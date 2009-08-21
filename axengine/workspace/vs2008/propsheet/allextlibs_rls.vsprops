@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="gb2312"?>
+<VisualStudioPropertySheet
+	ProjectType="Visual C++"
+	Version="8.00"
+	Name="allextlibs_rls"
+	>
+	<Tool
+		Name="VCLinkerTool"
+		AdditionalDependencies="BugTrapU.lib cg.lib cgGL.lib fmodex_vc.lib XInput.lib d3d9.lib d3dx9.lib dxerr.lib dxguid.lib lualib.lib qscintilla_vc9.lib zlib.lib freetype237MT.lib hkBase.lib hkSerialize.lib hkSceneData.lib hkInternal.lib hkGeometryUtilities.lib hkVisualize.lib hkCompat.lib hkpCollide.lib hkpConstraintSolver.lib hkpDynamics.lib hkpInternal.lib hkpUtilities.lib hkpVehicle.lib hkaAnimation.lib hkaInternal.lib hkaRagdoll.lib hkgBridge.lib hkgCommon.lib hkgDx9.lib hkgDx9s.lib hkgDx10.lib hkgOgl.lib hkgOgls.lib hksCommon.lib hksXAudio2.lib dxguid.lib opengl32.lib d3d9.lib d3dx9.lib dxerr.lib dxguid.lib "
+		AdditionalLibraryDirectories="&quot;$(SolutionDir)..\..\..\axextlibs\vc9\libs&quot;;&quot;$(SolutionDir)..\..\..\axextlibs\vc9\libs\release&quot;;&quot;$(SolutionDir)..\..\..\axextlibs\hk650r1\Lib\win32_net_9-0\release_multithreaded_dll&quot;"
+	/>
+</VisualStudioPropertySheet>

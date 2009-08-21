@@ -1,0 +1,385 @@
+<ui version="4.0" >
+ <class>SelectByNameDlgClass</class>
+ <widget class="QDialog" name="SelectByNameDlgClass" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>420</width>
+    <height>410</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>Select Object</string>
+  </property>
+  <layout class="QHBoxLayout" name="horizontalLayout_3" >
+   <item>
+    <layout class="QVBoxLayout" name="verticalLayout" >
+     <property name="sizeConstraint" >
+      <enum>QLayout::SetDefaultConstraint</enum>
+     </property>
+     <item>
+      <widget class="QLineEdit" name="input" />
+     </item>
+     <item>
+      <widget class="QTreeWidget" name="selection" >
+       <property name="frameShape" >
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+       <property name="frameShadow" >
+        <enum>QFrame::Plain</enum>
+       </property>
+       <property name="selectionMode" >
+        <enum>QAbstractItemView::ExtendedSelection</enum>
+       </property>
+       <property name="rootIsDecorated" >
+        <bool>false</bool>
+       </property>
+       <property name="sortingEnabled" >
+        <bool>true</bool>
+       </property>
+       <property name="headerHidden" >
+        <bool>true</bool>
+       </property>
+       <column>
+        <property name="text" >
+         <string>1</string>
+        </property>
+       </column>
+       <item>
+        <property name="text" >
+         <string>s</string>
+        </property>
+       </item>
+       <item>
+        <property name="text" >
+         <string>f</string>
+        </property>
+       </item>
+       <item>
+        <property name="text" >
+         <string>e</string>
+        </property>
+       </item>
+       <item>
+        <property name="text" >
+         <string>d</string>
+        </property>
+       </item>
+       <item>
+        <property name="text" >
+         <string>b</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="objInfo" />
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout" >
+       <item>
+        <widget class="QPushButton" name="selectAll" >
+         <property name="windowModality" >
+          <enum>Qt::NonModal</enum>
+         </property>
+         <property name="maximumSize" >
+          <size>
+           <width>60</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="mouseTracking" >
+          <bool>true</bool>
+         </property>
+         <property name="text" >
+          <string>All</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="selectNone" >
+         <property name="windowModality" >
+          <enum>Qt::NonModal</enum>
+         </property>
+         <property name="maximumSize" >
+          <size>
+           <width>60</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="mouseTracking" >
+          <bool>true</bool>
+         </property>
+         <property name="text" >
+          <string>None</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="selectInvert" >
+         <property name="windowModality" >
+          <enum>Qt::NonModal</enum>
+         </property>
+         <property name="maximumSize" >
+          <size>
+           <width>70</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="mouseTracking" >
+          <bool>true</bool>
+         </property>
+         <property name="text" >
+          <string>Invert</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer" >
+         <property name="orientation" >
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0" >
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QVBoxLayout" name="verticalLayout_3" >
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout_2" >
+       <item>
+        <widget class="QCheckBox" name="matchCase" >
+         <property name="text" >
+          <string>Match Case</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBox" >
+         <property name="sizePolicy" >
+          <sizepolicy vsizetype="Preferred" hsizetype="Fixed" >
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize" >
+          <size>
+           <width>0</width>
+           <height>110</height>
+          </size>
+         </property>
+         <property name="title" >
+          <string>List Types</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_5" >
+          <item>
+           <widget class="QCheckBox" name="static_2" >
+            <property name="text" >
+             <string>Static</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="entity" >
+            <property name="text" >
+             <string>Entity</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="speedTree" >
+            <property name="text" >
+             <string>Speed Tree</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="brush" >
+            <property name="text" >
+             <string>Brush</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_4" >
+            <item>
+             <widget class="QPushButton" name="typeAll" >
+              <property name="windowModality" >
+               <enum>Qt::NonModal</enum>
+              </property>
+              <property name="maximumSize" >
+               <size>
+                <width>40</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="mouseTracking" >
+               <bool>true</bool>
+              </property>
+              <property name="text" >
+               <string>All</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="typeNone" >
+              <property name="windowModality" >
+               <enum>Qt::NonModal</enum>
+              </property>
+              <property name="maximumSize" >
+               <size>
+                <width>45</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="mouseTracking" >
+               <bool>true</bool>
+              </property>
+              <property name="text" >
+               <string>None</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="typeInvert" >
+              <property name="windowModality" >
+               <enum>Qt::NonModal</enum>
+              </property>
+              <property name="maximumSize" >
+               <size>
+                <width>50</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="mouseTracking" >
+               <bool>true</bool>
+              </property>
+              <property name="text" >
+               <string>Invert</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBox_2" >
+         <property name="sizePolicy" >
+          <sizepolicy vsizetype="Preferred" hsizetype="Fixed" >
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize" >
+          <size>
+           <width>169</width>
+           <height>50</height>
+          </size>
+         </property>
+         <property name="title" >
+          <string>Option</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_4" >
+          <item>
+           <widget class="QCheckBox" name="immediate" >
+            <property name="text" >
+             <string>Immediate</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="cameraFollows" >
+            <property name="text" >
+             <string>Camera Follows</string>
+            </property>
+            <property name="checked" >
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <spacer name="verticalSpacer" >
+       <property name="orientation" >
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeType" >
+        <enum>QSizePolicy::Expanding</enum>
+       </property>
+       <property name="sizeHint" stdset="0" >
+        <size>
+         <width>20</width>
+         <height>40</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_2" >
+       <item>
+        <spacer name="horizontalSpacer_2" >
+         <property name="orientation" >
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeType" >
+          <enum>QSizePolicy::Fixed</enum>
+         </property>
+         <property name="sizeHint" stdset="0" >
+          <size>
+           <width>20</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QPushButton" name="select" >
+         <property name="maximumSize" >
+          <size>
+           <width>70</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text" >
+          <string>Select</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="cancel" >
+         <property name="maximumSize" >
+          <size>
+           <width>70</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text" >
+          <string>Cancel</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <layoutdefault spacing="6" margin="11" />
+ <resources/>
+ <connections/>
+</ui>

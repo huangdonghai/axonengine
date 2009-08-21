@@ -1,0 +1,32 @@
+<ui version="4.0" >
+ <class>ToolsPanelClass</class>
+ <widget class="QWidget" name="ToolsPanelClass" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>176</width>
+    <height>472</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>ToolsPanel</string>
+  </property>
+  <widget class="QLabel" name="label" >
+   <property name="geometry" >
+    <rect>
+     <x>50</x>
+     <y>10</y>
+     <width>56</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text" >
+    <string>Tools Panel</string>
+   </property>
+  </widget>
+ </widget>
+ <layoutdefault spacing="6" margin="11" />
+ <resources/>
+ <connections/>
+</ui>

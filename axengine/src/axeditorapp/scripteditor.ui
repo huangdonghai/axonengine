@@ -1,0 +1,324 @@
+<ui version="4.0" >
+ <class>ScriptEditorClass</class>
+ <widget class="QMainWindow" name="ScriptEditorClass" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>789</width>
+    <height>669</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>ScriptEditor</string>
+  </property>
+  <widget class="QWidget" name="centralWidget" >
+   <property name="geometry" >
+    <rect>
+     <x>260</x>
+     <y>33</y>
+     <width>529</width>
+     <height>575</height>
+    </rect>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout_2" >
+    <property name="spacing" >
+     <number>0</number>
+    </property>
+    <property name="margin" >
+     <number>0</number>
+    </property>
+    <item>
+     <widget class="QTabWidget" name="tabWidget" >
+      <property name="tabShape" >
+       <enum>QTabWidget::Rounded</enum>
+      </property>
+      <property name="currentIndex" >
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="tab" >
+       <property name="geometry" >
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>523</width>
+         <height>548</height>
+        </rect>
+       </property>
+       <attribute name="title" >
+        <string>Tab 1</string>
+       </attribute>
+      </widget>
+      <widget class="QWidget" name="tab_2" >
+       <property name="geometry" >
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>523</width>
+         <height>548</height>
+        </rect>
+       </property>
+       <attribute name="title" >
+        <string>Tab 2</string>
+       </attribute>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menuBar" >
+   <property name="geometry" >
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>789</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile" >
+    <property name="title" >
+     <string>File</string>
+    </property>
+   </widget>
+   <addaction name="menuFile" />
+  </widget>
+  <widget class="QToolBar" name="mainToolBar" >
+   <property name="geometry" >
+    <rect>
+     <x>0</x>
+     <y>21</y>
+     <width>789</width>
+     <height>12</height>
+    </rect>
+   </property>
+   <attribute name="toolBarArea" >
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak" >
+    <bool>false</bool>
+   </attribute>
+  </widget>
+  <widget class="QStatusBar" name="statusBar" >
+   <property name="geometry" >
+    <rect>
+     <x>0</x>
+     <y>650</y>
+     <width>789</width>
+     <height>19</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QDockWidget" name="dockWidget" >
+   <property name="geometry" >
+    <rect>
+     <x>0</x>
+     <y>33</y>
+     <width>256</width>
+     <height>575</height>
+    </rect>
+   </property>
+   <property name="windowTitle" >
+    <string>Files</string>
+   </property>
+   <attribute name="dockWidgetArea" >
+    <number>1</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents" >
+    <property name="geometry" >
+     <rect>
+      <x>0</x>
+      <y>22</y>
+      <width>256</width>
+      <height>553</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout" >
+     <property name="spacing" >
+      <number>0</number>
+     </property>
+     <property name="margin" >
+      <number>0</number>
+     </property>
+     <item>
+      <widget class="DirTree" name="fileTree" >
+       <property name="headerHidden" >
+        <bool>true</bool>
+       </property>
+       <column>
+        <property name="text" >
+         <string>1</string>
+        </property>
+       </column>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="dockWidget_2" >
+   <property name="geometry" >
+    <rect>
+     <x>0</x>
+     <y>612</y>
+     <width>128</width>
+     <height>38</height>
+    </rect>
+   </property>
+   <property name="windowTitle" >
+    <string>Breakpoints</string>
+   </property>
+   <attribute name="dockWidgetArea" >
+    <number>8</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_2" >
+    <property name="geometry" >
+     <rect>
+      <x>0</x>
+      <y>22</y>
+      <width>128</width>
+      <height>16</height>
+     </rect>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="dockWidget_5" >
+   <property name="geometry" >
+    <rect>
+     <x>132</x>
+     <y>612</y>
+     <width>128</width>
+     <height>38</height>
+    </rect>
+   </property>
+   <property name="windowTitle" >
+    <string>Upvalues</string>
+   </property>
+   <attribute name="dockWidgetArea" >
+    <number>8</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_5" >
+    <property name="geometry" >
+     <rect>
+      <x>0</x>
+      <y>22</y>
+      <width>128</width>
+      <height>16</height>
+     </rect>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="dockWidget_4" >
+   <property name="geometry" >
+    <rect>
+     <x>264</x>
+     <y>612</y>
+     <width>128</width>
+     <height>38</height>
+    </rect>
+   </property>
+   <property name="windowTitle" >
+    <string>Environment values</string>
+   </property>
+   <attribute name="dockWidgetArea" >
+    <number>8</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_4" >
+    <property name="geometry" >
+     <rect>
+      <x>0</x>
+      <y>22</y>
+      <width>128</width>
+      <height>16</height>
+     </rect>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="dockWidget_3" >
+   <property name="geometry" >
+    <rect>
+     <x>396</x>
+     <y>612</y>
+     <width>129</width>
+     <height>38</height>
+    </rect>
+   </property>
+   <property name="windowTitle" >
+    <string>Global values</string>
+   </property>
+   <attribute name="dockWidgetArea" >
+    <number>8</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_3" >
+    <property name="geometry" >
+     <rect>
+      <x>0</x>
+      <y>22</y>
+      <width>129</width>
+      <height>16</height>
+     </rect>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="dockWidget_6" >
+   <property name="geometry" >
+    <rect>
+     <x>529</x>
+     <y>612</y>
+     <width>128</width>
+     <height>38</height>
+    </rect>
+   </property>
+   <property name="windowTitle" >
+    <string>Local Values</string>
+   </property>
+   <attribute name="dockWidgetArea" >
+    <number>8</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_6" >
+    <property name="geometry" >
+     <rect>
+      <x>0</x>
+      <y>22</y>
+      <width>128</width>
+      <height>16</height>
+     </rect>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="dockWidget_7" >
+   <property name="geometry" >
+    <rect>
+     <x>661</x>
+     <y>612</y>
+     <width>128</width>
+     <height>38</height>
+    </rect>
+   </property>
+   <property name="windowTitle" >
+    <string>Call Stacks</string>
+   </property>
+   <attribute name="dockWidgetArea" >
+    <number>8</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_7" >
+    <property name="geometry" >
+     <rect>
+      <x>0</x>
+      <y>22</y>
+      <width>128</width>
+      <height>16</height>
+     </rect>
+    </property>
+   </widget>
+  </widget>
+ </widget>
+ <layoutdefault spacing="6" margin="11" />
+ <customwidgets>
+  <customwidget>
+   <class>DirTree</class>
+   <extends>QTreeWidget</extends>
+   <header>dirtree.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

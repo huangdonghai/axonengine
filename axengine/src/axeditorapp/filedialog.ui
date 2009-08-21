@@ -1,0 +1,485 @@
+<ui version="4.0" >
+ <class>FileDialogClass</class>
+ <widget class="QDialog" name="FileDialogClass" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>833</width>
+    <height>444</height>
+   </rect>
+  </property>
+  <property name="sizePolicy" >
+   <sizepolicy vsizetype="Ignored" hsizetype="Ignored" >
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="windowTitle" >
+   <string>FileDialog</string>
+  </property>
+  <property name="windowIcon" >
+   <iconset resource="Resources/editor.qrc" >
+    <normaloff>:/images/viewlist-16.png</normaloff>:/images/viewlist-16.png</iconset>
+  </property>
+  <property name="sizeGripEnabled" >
+   <bool>true</bool>
+  </property>
+  <layout class="QHBoxLayout" >
+   <item>
+    <layout class="QVBoxLayout" >
+     <property name="spacing" >
+      <number>6</number>
+     </property>
+     <property name="margin" >
+      <number>0</number>
+     </property>
+     <item>
+      <layout class="QHBoxLayout" >
+       <property name="spacing" >
+        <number>6</number>
+       </property>
+       <property name="margin" >
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="QLabel" name="label" >
+         <property name="text" >
+          <string>Look in:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="dirComboBox" >
+         <property name="sizePolicy" >
+          <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" >
+         <property name="spacing" >
+          <number>0</number>
+         </property>
+         <property name="margin" >
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QToolButton" name="toolButton1" >
+           <property name="text" >
+            <string>...</string>
+           </property>
+           <property name="icon" >
+            <iconset resource="Resources/editor.qrc" >
+             <normaloff>:/images/back-16.png</normaloff>:/images/back-16.png</iconset>
+           </property>
+           <property name="autoRaise" >
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="toolButton2" >
+           <property name="maximumSize" >
+            <size>
+             <width>16777215</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="text" >
+            <string>...</string>
+           </property>
+           <property name="icon" >
+            <iconset resource="Resources/editor.qrc" >
+             <normaloff>:/images/parentdir-16.png</normaloff>:/images/parentdir-16.png</iconset>
+           </property>
+           <property name="autoRaise" >
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="toolButton3" >
+           <property name="maximumSize" >
+            <size>
+             <width>16777215</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="text" >
+            <string>...</string>
+           </property>
+           <property name="icon" >
+            <iconset resource="Resources/editor.qrc" >
+             <normaloff>:/images/newdirectory-16.png</normaloff>:/images/newdirectory-16.png</iconset>
+           </property>
+           <property name="autoRaise" >
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="toolButton4" >
+           <property name="maximumSize" >
+            <size>
+             <width>16777215</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="text" >
+            <string>...</string>
+           </property>
+           <property name="icon" >
+            <iconset resource="Resources/editor.qrc" >
+             <normaloff>:/images/viewlist-16.png</normaloff>:/images/viewlist-16.png</iconset>
+           </property>
+           <property name="autoRaise" >
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="toolButton5" >
+           <property name="maximumSize" >
+            <size>
+             <width>16777215</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="text" >
+            <string>...</string>
+           </property>
+           <property name="icon" >
+            <iconset resource="Resources/editor.qrc" >
+             <normaloff>:/images/viewdetailed-16.png</normaloff>:/images/viewdetailed-16.png</iconset>
+           </property>
+           <property name="autoRaise" >
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" >
+       <property name="spacing" >
+        <number>6</number>
+       </property>
+       <property name="margin" >
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="QTreeWidget" name="rootDirTree" >
+         <property name="sizePolicy" >
+          <sizepolicy vsizetype="Expanding" hsizetype="Fixed" >
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="maximumSize" >
+          <size>
+           <width>120</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="frameShape" >
+          <enum>QFrame::Panel</enum>
+         </property>
+         <property name="frameShadow" >
+          <enum>QFrame::Sunken</enum>
+         </property>
+         <property name="columnCount" >
+          <number>1</number>
+         </property>
+         <column>
+          <property name="text" >
+           <string>Brows Here:</string>
+          </property>
+         </column>
+        </widget>
+       </item>
+       <item>
+        <widget class="QTreeWidget" name="treeWidget" >
+         <property name="indentation" >
+          <number>0</number>
+         </property>
+         <property name="uniformRowHeights" >
+          <bool>true</bool>
+         </property>
+         <property name="columnCount" >
+          <number>3</number>
+         </property>
+         <column>
+          <property name="text" >
+           <string>Name</string>
+          </property>
+         </column>
+         <column>
+          <property name="text" >
+           <string>Size</string>
+          </property>
+         </column>
+         <column>
+          <property name="text" >
+           <string>Date Modified</string>
+          </property>
+         </column>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QGridLayout" >
+       <property name="margin" >
+        <number>0</number>
+       </property>
+       <property name="spacing" >
+        <number>2</number>
+       </property>
+       <item row="1" column="2" >
+        <widget class="QPushButton" name="cancelButton" >
+         <property name="maximumSize" >
+          <size>
+           <width>16777215</width>
+           <height>22</height>
+          </size>
+         </property>
+         <property name="text" >
+          <string>Cancel</string>
+         </property>
+         <property name="autoDefault" >
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0" >
+        <widget class="QLabel" name="label_3" >
+         <property name="text" >
+          <string>Files of type:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0" >
+        <widget class="QLabel" name="label_2" >
+         <property name="text" >
+          <string>File name:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="2" >
+        <widget class="QPushButton" name="okButton" >
+         <property name="maximumSize" >
+          <size>
+           <width>16777215</width>
+           <height>22</height>
+          </size>
+         </property>
+         <property name="text" >
+          <string>Open</string>
+         </property>
+         <property name="default" >
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1" >
+        <widget class="QLineEdit" name="filenameEdit" />
+       </item>
+       <item row="1" column="1" >
+        <widget class="QComboBox" name="filterComboBox" />
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QVBoxLayout" >
+     <property name="spacing" >
+      <number>6</number>
+     </property>
+     <property name="margin" >
+      <number>0</number>
+     </property>
+     <item>
+      <widget class="QCheckBox" name="previewCheckBox" >
+       <property name="enabled" >
+        <bool>false</bool>
+       </property>
+       <property name="text" >
+        <string>Show preview or file info:</string>
+       </property>
+       <property name="checked" >
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QFrame" name="previewFrame" >
+       <property name="minimumSize" >
+        <size>
+         <width>256</width>
+         <height>256</height>
+        </size>
+       </property>
+       <property name="maximumSize" >
+        <size>
+         <width>256</width>
+         <height>256</height>
+        </size>
+       </property>
+       <property name="frameShape" >
+        <enum>QFrame::Panel</enum>
+       </property>
+       <property name="frameShadow" >
+        <enum>QFrame::Sunken</enum>
+       </property>
+       <layout class="QGridLayout" >
+        <property name="margin" >
+         <number>0</number>
+        </property>
+        <property name="spacing" >
+         <number>0</number>
+        </property>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <spacer name="verticalSpacer" >
+       <property name="orientation" >
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0" >
+        <size>
+         <width>20</width>
+         <height>40</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+  </layout>
+  <action name="actionBack" >
+   <property name="icon" >
+    <iconset resource="Resources/editor.qrc" >
+     <normaloff>:/images/back-16.png</normaloff>:/images/back-16.png</iconset>
+   </property>
+   <property name="text" >
+    <string>Back</string>
+   </property>
+   <property name="iconText" >
+    <string>Back</string>
+   </property>
+   <property name="toolTip" >
+    <string>Back</string>
+   </property>
+   <property name="statusTip" >
+    <string>Back</string>
+   </property>
+  </action>
+  <action name="actionParentDir" >
+   <property name="icon" >
+    <iconset resource="Resources/editor.qrc" >
+     <normaloff>:/images/parentdir-16.png</normaloff>:/images/parentdir-16.png</iconset>
+   </property>
+   <property name="text" >
+    <string>Parent Directory</string>
+   </property>
+   <property name="statusTip" >
+    <string>Parent Directory</string>
+   </property>
+  </action>
+  <action name="actionNewDirectory" >
+   <property name="enabled" >
+    <bool>false</bool>
+   </property>
+   <property name="icon" >
+    <iconset resource="Resources/editor.qrc" >
+     <normaloff>:/images/newdirectory-16.png</normaloff>:/images/newdirectory-16.png</iconset>
+   </property>
+   <property name="text" >
+    <string>New Directory</string>
+   </property>
+   <property name="statusTip" >
+    <string>New Directory</string>
+   </property>
+  </action>
+  <action name="actionListView" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="enabled" >
+    <bool>false</bool>
+   </property>
+   <property name="icon" >
+    <iconset resource="Resources/editor.qrc" >
+     <normaloff>:/images/viewlist-16.png</normaloff>:/images/viewlist-16.png</iconset>
+   </property>
+   <property name="text" >
+    <string>List View</string>
+   </property>
+   <property name="statusTip" >
+    <string>List View</string>
+   </property>
+  </action>
+  <action name="actionDetailView" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="checked" >
+    <bool>true</bool>
+   </property>
+   <property name="icon" >
+    <iconset resource="Resources/editor.qrc" >
+     <normaloff>:/images/viewdetailed-16.png</normaloff>:/images/viewdetailed-16.png</iconset>
+   </property>
+   <property name="text" >
+    <string>Detail View</string>
+   </property>
+   <property name="statusTip" >
+    <string>Detail View</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11" />
+ <tabstops>
+  <tabstop>filenameEdit</tabstop>
+  <tabstop>filterComboBox</tabstop>
+  <tabstop>dirComboBox</tabstop>
+  <tabstop>rootDirTree</tabstop>
+  <tabstop>okButton</tabstop>
+  <tabstop>cancelButton</tabstop>
+  <tabstop>toolButton1</tabstop>
+  <tabstop>toolButton2</tabstop>
+  <tabstop>toolButton3</tabstop>
+  <tabstop>toolButton4</tabstop>
+  <tabstop>toolButton5</tabstop>
+  <tabstop>previewCheckBox</tabstop>
+ </tabstops>
+ <resources>
+  <include location="Resources/editor.qrc" />
+ </resources>
+ <connections>
+  <connection>
+   <sender>cancelButton</sender>
+   <signal>clicked()</signal>
+   <receiver>FileDialogClass</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>523</x>
+     <y>458</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>462</x>
+     <y>480</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

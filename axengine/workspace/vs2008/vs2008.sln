@@ -1,0 +1,119 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4CDF1556-0B94-4E46-9815-4299D17ED28A}"
+	ProjectSection(SolutionItems) = preProject
+		..\..\license.txt = ..\..\license.txt
+	EndProjectSection
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "gpucaps", "gpucaps", "{97336EB5-0480-4631-AE52-2A8B20F7179B}"
+	ProjectSection(SolutionItems) = preProject
+		..\..\doc\gpucaps\amd_4850.xml = ..\..\doc\gpucaps\amd_4850.xml
+		..\..\doc\gpucaps\intel_945m.xml = ..\..\doc\gpucaps\intel_945m.xml
+		..\..\doc\gpucaps\nv_6600le.xml = ..\..\doc\gpucaps\nv_6600le.xml
+		..\..\doc\gpucaps\nv_7900go_gtx.xml = ..\..\doc\gpucaps\nv_7900go_gtx.xml
+		..\..\doc\gpucaps\nv_8600.xml = ..\..\doc\gpucaps\nv_8600.xml
+	EndProjectSection
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build rules", "build rules", "{D7C48AD4-4092-4943-A7C8-06CCFE8FA386}"
+	ProjectSection(SolutionItems) = preProject
+		..\..\doc\axonfx.rules = ..\..\doc\axonfx.rules
+	EndProjectSection
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "axcore", "axcore\axcore.vcproj", "{977E338E-EC28-4FD3-8564-4CA1D8E9BD73}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "axclient", "axclient\axclient.vcproj", "{C2922808-698C-40BC-BCED-CACA35163A84}"
+	ProjectSection(ProjectDependencies) = postProject
+		{977E338E-EC28-4FD3-8564-4CA1D8E9BD73} = {977E338E-EC28-4FD3-8564-4CA1D8E9BD73}
+	EndProjectSection
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "axlogic", "axlogic\axlogic.vcproj", "{58D8AD1C-DFD9-4796-A4C3-6152FE65C0AA}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C2922808-698C-40BC-BCED-CACA35163A84} = {C2922808-698C-40BC-BCED-CACA35163A84}
+		{977E338E-EC28-4FD3-8564-4CA1D8E9BD73} = {977E338E-EC28-4FD3-8564-4CA1D8E9BD73}
+	EndProjectSection
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "axeditor", "axeditor\axeditor.vcproj", "{B04A5E9A-BC7A-4692-9DDC-075EED228D6E}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "axeditorapp", "axeditorapp\axeditorapp.vcproj", "{B30947E7-9FEC-408A-A73F-42FCC08AD988}"
+	GlobalSection(Qt) = preSolution
+		Integration = True
+	EndGlobalSection
+	ProjectSection(ProjectDependencies) = postProject
+		{C2922808-698C-40BC-BCED-CACA35163A84} = {C2922808-698C-40BC-BCED-CACA35163A84}
+		{58D8AD1C-DFD9-4796-A4C3-6152FE65C0AA} = {58D8AD1C-DFD9-4796-A4C3-6152FE65C0AA}
+		{977E338E-EC28-4FD3-8564-4CA1D8E9BD73} = {977E338E-EC28-4FD3-8564-4CA1D8E9BD73}
+		{B04A5E9A-BC7A-4692-9DDC-075EED228D6E} = {B04A5E9A-BC7A-4692-9DDC-075EED228D6E}
+	EndProjectSection
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "data", "..\..\data\data.vcproj", "{DC8FF16E-34F1-44DA-AE1E-48715EBD581D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{977E338E-EC28-4FD3-8564-4CA1D8E9BD73}.Debug|Win32.ActiveCfg = Debug|Win32
+		{977E338E-EC28-4FD3-8564-4CA1D8E9BD73}.Debug|Win32.Build.0 = Debug|Win32
+		{977E338E-EC28-4FD3-8564-4CA1D8E9BD73}.Release|Win32.ActiveCfg = Release|Win32
+		{977E338E-EC28-4FD3-8564-4CA1D8E9BD73}.Release|Win32.Build.0 = Release|Win32
+		{C2922808-698C-40BC-BCED-CACA35163A84}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C2922808-698C-40BC-BCED-CACA35163A84}.Debug|Win32.Build.0 = Debug|Win32
+		{C2922808-698C-40BC-BCED-CACA35163A84}.Release|Win32.ActiveCfg = Release|Win32
+		{C2922808-698C-40BC-BCED-CACA35163A84}.Release|Win32.Build.0 = Release|Win32
+		{58D8AD1C-DFD9-4796-A4C3-6152FE65C0AA}.Debug|Win32.ActiveCfg = Debug|Win32
+		{58D8AD1C-DFD9-4796-A4C3-6152FE65C0AA}.Debug|Win32.Build.0 = Debug|Win32
+		{58D8AD1C-DFD9-4796-A4C3-6152FE65C0AA}.Release|Win32.ActiveCfg = Release|Win32
+		{58D8AD1C-DFD9-4796-A4C3-6152FE65C0AA}.Release|Win32.Build.0 = Release|Win32
+		{B04A5E9A-BC7A-4692-9DDC-075EED228D6E}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B04A5E9A-BC7A-4692-9DDC-075EED228D6E}.Debug|Win32.Build.0 = Debug|Win32
+		{B04A5E9A-BC7A-4692-9DDC-075EED228D6E}.Release|Win32.ActiveCfg = Release|Win32
+		{B04A5E9A-BC7A-4692-9DDC-075EED228D6E}.Release|Win32.Build.0 = Release|Win32
+		{B30947E7-9FEC-408A-A73F-42FCC08AD988}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B30947E7-9FEC-408A-A73F-42FCC08AD988}.Debug|Win32.Build.0 = Debug|Win32
+		{B30947E7-9FEC-408A-A73F-42FCC08AD988}.Release|Win32.ActiveCfg = Release|Win32
+		{B30947E7-9FEC-408A-A73F-42FCC08AD988}.Release|Win32.Build.0 = Release|Win32
+		{DC8FF16E-34F1-44DA-AE1E-48715EBD581D}.Debug|Win32.ActiveCfg = Debug|Win32
+		{DC8FF16E-34F1-44DA-AE1E-48715EBD581D}.Release|Win32.ActiveCfg = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{97336EB5-0480-4631-AE52-2A8B20F7179B} = {4CDF1556-0B94-4E46-9815-4299D17ED28A}
+		{D7C48AD4-4092-4943-A7C8-06CCFE8FA386} = {4CDF1556-0B94-4E46-9815-4299D17ED28A}
+	EndGlobalSection
+EndGlobal

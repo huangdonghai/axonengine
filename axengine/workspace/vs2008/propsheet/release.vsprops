@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="gb2312"?>
+<VisualStudioPropertySheet
+	ProjectType="Visual C++"
+	Version="8.00"
+	Name="release"
+	>
+	<Tool
+		Name="VCCLCompilerTool"
+		AdditionalIncludeDirectories="&quot;$(ProjectDir)/../../../include&quot;;&quot;$(SolutionDir)/../../../axextlibs/vc9/include&quot;"
+		PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_LIB"
+		RuntimeLibrary="2"
+		UsePrecompiledHeader="2"
+		PrecompiledHeaderThrough="pch.h"
+		ForcedIncludeFiles="pch.h"
+	/>
+	<Tool
+		Name="VCLinkerTool"
+		AdditionalLibraryDirectories="&quot;$(SolutionDir)..\..\..\axextlibs\vc9\libs&quot;;&quot;$(SolutionDir)..\..\..\axextlibs\vc9\libs\release&quot;"
+	/>
+</VisualStudioPropertySheet>

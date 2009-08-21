@@ -1,0 +1,129 @@
+<ui version="4.0" >
+ <class>ModelViewerClass</class>
+ <widget class="QMainWindow" name="ModelViewerClass" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>711</width>
+    <height>513</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>ModelViewer</string>
+  </property>
+  <widget class="QWidget" name="centralWidget" >
+   <layout class="QHBoxLayout" >
+    <property name="spacing" >
+     <number>0</number>
+    </property>
+    <property name="leftMargin" >
+     <number>0</number>
+    </property>
+    <property name="topMargin" >
+     <number>0</number>
+    </property>
+    <property name="rightMargin" >
+     <number>0</number>
+    </property>
+    <property name="bottomMargin" >
+     <number>0</number>
+    </property>
+    <item>
+     <widget class="QComboBox" name="modelType" >
+      <item>
+       <property name="text" >
+        <string>All Model</string>
+       </property>
+      </item>
+      <item>
+       <property name="text" >
+        <string>Model Loaded</string>
+       </property>
+      </item>
+      <item>
+       <property name="text" >
+        <string>Model Map Used</string>
+       </property>
+      </item>
+     </widget>
+    </item>
+    <item>
+     <widget class="QSplitter" name="splitter" >
+      <property name="orientation" >
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <widget class="DirTree" name="treeWidget" >
+       <property name="sizePolicy" >
+        <sizepolicy vsizetype="Preferred" hsizetype="Fixed" >
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <column>
+        <property name="text" >
+         <string>Models</string>
+        </property>
+       </column>
+      </widget>
+      <widget class="PreviewWidget" native="1" name="previewWidget" >
+       <property name="sizePolicy" >
+        <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize" >
+        <size>
+         <width>400</width>
+         <height>0</height>
+        </size>
+       </property>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menuBar" >
+   <property name="geometry" >
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>711</width>
+     <height>21</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QToolBar" name="mainToolBar" >
+   <attribute name="toolBarArea" >
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak" >
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionRefresh" />
+  </widget>
+  <widget class="QStatusBar" name="statusBar" />
+  <action name="actionRefresh" >
+   <property name="text" >
+    <string>Refresh</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11" />
+ <customwidgets>
+  <customwidget>
+   <class>PreviewWidget</class>
+   <extends>QWidget</extends>
+   <header>renderwidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>DirTree</class>
+   <extends>QTreeWidget</extends>
+   <header>dirtree.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

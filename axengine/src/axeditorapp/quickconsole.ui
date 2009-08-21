@@ -1,0 +1,130 @@
+<ui version="4.0" >
+ <class>QuickConsoleClass</class>
+ <widget class="QWidget" name="QuickConsoleClass" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>262</width>
+    <height>45</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>QuickConsole</string>
+  </property>
+  <layout class="QGridLayout" >
+   <property name="margin" >
+    <number>2</number>
+   </property>
+   <property name="spacing" >
+    <number>2</number>
+   </property>
+   <item row="1" column="1" >
+    <widget class="QToolButton" name="toolButton" >
+     <property name="maximumSize" >
+      <size>
+       <width>20</width>
+       <height>20</height>
+      </size>
+     </property>
+     <property name="text" >
+      <string>...</string>
+     </property>
+     <property name="icon" >
+      <iconset resource="Resources/editor.qrc" >
+       <normaloff>:/images/console.png</normaloff>:/images/console.png</iconset>
+     </property>
+     <property name="autoRaise" >
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0" >
+    <widget class="QLineEdit" name="input" >
+     <property name="minimumSize" >
+      <size>
+       <width>0</width>
+       <height>18</height>
+      </size>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0" colspan="2" >
+    <widget class="QTextEdit" name="message" >
+     <property name="maximumSize" >
+      <size>
+       <width>16777215</width>
+       <height>19</height>
+      </size>
+     </property>
+     <property name="palette" >
+      <palette>
+       <active>
+        <colorrole role="Base" >
+         <brush brushstyle="SolidPattern" >
+          <color alpha="255" >
+           <red>0</red>
+           <green>85</green>
+           <blue>0</blue>
+          </color>
+         </brush>
+        </colorrole>
+       </active>
+       <inactive>
+        <colorrole role="Base" >
+         <brush brushstyle="SolidPattern" >
+          <color alpha="255" >
+           <red>127</red>
+           <green>127</green>
+           <blue>127</blue>
+          </color>
+         </brush>
+        </colorrole>
+       </inactive>
+       <disabled>
+        <colorrole role="Base" >
+         <brush brushstyle="SolidPattern" >
+          <color alpha="255" >
+           <red>236</red>
+           <green>233</green>
+           <blue>216</blue>
+          </color>
+         </brush>
+        </colorrole>
+       </disabled>
+      </palette>
+     </property>
+     <property name="font" >
+      <font>
+       <family>Courier</family>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
+     <property name="frameShape" >
+      <enum>QFrame::Panel</enum>
+     </property>
+     <property name="frameShadow" >
+      <enum>QFrame::Plain</enum>
+     </property>
+     <property name="verticalScrollBarPolicy" >
+      <enum>Qt::ScrollBarAlwaysOff</enum>
+     </property>
+     <property name="horizontalScrollBarPolicy" >
+      <enum>Qt::ScrollBarAlwaysOff</enum>
+     </property>
+     <property name="lineWrapMode" >
+      <enum>QTextEdit::NoWrap</enum>
+     </property>
+     <property name="readOnly" >
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <layoutdefault spacing="6" margin="11" />
+ <resources>
+  <include location="Resources/editor.qrc" />
+ </resources>
+ <connections/>
+</ui>

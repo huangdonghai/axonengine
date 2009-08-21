@@ -1,0 +1,122 @@
+<ui version="4.0" >
+ <class>QuickStatusInfoPanelClass</class>
+ <widget class="QWidget" name="QuickStatusInfoPanelClass" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>524</width>
+    <height>76</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>QuickStatusInfoPanel</string>
+  </property>
+  <widget class="QLabel" name="label" >
+   <property name="geometry" >
+    <rect>
+     <x>10</x>
+     <y>30</y>
+     <width>71</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text" >
+    <string>View Position:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_3" >
+   <property name="geometry" >
+    <rect>
+     <x>170</x>
+     <y>30</y>
+     <width>76</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text" >
+    <string>Cursor Position:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_4" >
+   <property name="geometry" >
+    <rect>
+     <x>250</x>
+     <y>30</y>
+     <width>81</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="frameShape" >
+    <enum>QFrame::Panel</enum>
+   </property>
+   <property name="frameShadow" >
+    <enum>QFrame::Sunken</enum>
+   </property>
+   <property name="text" >
+    <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_5" >
+   <property name="geometry" >
+    <rect>
+     <x>350</x>
+     <y>30</y>
+     <width>31</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text" >
+    <string>CTRL</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_6" >
+   <property name="geometry" >
+    <rect>
+     <x>390</x>
+     <y>30</y>
+     <width>31</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text" >
+    <string>SHIFT</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_7" >
+   <property name="geometry" >
+    <rect>
+     <x>440</x>
+     <y>30</y>
+     <width>21</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text" >
+    <string>ALT</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_2" >
+   <property name="geometry" >
+    <rect>
+     <x>80</x>
+     <y>30</y>
+     <width>81</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="frameShape" >
+    <enum>QFrame::Panel</enum>
+   </property>
+   <property name="frameShadow" >
+    <enum>QFrame::Sunken</enum>
+   </property>
+   <property name="text" >
+    <string>TextLabel</string>
+   </property>
+  </widget>
+ </widget>
+ <layoutdefault spacing="6" margin="11" />
+ <resources/>
+ <connections/>
+</ui>

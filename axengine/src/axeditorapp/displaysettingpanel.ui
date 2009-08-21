@@ -1,0 +1,342 @@
+<ui version="4.0" >
+ <class>DisplaySettingPanelClass</class>
+ <widget class="QWidget" name="DisplaySettingPanelClass" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>467</width>
+    <height>552</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>DisplaySettingPanel</string>
+  </property>
+  <layout class="QVBoxLayout" >
+   <property name="spacing" >
+    <number>0</number>
+   </property>
+   <property name="margin" >
+    <number>0</number>
+   </property>
+   <item>
+    <widget class="QFrame" name="rollupFrame" >
+     <property name="frameShape" >
+      <enum>QFrame::Panel</enum>
+     </property>
+     <property name="frameShadow" >
+      <enum>QFrame::Sunken</enum>
+     </property>
+     <layout class="QHBoxLayout" >
+      <property name="spacing" >
+       <number>0</number>
+      </property>
+      <property name="margin" >
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="Rollup" name="rollup" >
+        <property name="autoFillBackground" >
+         <bool>true</bool>
+        </property>
+        <property name="frameShape" >
+         <enum>QFrame::StyledPanel</enum>
+        </property>
+        <property name="frameShadow" >
+         <enum>QFrame::Raised</enum>
+        </property>
+        <widget class="QTabWidget" name="tabWidget" >
+         <property name="geometry" >
+          <rect>
+           <x>70</x>
+           <y>80</y>
+           <width>211</width>
+           <height>381</height>
+          </rect>
+         </property>
+         <property name="currentIndex" >
+          <number>0</number>
+         </property>
+         <widget class="QWidget" name="tab" >
+          <attribute name="title" >
+           <string>Debug Render</string>
+          </attribute>
+          <widget class="QFrame" name="frame_2" >
+           <property name="geometry" >
+            <rect>
+             <x>0</x>
+             <y>10</y>
+             <width>191</width>
+             <height>261</height>
+            </rect>
+           </property>
+           <property name="frameShape" >
+            <enum>QFrame::NoFrame</enum>
+           </property>
+           <property name="frameShadow" >
+            <enum>QFrame::Raised</enum>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout" >
+            <property name="spacing" >
+             <number>2</number>
+            </property>
+            <property name="margin" >
+             <number>2</number>
+            </property>
+            <item>
+             <widget class="QCheckBox" name="r_wireframe" >
+              <property name="text" >
+               <string>Wireframe</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="r_showstat" >
+              <property name="text" >
+               <string>Show Render Statistic</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="r_showMemoryInfo" >
+              <property name="text" >
+               <string>Show Memory Info</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="r_noterrain" >
+              <property name="text" >
+               <string>No Terrain</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="r_nodetail" >
+              <property name="text" >
+               <string>No Detail</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="r_nobump" >
+              <property name="text" >
+               <string>No Bump</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="r_nospecular" >
+              <property name="text" >
+               <string>No Specular</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="r_detail" >
+              <property name="text" >
+               <string>No Detail</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="r_sky" >
+              <property name="text" >
+               <string>No Sky</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="r_water" >
+              <property name="text" >
+               <string>No Water</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="r_actor" >
+              <property name="text" >
+               <string>No Actor</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="r_speedtree" >
+              <property name="text" >
+               <string>No SpeedTree</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="r_shadow_2" >
+              <property name="text" >
+               <string>No Shadow</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="r_fog" >
+              <property name="text" >
+               <string>No fog</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="r_hdr" >
+              <property name="text" >
+               <string>No HDR</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="r_bloom" >
+              <property name="text" >
+               <string>No bloom</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+         <widget class="QWidget" name="tab_3" >
+          <attribute name="title" >
+           <string>Hide</string>
+          </attribute>
+          <widget class="QWidget" native="1" name="widget" >
+           <property name="geometry" >
+            <rect>
+             <x>10</x>
+             <y>10</y>
+             <width>171</width>
+             <height>41</height>
+            </rect>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_3" >
+            <property name="spacing" >
+             <number>2</number>
+            </property>
+            <property name="margin" >
+             <number>2</number>
+            </property>
+            <item>
+             <widget class="QCheckBox" name="r_showPhysics" >
+              <property name="text" >
+               <string>Show Physics</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="r_helper" >
+              <property name="text" >
+               <string>Show Helper</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+         <widget class="QWidget" name="tab_2" >
+          <attribute name="title" >
+           <string>Shader Debug</string>
+          </attribute>
+          <widget class="QFrame" name="frame" >
+           <property name="geometry" >
+            <rect>
+             <x>20</x>
+             <y>30</y>
+             <width>159</width>
+             <height>191</height>
+            </rect>
+           </property>
+           <property name="frameShape" >
+            <enum>QFrame::NoFrame</enum>
+           </property>
+           <property name="frameShadow" >
+            <enum>QFrame::Raised</enum>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_2" >
+            <property name="spacing" >
+             <number>2</number>
+            </property>
+            <property name="margin" >
+             <number>2</number>
+            </property>
+            <item>
+             <widget class="QRadioButton" name="shaderDebug0" >
+              <property name="text" >
+               <string>No debug</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QRadioButton" name="shaderDebug1" >
+              <property name="text" >
+               <string>Show Diffuse Map</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QRadioButton" name="shaderDebug2" >
+              <property name="text" >
+               <string>Show Normal</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QRadioButton" name="shaderDebug3" >
+              <property name="text" >
+               <string>Show Specular Map</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QRadioButton" name="shaderDebug4" >
+              <property name="text" >
+               <string>Show Ambient Light</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QRadioButton" name="shaderDebug5" >
+              <property name="text" >
+               <string>Show Diffuse Light</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QRadioButton" name="shaderDebug6" >
+              <property name="text" >
+               <string>Show Specular Light</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QRadioButton" name="shaderDebug7" >
+              <property name="text" >
+               <string>Show Fog Intensity</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </widget>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <layoutdefault spacing="6" margin="11" />
+ <customwidgets>
+  <customwidget>
+   <class>Rollup</class>
+   <extends>QFrame</extends>
+   <header>rollup.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

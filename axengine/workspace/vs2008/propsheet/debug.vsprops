@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<VisualStudioPropertySheet
+	ProjectType="Visual C++"
+	Version="8.00"
+	Name="debug"
+	>
+	<Tool
+		Name="VCCLCompilerTool"
+		Optimization="0"
+		AdditionalIncludeDirectories="&quot;$(ProjectDir)/../../../include&quot;;&quot;$(SolutionDir)/../../../axextlibs/vc9/include&quot;"
+		PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_LIB"
+		RuntimeLibrary="3"
+		UsePrecompiledHeader="2"
+		PrecompiledHeaderThrough="pch.h"
+		DebugInformationFormat="3"
+		ForcedIncludeFiles="pch.h"
+	/>
+</VisualStudioPropertySheet>

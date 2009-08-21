@@ -1,0 +1,67 @@
+<ui version="4.0" >
+ <class>AssetBrowserClass</class>
+ <widget class="QMainWindow" name="AssetBrowserClass" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>679</width>
+    <height>566</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>AssetBrowser</string>
+  </property>
+  <widget class="QWidget" name="centralWidget" >
+   <widget class="QTreeWidget" name="treeWidget" >
+    <property name="geometry" >
+     <rect>
+      <x>10</x>
+      <y>30</y>
+      <width>161</width>
+      <height>471</height>
+     </rect>
+    </property>
+    <column>
+     <property name="text" >
+      <string>1</string>
+     </property>
+    </column>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menuBar" >
+   <property name="geometry" >
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>679</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile" >
+    <property name="title" >
+     <string>File</string>
+    </property>
+   </widget>
+   <addaction name="menuFile" />
+  </widget>
+  <widget class="QToolBar" name="mainToolBar" >
+   <attribute name="toolBarArea" >
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak" >
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionRefresh" />
+  </widget>
+  <widget class="QStatusBar" name="statusBar" />
+  <action name="actionRefresh" >
+   <property name="text" >
+    <string>Refresh</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11" />
+ <resources/>
+ <connections/>
+</ui>
