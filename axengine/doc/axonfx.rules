@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<VisualStudioToolFile
+	Name="Axon FX files"
+	Version="8.00"
+	>
+	<Rules>
+		<CustomBuildRule
+			Name="build-axon-fx"
+			DisplayName="Axon Effect files"
+			CommandLine="cgc.exe -DNOT_IN_ENGINE=1 [VPENTRY] [VPPROFILE] -o &quot;$(InputDir)generated/$(InputName).vp&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;cgc.exe -DNOT_IN_ENGINE=1 [FPENTRY] [FPPROFILE] -o &quot;$(InputDir)generated/$(InputName).fp&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;fxc.exe /DNOT_IN_ENGINE=1 /DG_D3D=1 /I$(InputDir) [VSENTRY] [VSPROFILE] &quot;$(InputPath)&quot;&#x0D;&#x0A;fxc.exe /DNOT_IN_ENGINE=1 /DG_D3D=1 /I$(InputDir) [PSENTRY] [PSPROFILE] &quot;$(InputPath)&quot;&#x0D;&#x0A;"
+			Outputs="$(InputName).vp"
+			AdditionalDependencies="*.fxh"
+			FileExtensions="*.fx"
+			ExecutionDescription="Compiling Axon Effect file &quot;$(InputPath)&quot;"
+			BatchingSeparator=" ;"
+			>
+			<Properties>
+				<StringProperty
+					Name="VPENTRY"
+					DisplayName="Entry name"
+					Category="OpenGL Vertex Program"
+					Description="Entry name(-entry name)"
+					Switch="-entry [value]"
+					DefaultValue="VP_main"
+				/>
+				<StringProperty
+					Name="VPPROFILE"
+					DisplayName="Profile"
+					Category="OpenGL Vertex Program"
+					Description="Profile(-profile name )"
+					Switch="-profile [value]"
+					DefaultValue="arbvp1"
+				/>
+				<StringProperty
+					Name="FPENTRY"
+					DisplayName="Entry"
+					Category="OpenGL Fragment Program"
+					Description="Entry(-entry name)"
+					Switch="-entry [value]"
+					DefaultValue="FP_main"
+				/>
+				<StringProperty
+					Name="FPPROFILE"
+					DisplayName="Profile"
+					Category="OpenGL Fragment Program"
+					Description="Profile(-profile name)"
+					Switch="-profile [value]"
+					DefaultValue="arbfp1"
+				/>
+				<StringProperty
+					Name="VSENTRY"
+					DisplayName="Vertex Shader Entry"
+					Category="D3D Vertex Shader"
+					Switch="/E [value]"
+					DefaultValue="VP_main"
+				/>
+				<StringProperty
+					Name="VSPROFILE"
+					DisplayName="Vertex Shader Profile"
+					Category="D3D Vertex Shader"
+					Switch="/T [value]"
+					DefaultValue="vs_2_0"
+				/>
+				<StringProperty
+					Name="PSENTRY"
+					DisplayName="Pixel Shader Entry"
+					Category="D3D Pixel Shader"
+					Switch="/E [value]"
+					DefaultValue="FP_main"
+				/>
+				<StringProperty
+					Name="PSPROFILE"
+					DisplayName="Pixel Shader Profile"
+					Category="D3D Pixel Shader"
+					Switch="/T [value]"
+					DefaultValue="ps_2_0"
+				/>
+			</Properties>
+		</CustomBuildRule>
+		<CustomBuildRule
+			Name="luac"
+			DisplayName="luac"
+			CommandLine="luac.exe -l -o &quot;$(InputDir)generated\$(InputName).luaobj&quot; $(InputPath)"
+			Outputs="$(InputDir)generated\$(InputName).luaobj"
+			FileExtensions="*.lua"
+			ExecutionDescription="Lua compiling..."
+			>
+			<Properties>
+			</Properties>
+		</CustomBuildRule>
+	</Rules>
+</VisualStudioToolFile>

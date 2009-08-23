@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<!--**********************************************************
+* GPU Caps Viewer v1.6.2
+* (C)2007-2008 Jerome [JeGX] Guinot
+* http://www.ozone3d.net/gpu_caps_viewer/
+***********************************************************-->
+
+<gpu_viewer>
+
+	<system>
+		<cpu 
+			name="Intel(R) Core(TM)2 Duo CPU     E7200  @ 2.53GHz"
+			core_speed_mhz="2521"
+			num_cores="2"
+			family="6"
+			model="7"
+			stepping="6"
+		/>
+		<memory 
+			megabytes_physical_amount="2047"
+		/>
+		<operating_system 
+			description="Windows XP build 2600 [Service Pack 3]"
+			directx_version="9.0c"
+			physx_version="0"
+		/>
+	</system>
+	<graphics_controller>
+		<renderer 
+			model_from_opengl="ATI Radeon HD 4800 Series"
+			model_from_drivers="ATI Radeon HD 4800 Series "
+			model_from_db="ATI Radeon HD 4850"
+			device_description="ATI Radeon HD 4800 Series "
+			adapter_string="ATI Radeon HD 4800 Series"
+			vendor="ATI Technologies Inc."
+			vendor_id="4098"
+			device_id="37954"
+			drivers="8.561.0.0 - Catalyst 08.12 (12-1-2008)"
+			ati_catalyst_string="08.12"
+			ati_catalyst_release_string="8.561-081201a1-072271C-ATI"
+			gpu_codename="RV770"
+			gpu_unified_sp="800"
+			gpu_vertex_sp="0"
+			gpu_pixel_sp="0"
+			video_memory_size_megabytes="512"
+			bios_string="11X-B50102-X06"
+			cur_display_mode="1920x1200 @ 59 Hz - 32 bpp"
+		/>
+		<opengl_caps 
+			opengl_version="44060424"
+			glsl_version="1.20"
+			arb_texture_units="8"
+			vertex_texture_units="16"
+			pixel_texture_units="16"
+			geometry_texture_units="0"
+			max_texture_size="8192"
+			anisotropy="0"
+			point_sprite_size="0"
+			num_dynamic_lights="8"
+			max_viewport_size="8192"
+			max_vertex_uniform_components="512"
+			max_fragment_uniform_components="512"
+			max_geometry_uniform_components="0"
+			max_varying_float="68"
+			max_vertex_bindable_uniforms="0"
+			max_fragment_bindable_uniforms="0"
+			max_geometry_bindable_uniforms="0"
+			fbo="yes"
+			max_mrt_draw_buffers="8"
+			pbo="yes"
+			s3tc="yes"
+			ati_3dc="yes"
+			texture_rectangle="yes"
+			floating_texture="no"
+		/>
+		<msaa samples="1" />
+		<msaa samples="2" />
+		<msaa samples="4" />
+		<msaa samples="8" />
+		<opengl_extensions num_extensions="120" >
+			<li>GL_AMDX_vertex_shader_tessellator</li>
+			<li>GL_AMD_performance_monitor</li>
+			<li>GL_AMD_texture_texture4</li>
+			<li>GL_ARB_color_buffer_float</li>
+			<li>GL_ARB_depth_buffer_float</li>
+			<li>GL_ARB_depth_texture</li>
+			<li>GL_ARB_draw_buffers</li>
+			<li>GL_ARB_draw_instanced</li>
+			<li>GL_ARB_fragment_program</li>
+			<li>GL_ARB_fragment_program_shadow</li>
+			<li>GL_ARB_fragment_shader</li>
+			<li>GL_ARB_half_float_pixel</li>
+			<li>GL_ARB_half_float_vertex</li>
+			<li>GL_ARB_instanced_arrays</li>
+			<li>GL_ARB_multisample</li>
+			<li>GL_ARB_multitexture</li>
+			<li>GL_ARB_occlusion_query</li>
+			<li>GL_ARB_pixel_buffer_object</li>
+			<li>GL_ARB_point_parameters</li>
+			<li>GL_ARB_point_sprite</li>
+			<li>GL_ARB_shader_objects</li>
+			<li>GL_ARB_shader_texture_lod</li>
+			<li>GL_ARB_shading_language_100</li>
+			<li>GL_ARB_shadow</li>
+			<li>GL_ARB_shadow_ambient</li>
+			<li>GL_ARB_texture_border_clamp</li>
+			<li>GL_ARB_texture_compression</li>
+			<li>GL_ARB_texture_cube_map</li>
+			<li>GL_ARB_texture_env_add</li>
+			<li>GL_ARB_texture_env_combine</li>
+			<li>GL_ARB_texture_env_crossbar</li>
+			<li>GL_ARB_texture_env_dot3</li>
+			<li>GL_ARB_texture_float</li>
+			<li>GL_ARB_texture_mirrored_repeat</li>
+			<li>GL_ARB_texture_non_power_of_two</li>
+			<li>GL_ARB_texture_rectangle</li>
+			<li>GL_ARB_transpose_matrix</li>
+			<li>GL_ARB_vertex_buffer_object</li>
+			<li>GL_ARB_vertex_program</li>
+			<li>GL_ARB_vertex_shader</li>
+			<li>GL_ARB_window_pos</li>
+			<li>GL_ATI_draw_buffers</li>
+			<li>GL_ATI_envmap_bumpmap</li>
+			<li>GL_ATI_fragment_shader</li>
+			<li>GL_ATI_meminfo</li>
+			<li>GL_ATI_separate_stencil</li>
+			<li>GL_ATI_texture_compression_3dc</li>
+			<li>GL_ATI_texture_env_combine3</li>
+			<li>GL_ATI_texture_float</li>
+			<li>GL_EXT_abgr</li>
+			<li>GL_EXT_bgra</li>
+			<li>GL_EXT_blend_color</li>
+			<li>GL_EXT_blend_equation_separate</li>
+			<li>GL_EXT_blend_func_separate</li>
+			<li>GL_EXT_blend_minmax</li>
+			<li>GL_EXT_blend_subtract</li>
+			<li>GL_EXT_compiled_vertex_array</li>
+			<li>GL_EXT_copy_texture</li>
+			<li>GL_EXT_draw_buffers2</li>
+			<li>GL_EXT_draw_range_elements</li>
+			<li>GL_EXT_fog_coord</li>
+			<li>GL_EXT_framebuffer_blit</li>
+			<li>GL_EXT_framebuffer_multisample</li>
+			<li>GL_EXT_framebuffer_object</li>
+			<li>GL_EXT_framebuffer_sRGB</li>
+			<li>GL_EXT_gpu_program_parameters</li>
+			<li>GL_EXT_gpu_shader4</li>
+			<li>GL_EXT_multi_draw_arrays</li>
+			<li>GL_EXT_packed_depth_stencil</li>
+			<li>GL_EXT_packed_float</li>
+			<li>GL_EXT_packed_pixels</li>
+			<li>GL_EXT_point_parameters</li>
+			<li>GL_EXT_rescale_normal</li>
+			<li>GL_EXT_secondary_color</li>
+			<li>GL_EXT_separate_specular_color</li>
+			<li>GL_EXT_shadow_funcs</li>
+			<li>GL_EXT_stencil_wrap</li>
+			<li>GL_EXT_subtexture</li>
+			<li>GL_EXT_texgen_reflection</li>
+			<li>GL_EXT_texture3D</li>
+			<li>GL_EXT_texture_compression_latc</li>
+			<li>GL_EXT_texture_compression_rgtc</li>
+			<li>GL_EXT_texture_compression_s3tc</li>
+			<li>GL_EXT_texture_cube_map</li>
+			<li>GL_EXT_texture_edge_clamp</li>
+			<li>GL_EXT_texture_env_add</li>
+			<li>GL_EXT_texture_env_combine</li>
+			<li>GL_EXT_texture_env_dot3</li>
+			<li>GL_EXT_texture_filter_anisotropic</li>
+			<li>GL_EXT_texture_lod_bias</li>
+			<li>GL_EXT_texture_mirror_clamp</li>
+			<li>GL_EXT_texture_object</li>
+			<li>GL_EXT_texture_rectangle</li>
+			<li>GL_EXT_texture_sRGB</li>
+			<li>GL_EXT_texture_shared_exponent</li>
+			<li>GL_EXT_transform_feedback</li>
+			<li>GL_EXT_vertex_array</li>
+			<li>GL_KTX_buffer_region</li>
+			<li>GL_NV_blend_square</li>
+			<li>GL_NV_texgen_reflection</li>
+			<li>GL_SGIS_generate_mipmap</li>
+			<li>GL_SGIS_texture_edge_clamp</li>
+			<li>GL_SGIS_texture_lod</li>
+			<li>GL_WIN_swap_hint</li>
+			<li>WGL_ARB_extensions_string</li>
+			<li>WGL_ARB_pixel_format</li>
+			<li>WGL_ATI_pixel_format_float</li>
+			<li>WGL_ARB_pixel_format_float</li>
+			<li>WGL_ARB_multisample</li>
+			<li>WGL_EXT_swap_control</li>
+			<li>WGL_ARB_pbuffer</li>
+			<li>WGL_ARB_render_texture</li>
+			<li>WGL_ARB_make_current_read</li>
+			<li>WGL_EXT_extensions_string</li>
+			<li>WGL_ARB_buffer_region</li>
+			<li>WGL_EXT_framebuffer_sRGB</li>
+			<li>WGL_ATI_render_texture_rectangle</li>
+			<li>WGL_EXT_pixel_format_packed_float</li>
+			<li>WGL_I3D_genlock</li>
+			<li>WGL_NV_swap_group</li>
+		</opengl_extensions>
+	</graphics_controller>
+	<graphics_drivers>
+		<driver url="http://www.geeks3d.com/?page_id=752" />
+		<driver url="http://downloads.guru3d.com/download.php?id=18" />
+		<driver url="http://www.tweakguides.com/ATICAT_1.html" />
+	</graphics_drivers>
+	<graphics_cards_reviews>
+	</graphics_cards_reviews>
+
+</gpu_viewer>

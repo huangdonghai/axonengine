@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<!--**********************************************************
+* GPU Caps Viewer v1.5.0
+* (C)2007-2008 Jerome [JeGX] Guinot
+* http://www.ozone3d.net/gpu_caps_viewer/
+***********************************************************-->
+
+<gpu_viewer>
+
+	<system>
+		<cpu 
+			name="Genuine Intel(R) CPU           T2300  @ 1.66GHz"
+			core_speed_mhz="1662"
+			num_cores="2"
+			family="6"
+			model="14"
+			stepping="8"
+		/>
+		<memory 
+			megabytes_physical_amount="502"
+		/>
+		<operating_system 
+			description="Windows XP build 2600 [Service Pack 2]"
+			directx_version="9.0c"
+			physx_version="0"
+		/>
+	</system>
+	<graphics_controller>
+		<renderer 
+			model_from_ogl="Intel 945GM"
+			model_from_drivers="Mobile Intel(R) 945GM Express Chipset Family"
+			model_from_db="Intel 945GM"
+			device_description="Mobile Intel(R) 945GM Express Chipset Family"
+			adapter_string="Intel(R) Calistoga Graphics Controller"
+			vendor="Intel"
+			vendor_id="32902"
+			device_id="10146"
+			drivers="6.14.10.4450 - Mobile Intel(R) 945GM Express Chipset Family"
+			gpu_codename="945GM"
+			gpu_unified_sp="-1"
+			gpu_vertex_sp="-1"
+			gpu_pixel_sp="-1"
+			video_memory_size_megabytes="128"
+			bios_string="Intel Video BIOS"
+			cur_display_mode="1024x768 @ 60 Hz - 32 bpp"
+		/>
+		<opengl_caps 
+			opengl_version="21584444"
+			glsl_version="Not Supported"
+			arb_texture_units="16"
+			vertex_texture_units="0"
+			pixel_texture_units="16"
+			geometry_texture_units="0"
+			max_texture_size="2048"
+			anisotropy="0"
+			point_sprite_size="0"
+			num_dynamic_lights="16"
+			max_viewport_size="2048"
+			max_vertex_uniform_components="0"
+			max_fragment_uniform_components="0"
+			max_varying_float="0"
+			max_vertex_bindable_uniforms="0"
+			max_fragment_bindable_uniforms="0"
+			max_geometry_bindable_uniforms="0"
+			fbo="no"
+			max_mrt_draw_buffers="0"
+			pbo="no"
+			s3tc="yes"
+			ati_3dc="no"
+			texture_rectangle="no"
+			floating_texture="no"
+		/>
+		<opengl_extensions num_extensions="52" >
+			<extension name="GL_ARB_depth_texture" />
+			<extension name="GL_ARB_fragment_program" />
+			<extension name="GL_ARB_multitexture" />
+			<extension name="GL_ARB_point_parameters" />
+			<extension name="GL_ARB_shadow" />
+			<extension name="GL_ARB_texture_border_clamp" />
+			<extension name="GL_ARB_texture_compression" />
+			<extension name="GL_ARB_texture_cube_map" />
+			<extension name="GL_ARB_texture_env_add" />
+			<extension name="GL_ARB_texture_env_combine" />
+			<extension name="GL_ARB_texture_env_dot3" />
+			<extension name="GL_ARB_texture_env_crossbar" />
+			<extension name="GL_ARB_transpose_matrix" />
+			<extension name="GL_ARB_vertex_buffer_object" />
+			<extension name="GL_ARB_vertex_program" />
+			<extension name="GL_ARB_window_pos" />
+			<extension name="GL_EXT_abgr" />
+			<extension name="GL_EXT_bgra" />
+			<extension name="GL_EXT_blend_color" />
+			<extension name="GL_EXT_blend_func_separate" />
+			<extension name="GL_EXT_blend_minmax" />
+			<extension name="GL_EXT_blend_subtract" />
+			<extension name="GL_EXT_clip_volume_hint" />
+			<extension name="GL_EXT_compiled_vertex_array" />
+			<extension name="GL_EXT_cull_vertex" />
+			<extension name="GL_EXT_draw_range_elements" />
+			<extension name="GL_EXT_fog_coord" />
+			<extension name="GL_EXT_multi_draw_arrays" />
+			<extension name="GL_EXT_packed_pixels" />
+			<extension name="GL_EXT_rescale_normal" />
+			<extension name="GL_EXT_secondary_color" />
+			<extension name="GL_EXT_separate_specular_color" />
+			<extension name="GL_EXT_shadow_funcs" />
+			<extension name="GL_EXT_stencil_two_side" />
+			<extension name="GL_EXT_stencil_wrap" />
+			<extension name="GL_EXT_texture_compression_s3tc" />
+			<extension name="GL_EXT_texture_env_add" />
+			<extension name="GL_EXT_texture_env_combine" />
+			<extension name="GL_EXT_texture_filter_anisotropic" />
+			<extension name="GL_EXT_texture3D" />
+			<extension name="GL_3DFX_texture_compression_FXT1" />
+			<extension name="GL_IBM_texture_mirrored_repeat" />
+			<extension name="GL_NV_blend_square" />
+			<extension name="GL_NV_texgen_reflection" />
+			<extension name="GL_SGIS_generate_mipmap" />
+			<extension name="GL_WIN_swap_hint" />
+			<extension name="WGL_ARB_buffer_region" />
+			<extension name="WGL_ARB_extensions_string" />
+			<extension name="WGL_ARB_make_current_read" />
+			<extension name="WGL_ARB_pixel_format" />
+			<extension name="WGL_ARB_pbuffer" />
+			<extension name="WGL_EXT_swap_control" />
+		</opengl_extensions>
+	</graphics_controller>
+	<graphics_drivers>
+		<driver url="http://www.geeks3d.com/?page_id=156&from-gpu-caps-viewer" />
+	</graphics_drivers>
+	<graphics_cards_reviews>
+			<review url="http://www.geeks3d.com/?cat=3&from-gpu-caps-viewer" />
+	</graphics_cards_reviews>
+
+</gpu_viewer>
