@@ -15,7 +15,7 @@
 	</Platforms>
 	<ToolFiles>
 		<ToolFile
-			RelativePath="..\..\..\_axisv\axisv_vc2008\axonfx.rules"
+			RelativePath="..\doc\axonfx.rules"
 		/>
 	</ToolFiles>
 	<Configurations>
@@ -359,15 +359,6 @@
 			<File
 				RelativePath=".\shaders\_skyNishitaGen.fx"
 				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="build-axon-fx"
-						VSPROFILE="vs_3_0"
-						PSPROFILE="ps_3_0"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\shaders\_terrainbrush.fx"
@@ -408,15 +399,6 @@
 			<File
 				RelativePath=".\shaders\ocean.fx"
 				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="build-axon-fx"
-						VSPROFILE="vs_3_0"
-						PSPROFILE="ps_3_0"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\shaders\sky.fx"
@@ -588,22 +570,6 @@
 				<File
 					RelativePath=".\shaders\_globallight.fx"
 					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="build-axon-fx"
-							PSPROFILE="ps_3_0"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32"
-						>
-						<Tool
-							Name="build-axon-fx"
-							PSPROFILE="ps_3_0"
-						/>
-					</FileConfiguration>
 				</File>
 				<File
 					RelativePath=".\shaders\_pointlight.fx"
