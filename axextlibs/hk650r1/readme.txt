@@ -1,0 +1,1 @@
+place havok 6.50 sdk here
