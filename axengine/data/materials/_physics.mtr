@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+-->
+<material flags="0" shader="_debug" features="0" twosided="1" wireframed="1" physicsHelper="1" diffuse="255 0 0 255">
+</material>

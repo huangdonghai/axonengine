@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+-->
+<material flags="0" shader="_frond" features="0">
+  <texture map="diffuse" file="textures/default"></texture>
+</material>

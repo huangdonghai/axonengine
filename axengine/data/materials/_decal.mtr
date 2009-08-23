@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+-->
+<material flags="0" shader="blinn" features="1" surfaceType="metal" opacity="1.0" glow="0">
+  <shaderParam name="paramvalue"/>
+</material>

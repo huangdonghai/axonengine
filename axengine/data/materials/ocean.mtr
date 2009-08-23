@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+-->
+<material flags="0" shader="ocean" features="0" surfaceType="metal" glow="0">
+  <texture map="diffuse" file="textures/default"></texture>
+  <texture map="normal" file="textures/wave"></texture>
+  <shaderParam name="paramvalue"/>
+</material>

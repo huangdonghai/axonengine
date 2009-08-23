@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--$Id: console.font,v 1.1 2008/05/19 09:27:03 dunhill_hw Exp $-->
+<font name="console">
+	<face file="DroidSansMono.ttf" antialias="1" scale="1.0 1.0"/>
+	<face file="DroidSansFallback.ttf" antialias="1" scale="1.0 1.0"/>
+</font>
