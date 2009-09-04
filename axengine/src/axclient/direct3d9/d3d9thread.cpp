@@ -175,8 +175,6 @@ namespace Axon { namespace Render {
 		} else {
 			g_shaderMacro.resetMacro(ShaderMacro::G_DISABLE_SPECULAR);
 		}
-
-		BEGIN_PIX("DrawFrame");
 	}
 
 	void D3D9thread::drawScene(QueuedScene* scene, const D3D9clearer& clearer) {
@@ -347,8 +345,6 @@ namespace Axon { namespace Render {
 
 
 	void D3D9thread::endFrame() {
-		END_PIX();
-
 		d3d9FrameWnd->present();
 
 		d3d9Queue->clear();
