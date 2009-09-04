@@ -114,9 +114,6 @@ namespace Axon { namespace Render {
 
 		ulonglong_t cachestart = OsUtil::microseconds();
 
-		d3d9TargetManager->syncFrame();
-		d3d9QueryManager->syncFrame();
-		d3d9PrimitiveManager->syncFrame();
 		syncFrame();
 
 		ulonglong_t cacheend = OsUtil::microseconds();
@@ -178,6 +175,8 @@ namespace Axon { namespace Render {
 		} else {
 			g_shaderMacro.resetMacro(ShaderMacro::G_DISABLE_SPECULAR);
 		}
+
+		BEGIN_PIX("DrawFrame");
 	}
 
 	void D3D9thread::drawScene(QueuedScene* scene, const D3D9clearer& clearer) {
@@ -348,12 +347,19 @@ namespace Axon { namespace Render {
 
 
 	void D3D9thread::endFrame() {
+		END_PIX();
+
 		d3d9FrameWnd->present();
 
 		d3d9Queue->clear();
 	}
 
 	void D3D9thread::syncFrame() {
+		BEGIN_PIX("SyncFrame");
+		d3d9TargetManager->syncFrame();
+		d3d9QueryManager->syncFrame();
+		d3d9PrimitiveManager->syncFrame();
+
 		d3d9VertexBufferManager->reportStatices();
 
 		d3d9VertexBufferManager->beginAlloc();
@@ -374,6 +380,7 @@ namespace Axon { namespace Render {
 			d3d9Queue->setCacheEnd();
 
 		d3d9VertexBufferManager->endAlloc();
+		END_PIX();
 	}
 
 	void D3D9thread::cacheSceneRes(QueuedScene* scene) {
@@ -551,6 +558,7 @@ namespace Axon { namespace Render {
 		QueuedShadow* qshadow = qlight->shadowInfo;
 
 		if (r_shadowGen->getBool()) {
+			BEGIN_PIX("ShadowGen");
 			// offset the geometry slightly to prevent z-fighting
 			// note that this introduces some light-leakage artifacts
 			float factor = gl_shadowOffsetFactor->getFloat();
@@ -584,6 +592,7 @@ namespace Axon { namespace Render {
 			// disable depth biase
 			d3d9StateManager->SetRenderState(D3DRS_DEPTHBIAS, 0);
 			d3d9StateManager->SetRenderState(D3DRS_SLOPESCALEDEPTHBIAS, 0);
+			END_PIX();
 		}
 
 		tex->setHardwareShadowMap(true);
@@ -675,6 +684,8 @@ namespace Axon { namespace Render {
 	}
 
 	void D3D9thread::drawScene_world(QueuedScene* scene, const D3D9clearer& clearer) {
+		BEGIN_PIX("DrawWorld");
+
 		s_technique = Technique::Main;
 		d3d9WorldScene = scene;
 
@@ -734,28 +745,44 @@ namespace Axon { namespace Render {
 			if (sub->sceneType == QueuedScene::ShadowGen) {
 				drawPass_shadowGen(sub);
 			} else if (sub->sceneType == QueuedScene::Reflection) {
+				BEGIN_PIX("ReflectionGen");
 				g_shaderMacro.setMacro(ShaderMacro::G_REFLECTION);
 				drawScene_worldSub(sub);
 				g_shaderMacro.resetMacro(ShaderMacro::G_REFLECTION);
+				END_PIX();
 			} else if (sub->sceneType == QueuedScene::RenderToTexture) {
+				BEGIN_PIX("RenderToTexture");
 				drawScene_worldSub(sub);
+				END_PIX();
 			}
 		}
 
 		// fill z first
+		BEGIN_PIX("GfillPass");
 		drawPass_zfill(scene);
+		END_PIX();
 
+		BEGIN_PIX("DrawLights");
 		drawPass_lights(scene);
+		END_PIX();
 
+		BEGIN_PIX("SceneComposite");
 		drawPass_composite(scene);
+		END_PIX();
 
 		// post process and render back to backbuffer
 		if (r_framebuffer->getBool()) {
+			BEGIN_PIX("PostProcess");
 			drawPass_postprocess(scene);
+			END_PIX();
 		}
 
 		// check if need draw overlay primitives
+		BEGIN_PIX("DrawOverlay");
 		drawPass_overlay(scene);
+		END_PIX();
+
+		END_PIX();
 	}
 
 	void D3D9thread::drawScene_worldSub(QueuedScene* scene) {
@@ -784,7 +811,7 @@ namespace Axon { namespace Render {
 	}
 
 	void D3D9thread::drawScene_noworld(QueuedScene* scene, const D3D9clearer& clearer) {
-
+		BEGIN_PIX("DrawNoworld");
 		s_technique = Technique::Main;
 
 		setupScene(scene, &clearer, scene->target);
@@ -809,6 +836,8 @@ namespace Axon { namespace Render {
 
 		if (m_isStatistic)
 			g_statistic->setValue(stat_staticsTime, end - start);
+
+		END_PIX();
 	}
 
 	void D3D9thread::bindTarget(Target* target)

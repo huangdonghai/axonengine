@@ -52,6 +52,9 @@ using namespace Axon::Render;
 
 #define D3D9_SCOPELOCK ScopeLock _autoLocker(d3d9Mutex)
 
+#define BEGIN_PIX(x) D3DPERF_BeginEvent(D3DCOLOR_RGBA(0,0,0,255), L##x)
+#define END_PIX() D3DPERF_EndEvent()
+
 #include "d3d9texture.h"
 #include "d3d9shader.h"
 #include "d3d9rendertarget.h"
