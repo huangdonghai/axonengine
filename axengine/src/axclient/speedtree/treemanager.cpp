@@ -7,9 +7,9 @@ By continuing to use, modify, or distribute this file you indicate that you have
 read the license and understand and accept it fully.
 */
 
-#ifdef AX_CONFIG_OPTION_USE_SPEEDTREE_40
-
 #include "../private.h"
+
+#ifdef AX_CONFIG_OPTION_USE_SPEEDTREE_40
 
 namespace Axon { namespace Render {
 

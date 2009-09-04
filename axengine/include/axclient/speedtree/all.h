@@ -11,6 +11,7 @@ read the license and understand and accept it fully.
 #ifndef AX_CLIENT_SPEEDTREE_ALL_H
 #define AX_CLIENT_SPEEDTREE_ALL_H
 
+#define AX_CONFIG_OPTION_USE_SPEEDTREE_40 1
 #ifdef AX_CONFIG_OPTION_USE_SPEEDTREE_40
 
 #include "treeactor.h"
