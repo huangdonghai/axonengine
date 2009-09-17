@@ -79,7 +79,7 @@ namespace Axon { namespace Render {
 		bool m_hardwareShadowMap;
 	};
 
-	class D3D9texturemanager : public AssetFactory_<D3D9texture>, public ICmdHandler {
+	class D3D9texturemanager : public AssetFactory_<D3D9texture>, public TextureManager, public ICmdHandler {
 	public:
 		AX_DECLARE_COMMAND_HANDLER(D3D9texturemanager);
 
@@ -89,6 +89,12 @@ namespace Axon { namespace Render {
 		void addToDict(LPDIRECT3DBASETEXTURE9 d3dtex, D3D9texture* tex);
 		void removeFromDict(LPDIRECT3DBASETEXTURE9 d3dtex);
 		D3D9texture* getTex(LPDIRECT3DBASETEXTURE9 d3dtex) const;
+
+		// implement TextureManager
+		virtual TexturePtr loadTexture();
+		virtual TexturePtr createDynamicTexture();
+		virtual bool haveTexture();
+
 
 	protected:
 		// console command

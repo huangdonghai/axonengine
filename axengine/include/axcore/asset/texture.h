@@ -51,7 +51,7 @@ namespace Axon {
 		virtual void initialize(TexFormat format, int width, int height, InitFlags flags = 0) = 0;
 		virtual void getSize(int& width, int& height, int& depth) = 0;
 		virtual void uploadSubTexture(const Rect& rect, const void* pixels, TexFormat format = TexFormat::AUTO) = 0;
-		virtual void setClampMode(ClampMode clampmode) = 0;
+		virtual void setClampMode(ClampMode clampmwode) = 0;
 		virtual void setFilterMode(FilterMode filtermode) = 0;
 		virtual void setBorderColor(const Rgba& color) = 0;
 		virtual void setHardwareShadowMap(bool enable) = 0;
@@ -64,7 +64,16 @@ namespace Axon {
 		virtual ~Texture() {}
 	};
 
-AX_DECLARE_REFPTR(Texture);
+	AX_DECLARE_REFPTR(Texture);
+
+	class TextureManager {
+	public:
+		virtual ~TextureManager() {}
+
+		virtual TexturePtr loadTexture() = 0;
+		virtual TexturePtr createDynamicTexture() = 0;
+		virtual bool haveTexture() = 0;
+	};
 
 } // namespace Axon
 
