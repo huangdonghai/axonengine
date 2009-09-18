@@ -29,6 +29,7 @@ namespace Axon { namespace Render {
 }} // namespace Axon::Render
 
 #include "query.h"
+#include "texture.h"
 #include "textureatlas.h"
 #include "shader.h"
 #include "material.h"

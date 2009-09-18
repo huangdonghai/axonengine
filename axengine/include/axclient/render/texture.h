@@ -9,10 +9,10 @@ read the license and understand and accept it fully.
 
 
 
-#ifndef AX_TEXTURE_H
-#define AX_TEXTURE_H
+#ifndef AX_RENDER_TEXTURE_H
+#define AX_RENDER_TEXTURE_H
 
-namespace Axon {
+namespace Axon { namespace Render {
 
 	class Texture : public Asset {
 	public:
@@ -75,8 +75,8 @@ namespace Axon {
 		virtual bool haveTexture() = 0;
 	};
 
-} // namespace Axon
+}} // namespace Axon::Render
 
 
-#endif // end guardian
+#endif // AX_RENDER_TEXTURE_H
 

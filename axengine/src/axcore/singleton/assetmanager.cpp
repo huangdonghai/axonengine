@@ -352,6 +352,7 @@ namespace Axon {
 	}
 
 	void AssetManager::texlist_f(const CmdArgs& param) {
+#if 0
 		SCOPE_LOCK;
 
 		const Data* d = m_datas[Asset::kTexture];
@@ -376,6 +377,7 @@ namespace Axon {
 		}
 
 		Printf("total %d %s(s)\n", count, xGetTypeName(Asset::kTexture));
+#endif
 	}
 
 	void AssetManager::matlist_f(const CmdArgs& param) {

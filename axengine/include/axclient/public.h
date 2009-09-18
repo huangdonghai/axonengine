@@ -41,6 +41,8 @@ namespace Axon {
 	typedef Render::Material RenderMaterial;
 	typedef Render::Material Material;
 	typedef Render::MaterialPtr MaterialPtr;
+	typedef Render::Texture Texture;
+	typedef Render::TexturePtr TexturePtr;
 
 
 #define AX_CVARDECL(name, defaultstring, flags) \

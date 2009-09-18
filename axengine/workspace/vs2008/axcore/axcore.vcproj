@@ -186,10 +186,6 @@
 			<Filter
 				Name="asset"
 				>
-				<File
-					RelativePath="..\..\..\include\axcore\asset\texture.h"
-					>
-				</File>
 			</Filter>
 			<Filter
 				Name="inputoutput"

@@ -655,5 +655,20 @@ namespace Axon { namespace Render {
 		tex->saveToFile(filename);
 	}
 
+	TexturePtr D3D9texturemanager::loadTexture()
+	{
+		return TexturePtr();
+	}
+
+	TexturePtr D3D9texturemanager::createDynamicTexture()
+	{
+		return TexturePtr();
+	}
+
+	bool D3D9texturemanager::haveTexture()
+	{
+		return false;
+	}
+
 
 }} // namespace Axon::Render
