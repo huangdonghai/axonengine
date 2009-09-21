@@ -632,7 +632,6 @@ namespace Axon { namespace Render {
 
 	void D3D9thread::drawLocalLight(QueuedScene* scene, QueuedLight* light)
 	{
-
 		QueuedShadow* qshadow = light->shadowInfo;
 
 		if (qshadow) {

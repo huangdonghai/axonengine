@@ -77,6 +77,7 @@ namespace Axon {
 		void setAll() { m_data = -1; }
 		void unsetAll() { m_data = 0; }
 		bool isSet(E e) const { return (m_data&e)!= 0; }
+		bool isntSet(E e) const { return !isSet(e); }
 		bool isSetAny(int e) const { return (m_data & e) != 0; }
 		bool isSetAll(int e) const { return (m_data & e) == e; }
 

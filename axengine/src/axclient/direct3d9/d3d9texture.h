@@ -91,10 +91,7 @@ namespace Axon { namespace Render {
 		D3D9texture* getTex(LPDIRECT3DBASETEXTURE9 d3dtex) const;
 
 		// implement TextureManager
-		virtual TexturePtr loadTexture();
-		virtual TexturePtr createDynamicTexture();
-		virtual bool haveTexture();
-
+		virtual TexturePtr createObject();
 
 	protected:
 		// console command

@@ -58,7 +58,7 @@ namespace Axon {
 	typedef List<Asset*>	AssetList;
 
 	AX_BEGIN_COMMAND_MAP(AssetManager)
-		AX_COMMAND_ENTRY("assetlist",	list_f)
+		AX_COMMAND_ENTRY("assetlist", list_f)
 		AX_COMMAND_ENTRY("texlist",	texlist_f)
 		AX_COMMAND_ENTRY("matlist",	matlist_f)
 	AX_END_COMMAND_MAP()

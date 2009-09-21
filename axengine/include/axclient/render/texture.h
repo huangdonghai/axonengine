@@ -68,11 +68,50 @@ namespace Axon { namespace Render {
 
 	class TextureManager {
 	public:
-		virtual ~TextureManager() {}
+		TextureManager();
+		virtual ~TextureManager();
 
-		virtual TexturePtr loadTexture() = 0;
-		virtual TexturePtr createDynamicTexture() = 0;
-		virtual bool haveTexture() = 0;
+		// called in main thread
+		TexturePtr loadTexture(const FixedString& texname, Texture::InitFlags flags=0);
+		TexturePtr createTexture(const String& debugname, TexFormat format, int width, int height, Texture::InitFlags flags = 0);
+		bool isExist(const FixedString& texname);
+
+		// called in draw thread
+		virtual TexturePtr createObject() = 0;
+
+	protected:
+		struct LoadCmd {
+			Texture* texture;
+			FixedString texName;	// if filename is empty, than use format, width, height to init
+			Texture::InitFlags initFlags;
+			TexFormat format;
+			int width;
+			int height;
+		};
+		typedef List<LoadCmd> LoadCmdList;
+
+		struct UploadCmd {
+			Texture* texture;
+			Rect rect;
+			void* pixel;
+			TexFormat format;
+			Rgba color; // if pixel is null, then use this color
+		};
+		typedef List<UploadCmd> UploadCmdList;
+
+		struct FreeCmd {
+			Texture* texture;
+			int frameId;
+		};
+		typedef List<FreeCmd> FreeCmdList;
+
+		typedef Dict<FixedString,bool> ExistDict;
+
+		LoadCmdList m_loadCmdList;
+		UploadCmdList m_uploadCmdList;
+		FreeCmdList m_freeCmdList;
+		int m_frameId;
+		ExistDict m_existDict;
 	};
 
 }} // namespace Axon::Render

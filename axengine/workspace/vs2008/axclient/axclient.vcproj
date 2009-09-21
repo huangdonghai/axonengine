@@ -409,6 +409,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\include\axclient\render\texture.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\include\axclient\render\textureatlas.h"
 					>
 				</File>
@@ -494,6 +498,10 @@
 				</File>
 				<File
 					RelativePath="..\..\..\src\axclient\render\target.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\axclient\render\texture.cpp"
 					>
 				</File>
 				<File
