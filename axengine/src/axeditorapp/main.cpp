@@ -22,7 +22,26 @@ void testfixstring() {
 	str = fixed.c_str();
 }
 
+/**
+  Change our current directory to be the same as the directory containing the .exe.
+  Visual C++ starts us in the project directory by default, and the config file
+  is expected to be in the current directory.
+ */
+static void SetCurrentDir()
+{
+    wchar_t filename[_MAX_PATH];
+    wchar_t pathname[_MAX_PATH];
+    LPTSTR file_part;
+
+    GetModuleFileName(NULL, filename, sizeof(filename));
+    GetFullPathName(filename, sizeof(pathname), pathname, &file_part);
+    if(file_part) *file_part = 0; // Truncate filename portion
+    SetCurrentDirectory(pathname);
+}
+
 int main(int argc, char *argv[]) {
+	SetCurrentDir();
+
 	testfixstring();
 
 	Q_INIT_RESOURCE(editor);
