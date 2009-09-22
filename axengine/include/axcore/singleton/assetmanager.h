@@ -11,6 +11,7 @@ read the license and understand and accept it fully.
 #ifndef AX_ENGINE_ASSETMANAGER_H
 #define AX_ENGINE_ASSETMANAGER_H
 
+#if 0
 namespace Axon {
 
 
@@ -34,13 +35,13 @@ namespace Axon {
 		virtual ~Asset() {}
 
 		bool isDefaulted() { return m_isDefaulted; }
+		FixedString getKey() const { return m_key; }
+		void setKey(const FixedString& newkey) { m_key = newkey; }
 
 		// implement RefObject
 		virtual void deleteThis();
 
 		virtual bool doInit(const String& name, intptr_t arg) = 0;
-		virtual String getKey() const = 0;
-		virtual void setKey(const String& newkey) = 0;
 		virtual int getType() const = 0;
 
 	protected:
@@ -48,7 +49,7 @@ namespace Axon {
 		bool init(const String& key, intptr_t arg) { m_key = key; return doInit(key, arg); }
 
 	private:
-		String m_key;
+		FixedString m_key;
 		int m_frameId;
 		bool m_isDefaulted : 1;
 		bool m_isInDeleteList : 1;
@@ -194,6 +195,6 @@ namespace Axon {
 
 
 } // namespace Axon
-
+#endif
 #endif // end guardian
 

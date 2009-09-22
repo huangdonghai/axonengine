@@ -45,7 +45,7 @@ namespace Axon { namespace Render {
 	void GLrender::draw(Material* mat, Technique tech, GLgeometry* prim) {
 		if (!mat) {
 			if (!nullmaterial) {
-				nullmaterial = FindAsset_<Material>("null");
+				nullmaterial = Material::load("null");
 			}
 			mat = nullmaterial;
 			AX_ASSERT(mat);

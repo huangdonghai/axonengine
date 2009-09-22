@@ -20,9 +20,6 @@ namespace Axon { namespace Render {
 
 		// implement Asset
 		virtual bool doInit(const String& name, intptr_t arg);
-		virtual String getKey() const;
-		virtual void setKey(const String& newkey);
-		virtual int getType() const { return Asset::kTexture; }
 
 		virtual void initialize(TexFormat format, int width, int height, InitFlags flags = 0);
 		virtual void getSize(int& width, int& height, int& depth);
@@ -79,7 +76,7 @@ namespace Axon { namespace Render {
 		bool m_hardwareShadowMap;
 	};
 
-	class D3D9texturemanager : public AssetFactory_<D3D9texture>, public TextureManager, public ICmdHandler {
+	class D3D9texturemanager : public TextureManager, public ICmdHandler {
 	public:
 		AX_DECLARE_COMMAND_HANDLER(D3D9texturemanager);
 

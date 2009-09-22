@@ -200,16 +200,6 @@ namespace Axon { namespace Render {
 		return loadFile2D();
 	}
 
-	Axon::String D3D9texture::getKey() const
-	{
-		return m_name;
-	}
-
-	void D3D9texture::setKey(const String& newkey)
-	{
-		m_name = newkey;
-	}
-
 	void D3D9texture::initialize(TexFormat format, int width, int height, InitFlags flags /*= 0 */)
 	{
 		D3D9_SCOPELOCK;
@@ -643,7 +633,7 @@ namespace Axon { namespace Render {
 		}
 		const String& texname = params.tokened[1];
 
-		TexturePtr tex = FindAsset_<Texture>(texname);
+		TexturePtr tex = Texture::load(texname);
 
 		if (!tex) {
 			Printf("Cann't found texture '%s'\n", texname.c_str());
@@ -657,7 +647,9 @@ namespace Axon { namespace Render {
 
 	TexturePtr D3D9texturemanager::createObject()
 	{
-		return TexturePtr();
+		TexturePtr result;
+		result << new D3D9texture();
+		return result;
 	}
 
 

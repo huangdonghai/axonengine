@@ -157,25 +157,25 @@ namespace Axon { namespace Render {
 		m_treeRt->GetLightShaderParams(sShaderParams);
 
 		String texname = m_filepath + PathUtil::getName(sMapBank.m_pBranchMaps[CSpeedTreeRT::TL_DIFFUSE]);
-		TexturePtr tex = FindAsset_<Texture>(texname);
+		TexturePtr tex = Texture::load(texname);
 
-		m_branchMat = UniqueAsset_<Material>("_branch");
+		m_branchMat = Material::loadUnique("_branch");
 		m_branchMat->setTexture(SamplerType::Diffuse, tex.get());
 
 		setMaterialColor(m_branchMat.get(), m_treeRt->GetBranchMaterial(), sShaderParams.m_fGlobalLightScalar * sShaderParams.m_fBranchLightScalar, sShaderParams.m_fAmbientScalar);
 
 		texname = m_filepath + PathUtil::getName(sMapBank.m_pCompositeMaps[CSpeedTreeRT::TL_DIFFUSE]);
-		tex = FindAsset_<Texture>(texname);
-		m_frondMat = UniqueAsset_<Material>("_frond");
+		tex = Texture::load(texname);
+		m_frondMat = Material::loadUnique("_frond");
 		m_frondMat->setTexture(SamplerType::Diffuse, tex.get());
 
 		setMaterialColor(m_frondMat.get(), m_treeRt->GetFrondMaterial(), sShaderParams.m_fGlobalLightScalar * sShaderParams.m_fFrondLightScalar, sShaderParams.m_fAmbientScalar);
 
-		m_leafCardMat = UniqueAsset_<Material>("_leafcard");
+		m_leafCardMat = Material::loadUnique("_leafcard");
 		m_leafCardMat->setTexture(SamplerType::Diffuse, tex.get());
 		setMaterialColor(m_leafCardMat.get(), m_treeRt->GetLeafMaterial(), sShaderParams.m_fGlobalLightScalar * sShaderParams.m_fLeafLightScalar, sShaderParams.m_fAmbientScalar);
 
-		m_leafMeshMat = UniqueAsset_<Material>("_leafmesh");
+		m_leafMeshMat = Material::loadUnique("_leafmesh");
 		m_leafMeshMat->setTexture(SamplerType::Diffuse, tex.get());
 		setMaterialColor(m_leafMeshMat.get(), m_treeRt->GetLeafMaterial(), sShaderParams.m_fGlobalLightScalar * sShaderParams.m_fLeafLightScalar, sShaderParams.m_fAmbientScalar);
 	}

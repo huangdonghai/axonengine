@@ -33,13 +33,17 @@ namespace Axon { namespace Render {
 
 		// create asset
 		if (!m_isRenderBuffer) {
+			String texname;
+			StringUtil::sprintf(texname, "_RenderTarget_%d_%d_%d", m_width, m_height, g_system->generateId());
+#if 0
 			m_texture = dynamic_cast<GLtexture*>(g_assetManager->createEmptyAsset(Texture::AssetType));
 			m_texture->initialize(format, width, height);
 
-			String texname;
-			StringUtil::sprintf(texname, "_RenderTarget_%d_%d_%d", m_width, m_height, g_system->generateId());
 
 			g_assetManager->addAsset(Asset::kTexture, texname, m_texture);
+#else
+			m_texture = AX_REFPTR_CAST(GLtexture, Texture::create(texname, format, m_width, m_height));
+#endif
 		} else {
 
 		}

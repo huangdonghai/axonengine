@@ -86,11 +86,14 @@ namespace Axon { namespace Render {
 			// maybe some machine fast enough so spend time < 1ms, so we add i to
 			// texture name, make sure name is unique
 			StringUtil::sprintf(tex_name, "_texture_pool_%s_%s", m_name.c_str(), Uuid::generateUuid().c_str());
+#if 0
 			m_textures[i] << dynamic_cast<Texture*>(g_assetManager->createEmptyAsset(Asset::kTexture));
 			AX_ASSERT(m_textures[i]);
 			m_textures[i]->initialize(format, m_textureSize, m_textureSize);
-
 			g_assetManager->addAsset(Asset::kTexture, tex_name, m_textures[i]);
+#else
+			m_textures[i] = Texture::create(tex_name, format, m_textureSize, m_textureSize);
+#endif
 		}
 
 		return;

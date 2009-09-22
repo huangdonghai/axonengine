@@ -32,8 +32,8 @@ namespace Axon {
 	Render::System* g_renderSystem;
 	Render::Queue* g_renderQueue;
 	Render::Queue* g_queues[2];
-	Render::ShaderMacro			g_shaderMacro;
-	Render::Uniforms			g_uniforms;
+	Render::ShaderMacro g_shaderMacro;
+	Render::Uniforms g_uniforms;
 	Render::IDriver* g_renderDriver;
 
 	Render::TargetManager* g_targetManager;
@@ -41,17 +41,18 @@ namespace Axon {
 	Render::PrimitiveManager* g_primitiveManager;
 
 	Render::QueryManager* g_queryManager;
+	Render::TextureManager* g_textureManager;
 
 	InputSystem* g_inputSystem;
 	SoundSystem* g_soundSystem;
 
-	FontPtr						g_defaultFont;
-	FontPtr						g_consoleFont;
-	FontPtr						g_miniFont;
+	FontPtr g_defaultFont;
+	FontPtr g_consoleFont;
+	FontPtr g_miniFont;
 
 	// only visible in this module
-	FontFactory* g_fontFactory;
-	MaterialFactory* gMaterialFactory;
+	FontManager* g_fontFactory;
+	MaterialManager* gMaterialFactory;
 
 #ifdef AX_CONFIG_OPTION_USE_SPEEDTREE_40
 	TreeManager* g_treeManager;
@@ -84,16 +85,14 @@ namespace Axon {
 		g_renderSystem = new Render::System;
 		g_renderSystem->initialize();
 
-		gMaterialFactory = new MaterialFactory;
-		g_assetManager->registerType(RenderMaterial::AssetType, gMaterialFactory);
+		gMaterialFactory = new MaterialManager;
 
-		g_fontFactory = new FontFactory;
-		g_assetManager->registerType(Asset::kFont, g_fontFactory);
+		g_fontFactory = new FontManager;
 		g_fontFactory->initialize();
 
-		g_defaultFont = FindAsset_<Font>("fonts/default", Font::makeSize(14,14));
-		g_consoleFont = FindAsset_<Font>("fonts/console", Font::makeSize(14,14));
-		g_miniFont = FindAsset_<Font>("fonts/console", Font::makeSize(11,11));
+		g_defaultFont = Font::load("fonts/default", 14,14);
+		g_consoleFont = Font::load("fonts/console", 14,14);
+		g_miniFont = Font::load("fonts/console", 11,11);
 
 		g_renderDriver->postInit();
 
@@ -128,10 +127,8 @@ namespace Axon {
 #endif // AX_CONFIG_OPTION_USE_SPEEDTREE_40
 
 		g_fontFactory->finalize();
-		g_assetManager->removeType(Asset::kFont);
 		SafeDelete(g_fontFactory);
 
-		g_assetManager->removeType(RenderMaterial::AssetType);
 		SafeDelete(gMaterialFactory);
 
 		g_renderSystem->finalize();

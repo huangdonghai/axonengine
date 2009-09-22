@@ -316,9 +316,9 @@ namespace { namespace Internal {
 				if (filename.empty())
 					continue;
 
-				TexturePtr tex = FindAsset_<Texture>(filename);
+				TexturePtr tex = Texture::load(filename);
 
-				if (tex->isDefaulted()) {
+				if (tex) {
 					tex->release();
 					continue;
 				}
@@ -369,7 +369,7 @@ namespace { namespace Internal {
 				if (samplertype == SamplerType::Diffuse) {
 #if 0
 					if (!samplers[SamplerType::Normal]) {
-						tex = FindAsset_<Texture>(filename + "_n");
+						tex = Texture::load(filename + "_n");
 						if (tex->isDefaulted()) {
 							tex->release();
 						} else {
@@ -377,7 +377,7 @@ namespace { namespace Internal {
 						}
 					}
 					if (!samplers[SamplerType::Specular]) {
-						tex = FindAsset_<Texture>(filename + "_s");
+						tex = Texture::load(filename + "_s");
 						if (tex->isDefaulted()) {
 							tex->release();
 						} else {
@@ -385,7 +385,7 @@ namespace { namespace Internal {
 						}
 					}
 					if (!samplers[SamplerType::Emission]) {
-						tex = FindAsset_<Texture>(filename + "_g");
+						tex = Texture::load(filename + "_g");
 						if (tex->isDefaulted()) {
 							tex->release();
 						} else {
@@ -396,8 +396,8 @@ namespace { namespace Internal {
 				}
 
 				if (samplertype == SamplerType::Detail && !samplers[SamplerType::DetailNormal]) {
-					tex = FindAsset_<Texture>(filename + "_n");
-					if (tex->isDefaulted()) {
+					tex = Texture::load(filename + "_n");
+					if (tex) {
 						tex->release();
 					} else {
 						samplers[SamplerType::DetailNormal] = tex;
@@ -408,7 +408,7 @@ namespace { namespace Internal {
 
 		MaterialPtr getMaterial() {
 			if (!m_hkmat) {
-				return FindAsset_<Render::Material>("default");
+				return Material::load("default");
 			}
 
 			String fn = findStageFilename(hkxMaterial::TEX_DIFFUSE, 0);
@@ -426,9 +426,9 @@ namespace { namespace Internal {
 				}
 				
 				if (fn.empty())
-					return FindAsset_<Render::Material>(name);
+					return Material::load(name);
 
-				Render::Material* uniquemat = UniqueAsset_<Render::Material>(name);
+				Render::Material* uniquemat = Material::loadUnique(name);
 				uniquemat->setTextureSet(fn);
 				return uniquemat;
 #else
@@ -444,7 +444,7 @@ namespace { namespace Internal {
 
 			fillStatges(samplers, lightmap);
 
-			MaterialPtr mat = UniqueAsset_<Render::Material>(axname);
+			MaterialPtr mat = Material::loadUnique(axname);
 
 			// set samplers to material
 			for (int i = 0; i < SamplerType::NUMBER_ALL; i++) {
@@ -467,9 +467,9 @@ namespace { namespace Internal {
 
 #if 0
 			if (fn.empty()) {
-				return FindAsset_<Render::Material>("default");
+				return Material::load("default");
 			} else {
-				return FindAsset_<Render::Material>(fn);
+				return Material::load(fn);
 			}
 #endif
 		}
@@ -525,9 +525,9 @@ namespace { namespace Internal {
 		TexturePtr convert(hkxMaterial::TextureStage* stage) {
 			String fn = getTextureFilename(stage);
 
-			TexturePtr tex = FindAsset_<Texture>(fn);
+			TexturePtr tex = Texture::load(fn);
 
-			if (tex->isDefaulted()) {
+			if (tex) {
 				tex.clear();
 			}
 
@@ -863,7 +863,7 @@ namespace Axon { namespace Physics {
 			m_renderMesh->unlockVertexes();
 
 #if 0
-			Render::Material* mat = FindAsset_<Render::Material>(m_material);
+			Render::Material* mat = Material::load(m_material);
 #else
 			const Package::MaterialMap* mm = m_package->findMaterialMap(m_section->m_material);
 #endif

@@ -86,10 +86,11 @@ namespace Axon { namespace Render {
 		size_t size;
 	};
 
-	class AX_API Font : public Asset {
+	AX_DECLARE_REFPTR(Font);
+
+	class AX_API Font : public RefObject {
 	public:
 		enum {
-			AssetType = Asset::kFont,
 			MAX_CHARS = 65536,
 			ATLAS_PAD = 2,
 			TEXTURE_SIZE = 512
@@ -111,9 +112,6 @@ namespace Axon { namespace Render {
 
 		// implement Asset
 		virtual bool doInit(const String& name, intptr_t arg);
-		virtual String getKey() const;
-		virtual void setKey(const String& newkey);
-		virtual int getType() const { return AssetType; }
 
 		String getName();
 		uint_t getStringWidth(const WString& string);
@@ -123,6 +121,9 @@ namespace Axon { namespace Render {
 		size_t updateTexture(const wchar_t* str);
 		void getCharInfo(int id, Texture*& tex, Vector4& tc);
 		const GlyphInfo& getGlyphInfo(wchar_t c);
+
+		// management
+		static FontPtr load(const String& name, int w, int h);
 
 	protected:
 		bool parseFontDef();
@@ -140,24 +141,20 @@ namespace Axon { namespace Render {
 		int m_width, m_height;
 	};
 
-AX_DECLARE_REFPTR(Font);
 
 	//------------------------------------------------------------------------------
-	// class FontFactory
+	// class FontManager
 	//------------------------------------------------------------------------------
 
-	class FontFactory : public AssetFactory_<Font> {
+	class FontManager {
 	public:
-		FontFactory();
-		~FontFactory();
+		FontManager();
+		~FontManager();
 
 		void initialize();
 		void finalize();
 		BufInfo getFontFileBuf(const String filename);
 
-		virtual PoolHint getPoolHint() {
-			return Immortal;
-		}
 	private:
 		bool m_initialized;
 		typedef Dict<String, BufInfo,hash_pathname,equal_pathname> FileBufDict;

@@ -296,14 +296,6 @@ namespace Axon { namespace Render {
 		return loadFile2D();
 	}
 
-	String GLtexture::getKey() const {
-		return m_name;
-	}
-
-	void GLtexture::setKey(const String& newkey) {
-		m_name = newkey;
-	}
-
 	bool GLtexture::loadFile2D() {
 		GLrender::checkErrors();
 
@@ -706,16 +698,10 @@ namespace Axon { namespace Render {
 		GLrender::checkErrors();
 	}
 
-	static AssetFactory_<GLtexture>* gTextureFactory;
-
 	void GLtexture::initFactory() {
-		gTextureFactory = new AssetFactory_<GLtexture>();
-		g_assetManager->registerType(Asset::kTexture, gTextureFactory);
 	}
 
 	void GLtexture::finalizeFactory() {
-		g_assetManager->removeType(Asset::kTexture);
-		SafeDelete(gTextureFactory);
 	}
 
 	void GLtexture::copyFramebuffer(const Rect& r)

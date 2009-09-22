@@ -45,25 +45,18 @@ namespace Axon { namespace Render {
 		TypeZeroArray(m_textures);
 		TypeZeroArray(m_texgens);
 
-		m_matfile = FindAsset_<MaterialFile>(m_key);
+		m_decl = MaterialDecl::load(m_key);
 
-		if (m_matfile->isDefaulted()) {
-			if (arg) {
-				const char* parent = (const char*)arg;
-				MaterialFilePtr parentmat = FindAsset_<MaterialFile>(String("materials/") + parent);
-				if (!parentmat->isDefaulted()) {
-					m_matfile = parentmat;
-				}
-			}
+		if (m_decl->isDefaulted()) {
 			setTextureSet(m_key);
 		} else {
 			for (int i = 0; i < SamplerType::NUMBER_ALL; i++) {
-				TextureDef* texdef = m_matfile->getTextureDef(i);
+				TextureDef* texdef = m_decl->getTextureDef(i);
 
 				if (!texdef)
 					continue;
 
-				m_textures[i] = FindAsset_<Texture>(texdef->file);
+				m_textures[i] = Texture::load(texdef->file);
 
 				if (texdef->clamp && m_textures[i]) {
 					m_textures[i]->setClampMode(Texture::CM_ClampToBorder);
@@ -75,12 +68,12 @@ namespace Axon { namespace Render {
 			}
 		}
 
-		memcpy(m_features, m_matfile->getFeatures(), sizeof(m_features));
+		memcpy(m_features, m_decl->getFeatures(), sizeof(m_features));
 
 		m_shaderMacroNeedRegen = true;
 
 		// copy matfile's properties
-		m_diffuse = m_matfile->getDiffuse().rgb().toVector();
+		m_diffuse = m_decl->getDiffuse().rgb().toVector();
 
 		ShaderMacro macro = getShaderMacro();
 		macro.mergeFrom(&g_shaderMacro);
@@ -91,19 +84,8 @@ namespace Axon { namespace Render {
 		return true;
 	}
 
-
-	String Material::getKey() const {
-		return m_key;
-	}
-
-	void Material::setKey(const String& newkey) {
-		m_key = newkey;
-	}
-
-	int Material::getType() const { return AssetType; }
-
 	const String& Material::getShaderName() const {
-		return m_matfile->getShaderName();
+		return m_decl->getShaderName();
 	}
 
 	Shader* Material::getShaderTemplate() const {
@@ -224,44 +206,40 @@ namespace Axon { namespace Render {
 
 	bool Material::isWireframe() const
 	{
-		if (!m_matfile) {
+		if (!m_decl) {
 			return false;
 		}
 
-		return m_matfile->isWireframed();
+		return m_decl->isWireframed();
 	}
 
 	bool Material::isPhysicsHelper() const
 	{
-		if (!m_matfile) {
+		if (!m_decl) {
 			return true;
 		}
 
-		return m_matfile->getFlags().isSet(MaterialFile::PhysicsHelper);
+		return m_decl->getFlags().isSet(MaterialDecl::PhysicsHelper);
 	}
 
 	void Material::setTextureSet( const String& texname )
 	{
-		TexturePtr texture = FindAsset_<Texture>(texname);
-		if (!texture->isDefaulted())
-			m_textures[SamplerType::Diffuse] = texture;
+		TexturePtr texture = Texture::load(texname);
+		m_textures[SamplerType::Diffuse] = texture;
 
-		texture = FindAsset_<Texture>(texname + "_n");
-		if (!texture->isDefaulted())
-			m_textures[SamplerType::Normal] = texture;
+		texture = Texture::load(texname + "_n");
+		m_textures[SamplerType::Normal] = texture;
 
-		texture = FindAsset_<Texture>(texname + "_s");
-		if (!texture->isDefaulted())
-			m_textures[SamplerType::Specular] = texture;
+		texture = Texture::load(texname + "_s");
+		m_textures[SamplerType::Specular] = texture;
 
-		texture = FindAsset_<Texture>(texname + "_g");
-		if (!texture->isDefaulted())
-			m_textures[SamplerType::Emission] = texture;
+		texture = Texture::load(texname + "_g");
+		m_textures[SamplerType::Emission] = texture;
 
 		m_shaderMacroNeedRegen = true;
 	}
 
-	String MaterialFactory::generateKey(const String& name, intptr_t arg) {
+	String MaterialManager::generateKey(const String& name, intptr_t arg) {
 		if (!PathUtil::haveDir(name))
 			return "materials/" + name;
 		else

@@ -254,16 +254,6 @@ namespace Axon { namespace Render {
 		return true;
 	}
 
-	String Font::getKey() const {
-		return m_key;
-	}
-
-	void Font::setKey(const String& newkey) {
-		// do nothing
-		m_key = newkey;
-	}
-
-
 	bool Font::parseFontDef() {
 		String fname = m_name + ".font";
 		char* fbuf;
@@ -426,36 +416,36 @@ namespace Axon { namespace Render {
 	}
 
 	//------------------------------------------------------------------------------
-	// class FontFactory
+	// class FontManager
 	//------------------------------------------------------------------------------
 
-	FontFactory::FontFactory()
+	FontManager::FontManager()
 		: m_initialized(false)
 	{
 	}
 
-	FontFactory::~FontFactory() {
+	FontManager::~FontManager() {
 	}
 
-	void FontFactory::initialize() {
+	void FontManager::initialize() {
 		if (m_initialized)
-			Errorf("FontFactory::initialize: already initialized");
+			Errorf("FontManager::initialize: already initialized");
 
 		Printf("..initializing FreeType library...\n");
 		FT_Error error = FT_Init_FreeType(&gFT_Library);
 
 		if (error) {
-			Errorf("FontFactory::initialize: cann't initialize freetype2 library");
+			Errorf("FontManager::initialize: cann't initialize freetype2 library");
 		}
 
 		m_initialized = true;
 	}
 
-	void FontFactory::finalize() {
+	void FontManager::finalize() {
 	}
 
 
-	BufInfo FontFactory::getFontFileBuf(const String name) {
+	BufInfo FontManager::getFontFileBuf(const String name) {
 		FileBufDict::iterator it;
 
 		it = m_fontFileBufs.find(name);
@@ -471,7 +461,7 @@ namespace Axon { namespace Render {
 		size = g_fileSystem->readFile(filename, &buf);
 
 		if (!size || !buf) {
-			Errorf("FontFactory::getFontFileBuf: cann't read font file '%s'", filename.c_str());
+			Errorf("FontManager::getFontFileBuf: cann't read font file '%s'", filename.c_str());
 		}
 
 		BufInfo buf_info;

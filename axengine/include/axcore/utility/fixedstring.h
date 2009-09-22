@@ -23,6 +23,7 @@ namespace Axon {
 
 		const String& getString(int handle) const;
 		int findString(const String& str);
+		int findString(const char* lpcz);
 
 		static FixedStringManager& get();
 
@@ -44,6 +45,11 @@ namespace Axon {
 		FixedString(const String& str)
 		{
 			m_handle = FixedStringManager::get().findString(str.c_str());
+		}
+
+		FixedString(const char* lpcz)
+		{
+			m_handle = FixedStringManager::get().findString(lpcz);
 		}
 
 		~FixedString()
@@ -71,11 +77,17 @@ namespace Axon {
 			return *this;
 		}
 
+		FixedString& operator=(const char* lpcz) {
+			m_handle = FixedStringManager::get().findString(lpcz);
+			return *this;
+		}
+
 		bool operator==(const FixedString& rhs) const {
 			return m_handle == rhs.m_handle;
 		}
 
 		size_t hash() const { return m_handle; }
+		operator size_t() const { return m_handle; }
 
 	private:
 		int m_handle;

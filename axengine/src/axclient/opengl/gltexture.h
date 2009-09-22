@@ -22,9 +22,6 @@ namespace Axon { namespace Render {
 
 		// implement Asset
 		virtual bool doInit(const String& name, intptr_t arg);
-		virtual String getKey() const;
-		virtual void setKey(const String& newkey);
-		virtual int getType() const { return Asset::kTexture; }
 
 		// implement Texture
 		virtual void initialize(TexFormat format, int width, int height, InitFlags flags = 0);

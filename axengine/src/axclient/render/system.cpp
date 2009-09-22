@@ -122,8 +122,9 @@ namespace Axon { namespace Render {
 	}
 
 	void System::beginFrame(Target* target) {
+#if 0
 		g_assetManager->runFrame();
-
+#endif
 		m_curTarget = target;
 	}
 

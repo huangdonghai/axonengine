@@ -1621,7 +1621,7 @@ errquit:
 			return nullptr;
 		}
 
-		Object* obj =  it->second->createObject();
+		Object* obj = it->second->createObject();
 		obj->invoke_onInit();
 		return obj;
 	}

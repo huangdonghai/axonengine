@@ -24,7 +24,7 @@ namespace Axon { namespace Editor { namespace MapEdit {
 	TerrainRaiseTool::TerrainRaiseTool(Context* context) : MapTool(context) {
 		m_cursor = nullptr;
 		m_isValid = false;
-		m_brushMat = FindAsset_<Render::Material>("terrainbrush");
+		m_brushMat = Render::Material::load("terrainbrush");
 		m_brushPrims = nullptr;
 	}
 

@@ -509,7 +509,7 @@ namespace Axon { namespace Render {
 		}
 		const String& imagename = params.tokened[1];
 
-		TexturePtr tex = FindAsset_<Texture>(imagename);
+		TexturePtr tex = Texture::load(imagename);
 
 		if (!tex) {
 			Printf("Cann't found texture '%s'\n", imagename.c_str());

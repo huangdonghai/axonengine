@@ -115,7 +115,7 @@ namespace Axon { namespace Render {
 		g_shaderManager = d3d9ShaderManager;
 
 		d3d9TextureManager = new D3D9texturemanager();
-		g_assetManager->registerType(Asset::kTexture, d3d9TextureManager);
+		g_textureManager = d3d9TextureManager;
 
 		d3d9Thread = new D3D9thread();
 		if (r_multiThread->getInteger()) {

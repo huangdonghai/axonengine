@@ -161,10 +161,10 @@ namespace Axon { namespace Render {
 
 		m_boxVolume = nullptr;
 
-		m_matDrawQuad = FindAsset_<Material>("drawquad");
-		m_matMaskVolume = FindAsset_<Material>("maskvolume");
-		m_matShadowMask = FindAsset_<Material>("shadowmask");
-		m_matShadowBlur = FindAsset_<Material>("shadowblur");
+		m_matDrawQuad = Material::load("drawquad");
+		m_matMaskVolume = Material::load("maskvolume");
+		m_matShadowMask = Material::load("shadowmask");
+		m_matShadowBlur = Material::load("shadowblur");
 
 #if 0
 		m_shaderDrawQuad = FindAsset_<GLshader>("drawquad");

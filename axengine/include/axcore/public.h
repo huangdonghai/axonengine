@@ -65,7 +65,7 @@ namespace Axon {
 #include "cvardecls.h"
 #undef AX_CVARDECL
 
-	AX_API extern AssetManager* g_assetManager;
+//	AX_API extern AssetManager* g_assetManager;
 
 	AX_API void axCoreInit(int argc, char* argv[]);
 	AX_API void axCoreQuit();

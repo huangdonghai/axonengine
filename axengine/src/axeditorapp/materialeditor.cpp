@@ -75,11 +75,13 @@ void MaterialEditor::on_actionRefresh_triggered() {
 }
 
 void MaterialEditor::initFromMaterial(const String& name) {
-	MaterialPtr mat = FindAsset_<Render::Material>(name);
+	MaterialPtr mat = Material::load(name);
 
+#if 0
 	if (mat->isDefaulted()) {
 		return;
 	}
+#endif
 
 	Render::Shader* shader = mat->getShaderTemplate();
 	AX_ASSERT(shader);

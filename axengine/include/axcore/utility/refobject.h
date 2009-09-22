@@ -22,15 +22,18 @@ namespace Axon {
 		void addref();
 		void release();
 
-		virtual void deleteThis() { delete this; }
-
 		inline int getRefCount() const { return m_refcount; }
+		inline FixedString getKey() const { return m_key; }
+		inline void setKey(const FixedString& newkey) { m_key = newkey; }
+
+		virtual void deleteThis() { delete this; }
 
 	protected:
 		RefObject();
 		virtual ~RefObject();
 
 		int m_refcount;
+		FixedString m_key;
 	};
 
 	inline RefObject::RefObject() : m_refcount(1)

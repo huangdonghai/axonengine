@@ -14,9 +14,11 @@ read the license and understand and accept it fully.
 
 namespace Axon { namespace Render {
 
-	class Texture : public Asset {
+	AX_DECLARE_REFPTR(Texture);
+
+	class Texture : public RefObject {
 	public:
-		enum { AssetType = Asset::kTexture };
+		friend class TextureManager;
 
 		enum InitFlag {
 			IF_NoMipmap = 1,
@@ -48,23 +50,37 @@ namespace Axon { namespace Render {
 			FM_Trilinear
 		};
 
+		void uploadSubTexture(const Rect& rect, const void* pixels, TexFormat format = TexFormat::AUTO);
+		void generateMipmap();
+
+		// implement RefObject
+		virtual void deleteThis();
+
+		// Texture interface, need be implement in render driver
 		virtual void initialize(TexFormat format, int width, int height, InitFlags flags = 0) = 0;
 		virtual void getSize(int& width, int& height, int& depth) = 0;
-		virtual void uploadSubTexture(const Rect& rect, const void* pixels, TexFormat format = TexFormat::AUTO) = 0;
 		virtual void setClampMode(ClampMode clampmwode) = 0;
 		virtual void setFilterMode(FilterMode filtermode) = 0;
 		virtual void setBorderColor(const Rgba& color) = 0;
 		virtual void setHardwareShadowMap(bool enable) = 0;
 
 		virtual void saveToFile(const String& filename) = 0;
-		virtual void generateMipmap() = 0;
 		virtual TexFormat getFormat() = 0;
 
-	protected:
-		virtual ~Texture() {}
-	};
+		// management
+		static TexturePtr load(const FixedString& name, InitFlags flags=0);
+		static TexturePtr create(const String& debugname, TexFormat format, int width, int height, InitFlags flags = 0);
+		static bool isExist(const FixedString& name);
+		static void initManager();
+		static void finalizeManager();
 
-	AX_DECLARE_REFPTR(Texture);
+	protected:
+		virtual ~Texture();
+
+	protected:
+		Link<Texture> m_needFree;
+		Link<Texture> m_needGenMipmap;
+	};
 
 	class TextureManager {
 	public:
@@ -78,6 +94,14 @@ namespace Axon { namespace Render {
 
 		// called in draw thread
 		virtual TexturePtr createObject() = 0;
+
+	private:
+		friend class Texture;
+		// internal use
+		void uploadSubTexture(Texture* tex, const Rect& rect, const void* pixels, TexFormat format = TexFormat::AUTO);
+		void generateMipmap(Texture* tex);
+		void freeTexture(Texture* tex);
+		// end internal use
 
 	protected:
 		struct LoadCmd {
@@ -93,7 +117,7 @@ namespace Axon { namespace Render {
 		struct UploadCmd {
 			Texture* texture;
 			Rect rect;
-			void* pixel;
+			const void* pixel;
 			TexFormat format;
 			Rgba color; // if pixel is null, then use this color
 		};
@@ -106,12 +130,21 @@ namespace Axon { namespace Render {
 		typedef List<FreeCmd> FreeCmdList;
 
 		typedef Dict<FixedString,bool> ExistDict;
+		typedef Dict<FixedString,Texture*> TextureDict;
 
+		// command buffer
 		LoadCmdList m_loadCmdList;
 		UploadCmdList m_uploadCmdList;
 		FreeCmdList m_freeCmdList;
+		Link<Texture> m_needGenMipmapHead;
+		Link<Texture> m_needFreeHead;
+
+		// frame id
 		int m_frameId;
+
+		// texture manager's hash table
 		ExistDict m_existDict;
+		TextureDict m_textureDict;
 	};
 
 }} // namespace Axon::Render

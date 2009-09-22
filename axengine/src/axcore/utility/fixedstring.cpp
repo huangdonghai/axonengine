@@ -52,7 +52,24 @@ namespace Axon {
 		} else {
 			return it->second;
 		}
+	}
 
+	int FixedStringManager::findString( const char* lpcz )
+	{
+		if (!lpcz || !lpcz[0])
+			return 0;
+
+		Dict<const char*, int, hash_cstr, equal_cstr>::const_iterator it = m_dict.find(lpcz);
+
+		if (it == m_dict.end()) {
+			const String* newsz = new String(lpcz);
+			m_strings.push_back(newsz);
+			int handle = m_strings.size() - 1;
+			m_dict[newsz->c_str()] = handle;
+			return handle;
+		} else {
+			return it->second;
+		}
 	}
 
 	FixedStringManager& FixedStringManager::get()

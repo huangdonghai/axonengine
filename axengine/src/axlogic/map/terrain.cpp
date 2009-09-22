@@ -56,12 +56,15 @@ namespace Axon { namespace Map {
 
 	void AlphaBlock::updateTexture() {
 		if (!m_texture) {
-			m_texture << (Texture*)g_assetManager->createEmptyAsset(Asset::kTexture);
-			m_texture->initialize(TexFormat::A8, Map::ChunkPixels, Map::ChunkPixels);
 			String key;
 			StringUtil::sprintf(key, "_alphablock_%d", g_system->generateId());
+#if 0
+			m_texture << (Texture*)g_assetManager->createEmptyAsset(Asset::kTexture);
+			m_texture->initialize(TexFormat::A8, Map::ChunkPixels, Map::ChunkPixels);
 			g_assetManager->addAsset(Asset::kTexture, key, m_texture.get());
-
+#else
+			m_texture = Texture::create(key, TexFormat::A8, Map::ChunkPixels, Map::ChunkPixels);
+#endif
 			m_texture->setClampMode(Texture::CM_ClampToEdge);
 		}
 
@@ -99,9 +102,9 @@ namespace Axon { namespace Map {
 
 			String fn = PathUtil::removeExt(l->detailMat);
 
-			Texture* diffuse = FindAsset_<Texture>(fn);
-			Texture* normal = FindAsset_<Texture>(fn+"_n");
-			Texture* specular = FindAsset_<Texture>(fn+"_s");
+			Texture* diffuse = Texture::load(fn);
+			Texture* normal = Texture::load(fn+"_n");
+			Texture* specular = Texture::load(fn+"_s");
 
 			m_detailMat->setTexture(SamplerType::Diffuse, diffuse);
 			if (!normal->isDefaulted()) {
@@ -168,21 +171,24 @@ namespace Axon { namespace Map {
 		}
 
 		if (l->isUseDetail) {
+#if 0
 			m_detailMat = UniqueAsset_<RenderMaterial>("terrain");
-
+#else
+			m_detailMat = Material::loadUnique("terrain");
+#endif
 			String fn = PathUtil::removeExt(l->detailMat);
 
-			TexturePtr diffuse = FindAsset_<Texture>(fn);
-			TexturePtr normal = FindAsset_<Texture>(fn+"_n");
-			TexturePtr specular = FindAsset_<Texture>(fn+"_s");
+			TexturePtr diffuse = Texture::load(fn);
+			TexturePtr normal = Texture::load(fn+"_n");
+			TexturePtr specular = Texture::load(fn+"_s");
 
 			m_detailMat->setTexture(SamplerType::Diffuse, diffuse.get());
-			if (!normal->isDefaulted()) {
+//			if (!normal->isDefaulted()) {
 				m_detailMat->setTexture(SamplerType::Normal, normal.get());
-			}
-			if (!specular->isDefaulted()) {
+//			}
+//			if (!specular->isDefaulted()) {
 				m_detailMat->setTexture(SamplerType::Specular, specular.get());
-			}
+//			}
 
 #if 0
 			SafeRelease(diffuse);
@@ -508,8 +514,8 @@ namespace Axon { namespace Map {
 		m_tilerect.width = Map::ChunkTiles;
 		m_tilerect.height = Map::ChunkTiles;
 
-		m_material = FindAsset_<Render::Material>("materials/terrain");
-		AX_ASSERT(!m_material->isDefaulted());
+		m_material = Render::Material::load("materials/terrain");
+//		AX_ASSERT(!m_material->isDefaulted());
 
 		allocatePrimitive();
 	}
@@ -1022,23 +1028,30 @@ namespace Axon { namespace Map {
 			}
 		}
 
-		m_material = FindAsset_<Render::Material>("materials/terrain");
+		m_material = Material::load("materials/terrain");
 
 		// create normal texture
-		m_normalTexture << dynamic_cast<Texture*>(g_assetManager->createEmptyAsset(Asset::kTexture));
-		m_normalTexture->initialize(TexFormat::BGRA8, Map::ZoneTiles, Map::ZoneTiles, Texture::IF_AutoGenMipmap);
-		m_normalTexture->setClampMode(Texture::CM_ClampToEdge);
 		String texname;
 		StringUtil::sprintf(texname, "_zone_normal_%d_%d_%d", g_renderSystem->getFrameNum(), m_index.x, m_index.y);
+#if 0
+		m_normalTexture << dynamic_cast<Texture*>(g_assetManager->createEmptyAsset(Asset::kTexture));
+		m_normalTexture->initialize(TexFormat::BGRA8, Map::ZoneTiles, Map::ZoneTiles, Texture::IF_AutoGenMipmap);
 		g_assetManager->addAsset(Asset::kTexture, texname, m_normalTexture.get());
-
+#else
+		m_normalTexture = Texture::create(texname, TexFormat::BGRA8, Map::ZoneTiles, Map::ZoneTiles, Texture::IF_AutoGenMipmap);
+#endif
+		m_normalTexture->setClampMode(Texture::CM_ClampToEdge);
 		// create color texture
+		StringUtil::sprintf(texname, "_zone_color_%d_%d_%d", g_renderSystem->getFrameNum(), m_index.x, m_index.y);
+#if 0
 		m_colorTexture << dynamic_cast<Texture*>(g_assetManager->createEmptyAsset(Asset::kTexture));
 		m_colorTexture->initialize(TexFormat::DXT1, Map::ZonePixels, Map::ZonePixels, Texture::IF_AutoGenMipmap);
+		g_assetManager->addAsset(Asset::kTexture, texname, m_colorTexture.get());
+#else
+		m_colorTexture = Texture::create(texname, TexFormat::DXT1, Map::ZonePixels, Map::ZonePixels, Texture::IF_AutoGenMipmap);
+#endif
 		m_colorTexture->setClampMode(Texture::CM_ClampToEdge);
 		m_colorTexture->setFilterMode(Texture::FM_Bilinear);
-		StringUtil::sprintf(texname, "_zone_color_%d_%d_%d", g_renderSystem->getFrameNum(), m_index.x, m_index.y);
-		g_assetManager->addAsset(Asset::kTexture, texname, m_colorTexture.get());
 
 		// init primitive
 		m_prim = new RenderChunk(RenderPrim::Static);
@@ -1680,9 +1693,12 @@ namespace Axon { namespace Map {
 			String texname;
 			StringUtil::sprintf(texname, "%s_%d_%d", map_name.c_str(), m_zones[i]->getZoneIndex().x, m_zones[i]->getZoneIndex().y);
 
+#if 0
 			TexturePtr tex = UniqueAsset_<Texture>(texname, Texture::IF_AutoGenMipmap);
-
-			if (!tex->isDefaulted()) {
+#else
+			TexturePtr tex = Texture::load(texname, Texture::IF_AutoGenMipmap);
+#endif
+			if (!tex) {
 				z->setColorTexture(tex.get());
 				tex->setClampMode(Texture::CM_ClampToEdge);
 			} else {

@@ -71,11 +71,11 @@ namespace Axon { namespace Map {
 		{
 			GrassDef grassDef;
 
-			grassDef.setMaterial(FindAsset_<Render::Material>("grass2", (intptr_t)"grass2"));
+			grassDef.setMaterial(Material::load("grass2", (intptr_t)"grass2"));
 			grassDef.setMaterialName("grass2");
 			addGrassDef(grassDef);
 
-			grassDef.setMaterial(FindAsset_<Render::Material>("grass3", (intptr_t)"grass3"));
+			grassDef.setMaterial(Material::load("grass3", (intptr_t)"grass3"));
 			grassDef.setMaterialName("grass3");
 			addGrassDef(grassDef);
 		}
@@ -738,11 +738,11 @@ namespace Axon { namespace Map {
 
 		if (!m_mat)
 		{
-			m_mat = UniqueAsset_<Render::Material>("grass");
+			m_mat = Material::load("grass");
 		}
 
 		m_texName = texName;
-		m_tex = FindAsset_<Texture>(m_texName);
+		m_tex = Texture::load(m_texName);
 		AX_ASSERT(m_tex);
 
 		m_mat->setTexture(SamplerType::Diffuse, m_tex.get());

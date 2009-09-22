@@ -533,7 +533,7 @@ ParticlePreviewWidget::ParticlePreviewWidget(QWidget* parent)
 	m_tool = new Editor::ParticleTool();
 	m_tool->doBindCamera(&m_renderCamera);
 
-	//m_material = FindAsset_<Render::Material>("_frond");
+	//m_material = Material::load("_frond");
 	//m_texQuad->setMaterial(m_material);
 
 	m_texQuad = NULL;
@@ -606,12 +606,12 @@ void ParticlePreviewWidget::initTexQuad(const String& materialName,Vector2 start
 		else
 		{
 		    m_material->release();
-			m_material = UniqueAsset_<Render::Material>(materialName);
+			m_material = Material::loadUnique(materialName);
 		}
 	}
 	else
 	{
-		m_material = UniqueAsset_<Render::Material>(materialName);
+		m_material = Material::loadUnique(materialName);
 	}
 
 	Vertex* vertexData = m_texQuad->lockVertexes();

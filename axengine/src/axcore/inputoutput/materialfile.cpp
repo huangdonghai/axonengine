@@ -29,7 +29,7 @@ namespace {
 
 namespace Axon {
 
-	MaterialFile::MaterialFile() {
+	MaterialDecl::MaterialDecl() {
 		m_shaderGenMask = 0;
 		m_surfaceType = SurfaceType::Dust;
 		const char* s = m_surfaceType.toString();
@@ -50,21 +50,21 @@ namespace Axon {
 		TypeZeroArray(m_literals);
 	}
 
-	MaterialFile::~MaterialFile() {
+	MaterialDecl::~MaterialDecl() {
 		// free texture
 		// free params
 	}
 
-	bool MaterialFile::doInit(const String& name, intptr_t arg) {
+	bool MaterialDecl::doInit(const String& name, intptr_t arg) {
 #if 0
 		if (!File::havePath(name))
 			m_key = "materials/" + name;
 		else
 			m_key = name;
-#else
+//#else
 		m_key = generateKey(name, arg);
 #endif
-		String filename = m_key + ".mtr";
+		String filename = m_key.toString() + ".mtr";
 
 		char* buffer;
 		size_t size;
@@ -176,7 +176,7 @@ error_exit:
 		return false;
 	}
 
-	String MaterialFile::generateKey(const String& name, intptr_t arg) {
+	String MaterialDecl::generateKey(const String& name, intptr_t arg) {
 		String key;
 		if (!PathUtil::haveDir(name))
 			key = "materials/" + name;
@@ -188,8 +188,8 @@ error_exit:
 		return key;
 	}
 
-	MaterialFileFactory::MaterialFileFactory() {
-		m_defaulted = new MaterialFile();
+	MaterialDeclManager::MaterialDeclManager() {
+		m_defaulted = new MaterialDecl();
 
 		bool v = m_defaulted->doInit("default", 0);
 
@@ -198,22 +198,9 @@ error_exit:
 			m_defaulted = nullptr;
 		}
 	}
-	MaterialFileFactory::~MaterialFileFactory() {
+	MaterialDeclManager::~MaterialDeclManager() {
 		if (m_defaulted)
 			delete(m_defaulted);
-	}
-
-	AssetFactory::PoolHint MaterialFileFactory::getPoolHint() {
-		return AssetFactory::Immortal;
-	}
-	int MaterialFileFactory::getPoolSize() {
-		return 1024;
-	}
-	String MaterialFileFactory::generateKey(const String& name, intptr_t arg) {
-		return MaterialFile::generateKey(name, arg);
-	}
-	Asset* MaterialFileFactory::getDefaulted() {
-		return m_defaulted;
 	}
 
 } // namespace Axon

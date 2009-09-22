@@ -220,11 +220,11 @@ namespace Axon { namespace Render {
 
 
 	D3D9postprocess::D3D9postprocess() {
-		m_mtrDrawQuad = FindAsset_<Material>("drawquad");
-		m_mtrMaskVolume = FindAsset_<Material>("maskvolume");
+		m_mtrDrawQuad = Material::load("drawquad");
+		m_mtrMaskVolume = Material::load("maskvolume");
 
-		m_mtrPointLight =  FindAsset_<Material>("_pointlight");
-		m_mtrGlobalLight =  FindAsset_<Material>("_globallight");
+		m_mtrPointLight =  Material::load("_pointlight");
+		m_mtrGlobalLight =  Material::load("_globallight");
 
 		m_shaderDrawQuad = d3d9ShaderManager->findShaderDX("drawquad");
 		m_shaderHistogram = d3d9ShaderManager->findShaderDX("_histogram");

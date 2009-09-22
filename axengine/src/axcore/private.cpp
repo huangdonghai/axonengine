@@ -68,9 +68,6 @@ namespace Axon {
 #include <axcore/cvardecls.h>
 #undef AX_CVARDECL
 
-	AssetManager* g_assetManager;
-	AssetFactory_<MaterialFile>* gMaterialFileFactory;
-
 	void terminateHandler() {
 		MessageBoxW(NULL, L"terminateHandler", L"Error", MB_ICONERROR | MB_OK | MB_TASKMODAL);
 		int* p = 0;
@@ -128,12 +125,8 @@ namespace Axon {
 #include <axcore/cvardecls.h>
 #undef AX_CVARDECL
 
-		g_assetManager = new AssetManager();
-		g_assetManager->initialize();
 
-		gMaterialFileFactory = new AssetFactory_<MaterialFile>();
-		g_assetManager->registerType(Asset::kMaterialFile, gMaterialFileFactory);
-
+		MaterialDecl::initManager();
 #if 0
 		for (int i = 0; i < 1000; i++) {
 			ulonglong_t t = Microseconds();
@@ -144,11 +137,7 @@ namespace Axon {
 	}
 
 	void axCoreQuit() {
-		g_assetManager->removeType(Asset::kMaterialFile);
-		SafeDelete(gMaterialFileFactory);
-
-		g_assetManager->finalize();
-		SafeDelete(g_assetManager);
+		MaterialDecl::finalizeManager();
 
 		g_classFactory->finalize();
 		SafeDelete(g_classFactory);

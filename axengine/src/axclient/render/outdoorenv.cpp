@@ -149,9 +149,9 @@ namespace Axon { namespace Render {
 		{
 			MaterialPtr skymat = m_skybox12->getMaterial();
 			if (!skymat) {
-				skymat = UniqueAsset_<Material>("_skybox");
+				skymat = Material::loadUnique("_skybox");
 			}
-			TexturePtr tex = FindAsset_<Texture>(matname + "_12");
+			TexturePtr tex = Texture::load(matname + "_12");
 			AX_ASSERT(tex);
 			skymat->setTexture(SamplerType::Diffuse, tex.get());
 
@@ -160,9 +160,9 @@ namespace Axon { namespace Render {
 		{
 			MaterialPtr skymat = m_skybox34->getMaterial();
 			if (!skymat) {
-				skymat = UniqueAsset_<Material>("_skybox");
+				skymat = Material::loadUnique("_skybox");
 			}
-			TexturePtr tex = FindAsset_<Texture>(matname + "_34");
+			TexturePtr tex = Texture::load(matname + "_34");
 			AX_ASSERT(tex);
 			skymat->setTexture(SamplerType::Diffuse, tex);
 
@@ -171,9 +171,9 @@ namespace Axon { namespace Render {
 		{
 			MaterialPtr skymat = m_skybox5->getMaterial();
 			if (!skymat) {
-				skymat = UniqueAsset_<Material>("_skybox");
+				skymat = Material::loadUnique("_skybox");
 			}
-			TexturePtr tex = FindAsset_<Texture>(matname + "_5");
+			TexturePtr tex = Texture::load(matname + "_5");
 			AX_ASSERT(tex);
 			skymat->setTexture(SamplerType::Diffuse, tex);
 
@@ -251,8 +251,8 @@ namespace Axon { namespace Render {
 		AX_ASSERT(idxes - idxesStart == numidxes);
 		m_skydome->unlockIndexes();
 #if 0
-		Material* mat = UniqueAsset_<Material>("null");
-		Texture* tex = FindAsset_<Texture>("textures/testlalo");
+		Material* mat = Material::loadUnique("null");
+		Texture* tex = Texture::load("textures/testlalo");
 		mat->setTexture(SamplerType::Diffuse, tex);
 		m_skydome->setMaterial(mat);
 #endif
@@ -269,10 +269,10 @@ namespace Axon { namespace Render {
 		miert->getTexture()->setClampMode(Texture::CM_ClampToEdge);
 		m_skyNishitaRt->attachColor(0, miert);
 
-		m_skyNishitaMat = UniqueAsset_<Material>("_skyNishita");
+		m_skyNishitaMat = Material::loadUnique("_skyNishita");
 		m_skyNishitaMat->setTexture(SamplerType::Diffuse, m_skyNishitaRt->getTexture());
 		m_skyNishitaMat->setTexture(SamplerType::Specular, miert->getTexture());
-		m_skyNishitaGenMat = 0; //UniqueAsset_<Material>("_skyNishitaGen");
+		m_skyNishitaGenMat = 0; //Material::loadUnique("_skyNishitaGen");
 
 		m_skydome->setMaterial(m_skyNishitaMat);
 	}
@@ -366,7 +366,7 @@ namespace Axon { namespace Render {
 
 		AX_ASSERT(idxes - oldidxes == numidxes);
 
-		MaterialPtr mat = FindAsset_<Render::Material>("ocean");
+		MaterialPtr mat = Material::load("ocean");
 		m_oceanMesh->setMaterial(mat);
 	}
 

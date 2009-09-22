@@ -34,13 +34,13 @@ namespace Axon { namespace Editor { namespace MapEdit {
 			return;
 		}
 
-		TexturePtr tex = FindAsset_<Texture>("editor/icons/" + icon);
+		TexturePtr tex = Texture::load("editor/icons/" + icon);
 
-		if (tex->isDefaulted()) {
+		if (tex) {
 			return;
 		}
 
-		MaterialPtr mat = UniqueAsset_<Render::Material>("_icon");
+		MaterialPtr mat = Material::loadUnique("_icon");
 		AX_ASSERT(mat);
 		mat->setTexture(SamplerType::Diffuse, tex);
 

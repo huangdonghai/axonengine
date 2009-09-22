@@ -12,17 +12,12 @@ read the license and understand and accept it fully.
 
 namespace Axon { namespace Render {
 
-	class AX_API Material : public Asset {
+	AX_DECLARE_REFPTR(Material);
+
+	class AX_API Material : public RefObject {
 	public:
-		friend class AssetFactory_<Material>;
-
-		enum { AssetType = Asset::kMaterial };
-
 		// implement Asset
 		virtual bool doInit(const String& name, intptr_t arg);
-		virtual String getKey() const;
-		virtual void setKey(const String& newkey);
-		virtual int getType() const;
 
 		const String& getShaderName() const;
 		Shader* getShaderTemplate() const;
@@ -54,7 +49,6 @@ namespace Axon { namespace Render {
 		void clearFeatures();
 		void clearLiterals();
 
-
 		// texture setting and getting
 		Texture* getTexture(int sample) const;
 		void setTexture(int sampler, Texture* tex);
@@ -79,12 +73,19 @@ namespace Axon { namespace Render {
 		int getPixelToTexelWidth() const { return m_p2tWidth; }
 		int getPixelToTexelHeight() const { return m_p2tHeight; }
 
+		// management
+		static MaterialPtr load(const FixedString& key);
+		static MaterialPtr loadUnique(const FixedString& key);
+		static void initManager();
+		static void finalizeManager();
+
 	private:
 		Material();
+
 		virtual ~Material();
 
 		String m_key;
-		MaterialFilePtr m_matfile;
+		MaterialDecl* m_decl;
 
 		bool m_shaderMacroNeedRegen;
 		ShaderMacro m_shaderMacro;
@@ -116,7 +117,7 @@ namespace Axon { namespace Render {
 		int m_p2tWidth, m_p2tHeight;
 	};
 
-	class MaterialFactory: public AssetFactory_<Material> {
+	class MaterialManager {
 	public:
 		virtual String generateKey(const String& name, intptr_t arg);
 	};

@@ -159,12 +159,8 @@ namespace Axon {
 	typedef Dict<String,FloatSeq> ShaderParams;
 	typedef Dict<String, int> ShaderGens;
 
-	class MaterialFile : public Asset {
+	class MaterialDecl {
 	public:
-		enum {
-			AssetType = Asset::kMaterialFile
-		};
-
 		enum {
 			MAX_FEATURES = 8,
 			MAX_LITERALS = 8
@@ -207,21 +203,23 @@ namespace Axon {
 
 		// implement Asset
 		virtual bool doInit(const String& name, intptr_t arg);
-		virtual String getKey() const;
-		virtual void setKey(const String& k);
-		virtual int getType() const { return Asset::kMaterialFile; }
 
-		friend class AssetFactory_<MaterialFile>;
-		friend class MaterialFileFactory;
+		friend class MaterialDeclManager;
+		bool isDefaulted() const { return this == m_defaulted; }
+
+		// management
+		static MaterialDecl* load(const String& name);
+		static void initManager();
+		static void finalizeManager();
 
 	protected:
-		MaterialFile();
-		virtual ~MaterialFile();
+		MaterialDecl();
+		virtual ~MaterialDecl();
 
 		static String generateKey(const String& name, intptr_t arg);
 
 	private:
-		String m_key;
+		FixedString m_key;
 		String m_shaderName;
 		int m_shaderGenMask;
 		Flags m_flags;
@@ -242,25 +240,18 @@ namespace Axon {
 		// features and literals
 		bool m_features[MAX_FEATURES];
 		int m_literals[MAX_LITERALS];
+
+		// manager
+		static MaterialDecl* m_defaulted;
 	};
 
-	AX_DECLARE_REFPTR(MaterialFile);
-
-	inline String MaterialFile::getKey() const { return m_key; }
-	inline void MaterialFile::setKey(const String& k) { m_key = k; }
-
-	class MaterialFileFactory : public AssetFactory_<MaterialFile> {
+	class MaterialDeclManager {
 	public:
-		MaterialFileFactory();
-		virtual ~MaterialFileFactory();
-
-		virtual PoolHint getPoolHint();
-		virtual int getPoolSize();
-		virtual String generateKey(const String& name, intptr_t arg);
-		virtual Asset* getDefaulted();
+		MaterialDeclManager();
+		virtual ~MaterialDeclManager();
 
 	private:
-		MaterialFile* m_defaulted;
+		MaterialDecl* m_defaulted;
 	};
 }
 

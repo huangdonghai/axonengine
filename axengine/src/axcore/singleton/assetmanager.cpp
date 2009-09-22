@@ -10,6 +10,7 @@ read the license and understand and accept it fully.
 
 #include "../private.h"
 
+#if 0
 namespace Axon {
 	inline const char* xGetTypeName(int t) {
 		switch (t) {
@@ -209,7 +210,7 @@ namespace Axon {
 		Asset* a = d->factory->create();
 		if (a->init(name, arg)) {
 			a->m_key = a->getKey();
-			AX_ASSERT(!a->m_key.empty());
+			AX_ASSERT(!a->m_key);
 			d->assetDict[a->m_key] = a;
 
 			return a;
@@ -229,7 +230,7 @@ namespace Axon {
 
 		Asset* a = d->factory->create();
 		if (a->init(name, arg)) {
-			a->m_key = a->getKey() + "$" + Uuid::generateUuid();
+			a->m_key = a->getKey().toString() + "$" + Uuid::generateUuid();
 			d->assetDict[a->m_key] = a;
 
 			return a;
@@ -386,3 +387,4 @@ namespace Axon {
 
 } // namespace Axon
 
+#endif

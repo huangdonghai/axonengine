@@ -49,7 +49,7 @@ namespace Axon { namespace Editor {
 		TypeZeroArray(m_lines);
 		TypeZeroArray(m_meshs);
 		m_highlit = None;
-		m_material = FindAsset_<RenderMaterial>("depthhack");
+		m_material = Material::load("depthhack");
 	}
 
 	MoveGizmo::~MoveGizmo() {
@@ -393,7 +393,7 @@ namespace Axon { namespace Editor {
 		m_crank = nullptr;
 
 		m_highlit = None;
-		m_material = FindAsset_<RenderMaterial>("depthhack");
+		m_material = Material::load("depthhack");
 
 		m_enabledCrank = false;
 	}
@@ -582,7 +582,7 @@ namespace Axon { namespace Editor {
 		TypeZeroArray(m_lines);
 		TypeZeroArray(m_meshs);
 		m_highlit = None;
-		m_material = FindAsset_<RenderMaterial>("depthhack");
+		m_material = Material::load("depthhack");
 	}
 
 	ScaleGizmo::~ScaleGizmo() {

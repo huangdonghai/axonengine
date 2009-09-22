@@ -143,7 +143,7 @@ namespace Axon { namespace Map {
 
 	void RiverManager::init()
 	{
-		m_defaultMtr = FindAsset_<Render::Material>("materials/activeArea");
+		m_defaultMtr = Material::load("materials/activeArea");
 	}
 
 	bool RiverManager::saveFile(const String& filename, File* file, int indent)

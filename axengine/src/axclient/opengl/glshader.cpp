@@ -509,9 +509,10 @@ namespace Axon { namespace Render {
 		if (filename[0] != '$') {
 			Printf("%s", filename);
 
-			RefPtr<GLtexture> tex = FindAsset_<GLtexture>(filename);
-			if (tex) {
-				cgGLSetupSampler(param, tex->getObject());
+			TexturePtr tex = GLtexture::load(filename);
+			GLtexture* gltex = AX_REFPTR_CAST(GLtexture, tex);
+			if (gltex) {
+				cgGLSetupSampler(param, gltex->getObject());
 			}
 			return;
 		}
