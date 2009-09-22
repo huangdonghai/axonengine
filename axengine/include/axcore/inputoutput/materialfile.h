@@ -190,7 +190,9 @@ namespace Axon {
 			PhysicsHelper = 8,
 		};
 
-		typedef Flags_<Flag>	Flags;
+		typedef Flags_<Flag> Flags;
+
+		bool tryLoad(const String& name);
 
 		const String& getShaderName() { return m_shaderName; }
 		TextureDef* getTextureDef(SamplerType maptype) { return m_textures[maptype]; }
@@ -201,11 +203,8 @@ namespace Axon {
 		Rgba getDiffuse() const { return m_diffuse; }
 		const bool* getFeatures() const { return m_features; }
 
-		// implement Asset
-		virtual bool doInit(const String& name, intptr_t arg);
-
 		friend class MaterialDeclManager;
-		bool isDefaulted() const { return this == m_defaulted; }
+		bool isDefaulted() const { return this == ms_defaulted; }
 
 		// management
 		static MaterialDecl* load(const String& name);
@@ -216,7 +215,7 @@ namespace Axon {
 		MaterialDecl();
 		virtual ~MaterialDecl();
 
-		static String generateKey(const String& name, intptr_t arg);
+		static FixedString normalizeKey(const String& name);
 
 	private:
 		FixedString m_key;
@@ -242,16 +241,11 @@ namespace Axon {
 		int m_literals[MAX_LITERALS];
 
 		// manager
-		static MaterialDecl* m_defaulted;
-	};
-
-	class MaterialDeclManager {
-	public:
-		MaterialDeclManager();
-		virtual ~MaterialDeclManager();
-
-	private:
-		MaterialDecl* m_defaulted;
+		static MaterialDecl* ms_defaulted;
+		typedef Dict<FixedString, MaterialDecl*> MaterialDeclDict;
+		typedef DictSet<FixedString> FailureSet;
+		static MaterialDeclDict ms_declDict;
+		static FailureSet ms_failureSet;
 	};
 }
 

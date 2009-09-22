@@ -16,8 +16,7 @@ namespace Axon { namespace Render {
 
 	class AX_API Material : public RefObject {
 	public:
-		// implement Asset
-		virtual bool doInit(const String& name, intptr_t arg);
+		bool doInit(const String& name, intptr_t arg);
 
 		const String& getShaderName() const;
 		Shader* getShaderTemplate() const;
@@ -78,11 +77,12 @@ namespace Axon { namespace Render {
 		static MaterialPtr loadUnique(const FixedString& key);
 		static void initManager();
 		static void finalizeManager();
+		static FixedString normalizeKey(const String& name);
+		// end management
 
 	private:
 		Material();
-
-		virtual ~Material();
+		~Material();
 
 		String m_key;
 		MaterialDecl* m_decl;
@@ -115,11 +115,10 @@ namespace Axon { namespace Render {
 		// pixel to texel conversion
 		bool m_p2tEnabled;
 		int m_p2tWidth, m_p2tHeight;
-	};
 
-	class MaterialManager {
-	public:
-		virtual String generateKey(const String& name, intptr_t arg);
+		// management
+		typedef Dict<FixedString, Material*> MaterialDict;
+		static MaterialDict ms_materialDict;
 	};
 
 	inline void splitVectorToColor(const Vector3& v, float& multiply, Rgb& color) {
@@ -204,9 +203,6 @@ namespace Axon { namespace Render {
 		AX_ASSERT(sampler >= 0 && sampler < SamplerType::NUMBER_ALL);
 		m_textures[sampler] = tex;
 	}
-
-
-	AX_DECLARE_REFPTR(Material);
 
 }} // namespace Axon::Render
 

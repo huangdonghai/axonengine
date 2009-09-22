@@ -239,7 +239,8 @@ namespace Axon { namespace Render {
 		m_shaderMacroNeedRegen = true;
 	}
 
-	String MaterialManager::generateKey(const String& name, intptr_t arg) {
+	Axon::FixedString Material::normalizeKey( const String& name )
+	{
 		if (!PathUtil::haveDir(name))
 			return "materials/" + name;
 		else

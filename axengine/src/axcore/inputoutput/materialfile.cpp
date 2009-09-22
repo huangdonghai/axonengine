@@ -55,15 +55,9 @@ namespace Axon {
 		// free params
 	}
 
-	bool MaterialDecl::doInit(const String& name, intptr_t arg) {
-#if 0
-		if (!File::havePath(name))
-			m_key = "materials/" + name;
-		else
-			m_key = name;
-//#else
-		m_key = generateKey(name, arg);
-#endif
+	bool MaterialDecl::tryLoad(const String& name) {
+		m_key = normalizeKey(name);
+
 		String filename = m_key.toString() + ".mtr";
 
 		char* buffer;
@@ -176,8 +170,8 @@ error_exit:
 		return false;
 	}
 
-	String MaterialDecl::generateKey(const String& name, intptr_t arg) {
-		String key;
+	FixedString MaterialDecl::normalizeKey(const String& name) {
+		FixedString key;
 		if (!PathUtil::haveDir(name))
 			key = "materials/" + name;
 		else
@@ -188,19 +182,47 @@ error_exit:
 		return key;
 	}
 
-	MaterialDeclManager::MaterialDeclManager() {
-		m_defaulted = new MaterialDecl();
+	MaterialDecl* MaterialDecl::load( const String& name )
+	{
+		// normalize key first
+		FixedString key = normalizeKey(name);
 
-		bool v = m_defaulted->doInit("default", 0);
-
-		if (!v) {
-			delete m_defaulted;
-			m_defaulted = nullptr;
+		{ // check if already loaded
+			MaterialDeclDict::const_iterator it = ms_declDict.find(key);
+			if (it != ms_declDict.end())
+				return it->second;
 		}
+
+		{
+			// check if already checked
+			FailureSet::const_iterator it = ms_failureSet.find(key);
+			if (it != ms_failureSet.end()) {
+				return ms_defaulted;
+			}
+		}
+
+		// try load
+		MaterialDecl* result = new MaterialDecl();
+		bool success = result->tryLoad(key);
+		if (success) {
+			ms_declDict[key] = result;
+		} else {
+			delete result;
+			result = ms_defaulted;
+			ms_failureSet.insert(key);
+		}
+
+		return result;
 	}
-	MaterialDeclManager::~MaterialDeclManager() {
-		if (m_defaulted)
-			delete(m_defaulted);
+
+	void MaterialDecl::initManager()
+	{
+		ms_defaulted = load("default");
+	}
+
+	void MaterialDecl::finalizeManager()
+	{
+		// do nothing
 	}
 
 } // namespace Axon

@@ -127,12 +127,7 @@ namespace Axon {
 
 
 		MaterialDecl::initManager();
-#if 0
-		for (int i = 0; i < 1000; i++) {
-			ulonglong_t t = Microseconds();
-			Printf("%I64d ", t);
-		}
-#endif
+
 		_isInitialized = true;
 	}
 
