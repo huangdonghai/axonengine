@@ -16,6 +16,7 @@ namespace Axon { namespace Render {
 
 	class AX_API Material : public RefObject {
 	public:
+		// must be success
 		bool doInit(const String& name, intptr_t arg);
 
 		const String& getShaderName() const;
