@@ -34,9 +34,85 @@ namespace {
 	const int FONT_METRIC_SHIFT_BITS = 6;
 
 	const wchar_t DEFAULT_CHAR = L'?';
+
+	//------------------------------------------------------------------------------
+	// class Manager
+	//------------------------------------------------------------------------------
+
+	class Manager {
+	public:
+		Manager();
+		~Manager();
+
+		void initialize();
+		void finalize();
+		BufInfo getFontFileBuf(const String filename);
+
+	private:
+		bool m_initialized;
+		typedef Dict<String, BufInfo,hash_pathname,equal_pathname> FileBufDict;
+		FileBufDict m_fontFileBufs;	
+	};
+
+	Manager::Manager()
+		: m_initialized(false)
+	{
+	}
+
+	Manager::~Manager() {
+	}
+
+	void Manager::initialize() {
+		if (m_initialized)
+			Errorf("Manager::initialize: already initialized");
+
+		Printf("..initializing FreeType library...\n");
+		FT_Error error = FT_Init_FreeType(&gFT_Library);
+
+		if (error) {
+			Errorf("Manager::initialize: cann't initialize freetype2 library");
+		}
+
+		m_initialized = true;
+	}
+
+	void Manager::finalize() {
+	}
+
+
+	BufInfo Manager::getFontFileBuf(const String name) {
+		FileBufDict::iterator it;
+
+		it = m_fontFileBufs.find(name);
+
+		if (it != m_fontFileBufs.end())
+			return it->second;
+
+		String filename = gFontPath;
+		filename += "/" + name;
+		void* buf;
+		size_t size;
+
+		size = g_fileSystem->readFile(filename, &buf);
+
+		if (!size || !buf) {
+			Errorf("Manager::getFontFileBuf: cann't read font file '%s'", filename.c_str());
+		}
+
+		BufInfo buf_info;
+		buf_info.buf = buf;
+		buf_info.size = size;
+
+		m_fontFileBufs[name] = buf_info;
+
+		return buf_info;
+	}
+
+	static Manager* s_fontManager = 0;
 }
 
 namespace Axon { namespace Render {
+
 
 	//------------------------------------------------------------------------------
 	// class FontFace
@@ -45,7 +121,7 @@ namespace Axon { namespace Render {
 	FontFace::FontFace(const FaceDef* def, int nWidth, int nHeight)
 		: m_def(def)
 	{
-		BufInfo info = g_fontFactory->getFontFileBuf(def->filename);
+		BufInfo info = s_fontManager->getFontFileBuf(def->filename);
 
 		FT_Error error = FT_New_Memory_Face(gFT_Library,
 			(FT_Byte*)info.buf,	
@@ -415,63 +491,21 @@ namespace Axon { namespace Render {
 		m_texPool->newFrame();
 	}
 
-	//------------------------------------------------------------------------------
-	// class FontManager
-	//------------------------------------------------------------------------------
-
-	FontManager::FontManager()
-		: m_initialized(false)
+	FontPtr Font::load( const String& name, int w, int h )
 	{
+		return FontPtr();
 	}
 
-	FontManager::~FontManager() {
+	void Font::initManager()
+	{
+
 	}
 
-	void FontManager::initialize() {
-		if (m_initialized)
-			Errorf("FontManager::initialize: already initialized");
+	void Font::finalizeManager()
+	{
 
-		Printf("..initializing FreeType library...\n");
-		FT_Error error = FT_Init_FreeType(&gFT_Library);
-
-		if (error) {
-			Errorf("FontManager::initialize: cann't initialize freetype2 library");
-		}
-
-		m_initialized = true;
 	}
 
-	void FontManager::finalize() {
-	}
-
-
-	BufInfo FontManager::getFontFileBuf(const String name) {
-		FileBufDict::iterator it;
-
-		it = m_fontFileBufs.find(name);
-
-		if (it != m_fontFileBufs.end())
-			return it->second;
-
-		String filename = gFontPath;
-		filename += "/" + name;
-		void* buf;
-		size_t size;
-
-		size = g_fileSystem->readFile(filename, &buf);
-
-		if (!size || !buf) {
-			Errorf("FontManager::getFontFileBuf: cann't read font file '%s'", filename.c_str());
-		}
-
-		BufInfo buf_info;
-		buf_info.buf = buf;
-		buf_info.size = size;
-
-		m_fontFileBufs[name] = buf_info;
-
-		return buf_info;
-	}
 
 }} // namespace Axon::Render
 

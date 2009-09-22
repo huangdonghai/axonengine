@@ -50,10 +50,6 @@ namespace Axon {
 	FontPtr g_consoleFont;
 	FontPtr g_miniFont;
 
-	// only visible in this module
-	FontManager* g_fontFactory;
-	MaterialManager* gMaterialFactory;
-
 #ifdef AX_CONFIG_OPTION_USE_SPEEDTREE_40
 	TreeManager* g_treeManager;
 #endif // AX_CONFIG_OPTION_USE_SPEEDTREE_40
@@ -85,11 +81,15 @@ namespace Axon {
 		g_renderSystem = new Render::System;
 		g_renderSystem->initialize();
 
+#if 0
 		gMaterialFactory = new MaterialManager;
 
-		g_fontFactory = new FontManager;
+		g_fontFactory = new Manager;
 		g_fontFactory->initialize();
-
+#else
+		Material::initManager();
+		Font::initManager();
+#endif
 		g_defaultFont = Font::load("fonts/default", 14,14);
 		g_consoleFont = Font::load("fonts/console", 14,14);
 		g_miniFont = Font::load("fonts/console", 11,11);
@@ -126,11 +126,15 @@ namespace Axon {
 		SafeDelete(g_treeManager);
 #endif // AX_CONFIG_OPTION_USE_SPEEDTREE_40
 
+#if 0
 		g_fontFactory->finalize();
 		SafeDelete(g_fontFactory);
 
 		SafeDelete(gMaterialFactory);
-
+#else
+		Font::finalizeManager();
+		Material::finalizeManager();
+#endif
 		g_renderSystem->finalize();
 		SafeDelete(g_renderSystem);
 

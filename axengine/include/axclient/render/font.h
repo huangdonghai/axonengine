@@ -124,6 +124,8 @@ namespace Axon { namespace Render {
 
 		// management
 		static FontPtr load(const String& name, int w, int h);
+		static void initManager();
+		static void finalizeManager();
 
 	protected:
 		bool parseFontDef();
@@ -142,24 +144,6 @@ namespace Axon { namespace Render {
 	};
 
 
-	//------------------------------------------------------------------------------
-	// class FontManager
-	//------------------------------------------------------------------------------
-
-	class FontManager {
-	public:
-		FontManager();
-		~FontManager();
-
-		void initialize();
-		void finalize();
-		BufInfo getFontFileBuf(const String filename);
-
-	private:
-		bool m_initialized;
-		typedef Dict<String, BufInfo,hash_pathname,equal_pathname> FileBufDict;
-		FileBufDict m_fontFileBufs;	
-	};
 
 }} // namespace Axon::Render
 

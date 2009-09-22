@@ -38,11 +38,11 @@ namespace Axon {
 	typedef Render::Text RenderText;
 	typedef Render::Chunk RenderChunk;
 	typedef Render::Primitives RenderPrims;
-	typedef Render::Material RenderMaterial;
-	typedef Render::Material Material;
-	typedef Render::MaterialPtr MaterialPtr;
-	typedef Render::Texture Texture;
-	typedef Render::TexturePtr TexturePtr;
+
+	using Render::Material;
+	using Render::MaterialPtr;
+	using Render::Texture;
+	using Render::TexturePtr;
 
 
 #define AX_CVARDECL(name, defaultstring, flags) \

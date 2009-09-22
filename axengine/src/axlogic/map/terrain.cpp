@@ -806,7 +806,7 @@ namespace Axon { namespace Map {
 			if (!l)
 				continue;
 
-			RenderMaterial* detail = l->getDetailMat();
+			Material* detail = l->getDetailMat();
 			if (!detail)
 				continue;
 
