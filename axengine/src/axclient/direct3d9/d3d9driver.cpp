@@ -114,9 +114,12 @@ namespace Axon { namespace Render {
 		d3d9ShaderManager = new D3D9shadermanager;
 		g_shaderManager = d3d9ShaderManager;
 
+#if 0
 		d3d9TextureManager = new D3D9texturemanager();
 		g_textureManager = d3d9TextureManager;
-
+#else
+		D3D9texture::initManager();
+#endif
 		d3d9Thread = new D3D9thread();
 		if (r_multiThread->getInteger()) {
 			d3d9Thread->startThread();

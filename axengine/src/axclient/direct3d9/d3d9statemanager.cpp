@@ -342,7 +342,7 @@ namespace Axon { namespace Render {
 #if 0
 		pTexture->GetPrivateData(d3d9ResGuid, &appTex, &size);
 #else
-		appTex = d3d9TextureManager->getTex(pTexture);
+		appTex = D3D9texture::getAppTexture(pTexture);
 #endif
 		if (appTex/* && size*/) {
 			appTex->issueSamplerState(dwStage);

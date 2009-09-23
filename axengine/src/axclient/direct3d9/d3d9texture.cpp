@@ -12,6 +12,8 @@ read the license and understand and accept it fully.
 
 namespace Axon { namespace Render {
 
+	static D3D9texturemanager* s_manager;
+
 	inline bool trTexFormat(TexFormat texformat, D3DFORMAT& d3dformat) {
 		d3dformat = D3DFMT_UNKNOWN;
 
@@ -556,7 +558,7 @@ namespace Axon { namespace Render {
 		void* data = this;
 		m_object->SetPrivateData(d3d9ResGuid, &data, sizeof(void*), 0);
 #else
-		d3d9TextureManager->addToDict(m_object, this);
+		s_manager->addToDict(m_object, this);
 #endif
 	}
 
@@ -588,6 +590,21 @@ namespace Axon { namespace Render {
 		}
 
 		return false;
+	}
+
+	void D3D9texture::initManager()
+	{
+		s_manager = new D3D9texturemanager();
+	}
+
+	void D3D9texture::finalizeManager()
+	{
+		SafeDelete(s_manager);
+	}
+
+	D3D9texture* D3D9texture::getAppTexture( LPDIRECT3DBASETEXTURE9 d3dtex )
+	{
+		return s_manager->getTex(d3dtex);
 	}
 
 	// console command
@@ -650,6 +667,11 @@ namespace Axon { namespace Render {
 		TexturePtr result;
 		result << new D3D9texture();
 		return result;
+	}
+
+	void D3D9texturemanager::syncFrame()
+	{
+
 	}
 
 

@@ -29,12 +29,12 @@ void testfixstring() {
  */
 static void SetCurrentDir()
 {
-    wchar_t filename[_MAX_PATH];
-    wchar_t pathname[_MAX_PATH];
+    TCHAR filename[_MAX_PATH];
+    TCHAR pathname[_MAX_PATH];
     LPTSTR file_part;
 
     GetModuleFileName(NULL, filename, sizeof(filename));
-    GetFullPathName(filename, sizeof(pathname), pathname, &file_part);
+    GetFullPathName(filename, ArraySize(pathname), pathname, &file_part);
     if(file_part) *file_part = 0; // Truncate filename portion
     SetCurrentDirectory(pathname);
 }

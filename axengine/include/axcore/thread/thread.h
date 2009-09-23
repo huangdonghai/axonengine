@@ -96,6 +96,7 @@ namespace Axon {
 
 		void startThread();
 		void endThread();
+		bool isCurrentThread() const;
 
 		virtual void doRun() = 0;		// work entry
 

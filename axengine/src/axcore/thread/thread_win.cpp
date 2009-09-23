@@ -91,7 +91,8 @@ namespace Axon {
 	//--------------------------------------------------------------------------
 	//#include "BugTrap.h"
 
-	DWORD WINAPI ThreadProc(LPVOID lpParameter) {
+	DWORD WINAPI ThreadProc(LPVOID lpParameter)
+	{
 	//	BT_SetTerminate(); // set_terminate() must be called from every thread
 		Thread* thread = (Thread*)lpParameter;
 		thread->doRun();
@@ -100,25 +101,35 @@ namespace Axon {
 	}
 
 
-	Thread::Thread() {
+	Thread::Thread()
+	{
 		m_exitEvent = new SyncEvent();
 		m_handle = ::CreateThread(NULL, 0, ThreadProc, this, CREATE_SUSPENDED, NULL);
 		AX_ASSERT(m_handle);
 	}
 
-	void Thread::startThread() {
+	void Thread::startThread()
+	{
 		::ResumeThread(m_handle);
 	}
 
-	void Thread::endThread() {
+	void Thread::endThread()
+	{
 		m_exitEvent->setEvent();
 	}
 
 
-	Thread::~Thread() {
+	Thread::~Thread()
+	{
 		::CloseHandle(m_handle);
 		delete(m_exitEvent);
 	}
 
+
+	bool Thread::isCurrentThread() const
+	{
+		handle_t curThread = GetCurrentThread();
+		return curThread == m_handle;
+	}
 
 } // namespace Axon

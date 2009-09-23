@@ -73,7 +73,6 @@ namespace Axon {
 	AX_API extern Render::TargetManager* g_targetManager;
 	AX_API extern Render::QueryManager* g_queryManager;
 	AX_API extern Render::PrimitiveManager* g_primitiveManager;
-	AX_API extern Render::TextureManager* g_textureManager;
 
 	AX_API void axClientInit();
 	AX_API void axClientQuit();

@@ -20,7 +20,6 @@ namespace Axon { namespace Render {
 
 		// implement Asset
 		virtual bool doInit(const String& name, intptr_t arg);
-
 		virtual void initialize(TexFormat format, int width, int height, InitFlags flags = 0);
 		virtual void getSize(int& width, int& height, int& depth);
 		virtual void uploadSubTexture(const Rect& rect, const void* pixels, TexFormat format = TexFormat::AUTO);
@@ -44,17 +43,20 @@ namespace Axon { namespace Render {
 		// set sampler state to device
 		void issueSamplerState(DWORD dwStage);
 
+		// manager
+		static void initManager();
+		static void finalizeManager();
+		static D3D9texture* getAppTexture(LPDIRECT3DBASETEXTURE9 d3dtex);
+		// end manager
+
 	protected:
 		bool loadFile2D();
 		void setPrivateData();
 		// Ya..., I have a loooooongest function name. who can write a longer?
 		bool checkIfSupportHardwareMipmapGeneration(D3DFORMAT d3dformat, DWORD d3dusage);
-
 		void uploadSubTexture(int level, const Rect& rect, const void* pixels, TexFormat format = TexFormat::AUTO);
 
-
 	private:
-		
 		InitFlags m_initFlags;
 		String m_name;
 		TexFormat m_format;
@@ -86,6 +88,8 @@ namespace Axon { namespace Render {
 		void addToDict(LPDIRECT3DBASETEXTURE9 d3dtex, D3D9texture* tex);
 		void removeFromDict(LPDIRECT3DBASETEXTURE9 d3dtex);
 		D3D9texture* getTex(LPDIRECT3DBASETEXTURE9 d3dtex) const;
+
+		void syncFrame();
 
 		// implement TextureManager
 		virtual TexturePtr createObject();

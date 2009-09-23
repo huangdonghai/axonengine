@@ -34,12 +34,12 @@ namespace Axon { namespace Render {
 
 	TexturePtr Texture::load( const FixedString& name, InitFlags flags/*=0*/ )
 	{
-		return 0;
+		return s_textureManager->loadTexture(name, flags);
 	}
 
 	TexturePtr Texture::create( const String& debugname, TexFormat format, int width, int height, InitFlags flags /*= 0*/ )
 	{
-		return 0;
+		return s_textureManager->createTexture(debugname, format, width, height, flags);
 	}
 
 	bool Texture::isExist( const FixedString& name )
@@ -48,14 +48,10 @@ namespace Axon { namespace Render {
 	}
 
 	void Texture::initManager()
-	{
-
-	}
+	{}
 
 	void Texture::finalizeManager()
-	{
-
-	}
+	{}
 
 	TextureManager::TextureManager()
 	{

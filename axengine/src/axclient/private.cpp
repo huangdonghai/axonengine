@@ -41,7 +41,6 @@ namespace Axon {
 	Render::PrimitiveManager* g_primitiveManager;
 
 	Render::QueryManager* g_queryManager;
-	Render::TextureManager* g_textureManager;
 
 	InputSystem* g_inputSystem;
 	SoundSystem* g_soundSystem;
