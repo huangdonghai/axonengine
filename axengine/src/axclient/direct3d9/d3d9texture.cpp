@@ -267,7 +267,7 @@ namespace Axon { namespace Render {
 		height = m_height;
 	}
 
-	void D3D9texture::uploadSubTexture(const Rect& rect, const void* pixels, TexFormat format /*= TexFormat::AUTO */)
+	void D3D9texture::uploadSubTextureIm(const Rect& rect, const void* pixels, TexFormat format /*= TexFormat::AUTO */)
 	{
 		D3D9_SCOPELOCK;
 
@@ -304,7 +304,7 @@ namespace Axon { namespace Render {
 		SAFE_RELEASE(surface);
 	}
 
-	void D3D9texture::uploadSubTexture(int level, const Rect& rect, const void* pixels, TexFormat format /*= TexFormat::AUTO */)
+	void D3D9texture::uploadSubTextureIm(int level, const Rect& rect, const void* pixels, TexFormat format /*= TexFormat::AUTO */)
 	{
 		D3D9_SCOPELOCK;
 
@@ -368,7 +368,7 @@ namespace Axon { namespace Render {
 		V(D3DXSaveTextureToFile(u2w(ospath).c_str(), D3DXIFF_DDS, m_object, 0));
 	}
 
-	void D3D9texture::generateMipmap()
+	void D3D9texture::generateMipmapIm()
 	{
 		D3D9_SCOPELOCK;
 
@@ -389,7 +389,7 @@ namespace Axon { namespace Render {
 
 		D3D9texture* dummy = new D3D9texture();
 		dummy->initialize(TexFormat::BGRA8, m_width, m_height, Texture::IF_AutoGenMipmap);
-		dummy->uploadSubTexture(Rect(0,0,m_width,m_height), lockedRect.pBits, m_format);
+		dummy->uploadSubTextureIm(Rect(0,0,m_width,m_height), lockedRect.pBits, m_format);
 //		dummy->saveToFile("test.dds");
 
 		V(dummy->m_object->LockRect(0, &lockedRect, 0, 0));
@@ -406,7 +406,7 @@ namespace Axon { namespace Render {
 			if (i >= (DWORD)image.getNumMipmapLevels()) {
 				break;
 			}
-			uploadSubTexture(i, Rect(0,0,width,height), image.getData(i), dummy->getFormat());
+			uploadSubTextureIm(i, Rect(0,0,width,height), image.getData(i), dummy->getFormat());
 
 			width >>= 1;
 			height >>= 1;
@@ -534,7 +534,7 @@ namespace Axon { namespace Render {
 		}
 
 		if (m_initFlags.isSet(Texture::IF_AutoGenMipmap)) {
-			generateMipmap();
+			generateMipmapIm();
 		}
 
 		if (m_isMipmaped) {

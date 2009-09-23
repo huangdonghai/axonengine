@@ -63,9 +63,11 @@ namespace Axon { namespace Render {
 		virtual void setFilterMode(FilterMode filtermode) = 0;
 		virtual void setBorderColor(const Rgba& color) = 0;
 		virtual void setHardwareShadowMap(bool enable) = 0;
+		virtual TexFormat getFormat() = 0;
 
 		virtual void saveToFile(const String& filename) = 0;
-		virtual TexFormat getFormat() = 0;
+		virtual void uploadSubTextureIm(const Rect& rect, const void* pixels, TexFormat format = TexFormat::AUTO) = 0;
+		virtual void generateMipmapIm() = 0;
 
 		// management
 		static TexturePtr load(const FixedString& name, InitFlags flags=0);

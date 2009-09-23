@@ -28,6 +28,7 @@ namespace Axon { namespace Render {
 
 		// some status
 		virtual bool isHDRRendering();
+		virtual bool isInRenderingThread();
 
 		// resource management
 		virtual Target* createWindowTarget(handle_t wndId, const String& name);

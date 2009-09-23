@@ -38,15 +38,14 @@ namespace Axon { namespace Render {
 		m_realTarget = 0;
 		if (!pooled) {
 			m_isPooled = false;
+			String texname;
+			StringUtil::sprintf(texname, "_render_target_%d_%d_%d", m_width, m_height, g_system->generateId());
 #if 0
 			m_texture = dynamic_cast<D3D9texture*>(g_assetManager->createEmptyAsset(Texture::AssetType));
 			m_texture->initialize(format, width, height, Texture::IF_RenderTarget);
-			String texname;
-			StringUtil::sprintf(texname, "_render_target_%d_%d_%d", m_width, m_height, g_system->generateId());
-
 			g_assetManager->addAsset(Asset::kTexture, texname, m_texture);
 #else
-			TexturePtr tex = Texture::create("_render_target", format, m_width, m_height, Texture::IF_RenderTarget);
+			TexturePtr tex = Texture::create(texname, format, m_width, m_height, Texture::IF_RenderTarget);
 #endif
 		} else {
 			m_texture = 0;

@@ -190,5 +190,10 @@ namespace Axon { namespace Render {
 		d3d9PrimitiveManager->onDeviceLost();
 	}
 
+	bool D3D9driver::isInRenderingThread()
+	{
+		return d3d9Thread->isCurrentThread();
+	}
+
 }} // namespace Axon::Render
 

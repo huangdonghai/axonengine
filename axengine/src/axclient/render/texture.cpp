@@ -19,11 +19,20 @@ namespace Axon { namespace Render {
 
 	void Texture::uploadSubTexture( const Rect& rect, const void* pixels, TexFormat format /*= TexFormat::AUTO*/ )
 	{
+		if (g_renderDriver->isInRenderingThread()) {
+			uploadSubTextureIm(rect, pixels, format);
+			return;
+		}
+
 		s_textureManager->uploadSubTexture(this, rect, pixels, format);
 	}
 
 	void Texture::generateMipmap()
 	{
+		if (g_renderDriver->isInRenderingThread()) {
+			generateMipmapIm();
+			return;
+		}
 		s_textureManager->generateMipmap(this);
 	}
 

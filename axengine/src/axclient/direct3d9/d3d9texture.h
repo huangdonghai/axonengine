@@ -22,15 +22,15 @@ namespace Axon { namespace Render {
 		virtual bool doInit(const String& name, intptr_t arg);
 		virtual void initialize(TexFormat format, int width, int height, InitFlags flags = 0);
 		virtual void getSize(int& width, int& height, int& depth);
-		virtual void uploadSubTexture(const Rect& rect, const void* pixels, TexFormat format = TexFormat::AUTO);
 		virtual void setClampMode(ClampMode clampmode);
 		virtual void setFilterMode(FilterMode filtermode);
 		virtual void setBorderColor(const Rgba& color);
 		virtual void setHardwareShadowMap(bool enable);
+		virtual TexFormat getFormat();
 
 		virtual void saveToFile(const String& filename);
-		virtual void generateMipmap();
-		virtual TexFormat getFormat();
+		virtual void uploadSubTextureIm(const Rect& rect, const void* pixels, TexFormat format = TexFormat::AUTO);
+		virtual void generateMipmapIm();
 
 		// d3d specified
 		void getSize(int& width, int& height);
@@ -54,7 +54,7 @@ namespace Axon { namespace Render {
 		void setPrivateData();
 		// Ya..., I have a loooooongest function name. who can write a longer?
 		bool checkIfSupportHardwareMipmapGeneration(D3DFORMAT d3dformat, DWORD d3dusage);
-		void uploadSubTexture(int level, const Rect& rect, const void* pixels, TexFormat format = TexFormat::AUTO);
+		void uploadSubTextureIm(int level, const Rect& rect, const void* pixels, TexFormat format = TexFormat::AUTO);
 
 	private:
 		InitFlags m_initFlags;
