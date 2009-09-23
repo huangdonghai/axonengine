@@ -32,6 +32,31 @@ namespace Axon { namespace Render {
 		s_textureManager->freeTexture(this);
 	}
 
+	TexturePtr Texture::load( const FixedString& name, InitFlags flags/*=0*/ )
+	{
+		return 0;
+	}
+
+	TexturePtr Texture::create( const String& debugname, TexFormat format, int width, int height, InitFlags flags /*= 0*/ )
+	{
+		return 0;
+	}
+
+	bool Texture::isExist( const FixedString& name )
+	{
+		return false;
+	}
+
+	void Texture::initManager()
+	{
+
+	}
+
+	void Texture::finalizeManager()
+	{
+
+	}
+
 	TextureManager::TextureManager()
 	{
 		m_frameId = 0;

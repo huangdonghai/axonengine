@@ -11,6 +11,8 @@ read the license and understand and accept it fully.
 
 namespace Axon { namespace Render {
 
+	// static member
+	Material::MaterialDict Material::ms_materialDict;
 
 	Material::Material() {
 		m_baseTcAnim = false;
@@ -239,12 +241,32 @@ namespace Axon { namespace Render {
 		m_shaderMacroNeedRegen = true;
 	}
 
-	Axon::FixedString Material::normalizeKey( const String& name )
+	FixedString Material::normalizeKey( const String& name )
 	{
 		if (!PathUtil::haveDir(name))
 			return "materials/" + name;
 		else
 			return name;
+	}
+
+	MaterialPtr Material::load( const FixedString& key )
+	{
+		return 0;
+	}
+
+	MaterialPtr Material::loadUnique( const FixedString& key )
+	{
+		return 0;
+	}
+
+	void Material::initManager()
+	{
+
+	}
+
+	void Material::finalizeManager()
+	{
+
 	}
 
 }} // namespace Axon::Render

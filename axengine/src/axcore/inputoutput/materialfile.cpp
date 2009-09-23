@@ -29,6 +29,13 @@ namespace {
 
 namespace Axon {
 
+	// static member
+	MaterialDecl* MaterialDecl::ms_defaulted;
+	MaterialDecl::MaterialDeclDict MaterialDecl::ms_declDict;
+	MaterialDecl::FailureSet MaterialDecl::ms_failureSet;
+	// end static member
+
+
 	MaterialDecl::MaterialDecl() {
 		m_shaderGenMask = 0;
 		m_surfaceType = SurfaceType::Dust;
