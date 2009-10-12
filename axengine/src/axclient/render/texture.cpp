@@ -14,6 +14,10 @@ namespace Axon { namespace Render {
 
 	static TextureManager* s_textureManager;
 
+	//--------------------------------------------------------------------------
+	// class Texture
+	//--------------------------------------------------------------------------
+
 	Texture::~Texture()
 	{}
 
@@ -57,10 +61,28 @@ namespace Axon { namespace Render {
 	}
 
 	void Texture::initManager()
-	{}
+	{ /* do nothing */ }
 
 	void Texture::finalizeManager()
-	{}
+	{ /* do nothing */ }
+
+	FixedString Texture::normalizeKey( const String& name )
+	{
+		FixedString key;
+
+		if (!PathUtil::haveDir(name))
+			key = "textures/" + name;
+		else
+			key = name;
+
+		key = PathUtil::removeExt(key);
+
+		return key;
+	}
+
+	//--------------------------------------------------------------------------
+	// class TextureManager
+	//--------------------------------------------------------------------------
 
 	TextureManager::TextureManager()
 	{
@@ -78,7 +100,7 @@ namespace Axon { namespace Render {
 		s_textureManager = 0;
 	}
 
-	TexturePtr TextureManager::loadTexture( const FixedString& texname, Texture::InitFlags flags/*=0*/ )
+	TexturePtr TextureManager::loadTexture( const String& texname, Texture::InitFlags flags/*=0*/ )
 	{
 		// find if already loaded
 		TextureDict::const_iterator it = m_textureDict.find(texname);
@@ -89,16 +111,20 @@ namespace Axon { namespace Render {
 		// create a new texture object
 		TexturePtr tex = createObject();
 
-		// pending to render thread
-		LoadCmd cmd;
-		cmd.texture = tex;
-		cmd.texName = texname;
-		cmd.initFlags = flags;
-		cmd.format = 0;
-		cmd.width = 0;
-		cmd.height = 0;
+		if (g_renderDriver->isInRenderingThread()) {
+			tex->initialize(texname, flags);
+		} else {
+			// pending to render thread
+			LoadCmd cmd;
+			cmd.texture = tex;
+			cmd.texName = texname;
+			cmd.initFlags = flags;
+			cmd.format = 0;
+			cmd.width = 0;
+			cmd.height = 0;
 
-		m_loadCmdList.push_back(cmd);
+			m_loadCmdList.push_back(cmd);
+		}
 
 		// add to hash table
 		m_textureDict[texname] = tex;
@@ -111,14 +137,20 @@ namespace Axon { namespace Render {
 		// create object
 		TexturePtr tex = createObject();
 
-		LoadCmd cmd;
-		cmd.texture = tex;
-		cmd.initFlags = flags;
-		cmd.format = format;
-		cmd.width = width;
-		cmd.height = height;
+		if (g_renderDriver->isInRenderingThread()) {
+			// init immedially
+			tex->initialize(format, width, height, flags);
+		} else {
+			// pending to render thread
+			LoadCmd cmd;
+			cmd.texture = tex;
+			cmd.initFlags = flags;
+			cmd.format = format;
+			cmd.width = width;
+			cmd.height = height;
 
-		m_loadCmdList.push_back(cmd);
+			m_loadCmdList.push_back(cmd);
+		}
 
 		std::stringstream ss;
 		ss << debugname << "_" << m_frameId << "_" << g_system->generateId();
@@ -127,13 +159,13 @@ namespace Axon { namespace Render {
 		return tex;
 	}
 
-	bool TextureManager::isExist( const FixedString& texname )
+	bool TextureManager::isExist( const String& texname )
 	{
 		ExistDict::const_iterator it = m_existDict.find(texname);
 		if (it != m_existDict.end())
 			return it->second;
 
-		String filename = texname.toString() + ".dds";
+		String filename = texname + ".dds";
 
 		bool result = g_fileSystem->isFileExist(filename);
 		m_existDict[texname] = result;

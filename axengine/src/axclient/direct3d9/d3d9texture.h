@@ -20,7 +20,9 @@ namespace Axon { namespace Render {
 
 		// implement Asset
 		virtual bool doInit(const String& name, intptr_t arg);
+		virtual void initialize(const FixedString& name, InitFlags flags);
 		virtual void initialize(TexFormat format, int width, int height, InitFlags flags = 0);
+		virtual bool isInitialized() { return m_initialized; }
 		virtual void getSize(int& width, int& height, int& depth);
 		virtual void setClampMode(ClampMode clampmode);
 		virtual void setFilterMode(FilterMode filtermode);
@@ -50,15 +52,15 @@ namespace Axon { namespace Render {
 		// end manager
 
 	protected:
-		bool loadFile2D();
+		bool loadFile2D(const String& filename);
 		void setPrivateData();
 		// Ya..., I have a loooooongest function name. who can write a longer?
 		bool checkIfSupportHardwareMipmapGeneration(D3DFORMAT d3dformat, DWORD d3dusage);
 		void uploadSubTextureIm(int level, const Rect& rect, const void* pixels, TexFormat format = TexFormat::AUTO);
 
 	private:
+		bool m_initialized;
 		InitFlags m_initFlags;
-		String m_name;
 		TexFormat m_format;
 		LPDIRECT3DTEXTURE9 m_object;
 		bool m_dataLoaded;		// Is data have loaded?

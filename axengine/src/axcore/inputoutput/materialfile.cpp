@@ -177,8 +177,10 @@ error_exit:
 		return false;
 	}
 
-	FixedString MaterialDecl::normalizeKey(const String& name) {
+	FixedString MaterialDecl::normalizeKey(const String& name)
+	{
 		FixedString key;
+
 		if (!PathUtil::haveDir(name))
 			key = "materials/" + name;
 		else

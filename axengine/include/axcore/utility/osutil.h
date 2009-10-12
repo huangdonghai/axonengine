@@ -61,22 +61,22 @@ namespace Axon {
 		static void sleep(int ms);
 		static int getScreenWidth();
 		static int getScreenHeight();
-		//---------------------------------------------------------------------------
+
 		static int atomicIncrement(int& i32Value)
 		{
 			return InterlockedIncrement((LONG*)&i32Value);
 		}
-		//---------------------------------------------------------------------------
+
 		static int atomicDecrement(int& i32Value)
 		{
 			return InterlockedDecrement((LONG*)&i32Value);
 		}
-		//---------------------------------------------------------------------------
+
 		static uint_t atomicIncrement(uint_t& ui32Value)
 		{
 			return InterlockedIncrement((LONG*)&ui32Value);
 		}
-		//---------------------------------------------------------------------------
+
 		static uint_t atomicDecrement(uint_t& ui32Value)
 		{
 			AX_ASSERT(ui32Value > 0);

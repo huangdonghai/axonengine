@@ -167,6 +167,8 @@ namespace Axon { namespace Render {
 
 	D3D9texture::D3D9texture()
 	{
+		m_initialized = false;
+		m_initFlags = 0;
 		m_object = 0;
 
 		m_filterMode = FM_Linear;
@@ -192,14 +194,9 @@ namespace Axon { namespace Render {
 
 	bool D3D9texture::doInit(const String& name, intptr_t arg)
 	{
-		if (!PathUtil::haveDir(name))
-			m_name = "textures/" + name;
-		else
-			m_name = name;
-
 		m_initFlags = arg;
 
-		return loadFile2D();
+		return loadFile2D(name);
 	}
 
 	void D3D9texture::initialize(TexFormat format, int width, int height, InitFlags flags /*= 0 */)
@@ -252,6 +249,11 @@ namespace Axon { namespace Render {
 		g_statistic->addValue(stat_textureMemory, m_videoMemoryUsed);
 
 		setPrivateData();
+	}
+
+	void D3D9texture::initialize( const FixedString& name, InitFlags flags )
+	{
+		doInit(name, flags);
 	}
 
 	void D3D9texture::getSize(int& width, int& height, int& depth)
@@ -422,7 +424,7 @@ namespace Axon { namespace Render {
 		return m_format;
 	}
 
-	bool D3D9texture::loadFile2D()
+	bool D3D9texture::loadFile2D(const String& filename)
 	{
 		D3D9_SCOPELOCK;
 
@@ -436,8 +438,8 @@ namespace Axon { namespace Render {
 		flags |= Image::ExpandAlpha;
 
 		std::auto_ptr<Image> imagefile(new Image);
-		if (!imagefile->loadFile(m_name, flags)) {
-//			Debugf("D3D9texture::loadFile2D: can't find image file for %s\n", m_name.c_str());
+		if (!imagefile->loadFile(filename, flags)) {
+//			Debugf("D3D9texture::loadFile2D: can't find image file for %s\n", filename.c_str());
 			return false;
 		}
 
@@ -446,7 +448,7 @@ namespace Axon { namespace Render {
 		//		mDesc.format = imagefile->getFormat();
 		if (!Math::isPowerOfTwo(m_width) || !Math::isPowerOfTwo(m_height)) {
 			//			if (!(mDesc.flags & TexFlag_allowNPOT))
-			Errorf("GLtexture::loadFile2D: texture %s size isn't power of two", m_name.c_str());
+			Errorf("GLtexture::loadFile2D: texture %s size isn't power of two", filename.c_str());
 			//			else
 			//				Debugf("GLtexture::loadFile2D: texture %s size isn't power of two\n", mDesc.name.c_str());
 		}
@@ -671,7 +673,45 @@ namespace Axon { namespace Render {
 
 	void D3D9texturemanager::syncFrame()
 	{
+		{
+			// load commands
+			LoadCmdList::const_iterator it = m_loadCmdList.begin();
+			for (; it != m_loadCmdList.end(); ++it) {
+				const LoadCmd* cmd = &*it;
 
+				if (cmd->texName) {
+					cmd->texture->initialize(cmd->texName, cmd->initFlags);
+				} else {
+					cmd->texture->initialize(cmd->format, cmd->width, cmd->height, cmd->initFlags);
+				}
+			}
+		}
+
+		{
+			// upload commands
+			UploadCmdList::const_iterator it = m_uploadCmdList.begin();
+			for (; it != m_uploadCmdList.end(); ++it) {
+				const UploadCmd* cmd = &*it;
+
+				if (cmd->pixel) {
+					cmd->texture->uploadSubTextureIm(cmd->rect, cmd->pixel, cmd->format);
+				} else {
+
+				}
+			}
+		}
+
+		{
+			// gen mipmap
+			Link<Texture>* it = m_needGenMipmapHead.getNextNode();
+			for (; it; it = it->getNextNode()) {
+				it->getOwner()->generateMipmapIm();
+			}
+		}
+
+		{
+			// check need free
+		}
 	}
 
 
