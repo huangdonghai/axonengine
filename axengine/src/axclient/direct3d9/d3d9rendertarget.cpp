@@ -45,7 +45,7 @@ namespace Axon { namespace Render {
 			m_texture->initialize(format, width, height, Texture::IF_RenderTarget);
 			g_assetManager->addAsset(Asset::kTexture, texname, m_texture);
 #else
-			TexturePtr tex = Texture::create(texname, format, m_width, m_height, Texture::IF_RenderTarget);
+			m_texture = refptr_cast<D3D9texture>(Texture::create(texname, format, m_width, m_height, Texture::IF_RenderTarget)).get();
 #endif
 		} else {
 			m_texture = 0;

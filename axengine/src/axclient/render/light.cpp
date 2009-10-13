@@ -647,7 +647,7 @@ namespace Axon { namespace Render {
 
 	Light::~Light()
 	{
-		m_shadowLink.remove();
+		m_shadowLink.removeFromList();
 	}
 
 	BoundingBox Light::getLocalBoundingBox()
@@ -921,7 +921,7 @@ namespace Axon { namespace Render {
 	{
 		if (m_shadowLink.isInList()) {
 			Light* l = m_shadowLink.getNext();
-			m_shadowLink.remove();
+			m_shadowLink.removeFromList();
 			return l;
 		}
 

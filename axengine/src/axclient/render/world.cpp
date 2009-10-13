@@ -573,7 +573,7 @@ namespace Axon { namespace Render {
 		if (!la->isLight())
 			node->frameUpdated(m_visFrameId);
 
-		la->m_nodeLink.remove();
+		la->m_nodeLink.removeFromList();
 	}
 
 	void World::updateExposure(QueuedScene* qscene) {

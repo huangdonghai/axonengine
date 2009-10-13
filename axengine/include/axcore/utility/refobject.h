@@ -53,7 +53,7 @@ namespace Axon {
 	}
 
 	//--------------------------------------------------------------------------
-	// class InplacePtr
+	// class ResultPtr
 	//
 	// we need this to indicate the object's refcount already incremented, so if
 	// assign to RefPtr, no need add reference count again.
@@ -62,10 +62,10 @@ namespace Axon {
 	// release
 	//--------------------------------------------------------------------------
 	template <class Ty>
-	class InplacePtr {
+	class ResultPtr {
 	public:
-		InplacePtr(Ty* obj = 0) : m_object(obj) {}
-		InplacePtr(const InplacePtr& ptr) : m_object(ptr.m_object) {}
+		explicit ResultPtr(Ty* obj = 0) : m_object(obj) {}
+		explicit ResultPtr(const ResultPtr& ptr) : m_object(ptr.m_object) {}
 		
 	public:
 		Ty* m_object;
@@ -81,18 +81,18 @@ namespace Axon {
 		// construction and destruction
 		RefPtr(T* pObject = nullptr);
 		RefPtr(const RefPtr& ptr);
-		RefPtr(const InplacePtr<T>& ptr) { m_object = ptr.m_object; }
+		RefPtr(const ResultPtr<T>& ptr) { m_object = ptr.m_object; }
 		~RefPtr();
 
 		// implicit conversions
-		operator T*() const;
+//		operator T*() const;
 		T& operator*() const;
 		T* operator->() const;
 		T* get() const { return m_object; }
 
 		// assignment
 		RefPtr& operator=(const RefPtr& ptr);
-		RefPtr& operator=(const InplacePtr<T>& ptr) { if (m_object) m_object->release(); m_object = ptr.m_object; return *this; }
+		RefPtr& operator=(const ResultPtr<T>& ptr) { if (m_object) m_object->release(); m_object = ptr.m_object; return *this; }
 		RefPtr& operator=(T* pObject);
 
 		// comparisons
@@ -125,7 +125,7 @@ namespace Axon {
 
 	// Use for casting a smart pointer of one type to a pointer or smart pointer
 	// of another type.
-#define AX_REFPTR_CAST(type, smartptr) ((type*) (void*) (smartptr))
+#define AX_REFPTR_CAST(type, smartptr) ((type*) (void*) (smartptr.get()))
 
 	//---------------------------------------------------------------------------
 	template <class T>
@@ -150,7 +150,7 @@ namespace Axon {
 		if (m_object)
 			m_object->release();
 	}
-#if 1
+#if 0
 	//---------------------------------------------------------------------------
 	template <class T>
 	inline RefPtr<T>::operator T*() const
@@ -222,6 +222,10 @@ namespace Axon {
 	}
 	//---------------------------------------------------------------------------
 
+	template <class To, class From>
+	inline RefPtr<To> refptr_cast(const RefPtr<From> ptr) {
+		return RefPtr<To>((To*) (void*) (ptr.get()));
+	}
 }
 
 #endif

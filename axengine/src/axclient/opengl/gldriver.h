@@ -46,6 +46,7 @@ namespace Axon { namespace Render {
 		void findFunctions(bool allowExt);
 
 		virtual bool isHDRRendering();
+		virtual bool isInRenderingThread() { return false; }
 
 		// resource management
 		virtual Target* createWindowTarget(handle_t wndId, const String& name);

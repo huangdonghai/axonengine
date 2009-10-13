@@ -704,13 +704,20 @@ namespace Axon { namespace Render {
 		{
 			// gen mipmap
 			Link<Texture>* it = m_needGenMipmapHead.getNextNode();
-			for (; it; it = it->getNextNode()) {
+			for (; it != &m_needGenMipmapHead; it = it->getNextNode()) {
 				it->getOwner()->generateMipmapIm();
 			}
+			m_needGenMipmapHead.clearList();
 		}
 
 		{
 			// check need free
+			Link<Texture>* it = m_needFreeHead.getNextNode();
+			for (; it != &m_needFreeHead; it = it->getNextNode()) {
+				D3D9texture* owner = (D3D9texture*)it->getOwner();
+				SafeDelete(owner);
+			}
+			m_needFreeHead.clearList();
 		}
 	}
 

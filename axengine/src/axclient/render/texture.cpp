@@ -102,9 +102,13 @@ namespace Axon { namespace Render {
 
 	TexturePtr TextureManager::loadTexture( const String& texname, Texture::InitFlags flags/*=0*/ )
 	{
+		FixedString key = Texture::normalizeKey(texname);
+
 		// find if already loaded
-		TextureDict::const_iterator it = m_textureDict.find(texname);
+		TextureDict::const_iterator it = m_textureDict.find(key);
 		if (it != m_textureDict.end()) {
+			Texture* result = it->second;
+			result->m_needFreeLink.removeFromList();
 			return it->second;
 		}
 
@@ -112,12 +116,12 @@ namespace Axon { namespace Render {
 		TexturePtr tex = createObject();
 
 		if (g_renderDriver->isInRenderingThread()) {
-			tex->initialize(texname, flags);
+			tex->initialize(key, flags);
 		} else {
 			// pending to render thread
 			LoadCmd cmd;
 			cmd.texture = tex;
-			cmd.texName = texname;
+			cmd.texName = key;
 			cmd.initFlags = flags;
 			cmd.format = 0;
 			cmd.width = 0;
@@ -127,13 +131,19 @@ namespace Axon { namespace Render {
 		}
 
 		// add to hash table
-		m_textureDict[texname] = tex;
+		m_textureDict[key] = tex;
+		tex->setKey(key);
 
 		return tex;
 	}
 
 	TexturePtr TextureManager::createTexture( const String& debugname, TexFormat format, int width, int height, Texture::InitFlags flags /*= 0*/ )
 	{
+		std::stringstream ss;
+		ss << "_" << debugname << "_" << m_frameId << "_" << g_system->generateId();
+
+		FixedString key = Texture::normalizeKey(ss.str());
+
 		// create object
 		TexturePtr tex = createObject();
 
@@ -152,23 +162,24 @@ namespace Axon { namespace Render {
 			m_loadCmdList.push_back(cmd);
 		}
 
-		std::stringstream ss;
-		ss << debugname << "_" << m_frameId << "_" << g_system->generateId();
-		m_textureDict[ss.str()] = tex;
+		m_textureDict[key] = tex;
+		tex->setKey(key);
 
 		return tex;
 	}
 
 	bool TextureManager::isExist( const String& texname )
 	{
-		ExistDict::const_iterator it = m_existDict.find(texname);
+		FixedString key = Texture::normalizeKey(texname);
+
+		ExistDict::const_iterator it = m_existDict.find(key);
 		if (it != m_existDict.end())
 			return it->second;
 
-		String filename = texname + ".dds";
+		String filename = key + ".dds";
 
 		bool result = g_fileSystem->isFileExist(filename);
-		m_existDict[texname] = result;
+		m_existDict[key] = result;
 
 		return result;
 	}
@@ -203,14 +214,14 @@ namespace Axon { namespace Render {
 
 	void TextureManager::generateMipmap( Texture* tex )
 	{
-		if (tex->m_needGenMipmap.isEmpty())
-			m_needGenMipmapHead.addToEnd(tex->m_needGenMipmap);
+		if (!tex->m_needGenMipmapLink.isInList())
+			m_needGenMipmapHead.addToEnd(tex->m_needGenMipmapLink);
 	}
 
 	void TextureManager::freeTexture( Texture* tex )
 	{
-		if (tex->m_needFree.isEmpty())
-			m_needFreeHead.addToEnd(tex->m_needFree);
+		if (!tex->m_needFreeLink.isInList())
+			m_needFreeHead.addToEnd(tex->m_needFreeLink);
 	}
 
 }} // namespace Axon::Render

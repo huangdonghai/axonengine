@@ -172,24 +172,24 @@ namespace Axon {
 #endif
 
 	template< class T >
-	InplacePtr<T> FindAsset_(const String& name, intptr_t arg = 0) {
+	ResultPtr<T> FindAsset_(const String& name, intptr_t arg = 0) {
 #if 0
 		RefPtr<T> result;
 		result << dynamic_cast<T*>(g_assetManager->findAsset(T::AssetType, name, arg));
 		return result;
 #else
-		return InplacePtr<T>(dynamic_cast<T*>(g_assetManager->findAsset(T::AssetType, name, arg)));
+		return ResultPtr<T>(dynamic_cast<T*>(g_assetManager->findAsset(T::AssetType, name, arg)));
 #endif
 	}
 
 	template< class T >
-	InplacePtr<T> UniqueAsset_(const String& name, intptr_t arg = 0) {
+	ResultPtr<T> UniqueAsset_(const String& name, intptr_t arg = 0) {
 #if 0
 		RefPtr<T> result;
 		result << dynamic_cast<T*>(g_assetManager->uniqueAsset(T::AssetType, name, arg));
 		return result;
 #else
-		return InplacePtr<T>(dynamic_cast<T*>(g_assetManager->uniqueAsset(T::AssetType, name, arg)));
+		return ResultPtr<T>(dynamic_cast<T*>(g_assetManager->uniqueAsset(T::AssetType, name, arg)));
 #endif
 	}
 

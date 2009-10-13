@@ -15,6 +15,8 @@ namespace Axon { namespace Render {
 
 	class D3D9texture : public Texture {
 	public:
+		friend class D3D9texturemanager;
+
 		D3D9texture();
 		virtual ~D3D9texture();
 

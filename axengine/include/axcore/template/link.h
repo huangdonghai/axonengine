@@ -20,17 +20,17 @@ namespace Axon {
 		Link();
 		~Link();
 
-		bool isEmpty( void ) const;
+		bool isEmptyList( void ) const;
 		bool isInList( void ) const;
-		int size( void ) const;
-		void clear( void );
+		int getListSize( void ) const;
+		void clearList( void );
 
 		void insertBefore( Link &node );
 		void insertAfter( Link &node );
 		void addToEnd( Link &node );
 		void addToFront( Link &node );
 
-		void remove( void );
+		void removeFromList( void );
 
 		type* getNext( void ) const;
 		type* getPrev( void ) const;
@@ -59,11 +59,11 @@ namespace Axon {
 
 	template< class type >
 	Link<type>::~Link() {
-		clear();
+		clearList();
 	}
 
 	template< class type >
-	bool Link<type>::isEmpty( void ) const {
+	bool Link<type>::isEmptyList( void ) const {
 		return m_head->m_next == m_head;
 	}
 
@@ -73,8 +73,8 @@ namespace Axon {
 	}
 
 	template< class type >
-	int Link<type>::size( void ) const {
-		idLinkList<type>	*node;
+	int Link<type>::getListSize( void ) const {
+		Link<type> *node;
 		int num;
 
 		num = 0;
@@ -86,18 +86,18 @@ namespace Axon {
 	}
 
 	template< class type >
-	void Link<type>::clear( void ) {
+	void Link<type>::clearList( void ) {
 		if ( m_head == this ) {
 			while( m_next != this ) {
-				m_next->remove();
+				m_next->removeFromList();
 			}
 		} else {
-			remove();
+			removeFromList();
 		}
 	}
 
 	template< class type >
-	void Link<type>::remove( void ) {
+	void Link<type>::removeFromList( void ) {
 		m_prev->m_next = m_next;
 		m_next->m_prev = m_prev;
 
@@ -108,7 +108,7 @@ namespace Axon {
 
 	template< class type >
 	void Link<type>::insertBefore( Link &node ) {
-		remove();
+		removeFromList();
 
 		m_next = &node;
 		m_prev = node.m_prev;
@@ -119,7 +119,7 @@ namespace Axon {
 
 	template< class type >
 	void Link<type>::insertAfter( Link &node ) {
-		remove();
+		removeFromList();
 
 		m_prev = &node;
 		m_next = node.m_next;

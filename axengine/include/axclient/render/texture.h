@@ -92,8 +92,8 @@ namespace Axon { namespace Render {
 		virtual ~Texture();
 
 	protected:
-		Link<Texture> m_needFree;
-		Link<Texture> m_needGenMipmap;
+		Link<Texture> m_needFreeLink;
+		Link<Texture> m_needGenMipmapLink;
 	};
 
 	//--------------------------------------------------------------------------
