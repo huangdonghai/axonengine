@@ -42,9 +42,9 @@ namespace Axon { namespace Editor { namespace MapEdit {
 
 		MaterialPtr mat = Material::loadUnique("_icon");
 		AX_ASSERT(mat);
-		mat->setTexture(SamplerType::Diffuse, tex);
+		mat->setTexture(SamplerType::Diffuse, tex.get());
 
-		m_iconPrim = RenderMesh::createScreenQuad(RenderMesh::Dynamic, Rect(-1,-1,2,2), Rgba::White, mat);
+		m_iconPrim = RenderMesh::createScreenQuad(RenderMesh::Dynamic, Rect(-1,-1,2,2), Rgba::White, mat.get());
 	}
 
 	Entity::~Entity() {

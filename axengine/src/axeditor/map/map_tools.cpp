@@ -161,7 +161,7 @@ namespace Axon { namespace Editor { namespace MapEdit {
 		for (RenderPrims::iterator it = prims.begin(); it != prims.end(); ++it) {
 			Render::RefPrim* ref = new Render::RefPrim(RenderPrim::Dynamic);
 			ref->setRefered(*it);
-			ref->setMaterial(m_brushMat);
+			ref->setMaterial(m_brushMat.get());
 			m_brushPrims->addPrimitive(ref, true);
 		}
 		Matrix4 matrix;

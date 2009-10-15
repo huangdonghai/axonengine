@@ -51,6 +51,7 @@ namespace Axon { namespace Render {
 		static void initManager();
 		static void finalizeManager();
 		static D3D9texture* getAppTexture(LPDIRECT3DBASETEXTURE9 d3dtex);
+		static void syncFrame();
 		// end manager
 
 	protected:
@@ -96,7 +97,7 @@ namespace Axon { namespace Render {
 		void syncFrame();
 
 		// implement TextureManager
-		virtual TexturePtr createObject();
+		virtual TextureRp createObject();
 
 	protected:
 		// console command

@@ -64,9 +64,13 @@ namespace Axon {
 	template <class Ty>
 	class ResultPtr {
 	public:
-		explicit ResultPtr(Ty* obj = 0) : m_object(obj) {}
-		explicit ResultPtr(const ResultPtr& ptr) : m_object(ptr.m_object) {}
+		ResultPtr(Ty* obj = 0) : m_object(obj) {}
+		ResultPtr(const ResultPtr& ptr) : m_object(ptr.m_object) {}
 		
+		operator Ty*() const { return m_object; }
+		Ty& operator*() const { return *m_object; }
+		Ty* operator->() const { return m_object; }
+		Ty* get() const { return m_object; }
 	public:
 		Ty* m_object;
 	};
@@ -85,7 +89,7 @@ namespace Axon {
 		~RefPtr();
 
 		// implicit conversions
-//		operator T*() const;
+		operator T*() const;
 		T& operator*() const;
 		T* operator->() const;
 		T* get() const { return m_object; }
@@ -121,7 +125,8 @@ namespace Axon {
 
 #define AX_DECLARE_REFPTR(classname) \
 	class classname; \
-	typedef RefPtr<classname> classname##Ptr
+	typedef RefPtr<classname> classname##Ptr; \
+	typedef ResultPtr<classname> classname##Rp
 
 	// Use for casting a smart pointer of one type to a pointer or smart pointer
 	// of another type.
@@ -150,7 +155,7 @@ namespace Axon {
 		if (m_object)
 			m_object->release();
 	}
-#if 0
+#if 1
 	//---------------------------------------------------------------------------
 	template <class T>
 	inline RefPtr<T>::operator T*() const

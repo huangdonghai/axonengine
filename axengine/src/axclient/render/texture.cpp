@@ -18,6 +18,12 @@ namespace Axon { namespace Render {
 	// class Texture
 	//--------------------------------------------------------------------------
 
+	Texture::Texture()
+	{
+		m_needFreeLink.setOwner(this);
+		m_needGenMipmapLink.setOwner(this);
+	}
+
 	Texture::~Texture()
 	{}
 
@@ -45,12 +51,12 @@ namespace Axon { namespace Render {
 		s_textureManager->freeTexture(this);
 	}
 
-	TexturePtr Texture::load( const FixedString& name, InitFlags flags/*=0*/ )
+	TextureRp Texture::load( const FixedString& name, InitFlags flags/*=0*/ )
 	{
 		return s_textureManager->loadTexture(name, flags);
 	}
 
-	TexturePtr Texture::create( const String& debugname, TexFormat format, int width, int height, InitFlags flags /*= 0*/ )
+	TextureRp Texture::create( const String& debugname, TexFormat format, int width, int height, InitFlags flags /*= 0*/ )
 	{
 		return s_textureManager->createTexture(debugname, format, width, height, flags);
 	}
@@ -100,7 +106,7 @@ namespace Axon { namespace Render {
 		s_textureManager = 0;
 	}
 
-	TexturePtr TextureManager::loadTexture( const String& texname, Texture::InitFlags flags/*=0*/ )
+	TextureRp TextureManager::loadTexture( const String& texname, Texture::InitFlags flags/*=0*/ )
 	{
 		FixedString key = Texture::normalizeKey(texname);
 
@@ -113,7 +119,7 @@ namespace Axon { namespace Render {
 		}
 
 		// create a new texture object
-		TexturePtr tex = createObject();
+		TextureRp tex = createObject();
 
 		if (g_renderDriver->isInRenderingThread()) {
 			tex->initialize(key, flags);
@@ -137,7 +143,7 @@ namespace Axon { namespace Render {
 		return tex;
 	}
 
-	TexturePtr TextureManager::createTexture( const String& debugname, TexFormat format, int width, int height, Texture::InitFlags flags /*= 0*/ )
+	TextureRp TextureManager::createTexture( const String& debugname, TexFormat format, int width, int height, Texture::InitFlags flags /*= 0*/ )
 	{
 		std::stringstream ss;
 		ss << "_" << debugname << "_" << m_frameId << "_" << g_system->generateId();
@@ -145,7 +151,7 @@ namespace Axon { namespace Render {
 		FixedString key = Texture::normalizeKey(ss.str());
 
 		// create object
-		TexturePtr tex = createObject();
+		TextureRp tex = createObject();
 
 		if (g_renderDriver->isInRenderingThread()) {
 			// init immedially
@@ -215,13 +221,13 @@ namespace Axon { namespace Render {
 	void TextureManager::generateMipmap( Texture* tex )
 	{
 		if (!tex->m_needGenMipmapLink.isInList())
-			m_needGenMipmapHead.addToEnd(tex->m_needGenMipmapLink);
+			m_needGenMipmapHead.addToEnd(m_needGenMipmapHead);
 	}
 
 	void TextureManager::freeTexture( Texture* tex )
 	{
 		if (!tex->m_needFreeLink.isInList())
-			m_needFreeHead.addToEnd(tex->m_needFreeLink);
+			m_needFreeHead.addToEnd(m_needFreeHead);
 	}
 
 }} // namespace Axon::Render

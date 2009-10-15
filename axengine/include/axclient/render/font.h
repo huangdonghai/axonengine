@@ -126,6 +126,7 @@ namespace Axon { namespace Render {
 		static FontPtr load(const String& name, int w, int h);
 		static void initManager();
 		static void finalizeManager();
+		// end management
 
 	protected:
 		bool parseFontDef();
@@ -142,8 +143,6 @@ namespace Axon { namespace Render {
 		GlyphInfo m_glyphInfos[MAX_CHARS];
 		int m_width, m_height;
 	};
-
-
 
 }} // namespace Axon::Render
 

@@ -352,6 +352,8 @@ namespace Axon { namespace Render {
 
 	void D3D9thread::syncFrame() {
 		BEGIN_PIX("SyncFrame");
+		Material::syncFrame();
+		D3D9texture::syncFrame();
 		d3d9TargetManager->syncFrame();
 		d3d9QueryManager->syncFrame();
 		d3d9PrimitiveManager->syncFrame();

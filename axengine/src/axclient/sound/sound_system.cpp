@@ -112,7 +112,7 @@ namespace Axon { namespace Sound {
 		if (!m_commandSfx)
 			return;
 
-		playSound(ChannelId_Any, m_commandSfx);
+		playSound(ChannelId_Any, m_commandSfx.get());
 #if 0
 		FMOD::Sound* sound;
 		FMOD_RESULT result = m_fmodSystem->createSound(, FMOD_DEFAULT, 0, &sound);

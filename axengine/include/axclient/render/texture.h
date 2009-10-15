@@ -19,6 +19,7 @@ namespace Axon { namespace Render {
 	//--------------------------------------------------------------------------
 
 	AX_DECLARE_REFPTR(Texture);
+
 	class Texture : public RefObject {
 	public:
 		friend class TextureManager;
@@ -81,14 +82,15 @@ namespace Axon { namespace Render {
 		virtual void generateMipmapIm() = 0;
 
 		// management
-		static TexturePtr load(const FixedString& name, InitFlags flags=0);
-		static TexturePtr create(const String& debugname, TexFormat format, int width, int height, InitFlags flags = 0);
+		static TextureRp load(const FixedString& name, InitFlags flags=0);
+		static TextureRp create(const String& debugname, TexFormat format, int width, int height, InitFlags flags = 0);
 		static bool isExist(const FixedString& name);
 		static void initManager();
 		static void finalizeManager();
 		static FixedString normalizeKey(const String& name);
 
 	protected:
+		Texture();
 		virtual ~Texture();
 
 	protected:
@@ -106,12 +108,12 @@ namespace Axon { namespace Render {
 		virtual ~TextureManager();
 
 		// called in main thread
-		TexturePtr loadTexture(const String& texname, Texture::InitFlags flags=0);
-		TexturePtr createTexture(const String& debugname, TexFormat format, int width, int height, Texture::InitFlags flags = 0);
+		TextureRp loadTexture(const String& texname, Texture::InitFlags flags=0);
+		TextureRp createTexture(const String& debugname, TexFormat format, int width, int height, Texture::InitFlags flags = 0);
 		bool isExist(const String& texname);
 
 		// called in draw thread
-		virtual TexturePtr createObject() = 0;
+		virtual TextureRp createObject() = 0;
 
 	private:
 		friend class Texture;

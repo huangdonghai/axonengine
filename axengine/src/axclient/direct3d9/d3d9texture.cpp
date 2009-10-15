@@ -609,6 +609,11 @@ namespace Axon { namespace Render {
 		return s_manager->getTex(d3dtex);
 	}
 
+	void D3D9texture::syncFrame()
+	{
+		s_manager->syncFrame();
+	}
+
 	// console command
 	AX_BEGIN_COMMAND_MAP(D3D9texturemanager)
 		AX_COMMAND_ENTRY("dumpTex",	dumpTex_f)
@@ -664,10 +669,9 @@ namespace Axon { namespace Render {
 		tex->saveToFile(filename);
 	}
 
-	TexturePtr D3D9texturemanager::createObject()
+	TextureRp D3D9texturemanager::createObject()
 	{
-		TexturePtr result;
-		result << new D3D9texture();
+		TextureRp result = new D3D9texture();
 		return result;
 	}
 
@@ -704,7 +708,7 @@ namespace Axon { namespace Render {
 		{
 			// gen mipmap
 			Link<Texture>* it = m_needGenMipmapHead.getNextNode();
-			for (; it != &m_needGenMipmapHead; it = it->getNextNode()) {
+			for (; it; it = it->getNextNode()) {
 				it->getOwner()->generateMipmapIm();
 			}
 			m_needGenMipmapHead.clearList();
@@ -713,7 +717,7 @@ namespace Axon { namespace Render {
 		{
 			// check need free
 			Link<Texture>* it = m_needFreeHead.getNextNode();
-			for (; it != &m_needFreeHead; it = it->getNextNode()) {
+			for (; it; it = it->getNextNode()) {
 				D3D9texture* owner = (D3D9texture*)it->getOwner();
 				SafeDelete(owner);
 			}

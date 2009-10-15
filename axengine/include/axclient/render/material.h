@@ -16,6 +16,9 @@ namespace Axon { namespace Render {
 
 	class AX_API Material : public RefObject {
 	public:
+		// implement RefObject
+		virtual void deleteThis();
+
 		// must be success
 		bool doInit(const String& name, intptr_t arg);
 
@@ -74,11 +77,12 @@ namespace Axon { namespace Render {
 		int getPixelToTexelHeight() const { return m_p2tHeight; }
 
 		// management
-		static MaterialPtr load(const FixedString& key);
-		static MaterialPtr loadUnique(const FixedString& key);
+		static MaterialRp load(const String& name);
+		static MaterialRp loadUnique(const String& name);
 		static void initManager();
 		static void finalizeManager();
 		static FixedString normalizeKey(const String& name);
+		static void syncFrame();
 		// end management
 
 	private:
@@ -117,9 +121,15 @@ namespace Axon { namespace Render {
 		bool m_p2tEnabled;
 		int m_p2tWidth, m_p2tHeight;
 
+		// delete link
+		Link<Material> m_needDeleteLink;
+
 		// management
 		typedef Dict<FixedString, Material*> MaterialDict;
 		static MaterialDict ms_materialDict;
+		static Link<Material> ms_needDeleteLinkHead;
+
+		static void _deleteMaterial(Material* mat);
 	};
 
 	inline void splitVectorToColor(const Vector3& v, float& multiply, Rgb& color) {

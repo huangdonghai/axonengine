@@ -449,7 +449,7 @@ namespace { namespace Internal {
 			// set samplers to material
 			for (int i = 0; i < SamplerType::NUMBER_ALL; i++) {
 				if (samplers[i]) {
-					mat->setTexture(i, samplers[i]);
+					mat->setTexture(i, samplers[i].get());
 				}
 			}
 
@@ -522,13 +522,13 @@ namespace { namespace Internal {
 			return result;
 		}
 
-		TexturePtr convert(hkxMaterial::TextureStage* stage) {
+		Texture* convert(hkxMaterial::TextureStage* stage) {
 			String fn = getTextureFilename(stage);
 
-			TexturePtr tex = Texture::load(fn);
+			Texture* tex = Texture::load(fn);
 
 			if (tex) {
-				tex.clear();
+//				tex.clear();
 			}
 
 			return tex;
@@ -867,7 +867,7 @@ namespace Axon { namespace Physics {
 #else
 			const Package::MaterialMap* mm = m_package->findMaterialMap(m_section->m_material);
 #endif
-			m_renderMesh->setMaterial(mm->m_axMat);
+			m_renderMesh->setMaterial(mm->m_axMat.get());
 			m_renderMesh->setLightMap(mm->m_lightMap);
 
 			if (!haveTangents) {

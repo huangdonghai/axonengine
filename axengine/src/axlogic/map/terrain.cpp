@@ -50,7 +50,7 @@ namespace Axon { namespace Map {
 			updateTexture();
 
 		m_isDirty = false;
-		return m_texture;
+		return m_texture.get();
 	}
 
 

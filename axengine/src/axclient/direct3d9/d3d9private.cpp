@@ -26,7 +26,6 @@ namespace Axon { namespace Render {
 	IDirect3DDevice9* d3d9Device;
 
 	D3D9shadermanager* d3d9ShaderManager;
-	D3D9texturemanager* d3d9TextureManager;
 	D3D9targetmanager* d3d9TargetManager;
 	D3D9querymanager* d3d9QueryManager;
 	D3D9primitivemanager* d3d9PrimitiveManager;

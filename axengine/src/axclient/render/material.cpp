@@ -13,6 +13,7 @@ namespace Axon { namespace Render {
 
 	// static member
 	Material::MaterialDict Material::ms_materialDict;
+	Link<Material> Material::ms_needDeleteLinkHead;
 
 	Material::Material() {
 		m_baseTcAnim = false;
@@ -29,6 +30,8 @@ namespace Axon { namespace Render {
 
 		TypeZeroArray(m_features);
 		TypeZeroArray(m_literals);
+
+		m_needDeleteLink.setOwner(this);
 	}
 
 	Material::~Material() {
@@ -249,14 +252,37 @@ namespace Axon { namespace Render {
 			return name;
 	}
 
-	MaterialPtr Material::load( const FixedString& key )
+	MaterialRp Material::load(const String& name)
 	{
-		return 0;
+		FixedString key = normalizeKey(name);
+		MaterialDict::const_iterator it = ms_materialDict.find(key);
+
+		if (it != ms_materialDict.end()) {
+			Material* mat = it->second;
+			mat->addref();
+			return mat;
+		}
+
+		Material* result = new Material();
+		result->doInit(key, 0);
+		result->setKey(key);
+		ms_materialDict[key] = result;
+
+		return result;
 	}
 
-	MaterialPtr Material::loadUnique( const FixedString& key )
+	MaterialRp Material::loadUnique(const String& name)
 	{
-		return 0;
+		std::stringstream ss;
+		ss << name << "$" << g_system->generateId();
+		FixedString key = normalizeKey(name);
+		FixedString uniqueKey = normalizeKey(ss.str());
+
+		Material* result = new Material();
+		result->doInit(key, 0);
+		result->setKey(uniqueKey);
+		ms_materialDict[uniqueKey] = result;
+		return result;
 	}
 
 	void Material::initManager()
@@ -267,6 +293,26 @@ namespace Axon { namespace Render {
 	void Material::finalizeManager()
 	{
 
+	}
+
+	void Material::_deleteMaterial( Material* mat )
+	{
+		ms_needDeleteLinkHead.addToEnd(mat->m_needDeleteLink);
+	}
+
+	void Material::syncFrame()
+	{
+		for (Link<Material>* node = ms_needDeleteLinkHead.getNextNode(); node; node = node->getNextNode()) {
+			Material* owner = node->getOwner();
+			delete owner;
+		}
+
+		ms_needDeleteLinkHead.clearList();
+	}
+
+	void Material::deleteThis()
+	{
+		_deleteMaterial(this);
 	}
 
 }} // namespace Axon::Render
