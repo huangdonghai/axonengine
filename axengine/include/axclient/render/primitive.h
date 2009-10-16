@@ -330,9 +330,9 @@ namespace Axon { namespace Render {
 		Rect m_rect;				// draw on this rect
 		Vector3 m_position;			// for simple text
 		bool m_isSimpleText;
-		Rgba m_color;			// text color
+		Rgba m_color;				// text color
 		float m_aspect;
-		int m_format;			// format flags
+		int m_format;				// format flags
 		Font* m_font;				// font used
 		String m_text;				// string to draw
 		HorizonAlign m_horizonAlign;

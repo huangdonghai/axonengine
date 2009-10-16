@@ -48,21 +48,30 @@ namespace {
 		void finalize();
 		BufInfo getFontFileBuf(const String filename);
 
+		FontRp load(const String& name, int w, int h);
+		void deleteFont(Font* font);
+
 	private:
 		bool m_initialized;
 		typedef Dict<String, BufInfo,hash_pathname,equal_pathname> FileBufDict;
-		FileBufDict m_fontFileBufs;	
+		FileBufDict m_fontFileBufs;
+		typedef Dict<FixedString, Font*> FontDict;
+		FontDict m_fontDict;
 	};
 
 	Manager::Manager()
 		: m_initialized(false)
 	{
+		initialize();
 	}
 
-	Manager::~Manager() {
+	Manager::~Manager()
+	{
+		finalize();
 	}
 
-	void Manager::initialize() {
+	void Manager::initialize()
+	{
 		if (m_initialized)
 			Errorf("Manager::initialize: already initialized");
 
@@ -76,11 +85,12 @@ namespace {
 		m_initialized = true;
 	}
 
-	void Manager::finalize() {
-	}
+	void Manager::finalize()
+	{}
 
 
-	BufInfo Manager::getFontFileBuf(const String name) {
+	BufInfo Manager::getFontFileBuf(const String name)
+	{
 		FileBufDict::iterator it;
 
 		it = m_fontFileBufs.find(name);
@@ -106,6 +116,30 @@ namespace {
 		m_fontFileBufs[name] = buf_info;
 
 		return buf_info;
+	}
+
+	FontRp Manager::load( const String& name, int w, int h )
+	{
+		FixedString key = Font::normalizeKey(name, w, h);
+
+		FontDict::const_iterator it = m_fontDict.find(key);
+		if (it != m_fontDict.end()) {
+			it->second->addref();
+			return it->second;
+		}
+
+		Font* result = new Font();
+		result->doInit(name, w, h);
+
+		m_fontDict[key] = result;
+		result->setKey(key);
+
+		return result;
+	}
+
+	void Manager::deleteFont( Font* font )
+	{
+		// TODO: wait for delete
 	}
 
 	static Manager* s_fontManager = 0;
@@ -205,7 +239,6 @@ namespace Axon { namespace Render {
 			return false;
 
 		if (m_ftface->glyph->format != FT_GLYPH_FORMAT_BITMAP) {
-
 			if (m_def->antialias) {
 				error = FT_Render_Glyph(m_ftface->glyph, FT_RENDER_MODE_NORMAL);
 			} else {
@@ -253,7 +286,6 @@ namespace Axon { namespace Render {
 			return false;
 		}
 
-
 		return true;
 	}
 
@@ -262,16 +294,21 @@ namespace Axon { namespace Render {
 	// class Font
 	//------------------------------------------------------------------------------
 
-	Font::~Font() {
-	}
+	Font::~Font()
+	{}
 
-	bool Font::doInit(const String& name, intptr_t arg) {
+	bool Font::doInit(const String& name, int w, int h)
+	{
 		m_name = name;
 #if 0
 		if (!File::havePath(name))
 			m_name = "fonts/" + name;
-#endif
 		parseSize(arg, m_width, m_height);
+#else
+		m_name = name;
+		m_width = w;
+		m_height = h;
+#endif
 
 		if (m_width == 0) m_width = AX_DEFAULT_FONTSIZE;
 		if (m_height == 0) m_height = AX_DEFAULT_FONTSIZE;
@@ -330,7 +367,8 @@ namespace Axon { namespace Render {
 		return true;
 	}
 
-	bool Font::parseFontDef() {
+	bool Font::parseFontDef()
+	{
 		String fname = m_name + ".font";
 		char* fbuf;
 		size_t fsize;
@@ -389,11 +427,13 @@ namespace Axon { namespace Render {
 		return true;
 	}
 
-	String Font::getName() {
+	String Font::getName()
+	{
 		return m_name;
 	}
 
-	uint_t Font::getStringWidth(const WString& string) {
+	uint_t Font::getStringWidth(const WString& string)
+	{
 		uint_t width = 0;
 
 		size_t i;
@@ -403,16 +443,20 @@ namespace Axon { namespace Render {
 		return width;
 	}
 
-	uint_t Font::getWidth() {
+	uint_t Font::getWidth()
+	{
 		return m_width;
 	}
 
-	uint_t Font::getHeight() {
+	uint_t Font::getHeight()
+	{
 		return m_height;
 	}
+
 	#define BLINK_DIVISOR 75
 
-	uint_t Font::m_getCharWidth(wchar_t ch) {
+	uint_t Font::m_getCharWidth(wchar_t ch)
+	{
 		GlyphInfo& ginfo = m_glyphInfos[ch];
 
 		// if have cached, return
@@ -440,7 +484,8 @@ namespace Axon { namespace Render {
 		return ginfo.advance;
 	}
 
-	size_t Font::updateTexture(const wchar_t* str) {
+	size_t Font::updateTexture(const wchar_t* str)
+	{
 		size_t i;
 		wchar_t c;
 		byte_t* data = (byte_t*)Alloca(m_width*m_height);
@@ -461,15 +506,18 @@ namespace Axon { namespace Render {
 		return i;
 	}
 
-	void Font::getCharInfo(int id, Texture*& tex, Vector4& tc) {
+	void Font::getCharInfo(int id, Texture*& tex, Vector4& tc)
+	{
 		return m_texPool->getChunkInfo(id, tex, tc);
 	}
 
-	const GlyphInfo& Font::getGlyphInfo(wchar_t c) {
+	const GlyphInfo& Font::getGlyphInfo(wchar_t c)
+	{
 		return m_glyphInfos[c];
 	}
 
-	bool Font::uploadCharGlyph(wchar_t c, byte_t* data) {
+	bool Font::uploadCharGlyph(wchar_t c, byte_t* data)
+	{
 #if  1
 		if (m_glyphInfos[c].advance == 0xFF) {
 			m_getCharWidth(c);
@@ -487,25 +535,38 @@ namespace Axon { namespace Render {
 		return m_texPool->updateChunk(c, data);
 	}
 
-	void Font::newFrame() {
+	void Font::newFrame()
+	{
 		m_texPool->newFrame();
 	}
 
-	FontPtr Font::load( const String& name, int w, int h )
+	FontRp Font::load( const String& name, int w, int h )
 	{
-		return FontPtr();
+		return s_fontManager->load(name, w, h);
 	}
 
 	void Font::initManager()
 	{
-
+		s_fontManager = new Manager();
 	}
 
 	void Font::finalizeManager()
 	{
-
+		SafeDelete(s_fontManager);
 	}
 
+	void Font::deleteThis()
+	{
+		s_fontManager->deleteFont(this);
+	}
+
+	FixedString Font::normalizeKey( const String& name, int w, int h )
+	{
+		std::stringstream ss;
+		ss << name << "_" << w << "x" << h;
+		FixedString key = ss.str();
+		return key;
+	}
 
 }} // namespace Axon::Render
 

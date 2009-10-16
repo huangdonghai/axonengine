@@ -110,8 +110,11 @@ namespace Axon { namespace Render {
 		Font() {}
 		~Font();
 
+		// implement RefObject
+		virtual void deleteThis();
+
 		// implement Asset
-		virtual bool doInit(const String& name, intptr_t arg);
+		virtual bool doInit(const String& name, int w, int h);
 
 		String getName();
 		uint_t getStringWidth(const WString& string);
@@ -123,9 +126,10 @@ namespace Axon { namespace Render {
 		const GlyphInfo& getGlyphInfo(wchar_t c);
 
 		// management
-		static FontPtr load(const String& name, int w, int h);
+		static FontRp load(const String& name, int w, int h);
 		static void initManager();
 		static void finalizeManager();
+		static FixedString normalizeKey(const String& name, int w, int h);
 		// end management
 
 	protected:
