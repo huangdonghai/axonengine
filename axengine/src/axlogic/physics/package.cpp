@@ -308,7 +308,8 @@ namespace { namespace Internal {
 			return samplertype;
 		}
 
-		void fillStatges(TexturePtr samplers[SamplerType::NUMBER_ALL], TexturePtr& lightmap) {
+		void fillStatges(TexturePtr samplers[SamplerType::NUMBER_ALL], TexturePtr& lightmap)
+		{
 			for (int i = 0; i < m_hkmat->m_numStages; i++) {
 				hkxMaterial::TextureStage* stage = &m_hkmat->m_stages[i];
 				String filename = getTextureFilename(stage);
@@ -318,8 +319,7 @@ namespace { namespace Internal {
 
 				TexturePtr tex = Texture::load(filename);
 
-				if (tex) {
-					tex->release();
+				if (!tex) {
 					continue;
 				}
 
@@ -397,11 +397,7 @@ namespace { namespace Internal {
 
 				if (samplertype == SamplerType::Detail && !samplers[SamplerType::DetailNormal]) {
 					tex = Texture::load(filename + "_n");
-					if (tex) {
-						tex->release();
-					} else {
-						samplers[SamplerType::DetailNormal] = tex;
-					}
+					samplers[SamplerType::DetailNormal] = tex;
 				}
 			}
 		}
@@ -526,11 +522,6 @@ namespace { namespace Internal {
 			String fn = getTextureFilename(stage);
 
 			Texture* tex = Texture::load(fn);
-
-			if (tex) {
-//				tex.clear();
-			}
-
 			return tex;
 		}
 

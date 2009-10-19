@@ -63,6 +63,9 @@ namespace Axon { namespace Render {
 
 				m_textures[i] = Texture::load(texdef->file);
 
+				if (!m_textures[i])
+					continue;
+
 				if (texdef->clamp && m_textures[i]) {
 					m_textures[i]->setClampMode(Texture::CM_ClampToBorder);
 				}
@@ -302,6 +305,8 @@ namespace Axon { namespace Render {
 
 	void Material::syncFrame()
 	{
+		return;
+
 		for (Link<Material>* node = ms_needDeleteLinkHead.getNextNode(); node; node = node->getNextNode()) {
 			Material* owner = node->getOwner();
 			delete owner;

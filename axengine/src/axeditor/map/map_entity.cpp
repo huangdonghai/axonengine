@@ -36,7 +36,7 @@ namespace Axon { namespace Editor { namespace MapEdit {
 
 		TexturePtr tex = Texture::load("editor/icons/" + icon);
 
-		if (tex) {
+		if (!tex) {
 			return;
 		}
 

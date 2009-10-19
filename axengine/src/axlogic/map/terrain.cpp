@@ -1698,7 +1698,7 @@ namespace Axon { namespace Map {
 #else
 			TexturePtr tex = Texture::load(texname, Texture::IF_AutoGenMipmap);
 #endif
-			if (!tex) {
+			if (tex) {
 				z->setColorTexture(tex.get());
 				tex->setClampMode(Texture::CM_ClampToEdge);
 			} else {

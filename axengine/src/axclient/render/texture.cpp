@@ -51,7 +51,7 @@ namespace Axon { namespace Render {
 		s_textureManager->freeTexture(this);
 	}
 
-	TextureRp Texture::load( const FixedString& name, InitFlags flags/*=0*/ )
+	TextureRp Texture::load(const String& name, InitFlags flags/*=0*/)
 	{
 		return s_textureManager->loadTexture(name, flags);
 	}
@@ -61,9 +61,9 @@ namespace Axon { namespace Render {
 		return s_textureManager->createTexture(debugname, format, width, height, flags);
 	}
 
-	bool Texture::isExist( const FixedString& name )
+	bool Texture::isExist(const String& name)
 	{
-		return false;
+		return s_textureManager->isExist(name);
 	}
 
 	void Texture::initManager()
@@ -115,8 +115,12 @@ namespace Axon { namespace Render {
 		if (it != m_textureDict.end()) {
 			Texture* result = it->second;
 			result->m_needFreeLink.removeFromList();
-			return it->second;
+			result->addref();
+			return result;
 		}
+
+		if (!isExist(key))
+			return 0;
 
 		// create a new texture object
 		TextureRp tex = createObject();
@@ -174,10 +178,8 @@ namespace Axon { namespace Render {
 		return tex;
 	}
 
-	bool TextureManager::isExist( const String& texname )
+	bool TextureManager::isExist(const FixedString& key)
 	{
-		FixedString key = Texture::normalizeKey(texname);
-
 		ExistDict::const_iterator it = m_existDict.find(key);
 		if (it != m_existDict.end())
 			return it->second;

@@ -714,6 +714,8 @@ namespace Axon { namespace Render {
 			m_needGenMipmapHead.clearList();
 		}
 
+		return;
+
 		{
 			// check need free
 			Link<Texture>* it = m_needFreeHead.getNextNode();
