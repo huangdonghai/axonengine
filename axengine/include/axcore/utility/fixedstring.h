@@ -63,7 +63,7 @@ namespace Axon {
 			return FixedStringManager::get().getString(m_handle);
 		}
 
-		const char* c_str() {
+		const char* c_str() const {
 			return FixedStringManager::get().getString(m_handle).c_str();
 		}
 
@@ -87,7 +87,9 @@ namespace Axon {
 		}
 
 		size_t hash() const { return m_handle; }
-		operator size_t() const { return m_handle; }
+
+		bool empty() const { return m_handle == FixedStringManager::EMPTY_HANDLE; }
+//		explicit operator size_t() const { return m_handle; }
 
 	private:
 		int m_handle;

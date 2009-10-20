@@ -184,7 +184,7 @@ namespace Axon { namespace Render {
 		if (it != m_existDict.end())
 			return it->second;
 
-		String filename = key + ".dds";
+		String filename = key.toString() + ".dds";
 
 		bool result = g_fileSystem->isFileExist(filename);
 		m_existDict[key] = result;

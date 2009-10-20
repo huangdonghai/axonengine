@@ -141,7 +141,8 @@ namespace Axon { namespace Render {
 		m_skybox5->unlockIndexes();
 	}
 
-	void OutdoorEnv::setSkyBoxTexture(const String& matname) {
+	void OutdoorEnv::setSkyBoxTexture(const String& matname)
+	{
 		if (m_skyBoxMatName == matname)
 			return;
 
@@ -181,7 +182,8 @@ namespace Axon { namespace Render {
 		}
 	}
 
-	void OutdoorEnv::createSkyDome() {
+	void OutdoorEnv::createSkyDome()
+	{
 		int tess = SKYDOME_TESS;
 		int halftess = tess / 2;
 		float radius = SKYDOME_RADIUS;
@@ -277,7 +279,8 @@ namespace Axon { namespace Render {
 		m_skydome->setMaterial(m_skyNishitaMat);
 	}
 
-	void OutdoorEnv::createOceanMesh() {
+	void OutdoorEnv::createOceanMesh()
+	{
 		m_oceanMesh = nullptr;
 
 		// calculate vertexbuffer and indexbuffer size
@@ -373,18 +376,21 @@ namespace Axon { namespace Render {
 	void OutdoorEnv::createOceanGrid()
 	{}
 
-	BoundingBox OutdoorEnv::getLocalBoundingBox() {
+	BoundingBox OutdoorEnv::getLocalBoundingBox()
+	{
 		BoundingBox result;
 		result.min.set(0,0,0);
 		result.max.set(1,1,1);
 		return result;
 	}
 
-	BoundingBox OutdoorEnv::getBoundingBox() {
+	BoundingBox OutdoorEnv::getBoundingBox()
+	{
 		return getLocalBoundingBox();
 	}
 
-	Primitives OutdoorEnv::getAllPrimitives()	{
+	Primitives OutdoorEnv::getAllPrimitives()
+	{
 		Primitives result;
 		if (r_sky->getBool()) {
 #if 1
@@ -402,7 +408,8 @@ namespace Axon { namespace Render {
 		return result;
 	}
 
-	void OutdoorEnv::doUpdate(QueuedScene* qscene) {
+	void OutdoorEnv::doUpdate(QueuedScene* qscene)
+	{
 		if (!m_dateTimeInited) {
 			m_dateTime.initSystemTime(qscene->camera.getTime());
 			m_dateTimeInited = true;
@@ -423,7 +430,8 @@ namespace Axon { namespace Render {
 	}
 
 
-	void OutdoorEnv::issueToQueue(QueuedScene* qscene) {
+	void OutdoorEnv::issueToQueue(QueuedScene* qscene)
+	{
 		if (m_haveGlobalLight) {
 			qscene->addActor(this->getGlobalLight());
 			getGlobalLight()->issueToQueue(qscene);
@@ -481,7 +489,8 @@ namespace Axon { namespace Render {
 	}
 
 
-	void OutdoorEnv::genNishitaUpdateScene(QueuedScene* qscene) {
+	void OutdoorEnv::genNishitaUpdateScene(QueuedScene* qscene)
+	{
 		QueuedScene* scene = qscene->addSubScene();
 		if (!scene)
 			return;
@@ -496,43 +505,53 @@ namespace Axon { namespace Render {
 		scene->addInteraction(nullptr, quad);
 	}
 
-	Light* OutdoorEnv::getGlobalLight() const {
+	Light* OutdoorEnv::getGlobalLight() const
+	{
 		return m_globalLight;
 	}
 
-	void OutdoorEnv::setHaveOcean(bool have) {
+	void OutdoorEnv::setHaveOcean(bool have)
+	{
 		m_haveOcean = have;
 	}
 
-	void OutdoorEnv::setHaveFarSky(bool have) {
+	void OutdoorEnv::setHaveFarSky(bool have)
+	{
 		m_haveSky = have;
 	}
 
-	void OutdoorEnv::setFog(const Vector3& color, float density) {
+	void OutdoorEnv::setFog(const Vector3& color, float density)
+	{
 		m_globalFog->setFogColor(color);
 		m_globalFog->setFogDensity(density);
 	}
 
-	void OutdoorEnv::setOceanFog(const Vector3& color, float density) {
+	void OutdoorEnv::setOceanFog(const Vector3& color, float density)
+	{
 		m_oceanFog->setFogColor(color);
 		m_oceanFog->setFogDensity(density);
 	}
 
-	void OutdoorEnv::setOceanMaterial(const String& matname) {}
+	void OutdoorEnv::setOceanMaterial(const String& matname)
+	{}
 
-	void OutdoorEnv::setSunColor(const Rgb& color, float intensity, float specularX) {
+	void OutdoorEnv::setSunColor(const Rgb& color, float intensity, float specularX)
+	{
 		m_globalLight->setLightColor(color, intensity, specularX);
 	}
 
-	void OutdoorEnv::setSunDir(const Vector3& dir) {
+	void OutdoorEnv::setSunDir(const Vector3& dir)
+	{
 		m_globalLight->setOrigin(dir);
 	}
 
-	void OutdoorEnv::setSkyColor(const Rgb& color, float intensity) {
+	void OutdoorEnv::setSkyColor(const Rgb& color, float intensity)
+	{
 		m_globalLight->setSkyColor(color, intensity);
 	}
 
-	void OutdoorEnv::setEnvColor(const Rgb& color, float intensity) {
+	void OutdoorEnv::setEnvColor(const Rgb& color, float intensity)
+	{
 		m_globalLight->setEnvColor(color, intensity);
 	}
 

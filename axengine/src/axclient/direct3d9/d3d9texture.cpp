@@ -194,7 +194,11 @@ namespace Axon { namespace Render {
 
 	bool D3D9texture::doInit(const String& name, intptr_t arg)
 	{
+		AX_ASSERT(!m_initialized);
+
 		m_initFlags = arg;
+
+		m_initialized = true;
 
 		return loadFile2D(name);
 	}
@@ -683,12 +687,14 @@ namespace Axon { namespace Render {
 			for (; it != m_loadCmdList.end(); ++it) {
 				const LoadCmd* cmd = &*it;
 
-				if (cmd->texName) {
+				if (!cmd->texName.empty()) {
 					cmd->texture->initialize(cmd->texName, cmd->initFlags);
 				} else {
 					cmd->texture->initialize(cmd->format, cmd->width, cmd->height, cmd->initFlags);
 				}
 			}
+
+			m_loadCmdList.clear();
 		}
 
 		{
@@ -703,6 +709,8 @@ namespace Axon { namespace Render {
 
 				}
 			}
+
+			m_uploadCmdList.clear();
 		}
 
 		{
