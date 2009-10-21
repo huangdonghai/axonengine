@@ -16,7 +16,8 @@ namespace Axon { namespace Render {
 	// class D3D9target
 	//--------------------------------------------------------------------------
 
-	class D3D9target : public Target {
+	class D3D9target : public Target
+	{
 	public:
 		friend class D3D9targetmanager;
 

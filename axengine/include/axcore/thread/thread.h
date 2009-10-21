@@ -103,6 +103,7 @@ namespace Axon {
 	private:
 		handle_t m_handle;
 		SyncEvent* m_exitEvent;
+		ulong_t m_id;
 	};
 
 

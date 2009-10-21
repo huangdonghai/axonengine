@@ -104,7 +104,7 @@ namespace Axon {
 	Thread::Thread()
 	{
 		m_exitEvent = new SyncEvent();
-		m_handle = ::CreateThread(NULL, 0, ThreadProc, this, CREATE_SUSPENDED, NULL);
+		m_handle = ::CreateThread(NULL, 0, ThreadProc, this, CREATE_SUSPENDED, &m_id);
 		AX_ASSERT(m_handle);
 	}
 
@@ -128,8 +128,7 @@ namespace Axon {
 
 	bool Thread::isCurrentThread() const
 	{
-		handle_t curThread = GetCurrentThread();
-		return curThread == m_handle;
+		return GetCurrentThreadId() == m_id;
 	}
 
 } // namespace Axon

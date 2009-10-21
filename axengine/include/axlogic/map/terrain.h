@@ -36,6 +36,10 @@ namespace Axon { namespace Map {
 
 	class AlphaBlock {
 	public:
+		enum {
+			AlphaFormat = TexFormat::A8
+		};
+
 		typedef byte_t Data[Map::ChunkPixels][Map::ChunkPixels];
 
 		static AlphaBlock* const One;

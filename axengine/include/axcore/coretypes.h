@@ -170,6 +170,7 @@ namespace Axon {
 	typedef unsigned char byte_t;
 	typedef unsigned short ushort_t;
 	typedef unsigned int uint_t;
+	typedef unsigned long ulong_t;
 	typedef long long longlong_t;
 	typedef unsigned long long ulonglong_t;
 #endif

@@ -273,7 +273,9 @@ namespace Axon { namespace Render {
 
 	GLtexture::GLtexture()
 		: m_object(0)
-	{}
+	{
+		m_format = TexFormat::AUTO;
+	}
 
 
 	GLtexture::~GLtexture() {

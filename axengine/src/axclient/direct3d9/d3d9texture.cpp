@@ -169,6 +169,7 @@ namespace Axon { namespace Render {
 	{
 		m_initialized = false;
 		m_initFlags = 0;
+		m_format = TexFormat::AUTO;
 		m_object = 0;
 
 		m_filterMode = FM_Linear;

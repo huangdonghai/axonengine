@@ -63,12 +63,12 @@ namespace Axon { namespace Map {
 			m_texture->initialize(TexFormat::A8, Map::ChunkPixels, Map::ChunkPixels);
 			g_assetManager->addAsset(Asset::kTexture, key, m_texture.get());
 #else
-			m_texture = Texture::create(key, TexFormat::A8, Map::ChunkPixels, Map::ChunkPixels);
+			m_texture = Texture::create(key, AlphaFormat, Map::ChunkPixels, Map::ChunkPixels);
 #endif
 			m_texture->setClampMode(Texture::CM_ClampToEdge);
 		}
 
-		m_texture->uploadSubTexture(Rect(0,0,Map::ChunkPixels,Map::ChunkPixels), &m_data[0][0]);
+		m_texture->uploadSubTexture(Rect(0,0,Map::ChunkPixels,Map::ChunkPixels), &m_data[0][0], AlphaFormat);
 	}
 
 	LayerGen::LayerGen(Terrain* terrain, int layerId) {
