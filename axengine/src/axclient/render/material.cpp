@@ -318,10 +318,17 @@ namespace Axon { namespace Render {
 
 	void Material::syncFrame()
 	{
-		for (Link<Material>* node = ms_needDeleteLinkHead.getNextNode(); node; node = node->getNextNode()) {
+		Link<Material>* node = ms_needDeleteLinkHead.getNextNode();
+
+		while (node) {
 			Material* owner = node->getOwner();
+			Link<Material>* next = node->getNextNode();
+
+			node->removeFromList();
 			ms_materialDict.erase(owner->getKey());
 			delete owner;
+
+			node = next;
 		}
 
 		ms_needDeleteLinkHead.clearList();

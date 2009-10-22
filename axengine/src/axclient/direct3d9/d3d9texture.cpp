@@ -726,10 +726,14 @@ namespace Axon { namespace Render {
 		{
 			// check need free
 			Link<Texture>* it = m_needFreeHead.getNextNode();
-			for (; it; it = it->getNextNode()) {
+			while (it) {
 				D3D9texture* owner = (D3D9texture*)it->getOwner();
+				Link<Texture>* next = it->getNextNode();
+				it->removeFromList();
 				m_textureDict.erase(owner->getKey());
 				SafeDelete(owner);
+
+				it = next;
 			}
 			m_needFreeHead.clearList();
 		}
