@@ -723,13 +723,12 @@ namespace Axon { namespace Render {
 			m_needGenMipmapHead.clearList();
 		}
 
-		return;
-
 		{
 			// check need free
 			Link<Texture>* it = m_needFreeHead.getNextNode();
 			for (; it; it = it->getNextNode()) {
 				D3D9texture* owner = (D3D9texture*)it->getOwner();
+				m_textureDict.erase(owner->getKey());
 				SafeDelete(owner);
 			}
 			m_needFreeHead.clearList();

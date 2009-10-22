@@ -15,7 +15,8 @@ namespace Axon { namespace Render {
 	Material::MaterialDict Material::ms_materialDict;
 	Link<Material> Material::ms_needDeleteLinkHead;
 
-	Material::Material() {
+	Material::Material()
+	{
 		m_baseTcAnim = false;
 		m_shaderMacroNeedRegen = true;
 		m_diffuse = Vector3::One;
@@ -34,14 +35,16 @@ namespace Axon { namespace Render {
 		m_needDeleteLink.setOwner(this);
 	}
 
-	Material::~Material() {
+	Material::~Material()
+	{
 		// TODO: free texture
 
 //		FreeAsset_(m_matfile);
 //		FreeAsset_(m_shaderTemplate);
 	}
 
-	bool Material::doInit(const String& name, intptr_t arg) {
+	bool Material::doInit(const String& name, intptr_t arg)
+	{
 		if (!PathUtil::haveDir(name))
 			m_key = "materials/" + name;
 		else
@@ -92,15 +95,18 @@ namespace Axon { namespace Render {
 		return true;
 	}
 
-	const String& Material::getShaderName() const {
+	const String& Material::getShaderName() const
+	{
 		return m_decl->getShaderName();
 	}
 
-	Shader* Material::getShaderTemplate() const {
+	Shader* Material::getShaderTemplate() const
+	{
 		return m_shaderTemplate;
 	}
 
-	Shader* Material::getRealShader() const {
+	Shader* Material::getRealShader() const
+	{
 		return 0;
 	}
 
@@ -121,7 +127,8 @@ namespace Axon { namespace Render {
 	}
 #endif
 
-	void Material::setParameter(const String& name, int count, const float* ptr) {
+	void Material::setParameter(const String& name, int count, const float* ptr)
+	{
 		if (!count) {
 			count = 1;
 		}
@@ -135,12 +142,14 @@ namespace Axon { namespace Render {
 		::memcpy(&value[0], ptr, count * sizeof(float));
 	}
 
-	const ShaderParams& Material::getParameters() const {
+	const ShaderParams& Material::getParameters() const
+	{
 		return m_shaderParams;
 	}
 
 
-	const ShaderMacro& Material::getShaderMacro() {
+	const ShaderMacro& Material::getShaderMacro()
+	{
 		if (m_shaderMacroNeedRegen  || r_forceUpdateMaterialMacro->getBool()) {
 			m_shaderMacroNeedRegen = false;
 			m_haveDetail = false;
@@ -197,18 +206,21 @@ namespace Axon { namespace Render {
 	}
 
 
-	void Material::setBaseTcMatrix(const Matrix4& matrix) {
+	void Material::setBaseTcMatrix(const Matrix4& matrix)
+	{
 		m_shaderMacroNeedRegen = true;
 		m_baseTcAnim = true;
 		m_baseTcMatrix = matrix;
 	}
 
-	void Material::setTexGen(SamplerType st, const TexGen& texgen) {
+	void Material::setTexGen(SamplerType st, const TexGen& texgen)
+	{
 		m_shaderMacroNeedRegen = true;
 		m_texgens[st] = texgen;
 	}
 
-	const TexGen& Material::getTexGen(SamplerType st) const {
+	const TexGen& Material::getTexGen(SamplerType st) const
+	{
 		return m_texgens[st];
 	}
 
@@ -262,6 +274,7 @@ namespace Axon { namespace Render {
 
 		if (it != ms_materialDict.end()) {
 			Material* mat = it->second;
+			mat->m_needDeleteLink.removeFromList();
 			mat->addref();
 			return mat;
 		}
@@ -300,15 +313,14 @@ namespace Axon { namespace Render {
 
 	void Material::_deleteMaterial( Material* mat )
 	{
-		ms_needDeleteLinkHead.addToEnd(mat->m_needDeleteLink);
+		mat->m_needDeleteLink.addToEnd(ms_needDeleteLinkHead);
 	}
 
 	void Material::syncFrame()
 	{
-		return;
-
 		for (Link<Material>* node = ms_needDeleteLinkHead.getNextNode(); node; node = node->getNextNode()) {
 			Material* owner = node->getOwner();
+			ms_materialDict.erase(owner->getKey());
 			delete owner;
 		}
 

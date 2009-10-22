@@ -11,66 +11,61 @@ read the license and understand and accept it fully.
 #ifndef AX_CCMDSYSTEM_H
 #define AX_CCMDSYSTEM_H
 
-#define AX_DECLARE_COMMAND_HANDLER(classname)		\
-public:												\
-	typedef classname _selfclass;														\
-	typedef void (classname::*__fnCmdEntry)(const CmdArgs& params);					\
-	struct __CMDENTRY {																	\
-		const char* name;															\
-		__fnCmdEntry fn;																\
-	};																					\
-	virtual void HandleCmd(const CmdArgs& params);									\
-	virtual __CmdEntry* GetCmdEntries(uint_t* datasize);
+#define AX_DECLARE_COMMAND_HANDLER(cls)						\
+public:														\
+	typedef cls _selfclass;									\
+	typedef void (cls::*CmdFunc_t)(const CmdArgs& params);	\
+	struct MyCmdEntry {										\
+		const char* name;									\
+		CmdFunc_t fn;										\
+	};														\
+	virtual void HandleCmd(const CmdArgs& params);			\
+	virtual CmdEntry* GetCmdEntries(uint_t* datasize);
 
 // begin command mapping
-#define AX_BEGIN_COMMAND_MAP(classname)												\
-	void classname::HandleCmd(const CmdArgs& params) {								\
-		const __CMDENTRY* entry;														\
-																						\
+#define AX_BEGIN_COMMAND_MAP(cls)													\
+	void cls::HandleCmd(const CmdArgs& params) {									\
+		const MyCmdEntry* entry;													\
+																					\
 		AX_ASSERT(!params.tokened[0].empty());										\
-		const char* name = params.tokened[0].c_str(); uint_t datasize;					\
-		for (entry = (__CMDENTRY*)GetCmdEntries(&datasize); entry->name; entry++) {	\
+		const char* name = params.tokened[0].c_str(); uint_t datasize;				\
+		for (entry = (MyCmdEntry*)GetCmdEntries(&datasize); entry->name; entry++) {	\
 			if (!StringUtil::stricmp(entry->name, name)) {							\
-				(this->*(entry->fn))(params);											\
-			}																			\
-		}																				\
-	}																					\
-	__CmdEntry* classname::GetCmdEntries(uint_t* datasize) {							\
-		static __CMDENTRY entries[] = {
+				(this->*(entry->fn))(params);										\
+			}																		\
+		}																			\
+	}																				\
+	CmdEntry* cls::GetCmdEntries(uint_t* datasize) {								\
+		static MyCmdEntry entries[] = {
 
 
 // command entry
-#define AX_COMMAND_ENTRY(name, func)													\
+#define AX_COMMAND_ENTRY(name, func)												\
 		{ name, &_selfclass::func },
 
 
 // end command mapping
-#define AX_END_COMMAND_MAP()															\
-		{ NULL, NULL } };																\
-		*datasize = sizeof(__CMDENTRY); return (__CmdEntry *)&entries[0]; }
+#define AX_END_COMMAND_MAP()														\
+		{ NULL, NULL } };															\
+		*datasize = sizeof(MyCmdEntry); return (CmdEntry *)&entries[0]; }
 
 
 namespace Axon {
 
 	struct CmdArgs {
-		StringSeq tokened;	// tokenized parameter by ' '(SPACE)
-								// usually use this
-
-		String rawParam;	// raw parameter string, for some complicate
-								// scription command
+		StringSeq tokened;	// tokenized parameter by ' '(SPACE), usually use this
+		String rawParam;	// raw parameter string, for some complicate, scription command
 	};
 
-	struct __CmdEntry;
-
-	struct ICmdHandler {
-		virtual __CmdEntry* GetCmdEntries(uint_t* datasize) = 0;	// for internal use
-		virtual void HandleCmd(const CmdArgs& params) = 0;
-		virtual ~ICmdHandler() = 0 {}
-	};
-
-	struct __CmdEntry {
+	struct CmdEntry {
 		const char* name;
 		void* fn;
+	};
+
+	struct ICmdHandler {
+		virtual CmdEntry* GetCmdEntries(uint_t* datasize) = 0;	// for internal use
+		virtual void HandleCmd(const CmdArgs& params) = 0;
+		virtual ~ICmdHandler() = 0 {}
 	};
 
 

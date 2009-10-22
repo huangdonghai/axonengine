@@ -83,6 +83,7 @@ namespace Axon { namespace Render {
 		static void finalizeManager();
 		static FixedString normalizeKey(const String& name);
 		static void syncFrame();
+		static void matlist_f(const CmdArgs& args);
 		// end management
 
 	private:

@@ -86,13 +86,17 @@ namespace Axon { namespace Render {
 		return key;
 	}
 
+	void Texture::texlist_f( const CmdArgs& args )
+	{
+		s_textureManager->texlist_f(args);
+	}
+
 	//--------------------------------------------------------------------------
 	// class TextureManager
 	//--------------------------------------------------------------------------
 
 	TextureManager::TextureManager()
 	{
-		m_frameId = 0;
 		if (s_textureManager) {
 			Errorf("TextureManager already instanced");
 			return;
@@ -150,7 +154,7 @@ namespace Axon { namespace Render {
 	TextureRp TextureManager::createTexture( const String& debugname, TexFormat format, int width, int height, Texture::InitFlags flags /*= 0*/ )
 	{
 		std::stringstream ss;
-		ss << "_" << debugname << "_" << m_frameId << "_" << g_system->generateId();
+		ss << "_" << debugname << "$" << g_system->generateId();
 
 		FixedString key = Texture::normalizeKey(ss.str());
 
@@ -222,14 +226,33 @@ namespace Axon { namespace Render {
 
 	void TextureManager::generateMipmap( Texture* tex )
 	{
-		if (!tex->m_needGenMipmapLink.isInList())
-			m_needGenMipmapHead.addToEnd(m_needGenMipmapHead);
+		tex->m_needGenMipmapLink.addToEnd(m_needGenMipmapHead);
 	}
 
 	void TextureManager::freeTexture( Texture* tex )
 	{
-		if (!tex->m_needFreeLink.isInList())
-			m_needFreeHead.addToEnd(m_needFreeHead);
+		tex->m_needFreeLink.addToEnd(m_needFreeHead);
+	}
+
+	void TextureManager::texlist_f( const CmdArgs& args )
+	{
+		Printf("List texture(s):\n");
+
+		int count = 0;
+		TextureDict::const_iterator it = m_textureDict.begin();
+		for (; it != m_textureDict.end(); ++it) {
+			Texture* tex = it->second;
+			if (!tex) {
+				continue;
+			}
+
+			int width, height, depth;
+			tex->getSize(width, height, depth);
+			Printf("%4d %4d %4d %8s %s\n",tex->getRefCount(), width, height, tex->getFormat().getStringName(), tex->m_key.c_str());
+			count++;
+		}
+
+		Printf("total %d texture(s)\n", count);
 	}
 
 }} // namespace Axon::Render

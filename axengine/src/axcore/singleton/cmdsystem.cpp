@@ -76,7 +76,7 @@ namespace Axon {
 
 	void CmdSystem::registerHandler(ICmdHandler* handler) {
 		uint_t datasize;
-		__CmdEntry* entry = handler->GetCmdEntries(&datasize);
+		CmdEntry* entry = handler->GetCmdEntries(&datasize);
 		Cmd cmd;
 
 		for (; entry->name; ((byte_t*&)entry)+=datasize) {
@@ -88,7 +88,7 @@ namespace Axon {
 
 	void CmdSystem::removeHandler(ICmdHandler* handler) {
 		uint_t datasize;
-		__CmdEntry* entry = handler->GetCmdEntries(&datasize);
+		CmdEntry* entry = handler->GetCmdEntries(&datasize);
 
 		for (; entry->name; ((byte_t*&)entry)+=datasize) {
 			m_cmdDict.erase(entry->name);

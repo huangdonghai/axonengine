@@ -15,13 +15,16 @@ namespace Axon { namespace Render {
 
 	class Selection;
 
-	class AX_API System : public Object {
+	class AX_API System : public Object, public ICmdHandler
+	{
 	public:
 		// script
 		AX_DECLARE_CLASS(System, Object, "RenderSystem")
 			AX_METHOD(info)
 			AX_METHOD(test)
 		AX_END_CLASS()
+
+		AX_DECLARE_COMMAND_HANDLER(System);
 
 		System();
 		~System();
@@ -67,6 +70,11 @@ namespace Axon { namespace Render {
 		void removeEntityManager(IEntityManager* manager);
 		int getNumEntityManager() const;
 		IEntityManager* getEntityManager(int index) const;
+
+	protected:
+		// console command
+		void texlist_f(const CmdArgs& args);
+		void matlist_f(const CmdArgs& args);
 
 	public:
 		String name;

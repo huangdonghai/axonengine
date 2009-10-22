@@ -20,6 +20,9 @@ namespace Axon { namespace Render {
 	static const char* glname = "axopengl.driver";
 	static const char* d3d9name = "axdirect3d9.driver";
 
+	AX_BEGIN_COMMAND_MAP(System)
+	AX_END_COMMAND_MAP()
+
 	System::System()
 		: m_initialized(false)
 		, m_isSelectMode(false)
@@ -407,6 +410,16 @@ namespace Axon { namespace Render {
 	const IDriver::Info* System::getDriverInfo()
 	{
 		return g_renderDriver->getDriverInfo();
+	}
+
+	void System::texlist_f( const CmdArgs& args )
+	{
+		Texture::texlist_f(args);
+	}
+
+	void System::matlist_f( const CmdArgs& args )
+	{
+		Material::matlist_f(args);
 	}
 
 }} // namespace Axon::Render

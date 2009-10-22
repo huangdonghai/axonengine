@@ -88,6 +88,7 @@ namespace Axon { namespace Render {
 		static void initManager();
 		static void finalizeManager();
 		static FixedString normalizeKey(const String& name);
+		static void texlist_f(const CmdArgs& args);
 
 	protected:
 		Texture();
@@ -121,6 +122,7 @@ namespace Axon { namespace Render {
 		void uploadSubTexture(Texture* tex, const Rect& rect, const void* pixels, TexFormat format = TexFormat::AUTO);
 		void generateMipmap(Texture* tex);
 		void freeTexture(Texture* tex);
+		void texlist_f(const CmdArgs& args);
 		// end internal use
 
 	protected:
@@ -158,9 +160,6 @@ namespace Axon { namespace Render {
 		FreeCmdList m_freeCmdList;
 		Link<Texture> m_needGenMipmapHead;
 		Link<Texture> m_needFreeHead;
-
-		// frame id
-		int m_frameId;
 
 		// texture manager's hash table
 		ExistDict m_existDict;
