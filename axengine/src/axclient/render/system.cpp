@@ -21,15 +21,21 @@ namespace Axon { namespace Render {
 	static const char* d3d9name = "axdirect3d9.driver";
 
 	AX_BEGIN_COMMAND_MAP(System)
+		AX_COMMAND_ENTRY("texlist",	texlist_f)
+		AX_COMMAND_ENTRY("matlist",	matlist_f)
 	AX_END_COMMAND_MAP()
 
 	System::System()
 		: m_initialized(false)
 		, m_isSelectMode(false)
 		, m_frameNum(0)
-	{}
+	{
+		g_cmdSystem->registerHandler(this);
+	}
 
-	System::~System() {
+	System::~System()
+	{
+		g_cmdSystem->removeHandler(this);
 	}
 
 	void System::initialize() {

@@ -332,5 +332,10 @@ namespace Axon { namespace Render {
 		_deleteMaterial(this);
 	}
 
+	void Material::matlist_f( const CmdArgs& args )
+	{
+
+	}
+
 }} // namespace Axon::Render
 

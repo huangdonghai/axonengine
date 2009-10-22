@@ -143,7 +143,7 @@ namespace Axon { namespace Render {
 		String m_key;
 		FaceDefs m_faceDefs;
 		Sequence<FontFace*>	m_fontFaces;
-		TextureAtlas* m_texPool;
+		TextureAtlas* m_texAtlas;
 		GlyphInfo m_glyphInfos[MAX_CHARS];
 		int m_width, m_height;
 	};

@@ -27,10 +27,11 @@ namespace Axon { namespace Render {
 	{
 	}
 
-	TextureAtlas::~TextureAtlas() {
-	}
+	TextureAtlas::~TextureAtlas()
+	{}
 
-	void TextureAtlas::initialize(const String& name, int chunk_width, int chunk_height, int side_length, TexFormat format) {
+	void TextureAtlas::initialize(const String& name, int chunk_width, int chunk_height, int side_length, TexFormat format)
+	{
 		if (m_initialized) {
 			Errorf("TextureAtlas::initialize: has initialized");
 			return;
@@ -85,7 +86,7 @@ namespace Axon { namespace Render {
 		for (i=0; i<m_numTextures; i++) {
 			// maybe some machine fast enough so spend time < 1ms, so we add i to
 			// texture name, make sure name is unique
-			StringUtil::sprintf(tex_name, "_texture_pool_%s_%s", m_name.c_str(), Uuid::generateUuid().c_str());
+			StringUtil::sprintf(tex_name, "_texture_pool_%s", m_name.c_str());
 #if 0
 			m_textures[i] << dynamic_cast<Texture*>(g_assetManager->createEmptyAsset(Asset::kTexture));
 			AX_ASSERT(m_textures[i]);

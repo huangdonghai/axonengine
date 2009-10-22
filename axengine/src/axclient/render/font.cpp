@@ -354,9 +354,9 @@ namespace Axon { namespace Render {
 		}
 
 		// init texture pool
-		m_texPool = new TextureAtlas;
-		m_texPool->initialize(m_name, m_width, m_height, TEXTURE_SIZE, TexFormat::A8);
-		m_texPool->setTextureFilterMode(Texture::FM_Linear);
+		m_texAtlas = new TextureAtlas;
+		m_texAtlas->initialize(m_name, m_width, m_height, TEXTURE_SIZE, TexFormat::A8);
+		m_texAtlas->setTextureFilterMode(Texture::FM_Linear);
 
 		// test
 		newFrame();
@@ -490,12 +490,12 @@ namespace Axon { namespace Render {
 		wchar_t c;
 		byte_t* data = (byte_t*)Alloca(m_width*m_height);
 
-		m_texPool->newFrame();
+		m_texAtlas->newFrame();
 
 		for (i=0; *str; str++, i++) {
 			c = *str;
 
-			if (!m_texPool->isChunkResident(c)) {
+			if (!m_texAtlas->isChunkResident(c)) {
 				if (!uploadCharGlyph(c, data)) {
 					i++;		// return right len
 					break;
@@ -508,7 +508,7 @@ namespace Axon { namespace Render {
 
 	void Font::getCharInfo(int id, Texture*& tex, Vector4& tc)
 	{
-		return m_texPool->getChunkInfo(id, tex, tc);
+		return m_texAtlas->getChunkInfo(id, tex, tc);
 	}
 
 	const GlyphInfo& Font::getGlyphInfo(wchar_t c)
@@ -532,12 +532,12 @@ namespace Axon { namespace Render {
 			m_fontFaces[m_glyphInfos[c].face]->getCharBitmap(c, m_width, m_height, data);
 		}
 
-		return m_texPool->updateChunk(c, data);
+		return m_texAtlas->updateChunk(c, data);
 	}
 
 	void Font::newFrame()
 	{
-		m_texPool->newFrame();
+		m_texAtlas->newFrame();
 	}
 
 	FontRp Font::load( const String& name, int w, int h )
