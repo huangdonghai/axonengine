@@ -11,7 +11,8 @@ read the license and understand and accept it fully.
 
 namespace Axon { namespace Render {
 
-	QueuedLight* QueuedScene::addLight(Light* light) {
+	QueuedLight* QueuedScene::addLight(Light* light)
+	{
 		if (numLights >= MAX_LIGHTS) {
 			Errorf("MAX_LIGHTS exceeded");
 			light->fillQueued(nullptr);
@@ -38,7 +39,8 @@ namespace Axon { namespace Render {
 		return ql;
 	}
 
-	QueuedEntity* QueuedScene::addActor(Entity* actor) {
+	QueuedEntity* QueuedScene::addActor(Entity* actor)
+	{
 		if (numActors >= MAX_ACTORS) {
 			Errorf("MAX_ACTORS exceeded");
 			return 0;
@@ -67,7 +69,8 @@ namespace Axon { namespace Render {
 		return qa;
 	}
 
-	Interaction* QueuedScene::addInteraction(QueuedEntity* actor, Primitive* prim, bool chain) {
+	Interaction* QueuedScene::addInteraction(QueuedEntity* actor, Primitive* prim, bool chain)
+	{
 		if (numInteractions == MAX_INTERACTIONS) {
 			Errorf("MAX_INTERACTIONS exceeded");
 			return 0;
@@ -161,11 +164,13 @@ namespace Axon { namespace Render {
 		debugInteractions[numDebugInteractions++] = ia;
 	}
 
-	inline static bool Lesser(const Interaction* a, const Interaction* b) {
+	inline static bool Lesser(const Interaction* a, const Interaction* b)
+	{
 		return a->sortkey < b->sortkey;
 	}
 
-	inline static bool LesserLight(const QueuedLight* a, const QueuedLight* b) {
+	inline static bool LesserLight(const QueuedLight* a, const QueuedLight* b)
+	{
 		return a->preQueued->getVisSize() < b->preQueued->getVisSize();
 	}
 
@@ -315,10 +320,11 @@ namespace Axon { namespace Render {
 	Queue::Queue()
 	{}
 
-	Queue::~Queue() {
-	}
+	Queue::~Queue()
+	{}
 
-	void Queue::initialize() {
+	void Queue::initialize()
+	{
 	//	m_queuedScenes = NULL;
 		m_sceneCount = 0;
 		m_stack = new MemoryStack();
@@ -332,7 +338,8 @@ namespace Axon { namespace Render {
 		m_providingEvent->setEvent();
 	}
 
-	void Queue::finalize() {
+	void Queue::finalize()
+	{
 		beginProviding();
 		delete(m_cacheEndEvent);
 		delete(m_consumingEvent);
@@ -340,20 +347,24 @@ namespace Axon { namespace Render {
 		delete(m_stack);
 	}
 
-	void Queue::beginProviding() {
+	void Queue::beginProviding()
+	{
 		m_providingEvent->lock();
 	}
 
-	MemoryStack* Queue::getMemoryStack() {
+	MemoryStack* Queue::getMemoryStack()
+	{
 		return m_stack;
 	}
 
-	void Queue::setTarget(Target* target) {
+	void Queue::setTarget(Target* target)
+	{
 		m_target = target;
 	}
 
 
-	QueuedScene* Queue::allocQueuedScene() {
+	QueuedScene* Queue::allocQueuedScene()
+	{
 		QueuedScene* queued_view = new(m_stack) QueuedScene;
 
 		return queued_view;
@@ -369,28 +380,34 @@ namespace Axon { namespace Render {
 		m_queuedScenes[m_sceneCount++] = scene;
 	}
 
-	Interaction* Queue::allocInteraction() {
+	Interaction* Queue::allocInteraction()
+	{
 		return new(m_stack) Interaction;
 	}
 
-	Interaction** Queue::allocInteractionPointer(int num) {
+	Interaction** Queue::allocInteractionPointer(int num)
+	{
 		return new(m_stack) Interaction*[num];
 	}
 
 
-	QueuedLight* Queue::allocQueuedLight() {
+	QueuedLight* Queue::allocQueuedLight()
+	{
 		return new(m_stack) QueuedLight;
 	}
 
-	QueuedEntity* Queue::allocQueuedActor(int num) {
+	QueuedEntity* Queue::allocQueuedActor(int num)
+	{
 		return new(m_stack) QueuedEntity[num];
 	}
 
-	int* Queue::allocPrimitives(int num) {
+	int* Queue::allocPrimitives(int num)
+	{
 		return new(m_stack) int[num];
 	}
 
-	void Queue::endProviding() {
+	void Queue::endProviding()
+	{
 		m_providingEvent->resetEvent();
 		m_consumingEvent->setEvent();
 
@@ -398,27 +415,32 @@ namespace Axon { namespace Render {
 		m_cacheEndEvent->lock();
 	}
 
-	void Queue::beginConsuming() {
+	void Queue::beginConsuming()
+	{
 		m_consumingEvent->lock();
 	}
 
-	void Queue::setCacheEnd() {
+	void Queue::setCacheEnd()
+	{
 		m_cacheEndEvent->setEvent();
 	}
 
 
-	QueuedScene* Queue::getScene(int index) {
+	QueuedScene* Queue::getScene(int index)
+	{
 		AX_ASSERT(index >= 0 && index < m_sceneCount);
 
 		return m_queuedScenes[index];
 	}
 
-	void Queue::clear() {
+	void Queue::clear()
+	{
 		m_stack->clear();
 		m_sceneCount = 0;
 	}
 
-	void Queue::endConsuming() {
+	void Queue::endConsuming()
+	{
 		m_consumingEvent->resetEvent();
 		m_providingEvent->setEvent();
 	}

@@ -37,7 +37,8 @@ namespace Axon { namespace Render {
 	static bool s_threadRendering;
 
 
-	static Matrix4 GetConvertMatrix() {
+	static Matrix4 GetConvertMatrix()
+	{
 		Matrix4 mat;
 		mat.setIdentity();
 		mat.scale(1, 1, 0.5);
@@ -88,9 +89,11 @@ namespace Axon { namespace Render {
 		m_frameId = 0;
 	}
 
-	D3D9thread::~D3D9thread() {}
+	D3D9thread::~D3D9thread()
+	{}
 
-	void D3D9thread::runFrame(bool isInThread) {
+	void D3D9thread::runFrame(bool isInThread)
+	{
 		uint_t startTime = OsUtil::milliseconds();
 
 		d3d9Queue = g_queues[m_frameId%2];
@@ -126,7 +129,7 @@ namespace Axon { namespace Render {
 		clearer.clearColor(true);
 
 		if (r_nulldraw->getBool()) {
-			//			goto endframe;
+//			goto endframe;
 		}
 
 
@@ -169,7 +172,8 @@ namespace Axon { namespace Render {
 		}
 	}
 
-	void D3D9thread::beginFrame() {
+	void D3D9thread::beginFrame()
+	{
 		if (!r_specular->getBool()) {
 			g_shaderMacro.setMacro(ShaderMacro::G_DISABLE_SPECULAR);
 		} else {
@@ -177,7 +181,8 @@ namespace Axon { namespace Render {
 		}
 	}
 
-	void D3D9thread::drawScene(QueuedScene* scene, const D3D9clearer& clearer) {
+	void D3D9thread::drawScene(QueuedScene* scene, const D3D9clearer& clearer)
+	{
 		if (scene->sceneType == QueuedScene::WorldMain) {
 			drawScene_world(scene, clearer);
 		} else if (scene->sceneType == QueuedScene::Default) {
@@ -187,7 +192,8 @@ namespace Axon { namespace Render {
 		}
 	}
 
-	void D3D9thread::setupScene(QueuedScene* scene, const D3D9clearer* clearer, Target* target, Camera* camera) {
+	void D3D9thread::setupScene(QueuedScene* scene, const D3D9clearer* clearer, Target* target, Camera* camera)
+	{
 		//		AX_ASSERT(scene);
 		if (!scene && !camera) {
 			Errorf("D3D9thread::setupScene: parameter error");
@@ -267,7 +273,8 @@ namespace Axon { namespace Render {
 		}
 	}
 
-	void D3D9thread::unsetScene(QueuedScene* scene, const D3D9clearer* clearer, Target* target, Camera* camera) {
+	void D3D9thread::unsetScene(QueuedScene* scene, const D3D9clearer* clearer, Target* target, Camera* camera)
+	{
 		if (!scene && !camera) {
 			Errorf("D3D9thread::unsetScene: parameter error");
 			return;
@@ -282,7 +289,8 @@ namespace Axon { namespace Render {
 		}
 	}
 
-	void D3D9thread::drawPrimitive(int prim_id) {
+	void D3D9thread::drawPrimitive(int prim_id)
+	{
 		d3d9Interaction = nullptr;
 
 		D3D9primitive* prim = d3d9PrimitiveManager->getPrimitive(prim_id);
@@ -299,7 +307,8 @@ namespace Axon { namespace Render {
 		prim->draw(Technique::Main);
 	}
 
-	void D3D9thread::drawInteraction(Interaction* ia) {
+	void D3D9thread::drawInteraction(Interaction* ia)
+	{
 		static bool primMatrixSet = false;
 		d3d9Interaction = ia;
 
@@ -344,13 +353,15 @@ namespace Axon { namespace Render {
 	}
 
 
-	void D3D9thread::endFrame() {
+	void D3D9thread::endFrame()
+	{
 		d3d9FrameWnd->present();
 
 		d3d9Queue->clear();
 	}
 
-	void D3D9thread::syncFrame() {
+	void D3D9thread::syncFrame()
+	{
 		BEGIN_PIX("SyncFrame");
 		Material::syncFrame();
 		D3D9texture::syncFrame();
@@ -381,7 +392,8 @@ namespace Axon { namespace Render {
 		END_PIX();
 	}
 
-	void D3D9thread::cacheSceneRes(QueuedScene* scene) {
+	void D3D9thread::cacheSceneRes(QueuedScene* scene)
+	{
 		Scene* s_view = scene->source;
 
 		//		scene->camera = s_view->camera;
@@ -471,11 +483,13 @@ namespace Axon { namespace Render {
 		}
 	}
 
-	void D3D9driver::runFrame() {
+	void D3D9driver::runFrame()
+	{
 		d3d9Thread->runFrame(false);
 	}
 
-	void D3D9thread::drawPass_zfill(QueuedScene* scene) {
+	void D3D9thread::drawPass_zfill(QueuedScene* scene)
+	{
 		s_technique = Technique::Zpass;
 
 		D3D9clearer clearer;
@@ -493,7 +507,8 @@ namespace Axon { namespace Render {
 //		d3d9StateManager->SetRenderState(D3DRS_COLORWRITEENABLE, 0xf);
 	}
 
-	void D3D9thread::drawPass_composite(QueuedScene* scene) {
+	void D3D9thread::drawPass_composite(QueuedScene* scene)
+	{
 
 		if (r_wireframe->getBool()) {
 			//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -537,11 +552,13 @@ namespace Axon { namespace Render {
 		d3d9ForceWireframe = false;
 	}
 
-	inline DWORD F2DW(FLOAT f) {
+	inline DWORD F2DW(FLOAT f)
+	{
 		return *((DWORD*)&f);
 	}
 
-	void D3D9thread::drawPass_shadowGen(QueuedScene* scene) {
+	void D3D9thread::drawPass_shadowGen(QueuedScene* scene)
+	{
 		if (!scene->numInteractions) {
 			return;
 		}
@@ -659,10 +676,11 @@ namespace Axon { namespace Render {
 		}
 	}
 
-	void D3D9thread::drawPass_postprocess(QueuedScene* scene) {
-	}
+	void D3D9thread::drawPass_postprocess(QueuedScene* scene)
+	{}
 
-	void D3D9thread::drawPass_overlay(QueuedScene* scene) {
+	void D3D9thread::drawPass_overlay(QueuedScene* scene)
+	{
 		if (!scene->numOverlayPrimitives) {
 			return;
 		}
@@ -680,7 +698,8 @@ namespace Axon { namespace Render {
 		unsetScene(scene, nullptr, nullptr, &camera);
 	}
 
-	void D3D9thread::drawScene_world(QueuedScene* scene, const D3D9clearer& clearer) {
+	void D3D9thread::drawScene_world(QueuedScene* scene, const D3D9clearer& clearer)
+	{
 		BEGIN_PIX("DrawWorld");
 
 		s_technique = Technique::Main;
@@ -782,7 +801,8 @@ namespace Axon { namespace Render {
 		END_PIX();
 	}
 
-	void D3D9thread::drawScene_worldSub(QueuedScene* scene) {
+	void D3D9thread::drawScene_worldSub(QueuedScene* scene)
+	{
 		s_technique = Technique::Main;
 
 		D3D9clearer clear;
@@ -807,7 +827,8 @@ namespace Axon { namespace Render {
 		unsetScene(scene, &clear);
 	}
 
-	void D3D9thread::drawScene_noworld(QueuedScene* scene, const D3D9clearer& clearer) {
+	void D3D9thread::drawScene_noworld(QueuedScene* scene, const D3D9clearer& clearer)
+	{
 		BEGIN_PIX("DrawNoworld");
 		s_technique = Technique::Main;
 

@@ -11,18 +11,22 @@ read the license and understand and accept it fully.
 
 namespace Axon { namespace Render {
 
-	class Light::ShadowInfo {
+	class Light::ShadowInfo
+	{
 	public:
 		class SplitInfo {
 		public:
-			SplitInfo(Light::ShadowInfo* shadowInfo, int shadowSize) {
+			SplitInfo(Light::ShadowInfo* shadowInfo, int shadowSize)
+			{
 				m_target = 0;
 				m_updateFrame = -1;
 
 				if (shadowInfo->m_light->getLightType() != Light::kGlobal)
 					m_target = g_targetManager->allocTarget(Target::PooledAlloc, shadowSize, shadowSize, TexFormat::D16);
 			}
-			~SplitInfo() {
+
+			~SplitInfo()
+			{
 				if (m_target)
 					g_targetManager->freeTarget(m_target);
 			}
@@ -37,7 +41,8 @@ namespace Axon { namespace Render {
 			BoundingBox m_csmBbox;	// calc scale and offset
 		};
 
-		ShadowInfo(Light* light, int numSplits, int shadowSize) {
+		ShadowInfo(Light* light, int numSplits, int shadowSize)
+		{
 			m_light = light;
 			m_shadowMapSize = Math::nearestPowerOfTwo(shadowSize);
 
@@ -69,7 +74,8 @@ namespace Axon { namespace Render {
 			init();
 		}
 
-		~ShadowInfo() {
+		~ShadowInfo()
+		{
 			for (int i = 0; i < m_numSplits; i++) {
 				SafeDelete(m_splits[i]);
 			}
@@ -365,7 +371,7 @@ namespace Axon { namespace Render {
 			float f[Light::MAX_CSM_SPLITS+1];
 
 			// calculate split dist
-			m_numCsmSplits= updateSplitDist(f, neard, fard);
+			m_numCsmSplits = updateSplitDist(f, neard, fard);
 
 			int statindexes[4] = {
 				stat_csmSplit0Dist, stat_csmSplit1Dist, stat_csmSplit2Dist, stat_csmSplit3Dist,
@@ -795,7 +801,7 @@ namespace Axon { namespace Render {
 		float zfar = camera.getZfar();
 
 		camera.calcPointsAlongZdist(m_queuedLight->lightVolume, znear);
-		camera.calcPointsAlongZdist(&m_queuedLight->lightVolume[4], zfar-50);
+		camera.calcPointsAlongZdist(&m_queuedLight->lightVolume[4], zfar * 0.9f);
 	}
 
 	void Light::prepareLightBuffer_Point(QueuedScene* scene)
