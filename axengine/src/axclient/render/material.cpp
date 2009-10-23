@@ -341,7 +341,21 @@ namespace Axon { namespace Render {
 
 	void Material::matlist_f( const CmdArgs& args )
 	{
+		Printf("List material(s):\n");
 
+		int count = 0;
+		MaterialDict::const_iterator it = ms_materialDict.begin();
+		for (; it != ms_materialDict.end(); ++it) {
+			Material* mtr = it->second;
+			if (!mtr) {
+				continue;
+			}
+
+			Printf("%4d %s\n",mtr->getRefCount(), mtr->m_key.c_str());
+			count++;
+		}
+
+		Printf("total %d material(s)\n", count);
 	}
 
 }} // namespace Axon::Render
