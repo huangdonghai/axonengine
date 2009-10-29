@@ -1,7 +1,8 @@
-<ui version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>GfxTrackEditClass</class>
- <widget class="QMainWindow" name="GfxTrackEditClass" >
-  <property name="geometry" >
+ <widget class="QMainWindow" name="GfxTrackEditClass">
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
@@ -9,114 +10,124 @@
     <height>444</height>
    </rect>
   </property>
-  <property name="windowTitle" >
+  <property name="windowTitle">
    <string>Gfx Track Edit</string>
   </property>
-  <widget class="QWidget" name="centralWidget" >
-   <layout class="QHBoxLayout" name="horizontalLayout" >
-    <property name="spacing" >
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <property name="spacing">
      <number>0</number>
     </property>
-    <property name="margin" >
+    <property name="margin">
      <number>0</number>
     </property>
     <item>
-     <widget class="QGraphicsView" name="graphicsView" />
+     <widget class="QGraphicsView" name="graphicsView">
+      <property name="frameShape">
+       <enum>QFrame::NoFrame</enum>
+      </property>
+     </widget>
     </item>
    </layout>
   </widget>
-  <widget class="QMenuBar" name="menuBar" >
-   <property name="geometry" >
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
      <width>728</width>
-     <height>21</height>
+     <height>19</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuCurves" >
-    <property name="title" >
+   <widget class="QMenu" name="menuCurves">
+    <property name="title">
      <string>Curves</string>
     </property>
    </widget>
-   <addaction name="menuCurves" />
+   <addaction name="menuCurves"/>
   </widget>
-  <widget class="QToolBar" name="toolBar" >
-   <property name="windowTitle" >
+  <widget class="QToolBar" name="toolBar">
+   <property name="windowTitle">
     <string>Toogle Bar</string>
    </property>
-   <attribute name="toolBarArea" >
+   <attribute name="toolBarArea">
     <enum>TopToolBarArea</enum>
    </attribute>
-   <attribute name="toolBarBreak" >
+   <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
-   <addaction name="actionToggle" />
+   <addaction name="actionToggle"/>
   </widget>
-  <widget class="QToolBar" name="mainToolBar" >
-   <property name="windowTitle" >
+  <widget class="QToolBar" name="mainToolBar">
+   <property name="windowTitle">
     <string>Main Toolbar</string>
    </property>
-   <attribute name="toolBarArea" >
+   <attribute name="toolBarArea">
     <enum>TopToolBarArea</enum>
    </attribute>
-   <attribute name="toolBarBreak" >
+   <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
-   <addaction name="actionMoveKeys" />
-   <addaction name="actionSlideKeys" />
-   <addaction name="separator" />
-   <addaction name="actionScakeKeys" />
-   <addaction name="actionScaleValues" />
-   <addaction name="separator" />
-   <addaction name="actionAddKeys" />
-   <addaction name="separator" />
-   <addaction name="actionDrawCurves" />
-   <addaction name="actionReduceKeys" />
-   <addaction name="separator" />
-   <addaction name="actionTangentsStep" />
-   <addaction name="actionTangentsLinear" />
-   <addaction name="actionTangentsCurve" />
-   <addaction name="separator" />
-   <addaction name="actionShowStats" />
-   <addaction name="separator" />
-   <addaction name="actionPan" />
-   <addaction name="actionHorizontalExtends" />
-   <addaction name="actionVerticalExtends" />
-   <addaction name="actionZoom" />
-   <addaction name="actionZoomRigion" />
+   <addaction name="actionMoveKeys"/>
+   <addaction name="actionSlideKeys"/>
+   <addaction name="separator"/>
+   <addaction name="actionScakeKeys"/>
+   <addaction name="actionScaleValues"/>
+   <addaction name="separator"/>
+   <addaction name="actionAddKeys"/>
+   <addaction name="separator"/>
+   <addaction name="actionDrawCurves"/>
+   <addaction name="actionReduceKeys"/>
+   <addaction name="separator"/>
+   <addaction name="actionTangentsStep"/>
+   <addaction name="actionTangentsLinear"/>
+   <addaction name="actionTangentsCurve"/>
+   <addaction name="separator"/>
+   <addaction name="actionShowStats"/>
+   <addaction name="separator"/>
+   <addaction name="actionPan"/>
+   <addaction name="actionHorizontalExtends"/>
+   <addaction name="actionVerticalExtends"/>
+   <addaction name="actionZoom"/>
+   <addaction name="actionZoomRigion"/>
   </widget>
-  <widget class="QDockWidget" name="dockWidget" >
-   <property name="windowTitle" >
+  <widget class="QDockWidget" name="dockWidget">
+   <property name="windowTitle">
     <string>Tracks List</string>
    </property>
-   <attribute name="dockWidgetArea" >
+   <attribute name="dockWidgetArea">
     <number>1</number>
    </attribute>
-   <widget class="QWidget" name="dockWidgetContents" >
-    <layout class="QHBoxLayout" name="horizontalLayout_2" >
-     <property name="spacing" >
+   <widget class="QWidget" name="dockWidgetContents">
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <property name="spacing">
       <number>0</number>
      </property>
-     <property name="margin" >
+     <property name="margin">
       <number>0</number>
      </property>
      <item>
-      <widget class="QTreeWidget" name="treeWidget" >
-       <property name="sizePolicy" >
-        <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
+      <widget class="QTreeWidget" name="treeWidget">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
-       <property name="minimumSize" >
+       <property name="minimumSize">
         <size>
          <width>200</width>
          <height>0</height>
         </size>
        </property>
+       <property name="frameShape">
+        <enum>QFrame::NoFrame</enum>
+       </property>
+       <attribute name="headerVisible">
+        <bool>false</bool>
+       </attribute>
        <column>
-        <property name="text" >
+        <property name="text">
          <string>1</string>
         </property>
        </column>
@@ -125,163 +136,163 @@
     </layout>
    </widget>
   </widget>
-  <action name="actionToggle" >
-   <property name="icon" >
+  <action name="actionToggle">
+   <property name="icon">
     <iconset>
      <normaloff>://track/toggle_track.png</normaloff>://track/toggle_track.png</iconset>
    </property>
-   <property name="text" >
+   <property name="text">
     <string>Toggle</string>
    </property>
   </action>
-  <action name="actionMoveKeys" >
-   <property name="icon" >
+  <action name="actionMoveKeys">
+   <property name="icon">
     <iconset>
      <normaloff>://track/key_move.png</normaloff>://track/key_move.png</iconset>
    </property>
-   <property name="text" >
+   <property name="text">
     <string>Move Keys</string>
    </property>
   </action>
-  <action name="actionSlideKeys" >
-   <property name="icon" >
+  <action name="actionSlideKeys">
+   <property name="icon">
     <iconset>
      <normaloff>://track/key_slide.png</normaloff>://track/key_slide.png</iconset>
    </property>
-   <property name="text" >
+   <property name="text">
     <string>Slide Keys</string>
    </property>
   </action>
-  <action name="actionScakeKeys" >
-   <property name="icon" >
+  <action name="actionScakeKeys">
+   <property name="icon">
     <iconset>
      <normaloff>://track/key_scale.png</normaloff>://track/key_scale.png</iconset>
    </property>
-   <property name="text" >
+   <property name="text">
     <string>Scake Keys</string>
    </property>
   </action>
-  <action name="actionScaleValues" >
-   <property name="icon" >
+  <action name="actionScaleValues">
+   <property name="icon">
     <iconset>
      <normaloff>://track/key_value_scale.png</normaloff>://track/key_value_scale.png</iconset>
    </property>
-   <property name="text" >
+   <property name="text">
     <string>Scale Values</string>
    </property>
   </action>
-  <action name="actionAddKeys" >
-   <property name="icon" >
+  <action name="actionAddKeys">
+   <property name="icon">
     <iconset>
      <normaloff>://track/key_add.png</normaloff>://track/key_add.png</iconset>
    </property>
-   <property name="text" >
+   <property name="text">
     <string>Add Keys</string>
    </property>
   </action>
-  <action name="actionDrawCurves" >
-   <property name="icon" >
+  <action name="actionDrawCurves">
+   <property name="icon">
     <iconset>
      <normaloff>://track/draw_curve.png</normaloff>://track/draw_curve.png</iconset>
    </property>
-   <property name="text" >
+   <property name="text">
     <string>Draw Curves</string>
    </property>
   </action>
-  <action name="actionReduceKeys" >
-   <property name="icon" >
+  <action name="actionReduceKeys">
+   <property name="icon">
     <iconset>
      <normaloff>://track/key_reduce.png</normaloff>://track/key_reduce.png</iconset>
    </property>
-   <property name="text" >
+   <property name="text">
     <string>Reduce Keys</string>
    </property>
   </action>
-  <action name="actionTangentsStep" >
-   <property name="icon" >
+  <action name="actionTangentsStep">
+   <property name="icon">
     <iconset>
      <normaloff>://track/t_step.png</normaloff>://track/t_step.png</iconset>
    </property>
-   <property name="text" >
+   <property name="text">
     <string>Set Tangents to Step</string>
    </property>
   </action>
-  <action name="actionTangentsLinear" >
-   <property name="icon" >
+  <action name="actionTangentsLinear">
+   <property name="icon">
     <iconset>
      <normaloff>://track/t_linear.png</normaloff>://track/t_linear.png</iconset>
    </property>
-   <property name="text" >
+   <property name="text">
     <string>Set Tangents to Linear</string>
    </property>
   </action>
-  <action name="actionTangentsCurve" >
-   <property name="icon" >
+  <action name="actionTangentsCurve">
+   <property name="icon">
     <iconset>
      <normaloff>://track/t_curve.png</normaloff>://track/t_curve.png</iconset>
    </property>
-   <property name="text" >
+   <property name="text">
     <string>Set Tangents to Curve</string>
    </property>
   </action>
-  <action name="actionShowStats" >
-   <property name="icon" >
+  <action name="actionShowStats">
+   <property name="icon">
     <iconset>
      <normaloff>://track/show_key_stat.png</normaloff>://track/show_key_stat.png</iconset>
    </property>
-   <property name="text" >
+   <property name="text">
     <string>Show Selected Key Stats</string>
    </property>
   </action>
-  <action name="actionPan" >
-   <property name="icon" >
+  <action name="actionPan">
+   <property name="icon">
     <iconset>
      <normaloff>://track/pan.png</normaloff>://track/pan.png</iconset>
    </property>
-   <property name="text" >
+   <property name="text">
     <string>Pan</string>
    </property>
   </action>
-  <action name="actionHorizontalExtends" >
-   <property name="icon" >
+  <action name="actionHorizontalExtends">
+   <property name="icon">
     <iconset>
      <normaloff>://track/zoom_hor_extends.png</normaloff>://track/zoom_hor_extends.png</iconset>
    </property>
-   <property name="text" >
+   <property name="text">
     <string>Zoom Horizontal Extends</string>
    </property>
   </action>
-  <action name="actionVerticalExtends" >
-   <property name="icon" >
+  <action name="actionVerticalExtends">
+   <property name="icon">
     <iconset>
      <normaloff>://track/zoom_ver_extends.png</normaloff>://track/zoom_ver_extends.png</iconset>
    </property>
-   <property name="text" >
+   <property name="text">
     <string>Zoom Value Extends</string>
    </property>
   </action>
-  <action name="actionZoom" >
-   <property name="icon" >
+  <action name="actionZoom">
+   <property name="icon">
     <iconset>
      <normaloff>://track/zoom.png</normaloff>://track/zoom.png</iconset>
    </property>
-   <property name="text" >
+   <property name="text">
     <string>Zoom</string>
    </property>
   </action>
-  <action name="actionZoomRigion" >
-   <property name="icon" >
+  <action name="actionZoomRigion">
+   <property name="icon">
     <iconset>
      <normaloff>://track/zoom_region.png</normaloff>://track/zoom_region.png</iconset>
    </property>
-   <property name="text" >
+   <property name="text">
     <string>Zoom Rigion</string>
    </property>
   </action>
  </widget>
- <layoutdefault spacing="6" margin="11" />
+ <layoutdefault spacing="6" margin="11"/>
  <resources>
-  <include location="resources/editor.qrc" />
+  <include location="resources/editor.qrc"/>
  </resources>
  <connections/>
 </ui>
