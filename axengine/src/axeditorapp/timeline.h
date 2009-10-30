@@ -38,6 +38,10 @@ private:
 	int m_frameTime;
 	int m_masterTime;
 	int m_curTime;
+
+	// runtime
+	int m_frameCount;
+	float m_framePad;	// use float for smooth scale
 };
 
 #endif // TIMELINE_H

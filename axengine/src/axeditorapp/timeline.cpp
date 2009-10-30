@@ -8,18 +8,33 @@ read the license and understand and accept it fully.
 */
 
 #include "timeline.h"
+#include "workbench.h"
 
 enum {
 	MIN_DELTA = 8,
+	TEXT_DELTA = 45,
 	PAD_LEFT = 8,
 	PAD_RIGHT = 32,
 	PAD = PAD_LEFT + PAD_RIGHT
 };
 
+static int s_pads[] = { 1, 2, 5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000 };
+
+static int nextPad(int x)
+{
+	for (int i = 0; i < ArraySize(s_pads); i++) {
+		if (x < s_pads[i])
+			return s_pads[i];
+	}
+
+	Errorf("over flowed");
+	return 0;
+}
+
 TimeLine::TimeLine(QWidget *parent)
 	: QGraphicsView(parent)
 {
-	m_totalTime = 4000;
+	m_totalTime = 40000;
 	m_frameTime = 40;
 	m_masterTime = 200;
 	m_curTime = 0;
@@ -37,77 +52,54 @@ void TimeLine::drawBackground(QPainter *painter, const QRectF &rectf)
 {
 	QRect rect = rectf.toRect();
 
-//	painter->setPen(Qt::darkGray);
-//	painter->drawLine(rect.x(), rect.y(), rect.right(), rect.y());
+	m_frameCount = m_totalTime / m_frameTime;
+	int totalPixels = rect.width() - PAD;
+	m_framePad = (float)totalPixels / m_frameCount;
 
-//	painter->setPen(Qt::white);
-//	painter->drawLine(rect.x(), rect.bottom(), rect.right(), rect.bottom());
+	int baseStep = 1;
 
-	drawLine(painter, rect, m_frameTime, 11, false);
-	drawLine(painter, rect, m_masterTime, 24, true);
+	while (baseStep * m_framePad < MIN_DELTA)
+		baseStep = nextPad(baseStep);
+
+	drawLine(painter, rect, baseStep, 11, false);
+
+	// draw text
+	int textStep = nextPad(baseStep);
+	textStep = nextPad(textStep);
+
+	while (textStep * m_framePad < TEXT_DELTA) {
+		textStep = nextPad(textStep);
+	}
+	drawLine(painter, rect, textStep, 22, true);
 
 #if 0
-	// Shadow
-	QRectF sceneRect = rect;
-	QRectF rightShadow(sceneRect.right(), sceneRect.top() + 5, 5, sceneRect.height());
-	QRectF bottomShadow(sceneRect.left() + 5, sceneRect.bottom(), sceneRect.width(), 5);
-	if (rightShadow.intersects(rect) || rightShadow.contains(rect))
-		painter->fillRect(rightShadow, Qt::darkGray);
-	if (bottomShadow.intersects(rect) || bottomShadow.contains(rect))
-		painter->fillRect(bottomShadow, Qt::darkGray);
+	int step = drawLine(painter, rect, m_frameTime, 11, false);
+	int masterStep = m_masterTime * step;
 
-	// Fill
-	QLinearGradient gradient(sceneRect.topLeft(), sceneRect.bottomRight());
-	gradient.setColorAt(0, Qt::white);
-	gradient.setColorAt(1, Qt::lightGray);
-	painter->fillRect(rect.intersect(sceneRect), gradient);
-	painter->setBrush(Qt::NoBrush);
-	painter->drawRect(sceneRect);
-
-	// Text
-	QRectF textRect(sceneRect.left() + 4, sceneRect.top() + 4,
-		sceneRect.width() - 4, sceneRect.height() - 4);
-	QString message(tr("Click and drag the nodes around, and zoom with the mouse "
-		"wheel or the '+' and '-' keys"));
-
-	QFont font = painter->font();
-	font.setBold(true);
-	font.setPointSize(14);
-	painter->setFont(font);
-	painter->setPen(Qt::lightGray);
-	painter->drawText(textRect.translated(2, 2), message);
-	painter->setPen(Qt::black);
-	painter->drawText(textRect, message);
+	drawLine(painter, rect, masterStep, 24, true);
 #endif
 }
 
-void TimeLine::drawLine( QPainter* painter, const QRect& rect, int stepf, int len, bool draw_text )
+void TimeLine::drawLine(QPainter* painter, const QRect& rect, int stepf, int len, bool draw_text)
 {
-	const QFont& font = painter->font();
-
-	int totalSteps = m_totalTime / stepf;
-
-	int showSteps = (rect.width() - PAD) / MIN_DELTA;
-	int step = totalSteps / showSteps;
-	if (step < 1) step = 1;
-
 	// draw step line
 	painter->setPen(Qt::gray);
-	for (int i = 0; i <= totalSteps; i += step) {
 
+	for (int i = 0; i <= m_frameCount; i += stepf) {
 		painter->setPen(Qt::gray);
 		if (!draw_text) {
-			int x = PAD_LEFT + rect.x() + i * (rect.width() - PAD) / totalSteps;
+			int x = PAD_LEFT + rect.x() + i * m_framePad;
 			painter->drawLine(x, rect.y(), x, rect.y() + len);
 			continue;
 		}
 
-		int x = PAD_LEFT + rect.x() + i * (rect.width() - PAD) / totalSteps;
+		int x = PAD_LEFT + rect.x() + i * m_framePad;
 		painter->drawLine(x, rect.y(), x, rect.y() + len - 8);
 
 		painter->setPen(Qt::black);
 		QRect textRect(x - 23, rect.y()+18, 49, 8);
-		QString msg = QString("%1").arg(i * stepf / m_frameTime);
+		QString msg = QString("%1").arg(i);
 		painter->drawText(textRect, Qt::AlignCenter, msg);
 	}
 }
+

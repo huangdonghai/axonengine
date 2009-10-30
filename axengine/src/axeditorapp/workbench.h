@@ -13,7 +13,6 @@ read the license and understand and accept it fully.
 
 #include "private.h"
 
-
 #include "terrainpanel.h"
 #include "sidepanel.h"
 #include "workspace.h"
