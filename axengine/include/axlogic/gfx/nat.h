@@ -42,22 +42,34 @@ namespace Axon { namespace Gfx {
 	}
 
 	template <class T>
-	class Nat {
+	class Nat
+	{
 	public:
-		enum InterpolateType {
+		enum InterpolateType
+		{
 			InterpolateType_None,
 			InterpolateType_Linear,
 			InterpolateType_Cubic,
 			InterpolateType_Hermite,
 		};
 
+		typedef struct {
+			int time;
+			T val;
+		} KeyValue;
+
 		T getValue(int time);
 
 		InterpolateType m_interpolateType;
 		FixedString m_name;
-		Sequence<int> m_times;
-		Sequence<T> m_datas;
+		Sequence<KeyValue> m_keyValues;
 		bool m_loop;
+	};
+
+	class IAnimatable {
+	public:
+		virtual ~IAnimatable();
+
 	};
 
 }} // namespace Axon::Gfx

@@ -24,8 +24,6 @@ public:
 	void setTotalTime(int val) { m_totalTime = val; }
 	int getFrameTime() const { return m_frameTime; }
 	void setFrameTime(int val) { m_frameTime = val; }
-	int getMasterTime() const { return m_masterTime; }
-	void setMasterTime(int val) { m_masterTime = val; }
 	int getCurTime() const { return m_curTime; }
 	void setCurTime(int val) { m_curTime = val; }
 
@@ -36,7 +34,6 @@ protected:
 private:
 	int m_totalTime;
 	int m_frameTime;
-	int m_masterTime;
 	int m_curTime;
 
 	// runtime

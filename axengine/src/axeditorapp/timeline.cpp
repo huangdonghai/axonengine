@@ -34,9 +34,8 @@ static int nextPad(int x)
 TimeLine::TimeLine(QWidget *parent)
 	: QGraphicsView(parent)
 {
-	m_totalTime = 40000;
-	m_frameTime = 40;
-	m_masterTime = 200;
+	m_totalTime = 5000;
+	m_frameTime = 50;
 	m_curTime = 0;
 
 	QGraphicsScene *scene = new QGraphicsScene(this);
