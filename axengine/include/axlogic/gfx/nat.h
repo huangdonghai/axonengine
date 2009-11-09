@@ -68,7 +68,29 @@ namespace Axon { namespace Gfx {
 
 	class IAnimatable {
 	public:
+		enum DataType {
+			kBool,
+			kFloat,
+			kColor,
+			kVector,
+			kGroup,
+			kEvent
+		};
+
+		enum InterpolateType
+		{
+			InterpolateType_None,
+			InterpolateType_Linear,
+			InterpolateType_Cubic,
+			InterpolateType_Hermite,
+		};
+
 		virtual ~IAnimatable();
+
+		virtual String getName();
+		virtual DataType getDataType();
+		virtual InterpolateType getInterpolateType();
+		virtual void setInterpolateType(InterpolateType it);
 
 	};
 
