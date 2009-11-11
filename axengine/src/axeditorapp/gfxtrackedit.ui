@@ -22,7 +22,7 @@
      <number>0</number>
     </property>
     <item>
-     <widget class="QGraphicsView" name="graphicsView">
+     <widget class="TrackWidget" name="graphicsView">
       <property name="frameShape">
        <enum>QFrame::NoFrame</enum>
       </property>
@@ -291,6 +291,13 @@
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>TrackWidget</class>
+   <extends>QGraphicsView</extends>
+   <header>trackwidget.h</header>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="resources/editor.qrc"/>
  </resources>
