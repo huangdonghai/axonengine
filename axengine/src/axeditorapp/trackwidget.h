@@ -10,6 +10,8 @@ class TrackWidget;
 class TrackWidgetItem : public QGraphicsItem
 {
 public:
+	friend class TrackWidget;
+
 	TrackWidgetItem();
 	TrackWidgetItem(TrackWidget* widget);
 	TrackWidgetItem(TrackWidgetItem* parent);
@@ -28,11 +30,15 @@ public:
 protected:
 	void emitDataChanged();
 
+	void setTrackIndex(int index);
+	void relayout();
+
 private:
 	TrackWidget* m_widget;
 	TrackWidgetItem* m_parent;
 	Gfx::IAnimatable* m_anim;
 	QGraphicsItem* m_graphItem;
+	int m_trackIndex;
 };
 
 
@@ -48,9 +54,13 @@ public:
 protected:
 	virtual void resizeEvent(QResizeEvent * event);
 
+	void addTrackItem(TrackWidgetItem* track);
+	void relayout();
+
 private:
 	Gfx::IAnimatable* m_anim;
 	QGraphicsScene* m_scene;
+	QList<TrackWidgetItem*> m_tracks;
 	int m_lineHeight;
 	bool m_showBar;
 };

@@ -16,7 +16,8 @@ read the license and understand and accept it fully.
 
 namespace Axon {
 
-	void CDECL Errorf(const char* fmt, ...) {
+	void CDECL Errorf(const char* fmt, ...)
+	{
 		va_list argptr;
 		int len;
 		char buffer[4096];
@@ -65,7 +66,8 @@ namespace Axon {
 		abort();
 	}
 
-	void CDECL Debugf(const char* fmt, ...) {
+	void CDECL Debugf(const char* fmt, ...)
+	{
 		va_list argptr;
 		int len;
 		char buffer[1024];
@@ -84,7 +86,8 @@ namespace Axon {
 		}
 	}
 
-	void CDECL Printf(const char* fmt, ...) {
+	void CDECL Printf(const char* fmt, ...)
+	{
 		va_list argptr;
 		int len;
 		char buffer[1024];
@@ -104,7 +107,8 @@ namespace Axon {
 
 #pragma comment(lib, "Winmm.lib")
 
-	uint_t OsUtil::milliseconds(void) {
+	uint_t OsUtil::milliseconds()
+	{
 #if 0
 		return Microseconds()  / 1000;
 #else
@@ -119,7 +123,8 @@ namespace Axon {
 #endif
 	}
 
-	ulonglong_t OsUtil::microseconds(void) {
+	ulonglong_t OsUtil::microseconds()
+	{
 	// on multiprocessor, this may be have bugs for QPC..... fix me
 	static LARGE_INTEGER starttime;
 	static LARGE_INTEGER freq;
@@ -145,7 +150,8 @@ namespace Axon {
 		return (now.QuadPart - starttime.QuadPart) * microseconds_per_second / freq.QuadPart;
 	}
 
-	String OsUtil::getClipboardString() {
+	String OsUtil::getClipboardString()
+	{
 		String out;
 		wchar_t* data;
 
@@ -163,7 +169,8 @@ namespace Axon {
 		return out;
 	}
 
-	handle_t OsUtil::loadSysDll(const String& name) {
+	handle_t OsUtil::loadSysDll(const String& name)
+	{
 		String libname = name + ".dll";
 
 		handle_t hDll = (handle_t)::LoadLibraryW(u2w(libname).c_str());
@@ -173,7 +180,8 @@ namespace Axon {
 		return hDll;
 	}
 
-	handle_t OsUtil::loadDll(const String& name) {
+	handle_t OsUtil::loadDll(const String& name)
+	{
 	#if 0
 		String libname = name + "D";
 		return LoadSysDll(libname);
@@ -182,11 +190,13 @@ namespace Axon {
 	#endif
 	}
 
-	void* OsUtil::getProcEntry(handle_t handle, const String& name) {
+	void* OsUtil::getProcEntry(handle_t handle, const String& name)
+	{
 		return (void *)::GetProcAddress((HMODULE)handle, name.c_str());
 	}
 
-	bool OsUtil::freeDll(handle_t handle) {
+	bool OsUtil::freeDll(handle_t handle)
+	{
 		return ::FreeLibrary((HMODULE)handle) ? true : false;
 	}
 
@@ -197,7 +207,8 @@ namespace Axon {
 	static bool __haveit;
 	static byte_t __macAddress[6];
 
-	bool OsUtil::getMacAddress(byte_t address[6]) {
+	bool OsUtil::getMacAddress(byte_t address[6])
+	{
 		if (__inited) {
 			memcpy(address, __macAddress, 6);
 			return __haveit;
@@ -256,11 +267,13 @@ namespace Axon {
 		return __haveit;
 	}
 
-	String OsUtil::getHostName() {
+	String OsUtil::getHostName()
+	{
 		return "";
 	}
 
-	int OsUtil::getCpuUsage() {
+	int OsUtil::getCpuUsage()
+	{
 		static DWORD64 dw64LastTime = 0;
 		DWORD64 dw64CurrTime = 0;
 
@@ -307,7 +320,8 @@ namespace Axon {
 
 #pragma comment(lib, "Psapi.lib")
 
-	int OsUtil::getMemoryUsage() {
+	int OsUtil::getMemoryUsage()
+	{
 		PROCESS_MEMORY_COUNTERS pmc;
 		pmc.cb = sizeof(PROCESS_MEMORY_COUNTERS);
 	  
@@ -351,7 +365,8 @@ namespace Axon {
 		return 0;
 	}
 
-	void OsUtil::sleep(int ms) {
+	void OsUtil::sleep(int ms)
+	{
 		::Sleep(ms);
 	}
 
