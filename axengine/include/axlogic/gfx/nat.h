@@ -12,7 +12,7 @@ read the license and understand and accept it fully.
 #ifndef AX_GFX_NAT_H
 #define AX_GFX_NAT_H
 
-namespace Axon { namespace Gfx {
+namespace Axon {
 
 	// interpolation functions
 	template<class T>
@@ -91,9 +91,8 @@ namespace Axon { namespace Gfx {
 		virtual DataType getDataType();
 		virtual InterpolateType getInterpolateType();
 		virtual void setInterpolateType(InterpolateType it);
-
 	};
 
-}} // namespace Axon::Gfx
+} // namespace Axon
 
 #endif

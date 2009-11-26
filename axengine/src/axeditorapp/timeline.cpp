@@ -10,25 +10,27 @@ read the license and understand and accept it fully.
 #include "timeline.h"
 #include "workbench.h"
 
-enum {
-	MIN_DELTA = 8,
-	TEXT_DELTA = 45,
-	PAD_LEFT = 8,
-	PAD_RIGHT = 32,
-	PAD = PAD_LEFT + PAD_RIGHT
-};
+namespace {
+	enum {
+		MIN_DELTA = 8,
+		TEXT_DELTA = 45,
+		PAD_LEFT = 8,
+		PAD_RIGHT = 32,
+		PAD = PAD_LEFT + PAD_RIGHT
+	};
 
-static int s_pads[] = { 1, 2, 5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000 };
+	static int s_pads[] = { 1, 2, 5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000 };
 
-static int nextPad(int x)
-{
-	for (int i = 0; i < ArraySize(s_pads); i++) {
-		if (x < s_pads[i])
-			return s_pads[i];
+	static int nextPad(int x)
+	{
+		for (int i = 0; i < ArraySize(s_pads); i++) {
+			if (x < s_pads[i])
+				return s_pads[i];
+		}
+
+		Errorf("overflowed");
+		return 0;
 	}
-
-	Errorf("over flowed");
-	return 0;
 }
 
 TimeLine::TimeLine(QWidget *parent)
@@ -96,9 +98,9 @@ void TimeLine::drawLine(QPainter* painter, const QRect& rect, int stepf, int len
 		painter->drawLine(x, rect.y(), x, rect.y() + len - 8);
 
 		painter->setPen(Qt::black);
-		QRect textRect(x - 23, rect.y()+18, 49, 8);
+		QRect text_rect(x - 23, rect.y()+18, 49, 8);
 		QString msg = QString("%1").arg(i);
-		painter->drawText(textRect, Qt::AlignCenter, msg);
+		painter->drawText(text_rect, Qt::AlignCenter, msg);
 	}
 }
 
