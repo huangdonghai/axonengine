@@ -27,32 +27,61 @@ namespace {
 	}
 } // anonymous namespace
 
-AnimWrapper::AnimWrapper() : m_widget(0), m_parent(0)
-{
+TrackNameItem::TrackNameItem( AnimWrapper* wrapper )
+	: m_wrapper(wrapper)
+{}
 
+TrackNameItem::~TrackNameItem()
+{}
+
+QRectF TrackNameItem::boundingRect() const
+{
+	return QRectF(0,0,1,1);
+}
+
+void TrackNameItem::paint( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget /*= 0*/ )
+{
+	AX_ASSERT(widget);
+
+	QRectF left_rect(0, 0, LEFT_WIDTH, TRACK_HEIGHT);
+
+	const QPalette& pal = widget->palette();
+
+	painter->setPen(pal.color(QPalette::Window));
+	if (m_wrapper->getTrackIndex() % 2) {
+		painter->setBrush(pal.alternateBase());
+	} else {
+		painter->setBrush(pal.base());
+	}
+	painter->drawRect(0, 0, LEFT_WIDTH+10, TRACK_HEIGHT);
+
+	painter->drawText(left_rect, Qt::AlignCenter, "track");
 }
 
 AnimWrapper::AnimWrapper(TrackWidget* widget) : m_widget(widget), m_parent(0)
 {
-
+	init();
 }
 
 AnimWrapper::AnimWrapper(AnimWrapper* parent) : m_widget(0), m_parent(parent)
 {
 	if (m_parent)
 		m_widget = m_parent->m_widget;
+	init();
 }
 
 AnimWrapper::AnimWrapper(AnimWrapper* parent, IAnimatable* anim) : m_widget(0), m_parent(parent)
 {
 	if (m_parent)
 		m_widget = m_parent->m_widget;
+	init();
 }
 
 AnimWrapper::AnimWrapper(AnimWrapper* parent, AnimWrapper* preceding) : m_widget(0), m_parent(parent)
 {
 	if (m_parent)
 		m_widget = m_parent->m_widget;
+	init();
 }
 
 AnimWrapper::~AnimWrapper()
@@ -62,23 +91,6 @@ AnimWrapper::~AnimWrapper()
 
 void AnimWrapper::paint(QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget /*= 0*/ )
 {
-	AX_ASSERT(m_widget);
-
-	QRectF rect = m_widget->sceneRect();
-	QRectF left_rect(0, 0, LEFT_WIDTH, TRACK_HEIGHT);
-
-	const QPalette& pal = m_widget->palette();
-
-	painter->setPen(pal.color(QPalette::Window));
-	if (m_trackIndex % 2) {
-		painter->setBrush(pal.alternateBase());
-	} else {
-		painter->setBrush(pal.base());
-	}
-	painter->drawRect(0, 0, LEFT_WIDTH, TRACK_HEIGHT);
-	painter->drawRect(LEFT_WIDTH, 0, rect.width() - LEFT_WIDTH, TRACK_HEIGHT);
-
-	painter->drawText(left_rect, Qt::AlignCenter, "track");
 }
 
 QRectF AnimWrapper::boundingRect() const
@@ -94,12 +106,26 @@ void AnimWrapper::setTrackIndex( int index )
 
 void AnimWrapper::relayout()
 {
+	m_trackNameItem->setPos(0, m_trackIndex * TRACK_HEIGHT);
+}
+
+void AnimWrapper::init()
+{
+	m_trackIndex = 0;
+
+	m_trackNameItem = new TrackNameItem(this);
+//	m_trackViewItem = new TrackViewItem(this);
+
+	RectLayout* track_left = m_widget->getLayoutFrame(TrackWidget::TrackLeft);
+	m_trackNameItem->setParentItem(track_left);
 }
 
 
-
 RectLayout::RectLayout()
-{ /* do nothing */ }
+{
+	setFlag(ItemClipsToShape);
+	setFlag(ItemClipsChildrenToShape);
+}
 
 RectLayout::~RectLayout()
 { /* do nothing */ }
@@ -113,10 +139,15 @@ QRectF RectLayout::rect() const
 
 void RectLayout::setRect(const QRectF &rect)
 {
+	QPointF pos = rect.topLeft();
+	m_rect = rect;
+	m_rect.moveTopLeft(QPointF(0,0));
+#if 0
 	if (m_rect == rect)
 		return;
+#endif
 	prepareGeometryChange();
-	m_rect = rect;
+	setPos(pos);
 	update();
 }
 
@@ -252,9 +283,9 @@ TrackWidget::TrackWidget(QWidget *parent)
 	m_scene->addItem(m_frameTrackLeft);
 	m_scene->addItem(m_frameTrackRight);
 
-	AnimWrapper* item = new AnimWrapper();
+	AnimWrapper* item = new AnimWrapper(this);
 	addAnimWrapper(item);
-	addAnimWrapper(new AnimWrapper());
+	addAnimWrapper(new AnimWrapper(this));
 
 //	this->setBackgroundBrush(s_background);
 //	this->translate(100,100);
@@ -278,7 +309,7 @@ void TrackWidget::resizeEvent(QResizeEvent * event)
 
 void TrackWidget::addAnimWrapper(AnimWrapper* track)
 {
-	m_tracks.push_back(track);
+	m_wrappers.push_back(track);
 	track->m_widget = this;
 
 	relayout();
@@ -295,17 +326,17 @@ void TrackWidget::relayout()
 //	m_frameHeaderRight->setPos(LEFT_WIDTH, y0);
 	m_frameHeaderRight->setRect(LEFT_WIDTH, y0, rect.right() - LEFT_WIDTH, HEADER_HEIGHT);
 
-#if 0
-	QList<TrackItem*>::const_iterator it = m_tracks.begin();
+	m_frameTrackLeft->setRect(0, y1, LEFT_WIDTH, rect.bottom());
+
+	QList<AnimWrapper*>::const_iterator it = m_wrappers.begin();
 
 	int track_index = 0;
 
-	for (; it != m_tracks.end(); ++it) {
-		TrackItem* track = *it;
+	for (; it != m_wrappers.end(); ++it) {
+		AnimWrapper* track = *it;
 		track->setTrackIndex(track_index);
 		track_index++;
 	}
-#endif
 }
 
 void TrackWidget::drawBackground( QPainter *painter, const QRectF &rectf )
@@ -384,5 +415,26 @@ void TrackWidget::drawHeader(QPainter *painter, const QRectF &rect)
 		x += 4;
 		painter->drawText(x, 1, SIDE_PAD, 12, Qt::AlignLeft | Qt::AlignTop, msg);
 	}
+}
+
+RectLayout* TrackWidget::getLayoutFrame( LayoutFrameType lft ) const
+{
+	switch (lft) {
+	case CurveLeft:
+		return m_frameCurveLeft;
+	case CurveRight:
+		return m_frameCurveRight;
+	case HeaderLeft:
+		return m_frameHeaderLeft;
+	case HeaderRight:
+		return m_frameHeaderRight;
+	case TrackLeft:
+		return m_frameTrackLeft;
+	case TrackRight:
+		return m_frameTrackRight;
+	}
+
+	Errorf("bad arg");
+	return 0;
 }
 

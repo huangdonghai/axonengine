@@ -44,7 +44,6 @@ class AnimWrapper
 public:
 	friend class TrackWidget;
 
-	AnimWrapper();
 	AnimWrapper(TrackWidget* widget);
 	AnimWrapper(AnimWrapper* parent);
 	AnimWrapper(AnimWrapper* parent, IAnimatable* anim);
@@ -58,18 +57,24 @@ public:
 	virtual QRectF boundingRect() const;
 	virtual void paint(QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget = 0);
 
-protected:
-	void emitDataChanged();
-
+	int getTrackIndex() const { return m_trackIndex; }
 	void setTrackIndex(int index);
+
+protected:
+	void init();
+	void emitDataChanged();
 	void relayout();
 
 private:
 	TrackWidget* m_widget;
 	AnimWrapper* m_parent;
 	IAnimatable* m_anim;
+
+	// init
 	TrackNameItem* m_trackNameItem;
 	TrackViewItem* m_trackViewItem;
+
+	// runtime
 	int m_trackIndex;
 };
 
@@ -123,11 +128,17 @@ class TrackWidget : public QGraphicsView
 	Q_OBJECT
 
 public:
+	enum LayoutFrameType {
+		CurveLeft, CurveRight, HeaderLeft, HeaderRight, TrackLeft, TrackRight
+	};
+
 	TrackWidget(QWidget *parent);
 	~TrackWidget();
 
 	int getTimeRange() const { return 5000; }
 	int getFrameTime() const { return 50; }
+
+	RectLayout* getLayoutFrame(LayoutFrameType lft) const;
 
 protected:
 	virtual void resizeEvent(QResizeEvent * event);
@@ -140,7 +151,7 @@ protected:
 private:
 	IAnimatable* m_anim;
 	QGraphicsScene* m_scene;
-	QList<AnimWrapper*> m_tracks;
+	QList<AnimWrapper*> m_wrappers;
 	int m_lineHeight;
 	bool m_showBar;
 
