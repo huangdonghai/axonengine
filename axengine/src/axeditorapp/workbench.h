@@ -181,6 +181,8 @@ private:
 	SelectByNameDlg* m_selectByNameDlg;
 	ScriptEditor* m_scriptEditor;
 	GfxEditor* m_gfxEditor;
+
+	int m_timerUpdateStatus;
 };
 
 #endif // CXEDITORNEXGEN_H

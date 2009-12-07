@@ -8,7 +8,7 @@ read the license and understand and accept it fully.
 */
 
 
-
+#include "application.h"
 #include "filedialog.h"
 #include "filepreview.h"
 
@@ -138,7 +138,8 @@ FileDialog::~FileDialog()
 	//SafeDelete(mPreviewWidget);
 }
 
-void FileDialog::browseDir(const QString& dir, bool addHistory) {
+void FileDialog::browseDir(const QString& dir, bool addHistory)
+{
 	ui.treeWidget->clear();
 
 	if (addHistory) {
@@ -184,7 +185,8 @@ void FileDialog::browseDir(const QString& dir, bool addHistory) {
 	ui.dirComboBox->setCurrentIndex(level - 1);
 }
 
-void FileDialog::setRootDir(const QString& dir) {
+void FileDialog::setRootDir(const QString& dir)
+{
 	m_rootDir = dir;
 
 	if (!PathUtil::isDirectoryLetter(m_rootDir[m_rootDir.length()-1].toAscii()))
@@ -207,27 +209,32 @@ void FileDialog::setRootDir(const QString& dir) {
 	browseDir(m_rootDir, false);
 }
 
-void FileDialog::setViewMode(ViewMode mode) {
+void FileDialog::setViewMode(ViewMode mode)
+{
 	// NOT IMPLEMENTED
 }
 
-void FileDialog::setFileMode(FileMode mode) {
+void FileDialog::setFileMode(FileMode mode)
+{
 	m_fileMode = mode;
 
 	updateWidget();
 }
 
-void FileDialog::setAcceptMode(AcceptMode mode) {
+void FileDialog::setAcceptMode(AcceptMode mode)
+{
 	m_acceptMode = mode;
 
 	updateWidget();
 }
 
-void FileDialog::setDefaultSuffix(const QString& suffix) {
+void FileDialog::setDefaultSuffix(const QString& suffix)
+{
 	m_defaultSuffix = suffix;
 }
 
-void FileDialog::setFilter(const QString& filter) {
+void FileDialog::setFilter(const QString& filter)
+{
 	StringList strs = StringUtil::tokenize(q2u(filter).c_str(), L'|');
 
 	m_filters.clear();
@@ -241,22 +248,26 @@ void FileDialog::setFilter(const QString& filter) {
 	updateWidget();
 }
 
-void FileDialog::setFilters(const QStringList& filters) {
+void FileDialog::setFilters(const QStringList& filters)
+{
 	m_filters = filters;
 
 	updateWidget();
 }
 
-QString FileDialog::getFileName() const {
+QString FileDialog::getFileName() const
+{
 	return m_curFileName;
 }
 
 
-void FileDialog::SortByColumn(int column) {
+void FileDialog::SortByColumn(int column)
+{
 
 }
 
-void FileDialog::updateWidget() {
+void FileDialog::updateWidget()
+{
 	// filename widget
 	if (m_fileMode == ExistingFile)
 		ui.filenameEdit->setDisabled(true);
@@ -278,7 +289,8 @@ void FileDialog::updateWidget() {
 	}
 }
 
-void FileDialog::on_treeWidget_itemDoubleClicked(QTreeWidgetItem* item, int column ) {
+void FileDialog::on_treeWidget_itemDoubleClicked(QTreeWidgetItem* item, int column )
+{
 	FileItem* f_item = dynamic_cast<FileItem*>(item);
 
 	if (!f_item)
@@ -293,14 +305,16 @@ void FileDialog::on_treeWidget_itemDoubleClicked(QTreeWidgetItem* item, int colu
 	}
 }
 
-void FileDialog::on_rootDirTree_itemDoubleClicked(QTreeWidgetItem* item, int column) {
+void FileDialog::on_rootDirTree_itemDoubleClicked(QTreeWidgetItem* item, int column)
+{
 	QString fullpath = m_rootDir + item->text(0) + "/";
 
 	browseDir(fullpath, true);
 }
 
 
-void FileDialog::on_actionBack_triggered() {
+void FileDialog::on_actionBack_triggered()
+{
 	if (m_browsHistory.size() <= 0) {
 		return;
 	}
@@ -314,7 +328,8 @@ void FileDialog::on_actionBack_triggered() {
 	browseDir(fullpath, false);
 }
 
-void FileDialog::on_actionParentDir_triggered() {
+void FileDialog::on_actionParentDir_triggered()
+{
 	QString par_path = m_curDir;
 
 	// eat ending '/'
@@ -334,7 +349,8 @@ void FileDialog::on_actionParentDir_triggered() {
 	browseDir(par_path, true);
 }
 
-void FileDialog::on_treeWidget_itemClicked(QTreeWidgetItem* item, int column) {
+void FileDialog::on_treeWidget_itemClicked(QTreeWidgetItem* item, int column)
+{
 	FileItem* f_item = dynamic_cast<FileItem*>(item);
 
 	if (!f_item)
@@ -375,17 +391,20 @@ void FileDialog::on_treeWidget_itemClicked(QTreeWidgetItem* item, int column) {
 
 
 
-void FileDialog::on_dirComboBox_activated(int) {
+void FileDialog::on_dirComboBox_activated(int)
+{
 	QString& txt = ui.dirComboBox->currentText();
 
 	browseDir(txt, true);
 }
 
-void FileDialog::on_filterComboBox_activated(int) {
+void FileDialog::on_filterComboBox_activated(int)
+{
 	browseDir(m_curDir, false);
 }
 
-void FileDialog::on_okButton_clicked() {
+void FileDialog::on_okButton_clicked()
+{
 	if (ui.filenameEdit->text().isEmpty())
 		return;
 
@@ -393,11 +412,13 @@ void FileDialog::on_okButton_clicked() {
 }
 
 
-QString FileDialog::getDirectory(QWidget* parent, const QString& caption, const QString& dir) {
+QString FileDialog::getDirectory(QWidget* parent, const QString& caption, const QString& dir)
+{
 	return QString();
 }
 
-QString FileDialog::getOpenFileName(QWidget* parent, const QString& caption, const QString& dir, const QString& filter, QString* selectedFilter) {
+QString FileDialog::getOpenFileName(QWidget* parent, const QString& caption, const QString& dir, const QString& filter, QString* selectedFilter)
+{
 	FileDialog dlg(parent);
 
 	dlg.setWindowTitle(caption);
@@ -405,15 +426,19 @@ QString FileDialog::getOpenFileName(QWidget* parent, const QString& caption, con
 	dlg.setFileMode(ExistingFile);
 	dlg.setAcceptMode(AcceptOpen);
 	dlg.setRootDir(dir);
+	dlg.setWindowModality(Qt::WindowModal);
 
-	if (dlg.exec() == QDialog::Accepted) {
+	int result = dlg.exec();
+
+	if (result == QDialog::Accepted) {
 		return dlg.getFileName();
 	} else {
 		return QString();
 	}
 }
 
-QString FileDialog::getSaveFileName(QWidget* parent, const QString& caption, const QString& dir, const QString& filter, QString* selectedFilter) {
+QString FileDialog::getSaveFileName(QWidget* parent, const QString& caption, const QString& dir, const QString& filter, QString* selectedFilter)
+{
 	FileDialog dlg(parent);
 
 	dlg.setWindowTitle(caption);

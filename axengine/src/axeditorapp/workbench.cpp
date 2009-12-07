@@ -56,7 +56,7 @@ Workbench::Workbench(QWidget *parent, Qt::WFlags flags)
 	onViewChanged();
 	updateTitle();
 
-	startTimer(1000);
+	m_timerUpdateStatus = startTimer(1000);
 
 	//m_cameraDlg.setParent(m_sidePanel);
 
@@ -68,6 +68,7 @@ Workbench::Workbench(QWidget *parent, Qt::WFlags flags)
 
 Workbench::~Workbench()
 {
+	this->killTimer(m_timerUpdateStatus);
 	g_system->removeProgress(this);
 	g_mapContext->detachObserver(this);
 //	SafeDelete(m_uiEditor);
@@ -464,7 +465,7 @@ void Workbench::onStyleMacintosh(bool checked) {
 void Workbench::closeEvent(QCloseEvent *event) {
 	writeSettings();
 	event->accept();
-	g_app->myquit();
+	g_app->myQuit();
 }
 
 void Workbench::onEditorToolTriggered(QAction* action) {
@@ -855,6 +856,11 @@ void Workbench::activateTool(Editor::Tool::Type t) {
 
 void Workbench::timerEvent(QTimerEvent * event)
 {
+	if (event->timerId() != m_timerUpdateStatus) {
+		Errorf("wrong id");
+		return;
+	}
+
 	ui.cpuUsage->setText(QString(" CPU: %1% ").arg(OsUtil::getCpuUsage()));
 	int mu = OsUtil::getMemoryUsage();
 

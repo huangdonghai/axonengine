@@ -25,14 +25,18 @@ public:
 	virtual void tick();
 
 protected:
+	void setUpdate(int ms);
+
+protected:
 	virtual void timerEvent(QTimerEvent * event);
 	virtual bool winEventFilter(MSG * msg, long * result);
 
 public slots:
-	void myquit();
+	void engineTick();
+	void myQuit();
 
 private:
-	int m_timer0;
+	QTimer* m_engTimer;
 };
 
 #endif // APPLICATION_H

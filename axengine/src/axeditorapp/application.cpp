@@ -13,36 +13,31 @@ read the license and understand and accept it fully.
 Application::Application(int &argc, char **argv)
 	: QApplication(argc, argv)
 {
-	m_timer0 = startTimer(0);
+	m_engTimer = new QTimer();
+
+//	connect(m_engTimer, SIGNAL(timeout()), this, SLOT(engineTick()));
+
+	setUpdate(0);
+//	m_engTimer->start();
 }
 
 Application::~Application()
 {
-
 }
 
-void Application::tick() {
+void Application::tick()
+{
 	QApplication::processEvents();
 }
 
-void Application::myquit() {
+void Application::myQuit()
+{
 //	QApplication::quit();
 	g_system->setExitable();
 }
 
 void Application::timerEvent(QTimerEvent * event)
 {
-	if (event->timerId() != m_timer0) {
-		return;
-	}
-
-	if (g_system) {
-		if (!g_workbench->isActiveWindow()) {
-			g_system->forceTick(30);
-		} else {
-			g_system->forceTick(0);
-		}
-	}
 }
 
 #define WIN32_LEAN_AND_MEAN
@@ -57,4 +52,24 @@ bool Application::winEventFilter(MSG * msg, long * result)
 
 	g_inputSystem->queWinInput(msg);
 	return true;
+}
+
+void Application::setUpdate(int ms)
+{
+	if (m_engTimer->interval() == ms)
+		return;
+
+	m_engTimer->setInterval(ms);
+}
+
+void Application::engineTick()
+{
+	if (g_system) {
+		if (!g_workbench->isActiveWindow()) {
+			setUpdate(30);
+		} else {
+			setUpdate(0);
+		}
+		g_system->forceTick(0);
+	}
 }

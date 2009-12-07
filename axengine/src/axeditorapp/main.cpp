@@ -12,22 +12,12 @@ read the license and understand and accept it fully.
 #include "workbench.h"
 #include "application.h"
 
-void testfixstring() {
-	FixedString fixed("abc");
-	const char* str = fixed.c_str();
-	FixedString fixed2("xyz");
-	str = fixed2.c_str();
-
-	fixed = "you mama";
-	str = fixed.c_str();
-}
-
 /**
   Change our current directory to be the same as the directory containing the .exe.
   Visual C++ starts us in the project directory by default, and the config file
   is expected to be in the current directory.
  */
-static void SetCurrentDir()
+static void setCurrentDir()
 {
     TCHAR filename[_MAX_PATH];
     TCHAR pathname[_MAX_PATH];
@@ -39,10 +29,9 @@ static void SetCurrentDir()
     SetCurrentDirectory(pathname);
 }
 
-int main(int argc, char *argv[]) {
-	SetCurrentDir();
-
-	testfixstring();
+int main(int argc, char *argv[])
+{
+	setCurrentDir();
 
 	Q_INIT_RESOURCE(editor);
 
@@ -85,22 +74,13 @@ int main(int argc, char *argv[]) {
 	//ParticleEditor* editor = new ParticleEditor();
     bool v = g_app->connect(g_app, SIGNAL(lastWindowClosed()), g_app, SLOT(quit()));
 	AX_ASSERT(v);
-	v = g_app->connect(g_app, SIGNAL(aboutToQuit()), g_app, SLOT(myquit()));
+	v = g_app->connect(g_app, SIGNAL(aboutToQuit()), g_app, SLOT(myQuit()));
 	AX_ASSERT(v);
 
 	splash->finish(g_workbench);
 	SafeDelete(splash);
 
 #if 0
-	Image image;
-	bool v = image.loadFileByType("textures/default.dds", Image::DDS, Image::NoCompressed);
-	Image* resized = image.resize(192, 192);
-
-	resized->saveFile_tga("resized.tga");
-	image.clear();
-#endif
-
-#if 1
     g_app->exec();
 #else
 	g_system->registerTickable(System::TickEvent, g_app);

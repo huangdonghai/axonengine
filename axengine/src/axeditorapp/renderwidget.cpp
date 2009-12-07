@@ -31,17 +31,21 @@ RenderWidget::RenderWidget(QWidget *parent)
 	setAttribute(Qt::WA_PaintUnclipped);
 //	setAttribute(Qt::WA_OpaquePaintEvent);
 	setAutoFillBackground(true); // for compatibility
-	startTimer(30);
+	m_timerUpdate = startTimer(30);
 }
 
-RenderWidget::~RenderWidget() {
+RenderWidget::~RenderWidget()
+{
+	this->killTimer(m_timerUpdate);
 }
 
-void RenderWidget::setStopUpdate(bool stop) {
+void RenderWidget::setStopUpdate(bool stop)
+{
 	m_updateStoped = stop;
 }
 
-void RenderWidget::paintEvent(QPaintEvent* pe) {
+void RenderWidget::paintEvent(QPaintEvent* pe)
+{
 	if (m_updateStoped)
 		return;
 
@@ -85,7 +89,8 @@ void RenderWidget::paintEvent(QPaintEvent* pe) {
 	}*/
 }
 
-void RenderWidget::mouseMoveEvent(QMouseEvent * event) {
+void RenderWidget::mouseMoveEvent(QMouseEvent * event)
+{
 	if (m_viewControl == NONE)
 		return;
 
@@ -112,7 +117,8 @@ void RenderWidget::mouseMoveEvent(QMouseEvent * event) {
 	update();
 }
 
-void RenderWidget::mousePressEvent(QMouseEvent * event) {
+void RenderWidget::mousePressEvent(QMouseEvent * event)
+{
 	Qt::MouseButton button = event->button();
 
 	if (button & Qt::LeftButton) {
@@ -127,11 +133,13 @@ void RenderWidget::mousePressEvent(QMouseEvent * event) {
 	m_beginTrackPos.y = event->y();
 }
 
-void RenderWidget::mouseReleaseEvent(QMouseEvent * event) {
+void RenderWidget::mouseReleaseEvent(QMouseEvent * event)
+{
 	m_viewControl = NONE;
 }
 
-void RenderWidget::drawAxis() {
+void RenderWidget::drawAxis()
+{
 	Render::Camera camera;
 
 	float line_length = 1.0f;
@@ -164,7 +172,8 @@ void RenderWidget::drawAxis() {
 //	drawFrameNum();
 }
 
-void RenderWidget::drawFrameNum() {
+void RenderWidget::drawFrameNum()
+{
 	Render::Camera rv;
 
 	rv.setTarget(m_renderTarget);
@@ -218,15 +227,18 @@ PreviewWidget::PreviewWidget(QWidget* parent)
 //	mRenderWorld->AddRenderable(mModel);
 }
 
-PreviewWidget::~PreviewWidget() {
+PreviewWidget::~PreviewWidget()
+{
 	delete m_renderWorld;
 }
 
-void PreviewWidget::doRender() {
+void PreviewWidget::doRender()
+{
 	g_renderSystem->addToScene(m_renderWorld);
 }
 
-void PreviewWidget::mouseMoveEvent(QMouseEvent * event) {
+void PreviewWidget::mouseMoveEvent(QMouseEvent * event)
+{
 	if (m_viewControl == NONE)
 		return;
 
@@ -264,7 +276,8 @@ void PreviewWidget::mouseMoveEvent(QMouseEvent * event) {
 	update();
 }
 
-void PreviewWidget::mousePressEvent(QMouseEvent * event) {
+void PreviewWidget::mousePressEvent(QMouseEvent * event)
+{
 	Qt::MouseButton button = event->button();
 
 	if (button & Qt::LeftButton) {
@@ -289,7 +302,8 @@ void PreviewWidget::wheelEvent(QWheelEvent * event) {
 }
 
 
-void PreviewWidget::mouseReleaseEvent(QMouseEvent * event) {
+void PreviewWidget::mouseReleaseEvent(QMouseEvent * event)
+{
 	m_viewControl = NONE;
 }
 

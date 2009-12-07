@@ -61,6 +61,8 @@ protected:
 
 	enum ViewControl { NONE, PAN, ZOOM, ROTATE };
 	ViewControl m_viewControl;
+
+	int m_timerUpdate;
 };
 
 //------------------------------------------------------------------------------
