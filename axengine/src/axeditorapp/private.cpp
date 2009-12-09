@@ -19,7 +19,7 @@ QSettings* g_settings;
 //------------------------------------------------------------------------------
 // global data
 //------------------------------------------------------------------------------
-GlobalData* gGlobalData;
+GlobalData* g_globalData;
 
 GlobalData::GlobalData(QApplication* m_app)
 	: cursorHand(QPixmap(":/images/hand.png"))

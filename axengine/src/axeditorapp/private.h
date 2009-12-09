@@ -44,7 +44,7 @@ struct GlobalData {
 
 class Application;
 
-extern GlobalData* gGlobalData;
+extern GlobalData* g_globalData;
 extern Application* g_app;
 extern Workbench* g_workbench;
 extern QSettings* g_settings;

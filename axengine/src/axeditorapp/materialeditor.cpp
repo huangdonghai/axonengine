@@ -65,7 +65,7 @@ void MaterialEditor::initWidgets() {
 void MaterialEditor::on_matTree_itemActivated(QTreeWidgetItem* item,int) {
 	FileItem* fitem = (FileItem*)item;
 
-	gGlobalData->curMaterial = u2q(fitem->getFileInfo().fullpath);
+	g_globalData->curMaterial = u2q(fitem->getFileInfo().fullpath);
 
 	initFromMaterial(fitem->getFileInfo().fullpath);
 }

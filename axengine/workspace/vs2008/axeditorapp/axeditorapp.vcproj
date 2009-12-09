@@ -5074,13 +5074,6 @@
 				RelativePath=".\GeneratedFiles\Debug\moc_application.cpp"
 				>
 				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
 					Name="Release|Win32"
 					ExcludedFromBuild="true"
 					>
@@ -5095,13 +5088,6 @@
 				<FileConfiguration
 					Name="Debug|Win32"
 					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -5280,13 +5266,6 @@
 				RelativePath=".\GeneratedFiles\Debug\moc_filedialog.cpp"
 				>
 				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
 					Name="Release|Win32"
 					ExcludedFromBuild="true"
 					>
@@ -5301,13 +5280,6 @@
 				<FileConfiguration
 					Name="Debug|Win32"
 					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -5942,13 +5914,6 @@
 				RelativePath=".\GeneratedFiles\Debug\moc_workbench.cpp"
 				>
 				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
 					Name="Release|Win32"
 					ExcludedFromBuild="true"
 					>
@@ -5963,13 +5928,6 @@
 				<FileConfiguration
 					Name="Debug|Win32"
 					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -6129,6 +6087,13 @@
 					RelativePath=".\GeneratedFiles\Debug\moc_trackwidget.cpp"
 					>
 					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
 						Name="Release|Win32"
 						ExcludedFromBuild="true"
 						>
@@ -6161,6 +6126,13 @@
 					<FileConfiguration
 						Name="Debug|Win32"
 						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"

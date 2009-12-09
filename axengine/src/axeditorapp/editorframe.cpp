@@ -274,13 +274,13 @@ void EditorFrame::setCursor(Editor::CursorType cursor_type) {
 		break;
 
 	case CursorType::ViewRotate:
-		QWidget::setCursor(gGlobalData->cursorViewRotate);
+		QWidget::setCursor(g_globalData->cursorViewRotate);
 		break;
 	case CursorType::ViewZoom:
-		QWidget::setCursor(gGlobalData->cursorViewZoom);
+		QWidget::setCursor(g_globalData->cursorViewZoom);
 		break;
 	case CursorType::ViewPan:
-		QWidget::setCursor(gGlobalData->cursorViewPan);
+		QWidget::setCursor(g_globalData->cursorViewPan);
 		break;
 	}
 }

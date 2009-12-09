@@ -195,7 +195,7 @@ void Workbench::createMenus() {
 	connect(ui.actionSimplifiedChinese, SIGNAL(triggered(bool)), this, SLOT(onSimplifiedChinese(bool)));
 	connect(ui.actionEnglish, SIGNAL(triggered(bool)), this, SLOT(onEnglish(bool)));
 
-	if (gGlobalData->language.isEmpty())
+	if (g_globalData->language.isEmpty())
 		ui.actionEnglish->setChecked(true);
 	else
 		ui.actionSimplifiedChinese->setChecked(true);
@@ -211,13 +211,13 @@ void Workbench::createMenus() {
 	connect(ui.actionStylePlastique, SIGNAL(triggered(bool)), this, SLOT(onStylePlastique(bool)));
 	connect(ui.actionStyleMacintosh, SIGNAL(triggered(bool)), this, SLOT(onStyleMacintosh(bool)));
 
-	if (gGlobalData->style == "windows")
+	if (g_globalData->style == "windows")
 		ui.actionStyleWindows->setChecked(true);
-	else if (gGlobalData->style == "windowsxp")
+	else if (g_globalData->style == "windowsxp")
 		ui.actionStyleWindowsXP->setChecked(true);
-	else if (gGlobalData->style == "plastique")
+	else if (g_globalData->style == "plastique")
 		ui.actionStylePlastique->setChecked(true);
-	else if (gGlobalData->style == "macintosh")
+	else if (g_globalData->style == "macintosh")
 		ui.actionStyleMacintosh->setChecked(true);
 }
 

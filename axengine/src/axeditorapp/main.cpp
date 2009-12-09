@@ -38,14 +38,14 @@ int main(int argc, char *argv[])
 	g_settings = new QSettings("Ax", "EditorMain");
 
 	g_app = new Application(argc, argv);
-	gGlobalData = new GlobalData(g_app);
+	g_globalData = new GlobalData(g_app);
 
-	gGlobalData->style = g_settings->value("style", "").toString();
-	g_app->setStyle(gGlobalData->style);
+	g_globalData->style = g_settings->value("style", "").toString();
+	g_app->setStyle(g_globalData->style);
 
-	gGlobalData->language = g_settings->value("language", "").toString();
+	g_globalData->language = g_settings->value("language", "").toString();
 	QTranslator translator;
-	if (!gGlobalData->language.isEmpty()) {
+	if (!g_globalData->language.isEmpty()) {
 		translator.load(":/translations/editor_zh.qm");
 		g_app->installTranslator(&translator);
 	}
@@ -95,7 +95,7 @@ int main(int argc, char *argv[])
 	axClientQuit();
 	axCoreQuit();
 
-	SafeDelete(gGlobalData);
+	SafeDelete(g_globalData);
 	SafeDelete(g_app);
 	SafeDelete(g_settings);
 

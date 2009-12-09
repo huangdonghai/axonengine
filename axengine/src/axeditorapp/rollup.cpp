@@ -361,7 +361,7 @@ void Rollup::mousePressEvent (QMouseEvent * e) {
 
 	// tracking page
 	if (!m_scrollRect.contains (pos)) {
-		setCursor(gGlobalData->cursorHand);
+		setCursor(g_globalData->cursorHand);
 		m_trackingMode = TrackingPage;
 		m_trackingPos = pos;
 		return;
