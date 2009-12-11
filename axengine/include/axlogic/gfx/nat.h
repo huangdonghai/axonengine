@@ -66,15 +66,16 @@ namespace Axon {
 		bool m_loop;
 	};
 
-	class IAnimatable {
+	class IAnimatable
+	{
 	public:
-		enum DataType {
-			kBool,
+		enum DataType
+		{
 			kFloat,
 			kColor,
 			kVector,
-			kGroup,
-			kEvent
+			kEvent,
+			kGroup
 		};
 
 		enum InterpolateType
@@ -91,6 +92,8 @@ namespace Axon {
 		virtual DataType getDataType();
 		virtual InterpolateType getInterpolateType();
 		virtual void setInterpolateType(InterpolateType it);
+		virtual int numSubAnims();
+		virtual IAnimatable* getSubAnim(int index);
 	};
 
 } // namespace Axon

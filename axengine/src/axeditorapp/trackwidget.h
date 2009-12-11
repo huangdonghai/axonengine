@@ -8,6 +8,7 @@
 class AnimWrapper;
 class TrackWidget;
 
+//------------------------------------------------------------------------------
 class RectLayout : public QGraphicsItem
 {
 public:
@@ -33,6 +34,7 @@ protected:
 };
 
 
+//------------------------------------------------------------------------------
 class CurveNameItem : public QGraphicsItem
 {
 public:
@@ -46,6 +48,7 @@ public:
 private:
 };
 
+//------------------------------------------------------------------------------
 class ValueAxis : public RectLayout
 {
 public:
@@ -54,27 +57,29 @@ public:
 
 	virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
 
-	float getMinValue() const { return m_minValue; }
-	void setMinValue(float val) { m_minValue = val; }
-	float getMaxValue() const { return m_maxValue; }
-	void setMaxValue(float val) { m_maxValue = val; }
-	float getValueScale() const { return m_valueScale; }
-	void setValueScale(float val) { m_valueScale = val; }
-	float getValueOffset() const { return m_valueOffset; }
-	void setValueOffset(float val) { m_valueOffset = val; }
+	qreal getMinValue() const { return m_minValue; }
+	void setMinValue(qreal val) { m_minValue = val; }
+	qreal getMaxValue() const { return m_maxValue; }
+	void setMaxValue(qreal val) { m_maxValue = val; }
+	qreal getValueScale() const { return m_valueScale; }
+	void setValueScale(qreal val) { m_valueScale = val; }
+	qreal getValueOffset() const { return m_valueOffset; }
+	void setValueOffset(qreal val) { m_valueOffset = val; }
 
 private:
-	float m_minValue;
-	float m_maxValue;
-	float m_valueScale;
-	float m_valueOffset;
+	qreal m_minValue;
+	qreal m_maxValue;
+	qreal m_valueScale;
+	qreal m_valueOffset;
 };
 
+//------------------------------------------------------------------------------
 class CurveViewItem : public QGraphicsItem
 {
 
 };
 
+//------------------------------------------------------------------------------
 class CurveViewFrame : public RectLayout
 {
 public:
@@ -87,6 +92,7 @@ public:
 private:
 };
 
+//------------------------------------------------------------------------------
 class TrackNameItem : public QGraphicsItem
 {
 public:
@@ -103,11 +109,13 @@ private:
 	AnimWrapper* m_wrapper;
 };
 
+//------------------------------------------------------------------------------
 class TrackViewItem : public QGraphicsItem
 {
 
 };
 
+//------------------------------------------------------------------------------
 class AnimWrapper
 {
 public:
@@ -147,6 +155,7 @@ private:
 	int m_trackIndex;
 };
 
+//------------------------------------------------------------------------------
 class TimeAxis : public RectLayout
 {
 public:
@@ -157,6 +166,7 @@ protected:
 	virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
 };
 
+//------------------------------------------------------------------------------
 class CurveRight : public RectLayout
 {
 public:
@@ -165,15 +175,44 @@ public:
 
 protected:
 	virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
+	virtual void mouseMoveEvent(QGraphicsSceneMouseEvent* event);
+	virtual void mousePressEvent(QGraphicsSceneMouseEvent* event);
+	virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event);
+	virtual void wheelEvent(QGraphicsSceneWheelEvent * event);
+
+private:
+	bool m_isPanning;
+	int m_panningTicks;
+	float m_panningValue;
 };
 
+//------------------------------------------------------------------------------
+class TrackRight : public RectLayout
+{
+public:
+	TrackRight(TrackWidget* widget);
+	virtual ~TrackRight();
+
+protected:
+	virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
+	virtual void mouseMoveEvent(QGraphicsSceneMouseEvent* event);
+	virtual void mousePressEvent(QGraphicsSceneMouseEvent* event);
+	virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event);
+	virtual void wheelEvent(QGraphicsSceneWheelEvent * event);
+
+private:
+	bool m_isPanning;
+	int m_panningTicks;
+};
+
+//------------------------------------------------------------------------------
 class TrackWidget : public QGraphicsView
 {
 	Q_OBJECT
 
 public:
 	enum LayoutFrameType {
-		CurveLeft, CurveRight, HeaderLeft, HeaderRight, TrackLeft, TrackRight
+		kCurveLeft, kCurveRight, kHeaderLeft, kHeaderRight, kTrackLeft, kTrackRight
 	};
 
 	TrackWidget(QWidget *parent);
@@ -181,26 +220,48 @@ public:
 
 	RectLayout* getLayoutFrame(LayoutFrameType lft) const;
 
+	// prop-get-set
 	int getStartTime() const { return m_startTime; }
 	void setStartTime(int val) { m_startTime = val; }
 	int getEndTime() const { return m_endTime; }
 	void setEndTime(int val) { m_endTime = val; }
 	int getFrameTime() const { return m_frameTime; }
 	void setFrameTime(int val) { m_frameTime = val; }
-	float getTimeAxisScale() const { return m_timeAxisScale; }
-	void setTimeAxisScale(float val) { m_timeAxisScale = val; }
-	float getTimeAxisOffset() const { return m_timeAxisOffset; }
-	void setTimeAxisOffset(float val) { m_timeAxisOffset = val; }
-	float getValueAxisScale() const { return m_valueAxisScale; }
-	void setValueAxisScale(float val) { m_valueAxisScale = val; }
-	float getValueAxisOffset() const { return m_valueAxisOffset; }
-	void setValueAxisOffset(float val) { m_valueAxisOffset = val; }
-	int getTimeAxisFrameStep() const { return m_timeAxisFrameStep; }
-	void setTimeAxisFrameStep(int val) { m_timeAxisFrameStep = val; }
-	int getTimeAxisLabelStep() const { return m_timeAxisLabelStep; }
-	void setTimeAxisLabelStep(int val) { m_timeAxisLabelStep = val; }
-	float getTimeAxisPixelsPerTick() const { return m_timeAxisPixelsPerTick; }
-	void setTimeAxisPixelsPerTick(float val) { m_timeAxisPixelsPerTick = val; }
+	qreal getTimeAxisScale() const { return m_timeAxisScale; }
+	void setTimeAxisScale(qreal val) { m_timeAxisScale = val; }
+	qreal getTimeAxisOffset() const { return m_timeAxisOffset; }
+	void setTimeAxisOffset(qreal val) { m_timeAxisOffset = val; }
+	qreal getValueAxisScale() const { return m_valueAxisScale; }
+	void setValueAxisScale(qreal val) { m_valueAxisScale = val; }
+	qreal getValueAxisOffset() const { return m_valueAxisOffset; }
+	void setValueAxisOffset(qreal val) { m_valueAxisOffset = val; }
+	int getTimeAxisStep0() const { return m_timeAxisStep0; }
+	void setTimeAxisStep0(int val) { m_timeAxisStep0 = val; }
+	int getTimeAxisStep1() const { return m_timeAxisStep1; }
+	void setTimeAxisStep1(int val) { m_timeAxisStep1 = val; }
+	qreal getTimeAxisPixelsPerTick() const { return m_timeAxisPixelsPerTick; }
+	void setTimeAxisPixelsPerTick(qreal val) { m_timeAxisPixelsPerTick = val; }
+
+	// runtime calculation
+	int valueVpos(qreal val) const;
+	qreal vposValue(int vpos) const;
+	int ticksHpos(int ticks) const;
+	int hposTicks(int hpos) const;
+	int framesHpos(int frameNum) const;
+	int hposFrames(int hpos) const;
+
+	int getStartTime_Show() const { return m_startTime - (m_endTime - m_startTime) / 20; }
+	int getEndTime_Show() const { return m_endTime + (m_endTime - m_startTime) / 20; }
+	int getDuration_Show() const { return getEndTime_Show() - getStartTime_Show(); }
+	float getMinValue_Show() const { return m_minValue - (m_maxValue - m_minValue) * 0.05; }
+	float getMaxValue_Show() const { return m_maxValue + (m_maxValue - m_minValue) * 0.05; }
+	float getValueRange_Show() const { return getMaxValue_Show() - getMinValue_Show(); }
+
+	// adjust time axis and value axis
+	void offsetTimeAxis(int hpos, int ticks); // offset time axis, let hpos's time equal ticks
+	void scaleTimeAxis(int hpos, float factor); // scale time axis use hpos as scale center
+	void offsetAxis(const QPointF& pos, int ticks, float value);
+	void scaleAxis(const QPointF& pos, float factor);
 
 protected:
 	virtual void resizeEvent(QResizeEvent * event);
@@ -218,8 +279,8 @@ private:
 	int m_startTime;
 	int m_endTime;
 	int m_frameTime;
-	float m_minValue;
-	float m_maxValue;
+	qreal m_minValue;
+	qreal m_maxValue;
 
 
 	// layout
@@ -228,7 +289,7 @@ private:
 	RectLayout* m_frameHeaderLeft;
 	TimeAxis* m_timeAxis;
 	RectLayout* m_frameTrackLeft;
-	RectLayout* m_frameTrackRight;
+	TrackRight* m_frameTrackRight;
 	ValueAxis* m_valueAxis;
 	//
 	// runtime layout
@@ -238,17 +299,17 @@ private:
 	int m_y1;
 	int m_x0;
 	int m_x1;
-	float m_timeAxisScale;
-	float m_timeAxisOffset;
-	int m_timeAxisFrameStep;
-	int m_timeAxisLabelStep;
-	float m_timeAxisPixelsPerTick;
+	qreal m_timeAxisScale;
+	qreal m_timeAxisOffset;
+	int m_timeAxisStep0;
+	int m_timeAxisStep1;
+	qreal m_timeAxisPixelsPerTick;
 
-	float m_valueAxisScale;
-	float m_valueAxisOffset;
-	float m_valueAxisPixelsPerUnit;
-	float m_valueStep0;
-	float m_valueStep1;
+	qreal m_valueAxisScale;
+	qreal m_valueAxisOffset;
+	qreal m_valueAxisPixelsPerUnit;
+	qreal m_valueStep0;
+	qreal m_valueStep1;
 };
 
 #endif // TRACKWIDGET_H
