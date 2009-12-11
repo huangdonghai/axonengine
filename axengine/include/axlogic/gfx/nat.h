@@ -94,6 +94,24 @@ namespace Axon {
 		virtual void setInterpolateType(InterpolateType it);
 		virtual int numSubAnims();
 		virtual IAnimatable* getSubAnim(int index);
+		virtual int numKeys();
+		virtual int getKeyTime(int index);
+		virtual int getKeyIndex(int ms);
+	};
+
+	class AnimatableFloat : public IAnimatable
+	{
+
+	};
+
+	class AnimatableVector : public IAnimatable
+	{
+
+	};
+
+	class AnimatableColor : public IAnimatable
+	{
+
 	};
 
 } // namespace Axon
