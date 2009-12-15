@@ -69,14 +69,7 @@ namespace Axon {
 	class IAnimatable
 	{
 	public:
-		enum DataType
-		{
-			kFloat,
-			kColor,
-			kVector,
-			kEvent,
-			kGroup
-		};
+		enum Type { kTrack, kGroup, kObject };
 
 		enum InterpolateType
 		{
@@ -86,7 +79,7 @@ namespace Axon {
 			InterpolateType_Hermite,
 		};
 
-		virtual ~IAnimatable();
+		virtual ~IAnimatable() {}
 
 		virtual String getName();
 		virtual DataType getDataType();
@@ -97,21 +90,50 @@ namespace Axon {
 		virtual int numKeys();
 		virtual int getKeyTime(int index);
 		virtual int getKeyIndex(int ms);
+		virtual void getValue(void *value, int ticks) = 0;
+		virtual void setValue(void *value, int ticks) = 0;
 	};
 
-	class AnimatableFloat : public IAnimatable
+	class FloatTrack : public IAnimatable
 	{
+	public:
 
+
+	private:
+		struct FloatKey
+		{
+			float value;
+			int ticks;
+		};
 	};
 
-	class AnimatableVector : public IAnimatable
+	class VectorTrack : public IAnimatable
 	{
+	public:
 
+	private:
+		struct VectorKey
+		{
+			Vector3 value;
+			int ticks;
+		};
 	};
 
-	class AnimatableColor : public IAnimatable
+	class ColorTrack : public VectorTrack
 	{
+	public:
 
+	private:
+	};
+
+	class ObjectTrack : public IAnimatable
+	{
+	public:
+		ObjectTrack(Object* obj);
+		virtual ~ObjectTrack() {}
+
+
+	private:
 	};
 
 } // namespace Axon
