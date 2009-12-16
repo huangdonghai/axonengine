@@ -22,13 +22,18 @@ namespace Axon { namespace Gfx {
 		Vector4 color;
 	};
 
-	class ParticleEmitter : public GfxObject {
+	class ParticleEmitter : public GfxObject
+	{
 	public:
+		enum EmitterShape {
+			kPlane, kSphere
+		};
+
 		ParticleEmitter();
 		virtual ~ParticleEmitter();
 
 		// implement GfxObject
-		virtual Type getType() const { return kParticle; }
+		virtual Type getGfxType() const { return kParticleEmitter; }
 		virtual void update();
 		virtual void render();
 
@@ -37,17 +42,17 @@ namespace Axon { namespace Gfx {
 		Particle sphereEmit(int anim, int time, float w, float l, float spd, float var, float spr, float spr2);
 
 	private:
-		Nat<float> m_speed;
-		Nat<float> m_variation;
-		Nat<float> m_spread;
-		Nat<float> m_lat;
-		Nat<float> m_gravity;
-		Nat<float> m_lifespan;
-		Nat<float> m_rate;
-		Nat<float> m_areal;
-		Nat<float> m_areaw;
-		Nat<float> m_deacceleration;
-		Nat<byte_t> m_enabled;
+		FloatTrack m_speed;
+		FloatTrack m_variation;
+		FloatTrack m_spread;
+		FloatTrack m_lat;
+		FloatTrack m_gravity;
+		FloatTrack m_lifespan;
+		FloatTrack m_rate;
+		FloatTrack m_areal;
+		FloatTrack m_areaw;
+		FloatTrack m_deacceleration;
+		FloatTrack m_enabled;
 
 		Vector4 m_colors[3];
 		float m_sizes[3];

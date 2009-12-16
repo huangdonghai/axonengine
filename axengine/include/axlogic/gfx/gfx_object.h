@@ -16,16 +16,16 @@ namespace Axon { namespace Gfx {
 
 	class GfxEntity;
 
-	class GfxObject : public Object {
+	class GfxObject : public Object, public ObjAnimatable {
 	public:
 		// script
 		AX_DECLARE_CLASS(GfxObject, Object, "GfxObject")
 		AX_END_CLASS()
 
-		enum Type {
+		enum GfxType {
 			kVirtualBase,
-			kParticle,
-			kRibbon,
+			kParticleEmitter,
+			kRibbonEmitter,
 			kSound,
 			kModel
 		};
@@ -33,16 +33,16 @@ namespace Axon { namespace Gfx {
 		GfxObject();
 		virtual ~GfxObject();
 
-		virtual Type getType() const { return kVirtualBase; }
+		virtual Type getGfxType() const { return kVirtualBase; }
 		virtual void update() {}
 		virtual void render() {}
 
 	private:
 		GfxEntity* m_entity;
 
-		Nat<Vector3> m_pos;
-		Nat<Angles> m_angles;
-		Nat<float> m_scale;
+		VectorTrack m_pos;
+		VectorTrack m_rotations;
+		FloatTrack m_scale;
 	};
 
 }} // namespace Axon::Gfx

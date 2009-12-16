@@ -23,7 +23,7 @@ namespace Axon { namespace Gfx {
 		virtual ~RibbonEmitter();
 
 		// implement GfxObject
-		virtual Type getType() const { return kRibbon; }
+		virtual Type getType() const { return kRibbonEmitter; }
 		virtual void update();
 		virtual void render();
 

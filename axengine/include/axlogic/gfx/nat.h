@@ -66,59 +66,145 @@ namespace Axon {
 		bool m_loop;
 	};
 
+	//--------------------------------------------------------------------------
+	struct KeyBase
+	{
+		int ticks;
+	};
+
+	//--------------------------------------------------------------------------
+	struct TcbKey : public KeyBase
+	{
+		float tension, continuity, bias, easeIn, easeOut;
+	};
+
+	//--------------------------------------------------------------------------
+	struct FloatKey : public KeyBase
+	{
+		float val;
+	};
+
+	//--------------------------------------------------------------------------
+	struct VectorKey : public KeyBase
+	{
+		Vector3 val;
+	};
+
+	//--------------------------------------------------------------------------
+	struct ColorKey : public VectorKey
+	{
+		float alpha;
+	};
+
+
+	//--------------------------------------------------------------------------
 	class IAnimatable
 	{
 	public:
-		enum Type { kTrack, kGroup, kObject };
+		enum AnimType
+		{
+			kSimpleTrack,
+			kTcbTrack,
+			kBezierTrack,
+			kLastTrack = kBezierTrack,
+			kGroupAnim,
+			kObjectAnim,
+			kGameEntityAnim
+		};
 
+		// for simple track
 		enum InterpolateType
 		{
-			InterpolateType_None,
+			InterpolateType_Invalid,
+			InterpolateType_Step,
 			InterpolateType_Linear,
-			InterpolateType_Cubic,
-			InterpolateType_Hermite,
+			InterpolateType_CatmullRom,
 		};
 
 		virtual ~IAnimatable() {}
 
-		virtual String getName();
-		virtual DataType getDataType();
-		virtual InterpolateType getInterpolateType();
-		virtual void setInterpolateType(InterpolateType it);
-		virtual int numSubAnims();
-		virtual IAnimatable* getSubAnim(int index);
-		virtual int numKeys();
-		virtual int getKeyTime(int index);
-		virtual int getKeyIndex(int ms);
-		virtual void getValue(void *value, int ticks) = 0;
-		virtual void setValue(void *value, int ticks) = 0;
+		virtual String getAnimName() = 0;
+		virtual AnimType getAnimType() = 0;
+
+		// for group, object, entity
+		virtual int numSubAnims() { return 0; }
+		virtual IAnimatable* getSubAnim(int index) { return 0; }
+
+		// for track
+		virtual int numKeys() { return 0; }
+		virtual int getKeyTime(int index) { return 0; }
+		virtual int getKeyIndex(int ms) { return 0; }
+		virtual void getValue(void *value, int ticks) {}
+		virtual void setValue(void *value, int ticks) {}
+
+		// for simple track
+		virtual InterpolateType getInterpolateType() { return InterpolateType_Invalid; }
+		virtual void setInterpolateType(InterpolateType type) { /* do nothing */}
+#if 0
+		// for test
+		virtual void beginUpdateAnim();
+		virtual void endUpdateAnim();
+#endif
 	};
 
+
+	//--------------------------------------------------------------------------
 	class FloatTrack : public IAnimatable
 	{
 	public:
+		FloatTrack(const String& name);
+		virtual ~FloatTrack();
 
+		// implement IAnimatable
+		virtual String getAnimName() { return m_name; }
+		virtual AnimType getAnimType() { return kSimpleTrack; }
+
+		// implement track functions
+		virtual int numKeys();
+		virtual int getKeyTime(int index);
+		virtual int getKeyIndex(int ms);
+		virtual void getValue(void *value, int ticks);
+		virtual void setValue(void *value, int ticks);
+
+		// for simple track
+		virtual InterpolateType getInterpolateType() { return m_interpolateType; }
+		virtual void setInterpolateType(InterpolateType type) { m_interpolateType = type; }
 
 	private:
-		struct FloatKey
-		{
-			float value;
-			int ticks;
-		};
+		String m_name;
+		Sequence<FloatKey> m_keyValues;
+		InterpolateType m_interpolateType;
 	};
 
+	//--------------------------------------------------------------------------
 	class VectorTrack : public IAnimatable
 	{
 	public:
+		VectorTrack(const String& name);
+		virtual ~VectorTrack();
+
+		// implement IAnimatable
+		virtual String getAnimName() { return m_name; }
+		virtual AnimType getAnimType() { return kSimpleTrack; }
+
+		// implement track functions
+		virtual int numKeys();
+		virtual int getKeyTime(int index);
+		virtual int getKeyIndex(int ms);
+		virtual void getValue(void *value, int ticks);
+		virtual void setValue(void *value, int ticks);
+
+		// for simple track
+		virtual InterpolateType getInterpolateType() { return m_interpolateType; }
+		virtual void setInterpolateType(InterpolateType type) { m_interpolateType = type; }
 
 	private:
-		struct VectorKey
-		{
-			Vector3 value;
-			int ticks;
-		};
+		String m_name;
+		Sequence<VectorKey> m_keyValues;
+		InterpolateType m_interpolateType;
 	};
 
+	//--------------------------------------------------------------------------
 	class ColorTrack : public VectorTrack
 	{
 	public:
@@ -126,15 +212,25 @@ namespace Axon {
 	private:
 	};
 
-	class ObjectTrack : public IAnimatable
+	//--------------------------------------------------------------------------
+	class ObjAnimatable : public IAnimatable
 	{
 	public:
-		ObjectTrack(Object* obj);
-		virtual ~ObjectTrack() {}
+		ObjAnimatable();
+		virtual ~ObjAnimatable();
 
+		virtual String getAnimName();
+		virtual AnimType getAnimType() { return kObjectAnim; }
 
-	private:
+		// for group, object, entity
+		virtual int numSubAnims() { return m_subAnims.size(); }
+		virtual IAnimatable* getSubAnim(int index) { return m_subAnims[index]; }
+
+	protected:
+		Object* m_object;
+		Sequence<IAnimatable*> m_subAnims;
 	};
+
 
 } // namespace Axon
 

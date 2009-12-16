@@ -614,6 +614,10 @@
 				RelativePath="..\..\..\src\axlogic\gfx\gfx_ribbon.cpp"
 				>
 			</File>
+			<File
+				RelativePath="..\..\..\src\axlogic\gfx\nat.cpp"
+				>
+			</File>
 			<Filter
 				Name="public"
 				>
