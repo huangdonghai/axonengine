@@ -140,14 +140,13 @@ void Workbench::setStyle(const QString& style) {
 	g_settings->setValue("style", style);
 }
 
-void
-Workbench::addEditorTool(Editor::Tool::Type type, QAction* action) {
+void Workbench::addEditorTool(int type, QAction* action) {
 	action->setCheckable(true);
 	action->setData(type);
 	m_editorTools->addAction(action);
 }
 
-void Workbench::addEditorAction(Editor::Action::Type type, QAction* action) {
+void Workbench::addEditorAction(int type, QAction* action) {
 	action->setCheckable(false);
 	action->setData(type);
 	m_editorActions->addAction(action);
@@ -155,7 +154,7 @@ void Workbench::addEditorAction(Editor::Action::Type type, QAction* action) {
 
 void Workbench::createActions() {
 	typedef Editor::Action editorAction;
-	typedef Editor::Tool editorTool;
+	typedef Editor::MapEdit::MapTool editorTool;
 
 	m_editorTools = new QActionGroup(this);
 	m_editorTools->setExclusive(true);

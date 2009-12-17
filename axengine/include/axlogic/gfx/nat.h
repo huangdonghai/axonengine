@@ -208,6 +208,8 @@ namespace Axon {
 	class ColorTrack : public VectorTrack
 	{
 	public:
+		ColorTrack(const String& name);
+		virtual ~ColorTrack();
 
 	private:
 	};

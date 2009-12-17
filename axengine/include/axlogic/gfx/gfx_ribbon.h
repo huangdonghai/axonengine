@@ -25,14 +25,14 @@ namespace Axon { namespace Gfx {
 		virtual ~RibbonEmitter();
 
 		// implement GfxObject
-		virtual Type getGfxType() const { return kRibbonEmitter; }
+		virtual GfxType getGfxType() const { return kRibbonEmitter; }
 		virtual void update();
 		virtual void render();
 
 	private:
-		VectorTrack color;
-		FloatTrack opacity;
-		FloatTrack above, below;
+		ColorTrack m_color;
+		FloatTrack m_opacity;
+		FloatTrack m_above, m_below;
 
 		float f1, f2;
 

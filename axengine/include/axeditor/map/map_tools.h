@@ -14,7 +14,29 @@ namespace Axon { namespace Editor { namespace MapEdit {
 
 	class MapTool : public Editor::Tool {
 	public:
-		MapTool(Context* ctx);
+		enum MapToolType {
+			// terrain height map modification
+			TerrainRaise = Editor::Tool::UserDefined, TerrainLower, TerrainLevel, TerrainSmooth, TerrainGrab,
+			TerrainPush, TerrainErode, TerrainRamp,
+
+			// terrain paint
+			TerrainPaint, TerrainErase,
+
+			// terrain active area
+			TerrainPaintActive,TerrainEraseActive,
+
+			// grass / tree
+			GrassPaint, GrassErase, TreePaint, TreeErase,
+
+			// road / river
+			Road, River,
+
+			// entities
+			CreateStatic, CreateBrush, CreateEntity, CreateTree,
+
+		};
+
+		MapTool(MapContext* ctx);
 
 	protected:
 		MapContext* m_mapContext;
@@ -26,7 +48,7 @@ namespace Axon { namespace Editor { namespace MapEdit {
 
 	class TerrainRaiseTool : public MapTool {
 	public:
-		TerrainRaiseTool(Context* context);
+		TerrainRaiseTool(MapContext* context);
 		virtual ~TerrainRaiseTool();
 
 		// Tool
@@ -63,7 +85,7 @@ namespace Axon { namespace Editor { namespace MapEdit {
 
 	class TerrainLowerTool : public TerrainRaiseTool {
 	public:
-		TerrainLowerTool(Context* context);
+		TerrainLowerTool(MapContext* context);
 		virtual ~TerrainLowerTool();
 
 		virtual void onHistoryCreated(Action* action) { action->setMessage("Terrain Lower"); }
@@ -78,7 +100,7 @@ namespace Axon { namespace Editor { namespace MapEdit {
 
 	class TerrainFlatTool : public TerrainRaiseTool {
 	public:
-		TerrainFlatTool(Context* context);
+		TerrainFlatTool(MapContext* context);
 		virtual ~TerrainFlatTool();
 
 		virtual void doPress(int x, int y, int flags, float pressure);
@@ -100,7 +122,7 @@ namespace Axon { namespace Editor { namespace MapEdit {
 
 	class TerrainSmoothTool : public TerrainRaiseTool {
 	public:
-		TerrainSmoothTool(Context* context);
+		TerrainSmoothTool(MapContext* context);
 		virtual ~TerrainSmoothTool();
 
 		virtual void doDrag(int x, int y, int flags, float pressure);
@@ -115,7 +137,7 @@ namespace Axon { namespace Editor { namespace MapEdit {
 
 	class TerrainGrabTool : public TerrainRaiseTool {
 	public:
-		TerrainGrabTool(Context* context);
+		TerrainGrabTool(MapContext* context);
 		virtual ~TerrainGrabTool();
 
 		virtual void doPress(int x, int y, int flags, float pressure);
@@ -134,7 +156,7 @@ namespace Axon { namespace Editor { namespace MapEdit {
 
 	class TerrainPaintTool : public TerrainRaiseTool {
 	public:
-		TerrainPaintTool(Context* context);
+		TerrainPaintTool(MapContext* context);
 		virtual ~TerrainPaintTool();
 
 		virtual void doPress(int x, int y, int flags, float pressure);
@@ -152,7 +174,7 @@ namespace Axon { namespace Editor { namespace MapEdit {
 
 	class TerrainEraseTool : public TerrainPaintTool {
 	public:
-		TerrainEraseTool(Context* context) : TerrainPaintTool(context) {}
+		TerrainEraseTool(MapContext* context) : TerrainPaintTool(context) {}
 		virtual void doPress(int x, int y, int flags, float pressure);
 		virtual void doRelease(int x, int y);
 	};
@@ -164,7 +186,7 @@ namespace Axon { namespace Editor { namespace MapEdit {
 
 	class CreateStaticTool : public MapTool {
 	public:
-		CreateStaticTool(Context* context);
+		CreateStaticTool(MapContext* context);
 		virtual ~CreateStaticTool();
 
 		virtual void doBindView(View* view) {}
@@ -184,7 +206,7 @@ namespace Axon { namespace Editor { namespace MapEdit {
 
 	class CreateEntityTool : public MapTool {
 	public:
-		CreateEntityTool(Context* context);
+		CreateEntityTool(MapContext* context);
 		virtual ~CreateEntityTool();
 
 		virtual void doBindView(View* view) {}
@@ -205,7 +227,7 @@ namespace Axon { namespace Editor { namespace MapEdit {
 #ifdef AX_CONFIG_OPTION_USE_SPEEDTREE_40
 	class CreateTreeTool : public MapTool {
 	public:
-		CreateTreeTool(Context* context);
+		CreateTreeTool(MapContext* context);
 		virtual ~CreateTreeTool();
 
 		virtual void doBindView(View* view) {}

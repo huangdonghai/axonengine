@@ -15,6 +15,7 @@ read the license and understand and accept it fully.
 #include "nat.h"
 #include "gfx_object.h"
 #include "gfx_particle.h"
+#include "gfx_ribbon.h"
 #include "gfx_entity.h"
 
 #endif

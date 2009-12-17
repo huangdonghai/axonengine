@@ -11,7 +11,8 @@ read the license and understand and accept it fully.
 
 namespace Axon {
 
-	void Angles::toVectors(Vector3* forward, Vector3* left, Vector3* up) const {
+	void Angles::toVectors(Vector3* forward, Vector3* left, Vector3* up) const
+	{
 		float angle;
 		float sr, sp, sy, cr, cp, cy;
 		// static to help MS compiler fp bugs
@@ -43,7 +44,8 @@ namespace Axon {
 		}
 	}
 
-	Vector3 Angles::toForward(void) const {
+	Vector3 Angles::toForward(void) const
+	{
 		float sp, sy, cp, cy;
 
 		float angle = yaw * AX_D2R;
@@ -56,7 +58,8 @@ namespace Axon {
 		return Vector3(cp * cy, cp * sy, -sp);
 	}
 
-	Matrix3 Angles::toMatrix3(void) const {
+	Matrix3 Angles::toMatrix3(void) const
+	{
 		Matrix3 axis;
 		toVectors(&axis[0], &axis[1], &axis[2]);
 		return axis;

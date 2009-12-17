@@ -120,14 +120,14 @@ void CreationPanel::doNotify(IObservable* subject, int arg) {
 
 	int tooltype = g_mapContext->getToolType();
 
-	if (tooltype == Editor::Tool::CreateStatic) {
+	if (tooltype == Editor::MapEdit::MapTool::CreateStatic) {
 		ui.rollup->setPageVisible(0, true);
 		ui.rollup->setPageVisible(3, true);
-	} else if (tooltype == Editor::Tool::CreateEntity) {
+	} else if (tooltype == Editor::MapEdit::MapTool::CreateEntity) {
 		ui.rollup->setPageVisible(0, true);
 		ui.rollup->setPageVisible(1, true);
 		ui.rollup->setPageVisible(3, true);
-	} else if (tooltype == Editor::Tool::CreateTree) {
+	} else if (tooltype == Editor::MapEdit::MapTool::CreateTree) {
 		ui.rollup->setPageVisible(2, true);
 		ui.rollup->setPageVisible(3, true);
 	}

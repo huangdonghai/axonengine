@@ -11,7 +11,7 @@ read the license and understand and accept it fully.
 #ifndef AX_GFXEDIT_ACTOR_H
 #define AX_GFXEDIT_ACTOR_H
 
-namespace Axon { namespace Editor { namespace GfxEdit {
+namespace Axon { namespace Editor {
 
 	class GfxContext;
 
@@ -23,6 +23,6 @@ namespace Axon { namespace Editor { namespace GfxEdit {
 	private:
 	};
 
-}}} // namespace Axon::Editor::GfxEdit
+}} // namespace Axon::Editor
 
 #endif

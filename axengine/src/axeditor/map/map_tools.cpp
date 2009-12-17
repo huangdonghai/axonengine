@@ -12,16 +12,16 @@ read the license and understand and accept it fully.
 
 namespace Axon { namespace Editor { namespace MapEdit {
 
-	MapTool::MapTool( Context* ctx ) : Editor::Tool(ctx)
+	MapTool::MapTool(MapContext* ctx) : Editor::Tool(ctx)
 	{
-		m_mapContext = static_cast<MapContext*>(ctx);
+		m_mapContext = ctx;
 	}
 
 	//------------------------------------------------------------------------------
 	// class TerrainRaiseTool
 	//------------------------------------------------------------------------------
 
-	TerrainRaiseTool::TerrainRaiseTool(Context* context) : MapTool(context) {
+	TerrainRaiseTool::TerrainRaiseTool(MapContext* context) : MapTool(context) {
 		m_cursor = nullptr;
 		m_isValid = false;
 		m_brushMat = Render::Material::load("terrainbrush");
@@ -184,8 +184,8 @@ namespace Axon { namespace Editor { namespace MapEdit {
 	// class TerrainLowerTool, terrain lower tool
 	//------------------------------------------------------------------------------
 
-	TerrainLowerTool::TerrainLowerTool(Context* context) : TerrainRaiseTool(context) {
-	}
+	TerrainLowerTool::TerrainLowerTool(MapContext* context) : TerrainRaiseTool(context)
+	{}
 
 	TerrainLowerTool::~TerrainLowerTool() {}
 
@@ -197,8 +197,8 @@ namespace Axon { namespace Editor { namespace MapEdit {
 	// class TerrainFlatTool, terrain level tool
 	//------------------------------------------------------------------------------
 
-	TerrainFlatTool::TerrainFlatTool(Context* context) : TerrainRaiseTool(context) {
-	}
+	TerrainFlatTool::TerrainFlatTool(MapContext* context) : TerrainRaiseTool(context)
+	{}
 
 	TerrainFlatTool::~TerrainFlatTool() {}
 
@@ -268,8 +268,8 @@ namespace Axon { namespace Editor { namespace MapEdit {
 	// class TerrainSmoothTool, terrain smooth tool
 	//------------------------------------------------------------------------------
 
-	TerrainSmoothTool::TerrainSmoothTool(Context* context) : TerrainRaiseTool(context) {
-	}
+	TerrainSmoothTool::TerrainSmoothTool(MapContext* context) : TerrainRaiseTool(context)
+	{}
 
 	TerrainSmoothTool::~TerrainSmoothTool() {}
 
@@ -319,7 +319,7 @@ namespace Axon { namespace Editor { namespace MapEdit {
 	// class TerrainGrabTool, terrain level tool
 	//------------------------------------------------------------------------------
 
-	TerrainGrabTool::TerrainGrabTool(Context* context) : TerrainRaiseTool(context) {
+	TerrainGrabTool::TerrainGrabTool(MapContext* context) : TerrainRaiseTool(context) {
 		m_isJustPressed = false;
 		m_baseHeight = nullptr;
 	}
@@ -382,7 +382,7 @@ namespace Axon { namespace Editor { namespace MapEdit {
 	// class TerrainPaintTool, terrain paint tool
 	//--------------------------------------------------------------------------
 
-	TerrainPaintTool::TerrainPaintTool(Context* context) : TerrainRaiseTool(context) {
+	TerrainPaintTool::TerrainPaintTool(MapContext* context) : TerrainRaiseTool(context) {
 		m_oldPixel = nullptr;
 	}
 
@@ -511,7 +511,7 @@ namespace Axon { namespace Editor { namespace MapEdit {
 	// class CreateStaticTool
 	//--------------------------------------------------------------------------
 
-	CreateStaticTool::CreateStaticTool(Context* context) : MapTool(context) {
+	CreateStaticTool::CreateStaticTool(MapContext* context) : MapTool(context) {
 		m_actor = nullptr;
 	}
 
@@ -583,7 +583,7 @@ namespace Axon { namespace Editor { namespace MapEdit {
 	// class CreateEntityTool
 	//--------------------------------------------------------------------------
 
-	CreateEntityTool::CreateEntityTool(Context* context) : MapTool(context) {
+	CreateEntityTool::CreateEntityTool(MapContext* context) : MapTool(context) {
 		m_actor = nullptr;
 	}
 
@@ -656,7 +656,7 @@ namespace Axon { namespace Editor { namespace MapEdit {
 	//--------------------------------------------------------------------------
 
 #ifdef AX_CONFIG_OPTION_USE_SPEEDTREE_40
-	CreateTreeTool::CreateTreeTool(Context* context) : MapTool(context) {
+	CreateTreeTool::CreateTreeTool(MapContext* context) : MapTool(context) {
 		m_actor = nullptr;
 	}
 

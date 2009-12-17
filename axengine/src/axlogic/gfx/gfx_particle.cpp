@@ -14,6 +14,17 @@ read the license and understand and accept it fully.
 namespace Axon { namespace Gfx {
 
 	ParticleEmitter::ParticleEmitter()
+		: m_speed("Speed")
+		, m_variation("Variation")
+		, m_spread("Spread")
+		, m_lat("Lat")
+		, m_gravity("Gravity")
+		, m_lifespan("LifeSpan")
+		, m_rate("Rate")
+		, m_areal("AreaL")
+		, m_areaw("AreaW")
+		, m_deacceleration("Deacceleration")
+		, m_enabled("Enabled")
 	{
 
 	}

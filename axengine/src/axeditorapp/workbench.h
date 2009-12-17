@@ -29,31 +29,31 @@ class Workbench : public QMainWindow, public IObserver, public IProgressHandler 
     Q_OBJECT
 
 public:
-    Workbench( QWidget *parent = 0, Qt::WFlags flags = 0);
+    Workbench(QWidget *parent = 0, Qt::WFlags flags = 0);
     ~Workbench();
 
 	// implement IObserver
-	virtual void doNotify( IObservable* subjest, int arg);
+	virtual void doNotify(IObservable* subjest, int arg);
 
 	// implement IProgressHandler
-	virtual void beginProgress( const String& title);
-	virtual bool showProgress( uint_t percent, const String& msg);
+	virtual void beginProgress(const String& title);
+	virtual bool showProgress(uint_t percent, const String& msg);
 	virtual void endProgress();
 
 	// implement IWorkbench, for editordll use
-	virtual void activateTool( Editor::Tool::Type t);
+	virtual void activateTool(Editor::Tool::Type t);
 
 
 	void updateTitle();
 
 	// for status bar
-	void updateStatusInfo( const Vector3& vieworg, const Vector3& cursorpos);
-	void setLanguage( const QString& lang);
-	void setStyle( const QString& style);
+	void updateStatusInfo(const Vector3& vieworg, const Vector3& cursorpos);
+	void setLanguage(const QString& lang);
+	void setStyle(const QString& style);
 
 	// editor tools and editor actions
-	void addEditorTool( Editor::Tool::Type type, QAction* action);
-	void addEditorAction( Editor::Action::Type type, QAction* action);
+	void addEditorTool(int toolType, QAction* action);
+	void addEditorAction(int actionType, QAction* action);
 
 	Frame* getActiveFrame();
 	Editor::View* getActiveView();
@@ -61,15 +61,15 @@ public:
 	void showMaterialEditor();
 	void showModelViewer();
 
-	void openScriptFile( const QString& filename);
+	void openScriptFile(const QString& filename);
 
 //	SceneMinimap* getSceneMinimap(){return SceneMinimap_;}
 	SidePanel* getSidePanel(){return m_sidePanel;}
 
 protected:
 	// inherited event
-	virtual void closeEvent( QCloseEvent *event);
-	virtual void timerEvent( QTimerEvent * event);
+	virtual void closeEvent(QCloseEvent *event);
+	virtual void timerEvent(QTimerEvent * event);
 
 private:
 	void createActions();
@@ -128,23 +128,23 @@ private slots:
 	void on_actionConvert_md5anim_triggered();
 	void on_actionFollowTerrain_triggered();
 
-	void onViewChanged( int index);
+	void onViewChanged(int index);
 
 	void onAboutAct();
 
-	void onEnglish( bool);
-	void onSimplifiedChinese( bool);
+	void onEnglish(bool);
+	void onSimplifiedChinese(bool);
 
-	void onStyleWindows( bool);
-	void onStyleWindowsXP( bool);
-	void onStylePlastique( bool);
-	void onStyleMacintosh( bool);
+	void onStyleWindows(bool);
+	void onStyleWindowsXP(bool);
+	void onStylePlastique(bool);
+	void onStyleMacintosh(bool);
 
-	void onEditorToolTriggered( QAction* action );
-	void onEditorActionTriggered( QAction* action);
+	void onEditorToolTriggered(QAction* action );
+	void onEditorActionTriggered(QAction* action);
 
-	void onSnapToGridChanged( QAction* action);
-	void onSnapToAngleChanged( QAction* action);
+	void onSnapToGridChanged(QAction* action);
+	void onSnapToAngleChanged(QAction* action);
 
 	void onViewLabelDoubleClicked(QPoint);
 

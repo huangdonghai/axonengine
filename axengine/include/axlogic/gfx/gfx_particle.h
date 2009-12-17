@@ -34,7 +34,7 @@ namespace Axon { namespace Gfx {
 		virtual ~ParticleEmitter();
 
 		// implement GfxObject
-		virtual Type getGfxType() const { return kParticleEmitter; }
+		virtual GfxType getGfxType() const { return kParticleEmitter; }
 		virtual void update();
 		virtual void render();
 

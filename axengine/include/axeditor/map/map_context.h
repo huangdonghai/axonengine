@@ -45,15 +45,6 @@ namespace Axon { namespace Editor { namespace MapEdit {
 		MapContext();
 		~MapContext();
 
-#if 0
-		int generateActorId();
-		void addActor(Actor* a);
-		void removeActor(Actor* a);
-		Actor* findActor(int id);
-
-		Action* createAction(Action::Type type);
-		Tool* createTool(Tool::Type type);
-#endif
 		void reset();
 
 		String getTitle() const;
@@ -62,37 +53,12 @@ namespace Axon { namespace Editor { namespace MapEdit {
 		bool load(const String& filename);
 		bool save();
 		bool saveAs(const String& filename);
-#if 0
-		bool isDirty();
-		bool isLoading() const { return m_isLoading; }
-#endif
+
 		// view process
 		void setActiveView(Editor::View* view) { m_activeView = view; }
 		Editor::View* getActiveView() const { return m_activeView; }
 
 		Vector3 getViewPos();
-#if 0
-		void doAction(Action::Type action);
-		void doTool(Tool::Type tool);
-		Tool* getTool() const { return m_tool; }
-		Tool::Type getToolType() const { return m_tooltype; }
-
-		// history
-		void addHistory(Action* his);
-		void undo();
-		void redo();
-		HistoryManager* getHistory();
-
-		// selection
-		const ActorList& getSelection() { return m_selections; }
-		History* setSelectionHistoried(const ActorList& elist);
-		void setSelection(const ActorList& elist, bool undoable=true);
-		void setSelection(Actor* actor, bool undoable=true);
-		void selectNone(bool undoable=true);
-		void selectAll(bool undoable=true);
-		void selectInvert(bool undoable=true);
-		void addSelection(const ActorList& elist, bool undoable=true);
-#endif
 
 		MapTerrain* createTerrain(int tiles, int tilemeters);
 		MapTerrain* getTerrain();
@@ -137,15 +103,6 @@ namespace Axon { namespace Editor { namespace MapEdit {
 		void loadBookmarkInfo(const TiXmlElement* elem);
 
 	private:
-#if 0
-		ActorDict m_actorDict;
-		int m_maxId;
-
-		ActionFactory* m_actionFactories[Action::MaxType];
-		ToolFactory* m_toolFactories[Tool::MaxType];
-#endif
-
-	private:
 		GameWorld* m_gameWorld;
 		String m_title;
 		String m_filename;
@@ -158,24 +115,6 @@ namespace Axon { namespace Editor { namespace MapEdit {
 		FrontView* m_frontView;
 		LeftView* m_leftView;
 
-#if 0
-		Editor::View* m_indexedViews[Editor::View::NumView];
-		Editor::View* m_activeView;
-
-		// tool
-		Tool::Type m_tooltype;
-		Tool* m_tool;
-
-		// selection
-		ActorList m_selections;
-
-		// history
-		HistoryManager m_editorHistory;
-
-		// dirty flag
-		bool m_isDirty;
-		bool m_isLoading;
-#endif
 		// map state
 		MapState* m_mapState;
 
@@ -193,12 +132,6 @@ namespace Axon { namespace Editor { namespace MapEdit {
 	inline String MapContext::getFilename() const {
 		return m_filename;
 	}
-
-#if 0
-	inline renderWorld* Context::getRenderWorld() {
-		return m_renderWorld;
-	}
-#endif
 
 	inline MapTerrain* MapContext::getTerrain() {
 		return m_terrain;

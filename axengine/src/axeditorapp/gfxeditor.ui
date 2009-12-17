@@ -50,6 +50,9 @@
    <addaction name="actionObjectMove"/>
    <addaction name="actionObjectRotate"/>
    <addaction name="actionObjectScale"/>
+   <addaction name="separator"/>
+   <addaction name="actionAddParticle"/>
+   <addaction name="actionAddRibbon"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <widget class="QDockWidget" name="sideBar">
@@ -405,6 +408,22 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+I</string>
+   </property>
+  </action>
+  <action name="actionAddParticle">
+   <property name="text">
+    <string>Add Particle</string>
+   </property>
+   <property name="toolTip">
+    <string>Add a particle emitter</string>
+   </property>
+  </action>
+  <action name="actionAddRibbon">
+   <property name="text">
+    <string>Add Ribbon</string>
+   </property>
+   <property name="toolTip">
+    <string>Add a ribbon emitter</string>
    </property>
   </action>
  </widget>

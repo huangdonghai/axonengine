@@ -14,7 +14,7 @@ read the license and understand and accept it fully.
 #include "terrainpanel.h"
 #include "filedialog.h"
 
-typedef Editor::Tool editorTool;
+typedef Editor::MapEdit::MapTool editorTool;
 
 TerrainPanel::TerrainPanel(QWidget *parent)
     : QWidget(parent)

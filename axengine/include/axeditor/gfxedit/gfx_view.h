@@ -11,7 +11,7 @@ read the license and understand and accept it fully.
 #ifndef AX_GFXEDIT_VIEW_H
 #define AX_GFXEDIT_VIEW_H
 
-namespace Axon { namespace Editor { namespace GfxEdit {
+namespace Axon { namespace Editor {
 
 	class GfxView : public View {
 	public:
@@ -24,6 +24,6 @@ namespace Axon { namespace Editor { namespace GfxEdit {
 	private:
 	};
 
-}}} // namespace Axon::Editor::GfxEdit
+}} // namespace Axon::Editor
 
 #endif

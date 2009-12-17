@@ -12,6 +12,13 @@ read the license and understand and accept it fully.
 
 namespace Axon { namespace Editor { namespace MapEdit {
 
+	template< class T >
+	class MapToolFactory_ : public ToolFactory {
+		virtual Tool* create(Context* context) {
+			return new T(static_cast<MapContext*>(context));
+		}
+	};
+
 	//--------------------------------------------------------------------------
 	// class MapContext
 	//--------------------------------------------------------------------------
@@ -27,17 +34,17 @@ namespace Axon { namespace Editor { namespace MapEdit {
 		m_toolFactories[Tool::Move]			= new ToolFactory_<MoveTool>;
 		m_toolFactories[Tool::Rotate]		= new ToolFactory_<RotateTool>;
 		m_toolFactories[Tool::Scale]		= new ToolFactory_<ScaleTool>;
-		m_toolFactories[Tool::TerrainRaise]	= new ToolFactory_<TerrainRaiseTool>;
-		m_toolFactories[Tool::TerrainLower]	= new ToolFactory_<TerrainLowerTool>;
-		m_toolFactories[Tool::TerrainLevel]	= new ToolFactory_<TerrainFlatTool>;
-		m_toolFactories[Tool::TerrainSmooth]= new ToolFactory_<TerrainSmoothTool>;
-		m_toolFactories[Tool::TerrainGrab]	= new ToolFactory_<TerrainGrabTool>;
-		m_toolFactories[Tool::TerrainPaint]	= new ToolFactory_<TerrainPaintTool>;
-		m_toolFactories[Tool::TerrainErase]	= new ToolFactory_<TerrainEraseTool>;
-		m_toolFactories[Tool::CreateStatic]	= new ToolFactory_<CreateStaticTool>;
-		m_toolFactories[Tool::CreateEntity]	= new ToolFactory_<CreateEntityTool>;
+		m_toolFactories[MapTool::TerrainRaise]	= new MapToolFactory_<TerrainRaiseTool>;
+		m_toolFactories[MapTool::TerrainLower]	= new MapToolFactory_<TerrainLowerTool>;
+		m_toolFactories[MapTool::TerrainLevel]	= new MapToolFactory_<TerrainFlatTool>;
+		m_toolFactories[MapTool::TerrainSmooth]= new MapToolFactory_<TerrainSmoothTool>;
+		m_toolFactories[MapTool::TerrainGrab]	= new MapToolFactory_<TerrainGrabTool>;
+		m_toolFactories[MapTool::TerrainPaint]	= new MapToolFactory_<TerrainPaintTool>;
+		m_toolFactories[MapTool::TerrainErase]	= new MapToolFactory_<TerrainEraseTool>;
+		m_toolFactories[MapTool::CreateStatic]	= new MapToolFactory_<CreateStaticTool>;
+		m_toolFactories[MapTool::CreateEntity]	= new MapToolFactory_<CreateEntityTool>;
 #ifdef AX_CONFIG_OPTION_USE_SPEEDTREE_40
-		m_toolFactories[Tool::CreateTree]	= new ToolFactory_<CreateTreeTool>;
+		m_toolFactories[MapTool::CreateTree]	= new MapToolFactory_<CreateTreeTool>;
 #endif // AX_CONFIG_OPTION_USE_SPEEDTREE_40
 
 		m_actionFactories[Action::Delete]	= new ActionFactory_<DeleteAction>;

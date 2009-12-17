@@ -12,11 +12,12 @@ read the license and understand and accept it fully.
 #define AX_EDITOR_GFXEDIT_ALL_H
 
 #include "gfx_actor.h"
+#include "gfx_tools.h"
 #include "gfx_view.h"
 #include "gfx_context.h"
 
 namespace Axon {
-	typedef Editor::GfxEdit::GfxContext GfxContext;
+	typedef Editor::GfxContext GfxContext;
 } // namespace Axon
 
 #endif

@@ -23,7 +23,7 @@ namespace Axon { namespace Editor {
 		, m_cursorPos(0.0f, 0.0f, 0.0f)
 		, m_title("untitled")
 	{
-		m_font = g_consoleFont;
+		m_font = g_miniFont;
 #if 0
 		m_eyeAxis.setIdentity();
 #else

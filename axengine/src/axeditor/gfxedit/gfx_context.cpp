@@ -10,7 +10,14 @@ read the license and understand and accept it fully.
 
 #include "gfx_local.h"
 
-namespace Axon { namespace Editor { namespace GfxEdit {
+namespace Axon { namespace Editor {
+
+	template< class T >
+	class GfxToolFactory_ : public ToolFactory {
+		virtual Tool* create(Context* context) {
+			return new T(static_cast<GfxContext*>(context));
+		}
+	};
 
 
 	GfxContext::GfxContext()
@@ -52,4 +59,4 @@ namespace Axon { namespace Editor { namespace GfxEdit {
 
 	}
 
-}}} // namespace Axon::Editor::GfxEdit
+}} // namespace Axon::Editor

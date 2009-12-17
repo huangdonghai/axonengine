@@ -26,25 +26,6 @@ namespace Axon { namespace Editor {
 
 			Select, Move, Rotate, Scale,
 
-			// terrain height map modification
-			TerrainRaise, TerrainLower, TerrainLevel, TerrainSmooth, TerrainGrab,
-			TerrainPush, TerrainErode, TerrainRamp,
-
-			// terrain paint
-			TerrainPaint, TerrainErase,
-
-			// terrain active area
-			TerrainPaintActive,TerrainEraseActive,
-
-			// grass / tree
-			GrassPaint, GrassErase, TreePaint, TreeErase,
-
-			// road / river
-			Road, River,
-
-			// entities
-			CreateStatic, CreateBrush, CreateEntity, CreateTree,
-
 			UserDefined = 128,
 
 			MaxType = 256

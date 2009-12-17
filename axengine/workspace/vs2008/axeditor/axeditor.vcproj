@@ -436,6 +436,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\axeditor\gfxedit\gfx_tools.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\axeditor\gfxedit\gfx_view.cpp"
 				>
 			</File>
@@ -452,6 +456,10 @@
 				</File>
 				<File
 					RelativePath="..\..\..\include\axeditor\gfxedit\gfx_context.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\include\axeditor\gfxedit\gfx_tools.h"
 					>
 				</File>
 				<File

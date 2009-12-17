@@ -72,6 +72,17 @@ namespace Axon {
 
 	}
 
+	//--------------------------------------------------------------------------
+	ColorTrack::ColorTrack( const String& name )
+		: VectorTrack(name)
+	{
+
+	}
+
+	ColorTrack::~ColorTrack()
+	{
+
+	}
 
 	//--------------------------------------------------------------------------
 	ObjAnimatable::ObjAnimatable()
@@ -89,5 +100,6 @@ namespace Axon {
 	{
 		return m_object->get_objectName();
 	}
+
 
 } // namespace Axon
