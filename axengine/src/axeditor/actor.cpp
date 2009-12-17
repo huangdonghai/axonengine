@@ -12,12 +12,14 @@ read the license and understand and accept it fully.
 
 namespace Axon { namespace Editor {
 
-	void Actor::beginTransform() {
+	void Actor::beginTransform()
+	{
 		m_oldMatrix = m_oldmatrixNoScale = getMatrix();
 		m_oldscale = m_oldmatrixNoScale.axis.removeScale();
 	}
 
-	void Actor::doTransform(const AffineMat& mat, bool local) {
+	void Actor::doTransform(const AffineMat& mat, bool local)
+	{
 		AffineMat newmatrix;
 		if (local) {
 			newmatrix = m_oldmatrixNoScale * mat;
@@ -34,12 +36,14 @@ namespace Axon { namespace Editor {
 		}
 	}
 
-	Action* Actor::endTransform() {
+	Action* Actor::endTransform()
+	{
 		TransformHis* his = new TransformHis(m_context, "Transform", m_id, m_oldMatrix, getMatrix());
 		return his;
 	}
 
-	void Actor::setOrigin(int index, float f) {
+	void Actor::setOrigin(int index, float f)
+	{
 		AX_ASSERT(index >= 0 && index < 3);
 #if 0
 		Vector3 org = m_gameNode->getOrigin_p();
@@ -59,7 +63,8 @@ namespace Axon { namespace Editor {
 		setMatrix(mat);
 	}
 
-	void Actor::setRotate(int index, float f) {
+	void Actor::setRotate(int index, float f)
+	{
 		AX_ASSERT(index >= 0 && index < 3);
 #if 0
 		Matrix3 axis = m_gameNode->getAxis_p();
@@ -100,7 +105,8 @@ namespace Axon { namespace Editor {
 		m_actorDirty = true;
 	}
 
-	void Actor::setId(int newid) {
+	void Actor::setId(int newid)
+	{
 		m_context->removeActor(this);
 		m_id = newid;
 		m_context->addActor(this);
