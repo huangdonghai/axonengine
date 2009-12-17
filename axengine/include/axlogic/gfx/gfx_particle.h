@@ -14,7 +14,8 @@ read the license and understand and accept it fully.
 
 namespace Axon { namespace Gfx {
 
-	struct Particle {
+	struct Particle
+	{
 		Vector3 pos, speed, down, origin, dir;
 		Vector3 corners[4];
 		float size, life, maxlife;

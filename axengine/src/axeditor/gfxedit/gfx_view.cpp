@@ -12,7 +12,7 @@ read the license and understand and accept it fully.
 
 namespace Axon { namespace Editor { namespace GfxEdit {
 
-	GfxView::GfxView( GfxContext* ctx ) : View(ctx)
+	GfxView::GfxView(GfxContext* ctx) : View(ctx)
 	{
 
 	}

@@ -16,7 +16,8 @@ namespace Axon { namespace Gfx {
 
 	class GfxEntity;
 
-	class GfxObject : public Object, public ObjAnimatable {
+	class GfxObject : public Object, public ObjAnimatable
+	{
 	public:
 		// script
 		AX_DECLARE_CLASS(GfxObject, Object, "GfxObject")

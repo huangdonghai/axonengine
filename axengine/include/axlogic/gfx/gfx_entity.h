@@ -16,7 +16,8 @@ namespace Axon { namespace Gfx {
 
 	using namespace Axon::Render;
 
-	class GfxEntity : public RenderEntity {
+	class GfxEntity : public RenderEntity
+	{
 	public:
 		GfxEntity();
 		GfxEntity(const String &name);

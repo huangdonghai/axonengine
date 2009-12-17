@@ -12,25 +12,27 @@ read the license and understand and accept it fully.
 
 namespace Axon { namespace Gfx {
 
-	struct RibbonSegment {
+	struct RibbonSegment
+	{
 		Vector3 pos, up, back;
 		float len,len0;
 	};
 
-	class RibbonEmitter : public GfxObject {
+	class RibbonEmitter : public GfxObject
+	{
 	public:
 		RibbonEmitter();
 		virtual ~RibbonEmitter();
 
 		// implement GfxObject
-		virtual Type getType() const { return kRibbonEmitter; }
+		virtual Type getGfxType() const { return kRibbonEmitter; }
 		virtual void update();
 		virtual void render();
 
 	private:
-		Nat<Vector3> color;
-		Nat<float> opacity;
-		Nat<float> above, below;
+		VectorTrack color;
+		FloatTrack opacity;
+		FloatTrack above, below;
 
 		float f1, f2;
 
