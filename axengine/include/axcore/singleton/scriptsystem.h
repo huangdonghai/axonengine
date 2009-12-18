@@ -13,15 +13,15 @@ read the license and understand and accept it fully.
 #ifndef AX_SCRIPTSYSTEM_H
 #define AX_SCRIPTSYSTEM_H
 
-#define AX_DECLARE_CLASS(classname, baseclass, scriptname)			\
-	typedef classname ThisClass;										\
-	typedef baseclass BaseClass;										\
-	virtual ::Axon::TypeInfo* classname::getTypeInfo() const {			\
-		return classname::registerTypeInfo();							\
-	}																	\
+#define AX_DECLARE_CLASS(classname, baseclass, scriptname) public:			\
+	typedef classname ThisClass;											\
+	typedef baseclass BaseClass;											\
+	virtual ::Axon::TypeInfo* classname::getTypeInfo() const {				\
+		return classname::registerTypeInfo();								\
+	}																		\
 	static ::Axon::TypeInfo* classname::registerTypeInfo() {				\
-		static ::Axon::TypeInfo* typeinfo;								\
-		if (!typeinfo) {												\
+		static ::Axon::TypeInfo* typeinfo;									\
+		if (!typeinfo) {													\
 			typeinfo = new ::Axon::TypeInfo_<classname>(scriptname, BaseClass::registerTypeInfo()); \
 
 #define AX_CONSTPROP(name) typeinfo->addProperty(#name, &ThisClass::get_##name);
@@ -31,7 +31,7 @@ read the license and understand and accept it fully.
 #define AX_METHOD(name) typeinfo->addMethod(#name, &ThisClass::name);
 
 #define AX_END_CLASS()													\
-				g_scriptSystem->registerType(typeinfo);				\
+				g_scriptSystem->registerType(typeinfo);					\
 			}															\
 		return typeinfo;												\
 	}																	\
@@ -49,7 +49,8 @@ namespace Axon {
 	// class LuaTable
 	//--------------------------------------------------------------------------
 
-	struct AX_API LuaTable {
+	struct AX_API LuaTable
+	{
 	public:
 		LuaTable(int index);
 
@@ -67,7 +68,7 @@ namespace Axon {
 
 		Vector3 toVector3() const;
 		Rgb toColor() const;
-		Point       toPoint() const;
+		Point toPoint() const;
 		Rect toRect() const;
 		Object* toObject() const;
 
@@ -82,7 +83,8 @@ namespace Axon {
 	// class Variant
 	//--------------------------------------------------------------------------
 
-	class AX_API Variant {
+	class AX_API Variant
+	{
 	public:
 		enum Type {
 			kEmpty, kBool, kInt, kFloat, kString, kObject, kTable, kVector3, kColor, kPoint, kRect
@@ -649,8 +651,8 @@ namespace Axon {
 		EnumItems m_enumItems;
 	};
 
-	typedef Sequence<Member*>			MemberSeq;
-	typedef Dict<const char*, Member*, hash_cstr, equal_cstr>	MemberDict;
+	typedef Sequence<Member*> MemberSeq;
+	typedef Dict<const char*, Member*, hash_cstr, equal_cstr> MemberDict;
 
 	//--------------------------------------------------------------------------
 	// template SimpleProp_
@@ -1147,9 +1149,11 @@ namespace Axon {
 	typedef Sequence<ScriptProp*>		ScriptPropSeq;
 	typedef Dict<String,ScriptProp*> ScriptPropDict;
 
+
 	//--------------------------------------------------------------------------
 	// class ClassInfo
 	//--------------------------------------------------------------------------
+
 	class AX_API ClassInfo {
 	public:
 		ClassInfo() {}

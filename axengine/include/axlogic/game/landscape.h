@@ -14,17 +14,18 @@ read the license and understand and accept it fully.
 
 namespace Axon { namespace Game {
 
-	class World;
+	class GameWorld;
 
 	//--------------------------------------------------------------------------
 	// class Fixed
 	//--------------------------------------------------------------------------
 
-	class AX_API Fixed : public Node {
-	public:
-		AX_DECLARE_CLASS(Fixed, Node, "Game.Fixed")
+	class AX_API Fixed : public GameNode
+	{
+		AX_DECLARE_CLASS(Fixed, GameNode, "Game.Fixed")
 		AX_END_CLASS()
 
+	public:
 		friend class Landscape;
 
 		Fixed();
@@ -46,12 +47,12 @@ namespace Axon { namespace Game {
 	// class StaticFixed
 	//--------------------------------------------------------------------------
 
-	class AX_API StaticFixed : public Fixed {
-	public:
+	class AX_API StaticFixed : public Fixed
+	{
 		AX_DECLARE_CLASS(StaticFixed, Fixed, "Game.StaticFixed")
 			AX_PROP(model)
 		AX_END_CLASS()
-
+	public:
 		StaticFixed();
 		virtual ~StaticFixed();
 
@@ -59,7 +60,7 @@ namespace Axon { namespace Game {
 		void set_model(const String& val);
 
 	protected:
-		// implement Node
+		// implement GameNode
 		virtual void reload();
 		virtual void clear();
 
@@ -73,11 +74,12 @@ namespace Axon { namespace Game {
 	// class TerrainFixed
 	//--------------------------------------------------------------------------
 
-	class AX_API TerrainFixed : public Fixed, public IObserver {
-	public:
+	class AX_API TerrainFixed : public Fixed, public IObserver
+	{
 		AX_DECLARE_CLASS(TerrainFixed, Fixed, "Game.TerrainFixed")
 		AX_END_CLASS()
 
+	public:
 		TerrainFixed() {}
 		TerrainFixed(Render::Terrain* terr);
 		virtual ~TerrainFixed();
@@ -99,16 +101,17 @@ namespace Axon { namespace Game {
 	//--------------------------------------------------------------------------
 
 #ifdef AX_CONFIG_OPTION_USE_SPEEDTREE_40
-	class AX_API TreeFixed : public Fixed {
-	public:
+	class AX_API TreeFixed : public Fixed
+	{
 		AX_DECLARE_CLASS(TreeFixed, Fixed, "Game.TreeFixed")
 			AX_PROP(tree)
 		AX_END_CLASS()
 
+	public:
 		TreeFixed();
 		virtual ~TreeFixed();
 
-		// implement Node
+		// implement GameNode
 		virtual void reload();
 		virtual void clear();
 
@@ -125,23 +128,24 @@ namespace Axon { namespace Game {
 	// class Landscape
 	//--------------------------------------------------------------------------
 
-	class AX_API Landscape : public Entity {
-	public:
-		AX_DECLARE_CLASS(Landscape, Entity, "Game.Landscape")
+	class AX_API Landscape : public GameEntity
+	{
+		AX_DECLARE_CLASS(Landscape, GameEntity, "Game.Landscape")
 		AX_END_CLASS()
 
+	public:
 		enum { MaxFixed = 1024 };
 
 		Landscape() {}
-		Landscape(World* world);
+		Landscape(GameWorld* world);
 		virtual ~Landscape();
 
 		void addFixed(Fixed* fixed);
 		void removeFixed(Fixed* fixed);
 
-		Fixed*              getFixed(int num) const;
+		Fixed* getFixed(int num) const;
 
-		World* getGameWorld() const { return m_world; }
+		GameWorld* getGameWorld() const { return m_world; }
 
 	private:
 		Fixed* m_fixeds[MaxFixed];

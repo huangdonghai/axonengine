@@ -16,7 +16,7 @@ namespace Axon { namespace Game {
 
 	// key framed physics mover
 
-	class Mover : public Entity {
+	class Mover : public GameEntity {
 	public:
 		Mover();
 		virtual ~Mover();

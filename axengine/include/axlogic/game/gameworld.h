@@ -21,7 +21,8 @@ namespace Axon { namespace Game {
 		Think_animation = 4,
 	};
 
-	class AX_API World : public IObserver {
+	class AX_API GameWorld : public IObserver
+	{
 	public:
 		friend class GameSystem;
 
@@ -31,8 +32,8 @@ namespace Axon { namespace Game {
 			FreeNavigate,
 		};
 
-		World();
-		~World();
+		GameWorld();
+		~GameWorld();
 
 		void reset();
 
@@ -43,10 +44,10 @@ namespace Axon { namespace Game {
 		void drawFrame();
 		void drawScene(const Render::Camera& camera);
 
-		void addNode(Node* node);
-		void removeNode(Node* node);
+		void addNode(GameNode* node);
+		void removeNode(GameNode* node);
 
-		Entity* getEntity(int num) const;
+		GameEntity* getEntity(int num) const;
 		Landscape* getLandscape() const;
 		RenderWorld* getRenderWorld() const;
 		PhysicsWorld* getPhysicsWorld() const;
@@ -62,11 +63,11 @@ namespace Axon { namespace Game {
 		AffineMat getLastViewMatrix() const;
 
 		// static function
-		static Entity* createEntity(const char* clsname);
+		static GameEntity* createEntity(const char* clsname);
 
 	protected:
-		void addEntity(Entity* entity);
-		void removeEntity(Entity* entity);
+		void addEntity(GameEntity* entity);
+		void removeEntity(GameEntity* entity);
 
 		void addFixed(Fixed* fixed);
 		void removeFixed(Fixed* fixed);
@@ -78,7 +79,7 @@ namespace Axon { namespace Game {
 		bool m_onlyClient;
 		bool m_multiPlayer;
 
-		Entity* m_entities[EntityNum::MAX_ENTITIES];
+		GameEntity* m_entities[EntityNum::MAX_ENTITIES];
 		int m_spawnIds[EntityNum::MAX_ENTITIES];// for use in EntityPtr
 		int m_numEntities;
 		int m_firstFreeEntity;
@@ -96,28 +97,34 @@ namespace Axon { namespace Game {
 		Render::Target* m_targetWindow;
 	};
 
-	inline Entity* World::getEntity(int num) const {
+	inline GameEntity* GameWorld::getEntity(int num) const
+	{
 		AX_ASSERT(num >= 0 && num < EntityNum::MAX_ENTITIES);
 		return m_entities[num];
 	}
 
-	inline Landscape* World::getLandscape() const {
+	inline Landscape* GameWorld::getLandscape() const
+	{
 		return static_cast<Landscape*>(m_entities[EntityNum::LANDSCAPE]);
 	}
 
-	inline RenderWorld* World::getRenderWorld() const {
+	inline RenderWorld* GameWorld::getRenderWorld() const
+	{
 		return m_renderWorld;
 	}
 
-	inline PhysicsWorld* World::getPhysicsWorld() const {
+	inline PhysicsWorld* GameWorld::getPhysicsWorld() const
+	{
 		return m_physicsWorld;
 	}
 
-	inline SoundWorld* World::getSoundWorld() const {
+	inline SoundWorld* GameWorld::getSoundWorld() const
+	{
 		return m_soundWorld;
 	}
 
-	inline int World::getFrameTime() const {
+	inline int GameWorld::getFrameTime() const
+	{
 		return m_frametime;
 	}
 

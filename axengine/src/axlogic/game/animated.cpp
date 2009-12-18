@@ -26,7 +26,7 @@ namespace Axon{ namespace Game {
 	}
 
 	void Animated::doThink() {
-		Entity::doThink();
+		GameEntity::doThink();
 
 		if (m_animator) {
 			int frametime = m_world->getFrameTime();

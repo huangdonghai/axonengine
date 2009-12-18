@@ -13,7 +13,7 @@ read the license and understand and accept it fully.
 
 namespace Axon { namespace Game {
 
-	World::World() {
+	GameWorld::GameWorld() {
 		m_onlyClient = false;
 		m_onlyServer = false;
 		m_multiPlayer = false;
@@ -44,7 +44,7 @@ namespace Axon { namespace Game {
 		g_gameSystem->setGameWorld(this);
 	}
 
-	World::~World() {
+	GameWorld::~GameWorld() {
 		g_gameSystem->setGameWorld(0);
 
 		m_physicsWorld->detachObserver(this);
@@ -52,7 +52,7 @@ namespace Axon { namespace Game {
 		SafeDelete(m_renderWorld);
 	}
 
-	void World::runFrame(int what, int frametime)
+	void GameWorld::runFrame(int what, int frametime)
 	{
 		m_frametime = frametime;
 		m_lasttime += m_frametime;
@@ -70,7 +70,7 @@ namespace Axon { namespace Game {
 		}
 	}
 
-	void World::drawFrame()
+	void GameWorld::drawFrame()
 	{
 		m_lastCamera.setTime(m_lasttime);
 
@@ -86,7 +86,7 @@ namespace Axon { namespace Game {
 		g_renderSystem->endFrame();
 	}
 
-	void World::drawScene(const Render::Camera& camera)
+	void GameWorld::drawScene(const Render::Camera& camera)
 	{
 		m_lastCamera = camera;
 
@@ -103,7 +103,7 @@ namespace Axon { namespace Game {
 		g_renderSystem->endScene();
 	}
 
-	void World::addEntity(Entity* entity) {
+	void GameWorld::addEntity(GameEntity* entity) {
 		int start = m_firstFreeEntity;
 		int end = EntityNum::MAX_NORMAL;
 
@@ -138,7 +138,7 @@ namespace Axon { namespace Game {
 		}
 	}
 
-	void World::removeEntity(Entity* entity) {
+	void GameWorld::removeEntity(GameEntity* entity) {
 		int num = entity->m_entityNum;
 		if (num < 0) {
 			Errorf("not a valid entity number");
@@ -155,14 +155,14 @@ namespace Axon { namespace Game {
 		m_firstFreeEntity = num;
 	}
 
-	Entity* World::createEntity(const char* clsname) {
+	GameEntity* GameWorld::createEntity(const char* clsname) {
 		Object* obj = g_scriptSystem->createObject(clsname);
 
 		if (!obj) {
 			return nullptr;
 		}
 
-		Entity* ent = object_cast<Entity*>(obj);
+		GameEntity* ent = object_cast<GameEntity*>(obj);
 
 		if (!ent) {
 			delete obj;
@@ -178,19 +178,19 @@ namespace Axon { namespace Game {
 		return ent;
 	}
 
-	void World::addFixed(Fixed* fixed) {
+	void GameWorld::addFixed(Fixed* fixed) {
 		getLandscape()->addFixed(fixed);
 	}
 
-	void World::removeFixed(Fixed* fixed) {
+	void GameWorld::removeFixed(Fixed* fixed) {
 		getLandscape()->removeFixed(fixed);
 	}
 
-	void World::doNotify(IObservable* subject, int arg) {
+	void GameWorld::doNotify(IObservable* subject, int arg) {
 
 	}
 
-	void World::updateEnvdef() {
+	void GameWorld::updateEnvdef() {
 		m_outdoorEnv->setHaveFarSky(m_mapEnvDef->m_haveSkyBox);
 		m_outdoorEnv->setHaveOcean(m_mapEnvDef->m_haveOcean);
 		m_outdoorEnv->setFog(m_mapEnvDef->m_fogColor.toVector(), m_mapEnvDef->m_fogDensity);
@@ -216,12 +216,12 @@ namespace Axon { namespace Game {
 		m_outdoorEnv->setSunDir(sundir);
 	}
 
-	void World::setWindow(Render::Target* targetWin)
+	void GameWorld::setWindow(Render::Target* targetWin)
 	{
 		m_targetWindow = targetWin;
 	}
 
-	void World::restoreEntities()
+	void GameWorld::restoreEntities()
 	{
 		for (int i = EntityNum::MAX_CLIENTS; i < m_numEntities; i++) {
 			if (m_entities[i]) {
@@ -231,28 +231,28 @@ namespace Axon { namespace Game {
 
 	}
 
-	void World::reset()
+	void GameWorld::reset()
 	{
 
 	}
 
-	void World::addNode(Node* node)
+	void GameWorld::addNode(GameNode* node)
 	{
 		if (node->isFixed())
 			addFixed((Fixed*)node);
 		else
-			addEntity((Entity*)node);
+			addEntity((GameEntity*)node);
 	}
 
-	void World::removeNode(Node* node)
+	void GameWorld::removeNode(GameNode* node)
 	{
 		if (node->isFixed())
 			removeFixed((Fixed*)node);
 		else
-			removeEntity((Entity*)node);
+			removeEntity((GameEntity*)node);
 	}
 
-	AffineMat World::getLastViewMatrix() const
+	AffineMat GameWorld::getLastViewMatrix() const
 	{
 		return AffineMat(m_lastCamera.getViewAxis(), m_lastCamera.getOrigin());
 	}

@@ -168,7 +168,7 @@ namespace Axon { namespace Game {
 	// class Landscape
 	//--------------------------------------------------------------------------
 
-	Landscape::Landscape(World* world) {
+	Landscape::Landscape(GameWorld* world) {
 		m_world = world;
 
 		TypeZeroArray(m_fixeds);

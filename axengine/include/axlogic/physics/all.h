@@ -41,7 +41,7 @@ class hkDataWorldDict;
 class hkpCharacterProxy;
 
 namespace Axon { namespace Game {
-	class Entity;
+	class GameEntity;
 }} // namespace Axon::Game
 
 namespace Axon { namespace Physics {
@@ -55,7 +55,7 @@ namespace Axon { namespace Physics {
 	class Ragdoll;
 	class PhysicsPlayer;
 
-	typedef Game::Entity gameEntity;
+	typedef Game::GameEntity gameEntity;
 
 }} // namespace Axon::Physics
 

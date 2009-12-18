@@ -14,7 +14,7 @@ read the license and understand and accept it fully.
 
 namespace Axon { namespace Game {
 
-	class Projectile : public Entity {
+	class Projectile : public GameEntity {
 	public:
 		Projectile();
 		virtual ~Projectile();

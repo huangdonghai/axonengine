@@ -15,7 +15,7 @@ read the license and understand and accept it fully.
 namespace Axon { namespace Game {
 
 	//--------------------------------------------------------------------------
-	// class Entity
+	// class GameEntity
 	//--------------------------------------------------------------------------
 
 	struct EntityNum {
@@ -48,17 +48,17 @@ namespace Axon { namespace Game {
 		SndChannelId_Damage
 	};
 
-	class Entity;
-	typedef List<Entity*>			EntityList;
+	class GameEntity;
+	typedef List<GameEntity*> EntityList;
 	typedef EntityList::iterator EntityIterator;
-	typedef Dict<String,Entity*>	EntityHash;
+	typedef Dict<String,GameEntity*> EntityHash;
 
-	class AX_API Entity : public Node, public IObserver {
-	public:
-		AX_DECLARE_CLASS(Entity, Node, "Game.Entity")
+	class AX_API GameEntity : public GameNode, public IObserver
+	{
+		AX_DECLARE_CLASS(GameEntity, GameNode, "Game.Entity")
 		AX_END_CLASS()
-
-		friend class World;
+	public:
+		friend class GameWorld;
 
 		enum State {
 			Hide,
@@ -66,8 +66,8 @@ namespace Axon { namespace Game {
 			Active,
 		};
 
-		Entity();
-		virtual ~Entity();
+		GameEntity();
+		virtual ~GameEntity();
 
 		virtual void doThink();
 		virtual bool isPlayer() const { return false; }
@@ -81,7 +81,7 @@ namespace Axon { namespace Game {
 		void autoGenerateName();
 
 	protected:
-		// implement Node
+		// implement GameNode
 		virtual void reload();
 		virtual void doSpawn();
 		virtual void doRemove();
@@ -94,7 +94,7 @@ namespace Axon { namespace Game {
 
 	protected:
 		EntityNum m_entityNum;
-		World* m_world;			// world the entity has added to
+		GameWorld* m_world;			// world the entity has added to
 
 	private:
 		State m_state;
@@ -121,7 +121,7 @@ namespace Axon { namespace Game {
 		int getEntityNum( void ) const;
 
 	private:
-		World* m_world;
+		GameWorld* m_world;
 		int m_spawnId;
 	};
 
@@ -178,16 +178,16 @@ namespace Axon { namespace Game {
 	// class RigidBody
 	//--------------------------------------------------------------------------
 
-	class AX_API RigidBody : public Entity {
+	class AX_API RigidBody : public GameEntity {
 	public:
-		AX_DECLARE_CLASS(RigidBody, Entity, "Game.Physics.RigidBody")
+		AX_DECLARE_CLASS(RigidBody, GameEntity, "Game.Physics.RigidBody")
 			AX_METHOD(loadAsset)
 		AX_END_CLASS()
 
 		RigidBody();
 		virtual ~RigidBody();
 
-		// implement Entity
+		// implement GameEntity
 		virtual void doThink();
 
 		// properties

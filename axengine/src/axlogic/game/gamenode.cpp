@@ -14,10 +14,10 @@ read the license and understand and accept it fully.
 namespace Axon { namespace Game {
 
 	//--------------------------------------------------------------------------
-	// class Node
+	// class GameNode
 	//--------------------------------------------------------------------------
 
-	Node::Node() {
+	GameNode::GameNode() {
 		m_outdoorOnly = false;
 		m_castShadow = true;
 		m_recvShadow = true;
@@ -35,10 +35,10 @@ namespace Axon { namespace Game {
 		m_soundEntity = nullptr;
 	}
 
-	Node::~Node() {
+	GameNode::~GameNode() {
 	}
 
-	BoundingBox Node::getLocalBoundingBox() {
+	BoundingBox GameNode::getLocalBoundingBox() {
 		if (!m_renderEntity) {
 			return BoundingBox::UnitBox;
 		}
@@ -46,7 +46,7 @@ namespace Axon { namespace Game {
 		return m_renderEntity->getLocalBoundingBox();
 	}
 
-	BoundingBox Node::getBoundingBox() {
+	BoundingBox GameNode::getBoundingBox() {
 		if (!m_renderEntity) {
 			return getLocalBoundingBox().getTransformed(m_matrix_p);
 		}
@@ -54,44 +54,44 @@ namespace Axon { namespace Game {
 		return m_renderEntity->getBoundingBox();
 	}
 
-	Vector3 Node::getOrigin_p() const {
+	Vector3 GameNode::getOrigin_p() const {
 		return m_matrix_p.origin;
 	}
 
-	void Node::setOrigin_p(const Vector3& pos) {
+	void GameNode::setOrigin_p(const Vector3& pos) {
 		m_matrix_p.origin = (pos);
 		m_matrixDirty = true;
 		onMatrixChanged();
 	}
 
-	const Matrix3& Node::getAxis_p() const {
+	const Matrix3& GameNode::getAxis_p() const {
 		return m_matrix_p.axis;
 	}
 
-	void Node::setAxis_p(const Matrix3& axis) {
+	void GameNode::setAxis_p(const Matrix3& axis) {
 		m_matrix_p.axis = (axis);
 		m_matrixDirty = true;
 		onMatrixChanged();
 	}
 
-	void Node::setMatrix_p(const AffineMat& matrix) {
+	void GameNode::setMatrix_p(const AffineMat& matrix) {
 		m_matrix_p = matrix;
 		m_matrixDirty = true;
 		onMatrixChanged();
 	}
 
-	const AffineMat& Node::getMatrix_p() const {
+	const AffineMat& GameNode::getMatrix_p() const {
 		return m_matrix_p;
 	}
 
-	void Node::setInstanceColor( const Vector3& color )
+	void GameNode::setInstanceColor( const Vector3& color )
 	{
 		m_instanceColor_p = color;
 		onMatrixChanged();
 	}
 
 
-	void Node::doSelectTest() const {
+	void GameNode::doSelectTest() const {
 		if (!m_renderEntity) {
 			return;
 		}
@@ -102,10 +102,10 @@ namespace Axon { namespace Game {
 		g_renderSystem->testActor(m_renderEntity);
 	}
 
-	void Node::doDebugRender() const
+	void GameNode::doDebugRender() const
 	{}
 
-	void Node::writeXml(File* f, int indent/*=0 */) {
+	void GameNode::writeXml(File* f, int indent/*=0 */) {
 		String indstr(indent*2, ' ');
 #define INDENT if (indent) f->printf("%s", indstr.c_str());
 
@@ -139,7 +139,7 @@ namespace Axon { namespace Game {
 #undef INDENT
 	}
 
-	void Node::readXml(const TiXmlElement* node) {
+	void GameNode::readXml(const TiXmlElement* node) {
 		const TiXmlAttribute* attr = node->FirstAttribute();
 
 		for (; attr; attr = attr->Next()) {
@@ -147,7 +147,7 @@ namespace Axon { namespace Game {
 		}
 	}
 
-	void Node::doSpawn()
+	void GameNode::doSpawn()
 	{
 		if (m_spawned) {
 			Errorf("already spawned");
@@ -158,7 +158,7 @@ namespace Axon { namespace Game {
 		reload();
 	}
 
-	void Node::doRemove()
+	void GameNode::doRemove()
 	{
 		if (!m_spawned) {
 			Errorf("not even spawned");
@@ -168,7 +168,7 @@ namespace Axon { namespace Game {
 		m_spawned = false;
 	}
 
-	void Node::onPropertyChanged()
+	void GameNode::onPropertyChanged()
 	{
 		if (!m_spawned)
 			return;
@@ -176,7 +176,7 @@ namespace Axon { namespace Game {
 		reload();
 	}
 
-	void Node::onMatrixChanged()
+	void GameNode::onMatrixChanged()
 	{
 		if (!m_spawned)
 			return;

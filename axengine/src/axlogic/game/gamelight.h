@@ -14,9 +14,9 @@ read the license and understand and accept it fully.
 
 namespace Axon { namespace Game {
 
-	class GameLight : public Entity {
+	class GameLight : public GameEntity {
 	public:
-		AX_DECLARE_CLASS(GameLight, Entity, "Game.Effect.Light")
+		AX_DECLARE_CLASS(GameLight, GameEntity, "Game.Effect.Light")
 			AX_METHOD(loadLight)
 			AX_METHOD(activeLight)
 		AX_END_CLASS()
@@ -28,7 +28,7 @@ namespace Axon { namespace Game {
 		virtual void doSelectTest() const;
 		virtual void doDebugRender() const;
 
-		// implememt Entity
+		// implememt GameEntity
 		virtual void doThink();
 
 		// method

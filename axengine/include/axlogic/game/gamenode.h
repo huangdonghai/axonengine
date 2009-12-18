@@ -14,19 +14,20 @@ read the license and understand and accept it fully.
 namespace Axon { namespace Game {
 
 	//--------------------------------------------------------------------------
-	// class Node
+	// class GameNode
 	//--------------------------------------------------------------------------
 
-	class AX_API Node : public Object {
-	public:
-		AX_DECLARE_CLASS(Node, Object, "Game.Node")
+	class AX_API GameNode : public Object
+	{
+		AX_DECLARE_CLASS(GameNode, Object, "Game.Node")
 			AX_PROP(outdoorOnly)
 			AX_PROP(castShadow)
 			AX_PROP(recvShadow)
 			AX_PROP(lodRatio)
 		AX_END_CLASS()
 
-		friend class World;
+	public:
+		friend class GameWorld;
 
 		enum Mode {
 			Editing, Simulating, Gaming
@@ -43,8 +44,8 @@ namespace Axon { namespace Game {
 		};
 		typedef Flags_<Update>	UpdateFlags;
 
-		Node();
-		virtual ~Node();
+		GameNode();
+		virtual ~GameNode();
 
 		// geometry
 		virtual BoundingBox getLocalBoundingBox();

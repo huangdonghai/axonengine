@@ -14,10 +14,10 @@ read the license and understand and accept it fully.
 namespace Axon { namespace Game {
 
 	//--------------------------------------------------------------------------
-	// class Entity
+	// class GameEntity
 	//--------------------------------------------------------------------------
 
-	Entity::Entity() {
+	GameEntity::GameEntity() {
 		m_entityNum = -1;
 		m_world = nullptr;
 		m_state = Active;
@@ -25,42 +25,42 @@ namespace Axon { namespace Game {
 		setSoundEntity(new SoundEntity());
 	}
 
-	Entity::~Entity() {
+	GameEntity::~GameEntity() {
 		clear();
 		delete getSoundEntity();
 		setSoundEntity(0);
 	}
 
-	void Entity::doThink() {
+	void GameEntity::doThink() {
 		invoke_onThink();
 	}
 
-	void Entity::setState(State state)
+	void GameEntity::setState(State state)
 	{
 		m_state = state;
 	}
 
-	void Entity::doNotify(IObservable* subject, int arg) {
+	void GameEntity::doNotify(IObservable* subject, int arg) {
 	}
 
-	void Entity::onPhysicsActived() {
+	void GameEntity::onPhysicsActived() {
 		m_updateFlags.set(ReadPhysics);
 	}
 
-	void Entity::onPhysicsDeactived() {
+	void GameEntity::onPhysicsDeactived() {
 		m_updateFlags.unset(ReadPhysics);
 	}
 
-	void Entity::invoke_onThink() {
+	void GameEntity::invoke_onThink() {
 		invokeCallback("onThink", m_world->getFrameTime());
 	}
 
-	void Entity::reload()
+	void GameEntity::reload()
 	{
 		invokeCallback("onReset");
 	}
 
-	void Entity::autoGenerateName()
+	void GameEntity::autoGenerateName()
 	{
 		String objname = "entity";
 
@@ -73,7 +73,7 @@ namespace Axon { namespace Game {
 		set_objectName(objname);
 	}
 
-	void Entity::doSpawn()
+	void GameEntity::doSpawn()
 	{
 		if (m_spawned) {
 			Errorf("already spawned");
@@ -85,7 +85,7 @@ namespace Axon { namespace Game {
 		reload();
 	}
 
-	void Entity::doRemove()
+	void GameEntity::doRemove()
 	{
 		SoundEntity* soundEntity = getSoundEntity();
 		m_world->getSoundWorld()->removeEntity(soundEntity);

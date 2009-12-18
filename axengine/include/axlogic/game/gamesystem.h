@@ -55,7 +55,9 @@ namespace Axon { namespace Game {
 
 	class GameInput;
 
-	class AX_API GameSystem : public Object, public ICmdHandler, public ITickable, public IObservable {
+	class AX_API GameSystem
+		: public Object, public ICmdHandler, public ITickable, public IObservable
+	{
 		AX_DECLARE_COMMAND_HANDLER(GameSystem);
 	public:
 		enum ObserveFlag {
@@ -71,7 +73,7 @@ namespace Axon { namespace Game {
 			Editing,		// is editing map, network is disabled
 		};
 
-		friend class Game::World;
+		friend class Game::GameWorld;
 
 		GameSystem();
 		~GameSystem();
@@ -86,7 +88,7 @@ namespace Axon { namespace Game {
 		void stopRunning();
 		bool isRunning() const { return m_running; }
 
-		void setGameWorld(World* gameworld);
+		void setGameWorld(GameWorld* gameworld);
 
 		// player
 		const UserInput* getUserInput(EntityNum clientNum);
@@ -96,7 +98,7 @@ namespace Axon { namespace Game {
 
 	private:
 		GameInput* m_gameInput;
-		World* m_gameWorld;
+		GameWorld* m_gameWorld;
 
 		// runtime
 		State m_state;

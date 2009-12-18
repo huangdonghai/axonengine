@@ -42,7 +42,7 @@ namespace Axon { namespace Game {
 	}
 
 
-	void GameSystem::setGameWorld(World* gameworld)
+	void GameSystem::setGameWorld(GameWorld* gameworld)
 	{
 		if (m_gameWorld && gameworld) {
 			Errorf("already has a game world");
@@ -59,7 +59,7 @@ namespace Axon { namespace Game {
 			return;
 		}
 
-		Entity* ent = World::createEntity("Game.Player");
+		GameEntity* ent = GameWorld::createEntity("Game.Player");
 		m_gameWorld->addEntity(ent);
 	}
 

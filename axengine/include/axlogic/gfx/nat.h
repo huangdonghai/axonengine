@@ -147,6 +147,14 @@ namespace Axon {
 #endif
 	};
 
+	class IController
+	{
+	public:
+
+	private:
+		Object* m_object;
+		Member* m_target;
+	};
 
 	//--------------------------------------------------------------------------
 	class FloatTrack : public IAnimatable

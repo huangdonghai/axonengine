@@ -45,7 +45,7 @@ namespace Axon { namespace Game {
 	}
 
 	void GameLight::doThink() {
-		Entity::doThink();
+		GameEntity::doThink();
 	}
 
 	void GameLight::loadLight(const Variant& v) {
