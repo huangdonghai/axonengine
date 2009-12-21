@@ -30,9 +30,9 @@ namespace Axon { namespace Gfx {
 		virtual void render();
 
 	private:
-		ColorTrack m_color;
-		FloatTrack m_opacity;
-		FloatTrack m_above, m_below;
+		Rgb m_color;
+		float m_opacity;
+		float m_above, m_below;
 
 		float f1, f2;
 

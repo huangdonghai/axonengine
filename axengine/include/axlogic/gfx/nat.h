@@ -147,7 +147,7 @@ namespace Axon {
 #endif
 	};
 
-	class IControl
+	class Control
 	{
 	public:
 		enum ControlClass {
@@ -170,14 +170,13 @@ namespace Axon {
 			kProcedural,	// not keyframed, procedural generated
 		};
 
-		virtual ~IControl() {}
+		virtual ~Control() {}
 
-		virtual ControlClass getControlClass() = 0;
-		virtual ControlType getControlType() = 0;
+		virtual ControlClass getControlClass() const = 0;
+		virtual ControlType getControlType() const = 0;
 
 		virtual void step(int delta) = 0;
 
-		virtual bool isKeyable() { return false; }
 		virtual int getNumKeys ();
 		virtual void setNumKeys (int n);
 		virtual void getKey(int i, KeyBase* key);
@@ -186,6 +185,9 @@ namespace Axon {
 		virtual void sortKeys();
 		virtual DWORD& getTrackFlags ();
 		virtual int getKeySize ();
+
+		bool isKeyable() const { return getControlType() != kProcedural; }
+		bool isSimple() const { return getControlType() <= kSimpleMax; }
 
 	private:
 		Object* m_object;
@@ -206,68 +208,36 @@ namespace Axon {
 		void setCycleType(CycleType val) { m_cycleType = val; }
 
 	private:
-		Sequence<IControl*> m_controls;
+		Sequence<Control*> m_controls;
 		CycleType m_cycleType;
 	};
 
 	//--------------------------------------------------------------------------
-	class FloatTrack : public IAnimatable
+	class FloatTrack : public Control
 	{
 	public:
 		FloatTrack(const String& name);
 		virtual ~FloatTrack();
 
-		// implement IAnimatable
-		virtual String getAnimName() { return m_name; }
-		virtual AnimType getAnimType() { return kSimpleTrack; }
-
-		// implement track functions
-		virtual int numKeys();
-		virtual int getKeyTime(int index);
-		virtual int getKeyIndex(int ms);
-		virtual void getValue(void *value, int ticks);
-		virtual void setValue(void *value, int ticks);
-
-		// for simple track
-		virtual InterpolateType getInterpolateType() { return m_interpolateType; }
-		virtual void setInterpolateType(InterpolateType type) { m_interpolateType = type; }
-
 	private:
 		String m_name;
 		Sequence<FloatKey> m_keyValues;
-		InterpolateType m_interpolateType;
 	};
 
 	//--------------------------------------------------------------------------
-	class VectorTrack : public IAnimatable
+	class VectorTrack : public Control
 	{
 	public:
 		VectorTrack(const String& name);
 		virtual ~VectorTrack();
 
-		// implement IAnimatable
-		virtual String getAnimName() { return m_name; }
-		virtual AnimType getAnimType() { return kSimpleTrack; }
-
-		// implement track functions
-		virtual int numKeys();
-		virtual int getKeyTime(int index);
-		virtual int getKeyIndex(int ms);
-		virtual void getValue(void *value, int ticks);
-		virtual void setValue(void *value, int ticks);
-
-		// for simple track
-		virtual InterpolateType getInterpolateType() { return m_interpolateType; }
-		virtual void setInterpolateType(InterpolateType type) { m_interpolateType = type; }
-
 	private:
 		String m_name;
 		Sequence<VectorKey> m_keyValues;
-		InterpolateType m_interpolateType;
 	};
 
 	//--------------------------------------------------------------------------
-	class ColorTrack : public VectorTrack
+	class ColorTrack : public Control
 	{
 	public:
 		ColorTrack(const String& name);
@@ -275,26 +245,6 @@ namespace Axon {
 
 	private:
 	};
-
-	//--------------------------------------------------------------------------
-	class ObjAnimatable : public IAnimatable
-	{
-	public:
-		ObjAnimatable();
-		virtual ~ObjAnimatable();
-
-		virtual String getAnimName();
-		virtual AnimType getAnimType() { return kObjectAnim; }
-
-		// for group, object, entity
-		virtual int numSubAnims() { return m_subAnims.size(); }
-		virtual IAnimatable* getSubAnim(int index) { return m_subAnims[index]; }
-
-	protected:
-		Object* m_object;
-		Sequence<IAnimatable*> m_subAnims;
-	};
-
 
 } // namespace Axon
 

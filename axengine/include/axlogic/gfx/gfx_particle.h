@@ -43,17 +43,17 @@ namespace Axon { namespace Gfx {
 		Particle sphereEmit(int anim, int time, float w, float l, float spd, float var, float spr, float spr2);
 
 	private:
-		FloatTrack m_speed;
-		FloatTrack m_variation;
-		FloatTrack m_spread;
-		FloatTrack m_lat;
-		FloatTrack m_gravity;
-		FloatTrack m_lifespan;
-		FloatTrack m_rate;
-		FloatTrack m_areal;
-		FloatTrack m_areaw;
-		FloatTrack m_deacceleration;
-		FloatTrack m_enabled;
+		float m_speed;
+		float m_variation;
+		float m_spread;
+		float m_lat;
+		float m_gravity;
+		float m_lifespan;
+		float m_rate;
+		float m_areal;
+		float m_areaw;
+		float m_deacceleration;
+		float m_enabled;
 
 		Vector4 m_colors[3];
 		float m_sizes[3];

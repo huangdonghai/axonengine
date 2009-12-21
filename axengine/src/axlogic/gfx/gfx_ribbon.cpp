@@ -14,10 +14,6 @@ read the license and understand and accept it fully.
 namespace Axon { namespace Gfx {
 
 	RibbonEmitter::RibbonEmitter()
-		: m_color("Color")
-		, m_opacity("Opacity")
-		, m_above("Above")
-		, m_below("Below")
 	{
 
 	}
