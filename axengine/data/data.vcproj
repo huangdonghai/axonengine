@@ -609,6 +609,10 @@
 			Name="scripts"
 			>
 			<File
+				RelativePath=".\scripts\ClassReg.lua"
+				>
+			</File>
+			<File
 				RelativePath=".\scripts\Game.lua"
 				>
 			</File>

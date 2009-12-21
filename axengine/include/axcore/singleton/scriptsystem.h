@@ -87,12 +87,14 @@ namespace Axon {
 	{
 	public:
 		enum Type {
-			kEmpty, kBool, kInt, kFloat, kString, kObject, kTable, kVector3, kColor, kPoint, kRect
+			kEmpty, kBool, kInt, kFloat, kString, kObject, kTable, kVector3, kColor, kPoint, kRect, kAffineMat, kMaxType
 		};
 
 		enum {
 			MINIBUF_SIZE = 4 * sizeof(float)
 		};
+
+		Type getType() const { return type; }
 
 		// constructor
 		Variant();
@@ -108,6 +110,7 @@ namespace Axon {
 		Variant(const Rgb& v);
 		Variant(const Variant& v);
 		Variant(const LuaTable& table);
+		Variant(const AffineMat& matrix);
 		~Variant();
 
 		void clear();
@@ -123,6 +126,7 @@ namespace Axon {
 		operator Rgb() const;
 		operator LuaTable() const;
 		Variant& operator=(const Variant& v);
+		operator AffineMat() const;
 
 		void set(int v);
 		void set(float v);
@@ -154,6 +158,7 @@ namespace Axon {
 			double realval;
 			Object* obj;
 			String* str;
+			AffineMat* mtr;
 			byte_t minibuf[MINIBUF_SIZE];
 		};
 	};
@@ -180,9 +185,16 @@ namespace Axon {
 	
 	inline Variant::Variant(const Rgb& v) : type(kColor) { new (minibuf) Rgb(v); }
 
+	inline Variant::Variant(const AffineMat& v) : type(kAffineMat), mtr(new AffineMat(v)) {}
+
 	inline Variant::Variant(const Variant& v) : type(v.type), realval(v.realval) {
 		if (type == kString) {
 			str = new String(*(String*)v.str);
+			return;
+		}
+
+		if (type == kAffineMat) {
+			mtr = new AffineMat(*(AffineMat*)v.mtr);
 			return;
 		}
 
@@ -198,8 +210,8 @@ namespace Axon {
 	inline void Variant::clear() {
 		if (type == kString) {
 			delete str;
-		} else if (type == kVector3) {
-//			delete (Vector3*)voidp;
+		} else if (type == kAffineMat) {
+			delete mtr;
 		}
 		type = kEmpty;
 	}
@@ -295,6 +307,18 @@ namespace Axon {
 		}
 
 		return Rect();
+	}
+
+	inline Variant::operator AffineMat() const {
+		switch (type) {
+		case kTable:
+			break;
+		case kRect:
+			return *mtr;
+			break;
+		}
+
+		return AffineMat();
 	}
 
 	inline Variant::operator Rgb() const {
@@ -447,6 +471,12 @@ namespace Axon {
 				StringUtil::sprintf(result, "%d %d %d %d", v.x, v.y, v.width, v.height);
 				break;
 			}
+		case kAffineMat:
+			{
+				return mtr->toString();
+			}
+		default:
+			AX_NO_DEFAULT;
 		}
 		return result;
 	}
@@ -499,6 +529,15 @@ namespace Axon {
 				Rect v; v.fromString(str); this->set(v);
 				break;
 			}
+		case kAffineMat:
+			{
+				AffineMat v;
+				v.fromString(str);
+				this->set(v);
+				break;
+			}
+		default:
+			AX_NO_DEFAULT;
 		}
 	}
 
@@ -556,6 +595,11 @@ namespace Axon {
 		return Variant::kObject;
 	}
 
+	template<>
+	inline Variant::Type GetVariantType_<AffineMat>() {
+		return Variant::kAffineMat;
+	}
+
 	template< class T >
 	struct variant_cast_helper {
 		T doCast(const Variant& v) {
@@ -598,14 +642,15 @@ namespace Axon {
 	// class Member
 	//--------------------------------------------------------------------------
 
-	class AX_API Member {
+	class AX_API Member
+	{
 	public:
 		enum Type {
 			kPropertyType, kMethodType
 		};
 
 		enum Kind {
-			kEmpty, kBool, kInt, kFloat, kString, kObject, kTable, kVector3, kColor, kPoint, kRect,
+			kEmpty, kBool, kInt, kFloat, kString, kObject, kTable, kVector3, kColor, kPoint, kRect, kAffineMat, kMaxNormal,
 			kEnum, kFlag, kTexture, kModel, kMaterial, kAnimation, kSpeedTree, kSound, kGroup
 		};
 
@@ -616,6 +661,7 @@ namespace Axon {
 
 		bool isProperty() const { return m_type == kPropertyType; }
 		bool isMethod() const { return m_type == kMethodType; }
+		bool isAnimatable() const { return false; }
 		Type getType() const { return m_type; }
 		const char* getName() const { return m_name; }
 		int getNumParams() const { return m_numParams; }
@@ -629,16 +675,18 @@ namespace Axon {
 		// property
 		virtual void setProperty(Object* obj, const Variant& val) { AX_ASSERT(0); }
 		virtual Variant getProperty(const Object* obj) { AX_ASSERT(0); return Variant(); }
+		virtual void *getPropertyPointer(const Object* obj) { AX_ASSERT(0); return 0; }
 		virtual bool isConst() const { return false; }
 
-		static Variant::Type kindToType(Kind k) {
-			if (k <= kRect) {
+		static Variant::Type kindToType(Kind k)
+		{
+			if (k < kMaxNormal) {
 				return Variant::Type(k);
 			}
 			switch (k) {
-				case kEnum: case kFlag: return Variant::kInt;
-				case kTexture: case kModel: case kMaterial: case kAnimation: case kSpeedTree: case kSound: return Variant::kString;
-				default: return Variant::kEmpty;
+			case kEnum: case kFlag: return Variant::kInt;
+			case kTexture: case kModel: case kMaterial: case kAnimation: case kSpeedTree: case kSound: return Variant::kString;
+			default: return Variant::kEmpty;
 			}
 		}
 
@@ -667,6 +715,7 @@ namespace Axon {
 
 		virtual void setProperty(Object* obj, const Variant& val);
 		virtual Variant getProperty(const Object* obj);
+		virtual void *getPropertyPointer(const Object* obj);
 		virtual bool isConst() const { return false; }
 
 	private:
@@ -689,6 +738,12 @@ namespace Axon {
 	Variant SimpleProp_<T,M>::getProperty(const Object* obj) {
 		T* t = (T*)obj;
 		return t->*m_d;
+	}
+
+	template< class T, class M >
+	void* SimpleProp_<T,M>::getPropertyPointer(const Object* obj) {
+		T* t = (T*)obj;
+		return &(t->*m_d);
 	}
 
 	//--------------------------------------------------------------------------
@@ -1004,7 +1059,8 @@ namespace Axon {
 	// class TypeInfo
 	//--------------------------------------------------------------------------
 
-	class AX_API TypeInfo {
+	class AX_API TypeInfo
+	{
 	public:
 		friend class ScriptSystem;
 

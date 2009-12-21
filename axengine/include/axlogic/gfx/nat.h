@@ -147,13 +147,67 @@ namespace Axon {
 #endif
 	};
 
-	class IController
+	class IControl
 	{
 	public:
+		enum ControlClass {
+			kFloat,
+			kVector,
+			kColor,
+			kPosition,
+			kRotation,
+			kScale,
+			kText,
+		};
+
+		enum ControlType {
+			kStep,
+			kLinear,
+			kCatmullRom,
+			kSimpleMax = kCatmullRom,	// simple key flag
+			kTcb,
+			kBezier,
+			kProcedural,	// not keyframed, procedural generated
+		};
+
+		virtual ~IControl() {}
+
+		virtual ControlClass getControlClass() = 0;
+		virtual ControlType getControlType() = 0;
+
+		virtual void step(int delta) = 0;
+
+		virtual bool isKeyable() { return false; }
+		virtual int getNumKeys ();
+		virtual void setNumKeys (int n);
+		virtual void getKey(int i, KeyBase* key);
+		virtual void setKey(int i, KeyBase* key);
+		virtual int appendKey(KeyBase *key);
+		virtual void sortKeys();
+		virtual DWORD& getTrackFlags ();
+		virtual int getKeySize ();
 
 	private:
 		Object* m_object;
 		Member* m_target;
+	};
+
+	class Animator
+	{
+	public:
+		enum CycleType {
+			CycleType_Loop,
+			CycleType_Reverse,
+			CycleType_Clamp
+		};
+		virtual ~Animator() {}
+
+		CycleType getCycleType() const { return m_cycleType; }
+		void setCycleType(CycleType val) { m_cycleType = val; }
+
+	private:
+		Sequence<IControl*> m_controls;
+		CycleType m_cycleType;
 	};
 
 	//--------------------------------------------------------------------------

@@ -14,13 +14,7 @@ read the license and understand and accept it fully.
 namespace Axon { namespace Gfx {
 
 	GfxObject::GfxObject()
-		: m_pos("Position")
-		, m_rotations("Rotation")
-		, m_scale("Scale")
 	{
-		m_subAnims.push_back(&m_pos);
-		m_subAnims.push_back(&m_rotations);
-		m_subAnims.push_back(&m_scale);
 	}
 
 	GfxObject::~GfxObject()

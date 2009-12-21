@@ -16,11 +16,12 @@ namespace Axon { namespace Gfx {
 
 	class GfxEntity;
 
-	class GfxObject : public Object, public ObjAnimatable
+	class GfxObject : public Object
 	{
 	public:
 		// script
 		AX_DECLARE_CLASS(GfxObject, Object, "GfxObject")
+			AX_SIMPLEPROP(tm)
 		AX_END_CLASS()
 
 		enum GfxType {
@@ -40,10 +41,7 @@ namespace Axon { namespace Gfx {
 
 	private:
 		GfxEntity* m_entity;
-
-		VectorTrack m_pos;
-		VectorTrack m_rotations;
-		FloatTrack m_scale;
+		AffineMat m_tm;
 	};
 
 }} // namespace Axon::Gfx

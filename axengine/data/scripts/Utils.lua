@@ -13,7 +13,7 @@ print( "registering " .. ... .. " class" )
 
 -- utility function
 
-function setSuper( child, super )
+function setSuper(child, super)
 	child.__index = super
 	setmetatable( child, child )
 	child._SUPER = super
@@ -30,8 +30,8 @@ function count(_tbl)
 	return count;
 end
 
-function dumpTable( tbl )
-	if( type(tbl) ~= "table" ) then
+function dumpTable(tbl)
+	if (type(tbl) ~= "table") then
 		return
 	end
 	for i, v in pairs(tbl) do
@@ -122,7 +122,7 @@ function createProps(dst, src, recursive)
 	end
 	for i,v in pairs(src) do
 		if (recursive) then
-			if((type(v) == "table") and (v ~= src))then  -- avoid recursing into itself
+			if ((type(v) == "table") and (v ~= src)) then  -- avoid recursing into itself
 				if (v._default ~= nil) then
 					dst[i] = v._default
 				else

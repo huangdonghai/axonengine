@@ -43,6 +43,7 @@ namespace Axon { namespace Gfx {
 
 	private:
 		Sequence<GfxObject*> m_objects;
+		Animator* m_animator;
 	};
 
 }} // namespace Axon::Gfx

@@ -41,19 +41,19 @@ Editor = {
 m_lt = {}
 
 function onInit(self)
-	print( self.objectName, "onInit" )
+	print(self.objectName, "onInit")
 end
 
 function onFinalize(self)
-	print( self.objectName, "onFinalize" )
+	print(self.objectName, "onFinalize")
 end
 
 function onThink( self,frametime )
---	print( self.objectName, "onThink", frametime )
+--	print(self.objectName, "onThink", frametime)
 end
 
 function onReset(self)
-	print( self.objectName, "onReset" )
+	print(self.objectName, "onReset")
 	
 	local props = self.Properties;
 	
@@ -73,7 +73,7 @@ function onReset(self)
 	self:activeLight(props.active);
 end
 
-AX_DECLARE_CLASS( _M, Game.Entity )
+AX_DECLARE_CLASS(_M, Game.Entity)
 
 --------------------------------------------------------------------------------
 -- signals and slots

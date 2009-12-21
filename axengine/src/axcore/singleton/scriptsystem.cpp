@@ -210,11 +210,13 @@ extern "C" {
 
 namespace Axon {
 
-	static inline void xPushString(lua_State* L, const String& s) {
+	static inline void xPushString(lua_State* L, const String& s)
+	{
 		lua_pushlstring(L, s.c_str(), s.length());
 	}
 
-	static Variant xReadStack(lua_State* L, int index) {
+	static Variant xReadStack(lua_State* L, int index)
+	{
 		Variant ret;
 
 		switch (lua_type(L,index)) {
@@ -244,7 +246,8 @@ namespace Axon {
 	}
 
 
-	static void xPushObject(lua_State* L, Object* obj) {
+	static void xPushObject(lua_State* L, Object* obj)
+	{
 #if 0
 		lua_boxpointer(L, (void*)obj);
 		luaL_getmetatable(L, OBJECT_MT);
@@ -255,7 +258,8 @@ namespace Axon {
 #endif
 	}
 
-	static void xPushStack(lua_State* L, const Variant& val) {
+	static void xPushStack(lua_State* L, const Variant& val)
+	{
 		switch (val.type) {
 		case Variant::kBool:
 			lua_pushboolean(L, val.boolval);
@@ -319,7 +323,8 @@ namespace Axon {
 		}
 	}
 
-	static Object* xGetObject(lua_State* L, int index=1) {
+	static Object* xGetObject(lua_State* L, int index=1)
+	{
 		if (!lua_istable(L, index)) {
 			return 0;
 		}
@@ -337,7 +342,8 @@ namespace Axon {
 		return obj;
 	}
 
-	static int xMetaCall(lua_State *L) {
+	static int xMetaCall(lua_State *L)
+	{
 		// func id
 		luaL_checktype(L,lua_upvalueindex(1), LUA_TLIGHTUSERDATA);
 		Member* member = (Member*)lua_topointer(L, lua_upvalueindex(1));
@@ -379,7 +385,8 @@ namespace Axon {
 		return retCount;
 	}
 
-	static int xMetaIndex(lua_State *L) {
+	static int xMetaIndex(lua_State *L)
+	{
 #if 0
 		luaL_checktype(L, 1, LUA_TUSERDATA);
 		Object* obj = (Object*)lua_unboxpointer(L, 1);
@@ -408,7 +415,8 @@ namespace Axon {
 		return 1;
 	}
 
-	static int xMetaNewIndex(lua_State *L) {
+	static int xMetaNewIndex(lua_State *L)
+	{
 #if 0
 		luaL_checktype(L, 1, LUA_TUSERDATA);
 		Object* obj = (Object*)lua_unboxpointer(L, 1);
@@ -435,7 +443,8 @@ namespace Axon {
 	}
 
 	// find a scoped variable in global
-	static bool xGetGlobalScoped(lua_State* L, const char* name) {
+	static bool xGetGlobalScoped(lua_State* L, const char* name)
+	{
 		char buf[32];
 		int num = 0;
 
@@ -479,7 +488,8 @@ namespace Axon {
 	}
 
 	// find a scoped variable in stack top's table, table is popped
-	static bool xGetScoped(lua_State* L, const char* name) {
+	static bool xGetScoped(lua_State* L, const char* name)
+	{
 		char buf[32];
 		int num = 0;
 
@@ -520,7 +530,8 @@ namespace Axon {
 		return true;
 	}
 
-	static bool xSetScoped(lua_State* L, const char* name, const Variant& val) {
+	static bool xSetScoped(lua_State* L, const char* name, const Variant& val)
+	{
 		char buf[32];
 		int num = 0;
 
@@ -564,7 +575,8 @@ namespace Axon {
 		return true;
 	}
 
-	static int xPcall(lua_State* L, int numarg, int numresult) {
+	static int xPcall(lua_State* L, int numarg, int numresult)
+	{
 		int s = lua_pcall(L, numarg, numresult, 0);
 		return xReport(L, s, 0);
 	}
@@ -584,18 +596,21 @@ namespace Axon {
 		}
 	}
 
-	void LuaTable::beginRead() const {
+	void LuaTable::beginRead() const
+	{
 		AX_ASSURE(!m_isReading && !m_isIteratoring);
 		m_isReading = true;
 		m_stackTop = lua_gettop(L);
 	}
 
-	void LuaTable::endRead() const {
+	void LuaTable::endRead() const
+	{
 		AX_ASSURE(m_isReading);
 		lua_settop(L,m_stackTop);
 	}
 
-	Variant LuaTable::get(const String& n) const {
+	Variant LuaTable::get(const String& n) const
+	{
 		AX_ASSURE(m_isReading);
 
 		lua_pushstring(L, n.c_str());
@@ -621,13 +636,15 @@ namespace Axon {
 		return xReadStack(L, -1);
 	}
 
-	void LuaTable::set(const String& n, const Variant& v) {
+	void LuaTable::set(const String& n, const Variant& v)
+	{
 		lua_pushstring(L, n.c_str());
 		xPushStack(L, v);
 		lua_settable(L, m_index);
 	}
 
-	Vector3 LuaTable::toVector3() const {
+	Vector3 LuaTable::toVector3() const
+	{
 		Vector3 result;
 		beginRead();
 		result.x = get("x");
@@ -637,7 +654,8 @@ namespace Axon {
 		return result;
 	}
 
-	Rgb LuaTable::toColor() const {
+	Rgb LuaTable::toColor() const
+	{
 		Rgb result;
 		beginRead();
 		result.r = get("r").toFloat() * 255;
@@ -647,7 +665,8 @@ namespace Axon {
 		return result;
 	}
 
-	Point LuaTable::toPoint() const {
+	Point LuaTable::toPoint() const
+	{
 		Point result;
 		beginRead();
 		result.x = get("x");
@@ -656,7 +675,8 @@ namespace Axon {
 		return result;
 	}
 
-	Rect LuaTable::toRect() const {
+	Rect LuaTable::toRect() const
+	{
 		Rect result;
 		beginRead();
 		result.x = get("x");
@@ -667,7 +687,8 @@ namespace Axon {
 		return result;
 	}
 
-	Object* LuaTable::toObject() const {
+	Object* LuaTable::toObject() const
+	{
 		beginRead();
 		Object* result = get("__object");
 		endRead();
@@ -716,7 +737,8 @@ namespace Axon {
 
 	TypeInfo* Object::m_typeinfo = nullptr;
 
-	Object::Object() {
+	Object::Object()
+	{
 		m_classInfo = 0;
 
 		int top = lua_gettop(L);
@@ -741,7 +763,8 @@ namespace Axon {
 		lua_pop(L, 1);
 	}
 
-	Object::Object(const String& objname) {
+	Object::Object(const String& objname)
+	{
 		m_classInfo = 0;
 
 		int top = lua_gettop(L);
@@ -768,7 +791,8 @@ namespace Axon {
 		set_objectName(objname);
 	}
 
-	Object::~Object() {
+	Object::~Object()
+	{
 #if 1
 		invoke_onFinalize();
 
@@ -781,7 +805,8 @@ namespace Axon {
 //		gScriptSystem->removeObject(this);
 	}
 
-	Member* Object::findMember(const char* name) const {
+	Member* Object::findMember(const char* name) const
+	{
 		TypeInfo* typeinfo = getTypeInfo();
 
 		while (typeinfo) {
@@ -802,7 +827,8 @@ namespace Axon {
 		return it->second;
 	}
 
-	TypeInfo* Object::getTypeInfo() const {
+	TypeInfo* Object::getTypeInfo() const
+	{
 		if (!m_typeinfo) {
 			Object::registerTypeInfo();
 			AX_ASSERT(m_typeinfo);
@@ -811,7 +837,8 @@ namespace Axon {
 		return m_typeinfo;
 	}
 
-	TypeInfo* Object::registerTypeInfo() {
+	TypeInfo* Object::registerTypeInfo()
+	{
 		if (!m_typeinfo) {
 			m_typeinfo = new TypeInfo_<Object>("Object", nullptr);
 			m_typeinfo->addProperty("objectName", &Object::get_objectName, &Object::set_objectName);
@@ -822,16 +849,19 @@ namespace Axon {
 	}
 
 
-	void Object::set_objectName(const String& name) {
+	void Object::set_objectName(const String& name)
+	{
 		setObjectName(name, false);
 	}
 
-	String Object::get_objectName() const {
+	String Object::get_objectName() const
+	{
 		return m_objectName;
 	}
 
 
-	bool Object::inherits(const char* cls) const {
+	bool Object::inherits(const char* cls) const
+	{
 		TypeInfo* typeinfo = getTypeInfo();
 
 		for (; typeinfo; typeinfo=typeinfo->getBaseTypeInfo()) {
@@ -843,7 +873,8 @@ namespace Axon {
 		return false;
 	}
 
-	Variant Object::getProperty(const char* name) const {
+	Variant Object::getProperty(const char* name) const
+	{
 		Member* m = findMember(name);
 		if (!m || !m->isProperty()) {
 			return Variant();
@@ -852,7 +883,8 @@ namespace Axon {
 		return m->getProperty(this);
 	}
 
-	bool Object::setProperty(const char* name, const Variant& value) {
+	bool Object::setProperty(const char* name, const Variant& value)
+	{
 		Member* m = findMember(name);
 		if (!m || !m->isProperty() || m->isConst()) {
 			return false;
@@ -886,7 +918,8 @@ namespace Axon {
 		return true;
 	}
 
-	void Object::writeProperties(File* f, int indent) const {
+	void Object::writeProperties(File* f, int indent) const
+	{
 		String indstr(indent*2, ' ');
 #define INDENT if (indent) f->printf("%s", indstr.c_str());
 
@@ -927,7 +960,8 @@ namespace Axon {
 #undef INDENT
 	}
 
-	void Object::readProperties(const TiXmlElement* node) {
+	void Object::readProperties(const TiXmlElement* node)
+	{
 		const TiXmlAttribute* attr = node->FirstAttribute();
 
 		for (; attr; attr = attr->Next()) {
@@ -977,7 +1011,8 @@ namespace Axon {
 	}
 
 
-	void Object::initClassInfo(const ClassInfo* ci) {
+	void Object::initClassInfo(const ClassInfo* ci)
+	{
 		int top = lua_gettop(L);
 
 		lua_pushlightuserdata(L, this);
@@ -1022,7 +1057,8 @@ namespace Axon {
 		// TODO: rebind to object name
 	}
 
-	void Object::setObjectName(const String& name, bool force) {
+	void Object::setObjectName(const String& name, bool force)
+	{
 		if (m_objectName == name && !force) {
 			return;
 		}
@@ -1099,7 +1135,8 @@ namespace Axon {
 		lua_settop(L, top);
 	}
 
-	void Object::doPropertyChanged() {
+	void Object::doPropertyChanged()
+	{
 		onPropertyChanged();
 	}
 
@@ -1109,19 +1146,23 @@ namespace Axon {
 	}
 
 
-	void Object::invoke_onInit() {
+	void Object::invoke_onInit()
+	{
 		invokeCallback("onInit");
 	}
 
-	void Object::invoke_onFinalize() {
+	void Object::invoke_onFinalize()
+	{
 		invokeCallback("onFinalize");
 	}
 
-	void Object::invoke_onPropertyChanged() {
+	void Object::invoke_onPropertyChanged()
+	{
 		invokeCallback("onPropertyChanged");
 	}
 
-	void Object::invokeCallback(const String& callback) {
+	void Object::invokeCallback(const String& callback)
+	{
 		int top = lua_gettop(L);
 
 		lua_pushlightuserdata(L, this);
@@ -1144,7 +1185,8 @@ namespace Axon {
 		return;
 	}
 
-	void Object::invokeCallback(const String& callback, const Variant& param) {
+	void Object::invokeCallback(const String& callback, const Variant& param)
+	{
 		int top = lua_gettop(L);
 
 		lua_pushlightuserdata(L, this);
@@ -1252,14 +1294,17 @@ namespace Axon {
 	typedef List<Connection> ConnectionSeq;
 	typedef Dict<Object*,Dict<String, ConnectionSeq>> Connections;
 
-	ScriptSystem::ScriptSystem() {
+	ScriptSystem::ScriptSystem()
+	{
 		m_isReading = false;
 		m_readTop = 0;
 	}
 
-	ScriptSystem::~ScriptSystem() {}
+	ScriptSystem::~ScriptSystem()
+	{}
 
-	void ScriptSystem::initialize() {
+	void ScriptSystem::initialize()
+	{
 		Printf(_("Initializing ScriptSystem...\n"));
 
 		L = lua_open();
@@ -1314,12 +1359,14 @@ namespace Axon {
 		Printf(_("Initialized ScriptSystem\n"));
 	}
 
-	void ScriptSystem::finalize() {
+	void ScriptSystem::finalize()
+	{
 		lua_close(L);
 	}
 
 #if 0
-	void ScriptSystem::addObject(const String& name, Object* obj) {
+	void ScriptSystem::addObject(const String& name, Object* obj)
+	{
 		xPushObject(L,obj);
 		xPushString(L, name);
 		lua_pushvalue(L, -2);
@@ -1332,7 +1379,8 @@ namespace Axon {
 	void ScriptSystem::removeObject(Object* obj) {}
 #endif
 
-	void ScriptSystem::executeString(const String& text) {
+	void ScriptSystem::executeString(const String& text)
+	{
 		int s = luaL_loadbuffer(L, text.c_str(), text.size(), 0);
 		if (s==0) {
 			// execute Lua program
@@ -1341,7 +1389,8 @@ namespace Axon {
 		xReport(L, s, 0);
 	}
 
-	void ScriptSystem::executeString(const char* text) {
+	void ScriptSystem::executeString(const char* text)
+	{
 		int s = luaL_loadstring(L, text);
 		if (s==0) {
 			// execute Lua program
@@ -1350,7 +1399,8 @@ namespace Axon {
 		xReport(L, s, 0);
 	}
 
-	void ScriptSystem::executeFile(const String& filename) {
+	void ScriptSystem::executeFile(const String& filename)
+	{
 		size_t filesize;
 		char* filebuf;
 
@@ -1367,7 +1417,8 @@ namespace Axon {
 		xReport(L, s, filename.c_str());
 	}
 
-	bool ScriptSystem::invokeLuaMethod(const char* methodName, VariantSeq& stack, int nResult) {
+	bool ScriptSystem::invokeLuaMethod(const char* methodName, VariantSeq& stack, int nResult)
+	{
 		int top = lua_gettop(L);
 
 		// find method
@@ -1405,7 +1456,8 @@ errquit:
 		return invokeLuaMethod(method, vseq, 0);
 	}
 
-	bool ScriptSystem::invokeLuaScoped(const char *text, Axon::VariantSeq &stack, int nResult){
+	bool ScriptSystem::invokeLuaScoped(const char *text, Axon::VariantSeq &stack, int nResult)
+	{
 		String fullName(text);
 		String::size_type idx_end = fullName.find('.');
 		if (idx_end == String.npos) {
@@ -1447,7 +1499,8 @@ errquit:
 		return true;
 	}
 
-	String ScriptSystem::generateLuaString(const String& text){
+	String ScriptSystem::generateLuaString(const String& text)
+	{
 		String result = text;
 		String::size_type idx_end = text.find('.');
 		if (idx_end == String.npos){
@@ -1490,7 +1543,8 @@ errquit:
 		return result;
 	}
 
-	inline String xRemoveScope(const String& str) {
+	inline String xRemoveScope(const String& str)
+	{
 		size_t pos = str.rfind('.');
 		if (pos == String::npos || pos >= str.length()-1) {
 			return str;
@@ -1499,7 +1553,8 @@ errquit:
 		return str.substr(pos+1, str.length()-pos-1);
 	}
 
-	inline String xRemoveIndex(const String& str) {
+	inline String xRemoveIndex(const String& str)
+	{
 		// first get index from str
 		String::const_reverse_iterator it = str.rbegin();
 
@@ -1524,14 +1579,16 @@ errquit:
 		return str.substr(0, str.size() - count - 1);
 	}
 
-	int ScriptSystem::getNameIndex(const String& str) const {
+	int ScriptSystem::getNameIndex(const String& str) const
+	{
 		StringIntDict::const_iterator it = m_objectNameGen.find(xRemoveIndex(str));
 		if (it == m_objectNameGen.end())
 			return 0;
 		return it->second;
 	}
 
-	void ScriptSystem::updateNameIndex(const String& str) {
+	void ScriptSystem::updateNameIndex(const String& str)
+	{
 		// first get index from str
 		String::const_reverse_iterator it = str.rbegin();
 
@@ -1573,11 +1630,13 @@ errquit:
 		m_objectNameGen[name] = index+1;
 	}
 
-	int ScriptSystem::nextNameIndex(const String& str) {
+	int ScriptSystem::nextNameIndex(const String& str)
+	{
 		return m_objectNameGen[str]++;
 	}
 
-	String ScriptSystem::generateObjectName(const String& str) {
+	String ScriptSystem::generateObjectName(const String& str)
+	{
 		String noindex = xRemoveScope(xRemoveIndex(str));
 
 		int index = nextNameIndex(noindex);
@@ -1590,14 +1649,16 @@ errquit:
 		return result;
 	}
 
-	void ScriptSystem::registerType(TypeInfo* typeinfo) {
+	void ScriptSystem::registerType(TypeInfo* typeinfo)
+	{
 		m_typeInfoReg[typeinfo->getTypeName()] = typeinfo;
 		typeinfo->m_objNamespace = readFieldImmediately(typeinfo->m_typeName, "objNameSpace");
 
 		setTypeInfoToClassInfo(typeinfo->m_typeName, typeinfo);
 	}
 
-	Object* ScriptSystem::createObject(const char* classname) {
+	Object* ScriptSystem::createObject(const char* classname)
+	{
 		ClassInfoDict::const_iterator cit = m_classInfoReg.find(classname);
 		if (cit != m_classInfoReg.end()) {
 			ClassInfo* ci = cit->second;
@@ -1626,7 +1687,8 @@ errquit:
 		return obj;
 	}
 
-	Object* ScriptSystem::cloneObject(const Object* obj) {
+	Object* ScriptSystem::cloneObject(const Object* obj)
+	{
 		Object* result = 0;
 		
 		if (obj->getClassInfo())
@@ -1644,7 +1706,8 @@ errquit:
 		return result;
 	}
 	
-	Object* ScriptSystem::findObject(const String& objectname) {
+	Object* ScriptSystem::findObject(const String& objectname)
+	{
 		xPushString(L, objectname);
 		lua_rawget(L, LUA_GLOBALSINDEX);
 		Object* result = xGetObject(L, lua_gettop(L));
@@ -1662,7 +1725,8 @@ errquit:
 		m_readTop = lua_gettop(L);
 	}
 
-	Variant ScriptSystem::readField(const char* objname, const char* fieldname) {
+	Variant ScriptSystem::readField(const char* objname, const char* fieldname)
+	{
 		if (!m_isReading) {
 			Errorf("not in reading");
 		}
@@ -1704,7 +1768,8 @@ errquit:
 		m_isReading = false;
 	}
 
-	Variant ScriptSystem::readFieldImmediately(const char* objname, const char* fieldname) {
+	Variant ScriptSystem::readFieldImmediately(const char* objname, const char* fieldname)
+	{
 		Variant result;
 
 		xGetGlobalScoped(L, objname);
@@ -1721,7 +1786,8 @@ errquit:
 		return result;
 	}
 
-	void ScriptSystem::registerClass(const String& self, const String& base) {
+	void ScriptSystem::registerClass(const String& self, const String& base)
+	{
 		ClassInfoDict::iterator it = m_classInfoReg.find(self);
 
 		if (it != m_classInfoReg.end()) {
@@ -1737,7 +1803,8 @@ errquit:
 		classInfo->initScriptProps();
 	}
 
-	void ScriptSystem::setTypeInfoToClassInfo(const String& name, TypeInfo* ti) {
+	void ScriptSystem::setTypeInfoToClassInfo(const String& name, TypeInfo* ti)
+	{
 #if 0
 		// if can't find class info, create one
 		ClassInfoDict::iterator it = m_classInfoReg.find(name);
@@ -1763,7 +1830,8 @@ errquit:
 		}
 	}
 
-	void ScriptSystem::getClassList(const char* prefix, bool sort, StringSeq& result) const {
+	void ScriptSystem::getClassList(const char* prefix, bool sort, StringSeq& result) const
+	{
 		ClassInfoDict::const_iterator it = m_classInfoReg.begin();
 		size_t prefixlen = 0;
 		
@@ -1789,7 +1857,8 @@ errquit:
 		}
 	}
 
-	bool lesser(const ScriptProp* a, const ScriptProp* b) {
+	bool lesser(const ScriptProp* a, const ScriptProp* b)
+	{
 		if (!a->grouped() && b->grouped()) {
 			return true;
 		}
@@ -1800,7 +1869,8 @@ errquit:
 		return a->m_realName < b->m_realName;
 	}
 
-	void ClassInfo::initScriptProps() {
+	void ClassInfo::initScriptProps()
+	{
 		// init spawn arguments
 		int top = lua_gettop(L);
 
@@ -1860,7 +1930,8 @@ errquit:
 		std::sort(m_scriptPropSeq.begin(), m_scriptPropSeq.end(), lesser);
 	}
 
-	Axon::Variant ClassInfo::getField(const String& field) const {
+	Variant ClassInfo::getField(const String& field) const
+	{
 		Variant result;
 
 		if (xGetGlobalScoped(L, (m_className + "." + field).c_str())) {
@@ -1872,7 +1943,8 @@ errquit:
 		return result;
 	}
 
-	inline ScriptProp::Kind ScriptProp::checkNameKind() {
+	inline ScriptProp::Kind ScriptProp::checkNameKind()
+	{
 		ScriptProp::Kind kind = ScriptProp::kEmpty;
 
 		size_t pos = m_realName.find('_');
@@ -1926,7 +1998,8 @@ errquit:
 		return kind;
 	}
 
-	inline bool ScriptProp::isStringType(ScriptProp::Kind kind) {
+	inline bool ScriptProp::isStringType(ScriptProp::Kind kind)
+	{
 		return kindToType(kind) == Variant::kString;
 	}
 
@@ -1939,7 +2012,8 @@ errquit:
 	lua_pop(L, 1) 
 
 
-	ScriptProp::Kind ScriptProp::checkTableKind(Variant& result) {
+	ScriptProp::Kind ScriptProp::checkTableKind(Variant& result)
+	{
 		Kind kind = kEmpty;
 
 		bool hx, hy, hz, hr, hg, hb, hwidth, hheight;
@@ -2004,7 +2078,8 @@ errquit:
 #endif
 	}
 
-	void ScriptProp::init() {
+	void ScriptProp::init()
+	{
 		Kind kindFromName = checkNameKind();
 
 		int valuetype = lua_type(L,-1);
@@ -2057,10 +2132,11 @@ errquit:
 		m_propType = kindToType(m_propKind);
 	}
 
-	ScriptProp::ScriptProp() : Member(0, Member::kPropertyType) {
-	}
+	ScriptProp::ScriptProp() : Member(0, Member::kPropertyType)
+	{}
 
-	void ScriptProp::setProperty(Object* obj, const Variant& val) {
+	void ScriptProp::setProperty(Object* obj, const Variant& val)
+	{
 		if (m_propKind == kGroup)
 			return;
 
@@ -2074,7 +2150,8 @@ errquit:
 		lua_settop(L, top);
 	}
 
-	Variant ScriptProp::getProperty(const Object* obj) {
+	Variant ScriptProp::getProperty(const Object* obj)
+	{
 		Variant result;
 
 		if (m_propKind == kGroup)
