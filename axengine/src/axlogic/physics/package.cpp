@@ -14,6 +14,7 @@ read the license and understand and accept it fully.
 #define BYTE_OFFSET(p, off) ((byte_t*)p + off)
 
 namespace { namespace Internal {
+
 	using namespace Axon;
 
 	// return -1 if not found
