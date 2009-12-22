@@ -88,7 +88,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 	void D3D9geometry::update() {
-		if (!m_src->isDirty() && m_hint == Primitive::Static)
+		if (!m_src->isDirty() && m_hint == Primitive::HintStatic)
 			return;
 
 		D3D9primitive::update();
@@ -416,7 +416,7 @@ next:
 	}
 
 	void D3D9terrain::update() {
-		if (!m_src->isDirty() && m_hint == Primitive::Static)
+		if (!m_src->isDirty() && m_hint == Primitive::HintStatic)
 			return;
 
 		D3D9primitive::update();
@@ -454,13 +454,13 @@ next:
 			}
 		}
 
-		if (m_src->isVertexBufferDirty() || hint != Primitive::Static) {
+		if (m_src->isVertexBufferDirty() || hint != Primitive::HintStatic) {
 			int m_vertexCount = chunk->getNumVertexes();
 			// create vertex buffer
 			m_vertexObject.setData(chunk->getVertexesPointer(), m_vertexCount, m_hint, m_vertexType);
 		}
 
-		if (m_src->isIndexBufferDirty() || hint != Primitive::Static) {
+		if (m_src->isIndexBufferDirty() || hint != Primitive::HintStatic) {
 			int m_indexCount = chunk->getNumIndexes();
 
 			m_indexObject.setData(chunk->getIndexesPointer(), m_indexCount, m_indexHint, m_activeIndexes);
@@ -704,7 +704,7 @@ next:
 
 		int new_id;
 
-		if (prim->getHint() != Primitive::OneFrame) {
+		if (prim->getHint() != Primitive::HintOneFrame) {
 			if (h == 0) {
 				// init
 				D3D9primitive* glprim = createPrim(prim);
@@ -739,7 +739,7 @@ next:
 		prim->setCachedFrame(m_frameId);
 		g_statistic->incValue(stat_changedPrims);
 
-		if (prim->getHint() == Primitive::OneFrame)
+		if (prim->getHint() == Primitive::HintOneFrame)
 			delete(prim);
 
 		return new_id;

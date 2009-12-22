@@ -62,13 +62,13 @@ namespace Axon { namespace Editor { namespace MapEdit {
 		void readXml(const TiXmlElement* node);
 
 		// base function
-		GameNode* getGameNode() const { return m_gameNode; }
+		GameObject* getGameNode() const { return m_gameNode; }
 
 		static const char* typeToString(Type t);
 		static Type stringToType(const char* str);
 
 	protected:
-		GameNode* m_gameNode;
+		GameObject* m_gameNode;
 
 	private:
 		RenderLine* m_bboxLine;

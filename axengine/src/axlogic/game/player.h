@@ -14,15 +14,16 @@ read the license and understand and accept it fully.
 
 namespace Axon { namespace Game {
 
-	class Player : public GameEntity {
-	public:
-		AX_DECLARE_CLASS(Player, GameEntity, "Game.Player")
+	class Player : public GameActor
+	{
+		AX_DECLARE_CLASS(Player, GameActor, "Game.Player")
 		AX_END_CLASS()
 
+	public:
 		Player();
 		virtual ~Player();
 
-		// implement GameEntity
+		// implement GameActor
 		virtual void doThink();
 		virtual bool isPlayer() const { return true; }
 

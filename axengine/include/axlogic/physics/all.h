@@ -41,7 +41,7 @@ class hkDataWorldDict;
 class hkpCharacterProxy;
 
 namespace Axon { namespace Game {
-	class GameEntity;
+	class GameActor;
 }} // namespace Axon::Game
 
 AX_BEGIN_NAMESPACE
@@ -55,14 +55,14 @@ AX_BEGIN_NAMESPACE
 	class PhysicsRagdoll;
 	class PhysicsPlayer;
 
-	typedef Game::GameEntity GameEntity;
+	typedef Game::GameActor GameActor;
 
 AX_END_NAMESPACE
 
-#include "shape.h"
-#include "package.h"
-#include "world.h"
-#include "system.h"
+#include "physics_shape.h"
+#include "physics_package.h"
+#include "physics_world.h"
+#include "physics_system.h"
 
 namespace Axon {
 

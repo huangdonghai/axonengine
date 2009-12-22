@@ -53,7 +53,7 @@ void ActorPanel::doNotify(IObservable* subject, int arg ) {
 		ui.scriptFile->setText("");
 	} else {
 		MapActor* actor = static_cast<MapActor*>(actorlist.back());
-		GameNode* node = actor->getGameNode();
+		GameObject* node = actor->getGameNode();
 		ui.propEditor->initFromObject(node );
 		ui.scriptProp->initScriptProp(node );
 		ui.objectName->setText(u2q(node->get_objectName()) );
@@ -70,7 +70,7 @@ void ActorPanel::doNotify(IObservable* subject, int arg ) {
 			}
 			ui.scriptFile->setText(filename + ".lua" );
 		}
-		ui.cppType->setText(u2q(actor->getGameNode()->getTypeInfo()->getTypeName()) );
+		ui.cppType->setText(u2q(actor->getGameNode()->getMetaInfo()->getTypeName()) );
 	}
 
 	if (actorlist.empty() ) {

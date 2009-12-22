@@ -13,7 +13,8 @@ read the license and understand and accept it fully.
 
 namespace Axon { namespace Game {
 
-	class GameInput : public Object, public ICmdHandler {
+	class GameInput : public Object, public ICmdHandler
+	{
 		AX_DECLARE_COMMAND_HANDLER(GameInput);
 
 		AX_DECLARE_CLASS(GameInput, Object, "GameInput")
@@ -27,6 +28,7 @@ namespace Axon { namespace Game {
 			AX_METHOD(zoomInView)
 			AX_METHOD(zoomOutView)
 		AX_END_CLASS()
+
 	public:
 		enum ButtonType {
 			MoveForward,

@@ -14,9 +14,9 @@ read the license and understand and accept it fully.
 
 namespace Axon { namespace Game {
 
-	class Animated : public GameEntity
+	class Animated : public GameActor
 	{
-		AX_DECLARE_CLASS(Animated, GameEntity, "Game.Physics.Animated");
+		AX_DECLARE_CLASS(Animated, GameActor, "Game.Physics.Animated");
 			AX_METHOD(loadAsset)
 		AX_END_CLASS()
 
@@ -24,7 +24,7 @@ namespace Axon { namespace Game {
 		Animated();
 		virtual ~Animated();
 
-		// implement GameEntity
+		// implement GameActor
 		virtual void doThink();
 
 	protected:

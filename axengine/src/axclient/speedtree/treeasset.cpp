@@ -211,7 +211,7 @@ AX_BEGIN_NAMESPACE
 			return;
 		}
 
-		RenderMesh* lod0 = new RenderMesh(RenderMesh::Static);
+		RenderMesh* lod0 = new RenderMesh(RenderMesh::HintStatic);
 
 		lod0->initialize(numVerts, numIndexes);
 
@@ -261,7 +261,7 @@ AX_BEGIN_NAMESPACE
 				continue;
 			}
 
-			RefPrim* ref = new RefPrim(Primitive::Static);
+			RefPrim* ref = new RefPrim(Primitive::HintStatic);
 			ref->initialize(lod0, numIndexes);
 
 			idxes = ref->lockIndexes();
@@ -294,7 +294,7 @@ AX_BEGIN_NAMESPACE
 			return;
 		}
 
-		RenderMesh* lod0 = new RenderMesh(RenderMesh::Static);
+		RenderMesh* lod0 = new RenderMesh(RenderMesh::HintStatic);
 
 		lod0->initialize(numVerts, numIndexes);
 
@@ -349,7 +349,7 @@ AX_BEGIN_NAMESPACE
 				continue;
 			}
 
-			RefPrim* ref = new RefPrim(Primitive::Static);
+			RefPrim* ref = new RefPrim(Primitive::HintStatic);
 			ref->initialize(lod0, numIndexes);
 
 			idxes = ref->lockIndexes();
@@ -373,7 +373,7 @@ AX_BEGIN_NAMESPACE
 		for (int i = 0; i < numLods; i++) {
 			const CSpeedTreeRT::SGeometry::SLeaf& sLeaves = sGeometry.m_pLeaves[i];
 
-			RenderMesh* prim = new RenderMesh(RenderMesh::Static);
+			RenderMesh* prim = new RenderMesh(RenderMesh::HintStatic);
 			prim->setMaterial(m_leafCardMat.get());
 			prim->initialize(sLeaves.m_nNumLeaves * 4, sLeaves.m_nNumLeaves * 6);
 
@@ -476,7 +476,7 @@ AX_BEGIN_NAMESPACE
 				continue;
 			}
 
-			RenderMesh* prim = new RenderMesh(RenderMesh::Static);
+			RenderMesh* prim = new RenderMesh(RenderMesh::HintStatic);
 			prim->setMaterial(m_leafMeshMat.get());
 			prim->initialize(numverts, numidxes);
 
@@ -584,7 +584,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 	static inline void addInstance(QueuedScene* qscene, GeoInstance* gi) {
-		GeoInstance* cloned = new GeoInstance(Primitive::OneFrame);
+		GeoInstance* cloned = new GeoInstance(Primitive::HintOneFrame);
 		cloned->setInstanced(gi->getInstanced());
 		cloned->setInstances(gi->getAllInstances());
 

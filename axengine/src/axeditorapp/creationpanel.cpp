@@ -107,7 +107,7 @@ void CreationPanel::doNotify(IObservable* subject, int arg) {
 		ui.objectName->setText(QString("%1 objects").arg(actorlist.size()));
 	} else {
 		Editor::Actor* actor = actorlist.back();
-		GameNode* node = static_cast<MapActor*>(actor)->getGameNode();
+		GameObject* node = static_cast<MapActor*>(actor)->getGameNode();
 		ui.objectName->setText(u2q(node->get_objectName()));
 		ui.objectColor->setColor(actor->getColor());
 	}

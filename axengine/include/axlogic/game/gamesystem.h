@@ -27,7 +27,7 @@ namespace Axon { namespace Game {
 
 	struct Snapshot {
 		enum {
-			ENTITY_PVS_SIZE = ((EntityNum::MAX_ENTITIES+31)>>5)
+			ENTITY_PVS_SIZE = ((ActorNum::MAX_ENTITIES+31)>>5)
 		};
 
 		int sequence;
@@ -91,7 +91,7 @@ namespace Axon { namespace Game {
 		void setGameWorld(GameWorld* gameworld);
 
 		// player
-		const UserInput* getUserInput(EntityNum clientNum);
+		const UserInput* getUserInput(ActorNum clientNum);
 
 	protected:
 
@@ -103,8 +103,8 @@ namespace Axon { namespace Game {
 		// runtime
 		State m_state;
 
-		EntityState* m_clientEntityStates[EntityNum::MAX_CLIENTS][EntityNum::MAX_ENTITIES];
-		Snapshot* m_clientSnapshots[EntityNum::MAX_CLIENTS];
+		EntityState* m_clientEntityStates[ActorNum::MAX_CLIENTS][ActorNum::MAX_ENTITIES];
+		Snapshot* m_clientSnapshots[ActorNum::MAX_CLIENTS];
 		UserInput m_userInputs;
 
 		int m_starttime;

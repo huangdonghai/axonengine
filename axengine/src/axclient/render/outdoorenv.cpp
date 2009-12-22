@@ -95,7 +95,7 @@ AX_BEGIN_NAMESPACE
 		};
 
 		// box12
-		m_skybox12 = new RenderMesh(RenderMesh::Static);
+		m_skybox12 = new RenderMesh(RenderMesh::HintStatic);
 		m_skybox12->initialize(8, 12);
 		Vertex* verts = m_skybox12->lockVertexes();
 		for (int i = 0; i < 8; i++) {
@@ -110,7 +110,7 @@ AX_BEGIN_NAMESPACE
 		m_skybox12->unlockIndexes();
 
 		// box34
-		m_skybox34 = new RenderMesh(RenderMesh::Static);
+		m_skybox34 = new RenderMesh(RenderMesh::HintStatic);
 		m_skybox34->initialize(8, 12);
 		verts = m_skybox34->lockVertexes();
 		for (int i = 0; i < 8; i++) {
@@ -125,7 +125,7 @@ AX_BEGIN_NAMESPACE
 		m_skybox34->unlockIndexes();
 
 		// box side 5
-		m_skybox5 = new RenderMesh(RenderMesh::Static);
+		m_skybox5 = new RenderMesh(RenderMesh::HintStatic);
 		m_skybox5->initialize(4, 6);
 
 		verts = m_skybox5->lockVertexes();
@@ -191,7 +191,7 @@ AX_BEGIN_NAMESPACE
 		int numverts = (tess + 1) * (halftess+1);
 		int numidxes = tess * halftess * 2 * 3;
 
-		m_skydome = new RenderMesh(RenderMesh::Static);
+		m_skydome = new RenderMesh(RenderMesh::HintStatic);
 		m_skydome->initialize(numverts, numidxes);
 
 		// fill vertexes
@@ -295,7 +295,7 @@ AX_BEGIN_NAMESPACE
 		int numidxes =(num - 1) * OCEAN_SUBDIVIDE * 2 * 3 + OCEAN_SUBDIVIDE * 3;
 
 		// create render mesh
-		m_oceanMesh = new RenderMesh(RenderMesh::Static);
+		m_oceanMesh = new RenderMesh(RenderMesh::HintStatic);
 		m_oceanMesh->initialize(numverts, numidxes);
 
 		// initialize render mesh's vertexbuffer and indexbuffer
@@ -501,7 +501,7 @@ AX_BEGIN_NAMESPACE
 		scene->camera.setTarget(m_skyNishitaRt);
 		scene->camera.setOverlay(0, 0, 128, 64);
 
-		RenderMesh* quad = RenderMesh::createScreenQuad(Primitive::OneFrame, Rect(0,0,128,64), Rgba::White, m_skyNishitaGenMat);
+		RenderMesh* quad = RenderMesh::createScreenQuad(Primitive::HintOneFrame, Rect(0,0,128,64), Rgba::White, m_skyNishitaGenMat);
 		scene->addInteraction(nullptr, quad);
 	}
 

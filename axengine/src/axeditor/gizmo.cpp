@@ -16,7 +16,7 @@ namespace {
 
 	inline void xSetupAxis(RenderLine*& line, const Vector3& p0, const Vector3& p1, const Rgba& color) {
 		if (!line) {
-			line = new RenderLine(Primitive::Dynamic);
+			line = new RenderLine(Primitive::HintDynamic);
 			line->initialize(2, 2);
 			line->lock();
 			line->setIndex(0, 0);
@@ -237,7 +237,7 @@ namespace Axon { namespace Editor {
 
 		RenderLine*& line = m_lines[axis];
 		if (!line) {
-			line = new RenderLine(Primitive::Dynamic);
+			line = new RenderLine(Primitive::HintDynamic);
 			line->initialize(2, 2);
 			line->lock();
 			line->setIndex(0, 0);
@@ -288,7 +288,7 @@ namespace Axon { namespace Editor {
 
 		RenderLine*& line = m_lines[axis];
 		if (!line) {
-			line = new RenderLine(Primitive::Dynamic);
+			line = new RenderLine(Primitive::HintDynamic);
 			line->initialize(4, 4);
 			ushort_t* idxes = line->lockIndexes();
 			idxes[0] = 0;
@@ -314,7 +314,7 @@ namespace Axon { namespace Editor {
 		RenderMesh*& mesh = m_meshs[axis];
 		bool first = false;
 		if (!mesh) {
-			mesh = new RenderMesh(Primitive::Dynamic);
+			mesh = new RenderMesh(Primitive::HintDynamic);
 			mesh->initialize(4, 6);
 			ushort_t* idxes = mesh->lockIndexes();
 			idxes[0] = 0;
@@ -354,7 +354,7 @@ namespace Axon { namespace Editor {
 		RenderLine*& line = m_lines[XYZ];
 
 		if (!line) {
-			line = new RenderLine(Primitive::Dynamic);
+			line = new RenderLine(Primitive::HintDynamic);
 			line->initialize(4, 8);
 			ushort_t* idxes = line->lockIndexes();
 			idxes[0] = 0;
@@ -685,7 +685,7 @@ namespace Axon { namespace Editor {
 	}
 	void ScaleGizmo::setupScreenQuad(const RenderCamera& camera, RenderMesh*& mesh, const Vector3& pos, Rgba color) {
 		if (!mesh) {
-			mesh = new RenderMesh(Primitive::Dynamic);
+			mesh = new RenderMesh(Primitive::HintDynamic);
 			mesh->initialize(4, 6);
 			ushort_t* idx = mesh->lockIndexes();
 			idx[0] = 0; idx[1] = 1; idx[2] = 2;

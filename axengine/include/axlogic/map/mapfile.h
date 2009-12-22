@@ -103,7 +103,7 @@ namespace Axon { namespace Map {
 
 	class AX_API EnvDef : public Object {
 	public:
-		AX_DECLARE_CLASS(EnvDef, Object, "MapEnvDef")
+		AX_DECLARE_CLASS(EnvDef, Object)
 			AX_SIMPLEPROP(fogColor)
 			AX_SIMPLEPROP(fogDensity)
 			AX_SIMPLEPROP(haveSkyBox)

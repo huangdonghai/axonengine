@@ -14,12 +14,12 @@ read the license and understand and accept it fully.
 namespace Axon { namespace Game {
 
 	//--------------------------------------------------------------------------
-	// class GameNode
+	// class GameObject
 	//--------------------------------------------------------------------------
 
-	class AX_API GameNode : public Object
+	class AX_API GameObject : public Object
 	{
-		AX_DECLARE_CLASS(GameNode, Object, "Game.Node")
+		AX_DECLARE_CLASS(GameObject, Object, "Game.GameObject")
 			AX_PROP(outdoorOnly)
 			AX_PROP(castShadow)
 			AX_PROP(recvShadow)
@@ -44,8 +44,8 @@ namespace Axon { namespace Game {
 		};
 		typedef Flags_<Update>	UpdateFlags;
 
-		GameNode();
-		virtual ~GameNode();
+		GameObject();
+		virtual ~GameObject();
 
 		// geometry
 		virtual BoundingBox getLocalBoundingBox();

@@ -735,7 +735,7 @@ namespace Axon {
 	// class Object
 	//--------------------------------------------------------------------------
 
-	TypeInfo* Object::m_typeinfo = nullptr;
+	MetaInfo* Object::m_metaInfo = nullptr;
 
 	Object::Object()
 	{
@@ -763,6 +763,7 @@ namespace Axon {
 		lua_pop(L, 1);
 	}
 
+#if 0
 	Object::Object(const String& objname)
 	{
 		m_classInfo = 0;
@@ -790,6 +791,7 @@ namespace Axon {
 
 		set_objectName(objname);
 	}
+#endif
 
 	Object::~Object()
 	{
@@ -807,7 +809,7 @@ namespace Axon {
 
 	Member* Object::findMember(const char* name) const
 	{
-		TypeInfo* typeinfo = getTypeInfo();
+		MetaInfo* typeinfo = getMetaInfo();
 
 		while (typeinfo) {
 			Member* member = typeinfo->findMember(name);
@@ -827,25 +829,25 @@ namespace Axon {
 		return it->second;
 	}
 
-	TypeInfo* Object::getTypeInfo() const
+	MetaInfo* Object::getMetaInfo() const
 	{
-		if (!m_typeinfo) {
-			Object::registerTypeInfo();
-			AX_ASSERT(m_typeinfo);
+		if (!m_metaInfo) {
+			Object::registerMetaInfo();
+			AX_ASSERT(m_metaInfo);
 		}
 
-		return m_typeinfo;
+		return m_metaInfo;
 	}
 
-	TypeInfo* Object::registerTypeInfo()
+	MetaInfo* Object::registerMetaInfo()
 	{
-		if (!m_typeinfo) {
-			m_typeinfo = new TypeInfo_<Object>("Object", nullptr);
-			m_typeinfo->addProperty("objectName", &Object::get_objectName, &Object::set_objectName);
+		if (!m_metaInfo) {
+			m_metaInfo = new MetaInfo_<Object>("Object", nullptr);
+			m_metaInfo->addProperty("objectName", &Object::get_objectName, &Object::set_objectName);
 
-			g_scriptSystem->registerType(m_typeinfo);
+			g_scriptSystem->registerType(m_metaInfo);
 		}
-		return m_typeinfo;
+		return m_metaInfo;
 	}
 
 
@@ -862,7 +864,7 @@ namespace Axon {
 
 	bool Object::inherits(const char* cls) const
 	{
-		TypeInfo* typeinfo = getTypeInfo();
+		MetaInfo* typeinfo = getMetaInfo();
 
 		for (; typeinfo; typeinfo=typeinfo->getBaseTypeInfo()) {
 			if (Strequ(cls, typeinfo->getTypeName())) {
@@ -924,7 +926,7 @@ namespace Axon {
 #define INDENT if (indent) f->printf("%s", indstr.c_str());
 
 		// write properties
-		TypeInfo* typeinfo = getTypeInfo();
+		MetaInfo* typeinfo = getMetaInfo();
 
 		while (typeinfo) {
 			const MemberSeq& members = typeinfo->getMembers();
@@ -972,11 +974,11 @@ namespace Axon {
 	void Object::copyPropertiesFrom(const Object* rhs)
 	{
 		// write properties
-		TypeInfo* typeinfo = rhs->getTypeInfo();
+		MetaInfo* typeinfo = rhs->getMetaInfo();
 
 		while (typeinfo) {
 			// don't copy objectname
-			if (typeinfo == Object::m_typeinfo)
+			if (typeinfo == Object::m_metaInfo)
 				break;
 
 			const MemberSeq& members = typeinfo->getMembers();
@@ -1066,7 +1068,7 @@ namespace Axon {
 		resetObjectName();
 
 		m_objectName = name;
-		m_objectNamespace = getTypeInfo()->getObjNamespace();
+		m_objectNamespace = getNamespace();
 
 		if (m_objectName.empty())
 			return;
@@ -1080,7 +1082,7 @@ namespace Axon {
 		int ns = lua_gettop(L);
 
 		if (!lua_istable(L, ns)) {
-			Errorf("Object::setObjectName: can't find object namespace '%s'", m_typeinfo->getObjNamespace().c_str());
+			Errorf("Object::setObjectName: can't find object namespace '%s'", getNamespace().c_str());
 		}
 
 		// get from registry first
@@ -1116,7 +1118,7 @@ namespace Axon {
 		int ns = lua_gettop(L);
 
 		if (!lua_istable(L, ns)) {
-			Errorf("Object::setObjectName: can't find object namespace '%s'", m_typeinfo->getObjNamespace().c_str());
+			Errorf("Object::setObjectName: can't find object namespace '%s'", getNamespace().c_str());
 		}
 
 		if (!m_objectName.empty()) {
@@ -1649,10 +1651,9 @@ errquit:
 		return result;
 	}
 
-	void ScriptSystem::registerType(TypeInfo* typeinfo)
+	void ScriptSystem::registerType(MetaInfo* typeinfo)
 	{
 		m_typeInfoReg[typeinfo->getTypeName()] = typeinfo;
-		typeinfo->m_objNamespace = readFieldImmediately(typeinfo->m_typeName, "objNameSpace");
 
 		setTypeInfoToClassInfo(typeinfo->m_typeName, typeinfo);
 	}
@@ -1695,7 +1696,7 @@ errquit:
 			result = createObject(obj->getClassInfo()->m_className.c_str());
 
 		if (!result)
-			result = obj->getTypeInfo()->createObject();
+			result = obj->getMetaInfo()->createObject();
 
 		if (!result)
 			Errorf("can't create object");
@@ -1796,14 +1797,14 @@ errquit:
 
 		ClassInfo* classInfo = new ClassInfo;
 		classInfo->m_className = self;
-		classInfo->m_baseClassName = base;
+		classInfo->m_metaName = base;
 		classInfo->m_typeInfo = 0;
 		m_classInfoReg[self] = classInfo;
 
 		classInfo->initScriptProps();
 	}
 
-	void ScriptSystem::setTypeInfoToClassInfo(const String& name, TypeInfo* ti)
+	void ScriptSystem::setTypeInfoToClassInfo(const String& name, MetaInfo* ti)
 	{
 #if 0
 		// if can't find class info, create one
@@ -1823,7 +1824,7 @@ errquit:
 			ClassInfo* ci = it->second;
 			if (ci->m_className == name) {
 				ci->m_typeInfo = ti;
-			} else if (ci->m_baseClassName == name) {
+			} else if (ci->m_metaName == name) {
 				ci->m_typeInfo = ti;
 				setTypeInfoToClassInfo(ci->m_className, ti);
 			}

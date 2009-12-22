@@ -30,7 +30,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 	Primitive::~Primitive() {
-		if (m_hint != OneFrame) {
+		if (m_hint != HintOneFrame) {
 			g_primitiveManager->hintUncache(this);
 		}
 	}
@@ -308,7 +308,7 @@ AX_BEGIN_NAMESPACE
 
 	bool RenderLine::setupScreenRect(RenderLine*& line, const Rect& rect, const Rgba& color) {
 		if (!line) {
-			line = createScreenRect(Dynamic, rect, color);
+			line = createScreenRect(HintDynamic, rect, color);
 			return true;
 		}
 		line->lockVertexes();
@@ -347,7 +347,7 @@ AX_BEGIN_NAMESPACE
 
 		if (!line) {
 			isinit = true;
-			line = new RenderLine(Dynamic);
+			line = new RenderLine(HintDynamic);
 			line->initialize(2, 2);
 			line->lockIndexes();
 			line->m_indexes[0] = 0;
@@ -370,7 +370,7 @@ AX_BEGIN_NAMESPACE
 
 		if (!line) {
 			isInit = true;
-			line = new RenderLine(Dynamic);
+			line = new RenderLine(HintDynamic);
 			line->initialize(6, 6);
 			line->lock();
 			line->m_indexes[0] = 0;
@@ -404,7 +404,7 @@ AX_BEGIN_NAMESPACE
 		return isInit;
 	}
 
-	bool RenderLine::setupBoundingBox(RenderLine*& line, const Vector3& origin, const Matrix3& axis, const BoundingBox& inbbox, float scale/* =1.0f */, Hint hint /* = Primitive::Dynamic */){
+	bool RenderLine::setupBoundingBox(RenderLine*& line, const Vector3& origin, const Matrix3& axis, const BoundingBox& inbbox, float scale/* =1.0f */, Hint hint /* = Primitive::HintDynamic */){
 		bool isfirst = false;
 		if (!line) {
 			line = new RenderLine(hint);
@@ -470,12 +470,12 @@ AX_BEGIN_NAMESPACE
         return setupCircle(line, origin, p0, p1, color, subdivided, false, Plane(), hint);
 	}
 
-	bool RenderLine::setupCircle(RenderLine*& line, const Vector3& origin, const Vector3& p0, const Vector3& p1, const Rgba& color, int subdivided, bool clipplane, const Plane& plane,Hint hint /* = Primitive::Dynamic */) {
+	bool RenderLine::setupCircle(RenderLine*& line, const Vector3& origin, const Vector3& p0, const Vector3& p1, const Rgba& color, int subdivided, bool clipplane, const Plane& plane,Hint hint /* = Primitive::HintDynamic */) {
 		AX_ASSERT(subdivided >= 3);
 		bool first = false;
 
 		if (!line) {
-			line = new RenderLine(Dynamic);
+			line = new RenderLine(HintDynamic);
 			line->initialize(subdivided, subdivided * 2);
 			ushort_t* pidx = line->lockIndexes();
 			for (int i = 0; i < subdivided; i++) {
@@ -620,7 +620,7 @@ AX_BEGIN_NAMESPACE
 		if (m_numVertexes == 0)
 			return NULL;
 
-		RenderLine* line = new RenderLine(OneFrame);
+		RenderLine* line = new RenderLine(HintOneFrame);
 
 		line->initialize(m_numVertexes * 6, m_numVertexes * 6);
 		DebugVertex* verts = line->lockVertexes();
@@ -663,7 +663,7 @@ AX_BEGIN_NAMESPACE
 		if (m_numVertexes == 0)
 			return NULL;
 
-		RenderLine* line = new RenderLine(OneFrame);
+		RenderLine* line = new RenderLine(HintOneFrame);
 
 		line->initialize(m_numVertexes * 2, m_numVertexes * 2);
 		DebugVertex* verts = line->lockVertexes();
@@ -829,7 +829,7 @@ AX_BEGIN_NAMESPACE
 		int numidxes = subdivided * 3;
 		if (!mesh) {
 			isinit = true;
-			mesh = new RenderMesh(Dynamic);
+			mesh = new RenderMesh(HintDynamic);
 			mesh->initialize(numverts, numidxes);
 			mesh->lockIndexes();
 			for (int i = 0; i < subdivided; i++) {
@@ -865,7 +865,7 @@ AX_BEGIN_NAMESPACE
 		int numidxes =(numverts - 2) * 3;
 		if (!mesh) {
 			isinit = true;
-			mesh = new RenderMesh(Dynamic);
+			mesh = new RenderMesh(HintDynamic);
 			mesh->initialize(numverts, numidxes);
 			mesh->lockIndexes();
 			for (int i = 0; i < numverts - 2; i++) {
@@ -895,7 +895,7 @@ AX_BEGIN_NAMESPACE
 		int numidxes = 36;
 
 		if (!mesh){
-			mesh = new RenderMesh(Dynamic);
+			mesh = new RenderMesh(HintDynamic);
 			mesh->initialize(8,36);
 		}
 
@@ -936,7 +936,7 @@ AX_BEGIN_NAMESPACE
 		bool isinit = false;
 		if (!cone) {
 			isinit = true;
-			cone = new RenderMesh(Dynamic);
+			cone = new RenderMesh(HintDynamic);
 			cone->initialize(numverts, numidxes);
 
 			// triangles
@@ -1010,7 +1010,7 @@ AX_BEGIN_NAMESPACE
 
 		if (!mesh) {
 			isinit = true;
-			mesh = new RenderMesh(Dynamic);
+			mesh = new RenderMesh(HintDynamic);
 			mesh->initialize(numverts, numindexes);
 
 			// triangles

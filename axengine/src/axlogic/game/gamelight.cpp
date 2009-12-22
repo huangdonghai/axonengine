@@ -43,7 +43,7 @@ namespace Axon { namespace Game {
 	}
 
 	void GameLight::doThink() {
-		GameEntity::doThink();
+		GameActor::doThink();
 	}
 
 	void GameLight::loadLight(const Variant& v) {
@@ -103,7 +103,7 @@ namespace Axon { namespace Game {
 	void GameLight::setupPointPrim()
 	{
 		if (!m_pointPrim) {
-			m_pointPrim = new RenderMesh(Primitive::Static);
+			m_pointPrim = new RenderMesh(Primitive::HintStatic);
 			m_pointPrim->initialize(6, 8*3);
 
 			static ushort_t s_indices[] = {
@@ -150,7 +150,7 @@ namespace Axon { namespace Game {
 	void GameLight::setupSpotPrim()
 	{
 		if (!m_spotPrim) {
-			m_spotPrim = new RenderMesh(Primitive::Static);
+			m_spotPrim = new RenderMesh(Primitive::HintStatic);
 			m_spotPrim->initialize(6*3, 6*3);
 
 			static ushort_t s_indices[] = {

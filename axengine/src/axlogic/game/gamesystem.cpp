@@ -59,7 +59,7 @@ namespace Axon { namespace Game {
 			return;
 		}
 
-		GameEntity* ent = GameWorld::createEntity("Game.Player");
+		GameActor* ent = GameWorld::createEntity("Game.Player");
 		m_gameWorld->addEntity(ent);
 	}
 
@@ -128,7 +128,7 @@ namespace Axon { namespace Game {
 		notify(ObserveFlag_StopRunning);
 	}
 
-	const UserInput* GameSystem::getUserInput(EntityNum clientNum)
+	const UserInput* GameSystem::getUserInput(ActorNum clientNum)
 	{
 		return &m_userInputs;
 	}

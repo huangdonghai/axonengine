@@ -14,13 +14,14 @@ read the license and understand and accept it fully.
 
 namespace Axon { namespace Game {
 
-	class GameSound : public GameEntity {
-	public:
-		AX_DECLARE_CLASS(GameSound, GameEntity, "Game.Effect.Sound")
+	class GameSound : public GameActor
+	{
+		AX_DECLARE_CLASS(GameSound, GameActor, "Game.Effect.Sound")
 			AX_METHOD(loadSound)
 			AX_METHOD(activeSound)
 		AX_END_CLASS()
 
+	public:
 		GameSound();
 		virtual ~GameSound();
 
@@ -29,7 +30,7 @@ namespace Axon { namespace Game {
 		virtual void doDebugRender() const;
 		virtual void clear();
 
-		// implement GameEntity
+		// implement GameActor
 		virtual void doThink();
 
 		// method

@@ -644,15 +644,15 @@
 				Name="Game"
 				>
 				<File
-					RelativePath=".\scripts\game\Entity.lua"
-					>
-				</File>
-				<File
 					RelativePath=".\scripts\game\Fixed.lua"
 					>
 				</File>
 				<File
-					RelativePath=".\scripts\game\Node.lua"
+					RelativePath=".\scripts\game\GameActor.lua"
+					>
+				</File>
+				<File
+					RelativePath=".\scripts\game\GameObject.lua"
 					>
 				</File>
 				<File

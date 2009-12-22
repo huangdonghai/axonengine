@@ -104,7 +104,7 @@ AX_BEGIN_NAMESPACE
 
 	GLpostprocess::GLpostprocess() {
 #if 1
-		m_screenQuad = new RenderMesh(Primitive::Static);
+		m_screenQuad = new RenderMesh(Primitive::HintStatic);
 
 		Rgba color(255, 255, 255, 255);
 
@@ -156,7 +156,7 @@ AX_BEGIN_NAMESPACE
 		indexes[5] = 3;
 		m_screenQuad->unlockIndexes();
 #else
-		m_screenQuad = RenderMesh::createScreenQuad(Primitive::Static, Rect(), Rgba::White);
+		m_screenQuad = RenderMesh::createScreenQuad(Primitive::HintStatic, Rect(), Rgba::White);
 #endif
 
 		m_boxVolume = nullptr;

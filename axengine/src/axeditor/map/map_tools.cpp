@@ -152,14 +152,14 @@ namespace Axon { namespace Editor { namespace MapEdit {
 
 		m_center.x = from.x; m_center.y = from.y;
 		SafeDelete(m_cursor);
-		m_cursor = RenderLine::createLine(Primitive::Dynamic, from, to, Rgba::Red);
+		m_cursor = RenderLine::createLine(Primitive::HintDynamic, from, to, Rgba::Red);
 
 		SafeDelete(m_brushPrims);
 		Vector4 rect = m_terrain->getTerrainRect();
-		m_brushPrims = new GroupPrim(Primitive::Dynamic);
+		m_brushPrims = new GroupPrim(Primitive::HintDynamic);
 		Primitives prims = m_terrain->getPrimsByCircle(from.x, from.y, radius);
 		for (Primitives::iterator it = prims.begin(); it != prims.end(); ++it) {
-			RefPrim* ref = new RefPrim(Primitive::Dynamic);
+			RefPrim* ref = new RefPrim(Primitive::HintDynamic);
 			ref->setRefered(*it);
 			ref->setMaterial(m_brushMat.get());
 			m_brushPrims->addPrimitive(ref, true);

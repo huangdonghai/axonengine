@@ -27,10 +27,10 @@ namespace Axon { namespace Editor { namespace MapEdit {
 		virtual Type getType() const { return kEntity; }
 		virtual MapActor* clone() const;
 
-		GameEntity* getGameEntity() const { return m_gameEntity; }
+		GameActor* getGameEntity() const { return m_gameEntity; }
 
 	protected:
-		GameEntity* m_gameEntity;
+		GameActor* m_gameEntity;
 		RenderMesh* m_iconPrim;
 	};
 

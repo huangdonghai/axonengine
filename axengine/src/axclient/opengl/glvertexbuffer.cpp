@@ -13,13 +13,13 @@ AX_BEGIN_NAMESPACE
 
 	static inline GLenum trBufferHint(Primitive::Hint hint) {
 		switch (hint) {
-		case Primitive::Static:
+		case Primitive::HintStatic:
 			return GL_STATIC_DRAW;
-		case Primitive::Dynamic:
+		case Primitive::HintDynamic:
 			return GL_STREAM_DRAW;
-		case Primitive::Stream:
+		case Primitive::HintStream:
 			return GL_STREAM_DRAW;
-		case Primitive::OneFrame:
+		case Primitive::HintOneFrame:
 			return GL_STREAM_DRAW;
 		default: AX_NO_DEFAULT;
 			return GL_DYNAMIC_DRAW;
@@ -108,7 +108,7 @@ AX_BEGIN_NAMESPACE
 
 		int activeSize = activeCount * 2;
 
-		if (primhint == Primitive::OneFrame) {
+		if (primhint == Primitive::HintOneFrame) {
 			m_count = activeCount;
 			size = activeSize;
 		}

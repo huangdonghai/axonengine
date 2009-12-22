@@ -33,11 +33,11 @@ AX_BEGIN_NAMESPACE
 		};
 
 		enum Hint {
-			Static,				// will alloc in video memory, never change
-			Stream,				// provide once, draw once
-			Dynamic,			// 
-			OneFrame,			// only draw in one frame, will auto deleted when render driver cached it
-			OnStack // allocated on stack, so not need be free. just use for GeoInstancing, otherwise will maybe cause memory/resource leak
+			HintStatic,				// will alloc in video memory, never change
+			HintStream,				// provide once, draw once
+			HintDynamic,			// 
+			HintOneFrame,			// only draw in one frame, will auto deleted when render driver cached it
+			HintOnStack // allocated on stack, so not need be free. just use for GeoInstancing, otherwise will maybe cause memory/resource leak
 		};
 
 		Primitive(Hint hint);
@@ -203,11 +203,11 @@ AX_BEGIN_NAMESPACE
 
 		static bool setupLine(RenderLine*& line, const Vector3& from, const Vector3& to, const Rgba& color);
 		static bool setupAxis(RenderLine*& line, const Vector3& origin, const Matrix3& axis, float length, Rgba xcolor, Rgba ycolor, Rgba zcolor);
-		static bool setupBoundingBox(RenderLine*& line, const Vector3& origin, const Matrix3& axis, const BoundingBox& inbbox, float scale=1.0f, Hint hint = Primitive::Dynamic);
+		static bool setupBoundingBox(RenderLine*& line, const Vector3& origin, const Matrix3& axis, const BoundingBox& inbbox, float scale=1.0f, Hint hint = Primitive::HintDynamic);
 		static bool setupCircle(RenderLine*& line, const Vector3& origin, const Vector3& p0, const Vector3& p1, const Rgba& color, int subdivided);
 		static bool setupCircle(RenderLine*& line, const Vector3& origin, const Vector3& p0, const Vector3& p1, const Rgba& color, int subdivided ,Hint hint);
 		static bool setupCircle(RenderLine*& line, const Vector3& origin, const Vector3& p0, const Vector3& p1, const Rgba& color, int subdivided, const Plane& plane);
-		static bool setupCircle(RenderLine*& line, const Vector3& origin, const Vector3& p0, const Vector3& p1, const Rgba& color, int subdivided, bool clipplane, const Plane& plane,Hint hint = Primitive::Dynamic);
+		static bool setupCircle(RenderLine*& line, const Vector3& origin, const Vector3& p0, const Vector3& p1, const Rgba& color, int subdivided, bool clipplane, const Plane& plane,Hint hint = Primitive::HintDynamic);
 		static bool setupScreenRect(RenderLine*& line, const Rect& rect, const Rgba& color);
 
 	private:

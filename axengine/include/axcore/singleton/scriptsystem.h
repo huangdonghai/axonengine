@@ -13,16 +13,16 @@ read the license and understand and accept it fully.
 #ifndef AX_SCRIPTSYSTEM_H
 #define AX_SCRIPTSYSTEM_H
 
-#define AX_DECLARE_CLASS(classname, baseclass, scriptname) public:			\
+#define AX_DECLARE_CLASS(classname, baseclass) public:			\
 	typedef classname ThisClass;											\
 	typedef baseclass BaseClass;											\
-	virtual ::Axon::TypeInfo* classname::getTypeInfo() const {				\
-		return classname::registerTypeInfo();								\
+	virtual ::Axon::MetaInfo* classname::getMetaInfo() const {				\
+		return classname::registerMetaInfo();								\
 	}																		\
-	static ::Axon::TypeInfo* classname::registerTypeInfo() {				\
-		static ::Axon::TypeInfo* typeinfo;									\
+	static ::Axon::MetaInfo* classname::registerMetaInfo() {				\
+		static ::Axon::MetaInfo* typeinfo;									\
 		if (!typeinfo) {													\
-			typeinfo = new ::Axon::TypeInfo_<classname>(scriptname, BaseClass::registerTypeInfo()); \
+			typeinfo = new ::Axon::MetaInfo_<classname>(classname, BaseClass::registerMetaInfo()); \
 
 #define AX_CONSTPROP(name) typeinfo->addProperty(#name, &ThisClass::get_##name);
 #define AX_PROP(name) typeinfo->addProperty(#name, &ThisClass::get_##name, &ThisClass::set_##name);
@@ -37,7 +37,7 @@ read the license and understand and accept it fully.
 	}																	\
 
 
-#define AX_REGISTER_CLASS(cppname) cppname::registerTypeInfo();
+#define AX_REGISTER_CLASS(cppname) cppname::registerMetaInfo();
 
 
 namespace Axon {
@@ -1056,35 +1056,34 @@ namespace Axon {
 
 
 	//--------------------------------------------------------------------------
-	// class TypeInfo
+	// class MetaInfo
 	//--------------------------------------------------------------------------
 
-	class AX_API TypeInfo
+	class AX_API MetaInfo
 	{
 	public:
 		friend class ScriptSystem;
 
-		TypeInfo(const char* classname, TypeInfo* base);
-		virtual ~TypeInfo();
+		MetaInfo(const char* classname, MetaInfo* base);
+		virtual ~MetaInfo();
 
 		template< typename T, typename GetType, typename SetType >
-		TypeInfo& addProperty(const char* name, GetType (T::*get)() const, void (T::*set)(SetType));
+		MetaInfo& addProperty(const char* name, GetType (T::*get)() const, void (T::*set)(SetType));
 
 		template< typename T, typename GetType >
-		TypeInfo& addProperty(const char* name, GetType (T::*get)() const);
+		MetaInfo& addProperty(const char* name, GetType (T::*get)() const);
 
 		template< typename T, typename M >
-		TypeInfo& addProperty(const char* name, M (T::*d));
+		MetaInfo& addProperty(const char* name, M (T::*d));
 
 		template< typename Signature >
-		TypeInfo& addMethod(const char* name, Signature m);
+		MetaInfo& addMethod(const char* name, Signature m);
 
 		Member* findMember(const char* name) const;
-		TypeInfo* getBaseTypeInfo() const;
+		MetaInfo* getBaseTypeInfo() const;
 
 		const char* getTypeName() const;
 		const MemberSeq& getMembers() const;
-		const String& getObjNamespace() const { return m_objNamespace; }
 
 		virtual Object* createObject() = 0;
 
@@ -1093,35 +1092,34 @@ namespace Axon {
 
 	private:
 		const char* m_typeName;
-		TypeInfo* m_baseTypeInfo;
+		MetaInfo* m_baseTypeInfo;
 		MemberSeq m_members;
 		MemberDict m_memberDict;
-		String m_objNamespace;
 	};
 
-	inline TypeInfo::TypeInfo(const char* classname, TypeInfo* base)
+	inline MetaInfo::MetaInfo(const char* classname, MetaInfo* base)
 		: m_typeName(classname)
 		, m_baseTypeInfo(base)
 	{}
 
-	inline TypeInfo::~TypeInfo() {}
+	inline MetaInfo::~MetaInfo() {}
 
 	template< typename T, typename GetType, typename SetType >
-	TypeInfo& TypeInfo::addProperty(const char* name, GetType (T::*get)() const, void (T::*set)(SetType)) {
+	MetaInfo& MetaInfo::addProperty(const char* name, GetType (T::*get)() const, void (T::*set)(SetType)) {
 		Member* member = new Property_<T,GetType,SetType>(name, get, set);
 		addMember(member);
 		return *this;
 	}
 
 	template< typename T, typename GetType >
-	TypeInfo& TypeInfo::addProperty(const char* name, GetType (T::*get)() const) {
+	MetaInfo& MetaInfo::addProperty(const char* name, GetType (T::*get)() const) {
 		Member* member = new Property_<T,GetType,GetType>(name, get);
 		addMember(member);
 		return *this;
 	}
 
 	template< typename T, typename M >
-	TypeInfo& TypeInfo::addProperty(const char* name, M (T::*d)) {
+	MetaInfo& MetaInfo::addProperty(const char* name, M (T::*d)) {
 		Member* member = new SimpleProp_<T,M>(name, d);
 		addMember(member);
 		return *this;
@@ -1129,18 +1127,18 @@ namespace Axon {
 
 
 	template< typename Signature >
-	TypeInfo& TypeInfo::addMethod(const char* name, Signature m) {
+	MetaInfo& MetaInfo::addMethod(const char* name, Signature m) {
 		Member* member = new Method_<Signature>(name, m);
 		addMember(member);
 		return *this;
 	}
 
-	inline void TypeInfo::addMember(Member* member) {
+	inline void MetaInfo::addMember(Member* member) {
 		m_members.push_back(member);
 		m_memberDict[member->getName()] = member;
 	}
 
-	inline Member* TypeInfo::findMember(const char* name) const {
+	inline Member* MetaInfo::findMember(const char* name) const {
 		MemberDict::const_iterator it = m_memberDict.find(name);
 
 		if (it != m_memberDict.end())
@@ -1148,28 +1146,28 @@ namespace Axon {
 		return nullptr;
 	}
 
-	inline TypeInfo* TypeInfo::getBaseTypeInfo() const {
+	inline MetaInfo* MetaInfo::getBaseTypeInfo() const {
 		return m_baseTypeInfo;
 	}
 
-	inline const char* TypeInfo::getTypeName() const {
+	inline const char* MetaInfo::getTypeName() const {
 		return m_typeName;
 	}
 
-	inline const MemberSeq& TypeInfo::getMembers() const {
+	inline const MemberSeq& MetaInfo::getMembers() const {
 		return m_members;
 	}
 
 	//--------------------------------------------------------------------------
-	// class TypeInfo_
+	// class MetaInfo_
 	//--------------------------------------------------------------------------
 	template< class T >
-	class TypeInfo_ : public TypeInfo {
+	class MetaInfo_ : public MetaInfo {
 	public:
-		TypeInfo_(const char* classname, TypeInfo* base)
-			: TypeInfo(classname, base)
+		MetaInfo_(const char* classname, MetaInfo* base)
+			: MetaInfo(classname, base)
 		{}
-		virtual ~TypeInfo_() {}
+		virtual ~MetaInfo_() {}
 
 		virtual Object* createObject() {
 			return new T;
@@ -1218,8 +1216,8 @@ namespace Axon {
 		void initScriptProps();
 
 		String m_className;
-		String m_baseClassName;
-		TypeInfo* m_typeInfo;
+		String m_metaName;
+		MetaInfo* m_typeInfo;
 		ScriptPropSeq m_scriptPropSeq;
 		ScriptPropDict m_scriptProps;
 	};
@@ -1235,12 +1233,15 @@ namespace Axon {
 		friend class ScriptSystem;
 
 		Object();
+#if 0
 		Object(const String& objname);
+#endif
 		virtual ~Object();
 
-		virtual TypeInfo* getTypeInfo() const;
-		static TypeInfo* registerTypeInfo();
-		static TypeInfo* m_typeinfo;
+		virtual MetaInfo* getMetaInfo() const;
+		virtual String getNamespace() const { return String(); }
+		static MetaInfo* registerMetaInfo();
+		static MetaInfo* m_metaInfo;
 
 		const ClassInfo* getClassInfo() const { return m_classInfo; }
 
@@ -1330,7 +1331,7 @@ namespace Axon {
 		int nextNameIndex(const String& str);
 		String generateObjectName(const String& str);
 
-		void registerType(TypeInfo* typeinfo);
+		void registerType(MetaInfo* typeinfo);
 		void registerClass(const String& self, const String& base);
 
 		void getClassList(const char* prefix, bool sort, StringSeq& result) const;
@@ -1353,13 +1354,13 @@ namespace Axon {
 		const String& getPackagePath() { return m_packagePath; }
 
 	protected:
-		void setTypeInfoToClassInfo(const String& name, TypeInfo* ti);
+		void setTypeInfoToClassInfo(const String& name, MetaInfo* ti);
 
 	private:
 		typedef Dict<String,ClassInfo*>	ClassInfoDict;
 		ClassInfoDict m_classInfoReg;
 
-		typedef Dict<const char*, TypeInfo*, hash_cstr, equal_cstr> TypeInfoDict;
+		typedef Dict<const char*, MetaInfo*, hash_cstr, equal_cstr> TypeInfoDict;
 		TypeInfoDict m_typeInfoReg;
 
 		typedef Dict<String,int> StringIntDict;

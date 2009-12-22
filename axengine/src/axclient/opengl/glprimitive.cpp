@@ -827,7 +827,7 @@ AX_BEGIN_NAMESPACE
 
 		int new_id;
 
-		if (prim->getHint() != Primitive::OneFrame) {
+		if (prim->getHint() != Primitive::HintOneFrame) {
 			if (h == 0) {
 				// init
 				GLprimitive* glprim = createPrim(prim);
@@ -862,7 +862,7 @@ AX_BEGIN_NAMESPACE
 		prim->setCachedFrame(m_framenum);
 		g_statistic->incValue(stat_changedPrims);
 
-		if (prim->getHint() == Primitive::OneFrame)
+		if (prim->getHint() == Primitive::HintOneFrame)
 			delete prim;
 
 		return new_id;

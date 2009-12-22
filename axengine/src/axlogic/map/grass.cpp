@@ -261,7 +261,7 @@ namespace Axon { namespace Map {
 			// 如果尚未创建mesh 
 			if (mesh == NULL)
 			{
-				mesh = new RenderMesh(RenderMesh::Static);
+				mesh = new RenderMesh(RenderMesh::HintStatic);
 				m_grassDefSet[i].setMesh(mesh);
 			}
 

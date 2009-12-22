@@ -112,7 +112,7 @@ AX_BEGIN_NAMESPACE
 		m_vt = vt;
 		int size = m_count * s_strides[vt];
 
-		if (primhint != Primitive::Static) {
+		if (primhint != Primitive::HintStatic) {
 			// alloc from pages
 			DynVb dv = d3d9VertexBufferManager->allocVb(size);
 			m_object = dv.vb;
@@ -241,7 +241,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 	void D3D9indexobject::setData(const ushort_t* p, int count, Primitive::Hint hint, int activeCount) {
-		if (hint != Primitive::Static) {
+		if (hint != Primitive::HintStatic) {
 			m_count = count;
 			m_activeCount = activeCount;
 			if (!m_activeCount) {

@@ -507,7 +507,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 	void GLfontrender::initialize() {
-		m_vertexBuffer.setData(nullptr, NumCharsPerBatch * 4 * sizeof(BlendVertex), Primitive::Stream);
+		m_vertexBuffer.setData(nullptr, NumCharsPerBatch * 4 * sizeof(BlendVertex), Primitive::HintStream);
 #if 0
 		m_shader = (GLshader*)FindAsset_<Shader>("font");
 #else

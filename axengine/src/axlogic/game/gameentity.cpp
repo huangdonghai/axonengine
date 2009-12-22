@@ -14,10 +14,10 @@ read the license and understand and accept it fully.
 namespace Axon { namespace Game {
 
 	//--------------------------------------------------------------------------
-	// class GameEntity
+	// class GameActor
 	//--------------------------------------------------------------------------
 
-	GameEntity::GameEntity() {
+	GameActor::GameActor() {
 		m_entityNum = -1;
 		m_world = nullptr;
 		m_state = Active;
@@ -25,42 +25,42 @@ namespace Axon { namespace Game {
 		setSoundEntity(new SoundEntity());
 	}
 
-	GameEntity::~GameEntity() {
+	GameActor::~GameActor() {
 		clear();
 		delete getSoundEntity();
 		setSoundEntity(0);
 	}
 
-	void GameEntity::doThink() {
+	void GameActor::doThink() {
 		invoke_onThink();
 	}
 
-	void GameEntity::setState(State state)
+	void GameActor::setState(State state)
 	{
 		m_state = state;
 	}
 
-	void GameEntity::doNotify(IObservable* subject, int arg) {
+	void GameActor::doNotify(IObservable* subject, int arg) {
 	}
 
-	void GameEntity::onPhysicsActived() {
+	void GameActor::onPhysicsActived() {
 		m_updateFlags.set(ReadPhysics);
 	}
 
-	void GameEntity::onPhysicsDeactived() {
+	void GameActor::onPhysicsDeactived() {
 		m_updateFlags.unset(ReadPhysics);
 	}
 
-	void GameEntity::invoke_onThink() {
+	void GameActor::invoke_onThink() {
 		invokeCallback("onThink", m_world->getFrameTime());
 	}
 
-	void GameEntity::reload()
+	void GameActor::reload()
 	{
 		invokeCallback("onReset");
 	}
 
-	void GameEntity::autoGenerateName()
+	void GameActor::autoGenerateName()
 	{
 		String objname = "entity";
 
@@ -73,7 +73,7 @@ namespace Axon { namespace Game {
 		set_objectName(objname);
 	}
 
-	void GameEntity::doSpawn()
+	void GameActor::doSpawn()
 	{
 		if (m_spawned) {
 			Errorf("already spawned");
@@ -85,7 +85,7 @@ namespace Axon { namespace Game {
 		reload();
 	}
 
-	void GameEntity::doRemove()
+	void GameActor::doRemove()
 	{
 		SoundEntity* soundEntity = getSoundEntity();
 		m_world->getSoundWorld()->removeEntity(soundEntity);
@@ -99,24 +99,24 @@ namespace Axon { namespace Game {
 	}
 
 	//--------------------------------------------------------------------------
-	// class RigidBody
+	// class GameRigit
 	//--------------------------------------------------------------------------
 
-	RigidBody::RigidBody() {
+	GameRigit::GameRigit() {
 		m_model = nullptr;
 		m_rigid = nullptr;
 	}
 
-	RigidBody::~RigidBody() {
+	GameRigit::~GameRigit() {
 		clear();
 	}
 
-	void RigidBody::doThink() {
+	void GameRigit::doThink() {
 		m_model->setMatrix(m_rigid->getMatrix());
 		m_world->getRenderWorld()->addActor(m_model);
 	}
 
-	void RigidBody::loadAsset(const LuaTable& t)
+	void GameRigit::loadAsset(const LuaTable& t)
 	{
 		clear();
 
@@ -153,7 +153,7 @@ namespace Axon { namespace Game {
 		setPhysicsEntity(m_rigid);
 	}
 
-	void RigidBody::clear()
+	void GameRigit::clear()
 	{
 		setRenderEntity(0);
 		setPhysicsEntity(0);

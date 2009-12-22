@@ -20,9 +20,9 @@ namespace Axon { namespace Game {
 	// class Fixed
 	//--------------------------------------------------------------------------
 
-	class AX_API Fixed : public GameNode
+	class AX_API Fixed : public GameObject
 	{
-		AX_DECLARE_CLASS(Fixed, GameNode, "Game.Fixed")
+		AX_DECLARE_CLASS(Fixed, GameObject, "Game.Fixed")
 		AX_END_CLASS()
 
 	public:
@@ -60,7 +60,7 @@ namespace Axon { namespace Game {
 		void set_model(const String& val);
 
 	protected:
-		// implement GameNode
+		// implement GameObject
 		virtual void reload();
 		virtual void clear();
 
@@ -111,7 +111,7 @@ namespace Axon { namespace Game {
 		TreeFixed();
 		virtual ~TreeFixed();
 
-		// implement GameNode
+		// implement GameObject
 		virtual void reload();
 		virtual void clear();
 
@@ -128,9 +128,9 @@ namespace Axon { namespace Game {
 	// class Landscape
 	//--------------------------------------------------------------------------
 
-	class AX_API Landscape : public GameEntity
+	class AX_API Landscape : public GameActor
 	{
-		AX_DECLARE_CLASS(Landscape, GameEntity, "Game.Landscape")
+		AX_DECLARE_CLASS(Landscape, GameActor, "Game.Landscape")
 		AX_END_CLASS()
 
 	public:

@@ -389,15 +389,15 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\include\axclient\render\renderentity.h"
+					RelativePath="..\..\..\include\axclient\render\render_entity.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\include\axclient\render\rendersystem.h"
+					RelativePath="..\..\..\include\axclient\render\render_system.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\include\axclient\render\renderworld.h"
+					RelativePath="..\..\..\include\axclient\render\render_world.h"
 					>
 				</File>
 				<File
@@ -477,15 +477,15 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\src\axclient\render\renderentity.cpp"
+					RelativePath="..\..\..\src\axclient\render\render_entity.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\src\axclient\render\rendersystem.cpp"
+					RelativePath="..\..\..\src\axclient\render\render_system.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\src\axclient\render\renderworld.cpp"
+					RelativePath="..\..\..\src\axclient\render\render_world.cpp"
 					>
 				</File>
 				<File

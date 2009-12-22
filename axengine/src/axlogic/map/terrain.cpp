@@ -659,7 +659,7 @@ namespace Axon { namespace Map {
 	}
 
 	void Chunk::allocatePrimitive() {
-		m_prim = new RenderChunk(Primitive::Dynamic);
+		m_prim = new RenderChunk(Primitive::HintDynamic);
 	}
 
 	void Chunk::updatePrimitive() {
@@ -1054,7 +1054,7 @@ namespace Axon { namespace Map {
 		m_colorTexture->setFilterMode(Texture::FM_Bilinear);
 
 		// init primitive
-		m_prim = new RenderChunk(Primitive::Static);
+		m_prim = new RenderChunk(Primitive::HintStatic);
 		int primverts = (Map::ZoneTiles >> m_zonePrimLod) + 1;
 		primverts *= primverts;
 		int primidxes = (Map::ZoneTiles >> m_zonePrimLod);

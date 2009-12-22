@@ -36,10 +36,10 @@ namespace Axon {
 
 		g_gameSystem = new GameSystem();
 
-		AX_REGISTER_CLASS(Game::GameEntity);
+		AX_REGISTER_CLASS(Game::GameActor);
 		AX_REGISTER_CLASS(Game::GameLight);
 		AX_REGISTER_CLASS(Game::GameSound);
-		AX_REGISTER_CLASS(Game::RigidBody);
+		AX_REGISTER_CLASS(Game::GameRigit);
 		AX_REGISTER_CLASS(Game::Animated);
 		AX_REGISTER_CLASS(Game::Articulated);
 		AX_REGISTER_CLASS(Game::Player);

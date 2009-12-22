@@ -73,7 +73,7 @@ void RenderWidget::paintEvent(QPaintEvent* pe)
 		if (m_isDrawAxis)
 		{
 			float line_length = 1.0f;
-			RenderLine* axis_line = RenderLine::createAxis(Primitive::OneFrame, line_length);
+			RenderLine* axis_line = RenderLine::createAxis(Primitive::HintOneFrame, line_length);
 			g_renderSystem->addToScene(axis_line);
 		}
 		
@@ -198,7 +198,7 @@ void RenderWidget::drawFrameNum()
 	rect.y = rv.getViewRect().height - 24;
 	rect.width = 120;
 	rect.height = g_consoleFont->getHeight();
-	RenderText* prim = RenderText::createText(Primitive::OneFrame, rect, g_consoleFont, text, Rgba::Green);
+	RenderText* prim = RenderText::createText(Primitive::HintOneFrame, rect, g_consoleFont, text, Rgba::Green);
 
 	g_renderSystem->beginScene(rv);
 	g_renderSystem->addToScene(prim);

@@ -47,7 +47,7 @@ AX_BEGIN_NAMESPACE
 	PhysicsEntity::~PhysicsEntity() {
 	}
 
-	void PhysicsEntity::setGameEntity( GameEntity* ent )
+	void PhysicsEntity::setGameEntity( GameActor* ent )
 	{
 		m_gameEntity = ent;
 	}

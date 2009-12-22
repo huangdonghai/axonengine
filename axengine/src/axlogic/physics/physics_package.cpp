@@ -1074,7 +1074,7 @@ errexit:
 			if (newdata->m_binding || newdata->m_boneAttachment) {
 				newdata->m_needFreeRenderMesh = true;
 				newdata->m_renderMesh = nullptr;
-				newdata->generateStaticMesh(Primitive::Dynamic);
+				newdata->generateStaticMesh(Primitive::HintDynamic);
 				result.push_back(newdata);
 			} else {
 				newdata->m_needFreeRenderMesh = false;
@@ -1096,7 +1096,7 @@ errexit:
 
 		MeshDataList::const_iterator it = m_meshDatas.begin();
 		for (; it != m_meshDatas.end(); ++it) {
-			(*it)->generateStaticMesh(Primitive::Static);
+			(*it)->generateStaticMesh(Primitive::HintStatic);
 		}
 
 		m_isStaticMeshGenerated = true;

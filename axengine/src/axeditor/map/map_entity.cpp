@@ -44,7 +44,7 @@ namespace Axon { namespace Editor { namespace MapEdit {
 		AX_ASSERT(mat);
 		mat->setTexture(SamplerType::Diffuse, tex.get());
 
-		m_iconPrim = RenderMesh::createScreenQuad(RenderMesh::Dynamic, Rect(-1,-1,2,2), Rgba::White, mat.get());
+		m_iconPrim = RenderMesh::createScreenQuad(RenderMesh::HintDynamic, Rect(-1,-1,2,2), Rgba::White, mat.get());
 	}
 
 	Entity::~Entity() {

@@ -25,7 +25,7 @@ namespace Axon { namespace Gfx {
 
 	class ParticleEmitter : public GfxObject
 	{
-		AX_DECLARE_CLASS(ParticleEmitter, GfxObject, "ParticleEmitter")
+		AX_DECLARE_CLASS(ParticleEmitter, GfxObject)
 			AX_SIMPLEPROP(speed)
 			AX_SIMPLEPROP(variation)
 			AX_SIMPLEPROP(spread)

@@ -61,7 +61,8 @@ AX_BEGIN_NAMESPACE
 	// class AnimationContext
 	//--------------------------------------------------------------------------
 
-	class AnimationContext : public Object {
+	class AnimationContext : public Object
+	{
 		AX_DECLARE_CLASS(AnimationContext, Object, "AnimationContext")
 			AX_METHOD(playCycle)
 			AX_METHOD(playCycleSync)

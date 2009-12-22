@@ -216,7 +216,7 @@ AX_BEGIN_NAMESPACE
 
 			numInstancedIA++;
 
-			GeoInstance* geoins = new GeoInstance(Primitive::OneFrame);
+			GeoInstance* geoins = new GeoInstance(Primitive::HintOneFrame);
 			geoins->setInstanced(head->primitive);
 
 			for ( ia = head; ia; ia = ia->primNext) {

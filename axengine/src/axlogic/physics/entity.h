@@ -50,11 +50,11 @@ AX_BEGIN_NAMESPACE
 		virtual void bind(PhysicsWorld* world) = 0;
 		virtual void unbind(PhysicsWorld* world) = 0;
 
-		void setGameEntity(GameEntity* ent);
+		void setGameEntity(GameActor* ent);
 
 	protected:
 		PhysicsWorld* m_world;
-		GameEntity* m_gameEntity;
+		GameActor* m_gameEntity;
 	};
 
 AX_END_NAMESPACE

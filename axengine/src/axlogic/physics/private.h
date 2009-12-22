@@ -17,7 +17,7 @@ read the license and understand and accept it fully.
 #include "entity.h"
 #include "rigidbody.h"
 #include "ragdoll.h"
-#include "physicsplayer.h"
+#include "physics_player.h"
 #include "util.h"
 
 namespace Axon {

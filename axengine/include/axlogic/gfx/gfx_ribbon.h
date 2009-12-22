@@ -20,7 +20,7 @@ namespace Axon { namespace Gfx {
 
 	class RibbonEmitter : public GfxObject
 	{
-		AX_DECLARE_CLASS(RibbonEmitter, GfxObject, "RibbonEmitter")
+		AX_DECLARE_CLASS(RibbonEmitter, GfxObject)
 			AX_SIMPLEPROP(color)
 			AX_SIMPLEPROP(opacity)
 			AX_SIMPLEPROP(above)

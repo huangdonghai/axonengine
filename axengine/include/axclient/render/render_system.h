@@ -19,7 +19,7 @@ AX_BEGIN_NAMESPACE
 	{
 	public:
 		// script
-		AX_DECLARE_CLASS(RenderSystem, Object, "RenderSystem")
+		AX_DECLARE_CLASS(RenderSystem, Object)
 			AX_METHOD(info)
 			AX_METHOD(test)
 		AX_END_CLASS()

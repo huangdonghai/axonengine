@@ -17,7 +17,7 @@ onRemove				-- remove from game world
 
 --]]--
 
-AX_DECLARE_CLASS( _M, Object )
+AX_DECLARE_CLASS( _M, "GameObject" )
 
 objNameSpace = "Game"
 

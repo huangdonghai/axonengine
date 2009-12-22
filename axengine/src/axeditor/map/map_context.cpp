@@ -451,7 +451,7 @@ namespace Axon { namespace Editor { namespace MapEdit {
 			return;
 		}
 
-		GameNode* gamenode =  actor->getGameNode();
+		GameObject* gamenode =  actor->getGameNode();
 		gamenode->readXml(childnode);
 
 		actor->setMatrix(matrix);

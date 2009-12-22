@@ -52,7 +52,7 @@ namespace Axon { namespace Map {
 
 				if (mesh == NULL)
 				{
-					mesh = new RenderMesh(RenderMesh::Static);
+					mesh = new RenderMesh(RenderMesh::HintStatic);
 					river.setMesh(mesh);
 				}
 

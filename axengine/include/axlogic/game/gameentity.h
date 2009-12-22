@@ -15,10 +15,10 @@ read the license and understand and accept it fully.
 namespace Axon { namespace Game {
 
 	//--------------------------------------------------------------------------
-	// class GameEntity
+	// class GameActor
 	//--------------------------------------------------------------------------
 
-	struct EntityNum {
+	struct ActorNum {
 		enum Type {
 			MAX_CLIENTS = 32,
 			MAX_ENTITIES_BITS = 12,
@@ -28,7 +28,7 @@ namespace Axon { namespace Game {
 			LANDSCAPE = MAX_ENTITIES - 2,
 			MAX_NORMAL = LANDSCAPE
 		} t;
-		AX_DECLARE_ENUM(EntityNum);
+		AX_DECLARE_ENUM(ActorNum);
 	};
 
 	enum SndChannelId {
@@ -48,14 +48,14 @@ namespace Axon { namespace Game {
 		SndChannelId_Damage
 	};
 
-	class GameEntity;
-	typedef List<GameEntity*> EntityList;
+	class GameActor;
+	typedef List<GameActor*> EntityList;
 	typedef EntityList::iterator EntityIterator;
-	typedef Dict<String,GameEntity*> EntityHash;
+	typedef Dict<String,GameActor*> EntityHash;
 
-	class AX_API GameEntity : public GameNode, public IObserver
+	class AX_API GameActor : public GameObject, public IObserver
 	{
-		AX_DECLARE_CLASS(GameEntity, GameNode, "Game.Entity")
+		AX_DECLARE_CLASS(GameActor, GameObject, "Game.GameActor")
 		AX_END_CLASS()
 	public:
 		friend class GameWorld;
@@ -66,8 +66,8 @@ namespace Axon { namespace Game {
 			Active,
 		};
 
-		GameEntity();
-		virtual ~GameEntity();
+		GameActor();
+		virtual ~GameActor();
 
 		virtual void doThink();
 		virtual bool isPlayer() const { return false; }
@@ -81,7 +81,7 @@ namespace Axon { namespace Game {
 		void autoGenerateName();
 
 	protected:
-		// implement GameNode
+		// implement GameObject
 		virtual void reload();
 		virtual void doSpawn();
 		virtual void doRemove();
@@ -93,7 +93,7 @@ namespace Axon { namespace Game {
 		void invoke_onThink();
 
 	protected:
-		EntityNum m_entityNum;
+		ActorNum m_entityNum;
 		GameWorld* m_world;			// world the entity has added to
 
 	private:
@@ -101,15 +101,15 @@ namespace Axon { namespace Game {
 	};
 
 	//--------------------------------------------------------------------------
-	// class EntityPtr
+	// class GameActorPtr
 	//--------------------------------------------------------------------------
 
 	template< class type >
-	class EntityPtr {
+	class GameActorPtr {
 	public:
-		EntityPtr();
+		GameActorPtr();
 
-		EntityPtr<type>& operator=( type *ent );
+		GameActorPtr<type>& operator=( type *ent );
 
 		// synchronize entity pointers over the network
 		int getSpawnId( void ) const { return spawnId; }
@@ -126,28 +126,28 @@ namespace Axon { namespace Game {
 	};
 
 	template< class type >
-	inline EntityPtr<type>::EntityPtr() {
+	inline GameActorPtr<type>::GameActorPtr() {
 		m_spawnId = 0;
 	}
 
 	template< class type >
-	inline EntityPtr<type> &EntityPtr<type>::operator=( type *ent ) {
+	inline GameActorPtr<type> &GameActorPtr<type>::operator=( type *ent ) {
 		if ( ent == NULL ) {
 			m_spawnId = 0;
 		} else {
-			m_spawnId = ( m_world->m_spawnIds[ent->entityNumber] << EntityNum::MAX_ENTITIES_BITS ) | ent->entityNumber;
+			m_spawnId = ( m_world->m_spawnIds[ent->entityNumber] << ActorNum::MAX_ENTITIES_BITS ) | ent->entityNumber;
 		}
 		return *this;
 	}
 
 	template< class type >
-	inline bool EntityPtr<type>::setSpawnId( int id ) {
+	inline bool GameActorPtr<type>::setSpawnId( int id ) {
 		// the reason for this first check is unclear:
 		// the function returning false may mean the spawnId is already set right, or the entity is missing
 		if ( id == m_spawnId ) {
 			return false;
 		}
-		if ( ( id >> EntityNum::MAX_ENTITIES_BITS ) == m_world->m_spawnIds[id & EntityNum::MAX_ENTITIES_MASK] ) {
+		if ( ( id >> ActorNum::MAX_ENTITIES_BITS ) == m_world->m_spawnIds[id & ActorNum::MAX_ENTITIES_MASK] ) {
 			m_spawnId = id;
 			return true;
 		}
@@ -155,39 +155,40 @@ namespace Axon { namespace Game {
 	}
 
 	template< class type >
-	inline bool EntityPtr<type>::isValid( void ) const {
-		return ( m_world->m_spawnIds[m_spawnId & EntityNum::MAX_ENTITIES_MASK] == ( m_spawnId >> EntityNum::MAX_ENTITIES_BITS ) );
+	inline bool GameActorPtr<type>::isValid( void ) const {
+		return ( m_world->m_spawnIds[m_spawnId & ActorNum::MAX_ENTITIES_MASK] == ( m_spawnId >> ActorNum::MAX_ENTITIES_BITS ) );
 	}
 
 	template< class type >
-	inline type *EntityPtr<type>::getEntity( void ) const {
-		int entityNum = m_spawnId & EntityNum::MAX_ENTITIES_MASK;
-		if ( ( m_world->m_spawnIds[entityNum] == ( m_spawnId >> EntityNum::MAX_ENTITIES_BITS ) ) ) {
+	inline type *GameActorPtr<type>::getEntity( void ) const {
+		int entityNum = m_spawnId & ActorNum::MAX_ENTITIES_MASK;
+		if ( ( m_world->m_spawnIds[entityNum] == ( m_spawnId >> ActorNum::MAX_ENTITIES_BITS ) ) ) {
 			return static_cast<type *>( m_world->m_spawnIds[ entityNum ] );
 		}
 		return NULL;
 	}
 
 	template< class type >
-	inline int EntityPtr<type>::getEntityNum( void ) const {
-		return m_spawnId & EntityNum::MAX_ENTITIES_MASK;
+	inline int GameActorPtr<type>::getEntityNum( void ) const {
+		return m_spawnId & ActorNum::MAX_ENTITIES_MASK;
 	}
 
 
 	//--------------------------------------------------------------------------
-	// class RigidBody
+	// class GameRigit
 	//--------------------------------------------------------------------------
 
-	class AX_API RigidBody : public GameEntity {
-	public:
-		AX_DECLARE_CLASS(RigidBody, GameEntity, "Game.Physics.RigidBody")
+	class AX_API GameRigit : public GameActor
+	{
+		AX_DECLARE_CLASS(GameRigit, GameActor, "Game.Physics.RigidBody")
 			AX_METHOD(loadAsset)
 		AX_END_CLASS()
 
-		RigidBody();
-		virtual ~RigidBody();
+	public:
+		GameRigit();
+		virtual ~GameRigit();
 
-		// implement GameEntity
+		// implement GameActor
 		virtual void doThink();
 
 		// properties

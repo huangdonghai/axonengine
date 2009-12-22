@@ -44,10 +44,10 @@ namespace Axon { namespace Game {
 		void drawFrame();
 		void drawScene(const RenderCamera& camera);
 
-		void addNode(GameNode* node);
-		void removeNode(GameNode* node);
+		void addNode(GameObject* node);
+		void removeNode(GameObject* node);
 
-		GameEntity* getEntity(int num) const;
+		GameActor* getEntity(int num) const;
 		Landscape* getLandscape() const;
 		RenderWorld* getRenderWorld() const;
 		PhysicsWorld* getPhysicsWorld() const;
@@ -63,11 +63,11 @@ namespace Axon { namespace Game {
 		AffineMat getLastViewMatrix() const;
 
 		// static function
-		static GameEntity* createEntity(const char* clsname);
+		static GameActor* createEntity(const char* clsname);
 
 	protected:
-		void addEntity(GameEntity* entity);
-		void removeEntity(GameEntity* entity);
+		void addEntity(GameActor* entity);
+		void removeEntity(GameActor* entity);
 
 		void addFixed(Fixed* fixed);
 		void removeFixed(Fixed* fixed);
@@ -79,8 +79,8 @@ namespace Axon { namespace Game {
 		bool m_onlyClient;
 		bool m_multiPlayer;
 
-		GameEntity* m_entities[EntityNum::MAX_ENTITIES];
-		int m_spawnIds[EntityNum::MAX_ENTITIES];// for use in EntityPtr
+		GameActor* m_entities[ActorNum::MAX_ENTITIES];
+		int m_spawnIds[ActorNum::MAX_ENTITIES];// for use in EntityPtr
 		int m_numEntities;
 		int m_firstFreeEntity;
 		int m_numClients;
@@ -97,15 +97,15 @@ namespace Axon { namespace Game {
 		RenderTarget* m_targetWindow;
 	};
 
-	inline GameEntity* GameWorld::getEntity(int num) const
+	inline GameActor* GameWorld::getEntity(int num) const
 	{
-		AX_ASSERT(num >= 0 && num < EntityNum::MAX_ENTITIES);
+		AX_ASSERT(num >= 0 && num < ActorNum::MAX_ENTITIES);
 		return m_entities[num];
 	}
 
 	inline Landscape* GameWorld::getLandscape() const
 	{
-		return static_cast<Landscape*>(m_entities[EntityNum::LANDSCAPE]);
+		return static_cast<Landscape*>(m_entities[ActorNum::LANDSCAPE]);
 	}
 
 	inline RenderWorld* GameWorld::getRenderWorld() const

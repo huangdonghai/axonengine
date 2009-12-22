@@ -18,7 +18,7 @@ namespace Axon { namespace Gfx {
 
 	class GfxObject : public Object
 	{
-		AX_DECLARE_CLASS(GfxObject, Object, "GfxObject")
+		AX_DECLARE_CLASS(GfxObject, Object)
 			AX_SIMPLEPROP(tm)
 		AX_END_CLASS()
 	public:

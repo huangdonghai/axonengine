@@ -40,8 +40,8 @@ namespace Axon {
 
 	typedef Game::GameSystem GameSystem;
 	typedef Game::GameWorld GameWorld;
-	typedef Game::GameNode GameNode;
-	typedef Game::GameEntity GameEntity;
+	typedef Game::GameObject GameObject;
+	typedef Game::GameActor GameActor;
 
 	AX_API extern GameSystem* g_gameSystem;
 

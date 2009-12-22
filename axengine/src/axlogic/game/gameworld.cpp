@@ -20,12 +20,12 @@ namespace Axon { namespace Game {
 		TypeZeroArray(m_entities);
 		TypeZeroArray(m_spawnIds);
 
-		m_numEntities = EntityNum::MAX_CLIENTS;
-		m_firstFreeEntity = EntityNum::MAX_CLIENTS;
+		m_numEntities = ActorNum::MAX_CLIENTS;
+		m_firstFreeEntity = ActorNum::MAX_CLIENTS;
 		m_numClients = 0;
 
 		Landscape* landscape = new Landscape(this);
-		m_entities[EntityNum::LANDSCAPE] = landscape;
+		m_entities[ActorNum::LANDSCAPE] = landscape;
 
 		m_renderWorld = new RenderWorld();
 		m_renderWorld->initialize(2048);
@@ -103,13 +103,13 @@ namespace Axon { namespace Game {
 		g_renderSystem->endScene();
 	}
 
-	void GameWorld::addEntity(GameEntity* entity) {
+	void GameWorld::addEntity(GameActor* entity) {
 		int start = m_firstFreeEntity;
-		int end = EntityNum::MAX_NORMAL;
+		int end = ActorNum::MAX_NORMAL;
 
 		if (entity->isPlayer()) {
 			start = m_numClients;
-			end = EntityNum::MAX_CLIENTS;
+			end = ActorNum::MAX_CLIENTS;
 		}
 
 		int i = start;
@@ -138,13 +138,13 @@ namespace Axon { namespace Game {
 		}
 	}
 
-	void GameWorld::removeEntity(GameEntity* entity) {
+	void GameWorld::removeEntity(GameActor* entity) {
 		int num = entity->m_entityNum;
 		if (num < 0) {
 			Errorf("not a valid entity number");
 			return;
 		}
-		AX_ASSERT(num >= 0 && num < EntityNum::MAX_ENTITIES);
+		AX_ASSERT(num >= 0 && num < ActorNum::MAX_ENTITIES);
 
 		entity->doRemove();
 
@@ -155,14 +155,14 @@ namespace Axon { namespace Game {
 		m_firstFreeEntity = num;
 	}
 
-	GameEntity* GameWorld::createEntity(const char* clsname) {
+	GameActor* GameWorld::createEntity(const char* clsname) {
 		Object* obj = g_scriptSystem->createObject(clsname);
 
 		if (!obj) {
 			return nullptr;
 		}
 
-		GameEntity* ent = object_cast<GameEntity*>(obj);
+		GameActor* ent = object_cast<GameActor*>(obj);
 
 		if (!ent) {
 			delete obj;
@@ -223,7 +223,7 @@ namespace Axon { namespace Game {
 
 	void GameWorld::restoreEntities()
 	{
-		for (int i = EntityNum::MAX_CLIENTS; i < m_numEntities; i++) {
+		for (int i = ActorNum::MAX_CLIENTS; i < m_numEntities; i++) {
 			if (m_entities[i]) {
 				m_entities[i]->doPropertyChanged();
 			}
@@ -236,20 +236,20 @@ namespace Axon { namespace Game {
 
 	}
 
-	void GameWorld::addNode(GameNode* node)
+	void GameWorld::addNode(GameObject* node)
 	{
 		if (node->isFixed())
 			addFixed((Fixed*)node);
 		else
-			addEntity((GameEntity*)node);
+			addEntity((GameActor*)node);
 	}
 
-	void GameWorld::removeNode(GameNode* node)
+	void GameWorld::removeNode(GameObject* node)
 	{
 		if (node->isFixed())
 			removeFixed((Fixed*)node);
 		else
-			removeEntity((GameEntity*)node);
+			removeEntity((GameActor*)node);
 	}
 
 	AffineMat GameWorld::getLastViewMatrix() const

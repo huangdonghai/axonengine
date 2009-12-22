@@ -383,23 +383,35 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axlogic\physics\package.cpp"
+				RelativePath="..\..\..\src\axlogic\physics\physics_creature.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axlogic\physics\physicscreature.cpp"
+				RelativePath="..\..\..\src\axlogic\physics\physics_creature.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axlogic\physics\physicscreature.h"
+				RelativePath="..\..\..\src\axlogic\physics\physics_package.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axlogic\physics\physicsplayer.cpp"
+				RelativePath="..\..\..\src\axlogic\physics\physics_player.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axlogic\physics\physicsplayer.h"
+				RelativePath="..\..\..\src\axlogic\physics\physics_player.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\axlogic\physics\physics_shape.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\axlogic\physics\physics_system.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\axlogic\physics\physics_world.cpp"
 				>
 			</File>
 			<File
@@ -445,38 +457,8 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axlogic\physics\shape.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\axlogic\physics\system.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\src\axlogic\physics\util.h"
 				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\axlogic\physics\world.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)\$(InputName)1.obj"
-						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)\$(InputName)1.obj"
-						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-					/>
-				</FileConfiguration>
 			</File>
 			<Filter
 				Name="include"
@@ -486,19 +468,19 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\include\axlogic\physics\package.h"
+					RelativePath="..\..\..\include\axlogic\physics\physics_package.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\include\axlogic\physics\shape.h"
+					RelativePath="..\..\..\include\axlogic\physics\physics_shape.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\include\axlogic\physics\system.h"
+					RelativePath="..\..\..\include\axlogic\physics\physics_system.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\include\axlogic\physics\world.h"
+					RelativePath="..\..\..\include\axlogic\physics\physics_world.h"
 					>
 				</File>
 			</Filter>

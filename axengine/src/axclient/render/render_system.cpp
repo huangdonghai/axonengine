@@ -223,7 +223,7 @@ AX_BEGIN_NAMESPACE
 						rect.x += 300;
 					}
 
-					RenderText* text = RenderText::createText(Primitive::OneFrame, rect, g_miniFont, msg, Rgba::White, RenderText::Left);
+					RenderText* text = RenderText::createText(Primitive::HintOneFrame, rect, g_miniFont, msg, Rgba::White, RenderText::Left);
 					addToScene(text);
 
 					rect.y += line_height;
@@ -237,40 +237,40 @@ AX_BEGIN_NAMESPACE
 				RenderText* text;
 
 				StringUtil::sprintf(msg, "%32s: %d", "Total Allocated", gMemoryInfo.totalAllocated);
-				text = RenderText::createText(Primitive::OneFrame, rect, g_miniFont, msg, Rgba::White, RenderText::Left); addToScene(text); rect.y += line_height;
+				text = RenderText::createText(Primitive::HintOneFrame, rect, g_miniFont, msg, Rgba::White, RenderText::Left); addToScene(text); rect.y += line_height;
 				StringUtil::sprintf(msg, "%32s: %d", "Small Allocated", gMemoryInfo.smallAllocated);
-				text = RenderText::createText(Primitive::OneFrame, rect, g_miniFont, msg, Rgba::White, RenderText::Left); addToScene(text); rect.y += line_height;
+				text = RenderText::createText(Primitive::HintOneFrame, rect, g_miniFont, msg, Rgba::White, RenderText::Left); addToScene(text); rect.y += line_height;
 				StringUtil::sprintf(msg, "%32s: %d", "Medium Allocated", gMemoryInfo.mediumAllocated);
-				text = RenderText::createText(Primitive::OneFrame, rect, g_miniFont, msg, Rgba::White, RenderText::Left); addToScene(text); rect.y += line_height;
+				text = RenderText::createText(Primitive::HintOneFrame, rect, g_miniFont, msg, Rgba::White, RenderText::Left); addToScene(text); rect.y += line_height;
 				StringUtil::sprintf(msg, "%32s: %d", "Large Allocated", gMemoryInfo.largeAllocated);
-				text = RenderText::createText(Primitive::OneFrame, rect, g_miniFont, msg, Rgba::White, RenderText::Left); addToScene(text); rect.y += line_height;
+				text = RenderText::createText(Primitive::HintOneFrame, rect, g_miniFont, msg, Rgba::White, RenderText::Left); addToScene(text); rect.y += line_height;
 
 				StringUtil::sprintf(msg, "%32s: %d", "Total Blocks", gMemoryInfo.totalBlocks);
-				text = RenderText::createText(Primitive::OneFrame, rect, g_miniFont, msg, Rgba::White, RenderText::Left); addToScene(text); rect.y += line_height;
+				text = RenderText::createText(Primitive::HintOneFrame, rect, g_miniFont, msg, Rgba::White, RenderText::Left); addToScene(text); rect.y += line_height;
 				StringUtil::sprintf(msg, "%32s: %d", "Small Blocks", gMemoryInfo.smallBlocks);
-				text = RenderText::createText(Primitive::OneFrame, rect, g_miniFont, msg, Rgba::White, RenderText::Left); addToScene(text); rect.y += line_height;
+				text = RenderText::createText(Primitive::HintOneFrame, rect, g_miniFont, msg, Rgba::White, RenderText::Left); addToScene(text); rect.y += line_height;
 				StringUtil::sprintf(msg, "%32s: %d", "Medium Blocks", gMemoryInfo.mediumBlocks);
-				text = RenderText::createText(Primitive::OneFrame, rect, g_miniFont, msg, Rgba::White, RenderText::Left); addToScene(text); rect.y += line_height;
+				text = RenderText::createText(Primitive::HintOneFrame, rect, g_miniFont, msg, Rgba::White, RenderText::Left); addToScene(text); rect.y += line_height;
 				StringUtil::sprintf(msg, "%32s: %d", "Large Blocks", gMemoryInfo.largeBlocks);
-				text = RenderText::createText(Primitive::OneFrame, rect, g_miniFont, msg, Rgba::White, RenderText::Left); addToScene(text); rect.y += line_height;
+				text = RenderText::createText(Primitive::HintOneFrame, rect, g_miniFont, msg, Rgba::White, RenderText::Left); addToScene(text); rect.y += line_height;
 
 				StringUtil::sprintf(msg, "%32s: %d", "Frame Total Allocated", gMemoryInfo.frameTotalAllocated); gMemoryInfo.frameTotalAllocated = 0;
-				text = RenderText::createText(Primitive::OneFrame, rect, g_miniFont, msg, Rgba::White, RenderText::Left); addToScene(text); rect.y += line_height;
+				text = RenderText::createText(Primitive::HintOneFrame, rect, g_miniFont, msg, Rgba::White, RenderText::Left); addToScene(text); rect.y += line_height;
 				StringUtil::sprintf(msg, "%32s: %d", "Frame Small Allocated", gMemoryInfo.frameSmallAllocated); gMemoryInfo.frameSmallAllocated = 0;
-				text = RenderText::createText(Primitive::OneFrame, rect, g_miniFont, msg, Rgba::White, RenderText::Left); addToScene(text); rect.y += line_height;
+				text = RenderText::createText(Primitive::HintOneFrame, rect, g_miniFont, msg, Rgba::White, RenderText::Left); addToScene(text); rect.y += line_height;
 				StringUtil::sprintf(msg, "%32s: %d", "Frame Medium Allocated", gMemoryInfo.frameMediumAllocated); gMemoryInfo.frameMediumAllocated = 0;
-				text = RenderText::createText(Primitive::OneFrame, rect, g_miniFont, msg, Rgba::White, RenderText::Left); addToScene(text); rect.y += line_height;
+				text = RenderText::createText(Primitive::HintOneFrame, rect, g_miniFont, msg, Rgba::White, RenderText::Left); addToScene(text); rect.y += line_height;
 				StringUtil::sprintf(msg, "%32s: %d", "Frame Large Allocated", gMemoryInfo.frameLargeAllocated); gMemoryInfo.frameLargeAllocated = 0;
-				text = RenderText::createText(Primitive::OneFrame, rect, g_miniFont, msg, Rgba::White, RenderText::Left); addToScene(text); rect.y += line_height;
+				text = RenderText::createText(Primitive::HintOneFrame, rect, g_miniFont, msg, Rgba::White, RenderText::Left); addToScene(text); rect.y += line_height;
 
 				StringUtil::sprintf(msg, "%32s: %d", "Frame Total Blocks", gMemoryInfo.frameTotalBlocks); gMemoryInfo.frameTotalBlocks = 0;
-				text = RenderText::createText(Primitive::OneFrame, rect, g_miniFont, msg, Rgba::White, RenderText::Left); addToScene(text); rect.y += line_height;
+				text = RenderText::createText(Primitive::HintOneFrame, rect, g_miniFont, msg, Rgba::White, RenderText::Left); addToScene(text); rect.y += line_height;
 				StringUtil::sprintf(msg, "%32s: %d", "Frame Small Blocks", gMemoryInfo.frameSmallBlocks); gMemoryInfo.frameSmallBlocks = 0;
-				text = RenderText::createText(Primitive::OneFrame, rect, g_miniFont, msg, Rgba::White, RenderText::Left); addToScene(text); rect.y += line_height;
+				text = RenderText::createText(Primitive::HintOneFrame, rect, g_miniFont, msg, Rgba::White, RenderText::Left); addToScene(text); rect.y += line_height;
 				StringUtil::sprintf(msg, "%32s: %d", "Frame Medium Blocks", gMemoryInfo.frameMediumBlocks); gMemoryInfo.frameMediumBlocks = 0;
-				text = RenderText::createText(Primitive::OneFrame, rect, g_miniFont, msg, Rgba::White, RenderText::Left); addToScene(text); rect.y += line_height;
+				text = RenderText::createText(Primitive::HintOneFrame, rect, g_miniFont, msg, Rgba::White, RenderText::Left); addToScene(text); rect.y += line_height;
 				StringUtil::sprintf(msg, "%32s: %d", "Frame Large Blocks", gMemoryInfo.frameLargeBlocks); gMemoryInfo.frameLargeBlocks = 0;
-				text = RenderText::createText(Primitive::OneFrame, rect, g_miniFont, msg, Rgba::White, RenderText::Left); addToScene(text); rect.y += line_height;
+				text = RenderText::createText(Primitive::HintOneFrame, rect, g_miniFont, msg, Rgba::White, RenderText::Left); addToScene(text); rect.y += line_height;
 			}
 
 			this->endScene();
