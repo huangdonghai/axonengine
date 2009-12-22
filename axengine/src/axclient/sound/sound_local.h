@@ -11,7 +11,7 @@ read the license and understand and accept it fully.
 #include <fmod.hpp>
 #include <fmod_errors.h>
 
-namespace Axon { namespace Sound {
+namespace Axon {
 
 	inline void ERRCHECK(FMOD_RESULT result)
 	{
@@ -40,4 +40,4 @@ namespace Axon { namespace Sound {
 		FMOD::Channel* m_fmodChannel;
 	};
 
-}}
+}

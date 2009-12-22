@@ -31,7 +31,7 @@ namespace Axon {
 #include "target.h"
 #include "interaction.h"
 #include "primitive.h"
-#include "entity.h"
+#include "renderentity.h"
 #include "light.h"
 #include "fog.h"
 #include "terrain.h"
@@ -40,9 +40,9 @@ namespace Axon {
 #include "wind.h"
 #include "timeofday.h"
 #include "outdoorenv.h"
-#include "world.h"
+#include "renderworld.h"
 #include "queue.h"
-#include "system.h"
+#include "rendersystem.h"
 
 #endif // end guardian
 

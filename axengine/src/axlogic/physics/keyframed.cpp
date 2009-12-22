@@ -9,7 +9,7 @@ read the license and understand and accept it fully.
 
 #include "../private.h"
 
-namespace Axon { namespace Physics {
+AX_BEGIN_NAMESPACE
 
-}} // namespace Axon::Physics
+AX_END_NAMESPACE
 

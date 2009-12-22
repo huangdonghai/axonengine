@@ -10,7 +10,7 @@ read the license and understand and accept it fully.
 
 #include "../private.h"
 
-namespace Axon { namespace Physics {
+AX_BEGIN_NAMESPACE
 
 	static const float WALK_SPEED = 1.42f;
 	static const float RUN_SPEED = 6.0f;
@@ -37,7 +37,7 @@ namespace Axon { namespace Physics {
 			characterShape = new hkpCapsuleShape(vertexA, vertexB, radius);
 
 			// Construct a Shape Phantom
-			hkpSimpleShapePhantom* phantom = new hkpSimpleShapePhantom(characterShape, hkTransform::getIdentity(), hkpGroupFilter::calcFilterInfo(World::LAYER_PROXY,0));
+			hkpSimpleShapePhantom* phantom = new hkpSimpleShapePhantom(characterShape, hkTransform::getIdentity(), hkpGroupFilter::calcFilterInfo(PhysicsWorld::LAYER_PROXY,0));
 			characterShape->removeReference();
 
 			// Add the phantom to the world
@@ -88,11 +88,11 @@ namespace Axon { namespace Physics {
 		return AffineMat(objangle, h2x(m_characterProxy->getPosition()));
 	}
 
-	void PhysicsPlayer::bind(World* world) {
+	void PhysicsPlayer::bind(PhysicsWorld* world) {
 		world->m_havokWorld->addPhantom(m_characterProxy->getShapePhantom());
 	}
 
-	void PhysicsPlayer::unbind(World* world) {
+	void PhysicsPlayer::unbind(PhysicsWorld* world) {
 		world->m_havokWorld->removePhantom(m_characterProxy->getShapePhantom());
 	}
 
@@ -308,4 +308,4 @@ namespace Axon { namespace Physics {
 		setRuntime("IN_RUSH", inputstates.isSet(PhysicsPlayer::IN_RUSH));
 	}
 
-}} // namespace Axon::Physics
+AX_END_NAMESPACE

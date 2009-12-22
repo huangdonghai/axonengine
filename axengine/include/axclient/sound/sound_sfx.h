@@ -11,9 +11,9 @@ read the license and understand and accept it fully.
 #ifndef AX_SOUND_SFX_H
 #define AX_SOUND_SFX_H
 
-namespace Axon { namespace Sound {
+AX_BEGIN_NAMESPACE
 
-	class AX_API Sfx : public RefObject {
+	class AX_API SoundFx : public RefObject {
 	public:
 		friend class SoundSystem;
 
@@ -23,15 +23,15 @@ namespace Axon { namespace Sound {
 		bool isValid() const { return m_fmodSound != 0; }
 
 	private:
-		Sfx();
-		virtual ~Sfx();
+		SoundFx();
+		virtual ~SoundFx();
 
 		String m_name;
 		FMOD::Sound* m_fmodSound;
 	};
 
-	typedef RefPtr<Sfx> SfxPtr;
+	typedef RefPtr<SoundFx> SfxPtr;
 
-}} // namespace Axon::Sound
+AX_END_NAMESPACE
 
 #endif

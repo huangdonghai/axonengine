@@ -94,7 +94,7 @@ read the license and understand and accept it fully.
 #include <Common/SceneData/Scene/hkxScene.h>
 #include <Common/SceneData/Graph/hkxNode.h>
 
-// Skeletal Animation
+// Skeletal HavokAnimation
 #include <Animation/Animation/hkaAnimationContainer.h>
 #include <Animation/Animation/Animation/hkaAnimationBinding.h>
 #include <Animation/Animation/Animation/hkaAnnotationTrack.h>
@@ -118,7 +118,7 @@ read the license and understand and accept it fully.
 #include <Common/Visualize/hkVisualDebugger.h>
 #include <Physics/Utilities/VisualDebugger/hkpPhysicsContext.h>
 
-// Ragdoll
+// PhysicsRagdoll
 #include <Animation/Ragdoll/Instance/hkaRagdollInstance.h>
 #include <Animation/Ragdoll/Penetration/hkaDetectRagdollPenetration.h>
 

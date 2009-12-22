@@ -14,18 +14,18 @@ read the license and understand and accept it fully.
 namespace Axon {
 
 	PhysicsSystem* g_physicsSystem;
-	PhysicsPackageManager* g_physicsPackageManager;
+	HavokPackageManager* g_havokPackageManager;
 
 
 	void axPhysInit() {
 		g_physicsSystem = new PhysicsSystem;
 		g_physicsSystem->initialize();
 
-		g_physicsPackageManager = new PhysicsPackageManager;
+		g_havokPackageManager = new HavokPackageManager;
 	}
 
 	void axPhysQuit() {
-		SafeDelete(g_physicsPackageManager);
+		SafeDelete(g_havokPackageManager);
 
 		g_physicsSystem->finalize();
 		SafeDelete(g_physicsSystem);

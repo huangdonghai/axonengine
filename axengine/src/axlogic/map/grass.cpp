@@ -760,7 +760,7 @@ namespace Axon { namespace Map {
 		m_modelVertexes.clear();
 		m_modelIndexes.clear();
 
-		m_model = new PhysicsModel(name);
+		m_model = new HavokModel(name);
 
 		Primitives primitiveSeq =  m_model->getAllPrimitives();
 

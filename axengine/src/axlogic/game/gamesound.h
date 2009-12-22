@@ -37,7 +37,7 @@ namespace Axon { namespace Game {
 		void activeSound(bool isActive);
 
 	private:
-		SoundSfxPtr m_sfx;
+		SfxPtr m_sfx;
 		float m_minDist, m_maxDist;
 		bool m_looping;
 		float m_interval;

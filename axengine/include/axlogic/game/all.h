@@ -23,8 +23,6 @@ read the license and understand and accept it fully.
 #endif
 
 namespace Axon { namespace Game {
-	using namespace Axon::Logic;
-	
 }} // namespace Axon::Game
 
 #include "gamenode.h"

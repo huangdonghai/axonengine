@@ -345,10 +345,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\include\axclient\render\entity.h"
-					>
-				</File>
-				<File
 					RelativePath="..\..\..\include\axclient\render\fog.h"
 					>
 				</File>
@@ -393,11 +389,19 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\include\axclient\render\shader.h"
+					RelativePath="..\..\..\include\axclient\render\renderentity.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\include\axclient\render\system.h"
+					RelativePath="..\..\..\include\axclient\render\rendersystem.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\include\axclient\render\renderworld.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\include\axclient\render\shader.h"
 					>
 				</File>
 				<File
@@ -428,20 +432,12 @@
 					RelativePath="..\..\..\include\axclient\render\wind.h"
 					>
 				</File>
-				<File
-					RelativePath="..\..\..\include\axclient\render\world.h"
-					>
-				</File>
 			</Filter>
 			<Filter
 				Name="src"
 				>
 				<File
 					RelativePath="..\..\..\src\axclient\render\camera.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\src\axclient\render\entity.cpp"
 					>
 				</File>
 				<File
@@ -481,6 +477,18 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\src\axclient\render\renderentity.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\axclient\render\rendersystem.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\axclient\render\renderworld.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\src\axclient\render\selection.cpp"
 					>
 				</File>
@@ -490,10 +498,6 @@
 				</File>
 				<File
 					RelativePath="..\..\..\src\axclient\render\shader.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\src\axclient\render\system.cpp"
 					>
 				</File>
 				<File
@@ -514,10 +518,6 @@
 				</File>
 				<File
 					RelativePath="..\..\..\src\axclient\render\wind.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\src\axclient\render\world.cpp"
 					>
 				</File>
 			</Filter>

@@ -12,13 +12,13 @@ read the license and understand and accept it fully.
 #ifndef AX_PHYSICS_KEYFRAMED_H
 #define AX_PHYSICS_KEYFRAMED_H
 
-namespace Axon { namespace Physics {
+AX_BEGIN_NAMESPACE
 
-	class KeyFramed : public RigidBody {
+	class KeyFramed : public PhysicsRigid {
 	public:
 	private:
 	};
 
-}} // namespace Axon::Physics
+AX_END_NAMESPACE
 
 #endif

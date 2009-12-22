@@ -11,11 +11,15 @@ read the license and understand and accept it fully.
 #ifndef AX_SOUND_CHANNEL_H
 #define AX_SOUND_CHANNEL_H
 
-namespace Axon { namespace Sound {
+AX_BEGIN_NAMESPACE
 
-	struct Key {
-		Key() : world(0), entity(0), channelId(ChannelId_Any) {}
-		Key(SoundWorld* _world, SoundEntity* _entity, int _channelId) : world(_world), entity(_entity), channelId(_channelId) {}
+class SoundWorld;
+class SoundEntity;
+
+	struct SoundKey
+	{
+		SoundKey() : world(0), entity(0), channelId(ChannelId_Any) {}
+		SoundKey(SoundWorld* _world, SoundEntity* _entity, int _channelId) : world(_world), entity(_entity), channelId(_channelId) {}
 		size_t hash() const {
 			size_t h = 0;
 			hash_combine(h, size_t(world));
@@ -24,7 +28,7 @@ namespace Axon { namespace Sound {
 			return h;
 		}
 
-		bool operator==(const Key& rhs) const {
+		bool operator==(const SoundKey& rhs) const {
 			return world == rhs.world && entity == rhs.entity && channelId == rhs.channelId;
 		}
 
@@ -37,15 +41,15 @@ namespace Axon { namespace Sound {
 		int channelId;
 	};
 
-	class Channel {
+	class SoundChannel {
 	public:
-		Key m_key;
+		SoundKey m_key;
 		int m_startTime;
 		int m_finishTime;
 		FMOD::Channel* m_fmodChannel;
 	};
 
-}} // namespace Axon::Sound
+AX_END_NAMESPACE
 
 #endif
 

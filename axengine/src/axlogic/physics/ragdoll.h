@@ -13,14 +13,14 @@ read the license and understand and accept it fully.
 #define AX_PHYSICS_RAGDOLL_H
 
 
-namespace Axon { namespace Physics {
+AX_BEGIN_NAMESPACE
 
 	class SkeletonMapper {};
 
-	class Ragdoll : public Packable, public Entity {
+	class PhysicsRagdoll : public HavokPackable, public PhysicsEntity {
 	public:
-		Ragdoll(const String& name);
-		virtual ~Ragdoll();
+		PhysicsRagdoll(const String& name);
+		virtual ~PhysicsRagdoll();
 
 		virtual void setAutoDeactive(bool val);
 		virtual void setActive(bool activate);
@@ -30,11 +30,11 @@ namespace Axon { namespace Physics {
 		void setMotionType(MotionType motion);
 		MotionType getMotionType() const;
 		virtual Type getType() const { return kRagdoll; }
-		virtual void bind(World* world);
-		virtual void unbind(World* world);
+		virtual void bind(PhysicsWorld* world);
+		virtual void unbind(PhysicsWorld* world);
 
-		void mapOutSkeletalPose(Pose* pose);
-		void mapInSkeletalPose(Pose* pose);
+		void mapOutSkeletalPose(HavokPose* pose);
+		void mapInSkeletalPose(HavokPose* pose);
 
 	protected:
 		void setKeyframed();
@@ -52,7 +52,7 @@ namespace Axon { namespace Physics {
 		AffineMat m_matrix;
 	};
 
-}} // namespace Axon::Physics
+AX_END_NAMESPACE
 
 #endif // end guardian
 

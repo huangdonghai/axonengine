@@ -12,60 +12,61 @@ read the license and understand and accept it fully.
 #ifndef AX_PHYSICS_FILE_H
 #define AX_PHYSICS_FILE_H
 
-namespace Axon { namespace Physics {
+AX_BEGIN_NAMESPACE
 
-	class Rig;
-	class Pose;
-	class Animation;
-	class Animator;
-	class Ragdoll;
-	class Package;
+	class HavokRig;
+	class HavokPose;
+	class HavokAnimation;
+	class HavokAnimator;
+	class HavokPackage;
+
+	class PhysicsRagdoll;
 
 	//--------------------------------------------------------------------------
-	// class Packable
+	// class HavokPackable
 	//--------------------------------------------------------------------------
 
-	class Packable {
+	class HavokPackable {
 	public:
-		Packable() { m_package = nullptr; }
-		Packable(Package* package) : m_package(package) {}
-		virtual ~Packable() { SafeRelease(m_package); }
+		HavokPackable() { m_package = nullptr; }
+		HavokPackable(HavokPackage* package) : m_package(package) {}
+		virtual ~HavokPackable() { SafeRelease(m_package); }
 
 	protected:
-		Package* m_package;
+		HavokPackage* m_package;
 	};
 
 	//--------------------------------------------------------------------------
-	// class Animator
+	// class HavokAnimator
 	//--------------------------------------------------------------------------
 
-	class Animator {
+	class HavokAnimator {
 	public:
-		Animator(Rig* rig);
-		~Animator();
+		HavokAnimator(HavokRig* rig);
+		~HavokAnimator();
 
-		void addAnimation(Animation* anim);
-		void removeAnimation(Animation* anim);
+		void addAnimation(HavokAnimation* anim);
+		void removeAnimation(HavokAnimation* anim);
 		void removeAllAnimation();
-		void renderToPose(Pose* pose);
+		void renderToPose(HavokPose* pose);
 		void step(int frametime);
 
-		inline Rig* getRig() { return m_rig; }
+		inline HavokRig* getRig() { return m_rig; }
 
 	public:
-		Rig* m_rig;
+		HavokRig* m_rig;
 		hkaAnimatedSkeleton* m_animator;
-		List<Animation*>		m_animations;
+		List<HavokAnimation*>		m_animations;
 	};
 
 	//--------------------------------------------------------------------------
-	// class Animation
+	// class HavokAnimation
 	//--------------------------------------------------------------------------
 
-	class Animation : Packable {
+	class HavokAnimation : HavokPackable {
 	public:
-		Animation(const String& name);
-		virtual ~Animation();
+		HavokAnimation(const String& name);
+		virtual ~HavokAnimation();
 
 		bool isValid() const;
 
@@ -82,21 +83,21 @@ namespace Axon { namespace Physics {
 	};
 
 	//--------------------------------------------------------------------------
-	// class Rig
+	// class HavokRig
 	//--------------------------------------------------------------------------
 
-	class Rig : public Packable {
+	class HavokRig : public HavokPackable {
 	public:
-		Rig(const String& name);
-		Rig(Package* package);
-		virtual ~Rig() {}
+		HavokRig(const String& name);
+		HavokRig(HavokPackage* package);
+		virtual ~HavokRig() {}
 
 		int findBoneIndexByName(const char* BoneName);
 		const char* findBoneNameByIndex(int BoneIndex);
 		int getBoneCount();
 
 		// implement renderRig
-		Pose* createPose();
+		HavokPose* createPose();
 
 		bool isValid() const;
 
@@ -105,13 +106,13 @@ namespace Axon { namespace Physics {
 	};
 
 	//--------------------------------------------------------------------------
-	// class Pose
+	// class HavokPose
 	//--------------------------------------------------------------------------
 
-	class Pose {
+	class HavokPose {
 	public:
-		Pose(Rig* rig);
-		~Pose();
+		HavokPose(HavokRig* rig);
+		~HavokPose();
 
 		bool isValid() const;
 
@@ -120,10 +121,10 @@ namespace Axon { namespace Physics {
 	};
 
 	//--------------------------------------------------------------------------
-	// class Package
+	// class HavokPackage
 	//--------------------------------------------------------------------------
 
-	class Package : public RefObject {
+	class HavokPackage : public RefObject {
 	public:
 		class MeshData;
 		typedef List<MeshData*>	MeshDataList;
@@ -135,8 +136,8 @@ namespace Axon { namespace Physics {
 		};
 		typedef Sequence<MaterialMap*>	MaterialMaps;
 
-		Package(const String& filename);
-		~Package();
+		HavokPackage(const String& filename);
+		~HavokPackage();
 
 		// implement RefObject
 
@@ -148,7 +149,7 @@ namespace Axon { namespace Physics {
 
 		void initDynamicMeshes(MeshDataList& result);
 		void clearDynamicMeshes(MeshDataList& result);
-		void applyPose(Pose* pose, Primitives& prims);
+		void applyPose(HavokPose* pose, Primitives& prims);
 
 		// animation
 		hkaSkeleton* getSkeleton();
@@ -157,7 +158,7 @@ namespace Axon { namespace Physics {
 		hkaAnimationBinding* getAnimation(int Index);
 
 		// physics
-		RigidBody* getRigidBody();
+		PhysicsRigid* getRigidBody();
 		hkpRigidBody* getRigidBodyHk() const;
 		hkaRagdollInstance* getRagdoll() const;
 		hkaSkeletonMapper* getMapper(hkaSkeletonMapper* current) const;
@@ -200,14 +201,14 @@ namespace Axon { namespace Physics {
 	};
 
 	//--------------------------------------------------------------------------
-	// class SkeletalModel
+	// class HavokModel
 	//--------------------------------------------------------------------------
 
-	class AX_API SkeletalModel : public RenderEntity {
+	class AX_API HavokModel : public RenderEntity {
 	public:
-		SkeletalModel(const String& name);
-		SkeletalModel(Package* package);
-		virtual ~SkeletalModel();
+		HavokModel(const String& name);
+		HavokModel(HavokPackage* package);
+		virtual ~HavokModel();
 
 		// implement Render::Actor
 		virtual BoundingBox getLocalBoundingBox();
@@ -218,44 +219,44 @@ namespace Axon { namespace Physics {
 		virtual void issueToQueue(QueuedScene* qscene);
 
 		// SkeletalMesh
-		virtual Rig* findRig() const;
-		virtual void setPose(const Pose* pose, int linkBoneIndex = -1);
+		virtual HavokRig* findRig() const;
+		virtual void setPose(const HavokPose* pose, int linkBoneIndex = -1);
 
 	protected:
 		void applyPose();
 
 	private:
-		Package* m_package;
-		Pose* m_pose;
+		HavokPackage* m_package;
+		HavokPose* m_pose;
 		bool m_poseDirty;
 		mutable BoundingBox m_poseBbox;
 		bool m_isMeshDataInited;
-		Package::MeshDataList m_mestDataList;
+		HavokPackage::MeshDataList m_mestDataList;
 	};
 
 
 	//--------------------------------------------------------------------------
-	// class PackageManager
+	// class HavokPackageManager
 	//--------------------------------------------------------------------------
 
-	class PackageManager {
+	class HavokPackageManager {
 	public:
-		PackageManager();
-		~PackageManager();
+		HavokPackageManager();
+		~HavokPackageManager();
 
-		Package* findPackage(const String& name);
+		HavokPackage* findPackage(const String& name);
 
 	private:
-		friend class Package;
+		friend class HavokPackage;
 		void removePackage(const String& name);
 
 	private:
-		typedef Dict<String,Package*,hash_pathname,equal_pathname> PackageDict;
+		typedef Dict<String,HavokPackage*,hash_pathname,equal_pathname> PackageDict;
 		PackageDict m_packageDict;
 	};
 
 
-}} // namespace Axon::Physics
+AX_END_NAMESPACE
 
 
 #endif // end guardian

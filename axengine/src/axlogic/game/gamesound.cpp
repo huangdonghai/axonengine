@@ -66,9 +66,9 @@ namespace Axon { namespace Game {
 	void GameSound::activeSound( bool isActive )
 	{
 		if (isActive && m_sfx) {
-			Sound::LoopingMode looping = Sound::Looping_None;
+			LoopingMode looping = Looping_None;
 			if (m_looping) {
-				looping = Sound::Looping_Forever;
+				looping = Looping_Forever;
 			}
 			getSoundEntity()->playSound(SndChannelId_Ambient, m_sfx, looping, m_minDist, m_maxDist);
 		}

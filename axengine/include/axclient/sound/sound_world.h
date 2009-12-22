@@ -11,7 +11,7 @@ read the license and understand and accept it fully.
 #ifndef AX_SOUND_WORLD_H
 #define AX_SOUND_WORLD_H
 
-namespace Axon { namespace Sound {
+AX_BEGIN_NAMESPACE
 
 	class AX_API SoundWorld {
 	public:
@@ -23,7 +23,7 @@ namespace Axon { namespace Sound {
 
 		SoundEntity* getEntity(int id) const;
 
-		void playSound(int channelId, Sfx* sfx, LoopingMode = Looping_None);
+		void playSound(int channelId, SoundFx* sfx, LoopingMode = Looping_None);
 		void stopSound(int channelId);
 
 		void setListener(const AffineMat& matrix, const Vector3& velocity);
@@ -38,6 +38,6 @@ namespace Axon { namespace Sound {
 		Vector3 m_listenerVelocity;
 	};
 
-}} // namespace Axon::Sound
+AX_END_NAMESPACE
 
 #endif

@@ -30,7 +30,7 @@ namespace Axon { namespace Game {
 		m_physicsPlayer->runFrame(*userinput, m_world->getFrameTime());
 
 		m_body->setMatrix(m_physicsPlayer->getMatrix());
-		PhysicsPose* pose = m_physicsPlayer->getPose();
+		HavokPose* pose = m_physicsPlayer->getPose();
 		m_body->setPose(pose);
 		m_body->updateToWorld();
 	}
@@ -52,7 +52,7 @@ namespace Axon { namespace Game {
 		m_physicsPlayer = new PhysicsPlayer();
 		setPhysicsEntity(m_physicsPlayer);
 
-		m_body = new PhysicsModel("models/characters/_male/fullmale.mesh");
+		m_body = new HavokModel("models/characters/_male/fullmale.mesh");
 
 		m_world->getPhysicsWorld()->addEntity(m_physicsPlayer);
 		m_world->getRenderWorld()->addActor(m_body);

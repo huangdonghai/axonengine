@@ -11,12 +11,12 @@ read the license and understand and accept it fully.
 
 #include "../private.h"
 
-namespace Axon { namespace Physics {
+AX_BEGIN_NAMESPACE
 
-	Shape::Shape() {
+	PhysicsShape::PhysicsShape() {
 	}
 
-	Shape::~Shape() {
+	PhysicsShape::~PhysicsShape() {
 	}
 
 	class MyHeightFieldShape : public hkpSampledHeightFieldShape {
@@ -64,5 +64,5 @@ namespace Axon { namespace Physics {
 		m_rep->removeReference();
 	}
 
-}} // namespace Axon::Physics
+AX_END_NAMESPACE
 

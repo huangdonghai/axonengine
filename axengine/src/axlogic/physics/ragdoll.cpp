@@ -11,19 +11,19 @@ read the license and understand and accept it fully.
 
 #include "../private.h"
 
-namespace Axon { namespace Physics {
+AX_BEGIN_NAMESPACE
 
 	enum { LAYER_TEST = 1 };
 
-	Ragdoll::Ragdoll(const String& name) {
+	PhysicsRagdoll::PhysicsRagdoll(const String& name) {
 		m_instance = nullptr;
 		m_ragdollToSkeletal = nullptr;
 		m_skeletalToRagdoll = nullptr;
 		m_pose = nullptr;
 
-		MotionType m_motionType = Entity::Motion_Invalid;
+		MotionType m_motionType = PhysicsEntity::Motion_Invalid;
 
-		m_package = g_physicsPackageManager->findPackage(name);
+		m_package = g_havokPackageManager->findPackage(name);
 
 		if (!m_package) {
 			return;
@@ -59,13 +59,13 @@ namespace Axon { namespace Physics {
 //		hkpInertiaTensorComputer::optimizeInertiasOfConstraintTree(constraints.begin(), constraints.getSize(), m_instance->getRigidBodyOfBone(0));
 	}
 
-	Ragdoll::~Ragdoll() {
+	PhysicsRagdoll::~PhysicsRagdoll() {
 		if (m_instance) m_instance->removeReference();
 		if (m_ragdollToSkeletal) m_ragdollToSkeletal->removeReference();
 		if (m_skeletalToRagdoll) m_skeletalToRagdoll->removeReference();
 	}
 
-	void Ragdoll::setMotionType(MotionType motion) {
+	void PhysicsRagdoll::setMotionType(MotionType motion) {
 		if (m_motionType == motion) {
 			return;
 		}
@@ -84,12 +84,12 @@ namespace Axon { namespace Physics {
 		}
 	}
 
-	Entity::MotionType Ragdoll::getMotionType() const {
+	PhysicsEntity::MotionType PhysicsRagdoll::getMotionType() const {
 		return m_motionType;
 	}
 
-	void Ragdoll::mapOutSkeletalPose(Pose* pose) {
-		PhysicsPose* physicspose = (PhysicsPose*)pose;
+	void PhysicsRagdoll::mapOutSkeletalPose(HavokPose* pose) {
+		HavokPose* physicspose = (HavokPose*)pose;
 
 		if (!physicspose || !physicspose->m_havokPose) {
 			return;
@@ -110,12 +110,12 @@ namespace Axon { namespace Physics {
 		m_ragdollToSkeletal->mapPose(m_pose->getSyncedPoseModelSpace().begin(), poseHighRes->getSkeleton()->m_referencePose, poseHighRes->accessUnsyncedPoseModelSpace().begin(), hkaSkeletonMapper::CURRENT_POSE);
 	}
 
-	void Ragdoll::mapInSkeletalPose(Pose* pose) {
+	void PhysicsRagdoll::mapInSkeletalPose(HavokPose* pose) {
 		if (!m_pose) {
 			return;
 		}
 
-		PhysicsPose* physicspose = (PhysicsPose*)pose;
+		HavokPose* physicspose = (HavokPose*)pose;
 
 		hkArray<hkQsTransform> ragdollArrayModelSpace(m_instance->getNumBones());
 
@@ -132,7 +132,7 @@ namespace Axon { namespace Physics {
 		m_instance->setPoseModelSpace(m_pose->getSyncedPoseModelSpace().begin(), qst);
 	}
 
-	void Ragdoll::setAutoDeactive(bool val) {
+	void PhysicsRagdoll::setAutoDeactive(bool val) {
 		// set all bodies to keyframed motion
 		for (int i = 0; i < m_instance->getNumBones(); i++) {
 			hkpRigidBody* rb = m_instance->getRigidBodyOfBone(i);
@@ -148,34 +148,34 @@ namespace Axon { namespace Physics {
 		}
 	}
 
-	void Ragdoll::setActive(bool activate)
+	void PhysicsRagdoll::setActive(bool activate)
 	{
 
 	}
 
-	bool Ragdoll::isActive() const
+	bool PhysicsRagdoll::isActive() const
 	{
 		return true;
 	}
 
 
-	void Ragdoll::setMatrix(const AffineMat& matrix) {
+	void PhysicsRagdoll::setMatrix(const AffineMat& matrix) {
 		m_matrix = matrix;
 	}
 
-	Axon::AffineMat Ragdoll::getMatrix() const {
+	Axon::AffineMat PhysicsRagdoll::getMatrix() const {
 		return m_matrix;
 	}
 
-	void Ragdoll::bind(World* world) {
+	void PhysicsRagdoll::bind(PhysicsWorld* world) {
 		m_instance->addToWorld(world->m_havokWorld, true);
 	}
 
-	void Ragdoll::unbind(World* world) {
+	void PhysicsRagdoll::unbind(PhysicsWorld* world) {
 		m_instance->removeFromWorld();
 	}
 
-	void Ragdoll::setKeyframed() {
+	void PhysicsRagdoll::setKeyframed() {
 		// set all bodies to keyframed motion
 		for (int i = 0; i < m_instance->getNumBones(); i++) {
 			hkpRigidBody* rb = m_instance->getRigidBodyOfBone(i);
@@ -186,7 +186,7 @@ namespace Axon { namespace Physics {
 		}
 	}
 
-	void Ragdoll::setDynamic() {
+	void PhysicsRagdoll::setDynamic() {
 		for (int b = 0; b < m_instance->getNumBones(); b++) {
 			hkpRigidBody* rb = m_instance->getRigidBodyOfBone(b);
 
@@ -200,9 +200,9 @@ namespace Axon { namespace Physics {
 		setAutoDeactive(true);
 	}
 
-	void Ragdoll::setBodyKeyframed(hkpRigidBody* rb)
+	void PhysicsRagdoll::setBodyKeyframed(hkpRigidBody* rb)
 	{
-		const hkUint32 fi = hkpGroupFilter::calcFilterInfo(World::LAYER_RAGDOLL_KEYFRAMED, 1, 0, 0);
+		const hkUint32 fi = hkpGroupFilter::calcFilterInfo(PhysicsWorld::LAYER_RAGDOLL_KEYFRAMED, 1, 0, 0);
 
 		if ((rb->getMotionType() != hkpMotion::MOTION_KEYFRAMED) ||
 			(rb->getQualityType() != HK_COLLIDABLE_QUALITY_KEYFRAMED) ||
@@ -219,10 +219,10 @@ namespace Axon { namespace Physics {
 		}
 	}
 
-	void Ragdoll::setBodyDynamic(hkpRigidBody* rb, int boneId, int parentId)
+	void PhysicsRagdoll::setBodyDynamic(hkpRigidBody* rb, int boneId, int parentId)
 	{
-		const hkUint32 newFi = hkpGroupFilter::calcFilterInfo(World::LAYER_RAGDOLL_DYNAMIC, 1, boneId+1, parentId+1);
-//		const hkUint32 newFi = hkpGroupFilter::calcFilterInfo(World::LAYER_RAGDOLL_DYNAMIC, 1, 0, 0);
+		const hkUint32 newFi = hkpGroupFilter::calcFilterInfo(PhysicsWorld::LAYER_RAGDOLL_DYNAMIC, 1, boneId+1, parentId+1);
+//		const hkUint32 newFi = hkpGroupFilter::calcFilterInfo(PhysicsWorld::LAYER_RAGDOLL_DYNAMIC, 1, 0, 0);
 
 		if ((rb->getMotionType() == hkpMotion::MOTION_KEYFRAMED) ||
 			(rb->getQualityType() != HK_COLLIDABLE_QUALITY_MOVING) ||
@@ -244,4 +244,4 @@ namespace Axon { namespace Physics {
 		}
 	}
 
-}} // namespace Axon::Physics
+AX_END_NAMESPACE

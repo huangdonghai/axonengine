@@ -66,8 +66,8 @@ namespace Axon { namespace Game {
 
 	protected:
 		String m_modelName;
-		PhysicsModel* m_model;
-		physicsRigid* m_rigid;
+		HavokModel* m_model;
+		PhysicsRigid* m_rigid;
 	};
 
 	//--------------------------------------------------------------------------
@@ -93,7 +93,7 @@ namespace Axon { namespace Game {
 
 	private:
 		RenderTerrain* m_renderTerrain;
-		Physics::Terrain* m_physicsTerrain;
+		PhysicsTerrain* m_physicsTerrain;
 	};
 
 	//--------------------------------------------------------------------------

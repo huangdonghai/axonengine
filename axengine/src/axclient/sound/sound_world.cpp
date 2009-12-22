@@ -9,7 +9,7 @@ read the license and understand and accept it fully.
 
 #include "sound_local.h"
 
-namespace Axon { namespace Sound {
+AX_BEGIN_NAMESPACE
 
 	SoundWorld::SoundWorld()
 	{
@@ -55,7 +55,7 @@ namespace Axon { namespace Sound {
 		entity->m_entityId = ENTITYID_NULL;
 	}
 
-	void SoundWorld::playSound( int channelId, Sfx* sfx, LoopingMode looping/*= Looping_None*/ )
+	void SoundWorld::playSound( int channelId, SoundFx* sfx, LoopingMode looping/*= Looping_None*/ )
 	{
 		g_soundSystem->_playSound(this, 0, channelId, sfx, looping);
 	}
@@ -76,5 +76,5 @@ namespace Axon { namespace Sound {
 		return m_entities[id];
 	}
 
-}} // namespace Axon::Sound
+AX_END_NAMESPACE
 

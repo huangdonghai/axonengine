@@ -34,11 +34,11 @@ namespace Axon { namespace Game {
 
 
 	protected:
-		PhysicsRig* m_rig;
-		PhysicsPose* m_pose;
-		PhysicsModel* m_model;
-		PhysicsAnimation* m_animation;
-		PhysicsAnimator* m_animator;
+		HavokRig* m_rig;
+		HavokPose* m_pose;
+		HavokModel* m_model;
+		HavokAnimation* m_animation;
+		HavokAnimator* m_animator;
 	};
 
 }} // namespace Axon::Game

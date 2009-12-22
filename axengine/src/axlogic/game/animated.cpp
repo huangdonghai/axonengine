@@ -56,15 +56,15 @@ namespace Axon{ namespace Game {
 			mdl = "models/box.mesh";
 		}
 
-		m_model = new PhysicsModel(mdl);
+		m_model = new HavokModel(mdl);
 		m_model->setMatrix(m_matrix_p);
 		m_world->getRenderWorld()->addActor(m_model);
 
 		if (!animname.empty()) {
-			m_animation = new PhysicsAnimation(animname);
+			m_animation = new HavokAnimation(animname);
 			m_rig = m_model->findRig();
 			m_pose = m_rig->createPose();
-			m_animator = new PhysicsAnimator(m_rig);
+			m_animator = new HavokAnimator(m_rig);
 			m_animator->addAnimation(m_animation);
 		}
 		setRenderEntity(m_model);

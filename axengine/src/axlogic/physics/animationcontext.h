@@ -12,7 +12,7 @@ read the license and understand and accept it fully.
 #ifndef AX_PHYSICS_ANIMATIONCONTEXT_H
 #define AX_PHYSICS_ANIMATIONCONTEXT_H
 
-namespace Axon{ namespace Physics {
+AX_BEGIN_NAMESPACE
 
 	// forward declaration
 	class AnimationContext;
@@ -46,15 +46,15 @@ namespace Axon{ namespace Physics {
 		int m_index;
 		String m_channelName;
 		StringSeq m_bones;
-		Animator* m_animator;
-		Pose* m_pose;
-		Sequence<Animation*> m_animations;
+		HavokAnimator* m_animator;
+		HavokPose* m_pose;
+		Sequence<HavokAnimation*> m_animations;
 
 		// runtime
 		hkReal m_currentTime;
 		String m_state;
 		float m_easeinDuration;
-		Animation* m_currentAnimation;
+		HavokAnimation* m_currentAnimation;
 	};
 
 	//--------------------------------------------------------------------------
@@ -77,7 +77,7 @@ namespace Axon{ namespace Physics {
 
 		void initFromLua(const String& luaobj);
 
-		Pose* getPose() const;
+		HavokPose* getPose() const;
 
 		void step(int msec);
 
@@ -106,7 +106,7 @@ namespace Axon{ namespace Physics {
 		AnimationChannel* m_channels[MAX_CHANNELS];
 
 		// assets
-		Rig* m_rig;
+		HavokRig* m_rig;
 		int m_boneChannelMap[MAX_BONES]; // identify each bones channel
 		Dict<String,int> m_animDict; // map animations name and filename
 		StringSeq m_animations;
@@ -117,7 +117,7 @@ namespace Axon{ namespace Physics {
 	};
 
 
-}} // namespace Axon::Physics
+AX_END_NAMESPACE
 
 #endif // end guardian
 

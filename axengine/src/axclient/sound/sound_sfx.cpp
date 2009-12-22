@@ -10,23 +10,23 @@ read the license and understand and accept it fully.
 
 #include "sound_local.h"
 
-namespace Axon { namespace Sound {
+AX_BEGIN_NAMESPACE
 
 
-	Sfx::Sfx()
+	SoundFx::SoundFx()
 	{
 
 	}
 
-	Sfx::~Sfx()
+	SoundFx::~SoundFx()
 	{
 		SafeRelease(m_fmodSound);
 	}
 
-	void Sfx::deleteThis()
+	void SoundFx::deleteThis()
 	{
 		g_soundSystem->_removeSfx(this);
 	}
 
-}} // namespace Axon::Sound
+AX_END_NAMESPACE
 

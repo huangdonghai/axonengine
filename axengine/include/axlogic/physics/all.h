@@ -44,20 +44,20 @@ namespace Axon { namespace Game {
 	class GameEntity;
 }} // namespace Axon::Game
 
-namespace Axon { namespace Physics {
+AX_BEGIN_NAMESPACE
 
 	using namespace Axon::Logic;
 
 	// forward declaration
-	class Entity;
-	class RigidBody;
-	class Terrain;
-	class Ragdoll;
+	class PhysicsEntity;
+	class PhysicsRigid;
+	class PhysicsTerrain;
+	class PhysicsRagdoll;
 	class PhysicsPlayer;
 
-	typedef Game::GameEntity gameEntity;
+	typedef Game::GameEntity GameEntity;
 
-}} // namespace Axon::Physics
+AX_END_NAMESPACE
 
 #include "shape.h"
 #include "package.h"
@@ -66,24 +66,8 @@ namespace Axon { namespace Physics {
 
 namespace Axon {
 
-	typedef Physics::System PhysicsSystem;
-	typedef Physics::World PhysicsWorld;
-	typedef Physics::Entity PhysicsEntity;
-	typedef Physics::RigidBody physicsRigid;
-	typedef Physics::Rig PhysicsRig;
-	typedef Physics::Pose PhysicsPose;
-	typedef Physics::SkeletalModel PhysicsModel;
-	typedef Physics::Animation PhysicsAnimation;
-	typedef Physics::Animator PhysicsAnimator;
-	typedef Physics::Package PhysicsPackage;
-	typedef Physics::PackageManager PhysicsPackageManager;
-
-	typedef Physics::Ragdoll PhysicsRagdoll;
-
-	typedef Physics::PhysicsPlayer PhysicsPlayer;
-
 	extern PhysicsSystem* g_physicsSystem;
-	extern PhysicsPackageManager* g_physicsPackageManager;
+	extern HavokPackageManager* g_havokPackageManager;
 
 } // namespace Axon
 

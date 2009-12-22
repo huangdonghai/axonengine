@@ -132,7 +132,7 @@ namespace Axon { namespace Game {
 			modelName = "models/box.mesh";
 		}
 
-		m_model = new PhysicsModel(modelName);
+		m_model = new HavokModel(modelName);
 		m_model->setMatrix(m_matrix_p);
 		m_model->setInstanceColor(m_instanceColor_p);
 		m_world->getRenderWorld()->addActor(m_model);
@@ -142,7 +142,7 @@ namespace Axon { namespace Game {
 		}
 
 		if (!rigidName.empty()) {
-			m_rigid = new physicsRigid(rigidName);
+			m_rigid = new PhysicsRigid(rigidName);
 //			setPhysics(m_rigid);
 			m_rigid->setMatrix(m_matrix_p);
 			m_rigid->setMotionType(PhysicsEntity::Motion_Dynamic);

@@ -162,7 +162,7 @@ void CreationPanel::on_selectModel_itemDoubleClicked(QTreeWidgetItem* item,int)
 
 	g_mapContext->getMapState()->staticModelName = finfo.fullpath;
 
-	m_renderActor = new PhysicsModel(finfo.fullpath);
+	m_renderActor = new HavokModel(finfo.fullpath);
 	world->addActor(m_renderActor);
 
 	ui.preview->setFocusActor(m_renderActor);

@@ -32,8 +32,8 @@ namespace Axon { namespace Game {
 	};
 
 	enum SndChannelId {
-		SndChannelId_Any = Sound::ChannelId_Any,
-		SndChannelId_Voice = Sound::ChannelId_One,
+		SndChannelId_Any = ChannelId_Any,
+		SndChannelId_Voice = ChannelId_One,
 		SndChannelId_Voice2,
 		SndChannelId_Body,
 		SndChannelId_Body2,
@@ -197,8 +197,8 @@ namespace Axon { namespace Game {
 		void clear();
 
 	protected:
-		PhysicsModel* m_model;
-		physicsRigid* m_rigid;
+		HavokModel* m_model;
+		PhysicsRigid* m_rigid;
 	};
 
 }} // namespace Axon::Game

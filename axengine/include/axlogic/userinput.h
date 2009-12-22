@@ -50,7 +50,7 @@ namespace Axon { namespace Logic {
 		bool operator==(const UserInput &rhs) const;
 	};
 
-}} // namespace Axon::Physics
+}} // namespace Axon::Logic
 
 
 #endif // end guardian

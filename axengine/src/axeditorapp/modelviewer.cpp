@@ -69,7 +69,7 @@ void ModelViewer::on_treeWidget_itemDoubleClicked(QTreeWidgetItem* item, int) {
 			delete m_renderModel;
 		}
 
-		m_renderModel = new PhysicsModel(finfo.fullpath);
+		m_renderModel = new HavokModel(finfo.fullpath);
 //		m_renderModel->setAnimation("models/crouch.anim");
 		world->addActor(m_renderModel);
 

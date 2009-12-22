@@ -12,9 +12,9 @@ read the license and understand and accept it fully.
 #ifndef AX_PHYSICS_WORLD_H
 #define AX_PHYSICS_WORLD_H
 
-namespace Axon { namespace Physics {
+AX_BEGIN_NAMESPACE
 
-	class World : public IObservable {
+	class PhysicsWorld : public IObservable {
 	public:
 		enum ObserveFlag {
 			Synchronize = 1
@@ -30,13 +30,13 @@ namespace Axon { namespace Physics {
 			LAYER_PROXY = 6
 		};
 
-		World(float worldsize = 2048, bool enableVisualDebug = true, bool enableMultithread = true);
-		~World();
+		PhysicsWorld(float worldsize = 2048, bool enableVisualDebug = true, bool enableMultithread = true);
+		~PhysicsWorld();
 
 		void step(int frametime);
 
-		void addEntity(Entity* entity);
-		void removeEntity(Entity* entity);
+		void addEntity(PhysicsEntity* entity);
+		void removeEntity(PhysicsEntity* entity);
 
 	protected:
 		void stepMt(int frametime);
@@ -50,7 +50,7 @@ namespace Axon { namespace Physics {
 		float m_physicsDeltaTime;
 	};
 
-}} // namespace Axon::Physics
+AX_END_NAMESPACE
 
 #endif // end guardian
 

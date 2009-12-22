@@ -10,7 +10,7 @@ read the license and understand and accept it fully.
 
 #include "../private.h"
 
-namespace Axon { namespace Physics {
+AX_BEGIN_NAMESPACE
 
 	//--------------------------------------------------------------------------
 	// class AnimationContext
@@ -51,15 +51,15 @@ namespace Axon { namespace Physics {
 
 	void AnimationChannel::initAnimations()
 	{
-		m_animator = new Animator(m_context->m_rig);
-		m_pose = new Pose(m_context->m_rig);
+		m_animator = new HavokAnimator(m_context->m_rig);
+		m_pose = new HavokPose(m_context->m_rig);
 
 		const StringSeq& anim_names = m_context->m_animations;
 
 		m_animations.resize(anim_names.size());
 
 		for (size_t i = 0; i < anim_names.size(); i++) {
-			m_animations[i] = new Animation(anim_names[i]);
+			m_animations[i] = new HavokAnimation(anim_names[i]);
 
 			AX_ASSURE(m_animations[i]->isValid())
 
@@ -136,7 +136,7 @@ namespace Axon { namespace Physics {
 
 			// rig
 			String rig = assets.get("rig");
-			m_rig = new Rig(rig);
+			m_rig = new HavokRig(rig);
 
 			if (!m_rig->isValid()) {
 				Errorf("not an valid rig");
@@ -317,9 +317,9 @@ namespace Axon { namespace Physics {
 
 	}
 
-	Pose* AnimationContext::getPose() const
+	HavokPose* AnimationContext::getPose() const
 	{
 		return m_channels[0]->m_pose;
 	}
 
-}} // namespace Axon::Physics
+AX_END_NAMESPACE

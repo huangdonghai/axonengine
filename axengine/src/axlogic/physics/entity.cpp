@@ -11,7 +11,7 @@ read the license and understand and accept it fully.
 
 #include "../private.h"
 
-namespace Axon { namespace Physics {
+AX_BEGIN_NAMESPACE
 
 	class EntityActivationListener
 		: public hkReferencedObject
@@ -21,14 +21,14 @@ namespace Axon { namespace Physics {
 	public:
 		HK_DECLARE_CLASS_ALLOCATOR(HK_MEMORY_CLASS_DEMO);
 
-		EntityActivationListener(Entity* e) : m_wrapper(e) {}
+		EntityActivationListener(PhysicsEntity* e) : m_wrapper(e) {}
 
 		virtual void entityDeactivatedCallback(hkpEntity* entity) {
-			m_wrapper->notify(Entity::Deactivated);
+			m_wrapper->notify(PhysicsEntity::Deactivated);
 		}
 
 		virtual void entityActivatedCallback(hkpEntity* entity) {
-			m_wrapper->notify(Entity::Activated);
+			m_wrapper->notify(PhysicsEntity::Activated);
 		}
 
 		/// Called when an entity is deleted. hkpEntityListener subclasses <b>must</b> implement this function.
@@ -37,20 +37,20 @@ namespace Axon { namespace Physics {
 		}
 
 	private:
-		Entity* m_wrapper;
+		PhysicsEntity* m_wrapper;
 	};
 
-	Entity::Entity() {
+	PhysicsEntity::PhysicsEntity() {
 		m_world = nullptr;
 	}
 
-	Entity::~Entity() {
+	PhysicsEntity::~PhysicsEntity() {
 	}
 
-	void Entity::setGameEntity( gameEntity* ent )
+	void PhysicsEntity::setGameEntity( GameEntity* ent )
 	{
 		m_gameEntity = ent;
 	}
 
-}} // namespace Axon::Physics
+AX_END_NAMESPACE
 

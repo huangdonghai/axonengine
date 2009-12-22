@@ -38,7 +38,7 @@ namespace Axon { namespace Game {
 
 
 	private:
-		PhysicsModel* m_body;
+		HavokModel* m_body;
 		PhysicsPlayer* m_physicsPlayer;
 		int m_health;
 	};

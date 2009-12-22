@@ -136,16 +136,16 @@ namespace {
 	MyFilesystem* myFileSystem;
 }
 
-namespace Axon { namespace Physics {
+AX_BEGIN_NAMESPACE
 
 
-	System::System()
+	PhysicsSystem::PhysicsSystem()
 	{}
 
-	System::~System()
+	PhysicsSystem::~PhysicsSystem()
 	{}
 
-	void System::initialize() {
+	void PhysicsSystem::initialize() {
 		// We start initializing hkBaseSystem
 		bool debug = false;
 
@@ -174,13 +174,13 @@ namespace Axon { namespace Physics {
 
 	}
 
-	void System::finalize() {
+	void PhysicsSystem::finalize() {
 		hkResult res = hkBaseSystem::quit();
 
 		/// If we have a server we can delete it
 		// delete server;
 	}
 
-}} // namespace Axon::Physics
+AX_END_NAMESPACE
 
 

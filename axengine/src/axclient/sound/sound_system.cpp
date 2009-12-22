@@ -10,7 +10,7 @@ read the license and understand and accept it fully.
 
 #include "sound_local.h"
 
-namespace Axon { namespace Sound {
+AX_BEGIN_NAMESPACE
 
 	AX_BEGIN_COMMAND_MAP(SoundSystem)
 		AX_COMMAND_ENTRY("playSound", playSound_f)
@@ -124,17 +124,17 @@ namespace Axon { namespace Sound {
 #endif
 	}
 
-	Sfx* SoundSystem::createSfx( const String& name )
+	SoundFx* SoundSystem::createSfx( const String& name )
 	{
 		SfxDict::const_iterator it = m_sfxDict.find(name);
 
 		if (it != m_sfxDict.end()) {
-			Sfx* result = it->second;
+			SoundFx* result = it->second;
 			result->addref();
 			return result;
 		}
 
-		Sfx* result = new Sfx();
+		SoundFx* result = new SoundFx();
 		FMOD::Sound* fmodSound;
 
 		FMOD_RESULT hr = m_fmodSystem->createSound(name.c_str(), FMOD_3D | FMOD_SOFTWARE, 0, &fmodSound);
@@ -147,7 +147,7 @@ namespace Axon { namespace Sound {
 		return result;
 	}
 
-	void SoundSystem::_removeSfx( Sfx* sfx )
+	void SoundSystem::_removeSfx( SoundFx* sfx )
 	{
 		SfxDict::iterator it = m_sfxDict.find(sfx->m_name);
 		if (it == m_sfxDict.end()) {
@@ -168,7 +168,7 @@ namespace Axon { namespace Sound {
 		m_fmodSystem->update();
 	}
 
-	void SoundSystem::playSound( int channelId, Sfx* sfx, LoopingMode looping /*= Looping_None*/ )
+	void SoundSystem::playSound( int channelId, SoundFx* sfx, LoopingMode looping /*= Looping_None*/ )
 	{
 		_playSound(0, 0, channelId, sfx, looping);
 	}
@@ -178,7 +178,7 @@ namespace Axon { namespace Sound {
 		_stopSound(0, 0, channelId);
 	}
 
-	void SoundSystem::_playSound( SoundWorld* world, SoundEntity* entity, int channelId, Sfx* sfx, LoopingMode looping /*= Looping_None*/, float minDist /*= DEFAULT_MIN_DIST*/, float maxDist /*= DEFAULT_MAX_DIST*/ )
+	void SoundSystem::_playSound( SoundWorld* world, SoundEntity* entity, int channelId, SoundFx* sfx, LoopingMode looping /*= Looping_None*/, float minDist /*= DEFAULT_MIN_DIST*/, float maxDist /*= DEFAULT_MAX_DIST*/ )
 	{
 		if (!sfx || !sfx->isValid())
 			return;
@@ -191,12 +191,12 @@ namespace Axon { namespace Sound {
 		FMOD_RESULT hr;
 
 		FMOD::Channel* fmodChannel = 0;
-		Channel* channel = 0;
-		Key key(world,entity,channelId);
+		SoundChannel* channel = 0;
+		SoundKey key(world,entity,channelId);
 		int index = -1;
 
 		if (channelId != ChannelId_Any) {
-			Dict<Key,int>::iterator it = m_channelDict.find(key);
+			Dict<SoundKey,int>::iterator it = m_channelDict.find(key);
 			if (it != m_channelDict.end()) {
 				index = it->second;
 				channel = &m_channels[index];
@@ -253,13 +253,13 @@ namespace Axon { namespace Sound {
 		if (channelId == ChannelId_Any)
 			return;
 
-		Key key(world, entity, channelId);
-		Dict<Key,int>::iterator it = m_channelDict.find(key);
+		SoundKey key(world, entity, channelId);
+		Dict<SoundKey,int>::iterator it = m_channelDict.find(key);
 		if (it == m_channelDict.end())
 			return;
 
 		int index = it->second;
-		Channel& ch = m_channels[index];
+		SoundChannel& ch = m_channels[index];
 
 		AX_ASSERT(key == ch.m_key);
 
@@ -350,13 +350,13 @@ namespace Axon { namespace Sound {
 
 	void SoundSystem::_hintChannelEnd(int index)
 	{
-		Channel& channel = m_channels[index];
+		SoundChannel& channel = m_channels[index];
 
 		if (channel.m_key.channelId == ChannelId_Any)
 			return;
 
 
-		Dict<Key,int>::iterator it = m_channelDict.find(channel.m_key);
+		Dict<SoundKey,int>::iterator it = m_channelDict.find(channel.m_key);
 		if (it == m_channelDict.end())
 			return;
 
@@ -368,5 +368,5 @@ namespace Axon { namespace Sound {
 		m_activeWorld = world;
 	}
 
-}} // namespace Axon::Sound
+AX_END_NAMESPACE
 

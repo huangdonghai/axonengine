@@ -90,7 +90,7 @@ namespace Axon { namespace Map {
 		void setModelFilename(const String& name);
 		const String& getModelFilename() { return m_modelFilename; }
 
-		PhysicsModel* getModel() { return (m_type == Model) ? NULL : m_model; };
+		HavokModel* getModel() { return (m_type == Model) ? NULL : m_model; };
 		const std::vector<Vertex>& getModelVertexes() { return m_modelVertexes; }
 		const std::vector<int>& getModelIndexes() { return m_modelIndexes; }
 
@@ -110,7 +110,7 @@ namespace Axon { namespace Map {
 		RenderMesh* m_mesh;					// 网格
 
 		String m_modelFilename;			// 模型文件名
-		PhysicsModel* m_model;					// 模型 (仅当类型为Model时可用)
+		HavokModel* m_model;					// 模型 (仅当类型为Model时可用)
 		std::vector<Vertex> m_modelVertexes;			// 模型的顶点列表
 		std::vector<int>	m_modelIndexes;			// 模型的索引列表
 

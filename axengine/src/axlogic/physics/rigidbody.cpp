@@ -11,29 +11,29 @@ read the license and understand and accept it fully.
 
 #include "../private.h"
 
-namespace Axon { namespace Physics {
+AX_BEGIN_NAMESPACE
 
 	//--------------------------------------------------------------------------
-	// class RigidBody
+	// class PhysicsRigid
 	//--------------------------------------------------------------------------
 
-	RigidBody::RigidBody() {
+	PhysicsRigid::PhysicsRigid() {
 		m_package = nullptr;
 		m_havokRigid = nullptr;
 	}
 
-	RigidBody::RigidBody(Package* package, hkpRigidBody* rigid) {
+	PhysicsRigid::PhysicsRigid(HavokPackage* package, hkpRigidBody* rigid) {
 		m_package = package;
 		m_havokRigid = rigid;
 		m_havokRigid->setUserData(e2n(this));
 		setAutoDeactive(true);
 	}
 
-	RigidBody::RigidBody(const String& name)
+	PhysicsRigid::PhysicsRigid(const String& name)
 		: m_package(nullptr)
 		, m_havokRigid(nullptr)
 	{
-		m_package = g_physicsPackageManager->findPackage(name);
+		m_package = g_havokPackageManager->findPackage(name);
 
 		if (!m_package) {
 			return;
@@ -49,7 +49,7 @@ namespace Axon { namespace Physics {
 		setAutoDeactive(true);
 	}
 
-	RigidBody::~RigidBody() {
+	PhysicsRigid::~PhysicsRigid() {
 		if (m_world) {
 			unbind(m_world);
 		}
@@ -62,7 +62,7 @@ namespace Axon { namespace Physics {
 		}
 	}
 
-	void RigidBody::setActive(bool b) {
+	void PhysicsRigid::setActive(bool b) {
 		if (!m_havokRigid->getWorld()) {
 			return;
 		}
@@ -74,11 +74,11 @@ namespace Axon { namespace Physics {
 		}
 	}
 
-	bool RigidBody::isActive() const {
+	bool PhysicsRigid::isActive() const {
 		return m_havokRigid->isActive();
 	}
 
-	void RigidBody::setMatrix(const AffineMat& matrix) {
+	void PhysicsRigid::setMatrix(const AffineMat& matrix) {
 		hkTransform hk;
 		Matrix3 axis = matrix.axis;
 		axis.removeScale();
@@ -93,28 +93,28 @@ namespace Axon { namespace Physics {
 		m_matrix = matrix;
 	}
 
-	AffineMat RigidBody::getMatrix() const {
+	AffineMat PhysicsRigid::getMatrix() const {
 		if (m_havokRigid) {
 			return h2x(m_havokRigid->getTransform());
 		}
 		return m_matrix;
 	}
 
-	void RigidBody::setMotionType(MotionType motion) {
+	void PhysicsRigid::setMotionType(MotionType motion) {
 		if (m_havokRigid)
 			m_havokRigid->setMotionType(x2h(motion));
 
 		m_motionType = motion;
 	}
 
-	Entity::MotionType RigidBody::getMotionType() const {
+	PhysicsEntity::MotionType PhysicsRigid::getMotionType() const {
 		if (m_havokRigid)
 			return h2x(m_havokRigid->getMotionType());
 
 		return m_motionType;
 	}
 
-	void RigidBody::setAutoDeactive(bool val) {
+	void PhysicsRigid::setAutoDeactive(bool val) {
 		if (!m_havokRigid) return;
 
 		if (val) {
@@ -124,20 +124,20 @@ namespace Axon { namespace Physics {
 		}
 	}
 
-	void RigidBody::bind(World* world) {
+	void PhysicsRigid::bind(PhysicsWorld* world) {
 		if (!m_havokRigid) return;
 
 		world->m_havokWorld->addEntity(m_havokRigid);
 	}
 
-	void RigidBody::unbind(World* world) {
+	void PhysicsRigid::unbind(PhysicsWorld* world) {
 		if (!m_havokRigid) return;
 
 		world->m_havokWorld->removeEntity(m_havokRigid);
 	}
 
 	//--------------------------------------------------------------------------
-	// class Terrain
+	// class PhysicsTerrain
 	//--------------------------------------------------------------------------
 
 	class MyHeightFieldShape : public hkpSampledHeightFieldShape {
@@ -172,7 +172,7 @@ namespace Axon { namespace Physics {
 	};
 
 
-	Terrain::Terrain(const ushort_t* data, int size, float tilemeters) {
+	PhysicsTerrain::PhysicsTerrain(const ushort_t* data, int size, float tilemeters) {
 		hkpSampledHeightFieldBaseCinfo shapeCinfo;
 		shapeCinfo.m_xRes = size;
 		shapeCinfo.m_zRes = size;
@@ -195,7 +195,7 @@ namespace Axon { namespace Physics {
 		m_havokRigid = new hkpRigidBody(ci);
 	}
 
-	Terrain::~Terrain() {}
+	PhysicsTerrain::~PhysicsTerrain() {}
 
-}} // namespace Axon::Physics
+AX_END_NAMESPACE
 

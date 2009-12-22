@@ -11,13 +11,13 @@ read the license and understand and accept it fully.
 
 #include "../private.h"
 
-namespace Axon { namespace Physics {
+AX_BEGIN_NAMESPACE
 
 	//--------------------------------------------------------------------------
-	// class World
+	// class PhysicsWorld
 	//--------------------------------------------------------------------------
 
-	World::World(float worldsize, bool vdb, bool mt) {
+	PhysicsWorld::PhysicsWorld(float worldsize, bool vdb, bool mt) {
 		mt = false;
 
 		m_physicsDeltaTime = 1.0f / 30.0f;
@@ -92,11 +92,11 @@ namespace Axon { namespace Physics {
 		m_havokWorld->unlock();
 	}
 
-	World::~World() {
+	PhysicsWorld::~PhysicsWorld() {
 		m_havokWorld->removeReference();
 	}
 
-	void World::step(int frametime) {
+	void PhysicsWorld::step(int frametime) {
 		if (m_multithreadingUtil) {
 			stepMt(frametime);
 		}
@@ -113,7 +113,7 @@ namespace Axon { namespace Physics {
 		int physicstime = OsUtil::milliseconds() - start;
 	}
 
-	void World::stepMt(int frametime) {
+	void PhysicsWorld::stepMt(int frametime) {
 #if 0
 		uint_t start = Milliseconds();
 		m_multithreadingUtil->waitForStepWorldFinished();
@@ -133,7 +133,7 @@ namespace Axon { namespace Physics {
 #endif
 	}
 
-	void World::addEntity(Entity* entity) {
+	void PhysicsWorld::addEntity(PhysicsEntity* entity) {
 		if (!entity) {
 			return;
 		}
@@ -150,7 +150,7 @@ namespace Axon { namespace Physics {
 		entity->bind(this);
 	}
 
-	void World::removeEntity(Entity* entity) {
+	void PhysicsWorld::removeEntity(PhysicsEntity* entity) {
 		if (!entity) {
 			return;
 		}
@@ -163,5 +163,5 @@ namespace Axon { namespace Physics {
 	}
 
 
-}}
+AX_END_NAMESPACE
 

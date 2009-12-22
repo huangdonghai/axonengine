@@ -12,25 +12,25 @@ read the license and understand and accept it fully.
 #ifndef AX_PHYSICS_RIGIDBODY_H
 #define AX_PHYSICS_RIGIDBODY_H
 
-namespace Axon { namespace Physics {
+AX_BEGIN_NAMESPACE
 
 	// forward decl
-	class Package;
+	class HavokPackage;
 
 	//--------------------------------------------------------------------------
-	// class RigidBody
+	// class PhysicsRigid
 	//--------------------------------------------------------------------------
 
-	class RigidBody : public Entity {
+	class PhysicsRigid : public PhysicsEntity {
 	public:
-		RigidBody();
-		RigidBody(const String& name);
-		RigidBody(Package* package, hkpRigidBody* rigid);
-		virtual ~RigidBody();
+		PhysicsRigid();
+		PhysicsRigid(const String& name);
+		PhysicsRigid(HavokPackage* package, hkpRigidBody* rigid);
+		virtual ~PhysicsRigid();
 
 		bool isValid() const { return m_havokRigid!=0; }
 
-		// implement Entity
+		// implement PhysicsEntity
 		virtual void setActive(bool activate);
 		virtual bool isActive() const;
 		virtual void setAutoDeactive(bool val);
@@ -39,29 +39,29 @@ namespace Axon { namespace Physics {
 		virtual void setMotionType(MotionType motion);
 		virtual MotionType getMotionType() const;
 		virtual Type getType() const { return kRigidBody; }
-		virtual void bind(World* world);
-		virtual void unbind(World* world);
+		virtual void bind(PhysicsWorld* world);
+		virtual void unbind(PhysicsWorld* world);
 
 	protected:
-		Package* m_package;
+		HavokPackage* m_package;
 		hkpRigidBody* m_havokRigid;
 		AffineMat m_matrix;
 		MotionType m_motionType;
 	};
 
 	//--------------------------------------------------------------------------
-	// class Terrain
+	// class PhysicsTerrain
 	//--------------------------------------------------------------------------
 
-	class Terrain : public RigidBody {
+	class PhysicsTerrain : public PhysicsRigid {
 	public:
-		Terrain(const ushort_t* data, int size, float tilemeters);
-		virtual ~Terrain();
+		PhysicsTerrain(const ushort_t* data, int size, float tilemeters);
+		virtual ~PhysicsTerrain();
 
 	protected:
 	};
 
-}} // namespace Axon::Physics
+AX_END_NAMESPACE
 
 #endif // end guardian
 

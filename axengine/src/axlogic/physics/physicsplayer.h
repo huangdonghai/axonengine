@@ -11,9 +11,9 @@ read the license and understand and accept it fully.
 #ifndef AX_PHYSICS_PLAYER_H
 #define AX_PHYSICS_PLAYER_H
 
-namespace Axon { namespace Physics {
+AX_BEGIN_NAMESPACE
 
-	class PhysicsPlayer : public Entity {
+	class PhysicsPlayer : public PhysicsEntity {
 	public:
 		enum MoveType {
 			MoveType_Normal,
@@ -86,12 +86,12 @@ namespace Axon { namespace Physics {
 		virtual void setMatrix(const AffineMat& matrix);
 		virtual AffineMat getMatrix() const;
 		virtual Type getType() const { return kPlayer; }
-		virtual void bind(World* world);
-		virtual void unbind(World* world);
+		virtual void bind(PhysicsWorld* world);
+		virtual void unbind(PhysicsWorld* world);
 
 		// get & set
 		void setLinearVelocity(const Vector3& velocity);
-		Pose* getPose() const { return m_bodyAnimContext.getPose(); }
+		HavokPose* getPose() const { return m_bodyAnimContext.getPose(); }
 		AffineMat getThirdPerson();
 
 		void runFrame(const UserInput& userinput, int msec);
@@ -148,7 +148,7 @@ namespace Axon { namespace Physics {
 		InputStates m_inputStates;
 	};
 
-}} // namespace Axon::Physics
+AX_END_NAMESPACE
 
 #endif // end guardian
 

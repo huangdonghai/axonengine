@@ -12,25 +12,25 @@ read the license and understand and accept it fully.
 #ifndef AX_PHYSICS_SHAPE_H
 #define AX_PHYSICS_SHAPE_H
 
-namespace Axon { namespace Physics {
+AX_BEGIN_NAMESPACE
 
-	class Shape {
+	class PhysicsShape {
 	public:
-		Shape();
-		virtual ~Shape();
+		PhysicsShape();
+		virtual ~PhysicsShape();
 
 	protected:
 		hkpShape* m_rep;
 	};
 
 
-	class Heightfield : public Shape {
+	class Heightfield : public PhysicsShape {
 	public:
 		Heightfield(const ushort_t* data, int size, float tilemeters);
 		virtual ~Heightfield();
 	};
 
-}} // namespace Axon::Physics
+AX_END_NAMESPACE
 
 #endif // end guardian
 

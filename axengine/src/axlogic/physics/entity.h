@@ -12,11 +12,11 @@ read the license and understand and accept it fully.
 #ifndef AX_PHYSICS_ENTITY_H
 #define AX_PHYSICS_ENTITY_H
 
-namespace Axon { namespace Physics {
+AX_BEGIN_NAMESPACE
 
-	class Entity : public IObservable {
+	class PhysicsEntity : public IObservable {
 	public:
-		friend class World;
+		friend class PhysicsWorld;
 
 		enum Type {
 			kInvalid,		// invalid type, just for error check
@@ -38,8 +38,8 @@ namespace Axon { namespace Physics {
 			Synchronize = 4
 		};
 
-		Entity();
-		virtual ~Entity();
+		PhysicsEntity();
+		virtual ~PhysicsEntity();
 
 		virtual void setActive(bool activate) = 0;
 		virtual bool isActive() const = 0;
@@ -47,17 +47,17 @@ namespace Axon { namespace Physics {
 		virtual void setMatrix(const AffineMat& matrix) = 0;
 		virtual AffineMat getMatrix() const = 0;
 		virtual Type getType() const { return kInvalid; }
-		virtual void bind(World* world) = 0;
-		virtual void unbind(World* world) = 0;
+		virtual void bind(PhysicsWorld* world) = 0;
+		virtual void unbind(PhysicsWorld* world) = 0;
 
-		void setGameEntity(gameEntity* ent);
+		void setGameEntity(GameEntity* ent);
 
 	protected:
-		World* m_world;
-		gameEntity* m_gameEntity;
+		PhysicsWorld* m_world;
+		GameEntity* m_gameEntity;
 	};
 
-}} // namespace Axon::Physics
+AX_END_NAMESPACE
 
 #endif // end guardian
 

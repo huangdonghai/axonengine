@@ -9,8 +9,7 @@ read the license and understand and accept it fully.
 
 #include "sound_local.h"
 
-namespace Axon { namespace Sound {
-
+AX_BEGIN_NAMESPACE
 
 	SoundEntity::SoundEntity()
 	{
@@ -24,7 +23,7 @@ namespace Axon { namespace Sound {
 	{
 	}
 
-	void SoundEntity::playSound( int channelId, Sfx* sfx, LoopingMode looping /*= Looping_None*/, float minDist /*= DEFAULT_MIN_DIST*/, float maxDist /*= DEFAULT_MAX_DIST */ )
+	void SoundEntity::playSound( int channelId, SoundFx* sfx, LoopingMode looping /*= Looping_None*/, float minDist /*= DEFAULT_MIN_DIST*/, float maxDist /*= DEFAULT_MAX_DIST */ )
 	{
 		AX_ASSERT(m_world);
 
@@ -36,5 +35,5 @@ namespace Axon { namespace Sound {
 		g_soundSystem->_stopSound(m_world, this, channelId);
 	}
 
-}} // namespace Axon::Sound
+AX_END_NAMESPACE
 

@@ -17,10 +17,6 @@ read the license and understand and accept it fully.
 #include "networksystem.h"
 
 namespace Axon { namespace Network {
-
-
-
-	using namespace Axon::Logic;
 }} // namespace Axon::Network
 
 namespace Axon {

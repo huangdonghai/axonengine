@@ -46,8 +46,8 @@ namespace Axon { namespace Game {
 		if (m_modelName.empty())
 			return;
 
-		m_model = new PhysicsModel(m_modelName);
-		m_rigid = new physicsRigid(m_modelName);
+		m_model = new HavokModel(m_modelName);
+		m_rigid = new PhysicsRigid(m_modelName);
 
 		m_model->setMatrix(m_matrix_p);
 		m_model->setInstanceColor(m_instanceColor_p);
@@ -121,7 +121,7 @@ namespace Axon { namespace Game {
 		float tilemeters;
 
 		m_renderTerrain->getHeightinfo(datap, size, tilemeters);
-		m_physicsTerrain = new Physics::Terrain(datap, size, tilemeters);
+		m_physicsTerrain = new PhysicsTerrain(datap, size, tilemeters);
 
 		if (m_landscape) {
 			m_landscape->getGameWorld()->getPhysicsWorld()->addEntity(m_physicsTerrain);

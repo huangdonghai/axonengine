@@ -11,9 +11,9 @@ read the license and understand and accept it fully.
 #ifndef AX_PHYSICS_CREATURE_H
 #define AX_PHYSICS_CREATURE_H
 
-namespace Axon { namespace Physics {
+AX_BEGIN_NAMESPACE
 
-	class PhysicsCreature : public Entity {
+	class PhysicsCreature : public PhysicsEntity {
 	public:
 		PhysicsCreature();
 		virtual ~PhysicsCreature();
@@ -22,6 +22,6 @@ namespace Axon { namespace Physics {
 	private:
 	};
 
-}} // namespace Axon::Physics
+AX_END_NAMESPACE
 
 #endif // end guardian

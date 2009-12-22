@@ -19,13 +19,7 @@ namespace FMOD {
 }
 
 // forward declaration
-namespace Axon { namespace Sound {
-
-	class Sfx;
-	class Channel;
-	class SoundEntity;
-	class SoundWorld;
-	class SoundSystem;
+namespace Axon {
 
 	enum LoopingMode {
 		Looping_Forever = -1,
@@ -51,23 +45,12 @@ namespace Axon { namespace Sound {
 		DEFAULT_MAX_DIST = 64
 	};
 
-}} // namespace Axon::Sound
+} // namespace Axon
 
 #include "sound_sfx.h"
 #include "sound_channel.h"
 #include "sound_entity.h"
 #include "sound_world.h"
 #include "sound_system.h"
-
-namespace Axon {
-
-	typedef Sound::Sfx SoundSfx;
-	typedef Sound::SfxPtr SoundSfxPtr;
-	typedef Sound::Channel SoundChannel;
-	typedef Sound::SoundEntity SoundEntity;
-	typedef Sound::SoundWorld SoundWorld;
-	typedef Sound::SoundSystem SoundSystem;
-
-}
 
 #endif

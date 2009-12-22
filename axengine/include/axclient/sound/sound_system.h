@@ -10,7 +10,7 @@ read the license and understand and accept it fully.
 #ifndef AX_SOUND_SYSTEM_H
 #define AX_SOUND_SYSTEM_H
 
-namespace Axon { namespace Sound {
+AX_BEGIN_NAMESPACE
 
 	class AX_API SoundSystem : public ICmdHandler, public ITickable {
 	public:
@@ -22,17 +22,17 @@ namespace Axon { namespace Sound {
 		// implement ITickable
 		virtual void tick();
 
-		Sfx* createSfx(const String& name);
-		Sfx* createStream();
+		SoundFx* createSfx(const String& name);
+		SoundFx* createStream();
 
 		void setWorld(SoundWorld* world);
 
-		void playSound(int channelId, Sfx* sfx, LoopingMode looping = Looping_None);
+		void playSound(int channelId, SoundFx* sfx, LoopingMode looping = Looping_None);
 		void stopSound(int channelId);
 
 		// BEGIN INTERNAL USE
-		void _removeSfx(Sfx* sfx);
-		void _playSound(SoundWorld* world, SoundEntity* entity, int channelId, Sfx* sfx, LoopingMode looping = Looping_None, float minDist = DEFAULT_MIN_DIST, float maxDist = DEFAULT_MAX_DIST);
+		void _removeSfx(SoundFx* sfx);
+		void _playSound(SoundWorld* world, SoundEntity* entity, int channelId, SoundFx* sfx, LoopingMode looping = Looping_None, float minDist = DEFAULT_MIN_DIST, float maxDist = DEFAULT_MAX_DIST);
 		void _stopSound(SoundWorld* world, SoundEntity* entity, int channelId);
 		void _hintChannelEnd(int index);
 		// END INTERNAL USE
@@ -47,16 +47,16 @@ namespace Axon { namespace Sound {
 
 	private:
 		FMOD::System* m_fmodSystem;
-		typedef Dict<String, Sfx*, hash_pathname, equal_pathname> SfxDict;
+		typedef Dict<String, SoundFx*, hash_pathname, equal_pathname> SfxDict;
 		SfxDict m_sfxDict;
 		SfxPtr m_commandSfx;
 
-		Channel m_channels[MAX_CHANNELS];
-		Dict<Key,int> m_channelDict;
+		SoundChannel m_channels[MAX_CHANNELS];
+		Dict<SoundKey,int> m_channelDict;
 
 		SoundWorld* m_activeWorld;
 	};
 
-}} // namespace Axon::Sound
+AX_END_NAMESPACE
 
 #endif

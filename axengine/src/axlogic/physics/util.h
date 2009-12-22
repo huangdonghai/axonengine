@@ -12,16 +12,16 @@ read the license and understand and accept it fully.
 #ifndef AX_PHYSICS_Util_H
 #define AX_PHYSICS_Util_H
 
-namespace Axon { namespace Physics {
+AX_BEGIN_NAMESPACE
 
 	// cast entity pointer to number
-	inline hkUlong e2n(Entity* ent) {
+	inline hkUlong e2n(PhysicsEntity* ent) {
 		return hkUlong(ent);
 	}
 
 	// cast number to entity pointer
-	inline Entity* n2e(hkUlong ul) {
-		return (Entity*)ul;
+	inline PhysicsEntity* n2e(hkUlong ul) {
+		return (PhysicsEntity*)ul;
 	}
 
 	inline void h2x(const hkVector4& hk, Vector3& ax) {
@@ -90,11 +90,11 @@ namespace Axon { namespace Physics {
 	}
 
 
-	inline Entity::MotionType h2x(hkpMotion::MotionType hk) {
+	inline PhysicsEntity::MotionType h2x(hkpMotion::MotionType hk) {
 		switch (hk) {
 			default:
 			case hkpMotion::MOTION_INVALID:
-				return Entity::Motion_Invalid;
+				return PhysicsEntity::Motion_Invalid;
 
 			case hkpMotion::MOTION_DYNAMIC:
 			case hkpMotion::MOTION_SPHERE_INERTIA:
@@ -102,27 +102,27 @@ namespace Axon { namespace Physics {
 			case hkpMotion::MOTION_BOX_INERTIA:
 			case hkpMotion::MOTION_STABILIZED_BOX_INERTIA:
 			case hkpMotion::MOTION_THIN_BOX_INERTIA:
-				return Entity::Motion_Dynamic;
+				return PhysicsEntity::Motion_Dynamic;
 
 			case hkpMotion::MOTION_KEYFRAMED:
-				return Entity::Motion_Keyframed;
+				return PhysicsEntity::Motion_Keyframed;
 			case hkpMotion::MOTION_FIXED:
-				return Entity::Motion_Fixed;
+				return PhysicsEntity::Motion_Fixed;
 			case hkpMotion::MOTION_CHARACTER:
-				return Entity::Motion_Dynamic;
+				return PhysicsEntity::Motion_Dynamic;
 		}
 	}
 
-	inline hkpMotion::MotionType x2h(Entity::MotionType ax) {
+	inline hkpMotion::MotionType x2h(PhysicsEntity::MotionType ax) {
 		switch (ax) {
 			default:
-			case Entity::Motion_Invalid:
+			case PhysicsEntity::Motion_Invalid:
 				return hkpMotion::MOTION_INVALID;
-			case Entity::Motion_Fixed:
+			case PhysicsEntity::Motion_Fixed:
 				return hkpMotion::MOTION_FIXED;
-			case Entity::Motion_Dynamic:
+			case PhysicsEntity::Motion_Dynamic:
 				return hkpMotion::MOTION_DYNAMIC;
-			case Entity::Motion_Keyframed:
+			case PhysicsEntity::Motion_Keyframed:
 				return hkpMotion::MOTION_KEYFRAMED;
 		}
 	}
@@ -196,7 +196,7 @@ namespace Axon { namespace Physics {
 		}
 	};
 
-}} // namespace Axon::Physics
+AX_END_NAMESPACE
 
 #endif // AX_PHYSICS_INTERNAL_H
 

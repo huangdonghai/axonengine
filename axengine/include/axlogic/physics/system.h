@@ -12,19 +12,20 @@ read the license and understand and accept it fully.
 #ifndef AX_PHYSICS_SYSTEM_H
 #define AX_PHYSICS_SYSTEM_H
 
-namespace Axon { namespace Physics {
+AX_BEGIN_NAMESPACE
 
-	class System {
+	class PhysicsSystem {
 	public:
-		System();
-		~System();
+		PhysicsSystem();
+		~PhysicsSystem();
 
 		void initialize();
 		void finalize();
 
 	private:
 	};
-}} // namespace Axon::Physics
+
+AX_END_NAMESPACE
 
 #endif // end guardian
 
