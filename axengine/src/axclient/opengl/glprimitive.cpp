@@ -9,7 +9,7 @@ read the license and understand and accept it fully.
 
 #include "private.h"
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
 	int GLdriver::cachePrimitive(Primitive* prim) {
 		return glPrimitiveManager->cachePrimitive(prim);
@@ -235,7 +235,7 @@ namespace Axon { namespace Render {
 		m_vertexDefs.push_back(VDF_tangent);
 		m_vertexDefs.push_back(VDF_binormal);
 
-		Mesh* src = (Mesh*)m_source;
+		RenderMesh* src = (RenderMesh*)m_source;
 
 		if (src->getIsStriped()) {
 			m_elementType = GL_TRIANGLE_STRIP;
@@ -287,7 +287,7 @@ namespace Axon { namespace Render {
 
 		m_source->clearDirty();
 
-		Line* line = dynamic_cast<Line*>(m_source);
+		RenderLine* line = dynamic_cast<RenderLine*>(m_source);
 		AX_ASSERT(line);
 
 		m_vertexCount = line->getNumVertexes();
@@ -317,7 +317,7 @@ namespace Axon { namespace Render {
 
 		m_source->clearDirty();
 
-		Mesh* mesh = dynamic_cast<Mesh*>(m_source);
+		RenderMesh* mesh = dynamic_cast<RenderMesh*>(m_source);
 		AX_ASSERT(mesh);
 
 		m_vertexCount = mesh->getNumVertexes();
@@ -352,7 +352,7 @@ namespace Axon { namespace Render {
 	void GLtext::initialize(Primitive* src) {
 		GLprimitive::initialize(src);
 
-		Text* text = dynamic_cast<Text*>(m_source);
+		RenderText* text = dynamic_cast<RenderText*>(m_source);
 		AX_ASSERT(text);
 
 		// copy text info from source primitive
@@ -368,9 +368,9 @@ namespace Axon { namespace Render {
 		m_verticalAlign = text->getVerticalAlign();
 
 		if (m_isSimpleText) {
-			m_format = Text::ScaleByVertical;
-			m_horizonAlign = Text::Center;
-			m_verticalAlign = Text::VCenter;
+			m_format = RenderText::ScaleByVertical;
+			m_horizonAlign = RenderText::Center;
+			m_verticalAlign = RenderText::VCenter;
 		}
 
 		int numchars = s2i(m_text.size());
@@ -423,12 +423,12 @@ namespace Axon { namespace Render {
 		float textwidth = scale.x * m_font->getStringWidth(wstr);
 		float textheight = scale.y * m_font->getHeight();
 
-		if (m_format & Text::ScaleByVertical) {
+		if (m_format & RenderText::ScaleByVertical) {
 			scale.y = tq.height / textheight;
 			scale.x = m_aspect * scale.y;
 		}
 
-		if (m_format & Text::ScaleByHorizon) {
+		if (m_format & RenderText::ScaleByHorizon) {
 			scale.x = tq.width / textwidth;
 			scale.y = scale.x / m_aspect;
 		}
@@ -436,23 +436,23 @@ namespace Axon { namespace Render {
 		width = tq.width / scale.x;
 		height = tq.height / scale.y;
 
-		bool italic = m_format & Text::Italic ? true : false;
+		bool italic = m_format & RenderText::Italic ? true : false;
 
-		if (m_horizonAlign == Text::Left) {
+		if (m_horizonAlign == RenderText::Left) {
 			startpos.x = 0;
-		} else if (m_horizonAlign == Text::Center) {
+		} else if (m_horizonAlign == RenderText::Center) {
 			startpos.x =(width - textwidth) * 0.5f;
-		} else if (m_horizonAlign == Text::Right) {
+		} else if (m_horizonAlign == RenderText::Right) {
 			startpos.x = width - textwidth;
 		} else {
 			startpos.x = 0;
 		}
 
-		if (m_verticalAlign == Text::Top) {
+		if (m_verticalAlign == RenderText::Top) {
 			startpos.y = 0;
-		} else if (m_verticalAlign == Text::VCenter) {
+		} else if (m_verticalAlign == RenderText::VCenter) {
 			startpos.y =(height - textheight) * 0.5f;
-		} else if (m_verticalAlign == Text::Bottom) {
+		} else if (m_verticalAlign == RenderText::Bottom) {
 			startpos.y = height - textheight;
 		} else {
 			startpos.y = 0;
@@ -464,7 +464,7 @@ namespace Axon { namespace Render {
 
 			// for error string, cann't upload or cann't render char
 
-			if (m_format & Text::Blink) {
+			if (m_format & RenderText::Blink) {
 				Rgba color = m_color;
 				color.a = 128+127*sinf(gCamera->getTime() / BLINK_DIVISOR);
 				offset = glFontRender->drawString(m_font, color, tq, startpos, pStr, len, scale, italic);
@@ -474,7 +474,7 @@ namespace Axon { namespace Render {
 			// common
 			offset = glFontRender->drawString(m_font, m_color, tq, startpos, pStr, len, scale, italic);
 
-			if (m_format & Text::Bold) {
+			if (m_format & RenderText::Bold) {
 				glFontRender->drawString(m_font, m_color, tq, startpos+scale, pStr, len, scale, italic);
 			}
 
@@ -519,7 +519,7 @@ namespace Axon { namespace Render {
 	void GLterrain::update() {
 		GLprimitive::update();
 
-		Chunk* chunk = dynamic_cast<Chunk*>(m_source);
+		RenderChunk* chunk = dynamic_cast<RenderChunk*>(m_source);
 		AX_ASSERT(chunk);
 
 		if (!m_source->isDirty())
@@ -619,7 +619,7 @@ namespace Axon { namespace Render {
 		for (int i = 0; i < m_numLayers; i++) {
 			g_statistic->incValue(stat_numTerrainLayeredDrawElements);
 
-			Chunk::Layer& l = m_layers[i];
+			RenderChunk::Layer& l = m_layers[i];
 			l.detailMat->setTexture(SamplerType::TerrainColor, m_colorTexture);
 			l.detailMat->setTexture(SamplerType::TerrainNormal, m_normalTexture);
 			l.detailMat->setTexture(SamplerType::LayerAlpha, l.alphaTex);
@@ -970,4 +970,4 @@ namespace Axon { namespace Render {
 	}
 
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE

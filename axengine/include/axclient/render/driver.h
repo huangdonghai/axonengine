@@ -12,7 +12,7 @@ read the license and understand and accept it fully.
 
 #define ClassName_RenderDriver "gRenderDriver"
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
 	struct SelectRecord {
 		int name;
@@ -38,7 +38,7 @@ namespace Axon { namespace Render {
 		Matrix4 proj_matrix;
 	};
 
-	struct IDriver {
+	struct IRenderDriver {
 		struct Info {
 			enum DriverType {
 				OpenGL,
@@ -73,7 +73,7 @@ namespace Axon { namespace Render {
 		};
 
 		// device
-		virtual ~IDriver() {}
+		virtual ~IRenderDriver() {}
 		virtual void initialize() = 0;
 		virtual void finalize() = 0;
 		virtual void postInit() = 0;			// after render system is initilized, call this
@@ -83,7 +83,7 @@ namespace Axon { namespace Render {
 		virtual bool isInRenderingThread() = 0;
 
 		// resource management
-		virtual Target* createWindowTarget(handle_t wndId, const String& name) = 0;
+		virtual RenderTarget* createWindowTarget(handle_t wndId, const String& name) = 0;
 
 		// caps
 		virtual const Info* getDriverInfo() = 0;
@@ -93,6 +93,6 @@ namespace Axon { namespace Render {
 		virtual void runFrame() = 0;
 	};
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE
 
 #endif // AX_RENDERDRIVER_H

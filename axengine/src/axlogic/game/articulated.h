@@ -14,11 +14,12 @@ read the license and understand and accept it fully.
 
 namespace Axon { namespace Game {
 
-	class Articulated : public Animated {
-	public:
+	class Articulated : public Animated
+	{
 		AX_DECLARE_CLASS(Articulated, Animated, "Game.Physics.Articulated");
 		AX_END_CLASS()
 
+	public:
 		Articulated();
 		virtual ~Articulated();
 

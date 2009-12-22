@@ -10,7 +10,7 @@ read the license and understand and accept it fully.
 #ifndef AX_GLTEXTURE_H
 #define AX_GLTEXTURE_H
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
 	class GLtexture : public Texture {
 	public:
@@ -68,6 +68,6 @@ namespace Axon { namespace Render {
 	};
 
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE
 
 #endif // AX_GLTEXTURE_H

@@ -10,10 +10,8 @@ read the license and understand and accept it fully.
 #ifndef AX_CLIENT_RENDER_SELECTION_H
 #define AX_CLIENT_RENDER_SELECTION_H
 
-namespace Axon 
-{ 
-	namespace Render 
-	{
+AX_BEGIN_NAMESPACE
+
 		struct SelectionVertex;
 		struct Record;
 
@@ -32,9 +30,9 @@ namespace Axon
 			~Selection(void);
 
 
-			void beginSelect(const Camera& view);
+			void beginSelect(const RenderCamera& view);
 			void loadSelectId(int id);
-			void testActor(Entity* re);
+			void testActor(RenderEntity* re);
 			void testPrimitive(Primitive* prim);
 			void testPrimitive(Primitive* prim, const AffineMat& matrix);
 			SelectRecordSeq endSelect();
@@ -52,9 +50,9 @@ namespace Axon
 
 		private:
 
-			void testLine(const Line* line);
-			void testMesh(const Mesh* mesh);
-			void testChunk(const Chunk* chunk);
+			void testLine(const RenderLine* line);
+			void testMesh(const RenderMesh* mesh);
+			void testChunk(const RenderChunk* chunk);
 
 			void aliasClipTriangle(const SelectionVertex& vertex0,
 									const SelectionVertex& vertex1, const SelectionVertex& vertex2);
@@ -68,7 +66,7 @@ namespace Axon
 
 		private:
 
-			static Camera m_selectionCamera;
+			static RenderCamera m_selectionCamera;
 			Matrix4 m_selectModelViewMatrix;
 
 			int m_selectTime;
@@ -81,7 +79,6 @@ namespace Axon
 			bool m_isActor;
 		};
 
-	}
-}
+AX_END_NAMESPACE
 
 #endif

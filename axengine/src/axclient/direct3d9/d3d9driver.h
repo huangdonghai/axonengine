@@ -11,9 +11,9 @@ read the license and understand and accept it fully.
 #ifndef AX_D3D9DRIVER_H
 #define AX_D3D9DRIVER_H
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
-	class D3D9driver : public IDriver, public ICmdHandler {
+	class D3D9driver : public IRenderDriver, public ICmdHandler {
 	public:
 		AX_DECLARE_FACTORY();
 		AX_DECLARE_COMMAND_HANDLER(D3D9driver);
@@ -21,7 +21,7 @@ namespace Axon { namespace Render {
 		D3D9driver();
 		~D3D9driver();
 
-		// implement IDriver
+		// implement IRenderDriver
 		virtual void initialize();
 		virtual void finalize();
 		virtual void postInit();			// after render system is initilized, call this
@@ -31,7 +31,7 @@ namespace Axon { namespace Render {
 		virtual bool isInRenderingThread();
 
 		// resource management
-		virtual Target* createWindowTarget(handle_t wndId, const String& name);
+		virtual RenderTarget* createWindowTarget(handle_t wndId, const String& name);
 
 #if 0
 		// primitive
@@ -52,7 +52,7 @@ namespace Axon { namespace Render {
 
 #if 0
 		// new selection
-		virtual void beginSelect(const Camera& view);
+		virtual void beginSelect(const RenderCamera& view);
 		virtual void loadSelectId(int id);
 		virtual void testActor(Actor* re);
 		virtual void testPrimitive(Primitive* prim);
@@ -66,7 +66,7 @@ namespace Axon { namespace Render {
 		bool m_initialized;
 	};
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE
 
 
 #endif // end guardian

@@ -10,7 +10,7 @@ read the license and understand and accept it fully.
 
 #include "../private.h"
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
 	static TextureManager* s_textureManager;
 
@@ -255,5 +255,5 @@ namespace Axon { namespace Render {
 		Printf("total %d texture(s)\n", count);
 	}
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE
 

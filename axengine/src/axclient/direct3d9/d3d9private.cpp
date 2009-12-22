@@ -10,7 +10,7 @@ read the license and understand and accept it fully.
 
 #include "d3d9private.h"
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
 	AX_BEGIN_CLASS_MAP(axdirect3d9)
 		AX_CLASS_ENTRY("driver", D3D9driver)
@@ -18,8 +18,8 @@ namespace Axon { namespace Render {
 
 	D3D9window* d3d9InternalWindow;
 	D3D9driver* d3d9Driver;
-	IDriver::Info* d3d9DriverInfo;
-	Queue* d3d9Queue;
+	IRenderDriver::Info* d3d9DriverInfo;
+	RenderQueue* d3d9Queue;
 	SyncMutex d3d9Mutex;
 
 	IDirect3D9* d3d9Api;
@@ -40,7 +40,7 @@ namespace Axon { namespace Render {
 	bool d3d9NULL;
 	bool d3d9NVDB;
 
-	Camera* d3d9Camera;
+	RenderCamera* d3d9Camera;
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE
 

@@ -30,10 +30,8 @@ read the license and understand and accept it fully.
 	#define CheckNumError(num)
 #endif
 
-namespace Axon 
-{ 
-	namespace Render 
-	{
+AX_BEGIN_NAMESPACE
+
 		void aliasClipLeft (SelectionVertex *pfv0, SelectionVertex *pfv1, SelectionVertex *out);
 		void aliasClipRight (SelectionVertex *pfv0, SelectionVertex *pfv1, SelectionVertex *out);
 
@@ -64,7 +62,7 @@ namespace Axon
 		static float epision = 0.000001f;
 		static int numCalled = 0;
 
-		Camera Selection::m_selectionCamera;
+		RenderCamera Selection::m_selectionCamera;
 
 		Selection::Selection(void)
 			: m_isSelectMode(false)
@@ -80,7 +78,7 @@ namespace Axon
 			SafeDeleteArray(gSelectionVertexs);
 		}
 
-		void Selection::beginSelect(const Camera& view)
+		void Selection::beginSelect(const RenderCamera& view)
 		{
 			m_selectTime = OsUtil::milliseconds();
 
@@ -102,7 +100,7 @@ namespace Axon
 			m_isActor = false;
 		}
 
-		void Selection::testActor(Entity* re)
+		void Selection::testActor(RenderEntity* re)
 		{
 			// 顶点乘以该矩阵后,就是视坐标系里的坐标.
 			m_selectModelViewMatrix = m_selectionCamera.getViewMatrix() * re->getModelMatrix();
@@ -135,19 +133,19 @@ namespace Axon
 			// 判断图元类型并处理
 			if (prim->getType() == Primitive::LineType)
 			{
-				Line* line = static_cast<Line*> (prim);
+				RenderLine* line = static_cast<RenderLine*> (prim);
 
 				testLine(line);
 			}
 			else if (prim->getType() == Primitive::MeshType)
 			{
-				Mesh* mesh = static_cast<Mesh*> (prim);
+				RenderMesh* mesh = static_cast<RenderMesh*> (prim);
 
 				testMesh(mesh);
 			}
 			else if (prim->getType() == Primitive::ChunkType)
 			{
-				Chunk* chunk = static_cast<Chunk*> (prim);
+				RenderChunk* chunk = static_cast<RenderChunk*> (prim);
 
 				testChunk(chunk);
 			}
@@ -161,19 +159,19 @@ namespace Axon
 			// 判断图元类型并处理
 			if (prim->getType() == Primitive::LineType)
 			{
-				Line* line = static_cast<Line*> (prim);
+				RenderLine* line = static_cast<RenderLine*> (prim);
 
 				testLine(line);
 			}
 			else if (prim->getType() == Primitive::MeshType)
 			{
-				Mesh* mesh = static_cast<Mesh*> (prim);
+				RenderMesh* mesh = static_cast<RenderMesh*> (prim);
 
 				testMesh(mesh);
 			}
 			else if (prim->getType() == Primitive::ChunkType)
 			{
-				Chunk* chunk = static_cast<Chunk*> (prim);
+				RenderChunk* chunk = static_cast<RenderChunk*> (prim);
 
 				testChunk(chunk);
 			}
@@ -209,7 +207,7 @@ namespace Axon
 			return m_selectRecSeq;
 		}
 
-		void Selection::testLine(const Line* line)
+		void Selection::testLine(const RenderLine* line)
 		{
 			// 转换顶点坐标成为视坐标或归一化坐标
 			const DebugVertex* vertexs = line->getVertexesPointer();
@@ -271,7 +269,7 @@ namespace Axon
 			}
 		}
 
-		void Selection::testMesh(const Mesh* mesh)
+		void Selection::testMesh(const RenderMesh* mesh)
 		{
 			// 转换顶点坐标成为归一化坐标
 			const Vertex* vertexs = mesh->getVertexesPointer();
@@ -355,7 +353,7 @@ namespace Axon
 			}
 		}
 
-		void Selection::testChunk(const Chunk* chunk)
+		void Selection::testChunk(const RenderChunk* chunk)
 		{
 			// 转换顶点坐标成为视坐标或归一化坐标
 			const ChunkVertex* vertexs = chunk->getVertexesPointer();
@@ -1051,5 +1049,5 @@ namespace Axon
 
 			gNumVertex = num;
 		}
-	}
-}
+
+AX_END_NAMESPACE

@@ -10,7 +10,7 @@ read the license and understand and accept it fully.
 #ifndef AX_D3D9THREAD_H
 #define AX_D3D9THREAD_H
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
 	struct D3D9clearer {
 		Rgba color;
@@ -55,8 +55,8 @@ namespace Axon { namespace Render {
 	protected:
 		void beginFrame();
 		void drawScene(QueuedScene* scene, const D3D9clearer& clearer);
-		void setupScene(QueuedScene* scene, const D3D9clearer* clearer = nullptr, Target* target = nullptr, Camera* camera = nullptr);
-		void unsetScene(QueuedScene* scene, const D3D9clearer* clearer = nullptr, Target* target = nullptr, Camera* camera = nullptr);
+		void setupScene(QueuedScene* scene, const D3D9clearer* clearer = nullptr, RenderTarget* target = nullptr, RenderCamera* camera = nullptr);
+		void unsetScene(QueuedScene* scene, const D3D9clearer* clearer = nullptr, RenderTarget* target = nullptr, RenderCamera* camera = nullptr);
 		void drawPrimitive(int prim_id);
 		void drawInteraction(Interaction* ia);
 		void endFrame();
@@ -81,14 +81,14 @@ namespace Axon { namespace Render {
 		void syncFrame();
 		void cacheSceneRes(QueuedScene* scene);
 
-		void bindTarget(Target* target);
+		void bindTarget(RenderTarget* target);
 
 	private:
 		int m_frameId;
 		bool m_isStatistic;
 	};
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE
 
 #endif // end guardian
 

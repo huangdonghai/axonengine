@@ -32,7 +32,7 @@ namespace Axon { namespace Editor {
 		virtual void doDrag(int x, int y, int flags, float pressure);
 		virtual void doMove(int x, int y) {}
 		virtual void doRelease(int x, int y);
-		virtual void doRender(const Camera& camera) {}
+		virtual void doRender(const RenderCamera& camera) {}
 
 	private:
 	};

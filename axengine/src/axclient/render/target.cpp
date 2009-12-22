@@ -10,19 +10,19 @@ read the license and understand and accept it fully.
 
 #include "../private.h"
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
-	Target::Target()
+	RenderTarget::RenderTarget()
 	{
 		m_realAllocated = false;
 	}
 
-	Target::~Target()
+	RenderTarget::~RenderTarget()
 	{
 
 	}
 
-	void Target::allocReal()
+	void RenderTarget::allocReal()
 	{
 		if (m_realAllocated)
 			return;
@@ -31,7 +31,7 @@ namespace Axon { namespace Render {
 		m_realAllocated = true;
 	}
 
-	void Target::freeReal()
+	void RenderTarget::freeReal()
 	{
 		if (!m_realAllocated)
 			return;
@@ -40,13 +40,13 @@ namespace Axon { namespace Render {
 		m_realAllocated = false;
 	}
 
-	ReflectionTarget::ReflectionTarget(World* world, Entity* actor, Primitive* prim, int width, int height)
+	ReflectionTarget::ReflectionTarget(RenderWorld* world, RenderEntity* actor, Primitive* prim, int width, int height)
 	{
 		m_world = world;
 		m_actor = actor;
 		m_prim = prim;
 		m_updateFrame = -1;
-		m_target = g_targetManager->allocTarget(Target::PooledAlloc, width, height, TexFormat::BGRA8);
+		m_target = g_targetManager->allocTarget(RenderTarget::PooledAlloc, width, height, TexFormat::BGRA8);
 	}
 
 	ReflectionTarget::~ReflectionTarget()
@@ -92,17 +92,17 @@ namespace Axon { namespace Render {
 	{
 	}
 
-	void TargetManager::allocReal( Target* target )
+	void TargetManager::allocReal( RenderTarget* target )
 	{
 		m_realAllocTargets.push_back(target);
 	}
 
-	void TargetManager::freeReal( Target* target )
+	void TargetManager::freeReal( RenderTarget* target )
 	{
 		m_freeRealTargets.push_back(target);
 	}
 
-	ReflectionTarget* TargetManager::findReflection( World* world, Entity* actor, Primitive* prim, int width, int height )
+	ReflectionTarget* TargetManager::findReflection( RenderWorld* world, RenderEntity* actor, Primitive* prim, int width, int height )
 	{
 		List<ReflectionTarget*>::iterator it = m_reflectionTargets.begin();
 
@@ -124,5 +124,5 @@ namespace Axon { namespace Render {
 		return reflTarget;
 	}
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE
 

@@ -9,7 +9,7 @@ read the license and understand and accept it fully.
 
 #include "../private.h"
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
 	//------------------------------------------------------------------------------
 	// class Primitive
@@ -101,7 +101,7 @@ namespace Axon { namespace Render {
 	// class LinePrim
 	//------------------------------------------------------------------------------
 
-	Line::Line(Hint hint)
+	RenderLine::RenderLine(Hint hint)
 		: Primitive(hint)
 		, m_numVertexes(0)
 		, m_numIndexes(0)
@@ -112,11 +112,11 @@ namespace Axon { namespace Render {
 		m_type = LineType;
 	}
 
-	Line::~Line() {
+	RenderLine::~RenderLine() {
 		finalize();
 	}
 
-	void Line::initialize(int numverts, int numindexes) {
+	void RenderLine::initialize(int numverts, int numindexes) {
 		// clear old data first
 		finalize();
 
@@ -132,7 +132,7 @@ namespace Axon { namespace Render {
 		m_isIndexBufferDirtied = true;
 	}
 
-	void Line::finalize() {
+	void RenderLine::finalize() {
 		m_numVertexes = 0;
 		m_numIndexes = 0;
 		TypeFree(m_vertexes);
@@ -140,83 +140,83 @@ namespace Axon { namespace Render {
 
 	}
 
-	int Line::getNumVertexes() const {
+	int RenderLine::getNumVertexes() const {
 		return m_numVertexes;
 	}
 
-	const DebugVertex* Line::getVertexesPointer() const {
+	const DebugVertex* RenderLine::getVertexesPointer() const {
 		return m_vertexes;
 	}
 
-	DebugVertex* Line::lockVertexes() {
+	DebugVertex* RenderLine::lockVertexes() {
 		return m_vertexes;
 	}
 
-	void Line::unlockVertexes() {
+	void RenderLine::unlockVertexes() {
 		m_isDirtied = true;
 		m_isVertexBufferDirtied = true;
 	}
 
-	int Line::getNumIndexes() const {
+	int RenderLine::getNumIndexes() const {
 		return m_numIndexes;
 	}
 
-	const ushort_t* Line::getIndexPointer() const {
+	const ushort_t* RenderLine::getIndexPointer() const {
 		return m_indexes;
 	}
 
-	ushort_t* Line::lockIndexes() {
+	ushort_t* RenderLine::lockIndexes() {
 		return m_indexes;
 	}
 
-	void Line::unlockIndexes() {
+	void RenderLine::unlockIndexes() {
 		m_isDirtied = true;
 		m_isIndexBufferDirtied = true;
 	}
 
-	ushort_t Line::getIndex(int order) const {
+	ushort_t RenderLine::getIndex(int order) const {
 		AX_ASSERT(order >= 0 && order < m_numIndexes);
 		return m_indexes[order];
 	}
 
-	const Line::VertexType& Line::getVertex(int order) const {
+	const RenderLine::VertexType& RenderLine::getVertex(int order) const {
 		AX_ASSERT(order >= 0 && order < m_numVertexes);
 		return m_vertexes[order];
 	}
 
-	void Line::lock() {}
+	void RenderLine::lock() {}
 
-	void Line::setIndex(int order, int index) {
+	void RenderLine::setIndex(int order, int index) {
 		AX_ASSERT(order >= 0 && order < m_numIndexes);
 		m_indexes[order] = index;
 	}
 
-	void Line::setVertex(int order, const VertexType& vert) {
+	void RenderLine::setVertex(int order, const VertexType& vert) {
 		AX_ASSERT(order >= 0 && order < m_numVertexes);
 		m_vertexes[order] = vert;
 	}
 
-	Line::VertexType& Line::getVertexRef(int order) {
+	RenderLine::VertexType& RenderLine::getVertexRef(int order) {
 		AX_ASSERT(order >= 0 && order < m_numVertexes);
 		return m_vertexes[order];
 	}
 
-	void Line::setLineWidth(float line_width) {
+	void RenderLine::setLineWidth(float line_width) {
 		m_lineWidth = line_width;
 	}
 
-	float Line::getLineWidth() const {
+	float RenderLine::getLineWidth() const {
 		return m_lineWidth;
 	}
 
-	void Line::unlock() {
+	void RenderLine::unlock() {
 		m_isDirtied = true;
 		m_isVertexBufferDirtied = true;
 		m_isIndexBufferDirtied = true;
 	}
 
-	Line* Line::createAxis(Hint hint, float line_length) {
-		Line* line = new Line(hint);
+	RenderLine* RenderLine::createAxis(Hint hint, float line_length) {
+		RenderLine* line = new RenderLine(hint);
 
 		line->initialize(6, 6);
 
@@ -247,8 +247,8 @@ namespace Axon { namespace Render {
 		return line;
 	}
 
-	Line* Line::createAxis(Hint hint, const Vector3& origin, const Matrix3& axis, float line_length) {
-		Line* line = new Line(hint);
+	RenderLine* RenderLine::createAxis(Hint hint, const Vector3& origin, const Matrix3& axis, float line_length) {
+		RenderLine* line = new RenderLine(hint);
 
 		line->initialize(6, 6);
 
@@ -279,8 +279,8 @@ namespace Axon { namespace Render {
 		return line;
 	}
 
-	Line* Line::createScreenRect(Hint hint, const Rect& rect, const Rgba& color) {
-		Line* line = new Line(hint);
+	RenderLine* RenderLine::createScreenRect(Hint hint, const Rect& rect, const Rgba& color) {
+		RenderLine* line = new RenderLine(hint);
 
 		line->initialize(4, 8);
 
@@ -306,7 +306,7 @@ namespace Axon { namespace Render {
 		return line;
 	}
 
-	bool Line::setupScreenRect(Line*& line, const Rect& rect, const Rgba& color) {
+	bool RenderLine::setupScreenRect(RenderLine*& line, const Rect& rect, const Rgba& color) {
 		if (!line) {
 			line = createScreenRect(Dynamic, rect, color);
 			return true;
@@ -325,8 +325,8 @@ namespace Axon { namespace Render {
 		return true;
 	}
 
-	Line* Line::createLine(Hint hint, const Vector3& from, const Vector3& to, const Rgba& color) {
-		Line* line = new Line(hint);
+	RenderLine* RenderLine::createLine(Hint hint, const Vector3& from, const Vector3& to, const Rgba& color) {
+		RenderLine* line = new RenderLine(hint);
 
 		line->initialize(2, 2);
 
@@ -342,12 +342,12 @@ namespace Axon { namespace Render {
 		return line;
 	}
 
-	bool Line::setupLine(Line*& line, const Vector3& from, const Vector3& to, const Rgba& color) {
+	bool RenderLine::setupLine(RenderLine*& line, const Vector3& from, const Vector3& to, const Rgba& color) {
 		bool isinit = false;
 
 		if (!line) {
 			isinit = true;
-			line = new Line(Dynamic);
+			line = new RenderLine(Dynamic);
 			line->initialize(2, 2);
 			line->lockIndexes();
 			line->m_indexes[0] = 0;
@@ -365,12 +365,12 @@ namespace Axon { namespace Render {
 		return isinit;
 	}
 
-	bool Line::setupAxis(Line*& line, const Vector3& origin, const Matrix3& axis, float length, Rgba xcolor, Rgba ycolor, Rgba zcolor) {
+	bool RenderLine::setupAxis(RenderLine*& line, const Vector3& origin, const Matrix3& axis, float length, Rgba xcolor, Rgba ycolor, Rgba zcolor) {
 		bool isInit = false;
 
 		if (!line) {
 			isInit = true;
-			line = new Line(Dynamic);
+			line = new RenderLine(Dynamic);
 			line->initialize(6, 6);
 			line->lock();
 			line->m_indexes[0] = 0;
@@ -404,10 +404,10 @@ namespace Axon { namespace Render {
 		return isInit;
 	}
 
-	bool Line::setupBoundingBox(Line*& line, const Vector3& origin, const Matrix3& axis, const BoundingBox& inbbox, float scale/* =1.0f */, Hint hint /* = Primitive::Dynamic */){
+	bool RenderLine::setupBoundingBox(RenderLine*& line, const Vector3& origin, const Matrix3& axis, const BoundingBox& inbbox, float scale/* =1.0f */, Hint hint /* = Primitive::Dynamic */){
 		bool isfirst = false;
 		if (!line) {
-			line = new Line(hint);
+			line = new RenderLine(hint);
 			line->initialize(32, 48);
 
 			ushort_t* indexes = line->lockIndexes();
@@ -458,24 +458,24 @@ namespace Axon { namespace Render {
 		return isfirst;
 	}
 
-	bool Line::setupCircle(Line*& line, const Vector3& origin, const Vector3& p0, const Vector3& p1, const Rgba& color, int subdivided) {
+	bool RenderLine::setupCircle(RenderLine*& line, const Vector3& origin, const Vector3& p0, const Vector3& p1, const Rgba& color, int subdivided) {
 		return setupCircle(line, origin, p0, p1, color, subdivided, false, Plane());
 	}
 
-	bool Line::setupCircle(Line*& line, const Vector3& origin, const Vector3& p0, const Vector3& p1, const Rgba& color, int subdivided, const Plane& plane) {
+	bool RenderLine::setupCircle(RenderLine*& line, const Vector3& origin, const Vector3& p0, const Vector3& p1, const Rgba& color, int subdivided, const Plane& plane) {
 		return setupCircle(line, origin, p0, p1, color, subdivided, true, plane);
 	}
 
-	bool Line::setupCircle(Line*& line, const Vector3& origin, const Vector3& p0, const Vector3& p1, const Rgba& color, int subdivided,Hint hint){
+	bool RenderLine::setupCircle(RenderLine*& line, const Vector3& origin, const Vector3& p0, const Vector3& p1, const Rgba& color, int subdivided,Hint hint){
         return setupCircle(line, origin, p0, p1, color, subdivided, false, Plane(), hint);
 	}
 
-	bool Line::setupCircle(Line*& line, const Vector3& origin, const Vector3& p0, const Vector3& p1, const Rgba& color, int subdivided, bool clipplane, const Plane& plane,Hint hint /* = Primitive::Dynamic */) {
+	bool RenderLine::setupCircle(RenderLine*& line, const Vector3& origin, const Vector3& p0, const Vector3& p1, const Rgba& color, int subdivided, bool clipplane, const Plane& plane,Hint hint /* = Primitive::Dynamic */) {
 		AX_ASSERT(subdivided >= 3);
 		bool first = false;
 
 		if (!line) {
-			line = new Line(Dynamic);
+			line = new RenderLine(Dynamic);
 			line->initialize(subdivided, subdivided * 2);
 			ushort_t* pidx = line->lockIndexes();
 			for (int i = 0; i < subdivided; i++) {
@@ -509,9 +509,9 @@ namespace Axon { namespace Render {
 		return first;
 	}
 
-	Line* Line::createWorldBoundingBox( Hint hint, const BoundingBox& bbox, const Rgba& color )
+	RenderLine* RenderLine::createWorldBoundingBox( Hint hint, const BoundingBox& bbox, const Rgba& color )
 	{
-		Line* line = new Line(hint);
+		RenderLine* line = new RenderLine(hint);
 
 		line->initialize(8, 24);
 		VertexType* verts = line->lockVertexes();
@@ -541,10 +541,10 @@ namespace Axon { namespace Render {
 	}
 
 	//------------------------------------------------------------------------------
-	// class Mesh
+	// class RenderMesh
 	//------------------------------------------------------------------------------
 
-	Mesh::Mesh(Hint hint)
+	RenderMesh::RenderMesh(Hint hint)
 		: Primitive(hint)
 		, m_numVertexes(0)
 		, m_vertexes(NULL)
@@ -558,11 +558,11 @@ namespace Axon { namespace Render {
 		m_isStriped = false;
 	}
 
-	Mesh::~Mesh() {
+	RenderMesh::~RenderMesh() {
 		finalize();
 	}
 
-	void Mesh::initialize(int numverts, int numidxes) {
+	void RenderMesh::initialize(int numverts, int numidxes) {
 		if (numverts == m_numVertexes && numidxes == m_numIndexes)
 			return;
 
@@ -575,52 +575,52 @@ namespace Axon { namespace Render {
 		m_indexes = TypeAlloc<ushort_t>(numidxes);
 	}
 
-	void Mesh::finalize() {
+	void RenderMesh::finalize() {
 		m_numVertexes = 0;
 		m_numIndexes = 0;
 		TypeFree(m_vertexes);
 		TypeFree(m_indexes);
 	}
 
-	int Mesh::getNumVertexes() const {
+	int RenderMesh::getNumVertexes() const {
 		return m_numVertexes;
 	}
 
-	const Vertex* Mesh::getVertexesPointer() const {
+	const Vertex* RenderMesh::getVertexesPointer() const {
 		return m_vertexes;
 	}
 
-	Vertex* Mesh::lockVertexes() {
+	Vertex* RenderMesh::lockVertexes() {
 		return m_vertexes;
 	}
 
-	void Mesh::unlockVertexes() {
+	void RenderMesh::unlockVertexes() {
 		m_isDirtied = true;
 		m_isVertexBufferDirtied = true;
 	}
 
-	const ushort_t* Mesh::getIndexPointer() const {
+	const ushort_t* RenderMesh::getIndexPointer() const {
 		return m_indexes;
 	}
 
-	int Mesh::getNumIndexes() const {
+	int RenderMesh::getNumIndexes() const {
 		return m_numIndexes;
 	}
 
-	ushort_t* Mesh::lockIndexes() {
+	ushort_t* RenderMesh::lockIndexes() {
 		return m_indexes;
 	}
 
-	void Mesh::unlockIndexes() {
+	void RenderMesh::unlockIndexes() {
 		m_isDirtied = true;
 		m_isIndexBufferDirtied = true;
 	}
 
-	Line* Mesh::getTangentLine(float len) const {
+	RenderLine* RenderMesh::getTangentLine(float len) const {
 		if (m_numVertexes == 0)
 			return NULL;
 
-		Line* line = new Line(OneFrame);
+		RenderLine* line = new RenderLine(OneFrame);
 
 		line->initialize(m_numVertexes * 6, m_numVertexes * 6);
 		DebugVertex* verts = line->lockVertexes();
@@ -659,11 +659,11 @@ namespace Axon { namespace Render {
 		return line;
 	}
 
-	Line* Mesh::getNormalLine(float len) const {
+	RenderLine* RenderMesh::getNormalLine(float len) const {
 		if (m_numVertexes == 0)
 			return NULL;
 
-		Line* line = new Line(OneFrame);
+		RenderLine* line = new RenderLine(OneFrame);
 
 		line->initialize(m_numVertexes * 2, m_numVertexes * 2);
 		DebugVertex* verts = line->lockVertexes();
@@ -686,9 +686,9 @@ namespace Axon { namespace Render {
 		return line;
 	}
 
-	void Mesh::computeTangentSpace() {
+	void RenderMesh::computeTangentSpace() {
 		if (m_isStriped) {
-			Errorf("Mesh::computeTangentSpace: cann't compute tangent space when is striped");
+			Errorf("RenderMesh::computeTangentSpace: cann't compute tangent space when is striped");
 			return;
 		}
 
@@ -697,7 +697,7 @@ namespace Axon { namespace Render {
 		unlockVertexes();
 	}
 
-	void Mesh::computeTangentSpaceSlow()
+	void RenderMesh::computeTangentSpaceSlow()
 	{
 		if (m_isStriped) {
 			Errorf("can't compute tangent space when is striped");
@@ -712,8 +712,8 @@ namespace Axon { namespace Render {
 
 
 	// static helper function
-	Mesh* Mesh::createScreenQuad(Hint hint, const Rect& rect, const Rgba& color, Material* material, const Vector4& st) {
-		Mesh* quad = new Mesh(hint);
+	RenderMesh* RenderMesh::createScreenQuad(Hint hint, const Rect& rect, const Rgba& color, Material* material, const Vector4& st) {
+		RenderMesh* quad = new RenderMesh(hint);
 
 		quad->initialize(4, 6);
 		Vertex* verts = quad->lockVertexes();
@@ -768,7 +768,7 @@ namespace Axon { namespace Render {
 		return quad;
 	}
 
-	bool Mesh::setupScreenQuad(Mesh*& quad, const Rect& rect, const Rgba& color, Material* material, const Vector4& st) {
+	bool RenderMesh::setupScreenQuad(RenderMesh*& quad, const Rect& rect, const Rgba& color, Material* material, const Vector4& st) {
 		Vertex* verts = quad->lockVertexes();
 		verts[0].xyz = Vector3(rect.x, rect.y, 0.0f);
 		verts[0].st.x = st[0];
@@ -821,7 +821,7 @@ namespace Axon { namespace Render {
 		return true;
 	}
 
-	bool Mesh::setupFan(Mesh*& mesh, const Vector3& center, const Vector3& v0, const Vector3& v1, float start, float end, Rgba color, int subdivided, Material* material) {
+	bool RenderMesh::setupFan(RenderMesh*& mesh, const Vector3& center, const Vector3& v0, const Vector3& v1, float start, float end, Rgba color, int subdivided, Material* material) {
 		AX_ASSERT(subdivided >= 1);
 
 		bool isinit = false;
@@ -829,7 +829,7 @@ namespace Axon { namespace Render {
 		int numidxes = subdivided * 3;
 		if (!mesh) {
 			isinit = true;
-			mesh = new Mesh(Dynamic);
+			mesh = new RenderMesh(Dynamic);
 			mesh->initialize(numverts, numidxes);
 			mesh->lockIndexes();
 			for (int i = 0; i < subdivided; i++) {
@@ -859,13 +859,13 @@ namespace Axon { namespace Render {
 	}
 
 
-	bool Mesh::setupPolygon(Mesh*& mesh, int numverts, const Vector3* verts, Rgba color, Material* material) {
+	bool RenderMesh::setupPolygon(RenderMesh*& mesh, int numverts, const Vector3* verts, Rgba color, Material* material) {
 		AX_ASSERT(numverts >= 3);
 		bool isinit = false;
 		int numidxes =(numverts - 2) * 3;
 		if (!mesh) {
 			isinit = true;
-			mesh = new Mesh(Dynamic);
+			mesh = new RenderMesh(Dynamic);
 			mesh->initialize(numverts, numidxes);
 			mesh->lockIndexes();
 			for (int i = 0; i < numverts - 2; i++) {
@@ -889,13 +889,13 @@ namespace Axon { namespace Render {
 		return isinit;
 	}
 
-	bool Mesh::setupBox(Mesh*& mesh, const BoundingBox& bbox, const Rgba& color)
+	bool RenderMesh::setupBox(RenderMesh*& mesh, const BoundingBox& bbox, const Rgba& color)
 	{
 		int numverts = 8;
 		int numidxes = 36;
 
 		if (!mesh){
-			mesh = new Render::Mesh(Dynamic);
+			mesh = new RenderMesh(Dynamic);
 			mesh->initialize(8,36);
 		}
 
@@ -930,13 +930,13 @@ namespace Axon { namespace Render {
  	}
 
 	// NOTES: debug cone, no texture coords
-	bool Mesh::setupCone(Mesh*& cone, const Vector3& center, float radius, const Vector3& top, const Rgba& color, int subdivided) {
+	bool RenderMesh::setupCone(RenderMesh*& cone, const Vector3& center, float radius, const Vector3& top, const Rgba& color, int subdivided) {
 		int numverts = subdivided + 2;		// number of subdivided + top + center
 		int numidxes = subdivided * 2 * 3;
 		bool isinit = false;
 		if (!cone) {
 			isinit = true;
-			cone = new Mesh(Dynamic);
+			cone = new RenderMesh(Dynamic);
 			cone->initialize(numverts, numidxes);
 
 			// triangles
@@ -1002,7 +1002,7 @@ namespace Axon { namespace Render {
 		return isinit;
 	}
 
-	bool Mesh::setupHexahedron(Mesh*& mesh, Vector3 volumeverts[8]) {
+	bool RenderMesh::setupHexahedron(RenderMesh*& mesh, Vector3 volumeverts[8]) {
 		int numverts = 8;
 		int numindexes = 6 * 2 * 3;
 
@@ -1010,7 +1010,7 @@ namespace Axon { namespace Render {
 
 		if (!mesh) {
 			isinit = true;
-			mesh = new Mesh(Dynamic);
+			mesh = new RenderMesh(Dynamic);
 			mesh->initialize(numverts, numindexes);
 
 			// triangles
@@ -1059,17 +1059,17 @@ namespace Axon { namespace Render {
 #endif
 
 	//------------------------------------------------------------------------------
-	// class Text
+	// class RenderText
 	//------------------------------------------------------------------------------
 
-	Text::Text(Hint hint) : Primitive(hint), m_horizonAlign(Center), m_verticalAlign(VCenter) {
+	RenderText::RenderText(Hint hint) : Primitive(hint), m_horizonAlign(Center), m_verticalAlign(VCenter) {
 		m_type = TextType;
 	}
 
-	Text::~Text() {
+	RenderText::~RenderText() {
 	}
 
-	void Text::initialize(const Rect& rect, Rgba color, float aspect, int format, Font* font, const String& text) {
+	void RenderText::initialize(const Rect& rect, Rgba color, float aspect, int format, Font* font, const String& text) {
 		m_rect = rect;
 		m_color = color;
 		m_aspect = aspect;
@@ -1079,7 +1079,7 @@ namespace Axon { namespace Render {
 		m_isSimpleText = false;
 	}
 
-	void Text::initializeSimple(const Vector3& xyz, Rgba color, const String& text, bool fixedWidth) {
+	void RenderText::initializeSimple(const Vector3& xyz, Rgba color, const String& text, bool fixedWidth) {
 		m_isSimpleText = true;
 		m_color = color;
 		m_position = xyz;
@@ -1093,22 +1093,22 @@ namespace Axon { namespace Render {
 			m_font = g_defaultFont;
 	}
 
-	void Text::finalize() {
+	void RenderText::finalize() {
 	}
 
 	// static helper function
-	Text* Text::createSimpleText(Hint hint, const Vector3& xyz, const Rgba& color, const String& text, bool fixedWidth) {
-		Text* rp_text = new Text(hint);
+	RenderText* RenderText::createSimpleText(Hint hint, const Vector3& xyz, const Rgba& color, const String& text, bool fixedWidth) {
+		RenderText* rp_text = new RenderText(hint);
 		rp_text->initializeSimple(xyz, color, text, fixedWidth);
 
 		return rp_text;
 	}
 
-	Text* Text::createText(Hint hint, const Rect& rect, Font* font, const String& text, const Rgba& color, HorizonAlign halign, VerticalAlign valign, int format, float aspect) {
-		Text* rp_text = new Text(hint);
+	RenderText* RenderText::createText(Hint hint, const Rect& rect, Font* font, const String& text, const Rgba& color, HorizonAlign halign, VerticalAlign valign, int format, float aspect) {
+		RenderText* rp_text = new RenderText(hint);
 
 		if (text.size() == 0)
-			Errorf("Text::CreateText: null text");
+			Errorf("RenderText::CreateText: null text");
 
 		rp_text->m_rect = rect;
 		rp_text->m_font = font;
@@ -1125,10 +1125,10 @@ namespace Axon { namespace Render {
 
 
 	//------------------------------------------------------------------------------
-	// class Chunk
+	// class RenderChunk
 	//------------------------------------------------------------------------------
 
-	Chunk::Chunk(Hint hint)
+	RenderChunk::RenderChunk(Hint hint)
 		: Primitive(hint)
 		, m_numVertexes(0)
 		, m_vertexes(NULL)
@@ -1140,11 +1140,11 @@ namespace Axon { namespace Render {
 		m_isZonePrim = false;
 	}
 
-	Chunk::~Chunk() {
+	RenderChunk::~RenderChunk() {
 		finalize();
 	}
 
-	void Chunk::initialize(int numverts, int numidxes) {
+	void RenderChunk::initialize(int numverts, int numidxes) {
 		finalize();
 
 		m_numVertexes = numverts;
@@ -1154,90 +1154,90 @@ namespace Axon { namespace Render {
 		m_indexes = TypeAlloc<ushort_t>(numidxes);
 	}
 
-	void Chunk::finalize() {
+	void RenderChunk::finalize() {
 		TypeFree(m_vertexes);
 		TypeFree(m_indexes);
 		m_numVertexes = 0;
 		m_numIndexes = 0;
 	}
 
-	int Chunk::getNumVertexes() const {
+	int RenderChunk::getNumVertexes() const {
 		return m_numVertexes;
 	}
 
-	const ChunkVertex* Chunk::getVertexesPointer() const {
+	const ChunkVertex* RenderChunk::getVertexesPointer() const {
 		return m_vertexes;
 	}
 
-	ChunkVertex* Chunk::lockVertexes() {
+	ChunkVertex* RenderChunk::lockVertexes() {
 		return m_vertexes;
 	}
 
-	void Chunk::unlockVertexes() {
+	void RenderChunk::unlockVertexes() {
 		m_isDirtied = true;
 		m_isVertexBufferDirtied = true;
 	}
 
-	int Chunk::getNumIndexes() const {
+	int RenderChunk::getNumIndexes() const {
 		return m_numIndexes;
 	}
 
-	const ushort_t* Chunk::getIndexesPointer() const {
+	const ushort_t* RenderChunk::getIndexesPointer() const {
 		return m_indexes;
 	}
 
-	ushort_t* Chunk::lockIndexes() {
+	ushort_t* RenderChunk::lockIndexes() {
 		return m_indexes;
 	}
 
-	void Chunk::unlockIndexes() {
+	void RenderChunk::unlockIndexes() {
 		m_isDirtied = true;
 		m_isIndexBufferDirtied = true;
 	}
 
-	void Chunk::setTerrainRect(const Vector4& rect) {
+	void RenderChunk::setTerrainRect(const Vector4& rect) {
 		m_terrainRect = rect;
 	}
 
-	Vector4 Chunk::getTerrainRect() const {
+	Vector4 RenderChunk::getTerrainRect() const {
 		return m_terrainRect;
 	}
 
-	void  Chunk::setColorTexture(Texture* color_texture) {
+	void  RenderChunk::setColorTexture(Texture* color_texture) {
 		m_colorTexture = color_texture;
 	}
 
-	Texture* Chunk::getColorTexture() {
+	Texture* RenderChunk::getColorTexture() {
 		return m_colorTexture;
 	}
 
-	void Chunk::setNormalTexture(Texture* dsdt) {
+	void RenderChunk::setNormalTexture(Texture* dsdt) {
 		m_normalTexture = dsdt;
 	}
 
-	Texture* Chunk::getNormalTexture() {
+	Texture* RenderChunk::getNormalTexture() {
 		return m_normalTexture;
 	}
 
-	void Chunk::setChunkRect(const Vector4& rect) {
+	void RenderChunk::setChunkRect(const Vector4& rect) {
 		m_chunkRect = rect;
 	}
 
-	Vector4 Chunk::getChunkRect() const {
+	Vector4 RenderChunk::getChunkRect() const {
 		return m_chunkRect;
 	}
 
-	void Chunk::setNumLayers(int n) {
+	void RenderChunk::setNumLayers(int n) {
 		m_numLayers = std::min<int>(n,MAX_LAYERS);
 		m_isDirtied = true;
 	}
 
-	int Chunk::getNumLayers() const {
+	int RenderChunk::getNumLayers() const {
 		return m_numLayers;
 	}
 
-	void Chunk::setLayers(int index, Texture* alpha, Material* detail, const Vector2& scale, bool isVerticalProjection) {
-		if (index >= Chunk::MAX_LAYERS) {
+	void RenderChunk::setLayers(int index, Texture* alpha, Material* detail, const Vector2& scale, bool isVerticalProjection) {
+		if (index >= RenderChunk::MAX_LAYERS) {
 			Debugf("MAX_LAYERS exceeded\n");
 			return;
 		}
@@ -1248,33 +1248,33 @@ namespace Axon { namespace Render {
 		m_layers[index].isVerticalProjection = isVerticalProjection;
 	}
 
-	Texture* Chunk::getLayerAlpha(int index) const {
-		if (index >= Chunk::MAX_LAYERS) {
+	Texture* RenderChunk::getLayerAlpha(int index) const {
+		if (index >= RenderChunk::MAX_LAYERS) {
 			return nullptr;
 		}
 
 		return m_layers[index].alphaTex.get();
 	}
 
-	Material* Chunk::getLayerDetail(int index) const {
-		if (index >= Chunk::MAX_LAYERS) {
+	Material* RenderChunk::getLayerDetail(int index) const {
+		if (index >= RenderChunk::MAX_LAYERS) {
 			return nullptr;
 		}
 
 		return m_layers[index].detailMat.get();
 	}
 
-	Vector2 Chunk::getLayerScale(int index) const {
-		if (index >= Chunk::MAX_LAYERS) {
+	Vector2 RenderChunk::getLayerScale(int index) const {
+		if (index >= RenderChunk::MAX_LAYERS) {
 			return Vector2(1,1);
 		}
 
 		return m_layers[index].scale;
 	}
 
-	bool Chunk::isLayerVerticalProjection(int index) const {
+	bool RenderChunk::isLayerVerticalProjection(int index) const {
 
-		if (index >= Chunk::MAX_LAYERS) {
+		if (index >= RenderChunk::MAX_LAYERS) {
 			return false;
 		}
 
@@ -1458,4 +1458,4 @@ namespace Axon { namespace Render {
 		m_waitUncache.push_back(id-1);
 	}
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE

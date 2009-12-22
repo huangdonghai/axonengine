@@ -181,7 +181,7 @@ AnimWrapper::AnimWrapper(AnimWrapper* parent) : m_widget(0), m_parent(parent)
 	init();
 }
 
-AnimWrapper::AnimWrapper(AnimWrapper* parent, IAnimatable* anim) : m_widget(0), m_parent(parent)
+AnimWrapper::AnimWrapper(AnimWrapper* parent, Control* anim) : m_widget(0), m_parent(parent)
 {
 	if (m_parent)
 		m_widget = m_parent->m_widget;

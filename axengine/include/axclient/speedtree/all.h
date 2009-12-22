@@ -19,7 +19,7 @@ read the license and understand and accept it fully.
 #include "treemanager.h"
 
 namespace Axon {
-	typedef Render::TreeActor RenderTree;
+	typedef TreeActor RenderTree;
 } // namespace Axon
 
 #endif // AX_CONFIG_OPTION_USE_SPEEDTREE_40

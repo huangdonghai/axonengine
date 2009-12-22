@@ -9,7 +9,7 @@ read the license and understand and accept it fully.
 
 #include "private.h"
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
 	//--------------------------------------------------------------------------
 	// class GLtarget
@@ -22,7 +22,7 @@ namespace Axon { namespace Render {
 		m_depthTarget = nullptr;
 		TypeZeroArray(colorAttached);
 
-		m_storeHint = Target::Free;
+		m_storeHint = RenderTarget::Free;
 
 		m_texture = nullptr;
 		m_lastFrameUsed = 0;
@@ -62,7 +62,7 @@ namespace Axon { namespace Render {
 		return rect;
 	}
 
-	Target::Type GLtarget::getType() {
+	RenderTarget::Type GLtarget::getType() {
 		return kTexture;
 	}
 
@@ -74,7 +74,7 @@ namespace Axon { namespace Render {
 		m_framebuffer->unbind();
 	}
 
-	void GLtarget::attachDepth(Target* depth) {
+	void GLtarget::attachDepth(RenderTarget* depth) {
 		AX_ASSERT(depth->isTexture());
 		AX_ASSERT(depth->isDepthFormat());
 		GLtarget* gldepth = dynamic_cast<GLtarget*>(depth);
@@ -94,7 +94,7 @@ namespace Axon { namespace Render {
 		m_depthTarget = depth;
 	}
 
-	void GLtarget::attachColor(int index, Target* c) {
+	void GLtarget::attachColor(int index, RenderTarget* c) {
 		AX_ASSERT(index < MAX_COLOR_ATTACHMENT);
 		colorAttached[index] = (GLtarget*)c;
 	}
@@ -108,7 +108,7 @@ namespace Axon { namespace Render {
 		TypeZeroArray(colorAttached);
 	}
 
-	Target* GLtarget::getColorAttached(int index) const {
+	RenderTarget* GLtarget::getColorAttached(int index) const {
 		AX_ASSERT(index < MAX_COLOR_ATTACHMENT);
 		return colorAttached[index];
 	}
@@ -247,7 +247,7 @@ namespace Axon { namespace Render {
 			GLenum b = bindColor(m_boundTarget);
 			buffers.push_back(b + GL_COLOR_ATTACHMENT0_EXT);
 
-			for (int i = 0; i < Target::MAX_COLOR_ATTACHMENT; i++) {
+			for (int i = 0; i < RenderTarget::MAX_COLOR_ATTACHMENT; i++) {
 				GLtarget* attached = m_boundTarget->getColorAttachedGL(i);
 				if (!attached) {
 					continue;
@@ -265,7 +265,7 @@ namespace Axon { namespace Render {
 			// attach depth and stencil
 			GLtarget* depth = m_boundTarget->getDepthAttachedGL();
 			if (!depth) {
-				depth = allocTarget(Target::TemporalAlloc, TexFormat::D24);
+				depth = allocTarget(RenderTarget::TemporalAlloc, TexFormat::D24);
 			}
 
 			TexFormat tf = depth->getTextureGL()->getFormat();
@@ -354,7 +354,7 @@ namespace Axon { namespace Render {
 		while (it != m_targetpool.end()) {
 			GLtarget* target = *it;
 
-			if (target->getHint() == Target::PermanentAlloc) {
+			if (target->getHint() == RenderTarget::PermanentAlloc) {
 				++it;
 				continue;
 			}
@@ -365,7 +365,7 @@ namespace Axon { namespace Render {
 				continue;
 			}
 
-			target->setHint(Target::Free, frame);
+			target->setHint(RenderTarget::Free, frame);
 			++it;
 		}
 	}
@@ -412,7 +412,7 @@ namespace Axon { namespace Render {
 		return false;
 	}
 
-	GLtarget* GLframebuffer::allocTarget(Target::AllocHint hint, TexFormat texformat) {
+	GLtarget* GLframebuffer::allocTarget(RenderTarget::AllocHint hint, TexFormat texformat) {
 		if (!glFramebufferManager->isFormatSupport(texformat)) {
 			Errorf("GLframebuffer::allocTarget: can't support format %s", texformat.getStringName());
 			return nullptr;
@@ -420,7 +420,7 @@ namespace Axon { namespace Render {
 
 		GLtarget* result = nullptr;
 		AX_FOREACH(GLtarget* target, m_targetpool) {
-			if (target->getHint() != Target::Free) {
+			if (target->getHint() != RenderTarget::Free) {
 				continue;
 			}
 
@@ -441,7 +441,7 @@ namespace Axon { namespace Render {
 		return result;
 	}
 
-	void GLframebuffer::freeTarget(Target* target) {
+	void GLframebuffer::freeTarget(RenderTarget* target) {
 		if (!target->isTexture()) {
 			Errorf("GLframebuffer::freeTarget: target isn't a texture");
 			return;
@@ -456,7 +456,7 @@ namespace Axon { namespace Render {
 		}
 #endif
 
-		gltarget->setHint(Target::Free, glFramebufferManager->getFrame());
+		gltarget->setHint(RenderTarget::Free, glFramebufferManager->getFrame());
 	}
 
 	GLtexture* GLframebuffer::getBoundColor() const {
@@ -565,12 +565,12 @@ namespace Axon { namespace Render {
 	void GLframebuffermanager::finalize() {
 	}
 
-	Target* GLframebuffermanager::allocTarget(Target::AllocHint hint, int width, int height, TexFormat texformat) {
+	RenderTarget* GLframebuffermanager::allocTarget(RenderTarget::AllocHint hint, int width, int height, TexFormat texformat) {
 		GLframebuffer* fb = getFramebuffer(width, height);
 		return fb->allocTarget(hint, texformat);
 	}
 
-	void GLframebuffermanager::freeTarget(Target* target) {
+	void GLframebuffermanager::freeTarget(RenderTarget* target) {
 		if (!target->isTexture()) {
 			return;
 		}
@@ -804,16 +804,16 @@ namespace Axon { namespace Render {
 		return true;
 	}
 
-	TexFormat GLframebuffermanager::getSuggestFormat(Target::SuggestFormat sf)
+	TexFormat GLframebuffermanager::getSuggestFormat(RenderTarget::SuggestFormat sf)
 	{
 		switch (sf) {
-		case Target::LDR_COLOR:
+		case RenderTarget::LDR_COLOR:
 			return TexFormat::BGRA8;
-		case Target::MDR_COLOR:
+		case RenderTarget::MDR_COLOR:
 			return TexFormat::RGBA16F;
-		case Target::HDR_COLOR:
+		case RenderTarget::HDR_COLOR:
 			return TexFormat::RGBA16F;
-		case Target::SHADOW_MAP:
+		case RenderTarget::SHADOW_MAP:
 			if (r_shadowFormat->getInteger() == 0) {
 				return TexFormat::D16;
 			}
@@ -823,5 +823,5 @@ namespace Axon { namespace Render {
 		return 0;
 	}
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE
 

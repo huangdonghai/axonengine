@@ -11,7 +11,7 @@ read the license and understand and accept it fully.
 #ifndef AX_RENDER_VISAREA_H
 #define AX_RENDER_VISAREA_H
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
 #if 0
 	struct ConvexSide {
@@ -40,7 +40,7 @@ namespace Axon { namespace Render {
 	};
 #endif
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE
 
 #endif // end guardian
 

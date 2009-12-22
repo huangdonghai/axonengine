@@ -210,7 +210,7 @@ void CreationPanel::on_selectTree_itemDoubleClicked(QTreeWidgetItem* item,int)
 		delete m_renderActor;
 	}
 
-	m_renderActor = new Render::TreeActor(finfo.fullpath);
+	m_renderActor = new TreeActor(finfo.fullpath);
 	world->addActor(m_renderActor);
 
 	ui.preview->setFocusActor(m_renderActor);

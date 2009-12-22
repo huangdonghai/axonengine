@@ -74,7 +74,7 @@ namespace Axon { namespace Game {
 	// class TerrainFixed
 	//--------------------------------------------------------------------------
 
-	TerrainFixed::TerrainFixed(Render::Terrain* terr) {
+	TerrainFixed::TerrainFixed(RenderTerrain* terr) {
 		m_renderTerrain = terr;
 		m_physicsTerrain = nullptr;
 
@@ -105,7 +105,7 @@ namespace Axon { namespace Game {
 			return;
 		}
 
-		if (arg != Render::Terrain::HeightfieldSetted) {
+		if (arg != RenderTerrain::HeightfieldSetted) {
 			return;
 		}
 

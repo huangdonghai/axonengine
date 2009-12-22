@@ -11,24 +11,24 @@ read the license and understand and accept it fully.
 #ifndef AX_RENDER_TERRAIN
 #define AX_RENDER_TERRAIN
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
-	class TerrainChunk : public Entity {
+	class TerrainChunk : public RenderEntity {
 	public:
 	};
 
-	class AX_API Terrain : public Entity, public IObservable {
+	class AX_API RenderTerrain : public RenderEntity, public IObservable {
 	public:
 		enum { HeightfieldSetted = 1 };
 
-		Terrain() : Entity(kTerrain) {}
-		virtual ~Terrain() {}
+		RenderTerrain() : RenderEntity(kTerrain) {}
+		virtual ~RenderTerrain() {}
 
-		virtual Kind getType() const { return Entity::kTerrain; }
+		virtual Kind getType() const { return RenderEntity::kTerrain; }
 		virtual void getHeightinfo(ushort_t*& datap, int& size, float& tilemeters) = 0;
 	};
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE
 
 #endif // end guardian
 

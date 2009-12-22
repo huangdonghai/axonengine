@@ -10,7 +10,7 @@ read the license and understand and accept it fully.
 #ifndef AX_RENDER_INTERACTION_H
 #define AX_RENDER_INTERACTION_H
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
 	struct QueuedLight;
 	struct QueuedEntity;
@@ -30,7 +30,7 @@ namespace Axon { namespace Render {
 		Primitive* primitive;
 
 		int numTargets;
-		Target* targets[MAX_TARGETS];
+		RenderTarget* targets[MAX_TARGETS];
 
 		int resource;		// geometry resource
 		Shader* shader;
@@ -47,7 +47,7 @@ namespace Axon { namespace Render {
 		void setupShader();
 	};
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE
 
 #endif // end guardian
 

@@ -9,20 +9,20 @@ read the license and understand and accept it fully.
 
 #include "../private.h"
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
-	class Light::ShadowInfo
+	class RenderLight::ShadowInfo
 	{
 	public:
 		class SplitInfo {
 		public:
-			SplitInfo(Light::ShadowInfo* shadowInfo, int shadowSize)
+			SplitInfo(RenderLight::ShadowInfo* shadowInfo, int shadowSize)
 			{
 				m_target = 0;
 				m_updateFrame = -1;
 
-				if (shadowInfo->m_light->getLightType() != Light::kGlobal)
-					m_target = g_targetManager->allocTarget(Target::PooledAlloc, shadowSize, shadowSize, TexFormat::D16);
+				if (shadowInfo->m_light->getLightType() != RenderLight::kGlobal)
+					m_target = g_targetManager->allocTarget(RenderTarget::PooledAlloc, shadowSize, shadowSize, TexFormat::D16);
 			}
 
 			~SplitInfo()
@@ -32,16 +32,16 @@ namespace Axon { namespace Render {
 			}
 
 		public:
-			Light::ShadowInfo* m_shadowInfo;
-			Target* m_target;
-			Camera m_camera;
+			RenderLight::ShadowInfo* m_shadowInfo;
+			RenderTarget* m_target;
+			RenderCamera m_camera;
 			Vector3 m_volume[8];
 			int m_updateFrame;
 			float m_csmExtend;
 			BoundingBox m_csmBbox;	// calc scale and offset
 		};
 
-		ShadowInfo(Light* light, int numSplits, int shadowSize)
+		ShadowInfo(RenderLight* light, int numSplits, int shadowSize)
 		{
 			m_light = light;
 			m_shadowMapSize = Math::nearestPowerOfTwo(shadowSize);
@@ -54,7 +54,7 @@ namespace Axon { namespace Render {
 				}
 				int csmSize = m_shadowMapSize * 2;
 
-				m_csmTarget = g_targetManager->allocTarget(Target::PooledAlloc, csmSize, csmSize, TexFormat::D16);
+				m_csmTarget = g_targetManager->allocTarget(RenderTarget::PooledAlloc, csmSize, csmSize, TexFormat::D16);
 			} else {
 				m_csmTarget = 0;
 			}
@@ -85,11 +85,11 @@ namespace Axon { namespace Render {
 		{
 			Type t = m_light->getLightType();
 
-			if (t == Light::kGlobal) {
+			if (t == RenderLight::kGlobal) {
 				return initGlobal();
-			} else if (t == Light::kPoint) {
+			} else if (t == RenderLight::kPoint) {
 				return initPoint();
-			} else if (t == Light::kSpot) {
+			} else if (t == RenderLight::kSpot) {
 				return initSpot();
 			}
 
@@ -99,13 +99,13 @@ namespace Axon { namespace Render {
 		void update(QueuedScene* qscene)
 		{
 			switch (m_light->getLightType()) {
-				case Light::kGlobal:
+				case RenderLight::kGlobal:
 					updateGlobal(qscene);
 					break;
-				case Light::kPoint:
+				case RenderLight::kPoint:
 					updatePoint(qscene);
 					break;
-				case Light::kSpot:
+				case RenderLight::kSpot:
 					updateSpot(qscene);
 					break;
 			}
@@ -210,13 +210,13 @@ namespace Axon { namespace Render {
 
 		// updateSplitDist computes the near and far distances for every frustum slice
 		// in camera eye space - that is, at what distance does a slice start and end
-		int updateSplitDist(float f[Light::MAX_CSM_SPLITS+1], float nd, float fd)
+		int updateSplitDist(float f[RenderLight::MAX_CSM_SPLITS+1], float nd, float fd)
 		{
 			float lambda = r_csmLambda->getFloat();
 			float ratio = fd/nd;
 			int numsplits = r_csmSplits->getInteger();
 
-			numsplits = Math::clamp<int>(numsplits, 1, Light::MAX_CSM_SPLITS);
+			numsplits = Math::clamp<int>(numsplits, 1, RenderLight::MAX_CSM_SPLITS);
 
 			f[0] = nd;
 
@@ -266,7 +266,7 @@ namespace Axon { namespace Render {
 			Vector3* points = si->m_volume;
 			BoundingBox& bbox = si->m_csmBbox;
 
-			const Camera& visCamera = scene->camera;
+			const RenderCamera& visCamera = scene->camera;
 
 			visCamera.calcPointsAlongZdist(points, f[index]);
 			visCamera.calcPointsAlongZdist(points + 4, f[index+1]);
@@ -331,7 +331,7 @@ namespace Axon { namespace Render {
 			Vector3* points = si->m_volume;
 			BoundingBox& bbox = si->m_csmBbox;
 
-			const Camera& visCamera = scene->camera;
+			const RenderCamera& visCamera = scene->camera;
 
 			visCamera.calcPointsAlongZdist(points, f[m_numCsmSplits-1]);
 			visCamera.calcPointsAlongZdist(points + 4, f[m_numCsmSplits]);
@@ -368,7 +368,7 @@ namespace Axon { namespace Render {
 			neard = std::max(neard, 1.0f);
 			float fard = r_csmRange->getFloat();
 
-			float f[Light::MAX_CSM_SPLITS+1];
+			float f[RenderLight::MAX_CSM_SPLITS+1];
 
 			// calculate split dist
 			m_numCsmSplits = updateSplitDist(f, neard, fard);
@@ -471,7 +471,7 @@ namespace Axon { namespace Render {
 				if (m_csmTarget) {
 					g_targetManager->freeTarget(m_csmTarget);
 				}
-				m_csmTarget = g_targetManager->allocTarget(Target::PooledAlloc, csmSize, csmSize, TexFormat::D16);
+				m_csmTarget = g_targetManager->allocTarget(RenderTarget::PooledAlloc, csmSize, csmSize, TexFormat::D16);
 
 				for (int i = 0; i < 4; i++) {
 					SplitInfo* si = m_splits[i];
@@ -499,8 +499,8 @@ namespace Axon { namespace Render {
 			m_radius = m_light->getRadius();
 
 			// create camera
-			Camera cameras[6];
-			Camera::createCubemapCameras(mtx, cameras, 0.5f, m_light->getRadius());
+			RenderCamera cameras[6];
+			RenderCamera::createCubemapCameras(mtx, cameras, 0.5f, m_light->getRadius());
 
 			// calculate volumes
 			for (int i=0; i<6; i++) {
@@ -533,7 +533,7 @@ namespace Axon { namespace Render {
 			m_axis = mtx.axis;
 			m_radius = m_light->getRadius();
 
-			Camera& camera = m_splits[0]->m_camera;
+			RenderCamera& camera = m_splits[0]->m_camera;
 			SplitInfo* si = m_splits[0];
 
 			camera.setOrigin(mtx.origin);
@@ -574,19 +574,19 @@ namespace Axon { namespace Render {
 		}
 
 	public:
-		Light* m_light;
+		RenderLight* m_light;
 		int m_numSplits;
-		SplitInfo* m_splits[Light::MAX_SPLITS];
+		SplitInfo* m_splits[RenderLight::MAX_SPLITS];
 		int m_updateFrame;
 		int m_shadowMapSize;
-		Target* m_csmTarget;
+		RenderTarget* m_csmTarget;
 
 		// some cached info for check if need update
 		Vector3 m_origin;
 		Matrix3 m_axis;
 		float m_radius;
 
-		Vector4 m_splitScaleOffsets[Light::MAX_CSM_SPLITS];
+		Vector4 m_splitScaleOffsets[RenderLight::MAX_CSM_SPLITS];
 		float m_csmRange;
 		float m_csmLambda;
 		int m_csmZfar;
@@ -595,7 +595,7 @@ namespace Axon { namespace Render {
 
 
 
-	Light::Light() : Entity(kLight)
+	RenderLight::RenderLight() : RenderEntity(kLight)
 	{
 		m_type = kGlobal;
 		m_castShadowMap = 0;
@@ -613,7 +613,7 @@ namespace Axon { namespace Render {
 		m_preferShadowMapSize = 256;
 	}
 
-	Light::Light(Type t, const Vector3& pos, Rgb color) : Entity(kLight)
+	RenderLight::RenderLight(Type t, const Vector3& pos, Rgb color) : RenderEntity(kLight)
 	{
 		m_type = t;
 		setOrigin(pos);
@@ -632,7 +632,7 @@ namespace Axon { namespace Render {
 		m_preferShadowMapSize = 256;
 	}
 
-	Light::Light(Type t, const Vector3& pos, Rgb color, float radius) : Entity(kLight)
+	RenderLight::RenderLight(Type t, const Vector3& pos, Rgb color, float radius) : RenderEntity(kLight)
 	{
 		m_type = t;
 		setOrigin(pos);
@@ -651,12 +651,12 @@ namespace Axon { namespace Render {
 		m_preferShadowMapSize = 256;
 	}
 
-	Light::~Light()
+	RenderLight::~RenderLight()
 	{
 		m_shadowLink.removeFromList();
 	}
 
-	BoundingBox Light::getLocalBoundingBox()
+	BoundingBox RenderLight::getLocalBoundingBox()
 	{
 		if (m_type == kGlobal) {
 			return BoundingBox::LargestBox;
@@ -678,7 +678,7 @@ namespace Axon { namespace Render {
 		return BoundingBox::UnitBox;
 	}
 
-	BoundingBox Light::getBoundingBox()
+	BoundingBox RenderLight::getBoundingBox()
 	{
 		if (m_type == kGlobal) {
 			return BoundingBox::LargestBox;
@@ -688,7 +688,7 @@ namespace Axon { namespace Render {
 	}
 
 
-	void Light::fillQueued(QueuedLight* queued)
+	void RenderLight::fillQueued(QueuedLight* queued)
 	{
 		m_queuedLight = queued;
 
@@ -702,7 +702,7 @@ namespace Axon { namespace Render {
 		queued->matrix = m_affineMat;
 
 		queued->pos = m_affineMat.origin;
-		if (m_type == Light::kGlobal) {
+		if (m_type == RenderLight::kGlobal) {
 			queued->pos.xyz().normalize();
 			queued->pos.w = 0;
 		}
@@ -714,7 +714,7 @@ namespace Axon { namespace Render {
 		queued->radius = m_radius;
 	}
 
-	void Light::issueToQueue(QueuedScene* qscene)
+	void RenderLight::issueToQueue(QueuedScene* qscene)
 	{
 		if (!m_queuedLight) {
 			return;
@@ -783,7 +783,7 @@ namespace Axon { namespace Render {
 #endif
 	}
 
-	void Light::prepareLightBuffer(QueuedScene* scene)
+	void RenderLight::prepareLightBuffer(QueuedScene* scene)
 	{
 		if (m_type == kGlobal) {
 			prepareLightBuffer_Global(scene);
@@ -794,9 +794,9 @@ namespace Axon { namespace Render {
 		}
 	}
 
-	void Light::prepareLightBuffer_Global( QueuedScene* scene )
+	void RenderLight::prepareLightBuffer_Global( QueuedScene* scene )
 	{
-		const Camera& camera = scene->camera;
+		const RenderCamera& camera = scene->camera;
 		float znear = camera.getZnear();
 		float zfar = camera.getZfar();
 
@@ -804,7 +804,7 @@ namespace Axon { namespace Render {
 		camera.calcPointsAlongZdist(&m_queuedLight->lightVolume[4], zfar * 0.9f);
 	}
 
-	void Light::prepareLightBuffer_Point(QueuedScene* scene)
+	void RenderLight::prepareLightBuffer_Point(QueuedScene* scene)
 	{
 		// calculate light volume
 		const Vector3& origin = getOrigin();
@@ -834,7 +834,7 @@ namespace Axon { namespace Render {
 		}
 	}
 
-	void Light::prepareLightBuffer_Spot(QueuedScene* scene)
+	void RenderLight::prepareLightBuffer_Spot(QueuedScene* scene)
 	{
 		// calculate light volume
 		const Vector3& origin = getOrigin();
@@ -876,7 +876,7 @@ namespace Axon { namespace Render {
 		}
 	}
 
-	void Light::initShadowInfo()
+	void RenderLight::initShadowInfo()
 	{
 		if (!m_castShadowMap)
 			return;
@@ -895,12 +895,12 @@ namespace Axon { namespace Render {
 		}
 	}
 
-	void Light::clearShadowInfo()
+	void RenderLight::clearShadowInfo()
 	{
 		SafeDelete(m_shadowInfo);
 	}
 
-	bool Light::checkShadow( QueuedScene* qscene )
+	bool RenderLight::checkShadow( QueuedScene* qscene )
 	{
 		if (!m_castShadowMap) {
 			return false;
@@ -918,15 +918,15 @@ namespace Axon { namespace Render {
 		return true;
 	}
 
-	void Light::linkShadow()
+	void RenderLight::linkShadow()
 	{
 		m_shadowLink.addToFront(m_world->m_shadowLink);
 	}
 
-	Light* Light::unlinkShadow()
+	RenderLight* RenderLight::unlinkShadow()
 	{
 		if (m_shadowLink.isInList()) {
-			Light* l = m_shadowLink.getNext();
+			RenderLight* l = m_shadowLink.getNext();
 			m_shadowLink.removeFromList();
 			return l;
 		}
@@ -934,14 +934,14 @@ namespace Axon { namespace Render {
 		return 0;
 	}
 
-	void Light::freeShadowMap()
+	void RenderLight::freeShadowMap()
 	{
 		AX_ASSERT(m_shadowInfo);
 
 		m_shadowInfo->unuseShadowMap();
 	}
 
-	bool Light::genShadowMap(QueuedScene* qscene)
+	bool RenderLight::genShadowMap(QueuedScene* qscene)
 	{
 		AX_ASSERT(m_shadowInfo);
 
@@ -953,7 +953,7 @@ namespace Axon { namespace Render {
 		return false;
 	}
 
-	int Light::getShadowMemoryUsed() const
+	int RenderLight::getShadowMemoryUsed() const
 	{
 		if (!m_shadowInfo)
 			return 0;
@@ -961,21 +961,21 @@ namespace Axon { namespace Render {
 		return m_shadowMemoryUsed;
 	}
 
-	void Light::setLightColor( Rgb color, float intensity, float specularX )
+	void RenderLight::setLightColor( Rgb color, float intensity, float specularX )
 	{
 		m_color.xyz() = color.toVector() * intensity;
 		m_color.w = m_color.xyz().getLength() * specularX;
 	}
 
-	void Light::setSkyColor( Rgb color, float skyIntensity /*= 1.0f*/ )
+	void RenderLight::setSkyColor( Rgb color, float skyIntensity /*= 1.0f*/ )
 	{
 		m_skyColor = color.toVector() * skyIntensity;
 	}
 
-	void Light::setEnvColor( Rgb color, float envIntensity /*= 1.0f*/ )
+	void RenderLight::setEnvColor( Rgb color, float envIntensity /*= 1.0f*/ )
 	{
 		m_envColor = color.toVector() * envIntensity;
 	}
 
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE

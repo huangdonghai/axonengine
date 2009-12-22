@@ -42,7 +42,7 @@ namespace Axon { namespace Editor { namespace MapEdit {
 		}
 
 		if (m_isSelected && !m_isDeleted) {
-			Render::Line::setupBoundingBox(m_bboxLine, m_gameNode->getOrigin_p(), m_gameNode->getAxis_p(), m_gameNode->getLocalBoundingBox(), 1.05f);
+			RenderLine::setupBoundingBox(m_bboxLine, m_gameNode->getOrigin_p(), m_gameNode->getAxis_p(), m_gameNode->getLocalBoundingBox(), 1.05f);
 			g_renderSystem->addToScene(m_bboxLine);
 		}
 

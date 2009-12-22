@@ -11,7 +11,7 @@ read the license and understand and accept it fully.
 #ifndef AX_D3D9VERTEXBUFFER_H
 #define AX_D3D9VERTEXBUFFER_H
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
 	struct DynVb {
 		IDirect3DVertexBuffer9* vb;
@@ -325,7 +325,7 @@ namespace Axon { namespace Render {
 		D3D9vertdecl* vertDecls[D3D9vertexobject::VERTEXTYPE_NUMBER];
 	};
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE
 
 
 #endif // end guardian

@@ -11,7 +11,7 @@ read the license and understand and accept it fully.
 #ifndef AX_RENDER_QUERY_H
 #define AX_RENDER_QUERY_H
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
 	class AX_API Query {
 	public:
@@ -48,5 +48,5 @@ namespace Axon { namespace Render {
 		virtual void issueQuery(Query* query, int frameId, const BoundingBox& bbox) = 0;
 	};
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE
 #endif

@@ -9,7 +9,7 @@ read the license and understand and accept it fully.
 
 #include "d3d9private.h"
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
 
 	D3D9query::D3D9query()
@@ -177,5 +177,5 @@ namespace Axon { namespace Render {
 		return m_activeQuery[type];
 	}
 
-}} // Axon::Render
+AX_END_NAMESPACE
 

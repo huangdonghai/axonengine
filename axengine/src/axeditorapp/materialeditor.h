@@ -34,8 +34,8 @@ private slots:
 	void on_matTree_itemActivated(QTreeWidgetItem*,int);
 
 private:
-	Sequence<Render::Material*> m_openedMat;
-	Render::Material* m_curMat;
+	Sequence<Material*> m_openedMat;
+	Material* m_curMat;
 };
 
 #endif // MATERIALEDITOR_H

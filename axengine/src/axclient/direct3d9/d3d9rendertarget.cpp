@@ -11,7 +11,7 @@ read the license and understand and accept it fully.
 #include "d3d9private.h"
 
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
 	//--------------------------------------------------------------------------
 	// class D3D9target
@@ -23,7 +23,7 @@ namespace Axon { namespace Render {
 		m_depthTarget = nullptr;
 		TypeZeroArray(m_colorAttached);
 
-		m_storeHint = Target::Free;
+		m_storeHint = RenderTarget::Free;
 
 		m_texture = nullptr;
 		m_lastFrameUsed = 0;
@@ -76,7 +76,7 @@ namespace Axon { namespace Render {
 
 			// TODO: set dummy color target
 			TexFormat format = d3d9TargetManager->getNullTargetFormat();
-			m_nullColor = d3d9TargetManager->allocTargetDX(Target::TemporalAlloc, m_width, m_height, format);
+			m_nullColor = d3d9TargetManager->allocTargetDX(RenderTarget::TemporalAlloc, m_width, m_height, format);
 			V(d3d9Device->SetRenderTarget(0, m_nullColor->getSurface()));
 			m_nullColor->releaseSurface();
 
@@ -120,7 +120,7 @@ namespace Axon { namespace Render {
 #endif
 	}
 
-	void D3D9target::attachDepth(Target* depth)
+	void D3D9target::attachDepth(RenderTarget* depth)
 	{
 		AX_ASSERT(depth->isTexture());
 		AX_ASSERT(depth->isDepthFormat());
@@ -128,7 +128,7 @@ namespace Axon { namespace Render {
 		m_depthTarget = gldepth;
 	}
 
-	void D3D9target::attachColor(int index, Target* c)
+	void D3D9target::attachColor(int index, RenderTarget* c)
 	{
 		AX_ASSERT(index < MAX_COLOR_ATTACHMENT);
 		m_colorAttached[index] = (D3D9target*)c;
@@ -145,7 +145,7 @@ namespace Axon { namespace Render {
 		TypeZeroArray(m_colorAttached);
 	}
 
-	Target* D3D9target::getColorAttached(int index) const
+	RenderTarget* D3D9target::getColorAttached(int index) const
 	{
 		AX_ASSERT(index < MAX_COLOR_ATTACHMENT);
 		return m_colorAttached[index];
@@ -189,7 +189,7 @@ namespace Axon { namespace Render {
 		if (m_realTarget)
 			return;
 
-		m_realTarget = d3d9TargetManager->allocTargetDX(Target::PermanentAlloc, m_width, m_height, m_format);
+		m_realTarget = d3d9TargetManager->allocTargetDX(RenderTarget::PermanentAlloc, m_width, m_height, m_format);
 	}
 
 	void D3D9target::freeRealTarget()
@@ -286,12 +286,12 @@ namespace Axon { namespace Render {
 
 	}
 
-	Target* D3D9targetmanager::allocTarget(Target::AllocHint hint, int width, int height, TexFormat texformat)
+	RenderTarget* D3D9targetmanager::allocTarget(RenderTarget::AllocHint hint, int width, int height, TexFormat texformat)
 	{
 		return allocTargetDX(hint, width, height, texformat);
 	}
 
-	void D3D9targetmanager::freeTarget(Target* target)
+	void D3D9targetmanager::freeTarget(RenderTarget* target)
 	{
 		D3D9_SCOPELOCK;
 
@@ -299,7 +299,7 @@ namespace Axon { namespace Render {
 			Errorf("can't free window target");
 		}
 		D3D9target* dxtarget = (D3D9target*)target;
-		dxtarget->setHint(Target::Free, m_curFrame);
+		dxtarget->setHint(RenderTarget::Free, m_curFrame);
 
 		// if is pooled, free it's real target also
 		if (!dxtarget->isPooled())
@@ -321,7 +321,7 @@ namespace Axon { namespace Render {
 		m_curFrame ++;
 
 		{ // free real target first
-			List<Target*>::iterator it = m_freeRealTargets.begin();
+			List<RenderTarget*>::iterator it = m_freeRealTargets.begin();
 			while (it != m_freeRealTargets.end()) {
 				D3D9target* target = static_cast<D3D9target*>(*it);
 				target->freeRealTarget();
@@ -331,7 +331,7 @@ namespace Axon { namespace Render {
 		}
 
 		{ // alloc real target
-			List<Target*>::iterator it = m_realAllocTargets.begin();
+			List<RenderTarget*>::iterator it = m_realAllocTargets.begin();
 
 			while (it != m_realAllocTargets.end()) {
 				D3D9target* target = static_cast<D3D9target*>(*it);
@@ -360,7 +360,7 @@ namespace Axon { namespace Render {
 						continue;
 					}
 #else
-					if (t->getHint() != Target::Free) {
+					if (t->getHint() != RenderTarget::Free) {
 						++it3;
 						continue;
 					}
@@ -371,7 +371,7 @@ namespace Axon { namespace Render {
 						continue;
 					}
 
-					t->setHint(Target::Free, m_curFrame);
+					t->setHint(RenderTarget::Free, m_curFrame);
 					++it3;
 				}
 			}
@@ -414,7 +414,7 @@ namespace Axon { namespace Render {
 		}
 	}
 
-	D3D9target* D3D9targetmanager::allocTargetDX(Target::AllocHint hint, int width, int height, TexFormat texformat)
+	D3D9target* D3D9targetmanager::allocTargetDX(RenderTarget::AllocHint hint, int width, int height, TexFormat texformat)
 	{
 		D3D9_SCOPELOCK;
 
@@ -427,7 +427,7 @@ namespace Axon { namespace Render {
 
 		D3D9target* result = nullptr;
 		AX_FOREACH(D3D9target* target, targets) {
-			if (target->getHint() != Target::Free && target->getHint() != Target::TemporalAlloc) {
+			if (target->getHint() != RenderTarget::Free && target->getHint() != RenderTarget::TemporalAlloc) {
 				continue;
 			}
 
@@ -435,7 +435,7 @@ namespace Axon { namespace Render {
 				continue;
 			}
 
-			if (hint == Target::PooledAlloc) {
+			if (hint == RenderTarget::PooledAlloc) {
 				if (!target->isPooled())
 					continue;
 			} else {
@@ -448,7 +448,7 @@ namespace Axon { namespace Render {
 		}
 
 		if (!result) {
-			result = new D3D9target(width, height, texformat, hint == Target::PooledAlloc);
+			result = new D3D9target(width, height, texformat, hint == RenderTarget::PooledAlloc);
 			targets.push_back(result);
 		}
 
@@ -477,16 +477,16 @@ namespace Axon { namespace Render {
 		return m_depthStencilSurface;
 	}
 
-	TexFormat D3D9targetmanager::getSuggestFormat(Target::SuggestFormat sf)
+	TexFormat D3D9targetmanager::getSuggestFormat(RenderTarget::SuggestFormat sf)
 	{
 		switch (sf) {
-		case Target::LDR_COLOR:
+		case RenderTarget::LDR_COLOR:
 			return TexFormat::BGRA8;
-		case Target::MDR_COLOR:
+		case RenderTarget::MDR_COLOR:
 			return TexFormat::RGBA16F;
-		case Target::HDR_COLOR:
+		case RenderTarget::HDR_COLOR:
 			return TexFormat::RGBA16F;
-		case Target::SHADOW_MAP:
+		case RenderTarget::SHADOW_MAP:
 			return TexFormat::D16;
 			if (r_shadowFormat->getInteger() == 0) {
 				if (m_formatSupports[TexFormat::DF16]) {
@@ -514,7 +514,7 @@ namespace Axon { namespace Render {
 			return TexFormat::R5G6B5;
 		}
 
-		return getSuggestFormat(Target::LDR_COLOR);
+		return getSuggestFormat(RenderTarget::LDR_COLOR);
 	}
 
 	void D3D9targetmanager::onDeviceLost()
@@ -526,5 +526,5 @@ namespace Axon { namespace Render {
 	{
 
 	}
-}} // namespace Axon::Render
+AX_END_NAMESPACE
 

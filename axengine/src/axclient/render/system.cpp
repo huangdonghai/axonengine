@@ -11,7 +11,7 @@ read the license and understand and accept it fully.
 
 //#define USE_SELF_SELETION 1
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
 	// for performance timing
 	static ulonglong_t __lastFrameTime;
@@ -20,12 +20,12 @@ namespace Axon { namespace Render {
 	static const char* glname = "axopengl.driver";
 	static const char* d3d9name = "axdirect3d9.driver";
 
-	AX_BEGIN_COMMAND_MAP(System)
+	AX_BEGIN_COMMAND_MAP(RenderSystem)
 		AX_COMMAND_ENTRY("texlist",	texlist_f)
 		AX_COMMAND_ENTRY("matlist",	matlist_f)
 	AX_END_COMMAND_MAP()
 
-	System::System()
+	RenderSystem::RenderSystem()
 		: m_initialized(false)
 		, m_isSelectMode(false)
 		, m_frameNum(0)
@@ -33,20 +33,20 @@ namespace Axon { namespace Render {
 		g_cmdSystem->registerHandler(this);
 	}
 
-	System::~System()
+	RenderSystem::~RenderSystem()
 	{
 		g_cmdSystem->removeHandler(this);
 	}
 
-	void System::initialize() {
+	void RenderSystem::initialize() {
 		if (m_initialized)
 			return;
 
 		Printf("Initializing RenderSystem...\n");
 
-		g_queues[0] = new Queue;
+		g_queues[0] = new RenderQueue;
 		g_queues[0]->initialize();
-		g_queues[1] = new Queue;
+		g_queues[1] = new RenderQueue;
 		g_queues[1]->initialize();
 
 		g_renderQueue = g_queues[m_frameNum];
@@ -63,7 +63,7 @@ namespace Axon { namespace Render {
 			drivername = d3d9name;
 		}
 
-		g_renderDriver = (IDriver*)(g_classFactory->createInstance(drivername));
+		g_renderDriver = (IRenderDriver*)(g_classFactory->createInstance(drivername));
 #endif
 		g_renderDriver->initialize();
 
@@ -78,12 +78,12 @@ namespace Axon { namespace Render {
 		Printf("Initialized RenderSystem\n");
 	}
 
-	void System::finalize() {
+	void RenderSystem::finalize() {
 		g_renderDriver->finalize();
 		SafeDelete(g_renderDriver);
 	}
 
-	ShaderQuality System::getShaderQuality() {
+	ShaderQuality RenderSystem::getShaderQuality() {
 		if (r_shaderQuality->isModified()) {
 			m_shaderQuality = std::min<int>(r_shaderQuality->getInteger(), g_renderDriver->getDriverInfo()->highestQualitySupport);
 			r_shaderQuality->clearModifiedFlag();
@@ -92,15 +92,15 @@ namespace Axon { namespace Render {
 	}
 
 
-	uint_t System::getBackendCaps() {
+	uint_t RenderSystem::getBackendCaps() {
 		return 0;
 	}
 
-	void System::screenShot(const String& name, const Rect& rect) {
+	void RenderSystem::screenShot(const String& name, const Rect& rect) {
 	}
 
-	void System::info() {
-		const IDriver::Info* info = g_renderDriver->getDriverInfo();
+	void RenderSystem::info() {
+		const IRenderDriver::Info* info = g_renderDriver->getDriverInfo();
 
 		Printf("------- Render Driver Caps -------\n");
 
@@ -130,7 +130,7 @@ namespace Axon { namespace Render {
 		}
 	}
 
-	void System::beginFrame(Target* target) {
+	void RenderSystem::beginFrame(RenderTarget* target) {
 #if 0
 		g_assetManager->runFrame();
 #endif
@@ -138,14 +138,14 @@ namespace Axon { namespace Render {
 	}
 
 
-	void System::beginScene(const Camera& camera) {
+	void RenderSystem::beginScene(const RenderCamera& camera) {
 		if (m_curScene)
 			Errorf("already in a camera");
 
 		if (camera.getTarget() != m_curTarget)
 			Errorf("camera's target != current target");
 
-		ScenePtr sourceview(new Scene);
+		ScenePtr sourceview(new RenderScene);
 
 		m_curScene = sourceview;
 
@@ -158,31 +158,31 @@ namespace Axon { namespace Render {
 		m_curScene->primitives.reserve(256);
 	}
 
-	void System::addToScene(World* world) {
+	void RenderSystem::addToScene(RenderWorld* world) {
 		if (m_curScene->world) {
-			Errorf("System::addToScene: renderWorld has already added.");
+			Errorf("RenderSystem::addToScene: renderWorld has already added.");
 		}
 		m_curScene->world = world;
 	}
 
 
-	void System::addToScene(Entity* re) {
+	void RenderSystem::addToScene(RenderEntity* re) {
 		m_curScene->actors.push_back(re);
 	}
 
-	void System::addToScene(Primitive* primitive) {
+	void RenderSystem::addToScene(Primitive* primitive) {
 		m_curScene->primitives.push_back(primitive);
 	}
 
-	void System::addToOverlay(Primitive* primitive) {
+	void RenderSystem::addToOverlay(Primitive* primitive) {
 		m_curScene->overlays.push_back(primitive);
 	}
 
-	void System::endScene() {
+	void RenderSystem::endScene() {
 		m_curScene.reset();
 	}
 
-	void System::endFrame() {
+	void RenderSystem::endFrame() {
 		uint_t frontEndStart = OsUtil::milliseconds();
 
 		int shaderdebug = r_shaderDebug->getInteger();
@@ -192,7 +192,7 @@ namespace Axon { namespace Render {
 		bool show_memoryinfo = r_showMemoryInfo->getBool();
 
 		if (show_performer || show_memoryinfo) {
-			Camera camera;
+			RenderCamera camera;
 
 			Rect screen_rect = m_curTarget->getRect();
 			camera.setTarget(m_curTarget);
@@ -223,7 +223,7 @@ namespace Axon { namespace Render {
 						rect.x += 300;
 					}
 
-					Text* text = Text::createText(Primitive::OneFrame, rect, g_miniFont, msg, Rgba::White, Text::Left);
+					RenderText* text = RenderText::createText(Primitive::OneFrame, rect, g_miniFont, msg, Rgba::White, RenderText::Left);
 					addToScene(text);
 
 					rect.y += line_height;
@@ -234,43 +234,43 @@ namespace Axon { namespace Render {
 				Rect rect(400,0,120,12);
 
 				String msg;
-				Text* text;
+				RenderText* text;
 
 				StringUtil::sprintf(msg, "%32s: %d", "Total Allocated", gMemoryInfo.totalAllocated);
-				text = Text::createText(Primitive::OneFrame, rect, g_miniFont, msg, Rgba::White, Text::Left); addToScene(text); rect.y += line_height;
+				text = RenderText::createText(Primitive::OneFrame, rect, g_miniFont, msg, Rgba::White, RenderText::Left); addToScene(text); rect.y += line_height;
 				StringUtil::sprintf(msg, "%32s: %d", "Small Allocated", gMemoryInfo.smallAllocated);
-				text = Text::createText(Primitive::OneFrame, rect, g_miniFont, msg, Rgba::White, Text::Left); addToScene(text); rect.y += line_height;
+				text = RenderText::createText(Primitive::OneFrame, rect, g_miniFont, msg, Rgba::White, RenderText::Left); addToScene(text); rect.y += line_height;
 				StringUtil::sprintf(msg, "%32s: %d", "Medium Allocated", gMemoryInfo.mediumAllocated);
-				text = Text::createText(Primitive::OneFrame, rect, g_miniFont, msg, Rgba::White, Text::Left); addToScene(text); rect.y += line_height;
+				text = RenderText::createText(Primitive::OneFrame, rect, g_miniFont, msg, Rgba::White, RenderText::Left); addToScene(text); rect.y += line_height;
 				StringUtil::sprintf(msg, "%32s: %d", "Large Allocated", gMemoryInfo.largeAllocated);
-				text = Text::createText(Primitive::OneFrame, rect, g_miniFont, msg, Rgba::White, Text::Left); addToScene(text); rect.y += line_height;
+				text = RenderText::createText(Primitive::OneFrame, rect, g_miniFont, msg, Rgba::White, RenderText::Left); addToScene(text); rect.y += line_height;
 
 				StringUtil::sprintf(msg, "%32s: %d", "Total Blocks", gMemoryInfo.totalBlocks);
-				text = Text::createText(Primitive::OneFrame, rect, g_miniFont, msg, Rgba::White, Text::Left); addToScene(text); rect.y += line_height;
+				text = RenderText::createText(Primitive::OneFrame, rect, g_miniFont, msg, Rgba::White, RenderText::Left); addToScene(text); rect.y += line_height;
 				StringUtil::sprintf(msg, "%32s: %d", "Small Blocks", gMemoryInfo.smallBlocks);
-				text = Text::createText(Primitive::OneFrame, rect, g_miniFont, msg, Rgba::White, Text::Left); addToScene(text); rect.y += line_height;
+				text = RenderText::createText(Primitive::OneFrame, rect, g_miniFont, msg, Rgba::White, RenderText::Left); addToScene(text); rect.y += line_height;
 				StringUtil::sprintf(msg, "%32s: %d", "Medium Blocks", gMemoryInfo.mediumBlocks);
-				text = Text::createText(Primitive::OneFrame, rect, g_miniFont, msg, Rgba::White, Text::Left); addToScene(text); rect.y += line_height;
+				text = RenderText::createText(Primitive::OneFrame, rect, g_miniFont, msg, Rgba::White, RenderText::Left); addToScene(text); rect.y += line_height;
 				StringUtil::sprintf(msg, "%32s: %d", "Large Blocks", gMemoryInfo.largeBlocks);
-				text = Text::createText(Primitive::OneFrame, rect, g_miniFont, msg, Rgba::White, Text::Left); addToScene(text); rect.y += line_height;
+				text = RenderText::createText(Primitive::OneFrame, rect, g_miniFont, msg, Rgba::White, RenderText::Left); addToScene(text); rect.y += line_height;
 
 				StringUtil::sprintf(msg, "%32s: %d", "Frame Total Allocated", gMemoryInfo.frameTotalAllocated); gMemoryInfo.frameTotalAllocated = 0;
-				text = Text::createText(Primitive::OneFrame, rect, g_miniFont, msg, Rgba::White, Text::Left); addToScene(text); rect.y += line_height;
+				text = RenderText::createText(Primitive::OneFrame, rect, g_miniFont, msg, Rgba::White, RenderText::Left); addToScene(text); rect.y += line_height;
 				StringUtil::sprintf(msg, "%32s: %d", "Frame Small Allocated", gMemoryInfo.frameSmallAllocated); gMemoryInfo.frameSmallAllocated = 0;
-				text = Text::createText(Primitive::OneFrame, rect, g_miniFont, msg, Rgba::White, Text::Left); addToScene(text); rect.y += line_height;
+				text = RenderText::createText(Primitive::OneFrame, rect, g_miniFont, msg, Rgba::White, RenderText::Left); addToScene(text); rect.y += line_height;
 				StringUtil::sprintf(msg, "%32s: %d", "Frame Medium Allocated", gMemoryInfo.frameMediumAllocated); gMemoryInfo.frameMediumAllocated = 0;
-				text = Text::createText(Primitive::OneFrame, rect, g_miniFont, msg, Rgba::White, Text::Left); addToScene(text); rect.y += line_height;
+				text = RenderText::createText(Primitive::OneFrame, rect, g_miniFont, msg, Rgba::White, RenderText::Left); addToScene(text); rect.y += line_height;
 				StringUtil::sprintf(msg, "%32s: %d", "Frame Large Allocated", gMemoryInfo.frameLargeAllocated); gMemoryInfo.frameLargeAllocated = 0;
-				text = Text::createText(Primitive::OneFrame, rect, g_miniFont, msg, Rgba::White, Text::Left); addToScene(text); rect.y += line_height;
+				text = RenderText::createText(Primitive::OneFrame, rect, g_miniFont, msg, Rgba::White, RenderText::Left); addToScene(text); rect.y += line_height;
 
 				StringUtil::sprintf(msg, "%32s: %d", "Frame Total Blocks", gMemoryInfo.frameTotalBlocks); gMemoryInfo.frameTotalBlocks = 0;
-				text = Text::createText(Primitive::OneFrame, rect, g_miniFont, msg, Rgba::White, Text::Left); addToScene(text); rect.y += line_height;
+				text = RenderText::createText(Primitive::OneFrame, rect, g_miniFont, msg, Rgba::White, RenderText::Left); addToScene(text); rect.y += line_height;
 				StringUtil::sprintf(msg, "%32s: %d", "Frame Small Blocks", gMemoryInfo.frameSmallBlocks); gMemoryInfo.frameSmallBlocks = 0;
-				text = Text::createText(Primitive::OneFrame, rect, g_miniFont, msg, Rgba::White, Text::Left); addToScene(text); rect.y += line_height;
+				text = RenderText::createText(Primitive::OneFrame, rect, g_miniFont, msg, Rgba::White, RenderText::Left); addToScene(text); rect.y += line_height;
 				StringUtil::sprintf(msg, "%32s: %d", "Frame Medium Blocks", gMemoryInfo.frameMediumBlocks); gMemoryInfo.frameMediumBlocks = 0;
-				text = Text::createText(Primitive::OneFrame, rect, g_miniFont, msg, Rgba::White, Text::Left); addToScene(text); rect.y += line_height;
+				text = RenderText::createText(Primitive::OneFrame, rect, g_miniFont, msg, Rgba::White, RenderText::Left); addToScene(text); rect.y += line_height;
 				StringUtil::sprintf(msg, "%32s: %d", "Frame Large Blocks", gMemoryInfo.frameLargeBlocks); gMemoryInfo.frameLargeBlocks = 0;
-				text = Text::createText(Primitive::OneFrame, rect, g_miniFont, msg, Rgba::White, Text::Left); addToScene(text); rect.y += line_height;
+				text = RenderText::createText(Primitive::OneFrame, rect, g_miniFont, msg, Rgba::White, RenderText::Left); addToScene(text); rect.y += line_height;
 			}
 
 			this->endScene();
@@ -285,7 +285,7 @@ namespace Axon { namespace Render {
 		// add to render queue
 //		gQueryManager->runFrame();
 		for (size_t i = 0; i < m_sceneSeq.size(); i++) {
-			Scene* s_view = m_sceneSeq[i].get();
+			RenderScene* s_view = m_sceneSeq[i].get();
 
 			QueuedScene* queued = g_renderQueue->allocQueuedScene();
 			memset(queued, 0, sizeof(QueuedScene));
@@ -318,57 +318,57 @@ namespace Axon { namespace Render {
 		g_renderQueue = g_queues[m_frameNum%2];
 	}
 
-	void System::beginSelect(const Camera& view) {
+	void RenderSystem::beginSelect(const RenderCamera& view) {
 		m_selectionCamera = view;
 
 		m_selection->beginSelect(view);
 	}
 
-	void System::loadSelectId(int id) {
+	void RenderSystem::loadSelectId(int id) {
 		m_selection->loadSelectId(id);
 	}
 
 
-	void System::testActor(Entity* re) {
+	void RenderSystem::testActor(RenderEntity* re) {
 		m_selection->testActor(re);
 	}
 
-	void System::testPrimitive(Primitive* prim) {
+	void RenderSystem::testPrimitive(Primitive* prim) {
 		m_selection->testPrimitive(prim);
 	}
 
-	void Render::System::testPrimitive(Primitive* prim, const AffineMat& matrix) {
+	void RenderSystem::testPrimitive(Primitive* prim, const AffineMat& matrix) {
 		m_selection->testPrimitive(prim, matrix);
 	}
 
-	SelectRecordSeq System::endSelect() {
+	SelectRecordSeq RenderSystem::endSelect() {
 		return m_selection->endSelect();
 	}
 
-	Target* System::createWindowTarget(handle_t wndId, const String& name) {
+	RenderTarget* RenderSystem::createWindowTarget(handle_t wndId, const String& name) {
 		return g_renderDriver->createWindowTarget(wndId, name);
 	}
 
 #if 0
 	// textures for subscene's render target
-	Target* System::getColorTarget(int width, int height) {
+	Target* RenderSystem::getColorTarget(int width, int height) {
 		return g_renderDriver->getColorTarget(width, height);
 	}
 
-	Target* System::getDepthTarget(int width, int height) {
+	Target* RenderSystem::getDepthTarget(int width, int height) {
 		return gRenderDriver->getDepthTarget(width, height);
 	}
 
 
-	void System::addModelCreator(ModelCreator* creator) {
+	void RenderSystem::addModelCreator(ModelCreator* creator) {
 		m_modelCreators.push_back(creator);
 	}
 
-	void System::removeModelCreator(ModelCreator* creator) {
+	void RenderSystem::removeModelCreator(ModelCreator* creator) {
 		m_modelCreators.remove(creator);
 	}
 
-	ModelInstance* System::create(const String& name, intptr_t arg) {
+	ModelInstance* RenderSystem::create(const String& name, intptr_t arg) {
 		String ext = PathUtil::getExt(name);
 
 		ModelInstance* result = nullptr;
@@ -390,11 +390,11 @@ namespace Axon { namespace Render {
 	}
 #endif
 
-	void System::addEntityManager(IEntityManager* manager) {
+	void RenderSystem::addEntityManager(IEntityManager* manager) {
 		m_entityManagers.push_back(manager);
 	}
 
-	void System::removeEntityManager(IEntityManager* manager) {
+	void RenderSystem::removeEntityManager(IEntityManager* manager) {
 		Sequence<IEntityManager*>::iterator it = m_entityManagers.begin();
 
 		for (; it != m_entityManagers.end(); ++it) {
@@ -405,28 +405,28 @@ namespace Axon { namespace Render {
 		}
 	}
 
-	int System::getNumEntityManager() const {
+	int RenderSystem::getNumEntityManager() const {
 		return s2i(m_entityManagers.size());
 	}
 
-	IEntityManager* System::getEntityManager(int index) const {
+	IEntityManager* RenderSystem::getEntityManager(int index) const {
 		return m_entityManagers[index];
 	}
 
-	const IDriver::Info* System::getDriverInfo()
+	const IRenderDriver::Info* RenderSystem::getDriverInfo()
 	{
 		return g_renderDriver->getDriverInfo();
 	}
 
-	void System::texlist_f( const CmdArgs& args )
+	void RenderSystem::texlist_f( const CmdArgs& args )
 	{
 		Texture::texlist_f(args);
 	}
 
-	void System::matlist_f( const CmdArgs& args )
+	void RenderSystem::matlist_f( const CmdArgs& args )
 	{
 		Material::matlist_f(args);
 	}
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE
 

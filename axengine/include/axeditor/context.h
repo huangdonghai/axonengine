@@ -32,8 +32,8 @@ namespace Axon { namespace Editor {
 		virtual ~Context();
 
 		// present
-		virtual void doRender(const Render::Camera& camera, bool world = false) = 0;
-		virtual void doSelect(const Render::Camera& camera, int part) = 0;
+		virtual void doRender(const RenderCamera& camera, bool world = false) = 0;
+		virtual void doSelect(const RenderCamera& camera, int part) = 0;
 		virtual MapTerrain* getTerrain() { return 0; }
 
 		int generateActorId();

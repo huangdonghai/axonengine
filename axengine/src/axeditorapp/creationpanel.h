@@ -34,7 +34,7 @@ private:
 
 	EntityType mEntityType;
 	QString m_filename[ET_Max];
-	Render::Entity* m_renderActor;
+	RenderEntity* m_renderActor;
 
 private slots:
 	void on_selectTree_itemDoubleClicked(QTreeWidgetItem*,int);

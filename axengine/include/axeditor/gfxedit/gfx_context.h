@@ -19,8 +19,8 @@ namespace Axon { namespace Editor {
 		virtual ~GfxContext();
 
 		// implement Context
-		virtual void doRender(const Render::Camera& camera, bool world = false);
-		virtual void doSelect(const Render::Camera& camera, int part);
+		virtual void doRender(const RenderCamera& camera, bool world = false);
+		virtual void doSelect(const RenderCamera& camera, int part);
 
 	private:
 		GfxView* m_view;

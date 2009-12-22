@@ -10,7 +10,7 @@ read the license and understand and accept it fully.
 #ifndef AX_RENDER_ACTOR_H
 #define AX_RENDER_ACTOR_H
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
 	// forward declaration
 	struct QueuedScene;
@@ -49,9 +49,9 @@ namespace Axon { namespace Render {
 
 	class QuadNode;
 
-	class AX_API Entity {
+	class AX_API RenderEntity {
 	public:
-		friend class World;
+		friend class RenderWorld;
 
 		enum Flag {
 			DepthHack = 1, OutsideOnly = 2
@@ -62,8 +62,8 @@ namespace Axon { namespace Render {
 			kLight, kFog, kVisArea, kPortal, kOccluder, kTerrain, kOutdoorEnv
 		};
 
-		Entity(Kind type );
-		virtual ~Entity();
+		RenderEntity(Kind type );
+		virtual ~RenderEntity();
 
 		Kind getKind() const { return m_kind; }
 
@@ -101,8 +101,8 @@ namespace Axon { namespace Render {
 		void updateCsm(QueuedScene* qscene, Plane::Side side);
 		bool isCsmCulled() const;
 		float getVisSize() const { return m_visSize; }
-		World* getWorld() const { return m_world; }
-		void setWorld(World* world) { m_world = world; }
+		RenderWorld* getWorld() const { return m_world; }
+		void setWorld(RenderWorld* world) { m_world = world; }
 
 		// helper prims
 		void clearHelperPrims();
@@ -140,7 +140,7 @@ namespace Axon { namespace Render {
 		bool m_queryCulled;
 
 		// linked info
-		Link<Entity>			m_nodeLink;
+		Link<RenderEntity>			m_nodeLink;
 		QuadNode* m_linkedNode;
 		int m_linkedFrame;
 
@@ -148,30 +148,30 @@ namespace Axon { namespace Render {
 		Primitives m_helperPrims;
 
 		// used by world
-		World* m_world;
+		RenderWorld* m_world;
 		Query* m_visQuery;
 		Query* m_shadowQuery;
 		Plane::Side m_cullSide;
 	};
 
-	inline void Entity::clearHelperPrims()
+	inline void RenderEntity::clearHelperPrims()
 	{
 		m_helperPrims.clear();
 	}
 
-	inline void Entity::addHelperPrim(Primitive* prim)
+	inline void RenderEntity::addHelperPrim(Primitive* prim)
 	{
 		m_helperPrims.push_back(prim);
 	}
 
-	inline const Primitives& Entity::getHelperPrims() const
+	inline const Primitives& RenderEntity::getHelperPrims() const
 	{
 		return m_helperPrims;
 	}
 
 
 
-	typedef Sequence<Entity*>		ActorSeq;
+	typedef Sequence<RenderEntity*>		ActorSeq;
 
 	//--------------------------------------------------------------------------
 	// class IEntityManager
@@ -180,11 +180,11 @@ namespace Axon { namespace Render {
 	class AX_API IEntityManager {
 	public:
 		virtual bool isSupportExt(const String& ext) const = 0;
-		virtual Entity* create(const String& name, intptr_t arg = 0) = 0;
+		virtual RenderEntity* create(const String& name, intptr_t arg = 0) = 0;
 		virtual void updateForFrame(QueuedScene* qscene ) {}
 		virtual void issueToQueue(QueuedScene* qscene) {}
 	};
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE
 
 #endif // AX_RENDER_ACTOR_H

@@ -23,7 +23,6 @@ read the license and understand and accept it fully.
 
 namespace {
 	using namespace Axon;
-	using namespace Axon::Render;
 
 	FT_Library gFT_Library;
 
@@ -145,7 +144,7 @@ namespace {
 	static Manager* s_fontManager = 0;
 }
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
 
 	//------------------------------------------------------------------------------
@@ -568,6 +567,6 @@ namespace Axon { namespace Render {
 		return key;
 	}
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE
 
 

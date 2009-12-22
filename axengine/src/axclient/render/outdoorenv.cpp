@@ -10,7 +10,7 @@ read the license and understand and accept it fully.
 
 #include "../private.h"
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
 	static const float SKYBOX_SIZE = 4096;
 	static const float SKYBOX_TEXOFFSET = 1.0f / 512.0f;
@@ -22,7 +22,7 @@ namespace Axon { namespace Render {
 	static const int OCEAN_SUBDIVIDE = 32 * 4;
 	static const float OCEAN_MULTIPLY = 1.3f;
 
-	OutdoorEnv::OutdoorEnv(World* world) : Entity(kOutdoorEnv) {
+	OutdoorEnv::OutdoorEnv(RenderWorld* world) : RenderEntity(kOutdoorEnv) {
 		m_world = world;
 
 		m_haveSky = false;
@@ -38,17 +38,17 @@ namespace Axon { namespace Render {
 
 		createOceanMesh();
 
-		m_globalLight = new Light(Light::kGlobal, Vector3(1,-1,1), Rgb::White);
+		m_globalLight = new RenderLight(RenderLight::kGlobal, Vector3(1,-1,1), Rgb::White);
 		m_globalLight->setWorld(m_world);
 
 		// global fog
-		m_globalFog = new Fog();
+		m_globalFog = new RenderFog();
 		m_globalFog->setFogDensity(0.0004f);
 		m_globalFog->setFogColor(Rgba(119,171,201).toVector());
 		m_globalFog->setWorld(m_world);
 
 		// ocean fog
-		m_oceanFog = new Fog();
+		m_oceanFog = new RenderFog();
 		m_oceanFog->setFogDensity(0.04f);
 		m_oceanFog->setFogColor(Rgba(119,201,171).toVector() * 0.25f);
 		m_oceanFog->setWorld(m_world);
@@ -95,7 +95,7 @@ namespace Axon { namespace Render {
 		};
 
 		// box12
-		m_skybox12 = new Mesh(Mesh::Static);
+		m_skybox12 = new RenderMesh(RenderMesh::Static);
 		m_skybox12->initialize(8, 12);
 		Vertex* verts = m_skybox12->lockVertexes();
 		for (int i = 0; i < 8; i++) {
@@ -110,7 +110,7 @@ namespace Axon { namespace Render {
 		m_skybox12->unlockIndexes();
 
 		// box34
-		m_skybox34 = new Mesh(Mesh::Static);
+		m_skybox34 = new RenderMesh(RenderMesh::Static);
 		m_skybox34->initialize(8, 12);
 		verts = m_skybox34->lockVertexes();
 		for (int i = 0; i < 8; i++) {
@@ -125,7 +125,7 @@ namespace Axon { namespace Render {
 		m_skybox34->unlockIndexes();
 
 		// box side 5
-		m_skybox5 = new Mesh(Mesh::Static);
+		m_skybox5 = new RenderMesh(RenderMesh::Static);
 		m_skybox5->initialize(4, 6);
 
 		verts = m_skybox5->lockVertexes();
@@ -191,7 +191,7 @@ namespace Axon { namespace Render {
 		int numverts = (tess + 1) * (halftess+1);
 		int numidxes = tess * halftess * 2 * 3;
 
-		m_skydome = new Mesh(Mesh::Static);
+		m_skydome = new RenderMesh(RenderMesh::Static);
 		m_skydome->initialize(numverts, numidxes);
 
 		// fill vertexes
@@ -265,8 +265,8 @@ namespace Axon { namespace Render {
 			return;
 		}
 
-		m_skyNishitaRt = g_targetManager->allocTarget(Target::PermanentAlloc, 128, 64, TexFormat::RGBA16F);
-		Target* miert = g_targetManager->allocTarget(Target::PermanentAlloc, 128, 64, TexFormat::RGBA16F);
+		m_skyNishitaRt = g_targetManager->allocTarget(RenderTarget::PermanentAlloc, 128, 64, TexFormat::RGBA16F);
+		RenderTarget* miert = g_targetManager->allocTarget(RenderTarget::PermanentAlloc, 128, 64, TexFormat::RGBA16F);
 		m_skyNishitaRt->getTexture()->setClampMode(Texture::CM_ClampToEdge);
 		miert->getTexture()->setClampMode(Texture::CM_ClampToEdge);
 		m_skyNishitaRt->attachColor(0, miert);
@@ -295,7 +295,7 @@ namespace Axon { namespace Render {
 		int numidxes =(num - 1) * OCEAN_SUBDIVIDE * 2 * 3 + OCEAN_SUBDIVIDE * 3;
 
 		// create render mesh
-		m_oceanMesh = new Render::Mesh(Render::Mesh::Static);
+		m_oceanMesh = new RenderMesh(RenderMesh::Static);
 		m_oceanMesh->initialize(numverts, numidxes);
 
 		// initialize render mesh's vertexbuffer and indexbuffer
@@ -501,11 +501,11 @@ namespace Axon { namespace Render {
 		scene->camera.setTarget(m_skyNishitaRt);
 		scene->camera.setOverlay(0, 0, 128, 64);
 
-		Mesh* quad = Mesh::createScreenQuad(Primitive::OneFrame, Rect(0,0,128,64), Rgba::White, m_skyNishitaGenMat);
+		RenderMesh* quad = RenderMesh::createScreenQuad(Primitive::OneFrame, Rect(0,0,128,64), Rgba::White, m_skyNishitaGenMat);
 		scene->addInteraction(nullptr, quad);
 	}
 
-	Light* OutdoorEnv::getGlobalLight() const
+	RenderLight* OutdoorEnv::getGlobalLight() const
 	{
 		return m_globalLight;
 	}
@@ -565,5 +565,5 @@ namespace Axon { namespace Render {
 		m_globalLight->setCastShadowMap(val);
 	}
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE
 

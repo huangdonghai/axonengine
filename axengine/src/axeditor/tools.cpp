@@ -113,7 +113,7 @@ namespace Axon { namespace Editor {
 
 		r.inflate(1, 1);
 
-		Render::Line::setupScreenRect(m_linePrim, r, Rgba::Red);
+		RenderLine::setupScreenRect(m_linePrim, r, Rgba::Red);
 
 #if 1
 		int part = SelectPart::All - SelectPart::Terrain;
@@ -153,7 +153,7 @@ namespace Axon { namespace Editor {
 		m_context->addHistory(his);
 	}
 
-	void SelectTool::doRender(const Camera& camera) {
+	void SelectTool::doRender(const RenderCamera& camera) {
 		if (m_linePrim && m_beginPos != m_curPos)
 			g_renderSystem->addToOverlay(m_linePrim);
 	}
@@ -328,7 +328,7 @@ namespace Axon { namespace Editor {
 		end();
 	}
 
-	void TransformTool::doRender(const Camera& camera) {
+	void TransformTool::doRender(const RenderCamera& camera) {
 		if (!m_view)
 			return;
 

@@ -11,7 +11,7 @@ read the license and understand and accept it fully.
 #ifndef AX_D3D9PRIMITIVE_H
 #define AX_D3D9PRIMITIVE_H
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
 	//--------------------------------------------------------------------------
 	// class D3D9primitive
@@ -132,8 +132,8 @@ namespace Axon { namespace Render {
 		int m_format;			// format flags
 		Font* m_font;				// font used
 		String m_text;				// string to draw
-		Text::HorizonAlign m_horizonAlign;
-		Text::VerticalAlign m_verticalAlign;
+		RenderText::HorizonAlign m_horizonAlign;
+		RenderText::VerticalAlign m_verticalAlign;
 		Rgba m_color;
 	};
 
@@ -164,7 +164,7 @@ namespace Axon { namespace Render {
 
 		Vector4 m_chunkRect;
 		int m_numLayers;
-		Chunk::Layer m_layers[Chunk::MAX_LAYERS];
+		RenderChunk::Layer m_layers[RenderChunk::MAX_LAYERS];
 		bool m_layerVisible;
 		bool m_isZonePrim;
 		Primitive::Hint m_indexHint;
@@ -287,7 +287,7 @@ namespace Axon { namespace Render {
 			return m_staticPrims[(h & INDEX_MASK)-1];
 	}
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE
 
 
 #endif // end guardian

@@ -24,7 +24,7 @@ namespace Axon { namespace Editor { namespace MapEdit {
 	TerrainRaiseTool::TerrainRaiseTool(MapContext* context) : MapTool(context) {
 		m_cursor = nullptr;
 		m_isValid = false;
-		m_brushMat = Render::Material::load("terrainbrush");
+		m_brushMat = Material::load("terrainbrush");
 		m_brushPrims = nullptr;
 	}
 
@@ -119,7 +119,7 @@ namespace Axon { namespace Editor { namespace MapEdit {
 		m_view->getContext()->addHistory(action);
 	}
 
-	void TerrainRaiseTool::doRender(const Camera& camera) {
+	void TerrainRaiseTool::doRender(const RenderCamera& camera) {
 		if (!m_isValid)
 			return;
 
@@ -152,14 +152,14 @@ namespace Axon { namespace Editor { namespace MapEdit {
 
 		m_center.x = from.x; m_center.y = from.y;
 		SafeDelete(m_cursor);
-		m_cursor = Render::Line::createLine(RenderPrim::Dynamic, from, to, Rgba::Red);
+		m_cursor = RenderLine::createLine(Primitive::Dynamic, from, to, Rgba::Red);
 
 		SafeDelete(m_brushPrims);
 		Vector4 rect = m_terrain->getTerrainRect();
-		m_brushPrims = new Render::GroupPrim(RenderPrim::Dynamic);
-		RenderPrims prims = m_terrain->getPrimsByCircle(from.x, from.y, radius);
-		for (RenderPrims::iterator it = prims.begin(); it != prims.end(); ++it) {
-			Render::RefPrim* ref = new Render::RefPrim(RenderPrim::Dynamic);
+		m_brushPrims = new GroupPrim(Primitive::Dynamic);
+		Primitives prims = m_terrain->getPrimsByCircle(from.x, from.y, radius);
+		for (Primitives::iterator it = prims.begin(); it != prims.end(); ++it) {
+			RefPrim* ref = new RefPrim(Primitive::Dynamic);
 			ref->setRefered(*it);
 			ref->setMaterial(m_brushMat.get());
 			m_brushPrims->addPrimitive(ref, true);
@@ -647,7 +647,7 @@ namespace Axon { namespace Editor { namespace MapEdit {
 		m_actor = nullptr;
 	}
 
-	void CreateEntityTool::doRender(const Camera& camera) {
+	void CreateEntityTool::doRender(const RenderCamera& camera) {
 
 	}
 

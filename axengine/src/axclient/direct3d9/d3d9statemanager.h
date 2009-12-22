@@ -11,7 +11,7 @@ read the license and understand and accept it fully.
 #ifndef AX_D3D9_STATEMANAGER_H
 #define AX_D3D9_STATEMANAGER_H
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
 	extern IDirect3DDevice9* d3d9Device;
 
@@ -344,6 +344,6 @@ namespace Axon { namespace Render {
 		IDirect3DStateBlock9* m_stageSamplerStates[MAX_STAGES];
 	};
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE
 
 #endif // end guardian

@@ -64,11 +64,11 @@ namespace Axon { namespace Map {
 		Spline& getSpline() { return m_spline; }
 		const Spline& getSpline() const { return m_spline; }
 
-		Render::Material* getMaterial() const { return m_material; }
-		void setMaterial(Render::Material* material) { m_material = material; }
+		Material* getMaterial() const { return m_material; }
+		void setMaterial(Material* material) { m_material = material; }
 
-		Render::Mesh* getMesh() const { return m_mesh; }
-		void setMesh(Render::Mesh* mesh) { m_mesh = mesh; }
+		RenderMesh* getMesh() const { return m_mesh; }
+		void setMesh(RenderMesh* mesh) { m_mesh = mesh; }
 
 	protected:
 		String m_name;	
@@ -80,8 +80,8 @@ namespace Axon { namespace Map {
 
 		Spline m_spline;	// 样条曲线(控制点在里边)
 
-		Render::Material* m_material;	// 材质
-		Render::Mesh* m_mesh;
+		Material* m_material;	// 材质
+		RenderMesh* m_mesh;
 	};
 
 	//--------------------------------------------------------------------------
@@ -113,7 +113,7 @@ namespace Axon { namespace Map {
 
 		// operate
 		void update();
-		void uploadRenderData(RenderPrims* primSeq);
+		void uploadRenderData(Primitives* primSeq);
 		void clear();
 		void init();
 

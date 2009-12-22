@@ -14,7 +14,7 @@ read the license and understand and accept it fully.
 const int NUM_WIND_MATRIX = 3;
 const int NUM_LEAF_ANGLES = 8;
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
 	TreeAsset::TreeAsset(TreeManager* forest) {
 		m_manager = forest;
@@ -211,7 +211,7 @@ namespace Axon { namespace Render {
 			return;
 		}
 
-		Mesh* lod0 = new Mesh(Mesh::Static);
+		RenderMesh* lod0 = new RenderMesh(RenderMesh::Static);
 
 		lod0->initialize(numVerts, numIndexes);
 
@@ -224,9 +224,9 @@ namespace Axon { namespace Render {
 		for (int i = 0; i < numVerts; i++) {
 			const float* diffuseTc = b.m_pTexCoords[CSpeedTreeRT::TL_DIFFUSE] + i * 2;
 
-			float fWindMatrixIndex1 = float(int(b.m_pWindMatrixIndices[0][i] * 10.0f / Wind::NUM_WIND_MATRIXES));
+			float fWindMatrixIndex1 = float(int(b.m_pWindMatrixIndices[0][i] * 10.0f / RenderWind::NUM_WIND_MATRIXES));
 			float fWindMatrixWeight1 = b.m_pWindWeights[0][i];
-			float fWindMatrixIndex2 = float(int(b.m_pWindMatrixIndices[1][i] * 10.0f / Wind::NUM_WIND_MATRIXES));
+			float fWindMatrixIndex2 = float(int(b.m_pWindMatrixIndices[1][i] * 10.0f / RenderWind::NUM_WIND_MATRIXES));
 			float fWindMatrixWeight2 = b.m_pWindWeights[1][i];
 
 			verts[i].xyz.set(b.m_pCoords[i*3+0], b.m_pCoords[i*3+1], b.m_pCoords[i*3+2]);
@@ -294,7 +294,7 @@ namespace Axon { namespace Render {
 			return;
 		}
 
-		Mesh* lod0 = new Mesh(Mesh::Static);
+		RenderMesh* lod0 = new RenderMesh(RenderMesh::Static);
 
 		lod0->initialize(numVerts, numIndexes);
 
@@ -307,9 +307,9 @@ namespace Axon { namespace Render {
 		for (int i = 0; i < numVerts; i++) {
 			const float* diffuseTc = b.m_pTexCoords[CSpeedTreeRT::TL_DIFFUSE] + i * 2;
 
-			float fWindMatrixIndex1 = float(int(b.m_pWindMatrixIndices[0][i] * 10.0f / Wind::NUM_WIND_MATRIXES));
+			float fWindMatrixIndex1 = float(int(b.m_pWindMatrixIndices[0][i] * 10.0f / RenderWind::NUM_WIND_MATRIXES));
 			float fWindMatrixWeight1 = b.m_pWindWeights[0][i];
-			float fWindMatrixIndex2 = float(int(b.m_pWindMatrixIndices[1][i] * 10.0f / Wind::NUM_WIND_MATRIXES));
+			float fWindMatrixIndex2 = float(int(b.m_pWindMatrixIndices[1][i] * 10.0f / RenderWind::NUM_WIND_MATRIXES));
 			float fWindMatrixWeight2 = b.m_pWindWeights[1][i];
 
 			verts[i].xyz.set(b.m_pCoords[i*3+0], b.m_pCoords[i*3+1], b.m_pCoords[i*3+2]);
@@ -373,7 +373,7 @@ namespace Axon { namespace Render {
 		for (int i = 0; i < numLods; i++) {
 			const CSpeedTreeRT::SGeometry::SLeaf& sLeaves = sGeometry.m_pLeaves[i];
 
-			Mesh* prim = new Mesh(Mesh::Static);
+			RenderMesh* prim = new RenderMesh(RenderMesh::Static);
 			prim->setMaterial(m_leafCardMat.get());
 			prim->initialize(sLeaves.m_nNumLeaves * 4, sLeaves.m_nNumLeaves * 6);
 
@@ -476,7 +476,7 @@ namespace Axon { namespace Render {
 				continue;
 			}
 
-			Mesh* prim = new Mesh(Mesh::Static);
+			RenderMesh* prim = new RenderMesh(RenderMesh::Static);
 			prim->setMaterial(m_leafMeshMat.get());
 			prim->initialize(numverts, numidxes);
 
@@ -659,6 +659,6 @@ namespace Axon { namespace Render {
 	}
 #endif
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE
 
 #endif // AX_CONFIG_OPTION_USE_SPEEDTREE_40

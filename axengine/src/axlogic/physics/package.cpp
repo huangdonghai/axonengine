@@ -771,7 +771,7 @@ namespace Axon { namespace Physics {
 		hkaMeshBinding* m_binding;
 		hkaBoneAttachment* m_boneAttachment; // the animation is either a skin binding anim or attachment anim
 		hkxMeshSection* m_section;
-		Render::Mesh* m_renderMesh;
+		RenderMesh* m_renderMesh;
 		int m_lod;
 		bool m_needFreeRenderMesh;
 		bool m_haveLocalTransform;
@@ -796,11 +796,11 @@ namespace Axon { namespace Physics {
 			}
 		}
 
-		void generateStaticMesh(Render::Primitive::Hint hint) {
+		void generateStaticMesh(Primitive::Hint hint) {
 			if (m_renderMesh) {
 				return;
 			}
-			m_renderMesh = new Render::Mesh(hint);
+			m_renderMesh = new RenderMesh(hint);
 
 			int numverts = m_section->m_vertexBuffer->getNumVertices();
 			int numidxes = m_section->getNumTriangles() * 3;
@@ -973,7 +973,7 @@ errexit:
 				m_staticBbox.expandBy(helper.getPostion(j));
 			}
 #else
-			Render::Mesh* mesh = (*it)->m_renderMesh;
+			RenderMesh* mesh = (*it)->m_renderMesh;
 
 			if (!mesh) continue;
 
@@ -1074,7 +1074,7 @@ errexit:
 			if (newdata->m_binding || newdata->m_boneAttachment) {
 				newdata->m_needFreeRenderMesh = true;
 				newdata->m_renderMesh = nullptr;
-				newdata->generateStaticMesh(Render::Primitive::Dynamic);
+				newdata->generateStaticMesh(Primitive::Dynamic);
 				result.push_back(newdata);
 			} else {
 				newdata->m_needFreeRenderMesh = false;
@@ -1096,7 +1096,7 @@ errexit:
 
 		MeshDataList::const_iterator it = m_meshDatas.begin();
 		for (; it != m_meshDatas.end(); ++it) {
-			(*it)->generateStaticMesh(Render::Primitive::Static);
+			(*it)->generateStaticMesh(Primitive::Static);
 		}
 
 		m_isStaticMeshGenerated = true;
@@ -1157,7 +1157,7 @@ errexit:
 	}
 
 
-	void Package::issueToQueue( Render::QueuedEntity* qactor, Render::QueuedScene* qscene )
+	void Package::issueToQueue(QueuedEntity* qactor, QueuedScene* qscene )
 	{
 		generateStaticMesh();
 
@@ -1351,14 +1351,14 @@ final:
 	// class SkeletalModel
 	//--------------------------------------------------------------------------
 
-	SkeletalModel::SkeletalModel(Package* package) : Render::Entity(kModel) {
+	SkeletalModel::SkeletalModel(Package* package) : RenderEntity(kModel) {
 		m_package = package;
 		m_pose = nullptr;
 		m_isMeshDataInited = false;
 		SafeAddRef(m_package);
 	}
 
-	SkeletalModel::SkeletalModel(const String& name) : Render::Entity(kModel)
+	SkeletalModel::SkeletalModel(const String& name) : RenderEntity(kModel)
 	{
 		m_package = g_physicsPackageManager->findPackage(name);
 		m_pose = nullptr;
@@ -1392,9 +1392,9 @@ final:
 		return getLocalBoundingBox().getTransformed(m_affineMat);
 	}
 
-	Render::Primitives SkeletalModel::getAllPrimitives() {
+	Primitives SkeletalModel::getAllPrimitives() {
 		if (!m_package)
-			return Render::Primitives();
+			return Primitives();
 
 		if (!m_pose) {
 			return m_package->getPrimitives();
@@ -1417,7 +1417,7 @@ final:
 		return result;
 	}
 
-	void SkeletalModel::issueToQueue( Render::QueuedScene* qscene )
+	void SkeletalModel::issueToQueue(QueuedScene* qscene)
 	{
 		if (!m_package)
 			return;
@@ -1497,7 +1497,7 @@ final:
 				binding.m_bonesPerVertex = helper.getBonesPerVertex();
 
 				binding.m_oPosBase = &data->m_renderMesh->lockVertexes()->xyz[0];
-				binding.m_oPosStride = sizeof(Render::Mesh::VertexType) / sizeof(float);
+				binding.m_oPosStride = sizeof(RenderMesh::VertexType) / sizeof(float);
 
 				binding.m_numVerts = data->m_renderMesh->getNumVertexes();
 

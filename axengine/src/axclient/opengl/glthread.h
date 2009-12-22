@@ -10,7 +10,7 @@ read the license and understand and accept it fully.
 #ifndef AX_GLTHREAD_H
 #define AX_GLTHREAD_H
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
 	extern GLwindow* gFrameWindow;	// cast from gFrameTarget
 	extern GLtarget* gWorldTarget;
@@ -18,8 +18,8 @@ namespace Axon { namespace Render {
 	extern GLframebuffer* gWorldFramebuffer;
 
 	extern bool gIsReflecting;
-	extern Target* gTarget;
-	extern Camera* gCamera;
+	extern RenderTarget* gTarget;
+	extern RenderCamera* gCamera;
 	extern QueuedScene* gScene;
 	extern GLframebuffer* gFramebuffer;
 	extern const QueuedEntity* gActor;
@@ -94,8 +94,8 @@ namespace Axon { namespace Render {
 	protected:
 		void beginFrame();
 		void drawScene(QueuedScene* scene, const Clearer& clearer);
-		void setupScene(QueuedScene* scene, const Clearer* clearer = nullptr, Target* target = nullptr, Camera* camera = nullptr);
-		void unsetScene(QueuedScene* scene, const Clearer* clearer = nullptr, Target* target = nullptr, Camera* camera = nullptr);
+		void setupScene(QueuedScene* scene, const Clearer* clearer = nullptr, RenderTarget* target = nullptr, RenderCamera* camera = nullptr);
+		void unsetScene(QueuedScene* scene, const Clearer* clearer = nullptr, RenderTarget* target = nullptr, RenderCamera* camera = nullptr);
 		void drawPrimitive(int prim_id);
 		void drawInteraction(Interaction* ia);
 		void endFrame();
@@ -126,6 +126,6 @@ namespace Axon { namespace Render {
 		bool m_threadRendering;
 	};
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE
 
 #endif // end guardian

@@ -11,9 +11,9 @@ read the license and understand and accept it fully.
 
 #ifdef AX_CONFIG_OPTION_USE_SPEEDTREE_40
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
-	TreeActor::TreeActor(const String& filename, int seed) : Entity(kSpeedTree) {
+	TreeActor::TreeActor(const String& filename, int seed) : RenderEntity(kSpeedTree) {
 		m_treeAsset = g_treeManager->findAsset(filename, seed);
 		m_treeAsset->addActor(this);
 
@@ -57,6 +57,6 @@ namespace Axon { namespace Render {
 		m_treeAsset->issueToQueue(this, qscene);
 	}
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE
 
 #endif // AX_CONFIG_OPTION_USE_SPEEDTREE_40

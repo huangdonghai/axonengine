@@ -10,7 +10,7 @@ read the license and understand and accept it fully.
 
 #include "d3d9private.h"
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
 	PostMesh::PostMesh()
 	{
@@ -267,7 +267,7 @@ namespace Axon { namespace Render {
 	void D3D9postprocess::measureHistogram(D3D9texture* tex, int index) {
 		tex->setFilterMode(Texture::FM_Nearest);
 
-		float w = 1.0f / World::HISTOGRAM_WIDTH;
+		float w = 1.0f / RenderWorld::HISTOGRAM_WIDTH;
 		Vector4 param;
 		param.x = w * index;
 		param.y = w * (index+1);
@@ -471,9 +471,9 @@ namespace Axon { namespace Render {
 		PostMesh::setupScreenQuad(m_screenQuad, r);
 	}
 
-	void D3D9postprocess::genericPP(const String& shadername, Target* target, D3D9texture* src) {
+	void D3D9postprocess::genericPP(const String& shadername, RenderTarget* target, D3D9texture* src) {
 		D3D9shader* shader = getShader(shadername);
-		Camera camera;
+		RenderCamera camera;
 		camera.setTarget(target);
 		camera.setOverlay(target->getRect());
 
@@ -501,10 +501,10 @@ namespace Axon { namespace Render {
 		genericPP(shadername, nullptr, src1, src2);
 	}
 
-	void D3D9postprocess::genericPP(const String& shadername, Target* target, D3D9texture* src1, D3D9texture* src2) {
+	void D3D9postprocess::genericPP(const String& shadername, RenderTarget* target, D3D9texture* src1, D3D9texture* src2) {
 		D3D9shader* shader = getShader(shadername);
 
-		Camera camera;
+		RenderCamera camera;
 		if (target) {
 			camera.setTarget(target);
 			camera.setOverlay(target->getRect());
@@ -557,7 +557,7 @@ namespace Axon { namespace Render {
 		m_mtrPointLight->clearFeatures();
 		m_mtrPointLight->clearLiterals();
 
-		m_mtrPointLight->setFeature(F_SPOTLIGHT, light->type == Light::kSpot);
+		m_mtrPointLight->setFeature(F_SPOTLIGHT, light->type == RenderLight::kSpot);
 
 		m_mtrPointLight->setParameter("s_lightColor", 4, light->color);
 		m_mtrPointLight->setParameter("s_lightPos", 4, lightpos);
@@ -566,7 +566,7 @@ namespace Axon { namespace Render {
 		d3d9Draw->drawPostUP(m_mtrPointLight, m_hexahedron);
 	}
 
-	void D3D9postprocess::drawLightShadowed(Vector3 volume[8], QueuedLight* light, const Camera& shadowCamera)
+	void D3D9postprocess::drawLightShadowed(Vector3 volume[8], QueuedLight* light, const RenderCamera& shadowCamera)
 	{
 		PostMesh::setupHexahedron(m_hexahedron, volume);
 
@@ -585,7 +585,7 @@ namespace Axon { namespace Render {
 		m_mtrPointLight->clearLiterals();
 
 		m_mtrPointLight->setFeature(F_SHADOWED, true);
-		m_mtrPointLight->setFeature(F_SPOTLIGHT, light->type == Light::kSpot);
+		m_mtrPointLight->setFeature(F_SPOTLIGHT, light->type == RenderLight::kSpot);
 
 		m_mtrPointLight->setParameter("s_lightColor", 4, light->color);
 		m_mtrPointLight->setParameter("s_lightPos", 4, lightpos);
@@ -739,4 +739,4 @@ namespace Axon { namespace Render {
 		g_statistic->setValue(stat_numVisQuery, count);
 	}
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE

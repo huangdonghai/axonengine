@@ -12,8 +12,6 @@ read the license and understand and accept it fully.
 
 namespace Axon { namespace Game {
 
-	typedef Render::Primitive renderPrim;
-
 	GameLight::GameLight() {
 		m_renderLight = 0;
 		m_pointPrim = 0;
@@ -58,7 +56,7 @@ namespace Axon { namespace Game {
 		LuaTable table = v;
 
 		table.beginRead();
-		m_renderLight = new Render::Light();
+		m_renderLight = new RenderLight();
 		float spotangle = table.get("spotAngle");
 		m_renderLight->setLightType(RenderLight::Type(table.get("type").toInt()));
 		m_renderLight->setSpotAngle(spotangle);
@@ -95,7 +93,7 @@ namespace Axon { namespace Game {
 #endif
 	void GameLight::setupHelper()
 	{
-		if (m_renderLight->getLightType() == Render::Light::kSpot) {
+		if (m_renderLight->getLightType() == RenderLight::kSpot) {
 			setupSpotPrim();
 		} else {
 			setupPointPrim();
@@ -105,7 +103,7 @@ namespace Axon { namespace Game {
 	void GameLight::setupPointPrim()
 	{
 		if (!m_pointPrim) {
-			m_pointPrim = new Render::Mesh(renderPrim::Static);
+			m_pointPrim = new RenderMesh(Primitive::Static);
 			m_pointPrim->initialize(6, 8*3);
 
 			static ushort_t s_indices[] = {
@@ -152,7 +150,7 @@ namespace Axon { namespace Game {
 	void GameLight::setupSpotPrim()
 	{
 		if (!m_spotPrim) {
-			m_spotPrim = new Render::Mesh(renderPrim::Static);
+			m_spotPrim = new RenderMesh(Primitive::Static);
 			m_spotPrim->initialize(6*3, 6*3);
 
 			static ushort_t s_indices[] = {

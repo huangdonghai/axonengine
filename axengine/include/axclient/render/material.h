@@ -10,7 +10,7 @@ read the license and understand and accept it fully.
 #ifndef AX_RENDER_MATERIAL_H
 #define AX_RENDER_MATERIAL_H
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
 	AX_DECLARE_REFPTR(Material);
 
@@ -216,6 +216,6 @@ namespace Axon { namespace Render {
 		m_textures[sampler] = tex;
 	}
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE
 
 #endif // AX_MATERIAL_H

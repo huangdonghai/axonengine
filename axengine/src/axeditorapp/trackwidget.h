@@ -123,12 +123,12 @@ public:
 
 	AnimWrapper(TrackWidget* widget);
 	AnimWrapper(AnimWrapper* parent);
-	AnimWrapper(AnimWrapper* parent, IAnimatable* anim);
+	AnimWrapper(AnimWrapper* parent, Control* anim);
 	AnimWrapper(AnimWrapper* parent, AnimWrapper* preceding);
 	virtual ~AnimWrapper();
 
-	void setAnimatable(IAnimatable* anim);
-	IAnimatable* getAnimatable() const;
+	void setAnimatable(Control* anim);
+	Control* getAnimatable() const;
 
 	// drawing
 	virtual QRectF boundingRect() const;
@@ -145,7 +145,7 @@ protected:
 private:
 	TrackWidget* m_widget;
 	AnimWrapper* m_parent;
-	IAnimatable* m_anim;
+	Control* m_anim;
 
 	// init
 	TrackNameItem* m_trackNameItem;
@@ -271,7 +271,7 @@ protected:
 	void relayout();
 
 private:
-	IAnimatable* m_anim;
+	Control* m_anim;
 	QGraphicsScene* m_scene;
 	QList<AnimWrapper*> m_wrappers;
 	int m_lineHeight;

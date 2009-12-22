@@ -11,11 +11,11 @@ read the license and understand and accept it fully.
 #ifndef AX_CLIENT_SPEEDTREE_ACTOR_H
 #define AX_CLIENT_SPEEDTREE_ACTOR_H
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
 	class TreeAsset;
 
-	class AX_API TreeActor : public Entity {
+	class AX_API TreeActor : public RenderEntity {
 	public:
 		friend class TreeAsset;
 
@@ -51,7 +51,7 @@ namespace Axon { namespace Render {
 
 	typedef DictSet<TreeActor*> TreeDict;
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE
 
 #endif // end guardian
 

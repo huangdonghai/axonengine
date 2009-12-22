@@ -12,7 +12,7 @@ read the license and understand and accept it fully.
 #ifndef AX_RENDER_TEXTURE_H
 #define AX_RENDER_TEXTURE_H
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
 	//--------------------------------------------------------------------------
 	// class Texture
@@ -166,7 +166,7 @@ namespace Axon { namespace Render {
 		TextureDict m_textureDict;
 	};
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE
 
 
 #endif // AX_RENDER_TEXTURE_H

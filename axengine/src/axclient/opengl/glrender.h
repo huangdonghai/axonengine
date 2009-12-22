@@ -11,7 +11,7 @@ read the license and understand and accept it fully.
 #ifndef AX_GL_RENDER_H
 #define AX_GL_RENDER_H
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
 	// VertexDef
 	enum VertexDef {
@@ -72,7 +72,7 @@ namespace Axon { namespace Render {
 		float m_posOffset;
 	};
 
-}} // Axon::Render
+AX_END_NAMESPACE
 
 #endif // end guardian
 

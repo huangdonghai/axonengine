@@ -19,7 +19,7 @@ namespace Axon { namespace Editor {
 
 	class AX_API Tool : public Input::IEventHandler {
 	public:
-		typedef Render::Camera Camera;
+		typedef RenderCamera RenderCamera;
 		// editor tool
 		enum Type {
 			None,
@@ -42,7 +42,7 @@ namespace Axon { namespace Editor {
 		virtual void doDrag(int x, int y, int flags, float pressure) = 0;
 		virtual void doMove(int x, int y) = 0;
 		virtual void doRelease(int x, int y) = 0;
-		virtual void doRender(const Camera& camera) = 0;
+		virtual void doRender(const RenderCamera& camera) = 0;
 		virtual void setCursor();
 
 		virtual void handleEvent(Input::Event* e);
@@ -96,7 +96,7 @@ namespace Axon { namespace Editor {
 		virtual void doDrag(int x, int y, int flags, float pressure);
 		virtual void doMove(int x, int y);
 		virtual void doRelease(int x, int y);
-		virtual void doRender(const Camera& camera);
+		virtual void doRender(const RenderCamera& camera);
 
 		virtual void setCursor();
 
@@ -106,8 +106,8 @@ namespace Axon { namespace Editor {
 		void areaSelect();
 
 	private:
-		Render::Line* m_linePrim;
-		Render::Mesh* m_meshPrim;
+		RenderLine* m_linePrim;
+		RenderMesh* m_meshPrim;
 		Point m_beginPos;
 		Point m_curPos;
 		int m_selectionSeq;
@@ -138,7 +138,7 @@ namespace Axon { namespace Editor {
 		virtual void doDrag(int x, int y, int flags, float pressure);
 		virtual void doMove(int x, int y);
 		virtual void doRelease(int x, int y);
-		virtual void doRender(const Camera& camera);
+		virtual void doRender(const RenderCamera& camera);
 		virtual void setCursor();
 
 		// IObserver

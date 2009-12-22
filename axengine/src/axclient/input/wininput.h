@@ -17,7 +17,7 @@ namespace Axon { namespace Input {
 		WinInput();
 		virtual ~WinInput();
 
-		void setWindow(Render::Target* gamewnd);
+		void setWindow(RenderTarget* gamewnd);
 		void queWinInput(MSG* msg);
 
 		// implement IEventSource

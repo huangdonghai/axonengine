@@ -26,7 +26,7 @@ public:
 	Editor::View* getView() { return m_editorView; }
 
 	// implement Editor::IFrame
-	virtual Render::Target* getRenderTarget();
+	virtual RenderTarget* getRenderTarget();
 	virtual Rect getRect();
 	virtual void setCursor(Editor::CursorType cursor_type);
 	virtual void resetCursor();
@@ -79,7 +79,7 @@ protected:
 
 private:
     Editor::View* m_editorView;
-	Render::Target* m_renderTarget;
+	RenderTarget* m_renderTarget;
 	QHash<int,int> m_keymap;
 	int m_autoUpdateTimer;
 	bool m_isCapturing;

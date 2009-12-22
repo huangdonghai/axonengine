@@ -13,8 +13,9 @@ read the license and understand and accept it fully.
 namespace Axon { namespace Editor {
 
 	// editor view container
-	struct IFrame {
-		virtual Render::Target* getRenderTarget() = 0;
+	struct IFrame
+	{
+		virtual RenderTarget* getRenderTarget() = 0;
 		virtual Rect getRect() = 0;
 		virtual void setCursor(CursorType cursor_type) = 0;
 		virtual void resetCursor() = 0;
@@ -83,7 +84,7 @@ namespace Axon { namespace Editor {
 		Context* m_context;
 		IFrame* m_frame;
 		String m_title;
-		Render::Camera m_camera;
+		RenderCamera m_camera;
 		int m_frameNumCur;
 		unsigned int m_frameOldTime;
 		uint_t m_frameTime;
@@ -91,7 +92,7 @@ namespace Axon { namespace Editor {
 		Vector3 m_cursorPos;
 		AffineMat m_eyeMatrix;
 		bool m_autoUpdate;
-		Render::Font* m_font;
+		Font* m_font;
 	};
 
 }} // namespace Axon::Editor

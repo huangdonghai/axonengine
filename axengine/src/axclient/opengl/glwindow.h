@@ -10,11 +10,11 @@ read the license and understand and accept it fully.
 #ifndef AX_GLSTATE_H
 #define AX_GLSTATE_H
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
 	class GLprimitive;
 
-	class GLwindow : public Target {
+	class GLwindow : public RenderTarget {
 	public:
 		GLwindow(const String& name);
 		GLwindow(handle_t wndId, const String& name);
@@ -22,7 +22,7 @@ namespace Axon { namespace Render {
 
 		// implement ITarget
 		virtual Rect getRect();
-		virtual Type getType() { return Target::kWindow; }
+		virtual Type getType() { return RenderTarget::kWindow; }
 		virtual void bind();
 		virtual void unbind();
 		virtual bool isWindow() { return true;}
@@ -57,7 +57,7 @@ namespace Axon { namespace Render {
 		
 	};
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE
 
 
 #endif // AX_GLSTATE_H

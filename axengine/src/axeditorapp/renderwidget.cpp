@@ -9,8 +9,6 @@ read the license and understand and accept it fully.
 
 #include "renderwidget.h"
 
-using namespace Axon::Render;
-
 //------------------------------------------------------------------------------
 // class RenderWidget
 //------------------------------------------------------------------------------
@@ -75,7 +73,7 @@ void RenderWidget::paintEvent(QPaintEvent* pe)
 		if (m_isDrawAxis)
 		{
 			float line_length = 1.0f;
-			Render::Line* axis_line = Render::Line::createAxis(Render::Primitive::OneFrame, line_length);
+			RenderLine* axis_line = RenderLine::createAxis(Primitive::OneFrame, line_length);
 			g_renderSystem->addToScene(axis_line);
 		}
 		
@@ -140,7 +138,7 @@ void RenderWidget::mouseReleaseEvent(QMouseEvent * event)
 
 void RenderWidget::drawAxis()
 {
-	Render::Camera camera;
+	RenderCamera camera;
 
 	float line_length = 1.0f;
 	float view_size = line_length * 2.0f + 1.0f;
@@ -174,7 +172,7 @@ void RenderWidget::drawAxis()
 
 void RenderWidget::drawFrameNum()
 {
-	Render::Camera rv;
+	RenderCamera rv;
 
 	rv.setTarget(m_renderTarget);
 	rv.setOverlay(Rect(0,0,size().width(),size().height()));
@@ -200,7 +198,7 @@ void RenderWidget::drawFrameNum()
 	rect.y = rv.getViewRect().height - 24;
 	rect.width = 120;
 	rect.height = g_consoleFont->getHeight();
-	Render::Text* prim = Render::Text::createText(Render::Primitive::OneFrame, rect, g_consoleFont, text, Rgba::Green);
+	RenderText* prim = RenderText::createText(Primitive::OneFrame, rect, g_consoleFont, text, Rgba::Green);
 
 	g_renderSystem->beginScene(rv);
 	g_renderSystem->addToScene(prim);
@@ -216,7 +214,7 @@ PreviewWidget::PreviewWidget(QWidget* parent)
 	, m_viewControl(NONE)
 	, m_actor(NULL)
 {
-	m_renderWorld = new Render::World;
+	m_renderWorld = new RenderWorld;
 	m_renderWorld->initialize();
 
 //	m_globalLight = new renderLight(renderLight::kGlobal, Vector3(1,1,1), Rgb::White);
@@ -1288,7 +1286,7 @@ void ParticlePreviewWidget::mouseMoveEvent(QMouseEvent * e)
 
 		Rect r(x-size, y-size, size*2, size*2);
 
-		Render::Camera cam = m_renderCamera.createSelectionCamera(r);
+		Render::RenderCamera cam = m_renderCamera.createSelectionCamera(r);
 
 		gRenderSystem->beginSelect(cam);
 
@@ -1680,7 +1678,7 @@ void ParticlePreviewWidget::mousePressEvent(QMouseEvent * e)
 
 		Rect r(x-size, y-size, size*2+1, size*2+1);
 
-		Render::Camera cam = m_renderCamera.createSelectionCamera(r);
+		Render::RenderCamera cam = m_renderCamera.createSelectionCamera(r);
 
 		gRenderSystem->beginSelect(cam);
 

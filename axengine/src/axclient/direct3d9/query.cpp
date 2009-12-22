@@ -9,7 +9,7 @@ read the license and understand and accept it fully.
 
 #include "../private.h"
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
 
 	Query::Query()
@@ -98,4 +98,4 @@ namespace Axon { namespace Render {
 	}
 #endif
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE

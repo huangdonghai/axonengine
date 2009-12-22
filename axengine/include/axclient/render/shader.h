@@ -11,7 +11,7 @@ read the license and understand and accept it fully.
 #ifndef AX_RENDER_SHADER_H
 #define AX_RENDER_SHADER_H
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
 	//--------------------------------------------------------------------------
 	// class UniformItem
@@ -347,13 +347,13 @@ namespace Axon { namespace Render {
 		virtual void applyShaderCache(const String& name = String()) = 0;
 	};
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE
 
 namespace std { namespace tr1 {
 
 	template<>
-	struct hash<::Axon::Render::ShaderMacro> {
-		size_t operator()(const ::Axon::Render::ShaderMacro& sm) const { return sm.hash(); }
+	struct hash<::Axon::ShaderMacro> {
+		size_t operator()(const ::Axon::ShaderMacro& sm) const { return sm.hash(); }
 	};
 }}
 

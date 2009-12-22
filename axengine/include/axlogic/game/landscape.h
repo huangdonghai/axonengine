@@ -81,7 +81,7 @@ namespace Axon { namespace Game {
 
 	public:
 		TerrainFixed() {}
-		TerrainFixed(Render::Terrain* terr);
+		TerrainFixed(RenderTerrain* terr);
 		virtual ~TerrainFixed();
 
 		// implement Fixed
@@ -92,7 +92,7 @@ namespace Axon { namespace Game {
 		virtual void doNotify(IObservable* subject, int arg);
 
 	private:
-		Render::Terrain* m_renderTerrain;
+		RenderTerrain* m_renderTerrain;
 		Physics::Terrain* m_physicsTerrain;
 	};
 

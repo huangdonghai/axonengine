@@ -191,7 +191,7 @@ EditorFrame::~EditorFrame()
 	m_editorView->bindFrame(0);
 }
 
-Render::Target* EditorFrame::getRenderTarget() {
+RenderTarget* EditorFrame::getRenderTarget() {
 	if (m_renderTarget == nullptr) {
 		WId wid = winId();
 		m_oldWId = wid;

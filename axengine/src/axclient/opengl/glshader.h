@@ -13,7 +13,7 @@ read the license and understand and accept it fully.
 
 #define AX_SU(x, y) g_uniforms.getItem(Uniforms::x).set(y)
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
 	//--------------------------------------------------------------------------
 	// class GLuniform
@@ -186,7 +186,7 @@ namespace Axon { namespace Render {
 		static CGstate m_textureState;
 	};
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE
 
 #endif // end guardian
 

@@ -26,7 +26,7 @@ namespace Axon { namespace Map {
 
 		Type type;
 		Rect rect;
-		RenderPrims primSeq;
+		Primitives primSeq;
 		const RenderCamera* camera;
 	};
 
@@ -314,7 +314,7 @@ namespace Axon { namespace Map {
 	// class Terrain
 	//--------------------------------------------------------------------------
 
-	class AX_API Terrain : public Render::Terrain {
+	class AX_API Terrain : public RenderTerrain {
 	public:
 		friend class Chunk;
 		friend class Zone;
@@ -371,7 +371,7 @@ namespace Axon { namespace Map {
 		void doEvent(TerrainEvent* e);
 		void doSelect(const RenderCamera& camera);
 
-		RenderPrims getPrimsByCircle(float x, float y, float radius);
+		Primitives getPrimsByCircle(float x, float y, float radius);
 
 		// surface and material
 		Map::MaterialDef* getMaterialDef() const;
@@ -394,15 +394,15 @@ namespace Axon { namespace Map {
 		// implement renderActor
 		virtual BoundingBox getLocalBoundingBox() { return m_bbox; }
 		virtual BoundingBox getBoundingBox() { return m_bbox; }
-		virtual Kind getType() const { return Render::Entity::kTerrain; }
-		virtual void doUpdate(Render::QueuedScene* qscene);
+		virtual Kind getType() const { return RenderEntity::kTerrain; }
+		virtual void doUpdate(QueuedScene* qscene);
 
-		virtual void issueToQueue(Render::QueuedScene* qscene);
+		virtual void issueToQueue(QueuedScene* qscene);
 
-		virtual RenderPrims getAllPrimitives();
+		virtual Primitives getAllPrimitives();
 #if 0
-		virtual RenderPrims getViewedPrimitives();
-		virtual RenderPrims getLightedPrimitives(Render::QueuedLight* light);
+		virtual Primitives getViewedPrimitives();
+		virtual Primitives getLightedPrimitives(Render::QueuedLight* light);
 #endif
 
 		// implement renderTerrain

@@ -258,7 +258,7 @@ namespace Axon { namespace Input {
 		virtual void tick();
 
 		// input event
-		void setGameWindow(Render::Target* gamewindow);
+		void setGameWindow(RenderTarget* gamewindow);
 		void queEvent(const Event& e);
 		Event* getEvent();				// return null if no more event
 		void clearEvents();
@@ -282,7 +282,7 @@ namespace Axon { namespace Input {
 		int m_eventReadPos;
 		int m_eventWritePos;
 		List<IEventSource*>	m_eventSources;
-		Render::Target* m_gameWnd;
+		RenderTarget* m_gameWnd;
 		WinInput* m_winInput;
 
 		bool m_isCapturing;

@@ -98,55 +98,6 @@ namespace Axon {
 
 
 	//--------------------------------------------------------------------------
-	class IAnimatable
-	{
-	public:
-		enum AnimType
-		{
-			kSimpleTrack,
-			kTcbTrack,
-			kBezierTrack,
-			kLastTrack = kBezierTrack,
-			kGroupAnim,
-			kObjectAnim,
-			kGameEntityAnim
-		};
-
-		// for simple track
-		enum InterpolateType
-		{
-			InterpolateType_Invalid,
-			InterpolateType_Step,
-			InterpolateType_Linear,
-			InterpolateType_CatmullRom,
-		};
-
-		virtual ~IAnimatable() {}
-
-		virtual String getAnimName() = 0;
-		virtual AnimType getAnimType() = 0;
-
-		// for group, object, entity
-		virtual int numSubAnims() { return 0; }
-		virtual IAnimatable* getSubAnim(int index) { return 0; }
-
-		// for track
-		virtual int numKeys() { return 0; }
-		virtual int getKeyTime(int index) { return 0; }
-		virtual int getKeyIndex(int ms) { return 0; }
-		virtual void getValue(void *value, int ticks) {}
-		virtual void setValue(void *value, int ticks) {}
-
-		// for simple track
-		virtual InterpolateType getInterpolateType() { return InterpolateType_Invalid; }
-		virtual void setInterpolateType(InterpolateType type) { /* do nothing */}
-#if 0
-		// for test
-		virtual void beginUpdateAnim();
-		virtual void endUpdateAnim();
-#endif
-	};
-
 	class Control
 	{
 	public:
@@ -177,6 +128,7 @@ namespace Axon {
 
 		virtual void step(int delta) = 0;
 
+#if 0
 		virtual int getNumKeys ();
 		virtual void setNumKeys (int n);
 		virtual void getKey(int i, KeyBase* key);
@@ -185,6 +137,7 @@ namespace Axon {
 		virtual void sortKeys();
 		virtual DWORD& getTrackFlags ();
 		virtual int getKeySize ();
+#endif
 
 		bool isKeyable() const { return getControlType() != kProcedural; }
 		bool isSimple() const { return getControlType() <= kSimpleMax; }

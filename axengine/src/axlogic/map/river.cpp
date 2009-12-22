@@ -33,7 +33,7 @@ namespace Axon { namespace Map {
 
 	void RiverManager::update()
 	{
-		Render::Mesh* mesh= NULL;
+		RenderMesh* mesh= NULL;
 
 		for (int i=0; i<(int)m_riverDefSet.size(); ++i)
 		{
@@ -52,7 +52,7 @@ namespace Axon { namespace Map {
 
 				if (mesh == NULL)
 				{
-					mesh = new Render::Mesh(Render::Mesh::Static);
+					mesh = new RenderMesh(RenderMesh::Static);
 					river.setMesh(mesh);
 				}
 
@@ -105,7 +105,7 @@ namespace Axon { namespace Map {
 		}
 	}
 
-	void RiverManager::uploadRenderData(RenderPrims* primSeq)
+	void RiverManager::uploadRenderData(Primitives* primSeq)
 	{
 		if (m_riverDefSet.empty() || m_terrain==NULL)
 		{
@@ -116,11 +116,11 @@ namespace Axon { namespace Map {
 
 		for (int i=0; i<(int)m_riverDefSet.size(); ++i)
 		{
-			Render::Mesh* mesh = m_riverDefSet[i].getMesh();
+			RenderMesh* mesh = m_riverDefSet[i].getMesh();
 
 			if (mesh != NULL && mesh->getActivedIndexes() > 0)
 			{
-				Render::Material* mat = m_riverDefSet[i].getMaterial();
+				Material* mat = m_riverDefSet[i].getMaterial();
 
 				if (mat != NULL)
 				{

@@ -11,7 +11,7 @@ read the license and understand and accept it fully.
 #include "d3d9private.h"
 
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
 	AX_IMPLEMENT_FACTORY(D3D9driver)
 
@@ -140,13 +140,13 @@ namespace Axon { namespace Render {
 
 	bool D3D9driver::isHDRRendering() { return false; }
 
-	Target* D3D9driver::createWindowTarget(handle_t wndId, const String& name) {
+	RenderTarget* D3D9driver::createWindowTarget(handle_t wndId, const String& name) {
 		D3D9window* state = new D3D9window(wndId, name);
 		AX_ASSERT(state);
 		return state;
 	}
 
-	const IDriver::Info* D3D9driver::getDriverInfo() {
+	const IRenderDriver::Info* D3D9driver::getDriverInfo() {
 		return d3d9DriverInfo;
 	}
 
@@ -158,7 +158,7 @@ namespace Axon { namespace Render {
 		d3d9Thread->preFrame();
 	}
 
-	void D3D9driver::beginSelect(const Camera& view) {}
+	void D3D9driver::beginSelect(const RenderCamera& view) {}
 
 	void D3D9driver::loadSelectId(int id) {}
 
@@ -195,5 +195,5 @@ namespace Axon { namespace Render {
 		return d3d9Thread->isCurrentThread();
 	}
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE
 

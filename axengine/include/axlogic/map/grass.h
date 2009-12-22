@@ -71,15 +71,15 @@ namespace Axon { namespace Map {
 		void setHeight(float height) { m_height = height; }
 		float getHeight() { return m_height; }
 
-		void setMaterial(Render::Material* mat) { m_mat = mat;}
+		void setMaterial(Material* mat) { m_mat = mat;}
 		Material* getMaterial() { return m_mat.get();}
 
 		void setTextureName(const String& texName);
 		String getTextureName()	{ return m_texName; }
 		Texture* getTexture() { return m_tex.get(); }
 
-		Render::Mesh* getMesh() { return m_mesh; };
-		void setMesh(Render::Mesh* mesh) { m_mesh = mesh; }
+		RenderMesh* getMesh() { return m_mesh; };
+		void setMesh(RenderMesh* mesh) { m_mesh = mesh; }
 
 		String getName() { return m_name; }
 		void setName(const String& name) { m_name = name; }
@@ -107,7 +107,7 @@ namespace Axon { namespace Map {
 		MaterialPtr m_mat;					// 材质
 		TexturePtr m_tex;					// 纹理
 		String m_texName;				// 纹理图片名
-		Render::Mesh* m_mesh;					// 网格
+		RenderMesh* m_mesh;					// 网格
 
 		String m_modelFilename;			// 模型文件名
 		PhysicsModel* m_model;					// 模型 (仅当类型为Model时可用)
@@ -155,9 +155,9 @@ namespace Axon { namespace Map {
 		void setLevelByCoor(Vector4 rect, int level, bool add = false);
 		int getLevelByCoor(float x, float y);
 
-		void update(Render::QueuedScene* qscene);
+		void update(QueuedScene* qscene);
 		void update(const Rect& rect, bool forceUpdate = false);	// 第二个参数为是否强制更新
-		void uploadRenderData(RenderPrims* primSeq);
+		void uploadRenderData(Primitives* primSeq);
 		void clear();
 		void init();
 

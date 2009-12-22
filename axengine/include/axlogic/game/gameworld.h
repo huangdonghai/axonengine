@@ -37,12 +37,12 @@ namespace Axon { namespace Game {
 
 		void reset();
 
-		void setWindow(Render::Target* targetWin);
-		Render::Target* getWindow() { return m_targetWindow; }
+		void setWindow(RenderTarget* targetWin);
+		RenderTarget* getWindow() { return m_targetWindow; }
 
 		void runFrame(int what, int frametime);
 		void drawFrame();
-		void drawScene(const Render::Camera& camera);
+		void drawScene(const RenderCamera& camera);
 
 		void addNode(GameNode* node);
 		void removeNode(GameNode* node);
@@ -88,13 +88,13 @@ namespace Axon { namespace Game {
 		PhysicsWorld* m_physicsWorld;
 		RenderWorld* m_renderWorld;
 		SoundWorld* m_soundWorld;
-		Render::OutdoorEnv* m_outdoorEnv;
+		OutdoorEnv* m_outdoorEnv;
 		Map::EnvDef* m_mapEnvDef;
 
 		uint_t m_lasttime;
 		int m_frametime;
-		Render::Camera m_lastCamera;
-		Render::Target* m_targetWindow;
+		RenderCamera m_lastCamera;
+		RenderTarget* m_targetWindow;
 	};
 
 	inline GameEntity* GameWorld::getEntity(int num) const

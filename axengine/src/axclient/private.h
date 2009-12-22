@@ -24,10 +24,10 @@ read the license and understand and accept it fully.
 
 namespace Axon {
 
-	extern Render::IDriver* g_renderDriver;
+	extern IRenderDriver* g_renderDriver;
 
 #ifdef AX_CONFIG_OPTION_USE_SPEEDTREE_40
-	extern Render::TreeManager* g_treeManager;
+	extern TreeManager* g_treeManager;
 #endif // AX_CONFIG_OPTION_USE_SPEEDTREE_40
 } // namespace Axon
 

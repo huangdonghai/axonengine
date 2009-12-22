@@ -614,7 +614,7 @@ namespace Axon {
 		}
 	};
 
-	template< class T >
+	template<class T>
 	struct variant_cast_helper<T*> {
 		T* doCast(const Variant& v) {
 			Object* obj = variant_cast_helper<Object*>().doCast(v);
@@ -650,23 +650,21 @@ namespace Axon {
 		};
 
 		enum Kind {
-			kEmpty, kBool, kInt, kFloat, kString, kObject, kTable, kVector3, kColor, kPoint, kRect, kAffineMat, kMaxNormal,
-			kEnum, kFlag, kTexture, kModel, kMaterial, kAnimation, kSpeedTree, kSound, kGroup
+			kEnum = Variant::kMaxType, kFlag, kTexture, kModel, kMaterial, kAnimation, kSpeedTree, kSound, kGroup
 		};
 
 		typedef std::pair<String,int>	EnumItem;
 		typedef Sequence<EnumItem>		EnumItems;
 
-		Member(const char* name, Type t) : m_name(name), m_type(t), m_propKind(kEmpty) {}
+		Member(const char* name, Type t) : m_name(name), m_type(t), m_propKind(Variant::kEmpty) {}
 
 		bool isProperty() const { return m_type == kPropertyType; }
 		bool isMethod() const { return m_type == kMethodType; }
-		bool isAnimatable() const { return false; }
 		Type getType() const { return m_type; }
 		const char* getName() const { return m_name; }
 		int getNumParams() const { return m_numParams; }
 		Variant::Type getPropType() const { return m_propType; }
-		Kind getPropKind() const { return m_propKind; }
+		int getPropKind() const { return m_propKind; }
 		const EnumItems& getEnumItems() const { return m_enumItems; }
 
 		// method
@@ -677,10 +675,11 @@ namespace Axon {
 		virtual Variant getProperty(const Object* obj) { AX_ASSERT(0); return Variant(); }
 		virtual void *getPropertyPointer(const Object* obj) { AX_ASSERT(0); return 0; }
 		virtual bool isConst() const { return false; }
+		virtual bool isAnimatable() const { return false; }
 
-		static Variant::Type kindToType(Kind k)
+		static Variant::Type kindToType(int k)
 		{
-			if (k < kMaxNormal) {
+			if (k < Variant::kMaxType) {
 				return Variant::Type(k);
 			}
 			switch (k) {
@@ -695,7 +694,7 @@ namespace Axon {
 		Type m_type;
 		int m_numParams;
 		Variant::Type m_propType;
-		Kind m_propKind;
+		int m_propKind;
 		EnumItems m_enumItems;
 	};
 
@@ -717,6 +716,7 @@ namespace Axon {
 		virtual Variant getProperty(const Object* obj);
 		virtual void *getPropertyPointer(const Object* obj);
 		virtual bool isConst() const { return false; }
+		virtual bool isAnimatable() const { return true; }
 
 	private:
 		DataType m_d;
@@ -1192,9 +1192,9 @@ namespace Axon {
 	protected:
 		void init();
 		void initEnumItems();
-		Kind checkNameKind();
-		Kind checkTableKind(Variant& result);
-		bool isStringType(ScriptProp::Kind kind);
+		int checkNameKind();
+		int checkTableKind(Variant& result);
+		bool isStringType(int kind);
 
 	public:
 		String m_realName;
@@ -1301,7 +1301,8 @@ namespace Axon {
 	class ScriptSystem;
 	extern AX_API ScriptSystem* g_scriptSystem;
 
-	class AX_API ScriptSystem {
+	class AX_API ScriptSystem
+	{
 	public:
 		friend class Object;
 
@@ -1361,7 +1362,7 @@ namespace Axon {
 		typedef Dict<const char*, TypeInfo*, hash_cstr, equal_cstr> TypeInfoDict;
 		TypeInfoDict m_typeInfoReg;
 
-		typedef Dict<String,int>	StringIntDict;
+		typedef Dict<String,int> StringIntDict;
 		StringIntDict m_objectNameGen;
 
 		String m_packagePath;

@@ -11,7 +11,7 @@ read the license and understand and accept it fully.
 #ifndef AX_RENDER_OUTDOORENV_H
 #define AX_RENDER_OUTDOORENV_H
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
 	struct NishitaParams {
 		Vector3 sunPos;
@@ -25,9 +25,9 @@ namespace Axon { namespace Render {
 		}
 	};
 
-	class AX_API OutdoorEnv : public Entity {
+	class AX_API OutdoorEnv : public RenderEntity {
 	public:
-		OutdoorEnv(World* world);
+		OutdoorEnv(RenderWorld* world);
 		~OutdoorEnv();
 
 		void setTimeOfDay(TimeOfDay& tod);
@@ -46,7 +46,7 @@ namespace Axon { namespace Render {
 		void setEnvColor(const Rgb& color, float intensity);
 		void setSkyBoxTexture(const String& matname);
 
-		Light* getGlobalLight() const;
+		RenderLight* getGlobalLight() const;
 
 		// generate render primitive
 		virtual BoundingBox getLocalBoundingBox();
@@ -75,28 +75,28 @@ namespace Axon { namespace Render {
 
 		// skybox
 		String m_skyBoxMatName;
-		Mesh* m_skybox12;
-		Mesh* m_skybox34;
-		Mesh* m_skybox5;
-		Mesh* m_skydome;
-		Mesh* m_oceanMesh;
+		RenderMesh* m_skybox12;
+		RenderMesh* m_skybox34;
+		RenderMesh* m_skybox5;
+		RenderMesh* m_skydome;
+		RenderMesh* m_oceanMesh;
 
 		MaterialPtr m_skyNishitaMat;
 		MaterialPtr m_skyNishitaGenMat;
-		Target* m_skyNishitaRt;		// render target for nishita sky
+		RenderTarget* m_skyNishitaRt;		// render target for nishita sky
 		NishitaParams m_lastNishitaParams;
 
 		bool m_dateTimeInited;
 		DateTime m_dateTime;
 
-		Light* m_globalLight;
-		Fog* m_globalFog;
-		Fog* m_oceanFog;
+		RenderLight* m_globalLight;
+		RenderFog* m_globalFog;
+		RenderFog* m_oceanFog;
 
-		Wind m_wind;
+		RenderWind m_wind;
 	};
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE
 
 
 #endif // end guardian

@@ -13,7 +13,7 @@ read the license and understand and accept it fully.
 static D3DMULTISAMPLE_TYPE d3d9MultiSampleType = D3DMULTISAMPLE_4_SAMPLES;
 static DWORD d3d9MultiSampleQuality = 0;
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
 	static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
 		switch (message) {
@@ -101,7 +101,7 @@ namespace Axon { namespace Render {
 		V(d3d9StateManager->setDepthStencilSurface(ds, TexFormat::D24S8));
 
 		// depth stencil
-//		D3D9target* m_depthStencil = d3d9TargetManager->allocTargetDX(Target::PermanentAlloc, m_swapChainSize.x, m_swapChainSize.y, TexFormat::D24S8);
+//		D3D9target* m_depthStencil = d3d9TargetManager->allocTargetDX(RenderTarget::PermanentAlloc, m_swapChainSize.x, m_swapChainSize.y, TexFormat::D24S8);
 	}
 
 	void D3D9window::unbind() {
@@ -192,14 +192,14 @@ namespace Axon { namespace Render {
 			m_lightBuffer = 0;
 		}
 
-		m_gbuffer = d3d9TargetManager->allocTargetDX(Target::PermanentAlloc, r.right, r.bottom, TexFormat::RGBA16F);
+		m_gbuffer = d3d9TargetManager->allocTargetDX(RenderTarget::PermanentAlloc, r.right, r.bottom, TexFormat::RGBA16F);
 		m_gbuffer->getTexture()->setFilterMode(Texture::FM_Nearest);
 		m_gbuffer->getTexture()->setClampMode(Texture::CM_ClampToEdge);
 
-		m_lightBuffer = d3d9TargetManager->allocTargetDX(Target::PermanentAlloc, r.right, r.bottom, TexFormat::BGRA8);
+		m_lightBuffer = d3d9TargetManager->allocTargetDX(RenderTarget::PermanentAlloc, r.right, r.bottom, TexFormat::BGRA8);
 		m_lightBuffer->getTexture()->setFilterMode(Texture::FM_Nearest);
 		m_lightBuffer->getTexture()->setClampMode(Texture::CM_ClampToEdge);
 	}
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE
 

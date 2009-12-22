@@ -10,7 +10,7 @@ read the license and understand and accept it fully.
 #ifndef AX_GLFRAMEBUFFER_H
 #define AX_GLFRAMEBUFFER_H
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
 	class GLframebuffer;
 
@@ -18,7 +18,7 @@ namespace Axon { namespace Render {
 	// class GLtarget
 	//--------------------------------------------------------------------------
 
-	class GLtarget : public Target {
+	class GLtarget : public RenderTarget {
 	public:
 		friend class GLframebuffer;
 
@@ -36,13 +36,13 @@ namespace Axon { namespace Render {
 		virtual bool isDepthFormat() { return m_texture->getFormat().isDepth(); }
 		virtual bool isStencilFormat() { return m_texture->getFormat().isStencil(); }
 
-		virtual void attachDepth(Target* depth);
-		virtual Target* getDepthAttached() const { return m_depthTarget; }
+		virtual void attachDepth(RenderTarget* depth);
+		virtual RenderTarget* getDepthAttached() const { return m_depthTarget; }
 
-		virtual void attachColor(int index, Target* c);
+		virtual void attachColor(int index, RenderTarget* c);
 		virtual void detachColor(int index);
 		virtual void detachAllColor();
-		virtual Target* getColorAttached(int index) const;
+		virtual RenderTarget* getColorAttached(int index) const;
 
 		GLframebuffer* getFramebuffer() const { return m_framebuffer; }
 		GLtexture* getTextureGL() { return m_texture; }
@@ -81,8 +81,8 @@ namespace Axon { namespace Render {
 		GLframebuffer(int width, int height);
 		~GLframebuffer();
 
-		GLtarget* allocTarget(Target::AllocHint hint, TexFormat texformat);
-		void freeTarget(Target* target);	// only permanent target need be free
+		GLtarget* allocTarget(RenderTarget::AllocHint hint, TexFormat texformat);
+		void freeTarget(RenderTarget* target);	// only permanent target need be free
 
 		void newFrame(int frame);
 		void endFrame();
@@ -138,10 +138,10 @@ namespace Axon { namespace Render {
 		~GLframebuffermanager();
 
 		// implement TargetManager
-		virtual Target* allocTarget(Target::AllocHint hint, int width, int height, TexFormat texformat);
-		virtual void freeTarget(Target* target);	// only permanent target need be free
+		virtual RenderTarget* allocTarget(RenderTarget::AllocHint hint, int width, int height, TexFormat texformat);
+		virtual void freeTarget(RenderTarget* target);	// only permanent target need be free
 		virtual bool isFormatSupport(TexFormat format);
-		virtual TexFormat getSuggestFormat(Target::SuggestFormat sf);
+		virtual TexFormat getSuggestFormat(RenderTarget::SuggestFormat sf);
 
 		void initialize();
 		void finalize();
@@ -168,7 +168,7 @@ namespace Axon { namespace Render {
 		bool m_formatSupports[TexFormat::MAX_NUMBER];
 	};
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE
 
 #endif // end guardian
 

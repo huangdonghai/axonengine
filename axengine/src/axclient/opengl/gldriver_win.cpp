@@ -1,7 +1,7 @@
 
 #include "private.h"
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
 	static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
 		switch (message) {
@@ -51,6 +51,6 @@ namespace Axon { namespace Render {
 		return hwnd;
 	}
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE
 
 

@@ -407,7 +407,7 @@ namespace Axon { namespace Input {
 		}
 	}
 
-	void WinInput::setWindow(Render::Target* gamewnd)
+	void WinInput::setWindow(RenderTarget* gamewnd)
 	{
 		if (gamewnd) {
 			m_hwnd = (HWND)gamewnd->getWindowHandle();

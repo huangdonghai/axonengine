@@ -47,10 +47,10 @@ protected:
 
 protected:
 	Point m_beginTrackPos;
-	Render::Camera m_renderCamera;
+	RenderCamera m_renderCamera;
 	bool m_renderCameraAdded;
 	bool m_isDrawAxis;
-	Render::Target* m_renderTarget;
+	RenderTarget* m_renderTarget;
 	Vector3 m_viewOrg;
 	Angles m_viewAngles;
 	bool m_updateStoped;
@@ -92,9 +92,9 @@ protected:
 
 protected:
 	enum ViewControl { NONE, ROTATEOBJECT, ZOOMVIEW, ROTATEVIEW };
-	Render::World* m_renderWorld;
-	Render::Light* m_globalLight;
-	Render::Entity* m_actor;
+	RenderWorld* m_renderWorld;
+	RenderLight* m_globalLight;
+	RenderEntity* m_actor;
 	ViewControl m_viewControl;
 };
 

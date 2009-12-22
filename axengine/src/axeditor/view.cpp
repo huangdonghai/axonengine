@@ -90,7 +90,7 @@ namespace Axon { namespace Editor {
 	}
 
 	void View::drawAxis() {
-		Render::Camera rv;
+		RenderCamera rv;
 
 		float line_length = 1.0f;
 		float view_size = line_length * 2.0f + 1.0f;
@@ -103,18 +103,18 @@ namespace Axon { namespace Editor {
 
 		g_renderSystem->beginScene(rv);
 
-		Render::Line* axis_line = Render::Line::createAxis(Render::Primitive::OneFrame, line_length);
+		RenderLine* axis_line = RenderLine::createAxis(Primitive::OneFrame, line_length);
 		g_renderSystem->addToScene(axis_line);
 
 #if 1
 		line_length += 0.2f;
-		Render::Text* text = Render::Text::createSimpleText(Render::Primitive::OneFrame, Vector3(line_length, 0, 0), Rgba::Red, "x");
+		RenderText* text = RenderText::createSimpleText(Primitive::OneFrame, Vector3(line_length, 0, 0), Rgba::Red, "x");
 		g_renderSystem->addToScene(text);
 
-		text = Render::Text::createSimpleText(Render::Primitive::OneFrame, Vector3(0, line_length, 0), Rgba::Green, "y");
+		text = RenderText::createSimpleText(Primitive::OneFrame, Vector3(0, line_length, 0), Rgba::Green, "y");
 		g_renderSystem->addToScene(text);
 
-		text = Render::Text::createSimpleText(Render::Primitive::OneFrame, Vector3(0, 0, line_length), Rgba::Blue, "z");
+		text = RenderText::createSimpleText(Primitive::OneFrame, Vector3(0, 0, line_length), Rgba::Blue, "z");
 		g_renderSystem->addToScene(text);
 
 		g_renderSystem->endScene();
@@ -124,7 +124,7 @@ namespace Axon { namespace Editor {
 	}
 
 	void View::drawFrameNum() {
-		Render::Camera rv;
+		RenderCamera rv;
 
 		rv.setTarget(m_frame->getRenderTarget());
 		rv.setOverlay(m_camera.getViewRect());
@@ -158,7 +158,7 @@ namespace Axon { namespace Editor {
 		rect.y = m_camera.getViewRect().height - 24;
 		rect.width = 120;
 		rect.height = 24;
-		Render::Text* prim = Render::Text::createText(Render::Primitive::OneFrame, rect, m_font, text, Rgba::Green, Render::Text::Left);
+		RenderText* prim = RenderText::createText(Primitive::OneFrame, rect, m_font, text, Rgba::Green, RenderText::Left);
 
 		g_renderSystem->beginScene(rv);
 		g_renderSystem->addToScene(prim);
@@ -215,13 +215,13 @@ namespace Axon { namespace Editor {
 	}
 
 	void View::beginSelect(const Rect& r) {
-		Render::Camera cam = m_camera.createSelectionCamera(r);
+		RenderCamera cam = m_camera.createSelectionCamera(r);
 
 		g_renderSystem->beginSelect(cam);
 	}
 
 	int View::endSelect() {
-		Render::SelectRecordSeq records = g_renderSystem->endSelect();
+		SelectRecordSeq records = g_renderSystem->endSelect();
 
 		if (records.empty())
 			return -1;
@@ -243,13 +243,13 @@ namespace Axon { namespace Editor {
 	bool View::selectRegion(const Rect& rect, SelectPart part, OUT Vector3& pos, OUT ActorList& retlist, bool onlynearest) {
 		retlist.clear();
 
-		Render::Camera cam = m_camera.createSelectionCamera(rect);
+		RenderCamera cam = m_camera.createSelectionCamera(rect);
 
 		g_renderSystem->beginSelect(cam);
 
 		m_context->doSelect(cam, part);
 
-		Render::SelectRecordSeq records = g_renderSystem->endSelect();
+		SelectRecordSeq records = g_renderSystem->endSelect();
 
 		if (records.empty())
 			return false;
@@ -285,7 +285,7 @@ namespace Axon { namespace Editor {
 	}
 
 	bool View::selectRegion(const Rect& rect, SelectPart part, OUT Vector3& pos) {
-		Render::Camera cam = m_camera.createSelectionCamera(rect);
+		RenderCamera cam = m_camera.createSelectionCamera(rect);
 
 		g_renderSystem->beginSelect(cam);
 #if 0
@@ -298,7 +298,7 @@ namespace Axon { namespace Editor {
 #endif
 		m_context->doSelect(cam, part);
 
-		Render::SelectRecordSeq records = g_renderSystem->endSelect();
+		SelectRecordSeq records = g_renderSystem->endSelect();
 
 		if (records.empty())
 			return false;

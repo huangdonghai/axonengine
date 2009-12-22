@@ -122,7 +122,7 @@ void Workbench::doNotify(IObservable* subjest, int arg) {
 
 void Workbench::onViewLabelDoubleClicked(QPoint point)
 {
-	Render::Camera camera = g_mapContext->getActiveView()->getCamera();
+	RenderCamera camera = g_mapContext->getActiveView()->getCamera();
 
 	m_cameraDlg.refreshDlg(camera);
 	m_cameraDlg.show();
@@ -319,8 +319,8 @@ void Workbench::createStatusBar() {
 
 	ui.engineBuild->setText(build);
 
-	const Render::IDriver::Info* ri = g_renderSystem->getDriverInfo();
-	if (ri->driverType == Render::IDriver::Info::D3D) {
+	const IRenderDriver::Info* ri = g_renderSystem->getDriverInfo();
+	if (ri->driverType == IRenderDriver::Info::D3D) {
 		ui.renderDriver->setText("DX9");
 	} else {
 		ui.renderDriver->setText("GL2");

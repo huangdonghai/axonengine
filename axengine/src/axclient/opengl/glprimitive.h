@@ -10,7 +10,7 @@ read the license and understand and accept it fully.
 #ifndef AX_GL_PRIMITIVE_H
 #define AX_GL_PRIMITIVE_H
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
 	//--------------------------------------------------------------------------
 	// class GLprimitive
@@ -140,8 +140,8 @@ namespace Axon { namespace Render {
 		int m_format;			// format flags
 		Font* m_font;				// font used
 		String m_text;				// string to draw
-		Text::HorizonAlign m_horizonAlign;
-		Text::VerticalAlign m_verticalAlign;
+		RenderText::HorizonAlign m_horizonAlign;
+		RenderText::VerticalAlign m_verticalAlign;
 		Rgba m_color;
 
 #if 0
@@ -175,7 +175,7 @@ namespace Axon { namespace Render {
 
 		Vector4 m_chunkRect;
 		int m_numLayers;
-		Chunk::Layer m_layers[Chunk::MAX_LAYERS];
+		RenderChunk::Layer m_layers[RenderChunk::MAX_LAYERS];
 		bool m_layerVisible;
 	};
 
@@ -295,6 +295,6 @@ namespace Axon { namespace Render {
 		BufferPage* m_frameIndexBuffers;
 	};
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE
 
 #endif // AX_GL_PRIMITIVE_H

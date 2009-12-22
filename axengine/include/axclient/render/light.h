@@ -10,12 +10,12 @@ read the license and understand and accept it fully.
 #ifndef AX_RENDER_LIGHT_H
 #define AX_RENDER_LIGHT_H
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
 	struct QueuedScene;
 	struct QueuedLight;
 
-	class AX_API Light : public Entity {
+	class AX_API RenderLight : public RenderEntity {
 	public:
 		friend struct QueuedScene;
 
@@ -30,10 +30,10 @@ namespace Axon { namespace Render {
 			NUM_VOLUME_VERTEXES = 8
 		};
 
-		Light();
-		Light(Type t, const Vector3& pos, Rgb color);
-		Light(Type t, const Vector3& pos, Rgb color, float radius);
-		virtual ~Light();
+		RenderLight();
+		RenderLight(Type t, const Vector3& pos, Rgb color);
+		RenderLight(Type t, const Vector3& pos, Rgb color, float radius);
+		virtual ~RenderLight();
 
 		Type getLightType() const { return m_type; }
 		void setLightType(Type t) { m_type = t; }
@@ -64,7 +64,7 @@ namespace Axon { namespace Render {
 		// shadow
 		bool checkShadow(QueuedScene* qscene);
 		void linkShadow();
-		Light* unlinkShadow();
+		RenderLight* unlinkShadow();
 		void freeShadowMap();
 		bool genShadowMap(QueuedScene* qscene);
 
@@ -101,7 +101,7 @@ namespace Axon { namespace Render {
 
 		// shadow info
 		ShadowInfo* m_shadowInfo;
-		Link<Light> m_shadowLink;
+		Link<RenderLight> m_shadowLink;
 		int m_shadowMemoryUsed;
 
 		// for shadow map
@@ -109,23 +109,23 @@ namespace Axon { namespace Render {
 	};
 
 	struct QueuedShadow {
-		typedef Vector3 VolumeVertexes[Light::NUM_VOLUME_VERTEXES];
+		typedef Vector3 VolumeVertexes[RenderLight::NUM_VOLUME_VERTEXES];
 		int numSplitCamera;
-		Camera splitCameras[Light::MAX_SPLITS];
-		VolumeVertexes splitVolumes[Light::MAX_SPLITS];
+		RenderCamera splitCameras[RenderLight::MAX_SPLITS];
+		VolumeVertexes splitVolumes[RenderLight::MAX_SPLITS];
 
-		Vector4 splitScaleOffsets[Light::MAX_CSM_SPLITS];
+		Vector4 splitScaleOffsets[RenderLight::MAX_CSM_SPLITS];
 	};
 
 	struct QueuedLight {
-		typedef Vector3 VolumeVertexes[Light::NUM_VOLUME_VERTEXES];
+		typedef Vector3 VolumeVertexes[RenderLight::NUM_VOLUME_VERTEXES];
 
 		QueuedEntity* queuedActor;
-		Light* preQueued;
+		RenderLight* preQueued;
 
 		// queued struct
 		AffineMat matrix;
-		Light::Type type;
+		RenderLight::Type type;
 		float radius;
 		Vector4 pos;
 		Vector4 color;
@@ -143,8 +143,8 @@ namespace Axon { namespace Render {
 		QueuedShadow* shadowInfo;
 	};
 
-	typedef Sequence<Light*> LightSeq;
+	typedef Sequence<RenderLight*> LightSeq;
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE
 
 #endif // AX_RENDER_LIGHT_H

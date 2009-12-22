@@ -9,7 +9,7 @@ read the license and understand and accept it fully.
 
 #include "../private.h"
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
 	// static member
 	Material::MaterialDict Material::ms_materialDict;
@@ -358,5 +358,5 @@ namespace Axon { namespace Render {
 		Printf("total %d material(s)\n", count);
 	}
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE
 

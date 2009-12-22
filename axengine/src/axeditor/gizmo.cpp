@@ -14,9 +14,9 @@ namespace {
 	using namespace Axon;
 	using namespace Axon::Editor;
 
-	inline void xSetupAxis(Render::Line*& line, const Vector3& p0, const Vector3& p1, const Rgba& color) {
+	inline void xSetupAxis(RenderLine*& line, const Vector3& p0, const Vector3& p1, const Rgba& color) {
 		if (!line) {
-			line = new Render::Line(RenderPrim::Dynamic);
+			line = new RenderLine(Primitive::Dynamic);
 			line->initialize(2, 2);
 			line->lock();
 			line->setIndex(0, 0);
@@ -25,8 +25,8 @@ namespace {
 		}
 
 		line->lock();
-		Render::Line::VertexType& v0 = line->getVertexRef(0);
-		Render::Line::VertexType& v1 = line->getVertexRef(1);
+		RenderLine::VertexType& v0 = line->getVertexRef(0);
+		RenderLine::VertexType& v1 = line->getVertexRef(1);
 		v0.xyz = p0;
 		v0.rgba = color;
 		v1.xyz = p1;
@@ -62,7 +62,7 @@ namespace Axon { namespace Editor {
 		return c;
 	}
 
-	void MoveGizmo::setup(const Camera& camera, const Vector3& pos, const Matrix3& axis, float scale) {
+	void MoveGizmo::setup(const RenderCamera& camera, const Vector3& pos, const Matrix3& axis, float scale) {
 		m_pos = pos;
 		m_axis = axis;
 		m_scale = scale;
@@ -108,14 +108,14 @@ namespace Axon { namespace Editor {
 		}
 	}
 
-	int MoveGizmo::doSelect(Render::Camera* camera, int x, int y,int selectedSize)
+	int MoveGizmo::doSelect(RenderCamera* camera, int x, int y,int selectedSize)
 	{
 		if (!m_lines[0])
 			return -1;
 
 		int size = selectedSize;
 		Rect r(x-size, y-size, size*2+1, size*2+1);
-		Render::Camera cam = camera->createSelectionCamera(r);
+		RenderCamera cam = camera->createSelectionCamera(r);
 
 		g_renderSystem->beginSelect(cam);
 
@@ -143,7 +143,7 @@ namespace Axon { namespace Editor {
 		g_renderSystem->loadSelectId(XYZ);
 		g_renderSystem->testPrimitive(m_lines[XYZ]);
 
-		Render::SelectRecordSeq records = g_renderSystem->endSelect();
+		SelectRecordSeq records = g_renderSystem->endSelect();
 
 		if (records.empty())
 			return -1;
@@ -235,9 +235,9 @@ namespace Axon { namespace Editor {
 			color = Rgba::Yellow;
 		}
 
-		Render::Line*& line = m_lines[axis];
+		RenderLine*& line = m_lines[axis];
 		if (!line) {
-			line = new Render::Line(RenderPrim::Dynamic);
+			line = new RenderLine(Primitive::Dynamic);
 			line->initialize(2, 2);
 			line->lock();
 			line->setIndex(0, 0);
@@ -246,15 +246,15 @@ namespace Axon { namespace Editor {
 		}
 
 		line->lock();
-		Render::Line::VertexType& v0 = line->getVertexRef(0);
-		Render::Line::VertexType& v1 = line->getVertexRef(1);
+		RenderLine::VertexType& v0 = line->getVertexRef(0);
+		RenderLine::VertexType& v1 = line->getVertexRef(1);
 		v0.xyz = p0;
 		v0.rgba = color;
 		v1.xyz = p1;
 		v1.rgba = color;
 		line->unlock();
 
-		Render::Mesh::setupCone(m_meshs[axis], p1, m_length * 0.03f, p2, color );
+		RenderMesh::setupCone(m_meshs[axis], p1, m_length * 0.03f, p2, color );
 	}
 
 
@@ -286,9 +286,9 @@ namespace Axon { namespace Editor {
 			color1 = Rgba::Yellow;
 		}
 
-		Render::Line*& line = m_lines[axis];
+		RenderLine*& line = m_lines[axis];
 		if (!line) {
-			line = new Render::Line(RenderPrim::Dynamic);
+			line = new RenderLine(Primitive::Dynamic);
 			line->initialize(4, 4);
 			ushort_t* idxes = line->lockIndexes();
 			idxes[0] = 0;
@@ -300,7 +300,7 @@ namespace Axon { namespace Editor {
 
 		float length = m_length * 0.5f;
 
-		Render::Line::VertexType* verts = line->lockVertexes();
+		RenderLine::VertexType* verts = line->lockVertexes();
 		verts[0].xyz = m_pos + v0 * length;
 		verts[0].rgba = color0;
 		verts[1].xyz = verts[0].xyz + v1 * length;
@@ -311,10 +311,10 @@ namespace Axon { namespace Editor {
 		verts[3].rgba = color1;
 		line->unlockVertexes();
 
-		Render::Mesh*& mesh = m_meshs[axis];
+		RenderMesh*& mesh = m_meshs[axis];
 		bool first = false;
 		if (!mesh) {
-			mesh = new Render::Mesh(RenderPrim::Dynamic);
+			mesh = new RenderMesh(Primitive::Dynamic);
 			mesh->initialize(4, 6);
 			ushort_t* idxes = mesh->lockIndexes();
 			idxes[0] = 0;
@@ -344,17 +344,17 @@ namespace Axon { namespace Editor {
 		mesh->unlockVertexes();
 	}
 
-	void MoveGizmo::setupXYZ(const Camera& camera) {
+	void MoveGizmo::setupXYZ(const RenderCamera& camera) {
 		float len = 6.0f * m_scale;
 		Rgba color = Rgba::LtGrey;
 
 		if (m_highlit == XYZ)
 			color = Rgba::Yellow;
 
-		Render::Line*& line = m_lines[XYZ];
+		RenderLine*& line = m_lines[XYZ];
 
 		if (!line) {
-			line = new Render::Line(RenderPrim::Dynamic);
+			line = new RenderLine(Primitive::Dynamic);
 			line->initialize(4, 8);
 			ushort_t* idxes = line->lockIndexes();
 			idxes[0] = 0;
@@ -369,7 +369,7 @@ namespace Axon { namespace Editor {
 		}
 
 		const Matrix3& axis = camera.getViewAxis();
-		Render::Line::VertexType* verts = line->lockVertexes();
+		RenderLine::VertexType* verts = line->lockVertexes();
 		verts[0].xyz = m_pos - axis[1] * len - axis[2] * len;
 		verts[0].rgba = color;
 		verts[1].xyz = m_pos - axis[1] * len + axis[2] * len;
@@ -407,7 +407,7 @@ namespace Axon { namespace Editor {
 		SafeDelete(m_outerBound);
 	}
 
-	void RotateGizmo::setup(const Camera& camera, const Vector3& pos, const Matrix3& axis, float scale) {
+	void RotateGizmo::setup(const RenderCamera& camera, const Vector3& pos, const Matrix3& axis, float scale) {
 		m_pos = pos;
 		m_axis = axis;
 		m_scale = scale;
@@ -503,7 +503,7 @@ namespace Axon { namespace Editor {
 		m_enabledCrank = false;
 	}
 
-	void RotateGizmo::setupCrank(const Camera& camera) {
+	void RotateGizmo::setupCrank(const RenderCamera& camera) {
 		if (m_highlit == None)
 			return;
 
@@ -592,7 +592,7 @@ namespace Axon { namespace Editor {
 		}
 	}
 
-	void ScaleGizmo::setup(const Camera& camera, const Vector3& pos, const Matrix3& axis, float scale) {
+	void ScaleGizmo::setup(const RenderCamera& camera, const Vector3& pos, const Matrix3& axis, float scale) {
 		m_pos = pos;
 		m_axis = axis;
 		m_scale = scale;
@@ -683,9 +683,9 @@ namespace Axon { namespace Editor {
 
 		return Rgba::White;
 	}
-	void ScaleGizmo::setupScreenQuad(const Camera& camera, RenderMesh*& mesh, const Vector3& pos, Rgba color) {
+	void ScaleGizmo::setupScreenQuad(const RenderCamera& camera, RenderMesh*& mesh, const Vector3& pos, Rgba color) {
 		if (!mesh) {
-			mesh = new RenderMesh(RenderPrim::Dynamic);
+			mesh = new RenderMesh(Primitive::Dynamic);
 			mesh->initialize(4, 6);
 			ushort_t* idx = mesh->lockIndexes();
 			idx[0] = 0; idx[1] = 1; idx[2] = 2;

@@ -49,12 +49,12 @@ namespace Axon { namespace Editor {
 
 	}
 
-	void GfxContext::doRender( const Render::Camera& camera, bool world /*= false*/ )
+	void GfxContext::doRender( const RenderCamera& camera, bool world /*= false*/ )
 	{
 
 	}
 
-	void GfxContext::doSelect( const Render::Camera& camera, int part )
+	void GfxContext::doSelect( const RenderCamera& camera, int part )
 	{
 
 	}

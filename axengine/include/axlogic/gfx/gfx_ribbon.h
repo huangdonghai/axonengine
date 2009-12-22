@@ -20,6 +20,13 @@ namespace Axon { namespace Gfx {
 
 	class RibbonEmitter : public GfxObject
 	{
+		AX_DECLARE_CLASS(RibbonEmitter, GfxObject, "RibbonEmitter")
+			AX_SIMPLEPROP(color)
+			AX_SIMPLEPROP(opacity)
+			AX_SIMPLEPROP(above)
+			AX_SIMPLEPROP(below)
+		AX_END_CLASS()
+
 	public:
 		RibbonEmitter();
 		virtual ~RibbonEmitter();
@@ -30,9 +37,11 @@ namespace Axon { namespace Gfx {
 		virtual void render();
 
 	private:
+		// BEGIN ANIMATABLE PROPERTIES
 		Rgb m_color;
 		float m_opacity;
 		float m_above, m_below;
+		// END ANIMATABLE PROPERTIES
 
 		float f1, f2;
 

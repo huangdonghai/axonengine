@@ -21,7 +21,6 @@ read the license and understand and accept it fully.
 #include <dxerr.h>
 
 using namespace Axon;
-using namespace Axon::Render;
 
 #if 1 || defined(DEBUG) || defined(_DEBUG)
 #ifndef V
@@ -68,7 +67,7 @@ using namespace Axon::Render;
 #include "d3d9statemanager.h"
 #include "d3d9thread.h"
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
 	inline const char* D3DErrorString(HRESULT hr) {
 #define D3DERR(x) case x: return #x;
@@ -103,8 +102,8 @@ namespace Axon { namespace Render {
 
 	extern D3D9window* d3d9InternalWindow;
 	extern D3D9driver* d3d9Driver;
-	extern IDriver::Info* d3d9DriverInfo;
-	extern Render::Queue* d3d9Queue;
+	extern IRenderDriver::Info* d3d9DriverInfo;
+	extern RenderQueue* d3d9Queue;
 	extern SyncMutex d3d9Mutex;
 
 
@@ -126,7 +125,7 @@ namespace Axon { namespace Render {
 	extern bool d3d9NVDB;
 	extern bool d3d9NULL;
 
-	extern Camera* d3d9Camera;
+	extern RenderCamera* d3d9Camera;
 
 	// thread state
 	extern QueuedScene* d3d9Scene;
@@ -142,9 +141,9 @@ namespace Axon { namespace Render {
 #endif
 	extern const QueuedEntity* d3d9Actor;
 	extern Interaction* d3d9Interaction;
-	extern Target* d3d9BoundTarget;
+	extern RenderTarget* d3d9BoundTarget;
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE
 
 #endif // end guardian
 

@@ -14,9 +14,6 @@ namespace Axon {
 	AX_DECLARE_MODULE(axopengl);
 	AX_DECLARE_MODULE(axdirect3d9);
 
-	using namespace Axon::Render;
-//	using namespace Axon::PARTICLESYSTEM;
-
 	// console variable
 #define AX_CVARDECL(name, defaultstring, flags) \
 	Cvar* name;
@@ -29,18 +26,18 @@ namespace Axon {
 #undef AX_STATDECL
 
 	// public object
-	Render::System* g_renderSystem;
-	Render::Queue* g_renderQueue;
-	Render::Queue* g_queues[2];
-	Render::ShaderMacro g_shaderMacro;
-	Render::Uniforms g_uniforms;
-	Render::IDriver* g_renderDriver;
+	RenderSystem* g_renderSystem;
+	RenderQueue* g_renderQueue;
+	RenderQueue* g_queues[2];
+	ShaderMacro g_shaderMacro;
+	Uniforms g_uniforms;
+	IRenderDriver* g_renderDriver;
 
-	Render::TargetManager* g_targetManager;
-	Render::ShaderManager* g_shaderManager;
-	Render::PrimitiveManager* g_primitiveManager;
+	TargetManager* g_targetManager;
+	ShaderManager* g_shaderManager;
+	PrimitiveManager* g_primitiveManager;
 
-	Render::QueryManager* g_queryManager;
+	QueryManager* g_queryManager;
 
 	InputSystem* g_inputSystem;
 	SoundSystem* g_soundSystem;
@@ -77,7 +74,7 @@ namespace Axon {
 		AX_REGISTER_MODULE(axdirect3d9);
 #endif
 
-		g_renderSystem = new Render::System;
+		g_renderSystem = new RenderSystem;
 		g_renderSystem->initialize();
 
 #if 0

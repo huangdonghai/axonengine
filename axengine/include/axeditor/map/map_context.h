@@ -68,8 +68,8 @@ namespace Axon { namespace Editor { namespace MapEdit {
 		void runGame();
 
 		// present
-		void doRender(const Render::Camera& camera, bool world = false);
-		void doSelect(const Render::Camera& camera, int part);
+		void doRender(const RenderCamera& camera, bool world = false);
+		void doSelect(const RenderCamera& camera, int part);
 
 		// bookmarks --timlly add
 		void addBookmark(const AffineMat& viewMatrix, const String& name = "", int id = -1);

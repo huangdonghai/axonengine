@@ -16,7 +16,7 @@ namespace Axon { namespace Game {
 
 	class GameLight : public GameEntity {
 	public:
-		AX_DECLARE_CLASS(GameLight, GameEntity, "Game.Effect.Light")
+		AX_DECLARE_CLASS(GameLight, GameEntity, "Game.Effect.RenderLight")
 			AX_METHOD(loadLight)
 			AX_METHOD(activeLight)
 		AX_END_CLASS()
@@ -45,9 +45,9 @@ namespace Axon { namespace Game {
 		void setupSpotPrim();
 
 	private:
-		Render::Light* m_renderLight;
-		Render::Mesh* m_pointPrim;
-		Render::Mesh* m_spotPrim;
+		RenderLight* m_renderLight;
+		RenderMesh* m_pointPrim;
+		RenderMesh* m_spotPrim;
 	};
 
 

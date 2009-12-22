@@ -31,7 +31,6 @@ read the license and understand and accept it fully.
 
 
 using namespace Axon;
-using namespace Axon::Render;
 
 #include "gltexture.h"
 #include "glshader.h"
@@ -57,7 +56,7 @@ namespace Axon {
 	extern GLwindow* glInternalWindow;
 	extern HGLRC					glContext;
 	extern GLdriver* glDriver;
-	extern IDriver::Info* glDriverInfo;
+	extern IRenderDriver::Info* glDriverInfo;
 	extern GLthread* glThread;
 	extern CGcontext				glCgContext;
 	extern GLprimitivemanager* glPrimitiveManager;

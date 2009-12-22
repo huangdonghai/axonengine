@@ -10,7 +10,7 @@ read the license and understand and accept it fully.
 
 #include "../private.h"
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
 	//--------------------------------------------------------------------------
 	// class UniformItem
@@ -376,5 +376,5 @@ namespace Axon { namespace Render {
 			m_size = intoffset + 1;
 	}
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE
 

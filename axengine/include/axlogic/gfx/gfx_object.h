@@ -18,12 +18,10 @@ namespace Axon { namespace Gfx {
 
 	class GfxObject : public Object
 	{
-	public:
-		// script
 		AX_DECLARE_CLASS(GfxObject, Object, "GfxObject")
 			AX_SIMPLEPROP(tm)
 		AX_END_CLASS()
-
+	public:
 		enum GfxType {
 			kVirtualBase,
 			kParticleEmitter,
@@ -41,6 +39,8 @@ namespace Axon { namespace Gfx {
 
 	private:
 		GfxEntity* m_entity;
+
+		// animatable properties
 		AffineMat m_tm;
 	};
 

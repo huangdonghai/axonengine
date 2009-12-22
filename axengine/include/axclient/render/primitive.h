@@ -10,7 +10,7 @@ read the license and understand and accept it fully.
 #ifndef AX_RENDER_PRIMITIVE_H
 #define AX_RENDER_PRIMITIVE_H
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
 	//--------------------------------------------------------------------------
 	// class Primitive
@@ -158,15 +158,15 @@ namespace Axon { namespace Render {
 	};
 
 	//--------------------------------------------------------------------------
-	// class Line
+	// class RenderLine
 	//--------------------------------------------------------------------------
 
-	class AX_API Line : public Primitive {
+	class AX_API RenderLine : public Primitive {
 	public:
 		typedef DebugVertex VertexType;
 
-		Line(Hint hint);
-		virtual ~Line();
+		RenderLine(Hint hint);
+		virtual ~RenderLine();
 
 		void initialize(int numverts, int numidxes);
 		void finalize();
@@ -195,20 +195,20 @@ namespace Axon { namespace Render {
 		float getLineWidth() const;
 
 		// helper static create
-		static Line* createAxis(Hint hint, float line_length);
-		static Line* createAxis(Hint hint, const Vector3& origin, const Matrix3& axis, float line_length);
-		static Line* createScreenRect(Hint hint, const Rect& rect, const Rgba& color);
-		static Line* createLine(Hint hint, const Vector3& from, const Vector3& to, const Rgba& color);
-		static Line* createWorldBoundingBox(Hint hint, const BoundingBox& bbox, const Rgba& color);
+		static RenderLine* createAxis(Hint hint, float line_length);
+		static RenderLine* createAxis(Hint hint, const Vector3& origin, const Matrix3& axis, float line_length);
+		static RenderLine* createScreenRect(Hint hint, const Rect& rect, const Rgba& color);
+		static RenderLine* createLine(Hint hint, const Vector3& from, const Vector3& to, const Rgba& color);
+		static RenderLine* createWorldBoundingBox(Hint hint, const BoundingBox& bbox, const Rgba& color);
 
-		static bool setupLine(Line*& line, const Vector3& from, const Vector3& to, const Rgba& color);
-		static bool setupAxis(Line*& line, const Vector3& origin, const Matrix3& axis, float length, Rgba xcolor, Rgba ycolor, Rgba zcolor);
-		static bool setupBoundingBox(Line*& line, const Vector3& origin, const Matrix3& axis, const BoundingBox& inbbox, float scale=1.0f, Hint hint = Primitive::Dynamic);
-		static bool setupCircle(Line*& line, const Vector3& origin, const Vector3& p0, const Vector3& p1, const Rgba& color, int subdivided);
-		static bool setupCircle(Line*& line, const Vector3& origin, const Vector3& p0, const Vector3& p1, const Rgba& color, int subdivided ,Hint hint);
-		static bool setupCircle(Line*& line, const Vector3& origin, const Vector3& p0, const Vector3& p1, const Rgba& color, int subdivided, const Plane& plane);
-		static bool setupCircle(Line*& line, const Vector3& origin, const Vector3& p0, const Vector3& p1, const Rgba& color, int subdivided, bool clipplane, const Plane& plane,Hint hint = Primitive::Dynamic);
-		static bool setupScreenRect(Line*& line, const Rect& rect, const Rgba& color);
+		static bool setupLine(RenderLine*& line, const Vector3& from, const Vector3& to, const Rgba& color);
+		static bool setupAxis(RenderLine*& line, const Vector3& origin, const Matrix3& axis, float length, Rgba xcolor, Rgba ycolor, Rgba zcolor);
+		static bool setupBoundingBox(RenderLine*& line, const Vector3& origin, const Matrix3& axis, const BoundingBox& inbbox, float scale=1.0f, Hint hint = Primitive::Dynamic);
+		static bool setupCircle(RenderLine*& line, const Vector3& origin, const Vector3& p0, const Vector3& p1, const Rgba& color, int subdivided);
+		static bool setupCircle(RenderLine*& line, const Vector3& origin, const Vector3& p0, const Vector3& p1, const Rgba& color, int subdivided ,Hint hint);
+		static bool setupCircle(RenderLine*& line, const Vector3& origin, const Vector3& p0, const Vector3& p1, const Rgba& color, int subdivided, const Plane& plane);
+		static bool setupCircle(RenderLine*& line, const Vector3& origin, const Vector3& p0, const Vector3& p1, const Rgba& color, int subdivided, bool clipplane, const Plane& plane,Hint hint = Primitive::Dynamic);
+		static bool setupScreenRect(RenderLine*& line, const Rect& rect, const Rgba& color);
 
 	private:
 		int m_numVertexes;
@@ -219,15 +219,15 @@ namespace Axon { namespace Render {
 	};
 
 	//--------------------------------------------------------------------------
-	// class Mesh 
+	// class RenderMesh 
 	//--------------------------------------------------------------------------
 
-	class AX_API Mesh : public Primitive {
+	class AX_API RenderMesh : public Primitive {
 	public:
 		typedef Vertex VertexType;
 
-		Mesh(Hint hint);
-		virtual ~Mesh();
+		RenderMesh(Hint hint);
+		virtual ~RenderMesh();
 
 		void initialize(int numverts, int numidxes);
 		void finalize();
@@ -242,8 +242,8 @@ namespace Axon { namespace Render {
 		ushort_t* lockIndexes();
 		void unlockIndexes();
 
-		Line* getTangentLine(float len) const;
-		Line* getNormalLine(float len) const;
+		RenderLine* getTangentLine(float len) const;
+		RenderLine* getNormalLine(float len) const;
 
 		void computeTangentSpace();
 		void computeTangentSpaceSlow();
@@ -252,20 +252,20 @@ namespace Axon { namespace Render {
 		void setIsStriped(bool val) { m_isStriped = val; }
 
 		// static helper function
-		static Mesh* createScreenQuad(Hint hint, const Rect& rect, const Rgba& color, Material* material=nullptr, const Vector4& st = Vector4(0,0,1,1));
-		static Mesh* createQuad(Hint hint, const Vector3& p0, const Vector3& p1);
-		static Mesh* createAABB(Hint hint, const BoundingBox& box);
-		static Mesh* createSphere(Hint hint, const Vector3& origin, float radius, int subdivided);
-		static Mesh* createHalfSphere(Hint hint, const Vector3& origin, float radius, int subdivided, int side);
-		static Mesh* createCylinder(Hint hint, const Vector3& p0, const Vector3& p1, float radius);
+		static RenderMesh* createScreenQuad(Hint hint, const Rect& rect, const Rgba& color, Material* material=nullptr, const Vector4& st = Vector4(0,0,1,1));
+		static RenderMesh* createQuad(Hint hint, const Vector3& p0, const Vector3& p1);
+		static RenderMesh* createAABB(Hint hint, const BoundingBox& box);
+		static RenderMesh* createSphere(Hint hint, const Vector3& origin, float radius, int subdivided);
+		static RenderMesh* createHalfSphere(Hint hint, const Vector3& origin, float radius, int subdivided, int side);
+		static RenderMesh* createCylinder(Hint hint, const Vector3& p0, const Vector3& p1, float radius);
 
-		static bool setupFan(Mesh*& mesh, const Vector3& center, const Vector3& v0, const Vector3& v1, float start, float end, Rgba color, int subdivided, Material* material = nullptr);
-		static bool setupQuad(Mesh*& mesh, const Vector3& p0, const Vector3& p1, const Vector3& p2, const Vector3& p3, const Rgba& color, Material* material = nullptr);
-		static bool setupPolygon(Mesh*& mesh, int numverts, const Vector3* verts, Rgba color, Material* material = nullptr);
-		static bool setupCone(Mesh*& mesh, const Vector3& center, float radius, const Vector3& top, const Rgba& color, int subdivided = 8);
-		static bool setupBox(Mesh*& mesh, const BoundingBox& bbox, const Rgba& color);
-		static bool 		setupScreenQuad(Mesh*& mesh, const Rect& rect, const Rgba& color, Material* material=nullptr, const Vector4& st = Vector4(0,0,1,1));
-		static bool setupHexahedron(Mesh*& mesh, Vector3 vertes[8]);
+		static bool setupFan(RenderMesh*& mesh, const Vector3& center, const Vector3& v0, const Vector3& v1, float start, float end, Rgba color, int subdivided, Material* material = nullptr);
+		static bool setupQuad(RenderMesh*& mesh, const Vector3& p0, const Vector3& p1, const Vector3& p2, const Vector3& p3, const Rgba& color, Material* material = nullptr);
+		static bool setupPolygon(RenderMesh*& mesh, int numverts, const Vector3* verts, Rgba color, Material* material = nullptr);
+		static bool setupCone(RenderMesh*& mesh, const Vector3& center, float radius, const Vector3& top, const Rgba& color, int subdivided = 8);
+		static bool setupBox(RenderMesh*& mesh, const BoundingBox& bbox, const Rgba& color);
+		static bool 		setupScreenQuad(RenderMesh*& mesh, const Rect& rect, const Rgba& color, Material* material=nullptr, const Vector4& st = Vector4(0,0,1,1));
+		static bool setupHexahedron(RenderMesh*& mesh, Vector3 vertes[8]);
 
 	private:
 		int m_numVertexes;
@@ -276,10 +276,10 @@ namespace Axon { namespace Render {
 	};
 
 	//--------------------------------------------------------------------------
-	// class Text
+	// class RenderText
 	//--------------------------------------------------------------------------
 
-	class AX_API Text : public Primitive {
+	class AX_API RenderText : public Primitive {
 	public:
 		enum Format {
 			// style flags
@@ -302,8 +302,8 @@ namespace Axon { namespace Render {
 			VCenter, Top, Bottom
 		};
 
-		Text(Hint hint);
-		virtual ~Text();
+		RenderText(Hint hint);
+		virtual ~RenderText();
 
 		void initialize(const Rect& rect, Rgba color, float aspect, int format, Font* font, const String& text);
 		void initializeSimple(const Vector3& xyz, Rgba color, const String& text, bool fixedWidth = true);
@@ -323,8 +323,8 @@ namespace Axon { namespace Render {
 		void setVerticalAlign(VerticalAlign align) { m_verticalAlign = align; }
 
 		// static helper function
-		static Text* createSimpleText(Hint hint, const Vector3& xyz, const Rgba& color, const String& text, bool fixedWidth = true);
-		static Text* createText(Hint hint, const Rect& rect, Font* font, const String& text, const Rgba& color=Rgba::White, HorizonAlign halign=Center, VerticalAlign valign=VCenter, int format=0, float aspect = 1.0f);
+		static RenderText* createSimpleText(Hint hint, const Vector3& xyz, const Rgba& color, const String& text, bool fixedWidth = true);
+		static RenderText* createText(Hint hint, const Rect& rect, Font* font, const String& text, const Rgba& color=Rgba::White, HorizonAlign halign=Center, VerticalAlign valign=VCenter, int format=0, float aspect = 1.0f);
 
 	private:
 		Rect m_rect;				// draw on this rect
@@ -340,10 +340,10 @@ namespace Axon { namespace Render {
 	};
 
 	//--------------------------------------------------------------------------
-	// class Chunk
+	// class RenderChunk
 	//--------------------------------------------------------------------------
 
-	class AX_API Chunk : public Primitive {
+	class AX_API RenderChunk : public Primitive {
 	public:
 		enum {
 			MAX_LAYERS = 4
@@ -357,8 +357,8 @@ namespace Axon { namespace Render {
 			bool isVerticalProjection;
 		};
 
-		Chunk(Hint hint);
-		virtual ~Chunk();
+		RenderChunk(Hint hint);
+		virtual ~RenderChunk();
 
 		void initialize(int numverts, int numindexes);
 		void finalize();
@@ -420,10 +420,10 @@ namespace Axon { namespace Render {
 		bool m_isZonePrim;
 	};
 
-	inline void Chunk::setZoneRect(const Vector4& rect) {
+	inline void RenderChunk::setZoneRect(const Vector4& rect) {
 		m_zoneRect = rect;
 	}
-	inline Vector4 Chunk::getZoneRect() const {
+	inline Vector4 RenderChunk::getZoneRect() const {
 		return m_zoneRect;
 	}
 
@@ -537,6 +537,6 @@ namespace Axon { namespace Render {
 		List<int>			m_waitUncache;
 	};
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE
 
 #endif // AX_RENDER_PRIMITIVE_H

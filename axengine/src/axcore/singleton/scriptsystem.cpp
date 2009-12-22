@@ -1943,9 +1943,9 @@ errquit:
 		return result;
 	}
 
-	inline ScriptProp::Kind ScriptProp::checkNameKind()
+	inline int ScriptProp::checkNameKind()
 	{
-		ScriptProp::Kind kind = ScriptProp::kEmpty;
+		int kind = Variant::kEmpty;
 
 		size_t pos = m_realName.find('_');
 		if (pos != String::npos) {
@@ -1953,13 +1953,13 @@ errquit:
 			m_showName = m_realName.substr(pos+1, m_realName.size()-pos-1);
 
 			if (ks == "bool") {
-				kind = ScriptProp::kBool;
+				kind = Variant::kBool;
 			} else if (ks == "int") {
-				kind = ScriptProp::kInt;
+				kind = Variant::kInt;
 			} else if (ks == "float") {
-				kind = ScriptProp::kFloat;
+				kind = Variant::kFloat;
 			} else if (ks == "str") {
-				kind = ScriptProp::kString;
+				kind = Variant::kString;
 			} else if (ks == "mdl") {
 				kind = ScriptProp::kModel;
 			} else if (ks == "tex") {
@@ -1977,13 +1977,13 @@ errquit:
 			} else if (ks == "flag") {
 				kind = ScriptProp::kFlag;
 			} else if (ks == "vec") {
-				kind = ScriptProp::kVector3;
+				kind = Variant::kVector3;
 			} else if (ks == "color") {
-				kind = ScriptProp::kColor;
+				kind = Variant::kColor;
 			} else if (ks == "point") {
-				kind = ScriptProp::kPoint;
+				kind = Variant::kPoint;
 			} else if (ks == "rect") {
-				kind = ScriptProp::kRect;
+				kind = Variant::kRect;
 			} else {
 				Debugf("Error, don't know SpawnArg kind '%s'", ks.c_str());
 			}
@@ -1998,7 +1998,7 @@ errquit:
 		return kind;
 	}
 
-	inline bool ScriptProp::isStringType(ScriptProp::Kind kind)
+	inline bool ScriptProp::isStringType(int kind)
 	{
 		return kindToType(kind) == Variant::kString;
 	}
@@ -2012,9 +2012,9 @@ errquit:
 	lua_pop(L, 1) 
 
 
-	ScriptProp::Kind ScriptProp::checkTableKind(Variant& result)
+	int ScriptProp::checkTableKind(Variant& result)
 	{
-		Kind kind = kEmpty;
+		int kind = Variant::kEmpty;
 
 		bool hx, hy, hz, hr, hg, hb, hwidth, hheight;
 		float x, y, z, r, g, b, width, height;
@@ -2029,16 +2029,16 @@ errquit:
 		CHECK_FILED(height);
 
 		if (hx && hy && hz) {
-			kind = kVector3;
+			kind = Variant::kVector3;
 			result.set(Vector3(x,y,z));
 		} else if (hx && hy && hwidth && hheight) {
-			kind = kRect;
+			kind = Variant::kRect;
 			result.set(Rect(x,y,width,height));
 		} else if (hr && hg && hb) {
-			kind = kColor;
+			kind = Variant::kColor;
 			result.set(Rgb(r,g,b));
 		} else if (hx && hy) {
-			kind = kPoint;
+			kind = Variant::kPoint;
 			result.set(Point(x,y));
 		}
 
@@ -2080,28 +2080,28 @@ errquit:
 
 	void ScriptProp::init()
 	{
-		Kind kindFromName = checkNameKind();
+		int kindFromName = checkNameKind();
 
 		int valuetype = lua_type(L,-1);
 		switch (valuetype) {
 			case LUA_TBOOLEAN:
-				AX_ASSURE(kindFromName == kEmpty || kindFromName == kBool);
-				m_propKind = kBool;
+				AX_ASSURE(kindFromName == Variant::kEmpty || kindFromName == Variant::kBool);
+				m_propKind = Variant::kBool;
 				m_defaultValue.set(lua_toboolean(L,-1) ? true : false);
 				break;
 			case LUA_TNUMBER:
-				if (kindFromName == kEmpty || kindFromName == kFloat) {
-					m_propKind = kFloat;
-				} else if (kindFromName == kInt) {
-					m_propKind = kInt;
+				if (kindFromName == Variant::kEmpty || kindFromName == Variant::kFloat) {
+					m_propKind = Variant::kFloat;
+				} else if (kindFromName == Variant::kInt) {
+					m_propKind = Variant::kInt;
 				} else {
 					Errorf("Why here?");
 				}
 				m_defaultValue.set(lua_tonumber(L,-1));
 				break;
 			case LUA_TSTRING:
-				if (kindFromName == kEmpty) {
-					m_propKind = kString;
+				if (kindFromName == Variant::kEmpty) {
+					m_propKind = Variant::kString;
 				} else if (isStringType(kindFromName)) {
 					m_propKind = kindFromName;
 				} else {
@@ -2115,10 +2115,10 @@ errquit:
 					initEnumItems();
 				} else {
 					m_propKind = checkTableKind(m_defaultValue);
-					if (kindFromName != kEmpty && m_propKind != kindFromName) {
+					if (kindFromName != Variant::kEmpty && m_propKind != kindFromName) {
 						Errorf("Why here?");
 					}
-					if (!m_group && kindFromName == kEmpty) {
+					if (!m_group && kindFromName == Variant::kEmpty) {
 						m_propKind = kGroup;
 					}
 				}
@@ -2161,13 +2161,13 @@ errquit:
 		lua_rawget(L, LUA_REGISTRYINDEX);
 		if (xGetScoped(L, ("Properties." + m_realName).c_str())) {
 			result = xReadStack(L,-1);
-			if (m_propKind == kColor) {
+			if (m_propKind == Variant::kColor) {
 				result = (Rgb)result;
-			} else if (m_propKind == kVector3) {
+			} else if (m_propKind == Variant::kVector3) {
 				result = (Vector3)result;
-			} else if (m_propKind == kPoint) {
+			} else if (m_propKind == Variant::kPoint) {
 				result = (Point)result;
-			} else if (m_propKind == kRect) {
+			} else if (m_propKind == Variant::kRect) {
 				result = (Rect)result;
 			} else if (result.type == Variant::kTable) {
 				result.clear();

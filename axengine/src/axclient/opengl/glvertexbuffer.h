@@ -11,7 +11,7 @@ read the license and understand and accept it fully.
 #ifndef AX_GLVERTEXBUFFER_H
 #define AX_GLVERTEXBUFFER_H
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
 	//--------------------------------------------------------------------------
 	// class GLvertexbuffer
@@ -80,7 +80,7 @@ namespace Axon { namespace Render {
 	}
 
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE
 
 #endif // AX_GLVERTEXBUFFER_H
 

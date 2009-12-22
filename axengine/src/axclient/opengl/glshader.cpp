@@ -93,7 +93,7 @@ namespace { namespace Internal {
 }}
 
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
 #if 0
 	ShaderUniform gUniform;
@@ -299,7 +299,7 @@ namespace Axon { namespace Render {
 
 				Interaction* ia = gCurInteraction;
 
-				Target* target = ia->targets[count];
+				RenderTarget* target = ia->targets[count];
 				GLtarget* textarget = (GLtarget*)target;
 				GLtexture* tex = textarget->getTextureGL();
 
@@ -309,7 +309,7 @@ namespace Axon { namespace Render {
 					continue;
 				}
 #if 1
-				Target* target = gWorldFramebuffer->allocTarget(Target::PermanentAlloc, TexFormat::RGBA8);
+				RenderTarget* target = gWorldFramebuffer->allocTarget(RenderTarget::PermanentAlloc, TexFormat::RGBA8);
 				GLtarget* textarget = (GLtarget*)target;
 				GLtexture* tex = textarget->getTextureGL();
 #if 0
@@ -882,7 +882,7 @@ namespace Axon { namespace Render {
 	{
 
 	}
-}} // namespace Axon::Render
+AX_END_NAMESPACE
 
 
 

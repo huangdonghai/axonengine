@@ -9,7 +9,7 @@ read the license and understand and accept it fully.
 
 #include "../private.h"
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
 
 	TextureAtlas::TextureAtlas()
@@ -47,7 +47,7 @@ namespace Axon { namespace Render {
 		m_chunkWidth = chunk_width;
 		m_chunkHeight = chunk_height;
 
-		const IDriver::Info* info = g_renderDriver->getDriverInfo();
+		const IRenderDriver::Info* info = g_renderDriver->getDriverInfo();
 
 		if (side_length > info->maxTextureSize) {
 			m_textureSize = info->maxTextureSize;
@@ -188,5 +188,5 @@ namespace Axon { namespace Render {
 		}
 	}
 
-}} // namespace Axon
+AX_END_NAMESPACE
 

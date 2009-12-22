@@ -11,9 +11,9 @@ read the license and understand and accept it fully.
 #ifndef AX_RENDER_OCCLUDAR_H
 #define AX_RENDER_OCCLUDAR_H
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE
 
 #endif // end guardian
 

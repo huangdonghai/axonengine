@@ -10,7 +10,7 @@ read the license and understand and accept it fully.
 #ifndef AX_RENDER_TEXTUREATLAS_H
 #define AX_RENDER_TEXTUREATLAS_H
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
 	/*!
 		\class TextureAtlas
@@ -56,6 +56,6 @@ namespace Axon { namespace Render {
 		Dict<int, int>	m_atlasHash;	// int -> indexes map
 	};
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE
 
 #endif

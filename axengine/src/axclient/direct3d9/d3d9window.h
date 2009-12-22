@@ -11,9 +11,9 @@ read the license and understand and accept it fully.
 #ifndef AX_D3D9WINDOW_H
 #define AX_D3D9WINDOW_H
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
-	class D3D9window : public Target {
+	class D3D9window : public RenderTarget {
 	public:
 		D3D9window(const String& name);
 		D3D9window(handle_t wndId, const String& name);
@@ -21,7 +21,7 @@ namespace Axon { namespace Render {
 
 		// implement ITarget
 		virtual Rect getRect();
-		virtual Type getType() { return Target::kWindow; }
+		virtual Type getType() { return RenderTarget::kWindow; }
 		virtual void bind();
 		virtual void unbind();
 		virtual bool isWindow() { return true;}
@@ -52,7 +52,7 @@ namespace Axon { namespace Render {
 		D3D9target* m_lightBuffer;
 	};
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE
 
 #endif // end guardian
 

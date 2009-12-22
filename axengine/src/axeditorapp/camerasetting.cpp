@@ -30,7 +30,7 @@ CameraSetting::~CameraSetting()
 
 }
 
-void CameraSetting::refreshDlg(const Render::Camera &camera)
+void CameraSetting::refreshDlg(const RenderCamera &camera)
 {
 	ui.eyeX->setValue(camera.getOrigin().x);
 	ui.eyeY->setValue(camera.getOrigin().y);
@@ -47,7 +47,7 @@ void CameraSetting::refreshDlg(const Render::Camera &camera)
 
 void CameraSetting::on_eyeX_valueChanged(double value)
 {
-	Render::Camera camara = g_mapContext->getActiveView()->getCamera();
+	RenderCamera camara = g_mapContext->getActiveView()->getCamera();
 	Vector3 v = camara.getOrigin();
 
 	CheckIsEqual(v.x - value);
@@ -63,7 +63,7 @@ void CameraSetting::on_eyeX_valueChanged(double value)
 
 void CameraSetting::on_eyeY_valueChanged(double value)
 {
-	Render::Camera camara = g_mapContext->getActiveView()->getCamera();
+	RenderCamera camara = g_mapContext->getActiveView()->getCamera();
 	Vector3 v = camara.getOrigin();
 
 	CheckIsEqual(v.y - value);
@@ -79,7 +79,7 @@ void CameraSetting::on_eyeY_valueChanged(double value)
 
 void CameraSetting::on_eyeZ_valueChanged(double value)
 {
-	Render::Camera camara = g_mapContext->getActiveView()->getCamera();
+	RenderCamera camara = g_mapContext->getActiveView()->getCamera();
 	Vector3 v = camara.getOrigin();
 
 	CheckIsEqual(v.z - value);
@@ -94,7 +94,7 @@ void CameraSetting::on_eyeZ_valueChanged(double value)
 
 void CameraSetting::on_dirX_valueChanged(double value)
 {
-	Render::Camera camara = g_mapContext->getActiveView()->getCamera();
+	RenderCamera camara = g_mapContext->getActiveView()->getCamera();
 	Matrix3 mat3 = camara.getViewAxis();
 
 	CheckIsEqual(mat3[DirIndex].x - value);
@@ -109,7 +109,7 @@ void CameraSetting::on_dirX_valueChanged(double value)
 
 void CameraSetting::on_dirY_valueChanged(double value)
 {
-	Render::Camera camara = g_mapContext->getActiveView()->getCamera();
+	RenderCamera camara = g_mapContext->getActiveView()->getCamera();
 	Matrix3 mat3 = camara.getViewAxis();
 
 	CheckIsEqual(mat3[DirIndex].y - value);
@@ -124,7 +124,7 @@ void CameraSetting::on_dirY_valueChanged(double value)
 
 void CameraSetting::on_dirZ_valueChanged(double value)
 {
-	Render::Camera camara = g_mapContext->getActiveView()->getCamera();
+	RenderCamera camara = g_mapContext->getActiveView()->getCamera();
 	Matrix3 mat3 = camara.getViewAxis();
 
 	CheckIsEqual(mat3[DirIndex].z - value);
@@ -139,7 +139,7 @@ void CameraSetting::on_dirZ_valueChanged(double value)
 
 void CameraSetting::on_upX_valueChanged(double value)
 {
-	Render::Camera camara = g_mapContext->getActiveView()->getCamera();
+	RenderCamera camara = g_mapContext->getActiveView()->getCamera();
 	Matrix3 mat3 = camara.getViewAxis();
 
 	CheckIsEqual(mat3[UpIndex].x - value);
@@ -154,7 +154,7 @@ void CameraSetting::on_upX_valueChanged(double value)
 
 void CameraSetting::on_upY_valueChanged(double value)
 {
-	Render::Camera camara = g_mapContext->getActiveView()->getCamera();
+	RenderCamera camara = g_mapContext->getActiveView()->getCamera();
 	Matrix3 mat3 = camara.getViewAxis();
 
 	CheckIsEqual(mat3[UpIndex].y - value);
@@ -169,7 +169,7 @@ void CameraSetting::on_upY_valueChanged(double value)
 
 void CameraSetting::on_upZ_valueChanged(double value)
 {
-	Render::Camera camara = g_mapContext->getActiveView()->getCamera();
+	RenderCamera camara = g_mapContext->getActiveView()->getCamera();
 	Matrix3 mat3 = camara.getViewAxis();
 
 	CheckIsEqual(mat3[UpIndex].z - value);

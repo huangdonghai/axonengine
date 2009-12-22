@@ -9,7 +9,7 @@ read the license and understand and accept it fully.
 
 #include "private.h"
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
 	AX_IMPLEMENT_FACTORY(GLdriver)
 
@@ -293,7 +293,7 @@ namespace Axon { namespace Render {
 		Printf("..Finalized GLdriver\n");
 	}
 
-	const IDriver::Info* GLdriver::getDriverInfo() {
+	const IRenderDriver::Info* GLdriver::getDriverInfo() {
 		return glDriverInfo;
 	}
 
@@ -309,7 +309,7 @@ namespace Axon { namespace Render {
 
 	static int select_time;
 	static Matrix4 select_viewmatrix;
-	void GLdriver::beginSelect(const Camera& view) {
+	void GLdriver::beginSelect(const RenderCamera& view) {
 		select_time = OsUtil::milliseconds();
 
 		loadMatrix(GL_PROJECTION, view.getProjMatrix());
@@ -332,7 +332,7 @@ namespace Axon { namespace Render {
 		glLoadName(id);
 	}
 
-	void GLdriver::testActor(Entity* re) {
+	void GLdriver::testActor(RenderEntity* re) {
 #if 0
 		glMatrixMode(GL_MODELVIEW);
 		glPushMatrix();
@@ -357,7 +357,7 @@ namespace Axon { namespace Render {
 #endif
 	}
 
-	static inline void testMesh(Mesh* mesh) {
+	static inline void testMesh(RenderMesh* mesh) {
 		GLrender::bindVertexBuffer(VertexType::kVertex, 0, (uintptr_t)mesh->getVertexesPointer());
 		GLrender::checkErrors();
 
@@ -370,7 +370,7 @@ namespace Axon { namespace Render {
 		glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, mesh->getIndexPointer());
 	}
 
-	static inline void testLine(Line* line) {
+	static inline void testLine(RenderLine* line) {
 		GLrender::bindVertexBuffer(VertexType::kDebug, 0, (uintptr_t)line->getVertexesPointer());
 
 		int count = line->getActivedIndexes();
@@ -386,14 +386,14 @@ namespace Axon { namespace Render {
 		int id = prim->getCachedId();
 
 		if (id <= 0) {
-			Mesh* mesh = dynamic_cast<Mesh*>(prim);
+			RenderMesh* mesh = dynamic_cast<RenderMesh*>(prim);
 
 			if (mesh) {
 				testMesh(mesh);
 				return;
 			}
 
-			Line* line = dynamic_cast<Line*>(prim);
+			RenderLine* line = dynamic_cast<RenderLine*>(prim);
 
 			if (line) {
 				testLine(line);
@@ -470,7 +470,7 @@ namespace Axon { namespace Render {
 		return r_hdr->getInteger() && glDriverInfo->caps & Info::HDR;
 	}
 
-	Target* GLdriver::createWindowTarget(handle_t wndId, const String& name) {
+	RenderTarget* GLdriver::createWindowTarget(handle_t wndId, const String& name) {
 		GLwindow* state = new GLwindow(wndId, name);
 		AX_ASSERT(state);
 		return state;
@@ -591,6 +591,6 @@ namespace Axon { namespace Render {
 		glDeleteQueries(2, objs);
 	}
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE
 
 

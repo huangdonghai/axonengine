@@ -514,7 +514,7 @@ namespace Axon { namespace Map {
 		m_tilerect.width = Map::ChunkTiles;
 		m_tilerect.height = Map::ChunkTiles;
 
-		m_material = Render::Material::load("materials/terrain");
+		m_material = Material::load("materials/terrain");
 //		AX_ASSERT(!m_material->isDefaulted());
 
 		allocatePrimitive();
@@ -659,7 +659,7 @@ namespace Axon { namespace Map {
 	}
 
 	void Chunk::allocatePrimitive() {
-		m_prim = new RenderChunk(RenderPrim::Dynamic);
+		m_prim = new RenderChunk(Primitive::Dynamic);
 	}
 
 	void Chunk::updatePrimitive() {
@@ -828,9 +828,9 @@ namespace Axon { namespace Map {
 
 		int start = 0;
 		int numlayers = count;
-		if (count > Render::Chunk::MAX_LAYERS) {
-			start = count - Render::Chunk::MAX_LAYERS;
-			numlayers = Render::Chunk::MAX_LAYERS;
+		if (count > RenderChunk::MAX_LAYERS) {
+			start = count - RenderChunk::MAX_LAYERS;
+			numlayers = RenderChunk::MAX_LAYERS;
 		}
 
 		for (int i = 0; i < numlayers; i++ ) {
@@ -1054,7 +1054,7 @@ namespace Axon { namespace Map {
 		m_colorTexture->setFilterMode(Texture::FM_Bilinear);
 
 		// init primitive
-		m_prim = new RenderChunk(RenderPrim::Static);
+		m_prim = new RenderChunk(Primitive::Static);
 		int primverts = (Map::ZoneTiles >> m_zonePrimLod) + 1;
 		primverts *= primverts;
 		int primidxes = (Map::ZoneTiles >> m_zonePrimLod);
@@ -1553,7 +1553,7 @@ namespace Axon { namespace Map {
 		doLayerPainted(m_tilerect * Map::TilePixels);
 		doUpdateColorTextureLod(m_tilerect * Map::TilePixels);
 
-		notify(Render::Terrain::HeightfieldSetted);
+		notify(RenderTerrain::HeightfieldSetted);
 	}
 
 	void Terrain::initFromXml(const String& map_name, const TiXmlElement* elem) {
@@ -1682,7 +1682,7 @@ namespace Axon { namespace Map {
 			doUpdateColorTextureLod(m_tilerect * Map::TilePixels);
 		}
 
-		notify(Render::Terrain::HeightfieldSetted);
+		notify(RenderTerrain::HeightfieldSetted);
 	}
 
 	bool Terrain::loadColorTexture(const String& map_name) {
@@ -1901,8 +1901,8 @@ namespace Axon { namespace Map {
 		return result;
 	}
 
-	RenderPrims Terrain::getPrimsByCircle(float x, float y, float radius) {
-		RenderPrims result;
+	Primitives Terrain::getPrimsByCircle(float x, float y, float radius) {
+		Primitives result;
 
 		float scale = 1.0f / (m_tilemeters * Map::ChunkTiles);
 		int minx = floorf((x - radius) * scale);
@@ -2044,7 +2044,7 @@ namespace Axon { namespace Map {
 		lg->autoGenerate();
 	}
 
-	void Terrain::doUpdate(Render::QueuedScene* qscene) {
+	void Terrain::doUpdate(QueuedScene* qscene) {
 		m_grassManager->update(qscene);
 
 		const Vector3& org = qscene->camera.getOrigin();
@@ -2066,8 +2066,8 @@ namespace Axon { namespace Map {
 		m_heightDirtyLastView = false;
 	}
 
-	RenderPrims Terrain::getAllPrimitives() {
-		RenderPrims result;
+	Primitives Terrain::getAllPrimitives() {
+		Primitives result;
 
 		return result;
 	}
@@ -2101,7 +2101,7 @@ namespace Axon { namespace Map {
 	}
 #endif
 
-	void Terrain::issueToQueue( Render::QueuedScene* qscene )
+	void Terrain::issueToQueue(QueuedScene* qscene)
 	{
 		ulonglong_t start = OsUtil::microseconds();
 		TerrainEvent e;

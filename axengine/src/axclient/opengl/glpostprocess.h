@@ -11,7 +11,7 @@ read the license and understand and accept it fully.
 #ifndef AX_GL_POSTPROCESS_H
 #define AX_GL_POSTPROCESS_H
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
 	class GLpostprocess {
 	public:
@@ -33,18 +33,18 @@ namespace Axon { namespace Render {
 		void downscale4x4(GLtexture* tex, const Rect& rect);
 
 		void genericPP(const String& shadername, GLtexture* src);
-		void genericPP(const String& shadername, Target* target, GLtexture* src);
+		void genericPP(const String& shadername, RenderTarget* target, GLtexture* src);
 		void genericPP(const String& shadername, GLtexture* src1, GLtexture* src2);
-		void genericPP(const String& shadername, Target* target, GLtexture* src1, GLtexture* src2);
+		void genericPP(const String& shadername, RenderTarget* target, GLtexture* src1, GLtexture* src2);
 
 	protected:
 		void updateScreenQuad(const Rect& rect);
 		GLshader* getShader(const String& name);
 
 	private:
-		Mesh* m_screenQuad;
+		RenderMesh* m_screenQuad;
 		GLgeometry* m_screenQuadGeo;
-		Mesh* m_boxVolume;		// eight vertexes, six face hexahedron
+		RenderMesh* m_boxVolume;		// eight vertexes, six face hexahedron
 
 		MaterialPtr m_matDrawQuad;
 		MaterialPtr m_matMaskVolume;
@@ -57,7 +57,7 @@ namespace Axon { namespace Render {
 		Dict<String, GLshader*>	m_genericShaders;
 	};
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE
 
 #endif // end guardian
 

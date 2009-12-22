@@ -21,11 +21,13 @@ namespace Axon{ namespace Game {
 		m_pose = 0;
 	}
 
-	Animated::~Animated() {
+	Animated::~Animated()
+	{
 		clear();
 	}
 
-	void Animated::doThink() {
+	void Animated::doThink()
+	{
 		GameEntity::doThink();
 
 		if (m_animator) {

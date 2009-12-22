@@ -25,6 +25,20 @@ namespace Axon { namespace Gfx {
 
 	class ParticleEmitter : public GfxObject
 	{
+		AX_DECLARE_CLASS(ParticleEmitter, GfxObject, "ParticleEmitter")
+			AX_SIMPLEPROP(speed)
+			AX_SIMPLEPROP(variation)
+			AX_SIMPLEPROP(spread)
+			AX_SIMPLEPROP(lat)
+			AX_SIMPLEPROP(gravity)
+			AX_SIMPLEPROP(lifespan)
+			AX_SIMPLEPROP(rate)
+			AX_SIMPLEPROP(areal)
+			AX_SIMPLEPROP(areaw)
+			AX_SIMPLEPROP(deacceleration)
+			AX_SIMPLEPROP(enabled)
+		AX_END_CLASS()
+
 	public:
 		enum EmitterShape {
 			kPlane, kSphere
@@ -43,6 +57,7 @@ namespace Axon { namespace Gfx {
 		Particle sphereEmit(int anim, int time, float w, float l, float spd, float var, float spr, float spr2);
 
 	private:
+		// BEGIN ANIMATABLE PROPERTIES
 		float m_speed;
 		float m_variation;
 		float m_spread;
@@ -54,6 +69,7 @@ namespace Axon { namespace Gfx {
 		float m_areaw;
 		float m_deacceleration;
 		float m_enabled;
+		// END ANIMATABLE PROPERTIES
 
 		Vector4 m_colors[3];
 		float m_sizes[3];

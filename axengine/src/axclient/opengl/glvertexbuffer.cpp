@@ -9,7 +9,7 @@ read the license and understand and accept it fully.
 
 #include "private.h"
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
 	static inline GLenum trBufferHint(Primitive::Hint hint) {
 		switch (hint) {
@@ -192,5 +192,5 @@ namespace Axon { namespace Render {
 	}
 
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE
 

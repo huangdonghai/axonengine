@@ -9,13 +9,13 @@ read the license and understand and accept it fully.
 
 #include "../private.h"
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
 	//--------------------------------------------------------------------------
 	// class Actor
 	//--------------------------------------------------------------------------
 
-	Entity::Entity(Kind k)
+	RenderEntity::RenderEntity(Kind k)
 		: m_kind(k)
 		, m_flags(0)
 	{
@@ -38,7 +38,7 @@ namespace Axon { namespace Render {
 		m_nodeLink.setOwner(this);
 	}
 
-	Entity::~Entity() {
+	RenderEntity::~RenderEntity() {
 		g_queryManager->freeQuery(m_shadowQuery);
 		g_queryManager->freeQuery(m_visQuery);
 
@@ -47,39 +47,39 @@ namespace Axon { namespace Render {
 		}
 	}
 
-	const Vector3& Entity::getOrigin() const {
+	const Vector3& RenderEntity::getOrigin() const {
 		return m_affineMat.origin;
 	}
 
-	void Entity::setOrigin(const Vector3& origin) {
+	void RenderEntity::setOrigin(const Vector3& origin) {
 		m_affineMat.origin = origin;
 	}
 
-	const Matrix3& Entity::getAxis() const {
+	const Matrix3& RenderEntity::getAxis() const {
 		return m_affineMat.axis;
 	}
 
-	void Entity::setAxis(const Angles& angles) {
+	void RenderEntity::setAxis(const Angles& angles) {
 		m_affineMat.setAxis(angles);
 		m_instanceParam.w = 1.0f;
 	}
 
-	void Entity::setAxis(const Angles& angles, float scale) {
+	void RenderEntity::setAxis(const Angles& angles, float scale) {
 		m_affineMat.setAxis(angles, scale);
 		m_instanceParam.w = scale;
 	}
 
-	const AffineMat& Entity::getMatrix() const {
+	const AffineMat& RenderEntity::getMatrix() const {
 		return m_affineMat;
 	}
 
-	void Entity::setMatrix(const AffineMat& mat) {
+	void RenderEntity::setMatrix(const AffineMat& mat) {
 		m_affineMat = mat;
 		m_instanceParam.w = m_affineMat.axis[0].getLength();
 	}
 
 
-	void Entity::updateToWorld() {
+	void RenderEntity::updateToWorld() {
 		if (!isPresented()) {
 			return;
 		}
@@ -87,23 +87,23 @@ namespace Axon { namespace Render {
 		m_world->addActor(this);
 	}
 
-	int Entity::getFlags() const {
+	int RenderEntity::getFlags() const {
 		return m_flags;
 	}
 
-	void Entity::setFlags(int flags) {
+	void RenderEntity::setFlags(int flags) {
 		m_flags = flags;
 	}
 
-	void Entity::addFlags(int flags) {
+	void RenderEntity::addFlags(int flags) {
 		m_flags |= flags;
 	}
 
-	bool Entity::isFlagSet(Flag flag) {
+	bool RenderEntity::isFlagSet(Flag flag) {
 		return(m_flags & flag) != 0;
 	}
 
-	void Entity::setQueued(QueuedEntity* queued) {
+	void RenderEntity::setQueued(QueuedEntity* queued) {
 		m_queued = queued;
 #if 0
 		m_queued->modelMatrix = getModelMatrix();
@@ -114,21 +114,21 @@ namespace Axon { namespace Render {
 		m_queued->distance = m_distance;
 	}
 
-	QueuedEntity* Entity::getQueued() const {
+	QueuedEntity* RenderEntity::getQueued() const {
 		return m_queued;
 	}
 
 
 	// read only
-	Matrix4 Entity::getModelMatrix() const {
+	Matrix4 RenderEntity::getModelMatrix() const {
 		return m_affineMat.toMatrix4();
 	}
 
-	Vector4 Entity::getInstanceParam() const {
+	Vector4 RenderEntity::getInstanceParam() const {
 		return m_instanceParam;
 	}
 
-	void Entity::update(QueuedScene* qscene, Plane::Side side) {
+	void RenderEntity::update(QueuedScene* qscene, Plane::Side side) {
 		m_cullSide = side;
 		doUpdate(qscene);
 		doCalculateLod(qscene);
@@ -137,10 +137,10 @@ namespace Axon { namespace Render {
 			m_visFrameId = m_world->getVisFrameId();
 	}
 
-	void Entity::doUpdate(QueuedScene* qscene) {
+	void RenderEntity::doUpdate(QueuedScene* qscene) {
 	}
 
-	void Entity::doCalculateLod(QueuedScene* qscene) {
+	void RenderEntity::doCalculateLod(QueuedScene* qscene) {
 		if (!m_world)
 			return;
 
@@ -214,7 +214,7 @@ namespace Axon { namespace Render {
 		}
 	}
 
-	bool Entity::isVisable() const
+	bool RenderEntity::isVisable() const
 	{
 		if (!m_world)
 			return true;
@@ -222,7 +222,7 @@ namespace Axon { namespace Render {
 		return m_visFrameId == m_world->getVisFrameId();
 	}
 
-	void Entity::updateCsm( QueuedScene* qscene, Plane::Side side )
+	void RenderEntity::updateCsm( QueuedScene* qscene, Plane::Side side )
 	{
 		if (!r_csmCull->getBool())
 			return;
@@ -237,7 +237,7 @@ namespace Axon { namespace Render {
 		m_shadowQuery->issueQuery(m_world->getShadowFrameId(), m_linkedBbox);
 	}
 
-	bool Entity::isCsmCulled() const
+	bool RenderEntity::isCsmCulled() const
 	{
 		if (!r_csmCull->getBool())
 			return false;
@@ -251,18 +251,18 @@ namespace Axon { namespace Render {
 		return m_shadowQuery->m_result == 0;
 	}
 
-	void Entity::setInstanceColor( const Vector3& color )
+	void RenderEntity::setInstanceColor( const Vector3& color )
 	{
 		m_instanceParam.x = color.x;
 		m_instanceParam.y = color.y;
 		m_instanceParam.z = color.z;
 	}
 
-	Vector3 Entity::getInstanceColor() const
+	Vector3 RenderEntity::getInstanceColor() const
 	{
 		return m_instanceParam.xyz();
 	}
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE
 
 

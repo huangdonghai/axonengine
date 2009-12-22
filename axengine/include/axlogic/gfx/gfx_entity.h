@@ -14,8 +14,6 @@ read the license and understand and accept it fully.
 
 namespace Axon { namespace Gfx {
 
-	using namespace Axon::Render;
-
 	class GfxEntity : public RenderEntity
 	{
 	public:

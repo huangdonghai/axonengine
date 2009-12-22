@@ -11,17 +11,17 @@ read the license and understand and accept it fully.
 #ifndef AX_RENDER_WIND_H
 #define AX_RENDER_WIND_H
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
-	class Wind {
+	class RenderWind {
 	public:
 		enum {
 			NUM_WIND_MATRIXES = 3,
 			NUM_LEAF_ANGLES = 8
 		};
 
-		Wind();
-		~Wind();
+		RenderWind();
+		~RenderWind();
 
 		void setWindStrengthAndDirection(float strength, const Vector3& direction);
 
@@ -65,8 +65,8 @@ namespace Axon { namespace Render {
 		void getLeafAngles(Vector4 output[]) const;
 
 		// blending SpeedWinds into this one
-		void interpolateParameters(Wind* pWind1, Wind* pWind2, float fInterpolation);
-		void blendParameters(Wind** pWinds, float* pWeights, unsigned int uiNumWinds);
+		void interpolateParameters(RenderWind* pWind1, RenderWind* pWind2, float fInterpolation);
+		void blendParameters(RenderWind** pWinds, float* pWeights, unsigned int uiNumWinds);
 
 	protected:
 		struct OscillationParams {
@@ -127,7 +127,7 @@ namespace Axon { namespace Render {
 		Sequence<Matrix4>	m_leafAngleMatrices;               // The leaf angle matrices
 	};
 
-}} // Axon::Render
+AX_END_NAMESPACE
 
 #endif // end guardian
 

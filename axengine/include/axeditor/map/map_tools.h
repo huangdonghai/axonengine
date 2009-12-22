@@ -57,7 +57,7 @@ namespace Axon { namespace Editor { namespace MapEdit {
 		virtual void doDrag(int x, int y, int flags, float pressure);
 		virtual void doMove(int x, int y);
 		virtual void doRelease(int x, int y);
-		virtual void doRender(const Camera& camera);
+		virtual void doRender(const RenderCamera& camera);
 
 		virtual void onHistoryCreated(Action* action) { action->setMessage("Terrain Raise"); }
 
@@ -72,11 +72,11 @@ namespace Axon { namespace Editor { namespace MapEdit {
 		float m_brushStrength;
 		float m_brushSoftness;
 		Vector2 m_center;
-		Render::Line* m_cursor;
+		RenderLine* m_cursor;
 		Rect m_editedRect;
 
 		MaterialPtr m_brushMat;
-		Render::GroupPrim* m_brushPrims;
+		GroupPrim* m_brushPrims;
 	};
 
 	//--------------------------------------------------------------------------
@@ -194,7 +194,7 @@ namespace Axon { namespace Editor { namespace MapEdit {
 		virtual void doDrag(int x, int y, int flags, float pressure);
 		virtual void doMove(int x, int y) {}
 		virtual void doRelease(int x, int y);
-		virtual void doRender(const Camera& camera) {}
+		virtual void doRender(const RenderCamera& camera) {}
 
 	private:
 		Static* m_actor;
@@ -214,7 +214,7 @@ namespace Axon { namespace Editor { namespace MapEdit {
 		virtual void doDrag(int x, int y, int flags, float pressure);
 		virtual void doMove(int x, int y) {}
 		virtual void doRelease(int x, int y);
-		virtual void doRender(const Camera& camera);
+		virtual void doRender(const RenderCamera& camera);
 
 	private:
 		Entity* m_actor;
@@ -235,7 +235,7 @@ namespace Axon { namespace Editor { namespace MapEdit {
 		virtual void doDrag(int x, int y, int flags, float pressure);
 		virtual void doMove(int x, int y) {}
 		virtual void doRelease(int x, int y);
-		virtual void doRender(const Camera& camera) {}
+		virtual void doRender(const RenderCamera& camera) {}
 
 	private:
 		SpeedTree* m_actor;

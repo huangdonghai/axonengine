@@ -10,7 +10,7 @@ read the license and understand and accept it fully.
 
 #include "d3d9private.h"
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
 	//------------------------------------------------------------------------------
 	// class D3D9primitive
@@ -173,7 +173,7 @@ namespace Axon { namespace Render {
 	void D3D9geometry::initMesh() {
 		m_vertexType = D3D9vertexobject::VertexGeneric;
 
-		Mesh* src = (Mesh*)m_src;
+		RenderMesh* src = (RenderMesh*)m_src;
 
 		if (src->getIsStriped()) {
 			m_d3dPrimitiveType = D3DPT_TRIANGLESTRIP;
@@ -207,7 +207,7 @@ namespace Axon { namespace Render {
 	}
 
 	void D3D9geometry::updateLine() {
-		Line* line = static_cast<Line*>(m_src);
+		RenderLine* line = static_cast<RenderLine*>(m_src);
 		AX_ASSERT(line);
 
 		int m_vertexCount = line->getNumVertexes();
@@ -223,7 +223,7 @@ namespace Axon { namespace Render {
 
 
 	void D3D9geometry::updateMesh() {
-		Mesh* mesh = static_cast<Mesh*>(m_src);
+		RenderMesh* mesh = static_cast<RenderMesh*>(m_src);
 		AX_ASSERT(mesh);
 
 		int m_vertexCount = mesh->getNumVertexes();
@@ -249,7 +249,7 @@ namespace Axon { namespace Render {
 	void D3D9text::initialize(Primitive* src) {
 		D3D9primitive::initialize(src);
 
-		Text* text = static_cast<Text*>(m_src);
+		RenderText* text = static_cast<RenderText*>(m_src);
 		AX_ASSERT(text);
 
 		// copy text info from source primitive
@@ -265,9 +265,9 @@ namespace Axon { namespace Render {
 		m_verticalAlign = text->getVerticalAlign();
 
 		if (m_isSimpleText) {
-			m_format = Text::ScaleByVertical;
-			m_horizonAlign = Text::Center;
-			m_verticalAlign = Text::VCenter;
+			m_format = RenderText::ScaleByVertical;
+			m_horizonAlign = RenderText::Center;
+			m_verticalAlign = RenderText::VCenter;
 		}
 
 		int numchars = s2i(m_text.size());
@@ -323,12 +323,12 @@ namespace Axon { namespace Render {
 		float textwidth = scale.x * m_font->getStringWidth(wstr);
 		float textheight = scale.y * m_font->getHeight();
 
-		if (m_format & Text::ScaleByVertical) {
+		if (m_format & RenderText::ScaleByVertical) {
 			scale.y = tq.height / textheight;
 			scale.x = m_aspect * scale.y;
 		}
 
-		if (m_format & Text::ScaleByHorizon) {
+		if (m_format & RenderText::ScaleByHorizon) {
 			scale.x = tq.width / textwidth;
 			scale.y = scale.x / m_aspect;
 		}
@@ -336,23 +336,23 @@ namespace Axon { namespace Render {
 		width = tq.width / scale.x;
 		height = tq.height / scale.y;
 
-		bool italic = m_format & Text::Italic ? true : false;
+		bool italic = m_format & RenderText::Italic ? true : false;
 
-		if (m_horizonAlign == Text::Left) {
+		if (m_horizonAlign == RenderText::Left) {
 			startpos.x = 0;
-		} else if (m_horizonAlign == Text::Center) {
+		} else if (m_horizonAlign == RenderText::Center) {
 			startpos.x =(width - textwidth) * 0.5f;
-		} else if (m_horizonAlign == Text::Right) {
+		} else if (m_horizonAlign == RenderText::Right) {
 			startpos.x = width - textwidth;
 		} else {
 			startpos.x = 0;
 		}
 
-		if (m_verticalAlign == Text::Top) {
+		if (m_verticalAlign == RenderText::Top) {
 			startpos.y = 0;
-		} else if (m_verticalAlign == Text::VCenter) {
+		} else if (m_verticalAlign == RenderText::VCenter) {
 			startpos.y =(height - textheight) * 0.5f;
-		} else if (m_verticalAlign == Text::Bottom) {
+		} else if (m_verticalAlign == RenderText::Bottom) {
 			startpos.y = height - textheight;
 		} else {
 			startpos.y = 0;
@@ -367,7 +367,7 @@ namespace Axon { namespace Render {
 
 //			ulonglong_t t1 = OsUtil::microseconds();
 
-			if (m_format & Text::Blink) {
+			if (m_format & RenderText::Blink) {
 				Rgba color = m_color;
 				color.a = 128+127*sinf(d3d9Camera->getTime() / BLINK_DIVISOR);
 				offset = d3d9Draw->drawString(m_font, color, tq, startpos, pStr, len, scale, italic);
@@ -380,7 +380,7 @@ namespace Axon { namespace Render {
 			offset = d3d9Draw->drawString(m_font, m_color, tq, startpos, pStr, len, scale, italic);
 
 //			ulonglong_t t3 = OsUtil::microseconds();
-			if (m_format & Text::Bold) {
+			if (m_format & RenderText::Bold) {
 				d3d9Draw->drawString(m_font, m_color, tq, startpos+scale, pStr, len, scale, italic);
 			}
 
@@ -421,7 +421,7 @@ next:
 
 		D3D9primitive::update();
 
-		Chunk* chunk = static_cast<Chunk*>(m_src);
+		RenderChunk* chunk = static_cast<RenderChunk*>(m_src);
 		AX_ASSERT(chunk);
 
 		m_isZonePrim = chunk->isZonePrim();
@@ -518,7 +518,7 @@ next:
 		for (int i = 0; i < m_numLayers; i++) {
 			g_statistic->incValue(stat_numTerrainLayeredDrawElements);
 
-			Chunk::Layer& l = m_layers[i];
+			RenderChunk::Layer& l = m_layers[i];
 			l.detailMat->setTexture(SamplerType::TerrainColor, m_colorTexture);
 			l.detailMat->setTexture(SamplerType::TerrainNormal, m_normalTexture);
 			l.detailMat->setTexture(SamplerType::LayerAlpha, l.alphaTex.get());
@@ -879,5 +879,5 @@ next:
 
 	}
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE
 

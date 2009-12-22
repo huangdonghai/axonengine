@@ -11,9 +11,9 @@ read the license and understand and accept it fully.
 #ifndef AX_CLIENT_SPEEDTREE_MANAGER_H
 #define AX_CLIENT_SPEEDTREE_MANAGER_H
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
-	class AX_API TreeManager : public Render::IEntityManager {
+	class AX_API TreeManager : public IEntityManager {
 	public:
 		TreeManager();
 		~TreeManager();
@@ -27,7 +27,7 @@ namespace Axon { namespace Render {
 
 		// implement IEntityManager
 		virtual bool isSupportExt(const String& ext) const;
-		virtual Entity* create(const String& name, intptr_t arg = 0);
+		virtual RenderEntity* create(const String& name, intptr_t arg = 0);
 		virtual void updateForFrame(QueuedScene* qscene );
 		virtual void issueToQueue(QueuedScene* qscene);
 
@@ -41,7 +41,7 @@ namespace Axon { namespace Render {
 		TreeAsset* m_defaulted;
 	};
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE
 
 #endif // end guardian
 

@@ -9,7 +9,7 @@ read the license and understand and accept it fully.
 
 #include "d3d9private.h"
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
 	QueuedScene* d3d9Scene;
 
@@ -22,7 +22,7 @@ namespace Axon { namespace Render {
 	const QueuedEntity* d3d9Actor;
 	Interaction* d3d9Interaction;
 
-	Target* d3d9BoundTarget = 0;
+	RenderTarget* d3d9BoundTarget = 0;
 
 
 	static D3D9target* s_gbuffer;
@@ -192,7 +192,7 @@ namespace Axon { namespace Render {
 		}
 	}
 
-	void D3D9thread::setupScene(QueuedScene* scene, const D3D9clearer* clearer, Target* target, Camera* camera)
+	void D3D9thread::setupScene(QueuedScene* scene, const D3D9clearer* clearer, RenderTarget* target, RenderCamera* camera)
 	{
 		//		AX_ASSERT(scene);
 		if (!scene && !camera) {
@@ -273,7 +273,7 @@ namespace Axon { namespace Render {
 		}
 	}
 
-	void D3D9thread::unsetScene(QueuedScene* scene, const D3D9clearer* clearer, Target* target, Camera* camera)
+	void D3D9thread::unsetScene(QueuedScene* scene, const D3D9clearer* clearer, RenderTarget* target, RenderCamera* camera)
 	{
 		if (!scene && !camera) {
 			Errorf("D3D9thread::unsetScene: parameter error");
@@ -339,7 +339,7 @@ namespace Axon { namespace Render {
 					AX_SU(g_modelMatrix, d3d9Actor->m_matrix);
 				}
 
-				if (d3d9Actor->flags & Entity::DepthHack) {
+				if (d3d9Actor->flags & RenderEntity::DepthHack) {
 //					glDepthRange(0, 0.3f);
 				} else {
 //					glDepthRange(0, 1);
@@ -394,7 +394,7 @@ namespace Axon { namespace Render {
 
 	void D3D9thread::cacheSceneRes(QueuedScene* scene)
 	{
-		Scene* s_view = scene->source;
+		RenderScene* s_view = scene->source;
 
 		//		scene->camera = s_view->camera;
 
@@ -424,10 +424,10 @@ namespace Axon { namespace Render {
 					if (r_ignorMesh->getBool()) {
 						scene->interactions[j]->resource = -1;
 					}
-					Mesh* mesh = dynamic_cast<Mesh*>(prim);
+					RenderMesh* mesh = dynamic_cast<RenderMesh*>(prim);
 					if (mesh == nullptr)
 						continue;
-					Line* line = mesh->getNormalLine(normallen);
+					RenderLine* line = mesh->getNormalLine(normallen);
 					Interaction* ia = d3d9Queue->allocInteraction();
 					ia->qactor = scene->interactions[j]->qactor;
 					ia->primitive = line;
@@ -447,10 +447,10 @@ namespace Axon { namespace Render {
 				if (r_ignorMesh->getBool()) {
 					scene->interactions[j]->resource = -1;
 				}
-				Mesh* mesh = dynamic_cast<Mesh*>(prim);
+				RenderMesh* mesh = dynamic_cast<RenderMesh*>(prim);
 				if (mesh == nullptr)
 					continue;
-				Line* line = mesh->getTangentLine(tangentlen);
+				RenderLine* line = mesh->getTangentLine(tangentlen);
 				Interaction* ia = d3d9Queue->allocInteraction();
 				ia->qactor = scene->interactions[j]->qactor;
 				ia->primitive = line;
@@ -634,7 +634,7 @@ namespace Axon { namespace Render {
 		for (int i = 0; i < scene->numLights; i++) {
 			QueuedLight* ql = scene->lights[i];
 
-			if (ql->type == Light::kGlobal) {
+			if (ql->type == RenderLight::kGlobal) {
 				drawGlobalLight(scene, ql);
 			} else {
 				drawLocalLight(scene, ql);
@@ -686,7 +686,7 @@ namespace Axon { namespace Render {
 		}
 
 		// draw overlay
-		Camera camera = scene->camera;
+		RenderCamera camera = scene->camera;
 		camera.setOverlay(camera.getViewRect());
 
 		setupScene(scene, nullptr, nullptr, &camera);
@@ -858,7 +858,7 @@ namespace Axon { namespace Render {
 		END_PIX();
 	}
 
-	void D3D9thread::bindTarget(Target* target)
+	void D3D9thread::bindTarget(RenderTarget* target)
 	{
 		if (d3d9BoundTarget != target || target->isWindow()) {
 			if (d3d9BoundTarget) {
@@ -913,4 +913,4 @@ namespace Axon { namespace Render {
 		}
 	}
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE

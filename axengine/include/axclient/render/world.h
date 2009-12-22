@@ -11,11 +11,11 @@ read the license and understand and accept it fully.
 #define AX_RENDER_WORLD_H
 
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
-	struct Scene;
+	struct RenderScene;
 	struct QueuedScene;
-	class System;
+	class RenderSystem;
 
 	class QuadNode {
 	public:
@@ -25,7 +25,7 @@ namespace Axon { namespace Render {
 
 		float size;
 		BoundingBox bbox;
-		Link<Entity>		linkHead;
+		Link<RenderEntity>		linkHead;
 		int lastUpdateFrame;
 
 		QuadNode() {
@@ -57,23 +57,23 @@ namespace Axon { namespace Render {
 		}
 	};
 
-	class AX_API World {
+	class AX_API RenderWorld {
 	public:
-		friend class ::Axon::Render::System;
+		friend class RenderSystem;
 
 		enum {
 			HISTOGRAM_WIDTH = 32
 		};
 
-		World();
-		~World();
+		RenderWorld();
+		~RenderWorld();
 
 		void initialize(int worldSize = 1024);
 		void finalize();
 
-		void addActor(Entity* actor);
-		void removeActor(Entity* actor);
-		void addTempActor(Entity* actor);
+		void addActor(RenderEntity* actor);
+		void removeActor(RenderEntity* actor);
+		void addTempActor(RenderEntity* actor);
 
 		OutdoorEnv* getOutdoorEnv() { return m_outdoorEnv; }
 
@@ -83,15 +83,15 @@ namespace Axon { namespace Render {
 	protected:
 		struct FrameData;
 
-		void updateActor(Entity* actor);
+		void updateActor(RenderEntity* actor);
 
 		// add light, visarea, portal, occluder
-		void addLight(Light* light);
+		void addLight(RenderLight* light);
 
 		void generateQuadNode();
 		void generateChildNode_r(QuadNode* node);
-		void linkActor(Entity* actor);
-		void unlinkActor(Entity* actor);
+		void linkActor(RenderEntity* actor);
+		void unlinkActor(RenderEntity* actor);
 
 		// for internal use
 		void renderTo(QueuedScene* queued);
@@ -105,7 +105,7 @@ namespace Axon { namespace Render {
 	private:
 		float m_worldSize;
 		QuadNode* m_rootNode;
-		Terrain* m_terrain;
+		RenderTerrain* m_terrain;
 		OutdoorEnv* m_outdoorEnv;
 
 		int m_histogram[HISTOGRAM_WIDTH];
@@ -122,10 +122,10 @@ namespace Axon { namespace Render {
 		static int m_frameNum;
 
 	public:
-		Link<Light>		m_shadowLink;
+		Link<RenderLight>		m_shadowLink;
 	};
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE
 
 #endif // AX_RENDER_WORLD_H
 

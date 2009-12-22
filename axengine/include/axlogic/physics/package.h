@@ -14,8 +14,6 @@ read the license and understand and accept it fully.
 
 namespace Axon { namespace Physics {
 
-	using Axon::Render::Primitives;
-
 	class Rig;
 	class Pose;
 	class Animation;
@@ -146,7 +144,7 @@ namespace Axon { namespace Physics {
 
 		// meshes
 		Primitives getPrimitives();
-		void issueToQueue(Render::QueuedEntity* qactor, Render::QueuedScene* qscene);
+		void issueToQueue(QueuedEntity* qactor, QueuedScene* qscene);
 
 		void initDynamicMeshes(MeshDataList& result);
 		void clearDynamicMeshes(MeshDataList& result);
@@ -205,7 +203,7 @@ namespace Axon { namespace Physics {
 	// class SkeletalModel
 	//--------------------------------------------------------------------------
 
-	class AX_API SkeletalModel : public Render::Entity {
+	class AX_API SkeletalModel : public RenderEntity {
 	public:
 		SkeletalModel(const String& name);
 		SkeletalModel(Package* package);
@@ -217,7 +215,7 @@ namespace Axon { namespace Physics {
 		virtual Primitives getAllPrimitives();
 		virtual Primitives getSelectionPrims(){ return getAllPrimitives(); }
 
-		virtual void issueToQueue(Render::QueuedScene* qscene);
+		virtual void issueToQueue(QueuedScene* qscene);
 
 		// SkeletalMesh
 		virtual Rig* findRig() const;

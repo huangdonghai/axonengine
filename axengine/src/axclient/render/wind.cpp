@@ -11,7 +11,7 @@ read the license and understand and accept it fully.
 #include "../private.h"
 
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
 	/////////////////////////////////////////////////////////////////////////////
 	// Macros
@@ -33,9 +33,9 @@ namespace Axon { namespace Render {
 
 
 	/////////////////////////////////////////////////////////////////////////////
-	// Wind::WindController::WindController
+	// RenderWind::WindController::WindController
 
-	Wind::WindController::WindController(void) :
+	RenderWind::WindController::WindController(void) :
 		m_wantedValue(0.0f),
 		m_currentValue(0.0f),
 		m_lastDelta(0.0f),
@@ -44,9 +44,9 @@ namespace Axon { namespace Render {
 
 
 	/////////////////////////////////////////////////////////////////////////////
-	// Wind::WindController::Advance
+	// RenderWind::WindController::Advance
 
-	void Wind::WindController::advance(float fDeltaTime, float fP, float fMaxA) {
+	void RenderWind::WindController::advance(float fDeltaTime, float fP, float fMaxA) {
 		if (fDeltaTime > c_fMaxControllableDeltaTime)
 			fDeltaTime = c_fMaxControllableDeltaTime;
 
@@ -74,9 +74,9 @@ namespace Axon { namespace Render {
 
 
 	/////////////////////////////////////////////////////////////////////////////
-	// Wind::WindController::Reset
+	// RenderWind::WindController::Reset
 
-	void Wind::WindController::reset(float fValue) {
+	void RenderWind::WindController::reset(float fValue) {
 		m_currentValue = fValue;
 		m_wantedValue = fValue;
 		m_lastDelta = 0.0f;
@@ -85,9 +85,9 @@ namespace Axon { namespace Render {
 
 
 	/////////////////////////////////////////////////////////////////////////////
-	// Wind::OscillationParams::OscillationParams
+	// RenderWind::OscillationParams::OscillationParams
 
-	Wind::OscillationParams::OscillationParams(float fLowWindAngle, float fHighWindAngle, float fLowWindSpeed, float fHighWindSpeed) :
+	RenderWind::OscillationParams::OscillationParams(float fLowWindAngle, float fHighWindAngle, float fLowWindSpeed, float fHighWindSpeed) :
 		m_lowAngle(fLowWindAngle),
 		m_highAngle(fHighWindAngle),
 		m_lowSpeed(fLowWindSpeed),
@@ -98,9 +98,9 @@ namespace Axon { namespace Render {
 
 
 	/////////////////////////////////////////////////////////////////////////////
-	// Wind::OscillationParams::Advance
+	// RenderWind::OscillationParams::Advance
 
-	void Wind::OscillationParams::advance(float fDeltaTime, float fWindStrendth) {
+	void RenderWind::OscillationParams::advance(float fDeltaTime, float fWindStrendth) {
 		float fAngle = INTERPOLATE(m_lowAngle, m_highAngle, fWindStrendth);
 		float fSpeed = INTERPOLATE(m_lowSpeed, m_highSpeed, fWindStrendth);
 		m_adjustedTime += fDeltaTime * fSpeed;
@@ -112,9 +112,9 @@ namespace Axon { namespace Render {
 
 
 	/////////////////////////////////////////////////////////////////////////////
-	// Wind::Wind
+	// RenderWind::RenderWind
 
-	Wind::Wind() {
+	RenderWind::RenderWind() {
 		m_lastTime = 0;
 
 		setQuantities(NUM_WIND_MATRIXES, NUM_LEAF_ANGLES);
@@ -135,16 +135,16 @@ namespace Axon { namespace Render {
 
 
 	/////////////////////////////////////////////////////////////////////////////
-	// Wind::~Wind
+	// RenderWind::~RenderWind
 
-	Wind::~Wind()
+	RenderWind::~RenderWind()
 	{}
 
 
 	/////////////////////////////////////////////////////////////////////////////
-	// Wind::SetQuantities
+	// RenderWind::SetQuantities
 
-	void Wind::setQuantities(int iNumWindMatrices, int iNumLeafAngles) {
+	void RenderWind::setQuantities(int iNumWindMatrices, int iNumLeafAngles) {
 		if (iNumWindMatrices < 1)
 			iNumWindMatrices = 1;
 
@@ -169,18 +169,18 @@ namespace Axon { namespace Render {
 
 
 	/////////////////////////////////////////////////////////////////////////////
-	// Wind::SetWindResponse
+	// RenderWind::SetWindResponse
 
-	void Wind::setWindResponse(float fResponse, float fReponseLimit) {
+	void RenderWind::setWindResponse(float fResponse, float fReponseLimit) {
 		m_windResponse = fResponse;
 		m_windResponseLimit = fReponseLimit;
 	}
 
 
 	/////////////////////////////////////////////////////////////////////////////
-	// Wind::SetWindStrengthAndDirection
+	// RenderWind::SetWindStrengthAndDirection
 
-	void Wind::setWindStrengthAndDirection(float strength, const Vector3& direction) {
+	void RenderWind::setWindStrengthAndDirection(float strength, const Vector3& direction) {
 		m_windStrength = Math::saturate(strength);
 
 		Vector3 dir = direction.getNormalized();
@@ -192,26 +192,26 @@ namespace Axon { namespace Render {
 
 
 	/////////////////////////////////////////////////////////////////////////////
-	// Wind::SetMaxBendAngle
+	// RenderWind::SetMaxBendAngle
 
-	void Wind::setMaxBendAngle(float fMaxBendAngle) {
+	void RenderWind::setMaxBendAngle(float fMaxBendAngle) {
 		m_maxBendAngle = fMaxBendAngle;
 	}
 
 
 	/////////////////////////////////////////////////////////////////////////////
-	// Wind::SetExponents
+	// RenderWind::SetExponents
 
-	void Wind::setExponents(float fBranchExponent, float fLeafExponent) {
+	void RenderWind::setExponents(float fBranchExponent, float fLeafExponent) {
 		m_branchExponent = fBranchExponent;
 		m_leafExponent = fLeafExponent;
 	}
 
 
 	/////////////////////////////////////////////////////////////////////////////
-	// Wind::SetGusting
+	// RenderWind::SetGusting
 
-	void Wind::setGusting(float fGustStrength, float fGustFrequency, float fGustDuration) {
+	void RenderWind::setGusting(float fGustStrength, float fGustFrequency, float fGustDuration) {
 		m_gustingStrength = fGustStrength;
 		m_gustingFrequency = fGustFrequency;
 		m_gustingDuration = fGustDuration;
@@ -219,9 +219,9 @@ namespace Axon { namespace Render {
 
 
 	/////////////////////////////////////////////////////////////////////////////
-	// Wind::SetBranchHorizontal
+	// RenderWind::SetBranchHorizontal
 
-	void Wind::setBranchHorizontal(float fLowWindAngle, float fHighWindAngle, float fLowWindSpeed, float fHighWindSpeed) {
+	void RenderWind::setBranchHorizontal(float fLowWindAngle, float fHighWindAngle, float fLowWindSpeed, float fHighWindSpeed) {
 		m_branchHorizontal.m_lowAngle = fLowWindAngle;
 		m_branchHorizontal.m_highAngle = fHighWindAngle;
 		m_branchHorizontal.m_lowSpeed = fLowWindSpeed;
@@ -230,9 +230,9 @@ namespace Axon { namespace Render {
 
 
 	/////////////////////////////////////////////////////////////////////////////
-	// Wind::SetBranchVertical
+	// RenderWind::SetBranchVertical
 
-	void Wind::setBranchVertical(float fLowWindAngle, float fHighWindAngle, float fLowWindSpeed, float fHighWindSpeed) {
+	void RenderWind::setBranchVertical(float fLowWindAngle, float fHighWindAngle, float fLowWindSpeed, float fHighWindSpeed) {
 		m_branchVertical.m_lowAngle = fLowWindAngle;
 		m_branchVertical.m_highAngle = fHighWindAngle;
 		m_branchVertical.m_lowSpeed = fLowWindSpeed;
@@ -241,9 +241,9 @@ namespace Axon { namespace Render {
 
 
 	/////////////////////////////////////////////////////////////////////////////
-	// Wind::SetLeafRocking
+	// RenderWind::SetLeafRocking
 
-	void Wind::setLeafRocking(float fLowWindAngle, float fHighWindAngle, float fLowWindSpeed, float fHighWindSpeed) {
+	void RenderWind::setLeafRocking(float fLowWindAngle, float fHighWindAngle, float fLowWindSpeed, float fHighWindSpeed) {
 		m_leafRocking.m_lowAngle = fLowWindAngle;
 		m_leafRocking.m_highAngle = fHighWindAngle;
 		m_leafRocking.m_lowSpeed = fLowWindSpeed;
@@ -252,9 +252,9 @@ namespace Axon { namespace Render {
 
 
 	/////////////////////////////////////////////////////////////////////////////
-	// Wind::SetLeafRustling
+	// RenderWind::SetLeafRustling
 
-	void Wind::setLeafRustling(float fLowWindAngle, float fHighWindAngle, float fLowWindSpeed, float fHighWindSpeed) {
+	void RenderWind::setLeafRustling(float fLowWindAngle, float fHighWindAngle, float fLowWindSpeed, float fHighWindSpeed) {
 
 		m_leafRustling.m_lowAngle = fLowWindAngle;
 		m_leafRustling.m_highAngle = fHighWindAngle;
@@ -264,9 +264,9 @@ namespace Axon { namespace Render {
 
 
 	/////////////////////////////////////////////////////////////////////////////
-	// Wind::Advance
+	// RenderWind::Advance
 
-	void Wind::advance(float fCurrentTime, bool bUpdateMatrices, bool bUpdateLeafAngleMatrices, float fCameraX, float fCameraY, float fCameraZ) {
+	void RenderWind::advance(float fCurrentTime, bool bUpdateMatrices, bool bUpdateLeafAngleMatrices, float fCameraX, float fCameraY, float fCameraZ) {
 		fCurrentTime *= 0.1f;
 		float fDeltaTime = fCurrentTime - m_lastTime;
 		m_lastTime = fCurrentTime;
@@ -367,7 +367,7 @@ namespace Axon { namespace Render {
 
 #if 0
 	/////////////////////////////////////////////////////////////////////////////
-	// Wind::UpdateTree
+	// RenderWind::UpdateTree
 
 	void Wind::updateTree(CSpeedTreeRT* pTree) {
 		pTree->SetWindStrengthAndLeafAngles(m_finalWindStrength.m_currentValue, 
@@ -390,23 +390,23 @@ namespace Axon { namespace Render {
 	/////////////////////////////////////////////////////////////////////////////
 	// Wind::GetFinalStrength
 
-	float Wind::getFinalStrength(void) {
+	float RenderWind::getFinalStrength(void) {
 		return m_finalWindStrength.m_currentValue;
 	}
 
 
 	/////////////////////////////////////////////////////////////////////////////
-	// Wind::GetNumWindMatrices
+	// RenderWind::GetNumWindMatrices
 
-	unsigned int Wind::getNumWindMatrices(void) const {
+	unsigned int RenderWind::getNumWindMatrices(void) const {
 		return (unsigned int) m_windMatrices.size();
 	}
 
 
 	/////////////////////////////////////////////////////////////////////////////
-	// Wind::GetWindMatrix
+	// RenderWind::GetWindMatrix
 
-	float* Wind::getWindMatrix(unsigned int uiIndex) const {
+	float* RenderWind::getWindMatrix(unsigned int uiIndex) const {
 		float* pReturn = NULL;
 
 		if (uiIndex < m_windMatrices.size())
@@ -417,17 +417,17 @@ namespace Axon { namespace Render {
 
 
 	/////////////////////////////////////////////////////////////////////////////
-	// Wind::GetNumWindMatrices
+	// RenderWind::GetNumWindMatrices
 
-	unsigned int Wind::getNumLeafAngleMatrices(void) const {
+	unsigned int RenderWind::getNumLeafAngleMatrices(void) const {
 		return (unsigned int) m_leafAngleMatrices.size();
 	}
 
 
 	/////////////////////////////////////////////////////////////////////////////
-	// Wind::GetLeafAngleMatrix
+	// RenderWind::GetLeafAngleMatrix
 
-	float* Wind::getLeafAngleMatrix(unsigned int uiIndex) const {
+	float* RenderWind::getLeafAngleMatrix(unsigned int uiIndex) const {
 		float* pReturn = NULL;
 
 		if (uiIndex < m_windMatrices.size())
@@ -439,9 +439,9 @@ namespace Axon { namespace Render {
 
 
 	/////////////////////////////////////////////////////////////////////////////
-	// Wind::Reset
+	// RenderWind::Reset
 
-	void Wind::reset(void) {
+	void RenderWind::reset(void) {
 		unsigned int i = 0;
 		unsigned int uiSize = (unsigned int) m_windMatrices.size();
 		for (i = 0; i < uiSize; ++i)
@@ -459,7 +459,7 @@ namespace Axon { namespace Render {
 
 #if 0
 	/////////////////////////////////////////////////////////////////////////////
-	// Wind::GetQuantities
+	// RenderWind::GetQuantities
 
 	void Wind::getQuantities(int& iNumWindMatrices, int& iNumLeafAngles)
 	{
@@ -471,16 +471,16 @@ namespace Axon { namespace Render {
 	/////////////////////////////////////////////////////////////////////////////
 	// Wind::GetWindResponse
 
-	void Wind::getWindResponse(float& fResponse, float& fReponseLimit) {
+	void RenderWind::getWindResponse(float& fResponse, float& fReponseLimit) {
 		fResponse = m_windResponse;
 		fReponseLimit = m_windResponseLimit;
 	}
 
 
 	/////////////////////////////////////////////////////////////////////////////
-	// Wind::GetWindStrengthAndDirection
+	// RenderWind::GetWindStrengthAndDirection
 
-	void Wind::getWindStrengthAndDirection(float& fWindStrength, float& fWindDirectionX, float& fWindDirectionY, float& fWindDirectionZ) {
+	void RenderWind::getWindStrengthAndDirection(float& fWindStrength, float& fWindDirectionX, float& fWindDirectionY, float& fWindDirectionZ) {
 		fWindStrength = m_windStrength;
 		fWindDirectionX = m_finalWindDirectionX.m_wantedValue;
 		fWindDirectionY = m_finalWindDirectionY.m_wantedValue;
@@ -489,26 +489,26 @@ namespace Axon { namespace Render {
 
 
 	/////////////////////////////////////////////////////////////////////////////
-	// Wind::GetMaxBendAngle
+	// RenderWind::GetMaxBendAngle
 
-	float Wind::getMaxBendAngle(void) {
+	float RenderWind::getMaxBendAngle(void) {
 		return m_maxBendAngle;
 	}
 
 
 	/////////////////////////////////////////////////////////////////////////////
-	// Wind::GetExponents
+	// RenderWind::GetExponents
 
-	void Wind::getExponents(float& fBranchExponent, float& fLeafExponent) {
+	void RenderWind::getExponents(float& fBranchExponent, float& fLeafExponent) {
 		fBranchExponent = m_branchExponent;
 		fLeafExponent = m_leafExponent;
 	}
 
 
 	/////////////////////////////////////////////////////////////////////////////
-	// Wind::GetGusting
+	// RenderWind::GetGusting
 
-	void Wind::getGusting(float& fGustStrength, float& fGustFrequency, float& fGustDuration) {
+	void RenderWind::getGusting(float& fGustStrength, float& fGustFrequency, float& fGustDuration) {
 		fGustStrength = m_gustingStrength;
 		fGustFrequency = m_gustingFrequency;
 		fGustDuration = m_gustingDuration;
@@ -516,9 +516,9 @@ namespace Axon { namespace Render {
 
 
 	/////////////////////////////////////////////////////////////////////////////
-	// Wind::GetBranchHorizontal
+	// RenderWind::GetBranchHorizontal
 
-	void Wind::getBranchHorizontal(float& fLowWindAngle, float& fHighWindAngle, float& fLowWindSpeed, float& fHighWindSpeed) {
+	void RenderWind::getBranchHorizontal(float& fLowWindAngle, float& fHighWindAngle, float& fLowWindSpeed, float& fHighWindSpeed) {
 		fLowWindAngle = m_branchHorizontal.m_lowAngle;
 		fHighWindAngle = m_branchHorizontal.m_highAngle;
 		fLowWindSpeed = m_branchHorizontal.m_lowSpeed;
@@ -527,9 +527,9 @@ namespace Axon { namespace Render {
 
 
 	/////////////////////////////////////////////////////////////////////////////
-	// Wind::GetBranchVertical
+	// RenderWind::GetBranchVertical
 
-	void Wind::getBranchVertical(float& fLowWindAngle, float& fHighWindAngle, float& fLowWindSpeed, float& fHighWindSpeed) {
+	void RenderWind::getBranchVertical(float& fLowWindAngle, float& fHighWindAngle, float& fLowWindSpeed, float& fHighWindSpeed) {
 		fLowWindAngle = m_branchVertical.m_lowAngle;
 		fHighWindAngle = m_branchVertical.m_highAngle;
 		fLowWindSpeed = m_branchVertical.m_lowSpeed;
@@ -538,9 +538,9 @@ namespace Axon { namespace Render {
 
 
 	/////////////////////////////////////////////////////////////////////////////
-	// Wind::GetLeafRocking
+	// RenderWind::GetLeafRocking
 
-	void Wind::getLeafRocking(float& fLowWindAngle, float& fHighWindAngle, float& fLowWindSpeed, float& fHighWindSpeed) {
+	void RenderWind::getLeafRocking(float& fLowWindAngle, float& fHighWindAngle, float& fLowWindSpeed, float& fHighWindSpeed) {
 		fLowWindAngle = m_leafRocking.m_lowAngle;
 		fHighWindAngle = m_leafRocking.m_highAngle;
 		fLowWindSpeed = m_leafRocking.m_lowSpeed;
@@ -549,9 +549,9 @@ namespace Axon { namespace Render {
 
 
 	/////////////////////////////////////////////////////////////////////////////
-	// Wind::GetLeafRustling
+	// RenderWind::GetLeafRustling
 
-	void Wind::getLeafRustling(float& fLowWindAngle, float& fHighWindAngle, float& fLowWindSpeed, float& fHighWindSpeed) {
+	void RenderWind::getLeafRustling(float& fLowWindAngle, float& fHighWindAngle, float& fLowWindSpeed, float& fHighWindSpeed) {
 		fLowWindAngle = m_leafRustling.m_lowAngle;
 		fHighWindAngle = m_leafRustling.m_highAngle;
 		fLowWindSpeed = m_leafRustling.m_lowSpeed;
@@ -560,9 +560,9 @@ namespace Axon { namespace Render {
 
 
 	/////////////////////////////////////////////////////////////////////////////
-	// Wind::GetRustleAngles
+	// RenderWind::GetRustleAngles
 
-	bool Wind::getRustleAngles(FloatSeq& vAngles) const {
+	bool RenderWind::getRustleAngles(FloatSeq& vAngles) const {
 		bool bSuccess = false;
 
 		if (vAngles.size() == m_leafRustling.m_outputs.size())
@@ -576,9 +576,9 @@ namespace Axon { namespace Render {
 
 
 	/////////////////////////////////////////////////////////////////////////////
-	// Wind::GetRockAngles
+	// RenderWind::GetRockAngles
 
-	bool Wind::getRockAngles(FloatSeq& vAngles) const {
+	bool RenderWind::getRockAngles(FloatSeq& vAngles) const {
 		bool bSuccess = false;
 
 		if (vAngles.size() == m_leafRocking.m_outputs.size())
@@ -590,13 +590,13 @@ namespace Axon { namespace Render {
 		return bSuccess;
 	}
 
-	void Wind::getWindMatrix(Matrix4 output[]) const {
+	void RenderWind::getWindMatrix(Matrix4 output[]) const {
 		for (int i = 0; i < NUM_WIND_MATRIXES; i++) {
 			output[i] = m_windMatrices[i];
 		}
 	}
 
-	void Wind::getLeafAngles(Vector4 output[]) const {
+	void RenderWind::getLeafAngles(Vector4 output[]) const {
 		for (int i = 0; i < NUM_LEAF_ANGLES; i++) {
 			output[i].x = Math::d2r(m_leafRocking.m_outputs[i]);
 			output[i].y = Math::d2r(m_leafRustling.m_outputs[i]);
@@ -607,9 +607,9 @@ namespace Axon { namespace Render {
 
 
 	/////////////////////////////////////////////////////////////////////////////
-	// Wind::InterpolateParameters
+	// RenderWind::InterpolateParameters
 
-	void Wind::interpolateParameters(Wind* pWind1, Wind* pWind2, float fInterpolation) {
+	void RenderWind::interpolateParameters(RenderWind* pWind1, RenderWind* pWind2, float fInterpolation) {
 	#define INTERPOLATE_WIND_PARAM(a) a = INTERPOLATE(pWind1->a, pWind2->a, fInterpolation)
 
 		if (pWind1 != NULL && pWind2 != NULL)
@@ -667,9 +667,9 @@ namespace Axon { namespace Render {
 
 
 	/////////////////////////////////////////////////////////////////////////////
-	// Wind::BlendParameters
+	// RenderWind::BlendParameters
 
-	void Wind::blendParameters(Wind** pWinds, float* pWeights, unsigned int uiNumWinds) {
+	void RenderWind::blendParameters(RenderWind** pWinds, float* pWeights, unsigned int uiNumWinds) {
 		// zero out our data
 		m_windStrength = 0.0f;
 		m_finalWindDirectionX.m_wantedValue = 0.0f;
@@ -761,5 +761,5 @@ namespace Axon { namespace Render {
 		}
 	}
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE
 

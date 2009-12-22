@@ -11,7 +11,7 @@ read the license and understand and accept it fully.
 
 #ifdef AX_CONFIG_OPTION_USE_SPEEDTREE_40
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
 	TreeManager::TreeManager() {
 		m_defaulted = nullptr;
@@ -71,7 +71,7 @@ namespace Axon { namespace Render {
 		return false;
 	}
 
-	Entity* TreeManager::create(const String& name, intptr_t arg) {
+	RenderEntity* TreeManager::create(const String& name, intptr_t arg) {
 		return new TreeActor(name, arg);
 	}
 
@@ -92,6 +92,6 @@ namespace Axon { namespace Render {
 #endif
 	}
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE
 
 #endif // AX_CONFIG_OPTION_USE_SPEEDTREE_40

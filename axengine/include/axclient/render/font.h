@@ -13,7 +13,7 @@ read the license and understand and accept it fully.
 struct FT_FaceRec_;
 typedef struct FT_FaceRec_* FT_Face;
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
 	struct DrawText;
 
@@ -148,6 +148,6 @@ namespace Axon { namespace Render {
 		int m_width, m_height;
 	};
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE
 
 #endif // AX_RENDER_FONT_H

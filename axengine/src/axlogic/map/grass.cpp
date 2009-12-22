@@ -127,7 +127,7 @@ namespace Axon { namespace Map {
 #endif
 	}
 
-	void GrassManager::update( Render::QueuedScene* qscene )
+	void GrassManager::update(QueuedScene* qscene)
 	{
 		bool gonnaUpdate = false;
 		/*gRenderSystem->getMainCamera().getOrigin()*/
@@ -240,7 +240,7 @@ namespace Axon { namespace Map {
 		
 		float incidence = 0.0f;
 		int numTileGrass = 0;
-		Render::Mesh* mesh = NULL;
+		RenderMesh* mesh = NULL;
 		int maxNumGrassPerTile = m_numGrassPerLevel * m_maxGrassLevel;
 
 		for (int i=0; i<(int)m_grassDefSet.size(); ++i)
@@ -261,7 +261,7 @@ namespace Axon { namespace Map {
 			// 如果尚未创建mesh 
 			if (mesh == NULL)
 			{
-				mesh = new Render::Mesh(Render::Mesh::Static);
+				mesh = new RenderMesh(RenderMesh::Static);
 				m_grassDefSet[i].setMesh(mesh);
 			}
 
@@ -521,7 +521,7 @@ namespace Axon { namespace Map {
 		indexes[curIndex++] = tCurVertex + 3;
 	}
 
-	void GrassManager::uploadRenderData(RenderPrims* primSeq)
+	void GrassManager::uploadRenderData(Primitives* primSeq)
 	{
 		if (m_grassDefSet.empty() || m_terrain==NULL)
 		{
@@ -532,11 +532,11 @@ namespace Axon { namespace Map {
 		
 		for (int i=0; i<(int)m_grassDefSet.size(); ++i)
 		{
-			Render::Mesh* mesh = m_grassDefSet[i].getMesh();
+			RenderMesh* mesh = m_grassDefSet[i].getMesh();
 
 			if (mesh != NULL && mesh->getActivedIndexes() > 0)
 			{
-				Render::Material* mat = m_grassDefSet[i].getMaterial();
+				Material* mat = m_grassDefSet[i].getMaterial();
 
 				if (mat != NULL)
 				{
@@ -762,16 +762,16 @@ namespace Axon { namespace Map {
 
 		m_model = new PhysicsModel(name);
 
-		Render::Primitives primitiveSeq =  m_model->getAllPrimitives();
+		Primitives primitiveSeq =  m_model->getAllPrimitives();
 
-		Render::Primitives::iterator it;
+		Primitives::iterator it;
 		int numVertexes = 0;
 
 		for (it = primitiveSeq.begin();it != primitiveSeq.end();++ it)
 		{
-			if ((*it)->getType() == Render::Primitive::MeshType)
+			if ((*it)->getType() == Primitive::MeshType)
 			{
-				Render::Mesh* mesh = dynamic_cast<Render::Mesh*>(*it);
+				RenderMesh* mesh = dynamic_cast<RenderMesh*>(*it);
 
 				Vertex* vertexData = mesh->lockVertexes();
 				ushort_t*    indexData  = mesh->lockIndexes();

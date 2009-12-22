@@ -9,7 +9,7 @@ read the license and understand and accept it fully.
 
 #include "../private.h"
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 	
 	static bool s_drawTerrain = true;
 	static bool s_drawActor = true;
@@ -18,9 +18,9 @@ namespace Axon { namespace Render {
 		MininumNodeSize = 32
 	};
 
-	int World::m_frameNum = 0;
+	int RenderWorld::m_frameNum = 0;
 
-	World::World() {
+	RenderWorld::RenderWorld() {
 		m_outdoorEnv = nullptr;
 		TypeZeroArray(m_histogram);
 		m_curHistogramIndex = 0;
@@ -32,11 +32,11 @@ namespace Axon { namespace Render {
 		m_shadowDir.set(0,0,0);
 	}
 
-	World::~World() {
+	RenderWorld::~RenderWorld() {
 		g_queryManager->freeQuery(m_histogramQuery);
 	}
 
-	void World::initialize(int worldSize) {
+	void RenderWorld::initialize(int worldSize) {
 		worldSize = Math::clamp(worldSize, 1024, 8192);
 		worldSize = Math::nextPowerOfTwo(worldSize);
 		m_worldSize = worldSize;
@@ -49,11 +49,11 @@ namespace Axon { namespace Render {
 		generateQuadNode();
 	}
 
-	void World::finalize() {
+	void RenderWorld::finalize() {
 //		TypeFreeContainer(m_linkedActorSeq);
 	}
 
-	void World::addActor(Entity* actor) {
+	void RenderWorld::addActor(RenderEntity* actor) {
 		if (actor->m_world) {
 			if (actor->m_world == this) {
 				updateActor(actor);
@@ -66,9 +66,9 @@ namespace Axon { namespace Render {
 
 		actor->m_world = this;
 
-		if (actor->getKind() == Entity::kTerrain) {
+		if (actor->getKind() == RenderEntity::kTerrain) {
 			AX_ASSERT(m_terrain == nullptr);
-			m_terrain = dynamic_cast<Terrain*>(actor);
+			m_terrain = dynamic_cast<RenderTerrain*>(actor);
 			AX_ASSERT(m_terrain);
 
 			return;
@@ -77,8 +77,8 @@ namespace Axon { namespace Render {
 		linkActor(actor);
 	}
 
-	void World::updateActor(Entity* actor) {
-		if (actor->getKind() == Entity::kTerrain) {
+	void RenderWorld::updateActor(RenderEntity* actor) {
+		if (actor->getKind() == RenderEntity::kTerrain) {
 			return;
 		}
 
@@ -86,12 +86,12 @@ namespace Axon { namespace Render {
 		linkActor(actor);
 	}
 
-	void World::removeActor(Entity* actor) {
+	void RenderWorld::removeActor(RenderEntity* actor) {
 		if (actor->m_world != this) {
 			return;
 		}
 
-		if (actor->getKind() == Entity::kTerrain) {
+		if (actor->getKind() == RenderEntity::kTerrain) {
 			m_terrain = nullptr;
 			return;
 		}
@@ -102,7 +102,7 @@ namespace Axon { namespace Render {
 	}
 
 
-	void World::renderTo(QueuedScene* qscene) {
+	void RenderWorld::renderTo(QueuedScene* qscene) {
 		m_frameNum++;
 
 		qscene->worldFrameId = m_frameNum;
@@ -138,7 +138,7 @@ namespace Axon { namespace Render {
 			s_drawActor = false;
 		}
 
-		const Render::Camera& cam = qscene->camera;
+		const RenderCamera& cam = qscene->camera;
 
 		// outdoor environment
 		if (m_outdoorEnv) {
@@ -264,9 +264,9 @@ namespace Axon { namespace Render {
 			QuadNode* node = m_rootNode;
 
 			if (subscene->sceneType == QueuedScene::ShadowGen) {
-				Light* light = subscene->sourceLight->preQueued;
+				RenderLight* light = subscene->sourceLight->preQueued;
 
-				if (light->getLightType() != Light::kGlobal) {
+				if (light->getLightType() != RenderLight::kGlobal) {
 					node = subscene->sourceLight->preQueued->m_linkedNode;
 				}
 			}
@@ -274,7 +274,7 @@ namespace Axon { namespace Render {
 		}
 	}
 
-	void World::renderTo( QueuedScene* qscene, QuadNode* node )
+	void RenderWorld::renderTo( QueuedScene* qscene, QuadNode* node )
 	{
 		m_frameNum++;
 
@@ -311,7 +311,7 @@ namespace Axon { namespace Render {
 			s_drawActor = false;
 		}
 
-		const Render::Camera& cam = qscene->camera;
+		const RenderCamera& cam = qscene->camera;
 
 		// outdoor environment
 		if (m_outdoorEnv) {
@@ -372,7 +372,7 @@ namespace Axon { namespace Render {
 	}
 
 	// mark visible
-	void World::markVisible_r(QueuedScene* qscene, QuadNode* node, Plane::Side parentSide) {
+	void RenderWorld::markVisible_r(QueuedScene* qscene, QuadNode* node, Plane::Side parentSide) {
 		if (node == NULL)
 			return;
 
@@ -380,7 +380,7 @@ namespace Axon { namespace Render {
 			return;
 		}
 
-		const Render::Camera& cam = qscene->camera;
+		const RenderCamera& cam = qscene->camera;
 
 		Plane::Side side = parentSide;
 		
@@ -391,8 +391,8 @@ namespace Axon { namespace Render {
 			}
 		}
 
-		for (Entity* la = node->linkHead.getNext(); la; la = la->m_nodeLink.getNext()) {
-			if (qscene->sceneType == QueuedScene::ShadowGen && qscene->sourceLight->type == Light::kGlobal) {
+		for (RenderEntity* la = node->linkHead.getNext(); la; la = la->m_nodeLink.getNext()) {
+			if (qscene->sceneType == QueuedScene::ShadowGen && qscene->sourceLight->type == RenderLight::kGlobal) {
 				if (la->isCsmCulled()) {
 					g_statistic->incValue(stat_csmCulled);
 					continue;
@@ -426,7 +426,7 @@ namespace Axon { namespace Render {
 				continue;
 
 			// check if is light
-			if (la->getKind() == Entity::kLight || s_drawActor) {
+			if (la->getKind() == RenderEntity::kLight || s_drawActor) {
 				la->m_queued = qscene->addActor(la);
 			}
 
@@ -460,11 +460,11 @@ namespace Axon { namespace Render {
 		if (node->children[0])
 			color *= 0.5f;
 
-		Line* line = Line::createWorldBoundingBox(Line::OneFrame, node->bbox, color);
+		RenderLine* line = RenderLine::createWorldBoundingBox(RenderLine::OneFrame, node->bbox, color);
 		qscene->addHelperInteraction(0, line);
 	}
 
-	void World::generateQuadNode() {
+	void RenderWorld::generateQuadNode() {
 		uint_t size = m_worldSize;
 
 		// setup root
@@ -477,7 +477,7 @@ namespace Axon { namespace Render {
 		generateChildNode_r(m_rootNode);
 	}
 
-	void World::generateChildNode_r(QuadNode* node) {
+	void RenderWorld::generateChildNode_r(QuadNode* node) {
 		float size = node->size * 0.5f;
 		float offset = size * 0.5f;
 
@@ -522,7 +522,7 @@ namespace Axon { namespace Render {
 	}
 
 
-	void World::linkActor(Entity* actor) {
+	void RenderWorld::linkActor(RenderEntity* actor) {
 		actor->m_linkedBbox = actor->getBoundingBox();
 		actor->m_linkedExtends = actor->m_linkedBbox.getExtends().getLength();
 		actor->m_linkedFrame = m_visFrameId;
@@ -567,7 +567,7 @@ namespace Axon { namespace Render {
 			node->frameUpdated(m_visFrameId);
 	}
 
-	void World::unlinkActor(Entity* la) {
+	void RenderWorld::unlinkActor(RenderEntity* la) {
 		QuadNode* node = la->m_linkedNode;
 
 		if (!la->isLight())
@@ -576,7 +576,7 @@ namespace Axon { namespace Render {
 		la->m_nodeLink.removeFromList();
 	}
 
-	void World::updateExposure(QueuedScene* qscene) {
+	void RenderWorld::updateExposure(QueuedScene* qscene) {
 		if (1 || !r_hdr->getBool()) {
 			qscene->m_histogramIndex = -1;
 			qscene->m_histogramQueryId = 0;
@@ -679,6 +679,6 @@ namespace Axon { namespace Render {
 	}
 
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE
 
 

@@ -11,7 +11,7 @@ read the license and understand and accept it fully.
 #ifndef AX_D3D9TEXTURE_H
 #define AX_D3D9TEXTURE_H
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
 	class D3D9texture : public Texture {
 	public:
@@ -132,7 +132,7 @@ namespace Axon { namespace Render {
 		m_texDict.erase(it);
 	}
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE
 
 
 #endif // end guardian

@@ -9,9 +9,7 @@ read the license and understand and accept it fully.
 
 #include "private.h"
 
-namespace Axon { namespace Render {
-	using namespace Axon;
-	using namespace Axon::Render;
+AX_BEGIN_NAMESPACE
 	
 	inline GLenum trTexType(Texture::TexType type) {
 		switch (type) {
@@ -263,9 +261,9 @@ namespace Axon { namespace Render {
 		}
 	}
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
 	/*!
 		\class GLtexture
@@ -303,7 +301,7 @@ namespace Axon { namespace Render {
 
 		const byte_t* data;
 		bool isMipmap;
-		int flags = g_renderDriver->getDriverInfo()->caps & IDriver::Info::DXT ? 0 : Image::NoCompressed;
+		int flags = g_renderDriver->getDriverInfo()->caps & IRenderDriver::Info::DXT ? 0 : Image::NoCompressed;
 
 		if (!(m_createFlags & Texture::IF_NoMipmap))
 			flags |= Image::Mipmap;
@@ -750,6 +748,6 @@ namespace Axon { namespace Render {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, hsm);
 	}
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE
 
 

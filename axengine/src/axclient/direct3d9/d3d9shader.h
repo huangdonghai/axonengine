@@ -13,7 +13,7 @@ read the license and understand and accept it fully.
 
 #define AX_SU(x, y) D3D9uniform::setUniform(Uniforms::x,y);
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
 	class D3D9shader;
 
@@ -246,7 +246,7 @@ namespace Axon { namespace Render {
 	};
 
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE
 
 
 #endif // end guardian

@@ -22,7 +22,7 @@ public:
 	CameraSetting(QWidget *parent = 0);
 	~CameraSetting();
 
-	void refreshDlg(const Axon::Render::Camera &camera);
+	void refreshDlg(const RenderCamera &camera);
 
 private:
 	Ui::CameraSettingClass ui;

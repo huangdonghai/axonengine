@@ -390,31 +390,31 @@ bool PropertyEditor::initScriptProp(Object* obj) {
 		IProperty* group = 0;
 
 		switch (m->getPropKind()) {
-		case Member::kEmpty:
+		case Variant::kEmpty:
 			break;
-		case Member::kBool:
+		case Variant::kBool:
 			p = new BoolProperty(m->getProperty(obj), m->getName());
 			break;
-		case Member::kInt:
+		case Variant::kInt:
 			p = new IntProperty(m->getProperty(obj), m->getName());
 			break;
-		case Member::kFloat:
+		case Variant::kFloat:
 			p = new DoubleProperty(m->getProperty(obj), m->getName());
 			break;
-		case Member::kString:
+		case Variant::kString:
 			p = new StringProperty(u2q(m->getProperty(obj)), m->getName());
 			break;
-		case Member::kObject:
-		case Member::kTable:
+		case Variant::kObject:
+		case Variant::kTable:
 			break;
-		case Member::kVector3:
+		case Variant::kVector3:
 			p = new VectorProperty(m->getProperty(obj), m->getName());
 			break;
-		case Member::kColor:
+		case Variant::kColor:
 			p = new ColorProperty(x2q(m->getProperty(obj)), m->getName());
 			break;
-		case Member::kPoint:
-		case Member::kRect:
+		case Variant::kPoint:
+		case Variant::kRect:
 			break;
 		case Member::kEnum:
 			p = new EnumProperty(m->getEnumItems(), m->getProperty(obj), m->getName());

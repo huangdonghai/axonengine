@@ -14,8 +14,6 @@ namespace Axon { namespace Editor {
 
 	class Gizmo {
 	public:
-		typedef Render::Camera Camera;
-
 		virtual ~Gizmo() = 0 {}
 		virtual void doRender() = 0;
 		virtual int doSelect(View* view, int x, int y) = 0; // return -1 if not intersected
@@ -25,7 +23,7 @@ namespace Axon { namespace Editor {
 	class TransformGizmo : public Gizmo {
 	public:
 		virtual ~TransformGizmo() = 0 {}
-		virtual void setup(const Camera& camera, const Vector3& pos, const Matrix3& axis, float scale) = 0;
+		virtual void setup(const RenderCamera& camera, const Vector3& pos, const Matrix3& axis, float scale) = 0;
 	};
 
 	//--------------------------------------------------------------------------
@@ -41,10 +39,10 @@ namespace Axon { namespace Editor {
 		MoveGizmo();
 		virtual ~MoveGizmo();
 
-		void setup(const Camera& camera, const Vector3& pos, const Matrix3& axis, float scale);
+		void setup(const RenderCamera& camera, const Vector3& pos, const Matrix3& axis, float scale);
 		void doRender();
 		int doSelect(View* view, int x, int y); // return -1 if not intersected
-		int doSelect(Render::Camera* camera, int x, int y,int selectedSize); // return -1 if not intersected
+		int doSelect(RenderCamera* camera, int x, int y,int selectedSize); // return -1 if not intersected
 		void setHighlight(int);
 		int getHighlight() { return m_highlit; }
 
@@ -52,12 +50,12 @@ namespace Axon { namespace Editor {
 		void clear();
 		void setupAxis(int axis);
 		void setupPlane(int axis);
-		void setupXYZ(const Camera& camera);
+		void setupXYZ(const RenderCamera& camera);
 		Rgba getColor(int axis, Rgba c);
 
 	protected:
-		Render::Line* m_lines[NumberId];
-		Render::Mesh* m_meshs[NumberId];
+		RenderLine* m_lines[NumberId];
+		RenderMesh* m_meshs[NumberId];
 		SelectId m_highlit;
 		MaterialPtr m_material;
 		
@@ -80,7 +78,7 @@ namespace Axon { namespace Editor {
 		RotateGizmo();
 		~RotateGizmo();
 
-		void setup(const Camera& camera, const Vector3& pos, const Matrix3& axis, float scale);
+		void setup(const RenderCamera& camera, const Vector3& pos, const Matrix3& axis, float scale);
 		void doRender();
 		int doSelect(View* view, int x, int y);		
 		void setHighlight(int id);
@@ -88,17 +86,17 @@ namespace Axon { namespace Editor {
 		void disableCrank();
 
 	protected:
-		void setupCrank(const Camera& camera);
+		void setupCrank(const RenderCamera& camera);
 		Rgba getColor(int id);
 		Rgba getCenterColor(int id);
 
 	private:
 		enum { CirculSubdivided = 64, CrankSubdivided=360 };
-		Render::Line* m_centerLine;
-		Render::Line* m_circles[3];
-		Render::Line* m_innerBound;
-		Render::Line* m_outerBound;
-		Render::Mesh* m_crank;
+		RenderLine* m_centerLine;
+		RenderLine* m_circles[3];
+		RenderLine* m_innerBound;
+		RenderLine* m_outerBound;
+		RenderMesh* m_crank;
 		SelectId m_highlit;
 		MaterialPtr m_material;
 
@@ -123,18 +121,18 @@ namespace Axon { namespace Editor {
 		ScaleGizmo();
 		~ScaleGizmo();
 
-		void setup(const Camera& camera, const Vector3& pos, const Matrix3& axis, float scale);
+		void setup(const RenderCamera& camera, const Vector3& pos, const Matrix3& axis, float scale);
 		void doRender();
 		int doSelect(View* view, int x, int y);		
 		void setHighlight(int id);
 
 	protected:
 		Rgba getColor(int id);
-		void setupScreenQuad(const Camera& camera, RenderMesh*& mesh, const Vector3& pos, Rgba color);
+		void setupScreenQuad(const RenderCamera& camera, RenderMesh*& mesh, const Vector3& pos, Rgba color);
 
 	private:
-		Render::Line* m_lines[NumberId];
-		Render::Mesh* m_meshs[NumberId];
+		RenderLine* m_lines[NumberId];
+		RenderMesh* m_meshs[NumberId];
 		SelectId m_highlit;
 		MaterialPtr m_material;
 

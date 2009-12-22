@@ -71,7 +71,7 @@ namespace Axon { namespace Editor { namespace MapEdit {
 		GameNode* m_gameNode;
 
 	private:
-		Render::Line* m_bboxLine;
+		RenderLine* m_bboxLine;
 	};
 
 	//--------------------------------------------------------------------------

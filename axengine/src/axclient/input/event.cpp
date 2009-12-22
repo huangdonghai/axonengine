@@ -253,7 +253,7 @@ exit:
 		m_eventSources.remove(eventsource);
 	}
 
-	void InputSystem::setGameWindow(Render::Target* gamewindow)
+	void InputSystem::setGameWindow(RenderTarget* gamewindow)
 	{
 		m_gameWnd = gamewindow;
 	}

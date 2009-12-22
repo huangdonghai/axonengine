@@ -11,7 +11,7 @@ read the license and understand and accept it fully.
 #ifndef AX_D3D9POSTPROCESS_H
 #define AX_D3D9POSTPROCESS_H
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
 	struct PostMesh {
 		PostMesh();
@@ -57,16 +57,16 @@ namespace Axon { namespace Render {
 		void issueBboxQuery(const BoundingBox& bbox);
 
 		void drawLight(Vector3 volume[8], QueuedLight* light);
-		void drawLightShadowed(Vector3 volume[8], QueuedLight* light, const Camera& shadowCamera);
+		void drawLightShadowed(Vector3 volume[8], QueuedLight* light, const RenderCamera& shadowCamera);
 		void drawGlobalLight(Vector3 volume[8], QueuedLight* light);
 
 		void measureHistogram(D3D9texture* tex, int index);
 		void downscale4x4(D3D9texture* tex, const Rect& rect);
 
 		void genericPP(const String& shadername, D3D9texture* src);
-		void genericPP(const String& shadername, Target* target, D3D9texture* src);
+		void genericPP(const String& shadername, RenderTarget* target, D3D9texture* src);
 		void genericPP(const String& shadername, D3D9texture* src1, D3D9texture* src2);
-		void genericPP(const String& shadername, Target* target, D3D9texture* src1, D3D9texture* src2);
+		void genericPP(const String& shadername, RenderTarget* target, D3D9texture* src1, D3D9texture* src2);
 
 	protected:
 		D3D9shader* getShader(const String& name);
@@ -89,6 +89,6 @@ namespace Axon { namespace Render {
 		Dict<String, D3D9shader*>	m_genericShaders;
 	};
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE
 
 #endif

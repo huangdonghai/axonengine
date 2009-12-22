@@ -11,22 +11,16 @@ read the license and understand and accept it fully.
 #ifndef AX_RENDER_ALL_H
 #define AX_RENDER_ALL_H
 
-namespace Axon { namespace Render {
+namespace Axon {
 
 	class Material;
 	class Font;
-
-#if 0
-	enum Pass {
-		ZPass, Opacit, Translucet, ShadowGen
-	};
-#endif
 
 	enum Spec {
 		VeryLow, Low, Middle, High, VeryHigh
 	};
 
-}} // namespace Axon::Render
+} // namespace Axon
 
 #include "query.h"
 #include "texture.h"

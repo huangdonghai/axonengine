@@ -83,7 +83,7 @@ read the license and understand and accept it fully.
 #include <Animation/Animation/Deform/Skinning/Fpu/hkaFPUSkinningDeformer.h>
 #include <Animation/Animation/Deform/Skinning/Simd/hkaSimdSkinningDeformer.h>
 
-// Mesh info
+// RenderMesh info
 #include <Common/SceneData/Material/hkxMaterial.h>
 #include <Common/SceneData/Material/hkxTextureFile.h>
 #include <Common/SceneData/Mesh/hkxMesh.h>

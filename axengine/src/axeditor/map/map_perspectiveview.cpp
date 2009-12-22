@@ -344,7 +344,7 @@ namespace Axon { namespace Editor { namespace MapEdit {
 	PerspectiveView::SelectRegion(const Rect& rect, OUT ActorList& retlist, OUT Vector3& pos, MapSelectPart select_part) {
 		retlist.clear();
 
-		Render::Camera select_view = m_camera.createSelectView(rect);
+		Render::RenderCamera select_view = m_camera.createSelectView(rect);
 
 		gRenderSystem->beginSelect(select_view);
 

@@ -10,13 +10,13 @@ read the license and understand and accept it fully.
 #ifndef AX_D3D9RENDERTARGET_H
 #define AX_D3D9RENDERTARGET_H
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
 	//--------------------------------------------------------------------------
 	// class D3D9target
 	//--------------------------------------------------------------------------
 
-	class D3D9target : public Target
+	class D3D9target : public RenderTarget
 	{
 	public:
 		friend class D3D9targetmanager;
@@ -35,13 +35,13 @@ namespace Axon { namespace Render {
 		virtual bool isDepthFormat() { return m_texture->getFormat().isDepth(); }
 		virtual bool isStencilFormat() { return m_texture->getFormat().isStencil(); }
 
-		virtual void attachDepth(Target* depth);
-		virtual Target* getDepthAttached() const { return m_depthTarget; }
+		virtual void attachDepth(RenderTarget* depth);
+		virtual RenderTarget* getDepthAttached() const { return m_depthTarget; }
 
-		virtual void attachColor(int index, Target* c);
+		virtual void attachColor(int index, RenderTarget* c);
 		virtual void detachColor(int index);
 		virtual void detachAllColor();
-		virtual Target* getColorAttached(int index) const;
+		virtual RenderTarget* getColorAttached(int index) const;
 
 		TexFormat getFormat() const { return m_format; }
 		D3D9texture* getTextureDX();
@@ -91,15 +91,15 @@ namespace Axon { namespace Render {
 		virtual ~D3D9targetmanager();
 
 		// implement TargetManager
-		virtual Target* allocTarget(Target::AllocHint hint, int width, int height, TexFormat texformat);
-		virtual void freeTarget(Target* target);	// only permanent target need be free
+		virtual RenderTarget* allocTarget(RenderTarget::AllocHint hint, int width, int height, TexFormat texformat);
+		virtual void freeTarget(RenderTarget* target);	// only permanent target need be free
 		virtual bool isFormatSupport(TexFormat format);
-		virtual TexFormat getSuggestFormat(Target::SuggestFormat sf);
+		virtual TexFormat getSuggestFormat(RenderTarget::SuggestFormat sf);
 
 		// for internal use
 		TexFormat getNullTargetFormat();
 		void syncFrame();
-		D3D9target* allocTargetDX(Target::AllocHint hint, int width, int height, TexFormat texformat);
+		D3D9target* allocTargetDX(RenderTarget::AllocHint hint, int width, int height, TexFormat texformat);
 
 		IDirect3DSurface9* getDepthStencil(int width, int height);
 
@@ -122,6 +122,6 @@ namespace Axon { namespace Render {
 		int m_dsHeight;
 	};
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE
 
 #endif // end guardian

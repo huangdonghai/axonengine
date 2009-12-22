@@ -11,7 +11,7 @@ read the license and understand and accept it fully.
 #ifndef AX_D3D9QUERY_H
 #define AX_D3D9QUERY_H
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
 	class D3D9query : public Query {
 	public:
@@ -41,7 +41,7 @@ namespace Axon { namespace Render {
 	class D3D9querymanager : public QueryManager {
 	public:
 		struct ActiveQuery {
-			Target* frameTarget;
+			RenderTarget* frameTarget;
 			D3D9query* query;
 			int frameId;
 			BoundingBox bbox;
@@ -74,6 +74,6 @@ namespace Axon { namespace Render {
 		List<ActiveQuery*> m_frameIssuedQuery[Query::QueryType_Number];
 	};
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE
 
 #endif

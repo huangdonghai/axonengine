@@ -307,7 +307,7 @@ namespace Axon { namespace Editor { namespace MapEdit {
 		}
 	}
 
-	void MapContext::doRender(const Render::Camera& camera, bool world) {
+	void MapContext::doRender(const RenderCamera& camera, bool world) {
 		if (world) {
 			m_gameWorld->drawScene(camera);
 		}
@@ -331,7 +331,7 @@ namespace Axon { namespace Editor { namespace MapEdit {
 		g_renderSystem->endScene();
 	}
 
-	void MapContext::doSelect(const Render::Camera& camera, int part) {
+	void MapContext::doSelect(const RenderCamera& camera, int part) {
 		// select terrain
 		if (part & SelectPart::Terrain) {
 			if (m_terrain)

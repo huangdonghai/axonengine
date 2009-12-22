@@ -9,9 +9,9 @@ read the license and understand and accept it fully.
 
 #include "../private.h"
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
-	QueuedLight* QueuedScene::addLight(Light* light)
+	QueuedLight* QueuedScene::addLight(RenderLight* light)
 	{
 		if (numLights >= MAX_LIGHTS) {
 			Errorf("MAX_LIGHTS exceeded");
@@ -19,7 +19,7 @@ namespace Axon { namespace Render {
 			return 0;
 		}
 
-		if (light->getLightType() != Light::kGlobal && !r_lightBuf->getBool()) {
+		if (light->getLightType() != RenderLight::kGlobal && !r_lightBuf->getBool()) {
 			light->fillQueued(nullptr);
 //			return 0;
 		}
@@ -32,14 +32,14 @@ namespace Axon { namespace Render {
 
 		lights[numLights++] = ql;
 
-		if (light->getLightType() == Light::kGlobal) {
+		if (light->getLightType() == RenderLight::kGlobal) {
 			globalLight = ql;
 		}
 
 		return ql;
 	}
 
-	QueuedEntity* QueuedScene::addActor(Entity* actor)
+	QueuedEntity* QueuedScene::addActor(RenderEntity* actor)
 	{
 		if (numActors >= MAX_ACTORS) {
 			Errorf("MAX_ACTORS exceeded");
@@ -53,14 +53,14 @@ namespace Axon { namespace Render {
 
 		addHelperPrims(actor);
 
-		if (actor->getKind() == Entity::kLight) {
-			Light* light = dynamic_cast<Light*>(actor);
+		if (actor->getKind() == RenderEntity::kLight) {
+			RenderLight* light = dynamic_cast<RenderLight*>(actor);
 			AX_ASSERT(light);
 			addLight(light);
 		}
 
-		if (actor->getKind() == Entity::kFog) {
-			Fog* fog = dynamic_cast<Fog*>(actor);
+		if (actor->getKind() == RenderEntity::kFog) {
+			RenderFog* fog = dynamic_cast<RenderFog*>(actor);
 			AX_ASSERT(fog);
 			QueuedFog* qf = g_renderQueue->allocType<QueuedFog>();
 			fog->fillQueuedFog(qf);
@@ -139,7 +139,7 @@ namespace Axon { namespace Render {
 		return true;
 	}
 
-	void QueuedScene::addHelperPrims(Entity* actor)
+	void QueuedScene::addHelperPrims(RenderEntity* actor)
 	{
 		if (!r_helper->getBool())
 			return;
@@ -271,7 +271,7 @@ namespace Axon { namespace Render {
 
 		// sort by visSize
 		std::sort(&shadowed[0], &shadowed[numShadowed], LesserLight);
-		World* world = shadowed[0]->preQueued->getWorld();
+		RenderWorld* world = shadowed[0]->preQueued->getWorld();
 
 		// add to world's shadow link
 		for (int i = 0; i < numShadowed; i++) {
@@ -286,7 +286,7 @@ namespace Axon { namespace Render {
 		int desired = r_shadowPoolSize->getInteger();
 		desired = Math::clamp(desired, 8, 128) * 1024 * 1024;
 
-		Light* light = world->m_shadowLink.getNext();
+		RenderLight* light = world->m_shadowLink.getNext();
 		while (light) {
 			if (totalUsed > desired) {
 				frameFreed += light->getShadowMemoryUsed();
@@ -317,13 +317,13 @@ namespace Axon { namespace Render {
 		return result;
 	}
 
-	Queue::Queue()
+	RenderQueue::RenderQueue()
 	{}
 
-	Queue::~Queue()
+	RenderQueue::~RenderQueue()
 	{}
 
-	void Queue::initialize()
+	void RenderQueue::initialize()
 	{
 	//	m_queuedScenes = NULL;
 		m_sceneCount = 0;
@@ -338,7 +338,7 @@ namespace Axon { namespace Render {
 		m_providingEvent->setEvent();
 	}
 
-	void Queue::finalize()
+	void RenderQueue::finalize()
 	{
 		beginProviding();
 		delete(m_cacheEndEvent);
@@ -347,66 +347,66 @@ namespace Axon { namespace Render {
 		delete(m_stack);
 	}
 
-	void Queue::beginProviding()
+	void RenderQueue::beginProviding()
 	{
 		m_providingEvent->lock();
 	}
 
-	MemoryStack* Queue::getMemoryStack()
+	MemoryStack* RenderQueue::getMemoryStack()
 	{
 		return m_stack;
 	}
 
-	void Queue::setTarget(Target* target)
+	void RenderQueue::setTarget(RenderTarget* target)
 	{
 		m_target = target;
 	}
 
 
-	QueuedScene* Queue::allocQueuedScene()
+	QueuedScene* RenderQueue::allocQueuedScene()
 	{
 		QueuedScene* queued_view = new(m_stack) QueuedScene;
 
 		return queued_view;
 	}
 
-	void Queue::addScene(QueuedScene* scene)
+	void RenderQueue::addScene(QueuedScene* scene)
 	{
 		if (m_sceneCount >= MAX_VIEW) {
-			Errorf("Queue::allocQueuedScene: MAX_VIEW exceeds");
+			Errorf("RenderQueue::allocQueuedScene: MAX_VIEW exceeds");
 			return;
 		}
 
 		m_queuedScenes[m_sceneCount++] = scene;
 	}
 
-	Interaction* Queue::allocInteraction()
+	Interaction* RenderQueue::allocInteraction()
 	{
 		return new(m_stack) Interaction;
 	}
 
-	Interaction** Queue::allocInteractionPointer(int num)
+	Interaction** RenderQueue::allocInteractionPointer(int num)
 	{
 		return new(m_stack) Interaction*[num];
 	}
 
 
-	QueuedLight* Queue::allocQueuedLight()
+	QueuedLight* RenderQueue::allocQueuedLight()
 	{
 		return new(m_stack) QueuedLight;
 	}
 
-	QueuedEntity* Queue::allocQueuedActor(int num)
+	QueuedEntity* RenderQueue::allocQueuedActor(int num)
 	{
 		return new(m_stack) QueuedEntity[num];
 	}
 
-	int* Queue::allocPrimitives(int num)
+	int* RenderQueue::allocPrimitives(int num)
 	{
 		return new(m_stack) int[num];
 	}
 
-	void Queue::endProviding()
+	void RenderQueue::endProviding()
 	{
 		m_providingEvent->resetEvent();
 		m_consumingEvent->setEvent();
@@ -415,31 +415,31 @@ namespace Axon { namespace Render {
 		m_cacheEndEvent->lock();
 	}
 
-	void Queue::beginConsuming()
+	void RenderQueue::beginConsuming()
 	{
 		m_consumingEvent->lock();
 	}
 
-	void Queue::setCacheEnd()
+	void RenderQueue::setCacheEnd()
 	{
 		m_cacheEndEvent->setEvent();
 	}
 
 
-	QueuedScene* Queue::getScene(int index)
+	QueuedScene* RenderQueue::getScene(int index)
 	{
 		AX_ASSERT(index >= 0 && index < m_sceneCount);
 
 		return m_queuedScenes[index];
 	}
 
-	void Queue::clear()
+	void RenderQueue::clear()
 	{
 		m_stack->clear();
 		m_sceneCount = 0;
 	}
 
-	void Queue::endConsuming()
+	void RenderQueue::endConsuming()
 	{
 		m_consumingEvent->resetEvent();
 		m_providingEvent->setEvent();
@@ -468,5 +468,5 @@ namespace Axon { namespace Render {
 	}
 #endif
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE
 

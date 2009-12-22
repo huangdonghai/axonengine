@@ -9,9 +9,9 @@ read the license and understand and accept it fully.
 
 #include "private.h"
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
-	Camera* gCamera;
+	RenderCamera* gCamera;
 	QueuedScene* gScene;
 
 	GLwindow* gFrameWindow;
@@ -35,8 +35,8 @@ namespace Axon { namespace Render {
 	static TexFormat sColorFormat = TexFormat::BGRA8;
 	static TexFormat sDepthFormat = TexFormat::D24S8;
 
-	static inline void BindTarget(Target* target) {
-		static Target* bound;
+	static inline void BindTarget(RenderTarget* target) {
+		static RenderTarget* bound;
 
 		if (bound != target) {
 			if (target->isTexture()) {
@@ -233,7 +233,7 @@ namespace Axon { namespace Render {
 //		glLoadMatrixf(matrix);
 	}
 
-	void GLthread::setupScene(QueuedScene* scene, const Clearer* clearer, Target* target, Camera* camera) {
+	void GLthread::setupScene(QueuedScene* scene, const Clearer* clearer, RenderTarget* target, RenderCamera* camera) {
 //		AX_ASSERT(scene);
 		if (!scene && !camera) {
 			Errorf("GLthread::setupScene: parameter error");
@@ -295,7 +295,7 @@ namespace Axon { namespace Render {
 		}
 	}
 
-	void GLthread::unsetScene(QueuedScene* scene, const Clearer* clearer, Target* target, Camera* camera) {
+	void GLthread::unsetScene(QueuedScene* scene, const Clearer* clearer, RenderTarget* target, RenderCamera* camera) {
 		if (!scene && !camera) {
 			Errorf("GLthread::unsetScene: parameter error");
 		}
@@ -363,7 +363,7 @@ namespace Axon { namespace Render {
 					AX_SU(g_modelMatrix, gActor->m_matrix);
 				}
 
-				if (gActor->flags & Entity::DepthHack) {
+				if (gActor->flags & RenderEntity::DepthHack) {
 					glDepthRange(0, 0.3f);
 				} else {
 					glDepthRange(0, 1);
@@ -406,7 +406,7 @@ namespace Axon { namespace Render {
 	}
 
 	void GLthread::cacheSceneRes(QueuedScene* scene) {
-		Scene* s_view = scene->source;
+		RenderScene* s_view = scene->source;
 
 //		scene->camera = s_view->camera;
 
@@ -433,10 +433,10 @@ namespace Axon { namespace Render {
 					if (r_ignorMesh->getBool()) {
 						scene->interactions[j]->resource = -1;
 					}
-					Mesh* mesh = dynamic_cast<Mesh*>(prim);
+					RenderMesh* mesh = dynamic_cast<RenderMesh*>(prim);
 					if (mesh == nullptr)
 						continue;
-					Line* line = mesh->getNormalLine(normallen);
+					RenderLine* line = mesh->getNormalLine(normallen);
 					Interaction* ia = g_renderQueue->allocInteraction();
 					ia->qactor = scene->interactions[j]->qactor;
 					ia->primitive = line;
@@ -456,10 +456,10 @@ namespace Axon { namespace Render {
 				if (r_ignorMesh->getBool()) {
 					scene->interactions[j]->resource = -1;
 				}
-				Mesh* mesh = dynamic_cast<Mesh*>(prim);
+				RenderMesh* mesh = dynamic_cast<RenderMesh*>(prim);
 				if (mesh == nullptr)
 					continue;
-				Line* line = mesh->getTangentLine(tangentlen);
+				RenderLine* line = mesh->getTangentLine(tangentlen);
 				Interaction* ia = g_renderQueue->allocInteraction();
 				ia->qactor = scene->interactions[j]->qactor;
 				ia->primitive = line;
@@ -761,11 +761,11 @@ namespace Axon { namespace Render {
 		blurtimes = blurtimes * 2;
 
 		GLtarget* src = gShadowMaskTarget;
-		GLtarget* dst = src->getFramebuffer()->allocTarget(Target::FrameAlloc, sColorFormat);
+		GLtarget* dst = src->getFramebuffer()->allocTarget(RenderTarget::FrameAlloc, sColorFormat);
 		dst->attachDepth(src->getDepthAttached());
 
 		// draw overlay
-		Camera camera = scene->camera;
+		RenderCamera camera = scene->camera;
 		camera.setOverlay(camera.getViewRect());
 		s_technique = Technique::Main;
 
@@ -789,15 +789,15 @@ namespace Axon { namespace Render {
 			int width = r.width / 4;
 			int height = r.height / 4;
 
-			downscale = (GLtarget*)glFramebufferManager->allocTarget(Target::PermanentAlloc, width, height, sColorFormat);
-			downscale2 = (GLtarget*)glFramebufferManager->allocTarget(Target::PermanentAlloc, width, height, sColorFormat);
+			downscale = (GLtarget*)glFramebufferManager->allocTarget(RenderTarget::PermanentAlloc, width, height, sColorFormat);
+			downscale2 = (GLtarget*)glFramebufferManager->allocTarget(RenderTarget::PermanentAlloc, width, height, sColorFormat);
 
 			glPostprocess->genericPP("_downscale4x4bright", downscale, gWorldTarget->getTextureGL());
 			glPostprocess->genericPP("_gaussblurh", downscale2, downscale->getTextureGL());
 			glPostprocess->genericPP("_gaussblurv", downscale, downscale2->getTextureGL());
 		}
 
-		Camera camera = scene->camera;
+		RenderCamera camera = scene->camera;
 		camera.setOverlay(camera.getViewRect());
 
 		GLtexture* tex = (GLtexture*)gWorldTarget->getTexture();
@@ -838,7 +838,7 @@ namespace Axon { namespace Render {
 		}
 
 		// draw overlay
-		Camera camera = scene->camera;
+		RenderCamera camera = scene->camera;
 		camera.setOverlay(camera.getViewRect());
 
 		setupScene(scene, nullptr, nullptr, &camera);
@@ -865,9 +865,9 @@ namespace Axon { namespace Render {
 		gWorldFramebuffer = glFramebufferManager->getFramebuffer(viewport.z, viewport.w);
 
 		if (r_framebuffer->getBool()) {
-			GLtarget* colortarget = gWorldFramebuffer->allocTarget(Target::PermanentAlloc, sColorFormat);
-			GLtarget* depth = gWorldFramebuffer->allocTarget(Target::PermanentAlloc, sDepthFormat);
-			GLtarget* gbuffer = gWorldFramebuffer->allocTarget(Target::PermanentAlloc, TexFormat::RGBA16F);
+			GLtarget* colortarget = gWorldFramebuffer->allocTarget(RenderTarget::PermanentAlloc, sColorFormat);
+			GLtarget* depth = gWorldFramebuffer->allocTarget(RenderTarget::PermanentAlloc, sDepthFormat);
+			GLtarget* gbuffer = gWorldFramebuffer->allocTarget(RenderTarget::PermanentAlloc, TexFormat::RGBA16F);
 			gbuffer->getTexture()->setFilterMode(Texture::FM_Nearest);
 			gbuffer->getTexture()->setClampMode(Texture::CM_ClampToEdge);
 			colortarget->attachDepth(depth);
@@ -1018,5 +1018,5 @@ namespace Axon { namespace Render {
 	void GLthread::endQuery() {
 	}
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE
 

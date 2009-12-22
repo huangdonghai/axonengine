@@ -9,7 +9,7 @@ read the license and understand and accept it fully.
 
 #include "d3d9private.h"
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
 #if 0
 	//--------------------------------------------------------------------------------------
@@ -355,4 +355,4 @@ namespace Axon { namespace Render {
 
 	}
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE

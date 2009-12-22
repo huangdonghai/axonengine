@@ -10,11 +10,11 @@ read the license and understand and accept it fully.
 #ifndef AX_RENDER_QUEUE_H
 #define AX_RENDER_QUEUE_H
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
-	struct Scene {
-		Camera camera;
-		World* world;
+	struct RenderScene {
+		RenderCamera camera;
+		RenderWorld* world;
 
 		ActorSeq actors;
 		Primitives primitives;
@@ -28,7 +28,7 @@ namespace Axon { namespace Render {
 		BoundingBox bbox;
 	};
 
-	typedef shared_ptr<Scene>		ScenePtr;
+	typedef shared_ptr<RenderScene>		ScenePtr;
 	typedef Sequence<ScenePtr>		SceneSeq;
 
 	struct AX_API QueuedScene {
@@ -53,8 +53,8 @@ namespace Axon { namespace Render {
 		bool rendered;
 
 		// some global shader uniform parameters
-		Matrix4 windMatrices[Wind::NUM_WIND_MATRIXES];
-		Vector4 leafAngles[Wind::NUM_LEAF_ANGLES];
+		Matrix4 windMatrices[RenderWind::NUM_WIND_MATRIXES];
+		Vector4 leafAngles[RenderWind::NUM_LEAF_ANGLES];
 
 		int m_histogramIndex;		// which histogram need to query
 		int m_histogramQueryId;
@@ -64,9 +64,9 @@ namespace Axon { namespace Render {
 		int numSubScenes;
 		QueuedScene* subScenes[MAX_SUB_SCENES];
 
-		Scene* source;
-		Camera camera;
-		Target* target;		// main scene maybe have a render target
+		RenderScene* source;
+		RenderCamera camera;
+		RenderTarget* target;		// main scene maybe have a render target
 
 		int numLights;
 		QueuedLight* lights[MAX_LIGHTS];
@@ -93,8 +93,8 @@ namespace Axon { namespace Render {
 		int* overlayPrimIds;
 
 		QueuedScene* addSubScene();
-		QueuedLight* addLight(Light* light);
-		QueuedEntity* addActor(Entity* actor);
+		QueuedLight* addLight(RenderLight* light);
+		QueuedEntity* addActor(RenderEntity* actor);
 		Interaction* addInteraction(QueuedEntity* actor, Primitive* prim, bool chain = true);
 		void addHelperInteraction(QueuedEntity* qactor, Primitive* prim);
 
@@ -108,7 +108,7 @@ namespace Axon { namespace Render {
 	protected:
 		void checkLights();
 		bool addInteraction(Interaction* ia);
-		void addHelperPrims(Entity* actor);
+		void addHelperPrims(RenderEntity* actor);
 
 		void findInstance();
 		void sortInteractions();
@@ -141,7 +141,7 @@ namespace Axon { namespace Render {
 		if (!sourceLight)
 			return false;
 
-		if (sourceLight->type != Light::kGlobal)
+		if (sourceLight->type != RenderLight::kGlobal)
 			return false;
 
 		if (splitIndex != sourceLight->shadowInfo->numSplitCamera-1)
@@ -154,24 +154,24 @@ namespace Axon { namespace Render {
 
 	typedef Sequence<QueuedScene*>	QueuedSceneSeq;
 
-	class AX_API Queue {
+	class AX_API RenderQueue {
 	public:
 		enum {
 			QUERY_FRAME_STACK_DEPTH = 2,
 			MAX_QUERIES = 4096,
 			MAX_VIEW = 16
 		};
-		Queue();
-		~Queue();
+		RenderQueue();
+		~RenderQueue();
 
 		void initialize();
 		void finalize();
-		Target* getTarget();
+		RenderTarget* getTarget();
 
 		// for providing thread
 		void beginProviding();
 		MemoryStack* getMemoryStack();
-		void setTarget(Target* target);
+		void setTarget(RenderTarget* target);
 		QueuedScene* allocQueuedScene();
 		void addScene(QueuedScene* scene);
 		Interaction* allocInteraction();
@@ -194,7 +194,7 @@ namespace Axon { namespace Render {
 
 	private:
 		MemoryStack* m_stack;
-		Target* m_target;
+		RenderTarget* m_target;
 		int m_sceneCount;
 		QueuedScene* m_queuedScenes[MAX_VIEW];
 		SyncEvent* m_providingEvent;
@@ -203,7 +203,7 @@ namespace Axon { namespace Render {
 	};
 
 	template< class T >
-	T* Queue::allocType(int num) {
+	T* RenderQueue::allocType(int num) {
 		if (num == 1) {
 			return new(m_stack) T;
 		} else {
@@ -211,11 +211,11 @@ namespace Axon { namespace Render {
 		}
 	}
 
-	inline Target* Queue::getTarget() {
+	inline RenderTarget* RenderQueue::getTarget() {
 		return m_target;
 	}
 
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE
 
 #endif // AX_RENDER_QUEUE_H

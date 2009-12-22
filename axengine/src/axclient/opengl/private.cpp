@@ -18,7 +18,7 @@ namespace Axon {
 	GLwindow* glInternalWindow;
 	HGLRC glContext;
 	GLdriver* glDriver;
-	IDriver::Info* glDriverInfo;
+	IRenderDriver::Info* glDriverInfo;
 	GLthread* glThread;
 	GLprimitivemanager* glPrimitiveManager;
 	GLframebuffermanager* glFramebufferManager;

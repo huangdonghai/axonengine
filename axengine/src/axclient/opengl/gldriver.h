@@ -10,7 +10,7 @@ read the license and understand and accept it fully.
 #ifndef AX_GLDRIVER_H
 #define AX_GLDRIVER_H
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
 		// declare ogl functions
 	#define GL_EXT(name) extern bool SUPPORT##name;
@@ -25,7 +25,7 @@ namespace Axon { namespace Render {
 	#define BUFFER_OFFSET2(p, i)	((byte_t*)p + (i))
 
 
-	class GLdriver : public IDriver, public ICmdHandler {
+	class GLdriver : public IRenderDriver, public ICmdHandler {
 	public:
 		AX_DECLARE_FACTORY();
 		AX_DECLARE_COMMAND_HANDLER(GLdriver);
@@ -39,7 +39,7 @@ namespace Axon { namespace Render {
 		void loadMatrix(GLenum mode, const Matrix4& m);
 
 	public:
-		// implement Render::IDriver
+		// implement Render::IRenderDriver
 		virtual void initialize();
 		virtual void finalize();
 		virtual void postInit();			// after render system is initilized, call this
@@ -49,7 +49,7 @@ namespace Axon { namespace Render {
 		virtual bool isInRenderingThread() { return false; }
 
 		// resource management
-		virtual Target* createWindowTarget(handle_t wndId, const String& name);
+		virtual RenderTarget* createWindowTarget(handle_t wndId, const String& name);
 #if 0
 		virtual Target* getColorTarget(int width, int height);
 		virtual Target* getDepthTarget(int width, int height);
@@ -69,9 +69,9 @@ namespace Axon { namespace Render {
 		virtual void runFrame();
 
 		// new selcection
-		virtual void beginSelect(const Camera& view);
+		virtual void beginSelect(const RenderCamera& view);
 		virtual void loadSelectId(int id);
-		virtual void testActor(Entity* re);
+		virtual void testActor(RenderEntity* re);
 		virtual void testPrimitive(Primitive* prim);
 		virtual SelectRecordSeq endSelect();
 
@@ -103,6 +103,6 @@ namespace Axon { namespace Render {
 		int m_queryId;
 	};
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE
 
 #endif // AX_GLDRIVER_H

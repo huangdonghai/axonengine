@@ -548,7 +548,7 @@ void Workspace::on_bookmarkGoto_released()
 
 void Workspace::on_bookmarkAdd_released()
 {
-	const Render::Camera& camera = g_mapContext->getActiveView()->getCamera();
+	const RenderCamera& camera = g_mapContext->getActiveView()->getCamera();
 	
 	AffineMat viewMatrix;
 

@@ -11,48 +11,48 @@ read the license and understand and accept it fully.
 #define AX_RENDER_SYSTEM_H
 
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
 	class Selection;
 
-	class AX_API System : public Object, public ICmdHandler
+	class AX_API RenderSystem : public Object, public ICmdHandler
 	{
 	public:
 		// script
-		AX_DECLARE_CLASS(System, Object, "RenderSystem")
+		AX_DECLARE_CLASS(RenderSystem, Object, "RenderSystem")
 			AX_METHOD(info)
 			AX_METHOD(test)
 		AX_END_CLASS()
 
-		AX_DECLARE_COMMAND_HANDLER(System);
+		AX_DECLARE_COMMAND_HANDLER(RenderSystem);
 
-		System();
-		~System();
+		RenderSystem();
+		~RenderSystem();
 
 		void initialize();
 		void finalize();
 
 		ShaderQuality getShaderQuality();
 
-		const IDriver::Info* getDriverInfo();
+		const IRenderDriver::Info* getDriverInfo();
 		uint_t getBackendCaps();
 		int getFrameNum() const;
 
 		// new rendering
-		void beginFrame(Target* target);
-		Target* getFrameTarget() const { return m_curTarget; }
-		void beginScene(const Camera& view);
-		void addToScene(World* world);
-		void addToScene(Entity* re);
+		void beginFrame(RenderTarget* target);
+		RenderTarget* getFrameTarget() const { return m_curTarget; }
+		void beginScene(const RenderCamera& view);
+		void addToScene(RenderWorld* world);
+		void addToScene(RenderEntity* re);
 		void addToScene(Primitive* primitive);
 		void addToOverlay(Primitive* primitive);
 		void endScene();
 		void endFrame();
 
 		// new selection
-		void beginSelect(const Camera& view);
+		void beginSelect(const RenderCamera& view);
 		void loadSelectId(int id);
-		void testActor(Entity* re);
+		void testActor(RenderEntity* re);
 		void testPrimitive(Primitive* prim);
 		void testPrimitive(Primitive* prim, const AffineMat& matrix);
 		SelectRecordSeq endSelect();
@@ -60,10 +60,10 @@ namespace Axon { namespace Render {
 		void screenShot(const String& name, const Rect& rect);
 
 		void info();
-		void test(System* system) {}
+		void test(RenderSystem* system) {}
 
 		// textures for subscene's render target
-		Target* createWindowTarget(handle_t wndId, const String& name);
+		RenderTarget* createWindowTarget(handle_t wndId, const String& name);
 
 		// actor manager register
 		void addEntityManager(IEntityManager* manager);
@@ -86,25 +86,25 @@ namespace Axon { namespace Render {
 		bool m_isSelectMode;
 		int m_frameNum;
 
-		Target* m_curTarget;
+		RenderTarget* m_curTarget;
 
 		// current view buf
 		SceneSeq m_sceneSeq;
 		ScenePtr m_curScene;
 
 		// selection camera
-		Camera m_selectionCamera;
+		RenderCamera m_selectionCamera;
 		Selection* m_selection;
 
 		// actor manager registry
 		Sequence<IEntityManager*>	m_entityManagers;
 	};
 
-	inline int System::getFrameNum() const {
+	inline int RenderSystem::getFrameNum() const {
 		return m_frameNum;
 	}
 
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE
 
 #endif // AX_RENDER_SYSTEM_H

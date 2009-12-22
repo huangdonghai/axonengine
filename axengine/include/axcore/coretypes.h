@@ -154,6 +154,10 @@ support CPU(architecture) macro: some Compilers can produce code for more than o
 
 #define AX_BIT(x) (1<<x)
 
+#define AX_BEGIN_NAMESPACE namespace Axon {
+#define AX_END_NAMESPACE }
+#define AX_USE_NAMESPACE using namespace Axon;
+
 namespace Axon {
 
 #if 0

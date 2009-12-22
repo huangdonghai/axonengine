@@ -11,9 +11,9 @@ read the license and understand and accept it fully.
 #ifndef AX_RENDER_TARGET_H
 #define AX_RENDER_TARGET_H
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
-	class AX_API Target {
+	class AX_API RenderTarget {
 	public:
 		enum Type {
 			kWindow, kTexture
@@ -37,8 +37,8 @@ namespace Axon { namespace Render {
 			MAX_COLOR_ATTACHMENT = 3
 		};
 
-		Target();
-		virtual ~Target() = 0;;
+		RenderTarget();
+		virtual ~RenderTarget() = 0;;
 
 		virtual Type getType() = 0;
 		virtual Rect getRect() = 0;
@@ -51,13 +51,13 @@ namespace Axon { namespace Render {
 		virtual bool isStencilFormat() { return false;}
 
 		// for render texture target
-		virtual void attachDepth(Target* depth) {}
-		virtual Target* getDepthAttached() const { return nullptr; }
+		virtual void attachDepth(RenderTarget* depth) {}
+		virtual RenderTarget* getDepthAttached() const { return nullptr; }
 
-		virtual void attachColor(int index, Target* c) {}
+		virtual void attachColor(int index, RenderTarget* c) {}
 		virtual void detachColor(int index) {}
 		virtual void detachAllColor() {}
-		virtual Target* getColorAttached(int index) const { return 0; }
+		virtual RenderTarget* getColorAttached(int index) const { return 0; }
 
 		virtual Texture* getTexture() { return nullptr; }
 
@@ -73,24 +73,24 @@ namespace Axon { namespace Render {
 		bool m_realAllocated;
 	};
 
-	class World;
-	class Entity;
+	class RenderWorld;
+	class RenderEntity;
 	class Primitive;
 	struct QueuedScene;
 
 	class AX_API ReflectionTarget {
 	public:
-		ReflectionTarget(World* world, Entity* actor, Primitive* prim, int width, int height);
+		ReflectionTarget(RenderWorld* world, RenderEntity* actor, Primitive* prim, int width, int height);
 		~ReflectionTarget();
 
 		void update(QueuedScene* qscene);
 
 	public:
-		World* m_world;
-		Entity* m_actor;
+		RenderWorld* m_world;
+		RenderEntity* m_actor;
 		Primitive* m_prim;
-		Camera m_camera;
-		Target* m_target;
+		RenderCamera m_camera;
+		RenderTarget* m_target;
 		int m_updateFrame;
 	};
 
@@ -99,29 +99,29 @@ namespace Axon { namespace Render {
 		TargetManager();
 		virtual ~TargetManager() = 0;
 
-		virtual Target* allocTarget(Target::AllocHint hint, int width, int height, TexFormat texformat) = 0;
-		virtual void freeTarget(Target* target) = 0;	// only permanent target need be free
+		virtual RenderTarget* allocTarget(RenderTarget::AllocHint hint, int width, int height, TexFormat texformat) = 0;
+		virtual void freeTarget(RenderTarget* target) = 0;	// only permanent target need be free
 		virtual bool isFormatSupport(TexFormat format) = 0;
-		virtual TexFormat getSuggestFormat(Target::SuggestFormat sf) = 0;
+		virtual TexFormat getSuggestFormat(RenderTarget::SuggestFormat sf) = 0;
 
-		Target* allocShadowMap(int width, int height);
-		void freeShadowMap(Target* target);
+		RenderTarget* allocShadowMap(int width, int height);
+		void freeShadowMap(RenderTarget* target);
 
-		ReflectionTarget* findReflection(World* world, Entity* actor, Primitive* prim, int width, int height);
-
-	protected:
-		friend class Target;
-		void allocReal(Target* target);
-		void freeReal(Target* target);
+		ReflectionTarget* findReflection(RenderWorld* world, RenderEntity* actor, Primitive* prim, int width, int height);
 
 	protected:
-		List<Target*> m_realAllocTargets;
-		List<Target*> m_freeRealTargets;
+		friend class RenderTarget;
+		void allocReal(RenderTarget* target);
+		void freeReal(RenderTarget* target);
+
+	protected:
+		List<RenderTarget*> m_realAllocTargets;
+		List<RenderTarget*> m_freeRealTargets;
 
 		List<ReflectionTarget*> m_reflectionTargets;
 	};
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE
 
 #endif // end guardian
 

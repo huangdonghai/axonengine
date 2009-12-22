@@ -10,15 +10,15 @@ read the license and understand and accept it fully.
 
 #include "../private.h"
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
-	BoundingBox Fog::getLocalBoundingBox() {
-		return BoundingBox(-9999,-9999,-9999,9999,9999,9999);
-	}
+BoundingBox RenderFog::getLocalBoundingBox() {
+	return BoundingBox(-9999,-9999,-9999,9999,9999,9999);
+}
 
-	BoundingBox Fog::getBoundingBox() {
-		return BoundingBox(-9999,-9999,-9999,9999,9999,9999);
-	}
+BoundingBox RenderFog::getBoundingBox() {
+	return BoundingBox(-9999,-9999,-9999,9999,9999,9999);
+}
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE
 

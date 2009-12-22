@@ -11,7 +11,7 @@ read the license and understand and accept it fully.
 #include "d3d9private.h"
 
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
 	static ID3DXEffectPool* s_effectPool = NULL;   // Effect pool for sharing parameters
 
@@ -1056,7 +1056,7 @@ namespace Axon { namespace Render {
 
 				Interaction* ia = d3d9Interaction;
 
-				Target* target = ia->targets[count];
+				RenderTarget* target = ia->targets[count];
 				D3D9target* textarget = (D3D9target*)target;
 				D3D9texture* tex = textarget->getTextureDX();
 				tex->setClampMode(Texture::CM_ClampToEdge);
@@ -1065,7 +1065,7 @@ namespace Axon { namespace Render {
 			} else if (sa->m_renderType == SamplerAnno::SceneColor) {
 				Rect r = d3d9BoundTarget->getRect();
 
-				D3D9target* target = d3d9TargetManager->allocTargetDX(Target::TemporalAlloc, r.width, r.height, TexFormat::BGRA8);
+				D3D9target* target = d3d9TargetManager->allocTargetDX(RenderTarget::TemporalAlloc, r.width, r.height, TexFormat::BGRA8);
 				D3D9texture* tex = target->getTextureDX();
 				tex->setClampMode(Texture::CM_ClampToEdge);
 				target->copyFramebuffer(r);
@@ -1136,5 +1136,5 @@ namespace Axon { namespace Render {
 		}
 
 	}
-}} // namespace Axon::Render
+AX_END_NAMESPACE
 

@@ -10,7 +10,7 @@ read the license and understand and accept it fully.
 
 #include "d3d9private.h"
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
 	D3DVERTEXELEMENT9 s_veGeneric[] = {
 		{0, 0,  D3DDECLTYPE_FLOAT3,   D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0},
@@ -542,5 +542,5 @@ namespace Axon { namespace Render {
 	}
 
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE
 

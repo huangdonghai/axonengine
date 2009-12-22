@@ -14,7 +14,7 @@ read the license and understand and accept it fully.
 // forward declaration external library's type
 class CSpeedTreeRT;
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
 	class TreeActor;
 	class TreeManager;
@@ -96,7 +96,7 @@ namespace Axon { namespace Render {
 	}
 
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE
 
 #endif // end guardian
 

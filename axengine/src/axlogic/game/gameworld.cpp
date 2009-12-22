@@ -86,7 +86,7 @@ namespace Axon { namespace Game {
 		g_renderSystem->endFrame();
 	}
 
-	void GameWorld::drawScene(const Render::Camera& camera)
+	void GameWorld::drawScene(const RenderCamera& camera)
 	{
 		m_lastCamera = camera;
 
@@ -216,7 +216,7 @@ namespace Axon { namespace Game {
 		m_outdoorEnv->setSunDir(sundir);
 	}
 
-	void GameWorld::setWindow(Render::Target* targetWin)
+	void GameWorld::setWindow(RenderTarget* targetWin)
 	{
 		m_targetWindow = targetWin;
 	}

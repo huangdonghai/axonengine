@@ -11,7 +11,7 @@ read the license and understand and accept it fully.
 #ifndef AX_RENDER_TIMEOFDAY_H
 #define AX_RENDER_TIMEOFDAY_H
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
 	class TimeOfDay {
 	public:
@@ -66,6 +66,6 @@ namespace Axon { namespace Render {
 		Item m_items[NUM_ITEM_KINDS];
 	};
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE
 
 #endif // AX_RENDER_TIMEOFDAY_H

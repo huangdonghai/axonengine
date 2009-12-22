@@ -10,7 +10,7 @@ read the license and understand and accept it fully.
 
 #include "private.h"
 
-namespace Axon { namespace Render {
+AX_BEGIN_NAMESPACE
 
 	static Vector2 	sSampleOffsets[32];
 	static float 	sSampleWeights[32];
@@ -104,7 +104,7 @@ namespace Axon { namespace Render {
 
 	GLpostprocess::GLpostprocess() {
 #if 1
-		m_screenQuad = new Mesh(Primitive::Static);
+		m_screenQuad = new RenderMesh(Primitive::Static);
 
 		Rgba color(255, 255, 255, 255);
 
@@ -156,7 +156,7 @@ namespace Axon { namespace Render {
 		indexes[5] = 3;
 		m_screenQuad->unlockIndexes();
 #else
-		m_screenQuad = Mesh::createScreenQuad(Primitive::Static, Rect(), Rgba::White);
+		m_screenQuad = RenderMesh::createScreenQuad(Primitive::Static, Rect(), Rgba::White);
 #endif
 
 		m_boxVolume = nullptr;
@@ -227,7 +227,7 @@ namespace Axon { namespace Render {
 	void GLpostprocess::measureHistogram(GLtexture* tex, int index) {
 		tex->setFilterMode(Texture::FM_Nearest);
 
-		float w = 1.0f / World::HISTOGRAM_WIDTH;
+		float w = 1.0f / RenderWorld::HISTOGRAM_WIDTH;
 		Vector4 param;
 		param.x = w * index;
 		param.y = w * (index+1);
@@ -246,7 +246,7 @@ namespace Axon { namespace Render {
 	}
 
 	void GLpostprocess::maskVolume(Vector3 volume[8]) {
-		Mesh::setupHexahedron(m_boxVolume, volume);
+		RenderMesh::setupHexahedron(m_boxVolume, volume);
 		m_boxVolume->setMaterial(m_matMaskVolume);
 		glPrimitiveManager->cachePrimitive(m_boxVolume);
 		GLprimitive* glprim = glPrimitiveManager->getPrimitive(m_boxVolume->getCachedId());
@@ -256,7 +256,7 @@ namespace Axon { namespace Render {
 	}
 
 	void GLpostprocess::maskShadow(Vector3 volume[8], const Matrix4& matrix, GLtexture* tex, bool front) {
-		Mesh::setupHexahedron(m_boxVolume, volume);
+		RenderMesh::setupHexahedron(m_boxVolume, volume);
 
 		float range = r_csmRange->getFloat();
 		Vector2 zrange(range * 0.5f, range);
@@ -282,7 +282,7 @@ namespace Axon { namespace Render {
 
 	void GLpostprocess::maskShadow(Vector3 volume[8], const Matrix4& matrix, GLtexture* tex, const Vector4& minrange, const Vector4& maxrange, const Matrix4& scaleoffset, bool front /*= false */)
 	{
-		Mesh::setupHexahedron(m_boxVolume, volume);
+		RenderMesh::setupHexahedron(m_boxVolume, volume);
 
 		float range = r_csmRange->getFloat();
 		Vector2 zrange(range * 0.5f, range);
@@ -392,9 +392,9 @@ namespace Axon { namespace Render {
 		GLrender::draw(shader, Technique::Main, m_screenQuadGeo);
 	}
 
-	void GLpostprocess::genericPP(const String& shadername, Target* target, GLtexture* src) {
+	void GLpostprocess::genericPP(const String& shadername, RenderTarget* target, GLtexture* src) {
 		GLshader* shader = getShader(shadername);
-		Camera camera;
+		RenderCamera camera;
 		camera.setTarget(target);
 		camera.setOverlay(target->getRect());
 
@@ -424,10 +424,10 @@ namespace Axon { namespace Render {
 		genericPP(shadername, nullptr, src1, src2);
 	}
 
-	void GLpostprocess::genericPP(const String& shadername, Target* target, GLtexture* src1, GLtexture* src2) {
+	void GLpostprocess::genericPP(const String& shadername, RenderTarget* target, GLtexture* src1, GLtexture* src2) {
 		GLshader* shader = getShader(shadername);
 
-		Camera camera;
+		RenderCamera camera;
 		if (target) {
 			camera.setTarget(target);
 			camera.setOverlay(target->getRect());
@@ -461,5 +461,5 @@ namespace Axon { namespace Render {
 		}
 	}
 
-}} // namespace Axon::Render
+AX_END_NAMESPACE
 
