@@ -9,4 +9,4 @@ read the license and understand and accept it fully.
 
 module( ..., package.seeall );
 
-AX_DECLARE_CLASS( _M, Game.Entity )
+AX_DECLARE_CLASS( _M, "GameLight" )

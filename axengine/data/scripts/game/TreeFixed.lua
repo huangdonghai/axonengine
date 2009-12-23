@@ -14,5 +14,5 @@ Properties = {
 		mdl_model="speedtrees/default.spt",
 	},
 }
-AX_DECLARE_CLASS( _M, Game.Fixed )
+AX_DECLARE_CLASS(_M, "TreeFixed")
 

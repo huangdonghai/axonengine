@@ -16,7 +16,7 @@ namespace Axon { namespace Game {
 
 	class Animated : public GameActor
 	{
-		AX_DECLARE_CLASS(Animated, GameActor, "Game.Physics.Animated");
+		AX_DECLARE_CLASS(Animated, GameActor);
 			AX_METHOD(loadAsset)
 		AX_END_CLASS()
 

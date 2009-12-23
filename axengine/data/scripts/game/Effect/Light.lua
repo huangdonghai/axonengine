@@ -73,7 +73,7 @@ function onReset(self)
 	self:activeLight(props.active);
 end
 
-AX_DECLARE_CLASS(_M, Game.Entity)
+AX_DECLARE_CLASS(_M, "GameLight")
 
 --------------------------------------------------------------------------------
 -- signals and slots

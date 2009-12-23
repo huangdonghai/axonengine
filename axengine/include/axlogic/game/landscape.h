@@ -22,7 +22,7 @@ namespace Axon { namespace Game {
 
 	class AX_API Fixed : public GameObject
 	{
-		AX_DECLARE_CLASS(Fixed, GameObject, "Game.Fixed")
+		AX_DECLARE_CLASS(Fixed, GameObject)
 		AX_END_CLASS()
 
 	public:
@@ -49,7 +49,7 @@ namespace Axon { namespace Game {
 
 	class AX_API StaticFixed : public Fixed
 	{
-		AX_DECLARE_CLASS(StaticFixed, Fixed, "Game.StaticFixed")
+		AX_DECLARE_CLASS(StaticFixed, Fixed)
 			AX_PROP(model)
 		AX_END_CLASS()
 	public:
@@ -76,7 +76,7 @@ namespace Axon { namespace Game {
 
 	class AX_API TerrainFixed : public Fixed, public IObserver
 	{
-		AX_DECLARE_CLASS(TerrainFixed, Fixed, "Game.TerrainFixed")
+		AX_DECLARE_CLASS(TerrainFixed, Fixed)
 		AX_END_CLASS()
 
 	public:
@@ -103,7 +103,7 @@ namespace Axon { namespace Game {
 #ifdef AX_CONFIG_OPTION_USE_SPEEDTREE_40
 	class AX_API TreeFixed : public Fixed
 	{
-		AX_DECLARE_CLASS(TreeFixed, Fixed, "Game.TreeFixed")
+		AX_DECLARE_CLASS(TreeFixed, Fixed)
 			AX_PROP(tree)
 		AX_END_CLASS()
 
@@ -130,7 +130,7 @@ namespace Axon { namespace Game {
 
 	class AX_API Landscape : public GameActor
 	{
-		AX_DECLARE_CLASS(Landscape, GameActor, "Game.Landscape")
+		AX_DECLARE_CLASS(Landscape, GameActor)
 		AX_END_CLASS()
 
 	public:

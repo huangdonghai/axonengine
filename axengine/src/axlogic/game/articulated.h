@@ -16,7 +16,7 @@ namespace Axon { namespace Game {
 
 	class Articulated : public Animated
 	{
-		AX_DECLARE_CLASS(Articulated, Animated, "Game.Physics.Articulated");
+		AX_DECLARE_CLASS(Articulated, Animated);
 		AX_END_CLASS()
 
 	public:

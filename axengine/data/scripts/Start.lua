@@ -11,10 +11,9 @@ require("Utils")
 
 
 -- global function
-function AX_DECLARE_CLASS(me, super)
+function AX_DECLARE_CLASS(me, metaType)
 	print("registering " .. me._NAME .. " class")
-	Utils.merge(me, super, true)
-	registerClass(me._NAME, super._NAME)
+	registerClass(me._NAME, metaType)
 end
 
 function AX_CREATE_OBJECT(cls)

@@ -16,7 +16,7 @@ namespace Axon { namespace Game {
 
 	class GameSound : public GameActor
 	{
-		AX_DECLARE_CLASS(GameSound, GameActor, "Game.Effect.Sound")
+		AX_DECLARE_CLASS(GameSound, GameActor)
 			AX_METHOD(loadSound)
 			AX_METHOD(activeSound)
 		AX_END_CLASS()

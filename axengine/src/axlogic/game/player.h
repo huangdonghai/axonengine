@@ -16,7 +16,7 @@ namespace Axon { namespace Game {
 
 	class Player : public GameActor
 	{
-		AX_DECLARE_CLASS(Player, GameActor, "Game.Player")
+		AX_DECLARE_CLASS(Player, GameActor)
 		AX_END_CLASS()
 
 	public:

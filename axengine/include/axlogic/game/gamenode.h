@@ -19,7 +19,7 @@ namespace Axon { namespace Game {
 
 	class AX_API GameObject : public Object
 	{
-		AX_DECLARE_CLASS(GameObject, Object, "Game.GameObject")
+		AX_DECLARE_CLASS(GameObject, Object)
 			AX_PROP(outdoorOnly)
 			AX_PROP(castShadow)
 			AX_PROP(recvShadow)

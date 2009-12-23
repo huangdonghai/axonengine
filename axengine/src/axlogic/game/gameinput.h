@@ -17,7 +17,7 @@ namespace Axon { namespace Game {
 	{
 		AX_DECLARE_COMMAND_HANDLER(GameInput);
 
-		AX_DECLARE_CLASS(GameInput, Object, "GameInput")
+		AX_DECLARE_CLASS(GameInput, Object)
 			AX_METHOD(pauseGame)
 			AX_METHOD(moveForward)
 			AX_METHOD(moveBackward)

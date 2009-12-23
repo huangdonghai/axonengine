@@ -11,23 +11,23 @@ module( ..., package.seeall );
 
 print( "loading Game module..." );
 
-require( "Game.Node" )
-require( "Game.Fixed" )
-require( "Game.StaticFixed" )
-require( "Game.TreeFixed" )
+require("Game.GameObject")
+require("Game.Fixed")
+require("Game.StaticFixed")
+require("Game.TreeFixed")
 
-require( "Game.Entity" )
-require( "Game.Player" )
+require("Game.GameActor")
+require("Game.Player")
 
 -- entities
---require( "Game.Light.PointLight" )
---require( "Game.Light.SpotLight" )
+--require( "Game.Light.PointLight")
+--require( "Game.Light.SpotLight")
 
-require( "Game.Physics.Animated" )
-require( "Game.Physics.Articulated" )
-require( "Game.Physics.RigidBody" )
+require("Game.Physics.Animated")
+require("Game.Physics.Articulated")
+require("Game.Physics.RigidBody")
 
-require( "Game.Effect.Particle" )
-require( "Game.Effect.Sound" )
-require( "Game.Effect.Light" )
+require("Game.Effect.Particle")
+require("Game.Effect.Sound")
+require("Game.Effect.Light")
 

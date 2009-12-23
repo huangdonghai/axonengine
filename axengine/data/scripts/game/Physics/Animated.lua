@@ -42,4 +42,4 @@ function onReset(self)
 	self:loadAsset(m_table);
 end
 
-AX_DECLARE_CLASS( _M, Game.Entity )
+AX_DECLARE_CLASS(_M, "Animated")

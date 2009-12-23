@@ -15,5 +15,5 @@ Properties = {
 	},
 }
 
-AX_DECLARE_CLASS( _M, Game.Fixed )
+AX_DECLARE_CLASS(_M, "StaticFixed")
 

@@ -16,7 +16,7 @@ namespace Axon { namespace Game {
 
 	class GameLight : public GameActor
 	{
-		AX_DECLARE_CLASS(GameLight, GameActor, "Game.Effect.Light")
+		AX_DECLARE_CLASS(GameLight, GameActor)
 			AX_METHOD(loadLight)
 			AX_METHOD(activeLight)
 		AX_END_CLASS()

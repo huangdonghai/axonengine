@@ -41,4 +41,4 @@ function onReset(self)
 end
 
 
-AX_DECLARE_CLASS( _M, Game.Entity )
+AX_DECLARE_CLASS(_M, "GameSound")

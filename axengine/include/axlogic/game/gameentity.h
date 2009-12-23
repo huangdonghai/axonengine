@@ -55,7 +55,7 @@ namespace Axon { namespace Game {
 
 	class AX_API GameActor : public GameObject, public IObserver
 	{
-		AX_DECLARE_CLASS(GameActor, GameObject, "Game.GameActor")
+		AX_DECLARE_CLASS(GameActor, GameObject)
 		AX_END_CLASS()
 	public:
 		friend class GameWorld;
@@ -180,7 +180,7 @@ namespace Axon { namespace Game {
 
 	class AX_API GameRigit : public GameActor
 	{
-		AX_DECLARE_CLASS(GameRigit, GameActor, "Game.Physics.RigidBody")
+		AX_DECLARE_CLASS(GameRigit, GameActor)
 			AX_METHOD(loadAsset)
 		AX_END_CLASS()
 

@@ -26,7 +26,7 @@ function onThink( self,frametime )
 end
 
 function onReset(self)
-	print( self.objectName, "onReset" )
+	print(self.objectName, "onReset")
 	
 	local props = self.Properties;
 	
@@ -37,4 +37,4 @@ function onReset(self)
 	self:loadAsset(m_table);
 end
 
-AX_DECLARE_CLASS( _M, Game.Entity )
+AX_DECLARE_CLASS(_M, "GameRigit")

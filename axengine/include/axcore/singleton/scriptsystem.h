@@ -22,7 +22,7 @@ read the license and understand and accept it fully.
 	static ::Axon::MetaInfo* classname::registerMetaInfo() {				\
 		static ::Axon::MetaInfo* typeinfo;									\
 		if (!typeinfo) {													\
-			typeinfo = new ::Axon::MetaInfo_<classname>(classname, BaseClass::registerMetaInfo()); \
+			typeinfo = new ::Axon::MetaInfo_<classname>(#classname, BaseClass::registerMetaInfo()); \
 
 #define AX_CONSTPROP(name) typeinfo->addProperty(#name, &ThisClass::get_##name);
 #define AX_PROP(name) typeinfo->addProperty(#name, &ThisClass::get_##name, &ThisClass::set_##name);
@@ -1354,7 +1354,7 @@ namespace Axon {
 		const String& getPackagePath() { return m_packagePath; }
 
 	protected:
-		void setTypeInfoToClassInfo(const String& name, MetaInfo* ti);
+		void linkMetaInfoToClassInfo(MetaInfo* ti);
 
 	private:
 		typedef Dict<String,ClassInfo*>	ClassInfoDict;
@@ -1375,7 +1375,7 @@ namespace Axon {
 
 	template< class T >
 	T object_cast(Object* obj) {
-		if (obj->inherits(T(0)->registerTypeInfo()->getTypeName())) {
+		if (obj->inherits(T(0)->registerMetaInfo()->getTypeName())) {
 			return (T)obj;
 		}
 		return nullptr;
