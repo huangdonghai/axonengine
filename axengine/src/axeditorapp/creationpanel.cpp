@@ -93,7 +93,7 @@ void CreationPanel::doNotify(IObservable* subject, int arg) {
 	bool showbasic = false;
 	bool showmodel = false;
 
-	int track = Editor::Context::SelectionChanged | Editor::Context::ToolChanged;
+	int track = Context::SelectionChanged | Context::ToolChanged;
 
 	if (!(arg&track)) {
 		return;
@@ -101,12 +101,12 @@ void CreationPanel::doNotify(IObservable* subject, int arg) {
 
 	ui.rollup->setAllPagesVisible(false);
 
-	const Editor::ActorList& actorlist = g_mapContext->getSelection();
+	const AgentList& actorlist = g_mapContext->getSelection();
 
 	if (!actorlist.containsOne()) {
 		ui.objectName->setText(QString("%1 objects").arg(actorlist.size()));
 	} else {
-		Editor::Actor* actor = actorlist.back();
+		Agent* actor = actorlist.back();
 		GameObject* node = static_cast<MapActor*>(actor)->getGameNode();
 		ui.objectName->setText(u2q(node->get_objectName()));
 		ui.objectColor->setColor(actor->getColor());
@@ -120,14 +120,14 @@ void CreationPanel::doNotify(IObservable* subject, int arg) {
 
 	int tooltype = g_mapContext->getToolType();
 
-	if (tooltype == Editor::MapEdit::MapTool::CreateStatic) {
+	if (tooltype == MapTool::CreateStatic) {
 		ui.rollup->setPageVisible(0, true);
 		ui.rollup->setPageVisible(3, true);
-	} else if (tooltype == Editor::MapEdit::MapTool::CreateEntity) {
+	} else if (tooltype == MapTool::CreateEntity) {
 		ui.rollup->setPageVisible(0, true);
 		ui.rollup->setPageVisible(1, true);
 		ui.rollup->setPageVisible(3, true);
-	} else if (tooltype == Editor::MapEdit::MapTool::CreateTree) {
+	} else if (tooltype == MapTool::CreateTree) {
 		ui.rollup->setPageVisible(2, true);
 		ui.rollup->setPageVisible(3, true);
 	}
@@ -169,7 +169,7 @@ void CreationPanel::on_selectModel_itemDoubleClicked(QTreeWidgetItem* item,int)
 	ui.preview->update();
 
 	// set model for selected actor
-	const Editor::ActorList& actorlist = g_mapContext->getSelection();
+	const AgentList& actorlist = g_mapContext->getSelection();
 
 	if (actorlist.containsOne()) {
 		actorlist.setNodeProperty("model", finfo.fullpath);
@@ -219,7 +219,7 @@ void CreationPanel::on_selectTree_itemDoubleClicked(QTreeWidgetItem* item,int)
 	g_mapContext->getMapState()->treeFilename = finfo.fullpath;
 
 	// set model for selected actor
-	const Editor::ActorList& actorlist = g_mapContext->getSelection();
+	const AgentList& actorlist = g_mapContext->getSelection();
 
 	if (actorlist.containsOne()) {
 		actorlist.setNodeProperty("tree", finfo.fullpath);
@@ -290,7 +290,7 @@ void CreationPanel::initEntityList() {
 
 void CreationPanel::on_objectColor_colorChanged( const QColor& color )
 {
-	const Editor::ActorList& actorlist = g_mapContext->getSelection();
+	const AgentList& actorlist = g_mapContext->getSelection();
 
 	actorlist.setColor(q2x(color));
 }

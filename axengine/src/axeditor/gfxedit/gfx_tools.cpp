@@ -1,6 +1,6 @@
 #include "gfx_local.h"
 
-namespace Axon { namespace Editor {
+AX_BEGIN_NAMESPACE
 
 	GfxTool::GfxTool( GfxContext *ctx )
 		: Tool(ctx)
@@ -13,4 +13,4 @@ namespace Axon { namespace Editor {
 
 	}
 
-}} // namespace Axon::Editor
+AX_END_NAMESPACE

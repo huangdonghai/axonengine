@@ -11,7 +11,7 @@ read the license and understand and accept it fully.
 #ifndef AX_GAME_NODE_H
 #define AX_GAME_NODE_H
 
-namespace Axon { namespace Game {
+AX_BEGIN_NAMESPACE
 
 	//--------------------------------------------------------------------------
 	// class GameObject
@@ -119,7 +119,7 @@ namespace Axon { namespace Game {
 	};
 
 
-}} // namespace Axon::Game
+AX_END_NAMESPACE
 
 #endif // end guardian
 

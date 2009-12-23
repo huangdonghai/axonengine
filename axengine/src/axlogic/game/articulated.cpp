@@ -11,7 +11,7 @@ read the license and understand and accept it fully.
 
 #include "../private.h"
 
-namespace Axon { namespace Game {
+AX_BEGIN_NAMESPACE
 
 	Articulated::Articulated() {
 		m_ragdoll = new PhysicsRagdoll("models/havok/penetration_rig_L4101.mesh");
@@ -55,5 +55,5 @@ namespace Axon { namespace Game {
 //		}
 	}
 
-}} // namespace Axon::Game
+AX_END_NAMESPACE
 

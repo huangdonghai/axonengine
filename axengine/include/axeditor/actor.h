@@ -11,18 +11,18 @@ read the license and understand and accept it fully.
 #ifndef AX_EDITOR_ACTOR_H
 #define AX_EDITOR_ACTOR_H
 
-namespace Axon { namespace Editor {
+AX_BEGIN_NAMESPACE
 
-	class AX_API Actor {
+	class AX_API Agent {
 	public:
-		Actor(Context* ctx);
-		virtual ~Actor();
+		Agent(Context* ctx);
+		virtual ~Agent();
 
 		enum Flag {
 			Selected = 1, Hovering = 2, Hided = 4, Deleted = 8, Locked = 0x10
 		};
 
-		virtual Actor* clone() const = 0;
+		virtual Agent* clone() const = 0;
 		virtual void doDeleteFlagChanged(bool del) = 0;
 		virtual void doRender() = 0;
 
@@ -72,10 +72,10 @@ namespace Axon { namespace Editor {
 	};
 
 	//--------------------------------------------------------------------------
-	// class ActorList
+	// class AgentList
 	//--------------------------------------------------------------------------
 
-	class AX_API ActorList : public List<Actor*> {
+	class AX_API AgentList : public List<Agent*> {
 	public:
 		bool containsOne() const;	// if contains one object, return true
 		void beginTransform() const;
@@ -94,46 +94,46 @@ namespace Axon { namespace Editor {
 		void doPropertyChanged() const;
 		void setColor(Rgb val) const;
 
-		ActorList clone() const;
+		AgentList clone() const;
 		void setSelected(bool selected) const;
 		void setDeleted(bool deleted) const;
 	};
 
-	inline bool ActorList::containsOne() const {
+	inline bool AgentList::containsOne() const {
 		if (empty()) return false;
 		return front() == back();
 	}
 
-	inline void ActorList::beginTransform() const {
-		std::for_each(begin(), end(), std::mem_fun(&Actor::beginTransform));
+	inline void AgentList::beginTransform() const {
+		std::for_each(begin(), end(), std::mem_fun(&Agent::beginTransform));
 	}
 
-	inline void ActorList::doTransform(const AffineMat& mat, bool local) const {
-		ActorList::const_iterator it = begin();
+	inline void AgentList::doTransform(const AffineMat& mat, bool local) const {
+		AgentList::const_iterator it = begin();
 		for (; it != end(); ++it) {
 			(*it)->doTransform(mat, local);
 		}
 	}
 
-	inline void ActorList::setOrigin(int index, float f) const {
-		ActorList::const_iterator it = begin();
+	inline void AgentList::setOrigin(int index, float f) const {
+		AgentList::const_iterator it = begin();
 		for (; it != end(); ++it) {
 			(*it)->setOrigin(index, f);
 		}
 	}
 
-	inline void ActorList::setRotate(int index, float f) const {
-		ActorList::const_iterator it = begin();
+	inline void AgentList::setRotate(int index, float f) const {
+		AgentList::const_iterator it = begin();
 		for (; it != end(); ++it) {
 			(*it)->setRotate(index, f);
 		}
 	}
 
-	inline BoundingBox ActorList::getBoundingBox() const {
+	inline BoundingBox AgentList::getBoundingBox() const {
 		BoundingBox result;
 		result.clear();
 
-		ActorList::const_iterator it = begin();
+		AgentList::const_iterator it = begin();
 		for (; it != end(); ++it) {
 			result = result.united((*it)->getBoundingBox());
 		}
@@ -141,12 +141,12 @@ namespace Axon { namespace Editor {
 		return result;
 	}
 
-	inline Vector3 ActorList::getCenter() const {
+	inline Vector3 AgentList::getCenter() const {
 		Vector3 result;
 		result.clear();
 		int count = 0;
 
-		ActorList::const_iterator it = begin();
+		AgentList::const_iterator it = begin();
 		for (; it != end(); ++it) {
 			result += (*it)->getBoundingBox().getCenter();
 			count++;
@@ -158,39 +158,39 @@ namespace Axon { namespace Editor {
 		return result;
 	}
 
-	inline void ActorList::doSelect() const {}
+	inline void AgentList::doSelect() const {}
 
-	inline Vector3 ActorList::getBackOrigin() const {
+	inline Vector3 AgentList::getBackOrigin() const {
 		AX_ASSERT(!empty());
 		return back()->getMatrix().origin;
 	}
 
-	inline const Matrix3& ActorList::getBackAxis() const {
+	inline const Matrix3& AgentList::getBackAxis() const {
 		AX_ASSERT(!empty());
 		return back()->getMatrix().axis;
 	}
 
-	inline Vector3 ActorList::getFrontOrigin() const {
+	inline Vector3 AgentList::getFrontOrigin() const {
 		AX_ASSERT(!empty());
 		return front()->getMatrix().origin;
 	}
 
-	inline const Matrix3& ActorList::getFrontAxis() const {
+	inline const Matrix3& AgentList::getFrontAxis() const {
 		AX_ASSERT(!empty());
 		return front()->getMatrix().axis;
 	}
 
-	inline void ActorList::doPropertyChanged() const {
-		ActorList::const_iterator it = begin();
+	inline void AgentList::doPropertyChanged() const {
+		AgentList::const_iterator it = begin();
 		for (; it != end(); ++it) {
 			(*it)->doPropertyChanged();
 		}
 	}
 
-	inline ActorList ActorList::clone() const {
-		ActorList result;
+	inline AgentList AgentList::clone() const {
+		AgentList result;
 
-		ActorList::const_iterator it = begin();
+		AgentList::const_iterator it = begin();
 		for (; it != end(); ++it) {
 			result.push_back((*it)->clone());
 		}
@@ -198,28 +198,28 @@ namespace Axon { namespace Editor {
 		return result;
 	}
 
-	inline void ActorList::setSelected(bool selected) const {
-		ActorList::const_iterator it = begin();
+	inline void AgentList::setSelected(bool selected) const {
+		AgentList::const_iterator it = begin();
 		for (; it != end(); ++it) {
 			(*it)->setSelected(selected);
 		}
 	}
 
-	inline void ActorList::setDeleted(bool deleted) const {
-		ActorList::const_iterator it = begin();
+	inline void AgentList::setDeleted(bool deleted) const {
+		AgentList::const_iterator it = begin();
 		for (; it != end(); ++it) {
 			(*it)->setSelected(deleted);
 		}
 	}
 
-	inline void ActorList::setColor(Rgb val) const {
-		ActorList::const_iterator it = begin();
+	inline void AgentList::setColor(Rgb val) const {
+		AgentList::const_iterator it = begin();
 		for (; it != end(); ++it) {
 			(*it)->setColor(val);
 		}
 	}
 
-}} // namespace Axon::Editor
+AX_END_NAMESPACE
 
 #endif
 

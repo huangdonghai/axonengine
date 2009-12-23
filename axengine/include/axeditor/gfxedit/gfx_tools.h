@@ -1,7 +1,7 @@
 #ifndef AX_EDITOR_GFXTOOLS_H
 #define AX_EDITOR_GFXTOOLS_H
 
-namespace Axon { namespace Editor {
+AX_BEGIN_NAMESPACE
 
 	//--------------------------------------------------------------------------
 	class GfxTool : public Tool
@@ -37,6 +37,6 @@ namespace Axon { namespace Editor {
 	private:
 	};
 
-}} // namespace Axon::Editor
+AX_END_NAMESPACE
 
 #endif // AX_EDITOR_GFXTOOLS_H

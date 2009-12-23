@@ -12,7 +12,7 @@ read the license and understand and accept it fully.
 #ifndef AX_GAME_HULL_H
 #define AX_GAME_HULL_H
 
-namespace Axon { namespace Game {
+AX_BEGIN_NAMESPACE
 
 	class GameWorld;
 
@@ -157,7 +157,7 @@ namespace Axon { namespace Game {
 		return m_fixeds[num];
 	}
 
-}}
+AX_END_NAMESPACE
 
 #endif // end guardian
 

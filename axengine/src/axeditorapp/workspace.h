@@ -139,7 +139,7 @@ private:
 
 	CrossSplitter* m_frameLayouter;
 	Frame* m_frames[4];
-	EditorFrame* m_editorFrames[Editor::View::MaxView];
+	EditorFrame* m_editorFrames[View::MaxView];
 	bool m_frameMaximumed;
 	int m_maximunIndex;
 };

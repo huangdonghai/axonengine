@@ -10,17 +10,17 @@ read the license and understand and accept it fully.
 
 #include "map_local.h"
 
-namespace Axon { namespace Editor { namespace MapEdit {
+AX_BEGIN_NAMESPACE
 
 	//------------------------------------------------------------------------------
 	// class Entity, Editor Entity
 	//------------------------------------------------------------------------------
 
-	Entity::Entity(const String& type) {
+	MapActor::MapActor(const String& type) {
 		m_iconPrim = 0;
 		GameWorld* gameworld = getMapContext()->getGameWorld();
 		m_gameEntity = gameworld->createEntity(type.c_str());
-		m_gameNode = m_gameEntity;
+		m_gameObj = m_gameEntity;
 
 //		bindToGame();
 
@@ -47,11 +47,11 @@ namespace Axon { namespace Editor { namespace MapEdit {
 		m_iconPrim = RenderMesh::createScreenQuad(RenderMesh::HintDynamic, Rect(-1,-1,2,2), Rgba::White, mat.get());
 	}
 
-	Entity::~Entity() {
+	MapActor::~MapActor() {
 	}
 
 
-	void Entity::doRender()
+	void MapActor::doRender()
 	{
 		if (m_isDeleted)
 			return;
@@ -63,14 +63,14 @@ namespace Axon { namespace Editor { namespace MapEdit {
 			g_renderSystem->addToScene(m_iconPrim);
 		}
 
-		return MapActor::doRender();
+		return MapAgent::doRender();
 	}
 
-	MapActor* Entity::clone() const
+	MapAgent* MapActor::clone() const
 	{
 		// create entity
 		GameWorld* gameworld = getMapContext()->getGameWorld();
-		Entity* newent = new Entity(m_gameEntity->getClassInfo()->m_className);
+		MapActor* newent = new MapActor(m_gameEntity->getClassInfo()->m_className);
 
 		newent->m_gameEntity->copyPropertiesFrom(this->m_gameEntity);
 		newent->m_gameEntity->autoGenerateName();
@@ -81,4 +81,4 @@ namespace Axon { namespace Editor { namespace MapEdit {
 		return newent;
 	}
 
-}}} // namespace Axon::Editor::MapEdit
+AX_END_NAMESPACE

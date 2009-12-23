@@ -11,7 +11,7 @@ read the license and understand and accept it fully.
 #ifndef AX_EDITOR_MAP_STATE_H
 #define AX_EDITOR_MAP_STATE_H
 
-namespace Axon { namespace Editor { namespace MapEdit {
+AX_BEGIN_NAMESPACE
 
 	class MapState : public State {
 	public:
@@ -28,6 +28,6 @@ namespace Axon { namespace Editor { namespace MapEdit {
 		String entityClass;		// current entity class for creation
 	};
 
-}}} // namespace Axon::Editor::MapEdit
+AX_END_NAMESPACE
 
 #endif // AX_EDITOR_MAP_STATE_H

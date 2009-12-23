@@ -10,7 +10,7 @@ read the license and understand and accept it fully.
 
 #include "map_local.h"
 
-namespace Axon { namespace Editor { namespace MapEdit {
+AX_BEGIN_NAMESPACE
 
 	//------------------------------------------------------------------------------
 	// class PerspectiveView
@@ -169,7 +169,7 @@ namespace Axon { namespace Editor { namespace MapEdit {
 			m_isTrackingCenterSet = true;
 
 			if (!m_context->getSelection().empty()) {
-				ActorList alist = m_context->getSelection();
+				AgentList alist = m_context->getSelection();
 				m_trackingCenter = alist.getCenter();
 				return;
 			}
@@ -205,7 +205,7 @@ namespace Axon { namespace Editor { namespace MapEdit {
 			m_frame->setCursor(CursorType::ViewRotate);
 
 			if (!m_context->getSelection().empty()) {
-				ActorList alist = m_context->getSelection();
+				AgentList alist = m_context->getSelection();
 				m_trackingCenter = alist.getCenter();
 				return;
 			}
@@ -413,4 +413,4 @@ namespace Axon { namespace Editor { namespace MapEdit {
 		}
 	}
 
-}}} // namespace Axon::Editor::MapEdit
+AX_END_NAMESPACE

@@ -38,8 +38,6 @@ read the license and understand and accept it fully.
 
 namespace Axon {
 
-	typedef Editor::MapEdit::MapContext MapContext;
-
 	AX_API extern MapContext* g_mapContext;
 
 	AX_API void axEditorInit();

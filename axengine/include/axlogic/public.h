@@ -37,12 +37,6 @@ namespace Axon {
 #include "logiccvars.h"
 #undef AX_CVARDECL
 
-
-	typedef Game::GameSystem GameSystem;
-	typedef Game::GameWorld GameWorld;
-	typedef Game::GameObject GameObject;
-	typedef Game::GameActor GameActor;
-
 	AX_API extern GameSystem* g_gameSystem;
 
 	AX_API extern void axLogicInit();

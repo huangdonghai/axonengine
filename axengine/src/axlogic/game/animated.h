@@ -12,7 +12,7 @@ read the license and understand and accept it fully.
 #ifndef AX_GAME_ANIMATED_H
 #define AX_GAME_ANIMATED_H
 
-namespace Axon { namespace Game {
+AX_BEGIN_NAMESPACE
 
 	class Animated : public GameActor
 	{
@@ -41,7 +41,7 @@ namespace Axon { namespace Game {
 		HavokAnimator* m_animator;
 	};
 
-}} // namespace Axon::Game
+AX_END_NAMESPACE
 
 #endif // end guardian
 

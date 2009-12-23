@@ -14,7 +14,7 @@ namespace {
 	static const float MOUSE_SENSITIVITY_ADJUST = 7.5f;
 }
 
-namespace Axon { namespace Game {
+AX_BEGIN_NAMESPACE
 
 	AX_BEGIN_COMMAND_MAP(GameInput)
 		AX_COMMAND_ENTRY("bind",	bind_f)
@@ -413,5 +413,5 @@ namespace Axon { namespace Game {
 		}
 	}
 
-}} // namespace Axon::Game
+AX_END_NAMESPACE
 

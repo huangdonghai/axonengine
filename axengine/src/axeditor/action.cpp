@@ -10,7 +10,7 @@ read the license and understand and accept it fully.
 
 #include "private.h"
 
-namespace Axon { namespace Editor {
+AX_BEGIN_NAMESPACE
 
 	//--------------------------------------------------------------------------
 	// class UndoAction, undo action
@@ -56,14 +56,14 @@ namespace Axon { namespace Editor {
 			m_isFirst = false;
 		}
 
-		ActorList::const_iterator it = m_actorlist.begin();
+		AgentList::const_iterator it = m_actorlist.begin();
 		for (; it != m_actorlist.end(); ++it) {
 			(*it)->setDeleted(true);
 		}
 	}
 
 	void DeleteAction::undo() {
-		ActorList::const_iterator it = m_actorlist.begin();
+		AgentList::const_iterator it = m_actorlist.begin();
 		for (; it != m_actorlist.end(); ++it) {
 			(*it)->setDeleted(false);
 		}
@@ -99,7 +99,7 @@ namespace Axon { namespace Editor {
 			return;
 		}
 
-		ActorList::const_iterator it = m_actorlist.begin();
+		AgentList::const_iterator it = m_actorlist.begin();
 		for (; it != m_actorlist.end(); ++it) {
 			(*it)->setDeleted(false);
 		}
@@ -110,7 +110,7 @@ namespace Axon { namespace Editor {
 	void CloneAction::undo() {
 		m_selectionHis->undo();
 
-		ActorList::const_iterator it = m_actorlist.begin();
+		AgentList::const_iterator it = m_actorlist.begin();
 		for (; it != m_actorlist.end(); ++it) {
 			(*it)->setDeleted(true);
 		}
@@ -120,5 +120,5 @@ namespace Axon { namespace Editor {
 		return sizeof(UndeleteHis) + sizeof(ActionList);
 	}
 
-}} // namespace Axon::Editor
+AX_END_NAMESPACE
 

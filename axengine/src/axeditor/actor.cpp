@@ -10,15 +10,15 @@ read the license and understand and accept it fully.
 
 #include "private.h"
 
-namespace Axon { namespace Editor {
+AX_BEGIN_NAMESPACE
 
-	void Actor::beginTransform()
+	void Agent::beginTransform()
 	{
 		m_oldMatrix = m_oldmatrixNoScale = getMatrix();
 		m_oldscale = m_oldmatrixNoScale.axis.removeScale();
 	}
 
-	void Actor::doTransform(const AffineMat& mat, bool local)
+	void Agent::doTransform(const AffineMat& mat, bool local)
 	{
 		AffineMat newmatrix;
 		if (local) {
@@ -36,13 +36,13 @@ namespace Axon { namespace Editor {
 		}
 	}
 
-	Action* Actor::endTransform()
+	Action* Agent::endTransform()
 	{
 		TransformHis* his = new TransformHis(m_context, "Transform", m_id, m_oldMatrix, getMatrix());
 		return his;
 	}
 
-	void Actor::setOrigin(int index, float f)
+	void Agent::setOrigin(int index, float f)
 	{
 		AX_ASSERT(index >= 0 && index < 3);
 #if 0
@@ -56,14 +56,14 @@ namespace Axon { namespace Editor {
 #endif
 	}
 
-	void Actor::setOrigin( const Vector3& pos )
+	void Agent::setOrigin( const Vector3& pos )
 	{
 		AffineMat mat = getMatrix();
 		mat.origin = pos;
 		setMatrix(mat);
 	}
 
-	void Actor::setRotate(int index, float f)
+	void Agent::setRotate(int index, float f)
 	{
 		AX_ASSERT(index >= 0 && index < 3);
 #if 0
@@ -94,7 +94,7 @@ namespace Axon { namespace Editor {
 #endif
 	}
 
-	void Actor::setDeleted(bool deleted)
+	void Agent::setDeleted(bool deleted)
 	{
 		if (!m_isDeleted && deleted)
 			doDeleteFlagChanged(true);
@@ -105,21 +105,21 @@ namespace Axon { namespace Editor {
 		m_actorDirty = true;
 	}
 
-	void Actor::setId(int newid)
+	void Agent::setId(int newid)
 	{
 		m_context->removeActor(this);
 		m_id = newid;
 		m_context->addActor(this);
 	}
 
-	void Actor::setAxis( const Matrix3& axis )
+	void Agent::setAxis( const Matrix3& axis )
 	{
 		AffineMat mat = getMatrix();
 		mat.axis = axis;
 		setMatrix(mat);
 	}
 
-	Actor::Actor(Context* ctx)
+	Agent::Agent(Context* ctx)
 	{
 		m_context = ctx;
 		m_isHovering = false;
@@ -132,22 +132,22 @@ namespace Axon { namespace Editor {
 		m_actorDirty = true;
 	}
 
-	Actor::~Actor()
+	Agent::~Agent()
 	{
 		m_context->removeActor(this);
 	}
 
 	//--------------------------------------------------------------------------
-	// class ActorList
+	// class AgentList
 	//--------------------------------------------------------------------------
 
-	Action* ActorList::endTransform() const {
+	Action* AgentList::endTransform() const {
 		if (empty()) return nullptr;
 
 		Context* ctx = front()->getContext();
 		GroupHis* group = new GroupHis(ctx, "Transform");
 
-		ActorList::const_iterator it = begin();
+		AgentList::const_iterator it = begin();
 		for (; it != end(); ++it) {
 			Action* his = (*it)->endTransform();
 			if (his) group->append(his);
@@ -156,7 +156,7 @@ namespace Axon { namespace Editor {
 		return group;
 	}
 
-	void ActorList::setNodeProperty(const String& propname, const Variant& value) const
+	void AgentList::setNodeProperty(const String& propname, const Variant& value) const
 	{
 		if (empty()) return;
 
@@ -167,9 +167,9 @@ namespace Axon { namespace Editor {
 		}
 
 		History* his = nullptr;
-		ActorList::const_iterator it = begin();
+		AgentList::const_iterator it = begin();
 		for (; it != end(); ++it) {
-			Actor* actor = *it;
+			Agent* actor = *it;
 
 			Variant oldvalue = actor->getProperty(propname.c_str());
 			his = new PropertyEditHis(ctx, actor,propname,oldvalue,value);
@@ -185,5 +185,5 @@ namespace Axon { namespace Editor {
 		}
 	}
 
-}} // namespace Axon::Editor
+AX_END_NAMESPACE
 

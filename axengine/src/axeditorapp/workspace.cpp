@@ -376,7 +376,7 @@ void Workspace::on_transformAbsOrRel_clicked()
 		ui.transformAbsOrRel->setIcon(QIcon(QString::fromUtf8(":/images/gizmo_abs.png")));
 	}
 
-	g_mapContext->getMapState()->notify(Editor::State::Transform);
+	g_mapContext->getMapState()->notify(State::Transform);
 }
 
 void Workspace::doNotify(IObservable* subject, int arg)
@@ -384,7 +384,7 @@ void Workspace::doNotify(IObservable* subject, int arg)
 	if (subject != g_mapContext->getMapState())
 		return;
 
-	if (arg != Editor::State::TransformToApp)
+	if (arg != State::TransformToApp)
 		return;
 
 	if (g_mapContext->getMapState()->transformState.editable) {
@@ -422,12 +422,12 @@ void Workspace::on_transformX_editingFinished()
 			return;
 	}
 
-	Editor::Tool* tool = g_mapContext->getTool();
+	Tool* tool = g_mapContext->getTool();
 
 	if (!tool)
 		return;
 
-	Editor::TransformTool* transformtool = dynamic_cast<Editor::TransformTool*>(tool);
+	TransformTool* transformtool = dynamic_cast<TransformTool*>(tool);
 
 	if (!transformtool)
 		return;
@@ -450,12 +450,12 @@ void Workspace::on_transformY_editingFinished()
 			return;
 	}
 
-	Editor::Tool* tool = g_mapContext->getTool();
+	Tool* tool = g_mapContext->getTool();
 
 	if (!tool)
 		return;
 
-	Editor::TransformTool* transformtool = dynamic_cast<Editor::TransformTool*>(tool);
+	TransformTool* transformtool = dynamic_cast<TransformTool*>(tool);
 
 	if (!transformtool)
 		return;
@@ -478,12 +478,12 @@ void Workspace::on_transformZ_editingFinished()
 			return;
 	}
 
-	Editor::Tool* tool = g_mapContext->getTool();
+	Tool* tool = g_mapContext->getTool();
 
 	if (!tool)
 		return;
 
-	Editor::TransformTool* transformtool = dynamic_cast<Editor::TransformTool*>(tool);
+	TransformTool* transformtool = dynamic_cast<TransformTool*>(tool);
 
 	if (!transformtool)
 		return;
@@ -538,7 +538,7 @@ void Workspace::on_bookmarkGoto_released()
 		return ;
 	}
 
-	Editor::MapEdit::Bookmark* bookmark = g_mapContext->getBookmark(ui.bookmarkList->currentIndex());
+	Bookmark* bookmark = g_mapContext->getBookmark(ui.bookmarkList->currentIndex());
 
 	if (bookmark != NULL)
 	{
@@ -597,7 +597,7 @@ void Workspace::refreshBookmarks()
 	}
 
 	int n = g_mapContext->getNumBookmark();
-	Editor::MapEdit::Bookmark* bookmark = 0;
+	Bookmark* bookmark = 0;
 
 	for (int i=0; i<n; ++i)
 	{

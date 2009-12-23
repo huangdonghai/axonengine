@@ -10,7 +10,7 @@ read the license and understand and accept it fully.
 #ifndef AX_MANIPULAR_H
 #define AX_MANIPULAR_H
 
-namespace Axon { namespace Editor {
+AX_BEGIN_NAMESPACE
 
 	class Gizmo {
 	public:
@@ -142,6 +142,6 @@ namespace Axon { namespace Editor {
 		float m_length;
 	};
 
-}} // namespace Axon::Editor
+AX_END_NAMESPACE
 
 #endif // AX_MANIPULAR_H

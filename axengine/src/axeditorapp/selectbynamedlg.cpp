@@ -12,9 +12,7 @@ read the license and understand and accept it fully.
 
 //#define NumObjecType 4
 
-using namespace Editor;
-
-typedef Editor::Context::ActorDict ActorDict;
+typedef Context::ActorDict ActorDict;
 
 enum ObjectType{ NONE,
 				 STATIC = MapActor::kStatic, 
@@ -241,7 +239,7 @@ void SelectByNameDlg::on_selection_itemSelectionChanged()
 
 	g_mapContext->selectNone();
 
-	Editor::ActorList actorList;
+	AgentList actorList;
 	//const ActorDict& actorDict = gEditorContext->getActorDict();
 
 	QTreeWidgetItem* item;
@@ -465,7 +463,7 @@ void SelectByNameDlg::resetCamera()
 	{
 		int id = itemList[0]->data(0, Qt::UserRole).toInt();
 
-		Actor* actor = g_mapContext->findActor(id);
+		Agent* actor = g_mapContext->findActor(id);
 
 		if (actor != NULL)
 		{

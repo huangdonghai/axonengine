@@ -12,7 +12,7 @@ read the license and understand and accept it fully.
 #ifndef AX_GAME_SOUND_H
 #define AX_GAME_SOUND_H
 
-namespace Axon { namespace Game {
+AX_BEGIN_NAMESPACE
 
 	class GameSound : public GameActor
 	{
@@ -44,6 +44,6 @@ namespace Axon { namespace Game {
 		float m_interval;
 	};
 
-}} // namespace Axon::Game
+AX_END_NAMESPACE
 
 #endif

@@ -10,7 +10,7 @@ read the license and understand and accept it fully.
 
 #include "private.h"
 
-namespace Axon { namespace Editor {
+AX_BEGIN_NAMESPACE
 
 	Context::Context()
 	{
@@ -37,7 +37,7 @@ namespace Axon { namespace Editor {
 		return ++m_maxId;
 	}
 
-	void Context::addActor(Actor* actor) {
+	void Context::addActor(Agent* actor) {
 		int id = actor->getId();
 		ActorDict::iterator it = m_actorDict.find(id);
 
@@ -48,7 +48,7 @@ namespace Axon { namespace Editor {
 		m_actorDict[id] = actor;
 	}
 
-	void Context::removeActor(Actor* actor) {
+	void Context::removeActor(Agent* actor) {
 		int id = actor->getId();
 		ActorDict::iterator it = m_actorDict.find(id);
 
@@ -59,7 +59,7 @@ namespace Axon { namespace Editor {
 		it->second = 0;
 	}
 
-	Actor* Context::findActor(int id) {
+	Agent* Context::findActor(int id) {
 		ActorDict::iterator it = m_actorDict.find(id);
 
 		if (it == m_actorDict.end() || it->second == nullptr) {
@@ -110,9 +110,9 @@ namespace Axon { namespace Editor {
 		notify(ToolChanged);
 	}
 
-	History* Context::setSelectionHistoried( const ActorList& elist )
+	History* Context::setSelectionHistoried( const AgentList& elist )
 	{
-		ActorList oldlist = m_selections;
+		AgentList oldlist = m_selections;
 
 		m_selections.setSelected(false);
 		m_selections.clear();
@@ -126,8 +126,8 @@ namespace Axon { namespace Editor {
 		return new SelectHis(this, oldlist, m_selections);
 	}
 
-	void Context::setSelection(const ActorList& elist, bool undoable) {
-		ActorList oldlist = m_selections;
+	void Context::setSelection(const AgentList& elist, bool undoable) {
+		AgentList oldlist = m_selections;
 
 		m_selections.setSelected(false);
 		m_selections.clear();
@@ -144,18 +144,18 @@ namespace Axon { namespace Editor {
 		notify(SelectionChanged);
 	}
 
-	void Context::addSelection( const ActorList& elist, bool undoable/*=true*/ )
+	void Context::addSelection( const AgentList& elist, bool undoable/*=true*/ )
 	{
-		ActorList newlist = m_selections;
-		ActorList rhs = elist;
+		AgentList newlist = m_selections;
+		AgentList rhs = elist;
 
 		newlist.merge(rhs);
 
 		setSelection(newlist, undoable);
 	}
 
-	void Context::setSelection(Actor* actor, bool undoable) {
-		ActorList oldlist = m_selections;
+	void Context::setSelection(Agent* actor, bool undoable) {
+		AgentList oldlist = m_selections;
 
 		m_selections.setSelected(false);
 		m_selections.clear();
@@ -172,7 +172,7 @@ namespace Axon { namespace Editor {
 	}
 
 	void Context::selectNone(bool undoable) {
-		ActorList oldlist = m_selections;
+		AgentList oldlist = m_selections;
 
 		m_selections.setSelected(false);
 		m_selections.clear();
@@ -186,7 +186,7 @@ namespace Axon { namespace Editor {
 	}
 
 	void Context::selectAll(bool undoable) {
-		ActorList oldlist = m_selections;
+		AgentList oldlist = m_selections;
 
 		m_selections.setSelected(false);
 		m_selections.clear();
@@ -194,7 +194,7 @@ namespace Axon { namespace Editor {
 		ActorDict::iterator it;
 
 		for (it = m_actorDict.begin(); it != m_actorDict.end(); ++it) {
-			Actor* actor = it->second;
+			Agent* actor = it->second;
 
 			if (!actor) continue;
 
@@ -215,9 +215,9 @@ namespace Axon { namespace Editor {
 	void Context::selectInvert(bool undoable) {
 		ActorDict::iterator it;
 
-		ActorList newsel;
+		AgentList newsel;
 		for (it = m_actorDict.begin(); it != m_actorDict.end(); ++it) {
-			Actor* actor = it->second;
+			Agent* actor = it->second;
 
 			if (!actor) continue;
 
@@ -258,6 +258,6 @@ namespace Axon { namespace Editor {
 	}
 
 
-}} // namespace Axon::Context
+AX_END_NAMESPACE
 
 

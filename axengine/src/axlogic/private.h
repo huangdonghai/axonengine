@@ -16,9 +16,9 @@ read the license and understand and accept it fully.
 #include <axclient/public.h>
 #include <axlogic/public.h>
 
-#include "game/gameinput.h"
-#include "game/gamelight.h"
-#include "game/gamesound.h"
+#include "game/game_input.h"
+#include "game/game_light.h"
+#include "game/game_sound.h"
 #include "game/animated.h"
 #include "game/particle.h"
 #include "game/articulated.h"

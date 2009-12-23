@@ -10,7 +10,7 @@ read the license and understand and accept it fully.
 
 #include "map_local.h"
 
-namespace Axon { namespace Editor { namespace MapEdit {
+AX_BEGIN_NAMESPACE
 
 	static float gOrthoScale = 1.0f;
 
@@ -56,4 +56,4 @@ namespace Axon { namespace Editor { namespace MapEdit {
 	}
 
 
-}}} // namespace Axon::Editor::MapEdit
+AX_END_NAMESPACE

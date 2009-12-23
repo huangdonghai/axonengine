@@ -22,14 +22,14 @@ read the license and understand and accept it fully.
 #endif
 #endif
 
-namespace Axon { namespace Game {
-}} // namespace Axon::Game
+AX_BEGIN_NAMESPACE
+AX_END_NAMESPACE
 
-#include "gamenode.h"
-#include "gameentity.h"
+#include "game_object.h"
+#include "game_actor.h"
 #include "landscape.h"
-#include "gameworld.h"
-#include "gamesystem.h"
+#include "game_world.h"
+#include "game_system.h"
 
 #endif // end guardian
 

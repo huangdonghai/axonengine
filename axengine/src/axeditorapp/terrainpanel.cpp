@@ -14,7 +14,7 @@ read the license and understand and accept it fully.
 #include "terrainpanel.h"
 #include "filedialog.h"
 
-typedef Editor::MapEdit::MapTool editorTool;
+typedef MapTool editorTool;
 
 TerrainPanel::TerrainPanel(QWidget *parent)
     : QWidget(parent)
@@ -110,12 +110,12 @@ void TerrainPanel::doNotify(IObservable* subject, int arg) {
 	if (context != g_mapContext)
 		return;
 
-	if (arg & Editor::Context::EnvironmentChanged) {
+	if (arg & Context::EnvironmentChanged) {
 		Map::EnvDef* def = g_mapContext->getGameWorld()->getEnvironment();
 		ui.envProps->initFromObject(def);
 	}
 
-	if (!(arg & Editor::Context::TerrainMaterialEdited))
+	if (!(arg & Context::TerrainMaterialEdited))
 		return;
 
 	ui.layerList->clear();
@@ -125,7 +125,7 @@ void TerrainPanel::doNotify(IObservable* subject, int arg) {
 	ui.tableWidget->setRowCount(numBlocks);
 	for (int i = 0;i<numBlocks;i++){
 		blocksName = gEditorActiveAreaMgr->getBlocksName(i);
-		Editor::AreaBlocks* ab = gEditorActiveAreaMgr->getBlocks(blocksName);
+		AreaBlocks* ab = gEditorActiveAreaMgr->getBlocks(blocksName);
 		if (ab){
 			QTableWidgetItem* item = new QTableWidgetItem();
 			item->setText(u2q(ab->name()));
@@ -355,7 +355,7 @@ void TerrainPanel::on_toolButton_clicked()
 	ui.tableWidget->setRowCount(numBlocks);
 	for (int i = 0;i<numBlocks;i++){
 		blocksName = gEditorActiveAreaMgr->getBlocksName(i);
-		Editor::AreaBlocks* ab = gEditorActiveAreaMgr->getBlocks(blocksName);
+		AreaBlocks* ab = gEditorActiveAreaMgr->getBlocks(blocksName);
 		if (ab){
 			QTableWidgetItem* item = new QTableWidgetItem();
 			item->setText(u2q(ab->name()));
@@ -378,7 +378,7 @@ void TerrainPanel::on_toolButton_7_clicked()
 		ui.tableWidget->setRowCount(numBlocks);
 		for (int i = 0;i<numBlocks;i++){
 			String blocksName = gEditorActiveAreaMgr->getBlocksName(i);
-			Editor::AreaBlocks* ab = gEditorActiveAreaMgr->getBlocks(blocksName);
+			AreaBlocks* ab = gEditorActiveAreaMgr->getBlocks(blocksName);
 			if (ab){
 				QTableWidgetItem* item = new QTableWidgetItem();
 				item->setText(u2q(ab->name()));

@@ -12,7 +12,7 @@ read the license and understand and accept it fully.
 #include "editorframe.h"
 #include "workbench.h"
 
-EditorFrame::EditorFrame(QWidget *parent, Editor::View* view)
+EditorFrame::EditorFrame(QWidget *parent, View* view)
 	: QWidget(parent, Qt::MSWindowsOwnDC)
 	, m_editorView(view)
 	, m_renderTarget(nullptr)
@@ -214,9 +214,7 @@ Rect EditorFrame::getRect() {
 	return Rect(0, 0, s.width(), s.height());
 }
 
-void EditorFrame::setCursor(Editor::CursorType cursor_type) {
-	using namespace Editor;
-	
+void EditorFrame::setCursor(CursorType cursor_type) {
 	switch (cursor_type) {
 	case CursorType::Default:
 		unsetCursor();
@@ -732,12 +730,12 @@ void EditorFrame::resetMousePos()
 
 void EditorFrame::hideHardwareCursor()
 {
-	setCursor(Editor::CursorType::Blank);
+	setCursor(CursorType::Blank);
 }
 
 void EditorFrame::showHardwareCursor()
 {
-	setCursor(Editor::CursorType::Default);
+	setCursor(CursorType::Default);
 }
 #endif
 
@@ -746,7 +744,7 @@ void EditorFrame::setMouseMode(InputSystem::MouseMode mode)
 	m_mouseMode = mode;
 	
 	if (m_mouseMode == InputSystem::Normal_Mode) {
-		setCursor(Editor::CursorType::Default);
+		setCursor(CursorType::Default);
 	} else {
 		QSize s = size();
 		m_mouseCenter.set(s.width()/2, s.height()/2);

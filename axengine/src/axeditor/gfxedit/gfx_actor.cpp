@@ -10,6 +10,6 @@ read the license and understand and accept it fully.
 
 #include "gfx_local.h"
 
-namespace Axon { namespace Editor {
+AX_BEGIN_NAMESPACE
 
-}} // namespace Axon::Editor
+AX_END_NAMESPACE

@@ -41,7 +41,7 @@ public:
 	virtual void endProgress();
 
 	// implement IWorkbench, for editordll use
-	virtual void activateTool(Editor::Tool::Type t);
+	virtual void activateTool(Tool::Type t);
 
 
 	void updateTitle();
@@ -56,7 +56,7 @@ public:
 	void addEditorAction(int actionType, QAction* action);
 
 	Frame* getActiveFrame();
-	Editor::View* getActiveView();
+	View* getActiveView();
 
 	void showMaterialEditor();
 	void showModelViewer();

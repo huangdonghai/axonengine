@@ -11,7 +11,7 @@ read the license and understand and accept it fully.
 #ifndef AX_GAME_INPUT_H
 #define AX_GAME_INPUT_H
 
-namespace Axon { namespace Game {
+AX_BEGIN_NAMESPACE
 
 	class GameInput : public Object, public ICmdHandler
 	{
@@ -106,6 +106,6 @@ namespace Axon { namespace Game {
 		int m_mouseIndex;
 	};
 
-}} // namespace Axon::Game
+AX_END_NAMESPACE
 
 #endif // end guardian

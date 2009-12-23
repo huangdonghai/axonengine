@@ -11,18 +11,18 @@ read the license and understand and accept it fully.
 #ifndef AX_GFXEDIT_ACTOR_H
 #define AX_GFXEDIT_ACTOR_H
 
-namespace Axon { namespace Editor {
+AX_BEGIN_NAMESPACE
 
 	class GfxContext;
 
-	class GfxActor : public Actor {
+	class GfxAgent : public Agent {
 	public:
-		GfxActor(GfxContext* ctx);
-		virtual ~GfxActor();
+		GfxAgent(GfxContext* ctx);
+		virtual ~GfxAgent();
 
 	private:
 	};
 
-}} // namespace Axon::Editor
+AX_END_NAMESPACE
 
 #endif

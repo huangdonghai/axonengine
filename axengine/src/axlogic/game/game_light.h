@@ -12,7 +12,7 @@ read the license and understand and accept it fully.
 #ifndef AX_GAME_LIGHT_H
 #define AX_GAME_LIGHT_H
 
-namespace Axon { namespace Game {
+AX_BEGIN_NAMESPACE
 
 	class GameLight : public GameActor
 	{
@@ -52,7 +52,7 @@ namespace Axon { namespace Game {
 	};
 
 
-}} // namespace Axon::Game
+AX_END_NAMESPACE
 
 #endif // AX_GAME_LIGHT_H
 

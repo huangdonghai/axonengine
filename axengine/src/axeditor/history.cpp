@@ -10,7 +10,7 @@ read the license and understand and accept it fully.
 
 #include "private.h"
 
-namespace Axon { namespace Editor {
+AX_BEGIN_NAMESPACE
 	//--------------------------------------------------------------------------
 	// class HistoryManager
 	//--------------------------------------------------------------------------
@@ -75,7 +75,7 @@ namespace Axon { namespace Editor {
 	TransformHis::~TransformHis() {}
 
 	void TransformHis::doIt() {
-		Actor* actor = m_context->findActor(m_actorId);
+		Agent* actor = m_context->findActor(m_actorId);
 
 		if (!actor) {
 			return;
@@ -87,7 +87,7 @@ namespace Axon { namespace Editor {
 	}
 
 	void TransformHis::undo() {
-		Actor* actor = m_context->findActor(m_actorId);
+		Agent* actor = m_context->findActor(m_actorId);
 
 		if (!actor) {
 			return;
@@ -163,20 +163,20 @@ namespace Axon { namespace Editor {
 	// class DeleteHis
 	//--------------------------------------------------------------------------
 
-	DeleteHis::DeleteHis(Context* context, const String& msg, const ActorList& actorlist)
+	DeleteHis::DeleteHis(Context* context, const String& msg, const AgentList& actorlist)
 		: History(context, msg)
 		, m_actorList(actorlist)
 	{}
 
 	void DeleteHis::doIt() {
-		ActorList::const_iterator it = m_actorList.begin();
+		AgentList::const_iterator it = m_actorList.begin();
 		for (; it != m_actorList.end(); ++it) {
 			(*it)->setDeleted(true);
 		}
 	}
 
 	void DeleteHis::undo() {
-		ActorList::const_iterator it = m_actorList.begin();
+		AgentList::const_iterator it = m_actorList.begin();
 		for (; it != m_actorList.end(); ++it) {
 			(*it)->setDeleted(false);
 		}
@@ -190,20 +190,20 @@ namespace Axon { namespace Editor {
 	// class UndeleteHis
 	//--------------------------------------------------------------------------
 
-	UndeleteHis::UndeleteHis(Context* ctx, const String& msg, const ActorList& actorlist)
+	UndeleteHis::UndeleteHis(Context* ctx, const String& msg, const AgentList& actorlist)
 		: History(ctx, msg)
 		, m_actorList(actorlist)
 	{}
 
 	void UndeleteHis::doIt() {
-		ActorList::const_iterator it = m_actorList.begin();
+		AgentList::const_iterator it = m_actorList.begin();
 		for (; it != m_actorList.end(); ++it) {
 			(*it)->setDeleted(false);
 		}
 	}
 
 	void UndeleteHis::undo() {
-		ActorList::const_iterator it = m_actorList.begin();
+		AgentList::const_iterator it = m_actorList.begin();
 		for (; it != m_actorList.end(); ++it) {
 			(*it)->setDeleted(true);
 		}
@@ -217,7 +217,7 @@ namespace Axon { namespace Editor {
 	// class PropertyEditHis
 	//--------------------------------------------------------------------------
 
-	PropertyEditHis::PropertyEditHis(Context* ctx, Actor* actor, const String& propname, const Variant& oldvalue, const Variant& newvalue) 
+	PropertyEditHis::PropertyEditHis(Context* ctx, Agent* actor, const String& propname, const Variant& oldvalue, const Variant& newvalue) 
 		: History(ctx, "Property Edited")
 		, m_actor(actor)
 		, m_propName(propname)
@@ -248,7 +248,7 @@ namespace Axon { namespace Editor {
 	// class SelectHis
 	//--------------------------------------------------------------------------
 
-	SelectHis::SelectHis(Context* ctx, const ActorList& oldlist, const ActorList& newlist)
+	SelectHis::SelectHis(Context* ctx, const AgentList& oldlist, const AgentList& newlist)
 		: History(ctx, "Selection")
 		, m_oldlist(oldlist)
 		, m_newlist(newlist)
@@ -272,5 +272,5 @@ namespace Axon { namespace Editor {
 		return sizeof(this) + sizeof(m_newlist) + sizeof(m_oldlist);
 	}
 
-}} // namespace Axon::Editor
+AX_END_NAMESPACE
 

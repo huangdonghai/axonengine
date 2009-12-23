@@ -10,7 +10,7 @@ read the license and understand and accept it fully.
 
 #include "../private.h"
 
-namespace Axon { namespace Game {
+AX_BEGIN_NAMESPACE
 
 	AX_BEGIN_COMMAND_MAP(GameSystem)
 	AX_END_COMMAND_MAP()
@@ -133,4 +133,4 @@ namespace Axon { namespace Game {
 		return &m_userInputs;
 	}
 
-}} // namespace Axon::Game
+AX_END_NAMESPACE

@@ -10,7 +10,7 @@ read the license and understand and accept it fully.
 
 #include "map_local.h"
 
-namespace Axon { namespace Editor { namespace MapEdit {
+AX_BEGIN_NAMESPACE
 
 	MapState::MapState()
 	{
@@ -26,4 +26,4 @@ namespace Axon { namespace Editor { namespace MapEdit {
 		entityClass = "Game.Physics.Animated";
 	}
 
-}}}
+AX_END_NAMESPACE

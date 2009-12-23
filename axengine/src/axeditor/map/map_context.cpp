@@ -10,7 +10,7 @@ read the license and understand and accept it fully.
 
 #include "map_local.h"
 
-namespace Axon { namespace Editor { namespace MapEdit {
+AX_BEGIN_NAMESPACE
 
 	template< class T >
 	class MapToolFactory_ : public ToolFactory {
@@ -175,7 +175,7 @@ namespace Axon { namespace Editor { namespace MapEdit {
 			} else if (value == "terrain") {
 				m_terrain = new MapTerrain;
 				g_system->showProgress(progress += 5, "Loading Terrain...");
-				m_terrainFixed = new Game::TerrainFixed(m_terrain);
+				m_terrainFixed = new TerrainFixed(m_terrain);
 				m_terrain->initFromXml(map_name, elem);
 				m_gameWorld->addNode(m_terrainFixed);
 //				gEditorActiveAreaMgr->setTerrain(m_terrain);
@@ -255,7 +255,7 @@ namespace Axon { namespace Editor { namespace MapEdit {
 		// write actors
 		ActorDict::iterator it = m_actorDict.begin();
 		for (; it != m_actorDict.end(); ++it) {
-			MapActor* actor = (MapActor*)it->second;
+			MapAgent* actor = (MapAgent*)it->second;
 
 			if (!actor) continue;
 
@@ -286,7 +286,7 @@ namespace Axon { namespace Editor { namespace MapEdit {
 		}
 
 		m_terrain = new MapTerrain();
-		m_terrainFixed = new Game::TerrainFixed(m_terrain);
+		m_terrainFixed = new TerrainFixed(m_terrain);
 		m_terrain->init(tiles, tilemeters);
 
 		m_gameWorld->addNode(m_terrainFixed);
@@ -345,7 +345,7 @@ namespace Axon { namespace Editor { namespace MapEdit {
 		ActorDict::iterator it = m_actorDict.begin();
 
 		for (; it != m_actorDict.end(); ++it) {
-			MapActor* actor = (MapActor*)it->second;
+			MapAgent* actor = (MapAgent*)it->second;
 			if (actor && !actor->isDeleted())
 				actor->doSelect();
 		}
@@ -425,25 +425,25 @@ namespace Axon { namespace Editor { namespace MapEdit {
 			return;
 		}
 
-		MapActor::Type type = MapActor::stringToType(typestr);
+		MapAgent::Type type = MapAgent::stringToType(typestr);
 
-		MapActor* actor = nullptr;
+		MapAgent* actor = nullptr;
 
 		switch (type) {
-		case MapActor::kNone:
+		case MapAgent::kNone:
 			return;
-		case MapActor::kStatic:
-			actor = new Static();
+		case MapAgent::kStatic:
+			actor = new MapStatic();
 			break;
-		case MapActor::kSpeedTree:
+		case MapAgent::kSpeedTree:
 #ifdef AX_CONFIG_OPTION_USE_SPEEDTREE_40
-			actor = new SpeedTree();
+			actor = new MapSpeedTree();
 #endif // AX_CONFIG_OPTION_USE_SPEEDTREE_40
 			break;
-		case MapActor::kBrush:
+		case MapAgent::kBrush:
 			break;
-		case MapActor::kEntity:
-			actor = new Entity(childtypename);
+		case MapAgent::kEntity:
+			actor = new MapActor(childtypename);
 			break;
 		}
 
@@ -706,4 +706,4 @@ namespace Axon { namespace Editor { namespace MapEdit {
 		m_selections.setNodeProperty(propName,value);
 	}
 
-}}} // namespace Axon::Editor::MapEdit
+AX_END_NAMESPACE

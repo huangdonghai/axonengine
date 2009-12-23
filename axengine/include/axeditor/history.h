@@ -11,7 +11,7 @@ read the license and understand and accept it fully.
 #ifndef AX_EDITOR_HISTORY_H
 #define AX_EDITOR_HISTORY_H
 
-namespace Axon { namespace Editor {
+AX_BEGIN_NAMESPACE
 
 	typedef List<Action*>		ActionList;
 	typedef shared_ptr<Action>	ActionPtr;
@@ -108,7 +108,7 @@ namespace Axon { namespace Editor {
 
 	class DeleteHis : public History {
 	public:
-		DeleteHis(Context* context, const String& msg, const ActorList& actorlist);
+		DeleteHis(Context* context, const String& msg, const AgentList& actorlist);
 		virtual ~DeleteHis() {}
 
 		virtual void doIt();
@@ -117,7 +117,7 @@ namespace Axon { namespace Editor {
 		virtual int getMemoryUsed();
 
 	private:
-		ActorList m_actorList;
+		AgentList m_actorList;
 	};
 
 	//--------------------------------------------------------------------------
@@ -126,7 +126,7 @@ namespace Axon { namespace Editor {
 
 	class UndeleteHis : public History {
 	public:
-		UndeleteHis(Context* context, const String& msg, const ActorList& actorlist);
+		UndeleteHis(Context* context, const String& msg, const AgentList& actorlist);
 		virtual ~UndeleteHis() {}
 
 		virtual void doIt();
@@ -135,7 +135,7 @@ namespace Axon { namespace Editor {
 		virtual int getMemoryUsed();
 
 	private:
-		ActorList m_actorList;
+		AgentList m_actorList;
 	};
 
 	//--------------------------------------------------------------------------
@@ -144,7 +144,7 @@ namespace Axon { namespace Editor {
 
 	class PropertyEditHis : public History {
 	public:
-		PropertyEditHis(Context* context, Actor* actor, const String& propname, const Variant& oldvalue, const Variant& newvalue);
+		PropertyEditHis(Context* context, Agent* actor, const String& propname, const Variant& oldvalue, const Variant& newvalue);
 		virtual ~PropertyEditHis();
 
 		virtual void doIt();
@@ -154,7 +154,7 @@ namespace Axon { namespace Editor {
 		virtual int getMemoryUsed();
 
 	private:
-		Actor* m_actor;
+		Agent* m_actor;
 		const String m_propName;
 		const Variant m_oldValue;
 		const Variant m_newValue;
@@ -166,7 +166,7 @@ namespace Axon { namespace Editor {
 
 	class SelectHis : public History {
 	public:
-		SelectHis(Context* context, const ActorList& oldlist, const ActorList& newlist);
+		SelectHis(Context* context, const AgentList& oldlist, const AgentList& newlist);
 		virtual ~SelectHis();
 
 		virtual void doIt();
@@ -176,11 +176,11 @@ namespace Axon { namespace Editor {
 		virtual int getMemoryUsed();
 
 	private:
-		ActorList m_oldlist;
-		ActorList m_newlist;
+		AgentList m_oldlist;
+		AgentList m_newlist;
 	};
 
-}} // namespace Axon::Editor
+AX_END_NAMESPACE
 
 #endif
 

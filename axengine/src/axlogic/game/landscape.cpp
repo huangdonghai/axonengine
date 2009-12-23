@@ -11,7 +11,7 @@ read the license and understand and accept it fully.
 
 #include "../private.h"
 
-namespace Axon { namespace Game {
+AX_BEGIN_NAMESPACE
 
 	Fixed::Fixed() {
 		m_num = -1;
@@ -222,5 +222,5 @@ namespace Axon { namespace Game {
 
 
 
-}} // namespace Axon::Game
+AX_END_NAMESPACE
 

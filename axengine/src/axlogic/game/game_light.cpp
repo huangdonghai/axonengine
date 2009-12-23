@@ -10,7 +10,7 @@ read the license and understand and accept it fully.
 
 #include "../private.h"
 
-namespace Axon { namespace Game {
+AX_BEGIN_NAMESPACE
 
 	GameLight::GameLight() {
 		m_renderLight = 0;
@@ -211,4 +211,4 @@ namespace Axon { namespace Game {
 		SafeDelete(m_renderLight);
 	}
 
-}} // namespace Axon::Game
+AX_END_NAMESPACE

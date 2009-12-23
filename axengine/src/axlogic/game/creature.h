@@ -12,14 +12,14 @@ read the license and understand and accept it fully.
 #ifndef AX_GAME_CREATURE_H
 #define AX_GAME_CREATURE_H
 
-namespace Axon { namespace Game {
+AX_BEGIN_NAMESPACE
 
 	class Creature : public Articulated {
 	public:
 	private:
 	};
 
-}} // namespace Axon::Game
+AX_END_NAMESPACE
 
 #endif // end guardian
 

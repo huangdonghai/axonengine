@@ -10,7 +10,7 @@ read the license and understand and accept it fully.
 
 #include "private.h"
 
-namespace Axon { namespace Editor {
+AX_BEGIN_NAMESPACE
 	//------------------------------------------------------------------------------
 	// class Tool
 	//------------------------------------------------------------------------------
@@ -118,7 +118,7 @@ namespace Axon { namespace Editor {
 #if 1
 		int part = SelectPart::All - SelectPart::Terrain;
 
-		ActorList l;
+		AgentList l;
 		Vector3 pos;
 		if (!m_view->selectRegion(r, part, pos, l)) {
 			m_context->selectNone(false);
@@ -144,7 +144,7 @@ namespace Axon { namespace Editor {
 
 
 		// undo his
-		const ActorList& curlist = m_context->getSelection();
+		const AgentList& curlist = m_context->getSelection();
 
 		if (m_oldlist.empty() && curlist.empty())
 			return;
@@ -186,7 +186,7 @@ namespace Axon { namespace Editor {
 
 		int part = SelectPart::All - SelectPart::Terrain;
 
-		ActorList l;
+		AgentList l;
 		Vector3 pos;
 
 		if (!m_view->selectRegion(r, part, pos, l, true) && !m_isAdd) {
@@ -196,14 +196,14 @@ namespace Axon { namespace Editor {
 
 		int order = m_selectionSeq % s2i(l.size());
 
-		ActorList::const_iterator it = l.begin();
+		AgentList::const_iterator it = l.begin();
 		for (int i = 0;  it != l.end(); ++it, ++i) {
 			if (i == order) {
-				ActorList selected;
+				AgentList selected;
 				selected.push_back(*it);
 
 				if (m_isAdd) {
-					Actor* actor = *it;
+					Agent* actor = *it;
 					if (actor->isSelected()) {
 						selected = m_context->getSelection();
 						selected.remove(actor);
@@ -240,7 +240,7 @@ namespace Axon { namespace Editor {
 
 		int part = SelectPart::All - SelectPart::Terrain;
 
-		ActorList l;
+		AgentList l;
 		Vector3 pos;
 
 		if (!m_view->selectRegion(r, part, pos, l, false) && !m_isAdd) {
@@ -371,7 +371,7 @@ namespace Axon { namespace Editor {
 	}
 
 	void TransformTool::updateMode() {
-		const ActorList& actorlist = m_context->getSelection();
+		const AgentList& actorlist = m_context->getSelection();
 
 		if (actorlist.empty()) {
 			m_isSelectMode = true;
@@ -416,7 +416,7 @@ namespace Axon { namespace Editor {
 
 			// if shift key hold, clone actors
 			if (flags & Input::Event::ShiftModifier) {
-				ActorList cloned = m_context->getSelection().clone();
+				AgentList cloned = m_context->getSelection().clone();
 
 				GroupHis* group = new GroupHis(m_context, "Transform Cloned");
 
@@ -432,7 +432,7 @@ namespace Axon { namespace Editor {
 
 		m_beginTrack.set(x, y);
 
-		const ActorList& actorlist = m_context->getSelection();
+		const AgentList& actorlist = m_context->getSelection();
 
 		m_beginMatrix = AffineMat(m_gizmoAxis, m_gizmoCenter);
 		actorlist.beginTransform();
@@ -462,7 +462,7 @@ namespace Axon { namespace Editor {
 	}
 
 	void TransformTool::end() {
-		const ActorList& actorlist = m_context->getSelection();
+		const AgentList& actorlist = m_context->getSelection();
 		Action* his = actorlist.endTransform();
 
 		doEnd(0, 0, his);
@@ -548,7 +548,7 @@ namespace Axon { namespace Editor {
 		//		Vector3 dist(x, y, z);
 #endif
 
-		const ActorList& actorlist = m_context->getSelection();
+		const AgentList& actorlist = m_context->getSelection();
 
 		if (!m_isMouseInput && !m_context->getState()->transformRel && m_context->getState()->transformSpace == WorldSpace) {
 			actorlist.setOrigin(index, dist[index]);
@@ -590,7 +590,7 @@ namespace Axon { namespace Editor {
 					return false;
 				}
 
-				ActorList::const_iterator it = actorlist.begin();
+				AgentList::const_iterator it = actorlist.begin();
 				for (; it != actorlist.end(); ++it) 
 				{
 					(*it)->setOrigin(from);
@@ -731,7 +731,7 @@ namespace Axon { namespace Editor {
 		Vector3 state(0,0,0);
 
 		if (m_context->getState()->transformSpace == WorldSpace && !m_context->getState()->transformRel) {
-			const ActorList& actorlist = m_context->getSelection();
+			const AgentList& actorlist = m_context->getSelection();
 
 			if (actorlist.containsOne()) {
 				state = actorlist.getBackOrigin();
@@ -779,7 +779,7 @@ namespace Axon { namespace Editor {
 	}
 
 	bool RotateTool::doTransform(const Vector3& rotate, int index, AffineMat& result ) {
-		const ActorList& actorlist = m_context->getSelection();
+		const AgentList& actorlist = m_context->getSelection();
 
 		if (!m_isMouseInput && !m_context->getState()->transformRel && m_context->getState()->transformSpace == WorldSpace) {
 			actorlist.setRotate(index, rotate[index]);
@@ -945,7 +945,7 @@ namespace Axon { namespace Editor {
 				((RotateGizmo*)m_gizmo)->setCrank(m_beginClip, m_beginClip-m_angle);
 			}
 
-			const ActorList& actorlist = m_context->getSelection();
+			const AgentList& actorlist = m_context->getSelection();
 
 			result = getRotate(m_angle);
 
@@ -965,7 +965,7 @@ namespace Axon { namespace Editor {
 		Vector3 state(0,0,0);
 
 		if (m_context->getState()->transformSpace == WorldSpace && !m_context->getState()->transformRel) {
-			const ActorList& actorlist = m_context->getSelection();
+			const AgentList& actorlist = m_context->getSelection();
 
 			if (actorlist.containsOne()) {
 				Matrix3 axis = actorlist.getBackAxis();
@@ -1014,7 +1014,7 @@ namespace Axon { namespace Editor {
 	}
 
 	bool ScaleTool::doTransform(const Vector3& dist, int index, AffineMat& result) {
-		ActorList actorlist = m_context->getSelection();
+		AgentList actorlist = m_context->getSelection();
 
 		if (m_context->getState()->transformSpace != ObjectSpace) {
 			AffineMat mat1, mat2, mat3;
@@ -1187,5 +1187,5 @@ namespace Axon { namespace Editor {
 		}
 	}
 
-}} // namespace Axon::Editor
+AX_END_NAMESPACE
 

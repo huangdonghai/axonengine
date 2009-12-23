@@ -11,7 +11,7 @@ read the license and understand and accept it fully.
 #ifndef AX_EDITOR_MAP_CONTEXT_H
 #define AX_EDITOR_MAP_CONTEXT_H
 
-namespace Axon { namespace Editor { namespace MapEdit {
+AX_BEGIN_NAMESPACE
 
 	class Layer {
 	public:
@@ -29,7 +29,7 @@ namespace Axon { namespace Editor { namespace MapEdit {
 		AffineMat viewMatrix;
 	};
 
-	class AX_API MapContext : public Editor::Context {
+	class AX_API MapContext : public Context {
 	public:
 		enum ObserverFlag {
 			SelectionChanged = 1,
@@ -55,8 +55,8 @@ namespace Axon { namespace Editor { namespace MapEdit {
 		bool saveAs(const String& filename);
 
 		// view process
-		void setActiveView(Editor::View* view) { m_activeView = view; }
-		Editor::View* getActiveView() const { return m_activeView; }
+		void setActiveView(View* view) { m_activeView = view; }
+		View* getActiveView() const { return m_activeView; }
 
 		Vector3 getViewPos();
 
@@ -107,7 +107,7 @@ namespace Axon { namespace Editor { namespace MapEdit {
 		String m_title;
 		String m_filename;
 		MapTerrain* m_terrain;
-		Game::TerrainFixed* m_terrainFixed;
+		TerrainFixed* m_terrainFixed;
 
 		// views
 		PerspectiveView* m_perspectiveView;
@@ -137,7 +137,7 @@ namespace Axon { namespace Editor { namespace MapEdit {
 		return m_terrain;
 	}
 
-}}} // namespace Axon::Editor::MapEdit
+AX_END_NAMESPACE
 
 #endif // end guardian
 

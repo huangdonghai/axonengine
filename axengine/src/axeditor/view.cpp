@@ -10,7 +10,7 @@ read the license and understand and accept it fully.
 
 #include "private.h"
 
-namespace Axon { namespace Editor {
+AX_BEGIN_NAMESPACE
 
 	//------------------------------------------------------------------------------
 	// class View
@@ -240,7 +240,7 @@ namespace Axon { namespace Editor {
 		return nearest;
 	}
 
-	bool View::selectRegion(const Rect& rect, SelectPart part, OUT Vector3& pos, OUT ActorList& retlist, bool onlynearest) {
+	bool View::selectRegion(const Rect& rect, SelectPart part, OUT Vector3& pos, OUT AgentList& retlist, bool onlynearest) {
 		retlist.clear();
 
 		RenderCamera cam = m_camera.createSelectionCamera(rect);
@@ -255,10 +255,10 @@ namespace Axon { namespace Editor {
 			return false;
 
 		float minz = 1.0f;
-		Actor* minzActor = 0;
+		Agent* minzActor = 0;
 		for (size_t i = 0; i < records.size(); i++) {
 			int id = records[i].name;
-			Actor* ed = m_context->findActor(id);
+			Agent* ed = m_context->findActor(id);
 
 			AX_ASSERT(ed);
 
@@ -328,4 +328,4 @@ namespace Axon { namespace Editor {
 	}
 
 
-}} // namespace Axon::Editor
+AX_END_NAMESPACE

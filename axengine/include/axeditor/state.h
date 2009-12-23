@@ -11,7 +11,7 @@ read the license and understand and accept it fully.
 #ifndef AX_EDITOR_STATE_H
 #define AX_EDITOR_STATE_H
 
-namespace Axon { namespace Editor {
+AX_BEGIN_NAMESPACE
 
 	class AX_API State : public IObservable {
 	public:
@@ -48,7 +48,7 @@ namespace Axon { namespace Editor {
 		float snapToAngle;
 	};
 
-}} // namespace Axon::Editor
+AX_END_NAMESPACE
 
 #endif // AX_EDITOR_STATE_H
 

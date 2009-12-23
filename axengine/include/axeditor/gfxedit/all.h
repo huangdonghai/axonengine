@@ -16,9 +16,5 @@ read the license and understand and accept it fully.
 #include "gfx_view.h"
 #include "gfx_context.h"
 
-namespace Axon {
-	typedef Editor::GfxContext GfxContext;
-} // namespace Axon
-
 #endif
 

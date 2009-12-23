@@ -11,7 +11,7 @@ read the license and understand and accept it fully.
 
 #include "../private.h"
 
-namespace Axon { namespace Game {
+AX_BEGIN_NAMESPACE
 
 	GameWorld::GameWorld() {
 		m_onlyClient = false;
@@ -257,5 +257,5 @@ namespace Axon { namespace Game {
 		return AffineMat(m_lastCamera.getViewAxis(), m_lastCamera.getOrigin());
 	}
 
-}} // namespace Axon::Game
+AX_END_NAMESPACE
 

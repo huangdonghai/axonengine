@@ -10,22 +10,22 @@ read the license and understand and accept it fully.
 #ifndef AX_EDITOR_MAP_ENTITY_H
 #define AX_EDITOR_MAP_ENTITY_H
 
-namespace Axon { namespace Editor { namespace MapEdit {
+AX_BEGIN_NAMESPACE
 
 	//--------------------------------------------------------------------------
-	// class Entity, Editor Entity
+	// class MapActor, Editor MapActor
 	//--------------------------------------------------------------------------
 
-	class AX_API Entity : public MapActor {
+	class AX_API MapActor : public MapAgent {
 	public:
-		Entity();
-		Entity(const String& type);
-		virtual ~Entity();
+		MapActor();
+		MapActor(const String& type);
+		virtual ~MapActor();
 
 		// implement Actor
 		virtual void doRender();
 		virtual Type getType() const { return kEntity; }
-		virtual MapActor* clone() const;
+		virtual MapAgent* clone() const;
 
 		GameActor* getGameEntity() const { return m_gameEntity; }
 
@@ -34,6 +34,6 @@ namespace Axon { namespace Editor { namespace MapEdit {
 		RenderMesh* m_iconPrim;
 	};
 
-}}} // namespace Axon::Editor::MapEdit
+AX_END_NAMESPACE
 
 #endif // AX_EDITOR_ENTITY_H

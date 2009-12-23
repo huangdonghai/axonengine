@@ -12,11 +12,11 @@ read the license and understand and accept it fully.
 
 #include <bitset>
 
-namespace Axon { namespace Editor {
+AX_BEGIN_NAMESPACE
 	// some typedef
 
-	class Actor;
-	class ActorList;
+	class Agent;
+	class AgentList;
 
 	class Action;
 	class Tool;
@@ -92,6 +92,6 @@ namespace Axon { namespace Editor {
 		AX_DECLARE_ENUM(Space);
 	};
 
-}} // namespace Axon::Editor
+AX_END_NAMESPACE
 
 #endif // AX_EDITOR_TYPES_H

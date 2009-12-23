@@ -36,13 +36,13 @@ namespace Axon {
 
 		g_gameSystem = new GameSystem();
 
-		AX_REGISTER_CLASS(Game::GameActor);
-		AX_REGISTER_CLASS(Game::GameLight);
-		AX_REGISTER_CLASS(Game::GameSound);
-		AX_REGISTER_CLASS(Game::GameRigit);
-		AX_REGISTER_CLASS(Game::Animated);
-		AX_REGISTER_CLASS(Game::Articulated);
-		AX_REGISTER_CLASS(Game::Player);
+		AX_REGISTER_CLASS(GameActor);
+		AX_REGISTER_CLASS(GameLight);
+		AX_REGISTER_CLASS(GameSound);
+		AX_REGISTER_CLASS(GameRigit);
+		AX_REGISTER_CLASS(Animated);
+		AX_REGISTER_CLASS(Articulated);
+		AX_REGISTER_CLASS(Player);
 	}
 
 	void axLogicQuit() {

@@ -14,21 +14,21 @@ read the license and understand and accept it fully.
 #include "private.h"
 #include "frame.h"
 
-class EditorFrame : public QWidget, public IPanel, public Editor::IFrame, public Axon::Input::IEventSource
+class EditorFrame : public QWidget, public IPanel, public IFrame, public Input::IEventSource
 {
 	Q_OBJECT
 
 public:
-    EditorFrame(QWidget *parent, Editor::View* view);
+    EditorFrame(QWidget *parent, View* view);
     ~EditorFrame();
 
 	// public function
-	Editor::View* getView() { return m_editorView; }
+	View* getView() { return m_editorView; }
 
-	// implement Editor::IFrame
+	// implement IFrame
 	virtual RenderTarget* getRenderTarget();
 	virtual Rect getRect();
-	virtual void setCursor(Editor::CursorType cursor_type);
+	virtual void setCursor(CursorType cursor_type);
 	virtual void resetCursor();
 	virtual void setCursorPos(const Point& pos);
 	virtual void setNeedUpdate();
@@ -78,7 +78,7 @@ protected:
 	void issueEvent(QEvent* qe, Axon::Input::Event& xe);
 
 private:
-    Editor::View* m_editorView;
+    View* m_editorView;
 	RenderTarget* m_renderTarget;
 	QHash<int,int> m_keymap;
 	int m_autoUpdateTimer;

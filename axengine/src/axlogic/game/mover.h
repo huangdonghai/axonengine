@@ -12,7 +12,7 @@ read the license and understand and accept it fully.
 #ifndef AX_GAME_MOVER_H
 #define AX_GAME_MOVER_H
 
-namespace Axon { namespace Game {
+AX_BEGIN_NAMESPACE
 
 	// key framed physics mover
 
@@ -25,7 +25,7 @@ namespace Axon { namespace Game {
 
 	};
 
-}} // namespace Axon::Game
+AX_END_NAMESPACE
 
 #endif // end guardian
 

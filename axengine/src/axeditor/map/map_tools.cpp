@@ -10,9 +10,9 @@ read the license and understand and accept it fully.
 
 #include "map_local.h"
 
-namespace Axon { namespace Editor { namespace MapEdit {
+AX_BEGIN_NAMESPACE
 
-	MapTool::MapTool(MapContext* ctx) : Editor::Tool(ctx)
+	MapTool::MapTool(MapContext* ctx) : Tool(ctx)
 	{
 		m_mapContext = ctx;
 	}
@@ -525,7 +525,7 @@ namespace Axon { namespace Editor { namespace MapEdit {
 			return;
 		}
 
-		m_actor = new Static();
+		m_actor = new MapStatic();
 
 		m_actor->setProperty("model", m_mapContext->getMapState()->staticModelName);
 
@@ -537,11 +537,11 @@ namespace Axon { namespace Editor { namespace MapEdit {
 
 		m_actor->bindToGame();
 
-		GroupHis* grouphis = new GroupHis(m_context, "Create Static");
+		GroupHis* grouphis = new GroupHis(m_context, "Create MapStatic");
 
-		ActorList actorlist;
+		AgentList actorlist;
 		actorlist.push_back(m_actor);
-		UndeleteHis* undelhis = new UndeleteHis(m_context, "Create Static", actorlist);
+		UndeleteHis* undelhis = new UndeleteHis(m_context, "Create MapStatic", actorlist);
 
 		History* selhis = m_view->getContext()->setSelectionHistoried(actorlist);
 
@@ -596,7 +596,7 @@ namespace Axon { namespace Editor { namespace MapEdit {
 			return;
 		}
 
-		m_actor = new Entity(m_mapContext->getMapState()->entityClass);
+		m_actor = new MapActor(m_mapContext->getMapState()->entityClass);
 
 		if (m_mapContext->getMapState()->isSnapToGrid) {
 			from = Internal::snap(from, m_mapContext->getMapState()->snapToGrid);
@@ -609,7 +609,7 @@ namespace Axon { namespace Editor { namespace MapEdit {
 
 		GroupHis* grouphis = new GroupHis(m_context, "Create Entity");
 
-		ActorList actorlist;
+		AgentList actorlist;
 		actorlist.push_back(m_actor);
 		UndeleteHis* undelhis = new UndeleteHis(m_context, "Create Entity", actorlist);
 
@@ -670,7 +670,7 @@ namespace Axon { namespace Editor { namespace MapEdit {
 			return;
 		}
 
-		m_actor = new SpeedTree();
+		m_actor = new MapSpeedTree();
 		m_view->getContext()->setSelection(m_actor);
 
 		m_actor->setProperty("tree", m_mapContext->getMapState()->treeFilename);
@@ -681,11 +681,11 @@ namespace Axon { namespace Editor { namespace MapEdit {
 
 		m_actor->bindToGame();
 
-		GroupHis* grouphis = new GroupHis(m_context, "Create SpeedTree");
+		GroupHis* grouphis = new GroupHis(m_context, "Create MapSpeedTree");
 
-		ActorList actorlist;
+		AgentList actorlist;
 		actorlist.push_back(m_actor);
-		UndeleteHis* undelhis = new UndeleteHis(m_context, "Create SpeedTree", actorlist);
+		UndeleteHis* undelhis = new UndeleteHis(m_context, "Create MapSpeedTree", actorlist);
 
 		History* selhis = m_view->getContext()->setSelectionHistoried(actorlist);
 
@@ -724,5 +724,5 @@ namespace Axon { namespace Editor { namespace MapEdit {
 	}
 #endif // AX_CONFIG_OPTION_USE_SPEEDTREE_40
 
-}}} // namespace Axon::Editor::MapEdit
+AX_END_NAMESPACE
 

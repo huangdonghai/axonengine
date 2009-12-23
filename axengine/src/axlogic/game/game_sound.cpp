@@ -10,7 +10,7 @@ read the license and understand and accept it fully.
 
 #include "../private.h"
 
-namespace Axon { namespace Game {
+AX_BEGIN_NAMESPACE
 
 
 
@@ -79,5 +79,5 @@ namespace Axon { namespace Game {
 		m_sfx.clear();
 	}
 
-}} // namespace Axon::Game
+AX_END_NAMESPACE
 

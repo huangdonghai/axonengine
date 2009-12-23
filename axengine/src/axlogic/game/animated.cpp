@@ -11,7 +11,7 @@ read the license and understand and accept it fully.
 #include "../private.h"
 
 
-namespace Axon{ namespace Game {
+AX_BEGIN_NAMESPACE
 
 	Animated::Animated()
 	{
@@ -79,4 +79,4 @@ namespace Axon{ namespace Game {
 		SafeDelete(m_model);
 	}
 
-}} // namespace Axon::Game
+AX_END_NAMESPACE

@@ -10,15 +10,15 @@ read the license and understand and accept it fully.
 #ifndef AX_EDITOR_MAP_ACTOR_H
 #define AX_EDITOR_MAP_ACTOR_H
 
-namespace Axon { namespace Editor { namespace MapEdit {
+AX_BEGIN_NAMESPACE
 
 	class MapContext;
 
 	//--------------------------------------------------------------------------
-	// class Actor
+	// class Agent
 	//--------------------------------------------------------------------------
 
-	class AX_API MapActor : public Editor::Actor {
+	class AX_API MapAgent : public Agent {
 	public:
 		enum Type {
 			kNone, kStatic, kSpeedTree, kBrush, kEntity
@@ -28,18 +28,18 @@ namespace Axon { namespace Editor { namespace MapEdit {
 			Selected = 1, Hovering = 2, Hided = 4, Deleted = 8, Locked = 0x10
 		};
 
-		MapActor();
-		virtual ~MapActor();
+		MapAgent();
+		virtual ~MapAgent();
 
-		// implement Editor::Actor
-		virtual MapActor* clone() const;
+		// implement Editor::Agent
+		virtual MapAgent* clone() const;
 		virtual void doDeleteFlagChanged(bool del);
 		virtual void doRender();
 
 		virtual void setMatrix(const AffineMat& matrix);
-		virtual const AffineMat& getMatrix() const { return m_gameNode->getMatrix_p(); }
+		virtual const AffineMat& getMatrix() const { return m_gameObj->getMatrix_p(); }
 
-		virtual BoundingBox getBoundingBox() { return m_gameNode->getBoundingBox(); }
+		virtual BoundingBox getBoundingBox() { return m_gameObj->getBoundingBox(); }
 
 		// properties
 		virtual Variant getProperty(const String& propname);
@@ -49,7 +49,7 @@ namespace Axon { namespace Editor { namespace MapEdit {
 		virtual Rgb getColor() const;
 		virtual void setColor(Rgb val);
 
-		// MapActor interface
+		// MapAgent interface
 		virtual Type getType() const { return kNone; }
 
 		MapContext* getMapContext() const { return (MapContext*)(m_context); }
@@ -62,65 +62,61 @@ namespace Axon { namespace Editor { namespace MapEdit {
 		void readXml(const TiXmlElement* node);
 
 		// base function
-		GameObject* getGameNode() const { return m_gameNode; }
+		GameObject* getGameNode() const { return m_gameObj; }
 
 		static const char* typeToString(Type t);
 		static Type stringToType(const char* str);
 
 	protected:
-		GameObject* m_gameNode;
+		GameObject* m_gameObj;
 
 	private:
 		RenderLine* m_bboxLine;
 	};
 
 	//--------------------------------------------------------------------------
-	// class Static
+	// class MapStatic
 	//--------------------------------------------------------------------------
 
-	class AX_API Static : public MapActor {
+	class AX_API MapStatic : public MapAgent {
 	public:
-		Static();
-		Static(const String& nametemplate);
-		virtual ~Static();
+		MapStatic();
+		MapStatic(const String& nametemplate);
+		virtual ~MapStatic();
 
 		// implement editor actor
 		virtual void doRender();
-		virtual MapActor* clone() const;
+		virtual MapAgent* clone() const;
 		virtual Type getType() const { return kStatic; }
 
 	private:
 		// render
-		Game::StaticFixed* m_gameFixed;
+		StaticFixed* m_gameFixed;
 	};
 
 	//--------------------------------------------------------------------------
-	// class SpeedTree
+	// class MapSpeedTree
 	//--------------------------------------------------------------------------
 
 #ifdef AX_CONFIG_OPTION_USE_SPEEDTREE_40
-	class AX_API SpeedTree : public MapActor {
+	class AX_API MapSpeedTree : public MapAgent {
 	public:
-		SpeedTree();
-		SpeedTree(const String& nametemplate);
-		virtual ~SpeedTree();
+		MapSpeedTree();
+		MapSpeedTree(const String& nametemplate);
+		virtual ~MapSpeedTree();
 
 		// implement editor actor
 		virtual void doRender();
-		virtual MapActor* clone() const;
+		virtual MapAgent* clone() const;
 		virtual Type getType() const { return kSpeedTree; }
 
 	private:
 		// render
-		Game::TreeFixed* m_gameFixed;
+		TreeFixed* m_gameFixed;
 	};
 #endif // AX_CONFIG_OPTION_USE_SPEEDTREE_40
 
-}}} // namespace Axon::Editor::MapEdit
-
-namespace Axon {
-	typedef Editor::MapEdit::MapActor MapActor;
-}
+AX_END_NAMESPACE
 
 #endif // end guardian
 

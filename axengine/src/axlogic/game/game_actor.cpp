@@ -11,7 +11,7 @@ read the license and understand and accept it fully.
 
 #include "../private.h"
 
-namespace Axon { namespace Game {
+AX_BEGIN_NAMESPACE
 
 	//--------------------------------------------------------------------------
 	// class GameActor
@@ -162,5 +162,5 @@ namespace Axon { namespace Game {
 		SafeDelete(m_rigid);
 	}
 
-}} // namespace Axon::Game
+AX_END_NAMESPACE
 

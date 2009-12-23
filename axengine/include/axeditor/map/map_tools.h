@@ -10,13 +10,13 @@ read the license and understand and accept it fully.
 #ifndef AX_EDITOR_MAP_TOOL_H
 #define AX_EDITOR_MAP_TOOL_H
 
-namespace Axon { namespace Editor { namespace MapEdit {
+AX_BEGIN_NAMESPACE
 
-	class MapTool : public Editor::Tool {
+	class MapTool : public Tool {
 	public:
 		enum MapToolType {
 			// terrain height map modification
-			TerrainRaise = Editor::Tool::UserDefined, TerrainLower, TerrainLevel, TerrainSmooth, TerrainGrab,
+			TerrainRaise = Tool::UserDefined, TerrainLower, TerrainLevel, TerrainSmooth, TerrainGrab,
 			TerrainPush, TerrainErode, TerrainRamp,
 
 			// terrain paint
@@ -197,7 +197,7 @@ namespace Axon { namespace Editor { namespace MapEdit {
 		virtual void doRender(const RenderCamera& camera) {}
 
 	private:
-		Static* m_actor;
+		MapStatic* m_actor;
 	};
 
 	//--------------------------------------------------------------------------
@@ -217,7 +217,7 @@ namespace Axon { namespace Editor { namespace MapEdit {
 		virtual void doRender(const RenderCamera& camera);
 
 	private:
-		Entity* m_actor;
+		MapActor* m_actor;
 	};
 
 	//--------------------------------------------------------------------------
@@ -238,10 +238,10 @@ namespace Axon { namespace Editor { namespace MapEdit {
 		virtual void doRender(const RenderCamera& camera) {}
 
 	private:
-		SpeedTree* m_actor;
+		MapSpeedTree* m_actor;
 	};
 #endif // AX_CONFIG_OPTION_USE_SPEEDTREE_40
 
-}}} // namespace Axon::Editor::MapEdit
+AX_END_NAMESPACE
 
 #endif

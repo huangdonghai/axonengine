@@ -10,7 +10,7 @@ read the license and understand and accept it fully.
 #ifndef AX_EDITOR_VIEW_H
 #define AX_EDITOR_VIEW_H
 
-namespace Axon { namespace Editor {
+AX_BEGIN_NAMESPACE
 
 	// editor view container
 	struct IFrame
@@ -61,7 +61,7 @@ namespace Axon { namespace Editor {
 		void beginSelect(const Rect& r);
 		int endSelect();
 
-		bool selectRegion(const Rect& rect, SelectPart part, OUT Vector3& pos, OUT ActorList& retlist, bool onlynearest = false);
+		bool selectRegion(const Rect& rect, SelectPart part, OUT Vector3& pos, OUT AgentList& retlist, bool onlynearest = false);
 		bool selectRegion(const Rect& rect, SelectPart part, OUT Vector3& pos);
 
 		const RenderCamera& getCamera() const { return m_camera; }
@@ -95,6 +95,6 @@ namespace Axon { namespace Editor {
 		Font* m_font;
 	};
 
-}} // namespace Axon::Editor
+AX_END_NAMESPACE
 
 #endif // AX_EDITOR_VIEW_H

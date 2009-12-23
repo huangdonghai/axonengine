@@ -11,7 +11,7 @@ read the license and understand and accept it fully.
 #ifndef AX_EDITOR_ACTION_H
 #define AX_EDITOR_ACTION_H
 
-namespace Axon { namespace Editor {
+AX_BEGIN_NAMESPACE
 	//--------------------------------------------------------------------------
 	// class Action
 	//--------------------------------------------------------------------------
@@ -98,7 +98,7 @@ namespace Axon { namespace Editor {
 
 	private:
 		bool m_isFirst;
-		ActorList m_actorlist;
+		AgentList m_actorlist;
 	};
 
 	//--------------------------------------------------------------------------
@@ -120,10 +120,10 @@ namespace Axon { namespace Editor {
 
 	private:
 		bool m_isFirst;
-		ActorList m_actorlist;
+		AgentList m_actorlist;
 		History* m_selectionHis;
 	};
-}} // namespace Axon::Editor
+AX_END_NAMESPACE
 
 #endif
 

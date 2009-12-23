@@ -11,9 +11,9 @@ read the license and understand and accept it fully.
 #ifndef AX_EDITOR_MAP_HISTORY_H
 #define AX_EDITOR_MAP_HISTORY_H
 
-namespace Axon { namespace Editor { namespace MapEdit {
+AX_BEGIN_NAMESPACE
 
-	class AX_API MapHistory : public Editor::History {
+	class AX_API MapHistory : public History {
 	public:
 		MapHistory();
 		MapHistory(const String& msg);
@@ -68,7 +68,7 @@ namespace Axon { namespace Editor { namespace MapEdit {
 	// class TerrainSurfaceGenHis
 	//--------------------------------------------------------------------------
 
-	class TerrainSurfaceGenHis : public Editor::History {
+	class TerrainSurfaceGenHis : public History {
 	public:
 	private:
 	};
@@ -116,7 +116,7 @@ namespace Axon { namespace Editor { namespace MapEdit {
 		byte_t* m_oldData;
 	};
 
-}}} // namespace Axon::Editor::MapEdit
+AX_END_NAMESPACE
 
 #endif // end guardian
 

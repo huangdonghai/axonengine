@@ -12,7 +12,7 @@ read the license and understand and accept it fully.
 #ifndef AX_GAME_SYSTEM_H
 #define AX_GAME_SYSTEM_H
 
-namespace Axon { namespace Game {
+AX_BEGIN_NAMESPACE
 
 	struct EntityState {
 		enum {
@@ -73,7 +73,7 @@ namespace Axon { namespace Game {
 			Editing,		// is editing map, network is disabled
 		};
 
-		friend class Game::GameWorld;
+		friend class GameWorld;
 
 		GameSystem();
 		~GameSystem();
@@ -112,7 +112,7 @@ namespace Axon { namespace Game {
 		bool m_running;
 	};
 
-}} // namespace Axon::Game
+AX_END_NAMESPACE
 
 #endif // end AX_GAME_SYSTEM_H
 

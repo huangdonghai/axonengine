@@ -9,7 +9,7 @@ read the license and understand and accept it fully.
 
 #include "private.h"
 
-namespace Axon { namespace Editor {
+AX_BEGIN_NAMESPACE
 
 	State::State() {
 		moveSpeed = 10;
@@ -42,5 +42,5 @@ namespace Axon { namespace Editor {
 		notify(TransformToApp);
 	}
 
-}} // namespace Axon::Editor
+AX_END_NAMESPACE
 

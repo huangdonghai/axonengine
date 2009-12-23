@@ -438,7 +438,7 @@ void uiRenderWidget::translateMouseEvent(QMouseEvent* e, Event* xe) {
 	xe->time = Milliseconds();
 }
 
-void uiRenderWidget::setCursor(Editor::CursorType cursor_type) {
+void uiRenderWidget::setCursor(CursorType cursor_type) {
 	using namespace Editor;
 
 	switch (cursor_type) {
@@ -542,7 +542,7 @@ ParticlePreviewWidget::ParticlePreviewWidget(QWidget* parent)
 
 	m_renderCamera.setClearColor(Rgba(0, 0, 0));
 
-	m_tool = new Editor::ParticleTool();
+	m_tool = new ParticleTool();
 	m_tool->doBindCamera(&m_renderCamera);
 
 	//m_material = Material::load("_frond");

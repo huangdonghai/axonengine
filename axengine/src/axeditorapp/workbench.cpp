@@ -93,17 +93,17 @@ void Workbench::doNotify(IObservable* subjest, int arg) {
 	if (subjest != g_mapContext)
 		return;
 
-	if (arg & Editor::Context::SelectionChanged) {
-		Editor::ActorList sel = g_mapContext->getSelection();
+	if (arg & Context::SelectionChanged) {
+		AgentList sel = g_mapContext->getSelection();
 		ui.actionDelete->setEnabled(!sel.empty());
 		ui.actionClone->setEnabled(!sel.empty());
 	}
 
-	if (arg & Editor::Context::HistoryChanged) {
+	if (arg & Context::HistoryChanged) {
 		onHistoryChanged();
 	}
 
-	if (arg & Editor::Context::StatusChanged) {
+	if (arg & Context::StatusChanged) {
 		Vector3 viewpos = g_mapContext->getViewPos();
 		Vector3 viedir = g_mapContext->getActiveView()->getCamera().getViewAxis()[0];
 
@@ -153,8 +153,8 @@ void Workbench::addEditorAction(int type, QAction* action) {
 }
 
 void Workbench::createActions() {
-	typedef Editor::Action editorAction;
-	typedef Editor::MapEdit::MapTool editorTool;
+	typedef Action editorAction;
+	typedef MapTool editorTool;
 
 	m_editorTools = new QActionGroup(this);
 	m_editorTools->setExclusive(true);
@@ -247,7 +247,7 @@ void Workbench::createToolBars() {
 
 	ui.mainToolBar->insertWidget(ui.actionUsePivotCenter, ui.transformSpace);
 
-	g_mapContext->getMapState()->selectionPart = Editor::SelectPart::All;
+	g_mapContext->getMapState()->selectionPart = SelectPart::All;
 
 	{ // setup snap to grid
 		QWidget* widget = ui.mainToolBar->widgetForAction(ui.actionSnapToGrid);
@@ -413,7 +413,7 @@ Frame* Workbench::getActiveFrame() {
 	return m_workspace->getActiveFrame();
 }
 
-Editor::View* Workbench::getActiveView() {
+View* Workbench::getActiveView() {
 #if 0
 	EditorFrame* container = getActiveFrame();
 	if (!container)
@@ -468,16 +468,16 @@ void Workbench::closeEvent(QCloseEvent *event) {
 }
 
 void Workbench::onEditorToolTriggered(QAction* action) {
-	Editor::Tool::Type type = Editor::Tool::None;
+	Tool::Type type = Tool::None;
 	if (action) {
-		type = (Editor::Tool::Type)action->data().toInt();
+		type = (Tool::Type)action->data().toInt();
 	}
 
 	g_mapContext->doTool(type);
 }
 
 void Workbench::onEditorActionTriggered(QAction* action) {
-	Editor::Action::Type type = (Editor::Action::Type)action->data().toInt();
+	Action::Type type = (Action::Type)action->data().toInt();
 
 	g_mapContext->doAction(type);
 }
@@ -503,10 +503,10 @@ void Workbench::onHistoryChanged() {
 	ui.actionEditRedo->setDisabled(true);
 	ui.actionEditUndo->setDisabled(true);
 
-	Editor::HistoryManager* history = g_mapContext->getHistory();
+	HistoryManager* history = g_mapContext->getHistory();
 	AX_ASSERT(history);
 
-	Editor::HistoryList undolist = history->getUndoList();
+	HistoryList undolist = history->getUndoList();
 
 	if (undolist.size() > 0) {
 		m_undoToolButton->setDisabled(false);
@@ -514,7 +514,7 @@ void Workbench::onHistoryChanged() {
 		QMenu* menu = m_undoToolButton->menu();
 		menu->clear();
 
-		Editor::HistoryList::iterator it;
+		HistoryList::iterator it;
 
 		int count = 0; int memused = 0;
 		for (it = undolist.begin(); it != undolist.end(); ++it) {
@@ -534,14 +534,14 @@ void Workbench::onHistoryChanged() {
 		menu->addAction(temp);
 	}
 
-	Editor::HistoryList redolist = history->getRedoList();
+	HistoryList redolist = history->getRedoList();
 	if (redolist.size() > 0) {
 		m_redoToolButton->setDisabled(false);
 		ui.actionEditRedo->setDisabled(false);
 		QMenu* menu = m_redoToolButton->menu();
 		menu->clear();
 
-		Editor::HistoryList::iterator it;
+		HistoryList::iterator it;
 
 		int count = 0; int memused = 0;
 		for (it = redolist.begin(); it != redolist.end(); ++it) {
@@ -595,7 +595,7 @@ void Workbench::on_selectableType_activated(int index)
 	int part = 1 << index;
 
 	if (index == ui.selectableType->count() - 1) {
-		part = Editor::SelectPart::All;
+		part = SelectPart::All;
 	}
 
 	g_mapContext->getMapState()->selectionPart = part;
@@ -749,34 +749,34 @@ void Workbench::on_actionCreateTerrain_triggered()
 void Workbench::on_actionUseSelectionCenter_triggered(bool checked)
 {
 	if (ui.actionUseSelectionCenter->isChecked()) {
-		g_mapContext->getMapState()->transformCenter = Editor::TransformTool::SelectionCenter;
+		g_mapContext->getMapState()->transformCenter = TransformTool::SelectionCenter;
 	} else {
-		g_mapContext->getMapState()->transformCenter = Editor::TransformTool::PivotCenter;
+		g_mapContext->getMapState()->transformCenter = TransformTool::PivotCenter;
 	}
 
-	g_mapContext->getMapState()->notify(Editor::State::Transform);
+	g_mapContext->getMapState()->notify(State::Transform);
 }
 
 void Workbench::on_transformSpace_currentIndexChanged(int index)
 {
-	if (index < Editor::TransformTool::WorldSpace || index > Editor::TransformTool::ObjectSpace) {
-		index = Editor::TransformTool::WorldSpace;
+	if (index < TransformTool::WorldSpace || index > TransformTool::ObjectSpace) {
+		index = TransformTool::WorldSpace;
 	}
 
-	g_mapContext->getMapState()->transformSpace = (Editor::TransformTool::Space)index;
-	g_mapContext->getMapState()->notify(Editor::State::Transform);
+	g_mapContext->getMapState()->transformSpace = (TransformTool::Space)index;
+	g_mapContext->getMapState()->notify(State::Transform);
 }
 
 void Workbench::on_actionUsePivotCenter_triggered()
 {
-	g_mapContext->getMapState()->transformCenter = Editor::TransformTool::PivotCenter;
-	g_mapContext->getMapState()->notify(Editor::State::Transform);
+	g_mapContext->getMapState()->transformCenter = TransformTool::PivotCenter;
+	g_mapContext->getMapState()->notify(State::Transform);
 }
 
 void Workbench::on_actionUseTransformCenter_triggered()
 {
-	g_mapContext->getMapState()->transformCenter = Editor::TransformTool::TransformCenter;
-	g_mapContext->getMapState()->notify(Editor::State::Transform);
+	g_mapContext->getMapState()->transformCenter = TransformTool::TransformCenter;
+	g_mapContext->getMapState()->notify(State::Transform);
 }
 
 void Workbench::onSnapToGridChanged(QAction* action) {
@@ -832,8 +832,8 @@ void Workbench::endProgress()
 	QApplication::restoreOverrideCursor();
 }
 
-void Workbench::activateTool(Editor::Tool::Type t) {
-	if (t == Editor::Tool::None) {
+void Workbench::activateTool(Tool::Type t) {
+	if (t == Tool::None) {
 		QAction* action = m_editorTools->checkedAction();
 		if (!action) {
 			return;
@@ -845,7 +845,7 @@ void Workbench::activateTool(Editor::Tool::Type t) {
 	QList<QAction *> actions = m_editorTools->actions();
 	QAction* action = nullptr;
 	AX_FOREACH(action, actions) {
-		if ((Editor::Tool::Type)action->data().toInt() == t) {
+		if ((Tool::Type)action->data().toInt() == t) {
 			break;
 		}
 	}

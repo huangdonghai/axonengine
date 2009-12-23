@@ -12,7 +12,7 @@ read the license and understand and accept it fully.
 #ifndef AX_GAME_ARTICULATED_H
 #define AX_GAME_ARTICULATED_H
 
-namespace Axon { namespace Game {
+AX_BEGIN_NAMESPACE
 
 	class Articulated : public Animated
 	{
@@ -34,7 +34,7 @@ namespace Axon { namespace Game {
 		PhysicsRagdoll* m_ragdoll;
 	};
 
-}} // namespace Axon::Game
+AX_END_NAMESPACE
 
 #endif // end guardian
 

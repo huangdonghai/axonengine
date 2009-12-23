@@ -217,43 +217,43 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axlogic\game\gameentity.cpp"
+				RelativePath="..\..\..\src\axlogic\game\game_actor.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axlogic\game\gameinput.cpp"
+				RelativePath="..\..\..\src\axlogic\game\game_input.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axlogic\game\gameinput.h"
+				RelativePath="..\..\..\src\axlogic\game\game_input.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axlogic\game\gamelight.cpp"
+				RelativePath="..\..\..\src\axlogic\game\game_light.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axlogic\game\gamelight.h"
+				RelativePath="..\..\..\src\axlogic\game\game_light.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axlogic\game\gamenode.cpp"
+				RelativePath="..\..\..\src\axlogic\game\game_object.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axlogic\game\gamesound.cpp"
+				RelativePath="..\..\..\src\axlogic\game\game_sound.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axlogic\game\gamesound.h"
+				RelativePath="..\..\..\src\axlogic\game\game_sound.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axlogic\game\gamesystem.cpp"
+				RelativePath="..\..\..\src\axlogic\game\game_system.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axlogic\game\gameworld.cpp"
+				RelativePath="..\..\..\src\axlogic\game\game_world.cpp"
 				>
 			</File>
 			<File
@@ -308,27 +308,23 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\include\axlogic\game\gameentity.h"
+					RelativePath="..\..\..\include\axlogic\game\game_actor.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\include\axlogic\game\gamenode.h"
+					RelativePath="..\..\..\include\axlogic\game\game_object.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\include\axlogic\game\gamesystem.h"
+					RelativePath="..\..\..\include\axlogic\game\game_system.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\include\axlogic\game\gameworld.h"
+					RelativePath="..\..\..\include\axlogic\game\game_world.h"
 					>
 				</File>
 				<File
 					RelativePath="..\..\..\include\axlogic\game\landscape.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\include\axlogic\game\physics.h"
 					>
 				</File>
 			</Filter>

@@ -36,13 +36,13 @@ void ActorPanel::doNotify(IObservable* subject, int arg ) {
 
 	bool showbasic = false;
 
-	int track = Editor::Context::SelectionChanged;
+	int track = Context::SelectionChanged;
 
 	if (!(arg&track ) ) {
 		return;
 	}
 
-	const Editor::ActorList& actorlist = g_mapContext->getSelection();
+	const AgentList& actorlist = g_mapContext->getSelection();
 
 	if (!actorlist.containsOne() ) {
 		ui.objectName->setText(QString("%1 objects").arg(actorlist.size()));
@@ -94,7 +94,7 @@ void ActorPanel::onPropertyChanged(IProperty *property )
 
 void ActorPanel::on_objectColor_colorChanged( const QColor& color )
 {
-	const Editor::ActorList& actorlist = g_mapContext->getSelection();
+	const AgentList& actorlist = g_mapContext->getSelection();
 
 	actorlist.setColor(q2x(color));
 }

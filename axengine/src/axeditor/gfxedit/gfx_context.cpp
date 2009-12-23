@@ -10,7 +10,7 @@ read the license and understand and accept it fully.
 
 #include "gfx_local.h"
 
-namespace Axon { namespace Editor {
+AX_BEGIN_NAMESPACE
 
 	template< class T >
 	class GfxToolFactory_ : public ToolFactory {
@@ -59,4 +59,4 @@ namespace Axon { namespace Editor {
 
 	}
 
-}} // namespace Axon::Editor
+AX_END_NAMESPACE

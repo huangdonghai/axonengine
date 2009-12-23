@@ -11,7 +11,7 @@ read the license and understand and accept it fully.
 
 #include "../private.h"
 
-namespace Axon { namespace Game {
+AX_BEGIN_NAMESPACE
 
 	//--------------------------------------------------------------------------
 	// class GameObject
@@ -194,5 +194,5 @@ namespace Axon { namespace Game {
 			m_soundEntity->setMatrix(m_matrix_p);
 	}
 
-}} // namespace Axon::Game
+AX_END_NAMESPACE
 

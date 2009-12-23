@@ -12,7 +12,7 @@ read the license and understand and accept it fully.
 #ifndef AX_GAME_WORLD_H
 #define AX_GAME_WORLD_H
 
-namespace Axon { namespace Game {
+AX_BEGIN_NAMESPACE
 
 	enum Think {
 		Think_all = -1,
@@ -128,7 +128,7 @@ namespace Axon { namespace Game {
 		return m_frametime;
 	}
 
-}} // namespace Axon::Game
+AX_END_NAMESPACE
 
 #endif // end AX_GAME_WORLD_H
 

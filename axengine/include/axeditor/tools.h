@@ -11,7 +11,7 @@ read the license and understand and accept it fully.
 #ifndef AX_EDITOR_TOOLS_H
 #define AX_EDITOR_TOOLS_H
 
-namespace Axon { namespace Editor {
+AX_BEGIN_NAMESPACE
 
 	//--------------------------------------------------------------------------
 	// class Tool
@@ -111,7 +111,7 @@ namespace Axon { namespace Editor {
 		Point m_beginPos;
 		Point m_curPos;
 		int m_selectionSeq;
-		ActorList m_oldlist;
+		AgentList m_oldlist;
 		bool m_isAdd;
 	};
 
@@ -163,7 +163,7 @@ namespace Axon { namespace Editor {
 		void updateMode();
 
 	protected:
-		Editor::TransformGizmo* m_gizmo;
+		TransformGizmo* m_gizmo;
 		bool m_isSelectMode;
 		Vector3 m_gizmoCenter;
 		Matrix3 m_gizmoAxis;
@@ -274,7 +274,7 @@ namespace Axon { namespace Editor {
 	};
 
 
-}} // namespace Axon::Editor
+AX_END_NAMESPACE
 
 #endif
 

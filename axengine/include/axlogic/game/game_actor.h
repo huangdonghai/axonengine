@@ -12,7 +12,7 @@ read the license and understand and accept it fully.
 #ifndef AX_GAME_ENTITY_H
 #define AX_GAME_ENTITY_H
 
-namespace Axon { namespace Game {
+AX_BEGIN_NAMESPACE
 
 	//--------------------------------------------------------------------------
 	// class GameActor
@@ -202,7 +202,7 @@ namespace Axon { namespace Game {
 		PhysicsRigid* m_rigid;
 	};
 
-}} // namespace Axon::Game
+AX_END_NAMESPACE
 
 
 #endif // eng guardian

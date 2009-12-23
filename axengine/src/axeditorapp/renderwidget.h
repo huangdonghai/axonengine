@@ -103,7 +103,7 @@ protected:
 // class uiRenderWidget
 //------------------------------------------------------------------------------
 
-class uiRenderWidget : public RenderWidget,public Editor::IFrame {
+class uiRenderWidget : public RenderWidget,public IFrame {
 public:
 	Q_OBJECT
 
@@ -113,7 +113,7 @@ public:
 
 	// implement RenderWidget
 	virtual void doRender();
-	virtual void setCursor(Editor::CursorType cursor_type);
+	virtual void setCursor(CursorType cursor_type);
 
 	virtual Render::Target* getRenderTarget(){ return 0;}
 	virtual Rect getRect(){return Rect();}	
@@ -121,7 +121,7 @@ public:
 	virtual void resetCursor() { unsetCursor(); }
 	virtual void setNeedUpdate();
 	virtual void setAutoUpdate(bool update);
-	Editor::UiContext m_uiContext;
+	UiContext m_uiContext;
 	void setEditor(QWidget* editor){m_parent = editor;}
 protected:
 	// implement QT event handler
@@ -352,7 +352,7 @@ protected:
 	KeyFrameSlider* m_keyFrameSlider;
 	ParticleEditor* m_particleEditor;
 
-	Editor::ParticleTool*               m_tool;
+	ParticleTool*               m_tool;
 	Render::Mesh*                       m_texQuad;
 	Render::Material*                   m_material;
 	Render::Model*                      m_particleModel;

@@ -12,7 +12,7 @@ read the license and understand and accept it fully.
 #ifndef AX_GAME_WEAPON_H
 #define AX_GAME_WEAPON_H
 
-namespace Axon { namespace Game {
+AX_BEGIN_NAMESPACE
 
 	class Weapon : public GameActor {
 	public:
@@ -23,6 +23,6 @@ namespace Axon { namespace Game {
 	private:
 	};
 
-}} // namespace Axon::Game
+AX_END_NAMESPACE
 
 #endif // end guardian

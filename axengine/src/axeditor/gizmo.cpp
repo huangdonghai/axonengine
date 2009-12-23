@@ -11,8 +11,7 @@ read the license and understand and accept it fully.
 #include "private.h"
 
 namespace {
-	using namespace Axon;
-	using namespace Axon::Editor;
+	AX_USE_NAMESPACE;
 
 	inline void xSetupAxis(RenderLine*& line, const Vector3& p0, const Vector3& p1, const Rgba& color) {
 		if (!line) {
@@ -39,7 +38,7 @@ namespace {
 	};
 }
 
-namespace Axon { namespace Editor {
+AX_BEGIN_NAMESPACE
 
 	//--------------------------------------------------------------------------
 	// class MoveGizmo, editor manipulator
@@ -710,4 +709,4 @@ namespace Axon { namespace Editor {
 		mesh->unlockVertexes();
 	}
 
-}} // namespace Axon::Editor
+AX_END_NAMESPACE
