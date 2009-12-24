@@ -145,7 +145,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axeditor\actor.cpp"
+				RelativePath="..\..\..\src\axeditor\agent.cpp"
 				>
 			</File>
 			<File
@@ -295,7 +295,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\include\axeditor\actor.h"
+					RelativePath="..\..\..\include\axeditor\agent.h"
 					>
 				</File>
 				<File
@@ -344,11 +344,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axeditor\map\map_context.cpp"
+				RelativePath="..\..\..\src\axeditor\map\map_agent.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axeditor\map\map_entity.cpp"
+				RelativePath="..\..\..\src\axeditor\map\map_context.cpp"
 				>
 			</File>
 			<File
@@ -391,11 +391,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\include\axeditor\map\map_context.h"
+					RelativePath="..\..\..\include\axeditor\map\map_agent.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\include\axeditor\map\map_entity.h"
+					RelativePath="..\..\..\include\axeditor\map\map_context.h"
 					>
 				</File>
 				<File
@@ -424,7 +424,7 @@
 			Name="gfxedit"
 			>
 			<File
-				RelativePath="..\..\..\src\axeditor\gfxedit\gfx_actor.cpp"
+				RelativePath="..\..\..\src\axeditor\gfxedit\gfx_agent.cpp"
 				>
 			</File>
 			<File
@@ -451,7 +451,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\include\axeditor\gfxedit\gfx_actor.h"
+					RelativePath="..\..\..\include\axeditor\gfxedit\gfx_agent.h"
 					>
 				</File>
 				<File

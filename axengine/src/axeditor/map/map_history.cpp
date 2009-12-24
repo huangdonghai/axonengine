@@ -147,61 +147,6 @@ AX_BEGIN_NAMESPACE
 		return m_newdata->getTotalDataSize() + m_olddata->getTotalDataSize() + sizeof(TerrainPaintHis);
 	}
 
-	//--------------------------------------------------------------------------
-	// class PaintGrassHis
-	//--------------------------------------------------------------------------
-
-	PaintGrassHis::PaintGrassHis(const String& msg, const Rect& rect, byte_t* newData, byte_t* oldData)
-		: MapHistory(msg)
-		, m_rect(rect)
-		, m_newData(newData)
-		, m_oldData(oldData)
-	{
-
-	}
-
-	PaintGrassHis::~PaintGrassHis()
-	{
-		SafeDelete(m_newData);
-		SafeDelete(m_oldData);
-	}
-
-	void PaintGrassHis::doIt()
-	{
-		MapTerrain* terrain = m_context->getTerrain();
-		if (!terrain)
-			return;
-
-		Map::GrassManager* grassMgr = terrain->getGrassManager();
-		if (grassMgr == NULL)
-		{
-			return ;
-		}
-
-		grassMgr->setDensityData(m_rect, m_newData);
-		grassMgr->update(m_rect);
-	}
-
-	void PaintGrassHis::undo()
-	{
-		MapTerrain* terrain = m_context->getTerrain();
-		if (!terrain)
-			return;
-
-		Map::GrassManager* grassMgr = terrain->getGrassManager();
-		if (grassMgr == NULL)
-		{
-			return ;
-		}
-
-		grassMgr->setDensityData(m_rect, m_oldData);
-		grassMgr->update(m_rect);
-	}
-
-	int PaintGrassHis::getMemoryUsed()
-	{
-		return sizeof(PaintGrassHis) + sizeof(byte_t) * (m_rect.width * m_rect.height * 2);
-	}
 
 
 	MapHistory::MapHistory() : History(g_mapContext)

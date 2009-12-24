@@ -116,33 +116,33 @@ AX_BEGIN_NAMESPACE
 		Rect r(x-size, y-size, size*2+1, size*2+1);
 		RenderCamera cam = camera->createSelectionCamera(r);
 
-		g_renderSystem->beginSelect(cam);
+		g_renderSystem->beginHitTest(cam);
 
-		g_renderSystem->loadSelectId(X);
-		g_renderSystem->testPrimitive(m_lines[X]);
-		g_renderSystem->testPrimitive(m_meshs[X]);
+		g_renderSystem->loadHitId(X);
+		g_renderSystem->hitTest(m_lines[X]);
+		g_renderSystem->hitTest(m_meshs[X]);
 
-		g_renderSystem->loadSelectId(Y);
-		g_renderSystem->testPrimitive(m_lines[Y]);
-		g_renderSystem->testPrimitive(m_meshs[Y]);
+		g_renderSystem->loadHitId(Y);
+		g_renderSystem->hitTest(m_lines[Y]);
+		g_renderSystem->hitTest(m_meshs[Y]);
 
-		g_renderSystem->loadSelectId(Z);
-		g_renderSystem->testPrimitive(m_lines[Z]);
-		g_renderSystem->testPrimitive(m_meshs[Z]);
+		g_renderSystem->loadHitId(Z);
+		g_renderSystem->hitTest(m_lines[Z]);
+		g_renderSystem->hitTest(m_meshs[Z]);
 
-		g_renderSystem->loadSelectId(XY);
-		g_renderSystem->testPrimitive(m_lines[XY]);
+		g_renderSystem->loadHitId(XY);
+		g_renderSystem->hitTest(m_lines[XY]);
 
-		g_renderSystem->loadSelectId(YZ);
-		g_renderSystem->testPrimitive(m_lines[YZ]);
+		g_renderSystem->loadHitId(YZ);
+		g_renderSystem->hitTest(m_lines[YZ]);
 
-		g_renderSystem->loadSelectId(XZ);
-		g_renderSystem->testPrimitive(m_lines[XZ]);
+		g_renderSystem->loadHitId(XZ);
+		g_renderSystem->hitTest(m_lines[XZ]);
 
-		g_renderSystem->loadSelectId(XYZ);
-		g_renderSystem->testPrimitive(m_lines[XYZ]);
+		g_renderSystem->loadHitId(XYZ);
+		g_renderSystem->hitTest(m_lines[XYZ]);
 
-		SelectRecordSeq records = g_renderSystem->endSelect();
+		HitRecords records = g_renderSystem->endHitTest();
 
 		if (records.empty())
 			return -1;
@@ -172,29 +172,29 @@ AX_BEGIN_NAMESPACE
 		Rect r(x-size, y-size, size*2+1, size*2+1);
 		view->beginSelect(r);
 
-		g_renderSystem->loadSelectId(X);
-		g_renderSystem->testPrimitive(m_lines[X]);
-		g_renderSystem->testPrimitive(m_meshs[X]);
+		g_renderSystem->loadHitId(X);
+		g_renderSystem->hitTest(m_lines[X]);
+		g_renderSystem->hitTest(m_meshs[X]);
 
-		g_renderSystem->loadSelectId(Y);
-		g_renderSystem->testPrimitive(m_lines[Y]);
-		g_renderSystem->testPrimitive(m_meshs[Y]);
+		g_renderSystem->loadHitId(Y);
+		g_renderSystem->hitTest(m_lines[Y]);
+		g_renderSystem->hitTest(m_meshs[Y]);
 
-		g_renderSystem->loadSelectId(Z);
-		g_renderSystem->testPrimitive(m_lines[Z]);
-		g_renderSystem->testPrimitive(m_meshs[Z]);
+		g_renderSystem->loadHitId(Z);
+		g_renderSystem->hitTest(m_lines[Z]);
+		g_renderSystem->hitTest(m_meshs[Z]);
 
-		g_renderSystem->loadSelectId(XY);
-		g_renderSystem->testPrimitive(m_lines[XY]);
+		g_renderSystem->loadHitId(XY);
+		g_renderSystem->hitTest(m_lines[XY]);
 
-		g_renderSystem->loadSelectId(YZ);
-		g_renderSystem->testPrimitive(m_lines[YZ]);
+		g_renderSystem->loadHitId(YZ);
+		g_renderSystem->hitTest(m_lines[YZ]);
 
-		g_renderSystem->loadSelectId(XZ);
-		g_renderSystem->testPrimitive(m_lines[XZ]);
+		g_renderSystem->loadHitId(XZ);
+		g_renderSystem->hitTest(m_lines[XZ]);
 
-		g_renderSystem->loadSelectId(XYZ);
-		g_renderSystem->testPrimitive(m_lines[XYZ]);
+		g_renderSystem->loadHitId(XYZ);
+		g_renderSystem->hitTest(m_lines[XYZ]);
 
 		int axis = view->endSelect();
 
@@ -470,17 +470,17 @@ AX_BEGIN_NAMESPACE
 		Rect r(x-size, y-size, size*2+1, size*2+1);
 		view->beginSelect(r);
 
-		g_renderSystem->loadSelectId(X);
-		g_renderSystem->testPrimitive(m_circles[0]);
+		g_renderSystem->loadHitId(X);
+		g_renderSystem->hitTest(m_circles[0]);
 
-		g_renderSystem->loadSelectId(Y);
-		g_renderSystem->testPrimitive(m_circles[1]);
+		g_renderSystem->loadHitId(Y);
+		g_renderSystem->hitTest(m_circles[1]);
 
-		g_renderSystem->loadSelectId(Z);
-		g_renderSystem->testPrimitive(m_circles[2]);
+		g_renderSystem->loadHitId(Z);
+		g_renderSystem->hitTest(m_circles[2]);
 
-		g_renderSystem->loadSelectId(Screen);
-		g_renderSystem->testPrimitive(m_outerBound);
+		g_renderSystem->loadHitId(Screen);
+		g_renderSystem->hitTest(m_outerBound);
 
 		int axis = view->endSelect();
 
@@ -620,8 +620,8 @@ AX_BEGIN_NAMESPACE
 
 //		view->beginSelect(r);
 
-		//gRenderSystem->loadSelectId(XYZ);
-		//gRenderSystem->testPrimitive(m_meshs[XYZ]);
+		//gRenderSystem->loadHitId(XYZ);
+		//gRenderSystem->hitTest(m_meshs[XYZ]);
 
 //		int axis = view->endSelect();
 		/*if (axis != -1) {
@@ -630,17 +630,17 @@ AX_BEGIN_NAMESPACE
 
 		view->beginSelect(r);
 
-		g_renderSystem->loadSelectId(X);
-		g_renderSystem->testPrimitive(m_lines[X]);
-		g_renderSystem->testPrimitive(m_meshs[X]);
+		g_renderSystem->loadHitId(X);
+		g_renderSystem->hitTest(m_lines[X]);
+		g_renderSystem->hitTest(m_meshs[X]);
 
-		g_renderSystem->loadSelectId(Y);
-		g_renderSystem->testPrimitive(m_lines[Y]);
-		g_renderSystem->testPrimitive(m_meshs[Y]);
+		g_renderSystem->loadHitId(Y);
+		g_renderSystem->hitTest(m_lines[Y]);
+		g_renderSystem->hitTest(m_meshs[Y]);
 
-		g_renderSystem->loadSelectId(Z);
-		g_renderSystem->testPrimitive(m_lines[Z]);
-		g_renderSystem->testPrimitive(m_meshs[Z]);
+		g_renderSystem->loadHitId(Z);
+		g_renderSystem->hitTest(m_lines[Z]);
+		g_renderSystem->hitTest(m_meshs[Z]);
 
 		int axis = view->endSelect();
 

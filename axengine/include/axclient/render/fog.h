@@ -33,7 +33,6 @@ public:
 	virtual BoundingBox getLocalBoundingBox();
 	virtual BoundingBox getBoundingBox();
 	virtual RenderEntity::Kind getType() const { return RenderEntity::kFog; }
-	virtual Primitives getAllPrimitives() { return Primitives(); }
 
 
 private:

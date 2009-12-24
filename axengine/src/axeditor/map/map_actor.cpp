@@ -13,265 +13,72 @@ read the license and understand and accept it fully.
 AX_BEGIN_NAMESPACE
 
 	//------------------------------------------------------------------------------
-	// class Agent
+	// class Entity, Editor Entity
 	//------------------------------------------------------------------------------
 
-	MapAgent::MapAgent() : Agent(g_mapContext) {
-		m_gameObj = nullptr;
-		m_bboxLine = nullptr;
-	}
+	MapActor::MapActor(const String& type) {
+		m_iconPrim = 0;
+		GameWorld* gameworld = getMapContext()->getGameWorld();
+		m_gameEntity = gameworld->createEntity(type.c_str());
+		m_gameObj = m_gameEntity;
 
-	MapAgent::~MapAgent() {
-		SafeDelete(m_gameObj);
-		SafeDelete(m_bboxLine);
-	}
+//		bindToGame();
 
-	void MapAgent::doSelect() {
-		g_renderSystem->loadSelectId(m_id);
-		m_gameObj->doSelectTest();
-	}
-
-
-	void MapAgent::setMatrix(const AffineMat& matrix) {
-		m_gameObj->setMatrix_p(matrix);
-	}
-
-	void MapAgent::doRender() {
-		if (!r_helper->getBool()) {
+		const ClassInfo* ci = m_gameEntity->getClassInfo();
+		if (!ci) {
 			return;
 		}
 
-		if (m_isSelected && !m_isDeleted) {
-			RenderLine::setupBoundingBox(m_bboxLine, m_gameObj->getOrigin_p(), m_gameObj->getAxis_p(), m_gameObj->getLocalBoundingBox(), 1.05f);
-			g_renderSystem->addToScene(m_bboxLine);
+		String icon = ci->getField("Editor.icon");
+		if (icon.empty()) {
+			return;
 		}
 
-		m_gameObj->doDebugRender();
-	}
+		TexturePtr tex = Texture::load("editor/icons/" + icon);
 
-	MapAgent* MapAgent::clone() const {
-		return nullptr;
-	}
-
-
-	void MapAgent::writeXml(File* f, int indent) const {
-		String indstr(indent*2, ' ');
-#define INDENT if (indent) f->printf("%s", indstr.c_str());
-
-		INDENT; f->printf("<actor type=\"%s\" id=\"%d\"\n", typeToString(getType()), m_id);
-		INDENT;	f->printf("  matrix=\"%s\"\n", m_gameObj->getMatrix_p().toString().c_str());
-		INDENT; f->printf("  color=\"%s\"\n", getColor().toString().c_str());
-		INDENT; f->printf(">\n");
-
-		m_gameObj->writeXml(f, indent + 1);
-
-		INDENT; f->printf("</actor>\n");
-
-#undef INDENT
-	}
-
-	void MapAgent::readXml(const TiXmlElement* node) {
-
-	}
-
-	const char* MapAgent::typeToString(Type t) {
-#define AX_ENUM_ITEM(e) case e: return #e;
-		switch (t) {
-			AX_ENUM_ITEM(kNone)
-			AX_ENUM_ITEM(kStatic)
-			AX_ENUM_ITEM(kSpeedTree)
-			AX_ENUM_ITEM(kBrush)
-			AX_ENUM_ITEM(kEntity)
-		}
-#undef AX_ENUM_ITEM
-
-		return nullptr;
-	}
-
-	MapAgent::Type MapAgent::stringToType(const char* str) {
-#define AX_ENUM_ITEM(e) { #e, e },
-
-		static struct {
-			const char* str;
-			Type t;
-		} nameToType[] = {
-			AX_ENUM_ITEM(kNone)
-			AX_ENUM_ITEM(kStatic)
-			AX_ENUM_ITEM(kSpeedTree)
-			AX_ENUM_ITEM(kBrush)
-			AX_ENUM_ITEM(kEntity)
-		};
-#undef AX_ENUM_ITEM
-
-		for (size_t i = 0; i < ArraySize(nameToType); i++) {
-			if (Strequ(str, nameToType[i].str)) {
-				return nameToType[i].t;
-			}
+		if (!tex) {
+			return;
 		}
 
-		return kNone;
+		MaterialPtr mat = Material::loadUnique("_icon");
+		AX_ASSERT(mat);
+		mat->setTexture(SamplerType::Diffuse, tex.get());
+
+		m_iconPrim = RenderMesh::createScreenQuad(RenderMesh::HintDynamic, Rect(-1,-1,2,2), Rgba::White, mat.get());
 	}
 
-	Axon::Variant MapAgent::getProperty( const String& propname )
+	MapActor::~MapActor() {
+	}
+
+
+	void MapActor::doRender()
 	{
-		if (m_gameObj)
-			return m_gameObj->getProperty(propname.c_str());
-
-		return Variant();
-	}
-
-	void MapAgent::setProperty(const String& name, const Variant& value)
-	{
-		if (m_gameObj) {
-			m_gameObj->setProperty(name.c_str(), value);
-			m_gameObj->doPropertyChanged();
-		}
-	}
-
-	void MapAgent::doPropertyChanged()
-	{
-		if (m_gameObj)
-			m_gameObj->doPropertyChanged();
-	}
-
-	void MapAgent::bindToGame()
-	{
-		AX_ASSURE(!m_isInGame);
-		getMapContext()->getGameWorld()->addNode(m_gameObj);
-		m_isInGame = true;
-	}
-
-	void MapAgent::unbindToGame()
-	{
-		AX_ASSURE(m_isInGame);
-		getMapContext()->getGameWorld()->removeNode(m_gameObj);
-		m_isInGame = false;
-	}
-
-	Rgb MapAgent::getColor() const
-	{
-		return m_gameObj->getInstanceColor();
-	}
-
-	void MapAgent::setColor( Rgb val )
-	{
-		m_gameObj->setInstanceColor(val.toVector());
-	}
-
-	void MapAgent::doDeleteFlagChanged( bool del )
-	{
-		if (del) {
-			static_cast<MapContext*>(m_context)->getGameWorld()->removeNode(m_gameObj);
-		} else {
-			static_cast<MapContext*>(m_context)->getGameWorld()->addNode(m_gameObj);
-		}
-	}
-
-
-
-	//--------------------------------------------------------------------------
-	// class MapStatic
-	//--------------------------------------------------------------------------
-
-	MapStatic::MapStatic() {
-		MapContext* mapContext = static_cast<MapContext*>(m_context);
-		MapState* mapState = mapContext->getMapState();
-
-		m_gameFixed = new StaticFixed();
-		m_gameObj = m_gameFixed;
-
-		m_gameFixed->set_objectName(g_scriptSystem->generateObjectName(PathUtil::getName(mapState->staticModelName)));
-	}
-
-	MapStatic::MapStatic(const String& nametemplate) {
-		m_gameFixed = new StaticFixed();
-		m_gameObj = m_gameFixed;
-
-		m_gameFixed->set_objectName(g_scriptSystem->generateObjectName(PathUtil::getName(nametemplate)));
-	}
-
-	MapStatic::~MapStatic() {
-	}
-
-	void MapStatic::doRender() {
 		if (m_isDeleted)
 			return;
 
-		MapAgent::doRender();
+		if (m_iconPrim) {
+			Vector4 param = m_gameEntity->getOrigin_p();
+			param.w = 0.25f;
+			m_iconPrim->getMaterial()->setParameter("s_iconparam", 4, param);
+			g_renderSystem->addToScene(m_iconPrim);
+		}
 
-		if (!m_actorDirty)
-			return;
-
-		// do other things here...
-
-		m_actorDirty = false;
+		return MapAgent::doRender();
 	}
 
-	MapAgent* MapStatic::clone() const {
-		MapStatic* result = new MapStatic();
+	MapAgent* MapActor::clone() const
+	{
+		// create entity
+		GameWorld* gameworld = getMapContext()->getGameWorld();
+		MapActor* newent = new MapActor(m_gameEntity->getClassInfo()->m_className);
 
-		AX_ASSERT(result);
+		newent->m_gameEntity->copyPropertiesFrom(this->m_gameEntity);
+		newent->m_gameEntity->autoGenerateName();
+		newent->setMatrix(getMatrix());
+		newent->setColor(getColor());
 
-		result->m_gameObj->copyPropertiesFrom(m_gameObj);
-		result->setMatrix(getMatrix());
-		result->setColor(getColor());
-		result->bindToGame();
-
-		return result;
+		newent->bindToGame();
+		return newent;
 	}
-
-	//--------------------------------------------------------------------------
-	// class MapSpeedTree
-	//--------------------------------------------------------------------------
-
-#ifdef AX_CONFIG_OPTION_USE_SPEEDTREE_40
-	MapSpeedTree::MapSpeedTree() {
-		MapContext* mapContext = static_cast<MapContext*>(m_context);
-		MapState* mapState = mapContext->getMapState();
-
-		m_gameFixed = new TreeFixed();
-		m_gameObj = m_gameFixed;
-
-		m_gameFixed->set_objectName(g_scriptSystem->generateObjectName(PathUtil::getName(mapState->treeFilename)));
-	}
-
-	MapSpeedTree::MapSpeedTree(const String& nametemplate) {
-		m_gameFixed = new TreeFixed();
-		m_gameObj = m_gameFixed;
-
-		m_gameFixed->set_objectName(g_scriptSystem->generateObjectName(PathUtil::getName(nametemplate)));
-	}
-
-	MapSpeedTree::~MapSpeedTree() {
-	}
-
-	void MapSpeedTree::doRender() {
-		if (m_isDeleted)
-			return;
-
-		MapAgent::doRender();
-
-		if (!m_actorDirty)
-			return;
-
-		// do other things here...
-
-		m_actorDirty = false;
-	}
-
-	MapAgent* MapSpeedTree::clone() const {
-		MapSpeedTree* result = new MapSpeedTree();
-
-		AX_ASSERT(result);
-
-		result->m_gameObj->copyPropertiesFrom(m_gameObj);
-		result->setMatrix(getMatrix());
-		result->setColor(getColor());
-		result->bindToGame();
-
-		return result;
-	}
-#endif // AX_CONFIG_OPTION_USE_SPEEDTREE_40
 
 AX_END_NAMESPACE
-

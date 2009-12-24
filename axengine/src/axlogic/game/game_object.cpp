@@ -91,7 +91,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 
-	void GameObject::doSelectTest() const {
+	void GameObject::doHitTest() const {
 		if (!m_renderEntity) {
 			return;
 		}
@@ -99,7 +99,7 @@ AX_BEGIN_NAMESPACE
 		if (!m_renderEntity->isVisable())
 			return;
 
-		g_renderSystem->testActor(m_renderEntity);
+		g_renderSystem->hitTest(m_renderEntity);
 	}
 
 	void GameObject::doDebugRender() const
@@ -184,7 +184,7 @@ AX_BEGIN_NAMESPACE
 		if (m_renderEntity) {
 			m_renderEntity->setMatrix(m_matrix_p);
 			m_renderEntity->setInstanceColor(m_instanceColor_p);
-			m_renderEntity->updateToWorld();
+			m_renderEntity->refresh();
 		}
 
 		if (m_physicsEntity)

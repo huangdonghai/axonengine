@@ -327,10 +327,6 @@ namespace Axon { namespace Map {
 		void clear();
 		void writeXml(File* f, int indent=0);
 
-		// GrassManager
-		GrassManager* getGrassManager() { return m_grassManager; }
-		RiverManager* getRiverManager() { return m_riverManager; }
-
 		float getTileMeters() const;
 		float getMeterPixels() const;
 		Rect getTileRect() const;
@@ -395,12 +391,12 @@ namespace Axon { namespace Map {
 		virtual BoundingBox getLocalBoundingBox() { return m_bbox; }
 		virtual BoundingBox getBoundingBox() { return m_bbox; }
 		virtual Kind getType() const { return RenderEntity::kTerrain; }
-		virtual void doUpdate(QueuedScene* qscene);
+		virtual void frameUpdate(QueuedScene* qscene);
 
 		virtual void issueToQueue(QueuedScene* qscene);
 
-		virtual Primitives getAllPrimitives();
 #if 0
+		virtual Primitives getAllPrimitives();
 		virtual Primitives getViewedPrimitives();
 		virtual Primitives getLightedPrimitives(Render::QueuedLight* light);
 #endif
@@ -444,9 +440,6 @@ namespace Axon { namespace Map {
 		LayerGen* m_layerGens[Map::MaxLayers];
 		LayerGenHash m_layerGenHash;
 		ColorGen* m_colorGen;
-
-		GrassManager* m_grassManager;
-		RiverManager* m_riverManager;
 	};
 
 	inline float Terrain::getTileMeters() const {

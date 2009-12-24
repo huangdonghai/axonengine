@@ -35,18 +35,14 @@ AX_BEGIN_NAMESPACE
 		return getLocalBoundingBox().getTransformed(m_affineMat);
 	}
 
-	void TreeActor::doUpdate(QueuedScene* qscene)
-	{}
-
-
-	Primitives TreeActor::getSelectionPrims() {
-		return m_treeAsset->getAllPrimitives(m_lod);
+	void TreeActor::frameUpdate(QueuedScene* qscene)
+	{
+		m_instanceParam[InstanceScale] = m_affineMat.getScales();
 	}
 
-	Vector4 TreeActor::getInstanceParam() const {
-		Vector4 result = m_instanceParam;
-		result[InstanceScale] = m_affineMat.getScales();
-		return result;
+
+	Primitives TreeActor::getHitTestPrims() {
+		return m_treeAsset->getAllPrimitives(m_lod);
 	}
 
 	void TreeActor::issueToQueue(QueuedScene* qscene) {

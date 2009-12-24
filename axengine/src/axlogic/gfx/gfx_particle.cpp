@@ -11,47 +11,64 @@ read the license and understand and accept it fully.
 
 #include "gfx_local.h"
 
-namespace Axon { namespace Gfx {
+AX_BEGIN_NAMESPACE
 
-	ParticleEmitter::ParticleEmitter()
-		: m_speed(0)
-		, m_variation(0)
-		, m_spread(0)
-		, m_lat(0)
-		, m_gravity(0)
-		, m_lifespan(0)
-		, m_rate(0)
-		, m_areal(0)
-		, m_areaw(0)
-		, m_deacceleration(0)
-		, m_enabled(0)
-	{
+static BlockAlloc<Particle> ParticleAllocator;
 
-	}
+ParticleEmitter::ParticleEmitter()
+	: m_speed(0)
+	, m_variation(0)
+	, m_spread(0)
+	, m_lat(0)
+	, m_gravity(0)
+	, m_lifespan(0)
+	, m_rate(0)
+	, m_areal(0)
+	, m_areaw(0)
+	, m_deacceleration(0)
+	, m_enabled(0)
+{
 
-	ParticleEmitter::~ParticleEmitter()
-	{
+}
 
-	}
+ParticleEmitter::~ParticleEmitter()
+{
 
-	void ParticleEmitter::update()
-	{
+}
 
-	}
+Particle ParticleEmitter::planeEmit( int anim, int time, float w, float l, float spd, float var, float spr, float spr2 )
+{
+	return Particle();
+}
 
-	void ParticleEmitter::render()
-	{
+Particle ParticleEmitter::sphereEmit( int anim, int time, float w, float l, float spd, float var, float spr, float spr2 )
+{
+	return Particle();
+}
 
-	}
+BoundingBox ParticleEmitter::getLocalBoundingBox()
+{
+	return BoundingBox::UnitBox;
+}
 
-	Particle ParticleEmitter::planeEmit( int anim, int time, float w, float l, float spd, float var, float spr, float spr2 )
-	{
-		return Particle();
-	}
+BoundingBox ParticleEmitter::getBoundingBox()
+{
+	return getLocalBoundingBox().getTransformed(m_tm);
+}
 
-	Particle ParticleEmitter::sphereEmit( int anim, int time, float w, float l, float spd, float var, float spr, float spr2 )
-	{
-		return Particle();
-	}
+Primitives ParticleEmitter::getHitTestPrims()
+{
+	return Primitives();
+}
 
-}} // namespace Axon::Gfx
+void ParticleEmitter::frameUpdate( QueuedScene *qscene )
+{
+
+}
+
+void ParticleEmitter::issueToQueue( QueuedScene *qscene )
+{
+
+}
+
+AX_END_NAMESPACE

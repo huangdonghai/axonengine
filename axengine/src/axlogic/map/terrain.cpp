@@ -955,7 +955,7 @@ namespace Axon { namespace Map {
 		if (e->camera->cullBox(m_bbox))
 			return;
 
-		g_renderSystem->testPrimitive(m_prim);
+		g_renderSystem->hitTest(m_prim);
 	}
 
 	void Chunk::doEvent(TerrainEvent* e) {
@@ -1272,7 +1272,7 @@ namespace Axon { namespace Map {
 			return;
 
 		if (m_prim->getActivedIndexes() > 0) {
-			g_renderSystem->testPrimitive(m_prim);
+			g_renderSystem->hitTest(m_prim);
 		}
 		forwardEventToChunks(e);
 	}
@@ -1456,16 +1456,12 @@ namespace Axon { namespace Map {
 		m_zones = nullptr;
 		m_isHeightDirty = false;
 		
-		m_grassManager = new GrassManager(this);	// timlly add
-		m_riverManager = new RiverManager(this);
-
 		m_lastViewOrigin.set(9999,9999,9999);
 		m_heightDirtyLastView = true;;
 	}
 
 	Terrain::~Terrain() {
 		clear();
-		SafeDelete(m_grassManager);
 	}
 
 	void Terrain::init(int tiles, int tilemeters){
@@ -1657,21 +1653,14 @@ namespace Axon { namespace Map {
 		// timlly add
 		if (child && child->ValueTStr() == "GrassInfo") 
 		{
-			m_grassManager->loadFile(map_name, child);
-			m_grassManager->init();		// timlly add
-			
 			child = child->NextSiblingElement();	// timlly add.
 		}
 		else
 		{
-			m_grassManager->init();		// timlly add
 		}
 
 		if (child && child->ValueTStr() == "RiverInfo") 
 		{
-			m_riverManager->loadFile(map_name, child);
-			m_riverManager->init();		// timlly add
-
 			child = child->NextSiblingElement();	// timlly add.
 		}
 
@@ -1728,10 +1717,6 @@ namespace Axon { namespace Map {
 		if (m_materialDef) {
 			m_materialDef->writeToFile(f, indent+1);
 		}
-
-		// write grass info --timlly add
-		m_grassManager->saveFile(filename, f, indent+1);
-		m_riverManager->saveFile(filename, f, indent+1);
 
 		INDENT;f->printf("</terrain>\n");
 
@@ -1799,9 +1784,6 @@ namespace Axon { namespace Map {
 
 		m_isHeightDirty = true;
 		m_heightDirtyLastView = true;
-
-		// 更新草的高度. timlly add
-		m_grassManager->update(m_grassManager->getIndexByCoor(Vector4(rect.x, rect.y, rect.width, rect.height)));	
 	}
 
 	void Terrain::doUpdateNormalTextureLod(const Rect& tilerect) {
@@ -2044,9 +2026,7 @@ namespace Axon { namespace Map {
 		lg->autoGenerate();
 	}
 
-	void Terrain::doUpdate(QueuedScene* qscene) {
-		m_grassManager->update(qscene);
-
+	void Terrain::frameUpdate(QueuedScene* qscene) {
 		const Vector3& org = qscene->camera.getOrigin();
 		if ((org - m_lastViewOrigin).getLength() < 32 && !m_heightDirtyLastView) {
 			return;
@@ -2066,13 +2046,13 @@ namespace Axon { namespace Map {
 		m_heightDirtyLastView = false;
 	}
 
+#if 0
 	Primitives Terrain::getAllPrimitives() {
 		Primitives result;
 
 		return result;
 	}
 
-#if 0
 	RenderPrims Terrain::getViewedPrimitives() {
 		ulonglong_t start = OsUtil::microseconds();
 		TerrainEvent e;
@@ -2113,19 +2093,6 @@ namespace Axon { namespace Map {
 
 		ulonglong_t end = OsUtil::microseconds();
 		g_statistic->addValue(stat_terrainGenPrimsTime, end - start);
-
-		// timlly add
-		if (m_grassManager && r_grass->getBool())
-		{
-			//m_grassMgr->update();
-			m_grassManager->uploadRenderData(&(e.primSeq));
-		}
-
-		if (m_riverManager/* && r_river->getBool()*/)
-		{
-			//m_riverMgr->update();
-			m_riverManager->uploadRenderData(&(e.primSeq));
-		}
 
 		for (size_t i = 0; i < e.primSeq.size(); i++) {
 			qscene->addInteraction(0, e.primSeq[i]);

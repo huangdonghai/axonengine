@@ -11,8 +11,8 @@ read the license and understand and accept it fully.
 #ifndef AX_EDITOR_MAP_H
 #define AX_EDITOR_MAP_H
 
+#include "map_agent.h"
 #include "map_actor.h"
-#include "map_entity.h"
 #include "map_action.h"
 #include "map_history.h"
 #include "map_tools.h"

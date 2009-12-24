@@ -32,7 +32,7 @@ AX_BEGIN_NAMESPACE
 		m_body->setMatrix(m_physicsPlayer->getMatrix());
 		HavokPose* pose = m_physicsPlayer->getPose();
 		m_body->setPose(pose);
-		m_body->updateToWorld();
+		m_body->refresh();
 	}
 
 	void Player::setMatrix(const AffineMat& matrix)
@@ -55,7 +55,7 @@ AX_BEGIN_NAMESPACE
 		m_body = new HavokModel("models/characters/_male/fullmale.mesh");
 
 		m_world->getPhysicsWorld()->addEntity(m_physicsPlayer);
-		m_world->getRenderWorld()->addActor(m_body);
+		m_world->getRenderWorld()->addEntity(m_body);
 	}
 
 	void Player::clear()

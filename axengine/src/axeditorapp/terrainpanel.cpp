@@ -155,22 +155,6 @@ void TerrainPanel::doNotify(IObservable* subject, int arg) {
 		item->setText(0, u2q(matdef->getLayerDef(i)->name));
 		item->setData(0, Qt::UserRole, l->id);
 	}
-
-	// refresh grass info
-	Map::GrassManager* grassMgr = terrain->getGrassManager();
-	ui.numGrassPerLevel->setValue(grassMgr->getNumGrassPerLevel());
-
-	ui.grassTypes->clear();
-	int numGrass = grassMgr->getNumGrassDef();
-	for (int i=0; i<numGrass; ++i)
-	{
-		QTreeWidgetItem* item = new QTreeWidgetItem();
-		item->setText(0, u2q(grassMgr->getGrassDef(i).getName()));
-		ui.grassTypes->addTopLevelItem(item);
-	}
-	
-	ui.groupBox_grasses->setDisabled(true);
-	
 }
 
 // get param from spin, set to system and slider
@@ -415,15 +399,6 @@ void TerrainPanel::on_numGrassPerLevel_editingFinished()
 	{
 		return;
 	}
-
-	Map::GrassManager* grassMgr = terrain->getGrassManager();
-	if (!grassMgr)
-	{
-		return;
-	}
-
-	grassMgr->setNumGrassPerLevel(ui.numGrassPerLevel->value());
-	grassMgr->update(Rect(), true);
 }
 
 void TerrainPanel::on_grassTypeAdd_released()
@@ -433,20 +408,6 @@ void TerrainPanel::on_grassTypeAdd_released()
 	{
 		return;
 	}
-
-	Map::GrassManager* grassMgr = terrain->getGrassManager();
-	if (!grassMgr)
-	{
-		return;
-	}
-
-	Map::GrassDef grass;
-	grassMgr->addGrassDef(grass);
-	QTreeWidgetItem* item = new QTreeWidgetItem();
-	item->setText(0, u2q(grass.getName()));
-	ui.grassTypes->addTopLevelItem(item);
-	ui.grassTypes->clearSelection();
-	ui.grassTypes->setItemSelected(item, true);
 }
 
 void TerrainPanel::on_grassTypeDelete_released()
@@ -456,33 +417,6 @@ void TerrainPanel::on_grassTypeDelete_released()
 	{
 		return;
 	}
-
-	Map::GrassManager* grassMgr = terrain->getGrassManager();
-	if (!grassMgr)
-	{
-		return;
-	}
-
-	QList<QTreeWidgetItem*> selecedItem = ui.grassTypes->selectedItems();
-	if (selecedItem.empty())
-	{
-		return;
-	}
-
-	int index = ui.grassTypes->indexOfTopLevelItem(selecedItem.at(0));
-	grassMgr->deleteGrassDef(index);
-
-	ui.grassTypes->clear();
-	int numGrass = grassMgr->getNumGrassDef();
-	for (int i=0; i<numGrass; ++i)
-	{
-		QTreeWidgetItem* item = new QTreeWidgetItem();
-		item->setText(0, u2q(grassMgr->getGrassDef(i).getName()));
-		ui.grassTypes->addTopLevelItem(item);
-	}
-	ui.groupBox_grasses->setDisabled(true);
-
-	grassMgr->update(Rect(), true);
 }
 
 void TerrainPanel::on_grassTypes_itemSelectionChanged()
@@ -491,51 +425,6 @@ void TerrainPanel::on_grassTypes_itemSelectionChanged()
 	if (!terrain)
 	{
 		return;
-	}
-
-	Map::GrassManager* grassMgr = terrain->getGrassManager();
-	if (!grassMgr)
-	{
-		return;
-	}
-
-	QList<QTreeWidgetItem*> selecedItem = ui.grassTypes->selectedItems();
-	if (selecedItem.empty())
-	{
-		return;
-	}
-
-	int index = ui.grassTypes->indexOfTopLevelItem(selecedItem.at(0));
-	Map::GrassDef& grassDef = grassMgr->getGrassDef(index);
-
-	ui.groupBox_grasses->setDisabled(false);
-
-	ui.grassName->setText(u2q(grassDef.getName()));
-	ui.grassType->setCurrentIndex(grassDef.getType());
-	ui.grassIncidence->setValue(grassDef.getIncidence());
-	ui.grassWidth->setValue(grassDef.getWidth());
-	ui.grassHeight->setValue(grassDef.getHeight());
-	ui.grassMinScale->setValue(grassDef.getMinScale());
-	ui.grassMaxScale->setValue(grassDef.getMaxScale());
-	ui.grassColor->setColor(grassDef.getColor().rgb());
-	ui.grassTexture->setText(u2q(grassDef.getTextureName()));
-
-	Vector3 transfer = grassDef.getTransfer();
-//	ui.grassTransferX->setValue(transfer.x);
-//	ui.grassTransferY->setValue(transfer.y);
-	ui.grassTransferZ->setValue(transfer.z);
-
-	if (grassDef.getType() == Map::GrassDef::Model)
-	{
-		ui.grassModel->setDisabled(false);
-		ui.grassModel->setText(u2q(grassDef.getModelFilename()));
-
-		ui.modelBtn->setDisabled(false);
-	}
-	else
-	{
-		ui.grassModel->setDisabled(true);
-		ui.modelBtn->setDisabled(true);
 	}
 }
 
@@ -546,24 +435,6 @@ void TerrainPanel::on_grassIncidence_valueChanged(double value)
 	{
 		return;
 	}
-
-	Map::GrassManager* grassMgr = terrain->getGrassManager();
-	if (!grassMgr)
-	{
-		return;
-	}
-
-	QList<QTreeWidgetItem*> selecedItem = ui.grassTypes->selectedItems();
-	if (selecedItem.empty())
-	{
-		return;
-	}
-
-	int index = ui.grassTypes->indexOfTopLevelItem(selecedItem.at(0));
-	Map::GrassDef& grassDef = grassMgr->getGrassDef(index);
-
-	grassDef.setIncidence(value);
-	grassMgr->update(Rect(), true);
 }
 
 void TerrainPanel::on_grassType_currentIndexChanged(int value)
@@ -573,38 +444,6 @@ void TerrainPanel::on_grassType_currentIndexChanged(int value)
 	{
 		return;
 	}
-
-	Map::GrassManager* grassMgr = terrain->getGrassManager();
-	if (!grassMgr)
-	{
-		return;
-	}
-
-	QList<QTreeWidgetItem*> selecedItem = ui.grassTypes->selectedItems();
-	if (selecedItem.empty())
-	{
-		return;
-	}
-
-	int index = ui.grassTypes->indexOfTopLevelItem(selecedItem.at(0));
-	Map::GrassDef& grassDef = grassMgr->getGrassDef(index);
-
-	grassDef.setType(Map::GrassDef::Type(value));
-
-	if (value == Map::GrassDef::Model)
-	{
-		ui.grassModel->setDisabled(false);
-		ui.modelBtn->setDisabled(false);
-
-		ui.grassModel->setText(u2q(grassDef.getModelFilename()));
-	}
-	else
-	{
-		ui.grassModel->setDisabled(true);
-		ui.modelBtn->setDisabled(true);
-	}
-
-	grassMgr->update(Rect(), true);
 }
 
 void TerrainPanel::on_grassWidth_valueChanged(double value)
@@ -614,24 +453,6 @@ void TerrainPanel::on_grassWidth_valueChanged(double value)
 	{
 		return;
 	}
-
-	Map::GrassManager* grassMgr = terrain->getGrassManager();
-	if (!grassMgr)
-	{
-		return;
-	}
-
-	QList<QTreeWidgetItem*> selecedItem = ui.grassTypes->selectedItems();
-	if (selecedItem.empty())
-	{
-		return;
-	}
-
-	int index = ui.grassTypes->indexOfTopLevelItem(selecedItem.at(0));
-	Map::GrassDef& grassDef = grassMgr->getGrassDef(index);
-
-	grassDef.setWidth(value);
-	grassMgr->update(Rect(), true);
 }
 
 void TerrainPanel::on_grassHeight_valueChanged(double value)
@@ -641,24 +462,6 @@ void TerrainPanel::on_grassHeight_valueChanged(double value)
 	{
 		return;
 	}
-
-	Map::GrassManager* grassMgr = terrain->getGrassManager();
-	if (!grassMgr)
-	{
-		return;
-	}
-
-	QList<QTreeWidgetItem*> selecedItem = ui.grassTypes->selectedItems();
-	if (selecedItem.empty())
-	{
-		return;
-	}
-
-	int index = ui.grassTypes->indexOfTopLevelItem(selecedItem.at(0));
-	Map::GrassDef& grassDef = grassMgr->getGrassDef(index);
-
-	grassDef.setHeight(value);
-	grassMgr->update(Rect(), true);
 }
 
 void TerrainPanel::on_grassMinScale_valueChanged(double value)
@@ -668,24 +471,6 @@ void TerrainPanel::on_grassMinScale_valueChanged(double value)
 	{
 		return;
 	}
-
-	Map::GrassManager* grassMgr = terrain->getGrassManager();
-	if (!grassMgr)
-	{
-		return;
-	}
-
-	QList<QTreeWidgetItem*> selecedItem = ui.grassTypes->selectedItems();
-	if (selecedItem.empty())
-	{
-		return;
-	}
-
-	int index = ui.grassTypes->indexOfTopLevelItem(selecedItem.at(0));
-	Map::GrassDef& grassDef = grassMgr->getGrassDef(index);
-
-	grassDef.setMinScale(value);
-	grassMgr->update(Rect(), true);
 }
 
 void TerrainPanel::on_grassMaxScale_valueChanged(double value)
@@ -695,24 +480,6 @@ void TerrainPanel::on_grassMaxScale_valueChanged(double value)
 	{
 		return;
 	}
-
-	Map::GrassManager* grassMgr = terrain->getGrassManager();
-	if (!grassMgr)
-	{
-		return;
-	}
-
-	QList<QTreeWidgetItem*> selecedItem = ui.grassTypes->selectedItems();
-	if (selecedItem.empty())
-	{
-		return;
-	}
-
-	int index = ui.grassTypes->indexOfTopLevelItem(selecedItem.at(0));
-	Map::GrassDef& grassDef = grassMgr->getGrassDef(index);
-
-	grassDef.setMaxScale(value);
-	grassMgr->update(Rect(), true);
 }
 
 void TerrainPanel::on_textureBtn_released()
@@ -722,37 +489,6 @@ void TerrainPanel::on_textureBtn_released()
 	{
 		return;
 	}
-
-	Map::GrassManager* grassMgr = terrain->getGrassManager();
-	if (!grassMgr)
-	{
-		return;
-	}
-
-	QList<QTreeWidgetItem*> selecedItem = ui.grassTypes->selectedItems();
-	if (selecedItem.empty())
-	{
-		return;
-	}
-
-	int index = ui.grassTypes->indexOfTopLevelItem(selecedItem.at(0));
-	Map::GrassDef& grassDef = grassMgr->getGrassDef(index);
-
-	QString filename = FileDialog::getOpenFileName(this, tr("Open Texture File"), "textures\\", ".dds");
-
-	if (filename == "")
-	{
-		return;
-	}
-
-	String uFilename = q2u(filename);
-
-	uFilename.erase(uFilename.size()-4, 4);
-	uFilename.erase(0, String("textures\\").size());
-
-	grassDef.setTextureName(uFilename);
-	ui.grassTexture->setText(u2q(uFilename));
-	grassMgr->update(Rect(), true);
 }
 
 void TerrainPanel::on_grassName_textEdited(QString text)
@@ -762,24 +498,6 @@ void TerrainPanel::on_grassName_textEdited(QString text)
 	{
 		return;
 	}
-
-	Map::GrassManager* grassMgr = terrain->getGrassManager();
-	if (!grassMgr)
-	{
-		return;
-	}
-
-	QList<QTreeWidgetItem*> selecedItem = ui.grassTypes->selectedItems();
-	if (selecedItem.empty())
-	{
-		return;
-	}
-
-	int index = ui.grassTypes->indexOfTopLevelItem(selecedItem.at(0));
-	Map::GrassDef& grassDef = grassMgr->getGrassDef(index);
-
-	selecedItem.at(0)->setText(0, text);
-	grassDef.setName(q2u(text));
 }
 
 void TerrainPanel::on_grassColor_colorChanged(const QColor& color)
@@ -789,31 +507,6 @@ void TerrainPanel::on_grassColor_colorChanged(const QColor& color)
 	{
 		return;
 	}
-
-	Map::GrassManager* grassMgr = terrain->getGrassManager();
-	if (!grassMgr)
-	{
-		return;
-	}
-
-	QList<QTreeWidgetItem*> selecedItem = ui.grassTypes->selectedItems();
-	if (selecedItem.empty())
-	{
-		return;
-	}
-
-	int index = ui.grassTypes->indexOfTopLevelItem(selecedItem.at(0));
-	Map::GrassDef& grassDef = grassMgr->getGrassDef(index);
-
-	int r, g, b;
-	color.getRgb(&r, &g, &b);
-	Rgba rgba = grassDef.getColor();
-	rgba.r = (char) r;
-	rgba.g = (char) g;
-	rgba.b = (char) b;
-	grassDef.setColor(rgba);
-
-	grassMgr->update(Rect(), true);
 }
 
 void TerrainPanel::on_modelBtn_released()
@@ -823,38 +516,6 @@ void TerrainPanel::on_modelBtn_released()
 	{
 		return;
 	}
-
-	Map::GrassManager* grassMgr = terrain->getGrassManager();
-	if (!grassMgr)
-	{
-		return;
-	}
-
-	QList<QTreeWidgetItem*> selecedItem = ui.grassTypes->selectedItems();
-	if (selecedItem.empty())
-	{
-		return;
-	}
-
-	int index = ui.grassTypes->indexOfTopLevelItem(selecedItem.at(0));
-	Map::GrassDef& grassDef = grassMgr->getGrassDef(index);
-
-	QString filename = FileDialog::getOpenFileName(this, tr("Open Model File"), "models\\", ".mesh");
-
-	if (filename == "")
-	{
-		return;
-	}
-
-	String uFilename = q2u(filename);
-
-	//uFilename.erase(uFilename.size()-4, 4);
-	//uFilename.erase(0, String("textures\\").size());
-
-	grassDef.setModelFilename(uFilename);
-	ui.grassModel->setText(u2q(uFilename));
-
-	grassMgr->update(Rect(), true);
 }
 
 
@@ -865,25 +526,4 @@ void TerrainPanel::on_grassTransferZ_valueChanged(double value)
 	{
 		return;
 	}
-
-	Map::GrassManager* grassMgr = terrain->getGrassManager();
-	if (!grassMgr)
-	{
-		return;
-	}
-
-	QList<QTreeWidgetItem*> selecedItem = ui.grassTypes->selectedItems();
-	if (selecedItem.empty())
-	{
-		return;
-	}
-
-	int index = ui.grassTypes->indexOfTopLevelItem(selecedItem.at(0));
-	Map::GrassDef& grassDef = grassMgr->getGrassDef(index);
-
-	Vector3 tran = grassDef.getTransfer();
-	tran.z = value;
-	grassDef.setTransfer(tran);
-
-	grassMgr->update(Rect(), true);
 }

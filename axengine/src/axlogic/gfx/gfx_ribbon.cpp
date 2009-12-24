@@ -11,26 +11,26 @@ read the license and understand and accept it fully.
 
 #include "gfx_local.h"
 
-namespace Axon { namespace Gfx {
+AX_BEGIN_NAMESPACE
 
-	RibbonEmitter::RibbonEmitter()
-	{
+RibbonEmitter::RibbonEmitter()
+{
 
-	}
+}
 
-	RibbonEmitter::~RibbonEmitter()
-	{
+RibbonEmitter::~RibbonEmitter()
+{
 
-	}
+}
 
-	void RibbonEmitter::update()
-	{
+void RibbonEmitter::update()
+{
 
-	}
+}
 
-	void RibbonEmitter::render()
-	{
+void RibbonEmitter::render()
+{
 
-	}
+}
 
-}} // namespace Axon::Gfx
+AX_END_NAMESPACE

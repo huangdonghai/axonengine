@@ -68,7 +68,7 @@ AX_BEGIN_NAMESPACE
 		Vector3 origin = m_eyeMatrix.origin + dir * dist;
 
 		Map::Terrain* terrain = m_context->getTerrain();
-		if (mapState->followTerrain && terrain && terrain->isPresented()) {
+		if (mapState->followTerrain && terrain && terrain->isInWorld()) {
 			float h = terrain->getHeightByPos(m_eyeMatrix.origin) + m_camera.getZnear() * 2.0f;
 			if (origin.z < h) origin.z = h;
 		}

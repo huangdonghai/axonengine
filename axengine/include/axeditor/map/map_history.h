@@ -95,27 +95,6 @@ AX_BEGIN_NAMESPACE
 		Image* m_newdata;
 	};
 
-	//--------------------------------------------------------------------------
-	// class PaintGrassHis
-	//--------------------------------------------------------------------------
-
-	class PaintGrassHis : public MapHistory {
-	public:
-		PaintGrassHis(const String& msg, const Rect& rect, byte_t* newData, byte_t* oldData);
-		virtual ~PaintGrassHis();
-
-		virtual void doIt();
-		virtual void undo();
-		virtual String getName() { return "PaintGrassHis"; }
-		virtual bool isUndoable() { return true; }
-		virtual int getMemoryUsed();
-
-	private:
-		Rect m_rect;
-		byte_t* m_newData;
-		byte_t* m_oldData;
-	};
-
 AX_END_NAMESPACE
 
 #endif // end guardian

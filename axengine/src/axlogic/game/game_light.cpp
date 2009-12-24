@@ -24,14 +24,14 @@ AX_BEGIN_NAMESPACE
 		SafeDelete(m_spotPrim);
 	}
 
-	void GameLight::doSelectTest() const
+	void GameLight::doHitTest() const
 	{
 		if (m_pointPrim) {
-			g_renderSystem->testPrimitive(m_pointPrim, m_renderLight->getMatrix());
+			g_renderSystem->hitTest(m_pointPrim, m_renderLight->getMatrix());
 		}
 
 		if (m_spotPrim) {
-			g_renderSystem->testPrimitive(m_spotPrim, m_renderLight->getMatrix());
+			g_renderSystem->hitTest(m_spotPrim, m_renderLight->getMatrix());
 		}
 	}
 
@@ -74,9 +74,9 @@ AX_BEGIN_NAMESPACE
 
 	void GameLight::activeLight(bool isActive) {
 		if (isActive) {
-			m_world->getRenderWorld()->addActor(m_renderLight);
+			m_world->getRenderWorld()->addEntity(m_renderLight);
 		} else {
-			m_world->getRenderWorld()->removeActor(m_renderLight);
+			m_world->getRenderWorld()->removeEntity(m_renderLight);
 		}
 	}
 #if 0

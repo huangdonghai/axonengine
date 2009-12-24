@@ -73,7 +73,7 @@ AX_BEGIN_NAMESPACE
 		virtual void loadSelectId(int id);
 		virtual void testActor(RenderEntity* re);
 		virtual void testPrimitive(Primitive* prim);
-		virtual SelectRecordSeq endSelect();
+		virtual HitRecords endSelect();
 
 		// occlusion query
 		virtual int genQuery();

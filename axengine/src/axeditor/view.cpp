@@ -217,11 +217,11 @@ AX_BEGIN_NAMESPACE
 	void View::beginSelect(const Rect& r) {
 		RenderCamera cam = m_camera.createSelectionCamera(r);
 
-		g_renderSystem->beginSelect(cam);
+		g_renderSystem->beginHitTest(cam);
 	}
 
 	int View::endSelect() {
-		SelectRecordSeq records = g_renderSystem->endSelect();
+		HitRecords records = g_renderSystem->endHitTest();
 
 		if (records.empty())
 			return -1;
@@ -245,11 +245,11 @@ AX_BEGIN_NAMESPACE
 
 		RenderCamera cam = m_camera.createSelectionCamera(rect);
 
-		g_renderSystem->beginSelect(cam);
+		g_renderSystem->beginHitTest(cam);
 
 		m_context->doSelect(cam, part);
 
-		SelectRecordSeq records = g_renderSystem->endSelect();
+		HitRecords records = g_renderSystem->endHitTest();
 
 		if (records.empty())
 			return false;
@@ -287,7 +287,7 @@ AX_BEGIN_NAMESPACE
 	bool View::selectRegion(const Rect& rect, SelectPart part, OUT Vector3& pos) {
 		RenderCamera cam = m_camera.createSelectionCamera(rect);
 
-		g_renderSystem->beginSelect(cam);
+		g_renderSystem->beginHitTest(cam);
 #if 0
 		// select terrain
 		if (part & SelectPart::Terrain) {
@@ -298,7 +298,7 @@ AX_BEGIN_NAMESPACE
 #endif
 		m_context->doSelect(cam, part);
 
-		SelectRecordSeq records = g_renderSystem->endSelect();
+		HitRecords records = g_renderSystem->endHitTest();
 
 		if (records.empty())
 			return false;

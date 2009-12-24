@@ -39,20 +39,20 @@ AX_BEGIN_NAMESPACE
 
 	void Context::addActor(Agent* actor) {
 		int id = actor->getId();
-		ActorDict::iterator it = m_actorDict.find(id);
+		AgentDict::iterator it = m_agentDict.find(id);
 
-		if (it != m_actorDict.end() && it->second) {
+		if (it != m_agentDict.end() && it->second) {
 			Errorf("Context::addActor: duplicated id");
 		}
 
-		m_actorDict[id] = actor;
+		m_agentDict[id] = actor;
 	}
 
 	void Context::removeActor(Agent* actor) {
 		int id = actor->getId();
-		ActorDict::iterator it = m_actorDict.find(id);
+		AgentDict::iterator it = m_agentDict.find(id);
 
-		if (it == m_actorDict.end()) {
+		if (it == m_agentDict.end()) {
 			Errorf("Context::removeActor: can't find actor");
 		}
 
@@ -60,9 +60,9 @@ AX_BEGIN_NAMESPACE
 	}
 
 	Agent* Context::findActor(int id) {
-		ActorDict::iterator it = m_actorDict.find(id);
+		AgentDict::iterator it = m_agentDict.find(id);
 
-		if (it == m_actorDict.end() || it->second == nullptr) {
+		if (it == m_agentDict.end() || it->second == nullptr) {
 			Errorf("Context::findActor: can't find actor for id '%d'", id);
 			return nullptr;
 		}
@@ -191,9 +191,9 @@ AX_BEGIN_NAMESPACE
 		m_selections.setSelected(false);
 		m_selections.clear();
 
-		ActorDict::iterator it;
+		AgentDict::iterator it;
 
-		for (it = m_actorDict.begin(); it != m_actorDict.end(); ++it) {
+		for (it = m_agentDict.begin(); it != m_agentDict.end(); ++it) {
 			Agent* actor = it->second;
 
 			if (!actor) continue;
@@ -213,10 +213,10 @@ AX_BEGIN_NAMESPACE
 	}
 
 	void Context::selectInvert(bool undoable) {
-		ActorDict::iterator it;
+		AgentDict::iterator it;
 
 		AgentList newsel;
-		for (it = m_actorDict.begin(); it != m_actorDict.end(); ++it) {
+		for (it = m_agentDict.begin(); it != m_agentDict.end(); ++it) {
 			Agent* actor = it->second;
 
 			if (!actor) continue;
@@ -232,23 +232,23 @@ AX_BEGIN_NAMESPACE
 
 	void Context::addHistory(Action* his) {
 		m_isDirty = true;
-		m_editorHistory.addHistory(his);
+		m_historyManager.addHistory(his);
 
 		notify(HistoryChanged);
 	}
 
 	void Context::undo() {
-		m_editorHistory.undo(1);
+		m_historyManager.undo(1);
 		notify(HistoryChanged);
 	}
 
 	void Context::redo() {
-		m_editorHistory.redo(1);
+		m_historyManager.redo(1);
 		notify(HistoryChanged);
 	}
 
 	HistoryManager* Context::getHistory() {
-		return &m_editorHistory;
+		return &m_historyManager;
 	}
 
 	View* Context::getView(int index) {

@@ -53,7 +53,7 @@ AX_BEGIN_NAMESPACE
 //		TypeFreeContainer(m_linkedActorSeq);
 	}
 
-	void RenderWorld::addActor(RenderEntity* actor) {
+	void RenderWorld::addEntity(RenderEntity* actor) {
 		if (actor->m_world) {
 			if (actor->m_world == this) {
 				updateActor(actor);
@@ -86,7 +86,7 @@ AX_BEGIN_NAMESPACE
 		linkActor(actor);
 	}
 
-	void RenderWorld::removeActor(RenderEntity* actor) {
+	void RenderWorld::removeEntity(RenderEntity* actor) {
 		if (actor->m_world != this) {
 			return;
 		}

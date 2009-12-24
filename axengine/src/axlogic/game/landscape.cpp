@@ -54,7 +54,7 @@ AX_BEGIN_NAMESPACE
 		m_rigid->setMatrix(m_matrix_p);
 		m_rigid->setMotionType(PhysicsEntity::Motion_Fixed);
 
-		m_landscape->getGameWorld()->getRenderWorld()->addActor(m_model);
+		m_landscape->getGameWorld()->getRenderWorld()->addEntity(m_model);
 		m_landscape->getGameWorld()->getPhysicsWorld()->addEntity(m_rigid);
 
 		setRenderEntity(m_model);
@@ -88,14 +88,14 @@ AX_BEGIN_NAMESPACE
 
 	void TerrainFixed::reload() {
 		if (!m_landscape || !m_renderTerrain) return;
-		m_landscape->getGameWorld()->getRenderWorld()->addActor(m_renderTerrain);
+		m_landscape->getGameWorld()->getRenderWorld()->addEntity(m_renderTerrain);
 		if (!m_physicsTerrain) return;
 		m_landscape->getGameWorld()->getPhysicsWorld()->addEntity(m_physicsTerrain);
 	}
 
 	void TerrainFixed::clear() {
 		if (!m_landscape || !m_renderTerrain) return;
-		m_landscape->getGameWorld()->getRenderWorld()->removeActor(m_renderTerrain);
+		m_landscape->getGameWorld()->getRenderWorld()->removeEntity(m_renderTerrain);
 		if (!m_physicsTerrain) return;
 		m_landscape->getGameWorld()->getPhysicsWorld()->removeEntity(m_physicsTerrain);
 	}
@@ -149,7 +149,7 @@ AX_BEGIN_NAMESPACE
 
 		m_renderTree = new RenderTree(m_treeName);
 		m_renderTree->setMatrix(m_matrix_p);
-		m_landscape->getGameWorld()->getRenderWorld()->addActor(m_renderTree);
+		m_landscape->getGameWorld()->getRenderWorld()->addEntity(m_renderTree);
 
 		setRenderEntity(m_renderTree);
 	}

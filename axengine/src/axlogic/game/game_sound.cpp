@@ -24,7 +24,7 @@ AX_BEGIN_NAMESPACE
 
 	}
 
-	void GameSound::doSelectTest() const
+	void GameSound::doHitTest() const
 	{
 
 	}

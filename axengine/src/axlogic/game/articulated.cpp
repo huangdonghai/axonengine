@@ -49,7 +49,7 @@ AX_BEGIN_NAMESPACE
 		m_model->setPose(m_pose);
 
 //		if (!m_model->isPresented()) {
-			m_world->getRenderWorld()->addActor(m_model);
+			m_world->getRenderWorld()->addEntity(m_model);
 //		} else {
 //			m_world->getRenderWorld()->updateActor(m_model);
 //		}

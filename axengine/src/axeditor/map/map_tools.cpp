@@ -63,7 +63,7 @@ AX_BEGIN_NAMESPACE
 
 		Vector3 from;
 
-		if (!m_view->selectRegion(Rect(x, y, 1, 1), SelectPart::Terrain, from)) {
+		if (!m_view->selectRegion(Rect(x, y, 1, 1), SelectPart::kTerrain, from)) {
 			return;
 		}
 
@@ -96,7 +96,7 @@ AX_BEGIN_NAMESPACE
 			return;
 
 		Vector3 from;
-		if (!m_view->selectRegion(Rect(x, y, 1, 1), SelectPart::Terrain, from)) {
+		if (!m_view->selectRegion(Rect(x, y, 1, 1), SelectPart::kTerrain, from)) {
 			return;
 		}
 
@@ -212,7 +212,7 @@ AX_BEGIN_NAMESPACE
 	void TerrainFlatTool::doDrag(int x, int y, int flags, float pressure) {
 		Vector3 from;
 
-		if (!m_view->selectRegion(Rect(x, y, 1, 1), SelectPart::Terrain, from)) {
+		if (!m_view->selectRegion(Rect(x, y, 1, 1), SelectPart::kTerrain, from)) {
 			return;
 		}
 
@@ -279,7 +279,7 @@ AX_BEGIN_NAMESPACE
 
 		Vector3 from;
 
-		if (!m_view->selectRegion(Rect(x, y, 1, 1), SelectPart::Terrain, from)) {
+		if (!m_view->selectRegion(Rect(x, y, 1, 1), SelectPart::kTerrain, from)) {
 			return;
 		}
 
@@ -357,7 +357,7 @@ AX_BEGIN_NAMESPACE
 
 		Vector3 from;
 
-		if (!m_view->selectRegion(Rect(x, y, 1, 1), SelectPart::Terrain, from)) {
+		if (!m_view->selectRegion(Rect(x, y, 1, 1), SelectPart::kTerrain, from)) {
 			return;
 		}
 
@@ -413,7 +413,7 @@ AX_BEGIN_NAMESPACE
 
 		Vector3 from;
 
-		if (!m_view->selectRegion(Rect(x, y, 1, 1), SelectPart::Terrain, from)) {
+		if (!m_view->selectRegion(Rect(x, y, 1, 1), SelectPart::kTerrain, from)) {
 			return;
 		}
 

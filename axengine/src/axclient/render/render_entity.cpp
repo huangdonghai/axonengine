@@ -43,7 +43,7 @@ AX_BEGIN_NAMESPACE
 		g_queryManager->freeQuery(m_visQuery);
 
 		if (m_world) {
-			m_world->removeActor(this);
+			m_world->removeEntity(this);
 		}
 	}
 
@@ -79,12 +79,12 @@ AX_BEGIN_NAMESPACE
 	}
 
 
-	void RenderEntity::updateToWorld() {
-		if (!isPresented()) {
+	void RenderEntity::refresh() {
+		if (!isInWorld()) {
 			return;
 		}
 
-		m_world->addActor(this);
+		m_world->addEntity(this);
 	}
 
 	int RenderEntity::getFlags() const {
@@ -108,8 +108,8 @@ AX_BEGIN_NAMESPACE
 #if 0
 		m_queued->modelMatrix = getModelMatrix();
 #endif
-		m_queued->m_matrix = m_affineMat;
-		m_queued->instanceParam = getInstanceParam();
+		m_queued->matrix = m_affineMat;
+		m_queued->instanceParam = m_instanceParam;
 		m_queued->flags = m_flags;
 		m_queued->distance = m_distance;
 	}
@@ -124,23 +124,21 @@ AX_BEGIN_NAMESPACE
 		return m_affineMat.toMatrix4();
 	}
 
-	Vector4 RenderEntity::getInstanceParam() const {
-		return m_instanceParam;
-	}
-
-	void RenderEntity::update(QueuedScene* qscene, Plane::Side side) {
+	void RenderEntity::update(QueuedScene* qscene, Plane::Side side)
+	{
 		m_cullSide = side;
-		doUpdate(qscene);
-		doCalculateLod(qscene);
+		calculateLod(qscene);
+
+		frameUpdate(qscene);
 
 		if (!m_viewDistCulled && !m_queryCulled && m_world)
 			m_visFrameId = m_world->getVisFrameId();
 	}
 
-	void RenderEntity::doUpdate(QueuedScene* qscene) {
+	void RenderEntity::frameUpdate(QueuedScene* qscene) {
 	}
 
-	void RenderEntity::doCalculateLod(QueuedScene* qscene) {
+	void RenderEntity::calculateLod(QueuedScene* qscene) {
 		if (!m_world)
 			return;
 
@@ -222,7 +220,7 @@ AX_BEGIN_NAMESPACE
 		return m_visFrameId == m_world->getVisFrameId();
 	}
 
-	void RenderEntity::updateCsm( QueuedScene* qscene, Plane::Side side )
+	void RenderEntity::updateCsm(QueuedScene* qscene, Plane::Side side)
 	{
 		if (!r_csmCull->getBool())
 			return;
@@ -251,7 +249,7 @@ AX_BEGIN_NAMESPACE
 		return m_shadowQuery->m_result == 0;
 	}
 
-	void RenderEntity::setInstanceColor( const Vector3& color )
+	void RenderEntity::setInstanceColor(const Vector3& color)
 	{
 		m_instanceParam.x = color.x;
 		m_instanceParam.y = color.y;

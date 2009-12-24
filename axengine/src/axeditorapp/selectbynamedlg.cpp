@@ -12,7 +12,7 @@ read the license and understand and accept it fully.
 
 //#define NumObjecType 4
 
-typedef Context::ActorDict ActorDict;
+typedef Context::AgentDict ActorDict;
 
 enum ObjectType{ NONE,
 				 STATIC = MapActor::kStatic, 
@@ -95,7 +95,7 @@ void SelectByNameDlg::refreshDlg()
 
 		if (typeCheck[type] == true)
 		{
-			String str = actor->getGameNode()->get_objectName();
+			String str = actor->getGameObject()->get_objectName();
 
 			QTreeWidgetItem* item = new QTreeWidgetItem(ui.selection);
 
@@ -247,7 +247,7 @@ void SelectByNameDlg::on_selection_itemSelectionChanged()
 
 	//for (itr=actorDict.begin(); itr!=actorDict.end(); ++itr)
 	//{
-	//	QString str = u2q(itr->second->getGameNode()->get_objectName());
+	//	QString str = u2q(itr->second->getGameObject()->get_objectName());
 
 	//	for (int i=0; i<itemList.size(); ++i)
 	//	{
@@ -261,7 +261,7 @@ void SelectByNameDlg::on_selection_itemSelectionChanged()
 	//	}
 	//}
 	
-	//QString str = u2q(itr->second->getGameNode()->get_objectName());
+	//QString str = u2q(itr->second->getGameObject()->get_objectName());
 
 	for (int i=0; i<itemList.size(); ++i)
 	{

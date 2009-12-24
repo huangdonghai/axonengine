@@ -113,7 +113,7 @@ AX_BEGIN_NAMESPACE
 
 	void GameRigit::doThink() {
 		m_model->setMatrix(m_rigid->getMatrix());
-		m_world->getRenderWorld()->addActor(m_model);
+		m_world->getRenderWorld()->addEntity(m_model);
 	}
 
 	void GameRigit::loadAsset(const LuaTable& t)
@@ -135,7 +135,7 @@ AX_BEGIN_NAMESPACE
 		m_model = new HavokModel(modelName);
 		m_model->setMatrix(m_matrix_p);
 		m_model->setInstanceColor(m_instanceColor_p);
-		m_world->getRenderWorld()->addActor(m_model);
+		m_world->getRenderWorld()->addEntity(m_model);
 
 		if (rigidName.empty()) {
 			rigidName = modelName;

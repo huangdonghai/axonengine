@@ -52,7 +52,7 @@ AX_BEGIN_NAMESPACE
 		virtual BoundingBox getBoundingBox();
 
 		// for editor use
-		virtual void doSelectTest() const;
+		virtual void doHitTest() const;
 		virtual void doDebugRender() const;
 
 		// game logic

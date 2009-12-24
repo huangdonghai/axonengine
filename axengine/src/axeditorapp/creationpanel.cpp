@@ -79,7 +79,7 @@ CreationPanel::CreationPanel(QWidget *parent)
 
 CreationPanel::~CreationPanel() {
 	if (m_renderActor) {
-		ui.preview->getRenderWorld()->removeActor(m_renderActor);
+		ui.preview->getRenderWorld()->removeEntity(m_renderActor);
 		delete m_renderActor;
 	}
 	g_mapContext->detachObserver(this);
@@ -107,7 +107,7 @@ void CreationPanel::doNotify(IObservable* subject, int arg) {
 		ui.objectName->setText(QString("%1 objects").arg(actorlist.size()));
 	} else {
 		Agent* actor = actorlist.back();
-		GameObject* node = static_cast<MapActor*>(actor)->getGameNode();
+		GameObject* node = static_cast<MapActor*>(actor)->getGameObject();
 		ui.objectName->setText(u2q(node->get_objectName()));
 		ui.objectColor->setColor(actor->getColor());
 	}
@@ -156,14 +156,14 @@ void CreationPanel::on_selectModel_itemDoubleClicked(QTreeWidgetItem* item,int)
 
 	RenderWorld* world = ui.preview->getRenderWorld();
 	if (m_renderActor) {
-		world->removeActor(m_renderActor);
+		world->removeEntity(m_renderActor);
 		delete m_renderActor;
 	}
 
 	g_mapContext->getMapState()->staticModelName = finfo.fullpath;
 
 	m_renderActor = new HavokModel(finfo.fullpath);
-	world->addActor(m_renderActor);
+	world->addEntity(m_renderActor);
 
 	ui.preview->setFocusActor(m_renderActor);
 	ui.preview->update();
@@ -206,12 +206,12 @@ void CreationPanel::on_selectTree_itemDoubleClicked(QTreeWidgetItem* item,int)
 
 	RenderWorld* world = ui.preview->getRenderWorld();
 	if (m_renderActor) {
-		world->removeActor(m_renderActor);
+		world->removeEntity(m_renderActor);
 		delete m_renderActor;
 	}
 
 	m_renderActor = new TreeActor(finfo.fullpath);
-	world->addActor(m_renderActor);
+	world->addEntity(m_renderActor);
 
 	ui.preview->setFocusActor(m_renderActor);
 	ui.preview->update();

@@ -13,16 +13,16 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-	class GfxView : public View {
-	public:
-		GfxView(GfxContext* ctx);
-		virtual ~GfxView();
+class GfxView : public View {
+public:
+	GfxView(GfxContext* ctx);
+	virtual ~GfxView();
 
-	protected:
-		virtual void doRender();
+protected:
+	virtual void doRender();
 
-	private:
-	};
+private:
+};
 
 AX_END_NAMESPACE
 

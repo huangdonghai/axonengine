@@ -28,7 +28,7 @@ ModelViewer::ModelViewer(QWidget *parent)
 }
 
 ModelViewer::~ModelViewer() {
-	ui.previewWidget->getRenderWorld()->removeActor(m_renderModel);
+	ui.previewWidget->getRenderWorld()->removeEntity(m_renderModel);
 	SafeDelete(m_renderModel);
 }
 
@@ -65,13 +65,13 @@ void ModelViewer::on_treeWidget_itemDoubleClicked(QTreeWidgetItem* item, int) {
 	} else {
 		RenderWorld* world = ui.previewWidget->getRenderWorld();
 		if (m_renderModel) {
-			world->removeActor(m_renderModel);
+			world->removeEntity(m_renderModel);
 			delete m_renderModel;
 		}
 
 		m_renderModel = new HavokModel(finfo.fullpath);
 //		m_renderModel->setAnimation("models/crouch.anim");
-		world->addActor(m_renderModel);
+		world->addEntity(m_renderModel);
 
 		ui.previewWidget->setFocusActor(m_renderModel);
 		ui.previewWidget->update();

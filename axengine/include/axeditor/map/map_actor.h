@@ -7,116 +7,33 @@ By continuing to use, modify, or distribute this file you indicate that you have
 read the license and understand and accept it fully.
 */
 
-#ifndef AX_EDITOR_MAP_ACTOR_H
-#define AX_EDITOR_MAP_ACTOR_H
+#ifndef AX_EDITOR_MAP_ENTITY_H
+#define AX_EDITOR_MAP_ENTITY_H
 
 AX_BEGIN_NAMESPACE
 
-	class MapContext;
-
 	//--------------------------------------------------------------------------
-	// class Agent
+	// class MapActor, Editor MapActor
 	//--------------------------------------------------------------------------
 
-	class AX_API MapAgent : public Agent {
+	class AX_API MapActor : public MapAgent {
 	public:
-		enum Type {
-			kNone, kStatic, kSpeedTree, kBrush, kEntity
-		};
+		MapActor();
+		MapActor(const String& type);
+		virtual ~MapActor();
 
-		enum Flag {
-			Selected = 1, Hovering = 2, Hided = 4, Deleted = 8, Locked = 0x10
-		};
-
-		MapAgent();
-		virtual ~MapAgent();
-
-		// implement Editor::Agent
-		virtual MapAgent* clone() const;
-		virtual void doDeleteFlagChanged(bool del);
+		// implement Actor
 		virtual void doRender();
+		virtual Type getType() const { return kEntity; }
+		virtual MapAgent* clone() const;
 
-		virtual void setMatrix(const AffineMat& matrix);
-		virtual const AffineMat& getMatrix() const { return m_gameObj->getMatrix_p(); }
-
-		virtual BoundingBox getBoundingBox() { return m_gameObj->getBoundingBox(); }
-
-		// properties
-		virtual Variant getProperty(const String& propname);
-		virtual void setProperty(const String& propname, const Variant& value);
-		virtual void doPropertyChanged();
-
-		virtual Rgb getColor() const;
-		virtual void setColor(Rgb val);
-
-		// MapAgent interface
-		virtual Type getType() const { return kNone; }
-
-		MapContext* getMapContext() const { return (MapContext*)(m_context); }
-
-		void bindToGame();
-		void unbindToGame();
-		void doSelect();
-
-		void writeXml(File* f, int indent=0) const;
-		void readXml(const TiXmlElement* node);
-
-		// base function
-		GameObject* getGameNode() const { return m_gameObj; }
-
-		static const char* typeToString(Type t);
-		static Type stringToType(const char* str);
+		GameActor* getGameEntity() const { return m_gameEntity; }
 
 	protected:
-		GameObject* m_gameObj;
-
-	private:
-		RenderLine* m_bboxLine;
+		GameActor* m_gameEntity;
+		RenderMesh* m_iconPrim;
 	};
-
-	//--------------------------------------------------------------------------
-	// class MapStatic
-	//--------------------------------------------------------------------------
-
-	class AX_API MapStatic : public MapAgent {
-	public:
-		MapStatic();
-		MapStatic(const String& nametemplate);
-		virtual ~MapStatic();
-
-		// implement editor actor
-		virtual void doRender();
-		virtual MapAgent* clone() const;
-		virtual Type getType() const { return kStatic; }
-
-	private:
-		// render
-		StaticFixed* m_gameFixed;
-	};
-
-	//--------------------------------------------------------------------------
-	// class MapSpeedTree
-	//--------------------------------------------------------------------------
-
-#ifdef AX_CONFIG_OPTION_USE_SPEEDTREE_40
-	class AX_API MapSpeedTree : public MapAgent {
-	public:
-		MapSpeedTree();
-		MapSpeedTree(const String& nametemplate);
-		virtual ~MapSpeedTree();
-
-		// implement editor actor
-		virtual void doRender();
-		virtual MapAgent* clone() const;
-		virtual Type getType() const { return kSpeedTree; }
-
-	private:
-		// render
-		TreeFixed* m_gameFixed;
-	};
-#endif // AX_CONFIG_OPTION_USE_SPEEDTREE_40
 
 AX_END_NAMESPACE
 
-#endif // end guardian
-
+#endif // AX_EDITOR_ENTITY_H

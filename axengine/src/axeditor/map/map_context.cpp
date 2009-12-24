@@ -84,7 +84,7 @@ AX_BEGIN_NAMESPACE
 	void MapContext::reset() {
 		SafeDelete(m_tool);
 		m_selections.clear();
-		m_editorHistory.clear();
+		m_historyManager.clear();
 
 		if (m_terrain) {
 			SafeDelete(m_terrainFixed);
@@ -92,12 +92,12 @@ AX_BEGIN_NAMESPACE
 		}
 
 		// release actors
-		ActorDict::iterator it = m_actorDict.begin();
-		for (; it != m_actorDict.end(); ++it) {
+		AgentDict::iterator it = m_agentDict.begin();
+		for (; it != m_agentDict.end(); ++it) {
 			SafeDelete(it->second);
 		}
 
-		m_actorDict.clear();
+		m_agentDict.clear();
 		m_isDirty = false;
 
 		m_maxId = 0;
@@ -174,7 +174,7 @@ AX_BEGIN_NAMESPACE
 
 			} else if (value == "terrain") {
 				m_terrain = new MapTerrain;
-				g_system->showProgress(progress += 5, "Loading Terrain...");
+				g_system->showProgress(progress += 5, "Loading kTerrain...");
 				m_terrainFixed = new TerrainFixed(m_terrain);
 				m_terrain->initFromXml(map_name, elem);
 				m_gameWorld->addNode(m_terrainFixed);
@@ -235,7 +235,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 	void MapContext::writeToFile(File* f) {
-		int numActors = s2i(m_actorDict.size());
+		int numActors = s2i(m_agentDict.size());
 
 		f->printf("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n");
 		f->printf("<map haveTerrain=\"%d\" numActors=\"%d\">\n", m_terrain ? 1 : 0, numActors);
@@ -253,8 +253,8 @@ AX_BEGIN_NAMESPACE
 		}
 
 		// write actors
-		ActorDict::iterator it = m_actorDict.begin();
-		for (; it != m_actorDict.end(); ++it) {
+		AgentDict::iterator it = m_agentDict.begin();
+		for (; it != m_agentDict.end(); ++it) {
 			MapAgent* actor = (MapAgent*)it->second;
 
 			if (!actor) continue;
@@ -318,9 +318,9 @@ AX_BEGIN_NAMESPACE
 
 		g_renderSystem->beginScene(camera);
 		// present static
-		ActorDict::iterator it = m_actorDict.begin();
+		AgentDict::iterator it = m_agentDict.begin();
 
-		for (; it != m_actorDict.end(); ++it) {
+		for (; it != m_agentDict.end(); ++it) {
 			if (it->second) it->second->doRender();
 		}
 
@@ -333,21 +333,21 @@ AX_BEGIN_NAMESPACE
 
 	void MapContext::doSelect(const RenderCamera& camera, int part) {
 		// select terrain
-		if (part & SelectPart::Terrain) {
+		if (part & SelectPart::kTerrain) {
 			if (m_terrain)
 				m_terrain->doSelect(camera);
 		}
 
-		if (part - SelectPart::Terrain == 0)
+		if (part - SelectPart::kTerrain == 0)
 			return;
 
 		// present static
-		ActorDict::iterator it = m_actorDict.begin();
+		AgentDict::iterator it = m_agentDict.begin();
 
-		for (; it != m_actorDict.end(); ++it) {
+		for (; it != m_agentDict.end(); ++it) {
 			MapAgent* actor = (MapAgent*)it->second;
 			if (actor && !actor->isDeleted())
-				actor->doSelect();
+				actor->doHitTest();
 		}
 	}
 
@@ -451,7 +451,7 @@ AX_BEGIN_NAMESPACE
 			return;
 		}
 
-		GameObject* gamenode =  actor->getGameNode();
+		GameObject* gamenode =  actor->getGameObject();
 		gamenode->readXml(childnode);
 
 		actor->setMatrix(matrix);

@@ -71,9 +71,8 @@ AX_BEGIN_NAMESPACE
 		void initialize(int worldSize = 1024);
 		void finalize();
 
-		void addActor(RenderEntity* actor);
-		void removeActor(RenderEntity* actor);
-		void addTempActor(RenderEntity* actor);
+		void addEntity(RenderEntity* actor);
+		void removeEntity(RenderEntity* actor);
 
 		OutdoorEnv* getOutdoorEnv() { return m_outdoorEnv; }
 

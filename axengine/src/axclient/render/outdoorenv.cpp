@@ -389,6 +389,7 @@ AX_BEGIN_NAMESPACE
 		return getLocalBoundingBox();
 	}
 
+#if 0
 	Primitives OutdoorEnv::getAllPrimitives()
 	{
 		Primitives result;
@@ -407,8 +408,9 @@ AX_BEGIN_NAMESPACE
 		}
 		return result;
 	}
+#endif
 
-	void OutdoorEnv::doUpdate(QueuedScene* qscene)
+	void OutdoorEnv::frameUpdate(QueuedScene* qscene)
 	{
 		if (!m_dateTimeInited) {
 			m_dateTime.initSystemTime(qscene->camera.getTime());

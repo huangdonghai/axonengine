@@ -12,38 +12,46 @@ have read the license and understand and accept it fully.
 #ifndef AX_GFX_OBJECT_H
 #define AX_GFX_OBJECT_H
 
-namespace Axon { namespace Gfx {
+AX_BEGIN_NAMESPACE
 
-	class GfxEntity;
+class GfxEntity;
 
-	class GfxObject : public Object
-	{
-		AX_DECLARE_CLASS(GfxObject, Object)
-			AX_SIMPLEPROP(tm)
-		AX_END_CLASS()
-	public:
-		enum GfxType {
-			kVirtualBase,
-			kParticleEmitter,
-			kRibbonEmitter,
-			kSound,
-			kModel
-		};
-
-		GfxObject();
-		virtual ~GfxObject();
-
-		virtual GfxType getGfxType() const { return kVirtualBase; }
-		virtual void update() {}
-		virtual void render() {}
-
-	private:
-		GfxEntity* m_entity;
-
-		// animatable properties
-		AffineMat m_tm;
+class GfxObject : public Object
+{
+	AX_DECLARE_CLASS(GfxObject, Object)
+		AX_SIMPLEPROP(tm)
+	AX_END_CLASS()
+public:
+	enum GfxType {
+		kVirtualBase,
+		kParticleEmitter,
+		kRibbonEmitter,
+		kSound,
+		kModel
 	};
 
-}} // namespace Axon::Gfx
+	GfxObject();
+	virtual ~GfxObject();
+
+	virtual GfxType getGfxType() const { return kVirtualBase; }
+
+	const AffineMat& getTm() const { return m_tm; }
+	void setTm(const AffineMat& mat) { m_tm = mat; }
+
+	// interface, routed from GfxEntity
+	virtual BoundingBox getLocalBoundingBox();
+	virtual BoundingBox getBoundingBox();
+	virtual Primitives getHitTestPrims();
+	virtual void frameUpdate(QueuedScene *qscene);
+	virtual void issueToQueue(QueuedScene *qscene);
+
+protected:
+	GfxEntity* m_entity;
+
+	// animatable properties
+	AffineMat m_tm;
+};
+
+AX_END_NAMESPACE
 
 #endif // AX_GFX_OBJECT_H

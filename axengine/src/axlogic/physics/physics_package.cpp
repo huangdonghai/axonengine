@@ -1392,7 +1392,7 @@ final:
 		return getLocalBoundingBox().getTransformed(m_affineMat);
 	}
 
-	Primitives HavokModel::getAllPrimitives() {
+	Primitives HavokModel::getHitTestPrims() {
 		if (!m_package)
 			return Primitives();
 

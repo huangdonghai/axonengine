@@ -56,7 +56,6 @@ AX_BEGIN_NAMESPACE
 		const Matrix3& getAxis() const { return getMatrix().axis; }
 		void setAxis(const Matrix3& axis);
 		Context* getContext() const { return m_context; }
-		void setContext(Context* val) { m_context = val; }
 
 	protected:
 		Context* m_context;

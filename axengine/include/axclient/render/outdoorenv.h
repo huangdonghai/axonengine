@@ -54,9 +54,8 @@ AX_BEGIN_NAMESPACE
 		virtual Kind getType() const { return kOutdoorEnv; }
 
 		// new interface
-		virtual void doUpdate(QueuedScene* qscene);
+		virtual void frameUpdate(QueuedScene* qscene);
 		virtual void issueToQueue(QueuedScene* qscene);
-		virtual Primitives getAllPrimitives();
 
 	protected:
 		void createSkyBox();

@@ -58,10 +58,10 @@ AX_BEGIN_NAMESPACE
 
 	struct SelectPart {
 		enum Type {
-			Terrain = 1,
-			Static = 2,
-			Vegetation = 4,
-			Entity = 8,
+			kTerrain = 1,
+			kStatic = 2,
+			kVegetation = 4,
+			kActor = 8,
 
 			All = 0xFFFFFFFF
 		} t;

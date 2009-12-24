@@ -9,3 +9,6 @@ read the license and understand and accept it fully.
 
 
 #include "../private.h"
+
+AX_BEGIN_NAMESPACE
+AX_END_NAMESPACE

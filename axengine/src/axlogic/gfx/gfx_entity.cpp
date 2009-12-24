@@ -11,6 +11,66 @@ read the license and understand and accept it fully.
 
 #include "gfx_local.h"
 
-namespace Axon { namespace Gfx {
+AX_BEGIN_NAMESPACE
 
-}} // namespace Axon::Gfx
+GfxEntity::GfxEntity() : RenderEntity(kEffect)
+{
+
+}
+
+GfxEntity::GfxEntity( const String &filename ) : RenderEntity(kEffect)
+{
+
+}
+
+GfxEntity::~GfxEntity()
+{
+
+}
+
+BoundingBox GfxEntity::getLocalBoundingBox()
+{
+	BoundingBox result = BoundingBox::EmptyBox;
+
+	return result;
+}
+
+BoundingBox GfxEntity::getBoundingBox()
+{
+	BoundingBox result = BoundingBox::EmptyBox;
+
+	return result;
+}
+
+Primitives GfxEntity::getHitTestPrims()
+{
+	return Primitives();
+}
+
+void GfxEntity::frameUpdate( QueuedScene *qscene )
+{
+
+}
+
+void GfxEntity::issueToQueue( QueuedScene *qscene )
+{
+
+}
+
+void GfxEntity::addObject( GfxObject *obj )
+{
+	m_objects.push_back(obj);
+}
+
+void GfxEntity::removeObject( GfxObject *obj )
+{
+	Sequence<GfxObject*>::iterator it = m_objects.begin();
+	for (; it != m_objects.end(); ++it) {
+		if (*it == obj) {
+			m_objects.erase(it);
+			return;
+		}
+	}
+}
+
+AX_END_NAMESPACE

@@ -58,7 +58,7 @@ AX_BEGIN_NAMESPACE
 
 		m_model = new HavokModel(mdl);
 		m_model->setMatrix(m_matrix_p);
-		m_world->getRenderWorld()->addActor(m_model);
+		m_world->getRenderWorld()->addEntity(m_model);
 
 		if (!animname.empty()) {
 			m_animation = new HavokAnimation(animname);

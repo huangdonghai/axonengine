@@ -53,12 +53,12 @@ void ActorPanel::doNotify(IObservable* subject, int arg ) {
 		ui.scriptFile->setText("");
 	} else {
 		MapActor* actor = static_cast<MapActor*>(actorlist.back());
-		GameObject* node = actor->getGameNode();
+		GameObject* node = actor->getGameObject();
 		ui.propEditor->initFromObject(node );
 		ui.scriptProp->initScriptProp(node );
 		ui.objectName->setText(u2q(node->get_objectName()) );
 		ui.objectColor->setColor(actor->getColor() );
-		const ClassInfo* ci = actor->getGameNode()->getClassInfo();
+		const ClassInfo* ci = actor->getGameObject()->getClassInfo();
 		if (ci ) {
 			ui.scriptClass->setText(u2q(ci->m_className) );
 			QString filename = u2q("scripts/"+ ci->m_className );
@@ -70,7 +70,7 @@ void ActorPanel::doNotify(IObservable* subject, int arg ) {
 			}
 			ui.scriptFile->setText(filename + ".lua" );
 		}
-		ui.cppType->setText(u2q(actor->getGameNode()->getMetaInfo()->getTypeName()) );
+		ui.cppType->setText(u2q(actor->getGameObject()->getMetaInfo()->getTypeName()) );
 	}
 
 	if (actorlist.empty() ) {

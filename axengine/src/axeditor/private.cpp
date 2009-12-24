@@ -13,6 +13,7 @@ read the license and understand and accept it fully.
 namespace Axon {
 
 	MapContext* g_mapContext = 0;
+	GfxContext* g_gfxContext = 0;
 
 	void axEditorInit() {
 		g_mapContext = new MapContext();

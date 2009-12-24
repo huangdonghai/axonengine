@@ -213,8 +213,7 @@ AX_BEGIN_NAMESPACE
 		// implement Render::Actor
 		virtual BoundingBox getLocalBoundingBox();
 		virtual BoundingBox getBoundingBox();
-		virtual Primitives getAllPrimitives();
-		virtual Primitives getSelectionPrims(){ return getAllPrimitives(); }
+		virtual Primitives getHitTestPrims();
 
 		virtual void issueToQueue(QueuedScene* qscene);
 

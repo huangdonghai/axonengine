@@ -225,7 +225,7 @@ AX_BEGIN_NAMESPACE
 					continue;
 				}
 
-				geoins->addInstance(ia->qactor->m_matrix, ia->qactor->instanceParam);
+				geoins->addInstance(ia->qactor->matrix, ia->qactor->instanceParam);
 				ia->instanced = true;
 			}
 

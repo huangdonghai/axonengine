@@ -318,30 +318,30 @@ AX_BEGIN_NAMESPACE
 		g_renderQueue = g_queues[m_frameNum%2];
 	}
 
-	void RenderSystem::beginSelect(const RenderCamera& view) {
+	void RenderSystem::beginHitTest(const RenderCamera& view) {
 		m_selectionCamera = view;
 
 		m_selection->beginSelect(view);
 	}
 
-	void RenderSystem::loadSelectId(int id) {
+	void RenderSystem::loadHitId(int id) {
 		m_selection->loadSelectId(id);
 	}
 
 
-	void RenderSystem::testActor(RenderEntity* re) {
-		m_selection->testActor(re);
+	void RenderSystem::hitTest(RenderEntity* re) {
+		m_selection->testEntity(re);
 	}
 
-	void RenderSystem::testPrimitive(Primitive* prim) {
+	void RenderSystem::hitTest(Primitive* prim) {
 		m_selection->testPrimitive(prim);
 	}
 
-	void RenderSystem::testPrimitive(Primitive* prim, const AffineMat& matrix) {
+	void RenderSystem::hitTest(Primitive* prim, const AffineMat& matrix) {
 		m_selection->testPrimitive(prim, matrix);
 	}
 
-	SelectRecordSeq RenderSystem::endSelect() {
+	HitRecords RenderSystem::endHitTest() {
 		return m_selection->endSelect();
 	}
 

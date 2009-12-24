@@ -12,19 +12,19 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-	GfxView::GfxView(GfxContext* ctx) : View(ctx)
-	{
+GfxView::GfxView(GfxContext* ctx) : View(ctx)
+{
 
-	}
+}
 
-	GfxView::~GfxView()
-	{
+GfxView::~GfxView()
+{
 
-	}
+}
 
-	void GfxView::doRender()
-	{
+void GfxView::doRender()
+{
 
-	}
+}
 
 AX_END_NAMESPACE

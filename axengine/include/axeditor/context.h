@@ -15,7 +15,7 @@ AX_BEGIN_NAMESPACE
 
 	class AX_API Context : public IObservable {
 	public:
-		typedef Dict<int, Agent*> ActorDict;
+		typedef Dict<int, Agent*> AgentDict;
 
 		enum ObserverFlag {
 			SelectionChanged = 1,
@@ -34,16 +34,16 @@ AX_BEGIN_NAMESPACE
 		// present
 		virtual void doRender(const RenderCamera& camera, bool world = false) = 0;
 		virtual void doSelect(const RenderCamera& camera, int part) = 0;
-		virtual MapTerrain* getTerrain() { return 0; }
+		virtual MapTerrain *getTerrain() { return 0; }
 
 		int generateActorId();
-		void addActor(Agent* a);
-		void removeActor(Agent* a);
-		Agent* findActor(int id);
-		const ActorDict& getActorDict() { return m_actorDict; }
+		void addActor(Agent *a);
+		void removeActor(Agent *a);
+		Agent *findActor(int id);
+		const AgentDict& getActorDict() { return m_agentDict; }
 
-		Action* createAction(int type);
-		Tool* createTool(int type);
+		Action *createAction(int type);
+		Tool *createTool(int type);
 
 		void reset();
 
@@ -58,28 +58,30 @@ AX_BEGIN_NAMESPACE
 
 		// view process
 		int getNumViews() const { return m_numViews; }
-		View* getView(int index);
-		void setActiveView(View* view) { m_activeView = view; }
-		View* getActiveView() const { return m_activeView; }
+		View *getView(int index);
+		void setActiveView(View *view) { m_activeView = view; }
+		View *getActiveView() const { return m_activeView; }
 
 		Vector3 getViewPos();
 
 		void doAction(int action);
 		void doTool(int tool);
-		Tool* getTool() const { return m_tool; }
+		Tool *getTool() const { return m_tool; }
 		int getToolType() const { return m_tooltype; }
 
 		// history
-		void addHistory(Action* his);
+		void addHistory(Action *his);
+		void beginHis(const String& msg) { m_historyManager.begin(this, msg); }
+		void endHis() { m_historyManager.end(); }
 		void undo();
 		void redo();
-		HistoryManager* getHistory();
+		HistoryManager *getHistory();
 
 		// selection
 		const AgentList& getSelection() { return m_selections; }
-		History* setSelectionHistoried(const AgentList& elist);
+		History *setSelectionHistoried(const AgentList& elist);
 		void setSelection(const AgentList& elist, bool undoable=true);
-		void setSelection(Agent* actor, bool undoable=true);
+		void setSelection(Agent *actor, bool undoable=true);
 		void selectNone(bool undoable=true);
 		void selectAll(bool undoable=true);
 		void selectInvert(bool undoable=true);
@@ -89,34 +91,34 @@ AX_BEGIN_NAMESPACE
 		void setActorProperty(const String& propName, const Variant& value);
 
 		// state
-		State* getState() const { return m_state; }
-		void setState(State* val) { m_state = val; }
+		State *getState() const { return m_state; }
+		void setState(State *val) { m_state = val; }
 
 	protected:
 		int m_maxId;
-		ActorDict m_actorDict;
+		AgentDict m_agentDict;
 		bool m_isDirty;
 		bool m_isLoading;
 
-		ActionFactory* m_actionFactories[Action::MaxType];
-		ToolFactory* m_toolFactories[Tool::MaxType];
+		ActionFactory *m_actionFactories[Action::MaxType];
+		ToolFactory *m_toolFactories[Tool::MaxType];
 
 		int m_numViews;
-		View* m_indexedViews[View::MaxView];
-		View* m_activeView;
+		View *m_indexedViews[View::MaxView];
+		View *m_activeView;
 
 		// tool
 		int m_tooltype;
-		Tool* m_tool;
+		Tool *m_tool;
 
 		// selection
 		AgentList m_selections;
 
 		// history
-		HistoryManager m_editorHistory;
+		HistoryManager m_historyManager;
 
 		// state
-		State* m_state;
+		State *m_state;
 	};
 
 AX_END_NAMESPACE

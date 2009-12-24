@@ -340,7 +340,7 @@ AX_BEGIN_NAMESPACE
 #else
 		loadMatrix(GL_MODELVIEW, select_viewmatrix * re->getModelMatrix());
 #endif
-		Primitives prims = re->getSelectionPrims();
+		Primitives prims = re->getHitTestPrims();
 
 		Primitives::iterator it;
 
@@ -426,12 +426,12 @@ AX_BEGIN_NAMESPACE
 		}
 	};
 
-	SelectRecordSeq GLdriver::endSelect() {
+	HitRecords GLdriver::endSelect() {
 		// unbind vertex buffer and index buffer
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-		SelectRecordSeq selectBuffer;
+		HitRecords selectBuffer;
 
 		GLint recordCount = glRenderMode(GL_RENDER);
 		m_isSelectMode = false;
@@ -445,7 +445,7 @@ AX_BEGIN_NAMESPACE
 		while (p != end) {
 			AX_ASSERT(p<end);
 
-			SelectRecord r;
+			HitRecord r;
 			r.name = p->name[0];
 			r.minz = GLHitRecord::mappingz(p->minz);
 			r.maxz = GLHitRecord::mappingz(p->maxz);

@@ -14,12 +14,12 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-	struct SelectRecord {
+	struct HitRecord {
 		int name;
 		float minz;
 		float maxz;
 	};
-	typedef Sequence<SelectRecord> SelectRecordSeq;
+	typedef Sequence<HitRecord> HitRecords;
 
 	struct VideoMode {
 		uint_t width;

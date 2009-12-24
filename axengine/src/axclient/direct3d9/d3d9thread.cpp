@@ -330,13 +330,13 @@ AX_BEGIN_NAMESPACE
 					primMatrixSet = false;
 				}
 
-				AX_SU(g_modelMatrix, d3d9Actor->m_matrix);
+				AX_SU(g_modelMatrix, d3d9Actor->matrix);
 				AX_SU(g_instanceParam, d3d9Actor->instanceParam);
 
 				if (prim->isMatrixSet()) {
 					AffineMat mat = prim->getMatrix().getAffineMat();
-					mat = d3d9Actor->m_matrix * mat;
-					AX_SU(g_modelMatrix, d3d9Actor->m_matrix);
+					mat = d3d9Actor->matrix * mat;
+					AX_SU(g_modelMatrix, d3d9Actor->matrix);
 				}
 
 				if (d3d9Actor->flags & RenderEntity::DepthHack) {

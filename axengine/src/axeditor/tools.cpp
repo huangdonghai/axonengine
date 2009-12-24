@@ -116,7 +116,7 @@ AX_BEGIN_NAMESPACE
 		RenderLine::setupScreenRect(m_linePrim, r, Rgba::Red);
 
 #if 1
-		int part = SelectPart::All - SelectPart::Terrain;
+		int part = SelectPart::All - SelectPart::kTerrain;
 
 		AgentList l;
 		Vector3 pos;
@@ -184,7 +184,7 @@ AX_BEGIN_NAMESPACE
 
 		clearAsset();
 
-		int part = SelectPart::All - SelectPart::Terrain;
+		int part = SelectPart::All - SelectPart::kTerrain;
 
 		AgentList l;
 		Vector3 pos;
@@ -238,7 +238,7 @@ AX_BEGIN_NAMESPACE
 
 		clearAsset();
 
-		int part = SelectPart::All - SelectPart::Terrain;
+		int part = SelectPart::All - SelectPart::kTerrain;
 
 		AgentList l;
 		Vector3 pos;
@@ -586,7 +586,7 @@ AX_BEGIN_NAMESPACE
 
 				Vector3 from;
 
-				if (!m_view->selectRegion(Rect(m_mouseX, m_mouseY, 1, 1), SelectPart::Terrain, from)) {
+				if (!m_view->selectRegion(Rect(m_mouseX, m_mouseY, 1, 1), SelectPart::kTerrain, from)) {
 					return false;
 				}
 

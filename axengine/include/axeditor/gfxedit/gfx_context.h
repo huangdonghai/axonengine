@@ -13,18 +13,18 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-	class GfxContext : public Context {
-	public:
-		GfxContext();
-		virtual ~GfxContext();
+class GfxContext : public Context {
+public:
+	GfxContext();
+	virtual ~GfxContext();
 
-		// implement Context
-		virtual void doRender(const RenderCamera& camera, bool world = false);
-		virtual void doSelect(const RenderCamera& camera, int part);
+	// implement Context
+	virtual void doRender(const RenderCamera& camera, bool world = false);
+	virtual void doSelect(const RenderCamera& camera, int part);
 
-	private:
-		GfxView* m_view;
-	};
+private:
+	GfxView* m_view;
+};
 
 AX_END_NAMESPACE
 

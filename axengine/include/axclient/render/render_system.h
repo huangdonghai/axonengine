@@ -50,12 +50,12 @@ AX_BEGIN_NAMESPACE
 		void endFrame();
 
 		// new selection
-		void beginSelect(const RenderCamera& view);
-		void loadSelectId(int id);
-		void testActor(RenderEntity* re);
-		void testPrimitive(Primitive* prim);
-		void testPrimitive(Primitive* prim, const AffineMat& matrix);
-		SelectRecordSeq endSelect();
+		void beginHitTest(const RenderCamera& view);
+		void loadHitId(int id);
+		void hitTest(RenderEntity* re);
+		void hitTest(Primitive* prim);
+		void hitTest(Primitive* prim, const AffineMat& matrix);
+		HitRecords endHitTest();
 
 		void screenShot(const String& name, const Rect& rect);
 

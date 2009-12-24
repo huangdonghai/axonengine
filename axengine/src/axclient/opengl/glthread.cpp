@@ -354,13 +354,13 @@ AX_BEGIN_NAMESPACE
 					primMatrixSet = false;
 				}
 
-				AX_SU(g_modelMatrix, gActor->m_matrix);
+				AX_SU(g_modelMatrix, gActor->matrix);
 				AX_SU(g_instanceParam, gActor->instanceParam);
 
 				if (prim->isMatrixSet()) {
 					AffineMat mat = prim->getMatrix().getAffineMat();
-					mat = gActor->m_matrix * mat;
-					AX_SU(g_modelMatrix, gActor->m_matrix);
+					mat = gActor->matrix * mat;
+					AX_SU(g_modelMatrix, gActor->matrix);
 				}
 
 				if (gActor->flags & RenderEntity::DepthHack) {

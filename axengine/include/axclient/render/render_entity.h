@@ -21,7 +21,7 @@ AX_BEGIN_NAMESPACE
 			MAX_TARGETS = 8
 		};
 
-		AffineMat m_matrix;
+		AffineMat matrix;
 		Vector4 instanceParam;
 		int flags;			// Actor::Flag
 
@@ -58,7 +58,7 @@ AX_BEGIN_NAMESPACE
 		};
 
 		enum Kind {
-			kNone, kModel, kSpeedTree, kAnchor, kPartical, kUserInterface,
+			kNone, kModel, kSpeedTree, kAnchor, kEffect, kUserInterface,
 			kLight, kFog, kVisArea, kPortal, kOccluder, kTerrain, kOutdoorEnv
 		};
 
@@ -79,8 +79,8 @@ AX_BEGIN_NAMESPACE
 		void setInstanceColor(const Vector3& color);
 		Vector3 getInstanceColor() const;
 
-		bool isPresented() const { return m_world != 0; }
-		void updateToWorld();
+		bool isInWorld() const { return m_world != 0; }
+		void refresh();
 
 		int getFlags() const;
 		void setFlags(int flags);
@@ -89,6 +89,7 @@ AX_BEGIN_NAMESPACE
 
 		bool isVisable() const;
 		bool isLight() const { return m_kind == kLight; }
+		float getVisSize() const { return m_visSize; }
 
 		// queued
 		void setQueued(QueuedEntity* queued);
@@ -97,10 +98,6 @@ AX_BEGIN_NAMESPACE
 		// read only
 		Matrix4 getModelMatrix() const;
 
-		void update(QueuedScene* qscene, Plane::Side side);
-		void updateCsm(QueuedScene* qscene, Plane::Side side);
-		bool isCsmCulled() const;
-		float getVisSize() const { return m_visSize; }
 		RenderWorld* getWorld() const { return m_world; }
 		void setWorld(RenderWorld* world) { m_world = world; }
 
@@ -109,17 +106,19 @@ AX_BEGIN_NAMESPACE
 		void addHelperPrim(Primitive* prim);
 		const Primitives& getHelperPrims() const;
 
-		// generate render primitive
+		// virtual interface
 		virtual BoundingBox getLocalBoundingBox() = 0;
 		virtual BoundingBox getBoundingBox() = 0;
-		virtual Primitives getAllPrimitives() { return Primitives(); }
-		virtual Primitives getSelectionPrims() { return getAllPrimitives(); }
-
-		// new interface
-		virtual void doUpdate(QueuedScene* qscene);
-		virtual void doCalculateLod(QueuedScene* qscene);
-		virtual Vector4 getInstanceParam() const;
+		virtual Primitives getHitTestPrims() { return Primitives(); }
+		virtual void frameUpdate(QueuedScene* qscene);
 		virtual void issueToQueue(QueuedScene* qscene) {}
+
+	protected:
+		// only called by RenderWorld
+		void update(QueuedScene* qscene, Plane::Side side);
+		void updateCsm(QueuedScene* qscene, Plane::Side side);
+		bool isCsmCulled() const;
+		void calculateLod(QueuedScene* qscene);
 
 	protected:
 		const Kind m_kind;

@@ -26,7 +26,7 @@ AX_BEGIN_NAMESPACE
 		virtual ~GameSound();
 
 		// implement Node
-		virtual void doSelectTest() const;
+		virtual void doHitTest() const;
 		virtual void doDebugRender() const;
 		virtual void clear();
 
