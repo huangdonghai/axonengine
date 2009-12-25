@@ -13,84 +13,84 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-	TreeManager::TreeManager() {
-		m_defaulted = nullptr;
+TreeManager::TreeManager() {
+	m_defaulted = nullptr;
+}
+
+TreeManager::~TreeManager() {
+
+}
+
+TreeAsset* TreeManager::findAsset(const String& name, int seed) {
+	String key = TreeAsset::genKey(name, seed);
+	TreeAssetDict::iterator it = m_treeAssetDict.find(key);
+
+	if (it != m_treeAssetDict.end()) {
+		it->second->addref();
+		return it->second;
 	}
 
-	TreeManager::~TreeManager() {
+	TreeAsset* result = new TreeAsset(this);
+	bool v = result->load(name, seed);
 
+	if (!v) {
+		delete result;
+		m_defaulted->addref();
+		return m_defaulted;
 	}
 
-	TreeAsset* TreeManager::findAsset(const String& name, int seed) {
-		String key = TreeAsset::genKey(name, seed);
-		TreeAssetDict::iterator it = m_treeAssetDict.find(key);
+	m_treeAssetDict[key] = result;
+	return result;
+}
 
-		if (it != m_treeAssetDict.end()) {
-			it->second->addref();
-			return it->second;
-		}
+void TreeManager::addAsset(TreeAsset* wrapper) {
+	m_treeAssetDict[wrapper->getKey()] = wrapper;
+}
 
-		TreeAsset* result = new TreeAsset(this);
-		bool v = result->load(name, seed);
+void TreeManager::removeAsset(TreeAsset* wrapper) {
+	m_treeAssetDict.erase(wrapper->getKey());
+}
 
-		if (!v) {
-			delete result;
-			m_defaulted->addref();
-			return m_defaulted;
-		}
+void TreeManager::addTree(TreeActor* tree) {
+	m_treeDict.insert(tree);
+}
 
-		m_treeAssetDict[key] = result;
-		return result;
+void TreeManager::removeTree(TreeActor* tree) {
+	m_treeDict.erase(tree);
+}
+
+bool TreeManager::isSupportExt(const String& ext) const {
+	if (ext == "spt") {
+		return true;
 	}
 
-	void TreeManager::addAsset(TreeAsset* wrapper) {
-		m_treeAssetDict[wrapper->getKey()] = wrapper;
+	if (ext == "SPT") {
+		return true;
 	}
 
-	void TreeManager::removeAsset(TreeAsset* wrapper) {
-		m_treeAssetDict.erase(wrapper->getKey());
-	}
+	return false;
+}
 
-	void TreeManager::addTree(TreeActor* tree) {
-		m_treeDict.insert(tree);
-	}
+RenderEntity* TreeManager::create(const String& name, intptr_t arg) {
+	return new TreeActor(name, arg);
+}
 
-	void TreeManager::removeTree(TreeActor* tree) {
-		m_treeDict.erase(tree);
-	}
+void TreeManager::updateForFrame(QueuedScene* qscene ) {
+	// do nothing
+}
 
-	bool TreeManager::isSupportExt(const String& ext) const {
-		if (ext == "spt") {
-			return true;
-		}
-
-		if (ext == "SPT") {
-			return true;
-		}
-
-		return false;
-	}
-
-	RenderEntity* TreeManager::create(const String& name, intptr_t arg) {
-		return new TreeActor(name, arg);
-	}
-
-	void TreeManager::updateForFrame(QueuedScene* qscene ) {
-		// do nothing
-	}
-
-	void TreeManager::issueToQueue(QueuedScene* qscene) {
+void TreeManager::issueToQueue(QueuedScene* qscene) {
 #if 0
-		if (!r_geoInstancing->getInteger()) {
-			return;
-		}
-		// gen instance
-		TreeAssetDict::iterator it = m_treeAssetDict.begin();
-		for (; it != m_treeAssetDict.end(); ++it) {
-			it->second->issueToQueueInstancing(qscene);
-		}
-#endif
+	if (!r_geoInstancing->getInteger()) {
+		return;
 	}
+	// gen instance
+	TreeAssetDict::iterator it = m_treeAssetDict.begin();
+	for (; it != m_treeAssetDict.end(); ++it) {
+		it->second->issueToQueueInstancing(qscene);
+	}
+#endif
+}
 
 AX_END_NAMESPACE
 

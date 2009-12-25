@@ -25,17 +25,17 @@ struct Particle {
 class ParticleEmitter : public GfxObject
 {
 	AX_DECLARE_CLASS(ParticleEmitter, GfxObject)
-		AX_SIMPLEPROP(speed)
-		AX_SIMPLEPROP(variation)
-		AX_SIMPLEPROP(spread)
-		AX_SIMPLEPROP(lat)
-		AX_SIMPLEPROP(gravity)
-		AX_SIMPLEPROP(lifespan)
-		AX_SIMPLEPROP(rate)
-		AX_SIMPLEPROP(areal)
-		AX_SIMPLEPROP(areaw)
-		AX_SIMPLEPROP(deacceleration)
-		AX_SIMPLEPROP(enabled)
+		AX_SIMPLEPROP(EmissionSpeed)
+		AX_SIMPLEPROP(SpeedVariation)
+		AX_SIMPLEPROP(VerticalRange)
+		AX_SIMPLEPROP(HorizontalRange)
+		AX_SIMPLEPROP(Gravity)
+		AX_SIMPLEPROP(Lifespan)
+		AX_SIMPLEPROP(EmissionRate)
+		AX_SIMPLEPROP(EmissionAreaLength)
+		AX_SIMPLEPROP(EmissionAreaWidth)
+		AX_SIMPLEPROP(Gravity2)
+		AX_SIMPLEPROP(Enabled)
 	AX_END_CLASS()
 
 public:
@@ -55,22 +55,22 @@ public:
 	virtual void issueToQueue(QueuedScene *qscene);
 
 protected:
-	Particle planeEmit(int anim, int time, float w, float l, float spd, float var, float spr, float spr2);
-	Particle sphereEmit(int anim, int time, float w, float l, float spd, float var, float spr, float spr2);
+	Particle *planeEmit(float w, float l, float spd, float var, float spr, float spr2);
+	Particle *sphereEmit(float w, float l, float spd, float var, float spr, float spr2);
 
 private:
 	// BEGIN ANIMATABLE PROPERTIES
-	float m_speed;
-	float m_variation;
-	float m_spread;
-	float m_lat;
-	float m_gravity;
-	float m_lifespan;
-	float m_rate;
-	float m_areal;
-	float m_areaw;
-	float m_deacceleration;
-	float m_enabled;
+	float m_EmissionSpeed;
+	float m_SpeedVariation;		// Variation in the flying-speed. (range: 0 to 1)
+	float m_VerticalRange;		// Drifting away vertically. (range: 0 to pi)
+	float m_HorizontalRange;	// They can do it horizontally too! (range: 0 to 2*pi)
+	float m_Gravity;			// Fall down, apple!
+	float m_Lifespan;			// Everyone has to die.
+	float m_EmissionRate;		// Stread your particles, emitter.
+	float m_EmissionAreaLength; // Well, you can do that in this area.
+	float m_EmissionAreaWidth;
+	float m_Gravity2;			// A second gravity? Its strong.
+	float m_Enabled;
 	// END ANIMATABLE PROPERTIES
 
 	Vector4 m_colors[3];
