@@ -26,6 +26,28 @@ namespace Axon {
 		AX_DECLARE_ENUM(VertexType);
 	};
 
+	class VertexDecl {
+	public:
+		enum ElementDecl {
+			Postion,
+			StreamTc,
+			StreamTc2,
+			Color,
+			Normal,
+			Tangent,
+			Binormal,
+			BoneIndices,
+			BoneWeights
+		};
+		VertexDecl(const Sequence<ElementDecl>& decls);
+
+		int getStride() const;
+		int getElementOffset() const;
+
+	private:
+		Sequence<ElementDecl> m_elemDecls;
+	};
+
 	struct Vertex {
 		Vector3 xyz;
 		Vector2 st;
