@@ -50,9 +50,9 @@ public:
 
 private:
 
-	void testLine(const RenderLine* line);
-	void testMesh(const RenderMesh* mesh);
-	void testChunk(const RenderChunk* chunk);
+	void testLine(const LinePrim* line);
+	void testMesh(const MeshPrim* mesh);
+	void testChunk(const ChunkPrim* chunk);
 
 	void aliasClipTriangle(const SelectionVertex& vertex0,
 							const SelectionVertex& vertex1, const SelectionVertex& vertex2);

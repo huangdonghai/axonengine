@@ -173,7 +173,7 @@ AX_BEGIN_NAMESPACE
 	void D3D9geometry::initMesh() {
 		m_vertexType = D3D9vertexobject::VertexGeneric;
 
-		RenderMesh* src = (RenderMesh*)m_src;
+		MeshPrim* src = (MeshPrim*)m_src;
 
 		if (src->getIsStriped()) {
 			m_d3dPrimitiveType = D3DPT_TRIANGLESTRIP;
@@ -207,7 +207,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 	void D3D9geometry::updateLine() {
-		RenderLine* line = static_cast<RenderLine*>(m_src);
+		LinePrim* line = static_cast<LinePrim*>(m_src);
 		AX_ASSERT(line);
 
 		int m_vertexCount = line->getNumVertexes();
@@ -223,7 +223,7 @@ AX_BEGIN_NAMESPACE
 
 
 	void D3D9geometry::updateMesh() {
-		RenderMesh* mesh = static_cast<RenderMesh*>(m_src);
+		MeshPrim* mesh = static_cast<MeshPrim*>(m_src);
 		AX_ASSERT(mesh);
 
 		int m_vertexCount = mesh->getNumVertexes();
@@ -249,7 +249,7 @@ AX_BEGIN_NAMESPACE
 	void D3D9text::initialize(Primitive* src) {
 		D3D9primitive::initialize(src);
 
-		RenderText* text = static_cast<RenderText*>(m_src);
+		TextPrim* text = static_cast<TextPrim*>(m_src);
 		AX_ASSERT(text);
 
 		// copy text info from source primitive
@@ -265,9 +265,9 @@ AX_BEGIN_NAMESPACE
 		m_verticalAlign = text->getVerticalAlign();
 
 		if (m_isSimpleText) {
-			m_format = RenderText::ScaleByVertical;
-			m_horizonAlign = RenderText::Center;
-			m_verticalAlign = RenderText::VCenter;
+			m_format = TextPrim::ScaleByVertical;
+			m_horizonAlign = TextPrim::Center;
+			m_verticalAlign = TextPrim::VCenter;
 		}
 
 		int numchars = s2i(m_text.size());
@@ -323,12 +323,12 @@ AX_BEGIN_NAMESPACE
 		float textwidth = scale.x * m_font->getStringWidth(wstr);
 		float textheight = scale.y * m_font->getHeight();
 
-		if (m_format & RenderText::ScaleByVertical) {
+		if (m_format & TextPrim::ScaleByVertical) {
 			scale.y = tq.height / textheight;
 			scale.x = m_aspect * scale.y;
 		}
 
-		if (m_format & RenderText::ScaleByHorizon) {
+		if (m_format & TextPrim::ScaleByHorizon) {
 			scale.x = tq.width / textwidth;
 			scale.y = scale.x / m_aspect;
 		}
@@ -336,23 +336,23 @@ AX_BEGIN_NAMESPACE
 		width = tq.width / scale.x;
 		height = tq.height / scale.y;
 
-		bool italic = m_format & RenderText::Italic ? true : false;
+		bool italic = m_format & TextPrim::Italic ? true : false;
 
-		if (m_horizonAlign == RenderText::Left) {
+		if (m_horizonAlign == TextPrim::Left) {
 			startpos.x = 0;
-		} else if (m_horizonAlign == RenderText::Center) {
+		} else if (m_horizonAlign == TextPrim::Center) {
 			startpos.x =(width - textwidth) * 0.5f;
-		} else if (m_horizonAlign == RenderText::Right) {
+		} else if (m_horizonAlign == TextPrim::Right) {
 			startpos.x = width - textwidth;
 		} else {
 			startpos.x = 0;
 		}
 
-		if (m_verticalAlign == RenderText::Top) {
+		if (m_verticalAlign == TextPrim::Top) {
 			startpos.y = 0;
-		} else if (m_verticalAlign == RenderText::VCenter) {
+		} else if (m_verticalAlign == TextPrim::VCenter) {
 			startpos.y =(height - textheight) * 0.5f;
-		} else if (m_verticalAlign == RenderText::Bottom) {
+		} else if (m_verticalAlign == TextPrim::Bottom) {
 			startpos.y = height - textheight;
 		} else {
 			startpos.y = 0;
@@ -367,7 +367,7 @@ AX_BEGIN_NAMESPACE
 
 //			ulonglong_t t1 = OsUtil::microseconds();
 
-			if (m_format & RenderText::Blink) {
+			if (m_format & TextPrim::Blink) {
 				Rgba color = m_color;
 				color.a = 128+127*sinf(d3d9Camera->getTime() / BLINK_DIVISOR);
 				offset = d3d9Draw->drawString(m_font, color, tq, startpos, pStr, len, scale, italic);
@@ -380,7 +380,7 @@ AX_BEGIN_NAMESPACE
 			offset = d3d9Draw->drawString(m_font, m_color, tq, startpos, pStr, len, scale, italic);
 
 //			ulonglong_t t3 = OsUtil::microseconds();
-			if (m_format & RenderText::Bold) {
+			if (m_format & TextPrim::Bold) {
 				d3d9Draw->drawString(m_font, m_color, tq, startpos+scale, pStr, len, scale, italic);
 			}
 
@@ -421,7 +421,7 @@ next:
 
 		D3D9primitive::update();
 
-		RenderChunk* chunk = static_cast<RenderChunk*>(m_src);
+		ChunkPrim* chunk = static_cast<ChunkPrim*>(m_src);
 		AX_ASSERT(chunk);
 
 		m_isZonePrim = chunk->isZonePrim();
@@ -518,7 +518,7 @@ next:
 		for (int i = 0; i < m_numLayers; i++) {
 			g_statistic->incValue(stat_numTerrainLayeredDrawElements);
 
-			RenderChunk::Layer& l = m_layers[i];
+			ChunkPrim::Layer& l = m_layers[i];
 			l.detailMat->setTexture(SamplerType::TerrainColor, m_colorTexture);
 			l.detailMat->setTexture(SamplerType::TerrainNormal, m_normalTexture);
 			l.detailMat->setTexture(SamplerType::LayerAlpha, l.alphaTex.get());
@@ -649,7 +649,7 @@ next:
 
 	void D3D9instance::update() {
 		D3D9primitive::update();
-		GeoInstance* gi = static_cast<GeoInstance*>(m_src);
+		InstancePrim* gi = static_cast<InstancePrim*>(m_src);
 		AX_ASSERT(gi);
 
 		m_instanced = d3d9PrimitiveManager->cachePrimitive(gi->getInstanced());
@@ -704,7 +704,7 @@ next:
 
 		int new_id;
 
-		if (prim->getHint() != Primitive::HintOneFrame) {
+		if (prim->getHint() != Primitive::HintFrame) {
 			if (h == 0) {
 				// init
 				D3D9primitive* glprim = createPrim(prim);
@@ -739,7 +739,7 @@ next:
 		prim->setCachedFrame(m_frameId);
 		g_statistic->incValue(stat_changedPrims);
 
-		if (prim->getHint() == Primitive::HintOneFrame)
+		if (prim->getHint() == Primitive::HintFrame)
 			delete(prim);
 
 		return new_id;

@@ -42,7 +42,7 @@ AX_BEGIN_NAMESPACE
 		}
 
 		if (m_isSelected && !m_isDeleted) {
-			RenderLine::setupBoundingBox(m_bboxLine, m_gameObj->getOrigin_p(), m_gameObj->getAxis_p(), m_gameObj->getLocalBoundingBox(), 1.05f);
+			LinePrim::setupBoundingBox(m_bboxLine, m_gameObj->getOrigin_p(), m_gameObj->getAxis_p(), m_gameObj->getLocalBoundingBox(), 1.05f);
 			g_renderSystem->addToScene(m_bboxLine);
 		}
 

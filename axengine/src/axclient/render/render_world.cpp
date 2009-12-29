@@ -460,7 +460,7 @@ AX_BEGIN_NAMESPACE
 		if (node->children[0])
 			color *= 0.5f;
 
-		RenderLine* line = RenderLine::createWorldBoundingBox(RenderLine::HintOneFrame, node->bbox, color);
+		LinePrim* line = LinePrim::createWorldBoundingBox(LinePrim::HintFrame, node->bbox, color);
 		qscene->addHelperInteraction(0, line);
 	}
 

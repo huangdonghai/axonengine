@@ -133,19 +133,19 @@ void Selection::testPrimitive(Primitive* prim)
 	// 判断图元类型并处理
 	if (prim->getType() == Primitive::LineType)
 	{
-		RenderLine* line = static_cast<RenderLine*> (prim);
+		LinePrim* line = static_cast<LinePrim*> (prim);
 
 		testLine(line);
 	}
 	else if (prim->getType() == Primitive::MeshType)
 	{
-		RenderMesh* mesh = static_cast<RenderMesh*> (prim);
+		MeshPrim* mesh = static_cast<MeshPrim*> (prim);
 
 		testMesh(mesh);
 	}
 	else if (prim->getType() == Primitive::ChunkType)
 	{
-		RenderChunk* chunk = static_cast<RenderChunk*> (prim);
+		ChunkPrim* chunk = static_cast<ChunkPrim*> (prim);
 
 		testChunk(chunk);
 	}
@@ -159,19 +159,19 @@ void Selection::testPrimitive(Primitive* prim, const AffineMat& matrix)
 	// 判断图元类型并处理
 	if (prim->getType() == Primitive::LineType)
 	{
-		RenderLine* line = static_cast<RenderLine*> (prim);
+		LinePrim* line = static_cast<LinePrim*> (prim);
 
 		testLine(line);
 	}
 	else if (prim->getType() == Primitive::MeshType)
 	{
-		RenderMesh* mesh = static_cast<RenderMesh*> (prim);
+		MeshPrim* mesh = static_cast<MeshPrim*> (prim);
 
 		testMesh(mesh);
 	}
 	else if (prim->getType() == Primitive::ChunkType)
 	{
-		RenderChunk* chunk = static_cast<RenderChunk*> (prim);
+		ChunkPrim* chunk = static_cast<ChunkPrim*> (prim);
 
 		testChunk(chunk);
 	}
@@ -207,7 +207,7 @@ HitRecords Selection::endSelect()
 	return m_selectRecSeq;
 }
 
-void Selection::testLine(const RenderLine* line)
+void Selection::testLine(const LinePrim* line)
 {
 	// 转换顶点坐标成为视坐标或归一化坐标
 	const DebugVertex* vertexs = line->getVertexesPointer();
@@ -269,7 +269,7 @@ void Selection::testLine(const RenderLine* line)
 	}
 }
 
-void Selection::testMesh(const RenderMesh* mesh)
+void Selection::testMesh(const MeshPrim* mesh)
 {
 	// 转换顶点坐标成为归一化坐标
 	const Vertex* vertexs = mesh->getVertexesPointer();
@@ -353,7 +353,7 @@ void Selection::testMesh(const RenderMesh* mesh)
 	}
 }
 
-void Selection::testChunk(const RenderChunk* chunk)
+void Selection::testChunk(const ChunkPrim* chunk)
 {
 	// 转换顶点坐标成为视坐标或归一化坐标
 	const ChunkVertex* vertexs = chunk->getVertexesPointer();

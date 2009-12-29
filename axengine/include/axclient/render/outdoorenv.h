@@ -74,11 +74,11 @@ AX_BEGIN_NAMESPACE
 
 		// skybox
 		String m_skyBoxMatName;
-		RenderMesh* m_skybox12;
-		RenderMesh* m_skybox34;
-		RenderMesh* m_skybox5;
-		RenderMesh* m_skydome;
-		RenderMesh* m_oceanMesh;
+		MeshPrim* m_skybox12;
+		MeshPrim* m_skybox34;
+		MeshPrim* m_skybox5;
+		MeshPrim* m_skydome;
+		MeshPrim* m_oceanMesh;
 
 		MaterialPtr m_skyNishitaMat;
 		MaterialPtr m_skyNishitaGenMat;

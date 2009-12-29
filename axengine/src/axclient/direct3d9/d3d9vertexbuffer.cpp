@@ -206,14 +206,14 @@ AX_BEGIN_NAMESPACE
 
 	}
 
-	void D3D9instancedbuffer::setData( const GeoInstance::ParamSeq& params )
+	void D3D9instancedbuffer::setData( const InstancePrim::ParamSeq& params )
 	{
 		m_count = (int)params.size();
 
 		DynVb dynvb = d3d9VertexBufferManager->allocInstance(m_count*64);
 		Vector4* pdata = (Vector4*)dynvb.writePtr;
 		for (int i = 0; i < m_count; i++) {
-			const GeoInstance::Param& param = params[i];
+			const InstancePrim::Param& param = params[i];
 			pdata[0] = param.worldMatrix.getRow(0);
 			pdata[1] = param.worldMatrix.getRow(1);
 			pdata[2] = param.worldMatrix.getRow(2);

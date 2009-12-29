@@ -12,6 +12,7 @@ read the license and understand and accept it fully.
 #include "gfx_local.h"
 
 namespace {
+
 	AX_USE_NAMESPACE;
 
 	float frand()
@@ -68,6 +69,14 @@ namespace {
 			for (j=0; j<3; j++)
 				SpreadMat.m[i][j]*=Size;
 	}
+
+	template<class T>
+	T lifeRamp(float life, float mid, const T &a, const T &b, const T &c)
+	{
+		if (life<=mid) return interpolate<T>(life / mid,a,b);
+		else return interpolate<T>((life-mid) / (1.0f-mid),b,c);
+	}
+
 } // anonymous namespace
 
 AX_BEGIN_NAMESPACE
@@ -84,8 +93,17 @@ ParticleEmitter::~ParticleEmitter()
 
 }
 
-Particle* ParticleEmitter::planeEmit(float w, float l, float spd, float var, float spr, float spr2)
+Particle* ParticleEmitter::planeEmit(float width, float length, float speed, float variant, float spread, float spread2)
 {
+	Particle* p = ParticleAllocator.alloc();
+
+	p->pos = Vector3(randfloat(-length,length), 0, randfloat(-width,width));
+	Vector3 dir = Vector3(0,1,0);
+
+	p->dir = dir;//.normalize();
+	p->down = Vector3(0,-1.0f,0); // dir * -1.0f;
+	p->speed = dir * speed * (1.0f+randfloat(-variant,variant));
+
 	return 0;
 }
 
@@ -109,9 +127,70 @@ Primitives ParticleEmitter::getHitTestPrims()
 	return Primitives();
 }
 
-void ParticleEmitter::frameUpdate( QueuedScene *qscene )
+void ParticleEmitter::frameUpdate(QueuedScene *qscene)
 {
+	float grav = m_Gravity;
+	float deaccel = m_Gravity2;
 
+	// spawn new particles
+	float frate = m_EmissionRate;
+	float flife = m_Lifespan;
+	float dt = qscene->camera.getFrameTime() * 0.001f;
+
+	float rem = m_remain;
+	float ftospawn = (dt * frate / flife) + rem;
+	if (ftospawn < 1.0f) {
+		rem = ftospawn;
+		if (rem<0) 
+			rem = 0;
+	} else {
+		int tospawn = (int)ftospawn;
+
+		if ((tospawn + m_particles.size()) > MAX_PARTICLES) // Error check to prevent the program from trying to load insane amounts of particles.
+			tospawn = (int)m_particles.size() - MAX_PARTICLES;
+
+		rem = ftospawn - (float)tospawn;
+
+
+		float w = m_EmissionAreaWidth * 0.5f;
+		float l = m_EmissionAreaLength * 0.5f;
+		float spd = m_EmissionSpeed;
+		float var = m_SpeedVariation;
+		float spr = m_VerticalRange;
+		float spr2 = m_HorizontalRange;
+		bool en = m_Enabled != 0;
+
+		if (en) {
+			for (int i=0; i<tospawn; i++) {
+				Particle* p = planeEmit(w, l, spd, var, spr, spr2);
+				m_particles.push_back(p);
+			}
+		}
+	}
+
+	float mspeed = 1.0f;
+
+	for (List<Particle*>::iterator it = m_particles.begin(); it != m_particles.end(); ) {
+		Particle &p = **it;
+		p.speed += p.down * grav * dt - p.dir * deaccel * dt;
+
+		if (m_slowdown>0) {
+			mspeed = expf(-1.0f * m_slowdown * p.life);
+		}
+		p.pos += p.speed * mspeed * dt;
+
+		p.life += dt;
+		float rlife = p.life / p.maxlife;
+		// calculate size and color based on lifetime
+		p.size = lifeRamp<float>(rlife, m_mid, m_sizes[0], m_sizes[1], m_sizes[2]);
+		p.color = lifeRamp<Vector4>(rlife, m_mid, m_colors[0], m_colors[1], m_colors[2]);
+
+		// kill off old particles
+		if (rlife >= 1.0f) 
+			m_particles.erase(it++);
+		else 
+			++it;
+	}
 }
 
 void ParticleEmitter::issueToQueue( QueuedScene *qscene )

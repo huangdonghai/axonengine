@@ -55,6 +55,7 @@ read the license and understand and accept it fully.
 #include <unordered_map>
 #include <unordered_set>
 #include <memory>
+#include <type_traits>
 
 #ifdef _WIN32
 #define NOMINMAX

@@ -106,8 +106,8 @@ AX_BEGIN_NAMESPACE
 		void areaSelect();
 
 	private:
-		RenderLine* m_linePrim;
-		RenderMesh* m_meshPrim;
+		LinePrim* m_linePrim;
+		MeshPrim* m_meshPrim;
 		Point m_beginPos;
 		Point m_curPos;
 		int m_selectionSeq;

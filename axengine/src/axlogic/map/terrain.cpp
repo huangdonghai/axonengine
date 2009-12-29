@@ -659,7 +659,7 @@ namespace Axon { namespace Map {
 	}
 
 	void Chunk::allocatePrimitive() {
-		m_prim = new RenderChunk(Primitive::HintDynamic);
+		m_prim = new ChunkPrim(Primitive::HintDynamic);
 	}
 
 	void Chunk::updatePrimitive() {
@@ -691,7 +691,7 @@ namespace Axon { namespace Map {
 		int c = m_prim->getNumIndexes() / 3;
 		g_statistic->addValue(stat_terrainTris, num_tris - c);
 		g_statistic->addValue(stat_terrainVerts, num_verts - m_prim->getNumVertexes());
-		m_prim->initialize(num_verts, num_tris * 3);
+		m_prim->init(num_verts, num_tris * 3);
 		m_prim->setMaterial(m_material.get());
 		m_prim->setTerrainRect(m_terrain->getTerrainRect());
 		m_prim->setColorTexture(m_zone->getColorTexture());
@@ -798,7 +798,7 @@ namespace Axon { namespace Map {
 
 	void Chunk::updateLayers() {
 		int count = 0;
-		RenderChunk::Layer detaillayers[MaxLayers];
+		ChunkPrim::Layer detaillayers[MaxLayers];
 
 		for (int i = 0; i < m_terrain->getNumLayer(); i++) {
 			LayerGen* l = m_terrain->getLayerGen(i);
@@ -828,14 +828,14 @@ namespace Axon { namespace Map {
 
 		int start = 0;
 		int numlayers = count;
-		if (count > RenderChunk::MAX_LAYERS) {
-			start = count - RenderChunk::MAX_LAYERS;
-			numlayers = RenderChunk::MAX_LAYERS;
+		if (count > ChunkPrim::MAX_LAYERS) {
+			start = count - ChunkPrim::MAX_LAYERS;
+			numlayers = ChunkPrim::MAX_LAYERS;
 		}
 
 		for (int i = 0; i < numlayers; i++ ) {
 			int index = i+start;
-			RenderChunk::Layer *dl = &detaillayers[index];
+			ChunkPrim::Layer *dl = &detaillayers[index];
 			m_prim->setLayers(i, dl->alphaTex.get(), dl->detailMat.get(), dl->scale, dl->isVerticalProjection );
 		}
 
@@ -1054,12 +1054,12 @@ namespace Axon { namespace Map {
 		m_colorTexture->setFilterMode(Texture::FM_Bilinear);
 
 		// init primitive
-		m_prim = new RenderChunk(Primitive::HintStatic);
+		m_prim = new ChunkPrim(Primitive::HintStatic);
 		int primverts = (Map::ZoneTiles >> m_zonePrimLod) + 1;
 		primverts *= primverts;
 		int primidxes = (Map::ZoneTiles >> m_zonePrimLod);
 		primidxes = primidxes * primidxes * 2 * 3;
-		m_prim->initialize(primverts, primidxes);
+		m_prim->init(primverts, primidxes);
 		m_prim->setMaterial(m_material.get());
 		m_prim->setTerrainRect(m_terrain->getTerrainRect());
 		m_prim->setColorTexture(getColorTexture());

@@ -12,234 +12,234 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-	class MapTool : public Tool {
-	public:
-		enum MapToolType {
-			// terrain height map modification
-			TerrainRaise = Tool::UserDefined, TerrainLower, TerrainLevel, TerrainSmooth, TerrainGrab,
-			TerrainPush, TerrainErode, TerrainRamp,
+class MapTool : public Tool {
+public:
+	enum MapToolType {
+		// terrain height map modification
+		TerrainRaise = Tool::UserDefined, TerrainLower, TerrainLevel, TerrainSmooth, TerrainGrab,
+		TerrainPush, TerrainErode, TerrainRamp,
 
-			// terrain paint
-			TerrainPaint, TerrainErase,
+		// terrain paint
+		TerrainPaint, TerrainErase,
 
-			// terrain active area
-			TerrainPaintActive,TerrainEraseActive,
+		// terrain active area
+		TerrainPaintActive,TerrainEraseActive,
 
-			// grass / tree
-			GrassPaint, GrassErase, TreePaint, TreeErase,
+		// grass / tree
+		GrassPaint, GrassErase, TreePaint, TreeErase,
 
-			// road / river
-			Road, River,
+		// road / river
+		Road, River,
 
-			// entities
-			CreateStatic, CreateBrush, CreateEntity, CreateTree,
+		// entities
+		CreateStatic, CreateBrush, CreateEntity, CreateTree,
 
-		};
-
-		MapTool(MapContext* ctx);
-
-	protected:
-		MapContext* m_mapContext;
 	};
 
-	//--------------------------------------------------------------------------
-	// class TerrainRaiseTool, terrain raise tool
-	//--------------------------------------------------------------------------
+	MapTool(MapContext* ctx);
 
-	class TerrainRaiseTool : public MapTool {
-	public:
-		TerrainRaiseTool(MapContext* context);
-		virtual ~TerrainRaiseTool();
+protected:
+	MapContext* m_mapContext;
+};
 
-		// Tool
-		virtual void doBindView(View* view);
-		virtual void doPress(int x, int y, int flags, float pressure);
-		virtual void doDrag(int x, int y, int flags, float pressure);
-		virtual void doMove(int x, int y);
-		virtual void doRelease(int x, int y);
-		virtual void doRender(const RenderCamera& camera);
+//--------------------------------------------------------------------------
+// class TerrainRaiseTool, terrain raise tool
+//--------------------------------------------------------------------------
 
-		virtual void onHistoryCreated(Action* action) { action->setMessage("Terrain Raise"); }
+class TerrainRaiseTool : public MapTool {
+public:
+	TerrainRaiseTool(MapContext* context);
+	virtual ~TerrainRaiseTool();
 
-	protected:
-		virtual float getWeight(float x, float y) const;
-		virtual void updatePrim(const Vector3& from);
+	// Tool
+	virtual void doBindView(View* view);
+	virtual void doPress(int x, int y, int flags, float pressure);
+	virtual void doDrag(int x, int y, int flags, float pressure);
+	virtual void doMove(int x, int y);
+	virtual void doRelease(int x, int y);
+	virtual void doRender(const RenderCamera& camera);
 
-	protected:
-		MapTerrain* m_terrain;
-		bool m_isValid;
-		float m_brushRadius;
-		float m_brushStrength;
-		float m_brushSoftness;
-		Vector2 m_center;
-		RenderLine* m_cursor;
-		Rect m_editedRect;
+	virtual void onHistoryCreated(Action* action) { action->setMessage("Terrain Raise"); }
 
-		MaterialPtr m_brushMat;
-		GroupPrim* m_brushPrims;
-	};
+protected:
+	virtual float getWeight(float x, float y) const;
+	virtual void updatePrim(const Vector3& from);
 
-	//--------------------------------------------------------------------------
-	// class TerrainLowerTool, terrain lower tool
-	//--------------------------------------------------------------------------
+protected:
+	MapTerrain* m_terrain;
+	bool m_isValid;
+	float m_brushRadius;
+	float m_brushStrength;
+	float m_brushSoftness;
+	Vector2 m_center;
+	LinePrim* m_cursor;
+	Rect m_editedRect;
 
-	class TerrainLowerTool : public TerrainRaiseTool {
-	public:
-		TerrainLowerTool(MapContext* context);
-		virtual ~TerrainLowerTool();
+	MaterialPtr m_brushMat;
+	GroupPrim* m_brushPrims;
+};
 
-		virtual void onHistoryCreated(Action* action) { action->setMessage("Terrain Lower"); }
+//--------------------------------------------------------------------------
+// class TerrainLowerTool, terrain lower tool
+//--------------------------------------------------------------------------
 
-	protected:
-		virtual float getWeight(float x, float y) const;
-	};
+class TerrainLowerTool : public TerrainRaiseTool {
+public:
+	TerrainLowerTool(MapContext* context);
+	virtual ~TerrainLowerTool();
 
-	//--------------------------------------------------------------------------
-	// class TerrainFlatTool, terrain level tool
-	//--------------------------------------------------------------------------
+	virtual void onHistoryCreated(Action* action) { action->setMessage("Terrain Lower"); }
 
-	class TerrainFlatTool : public TerrainRaiseTool {
-	public:
-		TerrainFlatTool(MapContext* context);
-		virtual ~TerrainFlatTool();
+protected:
+	virtual float getWeight(float x, float y) const;
+};
 
-		virtual void doPress(int x, int y, int flags, float pressure);
-		virtual void doDrag(int x, int y, int flags, float pressure);
+//--------------------------------------------------------------------------
+// class TerrainFlatTool, terrain level tool
+//--------------------------------------------------------------------------
 
-		virtual void onHistoryCreated(Action* action) { action->setMessage("Terrain Flat"); }
+class TerrainFlatTool : public TerrainRaiseTool {
+public:
+	TerrainFlatTool(MapContext* context);
+	virtual ~TerrainFlatTool();
 
-	protected:
-		virtual float getWeight(float x, float y) const;
+	virtual void doPress(int x, int y, int flags, float pressure);
+	virtual void doDrag(int x, int y, int flags, float pressure);
 
-	private:
-		bool m_isJustPressed;
-		float m_height;
-	};
+	virtual void onHistoryCreated(Action* action) { action->setMessage("Terrain Flat"); }
 
-	//--------------------------------------------------------------------------
-	// class TerrainSmoothTool, terrain smooth tool
-	//--------------------------------------------------------------------------
+protected:
+	virtual float getWeight(float x, float y) const;
 
-	class TerrainSmoothTool : public TerrainRaiseTool {
-	public:
-		TerrainSmoothTool(MapContext* context);
-		virtual ~TerrainSmoothTool();
+private:
+	bool m_isJustPressed;
+	float m_height;
+};
 
-		virtual void doDrag(int x, int y, int flags, float pressure);
+//--------------------------------------------------------------------------
+// class TerrainSmoothTool, terrain smooth tool
+//--------------------------------------------------------------------------
 
-		virtual void onHistoryCreated(Action* action) { action->setMessage("Terrain Smooth"); }
-	};
+class TerrainSmoothTool : public TerrainRaiseTool {
+public:
+	TerrainSmoothTool(MapContext* context);
+	virtual ~TerrainSmoothTool();
 
+	virtual void doDrag(int x, int y, int flags, float pressure);
 
-	//--------------------------------------------------------------------------
-	// class TerrainGrabTool, terrain smooth tool
-	//--------------------------------------------------------------------------
-
-	class TerrainGrabTool : public TerrainRaiseTool {
-	public:
-		TerrainGrabTool(MapContext* context);
-		virtual ~TerrainGrabTool();
-
-		virtual void doPress(int x, int y, int flags, float pressure);
-		virtual void doDrag(int x, int y, int flags, float pressure);
-
-		virtual void onHistoryCreated(Action* action) { action->setMessage("Terrain Grab"); }
-	private:
-		bool m_isJustPressed;
-		int m_mouseY;
-		Image* m_baseHeight;
-	};
-
-	//--------------------------------------------------------------------------
-	// class TerrainPaintTool, terrain paint tool
-	//--------------------------------------------------------------------------
-
-	class TerrainPaintTool : public TerrainRaiseTool {
-	public:
-		TerrainPaintTool(MapContext* context);
-		virtual ~TerrainPaintTool();
-
-		virtual void doPress(int x, int y, int flags, float pressure);
-		virtual void doDrag(int x, int y, int flags, float pressure);
-		virtual void doRelease(int x, int y);
-
-	protected:
-		Map::LayerGen* m_layerGen;
-		Image* m_oldPixel;
-	};
-
-	//--------------------------------------------------------------------------
-	// class TerrainEraseTool, terrain erase tool
-	//--------------------------------------------------------------------------
-
-	class TerrainEraseTool : public TerrainPaintTool {
-	public:
-		TerrainEraseTool(MapContext* context) : TerrainPaintTool(context) {}
-		virtual void doPress(int x, int y, int flags, float pressure);
-		virtual void doRelease(int x, int y);
-	};
+	virtual void onHistoryCreated(Action* action) { action->setMessage("Terrain Smooth"); }
+};
 
 
-	//--------------------------------------------------------------------------
-	// class CreateStaticTool
-	//--------------------------------------------------------------------------
+//--------------------------------------------------------------------------
+// class TerrainGrabTool, terrain smooth tool
+//--------------------------------------------------------------------------
 
-	class CreateStaticTool : public MapTool {
-	public:
-		CreateStaticTool(MapContext* context);
-		virtual ~CreateStaticTool();
+class TerrainGrabTool : public TerrainRaiseTool {
+public:
+	TerrainGrabTool(MapContext* context);
+	virtual ~TerrainGrabTool();
 
-		virtual void doBindView(View* view) {}
-		virtual void doPress(int x, int y, int flags, float pressure);
-		virtual void doDrag(int x, int y, int flags, float pressure);
-		virtual void doMove(int x, int y) {}
-		virtual void doRelease(int x, int y);
-		virtual void doRender(const RenderCamera& camera) {}
+	virtual void doPress(int x, int y, int flags, float pressure);
+	virtual void doDrag(int x, int y, int flags, float pressure);
 
-	private:
-		MapStatic* m_actor;
-	};
+	virtual void onHistoryCreated(Action* action) { action->setMessage("Terrain Grab"); }
+private:
+	bool m_isJustPressed;
+	int m_mouseY;
+	Image* m_baseHeight;
+};
 
-	//--------------------------------------------------------------------------
-	// class CreateEntityTool
-	//--------------------------------------------------------------------------
+//--------------------------------------------------------------------------
+// class TerrainPaintTool, terrain paint tool
+//--------------------------------------------------------------------------
 
-	class CreateEntityTool : public MapTool {
-	public:
-		CreateEntityTool(MapContext* context);
-		virtual ~CreateEntityTool();
+class TerrainPaintTool : public TerrainRaiseTool {
+public:
+	TerrainPaintTool(MapContext* context);
+	virtual ~TerrainPaintTool();
 
-		virtual void doBindView(View* view) {}
-		virtual void doPress(int x, int y, int flags, float pressure);
-		virtual void doDrag(int x, int y, int flags, float pressure);
-		virtual void doMove(int x, int y) {}
-		virtual void doRelease(int x, int y);
-		virtual void doRender(const RenderCamera& camera);
+	virtual void doPress(int x, int y, int flags, float pressure);
+	virtual void doDrag(int x, int y, int flags, float pressure);
+	virtual void doRelease(int x, int y);
 
-	private:
-		MapActor* m_actor;
-	};
+protected:
+	Map::LayerGen* m_layerGen;
+	Image* m_oldPixel;
+};
 
-	//--------------------------------------------------------------------------
-	// class CreateTreeTool
-	//--------------------------------------------------------------------------
+//--------------------------------------------------------------------------
+// class TerrainEraseTool, terrain erase tool
+//--------------------------------------------------------------------------
+
+class TerrainEraseTool : public TerrainPaintTool {
+public:
+	TerrainEraseTool(MapContext* context) : TerrainPaintTool(context) {}
+	virtual void doPress(int x, int y, int flags, float pressure);
+	virtual void doRelease(int x, int y);
+};
+
+
+//--------------------------------------------------------------------------
+// class CreateStaticTool
+//--------------------------------------------------------------------------
+
+class CreateStaticTool : public MapTool {
+public:
+	CreateStaticTool(MapContext* context);
+	virtual ~CreateStaticTool();
+
+	virtual void doBindView(View* view) {}
+	virtual void doPress(int x, int y, int flags, float pressure);
+	virtual void doDrag(int x, int y, int flags, float pressure);
+	virtual void doMove(int x, int y) {}
+	virtual void doRelease(int x, int y);
+	virtual void doRender(const RenderCamera& camera) {}
+
+private:
+	MapStatic* m_actor;
+};
+
+//--------------------------------------------------------------------------
+// class CreateEntityTool
+//--------------------------------------------------------------------------
+
+class CreateEntityTool : public MapTool {
+public:
+	CreateEntityTool(MapContext* context);
+	virtual ~CreateEntityTool();
+
+	virtual void doBindView(View* view) {}
+	virtual void doPress(int x, int y, int flags, float pressure);
+	virtual void doDrag(int x, int y, int flags, float pressure);
+	virtual void doMove(int x, int y) {}
+	virtual void doRelease(int x, int y);
+	virtual void doRender(const RenderCamera& camera);
+
+private:
+	MapActor* m_actor;
+};
+
+//--------------------------------------------------------------------------
+// class CreateTreeTool
+//--------------------------------------------------------------------------
 
 #ifdef AX_CONFIG_OPTION_USE_SPEEDTREE_40
-	class CreateTreeTool : public MapTool {
-	public:
-		CreateTreeTool(MapContext* context);
-		virtual ~CreateTreeTool();
+class CreateTreeTool : public MapTool {
+public:
+	CreateTreeTool(MapContext* context);
+	virtual ~CreateTreeTool();
 
-		virtual void doBindView(View* view) {}
-		virtual void doPress(int x, int y, int flags, float pressure);
-		virtual void doDrag(int x, int y, int flags, float pressure);
-		virtual void doMove(int x, int y) {}
-		virtual void doRelease(int x, int y);
-		virtual void doRender(const RenderCamera& camera) {}
+	virtual void doBindView(View* view) {}
+	virtual void doPress(int x, int y, int flags, float pressure);
+	virtual void doDrag(int x, int y, int flags, float pressure);
+	virtual void doMove(int x, int y) {}
+	virtual void doRelease(int x, int y);
+	virtual void doRender(const RenderCamera& camera) {}
 
-	private:
-		MapSpeedTree* m_actor;
-	};
+private:
+	MapSpeedTree* m_actor;
+};
 #endif // AX_CONFIG_OPTION_USE_SPEEDTREE_40
 
 AX_END_NAMESPACE

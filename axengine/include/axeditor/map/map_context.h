@@ -13,129 +13,129 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-	class Layer {
-	public:
-	private:
-		typedef DictSet<int> IdSet;
-		int m_id;
-		IdSet m_actors;
+class Layer {
+public:
+private:
+	typedef DictSet<int> IdSet;
+	int m_id;
+	IdSet m_actors;
 
+};
+
+struct Bookmark 
+{
+	int id;
+	String name;
+	AffineMat viewMatrix;
+};
+
+class AX_API MapContext : public Context {
+public:
+	enum ObserverFlag {
+		SelectionChanged = 1,
+		HistoryChanged = 2,
+		StatusChanged = 4,
+		TerrainMaterialEdited = 8,
+		ToolChanged = 0x10,
+		EnvironmentChanged = 0x20,
+		ActorTransformed = 0x40,
+		EverythingChanged = 0xffffffff
 	};
 
-	struct Bookmark 
-	{
-		int id;
-		String name;
-		AffineMat viewMatrix;
-	};
+	MapContext();
+	~MapContext();
 
-	class AX_API MapContext : public Context {
-	public:
-		enum ObserverFlag {
-			SelectionChanged = 1,
-			HistoryChanged = 2,
-			StatusChanged = 4,
-			TerrainMaterialEdited = 8,
-			ToolChanged = 0x10,
-			EnvironmentChanged = 0x20,
-			ActorTransformed = 0x40,
-			EverythingChanged = 0xffffffff
-		};
+	void reset();
 
-		MapContext();
-		~MapContext();
+	String getTitle() const;
+	String getFilename() const;
+	bool createNew();
+	bool load(const String& filename);
+	bool save();
+	bool saveAs(const String& filename);
 
-		void reset();
+	// view process
+	void setActiveView(View* view) { m_activeView = view; }
+	View* getActiveView() const { return m_activeView; }
 
-		String getTitle() const;
-		String getFilename() const;
-		bool createNew();
-		bool load(const String& filename);
-		bool save();
-		bool saveAs(const String& filename);
+	Vector3 getViewPos();
 
-		// view process
-		void setActiveView(View* view) { m_activeView = view; }
-		View* getActiveView() const { return m_activeView; }
+	MapTerrain* createTerrain(int tiles, int tilemeters);
+	MapTerrain* getTerrain();
+	void setTerrainMaterialDef(Map::MaterialDef* matdef);
 
-		Vector3 getViewPos();
+	GameWorld* getGameWorld() const { return m_gameWorld; }
+	void runGame();
 
-		MapTerrain* createTerrain(int tiles, int tilemeters);
-		MapTerrain* getTerrain();
-		void setTerrainMaterialDef(Map::MaterialDef* matdef);
+	// present
+	virtual void doRender(const RenderCamera& camera, bool world = false);
+	virtual void doSelect(const RenderCamera& camera, int part);
 
-		GameWorld* getGameWorld() const { return m_gameWorld; }
-		void runGame();
+	// bookmarks --timlly add
+	void addBookmark(const AffineMat& viewMatrix, const String& name = "", int id = -1);
+	void addBookmark(const Bookmark &bookmark);
+	void deleteBookmark(const String& name);
+	void deleteBookmark(int index);
 
-		// present
-		virtual void doRender(const RenderCamera& camera, bool world = false);
-		virtual void doSelect(const RenderCamera& camera, int part);
+	int getNumBookmark();
+	Bookmark* getBookmark(const String& name);
+	Bookmark* getBookmark(int index);
 
-		// bookmarks --timlly add
-		void addBookmark(const AffineMat& viewMatrix, const String& name = "", int id = -1);
-		void addBookmark(const Bookmark &bookmark);
-		void deleteBookmark(const String& name);
-		void deleteBookmark(int index);
+	void clearAllBookmarks();
 
-		int getNumBookmark();
-		Bookmark* getBookmark(const String& name);
-		Bookmark* getBookmark(int index);
+	// properties
+	void setActorProperty(const String& propName, const Variant& value);
 
-		void clearAllBookmarks();
+	// map state
+	MapState* getMapState() const { return m_mapState; }
+	void setMapState(MapState* val) { m_mapState = val; }
 
-		// properties
-		void setActorProperty(const String& propName, const Variant& value);
+protected:
+	void writeToFile(File* f);
+	void readActor(const TiXmlElement* node);
 
-		// map state
-		MapState* getMapState() const { return m_mapState; }
-		void setMapState(MapState* val) { m_mapState = val; }
+	// save/load the helper info in the editor. --timlly add
+	void saveEditorInfo(const String& filename);
+	bool loadEditorInfo(const String& filename);
 
-	protected:
-		void writeToFile(File* f);
-		void readActor(const TiXmlElement* node);
+	// save/load the bookmark info. --timlly add
+	void saveBookmarkInfo(File* file, int indent);
+	void loadBookmarkInfo(const TiXmlElement* elem);
 
-		// save/load the helper info in the editor. --timlly add
-		void saveEditorInfo(const String& filename);
-		bool loadEditorInfo(const String& filename);
+private:
+	GameWorld* m_gameWorld;
+	String m_title;
+	String m_filename;
+	MapTerrain* m_terrain;
+	TerrainFixed* m_terrainFixed;
 
-		// save/load the bookmark info. --timlly add
-		void saveBookmarkInfo(File* file, int indent);
-		void loadBookmarkInfo(const TiXmlElement* elem);
+	// views
+	PerspectiveView* m_perspectiveView;
+	TopView* m_topView;
+	FrontView* m_frontView;
+	LeftView* m_leftView;
 
-	private:
-		GameWorld* m_gameWorld;
-		String m_title;
-		String m_filename;
-		MapTerrain* m_terrain;
-		TerrainFixed* m_terrainFixed;
+	// map state
+	MapState* m_mapState;
 
-		// views
-		PerspectiveView* m_perspectiveView;
-		TopView* m_topView;
-		FrontView* m_frontView;
-		LeftView* m_leftView;
+	// bookmarks  --timlly add
+	Sequence<Bookmark>	m_bookmarks;
+	int m_bookmarkIndex;
+};
 
-		// map state
-		MapState* m_mapState;
+inline String MapContext::getTitle() const {
+	if (m_filename.empty())
+		return m_title;
+	return m_filename;
+}
 
-		// bookmarks  --timlly add
-		Sequence<Bookmark>	m_bookmarks;
-		int m_bookmarkIndex;
-	};
+inline String MapContext::getFilename() const {
+	return m_filename;
+}
 
-	inline String MapContext::getTitle() const {
-		if (m_filename.empty())
-			return m_title;
-		return m_filename;
-	}
-
-	inline String MapContext::getFilename() const {
-		return m_filename;
-	}
-
-	inline MapTerrain* MapContext::getTerrain() {
-		return m_terrain;
-	}
+inline MapTerrain* MapContext::getTerrain() {
+	return m_terrain;
+}
 
 AX_END_NAMESPACE
 

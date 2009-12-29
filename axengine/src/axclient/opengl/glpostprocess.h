@@ -42,9 +42,9 @@ AX_BEGIN_NAMESPACE
 		GLshader* getShader(const String& name);
 
 	private:
-		RenderMesh* m_screenQuad;
+		MeshPrim* m_screenQuad;
 		GLgeometry* m_screenQuadGeo;
-		RenderMesh* m_boxVolume;		// eight vertexes, six face hexahedron
+		MeshPrim* m_boxVolume;		// eight vertexes, six face hexahedron
 
 		MaterialPtr m_matDrawQuad;
 		MaterialPtr m_matMaskVolume;

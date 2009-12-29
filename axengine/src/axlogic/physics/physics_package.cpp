@@ -771,7 +771,7 @@ AX_BEGIN_NAMESPACE
 		hkaMeshBinding* m_binding;
 		hkaBoneAttachment* m_boneAttachment; // the animation is either a skin binding anim or attachment anim
 		hkxMeshSection* m_section;
-		RenderMesh* m_renderMesh;
+		MeshPrim* m_renderMesh;
 		int m_lod;
 		bool m_needFreeRenderMesh;
 		bool m_haveLocalTransform;
@@ -800,11 +800,11 @@ AX_BEGIN_NAMESPACE
 			if (m_renderMesh) {
 				return;
 			}
-			m_renderMesh = new RenderMesh(hint);
+			m_renderMesh = new MeshPrim(hint);
 
 			int numverts = m_section->m_vertexBuffer->getNumVertices();
 			int numidxes = m_section->getNumTriangles() * 3;
-			m_renderMesh->initialize(numverts, numidxes);
+			m_renderMesh->init(numverts, numidxes);
 
 			ushort_t* pidx = m_renderMesh->lockIndexes();
 			for (hkUint32 k = 0; k < m_section->getNumTriangles(); k++) {
@@ -973,7 +973,7 @@ errexit:
 				m_staticBbox.expandBy(helper.getPostion(j));
 			}
 #else
-			RenderMesh* mesh = (*it)->m_renderMesh;
+			MeshPrim* mesh = (*it)->m_renderMesh;
 
 			if (!mesh) continue;
 
@@ -1497,7 +1497,7 @@ final:
 				binding.m_bonesPerVertex = helper.getBonesPerVertex();
 
 				binding.m_oPosBase = &data->m_renderMesh->lockVertexes()->xyz[0];
-				binding.m_oPosStride = sizeof(RenderMesh::VertexType) / sizeof(float);
+				binding.m_oPosStride = sizeof(MeshPrim::VertexType) / sizeof(float);
 
 				binding.m_numVerts = data->m_renderMesh->getNumVertexes();
 

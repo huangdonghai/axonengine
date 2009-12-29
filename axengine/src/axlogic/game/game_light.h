@@ -47,8 +47,8 @@ AX_BEGIN_NAMESPACE
 
 	private:
 		RenderLight* m_renderLight;
-		RenderMesh* m_pointPrim;
-		RenderMesh* m_spotPrim;
+		MeshPrim* m_pointPrim;
+		MeshPrim* m_spotPrim;
 	};
 
 

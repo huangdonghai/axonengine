@@ -104,11 +104,11 @@ AX_BEGIN_NAMESPACE
 
 	GLpostprocess::GLpostprocess() {
 #if 1
-		m_screenQuad = new RenderMesh(Primitive::HintStatic);
+		m_screenQuad = new MeshPrim(Primitive::HintStatic);
 
 		Rgba color(255, 255, 255, 255);
 
-		m_screenQuad->initialize(4, 6);
+		m_screenQuad->init(4, 6);
 		Vertex* verts = m_screenQuad->lockVertexes();
 //		verts[0].xyz = Vector3(rect.x, rect.y, 0.0f);
 		verts[0].st.x = 0;
@@ -156,7 +156,7 @@ AX_BEGIN_NAMESPACE
 		indexes[5] = 3;
 		m_screenQuad->unlockIndexes();
 #else
-		m_screenQuad = RenderMesh::createScreenQuad(Primitive::HintStatic, Rect(), Rgba::White);
+		m_screenQuad = MeshPrim::createScreenQuad(Primitive::HintStatic, Rect(), Rgba::White);
 #endif
 
 		m_boxVolume = nullptr;
@@ -246,7 +246,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 	void GLpostprocess::maskVolume(Vector3 volume[8]) {
-		RenderMesh::setupHexahedron(m_boxVolume, volume);
+		MeshPrim::setupHexahedron(m_boxVolume, volume);
 		m_boxVolume->setMaterial(m_matMaskVolume);
 		glPrimitiveManager->cachePrimitive(m_boxVolume);
 		GLprimitive* glprim = glPrimitiveManager->getPrimitive(m_boxVolume->getCachedId());
@@ -256,7 +256,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 	void GLpostprocess::maskShadow(Vector3 volume[8], const Matrix4& matrix, GLtexture* tex, bool front) {
-		RenderMesh::setupHexahedron(m_boxVolume, volume);
+		MeshPrim::setupHexahedron(m_boxVolume, volume);
 
 		float range = r_csmRange->getFloat();
 		Vector2 zrange(range * 0.5f, range);
@@ -282,7 +282,7 @@ AX_BEGIN_NAMESPACE
 
 	void GLpostprocess::maskShadow(Vector3 volume[8], const Matrix4& matrix, GLtexture* tex, const Vector4& minrange, const Vector4& maxrange, const Matrix4& scaleoffset, bool front /*= false */)
 	{
-		RenderMesh::setupHexahedron(m_boxVolume, volume);
+		MeshPrim::setupHexahedron(m_boxVolume, volume);
 
 		float range = r_csmRange->getFloat();
 		Vector2 zrange(range * 0.5f, range);

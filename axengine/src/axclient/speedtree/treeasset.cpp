@@ -211,9 +211,9 @@ AX_BEGIN_NAMESPACE
 			return;
 		}
 
-		RenderMesh* lod0 = new RenderMesh(RenderMesh::HintStatic);
+		MeshPrim* lod0 = new MeshPrim(MeshPrim::HintStatic);
 
-		lod0->initialize(numVerts, numIndexes);
+		lod0->init(numVerts, numIndexes);
 
 		// we use triangle strip for branches
 		lod0->setIsStriped(true);
@@ -262,7 +262,7 @@ AX_BEGIN_NAMESPACE
 			}
 
 			RefPrim* ref = new RefPrim(Primitive::HintStatic);
-			ref->initialize(lod0, numIndexes);
+			ref->init(lod0, numIndexes);
 
 			idxes = ref->lockIndexes();
 			idxes[0] = b.m_pStrips[i][0][0];
@@ -294,9 +294,9 @@ AX_BEGIN_NAMESPACE
 			return;
 		}
 
-		RenderMesh* lod0 = new RenderMesh(RenderMesh::HintStatic);
+		MeshPrim* lod0 = new MeshPrim(MeshPrim::HintStatic);
 
-		lod0->initialize(numVerts, numIndexes);
+		lod0->init(numVerts, numIndexes);
 
 		// we use triangle strip for branches
 		lod0->setIsStriped(true);
@@ -350,7 +350,7 @@ AX_BEGIN_NAMESPACE
 			}
 
 			RefPrim* ref = new RefPrim(Primitive::HintStatic);
-			ref->initialize(lod0, numIndexes);
+			ref->init(lod0, numIndexes);
 
 			idxes = ref->lockIndexes();
 			idxes[0] = b.m_pStrips[i][0][0];
@@ -373,9 +373,9 @@ AX_BEGIN_NAMESPACE
 		for (int i = 0; i < numLods; i++) {
 			const CSpeedTreeRT::SGeometry::SLeaf& sLeaves = sGeometry.m_pLeaves[i];
 
-			RenderMesh* prim = new RenderMesh(RenderMesh::HintStatic);
+			MeshPrim* prim = new MeshPrim(MeshPrim::HintStatic);
 			prim->setMaterial(m_leafCardMat.get());
-			prim->initialize(sLeaves.m_nNumLeaves * 4, sLeaves.m_nNumLeaves * 6);
+			prim->init(sLeaves.m_nNumLeaves * 4, sLeaves.m_nNumLeaves * 6);
 
 			Vertex* verts = prim->lockVertexes();
 			ushort_t* indexes = prim->lockIndexes();
@@ -476,9 +476,9 @@ AX_BEGIN_NAMESPACE
 				continue;
 			}
 
-			RenderMesh* prim = new RenderMesh(RenderMesh::HintStatic);
+			MeshPrim* prim = new MeshPrim(MeshPrim::HintStatic);
 			prim->setMaterial(m_leafMeshMat.get());
-			prim->initialize(numverts, numidxes);
+			prim->init(numverts, numidxes);
 
 			Vertex* verts = prim->lockVertexes();
 			ushort_t* indexes = prim->lockIndexes();
@@ -583,8 +583,8 @@ AX_BEGIN_NAMESPACE
 #endif
 	}
 
-	static inline void addInstance(QueuedScene* qscene, GeoInstance* gi) {
-		GeoInstance* cloned = new GeoInstance(Primitive::HintOneFrame);
+	static inline void addInstance(QueuedScene* qscene, InstancePrim* gi) {
+		InstancePrim* cloned = new InstancePrim(Primitive::HintFrame);
 		cloned->setInstanced(gi->getInstanced());
 		cloned->setInstances(gi->getAllInstances());
 

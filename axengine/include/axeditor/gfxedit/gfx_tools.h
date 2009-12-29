@@ -40,6 +40,7 @@ private:
 	GfxAgent *m_gfxAgent;
 };
 
+//--------------------------------------------------------------------------
 class ParticleCreationTool : public GfxObjectCreationTool
 {
 public:

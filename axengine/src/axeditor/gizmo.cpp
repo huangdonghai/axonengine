@@ -13,10 +13,10 @@ read the license and understand and accept it fully.
 namespace {
 	AX_USE_NAMESPACE;
 
-	inline void xSetupAxis(RenderLine*& line, const Vector3& p0, const Vector3& p1, const Rgba& color) {
+	inline void xSetupAxis(LinePrim*& line, const Vector3& p0, const Vector3& p1, const Rgba& color) {
 		if (!line) {
-			line = new RenderLine(Primitive::HintDynamic);
-			line->initialize(2, 2);
+			line = new LinePrim(Primitive::HintDynamic);
+			line->init(2, 2);
 			line->lock();
 			line->setIndex(0, 0);
 			line->setIndex(1, 1);
@@ -24,8 +24,8 @@ namespace {
 		}
 
 		line->lock();
-		RenderLine::VertexType& v0 = line->getVertexRef(0);
-		RenderLine::VertexType& v1 = line->getVertexRef(1);
+		LinePrim::VertexType& v0 = line->getVertexRef(0);
+		LinePrim::VertexType& v1 = line->getVertexRef(1);
 		v0.xyz = p0;
 		v0.rgba = color;
 		v1.xyz = p1;
@@ -234,10 +234,10 @@ AX_BEGIN_NAMESPACE
 			color = Rgba::Yellow;
 		}
 
-		RenderLine*& line = m_lines[axis];
+		LinePrim*& line = m_lines[axis];
 		if (!line) {
-			line = new RenderLine(Primitive::HintDynamic);
-			line->initialize(2, 2);
+			line = new LinePrim(Primitive::HintDynamic);
+			line->init(2, 2);
 			line->lock();
 			line->setIndex(0, 0);
 			line->setIndex(1, 1);
@@ -245,15 +245,15 @@ AX_BEGIN_NAMESPACE
 		}
 
 		line->lock();
-		RenderLine::VertexType& v0 = line->getVertexRef(0);
-		RenderLine::VertexType& v1 = line->getVertexRef(1);
+		LinePrim::VertexType& v0 = line->getVertexRef(0);
+		LinePrim::VertexType& v1 = line->getVertexRef(1);
 		v0.xyz = p0;
 		v0.rgba = color;
 		v1.xyz = p1;
 		v1.rgba = color;
 		line->unlock();
 
-		RenderMesh::setupCone(m_meshs[axis], p1, m_length * 0.03f, p2, color );
+		MeshPrim::setupCone(m_meshs[axis], p1, m_length * 0.03f, p2, color );
 	}
 
 
@@ -285,10 +285,10 @@ AX_BEGIN_NAMESPACE
 			color1 = Rgba::Yellow;
 		}
 
-		RenderLine*& line = m_lines[axis];
+		LinePrim*& line = m_lines[axis];
 		if (!line) {
-			line = new RenderLine(Primitive::HintDynamic);
-			line->initialize(4, 4);
+			line = new LinePrim(Primitive::HintDynamic);
+			line->init(4, 4);
 			ushort_t* idxes = line->lockIndexes();
 			idxes[0] = 0;
 			idxes[1] = 1;
@@ -299,7 +299,7 @@ AX_BEGIN_NAMESPACE
 
 		float length = m_length * 0.5f;
 
-		RenderLine::VertexType* verts = line->lockVertexes();
+		LinePrim::VertexType* verts = line->lockVertexes();
 		verts[0].xyz = m_pos + v0 * length;
 		verts[0].rgba = color0;
 		verts[1].xyz = verts[0].xyz + v1 * length;
@@ -310,11 +310,11 @@ AX_BEGIN_NAMESPACE
 		verts[3].rgba = color1;
 		line->unlockVertexes();
 
-		RenderMesh*& mesh = m_meshs[axis];
+		MeshPrim*& mesh = m_meshs[axis];
 		bool first = false;
 		if (!mesh) {
-			mesh = new RenderMesh(Primitive::HintDynamic);
-			mesh->initialize(4, 6);
+			mesh = new MeshPrim(Primitive::HintDynamic);
+			mesh->init(4, 6);
 			ushort_t* idxes = mesh->lockIndexes();
 			idxes[0] = 0;
 			idxes[1] = 1;
@@ -350,11 +350,11 @@ AX_BEGIN_NAMESPACE
 		if (m_highlit == XYZ)
 			color = Rgba::Yellow;
 
-		RenderLine*& line = m_lines[XYZ];
+		LinePrim*& line = m_lines[XYZ];
 
 		if (!line) {
-			line = new RenderLine(Primitive::HintDynamic);
-			line->initialize(4, 8);
+			line = new LinePrim(Primitive::HintDynamic);
+			line->init(4, 8);
 			ushort_t* idxes = line->lockIndexes();
 			idxes[0] = 0;
 			idxes[1] = 1;
@@ -368,7 +368,7 @@ AX_BEGIN_NAMESPACE
 		}
 
 		const Matrix3& axis = camera.getViewAxis();
-		RenderLine::VertexType* verts = line->lockVertexes();
+		LinePrim::VertexType* verts = line->lockVertexes();
 		verts[0].xyz = m_pos - axis[1] * len - axis[2] * len;
 		verts[0].rgba = color;
 		verts[1].xyz = m_pos - axis[1] * len + axis[2] * len;
@@ -416,24 +416,24 @@ AX_BEGIN_NAMESPACE
 		Plane plane(pos, camaxis[0]);
 
 		float length = m_length;
-		if (RenderLine::setupAxis(m_centerLine, pos, axis, length * 0.5f, getCenterColor(X), getCenterColor(Y), getCenterColor(Z))) {
+		if (LinePrim::setupAxis(m_centerLine, pos, axis, length * 0.5f, getCenterColor(X), getCenterColor(Y), getCenterColor(Z))) {
 			m_centerLine->setMaterial(m_material.get());
 		}
 
-		if (RenderLine::setupCircle(m_circles[0], pos, axis[1] * length, axis[2] * length, getColor(X), CirculSubdivided, plane)) {
+		if (LinePrim::setupCircle(m_circles[0], pos, axis[1] * length, axis[2] * length, getColor(X), CirculSubdivided, plane)) {
 			m_circles[0]->setMaterial(m_material.get());
 		}
-		if (RenderLine::setupCircle(m_circles[1], pos, axis[0] * length, axis[2] * length, getColor(Y), CirculSubdivided, plane)) {
+		if (LinePrim::setupCircle(m_circles[1], pos, axis[0] * length, axis[2] * length, getColor(Y), CirculSubdivided, plane)) {
 			m_circles[1]->setMaterial(m_material.get());
 		}
-		if (RenderLine::setupCircle(m_circles[2], pos, axis[0] * length, axis[1] * length, getColor(Z), CirculSubdivided, plane)) {
+		if (LinePrim::setupCircle(m_circles[2], pos, axis[0] * length, axis[1] * length, getColor(Z), CirculSubdivided, plane)) {
 			m_circles[2]->setMaterial(m_material.get());
 		}
 
-		if (RenderLine::setupCircle(m_innerBound, pos, camaxis[1] * length, camaxis[2] * length, Rgba::DkGrey, CirculSubdivided)) {
+		if (LinePrim::setupCircle(m_innerBound, pos, camaxis[1] * length, camaxis[2] * length, Rgba::DkGrey, CirculSubdivided)) {
 			m_innerBound->setMaterial(m_material.get());
 		}
-		if (RenderLine::setupCircle(m_outerBound, pos, camaxis[1] * length * 1.3f, camaxis[2] * length * 1.3f, getColor(Screen), CirculSubdivided)) {
+		if (LinePrim::setupCircle(m_outerBound, pos, camaxis[1] * length * 1.3f, camaxis[2] * length * 1.3f, getColor(Screen), CirculSubdivided)) {
 			m_outerBound->setMaterial(m_material.get());
 		}
 
@@ -535,7 +535,7 @@ AX_BEGIN_NAMESPACE
 
 		color.a = 64;
 
-		RenderMesh::setupFan(m_crank, m_pos, left, up, m_crankStart, m_crankEnd, color, CrankSubdivided, m_material.get());
+		MeshPrim::setupFan(m_crank, m_pos, left, up, m_crankStart, m_crankEnd, color, CrankSubdivided, m_material.get());
 	}
 
 	Rgba RotateGizmo::getColor(int id) {
@@ -598,11 +598,11 @@ AX_BEGIN_NAMESPACE
 		m_length = GIZMO_SIZE * scale;
 		float space = std::max(m_scale * 8, m_length * 0.1f);
 
-		RenderLine::setupLine(m_lines[X], pos+axis[0]*space, pos+axis[0]*m_length, getColor(X));
+		LinePrim::setupLine(m_lines[X], pos+axis[0]*space, pos+axis[0]*m_length, getColor(X));
 		setupScreenQuad(camera, m_meshs[X], pos+axis[0]*m_length, getColor(X));
-		RenderLine::setupLine(m_lines[Y], pos+axis[1]*space, pos+axis[1]*m_length, getColor(Y));
+		LinePrim::setupLine(m_lines[Y], pos+axis[1]*space, pos+axis[1]*m_length, getColor(Y));
 		setupScreenQuad(camera, m_meshs[Y], pos+axis[1]*m_length, getColor(Y));
-		RenderLine::setupLine(m_lines[Z], pos+axis[2]*space, pos+axis[2]*m_length, getColor(Z));
+		LinePrim::setupLine(m_lines[Z], pos+axis[2]*space, pos+axis[2]*m_length, getColor(Z));
 		setupScreenQuad(camera, m_meshs[Z], pos+axis[2]*m_length, getColor(Z));
 
 		// ÆÁ±Îµô´íÇÐ·ÅËõ·½¿ò --timlly add
@@ -682,10 +682,10 @@ AX_BEGIN_NAMESPACE
 
 		return Rgba::White;
 	}
-	void ScaleGizmo::setupScreenQuad(const RenderCamera& camera, RenderMesh*& mesh, const Vector3& pos, Rgba color) {
+	void ScaleGizmo::setupScreenQuad(const RenderCamera& camera, MeshPrim*& mesh, const Vector3& pos, Rgba color) {
 		if (!mesh) {
-			mesh = new RenderMesh(Primitive::HintDynamic);
-			mesh->initialize(4, 6);
+			mesh = new MeshPrim(Primitive::HintDynamic);
+			mesh->init(4, 6);
 			ushort_t* idx = mesh->lockIndexes();
 			idx[0] = 0; idx[1] = 1; idx[2] = 2;
 			idx[3] = 2; idx[4] = 1; idx[5] = 3;

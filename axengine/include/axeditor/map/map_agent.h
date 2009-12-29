@@ -71,7 +71,7 @@ AX_BEGIN_NAMESPACE
 		GameObject* m_gameObj;
 
 	private:
-		RenderLine* m_bboxLine;
+		LinePrim* m_bboxLine;
 	};
 
 	//--------------------------------------------------------------------------

@@ -12,716 +12,716 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-	MapTool::MapTool(MapContext* ctx) : Tool(ctx)
-	{
-		m_mapContext = ctx;
+MapTool::MapTool(MapContext* ctx) : Tool(ctx)
+{
+	m_mapContext = ctx;
+}
+
+//------------------------------------------------------------------------------
+// class TerrainRaiseTool
+//------------------------------------------------------------------------------
+
+TerrainRaiseTool::TerrainRaiseTool(MapContext* context) : MapTool(context) {
+	m_cursor = nullptr;
+	m_isValid = false;
+	m_brushMat = Material::load("terrainbrush");
+	m_brushPrims = nullptr;
+}
+
+TerrainRaiseTool::~TerrainRaiseTool() {
+	SafeDelete(m_cursor);
+	SafeDelete(m_brushPrims);
+}
+
+void TerrainRaiseTool::doBindView(View* view) {
+	m_view = dynamic_cast<PerspectiveView*>(view);
+	m_terrain = m_context->getTerrain();
+
+	if (m_view != nullptr && m_terrain != nullptr)
+		m_isValid = true;
+}
+
+void TerrainRaiseTool::doPress(int x, int y, int flags, float pressure) {
+	if (!m_isValid)
+		return;
+
+	m_brushRadius = m_mapContext->getMapState()->terrainBrushSize;
+	m_brushSoftness = m_mapContext->getMapState()->terrainBrushSoftness;
+	m_brushStrength = m_mapContext->getMapState()->terrainBrushStrength;
+
+	m_editedRect.clear();
+
+	if (flags & Input::Event::ControlModifier)
+		m_brushStrength = -m_brushStrength;
+
+	doDrag(x, y, flags, pressure);
+}
+
+void TerrainRaiseTool::doDrag(int x, int y, int flags, float pressure) {
+	if (!m_isValid)
+		return;
+
+	Vector3 from;
+
+	if (!m_view->selectRegion(Rect(x, y, 1, 1), SelectPart::kTerrain, from)) {
+		return;
 	}
 
-	//------------------------------------------------------------------------------
-	// class TerrainRaiseTool
-	//------------------------------------------------------------------------------
+	updatePrim(from);
 
-	TerrainRaiseTool::TerrainRaiseTool(MapContext* context) : MapTool(context) {
-		m_cursor = nullptr;
-		m_isValid = false;
-		m_brushMat = Material::load("terrainbrush");
-		m_brushPrims = nullptr;
+	float tm = m_terrain->getTileMeters();
+
+	from.x /= tm;
+	from.y /= tm;
+	int tileradius = m_brushRadius / tm;
+
+	Rect rect(from.x - tileradius, from.y - tileradius, tileradius * 2, tileradius * 2);
+	rect.inflate(1, 1);
+	rect &= m_terrain->getTileRect();
+	m_editedRect |= rect;
+
+	for (int j = rect.y; j < rect.yMax(); j++) {
+		for (int i = rect.x; i < rect.xMax(); i ++) {
+			float h = m_terrain->getHeight(i, j);
+			h += getWeight(i * tm, j * tm) * m_brushRadius / 10.0f;
+			m_terrain->setHeight(i, j, h);
+		}
 	}
 
-	TerrainRaiseTool::~TerrainRaiseTool() {
-		SafeDelete(m_cursor);
-		SafeDelete(m_brushPrims);
+	m_terrain->doHeightChanged(rect);
+}
+
+void TerrainRaiseTool::doMove(int x, int y) {
+	if (!m_isValid)
+		return;
+
+	Vector3 from;
+	if (!m_view->selectRegion(Rect(x, y, 1, 1), SelectPart::kTerrain, from)) {
+		return;
 	}
 
-	void TerrainRaiseTool::doBindView(View* view) {
-		m_view = dynamic_cast<PerspectiveView*>(view);
-		m_terrain = m_context->getTerrain();
+	updatePrim(from);
+}
 
-		if (m_view != nullptr && m_terrain != nullptr)
-			m_isValid = true;
+void TerrainRaiseTool::doRelease(int x, int y) {
+	if (!m_isValid)
+		return;
+
+	// create undo action
+	String msg = "Edit Height";
+	Image* oldimage = m_terrain->copyOldHeight(m_editedRect);
+	Image* newimage = m_terrain->copyHeight(m_editedRect);
+	m_terrain->writeOldHeight(m_editedRect, newimage);
+	HeightmapHis* action = new HeightmapHis(msg, m_editedRect, oldimage, newimage, m_terrain);
+
+	onHistoryCreated(action);
+
+	m_view->getContext()->addHistory(action);
+}
+
+void TerrainRaiseTool::doRender(const RenderCamera& camera) {
+	if (!m_isValid)
+		return;
+
+	if (m_cursor != NULL)
+		g_renderSystem->addToScene(m_cursor);
+
+	if (m_brushPrims)
+		g_renderSystem->addToScene(m_brushPrims);
+}
+
+float TerrainRaiseTool::getWeight(float x, float y) const {
+	Vector2 pos(x, y);
+	float dist = (pos - m_center).getLength();
+
+	dist /= m_brushRadius;
+	dist = 1.0f - dist;
+	dist /= m_brushSoftness;
+	dist = Math::saturate(dist);
+	dist *= m_brushStrength;
+
+	return dist;
+}
+
+void TerrainRaiseTool::updatePrim(const Vector3& from) {
+	if (from.x == m_center.x && from.y == m_center.y)
+		return;
+
+	Vector3 to = from; to.z += 2.0f;
+	float radius = m_mapContext->getMapState()->terrainBrushSize;
+
+	m_center.x = from.x; m_center.y = from.y;
+	SafeDelete(m_cursor);
+	m_cursor = LinePrim::createLine(Primitive::HintDynamic, from, to, Rgba::Red);
+
+	SafeDelete(m_brushPrims);
+	Vector4 rect = m_terrain->getTerrainRect();
+	m_brushPrims = new GroupPrim(Primitive::HintDynamic);
+	Primitives prims = m_terrain->getPrimsByCircle(from.x, from.y, radius);
+	for (Primitives::iterator it = prims.begin(); it != prims.end(); ++it) {
+		RefPrim* ref = new RefPrim(Primitive::HintDynamic);
+		ref->setRefered(*it);
+		ref->setMaterial(m_brushMat.get());
+		m_brushPrims->addPrimitive(ref, true);
+	}
+	Matrix4 matrix;
+	matrix.setTranslate(-(from.x-radius), -(from.y-radius), 0);
+	matrix.scale(0.5f/radius, 0.5f/radius, 1);
+	TexGen texgen;
+	texgen.type = SHADER::TexGen_vertex;
+	texgen.transform = true;
+	texgen.matrix = matrix;
+#if 0
+	m_brushMat->setBaseTcMatrix(matrix);
+#else
+	m_brushMat->setTexGen(SamplerType::Diffuse, texgen);
+#endif
+//		m_view->doUpdate();
+}
+
+
+//------------------------------------------------------------------------------
+// class TerrainLowerTool, terrain lower tool
+//------------------------------------------------------------------------------
+
+TerrainLowerTool::TerrainLowerTool(MapContext* context) : TerrainRaiseTool(context)
+{}
+
+TerrainLowerTool::~TerrainLowerTool() {}
+
+float TerrainLowerTool::getWeight(float x, float y) const {
+	return -TerrainRaiseTool::getWeight(x, y);
+}
+
+//------------------------------------------------------------------------------
+// class TerrainFlatTool, terrain level tool
+//------------------------------------------------------------------------------
+
+TerrainFlatTool::TerrainFlatTool(MapContext* context) : TerrainRaiseTool(context)
+{}
+
+TerrainFlatTool::~TerrainFlatTool() {}
+
+
+void TerrainFlatTool::doPress(int x, int y, int flags, float pressure) {
+	m_isJustPressed = true;
+
+	return TerrainRaiseTool::doPress(x, y, flags, pressure);
+}
+
+void TerrainFlatTool::doDrag(int x, int y, int flags, float pressure) {
+	Vector3 from;
+
+	if (!m_view->selectRegion(Rect(x, y, 1, 1), SelectPart::kTerrain, from)) {
+		return;
 	}
 
-	void TerrainRaiseTool::doPress(int x, int y, int flags, float pressure) {
-		if (!m_isValid)
-			return;
+	updatePrim(from);
 
-		m_brushRadius = m_mapContext->getMapState()->terrainBrushSize;
-		m_brushSoftness = m_mapContext->getMapState()->terrainBrushSoftness;
-		m_brushStrength = m_mapContext->getMapState()->terrainBrushStrength;
-
-		m_editedRect.clear();
-
-		if (flags & Input::Event::ControlModifier)
-			m_brushStrength = -m_brushStrength;
-
-		doDrag(x, y, flags, pressure);
+	if (m_isJustPressed) {
+		m_height = from.z;
+		m_isJustPressed = false;
 	}
 
-	void TerrainRaiseTool::doDrag(int x, int y, int flags, float pressure) {
-		if (!m_isValid)
-			return;
+	float tm = m_terrain->getTileMeters();
 
-		Vector3 from;
+	from.x /= tm;
+	from.y /= tm;
+	int tileradius = m_brushRadius / tm;
 
-		if (!m_view->selectRegion(Rect(x, y, 1, 1), SelectPart::kTerrain, from)) {
+	Rect rect(from.x - tileradius, from.y - tileradius, tileradius * 2, tileradius * 2);
+	rect.inflate(1, 1);
+	rect &= m_terrain->getTileRect();
+	m_editedRect |= rect;
+
+	for (int j = rect.y; j < rect.yMax(); j++) {
+		for (int i = rect.x; i < rect.xMax(); i ++) {
+			float weight = getWeight(i*tm, j*tm);
+			if (weight <= 0)
+				continue;
+
+			m_terrain->setHeight(i, j, m_height);
+		}
+	}
+
+	m_terrain->doHeightChanged(rect);
+}
+
+float TerrainFlatTool::getWeight(float x, float y) const {
+	Vector2 pos(x, y);
+	float dist = (pos - m_center).getLength();
+
+	dist /= m_brushRadius;
+	dist = 1.0f - dist;
+	dist /= m_brushSoftness;
+
+	if (dist >= 0.0f)
+		dist = 1.0f;
+	else
+		dist = 0.0f;
+
+	return dist;
+}
+
+
+//------------------------------------------------------------------------------
+// class TerrainSmoothTool, terrain smooth tool
+//------------------------------------------------------------------------------
+
+TerrainSmoothTool::TerrainSmoothTool(MapContext* context) : TerrainRaiseTool(context)
+{}
+
+TerrainSmoothTool::~TerrainSmoothTool() {}
+
+void TerrainSmoothTool::doDrag(int x, int y, int flags, float pressure) {
+	if (!m_isValid)
+		return;
+
+	Vector3 from;
+
+	if (!m_view->selectRegion(Rect(x, y, 1, 1), SelectPart::kTerrain, from)) {
+		return;
+	}
+
+	updatePrim(from);
+
+	float tm = m_terrain->getTileMeters();
+
+	from.x /= tm;
+	from.y /= tm;
+	int tileradius = m_brushRadius / tm;
+
+	Rect rect(from.x - tileradius, from.y - tileradius, tileradius * 2, tileradius * 2);
+	rect.inflate(1, 1);
+	rect &= m_terrain->getTileRect();
+	m_editedRect |= rect;
+
+	int smoothkernel = m_brushRadius / 16;
+	if (smoothkernel < 1)
+		smoothkernel = 1;
+
+	for (int j = rect.y; j < rect.yMax(); j++) {
+		for (int i = rect.x; i < rect.xMax(); i ++) {
+			float avg = m_terrain->getHeight(i-smoothkernel, j) + m_terrain->getHeight(i+smoothkernel, j)
+						+ m_terrain->getHeight(i, j-smoothkernel) + m_terrain->getHeight(i, j+smoothkernel);
+
+			avg *= 0.25f;
+			float h = m_terrain->getHeight(i, j);
+			float frac = getWeight(i * tm, j * tm);
+			m_terrain->setHeight(i, j, h * (1.0f - frac) + avg * frac);
+		}
+	}
+
+	m_terrain->doHeightChanged(rect);
+}
+
+//------------------------------------------------------------------------------
+// class TerrainGrabTool, terrain level tool
+//------------------------------------------------------------------------------
+
+TerrainGrabTool::TerrainGrabTool(MapContext* context) : TerrainRaiseTool(context) {
+	m_isJustPressed = false;
+	m_baseHeight = nullptr;
+}
+
+TerrainGrabTool::~TerrainGrabTool() {}
+
+void TerrainGrabTool::doPress(int x, int y, int flags, float pressure) {
+	m_isJustPressed = true;
+
+	return TerrainRaiseTool::doPress(x, y, flags, pressure);
+}
+
+void TerrainGrabTool::doDrag(int x, int y, int flags, float pressure) {
+	if (!m_isValid)
+		return;
+
+	float tm = m_terrain->getTileMeters();
+
+	if (!m_isJustPressed) {
+		if (!m_baseHeight) {
 			return;
 		}
 
-		updatePrim(from);
-
-		float tm = m_terrain->getTileMeters();
-
-		from.x /= tm;
-		from.y /= tm;
-		int tileradius = m_brushRadius / tm;
-
-		Rect rect(from.x - tileradius, from.y - tileradius, tileradius * 2, tileradius * 2);
-		rect.inflate(1, 1);
-		rect &= m_terrain->getTileRect();
-		m_editedRect |= rect;
-
+		Rect rect = m_editedRect;
 		for (int j = rect.y; j < rect.yMax(); j++) {
 			for (int i = rect.x; i < rect.xMax(); i ++) {
-				float h = m_terrain->getHeight(i, j);
-				h += getWeight(i * tm, j * tm) * m_brushRadius / 10.0f;
+				float h = m_terrain->getOldHeight(i, j) + (m_mouseY - y) * getWeight(i * tm, j * tm);
 				m_terrain->setHeight(i, j, h);
 			}
 		}
 
 		m_terrain->doHeightChanged(rect);
+		return;
 	}
 
-	void TerrainRaiseTool::doMove(int x, int y) {
-		if (!m_isValid)
-			return;
+	Vector3 from;
 
-		Vector3 from;
-		if (!m_view->selectRegion(Rect(x, y, 1, 1), SelectPart::kTerrain, from)) {
-			return;
+	if (!m_view->selectRegion(Rect(x, y, 1, 1), SelectPart::kTerrain, from)) {
+		return;
+	}
+
+	updatePrim(from);
+
+	from.x /= tm;
+	from.y /= tm;
+	int tileradius = m_brushRadius / tm;
+
+	Rect rect(from.x - tileradius, from.y - tileradius, tileradius * 2, tileradius * 2);
+	rect.inflate(1, 1);
+	rect &= m_terrain->getTileRect();
+	m_editedRect = rect;
+
+	m_baseHeight = m_terrain->copyHeight(m_editedRect);
+	m_mouseY = y;
+
+	m_isJustPressed = false;
+}
+
+//--------------------------------------------------------------------------
+// class TerrainPaintTool, terrain paint tool
+//--------------------------------------------------------------------------
+
+TerrainPaintTool::TerrainPaintTool(MapContext* context) : TerrainRaiseTool(context) {
+	m_oldPixel = nullptr;
+}
+
+TerrainPaintTool::~TerrainPaintTool() {}
+
+void TerrainPaintTool::doPress(int x, int y, int flags, float pressure) {
+	if (!m_isValid)
+		return;
+
+	m_brushRadius = m_mapContext->getMapState()->terrainBrushSize;
+	m_brushSoftness = m_mapContext->getMapState()->terrainBrushSoftness;
+	m_brushStrength = m_mapContext->getMapState()->terrainBrushStrength;
+	m_layerGen = m_terrain->getLayerGenById(m_mapContext->getMapState()->terrainCurLayerId);
+
+	m_editedRect.clear();
+
+	if (flags & Input::Event::ControlModifier)
+		m_brushStrength = -m_brushStrength;
+
+	SafeDelete(m_oldPixel);
+
+	doDrag(x, y, flags, pressure);
+}
+
+void TerrainPaintTool::doDrag(int x, int y, int flags, float pressure) {
+	if (!m_isValid || ! m_layerGen)
+		return;
+
+	Vector3 from;
+
+	if (!m_view->selectRegion(Rect(x, y, 1, 1), SelectPart::kTerrain, from)) {
+		return;
+	}
+
+	updatePrim(from);
+
+	float tm = m_terrain->getTileMeters();
+	float meterpixels = Map::TilePixels / tm;
+
+	from.x *= meterpixels;
+	from.y *= meterpixels;
+	int pixelradius = m_brushRadius * meterpixels;
+
+	Rect rect(from.x - pixelradius, from.y - pixelradius, pixelradius * 2, pixelradius * 2);
+	rect.inflate(1, 1);
+	rect &= m_terrain->getTileRect() * Map::TilePixels;
+
+	if (!m_editedRect.contains(rect)) {
+		Rect totalrect = m_editedRect | rect;
+		Image* image = m_layerGen->copyAlpha(totalrect);
+
+		if (m_oldPixel) {
+			image->writeSubImage(m_oldPixel, Rect(0,0,m_editedRect.width,m_editedRect.height), m_editedRect.getMins() - totalrect.getMins());
+			delete m_oldPixel;
 		}
 
-		updatePrim(from);
+		m_oldPixel = image;
+		m_editedRect = totalrect;
 	}
 
-	void TerrainRaiseTool::doRelease(int x, int y) {
-		if (!m_isValid)
-			return;
-
-		// create undo action
-		String msg = "Edit Height";
-		Image* oldimage = m_terrain->copyOldHeight(m_editedRect);
-		Image* newimage = m_terrain->copyHeight(m_editedRect);
-		m_terrain->writeOldHeight(m_editedRect, newimage);
-		HeightmapHis* action = new HeightmapHis(msg, m_editedRect, oldimage, newimage, m_terrain);
-
-		onHistoryCreated(action);
-
-		m_view->getContext()->addHistory(action);
-	}
-
-	void TerrainRaiseTool::doRender(const RenderCamera& camera) {
-		if (!m_isValid)
-			return;
-
-		if (m_cursor != NULL)
-			g_renderSystem->addToScene(m_cursor);
-
-		if (m_brushPrims)
-			g_renderSystem->addToScene(m_brushPrims);
-	}
-
-	float TerrainRaiseTool::getWeight(float x, float y) const {
-		Vector2 pos(x, y);
-		float dist = (pos - m_center).getLength();
-
-		dist /= m_brushRadius;
-		dist = 1.0f - dist;
-		dist /= m_brushSoftness;
-		dist = Math::saturate(dist);
-		dist *= m_brushStrength;
-
-		return dist;
-	}
-
-	void TerrainRaiseTool::updatePrim(const Vector3& from) {
-		if (from.x == m_center.x && from.y == m_center.y)
-			return;
-
-		Vector3 to = from; to.z += 2.0f;
-		float radius = m_mapContext->getMapState()->terrainBrushSize;
-
-		m_center.x = from.x; m_center.y = from.y;
-		SafeDelete(m_cursor);
-		m_cursor = RenderLine::createLine(Primitive::HintDynamic, from, to, Rgba::Red);
-
-		SafeDelete(m_brushPrims);
-		Vector4 rect = m_terrain->getTerrainRect();
-		m_brushPrims = new GroupPrim(Primitive::HintDynamic);
-		Primitives prims = m_terrain->getPrimsByCircle(from.x, from.y, radius);
-		for (Primitives::iterator it = prims.begin(); it != prims.end(); ++it) {
-			RefPrim* ref = new RefPrim(Primitive::HintDynamic);
-			ref->setRefered(*it);
-			ref->setMaterial(m_brushMat.get());
-			m_brushPrims->addPrimitive(ref, true);
+	for (int j = rect.y; j < rect.yMax(); j++) {
+		for (int i = rect.x; i < rect.xMax(); i ++) {
+			float alpha = m_layerGen->getAlpha(i, j);
+			alpha += getWeight(i / meterpixels, j / meterpixels);
+			m_layerGen->setAlpha(i, j, alpha);
 		}
-		Matrix4 matrix;
-		matrix.setTranslate(-(from.x-radius), -(from.y-radius), 0);
-		matrix.scale(0.5f/radius, 0.5f/radius, 1);
-		TexGen texgen;
-		texgen.type = SHADER::TexGen_vertex;
-		texgen.transform = true;
-		texgen.matrix = matrix;
-#if 0
-		m_brushMat->setBaseTcMatrix(matrix);
-#else
-		m_brushMat->setTexGen(SamplerType::Diffuse, texgen);
-#endif
-//		m_view->doUpdate();
 	}
 
+	m_terrain->doLayerPainted(rect);
+}
 
-	//------------------------------------------------------------------------------
-	// class TerrainLowerTool, terrain lower tool
-	//------------------------------------------------------------------------------
+void TerrainPaintTool::doRelease(int x, int y) {
+	if (!m_isValid || ! m_layerGen)
+		return;
 
-	TerrainLowerTool::TerrainLowerTool(MapContext* context) : TerrainRaiseTool(context)
-	{}
+	// create undo action
+	String msg = "mapTerrain Paint";
+	Image* newimage = m_layerGen->copyAlpha(m_editedRect);
+	TerrainPaintHis* action = new TerrainPaintHis(msg, m_editedRect, m_layerGen->getLayerId(), m_oldPixel, newimage);
 
-	TerrainLowerTool::~TerrainLowerTool() {}
+	m_oldPixel = nullptr;
 
-	float TerrainLowerTool::getWeight(float x, float y) const {
-		return -TerrainRaiseTool::getWeight(x, y);
+	m_view->getContext()->addHistory(action);
+}
+
+//--------------------------------------------------------------------------
+// class TerrainEraseTool, terrain erase tool
+//--------------------------------------------------------------------------
+
+void TerrainEraseTool::doPress( int x, int y, int flags, float pressure )
+{
+	if (!m_isValid)
+		return;
+
+	m_brushRadius = m_mapContext->getMapState()->terrainBrushSize;
+	m_brushSoftness = m_mapContext->getMapState()->terrainBrushSoftness;
+	m_brushStrength = -m_mapContext->getMapState()->terrainBrushStrength;
+	m_layerGen = m_terrain->getLayerGenById(m_mapContext->getMapState()->terrainCurLayerId);
+
+	m_editedRect.clear();
+
+	if (flags & Input::Event::ControlModifier)
+		m_brushStrength = -m_brushStrength;
+
+	SafeDelete(m_oldPixel);
+
+	doDrag(x, y, flags, pressure);
+}
+
+void TerrainEraseTool::doRelease( int x, int y )
+{
+	if (!m_isValid || ! m_layerGen)
+		return;
+
+	// create undo action
+	String msg = "mapTerrain Erase";
+	Image* newimage = m_layerGen->copyAlpha(m_editedRect);
+	TerrainPaintHis* action = new TerrainPaintHis(msg, m_editedRect, m_layerGen->getLayerId(), m_oldPixel, newimage);
+
+	m_oldPixel = nullptr;
+
+	m_view->getContext()->addHistory(action);
+}
+
+//--------------------------------------------------------------------------
+// class CreateStaticTool
+//--------------------------------------------------------------------------
+
+CreateStaticTool::CreateStaticTool(MapContext* context) : MapTool(context) {
+	m_actor = nullptr;
+}
+
+CreateStaticTool::~CreateStaticTool() {
+}
+
+void CreateStaticTool::doPress(int x, int y, int flags, float pressure) {
+	Vector3 from;
+
+	if (!m_view->traceWorld(x, y, from, SelectPart::All)) {
+		return;
 	}
 
-	//------------------------------------------------------------------------------
-	// class TerrainFlatTool, terrain level tool
-	//------------------------------------------------------------------------------
+	m_actor = new MapStatic();
 
-	TerrainFlatTool::TerrainFlatTool(MapContext* context) : TerrainRaiseTool(context)
-	{}
+	m_actor->setProperty("model", m_mapContext->getMapState()->staticModelName);
 
-	TerrainFlatTool::~TerrainFlatTool() {}
-
-
-	void TerrainFlatTool::doPress(int x, int y, int flags, float pressure) {
-		m_isJustPressed = true;
-
-		return TerrainRaiseTool::doPress(x, y, flags, pressure);
+	if (m_mapContext->getMapState()->isSnapToGrid) {
+		from = Internal::snap(from, m_mapContext->getMapState()->snapToGrid);
 	}
 
-	void TerrainFlatTool::doDrag(int x, int y, int flags, float pressure) {
-		Vector3 from;
+	m_actor->setOrigin(from);
 
-		if (!m_view->selectRegion(Rect(x, y, 1, 1), SelectPart::kTerrain, from)) {
-			return;
-		}
+	m_actor->bindToGame();
 
-		updatePrim(from);
+	GroupHis* grouphis = new GroupHis(m_context, "Create MapStatic");
 
-		if (m_isJustPressed) {
-			m_height = from.z;
-			m_isJustPressed = false;
-		}
+	AgentList actorlist;
+	actorlist.push_back(m_actor);
+	UndeleteHis* undelhis = new UndeleteHis(m_context, "Create MapStatic", actorlist);
 
-		float tm = m_terrain->getTileMeters();
+	History* selhis = m_view->getContext()->setSelectionHistoried(actorlist);
 
-		from.x /= tm;
-		from.y /= tm;
-		int tileradius = m_brushRadius / tm;
+	grouphis->append(undelhis);
+	grouphis->append(selhis);
 
-		Rect rect(from.x - tileradius, from.y - tileradius, tileradius * 2, tileradius * 2);
-		rect.inflate(1, 1);
-		rect &= m_terrain->getTileRect();
-		m_editedRect |= rect;
+	m_context->addHistory(grouphis);
 
-		for (int j = rect.y; j < rect.yMax(); j++) {
-			for (int i = rect.x; i < rect.xMax(); i ++) {
-				float weight = getWeight(i*tm, j*tm);
-				if (weight <= 0)
-					continue;
+	doDrag(x, y, flags, pressure);
+}
 
-				m_terrain->setHeight(i, j, m_height);
-			}
-		}
-
-		m_terrain->doHeightChanged(rect);
+void CreateStaticTool::doDrag(int x, int y, int flags, float pressure) {
+	if (!m_actor) {
+		return;
 	}
 
-	float TerrainFlatTool::getWeight(float x, float y) const {
-		Vector2 pos(x, y);
-		float dist = (pos - m_center).getLength();
+	Vector3 from;
 
-		dist /= m_brushRadius;
-		dist = 1.0f - dist;
-		dist /= m_brushSoftness;
-
-		if (dist >= 0.0f)
-			dist = 1.0f;
-		else
-			dist = 0.0f;
-
-		return dist;
+	if (!m_view->traceWorld(x, y, from, SelectPart::All)) {
+		return;
 	}
 
-
-	//------------------------------------------------------------------------------
-	// class TerrainSmoothTool, terrain smooth tool
-	//------------------------------------------------------------------------------
-
-	TerrainSmoothTool::TerrainSmoothTool(MapContext* context) : TerrainRaiseTool(context)
-	{}
-
-	TerrainSmoothTool::~TerrainSmoothTool() {}
-
-	void TerrainSmoothTool::doDrag(int x, int y, int flags, float pressure) {
-		if (!m_isValid)
-			return;
-
-		Vector3 from;
-
-		if (!m_view->selectRegion(Rect(x, y, 1, 1), SelectPart::kTerrain, from)) {
-			return;
-		}
-
-		updatePrim(from);
-
-		float tm = m_terrain->getTileMeters();
-
-		from.x /= tm;
-		from.y /= tm;
-		int tileradius = m_brushRadius / tm;
-
-		Rect rect(from.x - tileradius, from.y - tileradius, tileradius * 2, tileradius * 2);
-		rect.inflate(1, 1);
-		rect &= m_terrain->getTileRect();
-		m_editedRect |= rect;
-
-		int smoothkernel = m_brushRadius / 16;
-		if (smoothkernel < 1)
-			smoothkernel = 1;
-
-		for (int j = rect.y; j < rect.yMax(); j++) {
-			for (int i = rect.x; i < rect.xMax(); i ++) {
-				float avg = m_terrain->getHeight(i-smoothkernel, j) + m_terrain->getHeight(i+smoothkernel, j)
-							+ m_terrain->getHeight(i, j-smoothkernel) + m_terrain->getHeight(i, j+smoothkernel);
-
-				avg *= 0.25f;
-				float h = m_terrain->getHeight(i, j);
-				float frac = getWeight(i * tm, j * tm);
-				m_terrain->setHeight(i, j, h * (1.0f - frac) + avg * frac);
-			}
-		}
-
-		m_terrain->doHeightChanged(rect);
+	if (m_mapContext->getMapState()->isSnapToGrid) {
+		from = Internal::snap(from, m_mapContext->getMapState()->snapToGrid);
 	}
 
-	//------------------------------------------------------------------------------
-	// class TerrainGrabTool, terrain level tool
-	//------------------------------------------------------------------------------
+	m_actor->setOrigin(from);
+}
 
-	TerrainGrabTool::TerrainGrabTool(MapContext* context) : TerrainRaiseTool(context) {
-		m_isJustPressed = false;
-		m_baseHeight = nullptr;
+void CreateStaticTool::doRelease(int x, int y) {
+	if (!m_actor) {
+		return;
 	}
 
-	TerrainGrabTool::~TerrainGrabTool() {}
+	m_actor = nullptr;
+}
 
-	void TerrainGrabTool::doPress(int x, int y, int flags, float pressure) {
-		m_isJustPressed = true;
+//--------------------------------------------------------------------------
+// class CreateEntityTool
+//--------------------------------------------------------------------------
 
-		return TerrainRaiseTool::doPress(x, y, flags, pressure);
+CreateEntityTool::CreateEntityTool(MapContext* context) : MapTool(context) {
+	m_actor = nullptr;
+}
+
+CreateEntityTool::~CreateEntityTool() {}
+
+void CreateEntityTool::doPress(int x, int y, int flags, float pressure) {
+	Vector3 from;
+
+	if (!m_view->traceWorld(x, y, from, SelectPart::All)) {
+		return;
 	}
 
-	void TerrainGrabTool::doDrag(int x, int y, int flags, float pressure) {
-		if (!m_isValid)
-			return;
+	m_actor = new MapActor(m_mapContext->getMapState()->entityClass);
 
-		float tm = m_terrain->getTileMeters();
-
-		if (!m_isJustPressed) {
-			if (!m_baseHeight) {
-				return;
-			}
-
-			Rect rect = m_editedRect;
-			for (int j = rect.y; j < rect.yMax(); j++) {
-				for (int i = rect.x; i < rect.xMax(); i ++) {
-					float h = m_terrain->getOldHeight(i, j) + (m_mouseY - y) * getWeight(i * tm, j * tm);
-					m_terrain->setHeight(i, j, h);
-				}
-			}
-
-			m_terrain->doHeightChanged(rect);
-			return;
-		}
-
-		Vector3 from;
-
-		if (!m_view->selectRegion(Rect(x, y, 1, 1), SelectPart::kTerrain, from)) {
-			return;
-		}
-
-		updatePrim(from);
-
-		from.x /= tm;
-		from.y /= tm;
-		int tileradius = m_brushRadius / tm;
-
-		Rect rect(from.x - tileradius, from.y - tileradius, tileradius * 2, tileradius * 2);
-		rect.inflate(1, 1);
-		rect &= m_terrain->getTileRect();
-		m_editedRect = rect;
-
-		m_baseHeight = m_terrain->copyHeight(m_editedRect);
-		m_mouseY = y;
-
-		m_isJustPressed = false;
+	if (m_mapContext->getMapState()->isSnapToGrid) {
+		from = Internal::snap(from, m_mapContext->getMapState()->snapToGrid);
 	}
 
-	//--------------------------------------------------------------------------
-	// class TerrainPaintTool, terrain paint tool
-	//--------------------------------------------------------------------------
+	m_actor->getGameEntity()->autoGenerateName();
+	m_actor->setOrigin(from);
 
-	TerrainPaintTool::TerrainPaintTool(MapContext* context) : TerrainRaiseTool(context) {
-		m_oldPixel = nullptr;
+	m_actor->bindToGame();
+
+	GroupHis* grouphis = new GroupHis(m_context, "Create Entity");
+
+	AgentList actorlist;
+	actorlist.push_back(m_actor);
+	UndeleteHis* undelhis = new UndeleteHis(m_context, "Create Entity", actorlist);
+
+	History* selhis = m_view->getContext()->setSelectionHistoried(actorlist);
+
+	grouphis->append(undelhis);
+	grouphis->append(selhis);
+
+	m_context->addHistory(grouphis);
+}
+
+void CreateEntityTool::doDrag(int x, int y, int flags, float pressure) {
+	if (!m_actor) {
+		return;
 	}
 
-	TerrainPaintTool::~TerrainPaintTool() {}
+	Vector3 from;
 
-	void TerrainPaintTool::doPress(int x, int y, int flags, float pressure) {
-		if (!m_isValid)
-			return;
-
-		m_brushRadius = m_mapContext->getMapState()->terrainBrushSize;
-		m_brushSoftness = m_mapContext->getMapState()->terrainBrushSoftness;
-		m_brushStrength = m_mapContext->getMapState()->terrainBrushStrength;
-		m_layerGen = m_terrain->getLayerGenById(m_mapContext->getMapState()->terrainCurLayerId);
-
-		m_editedRect.clear();
-
-		if (flags & Input::Event::ControlModifier)
-			m_brushStrength = -m_brushStrength;
-
-		SafeDelete(m_oldPixel);
-
-		doDrag(x, y, flags, pressure);
+	if (!m_view->traceWorld(x, y, from, SelectPart::All)) {
+		return;
 	}
 
-	void TerrainPaintTool::doDrag(int x, int y, int flags, float pressure) {
-		if (!m_isValid || ! m_layerGen)
-			return;
-
-		Vector3 from;
-
-		if (!m_view->selectRegion(Rect(x, y, 1, 1), SelectPart::kTerrain, from)) {
-			return;
-		}
-
-		updatePrim(from);
-
-		float tm = m_terrain->getTileMeters();
-		float meterpixels = Map::TilePixels / tm;
-
-		from.x *= meterpixels;
-		from.y *= meterpixels;
-		int pixelradius = m_brushRadius * meterpixels;
-
-		Rect rect(from.x - pixelradius, from.y - pixelradius, pixelradius * 2, pixelradius * 2);
-		rect.inflate(1, 1);
-		rect &= m_terrain->getTileRect() * Map::TilePixels;
-
-		if (!m_editedRect.contains(rect)) {
-			Rect totalrect = m_editedRect | rect;
-			Image* image = m_layerGen->copyAlpha(totalrect);
-
-			if (m_oldPixel) {
-				image->writeSubImage(m_oldPixel, Rect(0,0,m_editedRect.width,m_editedRect.height), m_editedRect.getMins() - totalrect.getMins());
-				delete m_oldPixel;
-			}
-
-			m_oldPixel = image;
-			m_editedRect = totalrect;
-		}
-
-		for (int j = rect.y; j < rect.yMax(); j++) {
-			for (int i = rect.x; i < rect.xMax(); i ++) {
-				float alpha = m_layerGen->getAlpha(i, j);
-				alpha += getWeight(i / meterpixels, j / meterpixels);
-				m_layerGen->setAlpha(i, j, alpha);
-			}
-		}
-
-		m_terrain->doLayerPainted(rect);
+	if (m_mapContext->getMapState()->isSnapToGrid) {
+		from = Internal::snap(from, m_mapContext->getMapState()->snapToGrid);
 	}
 
-	void TerrainPaintTool::doRelease(int x, int y) {
-		if (!m_isValid || ! m_layerGen)
-			return;
+	m_actor->setOrigin(from);
+}
 
-		// create undo action
-		String msg = "mapTerrain Paint";
-		Image* newimage = m_layerGen->copyAlpha(m_editedRect);
-		TerrainPaintHis* action = new TerrainPaintHis(msg, m_editedRect, m_layerGen->getLayerId(), m_oldPixel, newimage);
-
-		m_oldPixel = nullptr;
-
-		m_view->getContext()->addHistory(action);
+void CreateEntityTool::doRelease(int x, int y) {
+	if (!m_actor) {
+		return;
 	}
 
-	//--------------------------------------------------------------------------
-	// class TerrainEraseTool, terrain erase tool
-	//--------------------------------------------------------------------------
+	m_actor = nullptr;
+}
 
-	void TerrainEraseTool::doPress( int x, int y, int flags, float pressure )
-	{
-		if (!m_isValid)
-			return;
+void CreateEntityTool::doRender(const RenderCamera& camera) {
 
-		m_brushRadius = m_mapContext->getMapState()->terrainBrushSize;
-		m_brushSoftness = m_mapContext->getMapState()->terrainBrushSoftness;
-		m_brushStrength = -m_mapContext->getMapState()->terrainBrushStrength;
-		m_layerGen = m_terrain->getLayerGenById(m_mapContext->getMapState()->terrainCurLayerId);
+}
 
-		m_editedRect.clear();
-
-		if (flags & Input::Event::ControlModifier)
-			m_brushStrength = -m_brushStrength;
-
-		SafeDelete(m_oldPixel);
-
-		doDrag(x, y, flags, pressure);
-	}
-
-	void TerrainEraseTool::doRelease( int x, int y )
-	{
-		if (!m_isValid || ! m_layerGen)
-			return;
-
-		// create undo action
-		String msg = "mapTerrain Erase";
-		Image* newimage = m_layerGen->copyAlpha(m_editedRect);
-		TerrainPaintHis* action = new TerrainPaintHis(msg, m_editedRect, m_layerGen->getLayerId(), m_oldPixel, newimage);
-
-		m_oldPixel = nullptr;
-
-		m_view->getContext()->addHistory(action);
-	}
-
-	//--------------------------------------------------------------------------
-	// class CreateStaticTool
-	//--------------------------------------------------------------------------
-
-	CreateStaticTool::CreateStaticTool(MapContext* context) : MapTool(context) {
-		m_actor = nullptr;
-	}
-
-	CreateStaticTool::~CreateStaticTool() {
-	}
-
-	void CreateStaticTool::doPress(int x, int y, int flags, float pressure) {
-		Vector3 from;
-
-		if (!m_view->traceWorld(x, y, from, SelectPart::All)) {
-			return;
-		}
-
-		m_actor = new MapStatic();
-
-		m_actor->setProperty("model", m_mapContext->getMapState()->staticModelName);
-
-		if (m_mapContext->getMapState()->isSnapToGrid) {
-			from = Internal::snap(from, m_mapContext->getMapState()->snapToGrid);
-		}
-
-		m_actor->setOrigin(from);
-
-		m_actor->bindToGame();
-
-		GroupHis* grouphis = new GroupHis(m_context, "Create MapStatic");
-
-		AgentList actorlist;
-		actorlist.push_back(m_actor);
-		UndeleteHis* undelhis = new UndeleteHis(m_context, "Create MapStatic", actorlist);
-
-		History* selhis = m_view->getContext()->setSelectionHistoried(actorlist);
-
-		grouphis->append(undelhis);
-		grouphis->append(selhis);
-
-		m_context->addHistory(grouphis);
-
-		doDrag(x, y, flags, pressure);
-	}
-
-	void CreateStaticTool::doDrag(int x, int y, int flags, float pressure) {
-		if (!m_actor) {
-			return;
-		}
-
-		Vector3 from;
-
-		if (!m_view->traceWorld(x, y, from, SelectPart::All)) {
-			return;
-		}
-
-		if (m_mapContext->getMapState()->isSnapToGrid) {
-			from = Internal::snap(from, m_mapContext->getMapState()->snapToGrid);
-		}
-
-		m_actor->setOrigin(from);
-	}
-
-	void CreateStaticTool::doRelease(int x, int y) {
-		if (!m_actor) {
-			return;
-		}
-
-		m_actor = nullptr;
-	}
-
-	//--------------------------------------------------------------------------
-	// class CreateEntityTool
-	//--------------------------------------------------------------------------
-
-	CreateEntityTool::CreateEntityTool(MapContext* context) : MapTool(context) {
-		m_actor = nullptr;
-	}
-
-	CreateEntityTool::~CreateEntityTool() {}
-
-	void CreateEntityTool::doPress(int x, int y, int flags, float pressure) {
-		Vector3 from;
-
-		if (!m_view->traceWorld(x, y, from, SelectPart::All)) {
-			return;
-		}
-
-		m_actor = new MapActor(m_mapContext->getMapState()->entityClass);
-
-		if (m_mapContext->getMapState()->isSnapToGrid) {
-			from = Internal::snap(from, m_mapContext->getMapState()->snapToGrid);
-		}
-
-		m_actor->getGameEntity()->autoGenerateName();
-		m_actor->setOrigin(from);
-
-		m_actor->bindToGame();
-
-		GroupHis* grouphis = new GroupHis(m_context, "Create Entity");
-
-		AgentList actorlist;
-		actorlist.push_back(m_actor);
-		UndeleteHis* undelhis = new UndeleteHis(m_context, "Create Entity", actorlist);
-
-		History* selhis = m_view->getContext()->setSelectionHistoried(actorlist);
-
-		grouphis->append(undelhis);
-		grouphis->append(selhis);
-
-		m_context->addHistory(grouphis);
-	}
-
-	void CreateEntityTool::doDrag(int x, int y, int flags, float pressure) {
-		if (!m_actor) {
-			return;
-		}
-
-		Vector3 from;
-
-		if (!m_view->traceWorld(x, y, from, SelectPart::All)) {
-			return;
-		}
-
-		if (m_mapContext->getMapState()->isSnapToGrid) {
-			from = Internal::snap(from, m_mapContext->getMapState()->snapToGrid);
-		}
-
-		m_actor->setOrigin(from);
-	}
-
-	void CreateEntityTool::doRelease(int x, int y) {
-		if (!m_actor) {
-			return;
-		}
-
-		m_actor = nullptr;
-	}
-
-	void CreateEntityTool::doRender(const RenderCamera& camera) {
-
-	}
-
-	//--------------------------------------------------------------------------
-	// class CreateTreeTool
-	//--------------------------------------------------------------------------
+//--------------------------------------------------------------------------
+// class CreateTreeTool
+//--------------------------------------------------------------------------
 
 #ifdef AX_CONFIG_OPTION_USE_SPEEDTREE_40
-	CreateTreeTool::CreateTreeTool(MapContext* context) : MapTool(context) {
-		m_actor = nullptr;
+CreateTreeTool::CreateTreeTool(MapContext* context) : MapTool(context) {
+	m_actor = nullptr;
+}
+
+CreateTreeTool::~CreateTreeTool() {
+}
+
+void CreateTreeTool::doPress(int x, int y, int flags, float pressure) {
+	Vector3 from;
+
+	if (!m_view->traceWorld(x, y, from, SelectPart::All)) {
+		return;
 	}
 
-	CreateTreeTool::~CreateTreeTool() {
+	m_actor = new MapSpeedTree();
+	m_view->getContext()->setSelection(m_actor);
+
+	m_actor->setProperty("tree", m_mapContext->getMapState()->treeFilename);
+
+	if (m_mapContext->getMapState()->isSnapToGrid) {
+		from = Internal::snap(from, m_mapContext->getMapState()->snapToGrid);
 	}
 
-	void CreateTreeTool::doPress(int x, int y, int flags, float pressure) {
-		Vector3 from;
+	m_actor->bindToGame();
 
-		if (!m_view->traceWorld(x, y, from, SelectPart::All)) {
-			return;
-		}
+	GroupHis* grouphis = new GroupHis(m_context, "Create MapSpeedTree");
 
-		m_actor = new MapSpeedTree();
-		m_view->getContext()->setSelection(m_actor);
+	AgentList actorlist;
+	actorlist.push_back(m_actor);
+	UndeleteHis* undelhis = new UndeleteHis(m_context, "Create MapSpeedTree", actorlist);
 
-		m_actor->setProperty("tree", m_mapContext->getMapState()->treeFilename);
+	History* selhis = m_view->getContext()->setSelectionHistoried(actorlist);
 
-		if (m_mapContext->getMapState()->isSnapToGrid) {
-			from = Internal::snap(from, m_mapContext->getMapState()->snapToGrid);
-		}
+	grouphis->append(undelhis);
+	grouphis->append(selhis);
 
-		m_actor->bindToGame();
+	m_context->addHistory(grouphis);
 
-		GroupHis* grouphis = new GroupHis(m_context, "Create MapSpeedTree");
+	doDrag(x, y, flags, pressure);
+}
 
-		AgentList actorlist;
-		actorlist.push_back(m_actor);
-		UndeleteHis* undelhis = new UndeleteHis(m_context, "Create MapSpeedTree", actorlist);
-
-		History* selhis = m_view->getContext()->setSelectionHistoried(actorlist);
-
-		grouphis->append(undelhis);
-		grouphis->append(selhis);
-
-		m_context->addHistory(grouphis);
-
-		doDrag(x, y, flags, pressure);
+void CreateTreeTool::doDrag(int x, int y, int flags, float pressure) {
+	if (!m_actor) {
+		return;
 	}
 
-	void CreateTreeTool::doDrag(int x, int y, int flags, float pressure) {
-		if (!m_actor) {
-			return;
-		}
+	Vector3 from;
 
-		Vector3 from;
-
-		if (!m_view->traceWorld(x, y, from, SelectPart::All)) {
-			return;
-		}
-
-		if (m_mapContext->getMapState()->isSnapToGrid) {
-			from = Internal::snap(from, m_mapContext->getMapState()->snapToGrid);
-		}
-
-		m_actor->setOrigin(from);
+	if (!m_view->traceWorld(x, y, from, SelectPart::All)) {
+		return;
 	}
 
-	void CreateTreeTool::doRelease(int x, int y) {
-		if (!m_actor) {
-			return;
-		}
-
-		m_actor = nullptr;
+	if (m_mapContext->getMapState()->isSnapToGrid) {
+		from = Internal::snap(from, m_mapContext->getMapState()->snapToGrid);
 	}
+
+	m_actor->setOrigin(from);
+}
+
+void CreateTreeTool::doRelease(int x, int y) {
+	if (!m_actor) {
+		return;
+	}
+
+	m_actor = nullptr;
+}
 #endif // AX_CONFIG_OPTION_USE_SPEEDTREE_40
 
 AX_END_NAMESPACE

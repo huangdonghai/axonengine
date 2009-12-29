@@ -17,9 +17,7 @@ AX_BEGIN_NAMESPACE
 			return GL_STATIC_DRAW;
 		case Primitive::HintDynamic:
 			return GL_STREAM_DRAW;
-		case Primitive::HintStream:
-			return GL_STREAM_DRAW;
-		case Primitive::HintOneFrame:
+		case Primitive::HintFrame:
 			return GL_STREAM_DRAW;
 		default: AX_NO_DEFAULT;
 			return GL_DYNAMIC_DRAW;
@@ -108,7 +106,7 @@ AX_BEGIN_NAMESPACE
 
 		int activeSize = activeCount * 2;
 
-		if (primhint == Primitive::HintOneFrame) {
+		if (primhint == Primitive::HintFrame) {
 			m_count = activeCount;
 			size = activeSize;
 		}

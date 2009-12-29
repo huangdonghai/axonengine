@@ -80,7 +80,7 @@ AX_BEGIN_NAMESPACE
 		D3D9instancedbuffer();
 		~D3D9instancedbuffer();
 
-		void setData(const GeoInstance::ParamSeq& params);
+		void setData(const InstancePrim::ParamSeq& params);
 
 	private:
 		IDirect3DVertexBuffer9* m_object;

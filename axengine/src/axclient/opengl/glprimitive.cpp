@@ -179,10 +179,10 @@ AX_BEGIN_NAMESPACE
 
 		ib->bind();
 
-		const GeoInstance::ParamSeq& params = *m_instanceParams;
+		const InstancePrim::ParamSeq& params = *m_instanceParams;
 
 		for (size_t i = 0; i < params.size(); i++) {
-			const GeoInstance::Param& param = params[i];
+			const InstancePrim::Param& param = params[i];
 
 			glMultiTexCoord4fv(GL_TEXTURE2, param.worldMatrix.getRow(0));
 			glMultiTexCoord4fv(GL_TEXTURE3, param.worldMatrix.getRow(1));
@@ -235,7 +235,7 @@ AX_BEGIN_NAMESPACE
 		m_vertexDefs.push_back(VDF_tangent);
 		m_vertexDefs.push_back(VDF_binormal);
 
-		RenderMesh* src = (RenderMesh*)m_source;
+		MeshPrim* src = (MeshPrim*)m_source;
 
 		if (src->getIsStriped()) {
 			m_elementType = GL_TRIANGLE_STRIP;
@@ -287,7 +287,7 @@ AX_BEGIN_NAMESPACE
 
 		m_source->clearDirty();
 
-		RenderLine* line = dynamic_cast<RenderLine*>(m_source);
+		LinePrim* line = dynamic_cast<LinePrim*>(m_source);
 		AX_ASSERT(line);
 
 		m_vertexCount = line->getNumVertexes();
@@ -317,7 +317,7 @@ AX_BEGIN_NAMESPACE
 
 		m_source->clearDirty();
 
-		RenderMesh* mesh = dynamic_cast<RenderMesh*>(m_source);
+		MeshPrim* mesh = dynamic_cast<MeshPrim*>(m_source);
 		AX_ASSERT(mesh);
 
 		m_vertexCount = mesh->getNumVertexes();
@@ -352,7 +352,7 @@ AX_BEGIN_NAMESPACE
 	void GLtext::initialize(Primitive* src) {
 		GLprimitive::initialize(src);
 
-		RenderText* text = dynamic_cast<RenderText*>(m_source);
+		TextPrim* text = dynamic_cast<TextPrim*>(m_source);
 		AX_ASSERT(text);
 
 		// copy text info from source primitive
@@ -368,9 +368,9 @@ AX_BEGIN_NAMESPACE
 		m_verticalAlign = text->getVerticalAlign();
 
 		if (m_isSimpleText) {
-			m_format = RenderText::ScaleByVertical;
-			m_horizonAlign = RenderText::Center;
-			m_verticalAlign = RenderText::VCenter;
+			m_format = TextPrim::ScaleByVertical;
+			m_horizonAlign = TextPrim::Center;
+			m_verticalAlign = TextPrim::VCenter;
 		}
 
 		int numchars = s2i(m_text.size());
@@ -423,12 +423,12 @@ AX_BEGIN_NAMESPACE
 		float textwidth = scale.x * m_font->getStringWidth(wstr);
 		float textheight = scale.y * m_font->getHeight();
 
-		if (m_format & RenderText::ScaleByVertical) {
+		if (m_format & TextPrim::ScaleByVertical) {
 			scale.y = tq.height / textheight;
 			scale.x = m_aspect * scale.y;
 		}
 
-		if (m_format & RenderText::ScaleByHorizon) {
+		if (m_format & TextPrim::ScaleByHorizon) {
 			scale.x = tq.width / textwidth;
 			scale.y = scale.x / m_aspect;
 		}
@@ -436,23 +436,23 @@ AX_BEGIN_NAMESPACE
 		width = tq.width / scale.x;
 		height = tq.height / scale.y;
 
-		bool italic = m_format & RenderText::Italic ? true : false;
+		bool italic = m_format & TextPrim::Italic ? true : false;
 
-		if (m_horizonAlign == RenderText::Left) {
+		if (m_horizonAlign == TextPrim::Left) {
 			startpos.x = 0;
-		} else if (m_horizonAlign == RenderText::Center) {
+		} else if (m_horizonAlign == TextPrim::Center) {
 			startpos.x =(width - textwidth) * 0.5f;
-		} else if (m_horizonAlign == RenderText::Right) {
+		} else if (m_horizonAlign == TextPrim::Right) {
 			startpos.x = width - textwidth;
 		} else {
 			startpos.x = 0;
 		}
 
-		if (m_verticalAlign == RenderText::Top) {
+		if (m_verticalAlign == TextPrim::Top) {
 			startpos.y = 0;
-		} else if (m_verticalAlign == RenderText::VCenter) {
+		} else if (m_verticalAlign == TextPrim::VCenter) {
 			startpos.y =(height - textheight) * 0.5f;
-		} else if (m_verticalAlign == RenderText::Bottom) {
+		} else if (m_verticalAlign == TextPrim::Bottom) {
 			startpos.y = height - textheight;
 		} else {
 			startpos.y = 0;
@@ -464,7 +464,7 @@ AX_BEGIN_NAMESPACE
 
 			// for error string, cann't upload or cann't render char
 
-			if (m_format & RenderText::Blink) {
+			if (m_format & TextPrim::Blink) {
 				Rgba color = m_color;
 				color.a = 128+127*sinf(gCamera->getTime() / BLINK_DIVISOR);
 				offset = glFontRender->drawString(m_font, color, tq, startpos, pStr, len, scale, italic);
@@ -474,7 +474,7 @@ AX_BEGIN_NAMESPACE
 			// common
 			offset = glFontRender->drawString(m_font, m_color, tq, startpos, pStr, len, scale, italic);
 
-			if (m_format & RenderText::Bold) {
+			if (m_format & TextPrim::Bold) {
 				glFontRender->drawString(m_font, m_color, tq, startpos+scale, pStr, len, scale, italic);
 			}
 
@@ -519,7 +519,7 @@ AX_BEGIN_NAMESPACE
 	void GLterrain::update() {
 		GLprimitive::update();
 
-		RenderChunk* chunk = dynamic_cast<RenderChunk*>(m_source);
+		ChunkPrim* chunk = dynamic_cast<ChunkPrim*>(m_source);
 		AX_ASSERT(chunk);
 
 		if (!m_source->isDirty())
@@ -619,7 +619,7 @@ AX_BEGIN_NAMESPACE
 		for (int i = 0; i < m_numLayers; i++) {
 			g_statistic->incValue(stat_numTerrainLayeredDrawElements);
 
-			RenderChunk::Layer& l = m_layers[i];
+			ChunkPrim::Layer& l = m_layers[i];
 			l.detailMat->setTexture(SamplerType::TerrainColor, m_colorTexture);
 			l.detailMat->setTexture(SamplerType::TerrainNormal, m_normalTexture);
 			l.detailMat->setTexture(SamplerType::LayerAlpha, l.alphaTex);
@@ -758,7 +758,7 @@ AX_BEGIN_NAMESPACE
 
 	void GLinstance::update() {
 		GLprimitive::update();
-		GeoInstance* gi = dynamic_cast<GeoInstance*>(m_source);
+		InstancePrim* gi = dynamic_cast<InstancePrim*>(m_source);
 		AX_ASSERT(gi);
 
 		m_instanced = glPrimitiveManager->cachePrimitive(gi->getInstanced());
@@ -827,7 +827,7 @@ AX_BEGIN_NAMESPACE
 
 		int new_id;
 
-		if (prim->getHint() != Primitive::HintOneFrame) {
+		if (prim->getHint() != Primitive::HintFrame) {
 			if (h == 0) {
 				// init
 				GLprimitive* glprim = createPrim(prim);
@@ -862,7 +862,7 @@ AX_BEGIN_NAMESPACE
 		prim->setCachedFrame(m_framenum);
 		g_statistic->incValue(stat_changedPrims);
 
-		if (prim->getHint() == Primitive::HintOneFrame)
+		if (prim->getHint() == Primitive::HintFrame)
 			delete prim;
 
 		return new_id;

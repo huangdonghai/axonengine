@@ -433,10 +433,10 @@ AX_BEGIN_NAMESPACE
 					if (r_ignorMesh->getBool()) {
 						scene->interactions[j]->resource = -1;
 					}
-					RenderMesh* mesh = dynamic_cast<RenderMesh*>(prim);
+					MeshPrim* mesh = dynamic_cast<MeshPrim*>(prim);
 					if (mesh == nullptr)
 						continue;
-					RenderLine* line = mesh->getNormalLine(normallen);
+					LinePrim* line = mesh->getNormalLine(normallen);
 					Interaction* ia = g_renderQueue->allocInteraction();
 					ia->qactor = scene->interactions[j]->qactor;
 					ia->primitive = line;
@@ -456,10 +456,10 @@ AX_BEGIN_NAMESPACE
 				if (r_ignorMesh->getBool()) {
 					scene->interactions[j]->resource = -1;
 				}
-				RenderMesh* mesh = dynamic_cast<RenderMesh*>(prim);
+				MeshPrim* mesh = dynamic_cast<MeshPrim*>(prim);
 				if (mesh == nullptr)
 					continue;
-				RenderLine* line = mesh->getTangentLine(tangentlen);
+				LinePrim* line = mesh->getTangentLine(tangentlen);
 				Interaction* ia = g_renderQueue->allocInteraction();
 				ia->qactor = scene->interactions[j]->qactor;
 				ia->primitive = line;

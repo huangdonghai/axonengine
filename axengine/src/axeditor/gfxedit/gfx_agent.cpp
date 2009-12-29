@@ -12,9 +12,14 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-GfxAgent::GfxAgent(GfxContext* ctx, GfxObject::GfxType gfxType) : Agent(ctx)
+GfxAgent::GfxAgent(GfxContext* ctx, GfxObject::GfxType gfxType)
+	: Agent(ctx)
+	, m_gfxObj(0)
 {
-
+	switch (gfxType) {
+		case GfxObject::kParticleEmitter:
+			m_gfxObj = new ParticleEmitter();
+	}
 }
 
 GfxAgent::~GfxAgent()

@@ -132,8 +132,8 @@ AX_BEGIN_NAMESPACE
 		int m_format;			// format flags
 		Font* m_font;				// font used
 		String m_text;				// string to draw
-		RenderText::HorizonAlign m_horizonAlign;
-		RenderText::VerticalAlign m_verticalAlign;
+		TextPrim::HorizonAlign m_horizonAlign;
+		TextPrim::VerticalAlign m_verticalAlign;
 		Rgba m_color;
 	};
 
@@ -164,7 +164,7 @@ AX_BEGIN_NAMESPACE
 
 		Vector4 m_chunkRect;
 		int m_numLayers;
-		RenderChunk::Layer m_layers[RenderChunk::MAX_LAYERS];
+		ChunkPrim::Layer m_layers[ChunkPrim::MAX_LAYERS];
 		bool m_layerVisible;
 		bool m_isZonePrim;
 		Primitive::Hint m_indexHint;

@@ -357,7 +357,7 @@ AX_BEGIN_NAMESPACE
 #endif
 	}
 
-	static inline void testMesh(RenderMesh* mesh) {
+	static inline void testMesh(MeshPrim* mesh) {
 		GLrender::bindVertexBuffer(VertexType::kVertex, 0, (uintptr_t)mesh->getVertexesPointer());
 		GLrender::checkErrors();
 
@@ -370,7 +370,7 @@ AX_BEGIN_NAMESPACE
 		glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, mesh->getIndexPointer());
 	}
 
-	static inline void testLine(RenderLine* line) {
+	static inline void testLine(LinePrim* line) {
 		GLrender::bindVertexBuffer(VertexType::kDebug, 0, (uintptr_t)line->getVertexesPointer());
 
 		int count = line->getActivedIndexes();
@@ -386,14 +386,14 @@ AX_BEGIN_NAMESPACE
 		int id = prim->getCachedId();
 
 		if (id <= 0) {
-			RenderMesh* mesh = dynamic_cast<RenderMesh*>(prim);
+			MeshPrim* mesh = dynamic_cast<MeshPrim*>(prim);
 
 			if (mesh) {
 				testMesh(mesh);
 				return;
 			}
 
-			RenderLine* line = dynamic_cast<RenderLine*>(prim);
+			LinePrim* line = dynamic_cast<LinePrim*>(prim);
 
 			if (line) {
 				testLine(line);

@@ -95,8 +95,8 @@ AX_BEGIN_NAMESPACE
 		};
 
 		// box12
-		m_skybox12 = new RenderMesh(RenderMesh::HintStatic);
-		m_skybox12->initialize(8, 12);
+		m_skybox12 = new MeshPrim(MeshPrim::HintStatic);
+		m_skybox12->init(8, 12);
 		Vertex* verts = m_skybox12->lockVertexes();
 		for (int i = 0; i < 8; i++) {
 			verts[i].xyz.set(l_verts12[i]);
@@ -110,8 +110,8 @@ AX_BEGIN_NAMESPACE
 		m_skybox12->unlockIndexes();
 
 		// box34
-		m_skybox34 = new RenderMesh(RenderMesh::HintStatic);
-		m_skybox34->initialize(8, 12);
+		m_skybox34 = new MeshPrim(MeshPrim::HintStatic);
+		m_skybox34->init(8, 12);
 		verts = m_skybox34->lockVertexes();
 		for (int i = 0; i < 8; i++) {
 			verts[i].xyz.set(l_verts12[i+8]);
@@ -125,8 +125,8 @@ AX_BEGIN_NAMESPACE
 		m_skybox34->unlockIndexes();
 
 		// box side 5
-		m_skybox5 = new RenderMesh(RenderMesh::HintStatic);
-		m_skybox5->initialize(4, 6);
+		m_skybox5 = new MeshPrim(MeshPrim::HintStatic);
+		m_skybox5->init(4, 6);
 
 		verts = m_skybox5->lockVertexes();
 		for (int i = 0; i < 4; i++) {
@@ -191,8 +191,8 @@ AX_BEGIN_NAMESPACE
 		int numverts = (tess + 1) * (halftess+1);
 		int numidxes = tess * halftess * 2 * 3;
 
-		m_skydome = new RenderMesh(RenderMesh::HintStatic);
-		m_skydome->initialize(numverts, numidxes);
+		m_skydome = new MeshPrim(MeshPrim::HintStatic);
+		m_skydome->init(numverts, numidxes);
 
 		// fill vertexes
 		Vertex* verts = m_skydome->lockVertexes();
@@ -295,10 +295,10 @@ AX_BEGIN_NAMESPACE
 		int numidxes =(num - 1) * OCEAN_SUBDIVIDE * 2 * 3 + OCEAN_SUBDIVIDE * 3;
 
 		// create render mesh
-		m_oceanMesh = new RenderMesh(RenderMesh::HintStatic);
-		m_oceanMesh->initialize(numverts, numidxes);
+		m_oceanMesh = new MeshPrim(MeshPrim::HintStatic);
+		m_oceanMesh->init(numverts, numidxes);
 
-		// initialize render mesh's vertexbuffer and indexbuffer
+		// init render mesh's vertexbuffer and indexbuffer
 		Vertex* verts = m_oceanMesh->lockVertexes();
 		Vertex* oldverts = verts;
 
@@ -503,7 +503,7 @@ AX_BEGIN_NAMESPACE
 		scene->camera.setTarget(m_skyNishitaRt);
 		scene->camera.setOverlay(0, 0, 128, 64);
 
-		RenderMesh* quad = RenderMesh::createScreenQuad(Primitive::HintOneFrame, Rect(0,0,128,64), Rgba::White, m_skyNishitaGenMat);
+		MeshPrim* quad = MeshPrim::createScreenQuad(Primitive::HintFrame, Rect(0,0,128,64), Rgba::White, m_skyNishitaGenMat);
 		scene->addInteraction(nullptr, quad);
 	}
 

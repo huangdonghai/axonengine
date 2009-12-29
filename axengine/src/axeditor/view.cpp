@@ -103,18 +103,18 @@ AX_BEGIN_NAMESPACE
 
 		g_renderSystem->beginScene(rv);
 
-		RenderLine* axis_line = RenderLine::createAxis(Primitive::HintOneFrame, line_length);
+		LinePrim* axis_line = LinePrim::createAxis(Primitive::HintFrame, line_length);
 		g_renderSystem->addToScene(axis_line);
 
 #if 1
 		line_length += 0.2f;
-		RenderText* text = RenderText::createSimpleText(Primitive::HintOneFrame, Vector3(line_length, 0, 0), Rgba::Red, "x");
+		TextPrim* text = TextPrim::createSimpleText(Primitive::HintFrame, Vector3(line_length, 0, 0), Rgba::Red, "x");
 		g_renderSystem->addToScene(text);
 
-		text = RenderText::createSimpleText(Primitive::HintOneFrame, Vector3(0, line_length, 0), Rgba::Green, "y");
+		text = TextPrim::createSimpleText(Primitive::HintFrame, Vector3(0, line_length, 0), Rgba::Green, "y");
 		g_renderSystem->addToScene(text);
 
-		text = RenderText::createSimpleText(Primitive::HintOneFrame, Vector3(0, 0, line_length), Rgba::Blue, "z");
+		text = TextPrim::createSimpleText(Primitive::HintFrame, Vector3(0, 0, line_length), Rgba::Blue, "z");
 		g_renderSystem->addToScene(text);
 
 		g_renderSystem->endScene();
@@ -158,7 +158,7 @@ AX_BEGIN_NAMESPACE
 		rect.y = m_camera.getViewRect().height - 24;
 		rect.width = 120;
 		rect.height = 24;
-		RenderText* prim = RenderText::createText(Primitive::HintOneFrame, rect, m_font, text, Rgba::Green, RenderText::Left);
+		TextPrim* prim = TextPrim::createText(Primitive::HintFrame, rect, m_font, text, Rgba::Green, TextPrim::Left);
 
 		g_renderSystem->beginScene(rv);
 		g_renderSystem->addToScene(prim);

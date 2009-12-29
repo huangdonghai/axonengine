@@ -31,7 +31,7 @@ AX_BEGIN_NAMESPACE
 
 	protected:
 		GameActor* m_gameEntity;
-		RenderMesh* m_iconPrim;
+		MeshPrim* m_iconPrim;
 	};
 
 AX_END_NAMESPACE

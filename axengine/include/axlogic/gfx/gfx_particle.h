@@ -14,6 +14,65 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
+template<class T_>
+class IndexedArrayIterator
+{
+public:
+	AX_STATIC_ASSERT(std::tr1::is_pointer<T_>::value);
+	typedef IndexedArrayIterator<T_> _Myt;
+	typedef T_ value_type;
+	typedef T_ &reference;
+	typedef T_ *pointer;
+	typedef int size_type;
+
+	reference operator*() {
+		return *m_pos;
+	}
+
+	pointer operator->() {
+		return m_pos;
+	}
+
+	_Myt& operator++() {
+
+	}
+
+	_Myt operator++(int) {
+
+	}
+
+private:
+	pointer m_pos;
+};
+
+template<class T_, int N_>
+class IndexedArray {
+public:
+	AX_STATIC_ASSERT(std::tr1::is_pointer<T_>::value);
+	typedef T_ value_type;
+	typedef T_ &reference;
+	typedef T_ *pointer;
+	typedef int size_type;
+	typedef IndexedArrayIterator<T_> iterator;
+	static const size_type npos = -1;
+
+	IndexedArray();
+	~IndexedArray();
+
+	size_type add(const T_& val);
+	reference at(size_type index);
+
+	// iterator
+	iterator begin();
+	iterator end();
+
+private:
+	value_type m_array[N_];
+	pointer m_freeList;
+	pointer m_start;	// for iterator
+	pointer m_end;		// for iterator
+};
+
 struct Particle {
 	Vector3 pos, speed, down, origin, dir;
 	Vector3 corners[4];
@@ -39,6 +98,9 @@ class ParticleEmitter : public GfxObject
 	AX_END_CLASS()
 
 public:
+	enum {
+		MAX_PARTICLES = 10000
+	};
 	enum EmitterShape {
 		kPlane, kSphere
 	};
@@ -55,7 +117,7 @@ public:
 	virtual void issueToQueue(QueuedScene *qscene);
 
 protected:
-	Particle *planeEmit(float w, float l, float spd, float var, float spr, float spr2);
+	Particle *planeEmit(float width, float length, float speed, float variant, float spread, float spread2);
 	Particle *sphereEmit(float w, float l, float spd, float var, float spr, float spr2);
 
 private:
@@ -73,18 +135,21 @@ private:
 	float m_Enabled;
 	// END ANIMATABLE PROPERTIES
 
+	// init info
 	Vector4 m_colors[3];
 	float m_sizes[3];
 	float m_mid, m_slowdown, m_rotation;
 	Vector3 m_pos;
-	List<Particle*> m_particles;
 	int m_blend, m_order, m_type;
-	int m_manim, m_mtime;
 	int m_rows, m_cols;
 	Sequence<Vector4> m_tiles;
 	bool m_billboard;
-	float m_rem;
 	int m_flags;
+
+	// runtime
+	MeshPrim *m_mesh;
+	float m_remain;
+	List<Particle*> m_particles;
 };
 
 AX_END_NAMESPACE

@@ -196,7 +196,7 @@ namespace Axon { namespace Map {
 
 		// slope range
 
-		RenderChunk* m_prim;
+		ChunkPrim* m_prim;
 	};
 
 	inline sbyte_t Chunk::getLod() const {
@@ -267,7 +267,7 @@ namespace Axon { namespace Map {
 		Rect m_tilerect;
 		BoundingBox m_bbox;
 		MaterialPtr m_material;
-		RenderChunk* m_prim;
+		ChunkPrim* m_prim;
 
 		Point m_chunkIndexOffset;
 		float m_maxerror;

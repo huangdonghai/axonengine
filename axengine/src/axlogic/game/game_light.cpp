@@ -103,8 +103,8 @@ AX_BEGIN_NAMESPACE
 	void GameLight::setupPointPrim()
 	{
 		if (!m_pointPrim) {
-			m_pointPrim = new RenderMesh(Primitive::HintStatic);
-			m_pointPrim->initialize(6, 8*3);
+			m_pointPrim = new MeshPrim(Primitive::HintStatic);
+			m_pointPrim->init(6, 8*3);
 
 			static ushort_t s_indices[] = {
 				0, 1, 2, 0, 2, 3, 0, 3, 4, 0, 4, 1,
@@ -150,8 +150,8 @@ AX_BEGIN_NAMESPACE
 	void GameLight::setupSpotPrim()
 	{
 		if (!m_spotPrim) {
-			m_spotPrim = new RenderMesh(Primitive::HintStatic);
-			m_spotPrim->initialize(6*3, 6*3);
+			m_spotPrim = new MeshPrim(Primitive::HintStatic);
+			m_spotPrim->init(6*3, 6*3);
 
 			static ushort_t s_indices[] = {
 				0, 1, 2, 3, 4, 5, 6, 7, 8,

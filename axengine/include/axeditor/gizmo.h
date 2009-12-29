@@ -54,8 +54,8 @@ AX_BEGIN_NAMESPACE
 		Rgba getColor(int axis, Rgba c);
 
 	protected:
-		RenderLine* m_lines[NumberId];
-		RenderMesh* m_meshs[NumberId];
+		LinePrim* m_lines[NumberId];
+		MeshPrim* m_meshs[NumberId];
 		SelectId m_highlit;
 		MaterialPtr m_material;
 		
@@ -92,11 +92,11 @@ AX_BEGIN_NAMESPACE
 
 	private:
 		enum { CirculSubdivided = 64, CrankSubdivided=360 };
-		RenderLine* m_centerLine;
-		RenderLine* m_circles[3];
-		RenderLine* m_innerBound;
-		RenderLine* m_outerBound;
-		RenderMesh* m_crank;
+		LinePrim* m_centerLine;
+		LinePrim* m_circles[3];
+		LinePrim* m_innerBound;
+		LinePrim* m_outerBound;
+		MeshPrim* m_crank;
 		SelectId m_highlit;
 		MaterialPtr m_material;
 
@@ -128,11 +128,11 @@ AX_BEGIN_NAMESPACE
 
 	protected:
 		Rgba getColor(int id);
-		void setupScreenQuad(const RenderCamera& camera, RenderMesh*& mesh, const Vector3& pos, Rgba color);
+		void setupScreenQuad(const RenderCamera& camera, MeshPrim*& mesh, const Vector3& pos, Rgba color);
 
 	private:
-		RenderLine* m_lines[NumberId];
-		RenderMesh* m_meshs[NumberId];
+		LinePrim* m_lines[NumberId];
+		MeshPrim* m_meshs[NumberId];
 		SelectId m_highlit;
 		MaterialPtr m_material;
 

@@ -113,7 +113,7 @@ AX_BEGIN_NAMESPACE
 
 		r.inflate(1, 1);
 
-		RenderLine::setupScreenRect(m_linePrim, r, Rgba::Red);
+		LinePrim::setupScreenRect(m_linePrim, r, Rgba::Red);
 
 #if 1
 		int part = SelectPart::All - SelectPart::kTerrain;
