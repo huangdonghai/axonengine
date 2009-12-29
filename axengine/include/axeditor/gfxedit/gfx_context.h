@@ -23,7 +23,8 @@ public:
 	virtual void doSelect(const RenderCamera& camera, int part);
 
 private:
-	GfxView* m_view;
+	RenderWorld *m_renderWorld;
+	GfxView *m_view;
 };
 
 AX_END_NAMESPACE
