@@ -139,7 +139,8 @@ AX_BEGIN_NAMESPACE
 #undef INDENT
 	}
 
-	void GameObject::readXml(const TiXmlElement* node) {
+	void GameObject::readXml(const TiXmlElement* node)
+	{
 		const TiXmlAttribute* attr = node->FirstAttribute();
 
 		for (; attr; attr = attr->Next()) {

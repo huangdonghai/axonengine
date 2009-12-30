@@ -9,7 +9,7 @@ read the license and understand and accept it fully.
 
 #include "../private.h"
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 	const AffineMat AffineMat::Identity(1,0,0,0,1,0,0,0,1,0,0,0);
 

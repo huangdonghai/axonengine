@@ -12,7 +12,7 @@ read the license and understand and accept it fully.
 
 #include <windows.h>
 
-namespace Axon { namespace Input {
+AX_BEGIN_NAMESPACE
 
 
 	static LRESULT WndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
@@ -55,10 +55,10 @@ namespace Axon { namespace Input {
 
 		TypeZeroArray(m_mapVkey);
 
-		m_mapVkey[VK_LBUTTON] = Key::MouseLeft;
-		m_mapVkey[VK_RBUTTON] = Key::MouseRight;
-		m_mapVkey[VK_CANCEL] = Key::Invalid;
-		m_mapVkey[VK_MBUTTON] = Key::MouseMiddle;
+		m_mapVkey[VK_LBUTTON] = InputKey::MouseLeft;
+		m_mapVkey[VK_RBUTTON] = InputKey::MouseRight;
+		m_mapVkey[VK_CANCEL] = InputKey::Invalid;
+		m_mapVkey[VK_MBUTTON] = InputKey::MouseMiddle;
 
 #if (_WIN32_WINNT >= 0x0500)
 		m_mapVkey[VK_XBUTTON1] = 0;
@@ -69,20 +69,20 @@ namespace Axon { namespace Input {
 				* 0x07 : unassigned
 				*/
 
-		m_mapVkey[VK_BACK] = Key::Backspace;
-		m_mapVkey[VK_TAB] = Key::Tab;
+		m_mapVkey[VK_BACK] = InputKey::Backspace;
+		m_mapVkey[VK_TAB] = InputKey::Tab;
 
 				/*
 				* 0x0A - 0x0B : reserved
 				*/
 
-		m_mapVkey[VK_CLEAR] = Key::Clear;
-		m_mapVkey[VK_RETURN] = Key::Enter;
-		m_mapVkey[VK_SHIFT] = Key::Shift;
-		m_mapVkey[VK_CONTROL] = Key::Ctrl;
-		m_mapVkey[VK_MENU] = Key::Menu;
-		m_mapVkey[VK_PAUSE] = Key::Pause;
-		m_mapVkey[VK_CAPITAL] = Key::Capslock;
+		m_mapVkey[VK_CLEAR] = InputKey::Clear;
+		m_mapVkey[VK_RETURN] = InputKey::Enter;
+		m_mapVkey[VK_SHIFT] = InputKey::Shift;
+		m_mapVkey[VK_CONTROL] = InputKey::Ctrl;
+		m_mapVkey[VK_MENU] = InputKey::Menu;
+		m_mapVkey[VK_PAUSE] = InputKey::Pause;
+		m_mapVkey[VK_CAPITAL] = InputKey::Capslock;
 
 		m_mapVkey[VK_KANA] = 0;
 		m_mapVkey[VK_HANGEUL] = 0;
@@ -92,29 +92,29 @@ namespace Axon { namespace Input {
 		m_mapVkey[VK_HANJA] = 0;
 		m_mapVkey[VK_KANJI] = 0;
 
-		m_mapVkey[VK_ESCAPE] = Key::Escape;
+		m_mapVkey[VK_ESCAPE] = InputKey::Escape;
 
 		m_mapVkey[VK_CONVERT] = 0;
 		m_mapVkey[VK_NONCONVERT] = 0;
 		m_mapVkey[VK_ACCEPT] = 0;
 		m_mapVkey[VK_MODECHANGE] = 0;
 
-		m_mapVkey[VK_SPACE] = Key::Space;
+		m_mapVkey[VK_SPACE] = InputKey::Space;
 		m_mapVkey[VK_PRIOR] = 0;
 		m_mapVkey[VK_NEXT] = 0;
-		m_mapVkey[VK_END] = Key::End;
-		m_mapVkey[VK_HOME] = Key::Home;
-		m_mapVkey[VK_LEFT] = Key::Left;
-		m_mapVkey[VK_UP] = Key::Up;
-		m_mapVkey[VK_RIGHT] = Key::Right;
-		m_mapVkey[VK_DOWN] = Key::Down;
+		m_mapVkey[VK_END] = InputKey::End;
+		m_mapVkey[VK_HOME] = InputKey::Home;
+		m_mapVkey[VK_LEFT] = InputKey::Left;
+		m_mapVkey[VK_UP] = InputKey::Up;
+		m_mapVkey[VK_RIGHT] = InputKey::Right;
+		m_mapVkey[VK_DOWN] = InputKey::Down;
 		m_mapVkey[VK_SELECT] = 0;
-		m_mapVkey[VK_PRINT] = Key::Print;
+		m_mapVkey[VK_PRINT] = InputKey::Print;
 		m_mapVkey[VK_EXECUTE] = 0;
 		m_mapVkey[VK_SNAPSHOT] = 0;
-		m_mapVkey[VK_INSERT] = Key::Insert;
-		m_mapVkey[VK_DELETE] = Key::Delete;
-		m_mapVkey[VK_HELP] = Key::Help;
+		m_mapVkey[VK_INSERT] = InputKey::Insert;
+		m_mapVkey[VK_DELETE] = InputKey::Delete;
+		m_mapVkey[VK_HELP] = InputKey::Help;
 
 				/*
 				* VK_0 - VK_9 are the same as ASCII '0' - '9' (0x30 - 0x39)
@@ -139,67 +139,67 @@ namespace Axon { namespace Input {
 
 		m_mapVkey[VK_SLEEP] = 0;
 
-		m_mapVkey[VK_NUMPAD0] = Key::NP_Insert;
-		m_mapVkey[VK_NUMPAD1] = Key::NP_End;
-		m_mapVkey[VK_NUMPAD2] = Key::NP_Down;
-		m_mapVkey[VK_NUMPAD3] = Key::NP_Pagedown;
-		m_mapVkey[VK_NUMPAD4] = Key::NP_Left;
-		m_mapVkey[VK_NUMPAD5] = Key::NP_5;
-		m_mapVkey[VK_NUMPAD6] = Key::NP_Right;
-		m_mapVkey[VK_NUMPAD7] = Key::NP_Home;
-		m_mapVkey[VK_NUMPAD8] = Key::NP_Up;
-		m_mapVkey[VK_NUMPAD9] = Key::NP_Pageup;
+		m_mapVkey[VK_NUMPAD0] = InputKey::NP_Insert;
+		m_mapVkey[VK_NUMPAD1] = InputKey::NP_End;
+		m_mapVkey[VK_NUMPAD2] = InputKey::NP_Down;
+		m_mapVkey[VK_NUMPAD3] = InputKey::NP_Pagedown;
+		m_mapVkey[VK_NUMPAD4] = InputKey::NP_Left;
+		m_mapVkey[VK_NUMPAD5] = InputKey::NP_5;
+		m_mapVkey[VK_NUMPAD6] = InputKey::NP_Right;
+		m_mapVkey[VK_NUMPAD7] = InputKey::NP_Home;
+		m_mapVkey[VK_NUMPAD8] = InputKey::NP_Up;
+		m_mapVkey[VK_NUMPAD9] = InputKey::NP_Pageup;
 		m_mapVkey[VK_MULTIPLY] = '*';
 		m_mapVkey[VK_ADD] = '+';
-		m_mapVkey[VK_SEPARATOR] = Key::Invalid;
+		m_mapVkey[VK_SEPARATOR] = InputKey::Invalid;
 		m_mapVkey[VK_SUBTRACT] = '-';
-		m_mapVkey[VK_DECIMAL] = Key::Invalid;
+		m_mapVkey[VK_DECIMAL] = InputKey::Invalid;
 		m_mapVkey[VK_DIVIDE] = '/';
-		m_mapVkey[VK_F1] = Key::F1;
-		m_mapVkey[VK_F2] = Key::F2;
-		m_mapVkey[VK_F3] = Key::F3;
-		m_mapVkey[VK_F4] = Key::F4;
-		m_mapVkey[VK_F5] = Key::F5;
-		m_mapVkey[VK_F6] = Key::F6;
-		m_mapVkey[VK_F7] = Key::F7;
-		m_mapVkey[VK_F8] = Key::F8;
-		m_mapVkey[VK_F9] = Key::F9;
-		m_mapVkey[VK_F10] = Key::F10;
-		m_mapVkey[VK_F11] = Key::F11;
-		m_mapVkey[VK_F12] = Key::F12;
-		m_mapVkey[VK_F13] = Key::F13;
-		m_mapVkey[VK_F14] = Key::F14;
-		m_mapVkey[VK_F15] = Key::F15;
-		m_mapVkey[VK_F16] = Key::Invalid;
-		m_mapVkey[VK_F17] = Key::Invalid;
-		m_mapVkey[VK_F18] = Key::Invalid;
-		m_mapVkey[VK_F19] = Key::Invalid;
-		m_mapVkey[VK_F20] = Key::Invalid;
-		m_mapVkey[VK_F21] = Key::Invalid;
-		m_mapVkey[VK_F22] = Key::Invalid;
-		m_mapVkey[VK_F23] = Key::Invalid;
-		m_mapVkey[VK_F24] = Key::Invalid;
+		m_mapVkey[VK_F1] = InputKey::F1;
+		m_mapVkey[VK_F2] = InputKey::F2;
+		m_mapVkey[VK_F3] = InputKey::F3;
+		m_mapVkey[VK_F4] = InputKey::F4;
+		m_mapVkey[VK_F5] = InputKey::F5;
+		m_mapVkey[VK_F6] = InputKey::F6;
+		m_mapVkey[VK_F7] = InputKey::F7;
+		m_mapVkey[VK_F8] = InputKey::F8;
+		m_mapVkey[VK_F9] = InputKey::F9;
+		m_mapVkey[VK_F10] = InputKey::F10;
+		m_mapVkey[VK_F11] = InputKey::F11;
+		m_mapVkey[VK_F12] = InputKey::F12;
+		m_mapVkey[VK_F13] = InputKey::F13;
+		m_mapVkey[VK_F14] = InputKey::F14;
+		m_mapVkey[VK_F15] = InputKey::F15;
+		m_mapVkey[VK_F16] = InputKey::Invalid;
+		m_mapVkey[VK_F17] = InputKey::Invalid;
+		m_mapVkey[VK_F18] = InputKey::Invalid;
+		m_mapVkey[VK_F19] = InputKey::Invalid;
+		m_mapVkey[VK_F20] = InputKey::Invalid;
+		m_mapVkey[VK_F21] = InputKey::Invalid;
+		m_mapVkey[VK_F22] = InputKey::Invalid;
+		m_mapVkey[VK_F23] = InputKey::Invalid;
+		m_mapVkey[VK_F24] = InputKey::Invalid;
 
 				/*
 				* 0x88 - 0x8F : unassigned
 				*/
 
-		m_mapVkey[VK_NUMLOCK] = Key::NP_Numlock;
-		m_mapVkey[VK_SCROLL] = Key::ScorllLock;
+		m_mapVkey[VK_NUMLOCK] = InputKey::NP_Numlock;
+		m_mapVkey[VK_SCROLL] = InputKey::ScorllLock;
 
 				/*
 				* NEC PC-9800 kbd definitions
 				*/
-		m_mapVkey[VK_OEM_NEC_EQUAL] = Key::Invalid;
+		m_mapVkey[VK_OEM_NEC_EQUAL] = InputKey::Invalid;
 
 				/*
 				* Fujitsu/OASYS kbd definitions
 				*/
-		m_mapVkey[VK_OEM_FJ_JISHO] = Key::Invalid;
-		m_mapVkey[VK_OEM_FJ_MASSHOU] = Key::Invalid;
-		m_mapVkey[VK_OEM_FJ_TOUROKU] = Key::Invalid;
-		m_mapVkey[VK_OEM_FJ_LOYA] = Key::Invalid;
-		m_mapVkey[VK_OEM_FJ_ROYA] = Key::Invalid;
+		m_mapVkey[VK_OEM_FJ_JISHO] = InputKey::Invalid;
+		m_mapVkey[VK_OEM_FJ_MASSHOU] = InputKey::Invalid;
+		m_mapVkey[VK_OEM_FJ_TOUROKU] = InputKey::Invalid;
+		m_mapVkey[VK_OEM_FJ_LOYA] = InputKey::Invalid;
+		m_mapVkey[VK_OEM_FJ_ROYA] = InputKey::Invalid;
 
 				/*
 				* 0x97 - 0x9F : unassigned
@@ -210,33 +210,33 @@ namespace Axon { namespace Input {
 				* Used only as parameters to GetAsyncKeyState() and GetKeyState().
 				* No other API or message will distinguish left and right keys in this way.
 				*/
-		m_mapVkey[VK_LSHIFT] = Key::Shift;
-		m_mapVkey[VK_RSHIFT] = Key::Shift;
-		m_mapVkey[VK_LCONTROL] = Key::Ctrl;
-		m_mapVkey[VK_RCONTROL] = Key::Ctrl;
-		m_mapVkey[VK_LMENU] = Key::Menu;
-		m_mapVkey[VK_RMENU] = Key::Menu;
+		m_mapVkey[VK_LSHIFT] = InputKey::Shift;
+		m_mapVkey[VK_RSHIFT] = InputKey::Shift;
+		m_mapVkey[VK_LCONTROL] = InputKey::Ctrl;
+		m_mapVkey[VK_RCONTROL] = InputKey::Ctrl;
+		m_mapVkey[VK_LMENU] = InputKey::Menu;
+		m_mapVkey[VK_RMENU] = InputKey::Menu;
 
 		#if (_WIN32_WINNT >= 0x0500)
-		m_mapVkey[VK_BROWSER_BACK] = Key::Invalid;
-		m_mapVkey[VK_BROWSER_FORWARD] = Key::Invalid;
-		m_mapVkey[VK_BROWSER_REFRESH] = Key::Invalid;
-		m_mapVkey[VK_BROWSER_STOP] = Key::Invalid;
-		m_mapVkey[VK_BROWSER_SEARCH] = Key::Invalid;
-		m_mapVkey[VK_BROWSER_FAVORITES] = Key::Invalid;
-		m_mapVkey[VK_BROWSER_HOME] = Key::Invalid;
+		m_mapVkey[VK_BROWSER_BACK] = InputKey::Invalid;
+		m_mapVkey[VK_BROWSER_FORWARD] = InputKey::Invalid;
+		m_mapVkey[VK_BROWSER_REFRESH] = InputKey::Invalid;
+		m_mapVkey[VK_BROWSER_STOP] = InputKey::Invalid;
+		m_mapVkey[VK_BROWSER_SEARCH] = InputKey::Invalid;
+		m_mapVkey[VK_BROWSER_FAVORITES] = InputKey::Invalid;
+		m_mapVkey[VK_BROWSER_HOME] = InputKey::Invalid;
 
-		m_mapVkey[VK_VOLUME_MUTE] = Key::Invalid;
-		m_mapVkey[VK_VOLUME_DOWN] = Key::Invalid;
-		m_mapVkey[VK_VOLUME_UP] = Key::Invalid;
-		m_mapVkey[VK_MEDIA_NEXT_TRACK] = Key::Invalid;
-		m_mapVkey[VK_MEDIA_PREV_TRACK] = Key::Invalid;
-		m_mapVkey[VK_MEDIA_STOP] = Key::Invalid;
-		m_mapVkey[VK_MEDIA_PLAY_PAUSE] = Key::Invalid;
-		m_mapVkey[VK_LAUNCH_MAIL] = Key::Invalid;
-		m_mapVkey[VK_LAUNCH_MEDIA_SELECT] = Key::Invalid;
-		m_mapVkey[VK_LAUNCH_APP1] = Key::Invalid;
-		m_mapVkey[VK_LAUNCH_APP2] = Key::Invalid;
+		m_mapVkey[VK_VOLUME_MUTE] = InputKey::Invalid;
+		m_mapVkey[VK_VOLUME_DOWN] = InputKey::Invalid;
+		m_mapVkey[VK_VOLUME_UP] = InputKey::Invalid;
+		m_mapVkey[VK_MEDIA_NEXT_TRACK] = InputKey::Invalid;
+		m_mapVkey[VK_MEDIA_PREV_TRACK] = InputKey::Invalid;
+		m_mapVkey[VK_MEDIA_STOP] = InputKey::Invalid;
+		m_mapVkey[VK_MEDIA_PLAY_PAUSE] = InputKey::Invalid;
+		m_mapVkey[VK_LAUNCH_MAIL] = InputKey::Invalid;
+		m_mapVkey[VK_LAUNCH_MEDIA_SELECT] = InputKey::Invalid;
+		m_mapVkey[VK_LAUNCH_APP1] = InputKey::Invalid;
+		m_mapVkey[VK_LAUNCH_APP2] = InputKey::Invalid;
 
 		#endif /* _WIN32_WINNT >= 0x0500 */
 
@@ -244,13 +244,13 @@ namespace Axon { namespace Input {
 				* 0xB8 - 0xB9 : reserved
 				*/
 
-		m_mapVkey[VK_OEM_1] = Key::Invalid;
-		m_mapVkey[VK_OEM_PLUS] = Key::Invalid;
-		m_mapVkey[VK_OEM_COMMA] = Key::Invalid;
-		m_mapVkey[VK_OEM_MINUS] = Key::Invalid;
-		m_mapVkey[VK_OEM_PERIOD] = Key::Invalid;
-		m_mapVkey[VK_OEM_2] = Key::Invalid;
-		m_mapVkey[VK_OEM_3] = Key::Invalid;
+		m_mapVkey[VK_OEM_1] = InputKey::Invalid;
+		m_mapVkey[VK_OEM_PLUS] = InputKey::Invalid;
+		m_mapVkey[VK_OEM_COMMA] = InputKey::Invalid;
+		m_mapVkey[VK_OEM_MINUS] = InputKey::Invalid;
+		m_mapVkey[VK_OEM_PERIOD] = InputKey::Invalid;
+		m_mapVkey[VK_OEM_2] = InputKey::Invalid;
+		m_mapVkey[VK_OEM_3] = InputKey::Invalid;
 
 				/*
 				* 0xC1 - 0xD7 : reserved
@@ -260,11 +260,11 @@ namespace Axon { namespace Input {
 				* 0xD8 - 0xDA : unassigned
 				*/
 
-		m_mapVkey[VK_OEM_4] = Key::Invalid;
-		m_mapVkey[VK_OEM_5] = Key::Invalid;
-		m_mapVkey[VK_OEM_6] = Key::Invalid;  //  ']}' for US
-		m_mapVkey[VK_OEM_7] = Key::Invalid;  //  ''"' for US
-		m_mapVkey[VK_OEM_8] = Key::Invalid;
+		m_mapVkey[VK_OEM_4] = InputKey::Invalid;
+		m_mapVkey[VK_OEM_5] = InputKey::Invalid;
+		m_mapVkey[VK_OEM_6] = InputKey::Invalid;  //  ']}' for US
+		m_mapVkey[VK_OEM_7] = InputKey::Invalid;  //  ''"' for US
+		m_mapVkey[VK_OEM_8] = InputKey::Invalid;
 
 				/*
 				* 0xE0 : reserved
@@ -273,20 +273,20 @@ namespace Axon { namespace Input {
 				/*
 				* Various extended or enhanced keyboards
 				*/
-		m_mapVkey[VK_OEM_AX] = Key::Invalid;  //  'Axon' key on Japanese Axon kbd
-		m_mapVkey[VK_OEM_102] = Key::Invalid;  //  "<>" or "\|" on RT 102-key kbd.
-		m_mapVkey[VK_ICO_HELP] = Key::Invalid;  //  Help key on ICO
-		m_mapVkey[VK_ICO_00] = Key::Invalid;  //  00 key on ICO
+		m_mapVkey[VK_OEM_AX] = InputKey::Invalid;  //  'Axon' key on Japanese Axon kbd
+		m_mapVkey[VK_OEM_102] = InputKey::Invalid;  //  "<>" or "\|" on RT 102-key kbd.
+		m_mapVkey[VK_ICO_HELP] = InputKey::Invalid;  //  Help key on ICO
+		m_mapVkey[VK_ICO_00] = InputKey::Invalid;  //  00 key on ICO
 
 		#if (WINVER >= 0x0400)
-		m_mapVkey[VK_PROCESSKEY] = Key::Invalid;
+		m_mapVkey[VK_PROCESSKEY] = InputKey::Invalid;
 		#endif /* WINVER >= 0x0400 */
 
-		m_mapVkey[VK_ICO_CLEAR] = Key::Invalid;
+		m_mapVkey[VK_ICO_CLEAR] = InputKey::Invalid;
 
 
 		#if (_WIN32_WINNT >= 0x0500)
-		m_mapVkey[VK_PACKET] = Key::Invalid;
+		m_mapVkey[VK_PACKET] = InputKey::Invalid;
 		#endif /* _WIN32_WINNT >= 0x0500 */
 
 				/*
@@ -296,29 +296,29 @@ namespace Axon { namespace Input {
 				/*
 				* Nokia/Ericsson definitions
 				*/
-		m_mapVkey[VK_OEM_RESET] = Key::Invalid;
-		m_mapVkey[VK_OEM_JUMP] = Key::Invalid;
-		m_mapVkey[VK_OEM_PA1] = Key::Invalid;
-		m_mapVkey[VK_OEM_PA2] = Key::Invalid;
-		m_mapVkey[VK_OEM_PA3] = Key::Invalid;
-		m_mapVkey[VK_OEM_WSCTRL] = Key::Invalid;
-		m_mapVkey[VK_OEM_CUSEL] = Key::Invalid;
-		m_mapVkey[VK_OEM_ATTN] = Key::Invalid;
-		m_mapVkey[VK_OEM_FINISH] = Key::Invalid;
-		m_mapVkey[VK_OEM_COPY] = Key::Invalid;
-		m_mapVkey[VK_OEM_AUTO] = Key::Invalid;
-		m_mapVkey[VK_OEM_ENLW] = Key::Invalid;
-		m_mapVkey[VK_OEM_BACKTAB] = Key::Invalid;
+		m_mapVkey[VK_OEM_RESET] = InputKey::Invalid;
+		m_mapVkey[VK_OEM_JUMP] = InputKey::Invalid;
+		m_mapVkey[VK_OEM_PA1] = InputKey::Invalid;
+		m_mapVkey[VK_OEM_PA2] = InputKey::Invalid;
+		m_mapVkey[VK_OEM_PA3] = InputKey::Invalid;
+		m_mapVkey[VK_OEM_WSCTRL] = InputKey::Invalid;
+		m_mapVkey[VK_OEM_CUSEL] = InputKey::Invalid;
+		m_mapVkey[VK_OEM_ATTN] = InputKey::Invalid;
+		m_mapVkey[VK_OEM_FINISH] = InputKey::Invalid;
+		m_mapVkey[VK_OEM_COPY] = InputKey::Invalid;
+		m_mapVkey[VK_OEM_AUTO] = InputKey::Invalid;
+		m_mapVkey[VK_OEM_ENLW] = InputKey::Invalid;
+		m_mapVkey[VK_OEM_BACKTAB] = InputKey::Invalid;
 
-		m_mapVkey[VK_ATTN] = Key::Invalid;
-		m_mapVkey[VK_CRSEL] = Key::Invalid;
-		m_mapVkey[VK_EXSEL] = Key::Invalid;
-		m_mapVkey[VK_EREOF] = Key::Invalid;
-		m_mapVkey[VK_PLAY] = Key::Invalid;
-		m_mapVkey[VK_ZOOM] = Key::Invalid;
-		m_mapVkey[VK_NONAME] = Key::Invalid;
-		m_mapVkey[VK_PA1] = Key::Invalid;
-		m_mapVkey[VK_OEM_CLEAR] = Key::Invalid;
+		m_mapVkey[VK_ATTN] = InputKey::Invalid;
+		m_mapVkey[VK_CRSEL] = InputKey::Invalid;
+		m_mapVkey[VK_EXSEL] = InputKey::Invalid;
+		m_mapVkey[VK_EREOF] = InputKey::Invalid;
+		m_mapVkey[VK_PLAY] = InputKey::Invalid;
+		m_mapVkey[VK_ZOOM] = InputKey::Invalid;
+		m_mapVkey[VK_NONAME] = InputKey::Invalid;
+		m_mapVkey[VK_PA1] = InputKey::Invalid;
+		m_mapVkey[VK_OEM_CLEAR] = InputKey::Invalid;
 	}
 
 	WinInput::~WinInput()
@@ -441,7 +441,7 @@ namespace Axon { namespace Input {
 		if (raw->header.dwType == RIM_TYPEKEYBOARD) {
 			RAWKEYBOARD& rk = raw->data.keyboard;
 
-			Event e;
+			InputEvent e;
 			TypeZero(&e);
 
 			e.key = m_mapVkey[rk.VKey];
@@ -451,9 +451,9 @@ namespace Axon { namespace Input {
 			}
 
 			if (rk.Message == WM_KEYDOWN) {
-				e.type = Event::KeyDown;
+				e.type = InputEvent::KeyDown;
 			} else if (rk.Message == WM_KEYUP) {
-				e.type = Event::KeyUp;
+				e.type = InputEvent::KeyUp;
 			} else {
 				Errorf("unknown key message");
 			}
@@ -476,5 +476,5 @@ quit:
 
 	}
 
-}} // namespace Axon::Input
+AX_END_NAMESPACE
 

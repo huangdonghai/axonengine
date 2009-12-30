@@ -52,7 +52,7 @@ read the license and understand and accept it fully.
 #define INTSIGNBITSET(i)		(((const unsigned long)(i)) >> 31)
 #define INTSIGNBITNOTSET(i)		((~((const unsigned long)(i))) >> 31)
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 	// forward declaration
 	struct Vector2;
@@ -320,7 +320,7 @@ namespace Axon {
 		return 0;
 	}
 
-} // namespace Axon
+AX_END_NAMESPACE
 
 #include "vector2.h"
 #include "vector3.h"
@@ -342,7 +342,7 @@ namespace Axon {
 #include "perlinnoise.h"
 #include "spline.h"
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 }
 

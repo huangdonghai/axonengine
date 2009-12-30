@@ -45,7 +45,7 @@ read the license and understand and accept it fully.
 #include "static_assert.h"
 #include "foreach.h"
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 	inline int s2i(size_t size) {
 #ifdef _DEBUG
@@ -104,6 +104,6 @@ namespace Axon {
 	};
 
 
-} // namespace Axon
+AX_END_NAMESPACE
 
 #endif // AX_TEMPLATE_H

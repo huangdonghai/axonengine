@@ -39,7 +39,7 @@ read the license and understand and accept it fully.
  */
 
 #if 0
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 	/*------------------------------------------------------------------------------
 		hash -- hash template class, like stdext::hashxxx
@@ -980,7 +980,7 @@ namespace Axon {
 #endif // end guardian
 #endif
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 	/// 
 	inline size_t hash_string(const char* s) {
 		unsigned long h = 0;

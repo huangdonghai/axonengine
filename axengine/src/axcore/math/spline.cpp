@@ -442,4 +442,4 @@ namespace Axon
 		delete[] WorkB;
 	}
 
-} // namespace Axon
+AX_END_NAMESPACE

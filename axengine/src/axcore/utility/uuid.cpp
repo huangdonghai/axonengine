@@ -11,7 +11,7 @@ read the license and understand and accept it fully.
 
 #pragma comment(lib, "Rpcrt4.lib")
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 	Uuid::Uuid()
 	{
@@ -65,5 +65,5 @@ namespace Axon {
 	}
 
 
-} // namespace Axon
+AX_END_NAMESPACE
 

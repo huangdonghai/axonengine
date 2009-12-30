@@ -65,7 +65,7 @@ namespace {
 }
 
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 	//------------------------------------------------------------------------------
 	// class PakedFolder
@@ -1132,5 +1132,5 @@ namespace Axon {
 		fclose(f);
 	}
 
-} // namespace Axon
+AX_END_NAMESPACE
 

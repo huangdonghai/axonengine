@@ -36,7 +36,7 @@ read the license and understand and accept it fully.
 
 // map editing
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 	AX_API extern MapContext* g_mapContext;
 	AX_API extern GfxContext* g_gfxContext;
@@ -44,7 +44,7 @@ namespace Axon {
 	AX_API void axEditorInit();
 	AX_API void axEditorQuit();
 
-} // namespace Axon
+AX_END_NAMESPACE
 
 #undef AX_API
 

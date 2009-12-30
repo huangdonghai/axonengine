@@ -9,7 +9,7 @@ read the license and understand and accept it fully.
 
 #include "../private.h"
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 	const BoundingBox BoundingBox::EmptyBox(99999,99999,99999,-99999,-99999,-99999);
 	const BoundingBox BoundingBox::UnitBox(-1,-1,-1,1,1,1);
@@ -43,5 +43,5 @@ namespace Axon {
 	}
 
 
-} // namespace Axon
+AX_END_NAMESPACE
 

@@ -10,7 +10,7 @@ read the license and understand and accept it fully.
 
 #include "../private.h"
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 #ifdef _WIN32
 #	include <windows.h>
@@ -18,4 +18,4 @@ namespace Axon {
 #	include <pthread.h>
 #endif
 
-} // namespace Axon
+AX_END_NAMESPACE

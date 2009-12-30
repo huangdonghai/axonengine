@@ -11,7 +11,7 @@ read the license and understand and accept it fully.
 
 #include "../private.h"
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 	PhysicsSystem* g_physicsSystem;
 	HavokPackageManager* g_havokPackageManager;
@@ -31,5 +31,5 @@ namespace Axon {
 		SafeDelete(g_physicsSystem);
 	}
 
-} // namespace Axon
+AX_END_NAMESPACE
 

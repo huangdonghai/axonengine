@@ -13,7 +13,7 @@ read the license and understand and accept it fully.
 #define AX_ENGINE_PERLINNOISE_H
 
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 	class AX_API PerlinNoise {
 	public:
@@ -41,7 +41,7 @@ namespace Axon {
 		float 	g1[B + B + 2];
 	};
 
-} // namespace Axon
+AX_END_NAMESPACE
 
 
 #endif // end guardian

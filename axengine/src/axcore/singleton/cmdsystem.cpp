@@ -10,7 +10,7 @@ read the license and understand and accept it fully.
 #include "../private.h"
 
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 	AX_BEGIN_COMMAND_MAP(CmdSystem)
 		AX_COMMAND_ENTRY("cmdlist",	list_f)
@@ -233,6 +233,6 @@ namespace Axon {
 
 
 
-} // namespace Axon
+AX_END_NAMESPACE
 
 

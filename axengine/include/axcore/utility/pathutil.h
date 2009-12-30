@@ -12,7 +12,7 @@ read the license and understand and accept it fully.
 #ifndef AX_PATHUTIL_H
 #define AX_PATHUTIL_H
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 	// path: dir name ext
 	// path: dir fullname
@@ -50,6 +50,6 @@ namespace Axon {
 		static FileInfoSeq getFileInfos(const String& base, const String& path, const String& exts, int flags);
 	};
 
-} // namespace Axon
+AX_END_NAMESPACE
 
 #endif // end AX_PATHUTIL_H

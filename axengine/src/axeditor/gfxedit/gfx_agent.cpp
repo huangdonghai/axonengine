@@ -15,6 +15,7 @@ AX_BEGIN_NAMESPACE
 GfxAgent::GfxAgent(GfxContext* ctx, GfxObject::GfxType gfxType)
 	: Agent(ctx)
 	, m_gfxObj(0)
+	, m_bboxLine(0)
 {
 	switch (gfxType) {
 		case GfxObject::kParticleEmitter:
@@ -24,7 +25,8 @@ GfxAgent::GfxAgent(GfxContext* ctx, GfxObject::GfxType gfxType)
 
 GfxAgent::~GfxAgent()
 {
-
+	SafeDelete(m_gfxObj);
+	SafeDelete(m_bboxLine);
 }
 
 Agent* GfxAgent::clone() const
@@ -39,12 +41,22 @@ void GfxAgent::doDeleteFlagChanged(bool del)
 
 void GfxAgent::doRender()
 {
+	if (!r_helper->getBool()) {
+		return;
+	}
 
+	if (m_isSelected && !m_isDeleted) {
+		const AffineMat& mat = m_gfxObj->getTm();
+		LinePrim::setupBoundingBox(m_bboxLine, mat.origin, mat.axis, m_gfxObj->getLocalBoundingBox(), 1.05f);
+		g_renderSystem->addToScene(m_bboxLine);
+	}
+
+//	m_gfxObj->doDebugRender();
 }
 
 void GfxAgent::setMatrix(const AffineMat& matrix)
 {
-
+	m_gfxObj->setTm(matrix);
 }
 
 const AffineMat& GfxAgent::getMatrix() const

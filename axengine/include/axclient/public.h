@@ -25,7 +25,7 @@ read the license and understand and accept it fully.
 #include "speedtree/all.h"
 #include "sound/all.h"
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 #define AX_CVARDECL(name, defaultstring, flags) \
 	AX_API extern Cvar* name;
@@ -59,7 +59,7 @@ namespace Axon {
 	AX_API void axClientInit();
 	AX_API void axClientQuit();
 
-} // namespace Axon
+AX_END_NAMESPACE
 
 #undef AX_API
 

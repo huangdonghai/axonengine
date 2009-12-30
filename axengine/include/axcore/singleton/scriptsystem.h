@@ -40,7 +40,7 @@ read the license and understand and accept it fully.
 #define AX_REGISTER_CLASS(cppname) cppname::registerMetaInfo();
 
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 	class Object;
 	class Variant;

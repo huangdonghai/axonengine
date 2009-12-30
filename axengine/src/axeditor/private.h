@@ -16,7 +16,7 @@ read the license and understand and accept it fully.
 #include <axlogic/public.h>
 #include <axeditor/public.h>
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 	struct Internal {
 		inline static float snap(float f, float grid) {
@@ -33,7 +33,7 @@ namespace Axon {
 		}
 	};
 
-} // namespace Axon
+AX_END_NAMESPACE
 
 
 #endif // AX_EDITOR_PRIVATE_H

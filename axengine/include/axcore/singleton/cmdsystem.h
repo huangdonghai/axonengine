@@ -50,7 +50,7 @@ public:														\
 		*datasize = sizeof(MyCmdEntry); return (CmdEntry *)&entries[0]; }
 
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 	struct CmdArgs {
 		StringSeq tokened;	// tokenized parameter by ' '(SPACE), usually use this
@@ -129,6 +129,6 @@ namespace Axon {
 	};
 	#endif
 
-} // namespace Axon
+AX_END_NAMESPACE
 
 #endif // AX_CCMDSYSTEM_H

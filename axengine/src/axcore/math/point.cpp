@@ -9,7 +9,7 @@ read the license and understand and accept it fully.
 
 #include "../private.h"
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 
 	Axon::String Point::toString() const {
@@ -24,4 +24,4 @@ namespace Axon {
 		return v == 2;
 	}
 
-} // namespace Axon
+AX_END_NAMESPACE

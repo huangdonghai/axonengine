@@ -11,12 +11,12 @@ read the license and understand and accept it fully.
 #ifndef AX_CC_GCC_H
 #define AX_CC_GCC_H
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 typedef long long longlong_t;
 typedef unsigned long long ulonglong_t;
 
-} // namespace Axon
+AX_END_NAMESPACE
 
 #define STDCALL
 

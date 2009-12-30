@@ -11,7 +11,7 @@ read the license and understand and accept it fully.
 #ifndef AX_RENDER_ALL_H
 #define AX_RENDER_ALL_H
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 	class Material;
 	class Font;
@@ -20,7 +20,7 @@ namespace Axon {
 		VeryLow, Low, Middle, High, VeryHigh
 	};
 
-} // namespace Axon
+AX_END_NAMESPACE
 
 #include "query.h"
 #include "texture.h"

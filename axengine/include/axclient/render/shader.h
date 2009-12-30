@@ -142,7 +142,7 @@ AX_BEGIN_NAMESPACE
 			NUM_FLAGS,
 		};
 
-		enum { VERSION = Axon::SHADER::SHADERMACRO_VERSION };
+		enum { VERSION = SHADER::SHADERMACRO_VERSION };
 
 		ShaderMacro();
 		ShaderMacro(const ShaderMacro& rhs);

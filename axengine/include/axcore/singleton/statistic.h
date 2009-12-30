@@ -11,7 +11,7 @@ read the license and understand and accept it fully.
 #ifndef AX_STATISTIC_H 
 #define AX_STATISTIC_H
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 	class AX_API Statistic {
 	public:
@@ -87,6 +87,6 @@ namespace Axon {
 	}
 
 
-} // namespace Axon
+AX_END_NAMESPACE
 
 #endif // AX_STATISTIC_H

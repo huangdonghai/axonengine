@@ -11,7 +11,7 @@ read the license and understand and accept it fully.
 #ifndef AX_STRING_H 
 #define AX_STRING_H
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 	template< class T, class AllocT = Allocator<T> >
 	class Sequence : public std::vector< T, AllocT >
@@ -131,7 +131,7 @@ namespace Axon {
 	}
 
 
-} // namespace Axon
+AX_END_NAMESPACE
 
 
 #endif // AX_STRING_H

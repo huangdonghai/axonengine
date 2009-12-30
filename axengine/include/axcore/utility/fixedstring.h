@@ -12,7 +12,7 @@ read the license and understand and accept it fully.
 #ifndef AX_FIXED_STRING_H
 #define AX_FIXED_STRING_H
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 	// manager fixed string here. never free
 	class AX_API FixedStringManager : public ThreadSafe {

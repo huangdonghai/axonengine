@@ -24,14 +24,14 @@ read the license and understand and accept it fully.
 #	pragma warning(disable : 4819)	// The file contains a character that cannot be represented in the current code page (number). Save the file in Unicode format to prevent data loss.
 #endif
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 typedef __int8 int8_t;
 typedef __int16 int16_t;
 typedef __int32 int32_t;
 typedef unsigned __int8 uint8_t;
 
-} // namespace Axon
+AX_END_NAMESPACE
 
 #define STDCALL     __stdcall
 

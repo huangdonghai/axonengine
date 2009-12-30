@@ -12,7 +12,7 @@ read the license and understand and accept it fully.
 #define AX_CONFIGFILE_H
 
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 	/// configure file include
 	///		sections
@@ -49,6 +49,6 @@ namespace Axon {
 	};
 
 
-} // namespace Axon
+AX_END_NAMESPACE
 
 #endif // AX_CONFIGFILE_H

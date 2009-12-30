@@ -12,7 +12,7 @@ read the license and understand and accept it fully.
 #define AX_ENGINE_ASSETMANAGER_H
 
 #if 0
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 
 	//--------------------------------------------------------------------------
@@ -194,7 +194,7 @@ namespace Axon {
 	}
 
 
-} // namespace Axon
+AX_END_NAMESPACE
 #endif
 #endif // end guardian
 

@@ -12,7 +12,7 @@ read the license and understand and accept it fully.
 #ifndef AX_CORE_BOUNDS_H
 #define AX_CORE_BOUNDS_H
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 	//--------------------------------------------------------------------------
 	// struct BoundingRange, 1D bounding
@@ -389,7 +389,7 @@ namespace Axon {
 		return dist.getLength();
 	}
 
-} // namespace Axon
+AX_END_NAMESPACE
 
 #endif // end guardian
 

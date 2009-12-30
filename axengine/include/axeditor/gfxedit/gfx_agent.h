@@ -39,6 +39,7 @@ public:
 
 private:
 	GfxObject *m_gfxObj;
+	LinePrim *m_bboxLine;
 };
 
 AX_END_NAMESPACE

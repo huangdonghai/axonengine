@@ -48,7 +48,7 @@ AX_BEGIN_NAMESPACE
 
 	class TerrainMaterialDefHis : public MapHistory {
 	public:
-		TerrainMaterialDefHis(Axon::Map::MaterialDef* old, Axon::Map::MaterialDef* newdata, MapTerrain* terrain);
+		TerrainMaterialDefHis(MapMaterialDef* old, MapMaterialDef* newdata, MapTerrain* terrain);
 		virtual ~TerrainMaterialDefHis();
 
 		// implement Action
@@ -59,8 +59,8 @@ AX_BEGIN_NAMESPACE
 		virtual int getMemoryUsed();
 
 	private:
-		Axon::Map::MaterialDef* m_olddata;
-		Axon::Map::MaterialDef* m_newdata;
+		MapMaterialDef* m_olddata;
+		MapMaterialDef* m_newdata;
 		MapTerrain* m_terrain;
 	};
 

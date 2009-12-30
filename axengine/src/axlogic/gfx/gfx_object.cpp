@@ -15,6 +15,7 @@ AX_BEGIN_NAMESPACE
 
 GfxObject::GfxObject()
 {
+	m_tm.setIdentity();
 }
 
 GfxObject::~GfxObject()
@@ -24,7 +25,7 @@ GfxObject::~GfxObject()
 
 BoundingBox GfxObject::getLocalBoundingBox()
 {
-	return BoundingBox(-1, -1, -1, 1, 1, 1);
+	return BoundingBox::UnitBox;
 }
 
 BoundingBox GfxObject::getBoundingBox()

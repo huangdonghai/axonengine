@@ -12,7 +12,7 @@ read the license and understand and accept it fully.
 #ifndef AX_CORE_SIMD_H
 #define AX_CORE_SIMD_H
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 
 	class AX_API Simd {
@@ -23,7 +23,7 @@ namespace Axon {
 		virtual void findHeightMinMax(const ushort_t* data, int stride, const Rect& rect, ushort_t* minh, ushort_t* maxh);
 	};
 
-} // namespace Axon
+AX_END_NAMESPACE
 
 #endif // end guardian
 

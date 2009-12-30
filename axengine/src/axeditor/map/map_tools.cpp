@@ -51,7 +51,7 @@ void TerrainRaiseTool::doPress(int x, int y, int flags, float pressure) {
 
 	m_editedRect.clear();
 
-	if (flags & Input::Event::ControlModifier)
+	if (flags & InputEvent::ControlModifier)
 		m_brushStrength = -m_brushStrength;
 
 	doDrag(x, y, flags, pressure);
@@ -399,7 +399,7 @@ void TerrainPaintTool::doPress(int x, int y, int flags, float pressure) {
 
 	m_editedRect.clear();
 
-	if (flags & Input::Event::ControlModifier)
+	if (flags & InputEvent::ControlModifier)
 		m_brushStrength = -m_brushStrength;
 
 	SafeDelete(m_oldPixel);
@@ -484,7 +484,7 @@ void TerrainEraseTool::doPress( int x, int y, int flags, float pressure )
 
 	m_editedRect.clear();
 
-	if (flags & Input::Event::ControlModifier)
+	if (flags & InputEvent::ControlModifier)
 		m_brushStrength = -m_brushStrength;
 
 	SafeDelete(m_oldPixel);
@@ -512,7 +512,7 @@ void TerrainEraseTool::doRelease( int x, int y )
 //--------------------------------------------------------------------------
 
 CreateStaticTool::CreateStaticTool(MapContext* context) : MapTool(context) {
-	m_actor = nullptr;
+	m_agent = nullptr;
 }
 
 CreateStaticTool::~CreateStaticTool() {
@@ -525,25 +525,25 @@ void CreateStaticTool::doPress(int x, int y, int flags, float pressure) {
 		return;
 	}
 
-	m_actor = new MapStatic();
+	m_agent = new MapStatic();
 
-	m_actor->setProperty("model", m_mapContext->getMapState()->staticModelName);
+	m_agent->setProperty("model", m_mapContext->getMapState()->staticModelName);
 
 	if (m_mapContext->getMapState()->isSnapToGrid) {
 		from = Internal::snap(from, m_mapContext->getMapState()->snapToGrid);
 	}
 
-	m_actor->setOrigin(from);
+	m_agent->setOrigin(from);
 
-	m_actor->bindToGame();
+	m_agent->bindToGame();
 
 	GroupHis* grouphis = new GroupHis(m_context, "Create MapStatic");
 
-	AgentList actorlist;
-	actorlist.push_back(m_actor);
-	UndeleteHis* undelhis = new UndeleteHis(m_context, "Create MapStatic", actorlist);
+	AgentList agentlist;
+	agentlist.push_back(m_agent);
+	UndeleteHis* undelhis = new UndeleteHis(m_context, "Create MapStatic", agentlist);
 
-	History* selhis = m_view->getContext()->setSelectionHistoried(actorlist);
+	History* selhis = m_view->getContext()->setSelectionHistoried(agentlist);
 
 	grouphis->append(undelhis);
 	grouphis->append(selhis);
@@ -554,7 +554,7 @@ void CreateStaticTool::doPress(int x, int y, int flags, float pressure) {
 }
 
 void CreateStaticTool::doDrag(int x, int y, int flags, float pressure) {
-	if (!m_actor) {
+	if (!m_agent) {
 		return;
 	}
 
@@ -568,15 +568,15 @@ void CreateStaticTool::doDrag(int x, int y, int flags, float pressure) {
 		from = Internal::snap(from, m_mapContext->getMapState()->snapToGrid);
 	}
 
-	m_actor->setOrigin(from);
+	m_agent->setOrigin(from);
 }
 
 void CreateStaticTool::doRelease(int x, int y) {
-	if (!m_actor) {
+	if (!m_agent) {
 		return;
 	}
 
-	m_actor = nullptr;
+	m_agent = nullptr;
 }
 
 //--------------------------------------------------------------------------
@@ -584,7 +584,7 @@ void CreateStaticTool::doRelease(int x, int y) {
 //--------------------------------------------------------------------------
 
 CreateEntityTool::CreateEntityTool(MapContext* context) : MapTool(context) {
-	m_actor = nullptr;
+	m_agent = nullptr;
 }
 
 CreateEntityTool::~CreateEntityTool() {}
@@ -596,21 +596,21 @@ void CreateEntityTool::doPress(int x, int y, int flags, float pressure) {
 		return;
 	}
 
-	m_actor = new MapActor(m_mapContext->getMapState()->entityClass);
+	m_agent = new MapActor(m_mapContext->getMapState()->entityClass);
 
 	if (m_mapContext->getMapState()->isSnapToGrid) {
 		from = Internal::snap(from, m_mapContext->getMapState()->snapToGrid);
 	}
 
-	m_actor->getGameEntity()->autoGenerateName();
-	m_actor->setOrigin(from);
+	m_agent->getGameEntity()->autoGenerateName();
+	m_agent->setOrigin(from);
 
-	m_actor->bindToGame();
+	m_agent->bindToGame();
 
 	GroupHis* grouphis = new GroupHis(m_context, "Create Entity");
 
 	AgentList actorlist;
-	actorlist.push_back(m_actor);
+	actorlist.push_back(m_agent);
 	UndeleteHis* undelhis = new UndeleteHis(m_context, "Create Entity", actorlist);
 
 	History* selhis = m_view->getContext()->setSelectionHistoried(actorlist);
@@ -622,7 +622,7 @@ void CreateEntityTool::doPress(int x, int y, int flags, float pressure) {
 }
 
 void CreateEntityTool::doDrag(int x, int y, int flags, float pressure) {
-	if (!m_actor) {
+	if (!m_agent) {
 		return;
 	}
 
@@ -636,15 +636,15 @@ void CreateEntityTool::doDrag(int x, int y, int flags, float pressure) {
 		from = Internal::snap(from, m_mapContext->getMapState()->snapToGrid);
 	}
 
-	m_actor->setOrigin(from);
+	m_agent->setOrigin(from);
 }
 
 void CreateEntityTool::doRelease(int x, int y) {
-	if (!m_actor) {
+	if (!m_agent) {
 		return;
 	}
 
-	m_actor = nullptr;
+	m_agent = nullptr;
 }
 
 void CreateEntityTool::doRender(const RenderCamera& camera) {
@@ -657,7 +657,7 @@ void CreateEntityTool::doRender(const RenderCamera& camera) {
 
 #ifdef AX_CONFIG_OPTION_USE_SPEEDTREE_40
 CreateTreeTool::CreateTreeTool(MapContext* context) : MapTool(context) {
-	m_actor = nullptr;
+	m_agent = nullptr;
 }
 
 CreateTreeTool::~CreateTreeTool() {
@@ -670,21 +670,21 @@ void CreateTreeTool::doPress(int x, int y, int flags, float pressure) {
 		return;
 	}
 
-	m_actor = new MapSpeedTree();
-	m_view->getContext()->setSelection(m_actor);
+	m_agent = new MapSpeedTree();
+	m_view->getContext()->setSelection(m_agent);
 
-	m_actor->setProperty("tree", m_mapContext->getMapState()->treeFilename);
+	m_agent->setProperty("tree", m_mapContext->getMapState()->treeFilename);
 
 	if (m_mapContext->getMapState()->isSnapToGrid) {
 		from = Internal::snap(from, m_mapContext->getMapState()->snapToGrid);
 	}
 
-	m_actor->bindToGame();
+	m_agent->bindToGame();
 
 	GroupHis* grouphis = new GroupHis(m_context, "Create MapSpeedTree");
 
 	AgentList actorlist;
-	actorlist.push_back(m_actor);
+	actorlist.push_back(m_agent);
 	UndeleteHis* undelhis = new UndeleteHis(m_context, "Create MapSpeedTree", actorlist);
 
 	History* selhis = m_view->getContext()->setSelectionHistoried(actorlist);
@@ -698,7 +698,7 @@ void CreateTreeTool::doPress(int x, int y, int flags, float pressure) {
 }
 
 void CreateTreeTool::doDrag(int x, int y, int flags, float pressure) {
-	if (!m_actor) {
+	if (!m_agent) {
 		return;
 	}
 
@@ -712,15 +712,15 @@ void CreateTreeTool::doDrag(int x, int y, int flags, float pressure) {
 		from = Internal::snap(from, m_mapContext->getMapState()->snapToGrid);
 	}
 
-	m_actor->setOrigin(from);
+	m_agent->setOrigin(from);
 }
 
 void CreateTreeTool::doRelease(int x, int y) {
-	if (!m_actor) {
+	if (!m_agent) {
 		return;
 	}
 
-	m_actor = nullptr;
+	m_agent = nullptr;
 }
 #endif // AX_CONFIG_OPTION_USE_SPEEDTREE_40
 

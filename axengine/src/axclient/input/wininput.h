@@ -10,9 +10,9 @@ read the license and understand and accept it fully.
 #ifndef AX_CLIENT_WININPUT_H
 #define AX_CLIENT_WININPUT_H
 
-namespace Axon { namespace Input {
+AX_BEGIN_NAMESPACE
 
-	class WinInput : public IEventSource {
+	class WinInput : public IInputSource {
 	public:
 		WinInput();
 		virtual ~WinInput();
@@ -20,7 +20,7 @@ namespace Axon { namespace Input {
 		void setWindow(RenderTarget* gamewnd);
 		void queWinInput(MSG* msg);
 
-		// implement IEventSource
+		// implement IInputSource
 		virtual void startCapture(InputSystem::CaptureMode capturemode);
 		virtual void process();
 		virtual void setVibration(float left, float right);
@@ -36,7 +36,7 @@ namespace Axon { namespace Input {
 		int m_mapVkey[256];
 	};
 
-}} // namespace Axon::Input
+AX_END_NAMESPACE
 
 #endif // end guardian
 

@@ -60,8 +60,8 @@ AX_BEGIN_NAMESPACE
 		void stopRunning();
 
 	protected:
-		void buttonDown(int bt, Key key, int msec);
-		void buttonUp(int bt, Key key, int msec);
+		void buttonDown(int bt, InputKey key, int msec);
+		void buttonUp(int bt, InputKey key, int msec);
 		float buttonState(int bt);
 
 		// generate user input
@@ -89,7 +89,7 @@ AX_BEGIN_NAMESPACE
 
 	private:
 		struct Button {
-			Key keys[2];		// key holding it down
+			InputKey keys[2];		// key holding it down
 			int downtime;		// msec timestamp
 			int msec;			// msec down this frame if both a down and up happened
 			bool isActive;		// current state
@@ -97,7 +97,7 @@ AX_BEGIN_NAMESPACE
 		};
 
 		Button m_buttons[ButtonMax];
-		Dict<Key,String>	m_keybinding;
+		Dict<InputKey,String>	m_keybinding;
 
 		int m_frameMsec;
 

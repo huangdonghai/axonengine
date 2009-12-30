@@ -81,6 +81,10 @@ support CPU(architecture) macro: some Compilers can produce code for more than o
 #	define OUT
 #endif
 
+#define AX_BEGIN_NAMESPACE namespace Axon {
+#define AX_END_NAMESPACE }
+#define AX_USE_NAMESPACE using namespace Axon;
+
 #if defined(_MSC_VER)
 #   include "cc_msvc.h"
 #elif defined(__GNUG__)
@@ -154,11 +158,7 @@ support CPU(architecture) macro: some Compilers can produce code for more than o
 
 #define AX_BIT(x) (1<<x)
 
-#define AX_BEGIN_NAMESPACE namespace Axon {
-#define AX_END_NAMESPACE }
-#define AX_USE_NAMESPACE using namespace Axon;
-
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 #if 0
 	typedef signed char sbyte_t;
@@ -433,6 +433,6 @@ namespace Axon {
 	typedef ResourcePtr<Resource>	ResPtr;
 #endif
 
-} // namespace Axon
+AX_END_NAMESPACE
 
 #endif // AX_CORE_CORETYPES_H

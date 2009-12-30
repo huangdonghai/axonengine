@@ -17,7 +17,7 @@ AX_BEGIN_NAMESPACE
 	// class Tool
 	//--------------------------------------------------------------------------
 
-	class AX_API Tool : public Input::IEventHandler {
+	class AX_API Tool : public IInputHandler {
 	public:
 		typedef RenderCamera RenderCamera;
 		// editor tool
@@ -45,12 +45,12 @@ AX_BEGIN_NAMESPACE
 		virtual void doRender(const RenderCamera& camera) = 0;
 		virtual void setCursor();
 
-		virtual void handleEvent(Input::Event* e);
+		virtual void handleEvent(InputEvent* e);
 	protected:
-		// implement IEventHandler
-		virtual void onMouseDown(Input::Event* e);
-		virtual void onMouseUp(Input::Event* e);
-		virtual void onMouseMove(Input::Event* e);
+		// implement IInputHandler
+		virtual void onMouseDown(InputEvent* e);
+		virtual void onMouseUp(InputEvent* e);
+		virtual void onMouseMove(InputEvent* e);
 
 	protected:
 		Context* m_context;

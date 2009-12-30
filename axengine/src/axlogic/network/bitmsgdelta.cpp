@@ -10,7 +10,7 @@ read the license and understand and accept it fully.
 
 #include "../private.h"
 
-namespace Axon { namespace Network {
+AX_BEGIN_NAMESPACE
 
 	const int MAX_DATA_BUFFER = 1024;
 
@@ -360,4 +360,4 @@ namespace Axon { namespace Network {
 		return value;
 	}
 
-}} // namespace Axon::Network
+AX_END_NAMESPACE

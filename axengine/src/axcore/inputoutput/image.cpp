@@ -10,7 +10,7 @@ read the license and understand and accept it fully.
 
 #include "../private.h"
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 	Image::Image()
 		: m_format(TexFormat::AUTO)
@@ -1137,5 +1137,5 @@ namespace Axon {
 	}
 
 
-} // namespace Axon
+AX_END_NAMESPACE
 

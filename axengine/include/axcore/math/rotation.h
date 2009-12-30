@@ -12,7 +12,7 @@ read the license and understand and accept it fully.
 #ifndef AX_CORE_ROTATION_H
 #define AX_CORE_ROTATION_H
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 	struct AX_API Rotate : public Vector3 {
 	public:
@@ -80,7 +80,7 @@ namespace Axon {
 		return result;
 	}
 
-} // namespace Axon
+AX_END_NAMESPACE
 
 #endif // AX_CORE_ROTATION_H
 

@@ -12,7 +12,7 @@ read the license and understand and accept it fully.
 #ifndef AX_LOGIC_USERINPUT_H
 #define AX_LOGIC_USERINPUT_H
 
-namespace Axon { namespace Logic {
+AX_BEGIN_NAMESPACE
 
 	struct UserInput {
 	public:
@@ -50,7 +50,7 @@ namespace Axon { namespace Logic {
 		bool operator==(const UserInput &rhs) const;
 	};
 
-}} // namespace Axon::Logic
+AX_END_NAMESPACE
 
 
 #endif // end guardian

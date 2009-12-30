@@ -14,10 +14,5 @@ read the license and understand and accept it fully.
 #include "event.h"
 #include "eventsource.h"
 
-namespace Axon {
-	using Input::InputSystem;
-	using Input::Key;
-}
-
 #endif // end guardian
 

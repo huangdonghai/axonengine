@@ -45,16 +45,12 @@ AX_BEGIN_NAMESPACE
 AX_END_NAMESPACE
 
 AX_BEGIN_NAMESPACE
-
-	using namespace Axon::Logic;
-
 	// forward declaration
 	class PhysicsEntity;
 	class PhysicsRigid;
 	class PhysicsTerrain;
 	class PhysicsRagdoll;
 	class PhysicsPlayer;
-
 AX_END_NAMESPACE
 
 #include "physics_shape.h"
@@ -62,12 +58,12 @@ AX_END_NAMESPACE
 #include "physics_world.h"
 #include "physics_system.h"
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 	extern PhysicsSystem* g_physicsSystem;
 	extern HavokPackageManager* g_havokPackageManager;
 
-} // namespace Axon
+AX_END_NAMESPACE
 
 #endif // end guardian
 

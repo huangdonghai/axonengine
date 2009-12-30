@@ -12,7 +12,7 @@ read the license and understand and accept it fully.
 
 #include <windows.h>
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 	//--------------------------------------------------------------------------
 	// class SyncMutex
@@ -131,4 +131,4 @@ namespace Axon {
 		return GetCurrentThreadId() == m_id;
 	}
 
-} // namespace Axon
+AX_END_NAMESPACE

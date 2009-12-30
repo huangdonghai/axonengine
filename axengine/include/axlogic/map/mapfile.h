@@ -11,7 +11,9 @@ read the license and understand and accept it fully.
 #ifndef AX_MAP_FILE_H
 #define AX_MAP_FILE_H
 
-namespace Axon { namespace Map {
+AX_BEGIN_NAMESPACE
+
+namespace Map {
 
 	enum Constant {
 		ChunkTilesBits = 5,
@@ -39,9 +41,11 @@ namespace Axon { namespace Map {
 		AlphaZeroIndex = 0,
 		AlphaOneIndex = 1
 	};
+}
 
-	class AX_API LayerDef {
-		friend class MaterialDef;
+	class AX_API MapLayerDef
+	{
+		friend class MapMaterialDef;
 
 	public:
 		const int id;
@@ -65,45 +69,47 @@ namespace Axon { namespace Map {
 		Vector2 slopeRange;
 
 	private:
-		LayerDef(int _id);
-		~LayerDef();
+		MapLayerDef(int _id);
+		~MapLayerDef();
 
-		LayerDef* clone() const;
+		MapLayerDef* clone() const;
 	};
 
-	class AX_API MaterialDef {
+	class AX_API MapMaterialDef
+	{
 	public:
-		MaterialDef();
-		~MaterialDef();
+		MapMaterialDef();
+		~MapMaterialDef();
 
 		int getNumLayers() const;
-		LayerDef* getLayerDef(int idx) const;
-		LayerDef* findLayerDefById(int id) const;
-		LayerDef* createLayerDef();
-		void deleteLayerDef(LayerDef* l);
-		void moveUpLayerDef(LayerDef* l);
-		void moveDownLayerDef(LayerDef* l);
+		MapLayerDef* getLayerDef(int idx) const;
+		MapLayerDef* findLayerDefById(int id) const;
+		MapLayerDef* createLayerDef();
+		void deleteLayerDef(MapLayerDef* l);
+		void moveUpLayerDef(MapLayerDef* l);
+		void moveDownLayerDef(MapLayerDef* l);
 
 		// set layer for index. the layer must create by this materialDef, or
 		// the id will be corrupted
-		void setLayer(int idx, LayerDef* l);
-		MaterialDef* clone() const;
+		void setLayer(int idx, MapLayerDef* l);
+		MapMaterialDef* clone() const;
 
 		void parseXml(const TiXmlElement* node);
 		void writeToFile(File* f, int indent=0);
 
 	protected:
-		int findLayerIndex(LayerDef* l);
+		int findLayerIndex(MapLayerDef* l);
 
 	private:
 		int m_numLayers;
-		LayerDef* m_layerDefs[MaxLayers];
+		MapLayerDef* m_layerDefs[Map::MaxLayers];
 		int m_maxLayerId;
 	};
 
-	class AX_API EnvDef : public Object {
+	class AX_API MapEnvDef : public Object
+	{
 	public:
-		AX_DECLARE_CLASS(EnvDef, Object)
+		AX_DECLARE_CLASS(MapEnvDef, Object)
 			AX_SIMPLEPROP(fogColor)
 			AX_SIMPLEPROP(fogDensity)
 			AX_SIMPLEPROP(haveSkyBox)
@@ -128,8 +134,8 @@ namespace Axon { namespace Map {
 			AX_SIMPLEPROP(caustics)
 		AX_END_CLASS()
 
-		EnvDef();
-		~EnvDef();
+		MapEnvDef();
+		~MapEnvDef();
 
 		// member method
 		void parseXml(const TiXmlElement* node);
@@ -169,6 +175,6 @@ namespace Axon { namespace Map {
 		bool m_caustics;
 	};
 
-}} // namespace Axon::Map
+AX_END_NAMESPACE
 
 #endif // AX_MAP_FILE_H

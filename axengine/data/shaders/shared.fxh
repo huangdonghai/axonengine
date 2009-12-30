@@ -20,7 +20,7 @@ read the license and understand and accept it fully.
 #endif
 
 #ifdef __cplusplus
-namespace Axon { namespace SHADER {
+namespace SHADER {
 #endif
 
 // render hardware
@@ -94,7 +94,7 @@ AX_SHADERCONST(SortHint_aboveWater, 4)
 AX_SHADERCONST(SHADERMACRO_VERSION, 2)
 
 #ifdef __cplusplus
-}} // namespace AX::SHADER
+} // namespace SHADER
 #endif
 
 

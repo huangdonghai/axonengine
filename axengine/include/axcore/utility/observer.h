@@ -13,7 +13,7 @@ read the license and understand and accept it fully.
 
 // see GoF Design Patterns 5.7
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 	class IObservable;
 
@@ -34,7 +34,7 @@ namespace Axon {
 		List<IObserver*>	m_observers;
 	};
 
-} // namespace Axon
+AX_END_NAMESPACE
 
 
 #endif // AX_OBSERVER_H

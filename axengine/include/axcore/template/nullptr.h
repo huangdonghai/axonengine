@@ -14,7 +14,7 @@ read the license and understand and accept it fully.
 
 // simulates c++0x's nullptr, see http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2004/n1601.pdf
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 	const // this is a const object...
 	class nullptr_t {
@@ -29,7 +29,7 @@ namespace Axon {
 		void operator&() const;		// whose address can¡¯t be taken
 	} nullptr = {};					// and whose name is nullptr
 
-} // namespace Axon
+AX_END_NAMESPACE
 
 #endif // end guardian
 

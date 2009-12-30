@@ -33,7 +33,7 @@ distribution.
 
 #include "../private.h"
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 bool TiXmlBase::condenseWhiteSpace = true;
 
@@ -3520,5 +3520,5 @@ bool TiXmlText::Blank() const
 }
 
 
-} // namespace Axon
+AX_END_NAMESPACE
 

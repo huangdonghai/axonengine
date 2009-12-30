@@ -14,7 +14,7 @@ read the license and understand and accept it fully.
 #include <Psapi.h>
 #include "BugTrap.h"
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 	void CDECL Errorf(const char* fmt, ...)
 	{
@@ -370,4 +370,4 @@ namespace Axon {
 		::Sleep(ms);
 	}
 
-} // namespace Axon
+AX_END_NAMESPACE

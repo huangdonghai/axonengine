@@ -11,7 +11,7 @@ read the license and understand and accept it fully.
 #ifndef AX_CORE_CORESYSTEM_H
 #define AX_CORE_CORESYSTEM_H
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 	// processor features
 	enum CPU_FEATURE {
@@ -143,7 +143,7 @@ namespace Axon {
 	inline const CpuInfo& System::getCpuInfo() { return m_cpuInfo; }
 
 
-} // namespace Axon
+AX_END_NAMESPACE
 
 
 #endif // AX_CORE_CORESYSTEM_H

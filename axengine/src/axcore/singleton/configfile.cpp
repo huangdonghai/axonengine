@@ -9,7 +9,7 @@ read the license and understand and accept it fully.
 
 #include "../private.h"
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 	ConfigFile::ConfigFile() {
 	}
@@ -256,4 +256,4 @@ namespace Axon {
 		m_data.clear();
 	}
 
-} // namespace Axon
+AX_END_NAMESPACE

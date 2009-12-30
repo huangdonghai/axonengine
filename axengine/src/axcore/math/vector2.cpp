@@ -9,6 +9,6 @@ read the license and understand and accept it fully.
 
 #include "../private.h"
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
-} // namespace Axon
+AX_END_NAMESPACE

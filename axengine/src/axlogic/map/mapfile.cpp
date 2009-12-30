@@ -10,14 +10,14 @@ read the license and understand and accept it fully.
 
 #include "../private.h"
 
-namespace Axon { namespace Map {
+AX_BEGIN_NAMESPACE
 
-	LayerDef::LayerDef(int _id) : id(_id) {}
+	MapLayerDef::MapLayerDef(int _id) : id(_id) {}
 
-	LayerDef::~LayerDef() {}
+	MapLayerDef::~MapLayerDef() {}
 
-	LayerDef* LayerDef::clone() const {
-		LayerDef* result = new LayerDef(id);
+	MapLayerDef* MapLayerDef::clone() const {
+		MapLayerDef* result = new MapLayerDef(id);
 
 		result->name = name;
 		result->surfaceType = surfaceType;
@@ -39,27 +39,27 @@ namespace Axon { namespace Map {
 	}
 
 
-	MaterialDef::MaterialDef() {
+	MapMaterialDef::MapMaterialDef() {
 		m_maxLayerId = 0;
 		m_numLayers = 0;
 	}
 
-	MaterialDef::~MaterialDef() {
+	MapMaterialDef::~MapMaterialDef() {
 		for (int i = 0; i < m_numLayers; i++) {
 			delete m_layerDefs[i];
 		}
 	}
 
-	int MaterialDef::getNumLayers() const {
+	int MapMaterialDef::getNumLayers() const {
 		return m_numLayers;
 	}
 
-	LayerDef* MaterialDef::getLayerDef(int idx) const {
+	MapLayerDef* MapMaterialDef::getLayerDef(int idx) const {
 		AX_ASSERT(idx >= 0 && idx < m_numLayers);
 		return m_layerDefs[idx];
 	}
 
-	LayerDef* MaterialDef::findLayerDefById(int id) const {
+	MapLayerDef* MapMaterialDef::findLayerDefById(int id) const {
 		for (int i = 0; i < m_numLayers; i++) {
 			if (m_layerDefs[i]->id == id)
 				return m_layerDefs[i];
@@ -69,11 +69,11 @@ namespace Axon { namespace Map {
 	}
 
 
-	LayerDef* MaterialDef::createLayerDef() {
-		if (m_numLayers == MaxLayers)
+	MapLayerDef* MapMaterialDef::createLayerDef() {
+		if (m_numLayers == Map::MaxLayers)
 			return nullptr;
 
-		LayerDef* layer = new LayerDef(m_maxLayerId++);
+		MapLayerDef* layer = new MapLayerDef(m_maxLayerId++);
 
 		layer->surfaceType = SurfaceType::Dust;
 		layer->color = Rgba::White;
@@ -91,7 +91,7 @@ namespace Axon { namespace Map {
 		return layer;
 	}
 
-	void MaterialDef::deleteLayerDef(LayerDef* l) {
+	void MapMaterialDef::deleteLayerDef(MapLayerDef* l) {
 		if (m_numLayers == 0)
 			return;
 
@@ -103,7 +103,7 @@ namespace Axon { namespace Map {
 
 		if (i == m_numLayers) {
 			// not found, fire error
-			Errorf("%s: cann't found LayerDef", __func__);
+			Errorf("%s: cann't found MapLayerDef", __func__);
 		}
 
 		delete l;
@@ -115,7 +115,7 @@ namespace Axon { namespace Map {
 		m_numLayers--;
 	}
 
-	void MaterialDef::moveUpLayerDef(LayerDef* l) {
+	void MapMaterialDef::moveUpLayerDef(MapLayerDef* l) {
 		if (m_numLayers == 0)
 			return;
 
@@ -127,7 +127,7 @@ namespace Axon { namespace Map {
 
 		if (i == m_numLayers) {
 			// not found, fire error
-			Errorf("%s: cann't found LayerDef", __func__);
+			Errorf("%s: cann't found MapLayerDef", __func__);
 		}
 
 		// is first layer, can't move
@@ -138,7 +138,7 @@ namespace Axon { namespace Map {
 		m_layerDefs[i-1] = l;
 	}
 
-	void MaterialDef::moveDownLayerDef(LayerDef* l) {
+	void MapMaterialDef::moveDownLayerDef(MapLayerDef* l) {
 		if (m_numLayers == 0)
 			return;
 
@@ -150,7 +150,7 @@ namespace Axon { namespace Map {
 
 		if (i == m_numLayers) {
 			// not found, fire error
-			Errorf("%s: cann't found LayerDef", __func__);
+			Errorf("%s: cann't found MapLayerDef", __func__);
 		}
 
 		// is last layer, can't move
@@ -161,8 +161,8 @@ namespace Axon { namespace Map {
 		m_layerDefs[i+1] = l;
 	}
 
-	MaterialDef* MaterialDef::clone() const {
-		MaterialDef* result = new MaterialDef();
+	MapMaterialDef* MapMaterialDef::clone() const {
+		MapMaterialDef* result = new MapMaterialDef();
 
 		result->m_numLayers = m_numLayers;
 		result->m_maxLayerId = m_maxLayerId;
@@ -174,7 +174,7 @@ namespace Axon { namespace Map {
 		return result;
 	}
 
-	void MaterialDef::setLayer(int idx, LayerDef* l) {
+	void MapMaterialDef::setLayer(int idx, MapLayerDef* l) {
 		AX_ASSERT(idx >= 0 && idx < m_numLayers);
 		int oldindex = findLayerIndex(l);
 		AX_ASSERT(oldindex >= 0 && oldindex < m_numLayers);
@@ -188,7 +188,7 @@ namespace Axon { namespace Map {
 		return defaultstr;
 	}
 
-	void MaterialDef::parseXml(const TiXmlElement* node) {
+	void MapMaterialDef::parseXml(const TiXmlElement* node) {
 		node->Attribute("maxLayerId", &m_maxLayerId);
 		node->Attribute("numLayers", &m_numLayers);
 
@@ -200,7 +200,7 @@ namespace Axon { namespace Map {
 				continue;
 
 			int id = atoi(child->Attribute("id"));
-			LayerDef* l = new LayerDef(id);
+			MapLayerDef* l = new MapLayerDef(id);
 			const char* attr;
 
 			l->name = child->Attribute("name");
@@ -232,7 +232,7 @@ namespace Axon { namespace Map {
 			f->printf("%s", ind);
 	}
 
-	void MaterialDef::writeToFile(File* f, int indent) {
+	void MapMaterialDef::writeToFile(File* f, int indent) {
 #define INDENT Indent(f, ind.c_str())
 		String ind(indent*2, ' ');
 
@@ -260,7 +260,7 @@ namespace Axon { namespace Map {
 #undef INDENT
 	}
 
-	int MaterialDef::findLayerIndex( LayerDef* l )
+	int MapMaterialDef::findLayerIndex( MapLayerDef* l )
 	{
 		for (int i = 0; i < m_numLayers; i++) {
 			if (m_layerDefs[i] == l)
@@ -270,7 +270,7 @@ namespace Axon { namespace Map {
 		return -1;
 	}
 
-	EnvDef::EnvDef()
+	MapEnvDef::MapEnvDef()
 		: m_textureSkyBox("textures/skys/day/box")
 		, m_skyModel()
 		, m_materialOcean("material/ocean")
@@ -301,14 +301,14 @@ namespace Axon { namespace Map {
 		m_caustics = true;
 	}
 
-	EnvDef::~EnvDef() {
+	MapEnvDef::~MapEnvDef() {
 	}
 
-	void EnvDef::parseXml(const TiXmlElement* node) {
+	void MapEnvDef::parseXml(const TiXmlElement* node) {
 		this->readProperties(node);
 	}
 
-	void EnvDef::writeToFile(File* f, int indent/*=0 */) {
+	void MapEnvDef::writeToFile(File* f, int indent/*=0 */) {
 #define INDENT Indent(f, ind.c_str())
 		String ind(indent*2, ' ');
 
@@ -319,5 +319,5 @@ namespace Axon { namespace Map {
 #undef INDENT
 	}
 
-}} // namespace Axon::Map
+AX_END_NAMESPACE
 

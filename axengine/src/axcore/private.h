@@ -12,7 +12,7 @@ read the license and understand and accept it fully.
 
 #include <axcore/public.h>
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 	void DetectCpuInfo(CpuInfo& cpu_info );
 
 	extern FILE* g_logFile;

@@ -11,7 +11,7 @@ read the license and understand and accept it fully.
 #include <fmod.hpp>
 #include <fmod_errors.h>
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 	inline void ERRCHECK(FMOD_RESULT result)
 	{

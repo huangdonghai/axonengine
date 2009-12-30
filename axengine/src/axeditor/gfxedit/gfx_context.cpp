@@ -25,15 +25,18 @@ GfxContext::GfxContext()
 	State* state = new State();
 	setState(state);
 
-	m_toolFactories[Tool::Select]		= new ToolFactory_<SelectTool>;
-	m_toolFactories[Tool::Move]			= new ToolFactory_<MoveTool>;
-	m_toolFactories[Tool::Rotate]		= new ToolFactory_<RotateTool>;
-	m_toolFactories[Tool::Scale]		= new ToolFactory_<ScaleTool>;
+	m_toolFactories[Tool::Select] = new ToolFactory_<SelectTool>;
+	m_toolFactories[Tool::Move] = new ToolFactory_<MoveTool>;
+	m_toolFactories[Tool::Rotate] = new ToolFactory_<RotateTool>;
+	m_toolFactories[Tool::Scale] = new ToolFactory_<ScaleTool>;
 
-	m_actionFactories[Action::Delete]	= new ActionFactory_<DeleteAction>;
-	m_actionFactories[Action::Undo]		= new ActionFactory_<UndoAction>;
-	m_actionFactories[Action::Redo]		= new ActionFactory_<RedoAction>;
-	m_actionFactories[Action::Clone]	= new ActionFactory_<CloneAction>;
+	m_toolFactories[GfxTool::CreateParticle] = new GfxToolFactory_<ParticleCreationTool>;
+	m_toolFactories[GfxTool::CreateRibbon] = new GfxToolFactory_<RibbonCreationTool>;
+
+	m_actionFactories[Action::Delete] = new ActionFactory_<DeleteAction>;
+	m_actionFactories[Action::Undo] = new ActionFactory_<UndoAction>;
+	m_actionFactories[Action::Redo] = new ActionFactory_<RedoAction>;
+	m_actionFactories[Action::Clone] = new ActionFactory_<CloneAction>;
 
 	m_view = new GfxView(this);
 
@@ -42,6 +45,12 @@ GfxContext::GfxContext()
 	m_numViews = 1;
 
 	m_activeView = m_view;
+
+	m_renderWorld = new RenderWorld();
+	m_renderWorld->initialize(512);
+
+	m_gfxEntity = new GfxEntity();
+	m_renderWorld->addEntity(m_gfxEntity);
 }
 
 GfxContext::~GfxContext()
@@ -51,7 +60,25 @@ GfxContext::~GfxContext()
 
 void GfxContext::doRender( const RenderCamera& camera, bool world /*= false*/ )
 {
+	g_renderSystem->beginScene(camera);
+	g_renderSystem->addToScene(m_renderWorld);
+	g_renderSystem->endScene();
 
+	g_renderSystem->beginScene(camera);
+	// present static
+	AgentDict::iterator it = m_agentDict.begin();
+
+	for (; it != m_agentDict.end(); ++it) {
+		if (it->second) it->second->doRender();
+	}
+
+	if (m_tool) {
+		m_tool->doRender(camera);
+	}
+
+	g_renderSystem->addToScene(m_view->m_gridLines);
+
+	g_renderSystem->endScene();
 }
 
 void GfxContext::doSelect( const RenderCamera& camera, int part )

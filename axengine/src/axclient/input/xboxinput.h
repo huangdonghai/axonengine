@@ -11,14 +11,14 @@ read the license and understand and accept it fully.
 #ifndef AX_XINPUT_H
 #define AX_XINPUT_H
 
-namespace Axon { namespace Input {
+AX_BEGIN_NAMESPACE
 
-	class Xinput : public IEventSource {
+	class Xinput : public IInputSource {
 	public:
 		Xinput();
 		~Xinput();
 
-		// IEventSource
+		// IInputSource
 		virtual void startCapture(InputSystem::CaptureMode capturemode);
 		virtual void process();
 		virtual void setVibration(float left, float right);
@@ -29,7 +29,7 @@ namespace Axon { namespace Input {
 		Dict<int,int>	m_keymap;
 	};
 
-}} // namespace Axon::Input
+AX_END_NAMESPACE
 
 #endif // end guardian
 

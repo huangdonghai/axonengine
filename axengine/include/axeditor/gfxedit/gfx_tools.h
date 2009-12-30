@@ -9,7 +9,7 @@ class GfxTool : public Tool
 public:
 	enum GfxToolType {
 		// object creation
-		CreateParticle, CreatRibbon
+		CreateParticle = Tool::UserDefined, CreateRibbon
 	};
 
 	GfxTool(GfxContext *ctx);

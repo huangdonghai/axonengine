@@ -10,243 +10,237 @@ read the license and understand and accept it fully.
 #include "../private.h"
 
 AX_BEGIN_NAMESPACE
-	
-	static bool s_drawTerrain = true;
-	static bool s_drawActor = true;
 
-	enum {
-		MininumNodeSize = 32
-	};
+static bool s_drawTerrain = true;
+static bool s_drawActor = true;
 
-	int RenderWorld::m_frameNum = 0;
+enum {
+	MininumNodeSize = 32
+};
 
-	RenderWorld::RenderWorld() {
-		m_outdoorEnv = nullptr;
-		TypeZeroArray(m_histogram);
-		m_curHistogramIndex = 0;
-		m_histogramQuery = g_queryManager->allocQuery();
-		m_lastExposure = 1;
+int RenderWorld::m_frameNum = 0;
 
-		m_visFrameId = 1;
-		m_shadowFrameId = 1;
-		m_shadowDir.set(0,0,0);
-	}
+RenderWorld::RenderWorld() {
+	m_outdoorEnv = nullptr;
+	TypeZeroArray(m_histogram);
+	m_curHistogramIndex = 0;
+	m_histogramQuery = g_queryManager->allocQuery();
+	m_lastExposure = 1;
 
-	RenderWorld::~RenderWorld() {
-		g_queryManager->freeQuery(m_histogramQuery);
-	}
+	m_visFrameId = 1;
+	m_shadowFrameId = 1;
+	m_shadowDir.set(0,0,0);
+}
 
-	void RenderWorld::initialize(int worldSize) {
-		worldSize = Math::clamp(worldSize, 1024, 8192);
-		worldSize = Math::nextPowerOfTwo(worldSize);
-		m_worldSize = worldSize;
+RenderWorld::~RenderWorld() {
+	g_queryManager->freeQuery(m_histogramQuery);
+}
 
-		m_terrain = nullptr;
+void RenderWorld::initialize(int worldSize) {
+	worldSize = Math::clamp(worldSize, 1024, 8192);
+	worldSize = Math::nextPowerOfTwo(worldSize);
+	m_worldSize = worldSize;
 
-		m_outdoorEnv = new OutdoorEnv(this);
+	m_terrain = nullptr;
 
-		// init quadtree
-		generateQuadNode();
-	}
+	m_outdoorEnv = new OutdoorEnv(this);
 
-	void RenderWorld::finalize() {
+	// init quadtree
+	generateQuadNode();
+}
+
+void RenderWorld::finalize() {
 //		TypeFreeContainer(m_linkedActorSeq);
-	}
+}
 
-	void RenderWorld::addEntity(RenderEntity* actor) {
-		if (actor->m_world) {
-			if (actor->m_world == this) {
-				updateActor(actor);
-				return;
-			} else {
-				Errorf("Add a actor belongs to other world.");
-				return;
-			}
-		}
-
-		actor->m_world = this;
-
-		if (actor->getKind() == RenderEntity::kTerrain) {
-			AX_ASSERT(m_terrain == nullptr);
-			m_terrain = dynamic_cast<RenderTerrain*>(actor);
-			AX_ASSERT(m_terrain);
-
+void RenderWorld::addEntity(RenderEntity* entity) {
+	if (entity->m_world) {
+		if (entity->m_world == this) {
+			updateEntity(entity);
+			return;
+		} else {
+			Errorf("Add a entity belongs to other world.");
 			return;
 		}
-
-		linkActor(actor);
 	}
 
-	void RenderWorld::updateActor(RenderEntity* actor) {
-		if (actor->getKind() == RenderEntity::kTerrain) {
-			return;
-		}
+	entity->m_world = this;
 
-		unlinkActor(actor);
-		linkActor(actor);
+	if (entity->getKind() == RenderEntity::kTerrain) {
+		AX_ASSERT(m_terrain == nullptr);
+		m_terrain = dynamic_cast<RenderTerrain*>(entity);
+		AX_ASSERT(m_terrain);
+
+		return;
 	}
 
-	void RenderWorld::removeEntity(RenderEntity* actor) {
-		if (actor->m_world != this) {
-			return;
-		}
+	linkEntity(entity);
+}
 
-		if (actor->getKind() == RenderEntity::kTerrain) {
-			m_terrain = nullptr;
-			return;
-		}
-
-		unlinkActor(actor);
-
-		actor->m_world = 0;
+void RenderWorld::updateEntity(RenderEntity* entity) {
+	if (entity->getKind() == RenderEntity::kTerrain) {
+		return;
 	}
 
+	unlinkEntity(entity);
+	linkEntity(entity);
+}
 
-	void RenderWorld::renderTo(QueuedScene* qscene) {
-		m_frameNum++;
+void RenderWorld::removeEntity(RenderEntity* entity) {
+	if (entity->m_world != this) {
+		return;
+	}
 
-		qscene->worldFrameId = m_frameNum;
+	if (entity->getKind() == RenderEntity::kTerrain) {
+		m_terrain = nullptr;
+		return;
+	}
 
-		s_drawTerrain = true;
-		s_drawActor = true;
+	unlinkEntity(entity);
 
-		m_updateShadowVis = qscene->isLastCsmSplits();
+	entity->m_world = 0;
+}
 
-		if (qscene->sceneType == QueuedScene::Reflection) {
-			int ref = r_reflection->getInteger();
 
-			s_drawTerrain = false;
-			s_drawActor = false;
+void RenderWorld::renderTo(QueuedScene* qscene) {
+	m_frameNum++;
 
-			switch (ref) {
-				case 2:
-					s_drawActor = true;
-				case 1:
-					s_drawTerrain = true;
-			}
-		} else if (qscene->sceneType == QueuedScene::ShadowGen) {
-			if (r_terrainShadow->getBool()) {
+	qscene->worldFrameId = m_frameNum;
+
+	s_drawTerrain = true;
+	s_drawActor = true;
+
+	m_updateShadowVis = qscene->isLastCsmSplits();
+
+	if (qscene->sceneType == QueuedScene::Reflection) {
+		int ref = r_reflection->getInteger();
+
+		s_drawTerrain = false;
+		s_drawActor = false;
+
+		switch (ref) {
+			case 2:
+				s_drawActor = true;
+			case 1:
 				s_drawTerrain = true;
-			} else {
-				s_drawTerrain = false;
-			}
+		}
+	} else if (qscene->sceneType == QueuedScene::ShadowGen) {
+		if (r_terrainShadow->getBool()) {
+			s_drawTerrain = true;
 		} else {
-			m_visFrameId++;
+			s_drawTerrain = false;
+		}
+	} else {
+		m_visFrameId++;
+	}
+
+	if (!r_actor->getBool()) {
+		s_drawActor = false;
+	}
+
+	const RenderCamera& cam = qscene->camera;
+
+	// outdoor environment
+	if (m_outdoorEnv) {
+		if (qscene->sceneType == QueuedScene::WorldMain) {
+			updateExposure(qscene);
+			m_outdoorEnv->update(qscene, Plane::Cross);
+		} else {
+			qscene->exposure = m_lastExposure;
 		}
 
-		if (!r_actor->getBool()) {
-			s_drawActor = false;
+		qscene->addActor(m_outdoorEnv);
+		m_outdoorEnv->issueToQueue(qscene);
+
+		if (m_shadowDir != m_outdoorEnv->getGlobalLight()->getGlobalLightDirection()) {
+			m_shadowDir = m_outdoorEnv->getGlobalLight()->getGlobalLightDirection();
+			m_shadowFrameId++;
 		}
+	}
 
-		const RenderCamera& cam = qscene->camera;
-
-		// outdoor environment
-		if (m_outdoorEnv) {
-			if (qscene->sceneType == QueuedScene::WorldMain) {
-				updateExposure(qscene);
-				m_outdoorEnv->update(qscene, Plane::Cross);
-			} else {
-				qscene->exposure = m_lastExposure;
-			}
-
-			qscene->addActor(m_outdoorEnv);
-			m_outdoorEnv->issueToQueue(qscene);
-
-			if (m_shadowDir != m_outdoorEnv->getGlobalLight()->getGlobalLightDirection()) {
-				m_shadowDir = m_outdoorEnv->getGlobalLight()->getGlobalLightDirection();
-				m_shadowFrameId++;
-			}
+	// terrain
+	if (m_terrain && r_terrain->getBool() && s_drawTerrain) {
+		if (qscene->sceneType == QueuedScene::WorldMain) {
+			m_terrain->update(qscene, Plane::Cross);
 		}
-
-		// terrain
-		if (m_terrain && r_terrain->getBool() && s_drawTerrain) {
-			if (qscene->sceneType == QueuedScene::WorldMain) {
-				m_terrain->update(qscene, Plane::Cross);
-			}
 #if 0
-			Primitives prims = m_terrain->getViewedPrimitives();
+		Primitives prims = m_terrain->getViewedPrimitives();
 
-			for (size_t i = 0; i < prims.size(); i++) {
-				qscene->addInteraction(0, prims[i]);
-			}
+		for (size_t i = 0; i < prims.size(); i++) {
+			qscene->addInteraction(0, prims[i]);
+		}
 #else
-			m_terrain->issueToQueue(qscene);
+		m_terrain->issueToQueue(qscene);
 #endif
+	}
+
+	bool frustumCull = r_frustumCull->getBool();
+
+	Plane::Side side;
+	if (frustumCull) {
+		side = Plane::Cross;
+	} else {
+		side = Plane::Front;
+	}
+
+	if (s_drawActor) {
+		markVisible_r(qscene, m_rootNode, side);
+	}
+
+	// issue entity manager
+	for (int i = 0; i < g_renderSystem->getNumEntityManager(); i++) {
+		IEntityManager* am = g_renderSystem->getEntityManager(i);
+		AX_ASSERT(am);
+
+		am->issueToQueue(qscene);
+	}
+
+	qscene->finalProcess();
+
+	if (qscene->sceneType != QueuedScene::WorldMain) {
+		return;
+	}
+
+	g_statistic->setValue(stat_worldGlobalLights, qscene->globalLight ? 1 : 0);
+	g_statistic->setValue(stat_worldLights, qscene->numLights);
+	g_statistic->setValue(stat_worldActors, qscene->numActors);
+	g_statistic->setValue(stat_worldInteractions, qscene->numInteractions);
+
+	// check interactions, if need subscene
+	for (int i = 0; i < qscene->numInteractions; i++) {
+		Interaction* ia = qscene->interactions[i];
+		Material* mat = ia->primitive->getMaterial();
+		if (!mat) {
+			continue;
 		}
 
-		bool frustumCull = r_frustumCull->getBool();
-
-		Plane::Side side;
-		if (frustumCull) {
-			side = Plane::Cross;
-		} else {
-			side = Plane::Front;
+		Shader* shader = mat->getShaderTemplate();
+		if (!shader) {
+			continue;
 		}
 
-		if (s_drawActor) {
-			markVisible_r(qscene, m_rootNode, side);
-		}
-
-		// issue actor manager
-		for (int i = 0; i < g_renderSystem->getNumEntityManager(); i++) {
-			IEntityManager* am = g_renderSystem->getEntityManager(i);
-			AX_ASSERT(am);
-
-			am->issueToQueue(qscene);
-		}
-
-		qscene->finalProcess();
-
-		if (qscene->sceneType != QueuedScene::WorldMain) {
-			return;
-		}
-
-		g_statistic->setValue(stat_worldGlobalLights, qscene->globalLight ? 1 : 0);
-		g_statistic->setValue(stat_worldLights, qscene->numLights);
-		g_statistic->setValue(stat_worldActors, qscene->numActors);
-		g_statistic->setValue(stat_worldInteractions, qscene->numInteractions);
-
-		// check interactions, if need subscene
-		for (int i = 0; i < qscene->numInteractions; i++) {
-			Interaction* ia = qscene->interactions[i];
-			Material* mat = ia->primitive->getMaterial();
-			if (!mat) {
+		for (int j = 0; j < shader->getNumSampler(); j++) {
+			SamplerAnno* sa = shader->getSamplerAnno(j);
+			if (sa->m_renderType != SamplerAnno::Reflection) {
 				continue;
 			}
 
-			Shader* shader = mat->getShaderTemplate();
-			if (!shader) {
-				continue;
-			}
-
-			for (int j = 0; j < shader->getNumSampler(); j++) {
-				SamplerAnno* sa = shader->getSamplerAnno(j);
-				if (sa->m_renderType != SamplerAnno::Reflection) {
-					continue;
-				}
-
 #if 0
-				QueuedScene* subscene = gRenderQueue->allocQueuedScene();
-				qscene->subScenes[qscene->numSubScenes++] = subscene;
-				subscene->sceneType = QueuedScene::Reflection;
+			QueuedScene* subscene = gRenderQueue->allocQueuedScene();
+			qscene->subScenes[qscene->numSubScenes++] = subscene;
+			subscene->sceneType = QueuedScene::Reflection;
 
-				subscene->camera = cam.createMirrorCamera(Plane(0, 0, 1, 0));
-				Target* target = gTargetManager->allocTarget(Target::FrameAlloc, 512, 512, TexFormat::BGRA8);
-				subscene->camera.setTarget(target);
-				subscene->camera.setViewRect(Rect(0, 0, 512, 512));
+			subscene->camera = cam.createMirrorCamera(Plane(0, 0, 1, 0));
+			Target* target = gTargetManager->allocTarget(Target::FrameAlloc, 512, 512, TexFormat::BGRA8);
+			subscene->camera.setTarget(target);
+			subscene->camera.setViewRect(Rect(0, 0, 512, 512));
 #else
-				ReflectionTarget* refl = g_targetManager->findReflection(this, 0, ia->primitive, 512, 512);
-				refl->update(qscene);
+			ReflectionTarget* refl = g_targetManager->findReflection(this, 0, ia->primitive, 512, 512);
+			refl->update(qscene);
 #endif
 
-				if (refl->m_target->m_realAllocated)
-					ia->targets[ia->numTargets++] = refl->m_target;
-
-				if (qscene->numSubScenes == QueuedScene::MAX_SUB_SCENES) {
-					Errorf("MAX_SUB_SCENES exceeds");
-					break;
-				}
-			}
+			if (refl->m_target->m_realAllocated)
+				ia->targets[ia->numTargets++] = refl->m_target;
 
 			if (qscene->numSubScenes == QueuedScene::MAX_SUB_SCENES) {
 				Errorf("MAX_SUB_SCENES exceeds");
@@ -254,429 +248,435 @@ AX_BEGIN_NAMESPACE
 			}
 		}
 
-		for (int i = 0; i < qscene->numSubScenes; i++) {
-			// render to texture no world
-			QueuedScene* subscene = qscene->subScenes[i];
-			if (subscene->sceneType == QueuedScene::RenderToTexture) {
-				continue;
-			}
-
-			QuadNode* node = m_rootNode;
-
-			if (subscene->sceneType == QueuedScene::ShadowGen) {
-				RenderLight* light = subscene->sourceLight->preQueued;
-
-				if (light->getLightType() != RenderLight::kGlobal) {
-					node = subscene->sourceLight->preQueued->m_linkedNode;
-				}
-			}
-			renderTo(qscene->subScenes[i], node);
+		if (qscene->numSubScenes == QueuedScene::MAX_SUB_SCENES) {
+			Errorf("MAX_SUB_SCENES exceeds");
+			break;
 		}
 	}
 
-	void RenderWorld::renderTo( QueuedScene* qscene, QuadNode* node )
-	{
-		m_frameNum++;
+	for (int i = 0; i < qscene->numSubScenes; i++) {
+		// render to texture no world
+		QueuedScene* subscene = qscene->subScenes[i];
+		if (subscene->sceneType == QueuedScene::RenderToTexture) {
+			continue;
+		}
 
-		qscene->worldFrameId = m_frameNum;
+		QuadNode* node = m_rootNode;
 
-		s_drawTerrain = true;
-		s_drawActor = true;
+		if (subscene->sceneType == QueuedScene::ShadowGen) {
+			RenderLight* light = subscene->sourceLight->preQueued;
 
-		m_updateShadowVis = qscene->isLastCsmSplits();
-
-		if (qscene->sceneType == QueuedScene::Reflection) {
-			int ref = r_reflection->getInteger();
-
-			s_drawTerrain = false;
-			s_drawActor = false;
-
-			switch (ref) {
-				case 2:
-					s_drawActor = true;
-				case 1:
-					s_drawTerrain = true;
+			if (light->getLightType() != RenderLight::kGlobal) {
+				node = subscene->sourceLight->preQueued->m_linkedNode;
 			}
-		} else if (qscene->sceneType == QueuedScene::ShadowGen) {
-			if (r_terrainShadow->getBool()) {
+		}
+		renderTo(qscene->subScenes[i], node);
+	}
+}
+
+void RenderWorld::renderTo( QueuedScene* qscene, QuadNode* node )
+{
+	m_frameNum++;
+
+	qscene->worldFrameId = m_frameNum;
+
+	s_drawTerrain = true;
+	s_drawActor = true;
+
+	m_updateShadowVis = qscene->isLastCsmSplits();
+
+	if (qscene->sceneType == QueuedScene::Reflection) {
+		int ref = r_reflection->getInteger();
+
+		s_drawTerrain = false;
+		s_drawActor = false;
+
+		switch (ref) {
+			case 2:
+				s_drawActor = true;
+			case 1:
 				s_drawTerrain = true;
-			} else {
-				s_drawTerrain = false;
-			}
+		}
+	} else if (qscene->sceneType == QueuedScene::ShadowGen) {
+		if (r_terrainShadow->getBool()) {
+			s_drawTerrain = true;
 		} else {
-			m_visFrameId++;
+			s_drawTerrain = false;
 		}
-
-		if (!r_actor->getBool()) {
-			s_drawActor = false;
-		}
-
-		const RenderCamera& cam = qscene->camera;
-
-		// outdoor environment
-		if (m_outdoorEnv) {
-			if (qscene->sceneType == QueuedScene::WorldMain) {
-				updateExposure(qscene);
-				m_outdoorEnv->update(qscene, Plane::Cross);
-			} else {
-				qscene->exposure = m_lastExposure;
-			}
-
-			qscene->addActor(m_outdoorEnv);
-			m_outdoorEnv->issueToQueue(qscene);
-
-			if (m_shadowDir != m_outdoorEnv->getGlobalLight()->getGlobalLightDirection()) {
-				m_shadowDir = m_outdoorEnv->getGlobalLight()->getGlobalLightDirection();
-				m_shadowFrameId++;
-			}
-		}
-
-		// terrain
-		if (m_terrain && r_terrain->getBool() && s_drawTerrain) {
-			if (qscene->sceneType == QueuedScene::WorldMain) {
-				m_terrain->update(qscene, Plane::Cross);
-			}
-#if 0
-			Primitives prims = m_terrain->getViewedPrimitives();
-
-			for (size_t i = 0; i < prims.size(); i++) {
-				qscene->addInteraction(0, prims[i]);
-			}
-#else
-			m_terrain->issueToQueue(qscene);
-#endif
-		}
-
-		bool frustumCull = r_frustumCull->getBool();
-
-		Plane::Side side;
-		if (frustumCull) {
-			side = Plane::Cross;
-		} else {
-			side = Plane::Front;
-		}
-
-		if (s_drawActor) {
-			markVisible_r(qscene, node, side);
-		}
-
-		// issue actor manager
-		for (int i = 0; i < g_renderSystem->getNumEntityManager(); i++) {
-			IEntityManager* am = g_renderSystem->getEntityManager(i);
-			AX_ASSERT(am);
-
-			am->issueToQueue(qscene);
-		}
-
-		qscene->finalProcess();
+	} else {
+		m_visFrameId++;
 	}
 
-	// mark visible
-	void RenderWorld::markVisible_r(QueuedScene* qscene, QuadNode* node, Plane::Side parentSide) {
-		if (node == NULL)
-			return;
+	if (!r_actor->getBool()) {
+		s_drawActor = false;
+	}
 
-		if (node->bbox.empty()) {
-			return;
+	const RenderCamera& cam = qscene->camera;
+
+	// outdoor environment
+	if (m_outdoorEnv) {
+		if (qscene->sceneType == QueuedScene::WorldMain) {
+			updateExposure(qscene);
+			m_outdoorEnv->update(qscene, Plane::Cross);
+		} else {
+			qscene->exposure = m_lastExposure;
 		}
 
-		const RenderCamera& cam = qscene->camera;
+		qscene->addActor(m_outdoorEnv);
+		m_outdoorEnv->issueToQueue(qscene);
 
-		Plane::Side side = parentSide;
-		
-		if (side == Plane::Cross) {
-			side = cam.checkBox(node->bbox);
-			if (side == Plane::Back) {
-				return;
+		if (m_shadowDir != m_outdoorEnv->getGlobalLight()->getGlobalLightDirection()) {
+			m_shadowDir = m_outdoorEnv->getGlobalLight()->getGlobalLightDirection();
+			m_shadowFrameId++;
+		}
+	}
+
+	// terrain
+	if (m_terrain && r_terrain->getBool() && s_drawTerrain) {
+		if (qscene->sceneType == QueuedScene::WorldMain) {
+			m_terrain->update(qscene, Plane::Cross);
+		}
+#if 0
+		Primitives prims = m_terrain->getViewedPrimitives();
+
+		for (size_t i = 0; i < prims.size(); i++) {
+			qscene->addInteraction(0, prims[i]);
+		}
+#else
+		m_terrain->issueToQueue(qscene);
+#endif
+	}
+
+	bool frustumCull = r_frustumCull->getBool();
+
+	Plane::Side side;
+	if (frustumCull) {
+		side = Plane::Cross;
+	} else {
+		side = Plane::Front;
+	}
+
+	if (s_drawActor) {
+		markVisible_r(qscene, node, side);
+	}
+
+	// issue entity manager
+	for (int i = 0; i < g_renderSystem->getNumEntityManager(); i++) {
+		IEntityManager* am = g_renderSystem->getEntityManager(i);
+		AX_ASSERT(am);
+
+		am->issueToQueue(qscene);
+	}
+
+	qscene->finalProcess();
+}
+
+// mark visible
+void RenderWorld::markVisible_r(QueuedScene* qscene, QuadNode* node, Plane::Side parentSide) {
+	if (node == NULL)
+		return;
+
+	if (node->bbox.empty()) {
+		return;
+	}
+
+	const RenderCamera& cam = qscene->camera;
+
+	Plane::Side side = parentSide;
+	
+	if (side == Plane::Cross) {
+		side = cam.checkBox(node->bbox);
+		if (side == Plane::Back) {
+			return;
+		}
+	}
+
+	for (RenderEntity* la = node->linkHead.getNext(); la; la = la->m_nodeLink.getNext()) {
+		if (qscene->sceneType == QueuedScene::ShadowGen && qscene->sourceLight->type == RenderLight::kGlobal) {
+			if (la->isCsmCulled()) {
+				g_statistic->incValue(stat_csmCulled);
+				continue;
+			} else {
+				g_statistic->incValue(stat_csmPassed);
 			}
 		}
 
-		for (RenderEntity* la = node->linkHead.getNext(); la; la = la->m_nodeLink.getNext()) {
-			if (qscene->sceneType == QueuedScene::ShadowGen && qscene->sourceLight->type == RenderLight::kGlobal) {
-				if (la->isCsmCulled()) {
-					g_statistic->incValue(stat_csmCulled);
-					continue;
-				} else {
-					g_statistic->incValue(stat_csmPassed);
-				}
-			}
-
-			const BoundingBox& bbox = la->m_linkedBbox;
-			// if node is cross frustum, we check actor's bbox
-			Plane::Side actorSide = side;
-			if (side == Plane::Cross && r_cullActor->getBool()) {
-				actorSide = cam.checkBox(bbox);
-				if ( actorSide == Plane::Back) {
-					continue;
-				}
-			}
-
-			if (qscene->sceneType == QueuedScene::WorldMain) {
-				la->update(qscene, actorSide);
-
-				if (la->m_queryCulled)
-					continue;
-			}
-
-			if (m_updateShadowVis) {
-				la->updateCsm(qscene, actorSide);
-			}
-
-			if (la->m_viewDistCulled)
-				continue;
-
-			// check if is light
-			if (la->getKind() == RenderEntity::kLight || s_drawActor) {
-				la->m_queued = qscene->addActor(la);
-			}
-
-			if (!s_drawActor) {
+		const BoundingBox& bbox = la->m_linkedBbox;
+		// if node is cross frustum, we check entity's bbox
+		Plane::Side actorSide = side;
+		if (side == Plane::Cross && r_cullActor->getBool()) {
+			actorSide = cam.checkBox(bbox);
+			if ( actorSide == Plane::Back) {
 				continue;
 			}
+		}
+
+		if (qscene->sceneType == QueuedScene::WorldMain) {
+			la->update(qscene, actorSide);
+
+			if (la->m_queryCulled)
+				continue;
+		}
+
+		if (m_updateShadowVis) {
+			la->updateCsm(qscene, actorSide);
+		}
+
+		if (la->m_viewDistCulled)
+			continue;
+
+		// check if is light
+		if (la->getKind() == RenderEntity::kLight || s_drawActor) {
+			la->m_queued = qscene->addActor(la);
+		}
+
+		if (!s_drawActor) {
+			continue;
+		}
 
 #if 0
  			Primitives prims = la->actor->getViewedPrimitives();
 
-			for (size_t i = 0; i < prims.size(); i++) {
-				qscene->addInteraction(la->queued, prims[i]);
-			}
+		for (size_t i = 0; i < prims.size(); i++) {
+			qscene->addInteraction(la->queued, prims[i]);
+		}
 #endif
-			la->issueToQueue(qscene);
-		}
-
-		if (node->children[0]) {
-			markVisible_r(qscene, node->children[0], side);
-			markVisible_r(qscene, node->children[1], side);
-			markVisible_r(qscene, node->children[2], side);
-			markVisible_r(qscene, node->children[3], side);
-		} else {
-		}
-
-		if (!r_showNode->getBool())
-			return;
-
-		Rgba color = Rgba::Green;
-
-		if (node->children[0])
-			color *= 0.5f;
-
-		LinePrim* line = LinePrim::createWorldBoundingBox(LinePrim::HintFrame, node->bbox, color);
-		qscene->addHelperInteraction(0, line);
+		la->issueToQueue(qscene);
 	}
 
-	void RenderWorld::generateQuadNode() {
-		uint_t size = m_worldSize;
-
-		// setup root
-		m_rootNode = new QuadNode();
-		m_rootNode->dist[0] = 0;
-		m_rootNode->dist[1] = 0;
-		m_rootNode->parent = 0;
-		m_rootNode->size = size;
-
-		generateChildNode_r(m_rootNode);
+	if (node->children[0]) {
+		markVisible_r(qscene, node->children[0], side);
+		markVisible_r(qscene, node->children[1], side);
+		markVisible_r(qscene, node->children[2], side);
+		markVisible_r(qscene, node->children[3], side);
+	} else {
 	}
 
-	void RenderWorld::generateChildNode_r(QuadNode* node) {
-		float size = node->size * 0.5f;
-		float offset = size * 0.5f;
+	if (!r_showNode->getBool())
+		return;
 
-		// first quadrant
-		QuadNode* child = new QuadNode();
-		child->dist[0] = node->dist[0] + offset;
-		child->dist[1] = node->dist[1] + offset;
-		child->size = size;
-		child->parent = node;
-		node->children[0] = child;
+	Rgba color = Rgba::Green;
 
-		// 2nd quadrant
-		child = new QuadNode();
-		child->dist[0] = node->dist[0] - offset;
-		child->dist[1] = node->dist[1] + offset;
-		child->size = size;
-		child->parent = node;
-		node->children[1] = child;
+	if (node->children[0])
+		color *= 0.5f;
 
-		// 3rd quadrant
-		child = new QuadNode();
-		child->dist[0] = node->dist[0] - offset;
-		child->dist[1] = node->dist[1] - offset;
-		child->size = size;
-		child->parent = node;
-		node->children[2] = child;
+	LinePrim* line = LinePrim::createWorldBoundingBox(LinePrim::HintFrame, node->bbox, color);
+	qscene->addHelperInteraction(0, line);
+}
 
-		// 4th quadrant
-		child = new QuadNode();
-		child->dist[0] = node->dist[0] + offset;
-		child->dist[1] = node->dist[1] - offset;
-		child->size = size;
-		child->parent = node;
-		node->children[3] = child;
+void RenderWorld::generateQuadNode() {
+	uint_t size = m_worldSize;
 
-		if (size > MininumNodeSize) {
-			generateChildNode_r(node->children[0]);
-			generateChildNode_r(node->children[1]);
-			generateChildNode_r(node->children[2]);
-			generateChildNode_r(node->children[3]);
-		}
+	// setup root
+	m_rootNode = new QuadNode();
+	m_rootNode->dist[0] = 0;
+	m_rootNode->dist[1] = 0;
+	m_rootNode->parent = 0;
+	m_rootNode->size = size;
+
+	generateChildNode_r(m_rootNode);
+}
+
+void RenderWorld::generateChildNode_r(QuadNode* node) {
+	float size = node->size * 0.5f;
+	float offset = size * 0.5f;
+
+	// first quadrant
+	QuadNode* child = new QuadNode();
+	child->dist[0] = node->dist[0] + offset;
+	child->dist[1] = node->dist[1] + offset;
+	child->size = size;
+	child->parent = node;
+	node->children[0] = child;
+
+	// 2nd quadrant
+	child = new QuadNode();
+	child->dist[0] = node->dist[0] - offset;
+	child->dist[1] = node->dist[1] + offset;
+	child->size = size;
+	child->parent = node;
+	node->children[1] = child;
+
+	// 3rd quadrant
+	child = new QuadNode();
+	child->dist[0] = node->dist[0] - offset;
+	child->dist[1] = node->dist[1] - offset;
+	child->size = size;
+	child->parent = node;
+	node->children[2] = child;
+
+	// 4th quadrant
+	child = new QuadNode();
+	child->dist[0] = node->dist[0] + offset;
+	child->dist[1] = node->dist[1] - offset;
+	child->size = size;
+	child->parent = node;
+	node->children[3] = child;
+
+	if (size > MininumNodeSize) {
+		generateChildNode_r(node->children[0]);
+		generateChildNode_r(node->children[1]);
+		generateChildNode_r(node->children[2]);
+		generateChildNode_r(node->children[3]);
 	}
+}
 
 
-	void RenderWorld::linkActor(RenderEntity* actor) {
-		actor->m_linkedBbox = actor->getBoundingBox();
-		actor->m_linkedExtends = actor->m_linkedBbox.getExtends().getLength();
-		actor->m_linkedFrame = m_visFrameId;
+void RenderWorld::linkEntity(RenderEntity* entity) {
+	entity->m_linkedBbox = entity->getBoundingBox();
+	entity->m_linkedExtends = entity->m_linkedBbox.getExtends().getLength();
+	entity->m_linkedFrame = m_visFrameId;
 
-		const BoundingBox& bbox = actor->m_linkedBbox;
+	const BoundingBox& bbox = entity->m_linkedBbox;
 
-		// find quad node
-		QuadNode* node = m_rootNode;
-		while (1) {
-			if (node->children[0] == NULL)
-				break;
+	// find quad node
+	QuadNode* node = m_rootNode;
+	while (1) {
+		if (node->children[0] == NULL)
+			break;
 
-			if (bbox.min.x >= node->dist[0]) {
-				if (bbox.min.y >= node->dist[1]) {
-					node = node->children[0];
-				} else if (bbox.max.y <= node->dist[1]) {
-					node = node->children[3];
-				} else {
-					break;
-				}
-			} else if (bbox.max.x <= node->dist[0]) {
-				if (bbox.max.y <= node->dist[1]) {
-					node = node->children[2];
-				} else if (bbox.min.y >= node->dist[1]) {
-					node = node->children[1];
-				} else {
-					break;
-				}
+		if (bbox.min.x >= node->dist[0]) {
+			if (bbox.min.y >= node->dist[1]) {
+				node = node->children[0];
+			} else if (bbox.max.y <= node->dist[1]) {
+				node = node->children[3];
 			} else {
 				break;
 			}
+		} else if (bbox.max.x <= node->dist[0]) {
+			if (bbox.max.y <= node->dist[1]) {
+				node = node->children[2];
+			} else if (bbox.min.y >= node->dist[1]) {
+				node = node->children[1];
+			} else {
+				break;
+			}
+		} else {
+			break;
 		}
-
-		// link to it
-		actor->m_nodeLink.addToEnd(node->linkHead);
-		actor->m_linkedNode = node;
-
-		// expand node's boundingbox
-		node->expandBbox(bbox);
-
-		if (!actor->isLight())
-			node->frameUpdated(m_visFrameId);
 	}
 
-	void RenderWorld::unlinkActor(RenderEntity* la) {
-		QuadNode* node = la->m_linkedNode;
+	// link to it
+	entity->m_nodeLink.addToEnd(node->linkHead);
+	entity->m_linkedNode = node;
 
-		if (!la->isLight())
-			node->frameUpdated(m_visFrameId);
+	// expand node's boundingbox
+	node->expandBbox(bbox);
 
-		la->m_nodeLink.removeFromList();
+	if (!entity->isLight())
+		node->frameUpdated(m_visFrameId);
+}
+
+void RenderWorld::unlinkEntity(RenderEntity* la) {
+	QuadNode* node = la->m_linkedNode;
+
+	if (!la->isLight())
+		node->frameUpdated(m_visFrameId);
+
+	la->m_nodeLink.removeFromList();
+}
+
+void RenderWorld::updateExposure(QueuedScene* qscene) {
+	if (1 || !r_hdr->getBool()) {
+		qscene->m_histogramIndex = -1;
+		qscene->m_histogramQueryId = 0;
+		return;
 	}
-
-	void RenderWorld::updateExposure(QueuedScene* qscene) {
-		if (1 || !r_hdr->getBool()) {
-			qscene->m_histogramIndex = -1;
-			qscene->m_histogramQueryId = 0;
-			return;
-		}
 
 #if 0
-		Target* lasttarget = gRenderQueue->getQueryResultTarget();
-		if (lasttarget != qscene->camera.getTarget()) {
-			qscene->exposure = m_lastExposure;
-			return;
-		}
+	Target* lasttarget = gRenderQueue->getQueryResultTarget();
+	if (lasttarget != qscene->camera.getTarget()) {
+		qscene->exposure = m_lastExposure;
+		return;
+	}
 #endif
-		m_curHistogramIndex++;
-		qscene->m_histogramIndex = m_curHistogramIndex % HISTOGRAM_WIDTH;
+	m_curHistogramIndex++;
+	qscene->m_histogramIndex = m_curHistogramIndex % HISTOGRAM_WIDTH;
 //		qscene->m_histogramQueryId = m_histogramQueryId;
 
-		if (m_curHistogramIndex < HISTOGRAM_WIDTH + 3) {
-			return;
+	if (m_curHistogramIndex < HISTOGRAM_WIDTH + 3) {
+		return;
+	}
+
+	int resultIndex = (m_curHistogramIndex - 2) % HISTOGRAM_WIDTH;
+	int queryResult = -1; // gRenderQueue->getQueryResult(m_histogramQueryId);
+
+	if (queryResult >= 0) {
+		m_histogram[resultIndex] = queryResult;
+	} else {
+		qscene->exposure = m_lastExposure;
+		return;
+	}
+
+	int totalsamplers = 0;
+	for (int i = 0; i < HISTOGRAM_WIDTH; i++) {
+		totalsamplers += m_histogram[i];
+		m_histogramAccumed[i] = totalsamplers;
+	}
+
+	if (totalsamplers == 0) {
+		return;
+	}
+
+	float midexposure = 0;
+	float overexposure = 0;
+
+	int halfsamplers = totalsamplers / 2;
+	int s, e;
+	for (s = 0; s < HISTOGRAM_WIDTH; s++) {
+		if (m_histogramAccumed[s] > halfsamplers) {
+			break;
 		}
-
-		int resultIndex = (m_curHistogramIndex - 2) % HISTOGRAM_WIDTH;
-		int queryResult = -1; // gRenderQueue->getQueryResult(m_histogramQueryId);
-
-		if (queryResult >= 0) {
-			m_histogram[resultIndex] = queryResult;
-		} else {
-			qscene->exposure = m_lastExposure;
-			return;
+	}
+	for (e = HISTOGRAM_WIDTH-1; e >= 0; e--) {
+		if (m_histogramAccumed[e] < halfsamplers) {
+			break;
 		}
+	}
 
-		int totalsamplers = 0;
-		for (int i = 0; i < HISTOGRAM_WIDTH; i++) {
-			totalsamplers += m_histogram[i];
-			m_histogramAccumed[i] = totalsamplers;
+	float scale = float(s + e + 2) / HISTOGRAM_WIDTH;
+
+	midexposure = m_lastExposure * scale;
+
+	int overbrightsamplers = totalsamplers * 0.95f;
+
+	int i;
+	for (i = 0; i < HISTOGRAM_WIDTH; i++) {
+		if (m_histogramAccumed[i] > overbrightsamplers) {
+			break;
 		}
+	}
 
-		if (totalsamplers == 0) {
-			return;
+	if (i >= HISTOGRAM_WIDTH - 1) {
+		scale = (float)m_histogram[HISTOGRAM_WIDTH - 1] / totalsamplers;
+		scale *= 20.0f;
+		if (scale > 1) {
+			scale = 1 + logf(scale);
 		}
-
-		float midexposure = 0;
-		float overexposure = 0;
-
-		int halfsamplers = totalsamplers / 2;
-		int s, e;
-		for (s = 0; s < HISTOGRAM_WIDTH; s++) {
-			if (m_histogramAccumed[s] > halfsamplers) {
-				break;
-			}
-		}
-		for (e = HISTOGRAM_WIDTH-1; e >= 0; e--) {
-			if (m_histogramAccumed[e] < halfsamplers) {
-				break;
-			}
-		}
-
-		float scale = float(s + e + 2) / HISTOGRAM_WIDTH;
-
-		midexposure = m_lastExposure * scale;
-
-		int overbrightsamplers = totalsamplers * 0.95f;
-
-		int i;
-		for (i = 0; i < HISTOGRAM_WIDTH; i++) {
-			if (m_histogramAccumed[i] > overbrightsamplers) {
-				break;
-			}
-		}
-
-		if (i >= HISTOGRAM_WIDTH - 1) {
-			scale = (float)m_histogram[HISTOGRAM_WIDTH - 1] / totalsamplers;
-			scale *= 20.0f;
-			if (scale > 1) {
-				scale = 1 + logf(scale);
-			}
-		} else {
-			scale = float(i+1) / HISTOGRAM_WIDTH;
-		}
+	} else {
+		scale = float(i+1) / HISTOGRAM_WIDTH;
+	}
 
 
 //		scale = float(i+1) / HISTOGRAM_WIDTH * 1.2f;
 
-		overexposure = m_lastExposure * scale;
+	overexposure = m_lastExposure * scale;
 
 //		float disired = std::max(midexposure, overexposure);
-		float disired = midexposure;
+	float disired = midexposure;
 
-		disired = Math::clamp(disired, 0.25f, 4.0f);
+	disired = Math::clamp(disired, 0.25f, 4.0f);
 
-		if (r_exposure->getFloat()) {
-			disired = r_exposure->getFloat();
-		}
-
-		float frametime = qscene->camera.getFrameTime();
-		float delta = fabs(disired - m_lastExposure) * frametime / 1000;
-		float exposure = Math::clamp(disired, m_lastExposure * (1-delta), m_lastExposure * (1+delta));
-		qscene->exposure = exposure;
-		m_lastExposure = qscene->exposure;
+	if (r_exposure->getFloat()) {
+		disired = r_exposure->getFloat();
 	}
+
+	float frametime = qscene->camera.getFrameTime();
+	float delta = fabs(disired - m_lastExposure) * frametime / 1000;
+	float exposure = Math::clamp(disired, m_lastExposure * (1-delta), m_lastExposure * (1+delta));
+	qscene->exposure = exposure;
+	m_lastExposure = qscene->exposure;
+}
 
 
 AX_END_NAMESPACE

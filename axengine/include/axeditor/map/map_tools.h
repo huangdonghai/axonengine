@@ -164,7 +164,7 @@ public:
 	virtual void doRelease(int x, int y);
 
 protected:
-	Map::LayerGen* m_layerGen;
+	MapLayerGen* m_layerGen;
 	Image* m_oldPixel;
 };
 
@@ -197,7 +197,7 @@ public:
 	virtual void doRender(const RenderCamera& camera) {}
 
 private:
-	MapStatic* m_actor;
+	MapStatic* m_agent;
 };
 
 //--------------------------------------------------------------------------
@@ -217,7 +217,7 @@ public:
 	virtual void doRender(const RenderCamera& camera);
 
 private:
-	MapActor* m_actor;
+	MapActor* m_agent;
 };
 
 //--------------------------------------------------------------------------
@@ -238,7 +238,7 @@ public:
 	virtual void doRender(const RenderCamera& camera) {}
 
 private:
-	MapSpeedTree* m_actor;
+	MapSpeedTree* m_agent;
 };
 #endif // AX_CONFIG_OPTION_USE_SPEEDTREE_40
 

@@ -10,7 +10,7 @@ read the license and understand and accept it fully.
 
 #include "../private.h"
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 	Statistic::Statistic()
 		: m_numValues(0)
@@ -82,4 +82,4 @@ namespace Axon {
 		return m_valueNames[index];
 	}
 
-} // namespace Axon
+AX_END_NAMESPACE

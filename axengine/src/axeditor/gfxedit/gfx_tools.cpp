@@ -120,4 +120,22 @@ GfxAgent * ParticleCreationTool::create()
 	return new GfxAgent(m_gfxContext, GfxObject::kParticleEmitter);
 }
 
+
+//--------------------------------------------------------------------------
+RibbonCreationTool::RibbonCreationTool( GfxContext *ctx )
+	: GfxObjectCreationTool(ctx)
+{
+
+}
+
+RibbonCreationTool::~RibbonCreationTool()
+{
+
+}
+
+GfxAgent * RibbonCreationTool::create()
+{
+	return new GfxAgent(m_gfxContext, GfxObject::kRibbonEmitter);
+}
+
 AX_END_NAMESPACE

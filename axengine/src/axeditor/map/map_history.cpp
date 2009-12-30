@@ -56,8 +56,8 @@ AX_BEGIN_NAMESPACE
 	// class TerrainMaterialDefHis, for terrain material def editing
 	//--------------------------------------------------------------------------
 
-	TerrainMaterialDefHis::TerrainMaterialDefHis(Map::MaterialDef* old, Map::MaterialDef* newdata, MapTerrain* terrain)
-		: MapHistory("MaterialDef Edit")
+	TerrainMaterialDefHis::TerrainMaterialDefHis(MapMaterialDef* old, MapMaterialDef* newdata, MapTerrain* terrain)
+		: MapHistory("MapMaterialDef Edit")
 	{
 		m_olddata = old;
 		m_newdata = newdata;
@@ -86,7 +86,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 	int TerrainMaterialDefHis::getMemoryUsed() {
-		return sizeof(Map::MaterialDef) * 2;
+		return sizeof(MapMaterialDef) * 2;
 	}
 
 	//--------------------------------------------------------------------------
@@ -112,7 +112,7 @@ AX_BEGIN_NAMESPACE
 		if (!terrain)
 			return;
 
-		Map::LayerGen* lg = terrain->getLayerGenById(m_layerId);
+		MapLayerGen* lg = terrain->getLayerGenById(m_layerId);
 		if (!lg)
 			return;
 
@@ -126,7 +126,7 @@ AX_BEGIN_NAMESPACE
 		if (!terrain)
 			return;
 
-		Map::LayerGen* lg = terrain->getLayerGenById(m_layerId);
+		MapLayerGen* lg = terrain->getLayerGenById(m_layerId);
 		if (!lg)
 			return;
 

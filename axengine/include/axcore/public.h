@@ -46,7 +46,7 @@ read the license and understand and accept it fully.
 #include "./singleton/coresystem.h"
 #include "./inputoutput/materialfile.h"
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 	// global object
 	AX_API extern FileSystem* g_fileSystem;
@@ -70,7 +70,7 @@ namespace Axon {
 	AX_API void axCoreInit(int argc, char* argv[]);
 	AX_API void axCoreQuit();
 
-} // namespace Axon
+AX_END_NAMESPACE
 
 #undef AX_API
 

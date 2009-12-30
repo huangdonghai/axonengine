@@ -13,15 +13,46 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-class GfxView : public View {
+class GfxView : public View
+{
+	friend class GfxContext;
+
 public:
 	GfxView(GfxContext* ctx);
 	virtual ~GfxView();
 
 protected:
+	// implement View
+	virtual void preUpdate() { updateMove(); }
 	virtual void doRender();
 
+	// implement IInputHandler
+	virtual void handleEvent(InputEvent* e);
+	virtual void onKeyDown(InputEvent* e);
+	virtual void onKeyUp(InputEvent* e);
+	virtual void onMouseDown(InputEvent* e);
+	virtual void onMouseUp(InputEvent* e);
+	virtual void onMouseMove(InputEvent* e);
+	virtual void onMouseWheel(InputEvent* e);
+
+	void updateMove();
+
 private:
+	enum Tracking {
+		kNone, kRotateHead, kRotate, kPan, kZoom, kHorizonPan
+	};
+
+	enum Moving {
+		Accel = 1, Front = 2, Left = 4, Right = 8, Back = 16,
+		MoveMask = Front + Left + Right + Back
+	};
+
+	Tracking m_tracking;
+	int m_moving;
+	Point m_trackingPos;
+	Vector3 m_trackingCenter;
+	bool m_isTrackingCenterSet;
+	LinePrim *m_gridLines;
 };
 
 AX_END_NAMESPACE

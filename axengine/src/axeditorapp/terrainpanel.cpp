@@ -40,8 +40,8 @@ TerrainPanel::TerrainPanel(QWidget *parent)
 #if 0
 	mModifyTerrainPanel = new ModifyTerrainPanel();
 	mTerrainPaintPanel = new TerrainPaintPanel();
-	ui.rollupWidget->m_addPage(mModifyTerrainPanel, tr("Modify Terrain"));
-	ui.rollupWidget->m_addPage(mTerrainPaintPanel, tr("Paint Terrain"));
+	ui.rollupWidget->m_addPage(mModifyTerrainPanel, tr("Modify MapTerrain"));
+	ui.rollupWidget->m_addPage(mTerrainPaintPanel, tr("Paint MapTerrain"));
 #else
 	ui.rollupWidget->initialize();
 #endif
@@ -91,7 +91,7 @@ TerrainPanel::TerrainPanel(QWidget *parent)
 	ui.rollupWidget->setAllPagesVisible(false);
 
 	// set envprops
-	Map::EnvDef* def = g_mapContext->getGameWorld()->getEnvironment();
+	MapEnvDef* def = g_mapContext->getGameWorld()->getEnvironment();
 	ui.envProps->initFromObject(def);
 
 	g_mapContext->attachObserver(this);
@@ -111,7 +111,7 @@ void TerrainPanel::doNotify(IObservable* subject, int arg) {
 		return;
 
 	if (arg & Context::EnvironmentChanged) {
-		Map::EnvDef* def = g_mapContext->getGameWorld()->getEnvironment();
+		MapEnvDef* def = g_mapContext->getGameWorld()->getEnvironment();
 		ui.envProps->initFromObject(def);
 	}
 
@@ -139,18 +139,18 @@ void TerrainPanel::doNotify(IObservable* subject, int arg) {
 	}
 #endif
 
-	Map::Terrain* terrain = context->getTerrain();
+	MapTerrain* terrain = context->getTerrain();
 
 	if (!terrain)
 		return;
 
-	Map::MaterialDef* matdef = terrain->getMaterialDef();
+	MapMaterialDef* matdef = terrain->getMaterialDef();
 
 	if (!matdef)
 		return;
 
 	for (int i = 0; i < matdef->getNumLayers(); i++) {
-		Map::LayerDef* l = matdef->getLayerDef(i);
+		MapLayerDef* l = matdef->getLayerDef(i);
 		QTreeWidgetItem* item = new QTreeWidgetItem(ui.layerList);
 		item->setText(0, u2q(matdef->getLayerDef(i)->name));
 		item->setData(0, Qt::UserRole, l->id);
@@ -251,7 +251,7 @@ void TerrainPanel::on_actionEnv_triggered()
 
 void TerrainPanel::on_applyEnv_clicked()
 {
-	Map::EnvDef* def = g_mapContext->getGameWorld()->getEnvironment();
+	MapEnvDef* def = g_mapContext->getGameWorld()->getEnvironment();
 	ui.envProps->applyToObject(def);
 
 	g_mapContext->getGameWorld()->updateEnvdef();
@@ -394,7 +394,7 @@ void TerrainPanel::on_tableWidget_itemChanged(QTableWidgetItem* item)
 
 void TerrainPanel::on_numGrassPerLevel_editingFinished()
 {
-	Map::Terrain* terrain = g_mapContext->getTerrain();
+	MapTerrain* terrain = g_mapContext->getTerrain();
 	if (!terrain)
 	{
 		return;
@@ -403,7 +403,7 @@ void TerrainPanel::on_numGrassPerLevel_editingFinished()
 
 void TerrainPanel::on_grassTypeAdd_released()
 {
-	Map::Terrain* terrain = g_mapContext->getTerrain();
+	MapTerrain* terrain = g_mapContext->getTerrain();
 	if (!terrain)
 	{
 		return;
@@ -412,7 +412,7 @@ void TerrainPanel::on_grassTypeAdd_released()
 
 void TerrainPanel::on_grassTypeDelete_released()
 {
-	Map::Terrain* terrain = g_mapContext->getTerrain();
+	MapTerrain* terrain = g_mapContext->getTerrain();
 	if (!terrain)
 	{
 		return;
@@ -421,7 +421,7 @@ void TerrainPanel::on_grassTypeDelete_released()
 
 void TerrainPanel::on_grassTypes_itemSelectionChanged()
 {
-	Map::Terrain* terrain = g_mapContext->getTerrain();
+	MapTerrain* terrain = g_mapContext->getTerrain();
 	if (!terrain)
 	{
 		return;
@@ -430,7 +430,7 @@ void TerrainPanel::on_grassTypes_itemSelectionChanged()
 
 void TerrainPanel::on_grassIncidence_valueChanged(double value)
 {
-	Map::Terrain* terrain = g_mapContext->getTerrain();
+	MapTerrain* terrain = g_mapContext->getTerrain();
 	if (!terrain)
 	{
 		return;
@@ -439,7 +439,7 @@ void TerrainPanel::on_grassIncidence_valueChanged(double value)
 
 void TerrainPanel::on_grassType_currentIndexChanged(int value)
 {
-	Map::Terrain* terrain = g_mapContext->getTerrain();
+	MapTerrain* terrain = g_mapContext->getTerrain();
 	if (!terrain)
 	{
 		return;
@@ -448,7 +448,7 @@ void TerrainPanel::on_grassType_currentIndexChanged(int value)
 
 void TerrainPanel::on_grassWidth_valueChanged(double value)
 {
-	Map::Terrain* terrain = g_mapContext->getTerrain();
+	MapTerrain* terrain = g_mapContext->getTerrain();
 	if (!terrain)
 	{
 		return;
@@ -457,7 +457,7 @@ void TerrainPanel::on_grassWidth_valueChanged(double value)
 
 void TerrainPanel::on_grassHeight_valueChanged(double value)
 {
-	Map::Terrain* terrain = g_mapContext->getTerrain();
+	MapTerrain* terrain = g_mapContext->getTerrain();
 	if (!terrain)
 	{
 		return;
@@ -466,7 +466,7 @@ void TerrainPanel::on_grassHeight_valueChanged(double value)
 
 void TerrainPanel::on_grassMinScale_valueChanged(double value)
 {
-	Map::Terrain* terrain = g_mapContext->getTerrain();
+	MapTerrain* terrain = g_mapContext->getTerrain();
 	if (!terrain)
 	{
 		return;
@@ -475,7 +475,7 @@ void TerrainPanel::on_grassMinScale_valueChanged(double value)
 
 void TerrainPanel::on_grassMaxScale_valueChanged(double value)
 {
-	Map::Terrain* terrain = g_mapContext->getTerrain();
+	MapTerrain* terrain = g_mapContext->getTerrain();
 	if (!terrain)
 	{
 		return;
@@ -484,7 +484,7 @@ void TerrainPanel::on_grassMaxScale_valueChanged(double value)
 
 void TerrainPanel::on_textureBtn_released()
 {
-	Map::Terrain* terrain = g_mapContext->getTerrain();
+	MapTerrain* terrain = g_mapContext->getTerrain();
 	if (!terrain)
 	{
 		return;
@@ -493,7 +493,7 @@ void TerrainPanel::on_textureBtn_released()
 
 void TerrainPanel::on_grassName_textEdited(QString text)
 {
-	Map::Terrain* terrain = g_mapContext->getTerrain();
+	MapTerrain* terrain = g_mapContext->getTerrain();
 	if (!terrain)
 	{
 		return;
@@ -502,7 +502,7 @@ void TerrainPanel::on_grassName_textEdited(QString text)
 
 void TerrainPanel::on_grassColor_colorChanged(const QColor& color)
 {
-	Map::Terrain* terrain = g_mapContext->getTerrain();
+	MapTerrain* terrain = g_mapContext->getTerrain();
 	if (!terrain)
 	{
 		return;
@@ -511,7 +511,7 @@ void TerrainPanel::on_grassColor_colorChanged(const QColor& color)
 
 void TerrainPanel::on_modelBtn_released()
 {
-	Map::Terrain* terrain = g_mapContext->getTerrain();
+	MapTerrain* terrain = g_mapContext->getTerrain();
 	if (!terrain)
 	{
 		return;
@@ -521,7 +521,7 @@ void TerrainPanel::on_modelBtn_released()
 
 void TerrainPanel::on_grassTransferZ_valueChanged(double value)
 {
-	Map::Terrain* terrain = g_mapContext->getTerrain();
+	MapTerrain* terrain = g_mapContext->getTerrain();
 	if (!terrain)
 	{
 		return;

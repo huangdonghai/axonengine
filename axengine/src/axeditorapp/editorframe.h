@@ -14,7 +14,7 @@ read the license and understand and accept it fully.
 #include "private.h"
 #include "frame.h"
 
-class EditorFrame : public QWidget, public IPanel, public IFrame, public Input::IEventSource
+class EditorFrame : public QWidget, public IPanel, public IViewFrame, public IInputSource
 {
 	Q_OBJECT
 
@@ -25,7 +25,7 @@ public:
 	// public function
 	View* getView() { return m_editorView; }
 
-	// implement IFrame
+	// implement IViewFrame
 	virtual RenderTarget* getRenderTarget();
 	virtual Rect getRect();
 	virtual void setCursor(CursorType cursor_type);
@@ -40,7 +40,7 @@ public:
 	virtual QString getTitle() { return u2q(m_editorView->getTitle()); }
 	virtual QWidget* getWidget() { return this; }
 
-	// implement IEventSource
+	// implement IInputSource
 	virtual void startCapture(InputSystem::CaptureMode capturemode);
 	virtual void process();
 	virtual void setVibration(float left, float right);
@@ -55,7 +55,7 @@ public:
 
 
 protected:
-	void translateMouseEvent(QMouseEvent* e, Axon::Input::Event* xe);
+	void translateMouseEvent(QMouseEvent* e, InputEvent* xe);
 	// implement QT event handler
 	virtual void paintEvent(QPaintEvent* pe);
 	virtual void mousePressEvent(QMouseEvent* e);
@@ -75,7 +75,7 @@ protected:
 	virtual bool winEvent (MSG * message, long * result);
 #endif
 
-	void issueEvent(QEvent* qe, Axon::Input::Event& xe);
+	void issueEvent(QEvent* qe, InputEvent& xe);
 
 private:
     View* m_editorView;

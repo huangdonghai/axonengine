@@ -14,7 +14,7 @@ read the license and understand and accept it fully.
 #define AX_PATH_SEP '/'
 #define AX_PATH_SEP_STR "/"
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 
 	struct FileInfo;
@@ -264,6 +264,6 @@ namespace Axon {
 		PakedFolder m_pakedFolders;
 	};
 
-} // namespace Axon
+AX_END_NAMESPACE
 
 #endif // AX_FILESYSTEM_H

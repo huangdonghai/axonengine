@@ -24,7 +24,7 @@ public:
 
 protected:
 	void initMaterialDef();
-	Map::LayerDef* getLayerDef(QTreeWidgetItem* item);
+	MapLayerDef* getLayerDef(QTreeWidgetItem* item);
 	void writeToDef(QTreeWidgetItem* item);
 	void writeCurrentDef();
 	void readFromDef(QTreeWidgetItem* item);
@@ -55,8 +55,8 @@ private slots:
 	void on_add_clicked();
 
 private:
-	Map::Terrain* m_terrain;
-	Map::MaterialDef* m_materialDef;
+	MapTerrain* m_terrain;
+	MapMaterialDef* m_materialDef;
 	Image* m_heightImage;
 	Image* m_slopeImage;
 	String m_baseImage;

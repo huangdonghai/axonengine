@@ -21,7 +21,7 @@ http://www.intel.com/cd/ids/developer/asmo-na/eng/275339.htm
 
 #include "../private.h"
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 // Copyright (c) 2005 Intel Corporation 
 // All Rights Reserved
@@ -952,4 +952,4 @@ end_fpu_type:
 #endif
 }
 
-} // namespace Axon
+AX_END_NAMESPACE

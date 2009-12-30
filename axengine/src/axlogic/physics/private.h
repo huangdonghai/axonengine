@@ -20,9 +20,9 @@ read the license and understand and accept it fully.
 #include "physics_player.h"
 #include "util.h"
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
-} // namespace Axon
+AX_END_NAMESPACE
 
 
 #endif // AX_PHYSICS_PRIVATE_H

@@ -251,7 +251,7 @@ static const Axon::ulonglong_t __msOfMinute = 60 * 1000;
 static const Axon::ulonglong_t __msOfSecond = 1000;
 
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 	DateTime::DateTime() {
 	}
@@ -676,4 +676,4 @@ namespace Axon {
 			return 0;  
 	}
 
-} // namespace Axon
+AX_END_NAMESPACE

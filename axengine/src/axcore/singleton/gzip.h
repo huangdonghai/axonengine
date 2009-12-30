@@ -13,7 +13,7 @@ read the license and understand and accept it fully.
 #include <zlib.h>
 //#include <zutil.h>
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 class Gzip {
 public:
@@ -77,6 +77,6 @@ private:
 
 };
 
-} // namespace Axon
+AX_END_NAMESPACE
 
 #endif // AX_GZIP_H

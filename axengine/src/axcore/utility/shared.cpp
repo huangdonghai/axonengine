@@ -10,7 +10,7 @@ read the license and understand and accept it fully.
 
 #include "../private.h"
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 struct FilterInfo {
 	enum FilterType {
@@ -281,7 +281,7 @@ StringSeq TokenizeSeq(const String& in, char split) {
 
 
 
-} // namespace Axon
+AX_END_NAMESPACE
 
 
 

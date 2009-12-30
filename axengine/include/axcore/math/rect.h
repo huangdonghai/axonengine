@@ -12,7 +12,7 @@ read the license and understand and accept it fully.
 #ifndef AX_CORE_RECT_H
 #define AX_CORE_RECT_H
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 	// 2D screen coordinate rectangle
 	struct AX_API Rect {
@@ -295,7 +295,7 @@ namespace Axon {
 		return v;
 	}
 
-} // namespace Axon
+AX_END_NAMESPACE
 
 #endif // end guardian
 

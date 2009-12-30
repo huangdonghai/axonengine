@@ -11,7 +11,7 @@ read the license and understand and accept it fully.
 #ifndef AX_OS_UTIL_H
 #define AX_OS_UTIL_H
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 	struct FileInfo;
 	typedef Sequence<FileInfo> FileInfoSeq;
@@ -84,6 +84,6 @@ namespace Axon {
 		}
 	};
 
-} // namespace Axon
+AX_END_NAMESPACE
 
 #endif // AX_OS_UTIL_H

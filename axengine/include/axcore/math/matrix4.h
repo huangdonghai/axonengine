@@ -12,7 +12,7 @@ read the license and understand and accept it fully.
 #ifndef AX_CORE_MATRIX4_H
 #define AX_CORE_MATRIX4_H
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 	//------------------------------------------------------------------------------
 	// Matrix4
@@ -762,7 +762,7 @@ namespace Axon {
 
 		return out;
 	}
-} // namespace Axon
+AX_END_NAMESPACE
 
 #endif // end guardian
 

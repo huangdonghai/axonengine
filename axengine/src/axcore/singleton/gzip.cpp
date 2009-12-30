@@ -22,7 +22,7 @@ read the license and understand and accept it fully.
 #define COMMENT 0x10 /* bit 4 set: file comment present */
 #define RESERVED 0xE0 /* bits 5..7: reserved */
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 static const int gz_magic[2] = {0x1f, 0x8b}; /* gzip magic header */
 static const int t_nBufferLength = 1024;
@@ -417,4 +417,4 @@ Ungzip::destroy() {
 	return err;
 }
 
-} // namespace Axon
+AX_END_NAMESPACE

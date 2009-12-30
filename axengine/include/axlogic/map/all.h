@@ -16,8 +16,4 @@ read the license and understand and accept it fully.
 #include "river.h"
 #include "terrain.h"
 
-namespace Axon {
-	typedef Map::Terrain MapTerrain;
-}
-
 #endif

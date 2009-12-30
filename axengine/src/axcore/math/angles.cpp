@@ -9,7 +9,7 @@ read the license and understand and accept it fully.
 
 #include "../private.h"
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 	void Angles::toVectors(Vector3* forward, Vector3* left, Vector3* up) const
 	{
@@ -118,5 +118,5 @@ namespace Axon {
 	}
 
 
-} // namespace Axon
+AX_END_NAMESPACE
 

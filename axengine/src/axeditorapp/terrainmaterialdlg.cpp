@@ -44,13 +44,13 @@ void TerrainMaterialDlg::initMaterialDef() {
 	if (m_terrain) {
 		m_materialDef = m_terrain->getMaterialDef()->clone();
 	} else {
-		m_materialDef = new Map::MaterialDef();
+		m_materialDef = new MapMaterialDef();
 	}
 
 	ui.layerList->clear();
 
 	for (int i = 0; i < m_materialDef->getNumLayers(); i++) {
-		Map::LayerDef* l = m_materialDef->getLayerDef(i);
+		MapLayerDef* l = m_materialDef->getLayerDef(i);
 
 		QTreeWidgetItem* item = new QTreeWidgetItem(ui.layerList, QStringList(u2q(l->name)));
 		item->setData(0, Qt::UserRole, l->id);
@@ -62,7 +62,7 @@ void TerrainMaterialDlg::initMaterialDef() {
 //	on_layerList_currentItemChanged(item, nullptr);
 }
 
-Map::LayerDef* TerrainMaterialDlg::getLayerDef(QTreeWidgetItem* item) {
+MapLayerDef* TerrainMaterialDlg::getLayerDef(QTreeWidgetItem* item) {
 	int id = item->data(0, Qt::UserRole).toInt();
 
 	return m_materialDef->findLayerDefById(id);
@@ -72,7 +72,7 @@ void TerrainMaterialDlg::writeToDef(QTreeWidgetItem* item) {
 	if (!item)
 		return;
 
-	Map::LayerDef* l = getLayerDef(item);
+	MapLayerDef* l = getLayerDef(item);
 
 	if (!l) return;
 
@@ -96,7 +96,7 @@ void TerrainMaterialDlg::readFromDef(QTreeWidgetItem* item) {
 	if (!item)
 		return;
 
-	Map::LayerDef* l = getLayerDef(item);
+	MapLayerDef* l = getLayerDef(item);
 
 	if (!l) return;
 
@@ -180,7 +180,7 @@ void TerrainMaterialDlg::on_add_clicked()
 	if (ui.layerList->topLevelItemCount() >= Map::MaxLayers)
 		return;
 
-	Map::LayerDef* layer = m_materialDef->createLayerDef();
+	MapLayerDef* layer = m_materialDef->createLayerDef();
 
 	if (!layer)
 		return;
@@ -199,7 +199,7 @@ void TerrainMaterialDlg::on_del_clicked()
 	if (!item)
 		return;
 
-	Map::LayerDef* l = getLayerDef(item);
+	MapLayerDef* l = getLayerDef(item);
 
 	if (!l)
 		return;
@@ -328,7 +328,7 @@ void TerrainMaterialDlg::on_layerList_itemChanged(QTreeWidgetItem* item,int colu
 	if (column != 0)
 		return;
 
-	Map::LayerDef* l = getLayerDef(item);
+	MapLayerDef* l = getLayerDef(item);
 
 	if (!l) return;
 

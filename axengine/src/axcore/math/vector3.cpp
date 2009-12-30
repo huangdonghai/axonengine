@@ -9,7 +9,7 @@ read the license and understand and accept it fully.
 
 #include "../private.h"
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 	const Vector3 Vector3::One = Vector3(1,1,1);
 	const Vector3 Vector3::Zero = Vector3(0,0,0);
@@ -26,4 +26,4 @@ namespace Axon {
 		return v == 3;
 	}
 
-} // namespace Axon
+AX_END_NAMESPACE

@@ -10,7 +10,7 @@ read the license and understand and accept it fully.
 
 #include "../private.h"
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 	/*
 	 * Copyright 2001-2004 Unicode, Inc.
@@ -1129,4 +1129,4 @@ namespace Axon {
 		return true;
 	}
 
-} // namespace Axon
+AX_END_NAMESPACE

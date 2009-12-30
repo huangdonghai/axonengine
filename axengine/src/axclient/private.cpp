@@ -9,7 +9,7 @@ read the license and understand and accept it fully.
 
 #include "private.h"
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 	AX_DECLARE_MODULE(axopengl);
 	AX_DECLARE_MODULE(axdirect3d9);
@@ -138,4 +138,4 @@ namespace Axon {
 		SafeDelete(g_renderQueue);
 	}
 
-} // namespace Axon
+AX_END_NAMESPACE

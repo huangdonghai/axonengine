@@ -18,7 +18,7 @@ read the license and understand and accept it fully.
 #include <windows.h>
 
 #endif
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 	void PathUtil::splitPath(const String& path, String& dir, String& fname, String& ext) {
 		dir = path;
@@ -479,5 +479,5 @@ namespace Axon {
 		return ret;
 	}
 
-} // namespace Axon
+AX_END_NAMESPACE
 

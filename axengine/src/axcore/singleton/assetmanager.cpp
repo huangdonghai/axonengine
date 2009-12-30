@@ -11,7 +11,7 @@ read the license and understand and accept it fully.
 #include "../private.h"
 
 #if 0
-namespace Axon {
+AX_BEGIN_NAMESPACE
 	inline const char* xGetTypeName(int t) {
 		switch (t) {
 		case Asset::kModelFile:
@@ -32,7 +32,7 @@ namespace Axon {
 	}
 }
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 	/* class Asset
 	   
@@ -385,6 +385,6 @@ namespace Axon {
 		listType(Asset::kMaterial, nullptr);
 	}
 
-} // namespace Axon
+AX_END_NAMESPACE
 
 #endif

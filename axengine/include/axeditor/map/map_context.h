@@ -62,7 +62,7 @@ public:
 
 	MapTerrain* createTerrain(int tiles, int tilemeters);
 	MapTerrain* getTerrain();
-	void setTerrainMaterialDef(Map::MaterialDef* matdef);
+	void setTerrainMaterialDef(MapMaterialDef* matdef);
 
 	GameWorld* getGameWorld() const { return m_gameWorld; }
 	void runGame();

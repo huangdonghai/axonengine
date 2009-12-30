@@ -13,44 +13,44 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-	class MapView : public View {
-	public:
-		enum Type {
-			Top, Left, Front, Perspective, Number
-		};
-
-		MapView(MapContext* ctx);
-		virtual ~MapView();
+class MapView : public View {
+public:
+	enum Type {
+		Top, Left, Front, Perspective, Number
 	};
 
-	class OrthoView : public MapView {
-	public:
-		OrthoView(MapContext* con);
-		virtual ~OrthoView();
+	MapView(MapContext* ctx);
+	virtual ~MapView();
+};
 
-	protected:
-		// implement view
-		virtual void doRender();
-		virtual bool handleEvent(const Input::Event& e);
+class OrthoView : public MapView {
+public:
+	OrthoView(MapContext* con);
+	virtual ~OrthoView();
 
-	protected:
-		float m_scale;
-	};
+protected:
+	// implement view
+	virtual void doRender();
+	virtual bool handleEvent(const InputEvent& e);
 
-	class TopView : public OrthoView {
-	public:
-		TopView(MapContext* con);
-	};
+protected:
+	float m_scale;
+};
 
-	class FrontView : public OrthoView {
-	public:
-		FrontView(MapContext* con);
-	};
+class TopView : public OrthoView {
+public:
+	TopView(MapContext* con);
+};
 
-	class LeftView : public OrthoView {
-	public:
-		LeftView(MapContext* con);
-	};
+class FrontView : public OrthoView {
+public:
+	FrontView(MapContext* con);
+};
+
+class LeftView : public OrthoView {
+public:
+	LeftView(MapContext* con);
+};
 
 AX_END_NAMESPACE
 

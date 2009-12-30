@@ -12,7 +12,7 @@ read the license and understand and accept it fully.
 #ifndef AX_CORE_VECTOR2_H
 #define AX_CORE_VECTOR2_H
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 	struct AX_API Vector2 {
 		float x, y;
@@ -208,7 +208,7 @@ namespace Axon {
 		x = tx; y = ty;
 		return true;
 	}
-} // namespace Axon
+AX_END_NAMESPACE
 
 #endif // end guardian
 

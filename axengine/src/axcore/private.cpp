@@ -48,7 +48,7 @@ namespace {
 	}
 }
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 	FileSystem* g_fileSystem;
 	CmdSystem* g_cmdSystem;
@@ -164,4 +164,4 @@ namespace Axon {
 		}
 	}
 
-} // namespace Axon
+AX_END_NAMESPACE

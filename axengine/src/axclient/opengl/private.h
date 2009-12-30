@@ -44,7 +44,7 @@ using namespace Axon;
 #include "glpostprocess.h"
 
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 	enum VertexAttribBindLocation {
 		VABL_tangent	= 1,
@@ -69,7 +69,7 @@ namespace Axon {
 
 	extern GLfontrender* glFontRender;
 
-} // namespace Axon
+AX_END_NAMESPACE
 
 
 #endif // AX_RENDER_GL2_H

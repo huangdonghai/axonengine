@@ -727,7 +727,7 @@ void Workbench::on_actionExit_triggered()
 
 void Workbench::on_actionSurfaceGen_triggered()
 {
-	Map::Terrain* terrain = g_mapContext->getTerrain();
+	MapTerrain* terrain = g_mapContext->getTerrain();
 
 	if (!terrain)
 		return;
@@ -737,7 +737,7 @@ void Workbench::on_actionSurfaceGen_triggered()
 
 void Workbench::on_actionCreateTerrain_triggered()
 {
-	Map::Terrain* terrain = g_mapContext->getTerrain();
+	MapTerrain* terrain = g_mapContext->getTerrain();
 
 	if (terrain)
 		return;
@@ -935,7 +935,7 @@ void Workbench::openScriptFile(const QString& filename)
 
 void Workbench::on_actionLayerGen_triggered()
 {
-	Map::Terrain* terrain = g_mapContext->getTerrain();
+	MapTerrain* terrain = g_mapContext->getTerrain();
 
 	if (!terrain)
 		return;

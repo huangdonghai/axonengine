@@ -35,7 +35,7 @@ distribution.
 #ifndef AX_CORE_XML_H
 #define AX_CORE_XML_H
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 #define TIXML_STRING String
 #define TIXML_USE_STL 1
@@ -1780,7 +1780,7 @@ private:
 	TIXML_STRING lineBreak;
 };
 
-} // namespace Axon
+AX_END_NAMESPACE
 
 #endif // end guardian
 

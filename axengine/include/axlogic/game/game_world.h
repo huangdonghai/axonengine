@@ -14,119 +14,119 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-	enum Think {
-		Think_all = -1,
-		Think_render = 1,
-		Think_physics = 2,
-		Think_animation = 4,
+enum Think {
+	Think_all = -1,
+	Think_render = 1,
+	Think_physics = 2,
+	Think_animation = 4,
+};
+
+class AX_API GameWorld : public IObserver
+{
+public:
+	friend class GameSystem;
+
+	enum CameraMode {
+		FirstPerson,
+		ThirdPerson,
+		FreeNavigate,
 	};
 
-	class AX_API GameWorld : public IObserver
-	{
-	public:
-		friend class GameSystem;
+	GameWorld();
+	~GameWorld();
 
-		enum CameraMode {
-			FirstPerson,
-			ThirdPerson,
-			FreeNavigate,
-		};
+	void reset();
 
-		GameWorld();
-		~GameWorld();
+	void setWindow(RenderTarget* targetWin);
+	RenderTarget* getWindow() { return m_targetWindow; }
 
-		void reset();
+	void runFrame(int what, int frametime);
+	void drawFrame();
+	void drawScene(const RenderCamera& camera);
 
-		void setWindow(RenderTarget* targetWin);
-		RenderTarget* getWindow() { return m_targetWindow; }
+	void addObject(GameObject* node);
+	void removeObject(GameObject* node);
 
-		void runFrame(int what, int frametime);
-		void drawFrame();
-		void drawScene(const RenderCamera& camera);
+	GameActor* getActor(int num) const;
+	Landscape* getLandscape() const;
+	RenderWorld* getRenderWorld() const;
+	PhysicsWorld* getPhysicsWorld() const;
+	SoundWorld* getSoundWorld() const;
+	int getFrameTime() const;
 
-		void addNode(GameObject* node);
-		void removeNode(GameObject* node);
+	MapEnvDef* getEnvironment() const { return m_mapEnvDef; }
+	void updateEnvdef();
 
-		GameActor* getEntity(int num) const;
-		Landscape* getLandscape() const;
-		RenderWorld* getRenderWorld() const;
-		PhysicsWorld* getPhysicsWorld() const;
-		SoundWorld* getSoundWorld() const;
-		int getFrameTime() const;
+	// implement IObserver
+	virtual void doNotify(IObservable* subject, int arg);
 
-		Map::EnvDef* getEnvironment() const { return m_mapEnvDef; }
-		void updateEnvdef();
+	AffineMat getLastViewMatrix() const;
 
-		// implement IObserver
-		virtual void doNotify(IObservable* subject, int arg);
+	// static function
+	static GameActor* createActor(const char* clsname);
 
-		AffineMat getLastViewMatrix() const;
+protected:
+	void addActor(GameActor* entity);
+	void removeActor(GameActor* entity);
 
-		// static function
-		static GameActor* createEntity(const char* clsname);
+	void addFixed(Fixed* fixed);
+	void removeFixed(Fixed* fixed);
 
-	protected:
-		void addEntity(GameActor* entity);
-		void removeEntity(GameActor* entity);
+	void restoreActors();
 
-		void addFixed(Fixed* fixed);
-		void removeFixed(Fixed* fixed);
+private:
+	bool m_onlyServer;
+	bool m_onlyClient;
+	bool m_multiPlayer;
 
-		void restoreEntities();
+	GameActor* m_entities[ActorNum::MAX_ACTORS];
+	int m_spawnIds[ActorNum::MAX_ACTORS];// for use in EntityPtr
+	int m_numEntities;
+	int m_firstFreeEntity;
+	int m_numClients;
 
-	private:
-		bool m_onlyServer;
-		bool m_onlyClient;
-		bool m_multiPlayer;
+	PhysicsWorld* m_physicsWorld;
+	RenderWorld* m_renderWorld;
+	SoundWorld* m_soundWorld;
+	OutdoorEnv* m_outdoorEnv;
+	MapEnvDef* m_mapEnvDef;
 
-		GameActor* m_entities[ActorNum::MAX_ENTITIES];
-		int m_spawnIds[ActorNum::MAX_ENTITIES];// for use in EntityPtr
-		int m_numEntities;
-		int m_firstFreeEntity;
-		int m_numClients;
+	uint_t m_lasttime;
+	int m_frametime;
+	RenderCamera m_lastCamera;
+	RenderTarget* m_targetWindow;
+};
 
-		PhysicsWorld* m_physicsWorld;
-		RenderWorld* m_renderWorld;
-		SoundWorld* m_soundWorld;
-		OutdoorEnv* m_outdoorEnv;
-		Map::EnvDef* m_mapEnvDef;
+inline GameActor* GameWorld::getActor(int num) const
+{
+	AX_ASSERT(num >= 0 && num < ActorNum::MAX_ACTORS);
+	return m_entities[num];
+}
 
-		uint_t m_lasttime;
-		int m_frametime;
-		RenderCamera m_lastCamera;
-		RenderTarget* m_targetWindow;
-	};
+inline Landscape* GameWorld::getLandscape() const
+{
+	return static_cast<Landscape*>(m_entities[ActorNum::LANDSCAPE]);
+}
 
-	inline GameActor* GameWorld::getEntity(int num) const
-	{
-		AX_ASSERT(num >= 0 && num < ActorNum::MAX_ENTITIES);
-		return m_entities[num];
-	}
+inline RenderWorld* GameWorld::getRenderWorld() const
+{
+	return m_renderWorld;
+}
 
-	inline Landscape* GameWorld::getLandscape() const
-	{
-		return static_cast<Landscape*>(m_entities[ActorNum::LANDSCAPE]);
-	}
+inline PhysicsWorld* GameWorld::getPhysicsWorld() const
+{
+	return m_physicsWorld;
+}
 
-	inline RenderWorld* GameWorld::getRenderWorld() const
-	{
-		return m_renderWorld;
-	}
+inline SoundWorld* GameWorld::getSoundWorld() const
+{
+	return m_soundWorld;
+}
 
-	inline PhysicsWorld* GameWorld::getPhysicsWorld() const
-	{
-		return m_physicsWorld;
-	}
-
-	inline SoundWorld* GameWorld::getSoundWorld() const
-	{
-		return m_soundWorld;
-	}
-
-	inline int GameWorld::getFrameTime() const
-	{
-		return m_frametime;
-	}
+inline int GameWorld::getFrameTime() const
+{
+	return m_frametime;
+}
 
 AX_END_NAMESPACE
 

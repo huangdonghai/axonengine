@@ -10,7 +10,7 @@ read the license and understand and accept it fully.
 
 #include "../private.h"
 
-namespace Axon { namespace Network {
+AX_BEGIN_NAMESPACE
 
 
-}} // namespace Axon::Network
+AX_END_NAMESPACE

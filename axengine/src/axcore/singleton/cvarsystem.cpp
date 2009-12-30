@@ -11,7 +11,7 @@ read the license and understand and accept it fully.
 #include "../private.h"
 
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 	AX_BEGIN_COMMAND_MAP(CvarSystem)
 		AX_COMMAND_ENTRY("cvarlist",	list_f)
@@ -334,6 +334,6 @@ namespace Axon {
 		cvar->set(params.tokened[2], true);
 	}
 
-} // namespace Axon
+AX_END_NAMESPACE
 
 

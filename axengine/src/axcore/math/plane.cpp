@@ -9,7 +9,7 @@ read the license and understand and accept it fully.
 
 #include "../private.h"
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 	Plane::Side Plane::side(const BoundingBox& bbox) const {
 		int i;
@@ -54,4 +54,4 @@ namespace Axon {
 		return (Side)sides;
 	}
 
-} // namespace Axon
+AX_END_NAMESPACE

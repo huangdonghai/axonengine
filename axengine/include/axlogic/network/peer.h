@@ -12,7 +12,7 @@ read the license and understand and accept it fully.
 #ifndef AX_NETWORK_PEER_H
 #define AX_NETWORK_PEER_H
 
-namespace Axon { namespace Network {
+AX_BEGIN_NAMESPACE
 
 	struct Address {
 		uint_t ip;
@@ -21,6 +21,6 @@ namespace Axon { namespace Network {
 
 	class Peer {};
 
-}} // namespace Axon::Network
+AX_END_NAMESPACE
 
 #endif // end guardian

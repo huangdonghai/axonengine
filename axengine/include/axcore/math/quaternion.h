@@ -12,7 +12,7 @@ read the license and understand and accept it fully.
 #ifndef AX_CORE_QUATERNION_H
 #define AX_CORE_QUATERNION_H
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 	struct CompactQuat;
 
@@ -348,7 +348,7 @@ namespace Axon {
 	}
 
 
-} // namespace Axon
+AX_END_NAMESPACE
 
 #endif // end guardian
 

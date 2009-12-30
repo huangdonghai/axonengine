@@ -12,7 +12,7 @@ read the license and understand and accept it fully.
 #ifndef AX_NETWORK_SYSTEM_H
 #define AX_NETWORK_SYSTEM_H
 
-namespace Axon { namespace Network {
+AX_BEGIN_NAMESPACE
 
 	class NetworkSystem {
 	public:
@@ -26,6 +26,6 @@ namespace Axon { namespace Network {
 	private:
 	};
 
-}} // namespace Axon::Network
+AX_END_NAMESPACE
 
 #endif // end guardian

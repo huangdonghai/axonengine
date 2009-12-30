@@ -12,73 +12,73 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-	//------------------------------------------------------------------------------
-	// class Entity, Editor Entity
-	//------------------------------------------------------------------------------
+//--------------------------------------------------------------------------
+// class Entity, Editor Entity
+//--------------------------------------------------------------------------
 
-	MapActor::MapActor(const String& type) {
-		m_iconPrim = 0;
-		GameWorld* gameworld = getMapContext()->getGameWorld();
-		m_gameEntity = gameworld->createEntity(type.c_str());
-		m_gameObj = m_gameEntity;
+MapActor::MapActor(const String& type) {
+	m_iconPrim = 0;
+	GameWorld* gameworld = getMapContext()->getGameWorld();
+	m_gameEntity = gameworld->createActor(type.c_str());
+	m_gameObj = m_gameEntity;
 
 //		bindToGame();
 
-		const ClassInfo* ci = m_gameEntity->getClassInfo();
-		if (!ci) {
-			return;
-		}
-
-		String icon = ci->getField("Editor.icon");
-		if (icon.empty()) {
-			return;
-		}
-
-		TexturePtr tex = Texture::load("editor/icons/" + icon);
-
-		if (!tex) {
-			return;
-		}
-
-		MaterialPtr mat = Material::loadUnique("_icon");
-		AX_ASSERT(mat);
-		mat->setTexture(SamplerType::Diffuse, tex.get());
-
-		m_iconPrim = MeshPrim::createScreenQuad(MeshPrim::HintDynamic, Rect(-1,-1,2,2), Rgba::White, mat.get());
+	const ClassInfo* ci = m_gameEntity->getClassInfo();
+	if (!ci) {
+		return;
 	}
 
-	MapActor::~MapActor() {
+	String icon = ci->getField("Editor.icon");
+	if (icon.empty()) {
+		return;
 	}
 
+	TexturePtr tex = Texture::load("editor/icons/" + icon);
 
-	void MapActor::doRender()
-	{
-		if (m_isDeleted)
-			return;
-
-		if (m_iconPrim) {
-			Vector4 param = m_gameEntity->getOrigin_p();
-			param.w = 0.25f;
-			m_iconPrim->getMaterial()->setParameter("s_iconparam", 4, param);
-			g_renderSystem->addToScene(m_iconPrim);
-		}
-
-		return MapAgent::doRender();
+	if (!tex) {
+		return;
 	}
 
-	MapAgent* MapActor::clone() const
-	{
-		// create entity
-		GameWorld* gameworld = getMapContext()->getGameWorld();
-		MapActor* newent = new MapActor(m_gameEntity->getClassInfo()->m_className);
+	MaterialPtr mat = Material::loadUnique("_icon");
+	AX_ASSERT(mat);
+	mat->setTexture(SamplerType::Diffuse, tex.get());
 
-		newent->m_gameEntity->copyPropertiesFrom(this->m_gameEntity);
-		newent->m_gameEntity->autoGenerateName();
-		newent->setMatrix(getMatrix());
-		newent->setColor(getColor());
+	m_iconPrim = MeshPrim::createScreenQuad(MeshPrim::HintDynamic, Rect(-1,-1,2,2), Rgba::White, mat.get());
+}
 
-		newent->bindToGame();
-		return newent;
+MapActor::~MapActor() {
+}
+
+
+void MapActor::doRender()
+{
+	if (m_isDeleted)
+		return;
+
+	if (m_iconPrim) {
+		Vector4 param = m_gameEntity->getOrigin_p();
+		param.w = 0.25f;
+		m_iconPrim->getMaterial()->setParameter("s_iconparam", 4, param);
+		g_renderSystem->addToScene(m_iconPrim);
 	}
+
+	return MapAgent::doRender();
+}
+
+MapAgent* MapActor::clone() const
+{
+	// create entity
+	GameWorld* gameworld = getMapContext()->getGameWorld();
+	MapActor* newent = new MapActor(m_gameEntity->getClassInfo()->m_className);
+
+	newent->m_gameEntity->copyPropertiesFrom(this->m_gameEntity);
+	newent->m_gameEntity->autoGenerateName();
+	newent->setMatrix(getMatrix());
+	newent->setColor(getColor());
+
+	newent->bindToGame();
+	return newent;
+}
 
 AX_END_NAMESPACE

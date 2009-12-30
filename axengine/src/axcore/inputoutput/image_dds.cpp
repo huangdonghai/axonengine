@@ -60,7 +60,7 @@ read the license and understand and accept it fully.
 #define CUBEMAP_SIDES 6
 #define DDS_DXT_BLOCK_SIZE 16
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 	const uint_t FOURCC_DXT1 = AX_MAKEFOURCC('D','X','T','1');
 	const uint_t FOURCC_DXT3 = AX_MAKEFOURCC('D','X','T','3');
@@ -1709,4 +1709,4 @@ namespace Axon {
 		delete fp;
 	}
 
-} // namespace Axon
+AX_END_NAMESPACE

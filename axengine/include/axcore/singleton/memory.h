@@ -11,7 +11,7 @@ read the license and understand and accept it fully.
 #ifndef AX_MEMORY_H
 #define AX_MEMORY_H
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 	//--------------------------------------------------------------------------
 	// class MemoryHeap
@@ -493,7 +493,7 @@ namespace Axon {
 	}
 
 
-} // namespace Axon
+AX_END_NAMESPACE
 
 
 //------------------------------------------------------------------------------

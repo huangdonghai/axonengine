@@ -11,14 +11,14 @@ read the license and understand and accept it fully.
 #ifndef AX_MAP_TERRAIN_H
 #define AX_MAP_TERRAIN_H
 
-namespace Axon { namespace Map {
+AX_BEGIN_NAMESPACE
 
 	// forward declare
-	class Chunk;
-	class Zone;
-	class Terrain;
+	class MapChunk;
+	class MapZone;
+	class MapTerrain;
 
-	struct TerrainEvent {
+	struct MapEvent {
 		enum Type {
 			HeightChanged, UpdateLayer, LayerPainted, CalcLod, GetViewed, Select,
 			UpdatePrimitive, UpdateColorMapLod, UpdateNormalMapLod
@@ -31,10 +31,10 @@ namespace Axon { namespace Map {
 	};
 
 	//--------------------------------------------------------------------------
-	// class LayerGen
+	// class MapLayerGen
 	//--------------------------------------------------------------------------
 
-	class AlphaBlock {
+	class MapAlphaBlock {
 	public:
 		enum {
 			AlphaFormat = TexFormat::A8
@@ -42,11 +42,11 @@ namespace Axon { namespace Map {
 
 		typedef byte_t Data[Map::ChunkPixels][Map::ChunkPixels];
 
-		static AlphaBlock* const One;
-		static AlphaBlock* const Zero;
+		static MapAlphaBlock* const One;
+		static MapAlphaBlock* const Zero;
 
-		AlphaBlock();
-		~AlphaBlock();
+		MapAlphaBlock();
+		~MapAlphaBlock();
 
 		const Data& getData() const;
 		Data& lock();
@@ -63,19 +63,19 @@ namespace Axon { namespace Map {
 		bool m_isDirty;
 	};
 
-	class AX_API LayerGen {
+	class AX_API MapLayerGen {
 	public:
-		LayerGen(Terrain* terrain, int layerId);
-		~LayerGen();
+		MapLayerGen(MapTerrain* terrain, int layerId);
+		~MapLayerGen();
 
 		void update();
 		void load(File* f);
 		void save(File* f);
-		Terrain* getTerrain() const;
+		MapTerrain* getTerrain() const;
 		int getLayerId() const;
-		Map::LayerDef* getLayerDef() const;
+		MapLayerDef* getLayerDef() const;
 		Image* getColorTemplate() const;
-		AlphaBlock* getBlock(const Point& index) const;
+		MapAlphaBlock* getBlock(const Point& index) const;
 		bool isAlphaZero(const Point& index) const;
 		bool isAlphaOne(const Point& index) const;
 		void autoGenerate();
@@ -93,56 +93,56 @@ namespace Axon { namespace Map {
 
 	protected:
 		void generateBlock(const Point& index);
-		void setBlock(const Point& index, AlphaBlock* block);
+		void setBlock(const Point& index, MapAlphaBlock* block);
 		void purifyBlock();
 
 	private:
-		Terrain* m_terrain;
+		MapTerrain* m_terrain;
 		int m_layerId;
 		int m_pixelIndexOffset;
 		Image* m_colorTemplate;
-		AlphaBlock** m_alphaBlocks;
+		MapAlphaBlock** m_alphaBlocks;
 		MaterialPtr m_detailMat;
 	};
 
-	inline Material* LayerGen::getDetailMat() const {
+	inline Material* MapLayerGen::getDetailMat() const {
 		return m_detailMat.get();
 	}
 
 	//--------------------------------------------------------------------------
-	// class ColorGen
+	// class MapColorGen
 	//--------------------------------------------------------------------------
 
-	struct ColorBlock {
+	struct MapColorBlock {
 		Bgra data[Map::ChunkPixels][Map::ChunkPixels];
 	};
 
-	class ColorGen {
+	class MapColorGen {
 	public:
-		ColorGen(Terrain* terrain);
-		~ColorGen();
+		MapColorGen(MapTerrain* terrain);
+		~MapColorGen();
 
 	private:
-		Terrain* m_terrain;
-		ColorBlock* m_colorIndexes;
+		MapTerrain* m_terrain;
+		MapColorBlock* m_colorIndexes;
 	};
 
-	typedef BlockAlloc<AlphaBlock>	AlphaBlockAllocator;
-	typedef BlockAlloc<ColorBlock>	ColorBlockAllocator;
+	typedef BlockAlloc<MapAlphaBlock>	AlphaBlockAllocator;
+	typedef BlockAlloc<MapColorBlock>	ColorBlockAllocator;
 
 	//--------------------------------------------------------------------------
-	// class Chunk
+	// class MapChunk
 	//--------------------------------------------------------------------------
 
-	class AX_API Chunk {
+	class AX_API MapChunk {
 	public:
-		friend class Zone;
-		friend class Terrain;
+		friend class MapZone;
+		friend class MapTerrain;
 
-		Chunk();
-		~Chunk();
+		MapChunk();
+		~MapChunk();
 
-		void initialize(Zone* zone, int x, int y);
+		void initialize(MapZone* zone, int x, int y);
 		void finalize();
 
 		Vector4 getChunkRect() const;
@@ -156,25 +156,25 @@ namespace Axon { namespace Map {
 		void updateLayers();
 		void updateColorTexture();
 
-		void doEvent(TerrainEvent* e);
+		void doEvent(MapEvent* e);
 
 	protected:
 		// event
 		void onHeightChanged();
-		void onCalculateLOD(TerrainEvent* e);
+		void onCalculateLOD(MapEvent* e);
 		void onUpdateLayer();
 		void onLayerPainted();
-		void onSelect(TerrainEvent* e);
-		void onGetViewedPrims(TerrainEvent* e);
-		void onUpdatePrimitive(TerrainEvent* e);
+		void onSelect(MapEvent* e);
+		void onGetViewedPrims(MapEvent* e);
+		void onUpdatePrimitive(MapEvent* e);
 
 	private:
 		union NeighborLod {
 			sbyte_t lods[4];
 			int i;
 		};
-		Terrain* m_terrain;
-		Zone* m_zone;
+		MapTerrain* m_terrain;
+		MapZone* m_zone;
 		Point m_index;			// in global
 		Rect m_tilerect;		// in global
 		BoundingBox m_bbox;
@@ -199,40 +199,40 @@ namespace Axon { namespace Map {
 		ChunkPrim* m_prim;
 	};
 
-	inline sbyte_t Chunk::getLod() const {
+	inline sbyte_t MapChunk::getLod() const {
 		return m_lod;
 	}
 
-	inline const BoundingBox& Chunk::getBoundingBox() const {
+	inline const BoundingBox& MapChunk::getBoundingBox() const {
 		return m_bbox;
 	}
 
-	inline BoundingRange Chunk::getAltitudeRange() const {
+	inline BoundingRange MapChunk::getAltitudeRange() const {
 		return m_heightRange;
 	}
 
-	inline BoundingRange Chunk::getSlopeRange() const {
+	inline BoundingRange MapChunk::getSlopeRange() const {
 		return m_slopeRange;
 	}
 
 	//--------------------------------------------------------------------------
-	// class Zone
+	// class MapZone
 	//--------------------------------------------------------------------------
 
-	class AX_API Zone {
+	class AX_API MapZone {
 	public:
-		friend class Chunk;
-		friend class Terrain;
+		friend class MapChunk;
+		friend class MapTerrain;
 
-		Zone();
-		~Zone();
+		MapZone();
+		~MapZone();
 
-		void initialize(Terrain* terrain, int x, int y);
+		void initialize(MapTerrain* terrain, int x, int y);
 		void finalize();
-		inline Terrain* getTerrain() { return m_terrain; }
+		inline MapTerrain* getTerrain() { return m_terrain; }
 		inline Point getZoneIndex() const { return m_index; }
-		Chunk* getChunk(const Point& global_index);
-		const Chunk* getChunk(const Point& global_index) const;
+		MapChunk* getChunk(const Point& global_index);
+		const MapChunk* getChunk(const Point& global_index) const;
 
 		inline Point chunkIndexMapToGlobal(const Point& idx) const;
 		inline Point chunkIndexMapToZone(const Point& idx) const;
@@ -240,8 +240,8 @@ namespace Axon { namespace Map {
 		void updatePrimVertexes(const Rect& rect);
 		void updateNormalTexture(const Rect& rect);
 
-		void doEvent(TerrainEvent* e);
-		void addChunkToPrim(Chunk* chunk);
+		void doEvent(MapEvent* e);
+		void addChunkToPrim(MapChunk* chunk);
 
 		Vector4 getZoneRect() const;
 
@@ -254,15 +254,15 @@ namespace Axon { namespace Map {
 		void updateColorTextureLod();
 		void updateNormalTextureLod();
 
-		void onHeightChanged(TerrainEvent* e);
-		void onCalculateLOD(TerrainEvent* e);
-		void onGetPrimitive(TerrainEvent* e);
-		void onUpdatePrimitive(TerrainEvent* e);
-		void onSelection(TerrainEvent* e);
-		void forwardEventToChunks(TerrainEvent* e);
+		void onHeightChanged(MapEvent* e);
+		void onCalculateLOD(MapEvent* e);
+		void onGetPrimitive(MapEvent* e);
+		void onUpdatePrimitive(MapEvent* e);
+		void onSelection(MapEvent* e);
+		void forwardEventToChunks(MapEvent* e);
 
 	private:
-		Terrain* m_terrain;
+		MapTerrain* m_terrain;
 		Point m_index;
 		Rect m_tilerect;
 		BoundingBox m_bbox;
@@ -275,35 +275,35 @@ namespace Axon { namespace Map {
 		sbyte_t m_lod;
 		sbyte_t m_lastLod;
 		sbyte_t m_zonePrimLod;
-		Chunk* m_chunks[Map::ZoneChunks][Map::ZoneChunks];
+		MapChunk* m_chunks[Map::ZoneChunks][Map::ZoneChunks];
 
 		TexturePtr m_normalTexture;
 		TexturePtr m_colorTexture;
 	};
 
-	inline Chunk* Zone::getChunk(const Point& global_index) {
+	inline MapChunk* MapZone::getChunk(const Point& global_index) {
 		Point index = global_index - m_chunkIndexOffset;
 		AX_ASSERT(index.x >= 0 && index.x < Map::ZoneChunks);
 		AX_ASSERT(index.y >= 0 && index.y < Map::ZoneChunks);
 		return m_chunks[index.y][index.x];
 	}
 
-	inline const Chunk* Zone::getChunk(const Point& global_index) const {
+	inline const MapChunk* MapZone::getChunk(const Point& global_index) const {
 		Point index = global_index - m_chunkIndexOffset;
 		AX_ASSERT(index.x >= 0 && index.x < Map::ZoneChunks);
 		AX_ASSERT(index.y >= 0 && index.y < Map::ZoneChunks);
 		return m_chunks[index.y][index.x];
 	}
 
-	inline Texture* Zone::getNormalTexture() const {
+	inline Texture* MapZone::getNormalTexture() const {
 		return m_normalTexture.get();
 	}
 
-	inline Texture* Zone::getColorTexture() const {
+	inline Texture* MapZone::getColorTexture() const {
 		return m_colorTexture.get();
 	}
 
-	inline void Zone::setColorTexture(Texture* tex) {
+	inline void MapZone::setColorTexture(Texture* tex) {
 		m_colorTexture = tex;
 		if (m_prim) {
 			m_prim->setColorTexture(getColorTexture());
@@ -311,16 +311,16 @@ namespace Axon { namespace Map {
 	}
 
 	//--------------------------------------------------------------------------
-	// class Terrain
+	// class MapTerrain
 	//--------------------------------------------------------------------------
 
-	class AX_API Terrain : public RenderTerrain {
+	class AX_API MapTerrain : public RenderTerrain {
 	public:
-		friend class Chunk;
-		friend class Zone;
+		friend class MapChunk;
+		friend class MapZone;
 
-		Terrain();
-		virtual ~Terrain();
+		MapTerrain();
+		virtual ~MapTerrain();
 
 		void init(int tiles, int tilemeters);
 		void initFromXml(const String& map_name, const TiXmlElement* elem);
@@ -351,11 +351,11 @@ namespace Axon { namespace Map {
 		Image* copyFloatHeight(int size) const;	// need be freed by caller
 
 		sbyte_t getChunkLod(const Point& global_index) const;
-		Zone* getZone(const Point& global_index);
-		const Zone* getZone(const Point& global_index) const;
-		Chunk* getChunk(const Point& global_index);
-		const Chunk* getChunk(const Point& global_index) const;
-		const Chunk* getPosChunk(const Vector3& pos) const;
+		MapZone* getZone(const Point& global_index);
+		const MapZone* getZone(const Point& global_index) const;
+		MapChunk* getChunk(const Point& global_index);
+		const MapChunk* getChunk(const Point& global_index) const;
+		const MapChunk* getPosChunk(const Vector3& pos) const;
 
 		void doHeightChanged(const Rect& tilerect);
 		void doUpdateNormalTextureLod(const Rect& tilerect);
@@ -364,16 +364,16 @@ namespace Axon { namespace Map {
 		void doUpdateColorTextureLod(const Rect& pixelrect);
 		void doCalculateLOD();
 
-		void doEvent(TerrainEvent* e);
+		void doEvent(MapEvent* e);
 		void doSelect(const RenderCamera& camera);
 
 		Primitives getPrimsByCircle(float x, float y, float radius);
 
 		// surface and material
-		Map::MaterialDef* getMaterialDef() const;
-		void setMaterialDef(Map::MaterialDef* matdef, bool undoable = true);
-		AlphaBlock* allocAlphaBlock();
-		void freeAlphaBlock(AlphaBlock*& block);
+		MapMaterialDef* getMaterialDef() const;
+		void setMaterialDef(MapMaterialDef* matdef, bool undoable = true);
+		MapAlphaBlock* allocAlphaBlock();
+		void freeAlphaBlock(MapAlphaBlock*& block);
 		Image* getSlopeImage() const;
 		Image* copySlopeImage(int size) const;	// need be freed by caller
 		byte_t getSlope(int x, int y, bool local = false) const;
@@ -382,10 +382,10 @@ namespace Axon { namespace Map {
 		void generateZoneColor(bool doprogress = false);
 		void generateLayerAlpha(bool doprogress = false, int id = -1);
 		int getNumLayer() const;
-		LayerGen* getLayerGen(int layer) const;
-		LayerGen* getLayerGenById(int id) const;
+		MapLayerGen* getLayerGen(int layer) const;
+		MapLayerGen* getLayerGenById(int id) const;
 		MaterialPtr getLayerMat(int layer) const;
-		AlphaBlock* getAlphaBlock(int layer, const Point& index) const;
+		MapAlphaBlock* getAlphaBlock(int layer, const Point& index) const;
 
 		// implement renderActor
 		virtual BoundingBox getLocalBoundingBox() { return m_bbox; }
@@ -425,60 +425,60 @@ namespace Axon { namespace Map {
 		int m_chunkIndexOffset;
 		int m_tileOffset;
 		int m_terrainZones;
-		Zone** m_zones;
+		MapZone** m_zones;
 
 		Vector3 m_lastViewOrigin;
 		bool m_heightDirtyLastView;
 
 		// terrain materials
-		typedef Dict<int,LayerGen*> LayerGenHash;
+		typedef Dict<int,MapLayerGen*> LayerGenHash;
 
-		Map::MaterialDef* m_materialDef;
+		MapMaterialDef* m_materialDef;
 		AlphaBlockAllocator m_alphaAllocator;
 		ColorBlockAllocator m_colorAllocator;
 		int m_numLayerGens;
-		LayerGen* m_layerGens[Map::MaxLayers];
+		MapLayerGen* m_layerGens[Map::MaxLayers];
 		LayerGenHash m_layerGenHash;
-		ColorGen* m_colorGen;
+		MapColorGen* m_colorGen;
 	};
 
-	inline float Terrain::getTileMeters() const {
+	inline float MapTerrain::getTileMeters() const {
 		return m_tilemeters;
 	}
 
-	inline float Terrain::getMeterPixels() const {
+	inline float MapTerrain::getMeterPixels() const {
 		return Map::TilePixels / m_tilemeters;
 	}
 
 
-	inline Rect Terrain::getTileRect() const {
+	inline Rect MapTerrain::getTileRect() const {
 		return m_tilerect;
 	}
 
-	inline Vector4 Terrain::getTerrainRect() const {
+	inline Vector4 MapTerrain::getTerrainRect() const {
 		Vector4 result(m_tilerect.x, m_tilerect.y, m_tilerect.width, m_tilerect.height);
 
 		return result * m_tilemeters;
 	}
 
 
-	inline int Terrain::getChunkIndexOffset() const {
+	inline int MapTerrain::getChunkIndexOffset() const {
 		return m_chunkIndexOffset;
 	}
 
-	inline int Terrain::getNumChunks() const {
+	inline int MapTerrain::getNumChunks() const {
 		return m_chunkIndexOffset * 2;
 	}
 
-	inline int Terrain::getZoneIndexOffset() const {
+	inline int MapTerrain::getZoneIndexOffset() const {
 		return m_zoneIndexOffset;
 	}
 
-	inline int Terrain::getNumZones() const {
+	inline int MapTerrain::getNumZones() const {
 		return m_zoneIndexOffset * 2;
 	}
 
-	inline float Terrain::getHeight(int x, int y, bool local) const {
+	inline float MapTerrain::getHeight(int x, int y, bool local) const {
 		if (!local) {
 			x += m_tileOffset; y += m_tileOffset;
 		}
@@ -489,7 +489,7 @@ namespace Axon { namespace Map {
 		return (float)h / std::numeric_limits<ushort_t>::max() * (m_heightBound.y - m_heightBound.x) + m_heightBound.x;
 	}
 
-	inline float Terrain::getOldHeight(int x, int y, bool local) const {
+	inline float MapTerrain::getOldHeight(int x, int y, bool local) const {
 		const ushort_t* oldheightdata = (const ushort_t*)m_oldHeightmap->getData(0);
 
 		if (!local) {
@@ -502,7 +502,7 @@ namespace Axon { namespace Map {
 		return (float)h / std::numeric_limits<ushort_t>::max() * (m_heightBound.y - m_heightBound.x) + m_heightBound.x;
 	}
 
-	inline float Terrain::getPixelHeight(int x, int y) const {
+	inline float MapTerrain::getPixelHeight(int x, int y) const {
 		float fx = x; float fy = y;
 		fx /= Map::TilePixels; fy /= Map::TilePixels;
 
@@ -522,7 +522,7 @@ namespace Axon { namespace Map {
 		return p;
 	}
 
-	inline float Terrain::getHeightByPos(const Vector3& pos) const {
+	inline float MapTerrain::getHeightByPos(const Vector3& pos) const {
 		float fx = pos.x / m_tilemeters; float fy = pos.y / m_tilemeters;
 
 		int x0 = floorf(fx); int x1 = ceilf(fx);
@@ -541,7 +541,7 @@ namespace Axon { namespace Map {
 		return p;
 	}
 
-	inline void Terrain::setHeight(int x, int y, float h, bool local) {
+	inline void MapTerrain::setHeight(int x, int y, float h, bool local) {
 		if (!local) {
 			x += m_tileOffset; y += m_tileOffset;
 		}
@@ -555,7 +555,7 @@ namespace Axon { namespace Map {
 		m_heighData[y*m_tiles + x] = uh;
 	}
 
-	inline byte_t Terrain::getSlope(int x, int y, bool local) const {
+	inline byte_t MapTerrain::getSlope(int x, int y, bool local) const {
 		if (!local) {
 			x += m_tileOffset; y += m_tileOffset;
 		}
@@ -565,7 +565,7 @@ namespace Axon { namespace Map {
 		return *m_slopeImage->getPixel(0, x, y);
 	}
 
-	inline float Terrain::getPixelSlope(int x, int y) const {
+	inline float MapTerrain::getPixelSlope(int x, int y) const {
 		float fx = x; float fy = y;
 		fx /= Map::TilePixels; fy /= Map::TilePixels;
 
@@ -586,7 +586,7 @@ namespace Axon { namespace Map {
 	}
 
 
-	inline void Terrain::setSlope(int x, int y, byte_t slope, bool local) {
+	inline void MapTerrain::setSlope(int x, int y, byte_t slope, bool local) {
 		if (!local) {
 			x += m_tileOffset; y += m_tileOffset;
 		}
@@ -597,8 +597,8 @@ namespace Axon { namespace Map {
 	}
 
 
-	inline sbyte_t Terrain::getChunkLod(const Point& global_index) const {
-		const Chunk* c = getChunk(global_index);
+	inline sbyte_t MapTerrain::getChunkLod(const Point& global_index) const {
+		const MapChunk* c = getChunk(global_index);
 		if (c)
 			return c->getLod();
 
@@ -606,7 +606,7 @@ namespace Axon { namespace Map {
 	}
 
 	// if out of bound, return null
-	inline Zone* Terrain::getZone(const Point& global_index) {
+	inline MapZone* MapTerrain::getZone(const Point& global_index) {
 		if (global_index.x < -m_zoneIndexOffset)
 			return nullptr;
 		if (global_index.x >= m_zoneIndexOffset)
@@ -622,7 +622,7 @@ namespace Axon { namespace Map {
 		return m_zones[i];
 	}
 
-	inline const Zone* Terrain::getZone(const Point& global_index) const {
+	inline const MapZone* MapTerrain::getZone(const Point& global_index) const {
 		if (global_index.x < -m_zoneIndexOffset)
 			return nullptr;
 		if (global_index.x >= m_zoneIndexOffset)
@@ -638,7 +638,7 @@ namespace Axon { namespace Map {
 		return m_zones[i];
 	}
 
-	inline Chunk* Terrain::getChunk(const Point& global_index) {
+	inline MapChunk* MapTerrain::getChunk(const Point& global_index) {
 		if (global_index.x < -m_chunkIndexOffset)
 			return nullptr;
 		if (global_index.x >= m_chunkIndexOffset)
@@ -650,7 +650,7 @@ namespace Axon { namespace Map {
 
 		Point index = (global_index + m_chunkIndexOffset) / Map::ZoneChunks;
 		index -= m_zoneIndexOffset;
-		Zone* z = getZone(index);
+		MapZone* z = getZone(index);
 
 		if (z == nullptr)
 			return nullptr;
@@ -658,7 +658,7 @@ namespace Axon { namespace Map {
 		return z->getChunk(global_index);
 	}
 
-	inline const Chunk* Terrain::getChunk(const Point& global_index) const {
+	inline const MapChunk* MapTerrain::getChunk(const Point& global_index) const {
 		if (global_index.x < -m_chunkIndexOffset)
 			return nullptr;
 		if (global_index.x >= m_chunkIndexOffset)
@@ -677,7 +677,7 @@ namespace Axon { namespace Map {
 #endif
 
 		index -= m_zoneIndexOffset;
-		const Zone* z = getZone(index);
+		const MapZone* z = getZone(index);
 
 		if (z == nullptr)
 			return nullptr;
@@ -685,7 +685,7 @@ namespace Axon { namespace Map {
 		return z->getChunk(global_index);
 	}
 
-	inline const Chunk* Terrain::getPosChunk(const Vector3& pos) const {
+	inline const MapChunk* MapTerrain::getPosChunk(const Vector3& pos) const {
 		Point index;
 
 		index.x = floorf(pos.x / (Map::ChunkTiles * m_tilemeters));
@@ -694,30 +694,30 @@ namespace Axon { namespace Map {
 		return getChunk(index);
 	}
 
-	inline Map::MaterialDef* Terrain::getMaterialDef() const {
+	inline MapMaterialDef* MapTerrain::getMaterialDef() const {
 		return m_materialDef;
 	}
 
-	inline AlphaBlock* Terrain::allocAlphaBlock() {
+	inline MapAlphaBlock* MapTerrain::allocAlphaBlock() {
 		return m_alphaAllocator.alloc();
 	}
 
-	inline void Terrain::freeAlphaBlock(AlphaBlock*& block) {
+	inline void MapTerrain::freeAlphaBlock(MapAlphaBlock*& block) {
 		return m_alphaAllocator.free(block);
 	}
 
-	inline int Terrain::getNumLayer() const {
+	inline int MapTerrain::getNumLayer() const {
 		return m_numLayerGens;
 	}
 
-	inline LayerGen* Terrain::getLayerGen(int layer) const {
+	inline MapLayerGen* MapTerrain::getLayerGen(int layer) const {
 		if (layer >= m_numLayerGens)
 			return nullptr;
 
 		return m_layerGens[layer];
 	}
 
-	inline LayerGen* Terrain::getLayerGenById(int id) const {
+	inline MapLayerGen* MapTerrain::getLayerGenById(int id) const {
 		for (int i = 0; i < m_numLayerGens; i++) {
 			if (m_layerGens[i]->getLayerId() == id)
 				return m_layerGens[i];
@@ -726,21 +726,21 @@ namespace Axon { namespace Map {
 		return nullptr;
 	}
 
-	inline MaterialPtr Terrain::getLayerMat(int layer) const {
+	inline MaterialPtr MapTerrain::getLayerMat(int layer) const {
 		if (layer >= m_numLayerGens)
 			return MaterialPtr();
 
 		return m_layerGens[layer]->getDetailMat();
 	}
 
-	inline AlphaBlock* Terrain::getAlphaBlock(int layer, const Point& index) const {
+	inline MapAlphaBlock* MapTerrain::getAlphaBlock(int layer, const Point& index) const {
 		if (layer >= m_numLayerGens)
 			return nullptr;
 
 		return m_layerGens[layer]->getBlock(index);
 	}
 
-}} // namespace Axon::Map
+AX_END_NAMESPACE
 
 #endif // AX_EDITOR_TERRAIN_H
 

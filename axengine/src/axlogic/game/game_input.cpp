@@ -37,7 +37,7 @@ AX_BEGIN_NAMESPACE
 		StringPairSeq spv = g_systemConfig->getItems("Binding");
 		StringPairSeq::const_iterator it;
 		for (it = spv.begin(); it != spv.end(); ++it) {
-			Key k = Key::getKey(it->first);
+			InputKey k = InputKey::getKey(it->first);
 			if (!k) {
 				continue;
 			}
@@ -56,22 +56,22 @@ AX_BEGIN_NAMESPACE
 	{
 		m_frameMsec = msec;
 
-		while (Input::Event* e = g_inputSystem->getEvent()) {
+		while (InputEvent* e = g_inputSystem->getEvent()) {
 			bool isdown = false;
 			switch (e->type) {
-			case Input::Event::KeyDown:
+			case InputEvent::KeyDown:
 				isdown = true;
 				break;
-			case Input::Event::KeyUp:
+			case InputEvent::KeyUp:
 				isdown = false;
 				break;
-			case Input::Event::MouseDown:
+			case InputEvent::MouseDown:
 				isdown = true;
 				break;
-			case Input::Event::MouseUp:
+			case InputEvent::MouseUp:
 				isdown = false;
 				break;
-			case Input::Event::MouseMove:
+			case InputEvent::MouseMove:
 				{
 					if (!m_mousePosInited) {
 						m_mouseDelta[0].set(0,0);
@@ -84,14 +84,14 @@ AX_BEGIN_NAMESPACE
 					continue;
 				}
 
-			case Input::Event::Char:
-			case Input::Event::Wheel:
+			case InputEvent::Char:
+			case InputEvent::Wheel:
 				{
-					Key key = Key::MouseWheelUp;
+					InputKey key = InputKey::MouseWheelUp;
 					if (e->delta<0)
-						key = Key::MouseWheelDown;
+						key = InputKey::MouseWheelDown;
 
-					Dict<Key,String>::const_iterator it = m_keybinding.find(key);
+					Dict<InputKey,String>::const_iterator it = m_keybinding.find(key);
 					if (it == m_keybinding.end()) {
 						continue;
 					}
@@ -100,11 +100,11 @@ AX_BEGIN_NAMESPACE
 					this->invokeMethod(it->second.c_str(), (int)e->key, false);
 					continue;
 				}
-			case Input::Event::XboxAxis:
+			case InputEvent::XboxAxis:
 				continue;
 			}
 
-			Dict<Key,String>::const_iterator it = m_keybinding.find(e->key);
+			Dict<InputKey,String>::const_iterator it = m_keybinding.find(e->key);
 			if (it == m_keybinding.end()) {
 				continue;
 			}
@@ -208,7 +208,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 
-	void GameInput::buttonDown(int bt, Key key, int msec)
+	void GameInput::buttonDown(int bt, InputKey key, int msec)
 	{
 		Button& b = m_buttons[bt];
 
@@ -236,7 +236,7 @@ AX_BEGIN_NAMESPACE
 		b.wasPressed = true;
 	}
 
-	void GameInput::buttonUp(int bt, Key key, int msec)
+	void GameInput::buttonUp(int bt, InputKey key, int msec)
 	{
 		Button& b = m_buttons[bt];
 
@@ -284,9 +284,9 @@ AX_BEGIN_NAMESPACE
 			return;
 		}
 
-		Key k = Key::getKey(tokens[1]);
+		InputKey k = InputKey::getKey(tokens[1]);
 		if (tokens.size() == 2) {
-			Dict<Key,String>::const_iterator it = m_keybinding.find(k);
+			Dict<InputKey,String>::const_iterator it = m_keybinding.find(k);
 			if (it == m_keybinding.end()) {
 				return;
 			}
@@ -300,7 +300,7 @@ AX_BEGIN_NAMESPACE
 
 	void GameInput::bindlist_f(const CmdArgs& args)
 	{
-		Dict<Key,String>::const_iterator it = m_keybinding.begin();
+		Dict<InputKey,String>::const_iterator it = m_keybinding.begin();
 
 		int count = 0;
 		while (it != m_keybinding.end()) {

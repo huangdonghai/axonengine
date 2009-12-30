@@ -12,7 +12,7 @@ read the license and understand and accept it fully.
 #ifndef AX_AFFINEMAT_H
 #define AX_AFFINEMAT_H
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 	// column major, affine matrix
 	struct AX_API AffineMat
@@ -337,7 +337,7 @@ namespace Axon {
 	}
 
 
-} // namespace Axon
+AX_END_NAMESPACE
 
 #endif // end guardian
 

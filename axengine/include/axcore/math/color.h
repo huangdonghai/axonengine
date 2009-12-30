@@ -12,7 +12,7 @@ read the license and understand and accept it fully.
 #ifndef AX_CORE_COLOR_H
 #define AX_CORE_COLOR_H
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 	//------------------------------------------------------------------------------
 	// Color, 3 unsigned byte
@@ -586,7 +586,7 @@ namespace Axon {
 		return Bgr(r,g,b);
 	}
 
-} // namespace Axon
+AX_END_NAMESPACE
 
 #endif // end guardian
 

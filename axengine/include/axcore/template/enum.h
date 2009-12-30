@@ -19,7 +19,7 @@ read the license and understand and accept it fully.
 	inline operator Type() const { return t; }
 //	inline operator int() const { return (int)t; } \
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 	template< class T >
 	struct Enum {
@@ -87,7 +87,7 @@ namespace Axon {
 		int m_data;
 	};
 
-} // namespace Axon
+AX_END_NAMESPACE
 
 #endif // end guardian
 

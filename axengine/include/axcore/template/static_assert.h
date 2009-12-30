@@ -13,7 +13,7 @@ read the license and understand and accept it fully.
 #ifndef AX_STATICASSERT_H
 #define AX_STATICASSERT_H
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 	// HP aCC cannot deal with missing names for template value parameters
 	template <bool x> struct STATIC_ASSERTION_FAILURE;
 

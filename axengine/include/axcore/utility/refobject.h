@@ -11,7 +11,7 @@ read the license and understand and accept it fully.
 #ifndef AX_CORE_REFOBJECT_H
 #define AX_CORE_REFOBJECT_H
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 	//--------------------------------------------------------------------------
 	// class RefObject

@@ -12,7 +12,7 @@ read the license and understand and accept it fully.
 #ifndef AX_RAY_H
 #define AX_RAY_H
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 	struct AX_API Ray {
 	public:
@@ -23,7 +23,7 @@ namespace Axon {
 		Vector3 m_start;
 		Vector3 m_dir;
 	};
-} // namespace Axon
+AX_END_NAMESPACE
 
 #endif // end guardian
 

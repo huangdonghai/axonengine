@@ -10,7 +10,7 @@ read the license and understand and accept it fully.
 
 #include "private.h"
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 	MapContext* g_mapContext = 0;
 	GfxContext* g_gfxContext = 0;
@@ -23,4 +23,4 @@ namespace Axon {
 		SafeDelete(g_mapContext);
 	}
 
-} // namespace Axon
+AX_END_NAMESPACE

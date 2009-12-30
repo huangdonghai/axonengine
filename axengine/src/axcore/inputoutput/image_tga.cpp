@@ -36,7 +36,7 @@ read the license and understand and accept it fully.
 #define TGA_O_UPPER 0 /* Origin in lower left-hand corner. */ 
 #define TGA_O_LOWER 1 /* Origin in upper left-hand corner. */ 
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 
 	struct TgaHeader { 
@@ -556,4 +556,4 @@ namespace Axon {
 	}
 
 
-} // namespace Axon
+AX_END_NAMESPACE

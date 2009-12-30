@@ -52,7 +52,7 @@ namespace {
 	}
 }
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 	PerlinNoise::PerlinNoise(uint_t seed /* = 0 */) {
 		m_holdrand = seed;

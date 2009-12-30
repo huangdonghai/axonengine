@@ -11,7 +11,7 @@ read the license and understand and accept it fully.
 #ifndef AX_THREAD_H 
 #define AX_THREAD_H
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 
 	#define AX_INFINITE 0xFFFFFFFF
@@ -108,6 +108,6 @@ namespace Axon {
 
 
 
-} // namespace Axon
+AX_END_NAMESPACE
 
 #endif // AX_THREAD_H

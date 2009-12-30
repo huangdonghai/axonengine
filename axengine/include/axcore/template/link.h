@@ -12,7 +12,7 @@ read the license and understand and accept it fully.
 #ifndef AX_LINK_H
 #define AX_LINK_H
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 	template< class type >
 	class Link {
@@ -185,6 +185,6 @@ namespace Axon {
 		m_owner = object;
 	}
 
-} // namespace Axon
+AX_END_NAMESPACE
 
 #endif

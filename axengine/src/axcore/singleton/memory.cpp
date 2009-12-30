@@ -12,7 +12,7 @@ read the license and understand and accept it fully.
 
 #define USE_LIBC_MALLOC 0
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 	MemoryInfo gMemoryInfo;
 
@@ -834,5 +834,5 @@ namespace Axon {
 		xGetHeap()->free16(ptr);
 	}
 
-} // namespace Axon
+AX_END_NAMESPACE
 

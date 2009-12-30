@@ -164,7 +164,7 @@ bool MapContext::load(const String& filename) {
 		const String& value = elem->ValueTStr();
 
 		if (value == "envDef") {
-			Map::EnvDef* ed = m_gameWorld->getEnvironment();
+			MapEnvDef* ed = m_gameWorld->getEnvironment();
 			if (ed) {
 				ed->readProperties(elem);
 				m_gameWorld->updateEnvdef();
@@ -175,7 +175,7 @@ bool MapContext::load(const String& filename) {
 			g_system->showProgress(progress += 5, "Loading kTerrain...");
 			m_terrainFixed = new TerrainFixed(m_terrain);
 			m_terrain->initFromXml(map_name, elem);
-			m_gameWorld->addNode(m_terrainFixed);
+			m_gameWorld->addObject(m_terrainFixed);
 //				gEditorActiveAreaMgr->setTerrain(m_terrain);
 		} else if (value == "actor") {
 			progress = 10 + (float)actorRead / numActors * 90;
@@ -239,7 +239,7 @@ void MapContext::writeToFile(File* f) {
 	f->printf("<map haveTerrain=\"%d\" numActors=\"%d\">\n", m_terrain ? 1 : 0, numActors);
 
 	// write env
-	Map::EnvDef* ed = m_gameWorld->getEnvironment();
+	MapEnvDef* ed = m_gameWorld->getEnvironment();
 	if (ed) {
 		ed->writeToFile(f, 1);
 	}
@@ -287,15 +287,15 @@ MapTerrain* MapContext::createTerrain(int tiles, int tilemeters) {
 	m_terrainFixed = new TerrainFixed(m_terrain);
 	m_terrain->init(tiles, tilemeters);
 
-	m_gameWorld->addNode(m_terrainFixed);
+	m_gameWorld->addObject(m_terrainFixed);
 
 	return m_terrain;
 }
 
-void MapContext::setTerrainMaterialDef(Map::MaterialDef* matdef)
+void MapContext::setTerrainMaterialDef(MapMaterialDef* matdef)
 {
 	if (m_terrain) {
-		Map::MaterialDef* oldmatdef = m_terrain->getMaterialDef()->clone();
+		MapMaterialDef* oldmatdef = m_terrain->getMaterialDef()->clone();
 		m_terrain->setMaterialDef(matdef);
 
 		TerrainMaterialDefHis* his = new TerrainMaterialDefHis(oldmatdef, matdef->clone(), m_terrain);

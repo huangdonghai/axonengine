@@ -9,7 +9,7 @@ read the license and understand and accept it fully.
 
 #include "../private.h"
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 	void Simd::initialize() {
 		g_simd = new Simd();
@@ -242,5 +242,5 @@ namespace Axon {
 		}
 	}
 
-} // namespace Axon
+AX_END_NAMESPACE
 

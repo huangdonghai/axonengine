@@ -11,7 +11,7 @@ read the license and understand and accept it fully.
 #ifndef AX_UUID_H
 #define AX_UUID_H
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 	class AX_API Uuid {
 	public:
@@ -34,6 +34,6 @@ namespace Axon {
 		byte_t m_node[6];
 	};
 
-} // namespace Axon
+AX_END_NAMESPACE
 
 #endif // AX_UUID_H

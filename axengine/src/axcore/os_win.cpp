@@ -15,7 +15,7 @@ read the license and understand and accept it fully.
 #include <windows.h>
 #include <mmsystem.h>
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 
 	/*-----------------------------------------------------------------------------
@@ -62,4 +62,4 @@ namespace Axon {
 	}
 
 
-} // namespace Axon
+AX_END_NAMESPACE

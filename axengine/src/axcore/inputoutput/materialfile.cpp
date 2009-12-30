@@ -27,7 +27,7 @@ namespace {
 }
 
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 	// static member
 	MaterialDecl* MaterialDecl::ms_defaulted;
@@ -234,5 +234,5 @@ error_exit:
 		// do nothing
 	}
 
-} // namespace Axon
+AX_END_NAMESPACE
 

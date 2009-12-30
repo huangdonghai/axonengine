@@ -30,48 +30,48 @@ EditorFrame::EditorFrame(QWidget *parent, View* view)
 
 	m_editorView->bindFrame(this);
 
-	m_keymap[Qt::Key_Escape]		= Key::Escape;                // misc keys
-	m_keymap[Qt::Key_Tab]		= Key::Tab;
-	m_keymap[Qt::Key_Backtab]	= Key::Backtab;
-	m_keymap[Qt::Key_Backspace]	= Key::Backspace;
-	m_keymap[Qt::Key_Return]		= Key::Enter;
-	m_keymap[Qt::Key_Enter]		= Key::Enter;
-	m_keymap[Qt::Key_Insert]		= Key::Insert;
-	m_keymap[Qt::Key_Delete]		= Key::Delete;
-	m_keymap[Qt::Key_Pause]		= Key::Pause;
-	m_keymap[Qt::Key_Print]		= Key::Print;
-	m_keymap[Qt::Key_SysReq]		= Key::SysReq;
-	m_keymap[Qt::Key_Clear]		= Key::Clear;
-	m_keymap[Qt::Key_Home]		= Key::Home;
-	m_keymap[Qt::Key_End]		= Key::End;
-	m_keymap[Qt::Key_Left]		= Key::Left;
-	m_keymap[Qt::Key_Up]			= Key::Up;
-	m_keymap[Qt::Key_Right]		= Key::Right;
-	m_keymap[Qt::Key_Down]		= Key::Down;
-	m_keymap[Qt::Key_PageUp]		= Key::PageUp;
-	m_keymap[Qt::Key_PageDown]	= Key::PageDown;
-	m_keymap[Qt::Key_Shift]		= Key::Shift;
-	m_keymap[Qt::Key_Control]	= Key::Ctrl;
-	m_keymap[Qt::Key_Meta]		= Key::Meta;
-	m_keymap[Qt::Key_Alt]		= Key::Alt;
-	m_keymap[Qt::Key_CapsLock]	= Key::Capslock;
-	m_keymap[Qt::Key_NumLock]	= Key::NP_Numlock;
-	m_keymap[Qt::Key_ScrollLock]	= Key::ScorllLock;
-	m_keymap[Qt::Key_F1]			= Key::F1;
-	m_keymap[Qt::Key_F2]			= Key::F2;
-	m_keymap[Qt::Key_F3]			= Key::F3;
-	m_keymap[Qt::Key_F4]			= Key::F4;
-	m_keymap[Qt::Key_F5]			= Key::F5;
-	m_keymap[Qt::Key_F6]			= Key::F6;
-	m_keymap[Qt::Key_F7]			= Key::F7;
-	m_keymap[Qt::Key_F8]			= Key::F8;
-	m_keymap[Qt::Key_F9]			= Key::F9;
-	m_keymap[Qt::Key_F10]		= Key::F10;
-	m_keymap[Qt::Key_F11]		= Key::F11;
-	m_keymap[Qt::Key_F12]		= Key::F12;
-	m_keymap[Qt::Key_F13]		= Key::F13;
-	m_keymap[Qt::Key_F14]		= Key::F14;
-	m_keymap[Qt::Key_F15]		= Key::F15;
+	m_keymap[Qt::Key_Escape]		= InputKey::Escape;                // misc keys
+	m_keymap[Qt::Key_Tab]		= InputKey::Tab;
+	m_keymap[Qt::Key_Backtab]	= InputKey::Backtab;
+	m_keymap[Qt::Key_Backspace]	= InputKey::Backspace;
+	m_keymap[Qt::Key_Return]		= InputKey::Enter;
+	m_keymap[Qt::Key_Enter]		= InputKey::Enter;
+	m_keymap[Qt::Key_Insert]		= InputKey::Insert;
+	m_keymap[Qt::Key_Delete]		= InputKey::Delete;
+	m_keymap[Qt::Key_Pause]		= InputKey::Pause;
+	m_keymap[Qt::Key_Print]		= InputKey::Print;
+	m_keymap[Qt::Key_SysReq]		= InputKey::SysReq;
+	m_keymap[Qt::Key_Clear]		= InputKey::Clear;
+	m_keymap[Qt::Key_Home]		= InputKey::Home;
+	m_keymap[Qt::Key_End]		= InputKey::End;
+	m_keymap[Qt::Key_Left]		= InputKey::Left;
+	m_keymap[Qt::Key_Up]			= InputKey::Up;
+	m_keymap[Qt::Key_Right]		= InputKey::Right;
+	m_keymap[Qt::Key_Down]		= InputKey::Down;
+	m_keymap[Qt::Key_PageUp]		= InputKey::PageUp;
+	m_keymap[Qt::Key_PageDown]	= InputKey::PageDown;
+	m_keymap[Qt::Key_Shift]		= InputKey::Shift;
+	m_keymap[Qt::Key_Control]	= InputKey::Ctrl;
+	m_keymap[Qt::Key_Meta]		= InputKey::Meta;
+	m_keymap[Qt::Key_Alt]		= InputKey::Alt;
+	m_keymap[Qt::Key_CapsLock]	= InputKey::Capslock;
+	m_keymap[Qt::Key_NumLock]	= InputKey::NP_Numlock;
+	m_keymap[Qt::Key_ScrollLock]	= InputKey::ScorllLock;
+	m_keymap[Qt::Key_F1]			= InputKey::F1;
+	m_keymap[Qt::Key_F2]			= InputKey::F2;
+	m_keymap[Qt::Key_F3]			= InputKey::F3;
+	m_keymap[Qt::Key_F4]			= InputKey::F4;
+	m_keymap[Qt::Key_F5]			= InputKey::F5;
+	m_keymap[Qt::Key_F6]			= InputKey::F6;
+	m_keymap[Qt::Key_F7]			= InputKey::F7;
+	m_keymap[Qt::Key_F8]			= InputKey::F8;
+	m_keymap[Qt::Key_F9]			= InputKey::F9;
+	m_keymap[Qt::Key_F10]		= InputKey::F10;
+	m_keymap[Qt::Key_F11]		= InputKey::F11;
+	m_keymap[Qt::Key_F12]		= InputKey::F12;
+	m_keymap[Qt::Key_F13]		= InputKey::F13;
+	m_keymap[Qt::Key_F14]		= InputKey::F14;
+	m_keymap[Qt::Key_F15]		= InputKey::F15;
 #if 0
 	m_keymap[Qt::Key_F16]
 	m_keymap[Qt::Key_F17]
@@ -96,17 +96,17 @@ EditorFrame::EditorFrame(QWidget *parent, View* view)
 	m_keymap[Qt::Key_Super_L]
 	m_keymap[Qt::Key_Super_R]
 #endif
-	m_keymap[Qt::Key_Menu]		= Key::Menu;
+	m_keymap[Qt::Key_Menu]		= InputKey::Menu;
 #if 0
 	m_keymap[Qt::Key_Hyper_L]
 	m_keymap[Qt::Key_Hyper_R]
 #endif
-	m_keymap[Qt::Key_Help]		= Key::Help;
+	m_keymap[Qt::Key_Help]		= InputKey::Help;
 #if 0
 	m_keymap[Qt::Key_Direction_L]
 	m_keymap[Qt::Key_Direction_R]
 #endif
-	m_keymap[Qt::Key_Space]		= Key::Space;
+	m_keymap[Qt::Key_Space]		= InputKey::Space;
 #if  0
 	m_keymap[Qt::Key_Any]
 #endif
@@ -329,28 +329,28 @@ void EditorFrame::paintEvent(QPaintEvent* pe) {
 #endif
 }
 
-void EditorFrame::translateMouseEvent(QMouseEvent* e, Axon::Input::Event* xe) {
+void EditorFrame::translateMouseEvent(QMouseEvent* e, InputEvent* xe) {
 	Qt::MouseButtons btns = e->buttons();
 	Qt::MouseButton btn = e->button();
 
 	if (e->type() == QEvent::MouseMove) {
 		if (btns & Qt::LeftButton)
-			xe->key = Key::MouseLeft;
+			xe->key = InputKey::MouseLeft;
 		else if ( btns & Qt::RightButton)
-			xe->key = Key::MouseRight;
+			xe->key = InputKey::MouseRight;
 		else if (btns & Qt::MidButton)
-			xe->key = Key::MouseMiddle;
+			xe->key = InputKey::MouseMiddle;
 	} else {
 		if (btn == Qt::LeftButton) {
-			xe->key = Key::MouseLeft;
+			xe->key = InputKey::MouseLeft;
 		} else if (btn == Qt::RightButton) {
-			xe->key = Key::MouseRight;
+			xe->key = InputKey::MouseRight;
 		} else if (btn == Qt::MidButton) {
-			xe->key = Key::MouseMiddle;
+			xe->key = InputKey::MouseMiddle;
 		}
 	}
 
-	if (xe->type == Axon::Input::Event::MouseMove && m_mouseMode == InputSystem::FPS_Mode) {
+	if (xe->type == InputEvent::MouseMove && m_mouseMode == InputSystem::FPS_Mode) {
 		xe->pos.x = e->x();
 		xe->pos.y = e->y();
 		xe->pos = xe->pos - m_mouseCenter;
@@ -362,11 +362,11 @@ void EditorFrame::translateMouseEvent(QMouseEvent* e, Axon::Input::Event* xe) {
 
 	Qt::KeyboardModifiers mod = e->modifiers();
 	if (mod & Qt::ShiftModifier)
-		xe->flags |= Axon::Input::Event::ShiftModifier;
+		xe->flags |= InputEvent::ShiftModifier;
 	if (mod & Qt::AltModifier)
-		xe->flags |= Axon::Input::Event::AltModifier;
+		xe->flags |= InputEvent::AltModifier;
 	if (mod & Qt::ControlModifier)
-		xe->flags |= Axon::Input::Event::ControlModifier;
+		xe->flags |= InputEvent::ControlModifier;
 
 	xe->time = OsUtil::milliseconds();
 
@@ -375,21 +375,21 @@ void EditorFrame::translateMouseEvent(QMouseEvent* e, Axon::Input::Event* xe) {
 
 
 void EditorFrame::mousePressEvent(QMouseEvent* e) {
-	Axon::Input::Event xe;
+	InputEvent xe;
 
 	TypeZero(&xe);
 
-	xe.type = Axon::Input::Event::MouseDown;
+	xe.type = InputEvent::MouseDown;
 
 	translateMouseEvent(e, &xe);
 }
 
 void EditorFrame::mouseReleaseEvent(QMouseEvent* e) {
-	Axon::Input::Event xe;
+	InputEvent xe;
 
 	TypeZero(&xe);
 
-	xe.type = Axon::Input::Event::MouseUp;
+	xe.type = InputEvent::MouseUp;
 
 	translateMouseEvent(e, &xe);
 }
@@ -403,37 +403,37 @@ void EditorFrame::mouseMoveEvent(QMouseEvent* e) {
 	last_x = x;
 	last_y = y;
 
-	Axon::Input::Event xe;
+	InputEvent xe;
 
 	TypeZero(&xe);
 
-	xe.type = Axon::Input::Event::MouseMove;
+	xe.type = InputEvent::MouseMove;
 
 	translateMouseEvent(e, &xe);
 }
 
 void EditorFrame::wheelEvent(QWheelEvent* e) {
-	Axon::Input::Event xe;
+	InputEvent xe;
 
 	TypeZero(&xe);
 
-	xe.type = Axon::Input::Event::Wheel;
+	xe.type = InputEvent::Wheel;
 	xe.delta = e->delta();
 
 	if (e->delta() > 0)
-		xe.key = Key::MouseWheelUp;
+		xe.key = InputKey::MouseWheelUp;
 	else
-		xe.key = Key::MouseWheelDown;
+		xe.key = InputKey::MouseWheelDown;
 
 	xe.time = OsUtil::milliseconds();
 
 	Qt::KeyboardModifiers mod = e->modifiers();
 	if (mod & Qt::ShiftModifier)
-		xe.flags |= Axon::Input::Event::ShiftModifier;
+		xe.flags |= InputEvent::ShiftModifier;
 	if (mod & Qt::AltModifier)
-		xe.flags |= Axon::Input::Event::AltModifier;
+		xe.flags |= InputEvent::AltModifier;
 	if (mod & Qt::ControlModifier)
-		xe.flags |= Axon::Input::Event::ControlModifier;
+		xe.flags |= InputEvent::ControlModifier;
 
 	issueEvent(e, xe);
 }
@@ -472,29 +472,29 @@ void EditorFrame::tabletEvent(QTabletEvent* e) {
 	switch (e->type()) {
 		 case QEvent::TabletPress:
 //			m_tabletPressed = true;
-			xe.key = Key::MouseLeft;
-			xe.type = Event::MouseDown;
+			xe.key = InputKey::MouseLeft;
+			xe.type = InputEvent::MouseDown;
 			goto localexit;
 			break;
 		 case QEvent::TabletRelease:
 //			m_tabletPressed = false;
-			xe.key = Key::MouseLeft;
-			xe.type = Event::MouseUp;			
+			xe.key = InputKey::MouseLeft;
+			xe.type = InputEvent::MouseUp;			
 			goto localexit;
 			break;
 		 case QEvent::TabletMove:
 			 {
 				 if (!m_tabletPressed && pressure > 127) {
 					 m_tabletPressed = true;
-					 xe.key = Key::MouseLeft;
-					 xe.type = Event::MouseDown;
+					 xe.key = InputKey::MouseLeft;
+					 xe.type = InputEvent::MouseDown;
 					 break;
 				 }
 
 				 if (m_tabletPressed && pressure <= 127) {
 					 m_tabletPressed = false;
-					 xe.key = Key::MouseLeft;
-					 xe.type = Event::MouseUp;
+					 xe.key = InputKey::MouseLeft;
+					 xe.type = InputEvent::MouseUp;
 					 break;
 				 }
 				 seq++;
@@ -518,10 +518,10 @@ void EditorFrame::tabletEvent(QTabletEvent* e) {
 				 }
 				 Printf("used Move %d", seq);
 				 lastpos = xe.pos;
-				 xe.type = Event::MouseMove;
+				 xe.type = InputEvent::MouseMove;
 
 				 if (m_tabletPressed) {
-					 xe.key = Key::MouseLeft;
+					 xe.key = InputKey::MouseLeft;
 				 } else {
 					 xe.key = 0;
 				 }
@@ -567,20 +567,20 @@ void EditorFrame::keyPressEvent(QKeyEvent* e) {
 	if (it == m_keymap.end())
 		return;
 
-	Axon::Input::Event xe;
+	InputEvent xe;
 	
 	TypeZero(&xe);
 
-	xe.type = Axon::Input::Event::KeyDown;
-	xe.key = (Key::Type)it.value();
+	xe.type = InputEvent::KeyDown;
+	xe.key = (InputKey::Type)it.value();
 
 	Qt::KeyboardModifiers mod = e->modifiers();
 	if (mod & Qt::ShiftModifier)
-		xe.flags |= Axon::Input::Event::ShiftModifier;
+		xe.flags |= InputEvent::ShiftModifier;
 	if (mod & Qt::AltModifier)
-		xe.flags |= Axon::Input::Event::AltModifier;
+		xe.flags |= InputEvent::AltModifier;
 	if (mod & Qt::ControlModifier)
-		xe.flags |= Axon::Input::Event::ControlModifier;
+		xe.flags |= InputEvent::ControlModifier;
 
 	xe.time = OsUtil::milliseconds();
 
@@ -596,20 +596,20 @@ void EditorFrame::keyReleaseEvent(QKeyEvent* e) {
 	if (it == m_keymap.end())
 		return;
 
-	Axon::Input::Event xe;
+	InputEvent xe;
 
 	TypeZero(&xe);
 
-	xe.type = Axon::Input::Event::KeyUp;
-	xe.key = (Key::Type)it.value();
+	xe.type = InputEvent::KeyUp;
+	xe.key = (InputKey::Type)it.value();
 
 	Qt::KeyboardModifiers mod = e->modifiers();
 	if (mod & Qt::ShiftModifier)
-		xe.flags |= Axon::Input::Event::ShiftModifier;
+		xe.flags |= InputEvent::ShiftModifier;
 	if (mod & Qt::AltModifier)
-		xe.flags |= Axon::Input::Event::AltModifier;
+		xe.flags |= InputEvent::AltModifier;
 	if (mod & Qt::ControlModifier)
-		xe.flags |= Axon::Input::Event::ControlModifier;
+		xe.flags |= InputEvent::ControlModifier;
 
 	xe.time = OsUtil::milliseconds();
 
@@ -708,7 +708,7 @@ void EditorFrame::resetCursor() {
 	this->unsetCursor();
 }
 
-void EditorFrame::issueEvent(QEvent* qe, Axon::Input::Event& xe)
+void EditorFrame::issueEvent(QEvent* qe, InputEvent& xe)
 {
 	if (m_isCapturing) {
 		g_inputSystem->queEvent(xe);

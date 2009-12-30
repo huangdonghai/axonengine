@@ -16,13 +16,4 @@ read the license and understand and accept it fully.
 #include "peer.h"
 #include "networksystem.h"
 
-namespace Axon { namespace Network {
-}} // namespace Axon::Network
-
-namespace Axon {
-	typedef Network::BitMsg netBitMsg;
-	typedef Network::BitMsgDelta netBitMsgDelta;
-	typedef Network::Peer netPeer;
-}
-
 #endif // end guardian

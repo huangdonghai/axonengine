@@ -15,7 +15,7 @@ read the license and understand and accept it fully.
 
 #include "../../../data/shaders/shared.fxh"
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 #define AX_DECL_SURFACETYPE \
 	AX_ENUM(Dust) \

@@ -11,7 +11,7 @@ read the license and understand and accept it fully.
 #ifndef AX_ENGINE_IMAGE_H
 #define AX_ENGINE_IMAGE_H
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 	struct TexFormat {
 		enum Type {
@@ -469,6 +469,6 @@ namespace Axon {
 		DataBufferSeq m_datas;
 	};
 
-} // namespace Axon
+AX_END_NAMESPACE
 
 #endif // AX_ENGINE_IMAGE_H

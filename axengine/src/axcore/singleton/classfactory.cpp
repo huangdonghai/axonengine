@@ -41,7 +41,7 @@ namespace {
 
 
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 	Module::Module(const String& name)
 		: m_name(name)
@@ -155,4 +155,4 @@ namespace Axon {
 		return module;
 	}
 
-} // namespace Axon
+AX_END_NAMESPACE

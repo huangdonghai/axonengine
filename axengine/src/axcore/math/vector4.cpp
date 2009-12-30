@@ -9,9 +9,9 @@ read the license and understand and accept it fully.
 
 #include "../private.h"
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 	const Vector4 Vector4::One = Vector4(1,1,1,1);
 	const Vector4 Vector4::Zero = Vector4(0,0,0,0);
 
-} // namespace Axon
+AX_END_NAMESPACE

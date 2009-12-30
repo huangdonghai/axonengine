@@ -11,14 +11,14 @@ read the license and understand and accept it fully.
 #ifndef AX_INPUT_EVENTSOURCE_H
 #define AX_INPUT_EVENTSOURCE_H
 
-namespace Axon { namespace Input {
+AX_BEGIN_NAMESPACE
 
-	class WinEventSource : public IEventSource {
+	class WinEventSource : public IInputSource {
 	public:
 		WinEventSource();
 		~WinEventSource();
 
-		// implement IEventSource
+		// implement IInputSource
 		virtual void startCapture(InputSystem::CaptureMode capturemode);
 		virtual void process();
 		virtual void setVibration(float left, float right);
@@ -28,11 +28,11 @@ namespace Axon { namespace Input {
 		handle_t m_hwnd;
 	};
 
-	class XenonEventSource : public IEventSource {};
+	class XenonEventSource : public IInputSource {};
 
-	class XWinEventSource : public IEventSource {};
+	class XWinEventSource : public IInputSource {};
 
-}} // namespace Axon::Input
+AX_END_NAMESPACE
 
 #endif // end guardian
 

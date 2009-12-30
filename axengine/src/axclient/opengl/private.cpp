@@ -9,7 +9,7 @@ read the license and understand and accept it fully.
 
 #include "private.h"
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 	AX_BEGIN_CLASS_MAP(axopengl)
 		AX_CLASS_ENTRY("driver", GLdriver)
@@ -32,5 +32,5 @@ namespace Axon {
 	GLfontrender* glFontRender;
 
 
-} // namespace Axon
+AX_END_NAMESPACE
 

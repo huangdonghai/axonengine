@@ -9,7 +9,7 @@ read the license and understand and accept it fully.
 
 #include "../private.h"
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 	const Matrix4 Matrix4::Identity(
 		1,0,0,0,
@@ -26,4 +26,4 @@ namespace Axon {
 		return result;
 	}
 
-} // namespace Axon
+AX_END_NAMESPACE

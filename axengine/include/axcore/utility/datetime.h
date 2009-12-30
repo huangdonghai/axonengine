@@ -11,8 +11,8 @@ read the license and understand and accept it fully.
 #ifndef AX_DATETIME_H
 #define AX_DATETIME_H
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
-} // namespace Axon
+AX_END_NAMESPACE
 
 #endif // AX_DATETIME_H

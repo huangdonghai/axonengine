@@ -32,7 +32,7 @@ read the license and understand and accept it fully.
 #define AX_DECLARE_MODULE(module) extern "C" const ClassEntry* module##_entry();
 #define AX_REGISTER_MODULE(module) g_classFactory->registerStaticModule(#module, module##_entry);
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 	struct ClassEntry {
 		const char* className;
@@ -78,6 +78,6 @@ namespace Axon {
 		ModuleDict m_moduleDict;
 	};
 
-} // namespace Axon
+AX_END_NAMESPACE
 
 #endif // AX_CORE_CLASS_FACTORY_H

@@ -11,7 +11,7 @@ read the license and understand and accept it fully.
 #ifndef AX_CALENDAR_H
 #define AX_CALENDAR_H
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 	enum { START_YEAR = 1901 };
 
@@ -122,6 +122,6 @@ namespace Axon {
 		uint_t m_curMilliseconds;
 	};
 
-} // namespace Axon
+AX_END_NAMESPACE
 
 #endif // AX_CALENDAR_H

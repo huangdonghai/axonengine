@@ -16,7 +16,7 @@ read the license and understand and accept it fully.
 #include "workbench.h"
 
 
-class WindowInput : public Axon::Input::IEventSource {
+class WindowInput : public IInputSource {
 public:
 	WindowInput();
 	~WindowInput();

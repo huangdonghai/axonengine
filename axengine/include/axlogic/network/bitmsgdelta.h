@@ -11,7 +11,7 @@ read the license and understand and accept it fully.
 #ifndef AX_NETWORK_BITMSGDELTA_H
 #define AX_NETWORK_BITMSGDELTA_H
 
-namespace Axon { namespace Network {
+AX_BEGIN_NAMESPACE
 
 	class BitMsgDelta {
 	public:
@@ -250,6 +250,6 @@ namespace Axon { namespace Network {
 		return Math::bitsToFloat( newBits, exponentBits, mantissaBits );
 	}
 
-}} // namespace Axon::Network
+AX_END_NAMESPACE
 
 #endif // end guardian

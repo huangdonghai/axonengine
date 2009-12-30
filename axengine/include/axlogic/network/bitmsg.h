@@ -11,7 +11,7 @@ read the license and understand and accept it fully.
 #ifndef AX_NETWORK_BITMSG_H
 #define AX_NETWORK_BITMSG_H
 
-namespace Axon { namespace Network {
+AX_BEGIN_NAMESPACE
 	typedef Dict<String, String> StringDict;
 
 	// network address
@@ -405,6 +405,6 @@ namespace Axon { namespace Network {
 		return Math::bitsToFloat( newBits, exponentBits, mantissaBits );
 	}
 
-}} // namespace Axon::Network
+AX_END_NAMESPACE
 
 #endif // end guardian

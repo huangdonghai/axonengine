@@ -19,7 +19,7 @@ namespace FMOD {
 }
 
 // forward declaration
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 	enum LoopingMode {
 		Looping_Forever = -1,
@@ -45,7 +45,7 @@ namespace Axon {
 		DEFAULT_MAX_DIST = 64
 	};
 
-} // namespace Axon
+AX_END_NAMESPACE
 
 #include "sound_sfx.h"
 #include "sound_channel.h"

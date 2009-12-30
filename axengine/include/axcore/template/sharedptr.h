@@ -13,7 +13,7 @@ read the license and understand and accept it fully.
 #define AX_CORE_SHAREDPTR_H
 
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 	struct DeleteArray {
 		void operator()(void* ptr)
@@ -438,7 +438,7 @@ namespace Axon {
 	};
 #endif
 
-} // namespace Axon
+AX_END_NAMESPACE
 
 
 #endif // end guardian

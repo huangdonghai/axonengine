@@ -24,8 +24,8 @@ AX_BEGIN_NAMESPACE
 		}
 	}
 
-	void Tool::handleEvent(Input::Event* e) {
-		if (e->flags & Input::Event::AltModifier)
+	void Tool::handleEvent(InputEvent* e) {
+		if (e->flags & InputEvent::AltModifier)
 			return;
 
 #if 0 // we need shift flags for tools
@@ -33,11 +33,11 @@ AX_BEGIN_NAMESPACE
 			return;
 #endif
 
-		IEventHandler::handleEvent(e);
+		IInputHandler::handleEvent(e);
 	}
 
-	void Tool::onMouseDown(Input::Event* e) {
-		if (e->key != Key::MouseLeft)
+	void Tool::onMouseDown(InputEvent* e) {
+		if (e->key != InputKey::MouseLeft)
 			return;
 
 		m_isPressed = true;
@@ -47,8 +47,8 @@ AX_BEGIN_NAMESPACE
 		return;
 	}
 
-	void Tool::onMouseUp(Input::Event* e) {
-		if (e->key != Key::MouseLeft)
+	void Tool::onMouseUp(InputEvent* e) {
+		if (e->key != InputKey::MouseLeft)
 			return;
 
 		e->accepted = true;
@@ -57,8 +57,8 @@ AX_BEGIN_NAMESPACE
 		doRelease(e->pos.x, e->pos.y);
 	}
 
-	void Tool::onMouseMove(Input::Event* e) {
-		if (e->key == Key::MouseRight)
+	void Tool::onMouseMove(InputEvent* e) {
+		if (e->key == InputKey::MouseRight)
 			return;
 
 		e->accepted = true;
@@ -96,7 +96,7 @@ AX_BEGIN_NAMESPACE
 
 		m_oldlist = m_context->getSelection();
 
-		if (flags & Input::Event::ControlModifier)
+		if (flags & InputEvent::ControlModifier)
 			m_isAdd = true;
 		else
 			m_isAdd = false;
@@ -415,7 +415,7 @@ AX_BEGIN_NAMESPACE
 				return false;
 
 			// if shift key hold, clone actors
-			if (flags & Input::Event::ShiftModifier) {
+			if (flags & InputEvent::ShiftModifier) {
 				AgentList cloned = m_context->getSelection().clone();
 
 				GroupHis* group = new GroupHis(m_context, "Transform Cloned");

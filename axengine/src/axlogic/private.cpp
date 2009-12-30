@@ -13,7 +13,7 @@ read the license and understand and accept it fully.
 #include "private.h"
 
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 #define AX_CVARDECL(name, defaultstring, flags) \
 	Cvar* name;
@@ -51,5 +51,5 @@ namespace Axon {
 		axPhysQuit();
 	}
 
-} // namespace Axon
+AX_END_NAMESPACE
 

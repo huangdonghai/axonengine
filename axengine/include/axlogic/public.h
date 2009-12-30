@@ -30,7 +30,7 @@ read the license and understand and accept it fully.
 #include "gfx/all.h"
 #include "game/all.h"
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 #define AX_CVARDECL(name, defaultstring, flags) \
 	AX_API extern Cvar* name;
@@ -42,7 +42,7 @@ namespace Axon {
 	AX_API extern void axLogicInit();
 	AX_API extern void axLogicQuit();
 
-} // namespace Axon
+AX_END_NAMESPACE
 
 #undef AX_API
 

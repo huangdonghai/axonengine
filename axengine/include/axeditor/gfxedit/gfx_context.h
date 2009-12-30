@@ -24,6 +24,7 @@ public:
 
 private:
 	RenderWorld *m_renderWorld;
+	GfxEntity *m_gfxEntity;
 	GfxView *m_view;
 };
 

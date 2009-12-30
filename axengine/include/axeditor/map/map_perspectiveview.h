@@ -12,59 +12,60 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-	//------------------------------------------------------------------------------
-	// class PerspectiveView, for Perspective map rendering and editing
-	//------------------------------------------------------------------------------
+//--------------------------------------------------------------------------
+// class PerspectiveView, for Perspective map rendering and editing
+//--------------------------------------------------------------------------
 
-	class PerspectiveView : public MapView, public ITickable, public IObserver {
-		friend class Context;
-		friend class MapContext;
+class PerspectiveView : public MapView, public ITickable, public IObserver
+{
+	friend class Context;
+	friend class MapContext;
 
-	public:
-		PerspectiveView(MapContext* context);
-		~PerspectiveView();
+public:
+	PerspectiveView(MapContext* context);
+	~PerspectiveView();
 
 
-	protected:
-		void updateMove();
+protected:
+	void updateMove();
 
-		// implement View
-		virtual void doRender();
-		virtual void checkViewOrg();
-		virtual void bindFrame(IFrame* container);
-		virtual void preUpdate() { updateMove(); }
+	// implement View
+	virtual void doRender();
+	virtual void checkViewOrg();
+	virtual void bindFrame(IViewFrame* container);
+	virtual void preUpdate() { updateMove(); }
 
-		// implement ITickable
-		virtual void tick();
+	// implement ITickable
+	virtual void tick();
 
-		// implement IEventHandler
-		virtual void handleEvent(Input::Event* e);
-		virtual void onKeyDown(Input::Event* e);
-		virtual void onKeyUp(Input::Event* e);
-		virtual void onMouseDown(Input::Event* e);
-		virtual void onMouseUp(Input::Event* e);
-		virtual void onMouseMove(Input::Event* e);
-		virtual void onMouseWheel(Input::Event* e);
+	// implement IEventHandler
+	virtual void handleEvent(InputEvent* e);
+	virtual void onKeyDown(InputEvent* e);
+	virtual void onKeyUp(InputEvent* e);
+	virtual void onMouseDown(InputEvent* e);
+	virtual void onMouseUp(InputEvent* e);
+	virtual void onMouseMove(InputEvent* e);
+	virtual void onMouseWheel(InputEvent* e);
 
-		// implement IObserver
-		virtual void doNotify(IObservable* subject, int arg);
+	// implement IObserver
+	virtual void doNotify(IObservable* subject, int arg);
 
-	private:
-		enum Tracking {
-			kNone, kRotateHead, kRotate, kPan, kZoom, kHorizonPan
-		};
-
-		enum Moving {
-			Accel = 1, Front = 2, Left = 4, Right = 8, Back = 16,
-			MoveMask = Front + Left + Right + Back
-		};
-
-		Tracking m_tracking;
-		int m_moving;
-		Point m_trackingPos;
-		Vector3 m_trackingCenter;
-		bool m_isTrackingCenterSet;
+private:
+	enum Tracking {
+		kNone, kRotateHead, kRotate, kPan, kZoom, kHorizonPan
 	};
+
+	enum Moving {
+		Accel = 1, Front = 2, Left = 4, Right = 8, Back = 16,
+		MoveMask = Front + Left + Right + Back
+	};
+
+	Tracking m_tracking;
+	int m_moving;
+	Point m_trackingPos;
+	Vector3 m_trackingCenter;
+	bool m_isTrackingCenterSet;
+};
 
 AX_END_NAMESPACE
 

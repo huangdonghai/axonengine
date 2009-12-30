@@ -22,14 +22,14 @@ read the license and understand and accept it fully.
 
 #include "render/selection.h"
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 	extern IRenderDriver* g_renderDriver;
 
 #ifdef AX_CONFIG_OPTION_USE_SPEEDTREE_40
 	extern TreeManager* g_treeManager;
 #endif // AX_CONFIG_OPTION_USE_SPEEDTREE_40
-} // namespace Axon
+AX_END_NAMESPACE
 
 #endif // AX_CLIENT_PRIVATE_H
 

@@ -9,7 +9,7 @@ read the license and understand and accept it fully.
 
 #include "../private.h"
 
-namespace Axon {
+AX_BEGIN_NAMESPACE
 
 typedef struct {
 	int valid;            /* indicate which fields are valid */
@@ -597,4 +597,4 @@ Image::loadFile_hdr(const String& filename) {
 	return m_dataPresent = true;
 }
 
-} // namespace Axon
+AX_END_NAMESPACE
