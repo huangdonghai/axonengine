@@ -32,15 +32,15 @@ AX_BEGIN_NAMESPACE
 		virtual ~Context();
 
 		// present
-		virtual void doRender(const RenderCamera& camera, bool world = false) = 0;
-		virtual void doSelect(const RenderCamera& camera, int part) = 0;
+		virtual void doRender(const RenderCamera &camera, bool world = false) = 0;
+		virtual void doSelect(const RenderCamera &camera, int part) = 0;
 		virtual MapTerrain *getTerrain() { return 0; }
 
 		int generateActorId();
 		void addActor(Agent *a);
 		void removeActor(Agent *a);
 		Agent *findActor(int id);
-		const AgentDict& getActorDict() { return m_agentDict; }
+		const AgentDict &getActorDict() { return m_agentDict; }
 
 		Action *createAction(int type);
 		Tool *createTool(int type);
@@ -50,9 +50,9 @@ AX_BEGIN_NAMESPACE
 		String getTitle() const;
 		String getFilename() const;
 		bool createNew();
-		bool load(const String& filename);
+		bool load(const String &filename);
 		bool save();
-		bool saveAs(const String& filename);
+		bool saveAs(const String &filename);
 		bool isDirty() const { return m_isDirty; }
 		bool isLoading() const { return m_isLoading; }
 
@@ -71,24 +71,24 @@ AX_BEGIN_NAMESPACE
 
 		// history
 		void addHistory(Action *his);
-		void beginHis(const String& msg) { m_historyManager.begin(this, msg); }
+		void beginHis(const String &msg) { m_historyManager.begin(this, msg); }
 		void endHis() { m_historyManager.end(); }
 		void undo();
 		void redo();
 		HistoryManager *getHistory();
 
 		// selection
-		const AgentList& getSelection() { return m_selections; }
-		History *setSelectionHistoried(const AgentList& elist);
-		void setSelection(const AgentList& elist, bool undoable=true);
+		const AgentList &getSelection() { return m_selections; }
+		History *setSelectionHistoried(const AgentList &elist);
+		void setSelection(const AgentList &elist, bool undoable=true);
 		void setSelection(Agent *actor, bool undoable=true);
 		void selectNone(bool undoable=true);
 		void selectAll(bool undoable=true);
 		void selectInvert(bool undoable=true);
-		void addSelection(const AgentList& elist, bool undoable=true);
+		void addSelection(const AgentList &elist, bool undoable=true);
 
 		// properties
-		void setActorProperty(const String& propName, const Variant& value);
+		void setActorProperty(const String &propName, const Variant &value);
 
 		// state
 		State *getState() const { return m_state; }

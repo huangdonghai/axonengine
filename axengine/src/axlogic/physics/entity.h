@@ -44,17 +44,17 @@ AX_BEGIN_NAMESPACE
 		virtual void setActive(bool activate) = 0;
 		virtual bool isActive() const = 0;
 		virtual void setAutoDeactive(bool val) = 0;
-		virtual void setMatrix(const AffineMat& matrix) = 0;
+		virtual void setMatrix(const AffineMat &matrix) = 0;
 		virtual AffineMat getMatrix() const = 0;
 		virtual Type getType() const { return kInvalid; }
-		virtual void bind(PhysicsWorld* world) = 0;
-		virtual void unbind(PhysicsWorld* world) = 0;
+		virtual void bind(PhysicsWorld *world) = 0;
+		virtual void unbind(PhysicsWorld *world) = 0;
 
-		void setGameEntity(GameActor* ent);
+		void setGameEntity(GameActor *ent);
 
 	protected:
-		PhysicsWorld* m_world;
-		GameActor* m_gameEntity;
+		PhysicsWorld *m_world;
+		GameActor *m_gameEntity;
 	};
 
 AX_END_NAMESPACE

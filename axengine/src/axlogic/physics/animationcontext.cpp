@@ -16,7 +16,7 @@ AX_BEGIN_NAMESPACE
 	// class AnimationContext
 	//--------------------------------------------------------------------------
 
-	AnimationChannel::AnimationChannel(AnimationContext* context, int index, const String& name, const StringSeq& bones)
+	AnimationChannel::AnimationChannel(AnimationContext *context, int index, const String &name, const StringSeq &bones)
 		: m_context(context)
 		, m_index(index)
 		, m_channelName(name)
@@ -54,7 +54,7 @@ AX_BEGIN_NAMESPACE
 		m_animator = new HavokAnimator(m_context->m_rig);
 		m_pose = new HavokPose(m_context->m_rig);
 
-		const StringSeq& anim_names = m_context->m_animations;
+		const StringSeq &anim_names = m_context->m_animations;
 
 		m_animations.resize(anim_names.size());
 
@@ -88,7 +88,7 @@ AX_BEGIN_NAMESPACE
 		m_animator->renderToPose(m_pose);
 	}
 
-	void AnimationChannel::switchState(const String& state, float easein)
+	void AnimationChannel::switchState(const String &state, float easein)
 	{
 		if (m_state == state) {
 			return;
@@ -119,7 +119,7 @@ AX_BEGIN_NAMESPACE
 
 	}
 
-	void AnimationContext::initFromLua(const String& luaobj)
+	void AnimationContext::initFromLua(const String &luaobj)
 	{
 		m_lua = luaobj;
 
@@ -196,7 +196,7 @@ AX_BEGIN_NAMESPACE
 		m_currentChannel = -1;
 	}
 
-	void AnimationContext::playCycle(const String& anim)
+	void AnimationContext::playCycle(const String &anim)
 	{
 		AX_ASSERT(m_currentChannel != -1);
 
@@ -208,12 +208,12 @@ AX_BEGIN_NAMESPACE
 		m_channels[m_currentChannel]->playCycle(it->second);
 	}
 
-	void AnimationContext::playCycleSync(const String& anim, int syncState)
+	void AnimationContext::playCycleSync(const String &anim, int syncState)
 	{
 
 	}
 
-	void AnimationContext::playAnim(const String& anim)
+	void AnimationContext::playAnim(const String &anim)
 	{
 		AX_ASSERT(m_currentChannel != -1);
 
@@ -231,7 +231,7 @@ AX_BEGIN_NAMESPACE
 		return m_channels[m_currentChannel]->isAnimDone(timeleft);
 	}
 
-	void AnimationContext::switchState(const String& state, float easyin)
+	void AnimationContext::switchState(const String &state, float easyin)
 	{
 		AX_ASSERT(m_currentChannel != -1);
 		m_channels[m_currentChannel]->switchState(state, easyin);
@@ -247,7 +247,7 @@ AX_BEGIN_NAMESPACE
 		m_currentChannel = -1;
 	}
 
-	void AnimationContext::initChannel(const LuaTable& table)
+	void AnimationContext::initChannel(const LuaTable &table)
 	{
 		// read from lua first
 		table.beginRead();
@@ -286,14 +286,14 @@ AX_BEGIN_NAMESPACE
 		}
 
 		for (int i = 0; i < numbones; i++) {
-			hkaBone* bone = m_rig->m_havokSkeleton->m_bones[i];
+			hkaBone *bone = m_rig->m_havokSkeleton->m_bones[i];
 
 			for (int j = 0; j < m_numChannels; j++) {
-				const StringSeq& channel_bones = m_channels[j]->m_bones;
+				const StringSeq &channel_bones = m_channels[j]->m_bones;
 
 				// find bone name in channel bone def
 				for (size_t k = 0; k < channel_bones.size(); k++) {
-					const String& channel_bone = channel_bones[k];
+					const String &channel_bone = channel_bones[k];
 					if (channel_bone == bone->m_name) {
 						m_boneChannelMap[i] = j;
 						break;
@@ -317,7 +317,7 @@ AX_BEGIN_NAMESPACE
 
 	}
 
-	HavokPose* AnimationContext::getPose() const
+	HavokPose *AnimationContext::getPose() const
 	{
 		return m_channels[0]->m_pose;
 	}

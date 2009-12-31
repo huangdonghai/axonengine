@@ -16,7 +16,7 @@ AX_BEGIN_NAMESPACE
 	// class UndoAction, undo action
 	//--------------------------------------------------------------------------
 
-	UndoAction::UndoAction(Context* context) : Action(context) {}
+	UndoAction::UndoAction(Context *context) : Action(context) {}
 	UndoAction::~UndoAction() {}
 
 	void UndoAction::doIt() {
@@ -28,7 +28,7 @@ AX_BEGIN_NAMESPACE
 	// class RedoAction, redo action
 	//--------------------------------------------------------------------------
 
-	RedoAction::RedoAction(Context* context) : Action(context) {}
+	RedoAction::RedoAction(Context *context) : Action(context) {}
 	RedoAction::~RedoAction() {}
 
 	void RedoAction::doIt() {
@@ -39,7 +39,7 @@ AX_BEGIN_NAMESPACE
 	// class DeleteAction, undo action
 	//--------------------------------------------------------------------------
 
-	DeleteAction::DeleteAction(Context* context) : Action(context) {
+	DeleteAction::DeleteAction(Context *context) : Action(context) {
 		m_isFirst = true;
 	}
 
@@ -77,7 +77,7 @@ AX_BEGIN_NAMESPACE
 	// class CloneAction, undo action
 	//--------------------------------------------------------------------------
 
-	CloneAction::CloneAction(Context* context) : Action(context) {
+	CloneAction::CloneAction(Context *context) : Action(context) {
 		m_isFirst = true;
 		m_selectionHis = nullptr;
 	}

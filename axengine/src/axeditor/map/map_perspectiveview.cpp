@@ -16,7 +16,7 @@ AX_BEGIN_NAMESPACE
 // class PerspectiveView
 //------------------------------------------------------------------------------
 
-PerspectiveView::PerspectiveView(MapContext* context)
+PerspectiveView::PerspectiveView(MapContext *context)
 	: MapView(context)
 	, m_tracking(kNone)
 	, m_moving(0)
@@ -42,8 +42,8 @@ PerspectiveView::~PerspectiveView()
 
 void PerspectiveView::updateMove()
 {
-	MapContext* mapContext = static_cast<MapContext*>(m_context);
-	MapState* mapState = mapContext->getMapState();
+	MapContext *mapContext = static_cast<MapContext*>(m_context);
+	MapState *mapState = mapContext->getMapState();
 
 	int accel = m_moving & Accel;
 	accel *= 2;
@@ -69,7 +69,7 @@ void PerspectiveView::updateMove()
 	dir.normalize();
 	Vector3 origin = m_eyeMatrix.origin + dir * dist;
 
-	MapTerrain* terrain = m_context->getTerrain();
+	MapTerrain *terrain = m_context->getTerrain();
 	if (mapState->followTerrain && terrain && terrain->isInWorld()) {
 		float h = terrain->getHeightByPos(m_eyeMatrix.origin) + m_camera.getZnear() * 2.0f;
 		if (origin.z < h) origin.z = h;
@@ -88,7 +88,7 @@ void PerspectiveView::doRender()
 void PerspectiveView::checkViewOrg() {
 }
 
-void PerspectiveView::bindFrame(IViewFrame* container)
+void PerspectiveView::bindFrame(IViewFrame *container)
 {
 	// pre bind
 	if (m_frame) {
@@ -110,7 +110,7 @@ void PerspectiveView::bindFrame(IViewFrame* container)
 	}
 }
 
-void PerspectiveView::onKeyDown(InputEvent* e)
+void PerspectiveView::onKeyDown(InputEvent *e)
 {
 #if 0
 	doUpdate();
@@ -143,7 +143,7 @@ void PerspectiveView::onKeyDown(InputEvent* e)
 	}
 }
 
-void PerspectiveView::onKeyUp(InputEvent* e)
+void PerspectiveView::onKeyUp(InputEvent *e)
 {
 	setAutoUpdate(Default);
 
@@ -166,7 +166,7 @@ void PerspectiveView::onKeyUp(InputEvent* e)
 	}
 }
 
-void PerspectiveView::onMouseDown(InputEvent* e)
+void PerspectiveView::onMouseDown(InputEvent *e)
 {
 	if (e->key == InputKey::MouseRight && e->flags & InputEvent::AltModifier) {
 		m_tracking = kPan;
@@ -224,7 +224,7 @@ void PerspectiveView::onMouseDown(InputEvent* e)
 
 }
 
-void PerspectiveView::onMouseUp(InputEvent* e)
+void PerspectiveView::onMouseUp(InputEvent *e)
 {
 //		if (e->key == InputKey::MouseRight) {
 		m_tracking = kNone;
@@ -234,10 +234,10 @@ void PerspectiveView::onMouseUp(InputEvent* e)
 //		}
 }
 
-void PerspectiveView::onMouseMove(InputEvent* e)
+void PerspectiveView::onMouseMove(InputEvent *e)
 {
-	MapContext* mapContext = static_cast<MapContext*>(m_context);
-	MapState* mapState = mapContext->getMapState();
+	MapContext *mapContext = static_cast<MapContext*>(m_context);
+	MapState *mapState = mapContext->getMapState();
 
 	if (!m_tracking)
 		return;
@@ -323,10 +323,10 @@ void PerspectiveView::onMouseMove(InputEvent* e)
 	}
 }
 
-void PerspectiveView::onMouseWheel(InputEvent* e)
+void PerspectiveView::onMouseWheel(InputEvent *e)
 {
-	MapContext* mapContext = static_cast<MapContext*>(m_context);
-	MapState* mapState = mapContext->getMapState();
+	MapContext *mapContext = static_cast<MapContext*>(m_context);
+	MapState *mapState = mapContext->getMapState();
 
 	float delta = e->delta;
 	
@@ -342,7 +342,7 @@ void PerspectiveView::onMouseWheel(InputEvent* e)
 	m_eyeMatrix.origin = (origin);
 }
 
-void PerspectiveView::handleEvent(InputEvent* e)
+void PerspectiveView::handleEvent(InputEvent *e)
 {
 	View::handleEvent(e);
 }
@@ -354,13 +354,13 @@ void PerspectiveView::tick()
 	doUpdate();
 }
 
-void PerspectiveView::doNotify( IObservable* subject, int arg )
+void PerspectiveView::doNotify( IObservable *subject, int arg )
 {
 	if (subject != g_gameSystem)
 		return;
 
 	if (arg & GameSystem::ObserveFlag_StopRunning) {
-		GameWorld* gw = static_cast<MapContext*>(m_context)->getGameWorld();
+		GameWorld *gw = static_cast<MapContext*>(m_context)->getGameWorld();
 
 		m_eyeMatrix = gw->getLastViewMatrix();
 	}

@@ -26,22 +26,22 @@ AX_BEGIN_NAMESPACE
 
 		uint_t sortkey;
 
-		QueuedEntity* qactor;
-		Primitive* primitive;
+		QueuedEntity *qactor;
+		Primitive *primitive;
 
 		int numTargets;
-		RenderTarget* targets[MAX_TARGETS];
+		RenderTarget *targets[MAX_TARGETS];
 
 		int resource;		// geometry resource
-		Shader* shader;
+		Shader *shader;
 
 		uint_t frameNum;
 
 		bool instanced;
 
 		// links
-		Interaction* actorNext;
-		Interaction* primNext;
+		Interaction *actorNext;
+		Interaction *primNext;
 
 		void calcSort(bool eyeInWater);
 		void setupShader();

@@ -14,7 +14,7 @@ read the license and understand and accept it fully.
 
 class IProperty {
 	IProperty(const IProperty&);
-	IProperty& operator=(const IProperty&);
+	IProperty &operator=(const IProperty&);
 public:
 	enum Kind {
 		kNormal,
@@ -41,7 +41,7 @@ public:
 
 	virtual Kind kind() const = 0;
 	virtual bool isSeparator() const { return false; }
-	virtual IProperty* parent() const { return m_parent; }
+	virtual IProperty *parent() const { return m_parent; }
 	virtual void setParent(IProperty *parent) { m_parent = parent; }
 	virtual QString propertyName() const = 0;
 	virtual QVariant value() const = 0;
@@ -49,14 +49,14 @@ public:
 	virtual QString toString() const = 0;
 	virtual QVariant decoration() const = 0;
 	virtual bool hasEditor() const = 0;
-	virtual QWidget* createEditor(QWidget *parent, const QObject *target, const char *receiver) const = 0;
+	virtual QWidget *createEditor(QWidget *parent, const QObject *target, const char *receiver) const = 0;
 	virtual void updateEditorContents(QWidget *editor) { Q_UNUSED(editor); }
 	virtual void updateValue(QWidget *editor) { Q_UNUSED(editor); }
 	virtual bool hasExternalEditor() const = 0;
-	virtual QWidget* createExternalEditor(QWidget *parent) = 0;
+	virtual QWidget *createExternalEditor(QWidget *parent) = 0;
 
 protected:
-	IProperty* m_parent;
+	IProperty *m_parent;
 	uint m_changed : 1;
 	uint m_dirty : 1;
 	uint m_fake : 1;
@@ -67,7 +67,7 @@ class IPropertyGroup: public IProperty {
 public:
 	virtual int indexOf(IProperty *property) const = 0;
 	virtual int propertyCount() const = 0;
-	virtual IProperty* propertyAt(int index) const = 0;
+	virtual IProperty *propertyAt(int index) const = 0;
 };
 
 template <typename T>
@@ -88,7 +88,7 @@ public:
 
 	bool hasEditor() const { return true; }
 	bool hasExternalEditor() const { return false; }
-	QWidget* createExternalEditor(QWidget *parent) { Q_UNUSED(parent); return 0; }
+	QWidget *createExternalEditor(QWidget *parent) { Q_UNUSED(parent); return 0; }
 
 protected:
 	T m_value;
@@ -110,7 +110,7 @@ public:
 	//
 	int indexOf(IProperty *property) const { return m_properties.indexOf(property); }
 	int propertyCount() const { return m_properties.size(); }
-	IProperty* propertyAt(int index) const { return m_properties.at(index); }
+	IProperty *propertyAt(int index) const { return m_properties.at(index); }
 
 	//
 	// IProperty Interface
@@ -123,12 +123,12 @@ public:
 
 	inline bool hasEditor() const { return true; }
 
-	QWidget* createEditor(QWidget *parent, const QObject *target, const char *receiver) const;
+	QWidget *createEditor(QWidget *parent, const QObject *target, const char *receiver) const;
 	virtual void updateEditorContents(QWidget *editor);
 
 	inline bool hasExternalEditor() const { return false; }
 
-	QWidget* createExternalEditor(QWidget *parent) { Q_UNUSED(parent); return 0; }
+	QWidget *createExternalEditor(QWidget *parent) { Q_UNUSED(parent); return 0; }
 
 protected:
 	const QString m_name;
@@ -151,7 +151,7 @@ public:
 	//
 	int indexOf(IProperty *property) const;
 	int propertyCount() const;
-	IProperty* propertyAt(int index) const;
+	IProperty *propertyAt(int index) const;
 
 	//
 	// IProperty Interface
@@ -165,10 +165,10 @@ public:
 	QString toString() const;
 
 	bool hasEditor() const;
-	QWidget* createEditor(QWidget *parent, const QObject *target, const char *receiver) const;
+	QWidget *createEditor(QWidget *parent, const QObject *target, const char *receiver) const;
 
 	bool hasExternalEditor() const;
-	QWidget* createExternalEditor(QWidget *parent);
+	QWidget *createExternalEditor(QWidget *parent);
 
 private:
 	const QString m_name;
@@ -188,7 +188,7 @@ public:
 	void setValue(const QVariant &value);
 	QString toString() const;
 
-	QWidget* createEditor(QWidget *parent, const QObject *target, const char *receiver) const;
+	QWidget *createEditor(QWidget *parent, const QObject *target, const char *receiver) const;
 	void updateEditorContents(QWidget *editor);
 	void updateValue(QWidget *editor);
 
@@ -208,7 +208,7 @@ public:
 
 	QVariant decoration() const;
 
-	QWidget* createEditor(QWidget *parent, const QObject *target, const char *receiver) const;
+	QWidget *createEditor(QWidget *parent, const QObject *target, const char *receiver) const;
 	void updateEditorContents(QWidget *editor);
 	void updateValue(QWidget *editor);
 };
@@ -221,7 +221,7 @@ public:
 	void setValue(const QVariant &value);
 	QString toString() const;
 
-	QWidget* createEditor(QWidget *parent, const QObject *target, const char *receiver) const;
+	QWidget *createEditor(QWidget *parent, const QObject *target, const char *receiver) const;
 	void updateEditorContents(QWidget *editor);
 	void updateValue(QWidget *editor);
 };
@@ -234,7 +234,7 @@ public:
 	void setValue(const QVariant &value);
 	QString toString() const;
 
-	QWidget* createEditor(QWidget *parent, const QObject *target, const char *receiver) const;
+	QWidget *createEditor(QWidget *parent, const QObject *target, const char *receiver) const;
 	void updateEditorContents(QWidget *editor);
 	void updateValue(QWidget *editor);
 };
@@ -252,7 +252,7 @@ public:
 	void setValue(const QVariant &value);
 	QString toString() const;
 
-	QWidget* createEditor(QWidget *parent, const QObject *target, const char *receiver) const;
+	QWidget *createEditor(QWidget *parent, const QObject *target, const char *receiver) const;
 	void updateEditorContents(QWidget *editor);
 	void updateValue(QWidget *editor);
 
@@ -271,7 +271,7 @@ public:
 	void setValue(const QVariant &value);
 	QString toString() const;
 
-	QWidget* createEditor(QWidget *parent, const QObject *target, const char *receiver) const;
+	QWidget *createEditor(QWidget *parent, const QObject *target, const char *receiver) const;
 	void updateEditorContents(QWidget *editor);
 	void updateValue(QWidget *editor);
 };
@@ -288,7 +288,7 @@ public:
 	QString toString() const;
 
 	bool hasEditor() const;
-	QWidget* createEditor(QWidget *parent, const QObject *target, const char *receiver) const;
+	QWidget *createEditor(QWidget *parent, const QObject *target, const char *receiver) const;
 	void updateEditorContents(QWidget *editor);
 	void updateValue(QWidget *editor);
 
@@ -303,7 +303,7 @@ public:
 
 	bool isSeparator() const { return true; }
 	bool hasEditor() const;
-	QWidget* createEditor(QWidget *parent, const QObject *target, const char *receiver) const;
+	QWidget *createEditor(QWidget *parent, const QObject *target, const char *receiver) const;
 	void updateEditorContents(QWidget *editor);
 	void updateValue(QWidget *editor);
 };
@@ -311,9 +311,9 @@ public:
 class FileLineEdit : public QWidget {
 	Q_OBJECT
 public:
-	FileLineEdit(QWidget*parent, const QString& value, const QString& path, const QString& filter);
+	FileLineEdit(QWidget*parent, const QString &value, const QString &path, const QString &filter);
 
-	void setFilename(const QString& text);
+	void setFilename(const QString &text);
 	QString filename() const;
 
 Q_SIGNALS:
@@ -332,10 +332,10 @@ private:
 
 class FileProperty : public StringProperty {
 public:
-	FileProperty(const QString& value, const QString& name, const QString& path, const QString& filter);
+	FileProperty(const QString &value, const QString &name, const QString &path, const QString &filter);
 
 	bool hasEditor() const;
-	QWidget* createEditor(QWidget *parent, const QObject *target, const char *receiver) const;
+	QWidget *createEditor(QWidget *parent, const QObject *target, const char *receiver) const;
 	void updateEditorContents(QWidget *editor);
 	void updateValue(QWidget *editor);
 
@@ -347,14 +347,14 @@ private:
 class EnumProperty: public AbstractProperty<int>
 {
 public:
-	EnumProperty(const Member::EnumItems& items, int value, const QString& name);
+	EnumProperty(const Member::EnumItems &items, int value, const QString &name);
 
 	QStringList items() const;
 
 	void setValue(const QVariant &value);
 	QString toString() const;
 
-	QWidget* createEditor(QWidget *parent, const QObject *target, const char *receiver) const;
+	QWidget *createEditor(QWidget *parent, const QObject *target, const char *receiver) const;
 	void updateEditorContents(QWidget *editor);
 	void updateValue(QWidget *editor);
 
@@ -367,14 +367,14 @@ private:
 class FlagsProperty: public AbstractProperty<int>
 {
 public:
-	FlagsProperty(const Member::EnumItems& items, int value, const QString& name);
+	FlagsProperty(const Member::EnumItems &items, int value, const QString &name);
 
 	QStringList items() const;
 
 	void setValue(const QVariant &value);
 	QString toString() const;
 
-	QWidget* createEditor(QWidget *parent, const QObject *target, const char *receiver) const;
+	QWidget *createEditor(QWidget *parent, const QObject *target, const char *receiver) const;
 	void updateEditorContents(QWidget *editor);
 	void updateValue(QWidget *editor);
 
@@ -395,7 +395,7 @@ public:
 	QVariant decoration() const;
 
 	QString toString() const { return QLatin1String(" ") + AbstractPropertyGroup::toString(); } // ### temp hack remove me!!
-	QWidget* createEditor(QWidget *parent, const QObject *target, const char *receiver) const;
+	QWidget *createEditor(QWidget *parent, const QObject *target, const char *receiver) const;
 	void updateEditorContents(QWidget *editor);
 	void updateValue(QWidget *editor);
 };
@@ -410,7 +410,7 @@ public:
 	QVariant decoration() const;
 
 	QString toString() const { return QLatin1String(" ") + AbstractPropertyGroup::toString(); } // ### temp hack remove me!!
-	QWidget* createEditor(QWidget *parent, const QObject *target, const char *receiver) const;
+	QWidget *createEditor(QWidget *parent, const QObject *target, const char *receiver) const;
 	void updateEditorContents(QWidget *editor);
 	void updateValue(QWidget *editor);
 #endif
@@ -442,7 +442,7 @@ public:
 	void setValue(const QVariant &value);
 	QString toString() const;
 
-	QWidget* createEditor(QWidget *parent, const QObject *target, const char *receiver) const;
+	QWidget *createEditor(QWidget *parent, const QObject *target, const char *receiver) const;
 	void updateEditorContents(QWidget *editor);
 	void updateValue(QWidget *editor);
 };
@@ -455,7 +455,7 @@ public:
 	void setValue(const QVariant &value);
 	QString toString() const;
 
-	QWidget* createEditor(QWidget *parent, const QObject *target, const char *receiver) const;
+	QWidget *createEditor(QWidget *parent, const QObject *target, const char *receiver) const;
 	void updateEditorContents(QWidget *editor);
 	void updateValue(QWidget *editor);
 };
@@ -468,7 +468,7 @@ public:
 	void setValue(const QVariant &value);
 	QString toString() const;
 
-	QWidget* createEditor(QWidget *parent, const QObject *target, const char *receiver) const;
+	QWidget *createEditor(QWidget *parent, const QObject *target, const char *receiver) const;
 	void updateEditorContents(QWidget *editor);
 	void updateValue(QWidget *editor);
 };
@@ -482,7 +482,7 @@ public:
 	void setValue(const QVariant &value);
 	QString toString() const;
 
-	QWidget* createEditor(QWidget *parent, const QObject *target, const char *receiver) const;
+	QWidget *createEditor(QWidget *parent, const QObject *target, const char *receiver) const;
 	void updateEditorContents(QWidget *editor);
 	void updateValue(QWidget *editor);
 
@@ -498,7 +498,7 @@ public:
 	void setValue(const QVariant &value);
 	QString toString() const;
 
-	QWidget* createEditor(QWidget *parent, const QObject *target, const char *receiver) const;
+	QWidget *createEditor(QWidget *parent, const QObject *target, const char *receiver) const;
 	void updateEditorContents(QWidget *editor);
 	void updateValue(QWidget *editor);
 };

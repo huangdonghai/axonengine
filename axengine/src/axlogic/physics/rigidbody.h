@@ -24,8 +24,8 @@ AX_BEGIN_NAMESPACE
 	class PhysicsRigid : public PhysicsEntity {
 	public:
 		PhysicsRigid();
-		PhysicsRigid(const String& name);
-		PhysicsRigid(HavokPackage* package, hkpRigidBody* rigid);
+		PhysicsRigid(const String &name);
+		PhysicsRigid(HavokPackage *package, hkpRigidBody *rigid);
 		virtual ~PhysicsRigid();
 
 		bool isValid() const { return m_havokRigid!=0; }
@@ -34,17 +34,17 @@ AX_BEGIN_NAMESPACE
 		virtual void setActive(bool activate);
 		virtual bool isActive() const;
 		virtual void setAutoDeactive(bool val);
-		virtual void setMatrix(const AffineMat& matrix);
+		virtual void setMatrix(const AffineMat &matrix);
 		virtual AffineMat getMatrix() const;
 		virtual void setMotionType(MotionType motion);
 		virtual MotionType getMotionType() const;
 		virtual Type getType() const { return kRigidBody; }
-		virtual void bind(PhysicsWorld* world);
-		virtual void unbind(PhysicsWorld* world);
+		virtual void bind(PhysicsWorld *world);
+		virtual void unbind(PhysicsWorld *world);
 
 	protected:
-		HavokPackage* m_package;
-		hkpRigidBody* m_havokRigid;
+		HavokPackage *m_package;
+		hkpRigidBody *m_havokRigid;
 		AffineMat m_matrix;
 		MotionType m_motionType;
 	};
@@ -55,7 +55,7 @@ AX_BEGIN_NAMESPACE
 
 	class PhysicsTerrain : public PhysicsRigid {
 	public:
-		PhysicsTerrain(const ushort_t* data, int size, float tilemeters);
+		PhysicsTerrain(const ushort_t *data, int size, float tilemeters);
 		virtual ~PhysicsTerrain();
 
 	protected:

@@ -32,7 +32,7 @@ ConsoleDlg::~ConsoleDlg()
 	g_system->removeLog(this);
 }
 
-void ConsoleDlg::addMessage(QString& msg)
+void ConsoleDlg::addMessage(QString &msg)
 {
 	ui.message->append(msg);
 }
@@ -55,7 +55,7 @@ void ConsoleDlg::on_input_returnPressed()
 }
 
 
-void ConsoleDlg::setInput(QString& str)
+void ConsoleDlg::setInput(QString &str)
 {
 	ui.input->clear();
 	ui.input->insert(str);
@@ -64,7 +64,7 @@ void ConsoleDlg::setInput(QString& str)
 bool ConsoleDlg::eventFilter (QObject * watched, QEvent * event)
 {
 	if (watched == ui.input && event->type() == QEvent::KeyPress) {
-		QKeyEvent* e = (QKeyEvent*)event;
+		QKeyEvent *e = (QKeyEvent*)event;
 		if (e->key() == Qt::Key_Up) {
 
 			// backup current input if need
@@ -94,12 +94,12 @@ bool ConsoleDlg::eventFilter (QObject * watched, QEvent * event)
 	return QWidget::eventFilter(watched, event);
 }
 
-void ConsoleDlg::print(const char* text) {
+void ConsoleDlg::print(const char *text) {
 	// we should parse text format escape
 	char line[1024];
 
-	const char* f = text;
-	char* t = line;
+	const char *f = text;
+	char *t = line;
 
 	while (1) {
 		if (*f == FORMAT_ESCAPE) {
@@ -161,12 +161,12 @@ void ConsoleDlg::print(const char* text) {
 	}
 }
 
-void ConsoleDlg::print(const String& text) {
+void ConsoleDlg::print(const String &text) {
 	print(text.c_str());
 }
 
 #if 0
-void ConsoleDlg::Print(const char* text) {
+void ConsoleDlg::Print(const char *text) {
 	SCOPE_CONVERT;
 
 	Print(M2W(text));

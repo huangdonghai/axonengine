@@ -23,18 +23,18 @@ AX_BEGIN_NAMESPACE
 		// constructor and destructor
 		inline Vector3(){}
 		inline Vector3(float ix, float iy, float iz) : x(ix), y(iy), z(iz){}
-		inline Vector3(const Vector2& v, float iz) : x(v.x), y(v.y), z(iz) {}
+		inline Vector3(const Vector2 &v, float iz) : x(v.x), y(v.y), z(iz) {}
 		inline ~Vector3(){}
 
 		// algo
-		inline Vector3 operator+(const Vector3& v) const {
+		inline Vector3 operator+(const Vector3 &v) const {
 			return Vector3(x + v.x, y + v.y, z + v.z);
 		}
 		// negative vector
 		inline Vector3 operator-() const {
 			return Vector3(-x, -y, -z);
 		}
-		inline Vector3 operator-(const Vector3& v) const {
+		inline Vector3 operator-(const Vector3 &v) const {
 			return Vector3(x - v.x, y - v.y, z - v.z);
 		}
 		// scale the vector
@@ -42,10 +42,10 @@ AX_BEGIN_NAMESPACE
 			return Vector3(x*scale, y*scale, z*scale);
 		}
 		// scale
-		inline Vector3 operator*(const Vector3& v) const {
+		inline Vector3 operator*(const Vector3 &v) const {
 			return Vector3(x*v.x, y*v.y, z*v.z);
 		}
-		inline Vector3 operator/(const Vector3& v) const {
+		inline Vector3 operator/(const Vector3 &v) const {
 			return Vector3(x/v.x, y/v.y, z/v.z);
 		}
 		// inverse scale
@@ -53,11 +53,11 @@ AX_BEGIN_NAMESPACE
 			return operator*(1.f / scale);
 		}
 		// Dot Product
-		inline float operator|(const Vector3& v) const {
+		inline float operator|(const Vector3 &v) const {
 			return x*v.x + y*v.y + z*v.z;
 		}
 		// Cross Product
-		inline Vector3 operator^(const Vector3& v) const {
+		inline Vector3 operator^(const Vector3 &v) const {
 			return Vector3(
 				y * v.z - z * v.y,
 				z * v.x - x * v.z,
@@ -65,19 +65,19 @@ AX_BEGIN_NAMESPACE
 				);
 		}
 		// compare
-		inline bool operator==(const Vector3& v) const {
+		inline bool operator==(const Vector3 &v) const {
 			return x==v.x && y==v.y && z==v.z;
 		}
-		bool operator!=(const Vector3& v) const {
+		bool operator!=(const Vector3 &v) const {
 			return x!=v.x || y!=v.y || z!=v.z;
 		}
 
 		// assign operator
-		inline Vector3 operator+=(const Vector3& v) {
+		inline Vector3 operator+=(const Vector3 &v) {
 			x += v.x; y += v.y; z += v.z;
 			return *this;
 		}
-		inline Vector3 operator-=(const Vector3& v) {
+		inline Vector3 operator-=(const Vector3 &v) {
 			x -= v.x; y -= v.y; z -= v.z;
 			return *this;
 		}
@@ -90,20 +90,20 @@ AX_BEGIN_NAMESPACE
 			x *= v; y *= v; z *= v;
 			return *this;
 		}
-		inline Vector3 operator*=(const Vector3& v) {
+		inline Vector3 operator*=(const Vector3 &v) {
 			x *= v.x; y *= v.y; z *= v.z;
 			return *this;
 		}
-		inline Vector3 operator/=(const Vector3& v) {
+		inline Vector3 operator/=(const Vector3 &v) {
 			x /= v.x; y /= v.y; z /= v.z;
 			return *this;
 		}
-		inline float& operator[](int index) {
+		inline float &operator[](int index) {
 			AX_STRICT_ASSERT(index >= 0 && index < 3);
 			return *(&x+index);
 		}
 
-		inline const float& operator[](int index) const {
+		inline const float &operator[](int index) const {
 			AX_STRICT_ASSERT(index >= 0 && index < 3);
 			return *(&x+index);
 		}
@@ -154,12 +154,12 @@ AX_BEGIN_NAMESPACE
 			x=0.0f;y=0.0f;z=0.0f;
 		}
 		// Set value
-		inline Vector3& set(float ix=0.0f, float iy=0.0f, float iz=0.0f) {
+		inline Vector3 &set(float ix=0.0f, float iy=0.0f, float iz=0.0f) {
 			x = ix; y = iy; z = iz;
 			return *this;
 		}
 
-		inline Vector3& set(const float* p) {
+		inline Vector3 &set(const float *p) {
 			x = p[0]; y = p[1]; z = p[2];
 			return *this;
 		}
@@ -176,7 +176,7 @@ AX_BEGIN_NAMESPACE
 		}
 
 		String toString() const;
-		bool fromString(const char* str);
+		bool fromString(const char *str);
 	};
 
 

@@ -16,7 +16,7 @@ const int NUM_LEAF_ANGLES = 8;
 
 AX_BEGIN_NAMESPACE
 
-	TreeAsset::TreeAsset(TreeManager* forest) {
+	TreeAsset::TreeAsset(TreeManager *forest) {
 		m_manager = forest;
 		m_treeRt = new CSpeedTreeRT();
 
@@ -45,10 +45,10 @@ AX_BEGIN_NAMESPACE
 		m_manager->removeAsset(this);
 	}
 
-	bool TreeAsset::load(const String& filename, int seed) {
+	bool TreeAsset::load(const String &filename, int seed) {
 		m_treeRt->SetNumWindMatrices(NUM_WIND_MATRIX);
 
-		unsigned char* fbuf;
+		unsigned char *fbuf;
 		size_t fsize;
 		fsize = g_fileSystem->readFile(filename, (void**)&fbuf);
 
@@ -137,7 +137,7 @@ AX_BEGIN_NAMESPACE
 
 
 
-	static inline void setMaterialColor(Material* mat, const float* f, float scaler, float ambientscaler) {
+	static inline void setMaterialColor(Material *mat, const float *f, float scaler, float ambientscaler) {
 		Vector3 diffuse(f[0], f[1], f[2]);
 		Vector3 ambient(f[3], f[4], f[5]);
 		Vector3 specular(f[6], f[7], f[8]);
@@ -191,7 +191,7 @@ AX_BEGIN_NAMESPACE
 		// query vertex attribute data
 		CSpeedTreeRT::SGeometry geometry;
 		m_treeRt->GetGeometry(geometry, SpeedTree_BranchGeometry);
-		const CSpeedTreeRT::SGeometry::SIndexed& b = geometry.m_sBranches;
+		const CSpeedTreeRT::SGeometry::SIndexed &b = geometry.m_sBranches;
 
 		int numVerts = b.m_nNumVertices;
 		int numLods = m_treeRt->GetNumBranchLodLevels();
@@ -211,18 +211,18 @@ AX_BEGIN_NAMESPACE
 			return;
 		}
 
-		MeshPrim* lod0 = new MeshPrim(MeshPrim::HintStatic);
+		MeshPrim *lod0 = new MeshPrim(MeshPrim::HintStatic);
 
 		lod0->init(numVerts, numIndexes);
 
 		// we use triangle strip for branches
-		lod0->setIsStriped(true);
+		lod0->setStriped(true);
 		lod0->setMaterial(m_branchMat.get());
 
-		Vertex* verts = lod0->lockVertexes();
+		Vertex *verts = lod0->lockVertexes();
 
 		for (int i = 0; i < numVerts; i++) {
-			const float* diffuseTc = b.m_pTexCoords[CSpeedTreeRT::TL_DIFFUSE] + i * 2;
+			const float *diffuseTc = b.m_pTexCoords[CSpeedTreeRT::TL_DIFFUSE] + i * 2;
 
 			float fWindMatrixIndex1 = float(int(b.m_pWindMatrixIndices[0][i] * 10.0f / RenderWind::NUM_WIND_MATRIXES));
 			float fWindMatrixWeight1 = b.m_pWindWeights[0][i];
@@ -240,7 +240,7 @@ AX_BEGIN_NAMESPACE
 
 		lod0->unlockVertexes();
 
-		ushort_t* idxes = lod0->lockIndexes();
+		ushort_t *idxes = lod0->lockIndexes();
 		idxes[0] = b.m_pStrips[0][0][0];
 		for (int i = 0; i < numIndexes-1; i++) {
 			idxes[i+1] = b.m_pStrips[0][0][i];
@@ -261,7 +261,7 @@ AX_BEGIN_NAMESPACE
 				continue;
 			}
 
-			RefPrim* ref = new RefPrim(Primitive::HintStatic);
+			RefPrim *ref = new RefPrim(Primitive::HintStatic);
 			ref->init(lod0, numIndexes);
 
 			idxes = ref->lockIndexes();
@@ -278,7 +278,7 @@ AX_BEGIN_NAMESPACE
 	void TreeAsset::buildFrond() {
 		CSpeedTreeRT::SGeometry sGeometry;
 		m_treeRt->GetGeometry(sGeometry, SpeedTree_FrondGeometry);
-		const CSpeedTreeRT::SGeometry::SIndexed& b = sGeometry.m_sFronds;
+		const CSpeedTreeRT::SGeometry::SIndexed &b = sGeometry.m_sFronds;
 
 		int numVerts = b.m_nNumVertices;
 		int numLods = m_treeRt->GetNumFrondLodLevels();
@@ -294,18 +294,18 @@ AX_BEGIN_NAMESPACE
 			return;
 		}
 
-		MeshPrim* lod0 = new MeshPrim(MeshPrim::HintStatic);
+		MeshPrim *lod0 = new MeshPrim(MeshPrim::HintStatic);
 
 		lod0->init(numVerts, numIndexes);
 
 		// we use triangle strip for branches
-		lod0->setIsStriped(true);
+		lod0->setStriped(true);
 		lod0->setMaterial(m_frondMat.get());
 
 		// fill vertexes
-		Vertex* verts = lod0->lockVertexes();
+		Vertex *verts = lod0->lockVertexes();
 		for (int i = 0; i < numVerts; i++) {
-			const float* diffuseTc = b.m_pTexCoords[CSpeedTreeRT::TL_DIFFUSE] + i * 2;
+			const float *diffuseTc = b.m_pTexCoords[CSpeedTreeRT::TL_DIFFUSE] + i * 2;
 
 			float fWindMatrixIndex1 = float(int(b.m_pWindMatrixIndices[0][i] * 10.0f / RenderWind::NUM_WIND_MATRIXES));
 			float fWindMatrixWeight1 = b.m_pWindWeights[0][i];
@@ -323,7 +323,7 @@ AX_BEGIN_NAMESPACE
 		lod0->unlockVertexes();
 
 		// fill indexes
-		ushort_t* idxes = lod0->lockIndexes();
+		ushort_t *idxes = lod0->lockIndexes();
 		idxes[0] = b.m_pStrips[0][0][0];
 		for (int i = 0; i < numIndexes-1; i++) {
 			idxes[i+1] = b.m_pStrips[0][0][i];
@@ -349,7 +349,7 @@ AX_BEGIN_NAMESPACE
 				continue;
 			}
 
-			RefPrim* ref = new RefPrim(Primitive::HintStatic);
+			RefPrim *ref = new RefPrim(Primitive::HintStatic);
 			ref->init(lod0, numIndexes);
 
 			idxes = ref->lockIndexes();
@@ -371,19 +371,19 @@ AX_BEGIN_NAMESPACE
 		m_treeRt->GetGeometry(sGeometry, SpeedTree_LeafGeometry);
 
 		for (int i = 0; i < numLods; i++) {
-			const CSpeedTreeRT::SGeometry::SLeaf& sLeaves = sGeometry.m_pLeaves[i];
+			const CSpeedTreeRT::SGeometry::SLeaf &sLeaves = sGeometry.m_pLeaves[i];
 
-			MeshPrim* prim = new MeshPrim(MeshPrim::HintStatic);
+			MeshPrim *prim = new MeshPrim(MeshPrim::HintStatic);
 			prim->setMaterial(m_leafCardMat.get());
 			prim->init(sLeaves.m_nNumLeaves * 4, sLeaves.m_nNumLeaves * 6);
 
-			Vertex* verts = prim->lockVertexes();
-			ushort_t* indexes = prim->lockIndexes();
+			Vertex *verts = prim->lockVertexes();
+			ushort_t *indexes = prim->lockIndexes();
 
 			int numLeafCards = 0;
 
 			for (int j = 0; j < sLeaves.m_nNumLeaves; j++) {
-				const CSpeedTreeRT::SGeometry::SLeaf::SCard* pCard = sLeaves.m_pCards + sLeaves.m_pLeafCardIndices[j];
+				const CSpeedTreeRT::SGeometry::SLeaf::SCard *pCard = sLeaves.m_pCards + sLeaves.m_pLeafCardIndices[j];
 
 				if (pCard->m_pMesh) {
 					continue;
@@ -396,7 +396,7 @@ AX_BEGIN_NAMESPACE
 				offsets[3].set(1, -1, 0);
 
 				for (int k = 0; k < 4; ++k) {
-					Vertex* vert = verts + j * 4 + k;
+					Vertex *vert = verts + j * 4 + k;
 					// xy = diffuse texcoords
 					// zw = compressed wind parameters
 					float fWindMatrixIndex1 = float(int(sLeaves.m_pWindMatrixIndices[0][j] * 10.0f / NUM_WIND_MATRIX));
@@ -426,7 +426,7 @@ AX_BEGIN_NAMESPACE
 					vert->xyz.z += pCard->m_fHeight * offsets[k].y * 0.5f;
 				}
 
-				ushort_t* idx = indexes + j * 6;
+				ushort_t *idx = indexes + j * 6;
 				idx[0] = j * 4;
 				idx[1] = j * 4 + 1;
 				idx[2] = j * 4 + 2;
@@ -457,12 +457,12 @@ AX_BEGIN_NAMESPACE
 		m_treeRt->GetGeometry(sGeometry, SpeedTree_LeafGeometry);
 
 		for (int i = 0; i < numLods; i++) {
-			const CSpeedTreeRT::SGeometry::SLeaf& sLeaves = sGeometry.m_pLeaves[i];
+			const CSpeedTreeRT::SGeometry::SLeaf &sLeaves = sGeometry.m_pLeaves[i];
 
 			int numverts = 0;
 			int numidxes = 0;
 			for (int j = 0; j < sLeaves.m_nNumLeaves; j++) {
-				const CSpeedTreeRT::SGeometry::SLeaf::SCard* pCard = sLeaves.m_pCards + sLeaves.m_pLeafCardIndices[j];
+				const CSpeedTreeRT::SGeometry::SLeaf::SCard *pCard = sLeaves.m_pCards + sLeaves.m_pLeafCardIndices[j];
 
 				if (!pCard->m_pMesh) {
 					continue;
@@ -476,28 +476,28 @@ AX_BEGIN_NAMESPACE
 				continue;
 			}
 
-			MeshPrim* prim = new MeshPrim(MeshPrim::HintStatic);
+			MeshPrim *prim = new MeshPrim(MeshPrim::HintStatic);
 			prim->setMaterial(m_leafMeshMat.get());
 			prim->init(numverts, numidxes);
 
-			Vertex* verts = prim->lockVertexes();
-			ushort_t* indexes = prim->lockIndexes();
+			Vertex *verts = prim->lockVertexes();
+			ushort_t *indexes = prim->lockIndexes();
 
 			int curverts = 0;
 			int curidxes = 0;
 
 			for (int j = 0; j < sLeaves.m_nNumLeaves; j++) {
-				const CSpeedTreeRT::SGeometry::SLeaf::SCard* pCard = sLeaves.m_pCards + sLeaves.m_pLeafCardIndices[j];
+				const CSpeedTreeRT::SGeometry::SLeaf::SCard *pCard = sLeaves.m_pCards + sLeaves.m_pLeafCardIndices[j];
 
 				if (!pCard->m_pMesh) {
 					continue;
 				}
 
-				const CSpeedTreeRT::SGeometry::SLeaf::SMesh* pMesh = pCard->m_pMesh;
+				const CSpeedTreeRT::SGeometry::SLeaf::SMesh *pMesh = pCard->m_pMesh;
 
 				AffineMat matrix;
-				Matrix3& axis = matrix.axis;
-				Vector3& org = matrix.origin;
+				Matrix3 &axis = matrix.axis;
+				Vector3 &org = matrix.origin;
 
 				for (int nVertex = 0; nVertex < pMesh->m_nNumVertices; ++nVertex) {
 					float fWindMatrixIndex1 = float(int(sLeaves.m_pWindMatrixIndices[0][j] * 10.0f / NUM_WIND_MATRIX));
@@ -505,7 +505,7 @@ AX_BEGIN_NAMESPACE
 					float fWindMatrixIndex2 = float(int(sLeaves.m_pWindMatrixIndices[1][j] * 10.0f / NUM_WIND_MATRIX));
 					float fWindMatrixWeight2 = sLeaves.m_pWindWeights[1][j];
 
-					Vertex* vert = verts + curverts + nVertex;
+					Vertex *vert = verts + curverts + nVertex;
 
 					// tex layer 0: .xy = diffuse texcoords, .z = leaf angle index [0,c_nNumSpeedWindAngles-1], .w = dimming
 //					cBuffer.TexCoord4(0, pMesh->m_pTexCoords[nVertex * 2], pMesh->m_pTexCoords[nVertex * 2 + 1], float(j % NUM_LEAF_ANGLES), sLeaves.m_pDimming[j]);
@@ -551,7 +551,7 @@ AX_BEGIN_NAMESPACE
 		}
 	}
 
-	void TreeAsset::issueToQueue(TreeActor* actor, QueuedScene* qscene) {
+	void TreeAsset::issueToQueue(TreeActor *actor, QueuedScene *qscene) {
 #if 0
 		if (r_geoInstancing->getInteger() != 0) {
 			return;
@@ -583,8 +583,8 @@ AX_BEGIN_NAMESPACE
 #endif
 	}
 
-	static inline void addInstance(QueuedScene* qscene, InstancePrim* gi) {
-		InstancePrim* cloned = new InstancePrim(Primitive::HintFrame);
+	static inline void addInstance(QueuedScene *qscene, InstancePrim *gi) {
+		InstancePrim *cloned = new InstancePrim(Primitive::HintFrame);
 		cloned->setInstanced(gi->getInstanced());
 		cloned->setInstances(gi->getAllInstances());
 
@@ -592,7 +592,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 #if 0
-	void TreeAsset::issueToQueueInstancing(QueuedScene* qscene) {
+	void TreeAsset::issueToQueueInstancing(QueuedScene *qscene) {
 		if (!r_speedtree->getBool()) {
 			return;
 		}
@@ -612,7 +612,7 @@ AX_BEGIN_NAMESPACE
 
 		GeoInstance::Param param;
 
-		AX_FOREACH(TreeActor* actor, m_treeActors) {
+		AX_FOREACH(TreeActor *actor, m_treeActors) {
 			if (actor->m_worldVisFrameId != qscene->worldFrameId) {
 				// not visible
 				continue;

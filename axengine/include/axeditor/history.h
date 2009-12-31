@@ -19,8 +19,8 @@ typedef List<ActionPtr> HistoryList;
 
 class AX_API History : public Action {
 public:
-	History(Context* context) : Action(context) {}
-	History(Context* context, const String& msg) : Action(context), m_message(msg) {}
+	History(Context *context) : Action(context) {}
+	History(Context *context, const String &msg) : Action(context), m_message(msg) {}
 	virtual ~History() {}
 
 	virtual void doIt() = 0;
@@ -28,7 +28,7 @@ public:
 	virtual bool isUndoable() { return true; }
 	virtual String getName() { return "History"; }
 	virtual String getMessage() { return m_message; }
-	virtual void setMessage(const String& msg) { m_message = msg; }
+	virtual void setMessage(const String &msg) { m_message = msg; }
 	virtual int getMemoryUsed() { return 0; }
 
 protected:
@@ -41,7 +41,7 @@ protected:
 
 class TransformHis : public History {
 public:
-	TransformHis(Context* context, const String& msg, int actorId, const AffineMat& oldmat, const AffineMat& newmat);
+	TransformHis(Context *context, const String &msg, int actorId, const AffineMat &oldmat, const AffineMat &newmat);
 	virtual ~TransformHis();
 
 	virtual void doIt();
@@ -62,7 +62,7 @@ private:
 
 class GroupHis : public History {
 public:
-	GroupHis(Context* context, const String& msg);
+	GroupHis(Context *context, const String &msg);
 	virtual ~GroupHis();
 
 	virtual void doIt();
@@ -71,7 +71,7 @@ public:
 	virtual String getName();
 	virtual int getMemoryUsed();
 
-	void append(Action* his);
+	void append(Action *his);
 	bool isEmpty() const { return m_actionList.empty(); }
 
 private:
@@ -85,7 +85,7 @@ private:
 
 class DeleteHis : public History {
 public:
-	DeleteHis(Context* context, const String& msg, const AgentList& actorlist);
+	DeleteHis(Context *context, const String &msg, const AgentList &actorlist);
 	virtual ~DeleteHis() {}
 
 	virtual void doIt();
@@ -103,7 +103,7 @@ private:
 
 class UndeleteHis : public History {
 public:
-	UndeleteHis(Context* context, const String& msg, const AgentList& actorlist);
+	UndeleteHis(Context *context, const String &msg, const AgentList &actorlist);
 	virtual ~UndeleteHis() {}
 
 	virtual void doIt();
@@ -121,7 +121,7 @@ private:
 
 class PropertyEditHis : public History {
 public:
-	PropertyEditHis(Context* context, Agent* actor, const String& propname, const Variant& oldvalue, const Variant& newvalue);
+	PropertyEditHis(Context *context, Agent *actor, const String &propname, const Variant &oldvalue, const Variant &newvalue);
 	virtual ~PropertyEditHis();
 
 	virtual void doIt();
@@ -131,7 +131,7 @@ public:
 	virtual int getMemoryUsed();
 
 private:
-	Agent* m_actor;
+	Agent *m_actor;
 	const String m_propName;
 	const Variant m_oldValue;
 	const Variant m_newValue;
@@ -143,7 +143,7 @@ private:
 
 class SelectHis : public History {
 public:
-	SelectHis(Context* context, const AgentList& oldlist, const AgentList& newlist);
+	SelectHis(Context *context, const AgentList &oldlist, const AgentList &newlist);
 	virtual ~SelectHis();
 
 	virtual void doIt();
@@ -166,12 +166,12 @@ public:
 	HistoryManager();
 	~HistoryManager();
 
-	void addHistory(Action* his);
+	void addHistory(Action *his);
 	void undo(int count);
 	void redo(int count);
 
 	// stacked
-	void begin(Context* ctx, const String& msg);
+	void begin(Context *ctx, const String &msg);
 	void end();
 
 	void clear();

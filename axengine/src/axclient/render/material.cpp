@@ -43,7 +43,7 @@ AX_BEGIN_NAMESPACE
 //		FreeAsset_(m_shaderTemplate);
 	}
 
-	bool Material::doInit(const String& name, intptr_t arg)
+	bool Material::doInit(const String &name, intptr_t arg)
 	{
 		if (!PathUtil::haveDir(name))
 			m_key = "materials/" + name;
@@ -59,7 +59,7 @@ AX_BEGIN_NAMESPACE
 			setTextureSet(m_key);
 		} else {
 			for (int i = 0; i < SamplerType::NUMBER_ALL; i++) {
-				TextureDef* texdef = m_decl->getTextureDef(i);
+				TextureDef *texdef = m_decl->getTextureDef(i);
 
 				if (!texdef)
 					continue;
@@ -95,39 +95,39 @@ AX_BEGIN_NAMESPACE
 		return true;
 	}
 
-	const String& Material::getShaderName() const
+	const String &Material::getShaderName() const
 	{
 		return m_decl->getShaderName();
 	}
 
-	Shader* Material::getShaderTemplate() const
+	Shader *Material::getShaderTemplate() const
 	{
 		return m_shaderTemplate;
 	}
 
-	Shader* Material::getRealShader() const
+	Shader *Material::getRealShader() const
 	{
 		return 0;
 	}
 
 #if 0
-	void Material::enableFeature(const String& name) {
+	void Material::enableFeature(const String &name) {
 		m_shaderMacroNeedRegen = true;
 		m_features.setValue(name, 1);
 	}
 
-	void Material::disableFeature(const String& name) {
+	void Material::disableFeature(const String &name) {
 		m_shaderMacroNeedRegen = true;
 		m_features.setValue(name, 0);
 	}
 
-	void Material::setMacroParameter(const String& name, int value) {
+	void Material::setMacroParameter(const String &name, int value) {
 		m_shaderMacroNeedRegen = true;
 		m_macroParameters.setValue(name, value);
 	}
 #endif
 
-	void Material::setParameter(const String& name, int count, const float* ptr)
+	void Material::setParameter(const String &name, int count, const float *ptr)
 	{
 		if (!count) {
 			count = 1;
@@ -137,18 +137,18 @@ AX_BEGIN_NAMESPACE
 			return;
 		}
 
-		FloatSeq& value = m_shaderParams[name];
+		FloatSeq &value = m_shaderParams[name];
 		value.resize(count);
 		::memcpy(&value[0], ptr, count * sizeof(float));
 	}
 
-	const ShaderParams& Material::getParameters() const
+	const ShaderParams &Material::getParameters() const
 	{
 		return m_shaderParams;
 	}
 
 
-	const ShaderMacro& Material::getShaderMacro()
+	const ShaderMacro &Material::getShaderMacro()
 	{
 		if (m_shaderMacroNeedRegen  || r_forceUpdateMaterialMacro->getBool()) {
 			m_shaderMacroNeedRegen = false;
@@ -206,20 +206,20 @@ AX_BEGIN_NAMESPACE
 	}
 
 
-	void Material::setBaseTcMatrix(const Matrix4& matrix)
+	void Material::setBaseTcMatrix(const Matrix4 &matrix)
 	{
 		m_shaderMacroNeedRegen = true;
 		m_baseTcAnim = true;
 		m_baseTcMatrix = matrix;
 	}
 
-	void Material::setTexGen(SamplerType st, const TexGen& texgen)
+	void Material::setTexGen(SamplerType st, const TexGen &texgen)
 	{
 		m_shaderMacroNeedRegen = true;
 		m_texgens[st] = texgen;
 	}
 
-	const TexGen& Material::getTexGen(SamplerType st) const
+	const TexGen &Material::getTexGen(SamplerType st) const
 	{
 		return m_texgens[st];
 	}
@@ -242,7 +242,7 @@ AX_BEGIN_NAMESPACE
 		return m_decl->getFlags().isSet(MaterialDecl::PhysicsHelper);
 	}
 
-	void Material::setTextureSet( const String& texname )
+	void Material::setTextureSet( const String &texname )
 	{
 		TexturePtr texture = Texture::load(texname);
 		m_textures[SamplerType::Diffuse] = texture;
@@ -259,7 +259,7 @@ AX_BEGIN_NAMESPACE
 		m_shaderMacroNeedRegen = true;
 	}
 
-	FixedString Material::normalizeKey( const String& name )
+	FixedString Material::normalizeKey( const String &name )
 	{
 		if (!PathUtil::haveDir(name))
 			return "materials/" + name;
@@ -267,19 +267,19 @@ AX_BEGIN_NAMESPACE
 			return name;
 	}
 
-	MaterialRp Material::load(const String& name)
+	MaterialRp Material::load(const String &name)
 	{
 		FixedString key = normalizeKey(name);
 		MaterialDict::const_iterator it = ms_materialDict.find(key);
 
 		if (it != ms_materialDict.end()) {
-			Material* mat = it->second;
+			Material *mat = it->second;
 			mat->m_needDeleteLink.removeFromList();
 			mat->addref();
 			return mat;
 		}
 
-		Material* result = new Material();
+		Material *result = new Material();
 		result->doInit(key, 0);
 		result->setKey(key);
 		ms_materialDict[key] = result;
@@ -287,14 +287,14 @@ AX_BEGIN_NAMESPACE
 		return result;
 	}
 
-	MaterialRp Material::loadUnique(const String& name)
+	MaterialRp Material::loadUnique(const String &name)
 	{
 		std::stringstream ss;
 		ss << name << "$" << g_system->generateId();
 		FixedString key = normalizeKey(name);
 		FixedString uniqueKey = normalizeKey(ss.str());
 
-		Material* result = new Material();
+		Material *result = new Material();
 		result->doInit(key, 0);
 		result->setKey(uniqueKey);
 		ms_materialDict[uniqueKey] = result;
@@ -311,7 +311,7 @@ AX_BEGIN_NAMESPACE
 
 	}
 
-	void Material::_deleteMaterial( Material* mat )
+	void Material::_deleteMaterial( Material *mat )
 	{
 		mat->m_needDeleteLink.addToEnd(ms_needDeleteLinkHead);
 	}
@@ -321,7 +321,7 @@ AX_BEGIN_NAMESPACE
 		Link<Material>* node = ms_needDeleteLinkHead.getNextNode();
 
 		while (node) {
-			Material* owner = node->getOwner();
+			Material *owner = node->getOwner();
 			Link<Material>* next = node->getNextNode();
 
 			node->removeFromList();
@@ -339,14 +339,14 @@ AX_BEGIN_NAMESPACE
 		_deleteMaterial(this);
 	}
 
-	void Material::matlist_f( const CmdArgs& args )
+	void Material::matlist_f( const CmdArgs &args )
 	{
 		Printf("List material(s):\n");
 
 		int count = 0;
 		MaterialDict::const_iterator it = ms_materialDict.begin();
 		for (; it != ms_materialDict.end(); ++it) {
-			Material* mtr = it->second;
+			Material *mtr = it->second;
 			if (!mtr) {
 				continue;
 			}

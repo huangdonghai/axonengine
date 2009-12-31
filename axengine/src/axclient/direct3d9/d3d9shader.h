@@ -23,15 +23,15 @@ AX_BEGIN_NAMESPACE
 
 	class D3D9uniform : public UniformItem {
 	public:
-		D3D9uniform(UniformItem& item, D3DXHANDLE param);
+		D3D9uniform(UniformItem &item, D3DXHANDLE param);
 		virtual ~D3D9uniform();
 
 		bool isCached() const;
 		void cache();
 
 		template< class Q >
-		static void setUniform(Uniforms::ItemName itemname, const Q& q) {
-			UniformItem& item = g_uniforms.getItem(itemname);
+		static void setUniform(Uniforms::ItemName itemname, const Q &q) {
+			UniformItem &item = g_uniforms.getItem(itemname);
 
 			if (item.m_valueType == UniformItem::vt_Texture) {
 				item.set(q);
@@ -46,10 +46,10 @@ AX_BEGIN_NAMESPACE
 			setUniform(item, &q);
 		}
 
-		static void setUniform(UniformItem& item, const void* q);
+		static void setUniform(UniformItem &item, const void *q);
 
 	public:
-		UniformItem* m_src;
+		UniformItem *m_src;
 		D3DXHANDLE m_param;
 	};
 
@@ -84,10 +84,10 @@ AX_BEGIN_NAMESPACE
 		
 		struct ParamDesc {
 			D3DXCONSTANT_DESC d3dDesc;
-			const D3D9pixel2texel* p2t;
+			const D3D9pixel2texel *p2t;
 		};
 
-		D3D9pass(D3D9shader* shader, D3DXHANDLE d3dxhandle);
+		D3D9pass(D3D9shader *shader, D3DXHANDLE d3dxhandle);
 		~D3D9pass();
 
 		void begin();
@@ -96,19 +96,19 @@ AX_BEGIN_NAMESPACE
 		void initVs();
 		void initPs();
 		void initState();
-		void initSampler(const D3DXCONSTANT_DESC& desc);
+		void initSampler(const D3DXCONSTANT_DESC &desc);
 
-		const D3D9pixel2texel* findPixel2Texel(const String& name);
+		const D3D9pixel2texel *findPixel2Texel(const String &name);
 		void setParameters();
-		void setParameter(const ParamDesc& param, const float* value, bool isPixelShader);
+		void setParameter(const ParamDesc &param, const float *value, bool isPixelShader);
 
 	private:
-		D3D9shader* m_shader;
+		D3D9shader *m_shader;
 		D3DXHANDLE m_d3dxhandle;
 
 		// shader
-		IDirect3DVertexShader9* m_vs;
-		IDirect3DPixelShader9* m_ps;
+		IDirect3DVertexShader9 *m_vs;
+		IDirect3DPixelShader9 *m_ps;
 
 		// render state
 		DWORD m_depthTest;
@@ -136,16 +136,16 @@ AX_BEGIN_NAMESPACE
 	public:
 		friend class D3D9shader;
 
-		D3D9technique(D3D9shader* shader, D3DXHANDLE d3dxhandle);
+		D3D9technique(D3D9shader *shader, D3DXHANDLE d3dxhandle);
 		~D3D9technique();
 
 	private:
 		enum {MAX_PASSES = 8};
-		D3D9shader* m_shader;
+		D3D9shader *m_shader;
 		D3DXHANDLE m_d3dxhandle;
 
 		int m_numPasses;
-		D3D9pass* m_passes[MAX_PASSES];
+		D3D9pass *m_passes[MAX_PASSES];
 	};
 
 	//--------------------------------------------------------------------------
@@ -162,23 +162,23 @@ AX_BEGIN_NAMESPACE
 		virtual ~D3D9shader();
 
 		// implement Shader
-		virtual bool doInit(const String& name, const ShaderMacro& macro = g_shaderMacro);
+		virtual bool doInit(const String &name, const ShaderMacro &macro = g_shaderMacro);
 		virtual bool isDepthWrite() const;
 		virtual bool haveTextureTarget() const;
 		virtual int getNumSampler() const;
-		virtual SamplerAnno* getSamplerAnno(int index) const;
+		virtual SamplerAnno *getSamplerAnno(int index) const;
 		virtual int getNumTweakable() const;
-		virtual ParameterAnno* getTweakableDef(int index);
+		virtual ParameterAnno *getTweakableDef(int index);
 		virtual SortHint getSortHint() const;
 		virtual bool haveTechnique(Technique tech) const;
 
-		void setSystemMap(SamplerType maptype, D3D9texture* tex);
+		void setSystemMap(SamplerType maptype, D3D9texture *tex);
 		// set pixel to texel conversion paramter
 		void setPixelToTexel(int width, int height);
 
-		void setCoupled(Material* mtr);
+		void setCoupled(Material *mtr);
 
-		ID3DXEffect* getObject() const { return m_object; }
+		ID3DXEffect *getObject() const { return m_object; }
 
 		UINT begin(Technique tech);
 		void beginPass(UINT pass);
@@ -198,7 +198,7 @@ AX_BEGIN_NAMESPACE
 		void initAxonObject();
 
 		D3DXHANDLE findTechnique(Technique tech);
-		D3DXHANDLE getUsedParameter(const char* name);
+		D3DXHANDLE getUsedParameter(const char *name);
 		bool isParameterUsed(D3DXHANDLE param);
 
 	private:
@@ -207,7 +207,7 @@ AX_BEGIN_NAMESPACE
 		SortHint m_sortHint;
 
 		D3DXHANDLE m_d3dxTechniques[Technique::Number];
-		D3D9texture* m_samplerBound[SamplerType::NUMBER_ALL];
+		D3D9texture *m_samplerBound[SamplerType::NUMBER_ALL];
 		D3DXHANDLE m_curTechnique;
 
 		bool m_haveTextureTarget;
@@ -218,9 +218,9 @@ AX_BEGIN_NAMESPACE
 		D3D9pixel2texels pixel2Texels;
 		int m_p2tWidth, m_p2tHeight;
 
-		D3D9technique* m_techniques[Technique::Number];
-		D3D9technique* m_curTech;
-		Material* m_coupled;
+		D3D9technique *m_techniques[Technique::Number];
+		D3D9technique *m_curTech;
+		Material *m_coupled;
 	};
 
 	//--------------------------------------------------------------------------
@@ -232,17 +232,17 @@ AX_BEGIN_NAMESPACE
 		D3D9shadermanager();
 		virtual ~D3D9shadermanager();
 
-		virtual Shader* findShader(const String& name, const ShaderMacro& macro = g_shaderMacro);
-		virtual Shader* findShader(const FixedString& nameId, const ShaderMacro& macro);
-		virtual void saveShaderCache(const String& name);
-		virtual void applyShaderCache(const String& name);
+		virtual Shader *findShader(const String &name, const ShaderMacro &macro = g_shaderMacro);
+		virtual Shader *findShader(const FixedString &nameId, const ShaderMacro &macro);
+		virtual void saveShaderCache(const String &name);
+		virtual void applyShaderCache(const String &name);
 
-		D3D9shader* findShaderDX(const String& name, const ShaderMacro& macro = g_shaderMacro);
+		D3D9shader *findShaderDX(const String &name, const ShaderMacro &macro = g_shaderMacro);
 
 	private:
 		typedef Dict<FixedString,Dict<ShaderMacro,D3D9shader*> > ShaderPool;
 		ShaderPool m_shaderPool;
-		D3D9shader* m_defaulted;
+		D3D9shader *m_defaulted;
 	};
 
 

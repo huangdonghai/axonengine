@@ -11,17 +11,17 @@ read the license and understand and accept it fully.
 
 #include "private.h"
 
-Application* g_app;
-Workbench* g_workbench;
-QSettings* g_settings;
+Application *g_app;
+Workbench *g_workbench;
+QSettings *g_settings;
 
 
 //------------------------------------------------------------------------------
 // global data
 //------------------------------------------------------------------------------
-GlobalData* g_globalData;
+GlobalData *g_globalData;
 
-GlobalData::GlobalData(QApplication* m_app)
+GlobalData::GlobalData(QApplication *m_app)
 	: cursorHand(QPixmap(":/images/hand.png"))
 	, cursorViewPan(QPixmap(":/cursors/view_pan.png"))
 	, cursorViewZoom(QPixmap(":/cursors/view_zoom.png"))

@@ -33,7 +33,7 @@ public:
 	void setHideFile(bool val) { m_hideFile = val; }
 
 	void refresh();
-	void browseSub_r(const String& path, QTreeWidgetItem* parentItem);
+	void browseSub_r(const String &path, QTreeWidgetItem *parentItem);
 	void removeEmpty();
 	void removeFile();
 

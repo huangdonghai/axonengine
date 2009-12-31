@@ -29,7 +29,7 @@ static const int t_nBufferLength = 1024;
 static const int t_nLevel=Z_DEFAULT_COMPRESSION;
 static const int t_nStrategy=Z_DEFAULT_STRATEGY;
 
-Gzip::Gzip(char* lpsz, int len)
+Gzip::Gzip(char *lpsz, int len)
 	: pgzip(0)
 	, Length(0)
 {
@@ -103,12 +103,12 @@ Gzip::Init(char *lpsz, int len) {
 }
 
 int
-Gzip::write(byte_t* buf, int count) {
+Gzip::write(byte_t *buf, int count) {
 	if (buf == 0)
 		return 0;
 	if (Length+count > m_CurrentBufferSize) {
 		int nTimes=(Length+count)/t_nBufferLength +1;
-		byte_t* pTemp=pgzip;
+		byte_t *pTemp=pgzip;
 		pgzip=static_cast<byte_t*>(malloc(nTimes*t_nBufferLength));
 		m_CurrentBufferSize=nTimes*t_nBufferLength;
 		memcpy(pgzip,pTemp,Length);
@@ -164,7 +164,7 @@ Gzip::putLong(uint_t x) {
 
 
 
-Ungzip::Ungzip(byte_t* pgzip, int len)
+Ungzip::Ungzip(byte_t *pgzip, int len)
 	: psz(NULL)
 	, Length(0)
 	, m_pos(0)
@@ -289,7 +289,7 @@ Ungzip::get_byte() {
 }
 
 int
-Ungzip::read(byte_t* buf, int size) {
+Ungzip::read(byte_t *buf, int size) {
 	int nRead=size;
 	if (m_pos+size >= m_gziplen) {
 		nRead=m_gziplen-m_pos;
@@ -302,7 +302,7 @@ Ungzip::read(byte_t* buf, int size) {
 }
 
 int
-Ungzip::gzread(char* buf, int len) {
+Ungzip::gzread(char *buf, int len) {
 	Bytef *start = (Bytef*)buf; /* starting point for crc computation */
 	byte_t  *next_out; /* == stream.next_out but not forced far (for MSDOS) */
 
@@ -388,7 +388,7 @@ Ungzip::getLong() {
 }
 
 int
-Ungzip::write(char* buf, int count) {
+Ungzip::write(char *buf, int count) {
 	if (buf == 0)
 		return 0;
 

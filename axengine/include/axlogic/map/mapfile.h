@@ -72,7 +72,7 @@ namespace Map {
 		MapLayerDef(int _id);
 		~MapLayerDef();
 
-		MapLayerDef* clone() const;
+		MapLayerDef *clone() const;
 	};
 
 	class AX_API MapMaterialDef
@@ -82,27 +82,27 @@ namespace Map {
 		~MapMaterialDef();
 
 		int getNumLayers() const;
-		MapLayerDef* getLayerDef(int idx) const;
-		MapLayerDef* findLayerDefById(int id) const;
-		MapLayerDef* createLayerDef();
-		void deleteLayerDef(MapLayerDef* l);
-		void moveUpLayerDef(MapLayerDef* l);
-		void moveDownLayerDef(MapLayerDef* l);
+		MapLayerDef *getLayerDef(int idx) const;
+		MapLayerDef *findLayerDefById(int id) const;
+		MapLayerDef *createLayerDef();
+		void deleteLayerDef(MapLayerDef *l);
+		void moveUpLayerDef(MapLayerDef *l);
+		void moveDownLayerDef(MapLayerDef *l);
 
 		// set layer for index. the layer must create by this materialDef, or
 		// the id will be corrupted
-		void setLayer(int idx, MapLayerDef* l);
-		MapMaterialDef* clone() const;
+		void setLayer(int idx, MapLayerDef *l);
+		MapMaterialDef *clone() const;
 
-		void parseXml(const TiXmlElement* node);
-		void writeToFile(File* f, int indent=0);
+		void parseXml(const TiXmlElement *node);
+		void writeToFile(File *f, int indent=0);
 
 	protected:
-		int findLayerIndex(MapLayerDef* l);
+		int findLayerIndex(MapLayerDef *l);
 
 	private:
 		int m_numLayers;
-		MapLayerDef* m_layerDefs[Map::MaxLayers];
+		MapLayerDef *m_layerDefs[Map::MaxLayers];
 		int m_maxLayerId;
 	};
 
@@ -138,8 +138,8 @@ namespace Map {
 		~MapEnvDef();
 
 		// member method
-		void parseXml(const TiXmlElement* node);
-		void writeToFile(File* f, int indent=0);
+		void parseXml(const TiXmlElement *node);
+		void writeToFile(File *f, int indent=0);
 
 
 	public:		// let public just because for easy use

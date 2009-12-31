@@ -26,7 +26,7 @@ public:
 		InstanceScale = 3
 	};
 
-	TreeActor(const String& filename, int seed = 1);
+	TreeActor(const String &filename, int seed = 1);
 	~TreeActor();
 
 	void setWindMatrixOffset(float fOffset) { m_instanceParam[WindMatrixOffset] = float(int(10.0f * fOffset)); }
@@ -38,12 +38,12 @@ public:
 	virtual Primitives getHitTestPrims();
 
 	// new interface
-	virtual void frameUpdate( QueuedScene* qscene );
-	virtual void issueToQueue(QueuedScene* qscene);
+	virtual void frameUpdate( QueuedScene *qscene );
+	virtual void issueToQueue(QueuedScene *qscene);
 
 
 private:
-	TreeAsset* m_treeAsset;
+	TreeAsset *m_treeAsset;
 	Vector4 m_instanceParam;
 };
 

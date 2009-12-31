@@ -12,7 +12,7 @@ class TrackWidget;
 class RectLayout : public QGraphicsItem
 {
 public:
-	RectLayout(TrackWidget* widget);
+	RectLayout(TrackWidget *widget);
 	virtual ~RectLayout();
 
 	QRectF rect() const;
@@ -29,7 +29,7 @@ private:
 	Q_DISABLE_COPY(RectLayout);
 
 protected:
-	TrackWidget* m_widget;
+	TrackWidget *m_widget;
 	QRectF m_rect;
 };
 
@@ -38,7 +38,7 @@ protected:
 class CurveNameItem : public QGraphicsItem
 {
 public:
-	CurveNameItem(AnimWrapper* wrapper);
+	CurveNameItem(AnimWrapper *wrapper);
 	virtual ~CurveNameItem();
 
 	// implement QGraphicsItem
@@ -52,7 +52,7 @@ private:
 class ValueAxis : public RectLayout
 {
 public:
-	ValueAxis(TrackWidget* widget);
+	ValueAxis(TrackWidget *widget);
 	virtual ~ValueAxis();
 
 	virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
@@ -96,7 +96,7 @@ private:
 class TrackNameItem : public QGraphicsItem
 {
 public:
-	TrackNameItem(AnimWrapper* wrapper);
+	TrackNameItem(AnimWrapper *wrapper);
 	virtual ~TrackNameItem();
 
 	// implement QGraphicsItem
@@ -106,7 +106,7 @@ public:
 protected:
 
 private:
-	AnimWrapper* m_wrapper;
+	AnimWrapper *m_wrapper;
 };
 
 //------------------------------------------------------------------------------
@@ -121,14 +121,14 @@ class AnimWrapper
 public:
 	friend class TrackWidget;
 
-	AnimWrapper(TrackWidget* widget);
-	AnimWrapper(AnimWrapper* parent);
-	AnimWrapper(AnimWrapper* parent, Control* anim);
-	AnimWrapper(AnimWrapper* parent, AnimWrapper* preceding);
+	AnimWrapper(TrackWidget *widget);
+	AnimWrapper(AnimWrapper *parent);
+	AnimWrapper(AnimWrapper *parent, Control *anim);
+	AnimWrapper(AnimWrapper *parent, AnimWrapper *preceding);
 	virtual ~AnimWrapper();
 
-	void setAnimatable(Control* anim);
-	Control* getAnimatable() const;
+	void setAnimatable(Control *anim);
+	Control *getAnimatable() const;
 
 	// drawing
 	virtual QRectF boundingRect() const;
@@ -143,13 +143,13 @@ protected:
 	void relayout();
 
 private:
-	TrackWidget* m_widget;
-	AnimWrapper* m_parent;
-	Control* m_anim;
+	TrackWidget *m_widget;
+	AnimWrapper *m_parent;
+	Control *m_anim;
 
 	// init
-	TrackNameItem* m_trackNameItem;
-	TrackViewItem* m_trackViewItem;
+	TrackNameItem *m_trackNameItem;
+	TrackViewItem *m_trackViewItem;
 
 	// runtime
 	int m_trackIndex;
@@ -159,7 +159,7 @@ private:
 class TimeAxis : public RectLayout
 {
 public:
-	TimeAxis(TrackWidget* widget);
+	TimeAxis(TrackWidget *widget);
 	virtual ~TimeAxis();
 
 protected:
@@ -170,14 +170,14 @@ protected:
 class CurveRight : public RectLayout
 {
 public:
-	CurveRight(TrackWidget* widget);
+	CurveRight(TrackWidget *widget);
 	virtual ~CurveRight();
 
 protected:
 	virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
-	virtual void mouseMoveEvent(QGraphicsSceneMouseEvent* event);
-	virtual void mousePressEvent(QGraphicsSceneMouseEvent* event);
-	virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event);
+	virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
+	virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
+	virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
 	virtual void wheelEvent(QGraphicsSceneWheelEvent * event);
 
 private:
@@ -190,14 +190,14 @@ private:
 class TrackRight : public RectLayout
 {
 public:
-	TrackRight(TrackWidget* widget);
+	TrackRight(TrackWidget *widget);
 	virtual ~TrackRight();
 
 protected:
 	virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
-	virtual void mouseMoveEvent(QGraphicsSceneMouseEvent* event);
-	virtual void mousePressEvent(QGraphicsSceneMouseEvent* event);
-	virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event);
+	virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
+	virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
+	virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
 	virtual void wheelEvent(QGraphicsSceneWheelEvent * event);
 
 private:
@@ -218,7 +218,7 @@ public:
 	TrackWidget(QWidget *parent);
 	~TrackWidget();
 
-	RectLayout* getLayoutFrame(LayoutFrameType lft) const;
+	RectLayout *getLayoutFrame(LayoutFrameType lft) const;
 
 	// prop-get-set
 	int getStartTime() const { return m_startTime; }
@@ -260,19 +260,19 @@ public:
 	// adjust time axis and value axis
 	void offsetTimeAxis(int hpos, int ticks); // offset time axis, let hpos's time equal ticks
 	void scaleTimeAxis(int hpos, float factor); // scale time axis use hpos as scale center
-	void offsetAxis(const QPointF& pos, int ticks, float value);
-	void scaleAxis(const QPointF& pos, float factor);
+	void offsetAxis(const QPointF &pos, int ticks, float value);
+	void scaleAxis(const QPointF &pos, float factor);
 
 protected:
 	virtual void resizeEvent(QResizeEvent * event);
 	virtual void drawBackground(QPainter *painter, const QRectF &rect);
 
-	void addAnimWrapper(AnimWrapper* track);
+	void addAnimWrapper(AnimWrapper *track);
 	void relayout();
 
 private:
-	Control* m_anim;
-	QGraphicsScene* m_scene;
+	Control *m_anim;
+	QGraphicsScene *m_scene;
 	QList<AnimWrapper*> m_wrappers;
 	int m_lineHeight;
 	bool m_showBar;
@@ -284,13 +284,13 @@ private:
 
 
 	// layout
-	RectLayout* m_frameCurveLeft;
-	RectLayout* m_frameCurveRight;
-	RectLayout* m_frameHeaderLeft;
-	TimeAxis* m_timeAxis;
-	RectLayout* m_frameTrackLeft;
-	TrackRight* m_frameTrackRight;
-	ValueAxis* m_valueAxis;
+	RectLayout *m_frameCurveLeft;
+	RectLayout *m_frameCurveRight;
+	RectLayout *m_frameHeaderLeft;
+	TimeAxis *m_timeAxis;
+	RectLayout *m_frameTrackLeft;
+	TrackRight *m_frameTrackRight;
+	ValueAxis *m_valueAxis;
 	//
 	// runtime layout
 	//

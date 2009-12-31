@@ -18,7 +18,7 @@ AX_BEGIN_NAMESPACE
 		/* construction & destruction */
 		Uuid();
 
-		Uuid& fromString(const String& str);
+		Uuid &fromString(const String &str);
 		String toString();
 
 		size_t hash() const;

@@ -35,58 +35,58 @@ AX_BEGIN_NAMESPACE
 		Matrix4();
 		Matrix4(float e0, float e1, float e2, float e3, float e4, float e5, float e6, float e7, float e8, float e9, float e10, float e11, float e12, float e13, float e14, float e15);
 		Matrix4(const float im[16]);
-		Matrix4(const Vector4& px, const Vector4& py, Vector4& pz, Vector4 pw);
-		Matrix4(const Vector4& px, const Vector4& py, Vector4& pz);
-		Matrix4(const Matrix3& axis, const Vector3& origin);
+		Matrix4(const Vector4 &px, const Vector4 &py, Vector4 &pz, Vector4 pw);
+		Matrix4(const Vector4 &px, const Vector4 &py, Vector4 &pz);
+		Matrix4(const Matrix3 &axis, const Vector3 &origin);
 		~Matrix4();
 
 		// member
-		Matrix4& setIdentity();
-		Matrix4& setOrtho(float left, float right, float bottom, float top, float znear, float zfar);
-		Matrix4& setTranslate(float x, float y, float z);
-		Matrix4& setRotation(float x, float y, float z);
-		Matrix4& setScale(float x, float y, float z);
-		Matrix4& setFrustum(float left, float right, float bottom, float top, float znear, float zfar);
-		Matrix4& setFrustumDX(float left, float right, float bottom, float top, float znear, float zfar);
-		Matrix4& setReflect(const Plane& plane);
-		Matrix4& translate(float x, float y, float z);
-		Matrix4& rotate(float x, float y, float z);
-		Matrix4& scale(float x, float y, float z);
+		Matrix4 &setIdentity();
+		Matrix4 &setOrtho(float left, float right, float bottom, float top, float znear, float zfar);
+		Matrix4 &setTranslate(float x, float y, float z);
+		Matrix4 &setRotation(float x, float y, float z);
+		Matrix4 &setScale(float x, float y, float z);
+		Matrix4 &setFrustum(float left, float right, float bottom, float top, float znear, float zfar);
+		Matrix4 &setFrustumDX(float left, float right, float bottom, float top, float znear, float zfar);
+		Matrix4 &setReflect(const Plane &plane);
+		Matrix4 &translate(float x, float y, float z);
+		Matrix4 &rotate(float x, float y, float z);
+		Matrix4 &scale(float x, float y, float z);
 
 		// transform a plane
-		Plane transformPlane(const Plane& p) const;
+		Plane transformPlane(const Plane &p) const;
 
 		// transform a vector3, no w divided
-		Vector3 fastTransform(const Vector3& p) const;
+		Vector3 fastTransform(const Vector3 &p) const;
 
 		// transform a vector4
-		Vector4 transformPoint(const Vector4& p) const;
+		Vector4 transformPoint(const Vector4 &p) const;
 
 		// transform a point
 		Vector3 transformPoint(const Vector3 &v) const;
 
 		// transform a normal
-		Vector3 transformNormal(const Vector3& v) const;
+		Vector3 transformNormal(const Vector3 &v) const;
 
 		Matrix4 getTranspose() const;
 		AffineMat getAffineMat() const;
 
 		float getDeterminant() const;
 		Matrix4 getInverse() const;
-		void mirror(const Vector4& plane);
-		void fromAxis(const Matrix3& axis, const Vector3& origin);
-		void toAxis(Matrix3& axis, Vector3& origin) const;
+		void mirror(const Vector4 &plane);
+		void fromAxis(const Matrix3 &axis, const Vector3 &origin);
+		void toAxis(Matrix3 &axis, Vector3 &origin) const;
 		Vector3 getTranslate() const;
 		void removeTranslate();
 		Matrix4 getRotateMatrix();
-		void fromAxisInverse(const Matrix3& axis, const Vector3& origin);
-		void fromQuaternion(const Quaternion& q);
+		void fromAxisInverse(const Matrix3 &axis, const Vector3 &origin);
+		void fromQuaternion(const Quaternion &q);
 		static Matrix4 getIdentity();
 
 		//zzx add
-		void fromRotate(const Vector3& pos,const Vector3& axis,float angles,float radius,bool isFixupStartRotDir = true);
+		void fromRotate(const Vector3 &pos,const Vector3 &axis,float angles,float radius,bool isFixupStartRotDir = true);
 
-		inline void extract3x3Matrix(Matrix3& m3x3) const
+		inline void extract3x3Matrix(Matrix3 &m3x3) const
 		{
 			m3x3.m[0][0] = m[0][0];
 			m3x3.m[0][1] = m[0][1];
@@ -101,15 +101,15 @@ AX_BEGIN_NAMESPACE
 		}
 
 		// operator
-		Matrix4 operator*(const Matrix4& im) const;
+		Matrix4 operator*(const Matrix4 &im) const;
 		void operator*=(const Matrix4 im);
-		bool operator==(Matrix4& other) const;
-		bool operator!=(Matrix4& other) const;
-		Vector4& operator[](int index);
-		const Vector4& operator[](int index) const;
-		Vector4 operator*(const Vector4& p) const;
-		Vector3 operator*(const Vector3& p) const;
-		const float* toFloatPointer() const;
+		bool operator==(Matrix4 &other) const;
+		bool operator!=(Matrix4 &other) const;
+		Vector4 &operator[](int index);
+		const Vector4 &operator[](int index) const;
+		Vector4 operator*(const Vector4 &p) const;
+		Vector3 operator*(const Vector3 &p) const;
+		const float *toFloatPointer() const;
 		operator const float*() const;
 	};
 
@@ -130,7 +130,7 @@ AX_BEGIN_NAMESPACE
 		memcpy(m, im, sizeof(float)*16);
 	}
 
-	inline Matrix4::Matrix4(const Vector4& px, const Vector4& py, Vector4& pz, Vector4 pw)
+	inline Matrix4::Matrix4(const Vector4 &px, const Vector4 &py, Vector4 &pz, Vector4 pw)
 	{
 		m[0][0] = px.x; m[0][1] = px.y;  m[0][2] = px.z;  m[0][3] = px.w;
 		m[1][0] = py.x; m[1][1] = py.y;  m[1][2] = py.z;  m[1][3] = py.w;
@@ -138,13 +138,13 @@ AX_BEGIN_NAMESPACE
 		m[3][0] = pw.x; m[3][1] = pw.y;  m[3][2] = pw.z;  m[3][3] = pw.w;
 	}
 
-	inline Matrix4::Matrix4(const Vector4& px, const Vector4& py, Vector4& pz)
+	inline Matrix4::Matrix4(const Vector4 &px, const Vector4 &py, Vector4 &pz)
 	{
 		Vector4 pw(0.f, 0.f, 0.f, 1.f);
 		Matrix4(px, py, pz, pw);
 	}
 
-	inline Matrix4::Matrix4(const Matrix3& axis, const Vector3& origin)
+	inline Matrix4::Matrix4(const Matrix3 &axis, const Vector3 &origin)
 	{
 		fromAxis(axis, origin);
 	}
@@ -152,7 +152,7 @@ AX_BEGIN_NAMESPACE
 	inline Matrix4::~Matrix4() {}
 
 	// member
-	inline Matrix4& Matrix4::setIdentity()
+	inline Matrix4 &Matrix4::setIdentity()
 	{
 		m[0][0] = 1; m[0][1] = 0;  m[0][2] = 0;  m[0][3] = 0;
 		m[1][0] = 0; m[1][1] = 1;  m[1][2] = 0;  m[1][3] = 0;
@@ -162,7 +162,7 @@ AX_BEGIN_NAMESPACE
 		return *this;
 	}
 
-	inline Matrix4& Matrix4::setOrtho(float left, float right, float bottom, float top, float znear, float zfar)
+	inline Matrix4 &Matrix4::setOrtho(float left, float right, float bottom, float top, float znear, float zfar)
 	{
 		// glOrtho(left, right, top, bottom, znear, zfar)
 		m[0][0] = 2.f / (right - left);
@@ -185,7 +185,7 @@ AX_BEGIN_NAMESPACE
 		return *this;
 	}
 
-	inline Matrix4& Matrix4::setTranslate(float x, float y, float z)
+	inline Matrix4 &Matrix4::setTranslate(float x, float y, float z)
 	{
 		m[0][0] = 1; m[0][1] = 0; m[0][2] = 0; m[0][3] = 0;
 		m[1][0] = 0; m[1][1] = 1; m[1][2] = 0; m[1][3] = 0;
@@ -195,7 +195,7 @@ AX_BEGIN_NAMESPACE
 		return *this;
 	}
 
-	inline Matrix4& Matrix4::translate(float x, float y, float z)
+	inline Matrix4 &Matrix4::translate(float x, float y, float z)
 	{
 		Matrix4 temp;
 		temp.setTranslate(x, y, z);
@@ -205,7 +205,7 @@ AX_BEGIN_NAMESPACE
 		return *this;
 	}
 
-	inline Matrix4& Matrix4::setRotation(float x, float y, float z)
+	inline Matrix4 &Matrix4::setRotation(float x, float y, float z)
 	{
 		//       |  CE       BDE+AF  -ADE+BF  0 |
 		//  M  = | -CF      -BDF+AE   ADF+BE  0 |
@@ -228,7 +228,7 @@ AX_BEGIN_NAMESPACE
 		return *this;
 	}
 
-	inline Matrix4& Matrix4::rotate(float x, float y, float z)
+	inline Matrix4 &Matrix4::rotate(float x, float y, float z)
 	{
 		Matrix4 temp;
 		temp.setRotation(x, y, z);
@@ -238,7 +238,7 @@ AX_BEGIN_NAMESPACE
 		return *this;
 	}
 
-	inline Matrix4& Matrix4::setScale(float x, float y, float z)
+	inline Matrix4 &Matrix4::setScale(float x, float y, float z)
 	{
 		m[0][0] = x;   m[0][1] = 0.f; m[0][2] = 0.f; m[0][3] = 0.f;
 		m[1][0] = 0.f; m[1][1] = y;   m[1][2] = 0.f; m[1][3] = 0.f;
@@ -248,7 +248,7 @@ AX_BEGIN_NAMESPACE
 		return *this;
 	}
 
-	inline Matrix4& Matrix4::scale(float x, float y, float z)
+	inline Matrix4 &Matrix4::scale(float x, float y, float z)
 	{
 		Matrix4 t;
 		t.setScale(x, y, z);
@@ -257,7 +257,7 @@ AX_BEGIN_NAMESPACE
 		return *this;
 	}
 
-	inline Matrix4& Matrix4::setFrustum(float left, float right, float bottom, float top, float znear, float zfar)
+	inline Matrix4 &Matrix4::setFrustum(float left, float right, float bottom, float top, float znear, float zfar)
 	{
 		double one_deltax;
 		double one_deltay;
@@ -292,7 +292,7 @@ AX_BEGIN_NAMESPACE
 		return *this;
 	}
 
-	inline Matrix4& Matrix4::setFrustumDX(float left, float right, float bottom, float top, float znear, float zfar)
+	inline Matrix4 &Matrix4::setFrustumDX(float left, float right, float bottom, float top, float znear, float zfar)
 	{
 		// set Perspective matrix for DX
 		// like D3DXMatrixPerspectiveOffCenterRH
@@ -326,7 +326,7 @@ AX_BEGIN_NAMESPACE
 		return *this;
 	}
 
-	inline Matrix4& Matrix4::setReflect(const Plane& P)
+	inline Matrix4 &Matrix4::setReflect(const Plane &P)
 	{
 		// plane's normal must be normalized
 
@@ -339,7 +339,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 	// matrix multiply
-	inline Matrix4 Matrix4::operator*(const Matrix4& im) const
+	inline Matrix4 Matrix4::operator*(const Matrix4 &im) const
 	{
 		Matrix4 om;
 		om[0][0] = m[0][0]*im[0][0] + m[1][0]*im[0][1] + m[2][0]*im[0][2] + m[3][0]*im[0][3];
@@ -369,7 +369,7 @@ AX_BEGIN_NAMESPACE
 		*this=this->operator*(im);
 	}
 
-	inline bool Matrix4::operator==(Matrix4& other) const
+	inline bool Matrix4::operator==(Matrix4 &other) const
 	{
 		for (int i = 0; i < 4; i++)
 			for (int j = 0; j < 4; j++)
@@ -379,25 +379,25 @@ AX_BEGIN_NAMESPACE
 		return true;
 	}
 
-	inline bool Matrix4::operator!=(Matrix4& other) const
+	inline bool Matrix4::operator!=(Matrix4 &other) const
 	{
 		return !(*this == other);
 	}
 
-	inline Vector4& Matrix4::operator[](int index)
+	inline Vector4 &Matrix4::operator[](int index)
 	{
 		AX_STRICT_ASSERT(index>=0 && index<4);
 		return m[index];
 	}
 
-	inline const Vector4& Matrix4::operator[](int index) const
+	inline const Vector4 &Matrix4::operator[](int index) const
 	{
 		AX_STRICT_ASSERT(index>=0 && index<4);
 		return m[index];
 	}
 
 	// transform a plane
-	inline Plane Matrix4::transformPlane(const Plane& p) const
+	inline Plane Matrix4::transformPlane(const Plane &p) const
 	{
 		/* Vector4 op;
 		Matrix4 m = Inverse();
@@ -418,7 +418,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 	// transform a vector3, no w divided
-	inline Vector3 Matrix4::fastTransform(const Vector3& p) const
+	inline Vector3 Matrix4::fastTransform(const Vector3 &p) const
 	{
 		Vector3 op;
 		op.x = p.x * m[0][0] + p.y * m[1][0] + p.z * m[2][0] + m[3][0];
@@ -429,7 +429,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 	// transform a vector4
-	inline Vector4 Matrix4::transformPoint(const Vector4& p) const
+	inline Vector4 Matrix4::transformPoint(const Vector4 &p) const
 	{
 		Vector4 op;
 		op.x = p.x * m[0][0] + p.y * m[1][0] + p.z * m[2][0] + p.w * m[3][0];
@@ -440,12 +440,12 @@ AX_BEGIN_NAMESPACE
 		return op;
 	}
 
-	inline Vector4 Matrix4::operator*(const Vector4& p) const
+	inline Vector4 Matrix4::operator*(const Vector4 &p) const
 	{
 		return transformPoint(p);
 	}
 
-	inline Vector3 Matrix4::operator*(const Vector3& p) const
+	inline Vector3 Matrix4::operator*(const Vector3 &p) const
 	{
 		return transformPoint(p);
 	}
@@ -459,7 +459,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 	// transform a normal
-	inline Vector3 Matrix4::transformNormal(const Vector3& v) const
+	inline Vector3 Matrix4::transformNormal(const Vector3 &v) const
 	{
 		// return TransformPlane(Vector4(v,0.0f));
 		Vector3 dst;
@@ -563,13 +563,13 @@ AX_BEGIN_NAMESPACE
 		return om;
 	}
 
-	inline void Matrix4::mirror(const Vector4& plane)
+	inline void Matrix4::mirror(const Vector4 &plane)
 	{
 		// components
-		Vector4& x = m[0];
-		Vector4& y = m[1];
-		Vector4& z = m[2];
-		Vector4& t = m[3];
+		Vector4 &x = m[0];
+		Vector4 &y = m[1];
+		Vector4 &z = m[2];
+		Vector4 &t = m[3];
 		Vector4 n2 = plane * -2;
 
 		// mirror translation
@@ -594,7 +594,7 @@ AX_BEGIN_NAMESPACE
 		mt = t;
 	}
 
-	inline void Matrix4::fromAxis(const Matrix3& axis, const Vector3& origin)
+	inline void Matrix4::fromAxis(const Matrix3 &axis, const Vector3 &origin)
 	{
 		m[0][0] = axis[0][0];
 		m[0][1] = axis[0][1];
@@ -614,7 +614,7 @@ AX_BEGIN_NAMESPACE
 		m[3][3] = 1.f;
 	}
 
-	inline void Matrix4::toAxis(Matrix3& axis, Vector3& origin) const
+	inline void Matrix4::toAxis(Matrix3 &axis, Vector3 &origin) const
 	{
 		axis.m[0][0] = m[0][0];
 		axis.m[0][1] = m[0][1];
@@ -656,7 +656,7 @@ AX_BEGIN_NAMESPACE
 		return m;
 	}
 
-	inline void Matrix4::fromAxisInverse(const Matrix3& axis, const Vector3& origin)
+	inline void Matrix4::fromAxisInverse(const Matrix3 &axis, const Vector3 &origin)
 	{
 		m[0][0] = axis[0][0];
 		m[0][1] = axis[1][0];
@@ -676,7 +676,7 @@ AX_BEGIN_NAMESPACE
 		m[3][3] = 1.f;
 	}
 
-	inline void Matrix4::fromQuaternion(const Quaternion& q)
+	inline void Matrix4::fromQuaternion(const Quaternion &q)
 	{
 		float x,y,z,w;
 		x = q.x;
@@ -702,7 +702,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 	//zzx add
-	inline void Matrix4::fromRotate(const Vector3& pos,const Vector3& axis,float angles,float radius,bool isFixupStartRotDir /* = true */)
+	inline void Matrix4::fromRotate(const Vector3 &pos,const Vector3 &axis,float angles,float radius,bool isFixupStartRotDir /* = true */)
 	{
 		Quaternion q;
 		Vector3 dir;
@@ -749,7 +749,7 @@ AX_BEGIN_NAMESPACE
 		return (float*)this;
 	}
 
-	inline const float* Matrix4::toFloatPointer() const
+	inline const float *Matrix4::toFloatPointer() const
 	{
 		return (const float*)this;
 	}

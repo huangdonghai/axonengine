@@ -40,7 +40,7 @@ AX_BEGIN_NAMESPACE
 		virtual bool unlock();
 
 	private:
-		mutable void* m_object;
+		mutable void *m_object;
 	};
 
 	//------------------------------------------------------------------------------
@@ -56,10 +56,10 @@ AX_BEGIN_NAMESPACE
 
 	class ScopeLock {
 	public:
-		ScopeLock(SyncMutex& syncobject) : m_mutex(syncobject) { m_mutex.lock(); }
+		ScopeLock(SyncMutex &syncobject) : m_mutex(syncobject) { m_mutex.lock(); }
 		~ScopeLock() { m_mutex.unlock(); }
 	private:
-		SyncMutex& m_mutex;
+		SyncMutex &m_mutex;
 	};
 
 
@@ -80,7 +80,7 @@ AX_BEGIN_NAMESPACE
 		bool resetEvent();
 
 	private:
-		void* m_object;
+		void *m_object;
 	};
 
 
@@ -102,7 +102,7 @@ AX_BEGIN_NAMESPACE
 
 	private:
 		handle_t m_handle;
-		SyncEvent* m_exitEvent;
+		SyncEvent *m_exitEvent;
 		ulong_t m_id;
 	};
 

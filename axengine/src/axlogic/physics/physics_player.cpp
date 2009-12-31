@@ -23,7 +23,7 @@ AX_BEGIN_NAMESPACE
 		m_moveType = MoveType_Normal;
 		m_speed = WALK_SPEED;
 
-		hkpCapsuleShape* characterShape = 0;
+		hkpCapsuleShape *characterShape = 0;
 		{
 			const hkReal totalHeight = 2.0f;
 			const hkReal radius = 0.8f;
@@ -37,7 +37,7 @@ AX_BEGIN_NAMESPACE
 			characterShape = new hkpCapsuleShape(vertexA, vertexB, radius);
 
 			// Construct a Shape Phantom
-			hkpSimpleShapePhantom* phantom = new hkpSimpleShapePhantom(characterShape, hkTransform::getIdentity(), hkpGroupFilter::calcFilterInfo(PhysicsWorld::LAYER_PROXY,0));
+			hkpSimpleShapePhantom *phantom = new hkpSimpleShapePhantom(characterShape, hkTransform::getIdentity(), hkpGroupFilter::calcFilterInfo(PhysicsWorld::LAYER_PROXY,0));
 			characterShape->removeReference();
 
 			// Add the phantom to the world
@@ -75,7 +75,7 @@ AX_BEGIN_NAMESPACE
 
 	void PhysicsPlayer::setAutoDeactive(bool val) {}
 
-	void PhysicsPlayer::setMatrix(const AffineMat& matrix) {
+	void PhysicsPlayer::setMatrix(const AffineMat &matrix) {
 		m_characterProxy->setPosition(x2h(matrix.origin));
 		m_viewAxis = matrix.axis;
 		m_viewAngles = m_viewAxis.toAngles();
@@ -88,11 +88,11 @@ AX_BEGIN_NAMESPACE
 		return AffineMat(objangle, h2x(m_characterProxy->getPosition()));
 	}
 
-	void PhysicsPlayer::bind(PhysicsWorld* world) {
+	void PhysicsPlayer::bind(PhysicsWorld *world) {
 		world->m_havokWorld->addPhantom(m_characterProxy->getShapePhantom());
 	}
 
-	void PhysicsPlayer::unbind(PhysicsWorld* world) {
+	void PhysicsPlayer::unbind(PhysicsWorld *world) {
 		world->m_havokWorld->removePhantom(m_characterProxy->getShapePhantom());
 	}
 
@@ -236,7 +236,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 
-	void PhysicsPlayer::runFrame(const UserInput& userinput, int msec) {
+	void PhysicsPlayer::runFrame(const UserInput &userinput, int msec) {
 		m_userInput = userinput;
 		m_frameMsec = msec;
 		m_frameSec = msec / 1000.0f;
@@ -263,7 +263,7 @@ AX_BEGIN_NAMESPACE
 		m_bodyAnimContext.step(msec);
 	}
 
-	void PhysicsPlayer::setLinearVelocity(const Vector3& velocity)
+	void PhysicsPlayer::setLinearVelocity(const Vector3 &velocity)
 	{
 		m_characterProxy->setLinearVelocity(x2h(velocity));
 	}

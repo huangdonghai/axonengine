@@ -24,10 +24,10 @@ public:
 
 protected:
 	void initMaterialDef();
-	MapLayerDef* getLayerDef(QTreeWidgetItem* item);
-	void writeToDef(QTreeWidgetItem* item);
+	MapLayerDef *getLayerDef(QTreeWidgetItem *item);
+	void writeToDef(QTreeWidgetItem *item);
 	void writeCurrentDef();
-	void readFromDef(QTreeWidgetItem* item);
+	void readFromDef(QTreeWidgetItem *item);
 	void updataMaskPreview();
 	void updateBaseImage();
 	void apply();
@@ -55,10 +55,10 @@ private slots:
 	void on_add_clicked();
 
 private:
-	MapTerrain* m_terrain;
-	MapMaterialDef* m_materialDef;
-	Image* m_heightImage;
-	Image* m_slopeImage;
+	MapTerrain *m_terrain;
+	MapMaterialDef *m_materialDef;
+	Image *m_heightImage;
+	Image *m_slopeImage;
 	String m_baseImage;
 };
 

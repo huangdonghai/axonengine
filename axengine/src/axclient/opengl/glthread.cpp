@@ -11,32 +11,32 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-	RenderCamera* gCamera;
-	QueuedScene* gScene;
+	RenderCamera *gCamera;
+	QueuedScene *gScene;
 
-	GLwindow* gFrameWindow;
+	GLwindow *gFrameWindow;
 	bool gIsReflecting;
 
-	QueuedScene* gWorldScene;
-	GLtarget* gWorldTarget;
-	GLframebuffer* gWorldFramebuffer;
+	QueuedScene *gWorldScene;
+	GLtarget *gWorldTarget;
+	GLframebuffer *gWorldFramebuffer;
 
-	const QueuedEntity* gActor;
+	const QueuedEntity *gActor;
 
 	static Technique s_technique;
 	static bool s_clearShadowmask;
 
-	static GLtarget* s_gbuffer;
+	static GLtarget *s_gbuffer;
 	static bool s_shadowGened;
 
 	static int s_numShadowMap;
-	static GLtexture* s_shadowMap[16];
+	static GLtexture *s_shadowMap[16];
 
 	static TexFormat sColorFormat = TexFormat::BGRA8;
 	static TexFormat sDepthFormat = TexFormat::D24S8;
 
-	static inline void BindTarget(RenderTarget* target) {
-		static RenderTarget* bound;
+	static inline void BindTarget(RenderTarget *target) {
+		static RenderTarget *bound;
 
 		if (bound != target) {
 			if (target->isTexture()) {
@@ -107,7 +107,7 @@ AX_BEGIN_NAMESPACE
 
 		m_threadRendering = isInThread;
 
-		GLwindow* window = dynamic_cast<GLwindow*>(g_renderQueue->getTarget());
+		GLwindow *window = dynamic_cast<GLwindow*>(g_renderQueue->getTarget());
 #if 0
 		m_numQueries[m_curQueryBucket] = gRenderQueue->allocQueryId();
 #endif
@@ -134,7 +134,7 @@ AX_BEGIN_NAMESPACE
 		}
 
 		for (int i = 0; i < view_count; i++) {
-			QueuedScene* queued = g_renderQueue->getScene(i);
+			QueuedScene *queued = g_renderQueue->getScene(i);
 
 			drawScene(queued, clearer);
 			clearer.clearColor(false);
@@ -181,7 +181,7 @@ AX_BEGIN_NAMESPACE
 		}
 	}
 
-	void GLthread::drawScene(QueuedScene* scene, const Clearer& clearer) {
+	void GLthread::drawScene(QueuedScene *scene, const Clearer &clearer) {
 		if (scene->sceneType == QueuedScene::WorldMain) {
 			drawScene_world(scene, clearer);
 		} else if (scene->sceneType == QueuedScene::Default) {
@@ -201,7 +201,7 @@ AX_BEGIN_NAMESPACE
 		return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z + v1.w * v2.w;
 	}
 
-	static void ModifyProjectionMatrix(const Vector4& clipPlane, float matrix[16])
+	static void ModifyProjectionMatrix(const Vector4 &clipPlane, float matrix[16])
 	{
 //		float       matrix[16];
 		Vector4    q;
@@ -233,7 +233,7 @@ AX_BEGIN_NAMESPACE
 //		glLoadMatrixf(matrix);
 	}
 
-	void GLthread::setupScene(QueuedScene* scene, const Clearer* clearer, RenderTarget* target, RenderCamera* camera) {
+	void GLthread::setupScene(QueuedScene *scene, const Clearer *clearer, RenderTarget *target, RenderCamera *camera) {
 //		AX_ASSERT(scene);
 		if (!scene && !camera) {
 			Errorf("GLthread::setupScene: parameter error");
@@ -257,7 +257,7 @@ AX_BEGIN_NAMESPACE
 #else
 		BindTarget(target);
 #endif
-		const Vector4& viewport = camera->getViewPort();
+		const Vector4 &viewport = camera->getViewPort();
 		glViewport(viewport.x, viewport.y, viewport.z, viewport.w);
 		glScissor(viewport.x, viewport.y, viewport.z, viewport.w);
 
@@ -295,7 +295,7 @@ AX_BEGIN_NAMESPACE
 		}
 	}
 
-	void GLthread::unsetScene(QueuedScene* scene, const Clearer* clearer, RenderTarget* target, RenderCamera* camera) {
+	void GLthread::unsetScene(QueuedScene *scene, const Clearer *clearer, RenderTarget *target, RenderCamera *camera) {
 		if (!scene && !camera) {
 			Errorf("GLthread::unsetScene: parameter error");
 		}
@@ -317,7 +317,7 @@ AX_BEGIN_NAMESPACE
 	void GLthread::drawPrimitive(int prim_id) {
 		gCurInteraction = nullptr;
 
-		GLprimitive* prim = glPrimitiveManager->getPrimitive(prim_id);
+		GLprimitive *prim = glPrimitiveManager->getPrimitive(prim_id);
 
 		if (!prim) {
 			return;
@@ -332,18 +332,18 @@ AX_BEGIN_NAMESPACE
 		prim->draw(Technique::Main);
 	}
 
-	void GLthread::drawInteraction(Interaction* ia) {
+	void GLthread::drawInteraction(Interaction *ia) {
 		static bool primMatrixSet = false;
 		gCurInteraction = ia;
 
-		GLprimitive* prim = glPrimitiveManager->getPrimitive(ia->resource);
+		GLprimitive *prim = glPrimitiveManager->getPrimitive(ia->resource);
 
 		if (!prim) {
 			return;
 		}
 
 		// check actor
-		const QueuedEntity* re = ia->qactor;
+		const QueuedEntity *re = ia->qactor;
 		if (re != gActor || prim->isMatrixSet() || primMatrixSet) {
 			gActor = re;
 
@@ -392,7 +392,7 @@ AX_BEGIN_NAMESPACE
 		int viewcount = g_renderQueue->getSceneCount();
 
 		for (int i = 0; i < viewcount; i++) {
-			QueuedScene* queued = g_renderQueue->getScene(i);
+			QueuedScene *queued = g_renderQueue->getScene(i);
 
 			cacheSceneRes(queued);
 
@@ -405,8 +405,8 @@ AX_BEGIN_NAMESPACE
 			g_renderQueue->setCacheEnd();
 	}
 
-	void GLthread::cacheSceneRes(QueuedScene* scene) {
-		RenderScene* s_view = scene->source;
+	void GLthread::cacheSceneRes(QueuedScene *scene) {
+		RenderScene *s_view = scene->source;
 
 //		scene->camera = s_view->camera;
 
@@ -414,7 +414,7 @@ AX_BEGIN_NAMESPACE
 		float normallen = r_showNormal->getFloat();
 
 		for (int j = 0; j < scene->numInteractions; j++) {
-			Primitive* prim = scene->interactions[j]->primitive;
+			Primitive *prim = scene->interactions[j]->primitive;
 
 			if (prim->getType() == Primitive::MeshType) {
 				if (r_ignorMesh->getBool()) {
@@ -433,11 +433,11 @@ AX_BEGIN_NAMESPACE
 					if (r_ignorMesh->getBool()) {
 						scene->interactions[j]->resource = -1;
 					}
-					MeshPrim* mesh = dynamic_cast<MeshPrim*>(prim);
+					MeshPrim *mesh = dynamic_cast<MeshPrim*>(prim);
 					if (mesh == nullptr)
 						continue;
-					LinePrim* line = mesh->getNormalLine(normallen);
-					Interaction* ia = g_renderQueue->allocInteraction();
+					LinePrim *line = mesh->getNormalLine(normallen);
+					Interaction *ia = g_renderQueue->allocInteraction();
 					ia->qactor = scene->interactions[j]->qactor;
 					ia->primitive = line;
 					ia->resource = glPrimitiveManager->cachePrimitive(line);
@@ -456,11 +456,11 @@ AX_BEGIN_NAMESPACE
 				if (r_ignorMesh->getBool()) {
 					scene->interactions[j]->resource = -1;
 				}
-				MeshPrim* mesh = dynamic_cast<MeshPrim*>(prim);
+				MeshPrim *mesh = dynamic_cast<MeshPrim*>(prim);
 				if (mesh == nullptr)
 					continue;
-				LinePrim* line = mesh->getTangentLine(tangentlen);
-				Interaction* ia = g_renderQueue->allocInteraction();
+				LinePrim *line = mesh->getTangentLine(tangentlen);
+				Interaction *ia = g_renderQueue->allocInteraction();
 				ia->qactor = scene->interactions[j]->qactor;
 				ia->primitive = line;
 				ia->resource = glPrimitiveManager->cachePrimitive(line);
@@ -512,7 +512,7 @@ AX_BEGIN_NAMESPACE
 		glThread->runFrame(false);
 	}
 
-	void GLthread::drawPass_zfill(QueuedScene* scene) {
+	void GLthread::drawPass_zfill(QueuedScene *scene) {
 		s_technique = Technique::Zpass;
 
 		Clearer clearer;
@@ -534,7 +534,7 @@ AX_BEGIN_NAMESPACE
 		unsetScene(scene, &clearer, s_gbuffer);
 	}
 
-	void GLthread::drawPass_composite(QueuedScene* scene) {
+	void GLthread::drawPass_composite(QueuedScene *scene) {
 
 		if (r_wireframe->getBool()) {
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -568,15 +568,15 @@ AX_BEGIN_NAMESPACE
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	}
 
-	void GLthread::drawPass_shadowGen(QueuedScene* scene) {
+	void GLthread::drawPass_shadowGen(QueuedScene *scene) {
 		if (!scene->numInteractions) {
 			return;
 		}
 
-		QueuedLight* qlight = scene->sourceLight;
-		QueuedShadow* qshadow = qlight->shadowInfo;
+		QueuedLight *qlight = scene->sourceLight;
+		QueuedShadow *qshadow = qlight->shadowInfo;
 
-		GLtexture* tex = (GLtexture*)scene->camera.getTarget()->getTexture();
+		GLtexture *tex = (GLtexture*)scene->camera.getTarget()->getTexture();
 		if (r_shadowGen->getBool()) {
 			// offset the geometry slightly to prevent z-fighting
 			// note that this introduces some light-leakage artifacts
@@ -625,10 +625,10 @@ AX_BEGIN_NAMESPACE
 	}
 
 #if 0
-	void GLthread::drawPass_shadowMasks(QueuedScene* scene) {
+	void GLthread::drawPass_shadowMasks(QueuedScene *scene) {
 		for (int i = 0; i < scene->numLights; i++) {
-			QueuedLight* ql = scene->lights[i];
-			QueuedShadow* qshadow = ql->shadowInfo;
+			QueuedLight *ql = scene->lights[i];
+			QueuedShadow *qshadow = ql->shadowInfo;
 
 			if (!qshadow) {
 				continue;
@@ -654,10 +654,10 @@ AX_BEGIN_NAMESPACE
 	}
 
 
-	void GLthread::drawPass_shadowMask(QueuedScene* scene, const Matrix4& matrix) {
+	void GLthread::drawPass_shadowMask(QueuedScene *scene, const Matrix4 &matrix) {
 #if 0
-		QueuedLight* light = scene->sourceLight;
-		QueuedShadow* qshadow = light->shadowInfo;
+		QueuedLight *light = scene->sourceLight;
+		QueuedShadow *qshadow = light->shadowInfo;
 
 		if (1/*qshadow->useCsmAtlas*/) {
 			if (!s_shadowGened) {
@@ -669,7 +669,7 @@ AX_BEGIN_NAMESPACE
 			}
 		}
 
-		GLtexture* tex = (GLtexture*)scene->camera.getTarget()->getTexture();
+		GLtexture *tex = (GLtexture*)scene->camera.getTarget()->getTexture();
 
 		s_technique = Technique::Main;
 
@@ -688,7 +688,7 @@ AX_BEGIN_NAMESPACE
 		int splitIndex = scene->splitIndex;
 
 //		Vector2 db = qshadow->splitDepthBounds[splitIndex];
-		QueuedLight::VolumeVertexes* vv = &qshadow->splitVolumes[splitIndex];
+		QueuedLight::VolumeVertexes *vv = &qshadow->splitVolumes[splitIndex];
 		
 		if (1/*qshadow->useCsmAtlas*/) {
 			vv = &qshadow->splitAllVolume;
@@ -735,7 +735,7 @@ AX_BEGIN_NAMESPACE
 
 		if (qshadow->useCsmAtlas) {
 //			glPostprocess->maskShadow(*vv, matrix, tex, drawfront);
-			Matrix4& mat = *(Matrix4*)qshadow->splitScaleOffsets;
+			Matrix4 &mat = *(Matrix4*)qshadow->splitScaleOffsets;
 			glPostprocess->maskShadow(*vv, matrix, tex, qshadow->splitMinrange, qshadow->splitMaxrange, mat, drawfront);
 		} else {
 			glPostprocess->maskShadow(*vv, matrix, tex, drawfront);
@@ -751,7 +751,7 @@ AX_BEGIN_NAMESPACE
 #endif
 	}
 
-	void GLthread::drawPass_shadowBlur(QueuedScene* scene) {
+	void GLthread::drawPass_shadowBlur(QueuedScene *scene) {
 		int blurtimes = r_shadowBlur->getInteger();
 
 		if (blurtimes <= 0) {
@@ -760,8 +760,8 @@ AX_BEGIN_NAMESPACE
 
 		blurtimes = blurtimes * 2;
 
-		GLtarget* src = gShadowMaskTarget;
-		GLtarget* dst = src->getFramebuffer()->allocTarget(RenderTarget::FrameAlloc, sColorFormat);
+		GLtarget *src = gShadowMaskTarget;
+		GLtarget *dst = src->getFramebuffer()->allocTarget(RenderTarget::FrameAlloc, sColorFormat);
 		dst->attachDepth(src->getDepthAttached());
 
 		// draw overlay
@@ -779,13 +779,13 @@ AX_BEGIN_NAMESPACE
 	}
 #endif
 
-	void GLthread::drawPass_postprocess(QueuedScene* scene) {
+	void GLthread::drawPass_postprocess(QueuedScene *scene) {
 		// draw overlay
-		GLtarget* downscale = 0;
-		GLtarget* downscale2 = 0;
+		GLtarget *downscale = 0;
+		GLtarget *downscale2 = 0;
 
 		if (r_bloom->getBool()) {
-			const Rect& r = scene->camera.getViewRect();
+			const Rect &r = scene->camera.getViewRect();
 			int width = r.width / 4;
 			int height = r.height / 4;
 
@@ -800,7 +800,7 @@ AX_BEGIN_NAMESPACE
 		RenderCamera camera = scene->camera;
 		camera.setOverlay(camera.getViewRect());
 
-		GLtexture* tex = (GLtexture*)gWorldTarget->getTexture();
+		GLtexture *tex = (GLtexture*)gWorldTarget->getTexture();
 
 		if (r_showShadowMap->getInteger()) {
 			int id = r_showShadowMap->getInteger() - 1;
@@ -832,7 +832,7 @@ AX_BEGIN_NAMESPACE
 		unsetScene(scene, nullptr, nullptr, &camera);
 	}
 
-	void GLthread::drawPass_overlay(QueuedScene* scene) {
+	void GLthread::drawPass_overlay(QueuedScene *scene) {
 		if (!scene->numOverlayPrimitives) {
 			return;
 		}
@@ -850,7 +850,7 @@ AX_BEGIN_NAMESPACE
 		unsetScene(scene, nullptr, nullptr, &camera);
 	}
 
-	void GLthread::drawScene_world(QueuedScene* scene, const Clearer& clearer) {
+	void GLthread::drawScene_world(QueuedScene *scene, const Clearer &clearer) {
 
 		longlong_t start = OsUtil::microseconds();
 
@@ -860,14 +860,14 @@ AX_BEGIN_NAMESPACE
 		s_numShadowMap = 0;
 		s_shadowGened = false;
 
-		const Vector4& viewport = scene->camera.getViewPort();
+		const Vector4 &viewport = scene->camera.getViewPort();
 
 		gWorldFramebuffer = glFramebufferManager->getFramebuffer(viewport.z, viewport.w);
 
 		if (r_framebuffer->getBool()) {
-			GLtarget* colortarget = gWorldFramebuffer->allocTarget(RenderTarget::PermanentAlloc, sColorFormat);
-			GLtarget* depth = gWorldFramebuffer->allocTarget(RenderTarget::PermanentAlloc, sDepthFormat);
-			GLtarget* gbuffer = gWorldFramebuffer->allocTarget(RenderTarget::PermanentAlloc, TexFormat::RGBA16F);
+			GLtarget *colortarget = gWorldFramebuffer->allocTarget(RenderTarget::PermanentAlloc, sColorFormat);
+			GLtarget *depth = gWorldFramebuffer->allocTarget(RenderTarget::PermanentAlloc, sDepthFormat);
+			GLtarget *gbuffer = gWorldFramebuffer->allocTarget(RenderTarget::PermanentAlloc, TexFormat::RGBA16F);
 			gbuffer->getTexture()->setFilterMode(Texture::FM_Nearest);
 			gbuffer->getTexture()->setClampMode(Texture::CM_ClampToEdge);
 			colortarget->attachDepth(depth);
@@ -926,7 +926,7 @@ AX_BEGIN_NAMESPACE
 #if 1
 		// draw subscene first
 		for (int i = 0; i < scene->numSubScenes; i++) {
-			QueuedScene* sub = scene->subScenes[i];
+			QueuedScene *sub = scene->subScenes[i];
 
 			if (sub->sceneType == QueuedScene::ShadowGen) {
 				drawPass_shadowGen(sub);
@@ -963,7 +963,7 @@ AX_BEGIN_NAMESPACE
 //		Printf("FRAMETIME: %d", end - start);
 	}
 
-	void GLthread::drawScene_worldSub(QueuedScene* scene) {
+	void GLthread::drawScene_worldSub(QueuedScene *scene) {
 		s_technique = Technique::Main;
 
 		Clearer clear;
@@ -988,7 +988,7 @@ AX_BEGIN_NAMESPACE
 		unsetScene(scene, &clear);
 	}
 
-	void GLthread::drawScene_noworld(QueuedScene* scene, const Clearer& clearer) {
+	void GLthread::drawScene_noworld(QueuedScene *scene, const Clearer &clearer) {
 		s_technique = Technique::Main;
 
 		glColorMask(1, 1, 1, 1);

@@ -21,23 +21,23 @@ AX_BEGIN_NAMESPACE
 	public:
 		HK_DECLARE_CLASS_ALLOCATOR(HK_MEMORY_CLASS_DEMO);
 
-		EntityActivationListener(PhysicsEntity* e) : m_wrapper(e) {}
+		EntityActivationListener(PhysicsEntity *e) : m_wrapper(e) {}
 
-		virtual void entityDeactivatedCallback(hkpEntity* entity) {
+		virtual void entityDeactivatedCallback(hkpEntity *entity) {
 			m_wrapper->notify(PhysicsEntity::Deactivated);
 		}
 
-		virtual void entityActivatedCallback(hkpEntity* entity) {
+		virtual void entityActivatedCallback(hkpEntity *entity) {
 			m_wrapper->notify(PhysicsEntity::Activated);
 		}
 
 		/// Called when an entity is deleted. hkpEntityListener subclasses <b>must</b> implement this function.
-		virtual void entityDeletedCallback(hkpEntity* entity) {
+		virtual void entityDeletedCallback(hkpEntity *entity) {
 			delete this;
 		}
 
 	private:
-		PhysicsEntity* m_wrapper;
+		PhysicsEntity *m_wrapper;
 	};
 
 	PhysicsEntity::PhysicsEntity() {
@@ -47,7 +47,7 @@ AX_BEGIN_NAMESPACE
 	PhysicsEntity::~PhysicsEntity() {
 	}
 
-	void PhysicsEntity::setGameEntity( GameActor* ent )
+	void PhysicsEntity::setGameEntity( GameActor *ent )
 	{
 		m_gameEntity = ent;
 	}

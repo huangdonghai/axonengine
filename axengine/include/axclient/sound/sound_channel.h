@@ -19,7 +19,7 @@ class SoundEntity;
 	struct SoundKey
 	{
 		SoundKey() : world(0), entity(0), channelId(ChannelId_Any) {}
-		SoundKey(SoundWorld* _world, SoundEntity* _entity, int _channelId) : world(_world), entity(_entity), channelId(_channelId) {}
+		SoundKey(SoundWorld *_world, SoundEntity *_entity, int _channelId) : world(_world), entity(_entity), channelId(_channelId) {}
 		size_t hash() const {
 			size_t h = 0;
 			hash_combine(h, size_t(world));
@@ -28,7 +28,7 @@ class SoundEntity;
 			return h;
 		}
 
-		bool operator==(const SoundKey& rhs) const {
+		bool operator==(const SoundKey &rhs) const {
 			return world == rhs.world && entity == rhs.entity && channelId == rhs.channelId;
 		}
 
@@ -36,8 +36,8 @@ class SoundEntity;
 			return hash();
 		}
 
-		SoundWorld* world;
-		SoundEntity* entity;
+		SoundWorld *world;
+		SoundEntity *entity;
 		int channelId;
 	};
 
@@ -46,7 +46,7 @@ class SoundEntity;
 		SoundKey m_key;
 		int m_startTime;
 		int m_finishTime;
-		FMOD::Channel* m_fmodChannel;
+		FMOD::Channel *m_fmodChannel;
 	};
 
 AX_END_NAMESPACE

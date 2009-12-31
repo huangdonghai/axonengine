@@ -24,7 +24,7 @@ public:
 private:
 	Ui::ModelViewerClass ui;
 
-	HavokModel* m_renderModel;
+	HavokModel *m_renderModel;
 
 private slots:
 	void on_treeWidget_itemDoubleClicked(QTreeWidgetItem*,int);

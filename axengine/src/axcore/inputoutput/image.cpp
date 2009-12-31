@@ -26,7 +26,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 	// IO & processing
-	bool Image::loadFile(const String& filename, int flags) {
+	bool Image::loadFile(const String &filename, int flags) {
 		clear();
 
 		m_loadFlags = flags;
@@ -42,7 +42,7 @@ AX_BEGIN_NAMESPACE
 		return m_dataPresent;
 	}
 
-	bool Image::loadFileByType(const String& filename, FileType filetype, int flags) {
+	bool Image::loadFileByType(const String &filename, FileType filetype, int flags) {
 		m_loadFlags = flags;
 		if (!(flags & RgbeFloat) || !(flags & RgbeHalf)) {
 			flags |=RgbeRaw;
@@ -73,7 +73,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 
-	Image* Image::resize(int width, int height) {
+	Image *Image::resize(int width, int height) {
 		if (!m_dataPresent)
 			return nullptr;
 
@@ -86,7 +86,7 @@ AX_BEGIN_NAMESPACE
 		AX_ASSERT(m_format.getNumComponents() <= 4);
 
 		// horizon scale
-		Image* temp = new Image();
+		Image *temp = new Image();
 		temp->initImage(m_format, width, m_height);
 
 		float xscale = (float)width / (float)m_width;
@@ -105,7 +105,7 @@ AX_BEGIN_NAMESPACE
 					int count = 0;
 					for (int j = left; j <= right; j++) {
 						int n_j = Math::mapToRange(j, 0, m_width);
-						const byte_t* pixel = getPixel(0, j, y);
+						const byte_t *pixel = getPixel(0, j, y);
 
 						for (int k = 0; k < m_format.getNumComponents(); k++) {
 							c[k] += pixel[k];
@@ -124,7 +124,7 @@ AX_BEGIN_NAMESPACE
 		} else {
 		}
 
-		Image* result = new Image;
+		Image *result = new Image;
 		result->initImage(m_format, width, height);
 
 		if (yscale < 1.0f) {
@@ -139,7 +139,7 @@ AX_BEGIN_NAMESPACE
 
 					for (int j = low; j <= high; j++) {
 						int n_j = Math::mapToRange(j, 0, m_height);
-						const byte_t* pixel = temp->getPixel(0, x, j);
+						const byte_t *pixel = temp->getPixel(0, x, j);
 
 						for (int k = 0; k < m_format.getNumComponents(); k++) {
 							c[k] += pixel[k];
@@ -161,15 +161,15 @@ AX_BEGIN_NAMESPACE
 		return result;
 	}
 
-	Image* Image::getFloatHeightmap(float max_height) {
+	Image *Image::getFloatHeightmap(float max_height) {
 		AX_ASSERT(m_dataPresent);
 		AX_ASSERT(m_format == TexFormat::L16);
 
-		Image* outimage = new Image;
+		Image *outimage = new Image;
 		outimage->initImage(TexFormat::R32F, m_width, m_height, nullptr);
 
-		const ushort_t* indata = (ushort_t*)getData(0);
-		float* outdata = (float*)outimage->getWritablePointer(0);
+		const ushort_t *indata = (ushort_t*)getData(0);
+		float *outdata = (float*)outimage->getWritablePointer(0);
 
 		for (int height = 0; height < m_height; height++) {
 			for (int width = 0; width < m_width; width++) {
@@ -195,8 +195,8 @@ AX_BEGIN_NAMESPACE
 			m_datas.resize(1);
 
 		int i, j, k;
-		byte_t* in;
-		byte_t* out;
+		byte_t *in;
+		byte_t *out;
 		int width = m_width;
 		int height = m_height;
 		int bpp = m_format.calculateDataSize(1, 1);
@@ -257,8 +257,8 @@ AX_BEGIN_NAMESPACE
 			m_datas.resize(1);
 
 		int i, j;
-		float* in;
-		float* out;
+		float *in;
+		float *out;
 		int width = m_width;
 		int height = m_height;
 		int numcmpts =  m_format.getNumComponents();
@@ -295,7 +295,7 @@ AX_BEGIN_NAMESPACE
 		}
 	}
 
-	void Image::initImage(TexFormat format, int width, int height, const byte_t* pixel) {
+	void Image::initImage(TexFormat format, int width, int height, const byte_t *pixel) {
 		clear();
 
 		m_format = format;
@@ -303,7 +303,7 @@ AX_BEGIN_NAMESPACE
 		m_height = height;
 
 		int imagesize = format.calculateDataSize(width, height);
-		byte_t* data = new byte_t[imagesize];
+		byte_t *data = new byte_t[imagesize];
 
 		m_datas.push_back(DataBuffer(data));
 		m_dataPresent = true;
@@ -321,7 +321,7 @@ AX_BEGIN_NAMESPACE
 		m_height = height;
 
 		int imagesize = format.calculateDataSize(width, height);
-		byte_t* data = new byte_t[imagesize];
+		byte_t *data = new byte_t[imagesize];
 
 		m_datas.push_back(DataBuffer(data));
 		m_dataPresent = true;
@@ -341,7 +341,7 @@ AX_BEGIN_NAMESPACE
 			if (height < 1) height = 1;
 
 			int imagesize = format.calculateDataSize(width, height);
-			byte_t* data = new byte_t[imagesize];
+			byte_t *data = new byte_t[imagesize];
 
 			m_datas.push_back(DataBuffer(data));
 		}
@@ -353,11 +353,11 @@ AX_BEGIN_NAMESPACE
 		m_dataPresent = false;
 	}
 
-	void Image::setPixel(int level, const Point& pos, const byte_t* pixel) {
+	void Image::setPixel(int level, const Point &pos, const byte_t *pixel) {
 		setPixel(level, pos.x, pos.y, pixel);
 	}
 
-	void Image::setPixel(int level, int x, int y, const byte_t* pixel) {
+	void Image::setPixel(int level, int x, int y, const byte_t *pixel) {
 		if (!m_dataPresent) {
 			Errorf(_("Image::setPixel: data not present\n"));
 		}
@@ -379,15 +379,15 @@ AX_BEGIN_NAMESPACE
 		AX_ASSERT(x >= 0 && x < level_width);
 		AX_ASSERT(y >= 0 && y < level_height);
 
-		byte_t* dst = m_datas[level].get() + (y * level_width + x) * bytes_per_pixel;
+		byte_t *dst = m_datas[level].get() + (y * level_width + x) * bytes_per_pixel;
 		::memcpy(dst, pixel, bytes_per_pixel);
 	}
 
-	void Image::setPixel(int level, const Rect& rect, const byte_t* pixel) {
+	void Image::setPixel(int level, const Rect &rect, const byte_t *pixel) {
 		setPixel(level, rect.x, rect.y, rect.width, rect.height, pixel);
 	}
 
-	void Image::setPixel(int level, int x, int y, int width, int height, const byte_t* pixel) {
+	void Image::setPixel(int level, int x, int y, int width, int height, const byte_t *pixel) {
 		if (!m_dataPresent) {
 			Errorf(_("Image::setPixel: data not present\n"));
 		}
@@ -409,7 +409,7 @@ AX_BEGIN_NAMESPACE
 		int i, j, px, py;
 		for (i = 0, py = y; i < height; i++, py++) {
 			px = x;
-			byte_t* dst = m_datas[level].get() + (py * level_width + px) * bytes_per_pixel;
+			byte_t *dst = m_datas[level].get() + (py * level_width + px) * bytes_per_pixel;
 
 			for (j = 0; j < height; j++, px++) {
 				AX_ASSERT(px >= 0 && px < level_width >> level);
@@ -420,28 +420,28 @@ AX_BEGIN_NAMESPACE
 		}
 	}
 
-	void Image::setPixel(const Point& pos, const byte_t* pixel) {
+	void Image::setPixel(const Point &pos, const byte_t *pixel) {
 		setPixel(0, pos, pixel);
 	}
 
-	void Image::setPixel(int x, int y, const byte_t* pixel) {
+	void Image::setPixel(int x, int y, const byte_t *pixel) {
 		setPixel(0, x, y, pixel);
 	}
 
-	void Image::setPixel(const Rect& rect, const byte_t* pixel) {
+	void Image::setPixel(const Rect &rect, const byte_t *pixel) {
 		setPixel(0, rect, pixel);
 	}
 
-	void Image::setPixel(int x, int y, int width, int height, const byte_t* pixel) {
+	void Image::setPixel(int x, int y, int width, int height, const byte_t *pixel) {
 		setPixel(0, x, y, width, height, pixel);
 	}
 
-	const byte_t* Image::getPixel(int level, const Point& pos) const {
+	const byte_t *Image::getPixel(int level, const Point &pos) const {
 		return getPixel(level, pos.x, pos.y);
 	}
 
 	// add support compressed format
-	const byte_t* Image::getPixel(int level, int x, int y) const {
+	const byte_t *Image::getPixel(int level, int x, int y) const {
 		if (!m_dataPresent) {
 			Errorf(_("Image::SetPixel: data not present\n"));
 		}
@@ -460,11 +460,11 @@ AX_BEGIN_NAMESPACE
 		x = Math::mapToBound(x, level_width);
 		y = Math::mapToBound(y, level_height);
 
-		byte_t* dst = m_datas[level].get() + (y/blocksize * level_width/blocksize + x/blocksize) * blockdatasize;
+		byte_t *dst = m_datas[level].get() + (y/blocksize * level_width/blocksize + x/blocksize) * blockdatasize;
 		return dst;
 	}
 
-	ByteSeq Image::getFilteredPixel(int level, const Vector2& st) const {
+	ByteSeq Image::getFilteredPixel(int level, const Vector2 &st) const {
 		return getFilteredPixel(level, st.x, st.y);
 	}
 
@@ -500,33 +500,33 @@ AX_BEGIN_NAMESPACE
 		ret.resize(bytes_per_pixel);
 
 		if (m_format.isByte()) {
-			const byte_t* p00 = getPixel(level, floorf(s), floorf(t));
-			const byte_t* p01 = getPixel(level, ceilf(s), floorf(t));
-			const byte_t* p10 = getPixel(level, floorf(s), ceilf(t));
-			const byte_t* p11 = getPixel(level, ceilf(s), ceilf(t));
-			byte_t* p = &ret[0];
+			const byte_t *p00 = getPixel(level, floorf(s), floorf(t));
+			const byte_t *p01 = getPixel(level, ceilf(s), floorf(t));
+			const byte_t *p10 = getPixel(level, floorf(s), ceilf(t));
+			const byte_t *p11 = getPixel(level, ceilf(s), ceilf(t));
+			byte_t *p = &ret[0];
 
 			int i;
 			for (i = 0; i < m_format.getNumComponents(); i++) {
 				p[i] = p00[i] * f00 + p01[i] * f01 + p10[i] * f10 + p11[i] * f11;
 			}
 		} else if (m_format.isUShort()) {
-			const ushort_t* p00 = (ushort_t*)getPixel(level, floorf(s), floorf(t));
-			const ushort_t* p01 = (ushort_t*)getPixel(level, ceilf(s), floorf(t));
-			const ushort_t* p10 = (ushort_t*)getPixel(level, floorf(s), ceilf(t));
-			const ushort_t* p11 = (ushort_t*)getPixel(level, ceilf(s), ceilf(t));
-			ushort_t* p = (ushort_t*)&ret[0];
+			const ushort_t *p00 = (ushort_t*)getPixel(level, floorf(s), floorf(t));
+			const ushort_t *p01 = (ushort_t*)getPixel(level, ceilf(s), floorf(t));
+			const ushort_t *p10 = (ushort_t*)getPixel(level, floorf(s), ceilf(t));
+			const ushort_t *p11 = (ushort_t*)getPixel(level, ceilf(s), ceilf(t));
+			ushort_t *p = (ushort_t*)&ret[0];
 
 			int i;
 			for (i = 0; i < m_format.getNumComponents(); i++) {
 				p[i] = p00[i] * f00 + p01[i] * f01 + p10[i] * f10 + p11[i] * f11;
 			}
 		} else if (m_format.isFloat()) {
-			const float* p00 = (float*)getPixel(level, floorf(s), floorf(t));
-			const float* p01 = (float*)getPixel(level, ceilf(s), floorf(t));
-			const float* p10 = (float*)getPixel(level, floorf(s), ceilf(t));
-			const float* p11 = (float*)getPixel(level, ceilf(s), ceilf(t));
-			float* p = (float*)&ret[0];
+			const float *p00 = (float*)getPixel(level, floorf(s), floorf(t));
+			const float *p01 = (float*)getPixel(level, ceilf(s), floorf(t));
+			const float *p10 = (float*)getPixel(level, floorf(s), ceilf(t));
+			const float *p11 = (float*)getPixel(level, ceilf(s), ceilf(t));
+			float *p = (float*)&ret[0];
 
 			int i;
 			for (i = 0; i < m_format.getNumComponents(); i++) {
@@ -541,7 +541,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 	// treat image is tiled, so rect can out of bounds
-	Image* Image::readSubImage(int level, const Rect& rect) const {
+	Image *Image::readSubImage(int level, const Rect &rect) const {
 		if (!m_dataPresent) {
 			Errorf(_("Image::readSubImage: data not present\n"));
 		}
@@ -554,7 +554,7 @@ AX_BEGIN_NAMESPACE
 			Errorf(_("Image::readSubImage: level out of bound\n"));
 		}
 
-		Image* image = new Image;
+		Image *image = new Image;
 		image->initImage(m_format, rect.width, rect.height);
 		image->writeSubImage(this, level, rect, 0, Point(0,0));
 
@@ -564,7 +564,7 @@ AX_BEGIN_NAMESPACE
 
 	// copy block data from another image, source image and dst image must have same format
 	// dxt and other compressed image format are support
-	void Image::writeSubImage(const Image* src_image, int src_level, const Rect& src_rect, int dst_level, const Point& dst_pos) {
+	void Image::writeSubImage(const Image *src_image, int src_level, const Rect &src_rect, int dst_level, const Point &dst_pos) {
 		if (src_image->getFormat() != m_format) {
 			Errorf(_("Image::writeSubImage: only same format can do this"));
 			return;
@@ -628,8 +628,8 @@ AX_BEGIN_NAMESPACE
 				int block_width = getWidth(dst_level) / blocksize;
 
 				for (s_y = copy_rect.y, d_y = dest_y; s_y < copy_rect.yMax(); s_y+=blocksize, d_y+=blocksize) {
-					const byte_t* src = src_image->getPixel(src_level, copy_rect.x, s_y);
-					byte_t* dst = m_datas[dst_level].get() + (d_y * block_width + dest_x) / blocksize * blockdatasize;
+					const byte_t *src = src_image->getPixel(src_level, copy_rect.x, s_y);
+					byte_t *dst = m_datas[dst_level].get() + (d_y * block_width + dest_x) / blocksize * blockdatasize;
 					memcpy(dst, src, linewidth);
 				}
 
@@ -642,14 +642,14 @@ AX_BEGIN_NAMESPACE
 		}
 	}
 
-	void Image::writeSubImage(const Image* src_image, const Rect& src_rect, const Point& dst_pos) {
+	void Image::writeSubImage(const Image *src_image, const Rect &src_rect, const Point &dst_pos) {
 		writeSubImage(src_image, 0, src_rect, 0, dst_pos);
 	}
 
-	void Image::writeSubImage(const Image* src_image, int src_level, const Rect& src_rect, int dst_level, const Rect& dst_rect, bool need_filter) {
+	void Image::writeSubImage(const Image *src_image, int src_level, const Rect &src_rect, int dst_level, const Rect &dst_rect, bool need_filter) {
 	}
 
-	void Image::writeSubImage(const Image* src_image, const Rect& src_rect, const Rect& dst_rect, bool need_filter) {
+	void Image::writeSubImage(const Image *src_image, const Rect &src_rect, const Rect &dst_rect, bool need_filter) {
 		writeSubImage(src_image, 0, src_rect, 0, dst_rect, need_filter);
 	}
 
@@ -714,13 +714,13 @@ AX_BEGIN_NAMESPACE
 		int maxLevel = getNumMipmapLevels();
 		for (int i = 0; i< maxLevel; i++) {
 			int bufLen = convertFormatTo(format, i, NULL);
-			byte_t* buf = new byte_t[bufLen];
+			byte_t *buf = new byte_t[bufLen];
 			convertFormatTo(format, i, buf);
 			m_datas[i] = DataBuffer(buf);
 		}
 	}
 
-	int Image::convertFormatTo(TexFormat format, int level, byte_t* pBuf) const {
+	int Image::convertFormatTo(TexFormat format, int level, byte_t *pBuf) const {
 		int width = getWidth(level);
 		int height = getHeight(level);
 		int ret = format.calculateDataSize(width, height);
@@ -740,7 +740,7 @@ AX_BEGIN_NAMESPACE
 			break;
 		case TexFormat::RGBA8:
 			{
-				const byte_t* src = m_datas[level].get();
+				const byte_t *src = m_datas[level].get();
 				for (int h = 0; h < height; h++) {
 					for (int w = 0; w < width; w++) {
 						switch (m_format)
@@ -828,7 +828,7 @@ AX_BEGIN_NAMESPACE
 			break;
 		case TexFormat::BGRA8:
 			{
-				const byte_t* src = m_datas[level].get();
+				const byte_t *src = m_datas[level].get();
 				for (int h = 0; h < height; h++) {
 					for (int w = 0; w < width; w++) {
 						switch (m_format)
@@ -932,7 +932,7 @@ AX_BEGIN_NAMESPACE
 		return ret;
 	}
 
-	const byte_t* Image::getData(int level) const {
+	const byte_t *Image::getData(int level) const {
 		if (!m_dataPresent) {
 			Errorf("Image::getData: data not present\n");
 		}
@@ -944,7 +944,7 @@ AX_BEGIN_NAMESPACE
 		return m_datas[level].get();
 	}
 
-	const byte_t* Image::getData(int level, TexFormat format) {
+	const byte_t *Image::getData(int level, TexFormat format) {
 		if (!m_dataPresent) {
 			Errorf("Image::getData: data not present\n");
 		}
@@ -959,7 +959,7 @@ AX_BEGIN_NAMESPACE
 		return m_datas[level].get();
 	}
 
-	void Image::writeDataTo(int level, byte_t* data) const {
+	void Image::writeDataTo(int level, byte_t *data) const {
 		if (!m_dataPresent) {
 			Errorf("Image::writeDataTo: data not present\n");
 		}
@@ -972,7 +972,7 @@ AX_BEGIN_NAMESPACE
 		memcpy(data, m_datas[level].get(), imageSize);
 	}
 
-	void Image::writeDataTo(int level, TexFormat format, byte_t* data) const {
+	void Image::writeDataTo(int level, TexFormat format, byte_t *data) const {
 		if (!m_dataPresent) {
 			Errorf("Image::writeDataTo: data not present\n");
 		}
@@ -984,7 +984,7 @@ AX_BEGIN_NAMESPACE
 		convertFormatTo(format, level, data);
 	}
 
-	void Image::writeDataTo(int level, const Rect& rect, int rotate, byte_t* data, bool flipS, bool flipT) const {
+	void Image::writeDataTo(int level, const Rect &rect, int rotate, byte_t *data, bool flipS, bool flipT) const {
 		if (!m_dataPresent) {
 			Errorf("Image::writeDataTo: data not present\n");
 			return;
@@ -1045,7 +1045,7 @@ AX_BEGIN_NAMESPACE
 		}
 
 		int i, j;
-		byte_t* srcdata = m_datas[level].get();
+		byte_t *srcdata = m_datas[level].get();
 
 		for (i = 0; i < rect.height; i++) {
 			int x = srcx;
@@ -1074,7 +1074,7 @@ AX_BEGIN_NAMESPACE
 		return;
 	}
 
-	byte_t* Image::getWritablePointer(int level) {
+	byte_t *Image::getWritablePointer(int level) {
 		if (!m_dataPresent) {
 			Errorf("Image::getWritablePointer: data not present\n");
 			return NULL;
@@ -1108,11 +1108,11 @@ AX_BEGIN_NAMESPACE
 	}
 
 
-	bool Image::loadFile_raw(const String& filename, int width, int height) {
+	bool Image::loadFile_raw(const String &filename, int width, int height) {
 		return false;
 	}
 
-	void Image::saveFile_raw(const String& filename) {
+	void Image::saveFile_raw(const String &filename) {
 		if (!m_dataPresent)
 			return;
 
@@ -1122,16 +1122,16 @@ AX_BEGIN_NAMESPACE
 		g_fileSystem->writeFile(filename, m_datas[0].get(), getDataSize(0));
 	}
 
-	void Image::setData(int level, const void* data, int size) {
+	void Image::setData(int level, const void *data, int size) {
 		AX_ASSERT(size == getDataSize(level));
 
 		if (getNumMipmapLevels() <= level) {
-			byte_t* newdata = new byte_t[size];
+			byte_t *newdata = new byte_t[size];
 			memcpy(newdata, data, size);
 
 			m_datas.push_back(DataBuffer(newdata));
 		} else {
-			byte_t* newdata = m_datas[level].get();
+			byte_t *newdata = m_datas[level].get();
 			memcpy(newdata, data, size);
 		}
 	}

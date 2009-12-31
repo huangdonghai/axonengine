@@ -28,15 +28,15 @@ AX_BEGIN_NAMESPACE
 		ConfigFile();
 		virtual ~ConfigFile();
 
-		bool load(const String& filename);
+		bool load(const String &filename);
 		bool save() const;
-		bool saveTo(const String& filename) const;
+		bool saveTo(const String &filename) const;
 		size_t getSectionCount() const;
 		StringSeq getSections() const;
-		size_t getItemCount(const String& section) const;
-		StringPairSeq getItems(const String& section) const;
-		String getKeyValue(const String& section, const String& key) const;
-		void setValue(const String& section, const String& key, const String& value);
+		size_t getItemCount(const String &section) const;
+		StringPairSeq getItems(const String &section) const;
+		String getKeyValue(const String &section, const String &key) const;
+		void setValue(const String &section, const String &key, const String &value);
 
 	private:
 		void clear();

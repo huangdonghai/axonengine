@@ -37,7 +37,7 @@ AX_BEGIN_NAMESPACE
 		return ++m_maxId;
 	}
 
-	void Context::addActor(Agent* actor) {
+	void Context::addActor(Agent *actor) {
 		int id = actor->getId();
 		AgentDict::iterator it = m_agentDict.find(id);
 
@@ -48,7 +48,7 @@ AX_BEGIN_NAMESPACE
 		m_agentDict[id] = actor;
 	}
 
-	void Context::removeActor(Agent* actor) {
+	void Context::removeActor(Agent *actor) {
 		int id = actor->getId();
 		AgentDict::iterator it = m_agentDict.find(id);
 
@@ -59,7 +59,7 @@ AX_BEGIN_NAMESPACE
 		it->second = 0;
 	}
 
-	Agent* Context::findActor(int id) {
+	Agent *Context::findActor(int id) {
 		AgentDict::iterator it = m_agentDict.find(id);
 
 		if (it == m_agentDict.end() || it->second == nullptr) {
@@ -70,14 +70,14 @@ AX_BEGIN_NAMESPACE
 		return it->second;
 	}
 
-	Action* Context::createAction(int type) {
+	Action *Context::createAction(int type) {
 		if (m_actionFactories[type] == nullptr)
 			return nullptr;
 
 		return m_actionFactories[type]->create(this);
 	}
 
-	Tool* Context::createTool(int type) {
+	Tool *Context::createTool(int type) {
 		if (m_toolFactories[type] == nullptr)
 			return nullptr;
 
@@ -85,7 +85,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 	void Context::doAction(int a) {
-		Action* action = createAction(a);
+		Action *action = createAction(a);
 		if (!action)
 			return;
 
@@ -110,7 +110,7 @@ AX_BEGIN_NAMESPACE
 		notify(ToolChanged);
 	}
 
-	History* Context::setSelectionHistoried( const AgentList& elist )
+	History *Context::setSelectionHistoried( const AgentList &elist )
 	{
 		AgentList oldlist = m_selections;
 
@@ -126,7 +126,7 @@ AX_BEGIN_NAMESPACE
 		return new SelectHis(this, oldlist, m_selections);
 	}
 
-	void Context::setSelection(const AgentList& elist, bool undoable) {
+	void Context::setSelection(const AgentList &elist, bool undoable) {
 		AgentList oldlist = m_selections;
 
 		m_selections.setSelected(false);
@@ -137,14 +137,14 @@ AX_BEGIN_NAMESPACE
 		m_selections.setSelected(true);
 
 		if (undoable) {
-			SelectHis* his = new SelectHis(this, oldlist, m_selections);
+			SelectHis *his = new SelectHis(this, oldlist, m_selections);
 			addHistory(his);
 		}
 
 		notify(SelectionChanged);
 	}
 
-	void Context::addSelection( const AgentList& elist, bool undoable/*=true*/ )
+	void Context::addSelection( const AgentList &elist, bool undoable/*=true*/ )
 	{
 		AgentList newlist = m_selections;
 		AgentList rhs = elist;
@@ -154,7 +154,7 @@ AX_BEGIN_NAMESPACE
 		setSelection(newlist, undoable);
 	}
 
-	void Context::setSelection(Agent* actor, bool undoable) {
+	void Context::setSelection(Agent *actor, bool undoable) {
 		AgentList oldlist = m_selections;
 
 		m_selections.setSelected(false);
@@ -164,7 +164,7 @@ AX_BEGIN_NAMESPACE
 		actor->setSelected(true);
 
 		if (undoable) {
-			SelectHis* his = new SelectHis(this, oldlist, m_selections);
+			SelectHis *his = new SelectHis(this, oldlist, m_selections);
 			addHistory(his);
 		}
 
@@ -178,7 +178,7 @@ AX_BEGIN_NAMESPACE
 		m_selections.clear();
 
 		if (undoable) {
-			SelectHis* his = new SelectHis(this, oldlist, m_selections);
+			SelectHis *his = new SelectHis(this, oldlist, m_selections);
 			addHistory(his);
 		}
 
@@ -194,7 +194,7 @@ AX_BEGIN_NAMESPACE
 		AgentDict::iterator it;
 
 		for (it = m_agentDict.begin(); it != m_agentDict.end(); ++it) {
-			Agent* actor = it->second;
+			Agent *actor = it->second;
 
 			if (!actor) continue;
 
@@ -205,7 +205,7 @@ AX_BEGIN_NAMESPACE
 		}
 
 		if (undoable) {
-			SelectHis* his = new SelectHis(this, oldlist, m_selections);
+			SelectHis *his = new SelectHis(this, oldlist, m_selections);
 			addHistory(his);
 		}
 
@@ -217,7 +217,7 @@ AX_BEGIN_NAMESPACE
 
 		AgentList newsel;
 		for (it = m_agentDict.begin(); it != m_agentDict.end(); ++it) {
-			Agent* actor = it->second;
+			Agent *actor = it->second;
 
 			if (!actor) continue;
 
@@ -230,7 +230,7 @@ AX_BEGIN_NAMESPACE
 		setSelection(newsel, undoable);
 	}
 
-	void Context::addHistory(Action* his) {
+	void Context::addHistory(Action *his) {
 		m_isDirty = true;
 		m_historyManager.addHistory(his);
 
@@ -247,11 +247,11 @@ AX_BEGIN_NAMESPACE
 		notify(HistoryChanged);
 	}
 
-	HistoryManager* Context::getHistory() {
+	HistoryManager *Context::getHistory() {
 		return &m_historyManager;
 	}
 
-	View* Context::getView(int index) {
+	View *Context::getView(int index) {
 		AX_ASSERT(index >= 0 && index < View::MaxView);
 
 		return m_indexedViews[index];

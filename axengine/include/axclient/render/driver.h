@@ -83,10 +83,10 @@ AX_BEGIN_NAMESPACE
 		virtual bool isInRenderingThread() = 0;
 
 		// resource management
-		virtual RenderTarget* createWindowTarget(handle_t wndId, const String& name) = 0;
+		virtual RenderTarget *createWindowTarget(handle_t wndId, const String &name) = 0;
 
 		// caps
-		virtual const Info* getDriverInfo() = 0;
+		virtual const Info *getDriverInfo() = 0;
 		virtual uint_t getBackendCaps() = 0;
 
 		// if not multi threads rendering, use this call render a frame

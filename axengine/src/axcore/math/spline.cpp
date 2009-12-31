@@ -25,21 +25,21 @@ namespace Axon
 		m_controlPoints.clear();
 	}
 
-	Vector3& Spline::getControlPoint(int pos)
+	Vector3 &Spline::getControlPoint(int pos)
 	{
 		AX_ASSERT(pos < (int) m_controlPoints.size());
 
 		return m_controlPoints[pos];
 	}
 
-	void Spline::addControlPoint(const Vector3& point)
+	void Spline::addControlPoint(const Vector3 &point)
 	{
 		m_dirty = true;
 
 		m_controlPoints.push_back(point);
 	}
 
-	void Spline::addControlPoint(int pos, const Vector3& point)
+	void Spline::addControlPoint(int pos, const Vector3 &point)
 	{
 		AX_ASSERT(pos <= (int) m_controlPoints.size());
 
@@ -57,7 +57,7 @@ namespace Axon
 		m_controlPoints.erase(m_controlPoints.begin()+pos);
 	}
 
-	void Spline::deleteControlPoint(const Vector3& point)
+	void Spline::deleteControlPoint(const Vector3 &point)
 	{
 		m_dirty = true;
 
@@ -80,7 +80,7 @@ namespace Axon
 		m_controlPoints.clear();
 	}
 
-	int Spline::getControlPointIndex(const Vector3& point)
+	int Spline::getControlPointIndex(const Vector3 &point)
 	{
 		for (int i=0; i<(int)m_controlPoints.size(); ++i)
 		{
@@ -93,7 +93,7 @@ namespace Axon
 		return -1;
 	}
 
-	/*Vector3& Spline::getControlPoint(const Vector3& point)
+	/*Vector3 &Spline::getControlPoint(const Vector3 &point)
 	{
 		int i = getControlPointIndex(point);
 
@@ -342,8 +342,8 @@ namespace Axon
 	{
 		int numPoint = (int) m_controlPoints.size();
 
-		float* Work = new float[numPoint];
-		float* WorkB = new float[numPoint];
+		float *Work = new float[numPoint];
+		float *WorkB = new float[numPoint];
 
 		// ------------- Bx --------------
 

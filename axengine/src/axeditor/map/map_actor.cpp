@@ -16,15 +16,15 @@ AX_BEGIN_NAMESPACE
 // class Entity, Editor Entity
 //--------------------------------------------------------------------------
 
-MapActor::MapActor(const String& type) {
+MapActor::MapActor(const String &type) {
 	m_iconPrim = 0;
-	GameWorld* gameworld = getMapContext()->getGameWorld();
+	GameWorld *gameworld = getMapContext()->getGameWorld();
 	m_gameEntity = gameworld->createActor(type.c_str());
 	m_gameObj = m_gameEntity;
 
 //		bindToGame();
 
-	const ClassInfo* ci = m_gameEntity->getClassInfo();
+	const ClassInfo *ci = m_gameEntity->getClassInfo();
 	if (!ci) {
 		return;
 	}
@@ -66,11 +66,11 @@ void MapActor::doRender()
 	return MapAgent::doRender();
 }
 
-MapAgent* MapActor::clone() const
+MapAgent *MapActor::clone() const
 {
 	// create entity
-	GameWorld* gameworld = getMapContext()->getGameWorld();
-	MapActor* newent = new MapActor(m_gameEntity->getClassInfo()->m_className);
+	GameWorld *gameworld = getMapContext()->getGameWorld();
+	MapActor *newent = new MapActor(m_gameEntity->getClassInfo()->m_className);
 
 	newent->m_gameEntity->copyPropertiesFrom(this->m_gameEntity);
 	newent->m_gameEntity->autoGenerateName();

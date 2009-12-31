@@ -14,15 +14,15 @@ read the license and understand and accept it fully.
 AX_BEGIN_NAMESPACE
 
 	struct DynVb {
-		IDirect3DVertexBuffer9* vb;
+		IDirect3DVertexBuffer9 *vb;
 		int offset;
-		void* writePtr;
+		void *writePtr;
 	};
 
 	struct DynIb {
-		IDirect3DIndexBuffer9* ib;
+		IDirect3DIndexBuffer9 *ib;
 		int offset;
-		void* writePtr;
+		void *writePtr;
 	};
 
 	// forward declaration
@@ -48,21 +48,21 @@ AX_BEGIN_NAMESPACE
 		D3D9vertexobject();
 		~D3D9vertexobject();
 
-		void setData(const void* p, int count, Primitive::Hint, VertexType vt);
+		void setData(const void *p, int count, Primitive::Hint, VertexType vt);
 		void resetData();
 		void bind();
-		void bindInstanced(D3D9instancedbuffer* instancedBuffer);
+		void bindInstanced(D3D9instancedbuffer *instancedBuffer);
 		void unbindInstanced();
 
 		int getNumVerts() const { return m_count; }
-		IDirect3DVertexBuffer9* getObject() const { return m_object; }
+		IDirect3DVertexBuffer9 *getObject() const { return m_object; }
 
 	protected:
 		void createDeclaration();
 
 	private:
-		IDirect3DVertexBuffer9* m_object;
-		D3D9vertdecl* m_declaration;
+		IDirect3DVertexBuffer9 *m_object;
+		D3D9vertdecl *m_declaration;
 		int m_offset;		// byte offset
 		int m_dataSize;
 		int m_count;
@@ -80,10 +80,10 @@ AX_BEGIN_NAMESPACE
 		D3D9instancedbuffer();
 		~D3D9instancedbuffer();
 
-		void setData(const InstancePrim::ParamSeq& params);
+		void setData(const InstancePrim::ParamSeq &params);
 
 	private:
-		IDirect3DVertexBuffer9* m_object;
+		IDirect3DVertexBuffer9 *m_object;
 		int m_offset;		// byte offset
 		int m_count;
 	};
@@ -97,12 +97,12 @@ AX_BEGIN_NAMESPACE
 		D3D9indexobject();
 		~D3D9indexobject();
 
-		void setData(const ushort_t* p, int count, Primitive::Hint, int activeCount = 0);
+		void setData(const ushort_t *p, int count, Primitive::Hint, int activeCount = 0);
 		void resetData();
 		void bind();
 		bool haveData() const;
 
-		IDirect3DIndexBuffer9* getObject() const { return m_object; }
+		IDirect3DIndexBuffer9 *getObject() const { return m_object; }
 
 		int getActiveCount() const;
 		void setActiveCount(int val);
@@ -114,7 +114,7 @@ AX_BEGIN_NAMESPACE
 
 
 	private:
-		IDirect3DIndexBuffer9* m_object;
+		IDirect3DIndexBuffer9 *m_object;
 		D3DPOOL m_hint;
 		int m_dataSize;
 		int m_count;
@@ -131,18 +131,18 @@ AX_BEGIN_NAMESPACE
 	public:
 		friend class D3D9vertexbuffermanager;
 
-		D3D9vertdecl(D3D9vertexbuffermanager* manager, D3D9vertexobject::VertexType vt, int offset);
+		D3D9vertdecl(D3D9vertexbuffermanager *manager, D3D9vertexobject::VertexType vt, int offset);
 		virtual ~D3D9vertdecl();
 
-		IDirect3DVertexDeclaration9* getObject() { return m_d3dObject; }
-		IDirect3DVertexDeclaration9* getObjectInstanced() { return m_d3dObjectInstanced; }
+		IDirect3DVertexDeclaration9 *getObject() { return m_d3dObject; }
+		IDirect3DVertexDeclaration9 *getObjectInstanced() { return m_d3dObjectInstanced; }
 
 	protected:
 
 	private:
-		D3D9vertexbuffermanager* m_manager;
-		IDirect3DVertexDeclaration9* m_d3dObject;
-		IDirect3DVertexDeclaration9* m_d3dObjectInstanced;
+		D3D9vertexbuffermanager *m_manager;
+		IDirect3DVertexDeclaration9 *m_d3dObject;
+		IDirect3DVertexDeclaration9 *m_d3dObjectInstanced;
 		D3D9vertexobject::VertexType m_vt;
 		int m_offset;
 	};
@@ -162,7 +162,7 @@ AX_BEGIN_NAMESPACE
 		struct Result {
 			BufType buffer;
 			int offset;
-			void* writePtr;
+			void *writePtr;
 		};
 
 		ChainedBuffer() {
@@ -266,13 +266,13 @@ AX_BEGIN_NAMESPACE
 		Sequence<BufType> m_pages;
 		int m_curIndex;
 		int m_curOffset;
-		void* m_curPointer;
+		void *m_curPointer;
 		bool m_isFrameAllocating;
 	};
 
-	IDirect3DVertexBuffer9* CreateVertexBufferPage(int pagesize);
+	IDirect3DVertexBuffer9 *CreateVertexBufferPage(int pagesize);
 
-	IDirect3DIndexBuffer9* CreateIndexBufferPage(int pagesize);
+	IDirect3DIndexBuffer9 *CreateIndexBufferPage(int pagesize);
 
 	typedef ChainedBuffer<IDirect3DVertexBuffer9*, 1024*1024, CreateVertexBufferPage> VertexBufferChain;
 	typedef ChainedBuffer<IDirect3DVertexBuffer9*, 256*1024, CreateVertexBufferPage> InstanceBufferChain;
@@ -284,9 +284,9 @@ AX_BEGIN_NAMESPACE
 		~D3D9vertexbuffermanager();
 
 		// vertdecl
-		D3D9vertdecl* getVertDecl(D3D9vertexobject::VertexType vt) { return vertDecls[vt]; }
-		D3D9vertdecl* allocVertDecl(D3D9vertexobject::VertexType vt, int offset);
-		void removeVertDecl(D3D9vertdecl* vd);
+		D3D9vertdecl *getVertDecl(D3D9vertexobject::VertexType vt) { return vertDecls[vt]; }
+		D3D9vertdecl *allocVertDecl(D3D9vertexobject::VertexType vt, int offset);
+		void removeVertDecl(D3D9vertdecl *vd);
 
 		// catch event
 		void onDeviceLost();
@@ -322,7 +322,7 @@ AX_BEGIN_NAMESPACE
 		// vertdecl
 		typedef Dict<int, D3D9vertdecl*> VertDeclPool;
 		VertDeclPool m_vertDeclPool[D3D9vertexobject::VERTEXTYPE_NUMBER];
-		D3D9vertdecl* vertDecls[D3D9vertexobject::VERTEXTYPE_NUMBER];
+		D3D9vertdecl *vertDecls[D3D9vertexobject::VERTEXTYPE_NUMBER];
 	};
 
 AX_END_NAMESPACE

@@ -31,34 +31,34 @@ AX_BEGIN_NAMESPACE
 			MaxType = 256
 		};
 
-		Tool(Context* context);
+		Tool(Context *context);
 		virtual ~Tool();
 
-		void setView(View* view);
-		View* getView();
+		void setView(View *view);
+		View *getView();
 
-		virtual void doBindView(View* view) = 0;
+		virtual void doBindView(View *view) = 0;
 		virtual void doPress(int x, int y, int flags, float pressure) = 0;
 		virtual void doDrag(int x, int y, int flags, float pressure) = 0;
 		virtual void doMove(int x, int y) = 0;
 		virtual void doRelease(int x, int y) = 0;
-		virtual void doRender(const RenderCamera& camera) = 0;
+		virtual void doRender(const RenderCamera &camera) = 0;
 		virtual void setCursor();
 
-		virtual void handleEvent(InputEvent* e);
+		virtual void handleEvent(InputEvent *e);
 	protected:
 		// implement IInputHandler
-		virtual void onMouseDown(InputEvent* e);
-		virtual void onMouseUp(InputEvent* e);
-		virtual void onMouseMove(InputEvent* e);
+		virtual void onMouseDown(InputEvent *e);
+		virtual void onMouseUp(InputEvent *e);
+		virtual void onMouseMove(InputEvent *e);
 
 	protected:
-		Context* m_context;
+		Context *m_context;
 		bool m_isPressed;
-		View* m_view;
+		View *m_view;
 	};
 
-	inline void Tool::setView(View* view) {
+	inline void Tool::setView(View *view) {
 		if (m_view != view) {
 			m_view = view;
 			doBindView(m_view);
@@ -66,18 +66,18 @@ AX_BEGIN_NAMESPACE
 		}
 	}
 
-	inline View* Tool::getView() {
+	inline View *Tool::getView() {
 		return m_view;
 	}
 
 	class ToolFactory {
 	public:
-		virtual Tool* create(Context* context) = 0;
+		virtual Tool *create(Context *context) = 0;
 	};
 
 	template< class T >
 	class ToolFactory_ : public ToolFactory {
-		virtual Tool* create(Context* context) {
+		virtual Tool *create(Context *context) {
 			return new T(context);
 		}
 	};
@@ -88,15 +88,15 @@ AX_BEGIN_NAMESPACE
 
 	class SelectTool : public Tool {
 	public:
-		SelectTool(Context* context);
+		SelectTool(Context *context);
 		virtual ~SelectTool();
 
-		virtual void doBindView(View* view);
+		virtual void doBindView(View *view);
 		virtual void doPress(int x, int y, int flags, float pressure);
 		virtual void doDrag(int x, int y, int flags, float pressure);
 		virtual void doMove(int x, int y);
 		virtual void doRelease(int x, int y);
-		virtual void doRender(const RenderCamera& camera);
+		virtual void doRender(const RenderCamera &camera);
 
 		virtual void setCursor();
 
@@ -106,8 +106,8 @@ AX_BEGIN_NAMESPACE
 		void areaSelect();
 
 	private:
-		LinePrim* m_linePrim;
-		MeshPrim* m_meshPrim;
+		LinePrim *m_linePrim;
+		MeshPrim *m_meshPrim;
 		Point m_beginPos;
 		Point m_curPos;
 		int m_selectionSeq;
@@ -129,24 +129,24 @@ AX_BEGIN_NAMESPACE
 			PivotCenter, SelectionCenter, TransformCenter
 		};
 
-		TransformTool(Context* context);
+		TransformTool(Context *context);
 		virtual ~TransformTool();
 
 		// Tool
-		virtual void doBindView(View* view);
+		virtual void doBindView(View *view);
 		virtual void doPress(int x, int y, int flags, float pressure);
 		virtual void doDrag(int x, int y, int flags, float pressure);
 		virtual void doMove(int x, int y);
 		virtual void doRelease(int x, int y);
-		virtual void doRender(const RenderCamera& camera);
+		virtual void doRender(const RenderCamera &camera);
 		virtual void setCursor();
 
 		// IObserver
-		virtual void doNotify(IObservable* subjest, int arg);
+		virtual void doNotify(IObservable *subjest, int arg);
 
 		// immediately transform for use input from UI
 		virtual bool begin();
-		virtual void transform(const Vector3& v, int index);
+		virtual void transform(const Vector3 &v, int index);
 		virtual void end();
 
 	protected:
@@ -154,16 +154,16 @@ AX_BEGIN_NAMESPACE
 
 		// pure virtual need be implemented in subclass
 		virtual bool doBegin(int x, int y) = 0;
-		virtual bool doTranslateVector(const Vector3& v, Vector3& result) = 0;
-		virtual bool doTransform(const Vector3& v, int index, AffineMat& result) = 0;
-		virtual void doEnd(int x, int y, Action* his) = 0;
+		virtual bool doTranslateVector(const Vector3 &v, Vector3 &result) = 0;
+		virtual bool doTransform(const Vector3 &v, int index, AffineMat &result) = 0;
+		virtual void doEnd(int x, int y, Action *his) = 0;
 		virtual void doUpdateMode() = 0;
 
 	protected:
 		void updateMode();
 
 	protected:
-		TransformGizmo* m_gizmo;
+		TransformGizmo *m_gizmo;
 		bool m_isSelectMode;
 		Vector3 m_gizmoCenter;
 		Matrix3 m_gizmoAxis;
@@ -184,7 +184,7 @@ AX_BEGIN_NAMESPACE
 
 	class MoveTool : public TransformTool {
 	public:
-		MoveTool(Context* context);
+		MoveTool(Context *context);
 		virtual ~MoveTool();
 
 		virtual void setCursor();
@@ -192,9 +192,9 @@ AX_BEGIN_NAMESPACE
 	protected:
 		// implement TransformTool
 		virtual bool doBegin(int x, int y);
-		virtual bool doTranslateVector(const Vector3& v, Vector3& result);
-		virtual bool doTransform(const Vector3& v, int index, AffineMat& result);
-		virtual void doEnd(int x, int y, Action* his);
+		virtual bool doTranslateVector(const Vector3 &v, Vector3 &result);
+		virtual bool doTransform(const Vector3 &v, int index, AffineMat &result);
+		virtual void doEnd(int x, int y, Action *his);
 		virtual void doUpdateMode();
 
 		//virtual void doMove(int x, int y);
@@ -202,7 +202,7 @@ AX_BEGIN_NAMESPACE
 
 	protected:
 		void selectClipPlane();
-		bool clipTest(int x, int y, Vector3& result);
+		bool clipTest(int x, int y, Vector3 &result);
 
 	protected:
 		Plane m_clipPlane;
@@ -217,7 +217,7 @@ AX_BEGIN_NAMESPACE
 
 	class RotateTool : public TransformTool {
 	public:
-		RotateTool(Context* context);
+		RotateTool(Context *context);
 		virtual ~RotateTool();
 
 		virtual void setCursor();
@@ -225,15 +225,15 @@ AX_BEGIN_NAMESPACE
 	protected:
 		// implement TransformTool
 		virtual bool doBegin(int x, int y);
-		virtual bool doTranslateVector(const Vector3& v, Vector3& result);
-		virtual bool doTransform(const Vector3& v, int index, AffineMat& result);
-		virtual void doEnd(int x, int y, Action* his);
+		virtual bool doTranslateVector(const Vector3 &v, Vector3 &result);
+		virtual bool doTransform(const Vector3 &v, int index, AffineMat &result);
+		virtual void doEnd(int x, int y, Action *his);
 		virtual void doUpdateMode();
 
 	protected:
 		Vector3 getRotate(float angle) const;
 		void selectClipPlane();
-		bool clipTest(int x, int y, float& result);
+		bool clipTest(int x, int y, float &result);
 
 	protected:
 		Plane m_clipPlane;
@@ -251,7 +251,7 @@ AX_BEGIN_NAMESPACE
 	public:
 		typedef ScaleGizmo::SelectId SelectId;
 
-		ScaleTool(Context* context);
+		ScaleTool(Context *context);
 		virtual ~ScaleTool();
 
 		virtual void setCursor();
@@ -259,14 +259,14 @@ AX_BEGIN_NAMESPACE
 	protected:
 		// implement TransformTool
 		virtual bool doBegin(int x, int y);
-		virtual bool doTranslateVector(const Vector3& v, Vector3& result);
-		virtual bool doTransform(const Vector3& v, int index, AffineMat& result);
-		virtual void doEnd(int x, int y, Action* his);
+		virtual bool doTranslateVector(const Vector3 &v, Vector3 &result);
+		virtual bool doTransform(const Vector3 &v, int index, AffineMat &result);
+		virtual void doEnd(int x, int y, Action *his);
 		virtual void doUpdateMode();
 
 	protected:
 		void selectClipPlane();
-		bool clipTest(int x, int y, Vector3& result);
+		bool clipTest(int x, int y, Vector3 &result);
 
 	private:
 		Plane m_clipPlane;

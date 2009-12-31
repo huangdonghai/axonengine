@@ -19,15 +19,15 @@ AX_BEGIN_NAMESPACE
 
 	class IObserver {
 	public:
-		virtual void doNotify(IObservable* subject, int arg) = 0;
+		virtual void doNotify(IObservable *subject, int arg) = 0;
 	};
 
 	class AX_API IObservable {
 	public:
 		virtual ~IObservable();
 
-		void attachObserver(IObserver* observer);
-		void detachObserver(IObserver* observer);
+		void attachObserver(IObserver *observer);
+		void detachObserver(IObserver *observer);
 		void notify(int arg);
 
 	private:

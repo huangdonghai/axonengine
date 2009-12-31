@@ -23,7 +23,7 @@ AX_BEGIN_NAMESPACE
 	{
 	}
 
-	void Query::issueQuery( int frameId, const BoundingBox& bbox )
+	void Query::issueQuery( int frameId, const BoundingBox &bbox )
 	{
 		g_queryManager->issueQuery(this, frameId, bbox);
 	}
@@ -38,7 +38,7 @@ AX_BEGIN_NAMESPACE
 	{
 
 	}
-	Query* QueryManager::allocQuery()
+	Query *QueryManager::allocQuery()
 	{
 		return m_queryAlloc.alloc();
 	}
@@ -49,9 +49,9 @@ AX_BEGIN_NAMESPACE
 		query = 0;
 	}
 
-	void QueryManager::issueQuery( Query* query, int frameId, const BoundingBox& bbox )
+	void QueryManager::issueQuery( Query *query, int frameId, const BoundingBox &bbox )
 	{
-		ActiveQuery* active = m_issuedQueryAlloc.alloc();
+		ActiveQuery *active = m_issuedQueryAlloc.alloc();
 		query->m_queryFrame = frameId;
 		active->query = query;
 		active->frameId = frameId;
@@ -67,7 +67,7 @@ AX_BEGIN_NAMESPACE
 			List<ActiveQuery*>::iterator it = m_activeQuery[i].begin();
 
 			while (it != m_activeQuery[i].end()) {
-				ActiveQuery* issued = *it;
+				ActiveQuery *issued = *it;
 
 				// object is freed
 				if (issued->query->m_objectId < 0) {

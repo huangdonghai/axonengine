@@ -18,7 +18,7 @@ class GfxView : public View
 	friend class GfxContext;
 
 public:
-	GfxView(GfxContext* ctx);
+	GfxView(GfxContext *ctx);
 	virtual ~GfxView();
 
 protected:
@@ -27,13 +27,13 @@ protected:
 	virtual void doRender();
 
 	// implement IInputHandler
-	virtual void handleEvent(InputEvent* e);
-	virtual void onKeyDown(InputEvent* e);
-	virtual void onKeyUp(InputEvent* e);
-	virtual void onMouseDown(InputEvent* e);
-	virtual void onMouseUp(InputEvent* e);
-	virtual void onMouseMove(InputEvent* e);
-	virtual void onMouseWheel(InputEvent* e);
+	virtual void handleEvent(InputEvent *e);
+	virtual void onKeyDown(InputEvent *e);
+	virtual void onKeyUp(InputEvent *e);
+	virtual void onMouseDown(InputEvent *e);
+	virtual void onMouseUp(InputEvent *e);
+	virtual void onMouseMove(InputEvent *e);
+	virtual void onMouseWheel(InputEvent *e);
 
 	void updateMove();
 

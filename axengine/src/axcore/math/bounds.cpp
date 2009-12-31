@@ -18,7 +18,7 @@ AX_BEGIN_NAMESPACE
 
 
 	// some function is recursively referanced, so move to here
-	BoundingBox BoundingBox::getTransformed(const AffineMat& matrix) const {
+	BoundingBox BoundingBox::getTransformed(const AffineMat &matrix) const {
 		int i;
 		Vector3 center, extents, rotatedExtents;
 		BoundingBox out;
@@ -26,8 +26,8 @@ AX_BEGIN_NAMESPACE
 		center = getCenter();
 		extents = max - center;
 
-		const Matrix3& axis = matrix.axis;
-		const Vector3& origin = matrix.origin;
+		const Matrix3 &axis = matrix.axis;
+		const Vector3 &origin = matrix.origin;
 
 		for (i = 0; i < 3; i++) {
 			rotatedExtents[i] = fabsf(extents[0] * axis[0][i]) +

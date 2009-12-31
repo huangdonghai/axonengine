@@ -169,7 +169,7 @@ void PropertyEditorModel::refresh(IProperty *property)
 	emit dataChanged(parentIndex0, parentIndex1);
 	// refresh children
 	if (parent->kind() == IProperty::kGroup) {
-		IPropertyGroup* group =  static_cast<IPropertyGroup*>(parent);
+		IPropertyGroup *group =  static_cast<IPropertyGroup*>(parent);
 		if (const int numRows = group->propertyCount()) {
 			const  QModelIndex leftTopChild = parentIndex0.child(0, 0);
 			const  QModelIndex rightBottomChild = parentIndex0.child(numRows - 1, 1);

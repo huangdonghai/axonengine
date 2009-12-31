@@ -30,7 +30,7 @@ AX_BEGIN_NAMESPACE
 	TextureAtlas::~TextureAtlas()
 	{}
 
-	void TextureAtlas::initialize(const String& name, int chunk_width, int chunk_height, int side_length, TexFormat format)
+	void TextureAtlas::initialize(const String &name, int chunk_width, int chunk_height, int side_length, TexFormat format)
 	{
 		if (m_initialized) {
 			Errorf("TextureAtlas::initialize: has initialized");
@@ -47,7 +47,7 @@ AX_BEGIN_NAMESPACE
 		m_chunkWidth = chunk_width;
 		m_chunkHeight = chunk_height;
 
-		const IRenderDriver::Info* info = g_renderDriver->getDriverInfo();
+		const IRenderDriver::Info *info = g_renderDriver->getDriverInfo();
 
 		if (side_length > info->maxTextureSize) {
 			m_textureSize = info->maxTextureSize;
@@ -114,7 +114,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 	// if texture pool is full, return false
-	bool TextureAtlas::updateChunk(int id, byte_t* data, TexFormat format) {
+	bool TextureAtlas::updateChunk(int id, byte_t *data, TexFormat format) {
 		int index;
 		int i;
 
@@ -155,7 +155,7 @@ AX_BEGIN_NAMESPACE
 		return true;
 	}
 
-	void TextureAtlas::getChunkInfo(int id, Texture*& tex, Vector4& tc) {
+	void TextureAtlas::getChunkInfo(int id, Texture*& tex, Vector4 &tc) {
 		if (m_atlasHash.find(id) == m_atlasHash.end())
 			Errorf("TextureAtlas::getChunkInfo: Chunk %d not resident", id);
 
@@ -171,7 +171,7 @@ AX_BEGIN_NAMESPACE
 		tc[3] =(rect.y + rect.height) * tc_scale;
 	}
 
-	void TextureAtlas::getChunkInfoByIndex(int index, int& tex, Rect& rect) {
+	void TextureAtlas::getChunkInfoByIndex(int index, int &tex, Rect &rect) {
 		AX_ASSERT(index < m_totalAtlas);
 
 		tex = index / m_atlasPerTexture;

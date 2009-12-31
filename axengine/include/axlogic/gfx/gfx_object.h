@@ -35,8 +35,8 @@ public:
 
 	virtual GfxType getGfxType() const { return kVirtualBase; }
 
-	const AffineMat& getTm() const { return m_tm; }
-	void setTm(const AffineMat& mat) { m_tm = mat; }
+	const AffineMat &getTm() const { return m_tm; }
+	void setTm(const AffineMat &mat) { m_tm = mat; }
 
 	// interface, routed from GfxEntity
 	virtual BoundingBox getLocalBoundingBox();
@@ -46,7 +46,7 @@ public:
 	virtual void issueToQueue(QueuedScene *qscene);
 
 protected:
-	GfxEntity* m_entity;
+	GfxEntity *m_entity;
 
 	// animatable properties
 	AffineMat m_tm;

@@ -22,24 +22,24 @@ AX_BEGIN_NAMESPACE
 		Vector2(float ix, float iy);
 		~Vector2();
 
-		Vector2 operator+(const Vector2& v) const;
+		Vector2 operator+(const Vector2 &v) const;
 		Vector2 operator-() const;
-		Vector2 operator-(const Vector2& v) const;
+		Vector2 operator-(const Vector2 &v) const;
 		Vector2 operator*(const float scale) const;
-		Vector2 operator*(const Vector2& v) const;
-		Vector2 operator/(const Vector2& v) const;
+		Vector2 operator*(const Vector2 &v) const;
+		Vector2 operator/(const Vector2 &v) const;
 		Vector2 operator/(float scale) const;
-		float operator|(const Vector2& v) const;
-		bool operator==(const Vector2& v) const;
-		bool operator!=(const Vector2& v) const;
-		Vector2 operator+=(const Vector2& v);
-		Vector2 operator-=(const Vector2& v);
+		float operator|(const Vector2 &v) const;
+		bool operator==(const Vector2 &v) const;
+		bool operator!=(const Vector2 &v) const;
+		Vector2 operator+=(const Vector2 &v);
+		Vector2 operator-=(const Vector2 &v);
 		Vector2 operator*=(float scale);
 		Vector2 operator/=(float v);
-		Vector2 operator*=(const Vector2& v);
-		Vector2 operator/=(const Vector2& v);
-		float& operator[](int index);
-		const float& operator[](int index) const;
+		Vector2 operator*=(const Vector2 &v);
+		Vector2 operator/=(const Vector2 &v);
+		float &operator[](int index);
+		const float &operator[](int index) const;
 		float getMax() const;
 		float getAbsMax() const;
 		float getMin() const;
@@ -49,11 +49,11 @@ AX_BEGIN_NAMESPACE
 		float normalize();
 		Vector2 getNormalized();
 		void clear();
-		Vector2& set(float ix=0.0f, float iy=0.0f);
-		const float* toFloatPointer() const;
+		Vector2 &set(float ix=0.0f, float iy=0.0f);
+		const float *toFloatPointer() const;
 		String toString() const;
-		bool parse(const String& str);
-		bool parse(const char* text);
+		bool parse(const String &str);
+		bool parse(const char *text);
 	};
 
 	inline Vector2::Vector2(){}
@@ -61,14 +61,14 @@ AX_BEGIN_NAMESPACE
 	inline Vector2::~Vector2(){}
 
 	// algo
-	inline Vector2 Vector2::operator+(const Vector2& v) const {
+	inline Vector2 Vector2::operator+(const Vector2 &v) const {
 		return Vector2(x + v.x, y + v.y);
 	}
 	// negative vector
 	inline Vector2 Vector2::operator-() const {
 		return Vector2(-x, -y);
 	}
-	inline Vector2 Vector2::operator-(const Vector2& v) const {
+	inline Vector2 Vector2::operator-(const Vector2 &v) const {
 		return Vector2(x - v.x, y - v.y);
 	}
 	// scale the vector
@@ -76,11 +76,11 @@ AX_BEGIN_NAMESPACE
 		return Vector2(x*scale, y*scale);
 	}
 	// multiply
-	inline Vector2 Vector2::operator*(const Vector2& v) const {
+	inline Vector2 Vector2::operator*(const Vector2 &v) const {
 		return Vector2(x*v.x, y*v.y);
 	}
 	// div
-	inline Vector2 Vector2::operator/(const Vector2& v) const {
+	inline Vector2 Vector2::operator/(const Vector2 &v) const {
 		return Vector2(x/v.x, y/v.y);
 	}
 	// inverse scale
@@ -88,23 +88,23 @@ AX_BEGIN_NAMESPACE
 		return Vector2(x/scale, y/scale);
 	}
 	// Dot Product
-	inline float Vector2::operator|(const Vector2& v) const {
+	inline float Vector2::operator|(const Vector2 &v) const {
 		return x*v.x + y*v.y;
 	}
 	// compare
-	inline bool Vector2::operator==(const Vector2& v) const {
+	inline bool Vector2::operator==(const Vector2 &v) const {
 		return x==v.x && y==v.y;
 	}
-	inline bool Vector2::operator!=(const Vector2& v) const {
+	inline bool Vector2::operator!=(const Vector2 &v) const {
 		return x!=v.x || y!=v.y;
 	}
 
 	// assign operator
-	inline Vector2 Vector2::operator+=(const Vector2& v) {
+	inline Vector2 Vector2::operator+=(const Vector2 &v) {
 		x += v.x; y += v.y;
 		return *this;
 	}
-	inline Vector2 Vector2::operator-=(const Vector2& v) {
+	inline Vector2 Vector2::operator-=(const Vector2 &v) {
 		x -= v.x; y -= v.y;
 		return *this;
 	}
@@ -116,21 +116,21 @@ AX_BEGIN_NAMESPACE
 		x /= v; y /= v;
 		return *this;
 	}
-	inline Vector2 Vector2::operator*=(const Vector2& v) {
+	inline Vector2 Vector2::operator*=(const Vector2 &v) {
 		x *= v.x; y *= v.y;
 		return *this;
 	}
-	inline Vector2 Vector2::operator/=(const Vector2& v) {
+	inline Vector2 Vector2::operator/=(const Vector2 &v) {
 		x /= v.x; y /= v.y;
 		return *this;
 	}
-	inline float& Vector2::operator[](int index) {
+	inline float &Vector2::operator[](int index) {
 		AX_STRICT_ASSERT(index >= 0);
 		AX_STRICT_ASSERT(index < 2);
 		return *(&x + index);
 	}
 
-	inline const float& Vector2::operator[](int index) const {
+	inline const float &Vector2::operator[](int index) const {
 		AX_STRICT_ASSERT(index >= 0);
 		AX_STRICT_ASSERT(index < 2);
 		return *(&x + index);
@@ -182,11 +182,11 @@ AX_BEGIN_NAMESPACE
 		x=0.0f;y=0.0f;
 	}
 	// Set value
-	inline Vector2& Vector2::set(float ix, float iy) {
+	inline Vector2 &Vector2::set(float ix, float iy) {
 		x = ix; y = iy;
 		return *this;
 	}
-	inline const float* Vector2::toFloatPointer() const {
+	inline const float *Vector2::toFloatPointer() const {
 		return &x;
 	}
 
@@ -196,11 +196,11 @@ AX_BEGIN_NAMESPACE
 		return result;
 	}
 
-	inline bool Vector2::parse(const String& str) {
+	inline bool Vector2::parse(const String &str) {
 		return parse(str.c_str());
 	}
 
-	inline bool Vector2::parse(const char* text) {
+	inline bool Vector2::parse(const char *text) {
 		float tx, ty;
 		int v = sscanf(text, "%f,%f", &tx, &ty);
 		if (v != 2)

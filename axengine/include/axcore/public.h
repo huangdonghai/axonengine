@@ -49,25 +49,25 @@ read the license and understand and accept it fully.
 AX_BEGIN_NAMESPACE
 
 	// global object
-	AX_API extern FileSystem* g_fileSystem;
-	AX_API extern CmdSystem* g_cmdSystem;
-	AX_API extern CvarSystem* g_cvarSystem;
-	AX_API extern ConfigFile* g_systemConfig;
-	AX_API extern System* g_system;
-	AX_API extern ClassFactory* g_classFactory;
-	AX_API extern ScriptSystem* g_scriptSystem;
-	AX_API extern Statistic* g_statistic;
-	AX_API extern Simd* g_simd;
+	AX_API extern FileSystem *g_fileSystem;
+	AX_API extern CmdSystem *g_cmdSystem;
+	AX_API extern CvarSystem *g_cvarSystem;
+	AX_API extern ConfigFile *g_systemConfig;
+	AX_API extern System *g_system;
+	AX_API extern ClassFactory *g_classFactory;
+	AX_API extern ScriptSystem *g_scriptSystem;
+	AX_API extern Statistic *g_statistic;
+	AX_API extern Simd *g_simd;
 
 	// global cvar
 #define AX_CVARDECL(name, defaultstring, flags) \
-	extern Cvar* name;
+	extern Cvar *name;
 #include "cvardecls.h"
 #undef AX_CVARDECL
 
-//	AX_API extern AssetManager* g_assetManager;
+//	AX_API extern AssetManager *g_assetManager;
 
-	AX_API void axCoreInit(int argc, char* argv[]);
+	AX_API void axCoreInit(int argc, char *argv[]);
 	AX_API void axCoreQuit();
 
 AX_END_NAMESPACE

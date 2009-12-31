@@ -18,7 +18,7 @@ read the license and understand and accept it fully.
 template <typename T>
 class AxForeachContainer {
 public:
-	inline AxForeachContainer(const T& t) : c(t), brk(0), i(c.begin()), e(c.end()) { }
+	inline AxForeachContainer(const T &t) : c(t), brk(0), i(c.begin()), e(c.end()) { }
 	const T c;
 	int brk;
 	typename T::const_iterator i, e;
@@ -37,7 +37,7 @@ struct ForeachContainerBase {};
 template <typename T>
 class AxForeachContainer : public ForeachContainerBase {
 public:
-	inline AxForeachContainer(const T& t): c(t), brk(0), i(c.begin()), e(c.end()){};
+	inline AxForeachContainer(const T &t): c(t), brk(0), i(c.begin()), e(c.end()){};
 	const T c;
 	mutable int brk;
 	mutable typename T::const_iterator i, e;
@@ -46,7 +46,7 @@ public:
 
 template <typename T> inline T *axForeachPointer(const T &) { return 0; }
 
-template <typename T> inline AxForeachContainer<T> axForeachContainerNew(const T& t)
+template <typename T> inline AxForeachContainer<T> axForeachContainerNew(const T &t)
 { return AxForeachContainer<T>(t); }
 
 template <typename T>

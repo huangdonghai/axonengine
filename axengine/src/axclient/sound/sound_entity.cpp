@@ -23,7 +23,7 @@ AX_BEGIN_NAMESPACE
 	{
 	}
 
-	void SoundEntity::playSound( int channelId, SoundFx* sfx, LoopingMode looping /*= Looping_None*/, float minDist /*= DEFAULT_MIN_DIST*/, float maxDist /*= DEFAULT_MAX_DIST */ )
+	void SoundEntity::playSound( int channelId, SoundFx *sfx, LoopingMode looping /*= Looping_None*/, float minDist /*= DEFAULT_MIN_DIST*/, float maxDist /*= DEFAULT_MAX_DIST */ )
 	{
 		AX_ASSERT(m_world);
 

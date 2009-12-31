@@ -40,7 +40,7 @@ AX_BEGIN_NAMESPACE
 			InvalidNum = -1
 		};
 		int m_num;
-		Landscape* m_landscape;
+		Landscape *m_landscape;
 	};
 
 	//--------------------------------------------------------------------------
@@ -57,7 +57,7 @@ AX_BEGIN_NAMESPACE
 		virtual ~StaticFixed();
 
 		String get_model() const { return m_modelName; }
-		void set_model(const String& val);
+		void set_model(const String &val);
 
 	protected:
 		// implement GameObject
@@ -66,8 +66,8 @@ AX_BEGIN_NAMESPACE
 
 	protected:
 		String m_modelName;
-		HavokModel* m_model;
-		PhysicsRigid* m_rigid;
+		HavokModel *m_model;
+		PhysicsRigid *m_rigid;
 	};
 
 	//--------------------------------------------------------------------------
@@ -81,7 +81,7 @@ AX_BEGIN_NAMESPACE
 
 	public:
 		TerrainFixed() {}
-		TerrainFixed(RenderTerrain* terr);
+		TerrainFixed(RenderTerrain *terr);
 		virtual ~TerrainFixed();
 
 		// implement Fixed
@@ -89,11 +89,11 @@ AX_BEGIN_NAMESPACE
 		virtual void clear();
 
 		// implement IObserver
-		virtual void doNotify(IObservable* subject, int arg);
+		virtual void doNotify(IObservable *subject, int arg);
 
 	private:
-		RenderTerrain* m_renderTerrain;
-		PhysicsTerrain* m_physicsTerrain;
+		RenderTerrain *m_renderTerrain;
+		PhysicsTerrain *m_physicsTerrain;
 	};
 
 	//--------------------------------------------------------------------------
@@ -116,11 +116,11 @@ AX_BEGIN_NAMESPACE
 		virtual void clear();
 
 		String get_tree() const { return m_treeName; }
-		void set_tree(const String& val);
+		void set_tree(const String &val);
 
 	protected:
 		String m_treeName;
-		RenderTree* m_renderTree;
+		RenderTree *m_renderTree;
 	};
 #endif // AX_CONFIG_OPTION_USE_SPEEDTREE_40
 
@@ -137,22 +137,22 @@ AX_BEGIN_NAMESPACE
 		enum { MaxFixed = 1024 };
 
 		Landscape() {}
-		Landscape(GameWorld* world);
+		Landscape(GameWorld *world);
 		virtual ~Landscape();
 
-		void addFixed(Fixed* fixed);
-		void removeFixed(Fixed* fixed);
+		void addFixed(Fixed *fixed);
+		void removeFixed(Fixed *fixed);
 
-		Fixed* getFixed(int num) const;
+		Fixed *getFixed(int num) const;
 
-		GameWorld* getGameWorld() const { return m_world; }
+		GameWorld *getGameWorld() const { return m_world; }
 
 	private:
-		Fixed* m_fixeds[MaxFixed];
+		Fixed *m_fixeds[MaxFixed];
 		FreeList<Fixed*>	m_freeList;
 	};
 
-	inline Fixed* Landscape::getFixed(int num) const{
+	inline Fixed *Landscape::getFixed(int num) const{
 		AX_ASSERT(num >= 0 && num < MaxFixed);
 		return m_fixeds[num];
 	}

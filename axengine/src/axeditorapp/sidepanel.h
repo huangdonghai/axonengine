@@ -20,7 +20,7 @@ read the license and understand and accept it fully.
 
 class TabBarHideText : public QTabBar {
 public:
-	TabBarHideText(QWidget* parent/* =0 */) : QTabBar(parent) {}
+	TabBarHideText(QWidget *parent/* =0 */) : QTabBar(parent) {}
 
 protected:
 	// override
@@ -38,23 +38,23 @@ public:
     SidePanel(QWidget *parent = 0);
     ~SidePanel();
 
-	int addPanel(QWidget* child, QIcon& icon, const QString& tooltip);
+	int addPanel(QWidget *child, QIcon &icon, const QString &tooltip);
 
-	DisplaySettingPanel* getDisplaySettingPanel(){return m_settingPanel;}
+	DisplaySettingPanel *getDisplaySettingPanel(){return m_settingPanel;}
 
-	TerrainPanel* getTerrainPanel(){return m_terrainPanel;}
+	TerrainPanel *getTerrainPanel(){return m_terrainPanel;}
 
 private:
 	// self
-	TabBarHideText* m_tabBar;
-	QTabBar* m_oldTabBar;
+	TabBarHideText *m_tabBar;
+	QTabBar *m_oldTabBar;
 
 	// pages
-	TerrainPanel* m_terrainPanel;
-	CreationPanel* m_creationPanel;
-	ActorPanel* m_actorPanel;
-	DisplaySettingPanel* m_settingPanel;
-	ToolsPanel* m_toolsPanel;
+	TerrainPanel *m_terrainPanel;
+	CreationPanel *m_creationPanel;
+	ActorPanel *m_actorPanel;
+	DisplaySettingPanel *m_settingPanel;
+	ToolsPanel *m_toolsPanel;
 };
 
 #endif // AXSIDEPANEL_H

@@ -18,7 +18,7 @@ AX_BEGIN_NAMESPACE
 	//	wrap OpenGL state operation
 	//------------------------------------------------------------------------------
 
-	GLwindow::GLwindow(const String& name)
+	GLwindow::GLwindow(const String &name)
 		: m_hdc(NULL)
 		, m_name(name)
 	{
@@ -29,7 +29,7 @@ AX_BEGIN_NAMESPACE
 #endif
 	}
 
-	GLwindow::GLwindow(handle_t wndId, const String& name) : m_wndId((HWND)wndId), m_name(name) {
+	GLwindow::GLwindow(handle_t wndId, const String &name) : m_wndId((HWND)wndId), m_name(name) {
 #if 0
 		initGLRC();
 		initialize();
@@ -167,7 +167,7 @@ AX_BEGIN_NAMESPACE
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 	}
 
-	void GLwindow::shareList(const GLwindow* other) {
+	void GLwindow::shareList(const GLwindow *other) {
 #if 0
 		// share resources between resource context and render context
 		if (!wglShareLists(m_glContext, other->m_glContext)) {
@@ -235,7 +235,7 @@ AX_BEGIN_NAMESPACE
 	}
 #if 0
 	void
-	GLwindow::getSize(Int& width, Int& height) {
+	GLwindow::getSize(Int &width, Int &height) {
 		RECT r;
 
 		::GetClientRect(m_wndId, &r);

@@ -13,8 +13,8 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-	PhysicsSystem* g_physicsSystem;
-	HavokPackageManager* g_havokPackageManager;
+	PhysicsSystem *g_physicsSystem;
+	HavokPackageManager *g_havokPackageManager;
 
 
 	void axPhysInit() {

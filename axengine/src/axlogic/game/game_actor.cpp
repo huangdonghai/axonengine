@@ -40,7 +40,7 @@ void GameActor::setState(State state)
 	m_state = state;
 }
 
-void GameActor::doNotify(IObservable* subject, int arg) {
+void GameActor::doNotify(IObservable *subject, int arg) {
 }
 
 void GameActor::onPhysicsActived() {
@@ -87,7 +87,7 @@ void GameActor::doSpawn()
 
 void GameActor::doRemove()
 {
-	SoundEntity* soundEntity = getSoundEntity();
+	SoundEntity *soundEntity = getSoundEntity();
 	m_world->getSoundWorld()->removeEntity(soundEntity);
 
 	if (!m_spawned) {
@@ -116,7 +116,7 @@ void GameRigit::doThink() {
 	m_world->getRenderWorld()->addEntity(m_model);
 }
 
-void GameRigit::loadAsset(const LuaTable& t)
+void GameRigit::loadAsset(const LuaTable &t)
 {
 	clear();
 

@@ -37,7 +37,7 @@ AX_BEGIN_NAMESPACE
 		} t;
 		AX_DECLARE_ENUM(SurfaceType);
 
-		const char* toString() {
+		const char *toString() {
 			switch (t) {
 #define AX_ENUM(x) case x: return #x;
 		AX_DECL_SURFACETYPE
@@ -47,7 +47,7 @@ AX_BEGIN_NAMESPACE
 			return "INVALID";
 		}
 
-		static int fromString(const char* str) {
+		static int fromString(const char *str) {
 #define AX_ENUM(x) if (Strequ(str, #x)) {return x; }
 			AX_DECL_SURFACETYPE
 #undef AX_ENUM
@@ -192,22 +192,22 @@ AX_BEGIN_NAMESPACE
 
 		typedef Flags_<Flag> Flags;
 
-		bool tryLoad(const String& name);
+		bool tryLoad(const String &name);
 
-		const String& getShaderName() { return m_shaderName; }
-		TextureDef* getTextureDef(SamplerType maptype) { return m_textures[maptype]; }
+		const String &getShaderName() { return m_shaderName; }
+		TextureDef *getTextureDef(SamplerType maptype) { return m_textures[maptype]; }
 		bool isWireframed() const { return m_flags.isSet(Wireframed); }
 		bool isTwoSided() const { return m_flags.isSet(TwoSided); }
 		Flags getFlags() const { return m_flags; }
 		void setFlags(Flags flags) { m_flags = flags; }
 		Rgba getDiffuse() const { return m_diffuse; }
-		const bool* getFeatures() const { return m_features; }
+		const bool *getFeatures() const { return m_features; }
 
 		friend class MaterialDeclManager;
 		bool isDefaulted() const { return this == ms_defaulted; }
 
 		// management
-		static MaterialDecl* load(const String& name);
+		static MaterialDecl *load(const String &name);
 		static void initManager();
 		static void finalizeManager();
 
@@ -215,7 +215,7 @@ AX_BEGIN_NAMESPACE
 		MaterialDecl();
 		virtual ~MaterialDecl();
 
-		static FixedString normalizeKey(const String& name);
+		static FixedString normalizeKey(const String &name);
 
 	private:
 		FixedString m_key;
@@ -223,7 +223,7 @@ AX_BEGIN_NAMESPACE
 		int m_shaderGenMask;
 		Flags m_flags;
 		SurfaceType m_surfaceType;
-		TextureDef* m_textures[SamplerType::NUMBER_ALL];
+		TextureDef *m_textures[SamplerType::NUMBER_ALL];
 		ShaderParams m_shaderParams;
 		Rgba m_diffuse, m_specular, m_emission;
 		float m_specExp, m_specLevel;
@@ -241,7 +241,7 @@ AX_BEGIN_NAMESPACE
 		int m_literals[MAX_LITERALS];
 
 		// manager
-		static MaterialDecl* ms_defaulted;
+		static MaterialDecl *ms_defaulted;
 		typedef Dict<FixedString, MaterialDecl*> MaterialDeclDict;
 		typedef DictSet<FixedString> FailureSet;
 		static MaterialDeclDict ms_declDict;

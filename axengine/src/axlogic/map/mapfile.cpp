@@ -16,8 +16,8 @@ AX_BEGIN_NAMESPACE
 
 	MapLayerDef::~MapLayerDef() {}
 
-	MapLayerDef* MapLayerDef::clone() const {
-		MapLayerDef* result = new MapLayerDef(id);
+	MapLayerDef *MapLayerDef::clone() const {
+		MapLayerDef *result = new MapLayerDef(id);
 
 		result->name = name;
 		result->surfaceType = surfaceType;
@@ -54,12 +54,12 @@ AX_BEGIN_NAMESPACE
 		return m_numLayers;
 	}
 
-	MapLayerDef* MapMaterialDef::getLayerDef(int idx) const {
+	MapLayerDef *MapMaterialDef::getLayerDef(int idx) const {
 		AX_ASSERT(idx >= 0 && idx < m_numLayers);
 		return m_layerDefs[idx];
 	}
 
-	MapLayerDef* MapMaterialDef::findLayerDefById(int id) const {
+	MapLayerDef *MapMaterialDef::findLayerDefById(int id) const {
 		for (int i = 0; i < m_numLayers; i++) {
 			if (m_layerDefs[i]->id == id)
 				return m_layerDefs[i];
@@ -69,11 +69,11 @@ AX_BEGIN_NAMESPACE
 	}
 
 
-	MapLayerDef* MapMaterialDef::createLayerDef() {
+	MapLayerDef *MapMaterialDef::createLayerDef() {
 		if (m_numLayers == Map::MaxLayers)
 			return nullptr;
 
-		MapLayerDef* layer = new MapLayerDef(m_maxLayerId++);
+		MapLayerDef *layer = new MapLayerDef(m_maxLayerId++);
 
 		layer->surfaceType = SurfaceType::Dust;
 		layer->color = Rgba::White;
@@ -91,7 +91,7 @@ AX_BEGIN_NAMESPACE
 		return layer;
 	}
 
-	void MapMaterialDef::deleteLayerDef(MapLayerDef* l) {
+	void MapMaterialDef::deleteLayerDef(MapLayerDef *l) {
 		if (m_numLayers == 0)
 			return;
 
@@ -115,7 +115,7 @@ AX_BEGIN_NAMESPACE
 		m_numLayers--;
 	}
 
-	void MapMaterialDef::moveUpLayerDef(MapLayerDef* l) {
+	void MapMaterialDef::moveUpLayerDef(MapLayerDef *l) {
 		if (m_numLayers == 0)
 			return;
 
@@ -138,7 +138,7 @@ AX_BEGIN_NAMESPACE
 		m_layerDefs[i-1] = l;
 	}
 
-	void MapMaterialDef::moveDownLayerDef(MapLayerDef* l) {
+	void MapMaterialDef::moveDownLayerDef(MapLayerDef *l) {
 		if (m_numLayers == 0)
 			return;
 
@@ -161,8 +161,8 @@ AX_BEGIN_NAMESPACE
 		m_layerDefs[i+1] = l;
 	}
 
-	MapMaterialDef* MapMaterialDef::clone() const {
-		MapMaterialDef* result = new MapMaterialDef();
+	MapMaterialDef *MapMaterialDef::clone() const {
+		MapMaterialDef *result = new MapMaterialDef();
 
 		result->m_numLayers = m_numLayers;
 		result->m_maxLayerId = m_maxLayerId;
@@ -174,7 +174,7 @@ AX_BEGIN_NAMESPACE
 		return result;
 	}
 
-	void MapMaterialDef::setLayer(int idx, MapLayerDef* l) {
+	void MapMaterialDef::setLayer(int idx, MapLayerDef *l) {
 		AX_ASSERT(idx >= 0 && idx < m_numLayers);
 		int oldindex = findLayerIndex(l);
 		AX_ASSERT(oldindex >= 0 && oldindex < m_numLayers);
@@ -182,17 +182,17 @@ AX_BEGIN_NAMESPACE
 		std::swap(m_layerDefs[idx], m_layerDefs[oldindex]);
 	}
 
-	inline const char* xgetAttr(const TiXmlElement* elem, const char* name, const char* defaultstr) {
-		const char* result = elem->Attribute(name);
+	inline const char *xgetAttr(const TiXmlElement *elem, const char *name, const char *defaultstr) {
+		const char *result = elem->Attribute(name);
 		if (result) return result;
 		return defaultstr;
 	}
 
-	void MapMaterialDef::parseXml(const TiXmlElement* node) {
+	void MapMaterialDef::parseXml(const TiXmlElement *node) {
 		node->Attribute("maxLayerId", &m_maxLayerId);
 		node->Attribute("numLayers", &m_numLayers);
 
-		const TiXmlElement* child = node->FirstChildElement();
+		const TiXmlElement *child = node->FirstChildElement();
 
 		int count = 0;
 		for (; child; child = child->NextSiblingElement()) {
@@ -200,8 +200,8 @@ AX_BEGIN_NAMESPACE
 				continue;
 
 			int id = atoi(child->Attribute("id"));
-			MapLayerDef* l = new MapLayerDef(id);
-			const char* attr;
+			MapLayerDef *l = new MapLayerDef(id);
+			const char *attr;
 
 			l->name = child->Attribute("name");
 			l->surfaceType = atoi(child->Attribute("surfaceType"));
@@ -227,12 +227,12 @@ AX_BEGIN_NAMESPACE
 		AX_ASSERT(count == m_numLayers);
 	}
 
-	inline void Indent(File*f, const char* ind) {
+	inline void Indent(File*f, const char *ind) {
 		if (ind)
 			f->printf("%s", ind);
 	}
 
-	void MapMaterialDef::writeToFile(File* f, int indent) {
+	void MapMaterialDef::writeToFile(File *f, int indent) {
 #define INDENT Indent(f, ind.c_str())
 		String ind(indent*2, ' ');
 
@@ -260,7 +260,7 @@ AX_BEGIN_NAMESPACE
 #undef INDENT
 	}
 
-	int MapMaterialDef::findLayerIndex( MapLayerDef* l )
+	int MapMaterialDef::findLayerIndex( MapLayerDef *l )
 	{
 		for (int i = 0; i < m_numLayers; i++) {
 			if (m_layerDefs[i] == l)
@@ -304,11 +304,11 @@ AX_BEGIN_NAMESPACE
 	MapEnvDef::~MapEnvDef() {
 	}
 
-	void MapEnvDef::parseXml(const TiXmlElement* node) {
+	void MapEnvDef::parseXml(const TiXmlElement *node) {
 		this->readProperties(node);
 	}
 
-	void MapEnvDef::writeToFile(File* f, int indent/*=0 */) {
+	void MapEnvDef::writeToFile(File *f, int indent/*=0 */) {
 #define INDENT Indent(f, ind.c_str())
 		String ind(indent*2, ' ');
 

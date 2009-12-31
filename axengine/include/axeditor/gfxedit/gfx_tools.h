@@ -32,7 +32,7 @@ public:
 	virtual void doDrag(int x, int y, int flags, float pressure);
 	virtual void doMove(int x, int y);
 	virtual void doRelease(int x, int y);
-	virtual void doRender(const RenderCamera& camera);
+	virtual void doRender(const RenderCamera &camera);
 
 	virtual GfxAgent *create() = 0;
 

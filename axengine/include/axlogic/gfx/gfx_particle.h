@@ -33,7 +33,7 @@ public:
 		return m_pos;
 	}
 
-	_Myt& operator++() {
+	_Myt &operator++() {
 
 	}
 
@@ -59,7 +59,7 @@ public:
 	IndexedArray();
 	~IndexedArray();
 
-	size_type add(const T_& val);
+	size_type add(const T_ &val);
 	reference at(size_type index);
 
 	// iterator

@@ -32,8 +32,8 @@ AX_BEGIN_NAMESPACE
 		Enum(int t);
 		~Enum();
 
-		Enum& operator=(enum_type t);
-		Enum& operator=(int t);
+		Enum &operator=(enum_type t);
+		Enum &operator=(int t);
 	};
 
 	template<class T>

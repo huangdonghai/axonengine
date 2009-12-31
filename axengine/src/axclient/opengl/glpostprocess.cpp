@@ -33,7 +33,7 @@ AX_BEGIN_NAMESPACE
 	// Desc: Get the texture coordinate offsets to be used inside the GaussBlur5x5
 	//       pixel shader.
 	//-----------------------------------------------------------------------------
-	void getSampleOffsets_GaussBlur5x5(int width, int height, Vector2* offsets, Vector4* weights, float factor=1.0f) {
+	void getSampleOffsets_GaussBlur5x5(int width, int height, Vector2 *offsets, Vector4 *weights, float factor=1.0f) {
 		float tu = 1 / (float)width ;
 		float tv = 1 / (float)height;
 
@@ -109,7 +109,7 @@ AX_BEGIN_NAMESPACE
 		Rgba color(255, 255, 255, 255);
 
 		m_screenQuad->init(4, 6);
-		Vertex* verts = m_screenQuad->lockVertexes();
+		Vertex *verts = m_screenQuad->lockVertexes();
 //		verts[0].xyz = Vector3(rect.x, rect.y, 0.0f);
 		verts[0].st.x = 0;
 		verts[0].st.y = 1;
@@ -147,7 +147,7 @@ AX_BEGIN_NAMESPACE
 		verts[3].binormal = Vector3(0, 1, 0);
 		m_screenQuad->unlockVertexes();
 
-		ushort_t* indexes = m_screenQuad->lockIndexes();
+		ushort_t *indexes = m_screenQuad->lockIndexes();
 		indexes[0] = 0;
 		indexes[1] = 1;
 		indexes[2] = 2;
@@ -176,37 +176,37 @@ AX_BEGIN_NAMESPACE
 		m_shaderDownscale4x4 = glShaderManager->findShaderGL("_downscale4x4");
 #endif
 		glPrimitiveManager->cachePrimitive(m_screenQuad);
-		GLgeometry* m_screenQuadGeo = dynamic_cast<GLgeometry*>(glPrimitiveManager->getPrimitive(m_screenQuad->getCachedId()));
+		GLgeometry *m_screenQuadGeo = dynamic_cast<GLgeometry*>(glPrimitiveManager->getPrimitive(m_screenQuad->getCachedId()));
 	}
 
 	GLpostprocess::~GLpostprocess() {
 		delete m_screenQuad;
 	}
 
-	void GLpostprocess::process(Type type, GLtexture* texture) {
+	void GLpostprocess::process(Type type, GLtexture *texture) {
 	}
 
-	void GLpostprocess::updateScreenQuad(const Rect& rect) {
-		Vertex* verts = m_screenQuad->lockVertexes();
+	void GLpostprocess::updateScreenQuad(const Rect &rect) {
+		Vertex *verts = m_screenQuad->lockVertexes();
 		verts[0].xyz = Vector3(rect.x, rect.y, 0.0f);
 		verts[1].xyz = Vector3(rect.x + rect.width, rect.y, 0.0f);
 		verts[2].xyz = Vector3(rect.x, rect.y + rect.height, 0.0f);
 		verts[3].xyz = Vector3(rect.x + rect.width, rect.y + rect.height, 0.0f);
 		m_screenQuad->unlockVertexes();
 
-		GLprimitive* glprim = glPrimitiveManager->getPrimitive(m_screenQuad->getCachedId());
+		GLprimitive *glprim = glPrimitiveManager->getPrimitive(m_screenQuad->getCachedId());
 		glprim->update();
 		m_screenQuadGeo = dynamic_cast<GLgeometry*>(glprim);
 	}
 
-	void GLpostprocess::drawQuad(GLtexture* texture) {
+	void GLpostprocess::drawQuad(GLtexture *texture) {
 #if 0
 		texture->setFilterMode(Texture::Nearest);
 
 		m_matDrawQuad->setTexture(SamplerType::Diffuse, texture);
 		m_screenQuad->setMaterial(m_matDrawQuad);
 
-		const Rect& r = gCamera->getViewRect();
+		const Rect &r = gCamera->getViewRect();
 		updateScreenQuad(r);
 
 		glThread->drawPrimitive(m_screenQuad->getCachedId());
@@ -216,7 +216,7 @@ AX_BEGIN_NAMESPACE
 		m_shaderDrawQuad->setSystemMap(SamplerType::Diffuse, texture);
 		m_shaderDrawQuad->setSU();
 
-		const Rect& r = gCamera->getViewRect();
+		const Rect &r = gCamera->getViewRect();
 		updateScreenQuad(r);
 
 		m_screenQuadGeo->bindVertexBuffer();
@@ -224,7 +224,7 @@ AX_BEGIN_NAMESPACE
 #endif
 	}
 
-	void GLpostprocess::measureHistogram(GLtexture* tex, int index) {
+	void GLpostprocess::measureHistogram(GLtexture *tex, int index) {
 		tex->setFilterMode(Texture::FM_Nearest);
 
 		float w = 1.0f / RenderWorld::HISTOGRAM_WIDTH;
@@ -238,7 +238,7 @@ AX_BEGIN_NAMESPACE
 		m_shaderHistogram->setSystemMap(SamplerType::Diffuse, tex);
 		m_shaderHistogram->setSU();
 
-		const Rect& r = gCamera->getViewRect();
+		const Rect &r = gCamera->getViewRect();
 		updateScreenQuad(r);
 
 		m_screenQuadGeo->bindVertexBuffer();
@@ -249,13 +249,13 @@ AX_BEGIN_NAMESPACE
 		MeshPrim::setupHexahedron(m_boxVolume, volume);
 		m_boxVolume->setMaterial(m_matMaskVolume);
 		glPrimitiveManager->cachePrimitive(m_boxVolume);
-		GLprimitive* glprim = glPrimitiveManager->getPrimitive(m_boxVolume->getCachedId());
+		GLprimitive *glprim = glPrimitiveManager->getPrimitive(m_boxVolume->getCachedId());
 		glprim->update();
 
 		glThread->drawPrimitive(m_boxVolume->getCachedId());
 	}
 
-	void GLpostprocess::maskShadow(Vector3 volume[8], const Matrix4& matrix, GLtexture* tex, bool front) {
+	void GLpostprocess::maskShadow(Vector3 volume[8], const Matrix4 &matrix, GLtexture *tex, bool front) {
 		MeshPrim::setupHexahedron(m_boxVolume, volume);
 
 		float range = r_csmRange->getFloat();
@@ -274,13 +274,13 @@ AX_BEGIN_NAMESPACE
 
 		m_boxVolume->setMaterial(m_matShadowMask);
 		glPrimitiveManager->cachePrimitive(m_boxVolume);
-		GLprimitive* glprim = glPrimitiveManager->getPrimitive(m_boxVolume->getCachedId());
+		GLprimitive *glprim = glPrimitiveManager->getPrimitive(m_boxVolume->getCachedId());
 		glprim->update();
 
 		glThread->drawPrimitive(m_boxVolume->getCachedId());
 	}
 
-	void GLpostprocess::maskShadow(Vector3 volume[8], const Matrix4& matrix, GLtexture* tex, const Vector4& minrange, const Vector4& maxrange, const Matrix4& scaleoffset, bool front /*= false */)
+	void GLpostprocess::maskShadow(Vector3 volume[8], const Matrix4 &matrix, GLtexture *tex, const Vector4 &minrange, const Vector4 &maxrange, const Matrix4 &scaleoffset, bool front /*= false */)
 	{
 		MeshPrim::setupHexahedron(m_boxVolume, volume);
 
@@ -304,16 +304,16 @@ AX_BEGIN_NAMESPACE
 
 		m_boxVolume->setMaterial(m_matShadowMask);
 		glPrimitiveManager->cachePrimitive(m_boxVolume);
-		GLprimitive* glprim = glPrimitiveManager->getPrimitive(m_boxVolume->getCachedId());
+		GLprimitive *glprim = glPrimitiveManager->getPrimitive(m_boxVolume->getCachedId());
 		glprim->update();
 
 		glThread->drawPrimitive(m_boxVolume->getCachedId());
 	}
 
-	void GLpostprocess::shadowBlur(GLtexture* texture, bool is_du) {
+	void GLpostprocess::shadowBlur(GLtexture *texture, bool is_du) {
 //		cgGLSetTextureParameter(g_shadowMask, texture->getObject());
 
-		const Vector4& viewport = gCamera->getViewPort();
+		const Vector4 &viewport = gCamera->getViewPort();
 //		getSampleOffsets_GaussBlur5x5(viewport.z, viewport.w, sSampleOffsets, sSampleWeights);
 		getSamplerOffsets_Gauss1D(viewport.z, viewport.w, 5, sSampleOffsets, sSampleWeights, is_du);
 		m_matShadowBlur->setTexture(SamplerType::Diffuse, texture);
@@ -322,13 +322,13 @@ AX_BEGIN_NAMESPACE
 
 		m_screenQuad->setMaterial(m_matShadowBlur);
 
-		const Rect& r = gCamera->getViewRect();
+		const Rect &r = gCamera->getViewRect();
 		updateScreenQuad(r);
 
 		glThread->drawPrimitive(m_screenQuad->getCachedId());
 	}
 
-	void GLpostprocess::downscale4x4(GLtexture* tex, const Rect& rect) {
+	void GLpostprocess::downscale4x4(GLtexture *tex, const Rect &rect) {
 		tex->setFilterMode(Texture::FM_Linear);
 		tex->setClampMode(Texture::CM_ClampToEdge);
 
@@ -348,14 +348,14 @@ AX_BEGIN_NAMESPACE
 
 		m_shaderDownscale4x4->setParameter("g_sampleOffsets", param, 4);
 
-		const Rect& r = gCamera->getViewRect();
+		const Rect &r = gCamera->getViewRect();
 		updateScreenQuad(r);
 
 		m_screenQuadGeo->bindVertexBuffer();
 		GLrender::draw(m_shaderDownscale4x4, Technique::Main, m_screenQuadGeo);
 	}
 
-	GLshader* GLpostprocess::getShader(const String& name) {
+	GLshader *GLpostprocess::getShader(const String &name) {
 		Dict<String, GLshader*>::iterator it = m_genericShaders.find(name);
 
 		if (it != m_genericShaders.end()) {
@@ -363,16 +363,16 @@ AX_BEGIN_NAMESPACE
 		}
 
 #if 0
-		GLshader* shader = FindAsset_<GLshader>(name);
+		GLshader *shader = FindAsset_<GLshader>(name);
 #else
-		GLshader* shader = glShaderManager->findShaderGL(name);
+		GLshader *shader = glShaderManager->findShaderGL(name);
 #endif
 		m_genericShaders[name] = shader;
 		return shader;
 	}
 
-	void GLpostprocess::genericPP(const String& shadername, GLtexture* src) {
-		GLshader* shader = getShader(shadername);
+	void GLpostprocess::genericPP(const String &shadername, GLtexture *src) {
+		GLshader *shader = getShader(shadername);
 
 		src->setFilterMode(Texture::FM_Nearest);
 		src->setClampMode(Texture::CM_ClampToEdge);
@@ -385,15 +385,15 @@ AX_BEGIN_NAMESPACE
 
 		shader->setParameter("s_invTextureSize", Vector2(1.0f/width, 1.0f/height));
 
-		const Rect& r = Rect(0, 0, width, height);
+		const Rect &r = Rect(0, 0, width, height);
 		updateScreenQuad(r);
 
 		m_screenQuadGeo->bindVertexBuffer();
 		GLrender::draw(shader, Technique::Main, m_screenQuadGeo);
 	}
 
-	void GLpostprocess::genericPP(const String& shadername, RenderTarget* target, GLtexture* src) {
-		GLshader* shader = getShader(shadername);
+	void GLpostprocess::genericPP(const String &shadername, RenderTarget *target, GLtexture *src) {
+		GLshader *shader = getShader(shadername);
 		RenderCamera camera;
 		camera.setTarget(target);
 		camera.setOverlay(target->getRect());
@@ -411,7 +411,7 @@ AX_BEGIN_NAMESPACE
 
 		shader->setParameter("s_invTextureSize", Vector2(1.0f/width, 1.0f/height));
 
-		const Rect& r = camera.getViewRect();
+		const Rect &r = camera.getViewRect();
 		updateScreenQuad(r);
 
 		m_screenQuadGeo->bindVertexBuffer();
@@ -420,12 +420,12 @@ AX_BEGIN_NAMESPACE
 		glThread->unsetScene(0, 0, 0, &camera);
 	}
 
-	void GLpostprocess::genericPP(const String& shadername, GLtexture* src1, GLtexture* src2) {
+	void GLpostprocess::genericPP(const String &shadername, GLtexture *src1, GLtexture *src2) {
 		genericPP(shadername, nullptr, src1, src2);
 	}
 
-	void GLpostprocess::genericPP(const String& shadername, RenderTarget* target, GLtexture* src1, GLtexture* src2) {
-		GLshader* shader = getShader(shadername);
+	void GLpostprocess::genericPP(const String &shadername, RenderTarget *target, GLtexture *src1, GLtexture *src2) {
+		GLshader *shader = getShader(shadername);
 
 		RenderCamera camera;
 		if (target) {

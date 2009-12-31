@@ -30,33 +30,33 @@ public:
 	~Selection(void);
 
 
-	void beginSelect(const RenderCamera& view);
+	void beginSelect(const RenderCamera &view);
 	void loadSelectId(int id);
-	void testEntity(RenderEntity* re);
-	void testPrimitive(Primitive* prim);
-	void testPrimitive(Primitive* prim, const AffineMat& matrix);
+	void testEntity(RenderEntity *re);
+	void testPrimitive(Primitive *prim);
+	void testPrimitive(Primitive *prim, const AffineMat &matrix);
 	HitRecords endSelect();
 
 	bool isSelectMode()	{return m_isSelectMode;}
 
 	// 将指定的顶点转化成视坐标
-	void translateToEyeCoor(const Vector3& inVertex, Vector3& outVertex);
+	void translateToEyeCoor(const Vector3 &inVertex, Vector3 &outVertex);
 	// 将指定的顶点转换成归一化投影坐标
-	static void translateToProCoor(SelectionVertex& vertex);
+	static void translateToProCoor(SelectionVertex &vertex);
 
 	// 初始化顶点区位标志位
-	static void initVertexFlags(SelectionVertex& vertex);
+	static void initVertexFlags(SelectionVertex &vertex);
 
 
 private:
 
-	void testLine(const LinePrim* line);
-	void testMesh(const MeshPrim* mesh);
-	void testChunk(const ChunkPrim* chunk);
+	void testLine(const LinePrim *line);
+	void testMesh(const MeshPrim *mesh);
+	void testChunk(const ChunkPrim *chunk);
 
-	void aliasClipTriangle(const SelectionVertex& vertex0,
-							const SelectionVertex& vertex1, const SelectionVertex& vertex2);
-	void aliasClipLine(const SelectionVertex& vertexStart, const SelectionVertex& vertexEnd);
+	void aliasClipTriangle(const SelectionVertex &vertex0,
+							const SelectionVertex &vertex1, const SelectionVertex &vertex2);
+	void aliasClipLine(const SelectionVertex &vertexStart, const SelectionVertex &vertexEnd);
 
 	int aliasClip(SelectionVertex *in, SelectionVertex *out, int flag, int count,
 							void (*clip) (SelectionVertex *pfv0, SelectionVertex *pfv1, SelectionVertex *out));

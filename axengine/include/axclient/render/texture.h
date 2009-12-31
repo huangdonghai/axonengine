@@ -54,41 +54,41 @@ AX_BEGIN_NAMESPACE
 			FM_Trilinear
 		};
 
-		void uploadSubTexture(const Rect& rect, const void* pixels, TexFormat format = TexFormat::AUTO);
+		void uploadSubTexture(const Rect &rect, const void *pixels, TexFormat format = TexFormat::AUTO);
 		void generateMipmap();
 
 		// implement RefObject
 		virtual void deleteThis();
 
 		// Texture interface, need be implement in render driver
-		virtual void initialize(const FixedString& name, InitFlags flags) = 0;
+		virtual void initialize(const FixedString &name, InitFlags flags) = 0;
 		virtual void initialize(TexFormat format, int width, int height, InitFlags flags = 0) = 0;
 
 		// just instanced this class, not even create real hardware texture
 		virtual bool isInitialized() = 0;
 
 		// get some info
-		virtual void getSize(int& width, int& height, int& depth) = 0;
+		virtual void getSize(int &width, int &height, int &depth) = 0;
 
 		// texture parameters
 		virtual void setClampMode(ClampMode clampmwode) = 0;
 		virtual void setFilterMode(FilterMode filtermode) = 0;
-		virtual void setBorderColor(const Rgba& color) = 0;
+		virtual void setBorderColor(const Rgba &color) = 0;
 		virtual void setHardwareShadowMap(bool enable) = 0;
 		virtual TexFormat getFormat() = 0;
 
-		virtual void saveToFile(const String& filename) = 0;
-		virtual void uploadSubTextureIm(const Rect& rect, const void* pixels, TexFormat format = TexFormat::AUTO) = 0;
+		virtual void saveToFile(const String &filename) = 0;
+		virtual void uploadSubTextureIm(const Rect &rect, const void *pixels, TexFormat format = TexFormat::AUTO) = 0;
 		virtual void generateMipmapIm() = 0;
 
 		// management
-		static TextureRp load(const String& name, InitFlags flags=0);
-		static TextureRp create(const String& debugname, TexFormat format, int width, int height, InitFlags flags = 0);
-		static bool isExist(const String& name);
+		static TextureRp load(const String &name, InitFlags flags=0);
+		static TextureRp create(const String &debugname, TexFormat format, int width, int height, InitFlags flags = 0);
+		static bool isExist(const String &name);
 		static void initManager();
 		static void finalizeManager();
-		static FixedString normalizeKey(const String& name);
-		static void texlist_f(const CmdArgs& args);
+		static FixedString normalizeKey(const String &name);
+		static void texlist_f(const CmdArgs &args);
 
 	protected:
 		Texture();
@@ -109,9 +109,9 @@ AX_BEGIN_NAMESPACE
 		virtual ~TextureManager();
 
 		// called in main thread
-		TextureRp loadTexture(const String& texname, Texture::InitFlags flags=0);
-		TextureRp createTexture(const String& debugname, TexFormat format, int width, int height, Texture::InitFlags flags = 0);
-		bool isExist(const FixedString& key);
+		TextureRp loadTexture(const String &texname, Texture::InitFlags flags=0);
+		TextureRp createTexture(const String &debugname, TexFormat format, int width, int height, Texture::InitFlags flags = 0);
+		bool isExist(const FixedString &key);
 
 		// called in draw thread
 		virtual TextureRp createObject() = 0;
@@ -119,15 +119,15 @@ AX_BEGIN_NAMESPACE
 	private:
 		friend class Texture;
 		// internal use
-		void uploadSubTexture(Texture* tex, const Rect& rect, const void* pixels, TexFormat format = TexFormat::AUTO);
-		void generateMipmap(Texture* tex);
-		void freeTexture(Texture* tex);
-		void texlist_f(const CmdArgs& args);
+		void uploadSubTexture(Texture *tex, const Rect &rect, const void *pixels, TexFormat format = TexFormat::AUTO);
+		void generateMipmap(Texture *tex);
+		void freeTexture(Texture *tex);
+		void texlist_f(const CmdArgs &args);
 		// end internal use
 
 	protected:
 		struct LoadCmd {
-			Texture* texture;
+			Texture *texture;
 			FixedString texName;	// if filename is empty, than use format, width, height to init
 			Texture::InitFlags initFlags;
 			TexFormat format;
@@ -137,16 +137,16 @@ AX_BEGIN_NAMESPACE
 		typedef List<LoadCmd> LoadCmdList;
 
 		struct UploadCmd {
-			Texture* texture;
+			Texture *texture;
 			Rect rect;
-			const void* pixel;
+			const void *pixel;
 			TexFormat format;
 			Rgba color; // if pixel is null, then use this color
 		};
 		typedef List<UploadCmd> UploadCmdList;
 
 		struct FreeCmd {
-			Texture* texture;
+			Texture *texture;
 			int frameId;
 		};
 		typedef List<FreeCmd> FreeCmdList;

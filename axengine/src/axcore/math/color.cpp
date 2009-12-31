@@ -18,7 +18,7 @@ AX_BEGIN_NAMESPACE
 		return result;
 	}
 
-	bool Rgb::fromString(const char* str) {
+	bool Rgb::fromString(const char *str) {
 		int _r, _g, _b;
 		int v = sscanf(str, "%d %d %d", &_r, &_g, &_b);
 		AX_ASSERT(v == 3);
@@ -83,7 +83,7 @@ AX_BEGIN_NAMESPACE
 		return result;
 	}
 
-	void Rgba::fromString(const char* str) {
+	void Rgba::fromString(const char *str) {
 		int _r, _g, _b, _a;
 		int v = sscanf(str, "%d %d %d %d", &_r, &_g, &_b, &_a);
 		AX_STRICT_ASSERT(v = 4);

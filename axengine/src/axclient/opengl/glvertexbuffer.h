@@ -22,7 +22,7 @@ AX_BEGIN_NAMESPACE
 		GLvertexbuffer();
 		~GLvertexbuffer();
 
-		void setData(const void* p, int size, Primitive::Hint);
+		void setData(const void *p, int size, Primitive::Hint);
 		void resetData();
 		void bind();
 
@@ -43,10 +43,10 @@ AX_BEGIN_NAMESPACE
 		GLindexbuffer();
 		~GLindexbuffer();
 
-		void setData(const ushort_t* p, int count, Primitive::Hint, int activeCount = 0);
+		void setData(const ushort_t *p, int count, Primitive::Hint, int activeCount = 0);
 		void resetData();
 		void bind();
-		void* mapBuffer();
+		void *mapBuffer();
 		void unmapBuffer();
 		bool haveData() const;
 

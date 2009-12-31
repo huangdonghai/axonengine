@@ -11,22 +11,22 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-	QueuedScene* d3d9Scene;
+	QueuedScene *d3d9Scene;
 
-	D3D9window* d3d9FrameWnd;
+	D3D9window *d3d9FrameWnd;
 	bool d3d9IsReflecting;
 	bool d3d9ForceWireframe = false;
 
-	QueuedScene* d3d9WorldScene;
-	D3D9target* d3d9WorldTarget;
-	const QueuedEntity* d3d9Actor;
-	Interaction* d3d9Interaction;
+	QueuedScene *d3d9WorldScene;
+	D3D9target *d3d9WorldTarget;
+	const QueuedEntity *d3d9Actor;
+	Interaction *d3d9Interaction;
 
-	RenderTarget* d3d9BoundTarget = 0;
+	RenderTarget *d3d9BoundTarget = 0;
 
 
-	static D3D9target* s_gbuffer;
-	static D3D9target* s_lbuffer;	// light buffer
+	static D3D9target *s_gbuffer;
+	static D3D9target *s_lbuffer;	// light buffer
 
 
 	static Technique s_technique;
@@ -46,7 +46,7 @@ AX_BEGIN_NAMESPACE
 		return mat;
 	}
 
-	static void ConvertToD3D(Matrix4& m) {
+	static void ConvertToD3D(Matrix4 &m) {
 		static Matrix4 conv = GetConvertMatrix();
 
 		Matrix4 m2 = conv * m;
@@ -109,7 +109,7 @@ AX_BEGIN_NAMESPACE
 		beginFrame();
 		d3d9Device->BeginScene();
 
-		D3D9window* window = dynamic_cast<D3D9window*>(d3d9Queue->getTarget());
+		D3D9window *window = dynamic_cast<D3D9window*>(d3d9Queue->getTarget());
 		if (window != d3d9FrameWnd) {
 			d3d9FrameWnd = window;
 			d3d9FrameWnd->bind();
@@ -140,7 +140,7 @@ AX_BEGIN_NAMESPACE
 			if (i == view_count - 1) m_isStatistic = true;
 
 			uint_t s = OsUtil::milliseconds();
-			QueuedScene* queued = d3d9Queue->getScene(i);
+			QueuedScene *queued = d3d9Queue->getScene(i);
 
 			drawScene(queued, clearer);
 			clearer.clearColor(false);
@@ -181,7 +181,7 @@ AX_BEGIN_NAMESPACE
 		}
 	}
 
-	void D3D9thread::drawScene(QueuedScene* scene, const D3D9clearer& clearer)
+	void D3D9thread::drawScene(QueuedScene *scene, const D3D9clearer &clearer)
 	{
 		if (scene->sceneType == QueuedScene::WorldMain) {
 			drawScene_world(scene, clearer);
@@ -192,7 +192,7 @@ AX_BEGIN_NAMESPACE
 		}
 	}
 
-	void D3D9thread::setupScene(QueuedScene* scene, const D3D9clearer* clearer, RenderTarget* target, RenderCamera* camera)
+	void D3D9thread::setupScene(QueuedScene *scene, const D3D9clearer *clearer, RenderTarget *target, RenderCamera *camera)
 	{
 		//		AX_ASSERT(scene);
 		if (!scene && !camera) {
@@ -218,7 +218,7 @@ AX_BEGIN_NAMESPACE
 			clearer->doClear();
 		}
 
-		const Vector4& vp = camera->getViewPortDX();
+		const Vector4 &vp = camera->getViewPortDX();
 		D3DVIEWPORT9 d3dviewport;
 		d3dviewport.X = vp.x;
 		d3dviewport.Y = vp.y;
@@ -273,7 +273,7 @@ AX_BEGIN_NAMESPACE
 		}
 	}
 
-	void D3D9thread::unsetScene(QueuedScene* scene, const D3D9clearer* clearer, RenderTarget* target, RenderCamera* camera)
+	void D3D9thread::unsetScene(QueuedScene *scene, const D3D9clearer *clearer, RenderTarget *target, RenderCamera *camera)
 	{
 		if (!scene && !camera) {
 			Errorf("D3D9thread::unsetScene: parameter error");
@@ -293,7 +293,7 @@ AX_BEGIN_NAMESPACE
 	{
 		d3d9Interaction = nullptr;
 
-		D3D9primitive* prim = d3d9PrimitiveManager->getPrimitive(prim_id);
+		D3D9primitive *prim = d3d9PrimitiveManager->getPrimitive(prim_id);
 
 		if (!prim) {
 			return;
@@ -307,19 +307,19 @@ AX_BEGIN_NAMESPACE
 		prim->draw(Technique::Main);
 	}
 
-	void D3D9thread::drawInteraction(Interaction* ia)
+	void D3D9thread::drawInteraction(Interaction *ia)
 	{
 		static bool primMatrixSet = false;
 		d3d9Interaction = ia;
 
-		D3D9primitive* prim = d3d9PrimitiveManager->getPrimitive(ia->resource);
+		D3D9primitive *prim = d3d9PrimitiveManager->getPrimitive(ia->resource);
 
 		if (!prim) {
 			return;
 		}
 
 		// check actor
-		const QueuedEntity* re = ia->qactor;
+		const QueuedEntity *re = ia->qactor;
 		if (re != d3d9Actor || prim->isMatrixSet() || primMatrixSet) {
 			d3d9Actor = re;
 
@@ -376,7 +376,7 @@ AX_BEGIN_NAMESPACE
 		int viewcount = d3d9Queue->getSceneCount();
 
 		for (int i = 0; i < viewcount; i++) {
-			QueuedScene* queued = d3d9Queue->getScene(i);
+			QueuedScene *queued = d3d9Queue->getScene(i);
 
 			cacheSceneRes(queued);
 
@@ -392,9 +392,9 @@ AX_BEGIN_NAMESPACE
 		END_PIX();
 	}
 
-	void D3D9thread::cacheSceneRes(QueuedScene* scene)
+	void D3D9thread::cacheSceneRes(QueuedScene *scene)
 	{
-		RenderScene* s_view = scene->source;
+		RenderScene *s_view = scene->source;
 
 		//		scene->camera = s_view->camera;
 
@@ -402,7 +402,7 @@ AX_BEGIN_NAMESPACE
 		float normallen = r_showNormal->getFloat();
 
 		for (int j = 0; j < scene->numInteractions; j++) {
-			Primitive* prim = scene->interactions[j]->primitive;
+			Primitive *prim = scene->interactions[j]->primitive;
 
 			if (prim->getType() == Primitive::MeshType) {
 				if (r_ignorMesh->getBool()) {
@@ -424,11 +424,11 @@ AX_BEGIN_NAMESPACE
 					if (r_ignorMesh->getBool()) {
 						scene->interactions[j]->resource = -1;
 					}
-					MeshPrim* mesh = dynamic_cast<MeshPrim*>(prim);
+					MeshPrim *mesh = dynamic_cast<MeshPrim*>(prim);
 					if (mesh == nullptr)
 						continue;
-					LinePrim* line = mesh->getNormalLine(normallen);
-					Interaction* ia = d3d9Queue->allocInteraction();
+					LinePrim *line = mesh->getNormalLine(normallen);
+					Interaction *ia = d3d9Queue->allocInteraction();
 					ia->qactor = scene->interactions[j]->qactor;
 					ia->primitive = line;
 //					ia->resource = d3d9PrimitiveManager->cachePrimitive(line);
@@ -447,11 +447,11 @@ AX_BEGIN_NAMESPACE
 				if (r_ignorMesh->getBool()) {
 					scene->interactions[j]->resource = -1;
 				}
-				MeshPrim* mesh = dynamic_cast<MeshPrim*>(prim);
+				MeshPrim *mesh = dynamic_cast<MeshPrim*>(prim);
 				if (mesh == nullptr)
 					continue;
-				LinePrim* line = mesh->getTangentLine(tangentlen);
-				Interaction* ia = d3d9Queue->allocInteraction();
+				LinePrim *line = mesh->getTangentLine(tangentlen);
+				Interaction *ia = d3d9Queue->allocInteraction();
 				ia->qactor = scene->interactions[j]->qactor;
 				ia->primitive = line;
 //				ia->resource = d3d9PrimitiveManager->cachePrimitive(line);
@@ -488,7 +488,7 @@ AX_BEGIN_NAMESPACE
 		d3d9Thread->runFrame(false);
 	}
 
-	void D3D9thread::drawPass_zfill(QueuedScene* scene)
+	void D3D9thread::drawPass_zfill(QueuedScene *scene)
 	{
 		s_technique = Technique::Zpass;
 
@@ -507,7 +507,7 @@ AX_BEGIN_NAMESPACE
 //		d3d9StateManager->SetRenderState(D3DRS_COLORWRITEENABLE, 0xf);
 	}
 
-	void D3D9thread::drawPass_composite(QueuedScene* scene)
+	void D3D9thread::drawPass_composite(QueuedScene *scene)
 	{
 
 		if (r_wireframe->getBool()) {
@@ -557,20 +557,20 @@ AX_BEGIN_NAMESPACE
 		return *((DWORD*)&f);
 	}
 
-	void D3D9thread::drawPass_shadowGen(QueuedScene* scene)
+	void D3D9thread::drawPass_shadowGen(QueuedScene *scene)
 	{
 		if (!scene->numInteractions) {
 			return;
 		}
 
-		D3D9target* target = (D3D9target*)scene->camera.getTarget();
+		D3D9target *target = (D3D9target*)scene->camera.getTarget();
 		if (target->isPooled() && !target->alreadyAllocatedRealTarget() )
 			return;
 
-		D3D9texture* tex = (D3D9texture*)scene->camera.getTarget()->getTexture();
+		D3D9texture *tex = (D3D9texture*)scene->camera.getTarget()->getTexture();
 
-		QueuedLight* qlight = scene->sourceLight;
-		QueuedShadow* qshadow = qlight->shadowInfo;
+		QueuedLight *qlight = scene->sourceLight;
+		QueuedShadow *qshadow = qlight->shadowInfo;
 
 		if (r_shadowGen->getBool()) {
 			BEGIN_PIX("ShadowGen");
@@ -618,7 +618,7 @@ AX_BEGIN_NAMESPACE
 		scene->rendered = true;
 	}
 
-	void D3D9thread::drawPass_lights(QueuedScene* scene)
+	void D3D9thread::drawPass_lights(QueuedScene *scene)
 	{
 		D3D9clearer clearer;
 
@@ -632,7 +632,7 @@ AX_BEGIN_NAMESPACE
 		clearer.clearColor(false);
 
 		for (int i = 0; i < scene->numLights; i++) {
-			QueuedLight* ql = scene->lights[i];
+			QueuedLight *ql = scene->lights[i];
 
 			if (ql->type == RenderLight::kGlobal) {
 				drawGlobalLight(scene, ql);
@@ -644,14 +644,14 @@ AX_BEGIN_NAMESPACE
 		unsetScene(d3d9WorldScene, nullptr, s_lbuffer);
 	}
 
-	void D3D9thread::drawGlobalLight( QueuedScene* scene, QueuedLight* light )
+	void D3D9thread::drawGlobalLight( QueuedScene *scene, QueuedLight *light )
 	{
 		d3d9Postprocess->drawGlobalLight(light->lightVolume, light);
 	}
 
-	void D3D9thread::drawLocalLight(QueuedScene* scene, QueuedLight* light)
+	void D3D9thread::drawLocalLight(QueuedScene *scene, QueuedLight *light)
 	{
-		QueuedShadow* qshadow = light->shadowInfo;
+		QueuedShadow *qshadow = light->shadowInfo;
 
 		if (qshadow) {
 			for (int i=0; i<qshadow->numSplitCamera; i++) {
@@ -676,10 +676,10 @@ AX_BEGIN_NAMESPACE
 		}
 	}
 
-	void D3D9thread::drawPass_postprocess(QueuedScene* scene)
+	void D3D9thread::drawPass_postprocess(QueuedScene *scene)
 	{}
 
-	void D3D9thread::drawPass_overlay(QueuedScene* scene)
+	void D3D9thread::drawPass_overlay(QueuedScene *scene)
 	{
 		if (!scene->numOverlayPrimitives) {
 			return;
@@ -698,14 +698,14 @@ AX_BEGIN_NAMESPACE
 		unsetScene(scene, nullptr, nullptr, &camera);
 	}
 
-	void D3D9thread::drawScene_world(QueuedScene* scene, const D3D9clearer& clearer)
+	void D3D9thread::drawScene_world(QueuedScene *scene, const D3D9clearer &clearer)
 	{
 		BEGIN_PIX("DrawWorld");
 
 		s_technique = Technique::Main;
 		d3d9WorldScene = scene;
 
-		const Rect& rect = scene->camera.getViewRect();
+		const Rect &rect = scene->camera.getViewRect();
 		int width = rect.width;
 		int height = rect.height;
 
@@ -756,7 +756,7 @@ AX_BEGIN_NAMESPACE
 
 		// draw subscene first
 		for (int i = 0; i < scene->numSubScenes; i++) {
-			QueuedScene* sub = scene->subScenes[i];
+			QueuedScene *sub = scene->subScenes[i];
 
 			if (sub->sceneType == QueuedScene::ShadowGen) {
 				drawPass_shadowGen(sub);
@@ -801,7 +801,7 @@ AX_BEGIN_NAMESPACE
 		END_PIX();
 	}
 
-	void D3D9thread::drawScene_worldSub(QueuedScene* scene)
+	void D3D9thread::drawScene_worldSub(QueuedScene *scene)
 	{
 		s_technique = Technique::Main;
 
@@ -827,7 +827,7 @@ AX_BEGIN_NAMESPACE
 		unsetScene(scene, &clear);
 	}
 
-	void D3D9thread::drawScene_noworld(QueuedScene* scene, const D3D9clearer& clearer)
+	void D3D9thread::drawScene_noworld(QueuedScene *scene, const D3D9clearer &clearer)
 	{
 		BEGIN_PIX("DrawNoworld");
 		s_technique = Technique::Main;
@@ -858,7 +858,7 @@ AX_BEGIN_NAMESPACE
 		END_PIX();
 	}
 
-	void D3D9thread::bindTarget(RenderTarget* target)
+	void D3D9thread::bindTarget(RenderTarget *target)
 	{
 		if (d3d9BoundTarget != target || target->isWindow()) {
 			if (d3d9BoundTarget) {
@@ -882,14 +882,14 @@ AX_BEGIN_NAMESPACE
 		d3d9StateManager->SetRenderState(D3DRS_COLORWRITEENABLE, 0);
 		List<D3D9querymanager::ActiveQuery*>::const_iterator it = querylist.begin();
 		for (; it != querylist.end(); ++it) {
-			D3D9querymanager::ActiveQuery* active = *it;
+			D3D9querymanager::ActiveQuery *active = *it;
 
 			// have issued
 			if (active->issued)
 				continue;
 
 			count++;
-			D3D9query* query = active->query;
+			D3D9query *query = active->query;
 			if (!query->beginQuery())
 				continue;
 

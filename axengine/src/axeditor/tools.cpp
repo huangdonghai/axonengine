@@ -15,7 +15,7 @@ AX_BEGIN_NAMESPACE
 	// class Tool
 	//------------------------------------------------------------------------------
 
-	Tool::Tool(Context* context) : m_context(context), m_isPressed(false), m_view(nullptr) {
+	Tool::Tool(Context *context) : m_context(context), m_isPressed(false), m_view(nullptr) {
 	}
 
 	Tool::~Tool() {
@@ -24,7 +24,7 @@ AX_BEGIN_NAMESPACE
 		}
 	}
 
-	void Tool::handleEvent(InputEvent* e) {
+	void Tool::handleEvent(InputEvent *e) {
 		if (e->flags & InputEvent::AltModifier)
 			return;
 
@@ -36,7 +36,7 @@ AX_BEGIN_NAMESPACE
 		IInputHandler::handleEvent(e);
 	}
 
-	void Tool::onMouseDown(InputEvent* e) {
+	void Tool::onMouseDown(InputEvent *e) {
 		if (e->key != InputKey::MouseLeft)
 			return;
 
@@ -47,7 +47,7 @@ AX_BEGIN_NAMESPACE
 		return;
 	}
 
-	void Tool::onMouseUp(InputEvent* e) {
+	void Tool::onMouseUp(InputEvent *e) {
 		if (e->key != InputKey::MouseLeft)
 			return;
 
@@ -57,7 +57,7 @@ AX_BEGIN_NAMESPACE
 		doRelease(e->pos.x, e->pos.y);
 	}
 
-	void Tool::onMouseMove(InputEvent* e) {
+	void Tool::onMouseMove(InputEvent *e) {
 		if (e->key == InputKey::MouseRight)
 			return;
 
@@ -78,7 +78,7 @@ AX_BEGIN_NAMESPACE
 	// class SelectTool
 	//--------------------------------------------------------------------------
 
-	SelectTool::SelectTool(Context* context) : Tool(context) {
+	SelectTool::SelectTool(Context *context) : Tool(context) {
 		m_linePrim = nullptr;
 		m_meshPrim = nullptr;
 		m_selectionSeq = 0;
@@ -88,7 +88,7 @@ AX_BEGIN_NAMESPACE
 		clearAsset();
 	}
 
-	void SelectTool::doBindView(View* view) {}
+	void SelectTool::doBindView(View *view) {}
 
 	void SelectTool::doPress(int x, int y, int flags, float pressure) {
 		m_beginPos.set(x, y);
@@ -144,16 +144,16 @@ AX_BEGIN_NAMESPACE
 
 
 		// undo his
-		const AgentList& curlist = m_context->getSelection();
+		const AgentList &curlist = m_context->getSelection();
 
 		if (m_oldlist.empty() && curlist.empty())
 			return;
 
-		SelectHis* his = new SelectHis(m_context, m_oldlist, curlist);
+		SelectHis *his = new SelectHis(m_context, m_oldlist, curlist);
 		m_context->addHistory(his);
 	}
 
-	void SelectTool::doRender(const RenderCamera& camera) {
+	void SelectTool::doRender(const RenderCamera &camera) {
 		if (m_linePrim && m_beginPos != m_curPos)
 			g_renderSystem->addToOverlay(m_linePrim);
 	}
@@ -203,7 +203,7 @@ AX_BEGIN_NAMESPACE
 				selected.push_back(*it);
 
 				if (m_isAdd) {
-					Agent* actor = *it;
+					Agent *actor = *it;
 					if (actor->isSelected()) {
 						selected = m_context->getSelection();
 						selected.remove(actor);
@@ -258,7 +258,7 @@ AX_BEGIN_NAMESPACE
 	// class TransformTool
 	//--------------------------------------------------------------------------
 
-	TransformTool::TransformTool(Context* context) : SelectTool(context) {
+	TransformTool::TransformTool(Context *context) : SelectTool(context) {
 		m_context->attachObserver(this);
 		m_context->getState()->attachObserver(this);
 
@@ -272,7 +272,7 @@ AX_BEGIN_NAMESPACE
 		m_context->detachObserver(this);
 	}
 
-	void TransformTool::doBindView(View* view) {
+	void TransformTool::doBindView(View *view) {
 		updateMode();
 	}
 
@@ -328,7 +328,7 @@ AX_BEGIN_NAMESPACE
 		end();
 	}
 
-	void TransformTool::doRender(const RenderCamera& camera) {
+	void TransformTool::doRender(const RenderCamera &camera) {
 		if (!m_view)
 			return;
 
@@ -337,7 +337,7 @@ AX_BEGIN_NAMESPACE
 		} else {
 			Vector3 pos = m_gizmoCenter;
 
-			const RenderCamera& camera = m_view->getCamera();
+			const RenderCamera &camera = m_view->getCamera();
 			Vector3 wpos = camera.worldToScreen(pos);
 			Vector3 upos = pos + camera.getViewAxis()[2];
 			upos = camera.worldToScreen(upos);
@@ -352,7 +352,7 @@ AX_BEGIN_NAMESPACE
 		}
 	}
 
-	void TransformTool::doNotify(IObservable* subject, int arg) {
+	void TransformTool::doNotify(IObservable *subject, int arg) {
 		if (m_isPressed)
 			return;
 
@@ -371,7 +371,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 	void TransformTool::updateMode() {
-		const AgentList& actorlist = m_context->getSelection();
+		const AgentList &actorlist = m_context->getSelection();
 
 		if (actorlist.empty()) {
 			m_isSelectMode = true;
@@ -418,10 +418,10 @@ AX_BEGIN_NAMESPACE
 			if (flags & InputEvent::ShiftModifier) {
 				AgentList cloned = m_context->getSelection().clone();
 
-				GroupHis* group = new GroupHis(m_context, "Transform Cloned");
+				GroupHis *group = new GroupHis(m_context, "Transform Cloned");
 
-				UndeleteHis* his = new UndeleteHis(m_context, "Transform Cloned", cloned);
-				History* his2 = m_context->setSelectionHistoried(cloned);
+				UndeleteHis *his = new UndeleteHis(m_context, "Transform Cloned", cloned);
+				History *his2 = m_context->setSelectionHistoried(cloned);
 
 				group->append(his);
 				group->append(his2);
@@ -432,7 +432,7 @@ AX_BEGIN_NAMESPACE
 
 		m_beginTrack.set(x, y);
 
-		const AgentList& actorlist = m_context->getSelection();
+		const AgentList &actorlist = m_context->getSelection();
 
 		m_beginMatrix = AffineMat(m_gizmoAxis, m_gizmoCenter);
 		actorlist.beginTransform();
@@ -445,7 +445,7 @@ AX_BEGIN_NAMESPACE
 		return begin(false, 0, 0, 0);
 	}
 
-	void TransformTool::transform(const Vector3& v, int index)
+	void TransformTool::transform(const Vector3 &v, int index)
 	{
 		Vector3 translated;
 
@@ -462,8 +462,8 @@ AX_BEGIN_NAMESPACE
 	}
 
 	void TransformTool::end() {
-		const AgentList& actorlist = m_context->getSelection();
-		Action* his = actorlist.endTransform();
+		const AgentList &actorlist = m_context->getSelection();
+		Action *his = actorlist.endTransform();
 
 		doEnd(0, 0, his);
 
@@ -484,7 +484,7 @@ AX_BEGIN_NAMESPACE
 	// class MoveTool, move tool
 	//------------------------------------------------------------------------------
 
-	MoveTool::MoveTool(Context* context) : TransformTool(context)  {
+	MoveTool::MoveTool(Context *context) : TransformTool(context)  {
 		m_gizmo = new MoveGizmo;
 	}
 
@@ -522,7 +522,7 @@ AX_BEGIN_NAMESPACE
 		TransformTool::doDrag(x, y, flags, pressure);
 	}
 
-	bool MoveTool::doTransform(const Vector3& dist, int index, AffineMat& result) {
+	bool MoveTool::doTransform(const Vector3 &dist, int index, AffineMat &result) {
 #if 0
 		bool v;
 		Vector3 cliped, dist;
@@ -548,7 +548,7 @@ AX_BEGIN_NAMESPACE
 		//		Vector3 dist(x, y, z);
 #endif
 
-		const AgentList& actorlist = m_context->getSelection();
+		const AgentList &actorlist = m_context->getSelection();
 
 		if (!m_isMouseInput && !m_context->getState()->transformRel && m_context->getState()->transformSpace == WorldSpace) {
 			actorlist.setOrigin(index, dist[index]);
@@ -619,12 +619,12 @@ AX_BEGIN_NAMESPACE
 		return true;
 	}
 
-	void MoveTool::doEnd(int x, int y, Action* his) {
+	void MoveTool::doEnd(int x, int y, Action *his) {
 		his->setMessage("Move Object");
 	}
 
 	void MoveTool::selectClipPlane() {
-		const Vector3& forward = m_view->getCamera().getViewAxis()[0];
+		const Vector3 &forward = m_view->getCamera().getViewAxis()[0];
 
 		AX_ASSERT(m_highlit != -1);
 
@@ -679,7 +679,7 @@ AX_BEGIN_NAMESPACE
 		}
 	}
 
-	bool MoveTool::clipTest(int x, int y, Vector3& result) {
+	bool MoveTool::clipTest(int x, int y, Vector3 &result) {
 		Vector3 start = m_view->getCamera().getOrigin();
 		Vector3 end(x, y, 1);
 
@@ -694,7 +694,7 @@ AX_BEGIN_NAMESPACE
 		return v;
 	}
 
-	bool MoveTool::doTranslateVector(const Vector3& vec, Vector3& result)
+	bool MoveTool::doTranslateVector(const Vector3 &vec, Vector3 &result)
 	{
 		bool v = true;
 
@@ -731,7 +731,7 @@ AX_BEGIN_NAMESPACE
 		Vector3 state(0,0,0);
 
 		if (m_context->getState()->transformSpace == WorldSpace && !m_context->getState()->transformRel) {
-			const AgentList& actorlist = m_context->getSelection();
+			const AgentList &actorlist = m_context->getSelection();
 
 			if (actorlist.containsOne()) {
 				state = actorlist.getBackOrigin();
@@ -760,7 +760,7 @@ AX_BEGIN_NAMESPACE
 	// class RotateTool, rotate tool
 	//--------------------------------------------------------------------------
 
-	RotateTool::RotateTool(Context* context) : TransformTool(context) {
+	RotateTool::RotateTool(Context *context) : TransformTool(context) {
 		m_gizmo = new RotateGizmo();
 	}
 
@@ -778,8 +778,8 @@ AX_BEGIN_NAMESPACE
 		return clipTest(x, y, m_beginClip);
 	}
 
-	bool RotateTool::doTransform(const Vector3& rotate, int index, AffineMat& result ) {
-		const AgentList& actorlist = m_context->getSelection();
+	bool RotateTool::doTransform(const Vector3 &rotate, int index, AffineMat &result ) {
+		const AgentList &actorlist = m_context->getSelection();
 
 		if (!m_isMouseInput && !m_context->getState()->transformRel && m_context->getState()->transformSpace == WorldSpace) {
 			actorlist.setRotate(index, rotate[index]);
@@ -825,7 +825,7 @@ AX_BEGIN_NAMESPACE
 		return true;
 	}
 
-	void RotateTool::doEnd(int x, int y, Action* his) {
+	void RotateTool::doEnd(int x, int y, Action *his) {
 		((RotateGizmo*)m_gizmo)->disableCrank();
 		his->setMessage("Rotate Object");
 	}
@@ -855,7 +855,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 	void RotateTool::selectClipPlane() {
-		const Matrix3& viewAxis = m_view->getCamera().getViewAxis();
+		const Matrix3 &viewAxis = m_view->getCamera().getViewAxis();
 
 		AX_ASSERT(m_highlit != -1);
 
@@ -884,7 +884,7 @@ AX_BEGIN_NAMESPACE
 		}
 	}
 
-	bool RotateTool::clipTest(int x, int y, float& result) {
+	bool RotateTool::clipTest(int x, int y, float &result) {
 		Vector3 start = m_view->getCamera().getOrigin();
 		Vector3 end(x, y, 1);
 
@@ -910,7 +910,7 @@ AX_BEGIN_NAMESPACE
 		return v;
 	}
 
-	bool RotateTool::doTranslateVector(const Vector3& vec, Vector3& result) {
+	bool RotateTool::doTranslateVector(const Vector3 &vec, Vector3 &result) {
 		bool v = true;
 		if (m_isMouseInput) {
 			float cliped;
@@ -945,7 +945,7 @@ AX_BEGIN_NAMESPACE
 				((RotateGizmo*)m_gizmo)->setCrank(m_beginClip, m_beginClip-m_angle);
 			}
 
-			const AgentList& actorlist = m_context->getSelection();
+			const AgentList &actorlist = m_context->getSelection();
 
 			result = getRotate(m_angle);
 
@@ -965,7 +965,7 @@ AX_BEGIN_NAMESPACE
 		Vector3 state(0,0,0);
 
 		if (m_context->getState()->transformSpace == WorldSpace && !m_context->getState()->transformRel) {
-			const AgentList& actorlist = m_context->getSelection();
+			const AgentList &actorlist = m_context->getSelection();
 
 			if (actorlist.containsOne()) {
 				Matrix3 axis = actorlist.getBackAxis();
@@ -993,7 +993,7 @@ AX_BEGIN_NAMESPACE
 	// class ScaleTool, scale tool
 	//--------------------------------------------------------------------------
 
-	ScaleTool::ScaleTool(Context* context) : TransformTool(context) {
+	ScaleTool::ScaleTool(Context *context) : TransformTool(context) {
 		m_gizmo = new ScaleGizmo();
 	}
 
@@ -1013,7 +1013,7 @@ AX_BEGIN_NAMESPACE
 		return clipTest(x, y, m_beginClip);
 	}
 
-	bool ScaleTool::doTransform(const Vector3& dist, int index, AffineMat& result) {
+	bool ScaleTool::doTransform(const Vector3 &dist, int index, AffineMat &result) {
 		AgentList actorlist = m_context->getSelection();
 
 		if (m_context->getState()->transformSpace != ObjectSpace) {
@@ -1046,12 +1046,12 @@ AX_BEGIN_NAMESPACE
 		return true;
 	}
 
-	void ScaleTool::doEnd(int x, int y, Action* his) {
+	void ScaleTool::doEnd(int x, int y, Action *his) {
 		his->setMessage("Scale Object");
 	}
 
 	void ScaleTool::selectClipPlane() {
-		const Vector3& forward = m_view->getCamera().getViewAxis()[0];
+		const Vector3 &forward = m_view->getCamera().getViewAxis()[0];
 
 		AX_ASSERT(m_highlit != -1);
 
@@ -1096,7 +1096,7 @@ AX_BEGIN_NAMESPACE
 		}
 	}
 
-	bool ScaleTool::clipTest(int x, int y, Vector3& result) {
+	bool ScaleTool::clipTest(int x, int y, Vector3 &result) {
 		Vector3 start = m_view->getCamera().getOrigin();
 		Vector3 end(x, y, 1);
 
@@ -1111,7 +1111,7 @@ AX_BEGIN_NAMESPACE
 		return v;
 	}
 
-	bool ScaleTool::doTranslateVector(const Vector3& vec, Vector3& dist) {
+	bool ScaleTool::doTranslateVector(const Vector3 &vec, Vector3 &dist) {
 		bool v;
 
 		if (m_isMouseInput) {

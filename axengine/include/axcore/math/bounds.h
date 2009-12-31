@@ -27,14 +27,14 @@ AX_BEGIN_NAMESPACE
 
 		void clear();
 		void set(float l, float h);
-		void set(const Vector2& v);
+		void set(const Vector2 &v);
 		void expandBy(float f);
 		float width() const;
 		bool isEmpty() const;
 		bool contains(float f) const;
-		bool contains(const BoundingRange& other) const;
-		bool intersects(const BoundingRange& other) const;
-		BoundingRange intersected(const BoundingRange& other) const;
+		bool contains(const BoundingRange &other) const;
+		bool intersects(const BoundingRange &other) const;
+		BoundingRange intersected(const BoundingRange &other) const;
 		float distance(float f) const;
 		void deflate(float f);
 		void inflate(float f);
@@ -53,7 +53,7 @@ AX_BEGIN_NAMESPACE
 		min = l; max = h;
 	}
 
-	inline void BoundingRange::set(const Vector2& v) {
+	inline void BoundingRange::set(const Vector2 &v) {
 		min = v.x; max = v.y;
 	}
 
@@ -74,15 +74,15 @@ AX_BEGIN_NAMESPACE
 		return f >= min && f <= max;
 	}
 
-	inline bool BoundingRange::contains(const BoundingRange& other) const {
+	inline bool BoundingRange::contains(const BoundingRange &other) const {
 		return min <= other.min && max >= other.max;
 	}
 
-	inline bool BoundingRange::intersects(const BoundingRange& other) const {
+	inline bool BoundingRange::intersects(const BoundingRange &other) const {
 		return !intersected(other).isEmpty();
 	}
 
-	inline BoundingRange BoundingRange::intersected(const BoundingRange& other) const {
+	inline BoundingRange BoundingRange::intersected(const BoundingRange &other) const {
 		BoundingRange result;
 		result.min = std::max(min, other.min);
 		result.max = std::min(max, other.max);
@@ -113,8 +113,8 @@ AX_BEGIN_NAMESPACE
 		Vector2 min, max;
 
 		BoundingRect() {}
-		BoundingRect(const BoundingRect& other) : min(other.min), max(other.max) {}
-		BoundingRect(const Vector2& _mins, const Vector2& _maxs) : min(_mins), max(_maxs) {}
+		BoundingRect(const BoundingRect &other) : min(other.min), max(other.max) {}
+		BoundingRect(const Vector2 &_mins, const Vector2 &_maxs) : min(_mins), max(_maxs) {}
 		BoundingRect(float min_x, float min_y, float max_x, float max_y) : min(min_x,min_y), max(max_x,max_y) {}
 		~BoundingRect() {}
 
@@ -122,7 +122,7 @@ AX_BEGIN_NAMESPACE
 			return (min.x >= max.x || min.y >= max.y);
 		}
 
-		inline bool contains(const Vector2& p) const {
+		inline bool contains(const Vector2 &p) const {
 			return (p.x >= min.x && p.y >= min.y && p.x < max.x && p.y < max.y);
 		}
 
@@ -134,7 +134,7 @@ AX_BEGIN_NAMESPACE
 			return max.y - min.y;
 		}
 
-		inline bool intersects(const BoundingRect& other, BoundingRect& intersection) const {
+		inline bool intersects(const BoundingRect &other, BoundingRect &intersection) const {
 			if ((*this).empty() || other.empty()) {
 				intersection.clear();
 				return false;
@@ -151,7 +151,7 @@ AX_BEGIN_NAMESPACE
 			max.x = max.y = std::numeric_limits<float>::min();
 		}
 
-		inline void expandBy(const Vector2& p) {
+		inline void expandBy(const Vector2 &p) {
 			for (int i=0; i<2; i++) {
 				if (p[i] < min[i])
 					min[i] = p[i];
@@ -180,7 +180,7 @@ AX_BEGIN_NAMESPACE
 				max.y = v;
 		}
 
-		inline void clampVertex(Vector2& v) {
+		inline void clampVertex(Vector2 &v) {
 			v.x = Math::clamp(v.x, min.x, max.x);
 			v.y = Math::clamp(v.y, min.y, max.y);
 		}
@@ -192,7 +192,7 @@ AX_BEGIN_NAMESPACE
 			max.y += my;
 		}
 
-		inline BoundingRect operator + (const BoundingRect& other) const {
+		inline BoundingRect operator + (const BoundingRect &other) const {
 			BoundingRect ret;
 			ret.min.x = std::min(min.x, other.min.x);
 			ret.min.y = std::min(min.y, other.min.y);
@@ -201,7 +201,7 @@ AX_BEGIN_NAMESPACE
 			return ret;
 		}
 
-		inline BoundingRect operator += (const BoundingRect& other) {
+		inline BoundingRect operator += (const BoundingRect &other) {
 			min.x = std::min(min.x, other.min.x);
 			min.y = std::min(min.y, other.min.y);
 			max.x = std::max(max.x, other.max.x);
@@ -223,41 +223,41 @@ AX_BEGIN_NAMESPACE
 		Vector3 min, max;
 
 		BoundingBox();
-		BoundingBox(const BoundingBox& other);
-		BoundingBox(const Vector3& _mins, const Vector3& _maxs);
+		BoundingBox(const BoundingBox &other);
+		BoundingBox(const Vector3 &_mins, const Vector3 &_maxs);
 		BoundingBox(float min_x, float min_y, float min_z, float max_x, float max_y, float max_z);
 		~BoundingBox();
 
 		bool empty() const;
-		bool contains(const Vector3& p) const;
-		bool contains(const BoundingBox& rhs) const;
+		bool contains(const Vector3 &p) const;
+		bool contains(const BoundingBox &rhs) const;
 		void clear();
-		void expandBy(const Vector3& p);
+		void expandBy(const Vector3 &p);
 		Vector3 getCenter() const;
 		// return min + (max - min) * t
-		Vector3 getLerped(const Vector3& t) const;
+		Vector3 getLerped(const Vector3 &t) const;
 		// (max-min) * c
-		Vector3 getExtends(const Vector3& t) const;
+		Vector3 getExtends(const Vector3 &t) const;
 
 		Vector3 getExtends() const;
 
-		BoundingBox& unite(const BoundingBox& rhs);
+		BoundingBox &unite(const BoundingBox &rhs);
 
-		BoundingBox intersected(const BoundingBox& other) const;
-		BoundingBox united(const BoundingBox& other) const;
+		BoundingBox intersected(const BoundingBox &other) const;
+		BoundingBox united(const BoundingBox &other) const;
 
-		BoundingBox getTransformed(const AffineMat& matrix) const;
-		float pointDistance(const Vector3& point);
+		BoundingBox getTransformed(const AffineMat &matrix) const;
+		float pointDistance(const Vector3 &point);
 	};
 
 	inline BoundingBox::BoundingBox()
 	{}
 
-	inline BoundingBox::BoundingBox(const BoundingBox& other)
+	inline BoundingBox::BoundingBox(const BoundingBox &other)
 		: min(other.min), max(other.max)
 	{}
 
-	inline BoundingBox::BoundingBox(const Vector3& _mins, const Vector3& _maxs)
+	inline BoundingBox::BoundingBox(const Vector3 &_mins, const Vector3 &_maxs)
 		: min(_mins), max(_maxs)
 	{}
 
@@ -275,12 +275,12 @@ AX_BEGIN_NAMESPACE
 			|| min.z >= max.z);
 	}
 
-	inline bool BoundingBox::contains(const Vector3& p) const {
+	inline bool BoundingBox::contains(const Vector3 &p) const {
 		return (p.x >= min.x && p.y >= min.y && p.z >= min.z
 			&& p.x < max.x && p.y < max.y && p.z < max.z);
 	}
 
-	inline bool BoundingBox::contains(const BoundingBox& rhs) const {
+	inline bool BoundingBox::contains(const BoundingBox &rhs) const {
 		return min <= rhs.min && max >= rhs.max;
 	}
 
@@ -289,7 +289,7 @@ AX_BEGIN_NAMESPACE
 		max.x = max.y = max.z = -999999999.f;
 	}
 
-	inline void BoundingBox::expandBy(const Vector3& p) {
+	inline void BoundingBox::expandBy(const Vector3 &p) {
 		for (int i=0; i<3; i++) {
 			if (p[i] < min[i])
 				min[i] = p[i];
@@ -303,12 +303,12 @@ AX_BEGIN_NAMESPACE
 	}
 
 	// return low + (high - low) * t
-	inline Vector3 BoundingBox::getLerped(const Vector3& t) const {
+	inline Vector3 BoundingBox::getLerped(const Vector3 &t) const {
 		return min + getExtends(t);
 	}
 
 	// (high-low) * c
-	inline Vector3 BoundingBox::getExtends(const Vector3& t) const {
+	inline Vector3 BoundingBox::getExtends(const Vector3 &t) const {
 		return (max - min) * t;
 	}
 
@@ -316,13 +316,13 @@ AX_BEGIN_NAMESPACE
 		return max - min;
 	}
 
-	inline BoundingBox& BoundingBox::unite(const BoundingBox& rhs) {
+	inline BoundingBox &BoundingBox::unite(const BoundingBox &rhs) {
 		expandBy(rhs.min);
 		expandBy(rhs.max);
 		return *this;
 	}
 
-	inline BoundingBox BoundingBox::intersected(const BoundingBox& other) const {
+	inline BoundingBox BoundingBox::intersected(const BoundingBox &other) const {
 		BoundingBox result;
 		result.min.x = std::max(min.x, other.min.x);
 		result.min.y = std::max(min.y, other.min.y);
@@ -333,7 +333,7 @@ AX_BEGIN_NAMESPACE
 		return result;
 	}
 
-	inline BoundingBox BoundingBox::united(const BoundingBox& other) const {
+	inline BoundingBox BoundingBox::united(const BoundingBox &other) const {
 		BoundingBox result = *this;
 		result.expandBy(other.min);
 		result.expandBy(other.max);
@@ -341,7 +341,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 #if 0
-	inline BoundingBox BoundingBox::getTransformed(const Vector3& origin, const Matrix3& axis) const {
+	inline BoundingBox BoundingBox::getTransformed(const Vector3 &origin, const Matrix3 &axis) const {
 		int i;
 		Vector3 center, extents, rotatedExtents;
 		BoundingBox out;
@@ -362,20 +362,20 @@ AX_BEGIN_NAMESPACE
 		return out;
 	}
 
-	inline BoundingBox BoundingBox::getTransformed(const Vector3& origin, const Angles& angles) const {
+	inline BoundingBox BoundingBox::getTransformed(const Vector3 &origin, const Angles &angles) const {
 		Matrix3 m;
 		m.fromAngles(angles);
 		return getTransformed(origin, m);
 	}
 
-	inline BoundingBox BoundingBox::getTransformed(const Vector3& origin, const Angles& angles, const Vector3& scales) const {
+	inline BoundingBox BoundingBox::getTransformed(const Vector3 &origin, const Angles &angles, const Vector3 &scales) const {
 		Matrix3 m;
 		m.fromAnglesScales(angles, scales);
 		return getTransformed(origin, m);
 	}
 #endif
 
-	inline float BoundingBox::pointDistance(const Vector3& point) {
+	inline float BoundingBox::pointDistance(const Vector3 &point) {
 		Vector3 dist;
 		for (int i = 0; i < 3; i++) {
 			if (point[i] < min[i]) {

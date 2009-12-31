@@ -25,7 +25,7 @@ AX_BEGIN_NAMESPACE
 			MaxType = 256
 		};
 
-		Action(Context* context) : m_context(context) {}
+		Action(Context *context) : m_context(context) {}
 		virtual ~Action() {}
 
 		virtual void doIt() = 0;
@@ -33,11 +33,11 @@ AX_BEGIN_NAMESPACE
 		virtual bool isUndoable() { return false; }
 		virtual String getName() { return "Action"; }
 		virtual String getMessage() { return getName(); }
-		virtual void setMessage(const String& msg) { /* do nothing default */}
+		virtual void setMessage(const String &msg) { /* do nothing default */}
 		virtual int getMemoryUsed() { return 0; }
 
 	protected:
-		Context* m_context;
+		Context *m_context;
 	};
 
 	//--------------------------------------------------------------------------
@@ -46,12 +46,12 @@ AX_BEGIN_NAMESPACE
 
 	class ActionFactory {
 	public:
-		virtual Action* create(Context* context) = 0;
+		virtual Action *create(Context *context) = 0;
 	};
 
 	template< class T >
 	class ActionFactory_ : public ActionFactory {
-		virtual Action* create(Context* context) {
+		virtual Action *create(Context *context) {
 			return new T(context);
 		}
 	};
@@ -62,7 +62,7 @@ AX_BEGIN_NAMESPACE
 
 	class UndoAction : public Action {
 	public:
-		UndoAction(Context* context);
+		UndoAction(Context *context);
 		virtual ~UndoAction();
 
 		virtual void doIt();
@@ -74,7 +74,7 @@ AX_BEGIN_NAMESPACE
 
 	class RedoAction : public Action {
 	public:
-		RedoAction(Context* context);
+		RedoAction(Context *context);
 		virtual ~RedoAction();
 
 		virtual void doIt();
@@ -86,7 +86,7 @@ AX_BEGIN_NAMESPACE
 
 	class DeleteAction : public Action {
 	public:
-		DeleteAction(Context* context);
+		DeleteAction(Context *context);
 		virtual ~DeleteAction();
 
 		virtual void doIt();
@@ -108,7 +108,7 @@ AX_BEGIN_NAMESPACE
 	class History;
 	class CloneAction : public Action {
 	public:
-		CloneAction(Context* context);
+		CloneAction(Context *context);
 		virtual ~CloneAction();
 
 		virtual void doIt();
@@ -121,7 +121,7 @@ AX_BEGIN_NAMESPACE
 	private:
 		bool m_isFirst;
 		AgentList m_actorlist;
-		History* m_selectionHis;
+		History *m_selectionHis;
 	};
 AX_END_NAMESPACE
 

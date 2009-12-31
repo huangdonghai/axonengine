@@ -42,7 +42,7 @@ void GameSystem::reset()
 }
 
 
-void GameSystem::setGameWorld(GameWorld* gameworld)
+void GameSystem::setGameWorld(GameWorld *gameworld)
 {
 	if (m_gameWorld && gameworld) {
 		Errorf("already has a game world");
@@ -59,7 +59,7 @@ void GameSystem::setGameWorld(GameWorld* gameworld)
 		return;
 	}
 
-	GameActor* ent = GameWorld::createActor("Game.Player");
+	GameActor *ent = GameWorld::createActor("Game.Player");
 	m_gameWorld->addActor(ent);
 }
 
@@ -128,7 +128,7 @@ void GameSystem::stopRunning()
 	notify(ObserveFlag_StopRunning);
 }
 
-const UserInput* GameSystem::getUserInput(ActorNum clientNum)
+const UserInput *GameSystem::getUserInput(ActorNum clientNum)
 {
 	return &m_userInputs;
 }

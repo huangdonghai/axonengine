@@ -27,7 +27,7 @@ AX_BEGIN_NAMESPACE
 		virtual ~SoundFx();
 
 		String m_name;
-		FMOD::Sound* m_fmodSound;
+		FMOD::Sound *m_fmodSound;
 	};
 
 	typedef RefPtr<SoundFx> SfxPtr;

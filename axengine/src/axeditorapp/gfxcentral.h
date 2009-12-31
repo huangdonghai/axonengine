@@ -31,10 +31,10 @@ public:
 
 private:
 	Ui::GfxCentralClass ui;
-	GfxTrackEdit* m_trackEdit;
-	GfxEditor* m_editor;
-	EditorFrame* m_viewFrame;
-	GfxContext* m_context;
+	GfxTrackEdit *m_trackEdit;
+	GfxEditor *m_editor;
+	EditorFrame *m_viewFrame;
+	GfxContext *m_context;
 
 private slots:
 	void on_toggleTrackEdit_clicked();

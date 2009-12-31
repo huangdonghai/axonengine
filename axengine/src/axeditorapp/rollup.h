@@ -20,7 +20,7 @@ class Rollup;
 class RollPage : public QWidget {
 	Q_OBJECT
 public:
-	RollPage(QWidget* parent, Rollup* rollup_widget, QWidget* contained, const QString& name);
+	RollPage(QWidget *parent, Rollup *rollup_widget, QWidget *contained, const QString &name);
 	~RollPage();
 
 protected:
@@ -32,12 +32,12 @@ private slots:
 
 private:
 	QString m_pageName;
-	QWidget* m_containedWidget;
-	Rollup* m_rollupWidget;
+	QWidget *m_containedWidget;
+	Rollup *m_rollupWidget;
 #if 0
-	QPushButton* m_button;
-	QLabel* m_expandWidget;
-	QLabel* m_shrinkWidget;
+	QPushButton *m_button;
+	QLabel *m_expandWidget;
+	QLabel *m_shrinkWidget;
 #endif
 	bool m_isHidden;
 	bool m_isShrinked;
@@ -53,7 +53,7 @@ class RollArea : public QWidget {
 	Q_OBJECT
 
 public:
-	RollArea(Rollup* parent);
+	RollArea(Rollup *parent);
 	~RollArea();
 
 private:
@@ -62,7 +62,7 @@ private:
 	virtual void mouseMoveEvent (QMouseEvent * e);
 
 private:
-	Rollup* m_parent;
+	Rollup *m_parent;
 };
 
 //------------------------------------------------------------------------------
@@ -76,13 +76,13 @@ public:
 	~Rollup();
 
 	void initialize();
-	int addPage(QWidget* page, QString& name);	// return index
+	int addPage(QWidget *page, QString &name);	// return index
 	void removeAllPages();
 	void setAllPagesVisible(bool visible);
 	void hidePage(int index);
 	void showPage(int index);
 	void setPageVisible(int index, bool visible);
-	void setGroupVisible(const QString& groupname, bool visible);
+	void setGroupVisible(const QString &groupname, bool visible);
 
 public:
 	void relayout();
@@ -91,7 +91,7 @@ private:
 	void checkScrollPos();
 	bool initFromTab();
 	bool initFromToolbox();
-	bool initGroup(const QString& grpname, QWidget* widget);
+	bool initGroup(const QString &grpname, QWidget *widget);
 
 protected:
 	// overload
@@ -119,8 +119,8 @@ private:
 
 	QVector<RollPage*> m_pages;
 	RollGroups m_groups;
-	RollArea* m_rollarea;
-	QWidget* m_central;
+	RollArea *m_rollarea;
+	QWidget *m_central;
 	ScrollTracking m_trackingMode;
 	int m_curScrollPos;
 	int m_totalPagesHeight;

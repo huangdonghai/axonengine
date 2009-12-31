@@ -48,7 +48,7 @@ namespace Axon{namespace Game{
 		if (m_world)
 			m_world->getRenderWorld()->addActor(m_renderModel);
 
-		ParticleModelInstance* instance = dynamic_cast<ParticleModelInstance*>(m_renderModel->getInstance());
+		ParticleModelInstance *instance = dynamic_cast<ParticleModelInstance*>(m_renderModel->getInstance());
 
 		//get particle
 		if (instance)
@@ -64,7 +64,7 @@ namespace Axon{namespace Game{
 		return m_modelName;
 	}
 
-	void Particle::setParticleModel(ParticleEffect* particle,bool needFree /* = true */)
+	void Particle::setParticleModel(ParticleEffect *particle,bool needFree /* = true */)
 	{
         if (particle == NULL)
 			return;
@@ -78,7 +78,7 @@ namespace Axon{namespace Game{
 
 		m_renderModel = new renderModel();
 
-		ParticleModelInstance* particleInstance = new ParticleModelInstance(particle);
+		ParticleModelInstance *particleInstance = new ParticleModelInstance(particle);
 
 		m_renderModel->setInstance(particleInstance,true);
 
@@ -88,7 +88,7 @@ namespace Axon{namespace Game{
 		_SourceParticleCenterPos = m_particle->getCenterPos();
 	}
 
-	ParticleEffect* Particle::getParticleEffect()
+	ParticleEffect *Particle::getParticleEffect()
 	{
 		return m_particle;
 	}

@@ -253,7 +253,7 @@ void PropertyEditor::setProperHeight() {
 	return;
 }
 
-void PropertyEditor::initFromObject(Object* obj) {
+void PropertyEditor::initFromObject(Object *obj) {
 	if (!obj) {
 		setInitialInput(nullptr);
 		return;
@@ -261,15 +261,15 @@ void PropertyEditor::initFromObject(Object* obj) {
 
 	PropertyCollection *collection = new PropertyCollection(QLatin1String("<root>"));
 
-	MetaInfo* typeinfo = obj->getMetaInfo();
+	MetaInfo *typeinfo = obj->getMetaInfo();
 
 	for (; typeinfo; typeinfo = typeinfo->getBaseTypeInfo()) {
-		IProperty* p;
+		IProperty *p;
 		p = new SeparatorProperty("", typeinfo->getTypeName()); collection->addProperty(p);
 
-		const MemberSeq& members = typeinfo->getMembers();
+		const MemberSeq &members = typeinfo->getMembers();
 
-		foreach(Member* m, members) {
+		foreach(Member *m, members) {
 			if (!m->isProperty()) {
 				continue;
 			}
@@ -311,12 +311,12 @@ void PropertyEditor::initFromObject(Object* obj) {
 	setInitialInput(collection);
 }
 
-void PropertyEditor::applyToObject(Object* obj) {
+void PropertyEditor::applyToObject(Object *obj) {
 	if (!obj) {
 		return;
 	}
 
-	IProperty* root = m_model->initialInput();
+	IProperty *root = m_model->initialInput();
 
 	if (!root) {
 		return;
@@ -326,10 +326,10 @@ void PropertyEditor::applyToObject(Object* obj) {
 		return;
 	}
 
-	IPropertyGroup* group = (IPropertyGroup*)root;
+	IPropertyGroup *group = (IPropertyGroup*)root;
 
 	for (int i = 0; i < group->propertyCount(); i++) {
-		IProperty* prop = group->propertyAt(i);
+		IProperty *prop = group->propertyAt(i);
 
 		if (prop->isFake()) {
 			continue;
@@ -344,7 +344,7 @@ void PropertyEditor::applyToObject(Object* obj) {
 }
 
 void PropertyEditor::setData(const QString &propName, QVariant value){
-	IProperty* root = m_model->initialInput();
+	IProperty *root = m_model->initialInput();
 
 	if (!root) {
 		return;
@@ -354,10 +354,10 @@ void PropertyEditor::setData(const QString &propName, QVariant value){
 		return;
 	}
 
-	IPropertyGroup* group = (IPropertyGroup*)root;
+	IPropertyGroup *group = (IPropertyGroup*)root;
 
 	for (int i = 0; i < group->propertyCount(); i++) {
-		IProperty* prop = group->propertyAt(i);
+		IProperty *prop = group->propertyAt(i);
 
 		if (prop->isFake()) {
 			continue;
@@ -374,20 +374,20 @@ void PropertyEditor::setData(const QString &propName, QVariant value){
 	}
 }
 
-bool PropertyEditor::initScriptProp(Object* obj) {
+bool PropertyEditor::initScriptProp(Object *obj) {
 	if (!obj || !obj->getClassInfo()) {
 		setInitialInput(nullptr);
 		return false;
 	}
 
-	const ClassInfo* ci = obj->getClassInfo();
+	const ClassInfo *ci = obj->getClassInfo();
 
-	const ScriptPropSeq& props = ci->m_scriptPropSeq;
+	const ScriptPropSeq &props = ci->m_scriptPropSeq;
 
 	PropertyCollection *collection = new PropertyCollection(QLatin1String("<root>"));
-	AX_FOREACH(ScriptProp* m, props) {
-		IProperty* p = 0;
-		IProperty* group = 0;
+	AX_FOREACH(ScriptProp *m, props) {
+		IProperty *p = 0;
+		IProperty *group = 0;
 
 		switch (m->getPropKind()) {
 		case Variant::kEmpty:

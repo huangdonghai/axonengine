@@ -16,14 +16,14 @@ AX_BEGIN_NAMESPACE
 	public:
 		virtual ~Gizmo() = 0 {}
 		virtual void doRender() = 0;
-		virtual int doSelect(View* view, int x, int y) = 0; // return -1 if not intersected
+		virtual int doSelect(View *view, int x, int y) = 0; // return -1 if not intersected
 		virtual void setHighlight(int) = 0;
 	};
 
 	class TransformGizmo : public Gizmo {
 	public:
 		virtual ~TransformGizmo() = 0 {}
-		virtual void setup(const RenderCamera& camera, const Vector3& pos, const Matrix3& axis, float scale) = 0;
+		virtual void setup(const RenderCamera &camera, const Vector3 &pos, const Matrix3 &axis, float scale) = 0;
 	};
 
 	//--------------------------------------------------------------------------
@@ -39,10 +39,10 @@ AX_BEGIN_NAMESPACE
 		MoveGizmo();
 		virtual ~MoveGizmo();
 
-		void setup(const RenderCamera& camera, const Vector3& pos, const Matrix3& axis, float scale);
+		void setup(const RenderCamera &camera, const Vector3 &pos, const Matrix3 &axis, float scale);
 		void doRender();
-		int doSelect(View* view, int x, int y); // return -1 if not intersected
-		int doSelect(RenderCamera* camera, int x, int y,int selectedSize); // return -1 if not intersected
+		int doSelect(View *view, int x, int y); // return -1 if not intersected
+		int doSelect(RenderCamera *camera, int x, int y,int selectedSize); // return -1 if not intersected
 		void setHighlight(int);
 		int getHighlight() { return m_highlit; }
 
@@ -50,12 +50,12 @@ AX_BEGIN_NAMESPACE
 		void clear();
 		void setupAxis(int axis);
 		void setupPlane(int axis);
-		void setupXYZ(const RenderCamera& camera);
+		void setupXYZ(const RenderCamera &camera);
 		Rgba getColor(int axis, Rgba c);
 
 	protected:
-		LinePrim* m_lines[NumberId];
-		MeshPrim* m_meshs[NumberId];
+		LinePrim *m_lines[NumberId];
+		MeshPrim *m_meshs[NumberId];
 		SelectId m_highlit;
 		MaterialPtr m_material;
 		
@@ -78,25 +78,25 @@ AX_BEGIN_NAMESPACE
 		RotateGizmo();
 		~RotateGizmo();
 
-		void setup(const RenderCamera& camera, const Vector3& pos, const Matrix3& axis, float scale);
+		void setup(const RenderCamera &camera, const Vector3 &pos, const Matrix3 &axis, float scale);
 		void doRender();
-		int doSelect(View* view, int x, int y);		
+		int doSelect(View *view, int x, int y);		
 		void setHighlight(int id);
 		void setCrank(float start, float end);
 		void disableCrank();
 
 	protected:
-		void setupCrank(const RenderCamera& camera);
+		void setupCrank(const RenderCamera &camera);
 		Rgba getColor(int id);
 		Rgba getCenterColor(int id);
 
 	private:
 		enum { CirculSubdivided = 64, CrankSubdivided=360 };
-		LinePrim* m_centerLine;
-		LinePrim* m_circles[3];
-		LinePrim* m_innerBound;
-		LinePrim* m_outerBound;
-		MeshPrim* m_crank;
+		LinePrim *m_centerLine;
+		LinePrim *m_circles[3];
+		LinePrim *m_innerBound;
+		LinePrim *m_outerBound;
+		MeshPrim *m_crank;
 		SelectId m_highlit;
 		MaterialPtr m_material;
 
@@ -121,18 +121,18 @@ AX_BEGIN_NAMESPACE
 		ScaleGizmo();
 		~ScaleGizmo();
 
-		void setup(const RenderCamera& camera, const Vector3& pos, const Matrix3& axis, float scale);
+		void setup(const RenderCamera &camera, const Vector3 &pos, const Matrix3 &axis, float scale);
 		void doRender();
-		int doSelect(View* view, int x, int y);		
+		int doSelect(View *view, int x, int y);		
 		void setHighlight(int id);
 
 	protected:
 		Rgba getColor(int id);
-		void setupScreenQuad(const RenderCamera& camera, MeshPrim*& mesh, const Vector3& pos, Rgba color);
+		void setupScreenQuad(const RenderCamera &camera, MeshPrim*& mesh, const Vector3 &pos, Rgba color);
 
 	private:
-		LinePrim* m_lines[NumberId];
-		MeshPrim* m_meshs[NumberId];
+		LinePrim *m_lines[NumberId];
+		MeshPrim *m_meshs[NumberId];
 		SelectId m_highlit;
 		MaterialPtr m_material;
 

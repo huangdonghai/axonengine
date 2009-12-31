@@ -38,7 +38,7 @@ AX_BEGIN_NAMESPACE
 		m_indices = TypeAlloc<ushort_t>(m_numIndices);
 	}
 
-	bool PostMesh::setupScreenQuad(PostMesh*& mesh, const Rect& rect)
+	bool PostMesh::setupScreenQuad(PostMesh*& mesh, const Rect &rect)
 	{
 		bool result = false;
 
@@ -90,7 +90,7 @@ AX_BEGIN_NAMESPACE
 		return result;
 	}
 
-	bool PostMesh::setupBoundingBox( PostMesh*& mesh, const BoundingBox& bbox )
+	bool PostMesh::setupBoundingBox( PostMesh*& mesh, const BoundingBox &bbox )
 	{
 		bool result = false;
 		int numverts = 8;
@@ -114,7 +114,7 @@ AX_BEGIN_NAMESPACE
 			memcpy(mesh->m_indices, s_idxes, numindexes * sizeof(ushort_t));
 		}
 
-		Vector3* verts = mesh->m_vertices;
+		Vector3 *verts = mesh->m_vertices;
 		for (int i = 0; i < 2; i++) {
 			for (int j = 0; j < 2; j++) {
 				for (int k = 0; k < 2; k++) {
@@ -150,7 +150,7 @@ AX_BEGIN_NAMESPACE
 	// Desc: Get the texture coordinate offsets to be used inside the GaussBlur5x5
 	//       pixel shader.
 	//-----------------------------------------------------------------------------
-	static void getSampleOffsets_GaussBlur5x5(int width, int height, Vector2* offsets, Vector4* weights, float factor=1.0f) {
+	static void getSampleOffsets_GaussBlur5x5(int width, int height, Vector2 *offsets, Vector4 *weights, float factor=1.0f) {
 		float tu = 1 / (float)width ;
 		float tv = 1 / (float)height;
 
@@ -238,17 +238,17 @@ AX_BEGIN_NAMESPACE
 	D3D9postprocess::~D3D9postprocess() {
 	}
 
-	void D3D9postprocess::process(Type type, D3D9texture* texture) {
+	void D3D9postprocess::process(Type type, D3D9texture *texture) {
 	}
 
-	void D3D9postprocess::drawQuad(D3D9texture* texture) {
+	void D3D9postprocess::drawQuad(D3D9texture *texture) {
 #if 0
 		texture->setFilterMode(Texture::Nearest);
 
 		m_matDrawQuad->setTexture(SamplerType::Diffuse, texture);
 		m_screenQuad->setMaterial(m_matDrawQuad);
 
-		const Rect& r = d3d9Camera->getViewRect();
+		const Rect &r = d3d9Camera->getViewRect();
 		updateScreenQuad(r);
 
 		d3d9Thread->drawPrimitive(m_screenQuad->getCachedId());
@@ -259,12 +259,12 @@ AX_BEGIN_NAMESPACE
 #if 0
 		m_shaderDrawQuad->setSU();
 #endif
-		const Rect& r = d3d9Camera->getViewRect();
+		const Rect &r = d3d9Camera->getViewRect();
 		PostMesh::setupScreenQuad(m_screenQuad, r);
 #endif
 	}
 
-	void D3D9postprocess::measureHistogram(D3D9texture* tex, int index) {
+	void D3D9postprocess::measureHistogram(D3D9texture *tex, int index) {
 		tex->setFilterMode(Texture::FM_Nearest);
 
 		float w = 1.0f / RenderWorld::HISTOGRAM_WIDTH;
@@ -280,7 +280,7 @@ AX_BEGIN_NAMESPACE
 		m_shaderHistogram->setSU();
 #endif
 
-		const Rect& r = d3d9Camera->getViewRect();
+		const Rect &r = d3d9Camera->getViewRect();
 		PostMesh::setupScreenQuad(m_screenQuad, r);
 	}
 
@@ -329,7 +329,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 #if 0
-	void D3D9postprocess::maskShadow(Vector3 volume[8], const Matrix4& matrix, D3D9texture* tex, bool front) {
+	void D3D9postprocess::maskShadow(Vector3 volume[8], const Matrix4 &matrix, D3D9texture *tex, bool front) {
 		PostMesh::setupHexahedron(m_hexahedron, volume);
 
 		float range = r_csmRange->getFloat();
@@ -354,7 +354,7 @@ AX_BEGIN_NAMESPACE
 		d3d9Draw->drawPostUP(m_mtrShadowMask, m_hexahedron);
 	}
 
-	void D3D9postprocess::maskShadow(Vector3 volume[8], const Matrix4& matrix, D3D9texture* tex, const Vector4& minrange, const Vector4& maxrange, const Matrix4& scaleoffset, bool front /*= false */)
+	void D3D9postprocess::maskShadow(Vector3 volume[8], const Matrix4 &matrix, D3D9texture *tex, const Vector4 &minrange, const Vector4 &maxrange, const Matrix4 &scaleoffset, bool front /*= false */)
 	{
 		PostMesh::setupHexahedron(m_hexahedron, volume);
 
@@ -397,22 +397,22 @@ AX_BEGIN_NAMESPACE
 		d3d9Draw->drawPostUP(m_mtrShadowMask, m_hexahedron);
 	}
 
-	void D3D9postprocess::shadowBlur(D3D9texture* texture, bool is_du) {
+	void D3D9postprocess::shadowBlur(D3D9texture *texture, bool is_du) {
 		//		cgGLSetTextureParameter(g_shadowMask, texture->getObject());
 
-		const Vector4& viewport = d3d9Camera->getViewPort();
+		const Vector4 &viewport = d3d9Camera->getViewPort();
 		//		getSampleOffsets_GaussBlur5x5(viewport.z, viewport.w, sSampleOffsets, sSampleWeights);
 		getSamplerOffsets_Gauss1D(viewport.z, viewport.w, 5, sSampleOffsets, sSampleWeights, is_du);
 		m_mtrShadowBlur->setTexture(SamplerType::Diffuse, texture);
 		m_mtrShadowBlur->setParameter("g_sampleOffsets", 32 * 2, sSampleOffsets[0].toFloatPointer());
 		m_mtrShadowBlur->setParameter("g_sampleWeights", 32, sSampleWeights);
 
-		const Rect& r = d3d9Camera->getViewRect();
+		const Rect &r = d3d9Camera->getViewRect();
 		PostMesh::setupScreenQuad(m_screenQuad, r);
 	}
 #endif
 
-	void D3D9postprocess::downscale4x4(D3D9texture* tex, const Rect& rect) {
+	void D3D9postprocess::downscale4x4(D3D9texture *tex, const Rect &rect) {
 		tex->setFilterMode(Texture::FM_Linear);
 		tex->setClampMode(Texture::CM_ClampToEdge);
 
@@ -433,11 +433,11 @@ AX_BEGIN_NAMESPACE
 
 //		m_shaderDownscale4x4->setParameter("g_sampleOffsets", param, 4);
 
-		const Rect& r = d3d9Camera->getViewRect();
+		const Rect &r = d3d9Camera->getViewRect();
 		PostMesh::setupScreenQuad(m_screenQuad, r);
 	}
 
-	D3D9shader* D3D9postprocess::getShader(const String& name) {
+	D3D9shader *D3D9postprocess::getShader(const String &name) {
 		Dict<String, D3D9shader*>::iterator it = m_genericShaders.find(name);
 
 		if (it != m_genericShaders.end()) {
@@ -445,16 +445,16 @@ AX_BEGIN_NAMESPACE
 		}
 
 #if 0
-		D3D9shader* shader = FindAsset_<D3D9shader>(name);
+		D3D9shader *shader = FindAsset_<D3D9shader>(name);
 #else
-		D3D9shader* shader = d3d9ShaderManager->findShaderDX(name);
+		D3D9shader *shader = d3d9ShaderManager->findShaderDX(name);
 #endif
 		m_genericShaders[name] = shader;
 		return shader;
 	}
 
-	void D3D9postprocess::genericPP(const String& shadername, D3D9texture* src) {
-		D3D9shader* shader = getShader(shadername);
+	void D3D9postprocess::genericPP(const String &shadername, D3D9texture *src) {
+		D3D9shader *shader = getShader(shadername);
 
 		src->setFilterMode(Texture::FM_Nearest);
 		src->setClampMode(Texture::CM_ClampToEdge);
@@ -467,12 +467,12 @@ AX_BEGIN_NAMESPACE
 		src->getSize(width, height);
 		shader->setPixelToTexel(width, height);
 
-		const Rect& r = Rect(0, 0, width, height);
+		const Rect &r = Rect(0, 0, width, height);
 		PostMesh::setupScreenQuad(m_screenQuad, r);
 	}
 
-	void D3D9postprocess::genericPP(const String& shadername, RenderTarget* target, D3D9texture* src) {
-		D3D9shader* shader = getShader(shadername);
+	void D3D9postprocess::genericPP(const String &shadername, RenderTarget *target, D3D9texture *src) {
+		D3D9shader *shader = getShader(shadername);
 		RenderCamera camera;
 		camera.setTarget(target);
 		camera.setOverlay(target->getRect());
@@ -491,18 +491,18 @@ AX_BEGIN_NAMESPACE
 
 //		shader->setParameter("s_invTextureSize", Vector2(1.0f/width, 1.0f/height));
 
-		const Rect& r = camera.getViewRect();
+		const Rect &r = camera.getViewRect();
 		PostMesh::setupScreenQuad(m_screenQuad, r);
 
 		d3d9Thread->unsetScene(0, 0, 0, &camera);
 	}
 
-	void D3D9postprocess::genericPP(const String& shadername, D3D9texture* src1, D3D9texture* src2) {
+	void D3D9postprocess::genericPP(const String &shadername, D3D9texture *src1, D3D9texture *src2) {
 		genericPP(shadername, nullptr, src1, src2);
 	}
 
-	void D3D9postprocess::genericPP(const String& shadername, RenderTarget* target, D3D9texture* src1, D3D9texture* src2) {
-		D3D9shader* shader = getShader(shadername);
+	void D3D9postprocess::genericPP(const String &shadername, RenderTarget *target, D3D9texture *src1, D3D9texture *src2) {
+		D3D9shader *shader = getShader(shadername);
 
 		RenderCamera camera;
 		if (target) {
@@ -546,7 +546,7 @@ AX_BEGIN_NAMESPACE
 #define F_SPOTLIGHT 4
 #define F_BOXFALLOFF 5
 
-	void D3D9postprocess::drawLight(Vector3 volume[8], QueuedLight* light)
+	void D3D9postprocess::drawLight(Vector3 volume[8], QueuedLight *light)
 	{
 		PostMesh::setupHexahedron(m_hexahedron, volume);
 
@@ -566,7 +566,7 @@ AX_BEGIN_NAMESPACE
 		d3d9Draw->drawPostUP(m_mtrPointLight, m_hexahedron);
 	}
 
-	void D3D9postprocess::drawLightShadowed(Vector3 volume[8], QueuedLight* light, const RenderCamera& shadowCamera)
+	void D3D9postprocess::drawLightShadowed(Vector3 volume[8], QueuedLight *light, const RenderCamera &shadowCamera)
 	{
 		PostMesh::setupHexahedron(m_hexahedron, volume);
 
@@ -574,7 +574,7 @@ AX_BEGIN_NAMESPACE
 		lightpos.w = 1.0f / light->radius;
 
 		Matrix4 matrix = shadowCamera.getViewProjMatrix();
-		D3D9texture* tex = (D3D9texture*)shadowCamera.getTarget()->getTexture();
+		D3D9texture *tex = (D3D9texture*)shadowCamera.getTarget()->getTexture();
 		int width, height;
 		tex->getSize(width, height);
 		matrix.scale(0.5f, -0.5f, 0.5f);
@@ -613,12 +613,12 @@ AX_BEGIN_NAMESPACE
 #define F_DIRECTION_LIGHT 1
 #define F_SKY_LIGHT 2
 #define F_ENV_LIGHT 3
-	void D3D9postprocess::drawGlobalLight( Vector3 volume[8], QueuedLight* light )
+	void D3D9postprocess::drawGlobalLight( Vector3 volume[8], QueuedLight *light )
 	{
-		QueuedShadow* qshadow = light->shadowInfo;
+		QueuedShadow *qshadow = light->shadowInfo;
 
 		if (qshadow) {
-			D3D9texture* tex = (D3D9texture*)qshadow->splitCameras[0].getTarget()->getTexture();
+			D3D9texture *tex = (D3D9texture*)qshadow->splitCameras[0].getTarget()->getTexture();
 			Matrix4 matrix = qshadow->splitCameras[0].getViewProjMatrix();
 			matrix.scale(0.5f, -0.5f, 0.5f);
 			matrix.translate(0.5f, 0.5f, 0.5f);
@@ -691,7 +691,7 @@ AX_BEGIN_NAMESPACE
 #undef F_SKY_LIGHT
 #undef F_ENV_LIGHT
 
-	void D3D9postprocess::issueBboxQuery( const BoundingBox& bbox )
+	void D3D9postprocess::issueBboxQuery( const BoundingBox &bbox )
 	{
 		PostMesh::setupBoundingBox(m_hexahedron, bbox);
 		d3d9Draw->drawPostUP(m_shaderQuery, m_hexahedron);
@@ -709,7 +709,7 @@ AX_BEGIN_NAMESPACE
 
 			List<D3D9querymanager::ActiveQuery*>::const_iterator it = querylist.begin();
 			for (; it != querylist.end(); ++it) {
-				D3D9querymanager::ActiveQuery* active = *it;
+				D3D9querymanager::ActiveQuery *active = *it;
 
 				// have issued
 				if (active->issued)
@@ -720,7 +720,7 @@ AX_BEGIN_NAMESPACE
 
 				count++;
 
-				D3D9query* query = active->query;
+				D3D9query *query = active->query;
 				if (!query->beginQuery())
 					continue;
 

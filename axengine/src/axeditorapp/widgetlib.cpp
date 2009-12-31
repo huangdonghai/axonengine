@@ -14,7 +14,7 @@ read the license and understand and accept it fully.
 // class ColorLabel
 //------------------------------------------------------------------------------
 
-ColorLabel::ColorLabel(QWidget* parent) : QLabel(parent), m_color(255,255,255) {
+ColorLabel::ColorLabel(QWidget *parent) : QLabel(parent), m_color(255,255,255) {
 	setColor(m_color);
 	setMinimumSize(QSize(24, 24));
 	setMaximumSize(QSize(24, 24));
@@ -49,16 +49,16 @@ void ColorLabel::mouseReleaseEvent(QMouseEvent * e) {
 QColor ColorLabel::color() {
 	return m_color;
 }
-void ColorLabel::setColor(const QColor& color) {
+void ColorLabel::setColor(const QColor &color) {
 	m_color = color;
 
 	QPixmap pixmap(24,24);
 	pixmap.fill(m_color);
 	setPixmap(pixmap);
 
-	QWidget* b = buddy();
+	QWidget *b = buddy();
 
-	QLineEdit* le = qobject_cast<QLineEdit*>(b);
+	QLineEdit *le = qobject_cast<QLineEdit*>(b);
 	if (le) {
 		QString tmp;
 		tmp.sprintf("%d,%d,%d", m_color.red(), m_color.green(), m_color.blue());
@@ -66,7 +66,7 @@ void ColorLabel::setColor(const QColor& color) {
 		le->setText(tmp);
 	}
 
-	QLabel* label = qobject_cast<QLabel*>(b);
+	QLabel *label = qobject_cast<QLabel*>(b);
 	if (label) {
 		QString tmp;
 		tmp.sprintf("%d,%d,%d", m_color.red(), m_color.green(), m_color.blue());
@@ -77,7 +77,7 @@ void ColorLabel::setColor(const QColor& color) {
 	emit colorEdited(m_color);
 }
 
-void ColorLabel::setColor(const Rgb& rgba)
+void ColorLabel::setColor(const Rgb &rgba)
 {
 	QColor color(rgba.r, rgba.g, rgba.b);
 	setColor(color);
@@ -89,7 +89,7 @@ void ColorLabel::setColor(const Rgb& rgba)
 ColorEdit::ColorEdit(QWidget *parent)
 	: QWidget(parent)
 {
-	QHBoxLayout* layout = new QHBoxLayout(this);
+	QHBoxLayout *layout = new QHBoxLayout(this);
 	layout->setSpacing(2);
 	layout->setContentsMargins(2, 2, 2, 2);
 	m_label = new ColorLabel(this);
@@ -111,7 +111,7 @@ QColor ColorEdit::color() {
 	return m_color;
 }
 
-void ColorEdit::setColor(const QColor& color) {
+void ColorEdit::setColor(const QColor &color) {
 	m_color = color;
 
 	QString tmp;
@@ -122,7 +122,7 @@ void ColorEdit::setColor(const QColor& color) {
 	emit colorEdited(m_color);
 }
 
-void ColorEdit::textChanged(const QString& text) {
+void ColorEdit::textChanged(const QString &text) {
 	QByteArray ba = text.toUtf8();
 	int r,g,b;
 	int v = sscanf(ba.begin(), "%d,%d,%d", &r, &g, &b);

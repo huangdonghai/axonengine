@@ -66,7 +66,7 @@ AX_BEGIN_NAMESPACE
 		int getBlockSize() const;
 		int getBlockDataSize() const;
 		int getDepthBits() const;
-		const char* getStringName() const;
+		const char *getStringName() const;
 
 		Type t;
 	};
@@ -259,7 +259,7 @@ AX_BEGIN_NAMESPACE
 		}
 	}
 
-	inline const char* TexFormat::getStringName() const {
+	inline const char *TexFormat::getStringName() const {
 		switch (t) {
 		case NULLTARGET:
 			return "NULL";
@@ -379,45 +379,45 @@ AX_BEGIN_NAMESPACE
 		virtual ~Image();
 
 		// io & processing
-		bool loadFile(const String& filename, int flags = 0);
-		bool loadFileByType(const String& filename, FileType filetype, int flags = 0);
-		Image* resize(int width, int height);
-		Image* getFloatHeightmap(float max_height);
+		bool loadFile(const String &filename, int flags = 0);
+		bool loadFileByType(const String &filename, FileType filetype, int flags = 0);
+		Image *resize(int width, int height);
+		Image *getFloatHeightmap(float max_height);
 		void generateMipmaps();
 		void generateNormalmapMipmaps();
 		void generateHeightmapMipmaps();	// mipmapping for height map, don't filter
-		void initImage(TexFormat format, int width, int height, const byte_t* pixel = NULL);
+		void initImage(TexFormat format, int width, int height, const byte_t *pixel = NULL);
 		void initImage(TexFormat format, int width, int height, bool mipmap);
 		void clear();		// clear data
 
 		void convertFormatTo(TexFormat format);
 
 		// set single pixel on one pos or rect, variant pixel data corresponding to Image::Format
-		void setPixel(int level, const Point& pos, const byte_t* pixel);
-		void setPixel(int level, int x, int y, const byte_t* pixel);
-		void setPixel(int level, const Rect& rect, const byte_t* pixel);
-		void setPixel(int level, int x, int y, int width, int height, const byte_t* pixel);
+		void setPixel(int level, const Point &pos, const byte_t *pixel);
+		void setPixel(int level, int x, int y, const byte_t *pixel);
+		void setPixel(int level, const Rect &rect, const byte_t *pixel);
+		void setPixel(int level, int x, int y, int width, int height, const byte_t *pixel);
 
 		// level = 0 if level don't provided
-		void setPixel(const Point& pos, const byte_t* pixel);
-		void setPixel(int x, int y, const byte_t* pixel);
-		void setPixel(const Rect& rect, const byte_t* pixel);
-		void setPixel(int x, int y, int width, int height, const byte_t* pixel);
+		void setPixel(const Point &pos, const byte_t *pixel);
+		void setPixel(int x, int y, const byte_t *pixel);
+		void setPixel(const Rect &rect, const byte_t *pixel);
+		void setPixel(int x, int y, int width, int height, const byte_t *pixel);
 
 		// get single pixel, returned value corresponding to Image::Format
-		const byte_t* getPixel(int level, const Point& pos) const;
-		const byte_t* getPixel(int level, int x, int y) const;
-		ByteSeq getFilteredPixel(int level, const Vector2& st) const;
+		const byte_t *getPixel(int level, const Point &pos) const;
+		const byte_t *getPixel(int level, int x, int y) const;
+		ByteSeq getFilteredPixel(int level, const Vector2 &st) const;
 		ByteSeq getFilteredPixel(int level, float s, float t) const;
 
 		// get subimage, if image is compressed format like DXTn, rect must be block aligned, or will raise an error
-		Image* readSubImage(int level, const Rect& rect) const;
+		Image *readSubImage(int level, const Rect &rect) const;
 
 		// copy block data from another image, source image and dst image must have same format
-		void writeSubImage(const Image* src_image, int src_level, const Rect& src_rect, int dst_level, const Point& dst_pos);
-		void writeSubImage(const Image* src_image, const Rect& src_rect, const Point& dst_pos);
-		void writeSubImage(const Image* src_image, int src_level, const Rect& src_rect, int dst_level, const Rect& dst_rect, bool need_filter = false);
-		void writeSubImage(const Image* src_image, const Rect& src_rect, const Rect& dst_rect, bool need_filter = false);
+		void writeSubImage(const Image *src_image, int src_level, const Rect &src_rect, int dst_level, const Point &dst_pos);
+		void writeSubImage(const Image *src_image, const Rect &src_rect, const Point &dst_pos);
+		void writeSubImage(const Image *src_image, int src_level, const Rect &src_rect, int dst_level, const Rect &dst_rect, bool need_filter = false);
+		void writeSubImage(const Image *src_image, const Rect &src_rect, const Rect &dst_rect, bool need_filter = false);
 
 		// get info
 		// mipmap level width, height, depth for non_power_of_two texture use same floor convention which identical to D3D and OpenGL API
@@ -428,36 +428,36 @@ AX_BEGIN_NAMESPACE
 		String getRealName() const;
 
 		// get data
-		const byte_t* getData(int level) const;
-		const byte_t* getData(int level, TexFormat format);
-		void writeDataTo(int level, byte_t* data) const;
-		void writeDataTo(int level, TexFormat format, byte_t* data) const;
-		byte_t* getWritablePointer(int level = 0);
+		const byte_t *getData(int level) const;
+		const byte_t *getData(int level, TexFormat format);
+		void writeDataTo(int level, byte_t *data) const;
+		void writeDataTo(int level, TexFormat format, byte_t *data) const;
+		byte_t *getWritablePointer(int level = 0);
 		int getTotalDataSize() const;
 		int getDataSize(int level) const;
 
 		// set data
-		void setData(int level, const void* data, int size);
+		void setData(int level, const void *data, int size);
 
 		// rotate must be one of 0, 90, 180, 270, it is clock-wise rotate
-		void writeDataTo(int level, const Rect& rect, int rotate, byte_t* data, bool flipS = false, bool flipT = false) const;
+		void writeDataTo(int level, const Rect &rect, int rotate, byte_t *data, bool flipS = false, bool flipT = false) const;
 
-		static void writeTGA(const String& filename, const byte_t *pixels, int width, int height);
+		static void writeTGA(const String &filename, const byte_t *pixels, int width, int height);
 
 		// load function
-		bool loadFile_tga(const String& filename);
-		bool loadFile_hdr(const String& filename);
-		bool loadFile_dds(const String& filename);
+		bool loadFile_tga(const String &filename);
+		bool loadFile_hdr(const String &filename);
+		bool loadFile_dds(const String &filename);
 
 		// save function
-		void saveFile_dds(const String& filename, bool bFast = true);
-		void saveFile_tga(const String& filename);
+		void saveFile_dds(const String &filename, bool bFast = true);
+		void saveFile_tga(const String &filename);
 
-		bool loadFile_raw(const String& filename, int width, int height);
-		void saveFile_raw(const String& filename);
+		bool loadFile_raw(const String &filename, int width, int height);
+		void saveFile_raw(const String &filename);
 
 	protected:
-		int convertFormatTo(TexFormat format, int level, byte_t* pBuf) const;
+		int convertFormatTo(TexFormat format, int level, byte_t *pBuf) const;
 
 	private:
 		TexFormat m_format;

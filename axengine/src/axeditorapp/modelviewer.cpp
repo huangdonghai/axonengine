@@ -39,14 +39,14 @@ void ModelViewer::on_modelType_activated(int index) {
 
 	ui.treeWidget->clear();
 	for (size_t i = 0; i < infos.size(); i++) {
-		FileItem* item = new FileItem(ui.treeWidget, infos[i]);
+		FileItem *item = new FileItem(ui.treeWidget, infos[i]);
 	}
 #endif
 }
 
-void ModelViewer::on_treeWidget_itemDoubleClicked(QTreeWidgetItem* item, int) {
-	FileItem* f_item = dynamic_cast<FileItem*>(item);
-	const FileInfo& finfo = f_item->getFileInfo();
+void ModelViewer::on_treeWidget_itemDoubleClicked(QTreeWidgetItem *item, int) {
+	FileItem *f_item = dynamic_cast<FileItem*>(item);
+	const FileInfo &finfo = f_item->getFileInfo();
 
 	if (!f_item)
 		return;
@@ -55,7 +55,7 @@ void ModelViewer::on_treeWidget_itemDoubleClicked(QTreeWidgetItem* item, int) {
 #if 0
 		FileInfoSeq infos = gFileSystem->getFileInfos(finfo.fullpath, "*.model;*.ase", File::List_sort);
 		for (size_t i = 0; i < infos.size(); i++) {
-			FileItem* child = new FileItem(item, infos[i]);
+			FileItem *child = new FileItem(item, infos[i]);
 //			f_item->addChild(item);
 		}
 #endif
@@ -63,7 +63,7 @@ void ModelViewer::on_treeWidget_itemDoubleClicked(QTreeWidgetItem* item, int) {
 
 //		f_item->setExpanded(true);
 	} else {
-		RenderWorld* world = ui.previewWidget->getRenderWorld();
+		RenderWorld *world = ui.previewWidget->getRenderWorld();
 		if (m_renderModel) {
 			world->removeEntity(m_renderModel);
 			delete m_renderModel;

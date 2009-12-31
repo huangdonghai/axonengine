@@ -15,7 +15,7 @@ read the license and understand and accept it fully.
 // class RollPage
 //------------------------------------------------------------------------------
 
-RollPage::RollPage(QWidget* parent, Rollup* rollup_widget, QWidget* contained, const QString& name)
+RollPage::RollPage(QWidget *parent, Rollup *rollup_widget, QWidget *contained, const QString &name)
 	: QWidget(parent)
 	, m_rollupWidget(rollup_widget)
 	, m_containedWidget(contained)
@@ -27,7 +27,7 @@ RollPage::RollPage(QWidget* parent, Rollup* rollup_widget, QWidget* contained, c
 {
 	setContentsMargins(0, 18, 0, 0);
 
-	QVBoxLayout* layout = new QVBoxLayout(this);
+	QVBoxLayout *layout = new QVBoxLayout(this);
 	layout->setObjectName(QString::fromUtf8("CxRollupPageLayout"));
 	layout->setSizeConstraint(QLayout::SetMinimumSize);
 	layout->setSpacing(0);
@@ -54,8 +54,8 @@ RollPage::RollPage(QWidget* parent, Rollup* rollup_widget, QWidget* contained, c
 
 	layout->setMargin(m_margin);
 
-	Object* obj = variant_cast<Object*>(g_renderSystem);
-	RenderSystem* rs = variant_cast<RenderSystem*>(obj);
+	Object *obj = variant_cast<Object*>(g_renderSystem);
+	RenderSystem *rs = variant_cast<RenderSystem*>(obj);
 }
 
 RollPage::~RollPage() {
@@ -117,7 +117,7 @@ void RollPage::mousePressEvent(QMouseEvent * e) {
 // class RollArea
 //------------------------------------------------------------------------------
 
-RollArea::RollArea(Rollup* parent)
+RollArea::RollArea(Rollup *parent)
 	: QWidget(parent)
 	, m_parent(parent)
 {
@@ -166,7 +166,7 @@ Rollup::Rollup(QWidget *parent)
 
 	m_central = new QWidget(this);
 	m_central->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-	QVBoxLayout* layout = new QVBoxLayout(this);
+	QVBoxLayout *layout = new QVBoxLayout(this);
 	layout->addWidget(m_central);
 	layout->setContentsMargins(1, 1, 1, 1);
 #endif
@@ -178,7 +178,7 @@ Rollup::Rollup(QWidget *parent)
 	m_rollarea->resize(s);
 
 	{
-		QVBoxLayout* layout = new QVBoxLayout(m_rollarea);
+		QVBoxLayout *layout = new QVBoxLayout(m_rollarea);
 		layout->setSizeConstraint(QLayout::SetMinimumSize);
 		layout->setSpacing(4);
 		layout->setMargin(2);
@@ -192,19 +192,19 @@ Rollup::~Rollup()
 
 
 void Rollup::initialize() {
-	QLayout* l = layout();
+	QLayout *l = layout();
 	SafeDelete(l);
 
 	setContentsMargins(1, 1, 1, 1);
 
 #if 0
-	QTabWidget* tab = this->findChild<QTabWidget*>();
+	QTabWidget *tab = this->findChild<QTabWidget*>();
 
 	if (!tab)
 		return;
 
 	for (int i = 0; i < tab->count(); i++) {
-		QWidget* widget = tab->widget(i);
+		QWidget *widget = tab->widget(i);
 		QString label = tab->tabText(i);
 
 		widget = widget->findChild<QWidget*>();
@@ -221,10 +221,10 @@ void Rollup::initialize() {
 #endif
 }
 
-int Rollup::addPage(QWidget* widget, QString& name) {
+int Rollup::addPage(QWidget *widget, QString &name) {
 	QString objname = widget->objectName();
 
-	RollPage* page = new RollPage(m_rollarea, this, widget, name);
+	RollPage *page = new RollPage(m_rollarea, this, widget, name);
 	m_pages.append(page);
 
 	widget->setObjectName(name);
@@ -236,7 +236,7 @@ int Rollup::addPage(QWidget* widget, QString& name) {
 	return m_pages.size() - 1;
 
 #if 0
-	QPushButton* button;
+	QPushButton *button;
 	button = new QPushButton(mCentralWidget);
 	button->setObjectName(QString::fromUtf8("CxRollupWidgetButton"));
 	button->setFixedHeight(18);
@@ -296,7 +296,7 @@ void Rollup::removeAllPages() {
 }
 
 void Rollup::setAllPagesVisible(bool visible) {
-	AX_FOREACH(RollPage* page, m_pages) {
+	AX_FOREACH(RollPage *page, m_pages) {
 		page->setVisible(visible);
 	}
 }
@@ -431,7 +431,7 @@ void Rollup::setPageVisible(int index, bool visible)
 	m_pages[index]->setVisible(visible);
 }
 
-void Rollup::setGroupVisible(const QString& groupname, bool visible) {
+void Rollup::setGroupVisible(const QString &groupname, bool visible) {
 	RollGroups::iterator it = m_groups.find(groupname);
 
 	if (it == m_groups.end()) {
@@ -446,13 +446,13 @@ void Rollup::setGroupVisible(const QString& groupname, bool visible) {
 }
 
 bool Rollup::initFromTab() {
-	QTabWidget* tab = this->findChild<QTabWidget*>();
+	QTabWidget *tab = this->findChild<QTabWidget*>();
 
 	if (!tab)
 		return false;
 
 	for (int i = 0; i < tab->count(); i++) {
-		QWidget* widget = tab->widget(i);
+		QWidget *widget = tab->widget(i);
 		QString label = tab->tabText(i);
 
 		widget = widget->findChild<QWidget*>();
@@ -470,13 +470,13 @@ bool Rollup::initFromTab() {
 }
 
 bool Rollup::initFromToolbox() {
-	QToolBox* toolbox = this->findChild<QToolBox*>();
+	QToolBox *toolbox = this->findChild<QToolBox*>();
 
 	if (!toolbox)
 		return false;
 
 	for (int i = 0; i < toolbox->count(); i++) {
-		QWidget* widget = toolbox->widget(i);
+		QWidget *widget = toolbox->widget(i);
 		QString label = toolbox->itemText(i);
 
 		widget = widget->findChild<QWidget*>();
@@ -490,15 +490,15 @@ bool Rollup::initFromToolbox() {
 	return true;
 }
 
-bool Rollup::initGroup(const QString& grpname, QWidget* widget) {
-	QToolBox* toolbox = qobject_cast<QToolBox*>(widget);
+bool Rollup::initGroup(const QString &grpname, QWidget *widget) {
+	QToolBox *toolbox = qobject_cast<QToolBox*>(widget);
 
 	if (!toolbox) {
 		return false;
 	}
 
 	for (int i = 0; i < toolbox->count(); i++) {
-		QWidget* widget = toolbox->widget(i);
+		QWidget *widget = toolbox->widget(i);
 		QString label = toolbox->itemText(i);
 
 		widget = widget->findChild<QWidget*>();

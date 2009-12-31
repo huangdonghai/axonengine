@@ -14,7 +14,7 @@ read the license and understand and accept it fully.
 
 class FilePreview
 {
-	typedef QWidget* (*CreateWidgetFunc)(const String& filePathName, QWidget* parent);
+	typedef QWidget* (*CreateWidgetFunc)(const String &filePathName, QWidget *parent);
 	Dict<String, CreateWidgetFunc>	m_createWidgetDict;
 
 	void Init();
@@ -22,7 +22,7 @@ public:
 	FilePreview(void);
 	~FilePreview(void);
 
-	QWidget* CreateWidget(const String& filePathName, QWidget* parent);
+	QWidget *CreateWidget(const String &filePathName, QWidget *parent);
 };
 
 #endif // __FILE_PREVIEW_H__

@@ -55,8 +55,8 @@ AX_BEGIN_NAMESPACE
 	int veoChunk[] = { 0, -1 };
 
 	struct VeInfo {
-		D3DVERTEXELEMENT9* ve;
-		int* offset;
+		D3DVERTEXELEMENT9 *ve;
+		int *offset;
 	} s_veInfos[] = {
 		{ s_veGeneric, veoGeneric },
 		{ s_veBlend, veoBlend },
@@ -71,17 +71,17 @@ AX_BEGIN_NAMESPACE
 	static DWORD s_lockNewFrame = D3DLOCK_DISCARD/* | D3DLOCK_NOOVERWRITE*/;
 	static DWORD s_lockAppend = D3DLOCK_NOOVERWRITE;
 
-	IDirect3DVertexBuffer9* CreateVertexBufferPage(int pagesize) {
+	IDirect3DVertexBuffer9 *CreateVertexBufferPage(int pagesize) {
 		HRESULT hr;
-		IDirect3DVertexBuffer9* vb;
+		IDirect3DVertexBuffer9 *vb;
 
 		V(d3d9Device->CreateVertexBuffer(pagesize, D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY, 0, D3DPOOL_DEFAULT, &vb, 0));
 		return vb;
 	}
 
-	IDirect3DIndexBuffer9* CreateIndexBufferPage(int pagesize) {
+	IDirect3DIndexBuffer9 *CreateIndexBufferPage(int pagesize) {
 		HRESULT hr;
-		IDirect3DIndexBuffer9* ib;
+		IDirect3DIndexBuffer9 *ib;
 
 		V(d3d9Device->CreateIndexBuffer(pagesize, D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY, D3DFMT_INDEX16, D3DPOOL_DEFAULT, &ib, 0));
 		return ib;
@@ -105,7 +105,7 @@ AX_BEGIN_NAMESPACE
 		resetData();
 	}
 
-	void D3D9vertexobject::setData(const void* p, int count, Primitive::Hint primhint, VertexType vt) {
+	void D3D9vertexobject::setData(const void *p, int count, Primitive::Hint primhint, VertexType vt) {
 		HRESULT hr;
 
 		m_count = count;
@@ -133,7 +133,7 @@ AX_BEGIN_NAMESPACE
 		g_statistic->incValue(stat_numVertexBuffers);
 		g_statistic->addValue(stat_vertexBufferMemory, size);
 
-		void* dst;
+		void *dst;
 		V(m_object->Lock(0, size, &dst, 0));
 		memcpy(dst, p, size);
 		V(m_object->Unlock());
@@ -166,7 +166,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 
-	void D3D9vertexobject::bindInstanced(D3D9instancedbuffer* instancedBuffer)
+	void D3D9vertexobject::bindInstanced(D3D9instancedbuffer *instancedBuffer)
 	{
 		HRESULT hr;
 
@@ -206,14 +206,14 @@ AX_BEGIN_NAMESPACE
 
 	}
 
-	void D3D9instancedbuffer::setData( const InstancePrim::ParamSeq& params )
+	void D3D9instancedbuffer::setData( const InstancePrim::ParamSeq &params )
 	{
 		m_count = (int)params.size();
 
 		DynVb dynvb = d3d9VertexBufferManager->allocInstance(m_count*64);
-		Vector4* pdata = (Vector4*)dynvb.writePtr;
+		Vector4 *pdata = (Vector4*)dynvb.writePtr;
 		for (int i = 0; i < m_count; i++) {
-			const InstancePrim::Param& param = params[i];
+			const InstancePrim::Param &param = params[i];
 			pdata[0] = param.worldMatrix.getRow(0);
 			pdata[1] = param.worldMatrix.getRow(1);
 			pdata[2] = param.worldMatrix.getRow(2);
@@ -240,7 +240,7 @@ AX_BEGIN_NAMESPACE
 		resetData();
 	}
 
-	void D3D9indexobject::setData(const ushort_t* p, int count, Primitive::Hint hint, int activeCount) {
+	void D3D9indexobject::setData(const ushort_t *p, int count, Primitive::Hint hint, int activeCount) {
 		if (hint != Primitive::HintStatic) {
 			m_count = count;
 			m_activeCount = activeCount;
@@ -252,7 +252,7 @@ AX_BEGIN_NAMESPACE
 			m_object = di.ib;
 			m_offset = di.offset / sizeof(ushort_t);
 
-			ushort_t* dst = (ushort_t*)di.writePtr;
+			ushort_t *dst = (ushort_t*)di.writePtr;
 			memcpy(dst, p, m_dataSize);
 			m_inStack = true;
 
@@ -276,7 +276,7 @@ AX_BEGIN_NAMESPACE
 		g_statistic->incValue(stat_numIndexBuffers);
 		g_statistic->addValue(stat_indexBufferMemory, m_dataSize);
 
-		void* dst;
+		void *dst;
 		V(m_object->Lock(0, m_dataSize, &dst, 0));
 
 		memcpy(dst, p, m_dataSize);
@@ -337,19 +337,19 @@ AX_BEGIN_NAMESPACE
 	// class D3D9vertdecl
 	//--------------------------------------------------------------------------
 
-	D3D9vertdecl::D3D9vertdecl(D3D9vertexbuffermanager* manager, D3D9vertexobject::VertexType vt, int offset)
+	D3D9vertdecl::D3D9vertdecl(D3D9vertexbuffermanager *manager, D3D9vertexobject::VertexType vt, int offset)
 	{
 		m_manager = manager;
 		m_vt = vt;
 		m_offset = offset;
 
-		VeInfo& veinfo = s_veInfos[vt];
+		VeInfo &veinfo = s_veInfos[vt];
 
 		// apply offset
 		int c = 0;
 		Sequence<D3DVERTEXELEMENT9> veiseq;
 
-		for (D3DVERTEXELEMENT9* ve = &veinfo.ve[0]; ve->Stream != 0xff; ve++, c++) {
+		for (D3DVERTEXELEMENT9 *ve = &veinfo.ve[0]; ve->Stream != 0xff; ve++, c++) {
 			ve->Offset = offset + veinfo.offset[c];
 			veiseq.push_back(*ve);
 		}
@@ -467,7 +467,7 @@ AX_BEGIN_NAMESPACE
 		// TODO: free all buffers
 	}
 
-	D3D9vertdecl* D3D9vertexbuffermanager::allocVertDecl(D3D9vertexobject::VertexType vt, int offset)
+	D3D9vertdecl *D3D9vertexbuffermanager::allocVertDecl(D3D9vertexobject::VertexType vt, int offset)
 	{
 		D3D9vertdecl*& result = m_vertDeclPool[vt][offset];
 
@@ -480,9 +480,9 @@ AX_BEGIN_NAMESPACE
 		return result;
 	}
 
-	void D3D9vertexbuffermanager::removeVertDecl(D3D9vertdecl* vd)
+	void D3D9vertexbuffermanager::removeVertDecl(D3D9vertdecl *vd)
 	{
-		VertDeclPool& decls = m_vertDeclPool[vd->m_vt];
+		VertDeclPool &decls = m_vertDeclPool[vd->m_vt];
 		decls.erase(vd->m_offset);
 	}
 

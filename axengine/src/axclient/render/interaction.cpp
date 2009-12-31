@@ -24,13 +24,13 @@ AX_BEGIN_NAMESPACE
 	void Interaction::calcSort(bool eyeInWater) {
 		sortkey = Shader::SortHint_opacit << 28;
 
-		Material* mat = primitive->getMaterial();
+		Material *mat = primitive->getMaterial();
 
 		if (!mat) {
 			return;
 		}
 
-		Shader* shader = mat->getShaderTemplate();
+		Shader *shader = mat->getShaderTemplate();
 
 		if (!shader) {
 			return;
@@ -38,7 +38,7 @@ AX_BEGIN_NAMESPACE
 
 		sortkey = shader->getSortHint();
 
-		Texture* tex = mat->getTexture(SamplerType::Diffuse);
+		Texture *tex = mat->getTexture(SamplerType::Diffuse);
 
 		if (eyeInWater) {
 			sortkey = eyeInWaterSort[sortkey];

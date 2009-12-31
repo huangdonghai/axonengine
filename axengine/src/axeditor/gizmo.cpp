@@ -13,7 +13,7 @@ read the license and understand and accept it fully.
 namespace {
 	AX_USE_NAMESPACE;
 
-	inline void xSetupAxis(LinePrim*& line, const Vector3& p0, const Vector3& p1, const Rgba& color) {
+	inline void xSetupAxis(LinePrim*& line, const Vector3 &p0, const Vector3 &p1, const Rgba &color) {
 		if (!line) {
 			line = new LinePrim(Primitive::HintDynamic);
 			line->init(2, 2);
@@ -24,8 +24,8 @@ namespace {
 		}
 
 		line->lock();
-		LinePrim::VertexType& v0 = line->getVertexRef(0);
-		LinePrim::VertexType& v1 = line->getVertexRef(1);
+		LinePrim::VertexType &v0 = line->getVertexRef(0);
+		LinePrim::VertexType &v1 = line->getVertexRef(1);
 		v0.xyz = p0;
 		v0.rgba = color;
 		v1.xyz = p1;
@@ -61,7 +61,7 @@ AX_BEGIN_NAMESPACE
 		return c;
 	}
 
-	void MoveGizmo::setup(const RenderCamera& camera, const Vector3& pos, const Matrix3& axis, float scale) {
+	void MoveGizmo::setup(const RenderCamera &camera, const Vector3 &pos, const Matrix3 &axis, float scale) {
 		m_pos = pos;
 		m_axis = axis;
 		m_scale = scale;
@@ -107,7 +107,7 @@ AX_BEGIN_NAMESPACE
 		}
 	}
 
-	int MoveGizmo::doSelect(RenderCamera* camera, int x, int y,int selectedSize)
+	int MoveGizmo::doSelect(RenderCamera *camera, int x, int y,int selectedSize)
 	{
 		if (!m_lines[0])
 			return -1;
@@ -163,7 +163,7 @@ AX_BEGIN_NAMESPACE
 		return nearest;
 	}
 
-	int MoveGizmo::doSelect(View* view, int x, int y) {
+	int MoveGizmo::doSelect(View *view, int x, int y) {
 		if (!m_lines[0])
 			return -1;
 
@@ -245,8 +245,8 @@ AX_BEGIN_NAMESPACE
 		}
 
 		line->lock();
-		LinePrim::VertexType& v0 = line->getVertexRef(0);
-		LinePrim::VertexType& v1 = line->getVertexRef(1);
+		LinePrim::VertexType &v0 = line->getVertexRef(0);
+		LinePrim::VertexType &v1 = line->getVertexRef(1);
 		v0.xyz = p0;
 		v0.rgba = color;
 		v1.xyz = p1;
@@ -289,7 +289,7 @@ AX_BEGIN_NAMESPACE
 		if (!line) {
 			line = new LinePrim(Primitive::HintDynamic);
 			line->init(4, 4);
-			ushort_t* idxes = line->lockIndexes();
+			ushort_t *idxes = line->lockIndexes();
 			idxes[0] = 0;
 			idxes[1] = 1;
 			idxes[2] = 2;
@@ -299,7 +299,7 @@ AX_BEGIN_NAMESPACE
 
 		float length = m_length * 0.5f;
 
-		LinePrim::VertexType* verts = line->lockVertexes();
+		LinePrim::VertexType *verts = line->lockVertexes();
 		verts[0].xyz = m_pos + v0 * length;
 		verts[0].rgba = color0;
 		verts[1].xyz = verts[0].xyz + v1 * length;
@@ -315,7 +315,7 @@ AX_BEGIN_NAMESPACE
 		if (!mesh) {
 			mesh = new MeshPrim(Primitive::HintDynamic);
 			mesh->init(4, 6);
-			ushort_t* idxes = mesh->lockIndexes();
+			ushort_t *idxes = mesh->lockIndexes();
 			idxes[0] = 0;
 			idxes[1] = 1;
 			idxes[2] = 2;
@@ -330,7 +330,7 @@ AX_BEGIN_NAMESPACE
 
 		if (axis == m_highlit) meshcolor.a = 64;
 
-		Vertex* mverts = mesh->lockVertexes();
+		Vertex *mverts = mesh->lockVertexes();
 		if (first) memset(mverts, 0, sizeof(Vertex) * 4);
 		mverts[0].xyz = m_pos;
 		mverts[0].rgba = meshcolor;
@@ -343,7 +343,7 @@ AX_BEGIN_NAMESPACE
 		mesh->unlockVertexes();
 	}
 
-	void MoveGizmo::setupXYZ(const RenderCamera& camera) {
+	void MoveGizmo::setupXYZ(const RenderCamera &camera) {
 		float len = 6.0f * m_scale;
 		Rgba color = Rgba::LtGrey;
 
@@ -355,7 +355,7 @@ AX_BEGIN_NAMESPACE
 		if (!line) {
 			line = new LinePrim(Primitive::HintDynamic);
 			line->init(4, 8);
-			ushort_t* idxes = line->lockIndexes();
+			ushort_t *idxes = line->lockIndexes();
 			idxes[0] = 0;
 			idxes[1] = 1;
 			idxes[2] = 1;
@@ -367,8 +367,8 @@ AX_BEGIN_NAMESPACE
 			line->unlockIndexes();
 		}
 
-		const Matrix3& axis = camera.getViewAxis();
-		LinePrim::VertexType* verts = line->lockVertexes();
+		const Matrix3 &axis = camera.getViewAxis();
+		LinePrim::VertexType *verts = line->lockVertexes();
 		verts[0].xyz = m_pos - axis[1] * len - axis[2] * len;
 		verts[0].rgba = color;
 		verts[1].xyz = m_pos - axis[1] * len + axis[2] * len;
@@ -406,13 +406,13 @@ AX_BEGIN_NAMESPACE
 		SafeDelete(m_outerBound);
 	}
 
-	void RotateGizmo::setup(const RenderCamera& camera, const Vector3& pos, const Matrix3& axis, float scale) {
+	void RotateGizmo::setup(const RenderCamera &camera, const Vector3 &pos, const Matrix3 &axis, float scale) {
 		m_pos = pos;
 		m_axis = axis;
 		m_scale = scale;
 		m_length = GIZMO_SIZE * scale;
 
-		const Matrix3& camaxis = camera.getViewAxis();
+		const Matrix3 &camaxis = camera.getViewAxis();
 		Plane plane(pos, camaxis[0]);
 
 		float length = m_length;
@@ -460,7 +460,7 @@ AX_BEGIN_NAMESPACE
 			g_renderSystem->addToScene(m_crank);
 	}
 
-	int RotateGizmo::doSelect(View* view, int x, int y) {
+	int RotateGizmo::doSelect(View *view, int x, int y) {
 		// check if initialized
 		if (!m_circles[0])
 			return -1;
@@ -502,13 +502,13 @@ AX_BEGIN_NAMESPACE
 		m_enabledCrank = false;
 	}
 
-	void RotateGizmo::setupCrank(const RenderCamera& camera) {
+	void RotateGizmo::setupCrank(const RenderCamera &camera) {
 		if (m_highlit == None)
 			return;
 
 		Vector3 left, up;
 		Rgba color;
-		const Matrix3& camaxis = camera.getViewAxis();
+		const Matrix3 &camaxis = camera.getViewAxis();
 
 		switch (m_highlit) {
 		case X:
@@ -591,7 +591,7 @@ AX_BEGIN_NAMESPACE
 		}
 	}
 
-	void ScaleGizmo::setup(const RenderCamera& camera, const Vector3& pos, const Matrix3& axis, float scale) {
+	void ScaleGizmo::setup(const RenderCamera &camera, const Vector3 &pos, const Matrix3 &axis, float scale) {
 		m_pos = pos;
 		m_axis = axis;
 		m_scale = scale;
@@ -609,7 +609,7 @@ AX_BEGIN_NAMESPACE
 		setupScreenQuad(camera, m_meshs[XYZ], pos, getColor(XYZ));
 	}
 
-	int ScaleGizmo::doSelect(View* view, int x, int y) {
+	int ScaleGizmo::doSelect(View *view, int x, int y) {
 		// check if initialized
 		if (!m_lines[0])
 			return -1;
@@ -682,22 +682,22 @@ AX_BEGIN_NAMESPACE
 
 		return Rgba::White;
 	}
-	void ScaleGizmo::setupScreenQuad(const RenderCamera& camera, MeshPrim*& mesh, const Vector3& pos, Rgba color) {
+	void ScaleGizmo::setupScreenQuad(const RenderCamera &camera, MeshPrim*& mesh, const Vector3 &pos, Rgba color) {
 		if (!mesh) {
 			mesh = new MeshPrim(Primitive::HintDynamic);
 			mesh->init(4, 6);
-			ushort_t* idx = mesh->lockIndexes();
+			ushort_t *idx = mesh->lockIndexes();
 			idx[0] = 0; idx[1] = 1; idx[2] = 2;
 			idx[3] = 2; idx[4] = 1; idx[5] = 3;
 			mesh->unlockIndexes();
-			Vertex* vert = mesh->lockVertexes();
+			Vertex *vert = mesh->lockVertexes();
 			memset(vert, 0, sizeof(Vertex) * 4);
 			mesh->unlockVertexes();
 		}
 
 		float len = 6.0f * m_scale;
-		const Matrix3& axis = camera.getViewAxis();
-		Vertex* vert = mesh->lockVertexes();
+		const Matrix3 &axis = camera.getViewAxis();
+		Vertex *vert = mesh->lockVertexes();
 		vert[0].xyz = pos + axis[1] * len - axis[2] * len;
 		vert[0].rgba = color;
 		vert[1].xyz = pos - axis[1] * len - axis[2] * len;

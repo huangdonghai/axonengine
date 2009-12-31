@@ -33,7 +33,7 @@ AX_BEGIN_NAMESPACE
 		float m_height;
 		Sequence<Vector3>	points;
 
-		Portal* m_portals;
+		Portal *m_portals;
 		bool inSun;
 		IntSeq brushes;
 		Primitives primitives;

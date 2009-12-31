@@ -56,7 +56,7 @@ AX_BEGIN_NAMESPACE
 	{
 		m_frameMsec = msec;
 
-		while (InputEvent* e = g_inputSystem->getEvent()) {
+		while (InputEvent *e = g_inputSystem->getEvent()) {
 			bool isdown = false;
 			switch (e->type) {
 			case InputEvent::KeyDown:
@@ -128,7 +128,7 @@ AX_BEGIN_NAMESPACE
 		return userInput;
 	}
 
-	void GameInput::genKeyMove(UserInput& userInput)
+	void GameInput::genKeyMove(UserInput &userInput)
 	{
 		int movespeed;
 		int forward, side, up;
@@ -158,7 +158,7 @@ AX_BEGIN_NAMESPACE
 		userInput.upmove = Math::clampSbyte(up);
 	}
 
-	void GameInput::genMouseMove(UserInput& userInput)
+	void GameInput::genMouseMove(UserInput &userInput)
 	{
 		float mx, my;
 		float accelSensitivity;
@@ -190,7 +190,7 @@ AX_BEGIN_NAMESPACE
 		userInput.angles[Angles::Pitch] += mouse_pitch->getFloat() * my * (mouse_invert->getBool() ? -1 : 1);
 	}
 
-	void GameInput::genButtons(UserInput& userInput)
+	void GameInput::genButtons(UserInput &userInput)
 	{
 		// buttons
 		if (m_buttons[Rush].isActive) {
@@ -210,7 +210,7 @@ AX_BEGIN_NAMESPACE
 
 	void GameInput::buttonDown(int bt, InputKey key, int msec)
 	{
-		Button& b = m_buttons[bt];
+		Button &b = m_buttons[bt];
 
 		if (key == b.keys[0] || key == b.keys[1]) {
 			return;		// repeating key
@@ -238,7 +238,7 @@ AX_BEGIN_NAMESPACE
 
 	void GameInput::buttonUp(int bt, InputKey key, int msec)
 	{
-		Button& b = m_buttons[bt];
+		Button &b = m_buttons[bt];
 
 		if (b.keys[0] == key) {
 			b.keys[0] = 0;
@@ -262,7 +262,7 @@ AX_BEGIN_NAMESPACE
 		float val;
 		int msec;
 
-		Button& b = m_buttons[bt];
+		Button &b = m_buttons[bt];
 
 		msec = b.msec;
 		b.msec = 0;
@@ -276,9 +276,9 @@ AX_BEGIN_NAMESPACE
 		return Math::saturate(val);
 	}
 
-	void GameInput::bind_f(const CmdArgs& args)
+	void GameInput::bind_f(const CmdArgs &args)
 	{
-		const StringSeq& tokens = args.tokened;
+		const StringSeq &tokens = args.tokened;
 
 		if (tokens.size() < 2) {
 			return;
@@ -298,7 +298,7 @@ AX_BEGIN_NAMESPACE
 		m_keybinding[k] = tokens[2];
 	}
 
-	void GameInput::bindlist_f(const CmdArgs& args)
+	void GameInput::bindlist_f(const CmdArgs &args)
 	{
 		Dict<InputKey,String>::const_iterator it = m_keybinding.begin();
 

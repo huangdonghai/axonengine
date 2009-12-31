@@ -42,14 +42,14 @@ AX_BEGIN_NAMESPACE
 		Printf(_("Finalized CmdSystem\n"));
 	}
 
-	bool CmdSystem::isCmd(const String& name) {
+	bool CmdSystem::isCmd(const String &name) {
 		if (m_cmdDict.find(name) != m_cmdDict.end())
 			return true;
 		else
 			return false;
 	}
 
-	void CmdSystem::executeString(const String& text, ExecType cet) {
+	void CmdSystem::executeString(const String &text, ExecType cet) {
 		// check if is script command first
 		if (text.size() > 1) {
 			if (text[0] == L'/') {
@@ -71,12 +71,12 @@ AX_BEGIN_NAMESPACE
 		Printf(_("Cann't found command or variable '%s'\n"), param.tokened[0].c_str());
 	}
 
-	void CmdSystem::enumerate(void (*func)(const String& name)) {
+	void CmdSystem::enumerate(void (*func)(const String &name)) {
 	}
 
-	void CmdSystem::registerHandler(ICmdHandler* handler) {
+	void CmdSystem::registerHandler(ICmdHandler *handler) {
 		uint_t datasize;
-		CmdEntry* entry = handler->GetCmdEntries(&datasize);
+		CmdEntry *entry = handler->GetCmdEntries(&datasize);
 		Cmd cmd;
 
 		for (; entry->name; ((byte_t*&)entry)+=datasize) {
@@ -86,9 +86,9 @@ AX_BEGIN_NAMESPACE
 		}
 	}
 
-	void CmdSystem::removeHandler(ICmdHandler* handler) {
+	void CmdSystem::removeHandler(ICmdHandler *handler) {
 		uint_t datasize;
-		CmdEntry* entry = handler->GetCmdEntries(&datasize);
+		CmdEntry *entry = handler->GetCmdEntries(&datasize);
 
 		for (; entry->name; ((byte_t*&)entry)+=datasize) {
 			m_cmdDict.erase(entry->name);
@@ -99,7 +99,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 
-	bool CmdSystem::executeCmd(const CmdArgs& params) {
+	bool CmdSystem::executeCmd(const CmdArgs &params) {
 		CmdDict::iterator it = m_cmdDict.find(params.tokened[0]);
 		if (it == m_cmdDict.end())
 			return false;
@@ -109,7 +109,7 @@ AX_BEGIN_NAMESPACE
 		return true;
 	}
 
-	CmdArgs CmdSystem::parseCmdString(const String& text) {
+	CmdArgs CmdSystem::parseCmdString(const String &text) {
 		CmdArgs param;
 
 		param.tokened = StringUtil::tokenizeSeq(text.c_str());
@@ -123,10 +123,10 @@ AX_BEGIN_NAMESPACE
 		return param;
 	}
 
-	void CmdSystem::list_f(const CmdArgs& param) {
+	void CmdSystem::list_f(const CmdArgs &param) {
 		CmdDict::iterator it = m_cmdDict.begin();
 		int count = 0;
-		const char* arg;
+		const char *arg;
 
 		if (param.tokened.size() > 1) {
 			arg = param.tokened[1].c_str();
@@ -146,18 +146,18 @@ AX_BEGIN_NAMESPACE
 		Printf(_("%d total console commands\n"), count);
 	}
 
-	void CmdSystem::quit_f(const CmdArgs& param) {
+	void CmdSystem::quit_f(const CmdArgs &param) {
 		g_system->finalize();
 
 		exit(0);
 	}
 
-	void CmdSystem::crash_f(const CmdArgs& param) {
+	void CmdSystem::crash_f(const CmdArgs &param) {
 		*(int *)NULL = 0x12345678;
 	}
 
-	void CmdSystem::error_f(const CmdArgs& param) {
-		const char* msg;
+	void CmdSystem::error_f(const CmdArgs &param) {
+		const char *msg;
 		if (param.tokened.size() > 1) {
 			msg = param.tokened[1].c_str();
 		} else {
@@ -167,15 +167,15 @@ AX_BEGIN_NAMESPACE
 		Errorf(msg);
 	}
 
-	void CmdSystem::debug_f(const CmdArgs& param) {
+	void CmdSystem::debug_f(const CmdArgs &param) {
 		AX_ASSERT(0);
 	}
 
-	void CmdSystem::script_f(const CmdArgs& param) {
+	void CmdSystem::script_f(const CmdArgs &param) {
 		g_scriptSystem->executeString(param.rawParam);
 	}
 
-	void CmdSystem::runFile_f(const CmdArgs& param) {
+	void CmdSystem::runFile_f(const CmdArgs &param) {
 		if (param.tokened.size() < 2)
 			return;
 
@@ -185,7 +185,7 @@ AX_BEGIN_NAMESPACE
 		g_scriptSystem->executeFile(param.tokened[1]);
 	#else
 		size_t filesize;
-		char* filebuf;
+		char *filebuf;
 
 		filesize = g_fileSystem->ReadFile(param.tokened[1], (void**)&filebuf);
 
@@ -200,7 +200,7 @@ AX_BEGIN_NAMESPACE
 		return 0;
 	}
 
-	void CmdSystem::execCmdLine(int argc, char* argv[]) {
+	void CmdSystem::execCmdLine(int argc, char *argv[]) {
 		CmdArgs cmdparam;
 		for (int i = 0; i < argc; i++) {
 			// not recognize

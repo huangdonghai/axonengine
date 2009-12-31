@@ -47,7 +47,7 @@ AX_BEGIN_NAMESPACE
 
 	   Each routine converts the text between *sourceStart and sourceEnd,
 	   putting the result into the buffer between *targetStart and
-	   targetEnd. Note: the end pointers are *after* the last item: e.g. 
+	   targetEnd. Note: the end pointers are *after *the last item: e.g. 
 	   *(sourceEnd - 1) is the last item.
 
 	   The return result indicates whether the conversion was successful,
@@ -118,28 +118,28 @@ AX_BEGIN_NAMESPACE
 
 	/* This is for C++ and does no harm in C */
 	ConversionResult ConvertUTF8toUTF16 (
-			const UTF8** sourceStart, const UTF8* sourceEnd, 
-			UTF16** targetStart, UTF16* targetEnd, ConversionFlags flags);
+			const UTF8** sourceStart, const UTF8 *sourceEnd, 
+			UTF16** targetStart, UTF16 *targetEnd, ConversionFlags flags);
 
 	ConversionResult ConvertUTF16toUTF8 (
-			const UTF16** sourceStart, const UTF16* sourceEnd, 
-			UTF8** targetStart, UTF8* targetEnd, ConversionFlags flags);
+			const UTF16** sourceStart, const UTF16 *sourceEnd, 
+			UTF8** targetStart, UTF8 *targetEnd, ConversionFlags flags);
 			
 	ConversionResult ConvertUTF8toUTF32 (
-			const UTF8** sourceStart, const UTF8* sourceEnd, 
-			UTF32** targetStart, UTF32* targetEnd, ConversionFlags flags);
+			const UTF8** sourceStart, const UTF8 *sourceEnd, 
+			UTF32** targetStart, UTF32 *targetEnd, ConversionFlags flags);
 
 	ConversionResult ConvertUTF32toUTF8 (
-			const UTF32** sourceStart, const UTF32* sourceEnd, 
-			UTF8** targetStart, UTF8* targetEnd, ConversionFlags flags);
+			const UTF32** sourceStart, const UTF32 *sourceEnd, 
+			UTF8** targetStart, UTF8 *targetEnd, ConversionFlags flags);
 			
 	ConversionResult ConvertUTF16toUTF32 (
-			const UTF16** sourceStart, const UTF16* sourceEnd, 
-			UTF32** targetStart, UTF32* targetEnd, ConversionFlags flags);
+			const UTF16** sourceStart, const UTF16 *sourceEnd, 
+			UTF32** targetStart, UTF32 *targetEnd, ConversionFlags flags);
 
 	ConversionResult ConvertUTF32toUTF16 (
-			const UTF32** sourceStart, const UTF32* sourceEnd, 
-			UTF16** targetStart, UTF16* targetEnd, ConversionFlags flags);
+			const UTF32** sourceStart, const UTF32 *sourceEnd, 
+			UTF16** targetStart, UTF16 *targetEnd, ConversionFlags flags);
 
 	bool isLegalUTF8Sequence(const UTF8 *source, const UTF8 *sourceEnd);
 
@@ -208,11 +208,11 @@ AX_BEGIN_NAMESPACE
 	/* --------------------------------------------------------------------- */
 
 	ConversionResult ConvertUTF32toUTF16 (
-		const UTF32** sourceStart, const UTF32* sourceEnd, 
-		UTF16** targetStart, UTF16* targetEnd, ConversionFlags flags) {
+		const UTF32** sourceStart, const UTF32 *sourceEnd, 
+		UTF16** targetStart, UTF16 *targetEnd, ConversionFlags flags) {
 		ConversionResult result = conversionOK;
-		const UTF32* source = *sourceStart;
-		UTF16* target = *targetStart;
+		const UTF32 *source = *sourceStart;
+		UTF16 *target = *targetStart;
 		while (source < sourceEnd) {
 			UTF32 ch;
 			if (target >= targetEnd) {
@@ -257,14 +257,14 @@ AX_BEGIN_NAMESPACE
 	/* --------------------------------------------------------------------- */
 
 	ConversionResult ConvertUTF16toUTF32 (
-		const UTF16** sourceStart, const UTF16* sourceEnd, 
-		UTF32** targetStart, UTF32* targetEnd, ConversionFlags flags) {
+		const UTF16** sourceStart, const UTF16 *sourceEnd, 
+		UTF32** targetStart, UTF32 *targetEnd, ConversionFlags flags) {
 		ConversionResult result = conversionOK;
-		const UTF16* source = *sourceStart;
-		UTF32* target = *targetStart;
+		const UTF16 *source = *sourceStart;
+		UTF32 *target = *targetStart;
 		UTF32 ch, ch2;
 		while (source < sourceEnd) {
-			const UTF16* oldSource = source; /*  In case we have to back up because of target overflow. */
+			const UTF16 *oldSource = source; /*  In case we have to back up because of target overflow. */
 			ch = *source++;
 			/* If we have a surrogate pair, convert to UTF32 first. */
 			if (ch >= UNI_SUR_HIGH_START && ch <= UNI_SUR_HIGH_END) {
@@ -316,7 +316,7 @@ AX_BEGIN_NAMESPACE
 	/*
 	 * Index into the table below with the first byte of a UTF-8 sequence to
 	 * get the number of trailing bytes that are supposed to follow it.
-	 * Note that *legal* UTF-8 values can't have 4 or 5-bytes. The table is
+	 * Note that *legal *UTF-8 values can't have 4 or 5-bytes. The table is
 	 * left as-is for anyone who may want to do such conversion, which was
 	 * allowed in earlier algorithms.
 	 */
@@ -344,7 +344,7 @@ AX_BEGIN_NAMESPACE
 	 * into the first byte, depending on how many bytes follow.  There are
 	 * as many entries in this table as there are UTF-8 sequence types.
 	 * (I.e., one byte sequence, two byte... etc.). Remember that sequencs
-	 * for *legal* UTF-8 will be 4 or fewer bytes total.
+	 * for *legal *UTF-8 will be 4 or fewer bytes total.
 	 */
 	static const UTF8 firstByteMark[7] = { 0x00, 0x00, 0xC0, 0xE0, 0xF0, 0xF8, 0xFC };
 
@@ -361,17 +361,17 @@ AX_BEGIN_NAMESPACE
 	/* --------------------------------------------------------------------- */
 
 	ConversionResult ConvertUTF16toUTF8 (
-		const UTF16** sourceStart, const UTF16* sourceEnd, 
-		UTF8** targetStart, UTF8* targetEnd, ConversionFlags flags) {
+		const UTF16** sourceStart, const UTF16 *sourceEnd, 
+		UTF8** targetStart, UTF8 *targetEnd, ConversionFlags flags) {
 		ConversionResult result = conversionOK;
-		const UTF16* source = *sourceStart;
-		UTF8* target = *targetStart;
+		const UTF16 *source = *sourceStart;
+		UTF8 *target = *targetStart;
 		while (source < sourceEnd) {
 			UTF32 ch;
 			unsigned short bytesToWrite = 0;
 			const UTF32 byteMask = 0xBF;
 			const UTF32 byteMark = 0x80; 
-			const UTF16* oldSource = source; /* In case we have to back up because of target overflow. */
+			const UTF16 *oldSource = source; /* In case we have to back up because of target overflow. */
 			ch = *source++;
 			/* If we have a surrogate pair, convert to UTF32 first. */
 			if (ch >= UNI_SUR_HIGH_START && ch <= UNI_SUR_HIGH_END) {
@@ -483,11 +483,11 @@ AX_BEGIN_NAMESPACE
 	/* --------------------------------------------------------------------- */
 
 	ConversionResult ConvertUTF8toUTF16 (
-		const UTF8** sourceStart, const UTF8* sourceEnd, 
-		UTF16** targetStart, UTF16* targetEnd, ConversionFlags flags) {
+		const UTF8** sourceStart, const UTF8 *sourceEnd, 
+		UTF16** targetStart, UTF16 *targetEnd, ConversionFlags flags) {
 		ConversionResult result = conversionOK;
-		const UTF8* source = *sourceStart;
-		UTF16* target = *targetStart;
+		const UTF8 *source = *sourceStart;
+		UTF16 *target = *targetStart;
 		while (source < sourceEnd) {
 			UTF32 ch = 0;
 			unsigned short extraBytesToRead = trailingBytesForUTF8[*source];
@@ -556,11 +556,11 @@ AX_BEGIN_NAMESPACE
 	/* --------------------------------------------------------------------- */
 
 	ConversionResult ConvertUTF32toUTF8 (
-		const UTF32** sourceStart, const UTF32* sourceEnd, 
-		UTF8** targetStart, UTF8* targetEnd, ConversionFlags flags) {
+		const UTF32** sourceStart, const UTF32 *sourceEnd, 
+		UTF8** targetStart, UTF8 *targetEnd, ConversionFlags flags) {
 		ConversionResult result = conversionOK;
-		const UTF32* source = *sourceStart;
-		UTF8* target = *targetStart;
+		const UTF32 *source = *sourceStart;
+		UTF8 *target = *targetStart;
 		while (source < sourceEnd) {
 			UTF32 ch;
 			unsigned short bytesToWrite = 0;
@@ -609,11 +609,11 @@ AX_BEGIN_NAMESPACE
 	/* --------------------------------------------------------------------- */
 
 	ConversionResult ConvertUTF8toUTF32 (
-		const UTF8** sourceStart, const UTF8* sourceEnd, 
-		UTF32** targetStart, UTF32* targetEnd, ConversionFlags flags) {
+		const UTF8** sourceStart, const UTF8 *sourceEnd, 
+		UTF32** targetStart, UTF32 *targetEnd, ConversionFlags flags) {
 		ConversionResult result = conversionOK;
-		const UTF8* source = *sourceStart;
-		UTF32* target = *targetStart;
+		const UTF8 *source = *sourceStart;
+		UTF32 *target = *targetStart;
 		while (source < sourceEnd) {
 			UTF32 ch = 0;
 			unsigned short extraBytesToRead = trailingBytesForUTF8[*source];
@@ -687,15 +687,15 @@ AX_BEGIN_NAMESPACE
 
 	   --------------------------------------------------------------------- */
 
-	inline WString u2w(const char* utf8str, size_t len) {
+	inline WString u2w(const char *utf8str, size_t len) {
 		WString result;
 
 		result.resize(len);
 		if (sizeof(wchar_t) == sizeof(UTF16)) {
-			const UTF8* srcstart = (UTF8*)&utf8str[0];
-			const UTF8* srcend = srcstart + len;
-			UTF16* dststart = (UTF16*)&result[0];
-			UTF16* dstend = dststart + len;
+			const UTF8 *srcstart = (UTF8*)&utf8str[0];
+			const UTF8 *srcend = srcstart + len;
+			UTF16 *dststart = (UTF16*)&result[0];
+			UTF16 *dstend = dststart + len;
 			ConversionResult cr = ConvertUTF8toUTF16(&srcstart, srcend, &dststart, dstend, strictConversion);
 			result.resize(dststart - (UTF16*)&result[0]);
 		}
@@ -703,7 +703,7 @@ AX_BEGIN_NAMESPACE
 		return result;
 	}
 
-	WString u2w(const String& utf8str) {
+	WString u2w(const String &utf8str) {
 		return u2w(utf8str.c_str(), utf8str.size());
 #if 0
 		size_t len = utf8str.size();
@@ -711,10 +711,10 @@ AX_BEGIN_NAMESPACE
 
 		result.resize(len);
 		if (sizeof(wchar_t) == sizeof(UTF16)) {
-			const UTF8* srcstart = (UTF8*)&utf8str[0];
-			const UTF8* srcend = srcstart + len;
-			UTF16* dststart = (UTF16*)&result[0];
-			UTF16* dstend = dststart + len;
+			const UTF8 *srcstart = (UTF8*)&utf8str[0];
+			const UTF8 *srcend = srcstart + len;
+			UTF16 *dststart = (UTF16*)&result[0];
+			UTF16 *dstend = dststart + len;
 			ConversionResult cr = ConvertUTF8toUTF16(&srcstart, srcend, &dststart, dstend, strictConversion);
 			result.resize(dststart - (UTF16*)&result[0]);
 		}
@@ -723,7 +723,7 @@ AX_BEGIN_NAMESPACE
 #endif
 	}
 
-	WString u2w(const char* utf8str) {
+	WString u2w(const char *utf8str) {
 		return u2w(utf8str, strlen(utf8str));
 #if 0
 		size_t len = strlen(utf8str);
@@ -731,10 +731,10 @@ AX_BEGIN_NAMESPACE
 
 		result.resize(len);
 		if (sizeof(wchar_t) == sizeof(UTF16)) {
-			const UTF8* srcstart = (UTF8*)&utf8str[0];
-			const UTF8* srcend = srcstart + len;
-			UTF16* dststart = (UTF16*)&result[0];
-			UTF16* dstend = dststart + len;
+			const UTF8 *srcstart = (UTF8*)&utf8str[0];
+			const UTF8 *srcend = srcstart + len;
+			UTF16 *dststart = (UTF16*)&result[0];
+			UTF16 *dstend = dststart + len;
 			ConversionResult cr = ConvertUTF8toUTF16(&srcstart, srcend, &dststart, dstend, strictConversion);
 			result.resize(dststart - (UTF16*)&result[0]);
 		}
@@ -743,32 +743,32 @@ AX_BEGIN_NAMESPACE
 #endif
 	}
 
-	String l2u(const char* localstr) {
+	String l2u(const char *localstr) {
 		WString ws = l2w(localstr);
 		return w2u(ws);
 	}
 
-	String l2u(const String& lstr) {
+	String l2u(const String &lstr) {
 		return w2u(l2w(lstr));
 	}
 
-	String u2l(const char* ustr) {
+	String u2l(const char *ustr) {
 		return w2l(u2w(ustr));
 	}
 
-	String u2l(const String& ustr) {
+	String u2l(const String &ustr) {
 		return w2l(u2w(ustr));
 	}
 
-	inline String w2u(const wchar_t* wstr, size_t len) {
+	inline String w2u(const wchar_t *wstr, size_t len) {
 		String result;
 
 		result.resize(len * AX_UTF8_LEN_MAX);
 		if (sizeof(wchar_t) == sizeof(UTF16)) {
-			const UTF16* srcstart = (UTF16*)&wstr[0];
-			const UTF16* srcend = srcstart + len;
-			UTF8* dststart = (UTF8*)&result[0];
-			UTF8* dstend = dststart + result.size();
+			const UTF16 *srcstart = (UTF16*)&wstr[0];
+			const UTF16 *srcend = srcstart + len;
+			UTF8 *dststart = (UTF8*)&result[0];
+			UTF8 *dstend = dststart + result.size();
 			ConversionResult cr = ConvertUTF16toUTF8(&srcstart, srcend, &dststart, dstend, strictConversion);
 			result.resize(dststart - (UTF8*)&result[0]);
 		}
@@ -776,7 +776,7 @@ AX_BEGIN_NAMESPACE
 		return result;
 	}
 
-	String w2u(const wchar_t* wstr) {
+	String w2u(const wchar_t *wstr) {
 		return w2u(wstr, wcslen(wstr));
 #if 0
 		size_t len = wcslen(wstr);
@@ -784,10 +784,10 @@ AX_BEGIN_NAMESPACE
 
 		result.resize(len * AX_UTF8_LEN_MAX);
 		if (sizeof(wchar_t) == sizeof(UTF16)) {
-			const UTF16* srcstart = (UTF16*)&wstr[0];
-			const UTF16* srcend = srcstart + len;
-			UTF8* dststart = (UTF8*)&result[0];
-			UTF8* dstend = dststart + result.size();
+			const UTF16 *srcstart = (UTF16*)&wstr[0];
+			const UTF16 *srcend = srcstart + len;
+			UTF8 *dststart = (UTF8*)&result[0];
+			UTF8 *dstend = dststart + result.size();
 			ConversionResult cr = ConvertUTF16toUTF8(&srcstart, srcend, &dststart, dstend, strictConversion);
 			result.resize(dststart - (UTF8*)&result[0]);
 		}
@@ -796,7 +796,7 @@ AX_BEGIN_NAMESPACE
 #endif
 	}
 
-	String w2u(const WString& wstr) {
+	String w2u(const WString &wstr) {
 		return w2u(wstr.c_str(), wstr.size());
 #if 0
 		size_t len = wstr.size();
@@ -804,10 +804,10 @@ AX_BEGIN_NAMESPACE
 
 		result.resize(len * AX_UTF8_LEN_MAX);
 		if (sizeof(wchar_t) == sizeof(UTF16)) {
-			const UTF16* srcstart = (UTF16*)&wstr[0];
-			const UTF16* srcend = srcstart + len;
-			UTF8* dststart = (UTF8*)&result[0];
-			UTF8* dstend = dststart + result.size();
+			const UTF16 *srcstart = (UTF16*)&wstr[0];
+			const UTF16 *srcend = srcstart + len;
+			UTF8 *dststart = (UTF8*)&result[0];
+			UTF8 *dstend = dststart + result.size();
 			ConversionResult cr = ConvertUTF16toUTF8(&srcstart, srcend, &dststart, dstend, strictConversion);
 			result.resize(dststart - (UTF8*)&result[0]);
 		}
@@ -816,7 +816,7 @@ AX_BEGIN_NAMESPACE
 #endif
 	}
 
-	inline WString l2w(const char* localstr, size_t len) {
+	inline WString l2w(const char *localstr, size_t len) {
 		WString result;
 
 		result.resize(len);
@@ -830,7 +830,7 @@ AX_BEGIN_NAMESPACE
 		return result;
 	}
 
-	WString l2w(const char* localstr) {
+	WString l2w(const char *localstr) {
 		return l2w(localstr, strlen(localstr));
 #if 0
 		size_t len = strlen(localstr);
@@ -848,7 +848,7 @@ AX_BEGIN_NAMESPACE
 #endif
 	}
 
-	WString l2w(const String& lstr) {
+	WString l2w(const String &lstr) {
 		return l2w(lstr.c_str(), lstr.size());
 #if 0
 		size_t len = lstr.size();
@@ -866,7 +866,7 @@ AX_BEGIN_NAMESPACE
 #endif
 	}
 
-	inline String w2l(const wchar_t* wstr, size_t len) {
+	inline String w2l(const wchar_t *wstr, size_t len) {
 		String result;
 
 		result.resize(len * AX_MB_LEN_MAX);
@@ -880,7 +880,7 @@ AX_BEGIN_NAMESPACE
 		return result;
 	}
 
-	String w2l(const wchar_t* wstr) {
+	String w2l(const wchar_t *wstr) {
 		return w2l(wstr, wcslen(wstr));
 #if 0
 		size_t len = wcslen(wstr);
@@ -898,7 +898,7 @@ AX_BEGIN_NAMESPACE
 #endif
 	}
 
-	String w2l(const WString& wstr) {
+	String w2l(const WString &wstr) {
 		return w2l(wstr.c_str(), wstr.size());
 #if 0
 		size_t len = wstr.size();
@@ -917,7 +917,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 
-	StringList StringUtil::tokenize(const char* text, char split /*= ' ' */) {
+	StringList StringUtil::tokenize(const char *text, char split /*= ' ' */) {
 		StringList result;
 
 		if (!text || !text[0])
@@ -925,7 +925,7 @@ AX_BEGIN_NAMESPACE
 
 		String str;
 
-		const char* token = text;
+		const char *token = text;
 
 		for (; ;) {
 			/* skip whitespace */
@@ -962,7 +962,7 @@ AX_BEGIN_NAMESPACE
 		return result;
 	}
 
-	StringSeq StringUtil::tokenizeSeq(const char* text, char split /*= ' ' */) {
+	StringSeq StringUtil::tokenizeSeq(const char *text, char split /*= ' ' */) {
 		StringSeq result;
 
 		if (!text || !text[0])
@@ -970,7 +970,7 @@ AX_BEGIN_NAMESPACE
 
 		String str;
 
-		const char* token = text;
+		const char *token = text;
 
 		for (; ;) {
 			/* skip whitespace */
@@ -1007,9 +1007,9 @@ AX_BEGIN_NAMESPACE
 		return result;
 	}
 
-	static int __StringContains(const char* str1, const char* str2, bool casesensitive) {
+	static int __StringContains(const char *str1, const char *str2, bool casesensitive) {
 		ptrdiff_t diff;
-		const char* pstr;
+		const char *pstr;
 		int i;
 		int j;
 
@@ -1039,7 +1039,7 @@ AX_BEGIN_NAMESPACE
 		return 0;
 	}
 
-	bool StringUtil::filterString(const char* filter, const char* name, bool casesensitive) {
+	bool StringUtil::filterString(const char *filter, const char *name, bool casesensitive) {
 		char buf[1024];
 		int num;
 		bool flag;

@@ -24,15 +24,15 @@ AX_BEGIN_NAMESPACE
 		};
 
 		UniformItem();
-		UniformItem(const UniformItem& rhs);
+		UniformItem(const UniformItem &rhs);
 		virtual ~UniformItem();
 
-		void init(ValueType vt, const char* name, int vsreg=0, int psreg=0, int arraysize = 1);
+		void init(ValueType vt, const char *name, int vsreg=0, int psreg=0, int arraysize = 1);
 
-		const char* getName() const { return m_name; }
+		const char *getName() const { return m_name; }
 
 		template< class Q >
-		void set(const Q& q) {
+		void set(const Q &q) {
 			AX_ASSERT(sizeof(q) <= m_dataSize);
 			if (memcmp(m_datap, &q, m_dataSize) == 0)
 				return;
@@ -42,12 +42,12 @@ AX_BEGIN_NAMESPACE
 		}
 
 		template< class Q >
-		const Q& get() const {
+		const Q &get() const {
 			return *(Q*)(data);
 		}
 
-		void setData(const void* p) { memcpy(m_datap,p,m_dataSize); }
-		void* getDataP() const { return m_datap; }
+		void setData(const void *p) { memcpy(m_datap,p,m_dataSize); }
+		void *getDataP() const { return m_datap; }
 
 	protected:
 		static int calcValueSize(ValueType vt);
@@ -61,8 +61,8 @@ AX_BEGIN_NAMESPACE
 		int m_psregister;
 		bool m_needUpdate;
 
-		void* m_datap;
-		const char* m_name;		// ascii name
+		void *m_datap;
+		const char *m_name;		// ascii name
 	};
 
 	//--------------------------------------------------------------------------
@@ -90,7 +90,7 @@ AX_BEGIN_NAMESPACE
 		Uniforms();
 		~Uniforms();
 
-		UniformItem& getItem(int itemname);
+		UniformItem &getItem(int itemname);
 
 		bool isVsregisterShared(int n) const {
 			if (n < 0 || n >= MAX_REGISTER)
@@ -145,7 +145,7 @@ AX_BEGIN_NAMESPACE
 		enum { VERSION = SHADER::SHADERMACRO_VERSION };
 
 		ShaderMacro();
-		ShaderMacro(const ShaderMacro& rhs);
+		ShaderMacro(const ShaderMacro &rhs);
 		~ShaderMacro();
 
 		void clear();
@@ -160,21 +160,21 @@ AX_BEGIN_NAMESPACE
 		StringSeq getCgDefine() const;
 		StringPairSeq getDefines() const;
 
-		void mergeFrom(const ShaderMacro* from);
+		void mergeFrom(const ShaderMacro *from);
 
 		// for hash_map use
 		size_t hash() const;
-		bool operator==(const ShaderMacro& rhs) const;
+		bool operator==(const ShaderMacro &rhs) const;
 
 		String toString() const;
-		void fromString(const String& str);
+		void fromString(const String &str);
 
 		static void initDefs();
-		static const char* getMacroName(int f);
+		static const char *getMacroName(int f);
 
 	private:
 		class ShaderMacroDefs;
-		static ShaderMacroDefs* m_defs;
+		static ShaderMacroDefs *m_defs;
 		int m_data[4];
 	};
 
@@ -324,13 +324,13 @@ AX_BEGIN_NAMESPACE
 		};
 
 		// need to implement
-		virtual bool doInit(const String& name, const ShaderMacro& macro) = 0;
+		virtual bool doInit(const String &name, const ShaderMacro &macro) = 0;
 		virtual bool isDepthWrite() const = 0;
 		virtual bool haveTextureTarget() const = 0;
 		virtual int getNumSampler() const = 0;
-		virtual SamplerAnno* getSamplerAnno(int index) const = 0;
+		virtual SamplerAnno *getSamplerAnno(int index) const = 0;
 		virtual int getNumTweakable() const = 0;
-		virtual ParameterAnno* getTweakableDef(int index) = 0;
+		virtual ParameterAnno *getTweakableDef(int index) = 0;
 		virtual SortHint getSortHint() const = 0;
 		virtual bool haveTechnique(Technique tech) const = 0;
 	};
@@ -341,10 +341,10 @@ AX_BEGIN_NAMESPACE
 
 	class ShaderManager {
 	public:
-		virtual Shader* findShader(const String& name, const ShaderMacro& macro) = 0;
-		virtual Shader* findShader(const FixedString& nameId, const ShaderMacro& macro) = 0;
-		virtual void saveShaderCache(const String& name = String()) = 0;
-		virtual void applyShaderCache(const String& name = String()) = 0;
+		virtual Shader *findShader(const String &name, const ShaderMacro &macro) = 0;
+		virtual Shader *findShader(const FixedString &nameId, const ShaderMacro &macro) = 0;
+		virtual void saveShaderCache(const String &name = String()) = 0;
+		virtual void applyShaderCache(const String &name = String()) = 0;
 	};
 
 AX_END_NAMESPACE
@@ -353,7 +353,7 @@ namespace std { namespace tr1 {
 
 	template<>
 	struct hash<::Axon::ShaderMacro> {
-		size_t operator()(const ::Axon::ShaderMacro& sm) const { return sm.hash(); }
+		size_t operator()(const ::Axon::ShaderMacro &sm) const { return sm.hash(); }
 	};
 }}
 

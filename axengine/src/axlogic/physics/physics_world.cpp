@@ -42,7 +42,7 @@ AX_BEGIN_NAMESPACE
 		// setup layer collision
 		{
 			// Replace filter
-			hkpGroupFilter* groupFilter = new hkpGroupFilter();
+			hkpGroupFilter *groupFilter = new hkpGroupFilter();
 
 			// We disable collisions between different layers to determine 
 			// what behavior we want
@@ -64,7 +64,7 @@ AX_BEGIN_NAMESPACE
 		hkpAgentRegisterUtil::registerAllAgents(m_havokWorld->getCollisionDispatcher());
 
 		if (vdb) {
-			hkpPhysicsContext* physicsContext = new hkpPhysicsContext;
+			hkpPhysicsContext *physicsContext = new hkpPhysicsContext;
 			physicsContext->addWorld(m_havokWorld); 
 
 			hkpPhysicsContext::registerAllPhysicsProcesses();
@@ -133,7 +133,7 @@ AX_BEGIN_NAMESPACE
 #endif
 	}
 
-	void PhysicsWorld::addEntity(PhysicsEntity* entity) {
+	void PhysicsWorld::addEntity(PhysicsEntity *entity) {
 		if (!entity) {
 			return;
 		}
@@ -150,7 +150,7 @@ AX_BEGIN_NAMESPACE
 		entity->bind(this);
 	}
 
-	void PhysicsWorld::removeEntity(PhysicsEntity* entity) {
+	void PhysicsWorld::removeEntity(PhysicsEntity *entity) {
 		if (!entity) {
 			return;
 		}

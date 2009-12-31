@@ -47,7 +47,7 @@ SidePanel::~SidePanel()
 {
 }
 
-int SidePanel::addPanel(QWidget* child, QIcon& icon, const QString& tooltip) {
+int SidePanel::addPanel(QWidget *child, QIcon &icon, const QString &tooltip) {
 	int index;
 
 	index = QTabWidget::addTab(child, icon, QString());

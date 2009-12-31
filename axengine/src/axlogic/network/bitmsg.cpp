@@ -153,7 +153,7 @@ AX_BEGIN_NAMESPACE
 		memcpy(getByteSpace(length), data, length);
 	}
 
-	void BitMsg::writeNetadr(const NetAdr& adr) {
+	void BitMsg::writeNetadr(const NetAdr &adr) {
 		byte_t *dataPtr;
 		dataPtr = getByteSpace(4);
 		memcpy(dataPtr, adr.ip, 4);

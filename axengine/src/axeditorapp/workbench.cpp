@@ -74,7 +74,7 @@ Workbench::~Workbench()
 //	SafeDelete(m_uiEditor);
 }
 
-void Workbench::updateStatusInfo(const Vector3& vieworg, const Vector3& cursorpos) {
+void Workbench::updateStatusInfo(const Vector3 &vieworg, const Vector3 &cursorpos) {
 	QString pos;
 	ui.viewpos->setText(tr("ViewPos:") + pos.sprintf("%.1f,%.1f,%.1f", vieworg.x, vieworg.y, vieworg.z));
 }
@@ -89,7 +89,7 @@ void Workbench::updateTitle() {
 	setWindowTitle(title);
 }
 
-void Workbench::doNotify(IObservable* subjest, int arg) {
+void Workbench::doNotify(IObservable *subjest, int arg) {
 	if (subjest != g_mapContext)
 		return;
 
@@ -128,25 +128,25 @@ void Workbench::onViewLabelDoubleClicked(QPoint point)
 	m_cameraDlg.show();
 }
 
-void Workbench::setLanguage(const QString& lang) {
+void Workbench::setLanguage(const QString &lang) {
 	g_settings->setValue("language", lang);
 	QMessageBox::about(this, tr("Selected Language"),
 		tr("Language selection will enable when program restart"));
 }
 
-void Workbench::setStyle(const QString& style) {
+void Workbench::setStyle(const QString &style) {
 	g_app->setStyle(style);
 
 	g_settings->setValue("style", style);
 }
 
-void Workbench::addEditorTool(int type, QAction* action) {
+void Workbench::addEditorTool(int type, QAction *action) {
 	action->setCheckable(true);
 	action->setData(type);
 	m_editorTools->addAction(action);
 }
 
-void Workbench::addEditorAction(int type, QAction* action) {
+void Workbench::addEditorAction(int type, QAction *action) {
 	action->setCheckable(false);
 	action->setData(type);
 	m_editorActions->addAction(action);
@@ -182,13 +182,13 @@ void Workbench::createActions() {
 }
 
 void Workbench::createMenus() {
-	QMenu* uiMenu = new QMenu(tr("Toolbars"));
+	QMenu *uiMenu = new QMenu(tr("Toolbars"));
 	uiMenu->addAction(m_sideBar->toggleViewAction());
 	uiMenu->addAction(ui.mainToolBar->toggleViewAction());
 	ui.menu_Setting->addMenu(uiMenu);
 
 	// init language menu
-	QActionGroup* langGroup = new QActionGroup(this);
+	QActionGroup *langGroup = new QActionGroup(this);
 	langGroup->addAction(ui.actionSimplifiedChinese);
 	langGroup->addAction(ui.actionEnglish);
 	connect(ui.actionSimplifiedChinese, SIGNAL(triggered(bool)), this, SLOT(onSimplifiedChinese(bool)));
@@ -200,7 +200,7 @@ void Workbench::createMenus() {
 		ui.actionSimplifiedChinese->setChecked(true);
 
 	// init style menu
-	QActionGroup* styleGroup = new QActionGroup(this);
+	QActionGroup *styleGroup = new QActionGroup(this);
 	styleGroup->addAction(ui.actionStyleWindows);
 	styleGroup->addAction(ui.actionStyleWindowsXP);
 	styleGroup->addAction(ui.actionStylePlastique);
@@ -239,7 +239,7 @@ void Workbench::createToolBars() {
 
 	ui.mainToolBar->insertWidget(ui.actionObjectSelect, ui.selectableType);
 
-	QActionGroup* gizmoCenterGroup = new QActionGroup(this);
+	QActionGroup *gizmoCenterGroup = new QActionGroup(this);
 
 	gizmoCenterGroup->addAction(ui.actionUsePivotCenter);
 	gizmoCenterGroup->addAction(ui.actionUseSelectionCenter);
@@ -250,19 +250,19 @@ void Workbench::createToolBars() {
 	g_mapContext->getMapState()->selectionPart = SelectPart::All;
 
 	{ // setup snap to grid
-		QWidget* widget = ui.mainToolBar->widgetForAction(ui.actionSnapToGrid);
-		QToolButton* tb = qobject_cast<QToolButton*>(widget);
+		QWidget *widget = ui.mainToolBar->widgetForAction(ui.actionSnapToGrid);
+		QToolButton *tb = qobject_cast<QToolButton*>(widget);
 
 		AX_ASSERT(tb);
 
 		tb->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 		ui.actionSnapToGrid->setIconText(QString("%1").arg(g_mapContext->getMapState()->snapToGrid));
 
-		QMenu* menu = new QMenu(tb);
+		QMenu *menu = new QMenu(tb);
 		tb->setPopupMode(QToolButton::MenuButtonPopup);
 		tb->setMenu(menu);
 
-		QAction* action = 0;
+		QAction *action = 0;
 		action = menu->addAction("1/64");	action->setData(1.0f / 64.0f);
 		action = menu->addAction("1/32");	action->setData(1.0f / 32.0f);
 		action = menu->addAction("1/16");	action->setData(1.0f / 16.0f);
@@ -281,15 +281,15 @@ void Workbench::createToolBars() {
 	}
 
 	{	// setup snap to angle
-		QWidget* widget = ui.mainToolBar->widgetForAction(ui.actionSnapToAngle);
-		QToolButton* tb = qobject_cast<QToolButton*>(widget);
+		QWidget *widget = ui.mainToolBar->widgetForAction(ui.actionSnapToAngle);
+		QToolButton *tb = qobject_cast<QToolButton*>(widget);
 
 		AX_ASSERT(tb);
 
 		tb->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 		ui.actionSnapToAngle->setIconText(QString("%1").arg(g_mapContext->getMapState()->snapToAngle));
 
-		QMenu* menu = new QMenu(tb);
+		QMenu *menu = new QMenu(tb);
 		tb->setPopupMode(QToolButton::MenuButtonPopup);
 		tb->setMenu(menu);
 
@@ -319,7 +319,7 @@ void Workbench::createStatusBar() {
 
 	ui.engineBuild->setText(build);
 
-	const IRenderDriver::Info* ri = g_renderSystem->getDriverInfo();
+	const IRenderDriver::Info *ri = g_renderSystem->getDriverInfo();
 	if (ri->driverType == IRenderDriver::Info::D3D) {
 		ui.renderDriver->setText("DX9");
 	} else {
@@ -347,7 +347,7 @@ void Workbench::createDockablePanel() {
 	mConsoleBar->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable);
 	mConsoleBar->setMinimumHeight(30);
 	addDockWidget(Qt::BottomDockWidgetArea, mConsoleBar, Qt::Horizontal);
-//	ConsoleFrame* consoleFrame = new ConsoleFrame(console);
+//	ConsoleFrame *consoleFrame = new ConsoleFrame(console);
 //	console->setWidget(consoleFrame);
 #endif
 }
@@ -409,13 +409,13 @@ void Workbench::writeSettings() {
 }
 
 
-Frame* Workbench::getActiveFrame() {
+Frame *Workbench::getActiveFrame() {
 	return m_workspace->getActiveFrame();
 }
 
-View* Workbench::getActiveView() {
+View *Workbench::getActiveView() {
 #if 0
-	EditorFrame* container = getActiveFrame();
+	EditorFrame *container = getActiveFrame();
 	if (!container)
 		return NULL;
 
@@ -467,7 +467,7 @@ void Workbench::closeEvent(QCloseEvent *event) {
 	g_app->myQuit();
 }
 
-void Workbench::onEditorToolTriggered(QAction* action) {
+void Workbench::onEditorToolTriggered(QAction *action) {
 	Tool::Type type = Tool::None;
 	if (action) {
 		type = (Tool::Type)action->data().toInt();
@@ -476,7 +476,7 @@ void Workbench::onEditorToolTriggered(QAction* action) {
 	g_mapContext->doTool(type);
 }
 
-void Workbench::onEditorActionTriggered(QAction* action) {
+void Workbench::onEditorActionTriggered(QAction *action) {
 	Action::Type type = (Action::Type)action->data().toInt();
 
 	g_mapContext->doAction(type);
@@ -503,7 +503,7 @@ void Workbench::onHistoryChanged() {
 	ui.actionEditRedo->setDisabled(true);
 	ui.actionEditUndo->setDisabled(true);
 
-	HistoryManager* history = g_mapContext->getHistory();
+	HistoryManager *history = g_mapContext->getHistory();
 	AX_ASSERT(history);
 
 	HistoryList undolist = history->getUndoList();
@@ -511,7 +511,7 @@ void Workbench::onHistoryChanged() {
 	if (undolist.size() > 0) {
 		m_undoToolButton->setDisabled(false);
 		ui.actionEditUndo->setDisabled(false);
-		QMenu* menu = m_undoToolButton->menu();
+		QMenu *menu = m_undoToolButton->menu();
 		menu->clear();
 
 		HistoryList::iterator it;
@@ -538,7 +538,7 @@ void Workbench::onHistoryChanged() {
 	if (redolist.size() > 0) {
 		m_redoToolButton->setDisabled(false);
 		ui.actionEditRedo->setDisabled(false);
-		QMenu* menu = m_redoToolButton->menu();
+		QMenu *menu = m_redoToolButton->menu();
 		menu->clear();
 
 		HistoryList::iterator it;
@@ -727,7 +727,7 @@ void Workbench::on_actionExit_triggered()
 
 void Workbench::on_actionSurfaceGen_triggered()
 {
-	MapTerrain* terrain = g_mapContext->getTerrain();
+	MapTerrain *terrain = g_mapContext->getTerrain();
 
 	if (!terrain)
 		return;
@@ -737,7 +737,7 @@ void Workbench::on_actionSurfaceGen_triggered()
 
 void Workbench::on_actionCreateTerrain_triggered()
 {
-	MapTerrain* terrain = g_mapContext->getTerrain();
+	MapTerrain *terrain = g_mapContext->getTerrain();
 
 	if (terrain)
 		return;
@@ -779,7 +779,7 @@ void Workbench::on_actionUseTransformCenter_triggered()
 	g_mapContext->getMapState()->notify(State::Transform);
 }
 
-void Workbench::onSnapToGridChanged(QAction* action) {
+void Workbench::onSnapToGridChanged(QAction *action) {
 	float f = action->data().toDouble();
 
 	ui.actionSnapToGrid->setIconText(QString("%1").arg(f));
@@ -787,7 +787,7 @@ void Workbench::onSnapToGridChanged(QAction* action) {
 	g_mapContext->getMapState()->snapToGrid = f;
 }
 
-void Workbench::onSnapToAngleChanged(QAction* action) {
+void Workbench::onSnapToAngleChanged(QAction *action) {
 	float f = action->text().toFloat();
 
 	ui.actionSnapToAngle->setIconText(QString("%1").arg(f));
@@ -806,7 +806,7 @@ void Workbench::on_actionSnapToAngle_triggered()
 	g_mapContext->getMapState()->isSnapToAngle = ui.actionSnapToAngle->isChecked();
 }
 
-void Workbench::beginProgress(const String& title)
+void Workbench::beginProgress(const String &title)
 {
 	m_statusBar->addWidget(ui.progress);
 	ui.progress->show();
@@ -815,7 +815,7 @@ void Workbench::beginProgress(const String& title)
 	QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 }
 
-bool Workbench::showProgress(uint_t percent, const String& msg)
+bool Workbench::showProgress(uint_t percent, const String &msg)
 {
 	ui.progressLabel->setText(u2q(msg));
 	ui.progressBar->setValue(percent);
@@ -834,7 +834,7 @@ void Workbench::endProgress()
 
 void Workbench::activateTool(Tool::Type t) {
 	if (t == Tool::None) {
-		QAction* action = m_editorTools->checkedAction();
+		QAction *action = m_editorTools->checkedAction();
 		if (!action) {
 			return;
 		}
@@ -843,7 +843,7 @@ void Workbench::activateTool(Tool::Type t) {
 	}
 	// find action
 	QList<QAction *> actions = m_editorTools->actions();
-	QAction* action = nullptr;
+	QAction *action = nullptr;
 	AX_FOREACH(action, actions) {
 		if ((Tool::Type)action->data().toInt() == t) {
 			break;
@@ -923,7 +923,7 @@ void Workbench::on_actionScriptEditor_triggered() {
 	m_scriptEditor->show();
 }
 
-void Workbench::openScriptFile(const QString& filename)
+void Workbench::openScriptFile(const QString &filename)
 {
 	if (!m_scriptEditor) {
 		m_scriptEditor = new ScriptEditor();
@@ -935,7 +935,7 @@ void Workbench::openScriptFile(const QString& filename)
 
 void Workbench::on_actionLayerGen_triggered()
 {
-	MapTerrain* terrain = g_mapContext->getTerrain();
+	MapTerrain *terrain = g_mapContext->getTerrain();
 
 	if (!terrain)
 		return;

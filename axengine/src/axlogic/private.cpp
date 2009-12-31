@@ -16,14 +16,14 @@ read the license and understand and accept it fully.
 AX_BEGIN_NAMESPACE
 
 #define AX_CVARDECL(name, defaultstring, flags) \
-	Cvar* name;
+	Cvar *name;
 #include <axlogic/logiccvars.h>
 #undef AX_CVARDECL
 
 	void axPhysInit();
 	void axPhysQuit();
 
-	GameSystem* g_gameSystem;
+	GameSystem *g_gameSystem;
 
 	void axLogicInit() {
 		// init cvar

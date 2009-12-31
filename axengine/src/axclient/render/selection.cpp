@@ -54,7 +54,7 @@ struct SelectionVertex
 	int flags;	// 区域码信息
 };
 
-static SelectionVertex* gSelectionVertexs = new SelectionVertex[DEFAULT_NUM_VERTEX];
+static SelectionVertex *gSelectionVertexs = new SelectionVertex[DEFAULT_NUM_VERTEX];
 static int gNumVertex = DEFAULT_NUM_VERTEX;
 static SelectionVertex gAliasVertex[2][8];
 
@@ -78,7 +78,7 @@ Selection::~Selection(void)
 	SafeDeleteArray(gSelectionVertexs);
 }
 
-void Selection::beginSelect(const RenderCamera& view)
+void Selection::beginSelect(const RenderCamera &view)
 {
 	m_selectTime = OsUtil::milliseconds();
 
@@ -100,7 +100,7 @@ void Selection::loadSelectId(int id)
 	m_isActor = false;
 }
 
-void Selection::testEntity(RenderEntity* re)
+void Selection::testEntity(RenderEntity *re)
 {
 	// 顶点乘以该矩阵后,就是视坐标系里的坐标.
 	m_selectModelViewMatrix = m_selectionCamera.getViewMatrix() * re->getModelMatrix();
@@ -111,13 +111,13 @@ void Selection::testEntity(RenderEntity* re)
 
 	for (it = prims.begin(); it != prims.end(); ++it)
 	{
-		Primitive* prim = *it;
+		Primitive *prim = *it;
 
 		testPrimitive(prim);
 	}
 }
 
-void Selection::testPrimitive(Primitive* prim)
+void Selection::testPrimitive(Primitive *prim)
 {
 	if (prim == NULL)
 	{
@@ -133,25 +133,25 @@ void Selection::testPrimitive(Primitive* prim)
 	// 判断图元类型并处理
 	if (prim->getType() == Primitive::LineType)
 	{
-		LinePrim* line = static_cast<LinePrim*> (prim);
+		LinePrim *line = static_cast<LinePrim*> (prim);
 
 		testLine(line);
 	}
 	else if (prim->getType() == Primitive::MeshType)
 	{
-		MeshPrim* mesh = static_cast<MeshPrim*> (prim);
+		MeshPrim *mesh = static_cast<MeshPrim*> (prim);
 
 		testMesh(mesh);
 	}
 	else if (prim->getType() == Primitive::ChunkType)
 	{
-		ChunkPrim* chunk = static_cast<ChunkPrim*> (prim);
+		ChunkPrim *chunk = static_cast<ChunkPrim*> (prim);
 
 		testChunk(chunk);
 	}
 }
 
-void Selection::testPrimitive(Primitive* prim, const AffineMat& matrix)
+void Selection::testPrimitive(Primitive *prim, const AffineMat &matrix)
 {
 	// 如果不是Actor,则视矩阵不用乘以模型矩阵
 	m_selectModelViewMatrix = m_selectionCamera.getViewMatrix() * matrix.toMatrix4();
@@ -159,19 +159,19 @@ void Selection::testPrimitive(Primitive* prim, const AffineMat& matrix)
 	// 判断图元类型并处理
 	if (prim->getType() == Primitive::LineType)
 	{
-		LinePrim* line = static_cast<LinePrim*> (prim);
+		LinePrim *line = static_cast<LinePrim*> (prim);
 
 		testLine(line);
 	}
 	else if (prim->getType() == Primitive::MeshType)
 	{
-		MeshPrim* mesh = static_cast<MeshPrim*> (prim);
+		MeshPrim *mesh = static_cast<MeshPrim*> (prim);
 
 		testMesh(mesh);
 	}
 	else if (prim->getType() == Primitive::ChunkType)
 	{
-		ChunkPrim* chunk = static_cast<ChunkPrim*> (prim);
+		ChunkPrim *chunk = static_cast<ChunkPrim*> (prim);
 
 		testChunk(chunk);
 	}
@@ -207,10 +207,10 @@ HitRecords Selection::endSelect()
 	return m_selectRecSeq;
 }
 
-void Selection::testLine(const LinePrim* line)
+void Selection::testLine(const LinePrim *line)
 {
 	// 转换顶点坐标成为视坐标或归一化坐标
-	const DebugVertex* vertexs = line->getVertexesPointer();
+	const DebugVertex *vertexs = line->getVertexesPointer();
 
 	int numVexTranslate = line->getNumVertexes();
 
@@ -258,7 +258,7 @@ void Selection::testLine(const LinePrim* line)
 		numIndex = line->getNumIndexes();
 	}
 
-	const ushort_t* indexes = line->getIndexPointer();
+	const ushort_t *indexes = line->getIndexPointer();
 
 	for (int i=0; i<numIndex-1; i+=2)
 	{
@@ -269,10 +269,10 @@ void Selection::testLine(const LinePrim* line)
 	}
 }
 
-void Selection::testMesh(const MeshPrim* mesh)
+void Selection::testMesh(const MeshPrim *mesh)
 {
 	// 转换顶点坐标成为归一化坐标
-	const Vertex* vertexs = mesh->getVertexesPointer();
+	const Vertex *vertexs = mesh->getVertexesPointer();
 
 	int numVexTranslate = mesh->getNumVertexes();
 
@@ -321,10 +321,10 @@ void Selection::testMesh(const MeshPrim* mesh)
 		numIndex = mesh->getNumIndexes();
 	}
 
-	const ushort_t* indexes = mesh->getIndexPointer();
+	const ushort_t *indexes = mesh->getIndexPointer();
 
 	// 如果是带状索引
-	if (mesh->getIsStriped())
+	if (mesh->isStriped())
 	{
 		for (int i=0; i<numIndex-2; ++i)
 		{
@@ -353,10 +353,10 @@ void Selection::testMesh(const MeshPrim* mesh)
 	}
 }
 
-void Selection::testChunk(const ChunkPrim* chunk)
+void Selection::testChunk(const ChunkPrim *chunk)
 {
 	// 转换顶点坐标成为视坐标或归一化坐标
-	const ChunkVertex* vertexs = chunk->getVertexesPointer();
+	const ChunkVertex *vertexs = chunk->getVertexesPointer();
 	int numVexTranslate = chunk->getNumVertexes();
 
 	if (numVexTranslate > gNumVertex)
@@ -404,7 +404,7 @@ void Selection::testChunk(const ChunkPrim* chunk)
 		numIndex = chunk->getNumIndexes();
 	}
 
-	const ushort_t* indexes = chunk->getIndexesPointer();
+	const ushort_t *indexes = chunk->getIndexesPointer();
 
 	for (int i=0; i<numIndex-2; i+=3)
 	{
@@ -416,8 +416,8 @@ void Selection::testChunk(const ChunkPrim* chunk)
 }
 
 // 对指定的三角形进行裁剪
-void Selection::aliasClipTriangle(const SelectionVertex& vertex0, 
-	const SelectionVertex& vertex1, const SelectionVertex& vertex2)
+void Selection::aliasClipTriangle(const SelectionVertex &vertex0, 
+	const SelectionVertex &vertex1, const SelectionVertex &vertex2)
 {
 	// check side first, because most material is one-side
 	Vector3 v0(vertex0.x, vertex0.y, vertex0.z);
@@ -568,7 +568,7 @@ void Selection::aliasClipTriangle(const SelectionVertex& vertex0,
 }
 
 // 线段裁剪
-void Selection::aliasClipLine(const SelectionVertex& vertex0, const SelectionVertex& vertex1)
+void Selection::aliasClipLine(const SelectionVertex &vertex0, const SelectionVertex &vertex1)
 {
 	// 如果2个顶点的标志位逻辑与为真, 则该图元完全在裁剪包围盒外
 	if (vertex0.flags & vertex1.flags)
@@ -716,7 +716,7 @@ void Selection::translateToProCoor(SelectionVertex &vexter)
 }
 
 // 将世界坐标转换成视坐标
-void Selection::translateToEyeCoor(const Vector3& inVertex, Vector3& outVertex)
+void Selection::translateToEyeCoor(const Vector3 &inVertex, Vector3 &outVertex)
 {
 	outVertex = m_selectModelViewMatrix * inVertex;	// 将模型坐标转换成视坐标
 }
@@ -745,7 +745,7 @@ void Selection::addSelectionRecord(const HitRecord &record)
 }
 
 // 初始化顶点区位码标志.由于Z裁剪在视坐标里已经判断,故不在此处判断
-void Selection::initVertexFlags(SelectionVertex& vertex)
+void Selection::initVertexFlags(SelectionVertex &vertex)
 {
 	vertex.flags = 0;
 

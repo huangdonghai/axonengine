@@ -39,15 +39,15 @@ AX_BEGIN_NAMESPACE
 	};
 
 	struct ILogHandler {
-		virtual void print(const char* text) = 0;
+		virtual void print(const char *text) = 0;
 		virtual ~ILogHandler() = 0 {}	// let gcc happy
 	};
 
 	struct IProgressHandler {
 		virtual ~IProgressHandler() {}
-		virtual void beginProgress(const String& title) = 0;
+		virtual void beginProgress(const String &title) = 0;
 		// return true if want go on, otherwise return false
-		virtual bool showProgress(uint_t percent, const String& msg) = 0;
+		virtual bool showProgress(uint_t percent, const String &msg) = 0;
 		virtual void endProgress() = 0;
 	};
 
@@ -83,30 +83,30 @@ AX_BEGIN_NAMESPACE
 
 		// register output system, base system can output info to multiply target at
 		// the same time
-		void registerLog(ILogHandler* log);
-		void removeLog(ILogHandler* log);
-		void print(const char* text);
+		void registerLog(ILogHandler *log);
+		void removeLog(ILogHandler *log);
+		void print(const char *text);
 
 		// register progress handler, base system can do progress showing in multiply
 		// target at the same tine
-		void registerProgress(IProgressHandler* progress);
-		void removeProgress(IProgressHandler* progress);
+		void registerProgress(IProgressHandler *progress);
+		void removeProgress(IProgressHandler *progress);
 
 		// implement IProgressHandler
-		virtual void beginProgress(const String& title);
+		virtual void beginProgress(const String &title);
 		// return true if want interrupt, false if want go on, otherwise return true
-		virtual bool showProgress(uint_t percent, const String& msg);
+		virtual bool showProgress(uint_t percent, const String &msg);
 		virtual void endProgress();
 
 		// tick
-		void registerTickable(TickPriority priority, ITickable* tickable);
-		void removeTickable(TickPriority priority, ITickable* tickable);
+		void registerTickable(TickPriority priority, ITickable *tickable);
+		void removeTickable(TickPriority priority, ITickable *tickable);
 		int run();
 		void forceTick(int mssleep);
 		void setExitable() { m_canExit = true; }
 
 		// cpu info
-		const CpuInfo& getCpuInfo();
+		const CpuInfo &getCpuInfo();
 
 	protected:
 		void printCpuInfo();
@@ -140,7 +140,7 @@ AX_BEGIN_NAMESPACE
 		bool m_canExit;
 	};
 
-	inline const CpuInfo& System::getCpuInfo() { return m_cpuInfo; }
+	inline const CpuInfo &System::getCpuInfo() { return m_cpuInfo; }
 
 
 AX_END_NAMESPACE

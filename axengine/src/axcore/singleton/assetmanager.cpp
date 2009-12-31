@@ -12,7 +12,7 @@ read the license and understand and accept it fully.
 
 #if 0
 AX_BEGIN_NAMESPACE
-	inline const char* xGetTypeName(int t) {
+	inline const char *xGetTypeName(int t) {
 		switch (t) {
 		case Asset::kModelFile:
 			return "Model File";
@@ -73,8 +73,8 @@ AX_BEGIN_NAMESPACE
 			, poolSize(poolsize)
 		{}
 
-		AssetFactory* factory;
-		Asset* defaulted;
+		AssetFactory *factory;
+		Asset *defaulted;
 		AssetDict assetDict;
 		AssetList assetNotRefed;
 		AssetFactory::PoolHint poolHint;
@@ -100,7 +100,7 @@ AX_BEGIN_NAMESPACE
 
 
 	// add factory
-	void AssetManager::registerType(int type, AssetFactory* factory) {
+	void AssetManager::registerType(int type, AssetFactory *factory) {
 		SCOPE_LOCK;
 
 		if (type < 0 || type >= Asset::MAX_TYPES)
@@ -115,7 +115,7 @@ AX_BEGIN_NAMESPACE
 		m_datas[type]->factory = factory;
 		m_datas[type]->poolHint = factory->getPoolHint();
 
-		Asset* defaulted = factory->getDefaulted();
+		Asset *defaulted = factory->getDefaulted();
 
 		if (defaulted == nullptr) {
 			defaulted = factory->create();
@@ -150,7 +150,7 @@ AX_BEGIN_NAMESPACE
 
 		// TODO: free old asset
 		for (int i = 0; i < Asset::MAX_TYPES; i++) {
-			Data* d = m_datas[i];
+			Data *d = m_datas[i];
 			if (!d) {
 				continue;
 			}
@@ -166,7 +166,7 @@ AX_BEGIN_NAMESPACE
 #endif
 			AssetList::iterator it = d->assetNotRefed.begin();
 			while (it != d->assetNotRefed.end()) {
-				Asset* asset = *it;
+				Asset *asset = *it;
 				if (asset->getRefCount()) {
 					it = d->assetNotRefed.erase(it);
 					asset->m_isInDeleteList = false;
@@ -186,7 +186,7 @@ AX_BEGIN_NAMESPACE
 
 
 	// create an empty asset
-	Asset* AssetManager::createEmptyAsset(int type) {
+	Asset *AssetManager::createEmptyAsset(int type) {
 		SCOPE_LOCK;
 
 		checkType(__func__, type);
@@ -194,12 +194,12 @@ AX_BEGIN_NAMESPACE
 		return m_datas[type]->factory->create();
 	}
 
-	Asset* AssetManager::findAsset(int type, const String& name, intptr_t arg) {
+	Asset *AssetManager::findAsset(int type, const String &name, intptr_t arg) {
 		SCOPE_LOCK;
 
 		checkType(__func__, type);
 
-		Data* d = m_datas[type];
+		Data *d = m_datas[type];
 
 		AssetDict::iterator it =d->assetDict.find(d->factory->generateKey(name, arg));
 		if ( it != d->assetDict.end()) {
@@ -207,7 +207,7 @@ AX_BEGIN_NAMESPACE
 			return it->second;
 		}
 
-		Asset* a = d->factory->create();
+		Asset *a = d->factory->create();
 		if (a->init(name, arg)) {
 			a->m_key = a->getKey();
 			AX_ASSERT(!a->m_key);
@@ -221,14 +221,14 @@ AX_BEGIN_NAMESPACE
 		return d->defaulted;
 	}
 
-	Asset* AssetManager::uniqueAsset(int type, const String& name, intptr_t arg /*= 0 */) {
+	Asset *AssetManager::uniqueAsset(int type, const String &name, intptr_t arg /*= 0 */) {
 		SCOPE_LOCK;
 
 		checkType(__func__, type);
 
-		Data* d = m_datas[type];
+		Data *d = m_datas[type];
 
-		Asset* a = d->factory->create();
+		Asset *a = d->factory->create();
 		if (a->init(name, arg)) {
 			a->m_key = a->getKey().toString() + "$" + Uuid::generateUuid();
 			d->assetDict[a->m_key] = a;
@@ -240,14 +240,14 @@ AX_BEGIN_NAMESPACE
 		return d->defaulted;
 	}
 
-	void AssetManager::addAsset(int type, const String& key, Asset* asset) {
+	void AssetManager::addAsset(int type, const String &key, Asset *asset) {
 		SCOPE_LOCK;
 
 		checkType(__func__, type);
 
 		asset->m_key = key;
 
-		Data* d = m_datas[type];
+		Data *d = m_datas[type];
 		AssetDict::iterator it =d->assetDict.find(asset->m_key);
 		if ( it != d->assetDict.end()) {
 			Errorf("%s: duplicated asset name", __func__);
@@ -258,7 +258,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 #if 0
-	void AssetManager::freeAsset(Asset* asset) {
+	void AssetManager::freeAsset(Asset *asset) {
 		SCOPE_LOCK;
 
 		if (!asset)
@@ -272,7 +272,7 @@ AX_BEGIN_NAMESPACE
 	}
 #endif
 
-	void AssetManager::removeAsset(Asset* asset) {
+	void AssetManager::removeAsset(Asset *asset) {
 		SCOPE_LOCK;
 
 		AX_ASSERT(asset->getRefCount() == 0);
@@ -284,7 +284,7 @@ AX_BEGIN_NAMESPACE
 		int type = asset->getType();
 		checkType(__func__, type);
 
-		Data* d = m_datas[type];
+		Data *d = m_datas[type];
 		AssetDict::iterator it =d->assetDict.find(asset->m_key);
 		if (it == d->assetDict.end()) {
 			d->factory->destroy(asset);
@@ -297,7 +297,7 @@ AX_BEGIN_NAMESPACE
 			return;
 		}
 
-		Asset* a = it->second;
+		Asset *a = it->second;
 		//AX_ASSERT(a == asset);
 
 		// or, add to not referenced list
@@ -309,7 +309,7 @@ AX_BEGIN_NAMESPACE
 		return;
 	}
 
-	void AssetManager::checkType(const char* func, int type) {
+	void AssetManager::checkType(const char *func, int type) {
 		if (type < 0 || type >= Asset::MAX_TYPES)
 			Errorf("%s: out of bound", func);
 
@@ -318,13 +318,13 @@ AX_BEGIN_NAMESPACE
 		}
 	}
 
-	void AssetManager::listType(int type, const char* filter) {
+	void AssetManager::listType(int type, const char *filter) {
 		SCOPE_LOCK;
 
 		if (type < 0 || type >= Asset::MAX_TYPES)
 			return;
 
-		const Data* d = m_datas[type];
+		const Data *d = m_datas[type];
 
 		if (d == nullptr)
 			return;
@@ -342,7 +342,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 
-	void AssetManager::list_f(const CmdArgs& param) {
+	void AssetManager::list_f(const CmdArgs &param) {
 		SCOPE_LOCK;
 
 		int type = 0;
@@ -352,11 +352,11 @@ AX_BEGIN_NAMESPACE
 		listType(type, nullptr);
 	}
 
-	void AssetManager::texlist_f(const CmdArgs& param) {
+	void AssetManager::texlist_f(const CmdArgs &param) {
 #if 0
 		SCOPE_LOCK;
 
-		const Data* d = m_datas[Asset::kTexture];
+		const Data *d = m_datas[Asset::kTexture];
 
 		if (d == nullptr)
 			return;
@@ -366,7 +366,7 @@ AX_BEGIN_NAMESPACE
 		int count = 0;
 		AssetDict::const_iterator it = d->assetDict.begin();
 		for (; it != d->assetDict.end(); ++it) {
-			Texture* tex = dynamic_cast<Texture*>(it->second);
+			Texture *tex = dynamic_cast<Texture*>(it->second);
 			if (!tex) {
 				continue;
 			}
@@ -381,7 +381,7 @@ AX_BEGIN_NAMESPACE
 #endif
 	}
 
-	void AssetManager::matlist_f(const CmdArgs& param) {
+	void AssetManager::matlist_f(const CmdArgs &param) {
 		listType(Asset::kMaterial, nullptr);
 	}
 

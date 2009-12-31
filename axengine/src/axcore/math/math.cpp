@@ -38,7 +38,7 @@ AX_BEGIN_NAMESPACE
 		//_controlfp(cwOriginal, MCW_EM);
 	}
 
-	float Math::getNearstDistanceLine(const Vector3& a, const Vector3& b, const Vector3& p)
+	float Math::getNearstDistanceLine(const Vector3 &a, const Vector3 &b, const Vector3 &p)
 	{
 		if (a == b)
 		{
@@ -51,7 +51,7 @@ AX_BEGIN_NAMESPACE
 		return fabs((ab | p) + d) / ab.getLength();
 	}
 
-	float Math::getNearstDistanceSegment(const Vector3& a, const Vector3& b, const Vector3& p)
+	float Math::getNearstDistanceSegment(const Vector3 &a, const Vector3 &b, const Vector3 &p)
 	{
 		
 		//计算点p到线段(a,b)的距离
@@ -189,7 +189,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 #if 0
-	void Math::anglesToVectors(const Vector3& angles, Vector3& forward, Vector3& left, Vector3& up) {
+	void Math::anglesToVectors(const Vector3 &angles, Vector3 &forward, Vector3 &left, Vector3 &up) {
 		float angle;
 		float sr, sp, sy, cr, cp, cy;
 		// static to help MS compiler fp bugs
@@ -217,13 +217,13 @@ AX_BEGIN_NAMESPACE
 		up[2] = cr * cp;
 	}
 
-	void Math::anglesToAxis(const Vector3& angles, Matrix3& axis) {
+	void Math::anglesToAxis(const Vector3 &angles, Matrix3 &axis) {
 		anglesToVectors(angles, axis[0], axis[1], axis[2]);
 	}
 #endif
 #if 0
 	// project a world-space vertex to screen
-	bool Math::project(Vector4& vert, const Matrix4& modelMatrix, const Matrix4& projMatrix, const Vector4& viewport) {
+	bool Math::project(Vector4 &vert, const Matrix4 &modelMatrix, const Matrix4 &projMatrix, const Vector4 &viewport) {
 		vert = projMatrix * modelMatrix * vert;
 
 		if (vert.w == 0.0f)
@@ -239,7 +239,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 	// unproject a screen vertex to world-space
-	bool Math::unproject(Vector4& vert, const Matrix4& modelMatrix, const Matrix4& projMatrix, const Vector4& viewport) {
+	bool Math::unproject(Vector4 &vert, const Matrix4 &modelMatrix, const Matrix4 &projMatrix, const Vector4 &viewport) {
 		vert.x = (vert.x - viewport[0]) * 2 / viewport[2] - 1.0;
 		vert.y = (vert.y - viewport[1]) * 2 / viewport[3] - 1.0;
 		vert.z = vert.z;
@@ -255,7 +255,7 @@ AX_BEGIN_NAMESPACE
 
 		return true;
 	}
-	UInt Math::boxOnPlaneSide(const Vector3& mins, const Vector3& maxs, const Vector4& plane) {
+	UInt Math::boxOnPlaneSide(const Vector3 &mins, const Vector3 &maxs, const Vector4 &plane) {
 		int i;
 		float dist1, dist2;
 		UInt sides;
@@ -282,11 +282,11 @@ AX_BEGIN_NAMESPACE
 		return sides;
 	}
 
-	UInt Math::boxOnPlaneSide(const BoundingBox& bbox, const Vector4& plane) {
+	UInt Math::boxOnPlaneSide(const BoundingBox &bbox, const Vector4 &plane) {
 		return boxOnPlaneSide(bbox.low, bbox.high, plane);
 	}
 
-	void Math::projectPointOnPlane(Vector3& dst, const Vector3 plane, const Vector3 normal) {
+	void Math::projectPointOnPlane(Vector3 &dst, const Vector3 plane, const Vector3 normal) {
 		float d;
 		Vector3 n;
 		float inv_denom;
@@ -300,7 +300,7 @@ AX_BEGIN_NAMESPACE
 		dst = plane  - n * d;
 	}
 
-	bool Math::rayIntersectPlane(Vector3& dst, const Vector3& org, const Vector3& dir, const Vector4& plane) {
+	bool Math::rayIntersectPlane(Vector3 &dst, const Vector3 &org, const Vector3 &dir, const Vector4 &plane) {
 		float tmp = dir | plane.xyz();
 
 		/* Is line parallel to plane? */
@@ -317,7 +317,7 @@ AX_BEGIN_NAMESPACE
 
 	#if 0
 	// Returns true if line and plane are not parallel
-	bool rayPlaneIntersect(const NxRay& line, const NxPlane& plane, NxReal& distance_along_line, NxVec3& point_on_plane)
+	bool rayPlaneIntersect(const NxRay &line, const NxPlane &plane, NxReal &distance_along_line, NxVec3 &point_on_plane)
 	{
 		const NxReal dn = line.dir|plane.normal;
 		if (-1E-7 < dn && dn < 1E-7)	return false; // parallel
@@ -908,7 +908,7 @@ AX_BEGIN_NAMESPACE
 
 
 #if 0
-	bool Math::rayTraceTriangles(const Vector3& start, const Vector3& end, float* vertbuf, UShort* idxbuf, int num_idxs, float& f) {
+	bool Math::rayTraceTriangles(const Vector3 &start, const Vector3 &end, float *vertbuf, UShort *idxbuf, int num_idxs, float &f) {
 		return false;
 	}
 #endif

@@ -25,27 +25,27 @@ public:
 	GfxEditor(QWidget *parent = 0);
 	~GfxEditor();
 
-	GfxContext* getContext() const { return m_gfxContext; }
+	GfxContext *getContext() const { return m_gfxContext; }
 
 	// editor tools and editor actions
-	void addEditorTool(int toolType, QAction* action);
-	void addEditorAction(int actionType, QAction* action);
+	void addEditorTool(int toolType, QAction *action);
+	void addEditorAction(int actionType, QAction *action);
 
 protected:
 	void createActions();
 
 private slots:
-	void onEditorToolTriggered(QAction* action );
-	void onEditorActionTriggered(QAction* action);
+	void onEditorToolTriggered(QAction *action );
+	void onEditorActionTriggered(QAction *action);
 
 private:
 	Ui::GfxEditorClass ui;
-	GfxContext* m_gfxContext;
-	GfxCentral* m_central;
+	GfxContext *m_gfxContext;
+	GfxCentral *m_central;
 
 	// editor tools and editor action
-	QActionGroup* m_editorTools;
-	QActionGroup* m_editorActions;
+	QActionGroup *m_editorTools;
+	QActionGroup *m_editorActions;
 
 };
 

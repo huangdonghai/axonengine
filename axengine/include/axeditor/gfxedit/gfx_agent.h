@@ -17,21 +17,21 @@ class GfxContext;
 
 class GfxAgent : public Agent {
 public:
-	GfxAgent(GfxContext* ctx, GfxObject::GfxType gfxType);
+	GfxAgent(GfxContext *ctx, GfxObject::GfxType gfxType);
 	virtual ~GfxAgent();
 
 	// implement Agent
-	virtual Agent* clone() const;
+	virtual Agent *clone() const;
 	virtual void doDeleteFlagChanged(bool del);
 	virtual void doRender();
 
-	virtual void setMatrix(const AffineMat& matrix);
-	virtual const AffineMat& getMatrix() const;
+	virtual void setMatrix(const AffineMat &matrix);
+	virtual const AffineMat &getMatrix() const;
 
 	virtual BoundingBox getBoundingBox();
 
-	virtual Variant getProperty(const String& propname);
-	virtual void setProperty(const String& propname, const Variant& value);
+	virtual Variant getProperty(const String &propname);
+	virtual void setProperty(const String &propname, const Variant &value);
 	virtual void doPropertyChanged();
 
 	virtual Rgb getColor() const;

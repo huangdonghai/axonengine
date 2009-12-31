@@ -12,7 +12,7 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-MapTool::MapTool(MapContext* ctx) : Tool(ctx)
+MapTool::MapTool(MapContext *ctx) : Tool(ctx)
 {
 	m_mapContext = ctx;
 }
@@ -21,7 +21,7 @@ MapTool::MapTool(MapContext* ctx) : Tool(ctx)
 // class TerrainRaiseTool
 //------------------------------------------------------------------------------
 
-TerrainRaiseTool::TerrainRaiseTool(MapContext* context) : MapTool(context) {
+TerrainRaiseTool::TerrainRaiseTool(MapContext *context) : MapTool(context) {
 	m_cursor = nullptr;
 	m_isValid = false;
 	m_brushMat = Material::load("terrainbrush");
@@ -33,7 +33,7 @@ TerrainRaiseTool::~TerrainRaiseTool() {
 	SafeDelete(m_brushPrims);
 }
 
-void TerrainRaiseTool::doBindView(View* view) {
+void TerrainRaiseTool::doBindView(View *view) {
 	m_view = dynamic_cast<PerspectiveView*>(view);
 	m_terrain = m_context->getTerrain();
 
@@ -109,17 +109,17 @@ void TerrainRaiseTool::doRelease(int x, int y) {
 
 	// create undo action
 	String msg = "Edit Height";
-	Image* oldimage = m_terrain->copyOldHeight(m_editedRect);
-	Image* newimage = m_terrain->copyHeight(m_editedRect);
+	Image *oldimage = m_terrain->copyOldHeight(m_editedRect);
+	Image *newimage = m_terrain->copyHeight(m_editedRect);
 	m_terrain->writeOldHeight(m_editedRect, newimage);
-	HeightmapHis* action = new HeightmapHis(msg, m_editedRect, oldimage, newimage, m_terrain);
+	HeightmapHis *action = new HeightmapHis(msg, m_editedRect, oldimage, newimage, m_terrain);
 
 	onHistoryCreated(action);
 
 	m_view->getContext()->addHistory(action);
 }
 
-void TerrainRaiseTool::doRender(const RenderCamera& camera) {
+void TerrainRaiseTool::doRender(const RenderCamera &camera) {
 	if (!m_isValid)
 		return;
 
@@ -143,7 +143,7 @@ float TerrainRaiseTool::getWeight(float x, float y) const {
 	return dist;
 }
 
-void TerrainRaiseTool::updatePrim(const Vector3& from) {
+void TerrainRaiseTool::updatePrim(const Vector3 &from) {
 	if (from.x == m_center.x && from.y == m_center.y)
 		return;
 
@@ -159,7 +159,7 @@ void TerrainRaiseTool::updatePrim(const Vector3& from) {
 	m_brushPrims = new GroupPrim(Primitive::HintDynamic);
 	Primitives prims = m_terrain->getPrimsByCircle(from.x, from.y, radius);
 	for (Primitives::iterator it = prims.begin(); it != prims.end(); ++it) {
-		RefPrim* ref = new RefPrim(Primitive::HintDynamic);
+		RefPrim *ref = new RefPrim(Primitive::HintDynamic);
 		ref->setRefered(*it);
 		ref->setMaterial(m_brushMat.get());
 		m_brushPrims->addPrimitive(ref, true);
@@ -184,7 +184,7 @@ void TerrainRaiseTool::updatePrim(const Vector3& from) {
 // class TerrainLowerTool, terrain lower tool
 //------------------------------------------------------------------------------
 
-TerrainLowerTool::TerrainLowerTool(MapContext* context) : TerrainRaiseTool(context)
+TerrainLowerTool::TerrainLowerTool(MapContext *context) : TerrainRaiseTool(context)
 {}
 
 TerrainLowerTool::~TerrainLowerTool() {}
@@ -197,7 +197,7 @@ float TerrainLowerTool::getWeight(float x, float y) const {
 // class TerrainFlatTool, terrain level tool
 //------------------------------------------------------------------------------
 
-TerrainFlatTool::TerrainFlatTool(MapContext* context) : TerrainRaiseTool(context)
+TerrainFlatTool::TerrainFlatTool(MapContext *context) : TerrainRaiseTool(context)
 {}
 
 TerrainFlatTool::~TerrainFlatTool() {}
@@ -268,7 +268,7 @@ float TerrainFlatTool::getWeight(float x, float y) const {
 // class TerrainSmoothTool, terrain smooth tool
 //------------------------------------------------------------------------------
 
-TerrainSmoothTool::TerrainSmoothTool(MapContext* context) : TerrainRaiseTool(context)
+TerrainSmoothTool::TerrainSmoothTool(MapContext *context) : TerrainRaiseTool(context)
 {}
 
 TerrainSmoothTool::~TerrainSmoothTool() {}
@@ -319,7 +319,7 @@ void TerrainSmoothTool::doDrag(int x, int y, int flags, float pressure) {
 // class TerrainGrabTool, terrain level tool
 //------------------------------------------------------------------------------
 
-TerrainGrabTool::TerrainGrabTool(MapContext* context) : TerrainRaiseTool(context) {
+TerrainGrabTool::TerrainGrabTool(MapContext *context) : TerrainRaiseTool(context) {
 	m_isJustPressed = false;
 	m_baseHeight = nullptr;
 }
@@ -382,7 +382,7 @@ void TerrainGrabTool::doDrag(int x, int y, int flags, float pressure) {
 // class TerrainPaintTool, terrain paint tool
 //--------------------------------------------------------------------------
 
-TerrainPaintTool::TerrainPaintTool(MapContext* context) : TerrainRaiseTool(context) {
+TerrainPaintTool::TerrainPaintTool(MapContext *context) : TerrainRaiseTool(context) {
 	m_oldPixel = nullptr;
 }
 
@@ -432,7 +432,7 @@ void TerrainPaintTool::doDrag(int x, int y, int flags, float pressure) {
 
 	if (!m_editedRect.contains(rect)) {
 		Rect totalrect = m_editedRect | rect;
-		Image* image = m_layerGen->copyAlpha(totalrect);
+		Image *image = m_layerGen->copyAlpha(totalrect);
 
 		if (m_oldPixel) {
 			image->writeSubImage(m_oldPixel, Rect(0,0,m_editedRect.width,m_editedRect.height), m_editedRect.getMins() - totalrect.getMins());
@@ -460,8 +460,8 @@ void TerrainPaintTool::doRelease(int x, int y) {
 
 	// create undo action
 	String msg = "mapTerrain Paint";
-	Image* newimage = m_layerGen->copyAlpha(m_editedRect);
-	TerrainPaintHis* action = new TerrainPaintHis(msg, m_editedRect, m_layerGen->getLayerId(), m_oldPixel, newimage);
+	Image *newimage = m_layerGen->copyAlpha(m_editedRect);
+	TerrainPaintHis *action = new TerrainPaintHis(msg, m_editedRect, m_layerGen->getLayerId(), m_oldPixel, newimage);
 
 	m_oldPixel = nullptr;
 
@@ -499,8 +499,8 @@ void TerrainEraseTool::doRelease( int x, int y )
 
 	// create undo action
 	String msg = "mapTerrain Erase";
-	Image* newimage = m_layerGen->copyAlpha(m_editedRect);
-	TerrainPaintHis* action = new TerrainPaintHis(msg, m_editedRect, m_layerGen->getLayerId(), m_oldPixel, newimage);
+	Image *newimage = m_layerGen->copyAlpha(m_editedRect);
+	TerrainPaintHis *action = new TerrainPaintHis(msg, m_editedRect, m_layerGen->getLayerId(), m_oldPixel, newimage);
 
 	m_oldPixel = nullptr;
 
@@ -511,7 +511,7 @@ void TerrainEraseTool::doRelease( int x, int y )
 // class CreateStaticTool
 //--------------------------------------------------------------------------
 
-CreateStaticTool::CreateStaticTool(MapContext* context) : MapTool(context) {
+CreateStaticTool::CreateStaticTool(MapContext *context) : MapTool(context) {
 	m_agent = nullptr;
 }
 
@@ -537,13 +537,13 @@ void CreateStaticTool::doPress(int x, int y, int flags, float pressure) {
 
 	m_agent->bindToGame();
 
-	GroupHis* grouphis = new GroupHis(m_context, "Create MapStatic");
+	GroupHis *grouphis = new GroupHis(m_context, "Create MapStatic");
 
 	AgentList agentlist;
 	agentlist.push_back(m_agent);
-	UndeleteHis* undelhis = new UndeleteHis(m_context, "Create MapStatic", agentlist);
+	UndeleteHis *undelhis = new UndeleteHis(m_context, "Create MapStatic", agentlist);
 
-	History* selhis = m_view->getContext()->setSelectionHistoried(agentlist);
+	History *selhis = m_view->getContext()->setSelectionHistoried(agentlist);
 
 	grouphis->append(undelhis);
 	grouphis->append(selhis);
@@ -583,7 +583,7 @@ void CreateStaticTool::doRelease(int x, int y) {
 // class CreateEntityTool
 //--------------------------------------------------------------------------
 
-CreateEntityTool::CreateEntityTool(MapContext* context) : MapTool(context) {
+CreateEntityTool::CreateEntityTool(MapContext *context) : MapTool(context) {
 	m_agent = nullptr;
 }
 
@@ -607,13 +607,13 @@ void CreateEntityTool::doPress(int x, int y, int flags, float pressure) {
 
 	m_agent->bindToGame();
 
-	GroupHis* grouphis = new GroupHis(m_context, "Create Entity");
+	GroupHis *grouphis = new GroupHis(m_context, "Create Entity");
 
 	AgentList actorlist;
 	actorlist.push_back(m_agent);
-	UndeleteHis* undelhis = new UndeleteHis(m_context, "Create Entity", actorlist);
+	UndeleteHis *undelhis = new UndeleteHis(m_context, "Create Entity", actorlist);
 
-	History* selhis = m_view->getContext()->setSelectionHistoried(actorlist);
+	History *selhis = m_view->getContext()->setSelectionHistoried(actorlist);
 
 	grouphis->append(undelhis);
 	grouphis->append(selhis);
@@ -647,7 +647,7 @@ void CreateEntityTool::doRelease(int x, int y) {
 	m_agent = nullptr;
 }
 
-void CreateEntityTool::doRender(const RenderCamera& camera) {
+void CreateEntityTool::doRender(const RenderCamera &camera) {
 
 }
 
@@ -656,7 +656,7 @@ void CreateEntityTool::doRender(const RenderCamera& camera) {
 //--------------------------------------------------------------------------
 
 #ifdef AX_CONFIG_OPTION_USE_SPEEDTREE_40
-CreateTreeTool::CreateTreeTool(MapContext* context) : MapTool(context) {
+CreateTreeTool::CreateTreeTool(MapContext *context) : MapTool(context) {
 	m_agent = nullptr;
 }
 
@@ -681,13 +681,13 @@ void CreateTreeTool::doPress(int x, int y, int flags, float pressure) {
 
 	m_agent->bindToGame();
 
-	GroupHis* grouphis = new GroupHis(m_context, "Create MapSpeedTree");
+	GroupHis *grouphis = new GroupHis(m_context, "Create MapSpeedTree");
 
 	AgentList actorlist;
 	actorlist.push_back(m_agent);
-	UndeleteHis* undelhis = new UndeleteHis(m_context, "Create MapSpeedTree", actorlist);
+	UndeleteHis *undelhis = new UndeleteHis(m_context, "Create MapSpeedTree", actorlist);
 
-	History* selhis = m_view->getContext()->setSelectionHistoried(actorlist);
+	History *selhis = m_view->getContext()->setSelectionHistoried(actorlist);
 
 	grouphis->append(undelhis);
 	grouphis->append(selhis);

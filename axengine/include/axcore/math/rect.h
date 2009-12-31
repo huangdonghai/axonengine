@@ -20,16 +20,16 @@ AX_BEGIN_NAMESPACE
 
 		Rect();
 		Rect(int ix, int iy, int iw, int ih);
-		Rect(const Rect& rect);
+		Rect(const Rect &rect);
 		~Rect();
 
 		// add need function below
 		void clear();
-		bool operator==(const Rect& other) const;
+		bool operator==(const Rect &other) const;
 		bool contains(int ix, int iy) const;
-		bool contains(const Point& point) const;
-		bool contains(const Rect& r) const;
-		bool intersects(const Rect& r);
+		bool contains(const Point &point) const;
+		bool contains(const Rect &r) const;
+		bool intersects(const Rect &r);
 		Point getCenter() const;
 		Point getMins() const;
 		Point getMaxs() const;
@@ -39,55 +39,55 @@ AX_BEGIN_NAMESPACE
 		int yMax() const;
 
 		template< class Q >
-		Rect& operator/=(Q scale);
+		Rect &operator/=(Q scale);
 		template< class Q >
 		Rect operator/(Q scale) const;
 		template< class Q >
-		Rect& operator*=(Q scale);
+		Rect &operator*=(Q scale);
 		template< class Q >
 		Rect operator*(Q scale) const;
 
 		// if two rect don't intersected, returned rect have zero or negative width
 		// and height, check isEmpty()
 		// self rect and other rect must have positive width and height to do this function
-		Rect intersect(const Rect& other) const;
+		Rect intersect(const Rect &other) const;
 
 		// like intersect, but returned rect is self offset base, for texture clipping
-		Rect intersectToLocal(const Rect& other) const;
+		Rect intersectToLocal(const Rect &other) const;
 
 		// return a new rect contain both two rect
-		Rect unite(const Rect& other) const;
+		Rect unite(const Rect &other) const;
 
 		// just do intersect
-		Rect operator&(const Rect& other) const;
-		Rect& operator&=(const Rect& other);
-		Rect operator|(const Rect& other) const;
-		Rect& operator|=(const Rect& other);
+		Rect operator&(const Rect &other) const;
+		Rect &operator&=(const Rect &other);
+		Rect operator|(const Rect &other) const;
+		Rect &operator|=(const Rect &other);
 		// just do offset, no resize
-		Rect operator-(const Point& point) const;
-		Rect& operator-=(const Point& point);
+		Rect operator-(const Point &point) const;
+		Rect &operator-=(const Point &point);
 		// just do offset, no resize
-		Rect operator+(const Point& point) const;
-		Rect& operator+=(const Point& point);
+		Rect operator+(const Point &point) const;
+		Rect &operator+=(const Point &point);
 		bool isEmpty() const;
 		void deflate(int x, int y);
-		void deflate(const Point& point);
+		void deflate(const Point &point);
 		void inflate(int x, int y);
-		void inflate(const Point& point);
+		void inflate(const Point &point);
 
 		void offset(int x);
 		void offset(int x, int y);
-		void offset(const Point& point);
+		void offset(const Point &point);
 
 		Vector4 toVector4() const;
 
 		String toString() const;
-		bool fromString(const char* str);
+		bool fromString(const char *str);
 	};
 
 	inline Rect::Rect() {}
 	inline Rect::Rect(int ix, int iy, int iw, int ih) : x(ix), y(iy), width(iw), height(ih) {}
-	inline Rect::Rect(const Rect& rect) : x(rect.x), y(rect.y), width(rect.width), height(rect.height) {}
+	inline Rect::Rect(const Rect &rect) : x(rect.x), y(rect.y), width(rect.width), height(rect.height) {}
 	inline Rect::~Rect() {}
 
 	// add need function below
@@ -98,7 +98,7 @@ AX_BEGIN_NAMESPACE
 		height = std::numeric_limits<int>::min();
 	}
 
-	inline bool Rect::operator==(const Rect& other) const {
+	inline bool Rect::operator==(const Rect &other) const {
 		return (x==other.x) && (y==other.y) && (width==other.width) && (height==other.height);
 	}
 
@@ -106,11 +106,11 @@ AX_BEGIN_NAMESPACE
 		return ix >= x && ix < x+width && iy >= y && iy < y+height;
 	}
 
-	inline bool Rect::contains(const Point& point) const {
+	inline bool Rect::contains(const Point &point) const {
 		return contains(point.x, point.y);
 	}
 
-	inline bool Rect::contains(const Rect& r) const {
+	inline bool Rect::contains(const Rect &r) const {
 		if (r.isEmpty())
 			return true;
 
@@ -120,7 +120,7 @@ AX_BEGIN_NAMESPACE
 		return x <= r.x && y <= r.y && xMax() >= r.xMax() && yMax() >= r.yMax();
 	}
 
-	inline bool Rect::intersects(const Rect& r) {
+	inline bool Rect::intersects(const Rect &r) {
 		if (x > r.xMax())
 			return false;
 		if (y > r.yMax())
@@ -141,7 +141,7 @@ AX_BEGIN_NAMESPACE
 	inline int Rect::yMax() const { return y + height; }
 
 	template< class Q >
-	Rect& Rect::operator/=(Q scale) {
+	Rect &Rect::operator/=(Q scale) {
 		x /= scale;
 		y /= scale;
 		width /= scale;
@@ -156,7 +156,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 	template< class Q >
-	Rect& Rect::operator*=(Q scale) {
+	Rect &Rect::operator*=(Q scale) {
 		x *= scale;
 		y *= scale;
 		width *= scale;
@@ -173,7 +173,7 @@ AX_BEGIN_NAMESPACE
 	// if two rect don't intersected, returned rect have zero or negative width
 	// and height, check isEmpty()
 	// self rect and other rect must have positive width and height to do this function
-	inline Rect Rect::intersect(const Rect& other) const {
+	inline Rect Rect::intersect(const Rect &other) const {
 		Rect r(0, 0, 0, 0);
 
 		r.x = std::max(x, other.x);
@@ -185,12 +185,12 @@ AX_BEGIN_NAMESPACE
 	}
 
 	// lick intersect, but returned rect is self offset base, for texture clipping
-	inline Rect Rect::intersectToLocal(const Rect& other) const {
+	inline Rect Rect::intersectToLocal(const Rect &other) const {
 		return intersect(other) - getMins();
 	}
 
 	// return a new rect contain both two rect
-	inline Rect Rect::unite(const Rect& other) const {
+	inline Rect Rect::unite(const Rect &other) const {
 		if (isEmpty())
 			return other;
 
@@ -208,32 +208,32 @@ AX_BEGIN_NAMESPACE
 	}
 
 	// just do intersect
-	inline Rect Rect::operator&(const Rect& other) const {
+	inline Rect Rect::operator&(const Rect &other) const {
 		return intersect(other);
 	}
 
-	inline Rect& Rect::operator&=(const Rect& other) {
+	inline Rect &Rect::operator&=(const Rect &other) {
 		*this = *this & other;
 
 		return *this;
 	}
 
-	inline Rect Rect::operator|(const Rect& other) const {
+	inline Rect Rect::operator|(const Rect &other) const {
 		return unite(other);
 	}
 
-	inline Rect& Rect::operator|=(const Rect& other) {
+	inline Rect &Rect::operator|=(const Rect &other) {
 		*this = *this | other;
 
 		return *this;
 	}
 
 	// just do offset, no resize
-	inline Rect Rect::operator-(const Point& point) const {
+	inline Rect Rect::operator-(const Point &point) const {
 		return Rect(x - point.x, y - point.y, width, height);
 	}
 
-	inline Rect& Rect::operator-=(const Point& point) {
+	inline Rect &Rect::operator-=(const Point &point) {
 		x -= point.x;
 		y -= point.y;
 
@@ -241,11 +241,11 @@ AX_BEGIN_NAMESPACE
 	}
 
 	// just do offset, no resize
-	inline Rect Rect::operator+(const Point& point) const {
+	inline Rect Rect::operator+(const Point &point) const {
 		return Rect(x + point.x, y + point.y, width, height);
 	}
 
-	inline Rect& Rect::operator+=(const Point& point) {
+	inline Rect &Rect::operator+=(const Point &point) {
 		x += point.x;
 		y += point.y;
 		return *this;
@@ -263,7 +263,7 @@ AX_BEGIN_NAMESPACE
 		height -= 2 * m_y;
 	}
 
-	inline void Rect::deflate(const Point& point) {
+	inline void Rect::deflate(const Point &point) {
 		deflate(point.x, point.y);
 	}
 
@@ -271,7 +271,7 @@ AX_BEGIN_NAMESPACE
 		deflate(-m_x, -m_y);
 	}
 
-	inline void Rect::inflate(const Point& point) {
+	inline void Rect::inflate(const Point &point) {
 		inflate(point.x, point.y);
 	}
 
@@ -282,7 +282,7 @@ AX_BEGIN_NAMESPACE
 		this->x += x;
 		this->y += y;
 	}
-	inline void  Rect::offset(const Point& point) {
+	inline void  Rect::offset(const Point &point) {
 		offset(point.x, point.y);
 	}
 

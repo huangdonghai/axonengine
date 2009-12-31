@@ -12,7 +12,7 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-	static TextureManager* s_textureManager;
+	static TextureManager *s_textureManager;
 
 	//--------------------------------------------------------------------------
 	// class Texture
@@ -27,7 +27,7 @@ AX_BEGIN_NAMESPACE
 	Texture::~Texture()
 	{}
 
-	void Texture::uploadSubTexture( const Rect& rect, const void* pixels, TexFormat format /*= TexFormat::AUTO*/ )
+	void Texture::uploadSubTexture( const Rect &rect, const void *pixels, TexFormat format /*= TexFormat::AUTO*/ )
 	{
 		if (g_renderDriver->isInRenderingThread()) {
 			uploadSubTextureIm(rect, pixels, format);
@@ -51,17 +51,17 @@ AX_BEGIN_NAMESPACE
 		s_textureManager->freeTexture(this);
 	}
 
-	TextureRp Texture::load(const String& name, InitFlags flags/*=0*/)
+	TextureRp Texture::load(const String &name, InitFlags flags/*=0*/)
 	{
 		return s_textureManager->loadTexture(name, flags);
 	}
 
-	TextureRp Texture::create( const String& debugname, TexFormat format, int width, int height, InitFlags flags /*= 0*/ )
+	TextureRp Texture::create( const String &debugname, TexFormat format, int width, int height, InitFlags flags /*= 0*/ )
 	{
 		return s_textureManager->createTexture(debugname, format, width, height, flags);
 	}
 
-	bool Texture::isExist(const String& name)
+	bool Texture::isExist(const String &name)
 	{
 		return s_textureManager->isExist(name);
 	}
@@ -72,7 +72,7 @@ AX_BEGIN_NAMESPACE
 	void Texture::finalizeManager()
 	{ /* do nothing */ }
 
-	FixedString Texture::normalizeKey( const String& name )
+	FixedString Texture::normalizeKey( const String &name )
 	{
 		FixedString key;
 
@@ -86,7 +86,7 @@ AX_BEGIN_NAMESPACE
 		return key;
 	}
 
-	void Texture::texlist_f( const CmdArgs& args )
+	void Texture::texlist_f( const CmdArgs &args )
 	{
 		s_textureManager->texlist_f(args);
 	}
@@ -110,14 +110,14 @@ AX_BEGIN_NAMESPACE
 		s_textureManager = 0;
 	}
 
-	TextureRp TextureManager::loadTexture( const String& texname, Texture::InitFlags flags/*=0*/ )
+	TextureRp TextureManager::loadTexture( const String &texname, Texture::InitFlags flags/*=0*/ )
 	{
 		FixedString key = Texture::normalizeKey(texname);
 
 		// find if already loaded
 		TextureDict::const_iterator it = m_textureDict.find(key);
 		if (it != m_textureDict.end()) {
-			Texture* result = it->second;
+			Texture *result = it->second;
 			result->m_needFreeLink.removeFromList();
 			result->addref();
 			return result;
@@ -151,7 +151,7 @@ AX_BEGIN_NAMESPACE
 		return tex;
 	}
 
-	TextureRp TextureManager::createTexture( const String& debugname, TexFormat format, int width, int height, Texture::InitFlags flags /*= 0*/ )
+	TextureRp TextureManager::createTexture( const String &debugname, TexFormat format, int width, int height, Texture::InitFlags flags /*= 0*/ )
 	{
 		std::stringstream ss;
 		ss << "_" << debugname << "$" << g_system->generateId();
@@ -182,7 +182,7 @@ AX_BEGIN_NAMESPACE
 		return tex;
 	}
 
-	bool TextureManager::isExist(const FixedString& key)
+	bool TextureManager::isExist(const FixedString &key)
 	{
 		ExistDict::const_iterator it = m_existDict.find(key);
 		if (it != m_existDict.end())
@@ -196,7 +196,7 @@ AX_BEGIN_NAMESPACE
 		return result;
 	}
 
-	void TextureManager::uploadSubTexture( Texture* tex, const Rect& rect, const void* pixels, TexFormat format /*= TexFormat::AUTO*/ )
+	void TextureManager::uploadSubTexture( Texture *tex, const Rect &rect, const void *pixels, TexFormat format /*= TexFormat::AUTO*/ )
 	{
 		// calculate pixel size
 		if (format == TexFormat::AUTO) {
@@ -217,31 +217,31 @@ AX_BEGIN_NAMESPACE
 		cmd.format = format;
 
 		// clone pixel
-		void* clonedPixels = g_renderQueue->allocType<byte_t>(size);
+		void *clonedPixels = g_renderQueue->allocType<byte_t>(size);
 		memcpy(clonedPixels, pixels, size);
 		cmd.pixel = clonedPixels;
 
 		m_uploadCmdList.push_back(cmd);
 	}
 
-	void TextureManager::generateMipmap( Texture* tex )
+	void TextureManager::generateMipmap( Texture *tex )
 	{
 		tex->m_needGenMipmapLink.addToEnd(m_needGenMipmapHead);
 	}
 
-	void TextureManager::freeTexture( Texture* tex )
+	void TextureManager::freeTexture( Texture *tex )
 	{
 		tex->m_needFreeLink.addToEnd(m_needFreeHead);
 	}
 
-	void TextureManager::texlist_f( const CmdArgs& args )
+	void TextureManager::texlist_f( const CmdArgs &args )
 	{
 		Printf("List texture(s):\n");
 
 		int count = 0;
 		TextureDict::const_iterator it = m_textureDict.begin();
 		for (; it != m_textureDict.end(); ++it) {
-			Texture* tex = it->second;
+			Texture *tex = it->second;
 			if (!tex) {
 				continue;
 			}

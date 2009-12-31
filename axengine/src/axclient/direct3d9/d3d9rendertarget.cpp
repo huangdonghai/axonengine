@@ -92,7 +92,7 @@ AX_BEGIN_NAMESPACE
 				d3d9Device->SetRenderTarget(1, 0);
 			}
 
-			IDirect3DSurface9* ds = 0;
+			IDirect3DSurface9 *ds = 0;
 			if (m_depthTarget) {
 				ds = m_depthTarget->getSurface();
 				V(d3d9StateManager->setDepthStencilSurface(ds, TexFormat::D24S8));
@@ -120,15 +120,15 @@ AX_BEGIN_NAMESPACE
 #endif
 	}
 
-	void D3D9target::attachDepth(RenderTarget* depth)
+	void D3D9target::attachDepth(RenderTarget *depth)
 	{
 		AX_ASSERT(depth->isTexture());
 		AX_ASSERT(depth->isDepthFormat());
-		D3D9target* gldepth = dynamic_cast<D3D9target*>(depth);
+		D3D9target *gldepth = dynamic_cast<D3D9target*>(depth);
 		m_depthTarget = gldepth;
 	}
 
-	void D3D9target::attachColor(int index, RenderTarget* c)
+	void D3D9target::attachColor(int index, RenderTarget *c)
 	{
 		AX_ASSERT(index < MAX_COLOR_ATTACHMENT);
 		m_colorAttached[index] = (D3D9target*)c;
@@ -145,7 +145,7 @@ AX_BEGIN_NAMESPACE
 		TypeZeroArray(m_colorAttached);
 	}
 
-	RenderTarget* D3D9target::getColorAttached(int index) const
+	RenderTarget *D3D9target::getColorAttached(int index) const
 	{
 		AX_ASSERT(index < MAX_COLOR_ATTACHMENT);
 		return m_colorAttached[index];
@@ -159,11 +159,11 @@ AX_BEGIN_NAMESPACE
 		}
 	}
 
-	void D3D9target::copyFramebuffer(const Rect& r)
+	void D3D9target::copyFramebuffer(const Rect &r)
 	{
 		getSurface();
 
-		IDirect3DSurface9* surface = 0;
+		IDirect3DSurface9 *surface = 0;
 
 		if (d3d9BoundTarget->isWindow()) {
 			surface = ((D3D9window*)d3d9BoundTarget)->getSurface();
@@ -201,7 +201,7 @@ AX_BEGIN_NAMESPACE
 		m_realTarget = 0;
 	}
 
-	IDirect3DSurface9* D3D9target::getSurface()
+	IDirect3DSurface9 *D3D9target::getSurface()
 	{
 		if (!m_isPooled) {
 			if (!m_surface) {
@@ -219,7 +219,7 @@ AX_BEGIN_NAMESPACE
 		return m_realTarget->getSurface();
 	}
 
-	Texture* D3D9target::getTexture()
+	Texture *D3D9target::getTexture()
 	{
 		if (!m_isPooled)
 			return m_texture;
@@ -246,7 +246,7 @@ AX_BEGIN_NAMESPACE
 		m_realTarget->releaseSurface();
 	}
 
-	D3D9texture* D3D9target::getTextureDX()
+	D3D9texture *D3D9target::getTextureDX()
 	{
 		return static_cast<D3D9texture*>(getTexture());
 	}
@@ -286,19 +286,19 @@ AX_BEGIN_NAMESPACE
 
 	}
 
-	RenderTarget* D3D9targetmanager::allocTarget(RenderTarget::AllocHint hint, int width, int height, TexFormat texformat)
+	RenderTarget *D3D9targetmanager::allocTarget(RenderTarget::AllocHint hint, int width, int height, TexFormat texformat)
 	{
 		return allocTargetDX(hint, width, height, texformat);
 	}
 
-	void D3D9targetmanager::freeTarget(RenderTarget* target)
+	void D3D9targetmanager::freeTarget(RenderTarget *target)
 	{
 		D3D9_SCOPELOCK;
 
 		if (target->isWindow()) {
 			Errorf("can't free window target");
 		}
-		D3D9target* dxtarget = (D3D9target*)target;
+		D3D9target *dxtarget = (D3D9target*)target;
 		dxtarget->setHint(RenderTarget::Free, m_curFrame);
 
 		// if is pooled, free it's real target also
@@ -323,7 +323,7 @@ AX_BEGIN_NAMESPACE
 		{ // free real target first
 			List<RenderTarget*>::iterator it = m_freeRealTargets.begin();
 			while (it != m_freeRealTargets.end()) {
-				D3D9target* target = static_cast<D3D9target*>(*it);
+				D3D9target *target = static_cast<D3D9target*>(*it);
 				target->freeRealTarget();
 				++it;
 			}
@@ -334,7 +334,7 @@ AX_BEGIN_NAMESPACE
 			List<RenderTarget*>::iterator it = m_realAllocTargets.begin();
 
 			while (it != m_realAllocTargets.end()) {
-				D3D9target* target = static_cast<D3D9target*>(*it);
+				D3D9target *target = static_cast<D3D9target*>(*it);
 				target->allocRealTarget();
 				++it;
 			}
@@ -349,11 +349,11 @@ AX_BEGIN_NAMESPACE
 
 			Dict<int,D3D9targetseq>::iterator it2 = h2.begin();
 			for (; it2 != h2.end(); ++it2) {
-				D3D9targetseq& ts = it2->second;
+				D3D9targetseq &ts = it2->second;
 				D3D9targetseq::iterator it3 = ts.begin();
 
 				while (it3 != ts.end()) {
-					D3D9target* t = *it3;
+					D3D9target *t = *it3;
 #if 0
 					if (t->getHint() == Target::PermanentAlloc || t->getHint() == Target::PooledAlloc) {
 						++it3;
@@ -378,7 +378,7 @@ AX_BEGIN_NAMESPACE
 		}
 	}
 
-	extern bool trTexFormat(TexFormat texformat, D3DFORMAT& d3dformat);
+	extern bool trTexFormat(TexFormat texformat, D3DFORMAT &d3dformat);
 
 	void D3D9targetmanager::checkFormats()
 	{
@@ -414,7 +414,7 @@ AX_BEGIN_NAMESPACE
 		}
 	}
 
-	D3D9target* D3D9targetmanager::allocTargetDX(RenderTarget::AllocHint hint, int width, int height, TexFormat texformat)
+	D3D9target *D3D9targetmanager::allocTargetDX(RenderTarget::AllocHint hint, int width, int height, TexFormat texformat)
 	{
 		D3D9_SCOPELOCK;
 
@@ -423,10 +423,10 @@ AX_BEGIN_NAMESPACE
 			return nullptr;
 		}
 
-		D3D9targetseq& targets = m_targetPool[width][height];
+		D3D9targetseq &targets = m_targetPool[width][height];
 
-		D3D9target* result = nullptr;
-		AX_FOREACH(D3D9target* target, targets) {
+		D3D9target *result = nullptr;
+		AX_FOREACH(D3D9target *target, targets) {
 			if (target->getHint() != RenderTarget::Free && target->getHint() != RenderTarget::TemporalAlloc) {
 				continue;
 			}
@@ -456,14 +456,14 @@ AX_BEGIN_NAMESPACE
 		return result;
 	}
 
-	IDirect3DSurface9* D3D9targetmanager::getDepthStencil(int width, int height)
+	IDirect3DSurface9 *D3D9targetmanager::getDepthStencil(int width, int height)
 	{
 		if (m_depthStencilSurface && m_dsWidth >= width && m_dsHeight >= height) {
 			return m_depthStencilSurface;
 		}
 
 #if 0
-		static D3D9target* ds = 0;
+		static D3D9target *ds = 0;
 		d3d9TargetManager->freeTarget(ds);
 		ds = d3d9TargetManager->allocTargetDX(Target::PermanentAlloc, width, height, TexFormat::D24S8);
 		m_depthStencilSurface = ds->getSurface();

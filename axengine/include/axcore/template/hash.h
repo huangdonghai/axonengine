@@ -52,12 +52,12 @@ AX_BEGIN_NAMESPACE
 
 	// TODO: type traits for object move and copy, for POD data type
 	template <class T1, class T2>
-	inline void _construct(T1 *p, const T2& value) {
+	inline void _construct(T1 *p, const T2 &value) {
 		new(p) T1(value);	// placement new
 	}
 
 	template <class T>
-	inline void _destroy(T* pointer) {
+	inline void _destroy(T *pointer) {
 		pointer->~T();
 	}
 
@@ -67,29 +67,29 @@ AX_BEGIN_NAMESPACE
 
 	template <class T>
 	struct __hash<T*> {
-		size_t operator()(T* p) const { return size_t((void*)p); }
+		size_t operator()(T *p) const { return size_t((void*)p); }
 	};
 
 	template <class T>
 	struct __hash<const T*> {
-		size_t operator()(T* p) const { return size_t((const void*)p); }
+		size_t operator()(T *p) const { return size_t((const void*)p); }
 	};
 
 	template <class T>
 	struct identity : public std::unary_function<T, T> {
-		const T& operator()(const T& x) const { return x; }
+		const T &operator()(const T &x) const { return x; }
 	};
 
 	template <class Pair>
 	struct select1st : public std::unary_function<Pair, typename Pair::first_type> {
-		const typename Pair::first_type& operator()(const Pair& x) const {
+		const typename Pair::first_type &operator()(const Pair &x) const {
 			return x.first;
 		}
 	};
 
 	template <class Pair>
 	struct select2nd : public std::unary_function<Pair, typename Pair::second_type> {
-		const typename Pair::second_type& operator()(const Pair& x) const {
+		const typename Pair::second_type &operator()(const Pair &x) const {
 			return x.second;
 		}
 	};
@@ -100,7 +100,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 	/// 
-	inline size_t __hash_string(const char* s) {
+	inline size_t __hash_string(const char *s) {
 		unsigned long h = 0;
 		for (; *s; ++s)
 			h = 5*h + *s;
@@ -108,7 +108,7 @@ AX_BEGIN_NAMESPACE
 		return size_t(h);
 	}
 
-	inline size_t __hash_string(const wchar_t* s) {
+	inline size_t __hash_string(const wchar_t *s) {
 		unsigned long h = 0;
 		for (; *s; ++s)
 			h = 5*h + *s;
@@ -118,22 +118,22 @@ AX_BEGIN_NAMESPACE
 
 	template<>
 	struct __hash<char*> {
-		size_t operator()(const char* s) const { return __hash_string(s); }
+		size_t operator()(const char *s) const { return __hash_string(s); }
 	};
 
 	template<>
 	struct __hash<const char*> {
-		size_t operator()(const char* s) const { return __hash_string(s); }
+		size_t operator()(const char *s) const { return __hash_string(s); }
 	};
 
 	template<>
 	struct __hash<String> {
-		size_t operator()(const String& s) const { return __hash_string(s.c_str()); }
+		size_t operator()(const String &s) const { return __hash_string(s.c_str()); }
 	};
 
 	template<>
 	struct __hash<const String> {
-		size_t operator()(const String& s) const { return __hash_string(s.c_str()); }
+		size_t operator()(const String &s) const { return __hash_string(s.c_str()); }
 	};
 
 	template<>
@@ -179,7 +179,7 @@ AX_BEGIN_NAMESPACE
 	};
 	template<>
 	struct __hash<void*> {
-		size_t operator()(void* x) const { return (size_t)x; }
+		size_t operator()(void *x) const { return (size_t)x; }
 	};
 
 #if 0
@@ -207,7 +207,7 @@ AX_BEGIN_NAMESPACE
 
 	template <class Value>
 	struct __hash_node {
-		__hash_node* mNext;
+		__hash_node *mNext;
 		Value mValue;		/// in map, contain key&data std::pair
 	};
 
@@ -218,19 +218,19 @@ AX_BEGIN_NAMESPACE
 		typedef __hash_const_iterator<Key, Value, HashFn, ExtractKey, EqualKey>	const_iterator;
 		typedef __hash_node<Value>		Node;
 		typedef Value value_type;
-		typedef Value& reference;
-		typedef Value* const_pointer;
+		typedef Value &reference;
+		typedef Value *const_pointer;
 
-		__hash_iterator(Node* n, HashTable *tab) : mCurrent(n), mHashTable(tab) {}
+		__hash_iterator(Node *n, HashTable *tab) : mCurrent(n), mHashTable(tab) {}
 		__hash_iterator() {}
 
 		reference operator*() const { return mCurrent->mValue; }
 		const_pointer operator->() const { return &(operator*()); }
-		bool operator==(const iterator& it) const { return mCurrent == it.mCurrent; }
-		bool operator!=(const iterator& it) const { return mCurrent != it.mCurrent; }
+		bool operator==(const iterator &it) const { return mCurrent == it.mCurrent; }
+		bool operator!=(const iterator &it) const { return mCurrent != it.mCurrent; }
 		iterator operator++(int) { iterator tmp = *this; ++*this; return tmp; }
-		iterator& operator++() {
-			const Node* old = mCurrent;
+		iterator &operator++() {
+			const Node *old = mCurrent;
 			mCurrent = mCurrent->mNext;
 			if (!mCurrent) {
 				size_t bucket = mHashTable->BucketNum(old->mValue);
@@ -242,8 +242,8 @@ AX_BEGIN_NAMESPACE
 		}
 
 	public:
-		Node* mCurrent;
-		HashTable* mHashTable;
+		Node *mCurrent;
+		HashTable *mHashTable;
 	};
 
 	template <class Key, class Value, class HashFn, class ExtractKey, class EqualKey>
@@ -254,21 +254,21 @@ AX_BEGIN_NAMESPACE
 		typedef __hash_iterator<Key, Value, HashFn, ExtractKey, EqualKey>		iterator;
 		typedef __hash_const_iterator<Key, Value, HashFn, ExtractKey, EqualKey>	const_iterator;
 		typedef Value value_type;
-		typedef const Value& reference;
-		typedef const Value* const_pointer;
+		typedef const Value &reference;
+		typedef const Value *const_pointer;
 
-		__hash_const_iterator(const Node* n, const HashTable* tab) : mCurrent(n), mHashTable(tab) {}
+		__hash_const_iterator(const Node *n, const HashTable *tab) : mCurrent(n), mHashTable(tab) {}
 		/// cast from non const iterator
-		__hash_const_iterator(const iterator& it) : mCurrent(it.mCurrent), mHashTable(it.mHashTable) {}
+		__hash_const_iterator(const iterator &it) : mCurrent(it.mCurrent), mHashTable(it.mHashTable) {}
 		__hash_const_iterator() {}
 
 		reference operator*() const { return mCurrent->mValue; }
 		const_pointer operator->() const { return &(operator*()); }
-		bool operator==(const const_iterator& it) const { return mCurrent == it.mCurrent; }
-		bool operator!=(const const_iterator& it) const { return mCurrent != it.mCurrent; }
+		bool operator==(const const_iterator &it) const { return mCurrent == it.mCurrent; }
+		bool operator!=(const const_iterator &it) const { return mCurrent != it.mCurrent; }
 		const_iterator operator++(int) { const_iterator tmp = *this; ++*this; return tmp; }
-		const_iterator& operator++() {
-			const Node* old = mCurrent;
+		const_iterator &operator++() {
+			const Node *old = mCurrent;
 			mCurrent = mCurrent->mNext;
 			if (!mCurrent) {
 				size_t bucket = mHashTable->BucketNum(old->mValue);
@@ -280,8 +280,8 @@ AX_BEGIN_NAMESPACE
 		}
 
 	public:
-		const Node* mCurrent;
-		const HashTable* mHashTable;
+		const Node *mCurrent;
+		const HashTable *mHashTable;
 	};
 
 	template <class Key, class Value, class HashFn, class ExtractKey, class EqualKey>
@@ -291,10 +291,10 @@ AX_BEGIN_NAMESPACE
 		typedef EqualKey KeyEqual;
 		typedef Key key_type;
 		typedef Value value_type;
-		typedef value_type* pointer;
-		typedef const value_type* const_pointer;
-		typedef value_type& reference;
-		typedef const value_type& const_reference;
+		typedef value_type *pointer;
+		typedef const value_type *const_pointer;
+		typedef value_type &reference;
+		typedef const value_type &const_reference;
 
 		typedef __hash_iterator<Key, Value, HashFn, ExtractKey, EqualKey>		iterator;
 		typedef __hash_const_iterator<Key, Value, HashFn, ExtractKey, EqualKey>	const_iterator;
@@ -302,7 +302,7 @@ AX_BEGIN_NAMESPACE
 		friend struct __hash_const_iterator<Key, Value, HashFn, ExtractKey, EqualKey>;
 
 	public:
-		__hash_table(size_t n, const HashFn& hf, const EqualKey& eql)
+		__hash_table(size_t n, const HashFn &hf, const EqualKey &eql)
 			: hash(hf) , equals(eql)
 		{
 			InitializeBuckets(n);
@@ -313,13 +313,13 @@ AX_BEGIN_NAMESPACE
 		__hash_table() {
 			InitializeBuckets(64);
 		}
-		__hash_table(const __hash_table& ht)
+		__hash_table(const __hash_table &ht)
 			: hash(ht.hash), equals(ht.equals), get_key(ht.get_key), mNumElements(0)
 		{
 			CopyFrom(ht);
 		}
 		~__hash_table() { clear(); }
-		__hash_table& operator=(const __hash_table& ht) {
+		__hash_table &operator=(const __hash_table &ht) {
 			if (&ht != this) {
 				clear();
 				hash = ht.hash;
@@ -358,33 +358,33 @@ AX_BEGIN_NAMESPACE
 
 		size_t elems_in_bucket(size_t bucket) const {
 			size_t result = 0;
-			for (Node* cur = mBuckets[bucket]; cur; cur = cur->mNext)
+			for (Node *cur = mBuckets[bucket]; cur; cur = cur->mNext)
 				result += 1;
 			return result;
 		}
 
-		std::pair<iterator,bool> InsertUnique(const value_type& obj) {
+		std::pair<iterator,bool> InsertUnique(const value_type &obj) {
 			const size_t n = BucketNum(obj);
-			Node* first = mBuckets[n];
+			Node *first = mBuckets[n];
 
-			for (Node* cur = first; cur; cur = cur->mNext)
+			for (Node *cur = first; cur; cur = cur->mNext)
 				if (equals(get_key(obj), get_key(cur->mValue)))
 					return std::pair<iterator,bool>(iterator(cur, this), false);
 
-			Node* tmp = NewNode(obj);
+			Node *tmp = NewNode(obj);
 			tmp->mNext = first;
 			mBuckets[n] = tmp;
 			++mNumElements;
 			return std::pair<iterator,bool>(iterator(tmp, this), true);
 		}
 
-		iterator insert_equal(const value_type& obj) {
+		iterator insert_equal(const value_type &obj) {
 			const size_t n = BucketNum(obj);
-			Node* first = mBuckets[n];
+			Node *first = mBuckets[n];
 
-			for (Node* cur = first; cur; cur = cur->mNext) {
+			for (Node *cur = first; cur; cur = cur->mNext) {
 				if (equals(get_key(cur->mValue), get_key(obj))) {
-					Node* tmp = NewNode(obj);
+					Node *tmp = NewNode(obj);
 					tmp->mNext = cur->mNext;
 					cur->mNext = tmp;
 					++mNumElements;
@@ -392,16 +392,16 @@ AX_BEGIN_NAMESPACE
 				}
 			}
 
-			Node* tmp = NewNode(obj);
+			Node *tmp = NewNode(obj);
 			tmp->mNext = first;
 			mBuckets[n] = tmp;
 			++mNumElements;
 			return iterator(tmp, this);
 		}
 
-		iterator find(const key_type& key) {
+		iterator find(const key_type &key) {
 			size_t n = BucketNumForKey(key);
-			Node* first;
+			Node *first;
 			for (first = mBuckets[n];
 				first && !equals(get_key(first->mValue), key);
 				first = first->mNext)
@@ -409,9 +409,9 @@ AX_BEGIN_NAMESPACE
 			return iterator(first, this);
 		}
 
-		const_iterator find(const key_type& key) const {
+		const_iterator find(const key_type &key) const {
 			size_t n = BucketNumForKey(key);
-			const Node* first;
+			const Node *first;
 			for (first = mBuckets[n]
 			; first && !equals(get_key(first->mValue), key)
 				; first = first->mNext)
@@ -419,9 +419,9 @@ AX_BEGIN_NAMESPACE
 			return const_iterator(first, this);
 		}
 
-		bool IsExist(const key_type& key) const {
+		bool IsExist(const key_type &key) const {
 			size_t n = BucketNumForKey(key);
-			const Node* first;
+			const Node *first;
 			for (first = mBuckets[n];
 				first && !equals(get_key(first->mValue), key);
 				first = first->mNext)
@@ -429,41 +429,41 @@ AX_BEGIN_NAMESPACE
 			return const_iterator(first, this) != end();
 		}
 
-		reference FindOrInsert(const value_type& obj) {
+		reference FindOrInsert(const value_type &obj) {
 			size_t n = BucketNum(obj);
-			Node* first = mBuckets[n];
+			Node *first = mBuckets[n];
 
-			for (Node* cur = first; cur; cur = cur->mNext)
+			for (Node *cur = first; cur; cur = cur->mNext)
 				if (equals(get_key(cur->mValue), get_key(obj)))
 					return cur->mValue;
 
-			Node* tmp = NewNode(obj);
+			Node *tmp = NewNode(obj);
 			tmp->mNext = first;
 			mBuckets[n] = tmp;
 			++mNumElements;
 			return tmp->mValue;
 		}
-		size_t count(const key_type& key) const {
+		size_t count(const key_type &key) const {
 			const size_t n = BucketNumForKey(key);
 			size_t result = 0;
 
-			for (const Node* cur = mBuckets[n]; cur; cur = cur->mNext)
+			for (const Node *cur = mBuckets[n]; cur; cur = cur->mNext)
 				if (equals(get_key(cur->mValue), key))
 					++result;
 			return result;
 		}
 
-		std::pair<iterator, iterator> EqualRange(const key_type& key);
-		std::pair<const_iterator, const_iterator> EqualRange(const key_type& key) const;
+		std::pair<iterator, iterator> EqualRange(const key_type &key);
+		std::pair<const_iterator, const_iterator> EqualRange(const key_type &key) const;
 
-		size_t erase(const key_type& key) {
+		size_t erase(const key_type &key) {
 			const size_t n = BucketNumForKey(key);
-			Node* first = mBuckets[n];
+			Node *first = mBuckets[n];
 			size_t erased = 0;
 
 			if (first) {
-				Node* cur = first;
-				Node* next = cur->mNext;
+				Node *cur = first;
+				Node *next = cur->mNext;
 				while (next) {
 					if (equals(get_key(next->mValue), key)) {
 						cur->mNext = next->mNext;
@@ -485,17 +485,17 @@ AX_BEGIN_NAMESPACE
 			}
 			return erased;
 		}
-		void erase(const iterator& it) {
-			if (Node* const p = it.mCurrent) {
+		void erase(const iterator &it) {
+			if (Node *const p = it.mCurrent) {
 				const size_t n = BucketNumForKey(get_key(p->mValue));
-				Node* cur = mBuckets[n];
+				Node *cur = mBuckets[n];
 
 				if (cur == p) {
 					mBuckets[n] = cur->mNext;
 					DeleteNode(cur);
 					--mNumElements;
 				} else {
-					Node* next = cur->mNext;
+					Node *next = cur->mNext;
 					while (next) {
 						if (next == p) {
 							cur->mNext = next->mNext;
@@ -511,15 +511,15 @@ AX_BEGIN_NAMESPACE
 			}
 		}
 
-		void erase(const const_iterator& it) {
+		void erase(const const_iterator &it) {
 			erase(iterator(const_cast<Node*>(it.mCurrent), const_cast<__hash_table*>(it.mHashTable)));
 		}
 
 		void clear() {
 			for (size_t i = 0; i < mBuckets.size(); ++i) {
-				Node* cur = mBuckets[i];
+				Node *cur = mBuckets[i];
 				while (cur != 0) {
-					Node* next = cur->mNext;
+					Node *next = cur->mNext;
 					DeleteNode(cur);
 					cur = next;
 				}
@@ -540,11 +540,11 @@ AX_BEGIN_NAMESPACE
 			return n;
 		}
 
-		size_t BucketNumForKey(const key_type& key) const {
+		size_t BucketNumForKey(const key_type &key) const {
 			return hash(key) & (mBuckets.size()-1);
 		}
 
-		size_t BucketNum(const value_type& obj) const {
+		size_t BucketNum(const value_type &obj) const {
 			return BucketNumForKey(get_key(obj));
 		}
 
@@ -555,8 +555,8 @@ AX_BEGIN_NAMESPACE
 			mNumElements = 0;
 		}
 
-		Node* NewNode(const value_type& obj) {
-			Node* n = _allocator.allocate(1);
+		Node *NewNode(const value_type &obj) {
+			Node *n = _allocator.allocate(1);
 			n->mNext = 0;
 			try {
 				_construct(&n->mValue, obj);
@@ -567,25 +567,25 @@ AX_BEGIN_NAMESPACE
 			}
 		}
 
-		void DeleteNode(Node* n) {
+		void DeleteNode(Node *n) {
 			_destroy(&n->mValue);
 			_allocator.deallocate(n, 1);
 		}
 
-		void EraseBucket(const size_t n, Node* first, Node* last);
-		void EraseBucket(const size_t n, Node* last);
+		void EraseBucket(const size_t n, Node *first, Node *last);
+		void EraseBucket(const size_t n, Node *last);
 
-		void CopyFrom(const __hash_table& ht) {
+		void CopyFrom(const __hash_table &ht) {
 			mBuckets.clear();
 			mBuckets.reserve(ht.mBuckets.size());
 			mBuckets.insert(mBuckets.end(), ht.mBuckets.size(), (Node*) 0);
 			try {
 				for (size_t i = 0; i < ht.mBuckets.size(); ++i) {
-					if (const Node* cur = ht.mBuckets[i]) {
-						Node* copy = NewNode(cur->mValue);
+					if (const Node *cur = ht.mBuckets[i]) {
+						Node *copy = NewNode(cur->mValue);
 						mBuckets[i] = copy;
 
-						for (Node* next = cur->mNext; next; cur = next, next = cur->mNext) {
+						for (Node *next = cur->mNext; next; cur = next, next = cur->mNext) {
 							copy->mNext = NewNode(next->mValue);
 							copy = copy->mNext;
 						}
@@ -630,8 +630,8 @@ AX_BEGIN_NAMESPACE
 	public:
 		hash_set() : rep(DEFAULT_HASH_BUCKET_SIZE, Hasher(), KeyEqual()) {}
 		explicit hash_set(size_t n) : rep(n, Hasher(), KeyEqual()) {}
-		hash_set(size_t n, const Hasher& hf) : rep(n, hf, KeyEqual()) {}
-		hash_set(size_t n, const Hasher& hf, const KeyEqual& eql) : rep(n, hf, eql) {}
+		hash_set(size_t n, const Hasher &hf) : rep(n, hf, KeyEqual()) {}
+		hash_set(size_t n, const Hasher &hf, const KeyEqual &eql) : rep(n, hf, eql) {}
 
 
 	public:
@@ -643,14 +643,14 @@ AX_BEGIN_NAMESPACE
 		iterator end() const { return rep.end(); }
 
 	public:
-		std::pair<iterator, bool> insert(const value_type& obj) {
+		std::pair<iterator, bool> insert(const value_type &obj) {
 			return rep.InsertUnique(obj);
 		}
 
-		iterator find(const key_type& key) const { return rep.find(key); }
-		size_t count(const key_type& key) const { return rep.count(key); }
+		iterator find(const key_type &key) const { return rep.find(key); }
+		size_t count(const key_type &key) const { return rep.count(key); }
 
-		size_t erase(const key_type& key) {return rep.erase(key); }
+		size_t erase(const key_type &key) {return rep.erase(key); }
 		void erase(iterator it) { rep.erase(it); }
 		void clear() { rep.clear(); }
 
@@ -688,8 +688,8 @@ AX_BEGIN_NAMESPACE
 	public:
 		hash_multiset() : rep(DEFAULT_HASH_BUCKET_SIZE, Hasher(), KeyEqual()) {}
 		explicit hash_multiset(size_t n) : rep(n, Hasher(), KeyEqual()) {}
-		hash_multiset(size_t n, const Hasher& hf) : rep(n, hf, KeyEqual()) {}
-		hash_multiset(size_t n, const Hasher& hf, const KeyEqual& eql) : rep(n, hf, eql) {}
+		hash_multiset(size_t n, const Hasher &hf) : rep(n, hf, KeyEqual()) {}
+		hash_multiset(size_t n, const Hasher &hf, const KeyEqual &eql) : rep(n, hf, eql) {}
 
 
 	public:
@@ -701,14 +701,14 @@ AX_BEGIN_NAMESPACE
 		const_iterator end() const { return rep.end(); }
 
 	public:
-		iterator insert(const value_type& obj) {
+		iterator insert(const value_type &obj) {
 			return rep.insert_equal(obj);
 		}
 
-		const_iterator find(const key_type& key) const { return rep.find(key); }
-		size_t count(const key_type& key) const { return rep.count(key); }
+		const_iterator find(const key_type &key) const { return rep.find(key); }
+		size_t count(const key_type &key) const { return rep.count(key); }
 
-		size_t erase(const key_type& key) {return rep.erase(key); }
+		size_t erase(const key_type &key) {return rep.erase(key); }
 		void erase(iterator it) { rep.erase(it); }
 		void clear() { rep.clear(); }
 
@@ -753,8 +753,8 @@ AX_BEGIN_NAMESPACE
 	public:
 		hash_map() : rep(DEFAULT_HASH_BUCKET_SIZE, Hasher(), KeyEqual()) {}
 		explicit hash_map(size_t n) : rep(n, Hasher(), KeyEqual()) {}
-		hash_map(size_t n, const Hasher& hf) : rep(n, hf, KeyEqual()) {}
-		hash_map(size_t n, const Hasher& hf, const KeyEqual& eql) : rep(n, hf, eql) {}
+		hash_map(size_t n, const Hasher &hf) : rep(n, hf, KeyEqual()) {}
+		hash_map(size_t n, const Hasher &hf, const KeyEqual &eql) : rep(n, hf, eql) {}
 
 
 	public:
@@ -768,18 +768,18 @@ AX_BEGIN_NAMESPACE
 		const_iterator end() const { return rep.end(); }
 
 	public:
-		std::pair<iterator, bool>	insert(const value_type& obj) { return rep.InsertUnique(obj); }
-		std::pair<iterator, bool>	insert(const key_type& key, const data_type& data)
+		std::pair<iterator, bool>	insert(const value_type &obj) { return rep.InsertUnique(obj); }
+		std::pair<iterator, bool>	insert(const key_type &key, const data_type &data)
 		{ return rep.InsertUnique(std::make_pair(key, data)); }
-		iterator find(const key_type& key) { return rep.find(key); }
-		const_iterator find(const key_type& key) const { return rep.find(key); }
-		bool exist(const key_type& key) const { return rep.IsExist(key); }
-		size_t count(const key_type& key) const { return rep.count(key); }
-		size_t erase(const key_type& key) {return rep.erase(key); }
+		iterator find(const key_type &key) { return rep.find(key); }
+		const_iterator find(const key_type &key) const { return rep.find(key); }
+		bool exist(const key_type &key) const { return rep.IsExist(key); }
+		size_t count(const key_type &key) const { return rep.count(key); }
+		size_t erase(const key_type &key) {return rep.erase(key); }
 		void erase(iterator it) { rep.erase(it); }
 		void clear() { rep.clear(); }
 
-		T& operator[](const key_type& key) {
+		T &operator[](const key_type &key) {
 			return rep.FindOrInsert(value_type(key, T())).second;
 		}
 
@@ -823,8 +823,8 @@ AX_BEGIN_NAMESPACE
 	public:
 		hash_multimap() : rep(DEFAULT_HASH_BUCKET_SIZE, Hasher(), KeyEqual()) {}
 		explicit hash_multimap(size_t n) : rep(n, Hasher(), KeyEqual()) {}
-		hash_multimap(size_t n, const Hasher& hf) : rep(n, hf, KeyEqual()) {}
-		hash_multimap(size_t n, const Hasher& hf, const KeyEqual& eql) : rep(n, hf, eql) {}
+		hash_multimap(size_t n, const Hasher &hf) : rep(n, hf, KeyEqual()) {}
+		hash_multimap(size_t n, const Hasher &hf, const KeyEqual &eql) : rep(n, hf, eql) {}
 
 
 	public:
@@ -838,13 +838,13 @@ AX_BEGIN_NAMESPACE
 		const_iterator end() const { return rep.end(); }
 
 	public:
-		iterator insert(const value_type& obj) { return rep.insert_equal(obj); }
-		iterator insert(const key_type& key, const data_type& data)
+		iterator insert(const value_type &obj) { return rep.insert_equal(obj); }
+		iterator insert(const key_type &key, const data_type &data)
 		{ return rep.insert_equal(std::make_pair(key, data)); }
-		iterator find(const key_type& key) { return rep.find(key); }
-		const_iterator find(const key_type& key) const { return rep.find(key); }
-		size_t count(const key_type& key) const { return rep.count(key); }
-		size_t erase(const key_type& key) {return rep.erase(key); }
+		iterator find(const key_type &key) { return rep.find(key); }
+		const_iterator find(const key_type &key) const { return rep.find(key); }
+		size_t count(const key_type &key) const { return rep.count(key); }
+		size_t erase(const key_type &key) {return rep.erase(key); }
 		void erase(iterator it) { rep.erase(it); }
 		void clear() { rep.clear(); }
 
@@ -856,7 +856,7 @@ AX_BEGIN_NAMESPACE
 
 
 	/// 
-	inline size_t hash_istring(const char* s) {
+	inline size_t hash_istring(const char *s) {
 		if (!s)
 			return 0;
 
@@ -868,7 +868,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 	/// 
-	inline size_t hash_filename(const char* s) {
+	inline size_t hash_filename(const char *s) {
 		if (!s)
 			return 0;
 
@@ -885,7 +885,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 	/// 
-	inline size_t hash_istring(const wchar_t* s) {
+	inline size_t hash_istring(const wchar_t *s) {
 		if (!s)
 			return 0;
 
@@ -897,7 +897,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 	/// 
-	inline size_t hash_filename(const wchar_t* s) {
+	inline size_t hash_filename(const wchar_t *s) {
 		if (!s)
 			return 0;
 
@@ -914,18 +914,18 @@ AX_BEGIN_NAMESPACE
 	}
 
 	struct hash_str {
-		inline size_t operator()(const String& s) const { return __hash<const char*>()(s.c_str()); }
-		inline size_t operator()(const char* s) const { return __hash<const char*>()(s); }
+		inline size_t operator()(const String &s) const { return __hash<const char*>()(s.c_str()); }
+		inline size_t operator()(const char *s) const { return __hash<const char*>()(s); }
 	};
 
 	struct hash_istr {
-		inline size_t operator()(const String& s) const { return hash_istring(s.c_str()); }
-		inline size_t operator()(const char* s) const { return hash_istring(s); }
+		inline size_t operator()(const String &s) const { return hash_istring(s.c_str()); }
+		inline size_t operator()(const char *s) const { return hash_istring(s); }
 	};
 
 	struct hash_pathname {
-		inline size_t operator()(const String& s) const { return hash_filename(s.c_str()); }
-		inline size_t operator()(const char* s) const { return hash_filename(s); }
+		inline size_t operator()(const String &s) const { return hash_filename(s.c_str()); }
+		inline size_t operator()(const char *s) const { return hash_filename(s); }
 	};
 
 	inline char __tofilenamechar(char c) {
@@ -935,10 +935,10 @@ AX_BEGIN_NAMESPACE
 	}
 
 	struct equal_pathname {
-		inline bool operator()(const String& s1, const String& s2) const {
+		inline bool operator()(const String &s1, const String &s2) const {
 			return operator()(s1.c_str(), s2.c_str());
 		}
-		inline bool operator()(const char* s1, const char* s2) const {
+		inline bool operator()(const char *s1, const char *s2) const {
 			for (uint_t i = 0; *s1 && *s2; i++, s1++, s2++) {
 				if (__tofilenamechar(*s1) != __tofilenamechar(*s2))
 					return false;
@@ -951,19 +951,19 @@ AX_BEGIN_NAMESPACE
 	};
 
 	struct equal_istr {
-		inline bool operator()(const String& s1, const String& s2) const {
+		inline bool operator()(const String &s1, const String &s2) const {
 			return StringUtil::stricmp(s1.c_str(), s2.c_str()) == 0;
 		}
-		inline bool operator()(const char* s1, const char* s2) const {
+		inline bool operator()(const char *s1, const char *s2) const {
 			return StringUtil::stricmp(s1, s2) == 0;
 		}
 	};
 
 	struct equal_str {
-		inline bool operator()(const String& s1, const String& s2) const {
+		inline bool operator()(const String &s1, const String &s2) const {
 			return strcmp(s1.c_str(), s2.c_str()) == 0;
 		}
-		inline bool operator()(const char* s1, const char* s2) const {
+		inline bool operator()(const char *s1, const char *s2) const {
 			return strcmp(s1, s2) == 0;
 		}
 	};
@@ -982,7 +982,7 @@ AX_BEGIN_NAMESPACE
 
 AX_BEGIN_NAMESPACE
 	/// 
-	inline size_t hash_string(const char* s) {
+	inline size_t hash_string(const char *s) {
 		unsigned long h = 0;
 		for (; *s; ++s)
 			h = 5*h + *s;
@@ -990,7 +990,7 @@ AX_BEGIN_NAMESPACE
 		return size_t(h);
 	}
 
-	inline size_t hash_string(const wchar_t* s) {
+	inline size_t hash_string(const wchar_t *s) {
 		unsigned long h = 0;
 		for (; *s; ++s)
 			h = 5*h + *s;
@@ -999,7 +999,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 	/// 
-	inline size_t hash_istring(const char* s) {
+	inline size_t hash_istring(const char *s) {
 		if (!s)
 			return 0;
 
@@ -1011,7 +1011,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 	/// 
-	inline size_t hash_filename(const char* s) {
+	inline size_t hash_filename(const char *s) {
 		if (!s)
 			return 0;
 
@@ -1028,7 +1028,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 	/// 
-	inline size_t hash_istring(const wchar_t* s) {
+	inline size_t hash_istring(const wchar_t *s) {
 		if (!s)
 			return 0;
 
@@ -1040,7 +1040,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 	/// 
-	inline size_t hash_filename(const wchar_t* s) {
+	inline size_t hash_filename(const wchar_t *s) {
 		if (!s)
 			return 0;
 
@@ -1057,17 +1057,17 @@ AX_BEGIN_NAMESPACE
 	}
 
 	struct hash_cstr {
-		inline size_t operator()(const char* s) const { return hash_string(s); }
+		inline size_t operator()(const char *s) const { return hash_string(s); }
 	};
 
 	struct hash_istr {
-		inline size_t operator()(const String& s) const { return hash_istring(s.c_str()); }
-		inline size_t operator()(const char* s) const { return hash_istring(s); }
+		inline size_t operator()(const String &s) const { return hash_istring(s.c_str()); }
+		inline size_t operator()(const char *s) const { return hash_istring(s); }
 	};
 
 	struct hash_pathname {
-		inline size_t operator()(const String& s) const { return hash_filename(s.c_str()); }
-		inline size_t operator()(const char* s) const { return hash_filename(s); }
+		inline size_t operator()(const String &s) const { return hash_filename(s.c_str()); }
+		inline size_t operator()(const char *s) const { return hash_filename(s); }
 	};
 
 	inline char __tofilenamechar(char c) {
@@ -1077,10 +1077,10 @@ AX_BEGIN_NAMESPACE
 	}
 
 	struct equal_pathname {
-		inline bool operator()(const String& s1, const String& s2) const {
+		inline bool operator()(const String &s1, const String &s2) const {
 			return operator()(s1.c_str(), s2.c_str());
 		}
-		inline bool operator()(const char* s1, const char* s2) const {
+		inline bool operator()(const char *s1, const char *s2) const {
 			for (uint_t i = 0; *s1 && *s2; i++, s1++, s2++) {
 				if (__tofilenamechar(*s1) != __tofilenamechar(*s2))
 					return false;
@@ -1093,16 +1093,16 @@ AX_BEGIN_NAMESPACE
 	};
 
 	struct equal_istr {
-		inline bool operator()(const String& s1, const String& s2) const {
+		inline bool operator()(const String &s1, const String &s2) const {
 			return StringUtil::stricmp(s1.c_str(), s2.c_str()) == 0;
 		}
-		inline bool operator()(const char* s1, const char* s2) const {
+		inline bool operator()(const char *s1, const char *s2) const {
 			return StringUtil::stricmp(s1, s2) == 0;
 		}
 	};
 
 	struct equal_cstr {
-		inline bool operator()(const char* s1, const char* s2) const {
+		inline bool operator()(const char *s1, const char *s2) const {
 			return strcmp(s1, s2) == 0;
 		}
 	};

@@ -185,9 +185,9 @@ AX_BEGIN_NAMESPACE
 	//--------------------------------------------------------------------------------------
 	// Create an extended ID3DXEffectStateManager instance
 	//--------------------------------------------------------------------------------------
-	CStateManagerInterface* CStateManagerInterface::Create(LPDIRECT3DDEVICE9 pDevice)
+	CStateManagerInterface *CStateManagerInterface::Create(LPDIRECT3DDEVICE9 pDevice)
 	{
-		CStateManagerInterface* pStateManager = NULL;
+		CStateManagerInterface *pStateManager = NULL;
 
 		D3DDEVICE_CREATION_PARAMETERS cp;
 		memset(&cp, 0, sizeof cp);
@@ -236,7 +236,7 @@ AX_BEGIN_NAMESPACE
 		TypeZeroArray(m_textures);
 	}
 
-	HRESULT D3D9statemanager::setDepthStencilSurface(IDirect3DSurface9* obj, TexFormat format)
+	HRESULT D3D9statemanager::setDepthStencilSurface(IDirect3DSurface9 *obj, TexFormat format)
 	{
 		m_depthStencilFormat = format;
 
@@ -248,7 +248,7 @@ AX_BEGIN_NAMESPACE
 		return d3d9Device->SetDepthStencilSurface(obj);
 	}
 
-	void D3D9statemanager::setVertexDeclaration( IDirect3DVertexDeclaration9* vertdecl )
+	void D3D9statemanager::setVertexDeclaration( IDirect3DVertexDeclaration9 *vertdecl )
 	{
 		if (vertdecl == m_vertexDeclaration)
 			return;
@@ -271,7 +271,7 @@ AX_BEGIN_NAMESPACE
 			return;
 		}
 
-		IDirect3DStateBlock9* state = 0;
+		IDirect3DStateBlock9 *state = 0;
 		d3d9Device->BeginStateBlock();
 
 		switch (clampmode) {
@@ -333,7 +333,7 @@ AX_BEGIN_NAMESPACE
 		m_textures[dwStage] = pTexture;
 
 		// set sampler state
-		D3D9texture* appTex = 0;
+		D3D9texture *appTex = 0;
 		DWORD size = sizeof(void*);
 
 		if (!pTexture) {

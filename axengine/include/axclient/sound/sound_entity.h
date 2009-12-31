@@ -25,14 +25,14 @@ AX_BEGIN_NAMESPACE
 		Vector3 getVelocity() const { return m_velocity; }
 		void setVelocity(Vector3 val) { m_velocity = val; }
 
-		void playSound(int channelId, SoundFx* sfx, LoopingMode looping = Looping_None, float minDist = DEFAULT_MIN_DIST, float maxDist = DEFAULT_MAX_DIST );
+		void playSound(int channelId, SoundFx *sfx, LoopingMode looping = Looping_None, float minDist = DEFAULT_MIN_DIST, float maxDist = DEFAULT_MAX_DIST );
 		void stopSound(int channelId);
 
 	private:
 		friend class SoundWorld;
 		friend class SoundSystem;
 
-		SoundWorld* m_world;
+		SoundWorld *m_world;
 		int m_entityId;
 		AffineMat m_matrix;
 		Vector3 m_velocity;

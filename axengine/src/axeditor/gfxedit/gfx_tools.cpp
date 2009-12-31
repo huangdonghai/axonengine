@@ -49,13 +49,13 @@ void GfxObjectCreationTool::doPress(int x, int y, int flags, float pressure)
 	m_gfxAgent->bindToGame();
 #endif
 
-	GroupHis* grouphis = new GroupHis(m_context, "Create GfxObject");
+	GroupHis *grouphis = new GroupHis(m_context, "Create GfxObject");
 
 	AgentList agentlist;
 	agentlist.push_back(m_gfxAgent);
-	UndeleteHis* undelhis = new UndeleteHis(m_context, "Create GfxObject", agentlist);
+	UndeleteHis *undelhis = new UndeleteHis(m_context, "Create GfxObject", agentlist);
 
-	History* selhis = m_view->getContext()->setSelectionHistoried(agentlist);
+	History *selhis = m_view->getContext()->setSelectionHistoried(agentlist);
 
 	grouphis->append(undelhis);
 	grouphis->append(selhis);
@@ -98,7 +98,7 @@ void GfxObjectCreationTool::doRelease(int x, int y)
 	m_gfxAgent = nullptr;
 }
 
-void GfxObjectCreationTool::doRender(const RenderCamera& camera)
+void GfxObjectCreationTool::doRender(const RenderCamera &camera)
 {
 
 }

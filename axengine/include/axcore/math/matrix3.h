@@ -28,39 +28,39 @@ AX_BEGIN_NAMESPACE
 
 		Matrix3();
 		Matrix3(const float in[9]);
-		Matrix3(const Quaternion& q);
-		Matrix3(const Vector3& forward, const Vector3& left, const Vector3& up);
+		Matrix3(const Quaternion &q);
+		Matrix3(const Vector3 &forward, const Vector3 &left, const Vector3 &up);
 		Matrix3(float e0, float e1, float e2, float e3, float e4, float e5, float e6, float e7, float e8);
 		~Matrix3();
 
 		void clear() { m[0].clear(); m[1].clear(); m[2].clear(); }
 
 		// operator
-		Vector3& operator[] (int index);
-		const Vector3& operator[] (int index) const;
+		Vector3 &operator[] (int index);
+		const Vector3 &operator[] (int index) const;
 		Vector3 getRow(int index) const;
-		const Matrix3& operator*=(float scale);
-		Matrix3 operator*(const Matrix3& im) const;
-		bool operator==(const Matrix3& other) const;
-		bool operator!=(const Matrix3& other) const;
+		const Matrix3 &operator*=(float scale);
+		Matrix3 operator*(const Matrix3 &im) const;
+		bool operator==(const Matrix3 &other) const;
+		bool operator!=(const Matrix3 &other) const;
 
 		// transform a vector
-		Vector3 transformPoint(const Vector3& p) const;
-		Vector3 operator*(const Vector3& p) const;
+		Vector3 transformPoint(const Vector3 &p) const;
+		Vector3 operator*(const Vector3 &p) const;
 		// function
 		void setIdentity();
-		void fromQuaternion(const Quaternion& q);
+		void fromQuaternion(const Quaternion &q);
 
 		// implemented in angles.hpp
-		void fromAngles(const Angles& angles);
-		void fromAnglesScales(const Angles& angles, float scale);
+		void fromAngles(const Angles &angles);
+		void fromAnglesScales(const Angles &angles, float scale);
 
 		// must no scale to convert angles
 		Angles toAngles() const;
 		Matrix3 getInverse() const;
 		Matrix3 getTranspose() const;
 
-		void toAnglesScale(Angles& angles, float& scale) const;
+		void toAnglesScale(Angles &angles, float &scale) const;
 
 		Matrix3 scale(float s) const;
 
@@ -69,11 +69,11 @@ AX_BEGIN_NAMESPACE
 		// remove shear transform
 		void removeShear();
 
-		const float* toFloatPointer() const;
+		const float *toFloatPointer() const;
 		operator const float*() const;
 
 		String toString() const;
-		void fromString(const char* str);
+		void fromString(const char *str);
 
 		static Matrix3 getIdentity();
 	};
@@ -86,12 +86,12 @@ AX_BEGIN_NAMESPACE
 		memcpy(m, in, sizeof(in));
 	}
 
-	inline Matrix3::Matrix3(const Quaternion& q)
+	inline Matrix3::Matrix3(const Quaternion &q)
 	{
 		fromQuaternion(q);
 	}
 
-	inline Matrix3::Matrix3(const Vector3& forward, const Vector3& left, const Vector3& up)
+	inline Matrix3::Matrix3(const Vector3 &forward, const Vector3 &left, const Vector3 &up)
 	{
 		m[0][0] = forward.x;m[0][1] = forward.y;m[0][2] = forward.z;
 		m[1][0] = left.x;	m[1][1] = left.y;	m[1][2] = left.z;
@@ -109,13 +109,13 @@ AX_BEGIN_NAMESPACE
 	{}
 
 	// operator
-	inline Vector3& Matrix3::operator[] (int index)
+	inline Vector3 &Matrix3::operator[] (int index)
 	{
 		AX_STRICT_ASSERT(index>=0 && index<3);
 		return m[index];
 	}
 
-	inline const Vector3& Matrix3::operator[] (int index) const
+	inline const Vector3 &Matrix3::operator[] (int index) const
 	{
 		AX_STRICT_ASSERT(index>=0 && index<3);
 		return m[index];
@@ -127,7 +127,7 @@ AX_BEGIN_NAMESPACE
 		return Vector3(m[0][index], m[1][index], m[2][index]);
 	}
 
-	inline const Matrix3& Matrix3::operator*=(float scale)
+	inline const Matrix3 &Matrix3::operator*=(float scale)
 	{
 		m[0] *= scale;
 		m[1] *= scale;
@@ -136,7 +136,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 
-	inline Matrix3 Matrix3::operator*(const Matrix3& im) const
+	inline Matrix3 Matrix3::operator*(const Matrix3 &im) const
 	{
 		Matrix3 result;
 
@@ -168,7 +168,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 	// transform a vector
-	inline Vector3 Matrix3::transformPoint(const Vector3& p) const
+	inline Vector3 Matrix3::transformPoint(const Vector3 &p) const
 	{
 		Vector3 result;
 		result.x = p.x * m[0][0] + p.y * m[1][0] + p.z * m[2][0];
@@ -178,7 +178,7 @@ AX_BEGIN_NAMESPACE
 		return result;
 	}
 
-	inline Vector3 Matrix3::operator*(const Vector3& p) const
+	inline Vector3 Matrix3::operator*(const Vector3 &p) const
 	{
 		return transformPoint(p);
 	}
@@ -191,7 +191,7 @@ AX_BEGIN_NAMESPACE
 		m[2][0] = 0;	m[2][1] = 0;	m[2][2] = 1;
 	}
 
-	inline void Matrix3::fromQuaternion(const Quaternion& q)
+	inline void Matrix3::fromQuaternion(const Quaternion &q)
 	{
 		m[0][0] = 1.0 - 2.0 * q.y * q.y - 2.0 * q.z * q.z;
 		m[0][1] = 2.0 * q.x * q.y + 2.0 * q.w * q.z;
@@ -206,7 +206,7 @@ AX_BEGIN_NAMESPACE
 		m[2][2] = 1.0 - 2.0 * q.x * q.x - 2.0 * q.y * q.y;
 	}
 
-	inline void Matrix3::fromAnglesScales(const Angles& angles, float scale)
+	inline void Matrix3::fromAnglesScales(const Angles &angles, float scale)
 	{
 		fromAngles(angles);
 		m[0] *= scale;
@@ -287,7 +287,7 @@ AX_BEGIN_NAMESPACE
 		return (float*)this;
 	}
 
-	inline const float* Matrix3::toFloatPointer() const
+	inline const float *Matrix3::toFloatPointer() const
 	{
 		return (const float*)this;
 	}

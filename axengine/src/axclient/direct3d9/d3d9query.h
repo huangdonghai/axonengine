@@ -32,7 +32,7 @@ AX_BEGIN_NAMESPACE
 
 	private:
 		int m_id;
-		IDirect3DQuery9* m_queries[NUMBER];
+		IDirect3DQuery9 *m_queries[NUMBER];
 		int m_queryPos;
 		int m_readPos;
 		bool m_quering;
@@ -41,8 +41,8 @@ AX_BEGIN_NAMESPACE
 	class D3D9querymanager : public QueryManager {
 	public:
 		struct ActiveQuery {
-			RenderTarget* frameTarget;
-			D3D9query* query;
+			RenderTarget *frameTarget;
+			D3D9query *query;
 			int frameId;
 			BoundingBox bbox;
 			bool issued;
@@ -55,9 +55,9 @@ AX_BEGIN_NAMESPACE
 		D3D9querymanager();
 		virtual ~D3D9querymanager();
 
-		virtual Query* allocQuery();
+		virtual Query *allocQuery();
 		virtual void freeQuery(Query*& query);
-		virtual void issueQuery(Query* query, int frameId, const BoundingBox& bbox);
+		virtual void issueQuery(Query *query, int frameId, const BoundingBox &bbox);
 
 		// must called sync main thread
 		void syncFrame();

@@ -53,7 +53,7 @@ CreationPanel::CreationPanel(QWidget *parent)
 
 #if 0
 	PropertyCollection *collection = new PropertyCollection(QLatin1String("<root>"));
-	IProperty* p;
+	IProperty *p;
 
 	p = new SeparatorProperty("", "Object"); collection->addProperty(p);
 
@@ -85,7 +85,7 @@ CreationPanel::~CreationPanel() {
 	g_mapContext->detachObserver(this);
 }
 
-void CreationPanel::doNotify(IObservable* subject, int arg) {
+void CreationPanel::doNotify(IObservable *subject, int arg) {
 	if (subject != g_mapContext) {
 		return;
 	}
@@ -101,13 +101,13 @@ void CreationPanel::doNotify(IObservable* subject, int arg) {
 
 	ui.rollup->setAllPagesVisible(false);
 
-	const AgentList& actorlist = g_mapContext->getSelection();
+	const AgentList &actorlist = g_mapContext->getSelection();
 
 	if (!actorlist.containsOne()) {
 		ui.objectName->setText(QString("%1 objects").arg(actorlist.size()));
 	} else {
-		Agent* actor = actorlist.back();
-		GameObject* node = static_cast<MapActor*>(actor)->getGameObject();
+		Agent *actor = actorlist.back();
+		GameObject *node = static_cast<MapActor*>(actor)->getGameObject();
 		ui.objectName->setText(u2q(node->get_objectName()));
 		ui.objectColor->setColor(actor->getColor());
 	}
@@ -142,19 +142,19 @@ void CreationPanel::on_modelButton_clicked()
 
 }
 
-void CreationPanel::on_selectModel_itemDoubleClicked(QTreeWidgetItem* item,int)
+void CreationPanel::on_selectModel_itemDoubleClicked(QTreeWidgetItem *item,int)
 {
-	FileItem* f_item = dynamic_cast<FileItem*>(item);
+	FileItem *f_item = dynamic_cast<FileItem*>(item);
 	if (!f_item)
 		return;
 
-	const FileInfo& finfo = f_item->getFileInfo();
+	const FileInfo &finfo = f_item->getFileInfo();
 
 	if (f_item->isDirectory()) {
 		return;
 	}
 
-	RenderWorld* world = ui.preview->getRenderWorld();
+	RenderWorld *world = ui.preview->getRenderWorld();
 	if (m_renderActor) {
 		world->removeEntity(m_renderActor);
 		delete m_renderActor;
@@ -169,14 +169,14 @@ void CreationPanel::on_selectModel_itemDoubleClicked(QTreeWidgetItem* item,int)
 	ui.preview->update();
 
 	// set model for selected actor
-	const AgentList& actorlist = g_mapContext->getSelection();
+	const AgentList &actorlist = g_mapContext->getSelection();
 
 	if (actorlist.containsOne()) {
 		actorlist.setNodeProperty("model", finfo.fullpath);
 	}
 }
 
-void CreationPanel::on_selectEntity_itemDoubleClicked(QTreeWidgetItem* item,int)
+void CreationPanel::on_selectEntity_itemDoubleClicked(QTreeWidgetItem *item,int)
 {
 	if (!item)
 		return;
@@ -191,20 +191,20 @@ void CreationPanel::on_selectEntity_itemDoubleClicked(QTreeWidgetItem* item,int)
 
 
 
-void CreationPanel::on_selectTree_itemDoubleClicked(QTreeWidgetItem* item,int)
+void CreationPanel::on_selectTree_itemDoubleClicked(QTreeWidgetItem *item,int)
 {
 #ifdef AX_CONFIG_OPTION_USE_SPEEDTREE_40
-	FileItem* f_item = dynamic_cast<FileItem*>(item);
+	FileItem *f_item = dynamic_cast<FileItem*>(item);
 	if (!f_item)
 		return;
 
-	const FileInfo& finfo = f_item->getFileInfo();
+	const FileInfo &finfo = f_item->getFileInfo();
 
 	if (f_item->isDirectory()) {
 		return;
 	}
 
-	RenderWorld* world = ui.preview->getRenderWorld();
+	RenderWorld *world = ui.preview->getRenderWorld();
 	if (m_renderActor) {
 		world->removeEntity(m_renderActor);
 		delete m_renderActor;
@@ -219,7 +219,7 @@ void CreationPanel::on_selectTree_itemDoubleClicked(QTreeWidgetItem* item,int)
 	g_mapContext->getMapState()->treeFilename = finfo.fullpath;
 
 	// set model for selected actor
-	const AgentList& actorlist = g_mapContext->getSelection();
+	const AgentList &actorlist = g_mapContext->getSelection();
 
 	if (actorlist.containsOne()) {
 		actorlist.setNodeProperty("tree", finfo.fullpath);
@@ -227,8 +227,8 @@ void CreationPanel::on_selectTree_itemDoubleClicked(QTreeWidgetItem* item,int)
 #endif // AX_CONFIG_OPTION_USE_SPEEDTREE_40
 }
 
-static QTreeWidgetItem* findOrCreate(QTreeWidgetItem* item, const QString& fullname, const QString& name, bool isdir) {
-	QTreeWidgetItem* found = 0;
+static QTreeWidgetItem *findOrCreate(QTreeWidgetItem *item, const QString &fullname, const QString &name, bool isdir) {
+	QTreeWidgetItem *found = 0;
 
 	for (int i=0; i<item->childCount(); i++) {
 		if (item->child(i)->text(0) == name) {
@@ -265,7 +265,7 @@ void CreationPanel::initEntityList() {
 		QString entname = u2q(entlist[i]);
 
 		int pos = 0;
-		QTreeWidgetItem* item = ui.selectEntity->invisibleRootItem();
+		QTreeWidgetItem *item = ui.selectEntity->invisibleRootItem();
 
 		while (1) {
 			int curpos = entname.indexOf(QChar('.'), pos);
@@ -288,9 +288,9 @@ void CreationPanel::initEntityList() {
 	int c = ui.selectEntity->topLevelItemCount();
 }
 
-void CreationPanel::on_objectColor_colorChanged( const QColor& color )
+void CreationPanel::on_objectColor_colorChanged( const QColor &color )
 {
-	const AgentList& actorlist = g_mapContext->getSelection();
+	const AgentList &actorlist = g_mapContext->getSelection();
 
 	actorlist.setColor(q2x(color));
 }

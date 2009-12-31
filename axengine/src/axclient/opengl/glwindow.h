@@ -16,8 +16,8 @@ AX_BEGIN_NAMESPACE
 
 	class GLwindow : public RenderTarget {
 	public:
-		GLwindow(const String& name);
-		GLwindow(handle_t wndId, const String& name);
+		GLwindow(const String &name);
+		GLwindow(handle_t wndId, const String &name);
 		virtual ~GLwindow();
 
 		// implement ITarget
@@ -31,10 +31,10 @@ AX_BEGIN_NAMESPACE
 		// wrap OpenGL state function
 		void initialize();
 		void finalize();
-		void shareList(const GLwindow* other);
+		void shareList(const GLwindow *other);
 		void swapBuffers();
 #if 0
-		void getSize(Int& width, Int& height);
+		void getSize(Int &width, Int &height);
 		Point getClientSize();
 #endif
 		void initGLRC();

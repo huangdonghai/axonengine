@@ -22,7 +22,7 @@ class PerspectiveView : public MapView, public ITickable, public IObserver
 	friend class MapContext;
 
 public:
-	PerspectiveView(MapContext* context);
+	PerspectiveView(MapContext *context);
 	~PerspectiveView();
 
 
@@ -32,23 +32,23 @@ protected:
 	// implement View
 	virtual void doRender();
 	virtual void checkViewOrg();
-	virtual void bindFrame(IViewFrame* container);
+	virtual void bindFrame(IViewFrame *container);
 	virtual void preUpdate() { updateMove(); }
 
 	// implement ITickable
 	virtual void tick();
 
 	// implement IEventHandler
-	virtual void handleEvent(InputEvent* e);
-	virtual void onKeyDown(InputEvent* e);
-	virtual void onKeyUp(InputEvent* e);
-	virtual void onMouseDown(InputEvent* e);
-	virtual void onMouseUp(InputEvent* e);
-	virtual void onMouseMove(InputEvent* e);
-	virtual void onMouseWheel(InputEvent* e);
+	virtual void handleEvent(InputEvent *e);
+	virtual void onKeyDown(InputEvent *e);
+	virtual void onKeyUp(InputEvent *e);
+	virtual void onMouseDown(InputEvent *e);
+	virtual void onMouseUp(InputEvent *e);
+	virtual void onMouseMove(InputEvent *e);
+	virtual void onMouseWheel(InputEvent *e);
 
 	// implement IObserver
-	virtual void doNotify(IObservable* subject, int arg);
+	virtual void doNotify(IObservable *subject, int arg);
 
 private:
 	enum Tracking {

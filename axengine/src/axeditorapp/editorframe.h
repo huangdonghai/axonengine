@@ -19,18 +19,18 @@ class EditorFrame : public QWidget, public IPanel, public IViewFrame, public IIn
 	Q_OBJECT
 
 public:
-    EditorFrame(QWidget *parent, View* view);
+    EditorFrame(QWidget *parent, View *view);
     ~EditorFrame();
 
 	// public function
-	View* getView() { return m_editorView; }
+	View *getView() { return m_editorView; }
 
 	// implement IViewFrame
-	virtual RenderTarget* getRenderTarget();
+	virtual RenderTarget *getRenderTarget();
 	virtual Rect getRect();
 	virtual void setCursor(CursorType cursor_type);
 	virtual void resetCursor();
-	virtual void setCursorPos(const Point& pos);
+	virtual void setCursorPos(const Point &pos);
 	virtual void setNeedUpdate();
 	virtual void setAutoUpdate(bool b);
 	virtual void registerEventSource();
@@ -38,7 +38,7 @@ public:
 
 	// implement IPanel
 	virtual QString getTitle() { return u2q(m_editorView->getTitle()); }
-	virtual QWidget* getWidget() { return this; }
+	virtual QWidget *getWidget() { return this; }
 
 	// implement IInputSource
 	virtual void startCapture(InputSystem::CaptureMode capturemode);
@@ -51,35 +51,35 @@ public:
 	virtual bool eventFilter(QObject * watched, QEvent * event);
 
 	// no paint engine
-	QPaintEngine* paintEngine() const { return NULL; }
+	QPaintEngine *paintEngine() const { return NULL; }
 
 
 protected:
-	void translateMouseEvent(QMouseEvent* e, InputEvent* xe);
+	void translateMouseEvent(QMouseEvent *e, InputEvent *xe);
 	// implement QT event handler
-	virtual void paintEvent(QPaintEvent* pe);
-	virtual void mousePressEvent(QMouseEvent* e);
-	virtual void mouseReleaseEvent(QMouseEvent* e);
-	virtual void mouseMoveEvent(QMouseEvent* e);
-	virtual void wheelEvent(QWheelEvent* e);
-	virtual void enterEvent(QEvent* e);
-	virtual void leaveEvent(QEvent* e);
+	virtual void paintEvent(QPaintEvent *pe);
+	virtual void mousePressEvent(QMouseEvent *e);
+	virtual void mouseReleaseEvent(QMouseEvent *e);
+	virtual void mouseMoveEvent(QMouseEvent *e);
+	virtual void wheelEvent(QWheelEvent *e);
+	virtual void enterEvent(QEvent *e);
+	virtual void leaveEvent(QEvent *e);
 #if 0
-	virtual void tabletEvent(QTabletEvent* e);
+	virtual void tabletEvent(QTabletEvent *e);
 #endif
 	virtual void keyPressEvent(QKeyEvent * e);
-	virtual void keyReleaseEvent(QKeyEvent* e);
-	virtual void timerEvent(QTimerEvent* e);
+	virtual void keyReleaseEvent(QKeyEvent *e);
+	virtual void timerEvent(QTimerEvent *e);
 
 #if 0
 	virtual bool winEvent (MSG * message, long * result);
 #endif
 
-	void issueEvent(QEvent* qe, InputEvent& xe);
+	void issueEvent(QEvent *qe, InputEvent &xe);
 
 private:
-    View* m_editorView;
-	RenderTarget* m_renderTarget;
+    View *m_editorView;
+	RenderTarget *m_renderTarget;
 	QHash<int,int> m_keymap;
 	int m_autoUpdateTimer;
 	bool m_isCapturing;

@@ -14,28 +14,28 @@ read the license and understand and accept it fully.
 #define AX_DECLARE_COMMAND_HANDLER(cls)						\
 public:														\
 	typedef cls _selfclass;									\
-	typedef void (cls::*CmdFunc_t)(const CmdArgs& params);	\
+	typedef void (cls::*CmdFunc_t)(const CmdArgs &params);	\
 	struct MyCmdEntry {										\
-		const char* name;									\
+		const char *name;									\
 		CmdFunc_t fn;										\
 	};														\
-	virtual void HandleCmd(const CmdArgs& params);			\
-	virtual CmdEntry* GetCmdEntries(uint_t* datasize);
+	virtual void HandleCmd(const CmdArgs &params);			\
+	virtual CmdEntry *GetCmdEntries(uint_t *datasize);
 
 // begin command mapping
 #define AX_BEGIN_COMMAND_MAP(cls)													\
-	void cls::HandleCmd(const CmdArgs& params) {									\
-		const MyCmdEntry* entry;													\
+	void cls::HandleCmd(const CmdArgs &params) {									\
+		const MyCmdEntry *entry;													\
 																					\
 		AX_ASSERT(!params.tokened[0].empty());										\
-		const char* name = params.tokened[0].c_str(); uint_t datasize;				\
+		const char *name = params.tokened[0].c_str(); uint_t datasize;				\
 		for (entry = (MyCmdEntry*)GetCmdEntries(&datasize); entry->name; entry++) {	\
 			if (!StringUtil::stricmp(entry->name, name)) {							\
 				(this->*(entry->fn))(params);										\
 			}																		\
 		}																			\
 	}																				\
-	CmdEntry* cls::GetCmdEntries(uint_t* datasize) {								\
+	CmdEntry *cls::GetCmdEntries(uint_t *datasize) {								\
 		static MyCmdEntry entries[] = {
 
 
@@ -58,20 +58,20 @@ AX_BEGIN_NAMESPACE
 	};
 
 	struct CmdEntry {
-		const char* name;
-		void* fn;
+		const char *name;
+		void *fn;
 	};
 
 	struct ICmdHandler {
-		virtual CmdEntry* GetCmdEntries(uint_t* datasize) = 0;	// for internal use
-		virtual void HandleCmd(const CmdArgs& params) = 0;
+		virtual CmdEntry *GetCmdEntries(uint_t *datasize) = 0;	// for internal use
+		virtual void HandleCmd(const CmdArgs &params) = 0;
 		virtual ~ICmdHandler() = 0 {}
 	};
 
 
 	struct Cmd {
 		String name;
-		ICmdHandler* handler;
+		ICmdHandler *handler;
 	};
 
 	typedef Dict<String, Cmd, hash_istr, equal_istr> CmdDict;
@@ -94,27 +94,27 @@ AX_BEGIN_NAMESPACE
 
 		void initialize(void);
 		void finalize(void);
-		bool isCmd(const String& name);
-		void executeString(const String& text, ExecType cet = Exec_Immediately);
-		void enumerate(void (*func)(const String& name));
-		void registerHandler(ICmdHandler* handler);
-		void removeHandler(ICmdHandler* handler);
+		bool isCmd(const String &name);
+		void executeString(const String &text, ExecType cet = Exec_Immediately);
+		void enumerate(void (*func)(const String &name));
+		void registerHandler(ICmdHandler *handler);
+		void removeHandler(ICmdHandler *handler);
 		void runFrame(uint_t frame_time);
 
 	public:
 		// console command
-		bool executeCmd(const CmdArgs& params);
-		CmdArgs parseCmdString(const String& text);
+		bool executeCmd(const CmdArgs &params);
+		CmdArgs parseCmdString(const String &text);
 
-		void list_f(const CmdArgs& param);
-		void quit_f(const CmdArgs& param);
-		void crash_f(const CmdArgs& param);
-		void error_f(const CmdArgs& param);
-		void debug_f(const CmdArgs& param);
-		void script_f(const CmdArgs& param);
-		void runFile_f(const CmdArgs& param);
+		void list_f(const CmdArgs &param);
+		void quit_f(const CmdArgs &param);
+		void crash_f(const CmdArgs &param);
+		void error_f(const CmdArgs &param);
+		void debug_f(const CmdArgs &param);
+		void script_f(const CmdArgs &param);
+		void runFile_f(const CmdArgs &param);
 
-		void execCmdLine(int argc, char* argv[]);
+		void execCmdLine(int argc, char *argv[]);
 		// script command
 		int list_s(int);
 

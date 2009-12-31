@@ -26,7 +26,7 @@ struct FilterInfo {
 	int type;
 
 public:
-	bool isIn(const String& name) const;
+	bool isIn(const String &name) const;
 };
 
 Filter::~Filter() {
@@ -35,7 +35,7 @@ Filter::~Filter() {
 	}
 }
 
-Filter::Filter(const String& filterStr) {
+Filter::Filter(const String &filterStr) {
 	StringList strs = StringUtil::tokenize(filterStr.c_str(), L';');
 
 	if (strs.size() == 0) {
@@ -44,9 +44,9 @@ Filter::Filter(const String& filterStr) {
 
 	StringList::iterator it = strs.begin();
 	for (; it != strs.end(); ++it) {
-		FilterInfo* pfi = new FilterInfo;
-		FilterInfo& fi = *pfi;
-		const String& orgStr = *it;
+		FilterInfo *pfi = new FilterInfo;
+		FilterInfo &fi = *pfi;
+		const String &orgStr = *it;
 		fi.str = orgStr;
 		if (orgStr == "*") {
 			fi.type = FilterInfo::FT_ALL;
@@ -80,7 +80,7 @@ Filter::Filter(const String& filterStr) {
 }
 
 
-static bool IsMatch(const char* pName, const char* pFilter) {
+static bool IsMatch(const char *pName, const char *pFilter) {
 	for (; *pFilter; pFilter++) {
 		if (*pFilter == L'?') {
 			if (*pName == 0)
@@ -106,14 +106,14 @@ static bool IsMatch(const char* pName, const char* pFilter) {
 	return true;
 }
 
-bool FilterInfo::isIn(const String& name) const {
+bool FilterInfo::isIn(const String &name) const {
 	switch (this->type) {
 	case FilterInfo::FT_ALL:
 		return true;
 	case FilterInfo::FT_EXT:
 		{
 			size_t len = name.length();
-			const char* pNameExt = name.c_str() + len - this->str.length();
+			const char *pNameExt = name.c_str() + len - this->str.length();
 			return ::strcmp(pNameExt, this->str.c_str()) == 0;
 		}
 	case FilterInfo::FT_PIECE:
@@ -131,7 +131,7 @@ bool FilterInfo::isIn(const String& name) const {
 	}
 }
 
-bool Filter::In(const String& name) const {
+bool Filter::In(const String &name) const {
 	std::vector<FilterInfo*>::const_iterator it = mfilters.begin();
 	for (; it != mfilters.end(); ++it) {
 		if ((*it)->isIn(name)) {
@@ -142,7 +142,7 @@ bool Filter::In(const String& name) const {
 
 }
 #if 0
-Strings Tokenize(const String& in, wchar_t split) {
+Strings Tokenize(const String &in, wchar_t split) {
 	Strings strcol;
 
 	if (in.empty())
@@ -150,7 +150,7 @@ Strings Tokenize(const String& in, wchar_t split) {
 
 	String str;
 
-	const wchar_t* token = in.c_str();
+	const wchar_t *token = in.c_str();
 
 	for (; ;) {
 		/* skip whitespace */
@@ -187,7 +187,7 @@ Strings Tokenize(const String& in, wchar_t split) {
 	return strcol;
 }
 
-StringList Tokenize(const String& in, char split) {
+StringList Tokenize(const String &in, char split) {
 	StringList strcol;
 
 	if (in.empty())
@@ -195,7 +195,7 @@ StringList Tokenize(const String& in, char split) {
 
 	String str;
 
-	const char* token = in.c_str();
+	const char *token = in.c_str();
 
 	for (; ;) {
 		/* skip whitespace */
@@ -232,7 +232,7 @@ StringList Tokenize(const String& in, char split) {
 	return strcol;
 }
 
-StringSeq TokenizeSeq(const String& in, char split) {
+StringSeq TokenizeSeq(const String &in, char split) {
 	StringSeq strcol;
 
 	if (in.empty())
@@ -240,7 +240,7 @@ StringSeq TokenizeSeq(const String& in, char split) {
 
 	String str;
 
-	const char* token = in.c_str();
+	const char *token = in.c_str();
 
 	for (; ;) {
 		/* skip whitespace */

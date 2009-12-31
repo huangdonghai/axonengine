@@ -20,20 +20,20 @@ AX_BEGIN_NAMESPACE
 		virtual void deleteThis();
 
 		// must be success
-		bool doInit(const String& name, intptr_t arg);
+		bool doInit(const String &name, intptr_t arg);
 
-		const String& getShaderName() const;
-		Shader* getShaderTemplate() const;
-		const FixedString& getShaderNameId() const { return m_shaderNameId; }
-		Shader* getRealShader() const;
+		const String &getShaderName() const;
+		Shader *getShaderTemplate() const;
+		const FixedString &getShaderNameId() const { return m_shaderNameId; }
+		Shader *getRealShader() const;
 		bool isWireframe() const;
 		bool isPhysicsHelper() const;
 
-		void setTextureSet(const String& texname);
+		void setTextureSet(const String &texname);
 
-		void setDiffuse(const Vector3& v);
+		void setDiffuse(const Vector3 &v);
 		void setDiffuse(Rgb rgb, float intensity = 1.0f) { m_diffuse = rgb.toVector() * intensity; }
-		void setSpecular(const Vector3& v);
+		void setSpecular(const Vector3 &v);
 		void setSpecular(Rgb rgb, float intensity = 1.0f) { m_specular = rgb.toVector() * intensity; }
 		void setShiness(float shiness) { m_shiness = shiness; }
 		void setDetailScale(float scale) { m_detailScale = scale; }
@@ -53,22 +53,22 @@ AX_BEGIN_NAMESPACE
 		void clearLiterals();
 
 		// texture setting and getting
-		Texture* getTexture(int sample) const;
-		void setTexture(int sampler, Texture* tex);
+		Texture *getTexture(int sample) const;
+		void setTexture(int sampler, Texture *tex);
 
 		// parameter setting and getting
-		void setParameter(const String& name, int num, const float* ptr);
-		const ShaderParams& getParameters() const;
+		void setParameter(const String &name, int num, const float *ptr);
+		const ShaderParams &getParameters() const;
 
 		// shader macro
-		const ShaderMacro& getShaderMacro();
+		const ShaderMacro &getShaderMacro();
 
-		void setBaseTcMatrix(const Matrix4& matrix);
+		void setBaseTcMatrix(const Matrix4 &matrix);
 		bool isBaseTcAnim() const { return m_baseTcAnim; }
-		const Matrix4* getBaseTcMatrix() const { return &m_baseTcMatrix; }
+		const Matrix4 *getBaseTcMatrix() const { return &m_baseTcMatrix; }
 
-		void setTexGen(SamplerType st, const TexGen& texgen);
-		const TexGen& getTexGen(SamplerType st) const;
+		void setTexGen(SamplerType st, const TexGen &texgen);
+		const TexGen &getTexGen(SamplerType st) const;
 
 		// pixel to texel
 		void setPixelToTexel(int width, int height);
@@ -77,13 +77,13 @@ AX_BEGIN_NAMESPACE
 		int getPixelToTexelHeight() const { return m_p2tHeight; }
 
 		// management
-		static MaterialRp load(const String& name);
-		static MaterialRp loadUnique(const String& name);
+		static MaterialRp load(const String &name);
+		static MaterialRp loadUnique(const String &name);
 		static void initManager();
 		static void finalizeManager();
-		static FixedString normalizeKey(const String& name);
+		static FixedString normalizeKey(const String &name);
 		static void syncFrame();
-		static void matlist_f(const CmdArgs& args);
+		static void matlist_f(const CmdArgs &args);
 		// end management
 
 	private:
@@ -91,7 +91,7 @@ AX_BEGIN_NAMESPACE
 		~Material();
 
 		String m_key;
-		MaterialDecl* m_decl;
+		MaterialDecl *m_decl;
 
 		bool m_shaderMacroNeedRegen;
 		ShaderMacro m_shaderMacro;
@@ -102,7 +102,7 @@ AX_BEGIN_NAMESPACE
 		float m_detailScale;
 		bool m_haveDetail;
 
-		Shader* m_shaderTemplate;
+		Shader *m_shaderTemplate;
 		FixedString m_shaderNameId;
 		TexturePtr m_textures[SamplerType::NUMBER_ALL];
 		TexGen m_texgens[SamplerType::NUMBER_ALL];
@@ -130,10 +130,10 @@ AX_BEGIN_NAMESPACE
 		static MaterialDict ms_materialDict;
 		static Link<Material> ms_needDeleteLinkHead;
 
-		static void _deleteMaterial(Material* mat);
+		static void _deleteMaterial(Material *mat);
 	};
 
-	inline void splitVectorToColor(const Vector3& v, float& multiply, Rgb& color) {
+	inline void splitVectorToColor(const Vector3 &v, float &multiply, Rgb &color) {
 		multiply = v.getMax();
 		if (multiply < 1e-6) {
 			color.fromVector(Vector3(0,0,0));
@@ -142,11 +142,11 @@ AX_BEGIN_NAMESPACE
 		}
 	}
 
-	inline void Material::setDiffuse(const Vector3& v) {
+	inline void Material::setDiffuse(const Vector3 &v) {
 		m_diffuse = v;
 	}
 
-	inline void Material::setSpecular(const Vector3& v) {
+	inline void Material::setSpecular(const Vector3 &v) {
 		m_specular = v;
 	}
 
@@ -205,12 +205,12 @@ AX_BEGIN_NAMESPACE
 		m_p2tHeight = height;
 	}
 
-	inline Texture* Material::getTexture(int sampler) const {
+	inline Texture *Material::getTexture(int sampler) const {
 		AX_ASSERT(sampler >= 0 && sampler < SamplerType::NUMBER_ALL);
 		return m_textures[sampler].get();
 	}
 
-	inline void Material::setTexture(int sampler, Texture* tex) {
+	inline void Material::setTexture(int sampler, Texture *tex) {
 		m_shaderMacroNeedRegen = true;
 		AX_ASSERT(sampler >= 0 && sampler < SamplerType::NUMBER_ALL);
 		m_textures[sampler] = tex;

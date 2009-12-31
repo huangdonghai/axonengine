@@ -33,11 +33,11 @@ public:
     ~Workbench();
 
 	// implement IObserver
-	virtual void doNotify(IObservable* subjest, int arg);
+	virtual void doNotify(IObservable *subjest, int arg);
 
 	// implement IProgressHandler
-	virtual void beginProgress(const String& title);
-	virtual bool showProgress(uint_t percent, const String& msg);
+	virtual void beginProgress(const String &title);
+	virtual bool showProgress(uint_t percent, const String &msg);
 	virtual void endProgress();
 
 	// implement IWorkbench, for editordll use
@@ -47,24 +47,24 @@ public:
 	void updateTitle();
 
 	// for status bar
-	void updateStatusInfo(const Vector3& vieworg, const Vector3& cursorpos);
-	void setLanguage(const QString& lang);
-	void setStyle(const QString& style);
+	void updateStatusInfo(const Vector3 &vieworg, const Vector3 &cursorpos);
+	void setLanguage(const QString &lang);
+	void setStyle(const QString &style);
 
 	// editor tools and editor actions
-	void addEditorTool(int toolType, QAction* action);
-	void addEditorAction(int actionType, QAction* action);
+	void addEditorTool(int toolType, QAction *action);
+	void addEditorAction(int actionType, QAction *action);
 
-	Frame* getActiveFrame();
-	View* getActiveView();
+	Frame *getActiveFrame();
+	View *getActiveView();
 
 	void showMaterialEditor();
 	void showModelViewer();
 
-	void openScriptFile(const QString& filename);
+	void openScriptFile(const QString &filename);
 
-//	SceneMinimap* getSceneMinimap(){return SceneMinimap_;}
-	SidePanel* getSidePanel(){return m_sidePanel;}
+//	SceneMinimap *getSceneMinimap(){return SceneMinimap_;}
+	SidePanel *getSidePanel(){return m_sidePanel;}
 
 protected:
 	// inherited event
@@ -140,11 +140,11 @@ private slots:
 	void onStylePlastique(bool);
 	void onStyleMacintosh(bool);
 
-	void onEditorToolTriggered(QAction* action );
-	void onEditorActionTriggered(QAction* action);
+	void onEditorToolTriggered(QAction *action );
+	void onEditorActionTriggered(QAction *action);
 
-	void onSnapToGridChanged(QAction* action);
-	void onSnapToAngleChanged(QAction* action);
+	void onSnapToGridChanged(QAction *action);
+	void onSnapToAngleChanged(QAction *action);
 
 	void onViewLabelDoubleClicked(QPoint);
 
@@ -154,33 +154,33 @@ public:
 
 private:
 	// tool bar
-	QToolButton* m_undoToolButton;
-	QToolButton* m_redoToolButton;
-	QComboBox* m_selectableType;
+	QToolButton *m_undoToolButton;
+	QToolButton *m_redoToolButton;
+	QComboBox *m_selectableType;
 
 	// status bar
-	QStatusBar* m_statusBar;
+	QStatusBar *m_statusBar;
 
 	// -- dockable bar --
-	QDockWidget* m_sideBar;			// side panel
-	SidePanel* m_sidePanel;
+	QDockWidget *m_sideBar;			// side panel
+	SidePanel *m_sidePanel;
 
 	// central widget
-	Workspace* m_workspace;
+	Workspace *m_workspace;
 
 	// editor tools and editor action
-	QActionGroup* m_editorTools;
-	QActionGroup* m_editorActions;
+	QActionGroup *m_editorTools;
+	QActionGroup *m_editorActions;
 
 	// model viewer
-	ModelViewer* m_modelViewer;
+	ModelViewer *m_modelViewer;
 	// material editor
-	MaterialEditor* m_materialEditor;
+	MaterialEditor *m_materialEditor;
 
 	CameraSetting m_cameraDlg;
-	SelectByNameDlg* m_selectByNameDlg;
-	ScriptEditor* m_scriptEditor;
-	GfxEditor* m_gfxEditor;
+	SelectByNameDlg *m_selectByNameDlg;
+	ScriptEditor *m_scriptEditor;
+	GfxEditor *m_gfxEditor;
 
 	int m_timerUpdateStatus;
 };

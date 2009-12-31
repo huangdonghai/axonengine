@@ -22,18 +22,18 @@ public:
     ConsoleDlg(QWidget *parent = 0);
     ~ConsoleDlg();
 
-	void addMessage(QString& msg);
+	void addMessage(QString &msg);
 
 	// implement ILogHandler
-//	virtual void Print(const Wchar* text);
-	virtual void print(const String& str);
-	virtual void print(const char* text);
+//	virtual void Print(const Wchar *text);
+	virtual void print(const String &str);
+	virtual void print(const char *text);
 
 private slots:
 	void on_message_textChanged();
 	void on_input_returnPressed();
 	bool eventFilter(QObject * watched, QEvent * event);
-	void setInput(QString& str);
+	void setInput(QString &str);
 
 private:
     Ui::ConsoleDlgClass ui;

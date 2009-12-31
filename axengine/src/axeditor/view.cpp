@@ -16,7 +16,7 @@ AX_BEGIN_NAMESPACE
 // class View
 //--------------------------------------------------------------------------
 
-View::View(Context* context)
+View::View(Context *context)
 	: m_context(context)
 	, m_frame(NULL)
 	, m_frameNumCur(0)
@@ -41,12 +41,12 @@ View::~View()
 {}
 
 // implement View
-void View::bindFrame(IViewFrame* container)
+void View::bindFrame(IViewFrame *container)
 {
 	m_frame = container;
 }
 
-String& View::getTitle()
+String &View::getTitle()
 {
 	return m_title;
 }
@@ -107,12 +107,12 @@ void View::drawAxis()
 
 	g_renderSystem->beginScene(rv);
 
-	LinePrim* axis_line = LinePrim::createAxis(Primitive::HintFrame, line_length);
+	LinePrim *axis_line = LinePrim::createAxis(Primitive::HintFrame, line_length);
 	g_renderSystem->addToScene(axis_line);
 
 #if 1
 	line_length += 0.2f;
-	TextPrim* text = TextPrim::createSimpleText(Primitive::HintFrame, Vector3(line_length, 0, 0), Rgba::Red, "x");
+	TextPrim *text = TextPrim::createSimpleText(Primitive::HintFrame, Vector3(line_length, 0, 0), Rgba::Red, "x");
 	g_renderSystem->addToScene(text);
 
 	text = TextPrim::createSimpleText(Primitive::HintFrame, Vector3(0, line_length, 0), Rgba::Green, "y");
@@ -163,16 +163,16 @@ void View::drawFrameNum()
 	rect.y = m_camera.getViewRect().height - 24;
 	rect.width = 120;
 	rect.height = 24;
-	TextPrim* prim = TextPrim::createText(Primitive::HintFrame, rect, m_font, text, Rgba::Green, TextPrim::Left);
+	TextPrim *prim = TextPrim::createText(Primitive::HintFrame, rect, m_font, text, Rgba::Green, TextPrim::Left);
 
 	g_renderSystem->beginScene(rv);
 	g_renderSystem->addToScene(prim);
 	g_renderSystem->endScene();
 }
 
-void View::handleEvent(InputEvent* e)
+void View::handleEvent(InputEvent *e)
 {
-	Tool* t = m_context->getTool();
+	Tool *t = m_context->getTool();
 
 	if (t) {
 		t->setView(this);
@@ -188,7 +188,7 @@ void View::handleEvent(InputEvent* e)
 #endif
 }
 
-bool View::traceWorld(int x, int y, Vector3& result, int part)
+bool View::traceWorld(int x, int y, Vector3 &result, int part)
 {
 	if (selectRegion(Rect(x-1, y-1, 3, 3), part, result)) {
 		return true;
@@ -216,13 +216,13 @@ bool View::traceWorld(int x, int y, Vector3& result, int part)
 	return true;
 }
 
-bool View::traceWorld(Vector3& result)
+bool View::traceWorld(Vector3 &result)
 {
 	Point center = m_frame->getRect().getCenter();
 	return traceWorld(center.x, center.y, result, SelectPart::All);
 }
 
-void View::beginSelect(const Rect& r)
+void View::beginSelect(const Rect &r)
 {
 	RenderCamera cam = m_camera.createSelectionCamera(r);
 
@@ -250,7 +250,7 @@ int View::endSelect()
 	return nearest;
 }
 
-bool View::selectRegion(const Rect& rect, SelectPart part, OUT Vector3& pos, OUT AgentList& retlist, bool onlynearest)
+bool View::selectRegion(const Rect &rect, SelectPart part, OUT Vector3 &pos, OUT AgentList &retlist, bool onlynearest)
 {
 	retlist.clear();
 
@@ -266,10 +266,10 @@ bool View::selectRegion(const Rect& rect, SelectPart part, OUT Vector3& pos, OUT
 		return false;
 
 	float minz = 1.0f;
-	Agent* minzActor = 0;
+	Agent *minzActor = 0;
 	for (size_t i = 0; i < records.size(); i++) {
 		int id = records[i].name;
-		Agent* ed = m_context->findActor(id);
+		Agent *ed = m_context->findActor(id);
 
 		AX_ASSERT(ed);
 
@@ -295,7 +295,7 @@ bool View::selectRegion(const Rect& rect, SelectPart part, OUT Vector3& pos, OUT
 	return true;
 }
 
-bool View::selectRegion(const Rect& rect, SelectPart part, OUT Vector3& pos)
+bool View::selectRegion(const Rect &rect, SelectPart part, OUT Vector3 &pos)
 {
 	RenderCamera cam = m_camera.createSelectionCamera(rect);
 
@@ -303,7 +303,7 @@ bool View::selectRegion(const Rect& rect, SelectPart part, OUT Vector3& pos)
 #if 0
 	// select terrain
 	if (part & SelectPart::Terrain) {
-		Map::Terrain* terrain = m_context->getTerrain();
+		Map::Terrain *terrain = m_context->getTerrain();
 		if (terrain)
 			terrain->doSelect(cam);
 	}

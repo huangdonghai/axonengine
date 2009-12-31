@@ -14,7 +14,7 @@ AX_BEGIN_NAMESPACE
 
 template< class T >
 class MapToolFactory_ : public ToolFactory {
-	virtual Tool* create(Context* context) {
+	virtual Tool *create(Context *context) {
 		return new T(static_cast<MapContext*>(context));
 	}
 };
@@ -114,14 +114,14 @@ bool MapContext::createNew() {
 	return true;
 }
 
-bool MapContext::load(const String& filename) {
+bool MapContext::load(const String &filename) {
 	m_isLoading = true;
 
 	reset();
 
 	m_perspectiveView->doUpdate();
 
-	void* filebuf;
+	void *filebuf;
 	size_t filesize = g_fileSystem->readFile(filename, &filebuf);
 
 	if (!filesize || !filebuf)
@@ -141,8 +141,8 @@ bool MapContext::load(const String& filename) {
 		return false;
 	}
 
-	const TiXmlElement* root = doc.FirstChildElement("map");
-	const TiXmlAttribute* attr = NULL;
+	const TiXmlElement *root = doc.FirstChildElement("map");
+	const TiXmlAttribute *attr = NULL;
 
 	if (!root)
 		return false;
@@ -159,12 +159,12 @@ bool MapContext::load(const String& filename) {
 
 	g_system->showProgress(progress += 5, "Loading XML...");
 
-	const TiXmlElement* elem;
+	const TiXmlElement *elem;
 	for (elem = root->FirstChildElement(); elem; elem = elem->NextSiblingElement()) {
-		const String& value = elem->ValueTStr();
+		const String &value = elem->ValueTStr();
 
 		if (value == "envDef") {
-			MapEnvDef* ed = m_gameWorld->getEnvironment();
+			MapEnvDef *ed = m_gameWorld->getEnvironment();
 			if (ed) {
 				ed->readProperties(elem);
 				m_gameWorld->updateEnvdef();
@@ -218,7 +218,7 @@ bool MapContext::save() {
 	return true;
 }
 
-bool MapContext::saveAs(const String& filename) {
+bool MapContext::saveAs(const String &filename) {
 	std::auto_ptr<File> file(g_fileSystem->openFileWrite(filename));
 	if (!file.get())
 		return false;
@@ -232,14 +232,14 @@ bool MapContext::saveAs(const String& filename) {
 	return true;
 }
 
-void MapContext::writeToFile(File* f) {
+void MapContext::writeToFile(File *f) {
 	int numActors = s2i(m_agentDict.size());
 
 	f->printf("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n");
 	f->printf("<map haveTerrain=\"%d\" numActors=\"%d\">\n", m_terrain ? 1 : 0, numActors);
 
 	// write env
-	MapEnvDef* ed = m_gameWorld->getEnvironment();
+	MapEnvDef *ed = m_gameWorld->getEnvironment();
 	if (ed) {
 		ed->writeToFile(f, 1);
 	}
@@ -253,7 +253,7 @@ void MapContext::writeToFile(File* f) {
 	// write actors
 	AgentDict::iterator it = m_agentDict.begin();
 	for (; it != m_agentDict.end(); ++it) {
-		MapAgent* actor = (MapAgent*)it->second;
+		MapAgent *actor = (MapAgent*)it->second;
 
 		if (!actor) continue;
 
@@ -277,7 +277,7 @@ Vector3 MapContext::getViewPos() {
 	return m_perspectiveView->getEyeMatrix().origin;
 }
 
-MapTerrain* MapContext::createTerrain(int tiles, int tilemeters) {
+MapTerrain *MapContext::createTerrain(int tiles, int tilemeters) {
 	if (m_terrain) {
 		Errorf("%s: map already has a terrain object");
 		return nullptr;
@@ -292,20 +292,20 @@ MapTerrain* MapContext::createTerrain(int tiles, int tilemeters) {
 	return m_terrain;
 }
 
-void MapContext::setTerrainMaterialDef(MapMaterialDef* matdef)
+void MapContext::setTerrainMaterialDef(MapMaterialDef *matdef)
 {
 	if (m_terrain) {
-		MapMaterialDef* oldmatdef = m_terrain->getMaterialDef()->clone();
+		MapMaterialDef *oldmatdef = m_terrain->getMaterialDef()->clone();
 		m_terrain->setMaterialDef(matdef);
 
-		TerrainMaterialDefHis* his = new TerrainMaterialDefHis(oldmatdef, matdef->clone(), m_terrain);
+		TerrainMaterialDefHis *his = new TerrainMaterialDefHis(oldmatdef, matdef->clone(), m_terrain);
 		addHistory(his);
 
 		notify(MapContext::TerrainMaterialEdited);
 	}
 }
 
-void MapContext::doRender(const RenderCamera& camera, bool world) {
+void MapContext::doRender(const RenderCamera &camera, bool world) {
 	if (world) {
 		m_gameWorld->drawScene(camera);
 	}
@@ -329,7 +329,7 @@ void MapContext::doRender(const RenderCamera& camera, bool world) {
 	g_renderSystem->endScene();
 }
 
-void MapContext::doSelect(const RenderCamera& camera, int part) {
+void MapContext::doSelect(const RenderCamera &camera, int part) {
 	// select terrain
 	if (part & SelectPart::kTerrain) {
 		if (m_terrain)
@@ -343,7 +343,7 @@ void MapContext::doSelect(const RenderCamera& camera, int part) {
 	AgentDict::iterator it = m_agentDict.begin();
 
 	for (; it != m_agentDict.end(); ++it) {
-		MapAgent* actor = (MapAgent*)it->second;
+		MapAgent *actor = (MapAgent*)it->second;
 		if (actor && !actor->isDeleted())
 			actor->doHitTest();
 	}
@@ -357,12 +357,12 @@ void MapContext::runGame() {
 void MapContext::startGaming() {
 	ActorDict::iterator it = m_actorDict.begin();
 	for (; it != m_actorDict.end(); ++it) {
-		Actor* actor = it->second;
+		Actor *actor = it->second;
 		if (actor->getType() != Actor::kEntity) {
 			continue;
 		}
 
-		Entity* ent = dynamic_cast<Entity*>(actor);
+		Entity *ent = dynamic_cast<Entity*>(actor);
 		AX_ASSERT(ent);
 		ent->backup();
 	}
@@ -371,20 +371,20 @@ void MapContext::startGaming() {
 void MapContext::stopGaming() {
 	ActorDict::iterator it = m_actorDict.begin();
 	for (; it != m_actorDict.end(); ++it) {
-		Actor* actor = it->second;
+		Actor *actor = it->second;
 		if (actor->getType() != Actor::kEntity) {
 			continue;
 		}
 
-		Entity* ent = dynamic_cast<Entity*>(actor);
+		Entity *ent = dynamic_cast<Entity*>(actor);
 		AX_ASSERT(ent);
 		ent->restore();
 	}
 }
 #endif
 
-void MapContext::readActor(const TiXmlElement* node) {
-	const char* typestr = node->Attribute("type");
+void MapContext::readActor(const TiXmlElement *node) {
+	const char *typestr = node->Attribute("type");
 	if (!typestr) {
 		return;
 	}
@@ -393,7 +393,7 @@ void MapContext::readActor(const TiXmlElement* node) {
 	AffineMat matrix;
 	Rgb color;
 
-	const char* v = node->Attribute("id", &id);
+	const char *v = node->Attribute("id", &id);
 	if (!v) {
 		return;
 	}
@@ -411,13 +411,13 @@ void MapContext::readActor(const TiXmlElement* node) {
 
 	color.fromString(v);
 
-	const TiXmlElement* childnode = node->FirstChildElement("node");
+	const TiXmlElement *childnode = node->FirstChildElement("node");
 
 	if (!childnode) {
 		return;
 	}
 
-	const char* childtypename = childnode->Attribute("className");
+	const char *childtypename = childnode->Attribute("className");
 
 	if (!childtypename) {
 		return;
@@ -425,7 +425,7 @@ void MapContext::readActor(const TiXmlElement* node) {
 
 	MapAgent::Type type = MapAgent::stringToType(typestr);
 
-	MapAgent* actor = nullptr;
+	MapAgent *actor = nullptr;
 
 	switch (type) {
 	case MapAgent::kNone:
@@ -449,7 +449,7 @@ void MapContext::readActor(const TiXmlElement* node) {
 		return;
 	}
 
-	GameObject* gamenode =  actor->getGameObject();
+	GameObject *gamenode =  actor->getGameObject();
 	gamenode->readXml(childnode);
 
 	actor->setMatrix(matrix);
@@ -463,7 +463,7 @@ void MapContext::readActor(const TiXmlElement* node) {
 	g_scriptSystem->updateNameIndex(gamenode->get_objectName());
 }
 
-void MapContext::addBookmark(const AffineMat& viewMatrix, const String& name, int id)
+void MapContext::addBookmark(const AffineMat &viewMatrix, const String &name, int id)
 {
 	Bookmark bookmark;
 
@@ -501,7 +501,7 @@ void MapContext::addBookmark(const Bookmark &bookmark)
 	++ m_bookmarkIndex;
 }
 
-void MapContext::deleteBookmark(const String& name)
+void MapContext::deleteBookmark(const String &name)
 {
 	Sequence<Bookmark>::iterator itr;
 
@@ -528,7 +528,7 @@ int MapContext::getNumBookmark()
 	return (int) m_bookmarks.size();
 }
 
-Bookmark* MapContext::getBookmark(const String& name)
+Bookmark *MapContext::getBookmark(const String &name)
 {
 	Sequence<Bookmark>::iterator itr;
 
@@ -543,7 +543,7 @@ Bookmark* MapContext::getBookmark(const String& name)
 	return NULL;
 }
 
-Bookmark* MapContext::getBookmark(int index)
+Bookmark *MapContext::getBookmark(int index)
 {
 	//AX_ASSERT(index < (int) m_bookmarks.size());
 
@@ -563,11 +563,11 @@ void MapContext::clearAllBookmarks()
 	m_bookmarkIndex = 0;
 }
 
-void MapContext::saveEditorInfo(const String& filename)
+void MapContext::saveEditorInfo(const String &filename)
 {
 	String filepath = PathUtil::removeExt(filename) + "_editor.info";
 
-	File* file = g_fileSystem->openFileWrite(filepath);
+	File *file = g_fileSystem->openFileWrite(filepath);
 	if (!file)
 	{
 		return ;
@@ -584,11 +584,11 @@ void MapContext::saveEditorInfo(const String& filename)
 	file->close();
 }
 
-bool MapContext::loadEditorInfo(const String& filename)
+bool MapContext::loadEditorInfo(const String &filename)
 {
 	String filepath = PathUtil::removeExt(filename) + "_editor.info";
 
-	void* filebuf;
+	void *filebuf;
 	size_t filesize = g_fileSystem->readFile(filepath, &filebuf);
 
 	if (!filesize || !filebuf)
@@ -612,8 +612,8 @@ bool MapContext::loadEditorInfo(const String& filename)
 		return false;
 	}
 
-	const TiXmlElement* root = doc.FirstChildElement("EditorInfo");
-	const TiXmlAttribute* attr = NULL;
+	const TiXmlElement *root = doc.FirstChildElement("EditorInfo");
+	const TiXmlAttribute *attr = NULL;
 
 	if (!root)
 	{
@@ -622,10 +622,10 @@ bool MapContext::loadEditorInfo(const String& filename)
 
 	//gSystem->beginProgress("Loading Editor Info...");
 
-	const TiXmlElement* elem;
+	const TiXmlElement *elem;
 	for (elem = root->FirstChildElement(); elem; elem = elem->NextSiblingElement()) 
 	{
-		const String& value = elem->ValueTStr();
+		const String &value = elem->ValueTStr();
 
 		if (value == "bookmark") 
 		{
@@ -642,7 +642,7 @@ bool MapContext::loadEditorInfo(const String& filename)
 	return true;
 }
 
-void MapContext::saveBookmarkInfo(File* file, int indent)
+void MapContext::saveBookmarkInfo(File *file, int indent)
 {
 #define INDENT if (indent) file->printf("%s", ind.c_str());
 	String ind(indent, '\t');		//String ind(indent*2, ' ');
@@ -665,13 +665,13 @@ void MapContext::saveBookmarkInfo(File* file, int indent)
 #undef INDENT
 }
 
-void MapContext::loadBookmarkInfo(const TiXmlElement* elem)
+void MapContext::loadBookmarkInfo(const TiXmlElement *elem)
 {
 	clearAllBookmarks();
 
-	const TiXmlElement* bookmarkNode;
+	const TiXmlElement *bookmarkNode;
 	Bookmark bookmark;
-	const char* v(NULL);
+	const char *v(NULL);
 
 	for (bookmarkNode = elem->FirstChildElement(); bookmarkNode; bookmarkNode = bookmarkNode->NextSiblingElement()) 
 	{
@@ -699,7 +699,7 @@ void MapContext::loadBookmarkInfo(const TiXmlElement* elem)
 	}
 }
 
-void MapContext::setActorProperty(const String& propName, const Variant& value)
+void MapContext::setActorProperty(const String &propName, const Variant &value)
 {
 	m_selections.setNodeProperty(propName,value);
 }

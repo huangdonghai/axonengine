@@ -21,26 +21,26 @@ AX_BEGIN_NAMESPACE
 		GLenum getTarget() const;
 
 		// implement Asset
-		virtual bool doInit(const String& name, intptr_t arg);
+		virtual bool doInit(const String &name, intptr_t arg);
 
 		// implement Texture
 		virtual void initialize(TexFormat format, int width, int height, InitFlags flags = 0);
-		virtual void getSize(int& width, int& height, int& depth);
-		virtual void getSize(int& width, int& height);
+		virtual void getSize(int &width, int &height, int &depth);
+		virtual void getSize(int &width, int &height);
 		virtual void setSize(int width, int height, int depth);
 		virtual TexFormat getFormat();
-		virtual void uploadSubTexture(const Rect& rect, const void* pixels, TexFormat format = TexFormat::AUTO);
+		virtual void uploadSubTexture(const Rect &rect, const void *pixels, TexFormat format = TexFormat::AUTO);
 #if 0
-		virtual void uploadSubTextureImmediately(const Rect& rect, const void* pixels);
+		virtual void uploadSubTextureImmediately(const Rect &rect, const void *pixels);
 #endif
 		virtual void setClampMode(ClampMode clampmode);
 		virtual void setFilterMode(FilterMode filtermode);
-		virtual void saveToFile(const String& filename);
+		virtual void saveToFile(const String &filename);
 		virtual void generateMipmap();
-		virtual void setBorderColor(const Rgba& color);
+		virtual void setBorderColor(const Rgba &color);
 		virtual void setHardwareShadowMap(bool enable);
 
-		void copyFramebuffer(const Rect& r);
+		void copyFramebuffer(const Rect &r);
 		void setDepthTextureMode(GLenum mode);
 
 		static void initFactory();
@@ -62,7 +62,7 @@ AX_BEGIN_NAMESPACE
 		int m_height;
 		int m_depth;
 		uint_t m_mipmapLevels;
-		void* m_compressedData;
+		void *m_compressedData;
 		bool m_isLoadFromMemory;
 		uint_t m_videoMemoryUsed;
 	};

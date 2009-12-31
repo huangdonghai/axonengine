@@ -37,7 +37,7 @@ AX_BEGIN_NAMESPACE
 		resetData();
 	}
 
-	void GLvertexbuffer::setData(const void* p, int size, Primitive::Hint primhint) {
+	void GLvertexbuffer::setData(const void *p, int size, Primitive::Hint primhint) {
 		m_hint = trBufferHint(primhint);
 		if (m_hint == GL_STATIC_DRAW || size != m_dataSize) {
 			resetData();
@@ -93,7 +93,7 @@ AX_BEGIN_NAMESPACE
 		resetData();
 	}
 
-	void GLindexbuffer::setData(const ushort_t* p, int count, Primitive::Hint primhint, int activeCount) {
+	void GLindexbuffer::setData(const ushort_t *p, int count, Primitive::Hint primhint, int activeCount) {
 		m_hint = trBufferHint(primhint);
 
 		m_count = count;
@@ -180,7 +180,7 @@ AX_BEGIN_NAMESPACE
 		return m_dataSize > 0;
 	}
 
-	void* GLindexbuffer::mapBuffer() {
+	void *GLindexbuffer::mapBuffer() {
 		bind();
 		return glMapBuffer(GL_ELEMENT_ARRAY_BUFFER, GL_WRITE_ONLY);
 	}

@@ -36,17 +36,17 @@ AX_BEGIN_NAMESPACE
 
 		bool isDefaulted() { return m_isDefaulted; }
 		FixedString getKey() const { return m_key; }
-		void setKey(const FixedString& newkey) { m_key = newkey; }
+		void setKey(const FixedString &newkey) { m_key = newkey; }
 
 		// implement RefObject
 		virtual void deleteThis();
 
-		virtual bool doInit(const String& name, intptr_t arg) = 0;
+		virtual bool doInit(const String &name, intptr_t arg) = 0;
 		virtual int getType() const = 0;
 
 	protected:
 		Asset();
-		bool init(const String& key, intptr_t arg) { m_key = key; return doInit(key, arg); }
+		bool init(const String &key, intptr_t arg) { m_key = key; return doInit(key, arg); }
 
 	private:
 		FixedString m_key;
@@ -70,21 +70,21 @@ AX_BEGIN_NAMESPACE
 		/*
 		   test
 		*/
-		virtual Asset* create() = 0;
-		virtual void destroy(Asset* p) = 0;
+		virtual Asset *create() = 0;
+		virtual void destroy(Asset *p) = 0;
 		virtual PoolHint getPoolHint() = 0;
 		virtual int getPoolSize() = 0;
-		virtual String generateKey(const String& name, intptr_t arg) = 0;
-		virtual Asset* getDefaulted() = 0;
+		virtual String generateKey(const String &name, intptr_t arg) = 0;
+		virtual Asset *getDefaulted() = 0;
 	};
 
 	template< class T >
 	class AssetFactory_ : public AssetFactory {
 	public:
-		virtual Asset* create() {
+		virtual Asset *create() {
 			return new T();
 		}
-		virtual void destroy(Asset* p) {
+		virtual void destroy(Asset *p) {
 			delete(p);
 		}
 		virtual PoolHint getPoolHint() {
@@ -93,10 +93,10 @@ AX_BEGIN_NAMESPACE
 		virtual int getPoolSize() {
 			return 1024;
 		}
-		virtual String generateKey(const String& name, intptr_t arg) {
+		virtual String generateKey(const String &name, intptr_t arg) {
 			return name;
 		}
-		virtual Asset* getDefaulted() {
+		virtual Asset *getDefaulted() {
 			return nullptr;
 		}
 	};
@@ -121,58 +121,58 @@ AX_BEGIN_NAMESPACE
 		void finalize();
 
 		// add factory
-		void registerType(int type, AssetFactory* factory);
+		void registerType(int type, AssetFactory *factory);
 		void removeType(int type);
 		void runFrame();
 
 		// create an empty asset, not even add to manager for find
-		Asset* createEmptyAsset(int type);
+		Asset *createEmptyAsset(int type);
 
 		// add an asset to manager for find
-		void addAsset(int type, const String& key, Asset* asset);
+		void addAsset(int type, const String &key, Asset *asset);
 
 		// find or create a new asset
-		Asset* findAsset(int type, const String& name, intptr_t arg = 0);
+		Asset *findAsset(int type, const String &name, intptr_t arg = 0);
 
 		// create a unique asset, not shared with others. need use freeAsset to free it
-		Asset* uniqueAsset(int type, const String& name, intptr_t arg = 0);
+		Asset *uniqueAsset(int type, const String &name, intptr_t arg = 0);
 
 		template< class Q >
-		Q* findAsset(const String& name, intptr_t arg = 0) {
+		Q *findAsset(const String &name, intptr_t arg = 0) {
 			return dynamic_cast<Q*>(findAsset(Q::AssetType, name, arg));
 		}
 
 	protected:
-		void removeAsset(Asset* asset);
-		void checkType(const char* func, int type);
-		void listType(int type, const char* filter);
+		void removeAsset(Asset *asset);
+		void checkType(const char *func, int type);
+		void listType(int type, const char *filter);
 
 		// console command
-		void list_f(const CmdArgs& param);
-		void texlist_f(const CmdArgs& param);
-		void matlist_f(const CmdArgs& param);
+		void list_f(const CmdArgs &param);
+		void texlist_f(const CmdArgs &param);
+		void matlist_f(const CmdArgs &param);
 
 	private:
 		class Data;
 
-		Data* m_datas[Asset::MAX_TYPES];
+		Data *m_datas[Asset::MAX_TYPES];
 		int m_frameId;
 	};
 
 #if 0
 	template< class T >
-	T* FindAsset_(const String& name, intptr_t arg = 0) {
+	T *FindAsset_(const String &name, intptr_t arg = 0) {
 		return dynamic_cast<T*>(g_assetManager->findAsset(T::AssetType, name, arg));
 	}
 
 	template< class T >
-	T* UniqueAsset_(const String& name, intptr_t arg = 0) {
+	T *UniqueAsset_(const String &name, intptr_t arg = 0) {
 		return dynamic_cast<T*>(g_assetManager->uniqueAsset(T::AssetType, name, arg));
 	}
 #endif
 
 	template< class T >
-	ResultPtr<T> FindAsset_(const String& name, intptr_t arg = 0) {
+	ResultPtr<T> FindAsset_(const String &name, intptr_t arg = 0) {
 #if 0
 		RefPtr<T> result;
 		result << dynamic_cast<T*>(g_assetManager->findAsset(T::AssetType, name, arg));
@@ -183,7 +183,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 	template< class T >
-	ResultPtr<T> UniqueAsset_(const String& name, intptr_t arg = 0) {
+	ResultPtr<T> UniqueAsset_(const String &name, intptr_t arg = 0) {
 #if 0
 		RefPtr<T> result;
 		result << dynamic_cast<T*>(g_assetManager->uniqueAsset(T::AssetType, name, arg));

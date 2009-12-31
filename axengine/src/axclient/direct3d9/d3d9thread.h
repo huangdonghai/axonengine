@@ -54,34 +54,34 @@ AX_BEGIN_NAMESPACE
 
 	protected:
 		void beginFrame();
-		void drawScene(QueuedScene* scene, const D3D9clearer& clearer);
-		void setupScene(QueuedScene* scene, const D3D9clearer* clearer = nullptr, RenderTarget* target = nullptr, RenderCamera* camera = nullptr);
-		void unsetScene(QueuedScene* scene, const D3D9clearer* clearer = nullptr, RenderTarget* target = nullptr, RenderCamera* camera = nullptr);
+		void drawScene(QueuedScene *scene, const D3D9clearer &clearer);
+		void setupScene(QueuedScene *scene, const D3D9clearer *clearer = nullptr, RenderTarget *target = nullptr, RenderCamera *camera = nullptr);
+		void unsetScene(QueuedScene *scene, const D3D9clearer *clearer = nullptr, RenderTarget *target = nullptr, RenderCamera *camera = nullptr);
 		void drawPrimitive(int prim_id);
-		void drawInteraction(Interaction* ia);
+		void drawInteraction(Interaction *ia);
 		void endFrame();
 
-		void drawGlobalLight(QueuedScene* scene, QueuedLight* light);
-		void drawLocalLight(QueuedScene* scene, QueuedLight* light);
+		void drawGlobalLight(QueuedScene *scene, QueuedLight *light);
+		void drawLocalLight(QueuedScene *scene, QueuedLight *light);
 
-		void drawPass_zfill(QueuedScene* scene);
-		void drawPass_overlay(QueuedScene* scene);
-		void drawPass_composite(QueuedScene* scene);
-		void drawPass_shadowGen(QueuedScene* scene);
-		void drawPass_lights(QueuedScene* scene);
-		void drawPass_postprocess(QueuedScene* scene);
+		void drawPass_zfill(QueuedScene *scene);
+		void drawPass_overlay(QueuedScene *scene);
+		void drawPass_composite(QueuedScene *scene);
+		void drawPass_shadowGen(QueuedScene *scene);
+		void drawPass_lights(QueuedScene *scene);
+		void drawPass_postprocess(QueuedScene *scene);
 
-		void drawScene_world(QueuedScene* scene, const D3D9clearer& clearer);
-		void drawScene_worldSub(QueuedScene* scene);
-		void drawScene_noworld(QueuedScene* scene, const D3D9clearer& clearer);
+		void drawScene_world(QueuedScene *scene, const D3D9clearer &clearer);
+		void drawScene_worldSub(QueuedScene *scene);
+		void drawScene_noworld(QueuedScene *scene, const D3D9clearer &clearer);
 
 		void issueVisQuery();
 		void issueShadowQuery();
 
 		void syncFrame();
-		void cacheSceneRes(QueuedScene* scene);
+		void cacheSceneRes(QueuedScene *scene);
 
-		void bindTarget(RenderTarget* target);
+		void bindTarget(RenderTarget *target);
 
 	private:
 		int m_frameId;

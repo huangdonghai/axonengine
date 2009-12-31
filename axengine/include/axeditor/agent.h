@@ -15,34 +15,34 @@ AX_BEGIN_NAMESPACE
 
 class AX_API Agent {
 public:
-	Agent(Context* ctx);
+	Agent(Context *ctx);
 	virtual ~Agent();
 
 	enum Flag {
 		Selected = 1, Hovering = 2, Hided = 4, Deleted = 8, Locked = 0x10
 	};
 
-	virtual Agent* clone() const = 0;
+	virtual Agent *clone() const = 0;
 	virtual void doDeleteFlagChanged(bool del) = 0;
 	virtual void doRender() = 0;
 
-	virtual void setMatrix(const AffineMat& matrix) = 0;
-	virtual const AffineMat& getMatrix() const = 0;
+	virtual void setMatrix(const AffineMat &matrix) = 0;
+	virtual const AffineMat &getMatrix() const = 0;
 
 	virtual BoundingBox getBoundingBox() = 0;
 
-	virtual Variant getProperty(const String& propname) = 0;
-	virtual void setProperty(const String& propname, const Variant& value) = 0;
+	virtual Variant getProperty(const String &propname) = 0;
+	virtual void setProperty(const String &propname, const Variant &value) = 0;
 	virtual void doPropertyChanged() = 0;
 
 	virtual Rgb getColor() const = 0;
 	virtual void setColor(Rgb val) = 0;
 
 	void beginTransform();
-	void doTransform(const AffineMat& mat, bool local);
+	void doTransform(const AffineMat &mat, bool local);
 	void setOrigin(int index, float f);
 	void setRotate(int index, float f);
-	Action* endTransform();
+	Action *endTransform();
 
 	void setHovering(bool ishovering) { m_isHovering = ishovering; }
 	void setSelected(bool is_selected) { m_isSelected = is_selected; }
@@ -51,14 +51,14 @@ public:
 	bool isDeleted() const { return m_isDeleted; }
 	int getId() const { return m_id; }
 	void setId(int newid);
-	const Vector3& getOrigin() const { return getMatrix().origin; }
-	void setOrigin(const Vector3& pos);
-	const Matrix3& getAxis() const { return getMatrix().axis; }
-	void setAxis(const Matrix3& axis);
-	Context* getContext() const { return m_context; }
+	const Vector3 &getOrigin() const { return getMatrix().origin; }
+	void setOrigin(const Vector3 &pos);
+	const Matrix3 &getAxis() const { return getMatrix().axis; }
+	void setAxis(const Matrix3 &axis);
+	Context *getContext() const { return m_context; }
 
 protected:
-	Context* m_context;
+	Context *m_context;
 	int m_id;
 	bool m_isHovering : 1;
 	bool m_isSelected : 1;
@@ -78,18 +78,18 @@ class AX_API AgentList : public List<Agent*> {
 public:
 	bool containsOne() const;	// if contains one object, return true
 	void beginTransform() const;
-	void doTransform(const AffineMat& mat, bool local) const;
+	void doTransform(const AffineMat &mat, bool local) const;
 	void setOrigin(int index, float f) const;
 	void setRotate(int index, float f) const;
-	Action* endTransform() const;
+	Action *endTransform() const;
 	BoundingBox getBoundingBox() const;
 	Vector3 getCenter() const;
 	void doSelect() const;
 	Vector3 getBackOrigin() const;
-	const Matrix3& getBackAxis() const;
+	const Matrix3 &getBackAxis() const;
 	Vector3 getFrontOrigin() const;
-	const Matrix3& getFrontAxis() const;
-	void setNodeProperty(const String& propname, const Variant& value) const;
+	const Matrix3 &getFrontAxis() const;
+	void setNodeProperty(const String &propname, const Variant &value) const;
 	void doPropertyChanged() const;
 	void setColor(Rgb val) const;
 
@@ -107,7 +107,7 @@ inline void AgentList::beginTransform() const {
 	std::for_each(begin(), end(), std::mem_fun(&Agent::beginTransform));
 }
 
-inline void AgentList::doTransform(const AffineMat& mat, bool local) const {
+inline void AgentList::doTransform(const AffineMat &mat, bool local) const {
 	AgentList::const_iterator it = begin();
 	for (; it != end(); ++it) {
 		(*it)->doTransform(mat, local);
@@ -164,7 +164,7 @@ inline Vector3 AgentList::getBackOrigin() const {
 	return back()->getMatrix().origin;
 }
 
-inline const Matrix3& AgentList::getBackAxis() const {
+inline const Matrix3 &AgentList::getBackAxis() const {
 	AX_ASSERT(!empty());
 	return back()->getMatrix().axis;
 }
@@ -174,7 +174,7 @@ inline Vector3 AgentList::getFrontOrigin() const {
 	return front()->getMatrix().origin;
 }
 
-inline const Matrix3& AgentList::getFrontAxis() const {
+inline const Matrix3 &AgentList::getFrontAxis() const {
 	AX_ASSERT(!empty());
 	return front()->getMatrix().axis;
 }

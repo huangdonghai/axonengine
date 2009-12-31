@@ -25,10 +25,10 @@ AX_BEGIN_NAMESPACE
 		BitMsg();
 		~BitMsg() {}
 
-		void init( byte_t* data, int length );
-		void init( const byte_t* data, int length );
-		byte_t* getData( void );
-		const byte_t* getData( void ) const;
+		void init( byte_t *data, int length );
+		void init( const byte_t *data, int length );
+		byte_t *getData( void );
+		const byte_t *getData( void ) const;
 		int getMaxSize( void ) const;
 		void setAllowOverflow( bool set );
 		bool isOverflowed( void ) const;
@@ -67,7 +67,7 @@ AX_BEGIN_NAMESPACE
 		void writeDir( const Vector3 &dir, int numBits );
 		void writeString( const char *s, int maxLength = -1, bool make7Bit = true );
 		void writeData( const void *data, int length );
-		void writeNetadr( const NetAdr& adr );
+		void writeNetadr( const NetAdr &adr );
 
 		void writeDeltaChar( int oldValue, int newValue );
 		void writeDeltaByte( int oldValue, int newValue );
@@ -113,8 +113,8 @@ AX_BEGIN_NAMESPACE
 		static Vector3 bitsToDir( int bits, int numBits );
 
 	private:
-		byte_t* m_writeData;
-		const byte_t* m_readData;
+		byte_t *m_writeData;
+		const byte_t *m_readData;
 		int m_maxSize;
 		int m_curSize;
 		int m_writeBit;

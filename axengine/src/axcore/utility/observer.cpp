@@ -14,11 +14,11 @@ AX_BEGIN_NAMESPACE
 
 	IObservable::~IObservable() {}
 
-	void IObservable::attachObserver(IObserver* observer) {
+	void IObservable::attachObserver(IObserver *observer) {
 		m_observers.push_back(observer);
 	}
 
-	void IObservable::detachObserver(IObserver* observer) {
+	void IObservable::detachObserver(IObserver *observer) {
 		List<IObserver*>::iterator it = m_observers.begin();
 
 		for (; it != m_observers.end(); ++it) {

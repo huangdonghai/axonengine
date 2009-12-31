@@ -180,7 +180,7 @@ AX_BEGIN_NAMESPACE
 	/////////////////////////////////////////////////////////////////////////////
 	// RenderWind::SetWindStrengthAndDirection
 
-	void RenderWind::setWindStrengthAndDirection(float strength, const Vector3& direction) {
+	void RenderWind::setWindStrengthAndDirection(float strength, const Vector3 &direction) {
 		m_windStrength = Math::saturate(strength);
 
 		Vector3 dir = direction.getNormalized();
@@ -353,7 +353,7 @@ AX_BEGIN_NAMESPACE
 			unsigned int uiSize = (unsigned int)m_leafAngleMatrices.size();
 			for (unsigned int i = 0; i < uiSize; ++i)
 			{
-				Matrix4& cMatrix = m_leafAngleMatrices[i];
+				Matrix4 &cMatrix = m_leafAngleMatrices[i];
 
 				cMatrix.setIdentity();
 				cMatrix.rotate(0, 0, fAzimuth);
@@ -369,7 +369,7 @@ AX_BEGIN_NAMESPACE
 	/////////////////////////////////////////////////////////////////////////////
 	// RenderWind::UpdateTree
 
-	void Wind::updateTree(CSpeedTreeRT* pTree) {
+	void Wind::updateTree(CSpeedTreeRT *pTree) {
 		pTree->SetWindStrengthAndLeafAngles(m_finalWindStrength.m_currentValue, 
 											&(m_leafRocking.m_outputs[0]), 
 											&(m_leafRustling.m_outputs[0]), 
@@ -406,8 +406,8 @@ AX_BEGIN_NAMESPACE
 	/////////////////////////////////////////////////////////////////////////////
 	// RenderWind::GetWindMatrix
 
-	float* RenderWind::getWindMatrix(unsigned int uiIndex) const {
-		float* pReturn = NULL;
+	float *RenderWind::getWindMatrix(unsigned int uiIndex) const {
+		float *pReturn = NULL;
 
 		if (uiIndex < m_windMatrices.size())
 			pReturn = ((float*)&m_windMatrices[uiIndex]);
@@ -427,8 +427,8 @@ AX_BEGIN_NAMESPACE
 	/////////////////////////////////////////////////////////////////////////////
 	// RenderWind::GetLeafAngleMatrix
 
-	float* RenderWind::getLeafAngleMatrix(unsigned int uiIndex) const {
-		float* pReturn = NULL;
+	float *RenderWind::getLeafAngleMatrix(unsigned int uiIndex) const {
+		float *pReturn = NULL;
 
 		if (uiIndex < m_windMatrices.size())
 			pReturn = ((float*)&m_leafAngleMatrices[uiIndex]);
@@ -461,7 +461,7 @@ AX_BEGIN_NAMESPACE
 	/////////////////////////////////////////////////////////////////////////////
 	// RenderWind::GetQuantities
 
-	void Wind::getQuantities(int& iNumWindMatrices, int& iNumLeafAngles)
+	void Wind::getQuantities(int &iNumWindMatrices, int &iNumLeafAngles)
 	{
 		iNumWindMatrices = (int)m_vWindMatrices.size();
 		iNumLeafAngles = (int)m_vLeafAngleMatrices.size();
@@ -471,7 +471,7 @@ AX_BEGIN_NAMESPACE
 	/////////////////////////////////////////////////////////////////////////////
 	// Wind::GetWindResponse
 
-	void RenderWind::getWindResponse(float& fResponse, float& fReponseLimit) {
+	void RenderWind::getWindResponse(float &fResponse, float &fReponseLimit) {
 		fResponse = m_windResponse;
 		fReponseLimit = m_windResponseLimit;
 	}
@@ -480,7 +480,7 @@ AX_BEGIN_NAMESPACE
 	/////////////////////////////////////////////////////////////////////////////
 	// RenderWind::GetWindStrengthAndDirection
 
-	void RenderWind::getWindStrengthAndDirection(float& fWindStrength, float& fWindDirectionX, float& fWindDirectionY, float& fWindDirectionZ) {
+	void RenderWind::getWindStrengthAndDirection(float &fWindStrength, float &fWindDirectionX, float &fWindDirectionY, float &fWindDirectionZ) {
 		fWindStrength = m_windStrength;
 		fWindDirectionX = m_finalWindDirectionX.m_wantedValue;
 		fWindDirectionY = m_finalWindDirectionY.m_wantedValue;
@@ -499,7 +499,7 @@ AX_BEGIN_NAMESPACE
 	/////////////////////////////////////////////////////////////////////////////
 	// RenderWind::GetExponents
 
-	void RenderWind::getExponents(float& fBranchExponent, float& fLeafExponent) {
+	void RenderWind::getExponents(float &fBranchExponent, float &fLeafExponent) {
 		fBranchExponent = m_branchExponent;
 		fLeafExponent = m_leafExponent;
 	}
@@ -508,7 +508,7 @@ AX_BEGIN_NAMESPACE
 	/////////////////////////////////////////////////////////////////////////////
 	// RenderWind::GetGusting
 
-	void RenderWind::getGusting(float& fGustStrength, float& fGustFrequency, float& fGustDuration) {
+	void RenderWind::getGusting(float &fGustStrength, float &fGustFrequency, float &fGustDuration) {
 		fGustStrength = m_gustingStrength;
 		fGustFrequency = m_gustingFrequency;
 		fGustDuration = m_gustingDuration;
@@ -518,7 +518,7 @@ AX_BEGIN_NAMESPACE
 	/////////////////////////////////////////////////////////////////////////////
 	// RenderWind::GetBranchHorizontal
 
-	void RenderWind::getBranchHorizontal(float& fLowWindAngle, float& fHighWindAngle, float& fLowWindSpeed, float& fHighWindSpeed) {
+	void RenderWind::getBranchHorizontal(float &fLowWindAngle, float &fHighWindAngle, float &fLowWindSpeed, float &fHighWindSpeed) {
 		fLowWindAngle = m_branchHorizontal.m_lowAngle;
 		fHighWindAngle = m_branchHorizontal.m_highAngle;
 		fLowWindSpeed = m_branchHorizontal.m_lowSpeed;
@@ -529,7 +529,7 @@ AX_BEGIN_NAMESPACE
 	/////////////////////////////////////////////////////////////////////////////
 	// RenderWind::GetBranchVertical
 
-	void RenderWind::getBranchVertical(float& fLowWindAngle, float& fHighWindAngle, float& fLowWindSpeed, float& fHighWindSpeed) {
+	void RenderWind::getBranchVertical(float &fLowWindAngle, float &fHighWindAngle, float &fLowWindSpeed, float &fHighWindSpeed) {
 		fLowWindAngle = m_branchVertical.m_lowAngle;
 		fHighWindAngle = m_branchVertical.m_highAngle;
 		fLowWindSpeed = m_branchVertical.m_lowSpeed;
@@ -540,7 +540,7 @@ AX_BEGIN_NAMESPACE
 	/////////////////////////////////////////////////////////////////////////////
 	// RenderWind::GetLeafRocking
 
-	void RenderWind::getLeafRocking(float& fLowWindAngle, float& fHighWindAngle, float& fLowWindSpeed, float& fHighWindSpeed) {
+	void RenderWind::getLeafRocking(float &fLowWindAngle, float &fHighWindAngle, float &fLowWindSpeed, float &fHighWindSpeed) {
 		fLowWindAngle = m_leafRocking.m_lowAngle;
 		fHighWindAngle = m_leafRocking.m_highAngle;
 		fLowWindSpeed = m_leafRocking.m_lowSpeed;
@@ -551,7 +551,7 @@ AX_BEGIN_NAMESPACE
 	/////////////////////////////////////////////////////////////////////////////
 	// RenderWind::GetLeafRustling
 
-	void RenderWind::getLeafRustling(float& fLowWindAngle, float& fHighWindAngle, float& fLowWindSpeed, float& fHighWindSpeed) {
+	void RenderWind::getLeafRustling(float &fLowWindAngle, float &fHighWindAngle, float &fLowWindSpeed, float &fHighWindSpeed) {
 		fLowWindAngle = m_leafRustling.m_lowAngle;
 		fHighWindAngle = m_leafRustling.m_highAngle;
 		fLowWindSpeed = m_leafRustling.m_lowSpeed;
@@ -562,7 +562,7 @@ AX_BEGIN_NAMESPACE
 	/////////////////////////////////////////////////////////////////////////////
 	// RenderWind::GetRustleAngles
 
-	bool RenderWind::getRustleAngles(FloatSeq& vAngles) const {
+	bool RenderWind::getRustleAngles(FloatSeq &vAngles) const {
 		bool bSuccess = false;
 
 		if (vAngles.size() == m_leafRustling.m_outputs.size())
@@ -578,7 +578,7 @@ AX_BEGIN_NAMESPACE
 	/////////////////////////////////////////////////////////////////////////////
 	// RenderWind::GetRockAngles
 
-	bool RenderWind::getRockAngles(FloatSeq& vAngles) const {
+	bool RenderWind::getRockAngles(FloatSeq &vAngles) const {
 		bool bSuccess = false;
 
 		if (vAngles.size() == m_leafRocking.m_outputs.size())
@@ -609,7 +609,7 @@ AX_BEGIN_NAMESPACE
 	/////////////////////////////////////////////////////////////////////////////
 	// RenderWind::InterpolateParameters
 
-	void RenderWind::interpolateParameters(RenderWind* pWind1, RenderWind* pWind2, float fInterpolation) {
+	void RenderWind::interpolateParameters(RenderWind *pWind1, RenderWind *pWind2, float fInterpolation) {
 	#define INTERPOLATE_WIND_PARAM(a) a = INTERPOLATE(pWind1->a, pWind2->a, fInterpolation)
 
 		if (pWind1 != NULL && pWind2 != NULL)
@@ -669,7 +669,7 @@ AX_BEGIN_NAMESPACE
 	/////////////////////////////////////////////////////////////////////////////
 	// RenderWind::BlendParameters
 
-	void RenderWind::blendParameters(RenderWind** pWinds, float* pWeights, unsigned int uiNumWinds) {
+	void RenderWind::blendParameters(RenderWind** pWinds, float *pWeights, unsigned int uiNumWinds) {
 		// zero out our data
 		m_windStrength = 0.0f;
 		m_finalWindDirectionX.m_wantedValue = 0.0f;

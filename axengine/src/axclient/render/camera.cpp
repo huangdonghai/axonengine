@@ -26,17 +26,17 @@ RenderCamera::~RenderCamera() {
 }
 
 
-void RenderCamera::setTarget(RenderTarget* target) {
+void RenderCamera::setTarget(RenderTarget *target) {
 	m_target = target;
 	calcViewPort();
 }
 
-RenderTarget* RenderCamera::getTarget() const {
+RenderTarget *RenderCamera::getTarget() const {
 	return m_target;
 }
 
 
-void RenderCamera::setOrigin(const Vector3& view_org) {
+void RenderCamera::setOrigin(const Vector3 &view_org) {
 	if (m_viewOrg == view_org)
 		return;
 
@@ -46,11 +46,11 @@ void RenderCamera::setOrigin(const Vector3& view_org) {
 	calcFrustum();
 }
 
-const Vector3& RenderCamera::getOrigin() const {
+const Vector3 &RenderCamera::getOrigin() const {
 	return m_viewOrg;
 }
 
-void RenderCamera::setViewRect(const Rect& view_rect) {
+void RenderCamera::setViewRect(const Rect &view_rect) {
 	if (m_viewRect == view_rect)
 		return;
 
@@ -60,12 +60,12 @@ void RenderCamera::setViewRect(const Rect& view_rect) {
 	calcFrustum();
 }
 
-const Rect& RenderCamera::getViewRect() const {
+const Rect &RenderCamera::getViewRect() const {
 	return m_viewRect;
 }
 
 
-void RenderCamera::setViewAxis(const Matrix3& axis) {
+void RenderCamera::setViewAxis(const Matrix3 &axis) {
 	if (m_viewAxis == axis)
 		return;
 
@@ -74,14 +74,14 @@ void RenderCamera::setViewAxis(const Matrix3& axis) {
 	calcFrustum();
 }
 
-void RenderCamera::setViewAngles(const Angles& angles) {
+void RenderCamera::setViewAngles(const Angles &angles) {
 	m_viewAxis = angles.toMatrix3();
 	calcViewMatrix();
 	calcFrustum();
 }
 
 
-const Matrix3& RenderCamera::getViewAxis() const {
+const Matrix3 &RenderCamera::getViewAxis() const {
 	return m_viewAxis;
 }
 
@@ -177,12 +177,12 @@ void RenderCamera::setOverlay(float left, float top, float width, float height) 
 	calcFrustum();
 }
 
-void RenderCamera::setOverlay(const Rect& rect) {
+void RenderCamera::setOverlay(const Rect &rect) {
 	setOverlay(rect.x, rect.y, rect.width, rect.height);
 }
 
 
-void RenderCamera::setPersOverlay(const Rect& rect, float fov) {
+void RenderCamera::setPersOverlay(const Rect &rect, float fov) {
 	m_viewOrg.x = rect.width * 0.5f;
 	m_viewOrg.y = rect.height * 0.5f;
 	m_viewOrg.z = - m_viewOrg.x * tan(fov * 0.5f * AX_D2R);
@@ -204,17 +204,17 @@ void RenderCamera::setPersOverlay(const Rect& rect, float fov) {
 }
 
 
-Plane::Side RenderCamera::checkBox(const BoundingBox& bbox) const {
+Plane::Side RenderCamera::checkBox(const BoundingBox &bbox) const {
 	g_statistic->incValue(stat_frustumCullCall);
 	return m_convex.checkBox(bbox);
 }
 
-bool RenderCamera::cullBox(const BoundingBox& bbox) const {
+bool RenderCamera::cullBox(const BoundingBox &bbox) const {
 	g_statistic->incValue(stat_frustumCullCall);
 	return m_convex.cullBox(bbox);
 }
 
-Vector3 RenderCamera::worldToScreen(const Vector3& in) const {
+Vector3 RenderCamera::worldToScreen(const Vector3 &in) const {
 	Vector4 out(in);
 
 	out = m_vp * out;
@@ -232,7 +232,7 @@ Vector3 RenderCamera::worldToScreen(const Vector3& in) const {
 	return out.xyz();
 }
 
-Vector3 RenderCamera::screenToWorld(const Vector3& in) const {
+Vector3 RenderCamera::screenToWorld(const Vector3 &in) const {
 	Vector4 vert(in);
 
 	vert.y = m_clientSize.y - vert.y;
@@ -252,7 +252,7 @@ Vector3 RenderCamera::screenToWorld(const Vector3& in) const {
 }
 
 
-RenderCamera RenderCamera::createSelectionCamera(const Rect& region) const {
+RenderCamera RenderCamera::createSelectionCamera(const Rect &region) const {
 	RenderCamera ret = *this;
 
 	// calculate projec matrix
@@ -381,13 +381,13 @@ void RenderCamera::calcFrustum() {
 	return;
 }
 
-RenderCamera RenderCamera::createMirrorCamera(const Plane& mirror_plane) const {
+RenderCamera RenderCamera::createMirrorCamera(const Plane &mirror_plane) const {
 	RenderCamera result = *this;
 	result.enableReflection(mirror_plane);
 	return result;
 }
 
-void RenderCamera::enableReflection(const Plane& mirror_plane) {
+void RenderCamera::enableReflection(const Plane &mirror_plane) {
 	m_isReflection = true;
 	m_reflectionPlane = mirror_plane;
 
@@ -410,7 +410,7 @@ bool RenderCamera::isReflectionEnabled() {
 	return m_isReflection;
 }
 
-void RenderCamera::getTrapezoidalMatrix(Matrix4& lightMatrix, Matrix4& tsmMatrix, const Vector3& lightdir, float focusdistance) const
+void RenderCamera::getTrapezoidalMatrix(Matrix4 &lightMatrix, Matrix4 &tsmMatrix, const Vector3 &lightdir, float focusdistance) const
 {
 	if (m_isOrthoProjection) {
 		Errorf("%s", __func__);
@@ -472,7 +472,7 @@ inline float Dot(Vector4 v1, Vector4 v2) {
 	return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z + v1.w * v2.w;
 }
 
-static void ModifyProjectionMatrix(const Vector4& clipPlane, float matrix[16]) {
+static void ModifyProjectionMatrix(const Vector4 &clipPlane, float matrix[16]) {
 	//		float       matrix[16];
 	Vector4    q;
 
@@ -515,7 +515,7 @@ void RenderCamera::adjustProjMatrixForReflection()
 	ModifyProjectionMatrix(cplane, &m_projMatrix[0][0]);
 }
 
-void RenderCamera::createCubemapCameras(const RenderCamera& main, const AffineMat& mtx, RenderCamera result[6], float znear/*=0.5f*/, float zfar/*=16.0f */)
+void RenderCamera::createCubemapCameras(const RenderCamera &main, const AffineMat &mtx, RenderCamera result[6], float znear/*=0.5f*/, float zfar/*=16.0f */)
 {
 	static float faces[6][3] = {
 		{ 1,2,3 },		// PX
@@ -526,7 +526,7 @@ void RenderCamera::createCubemapCameras(const RenderCamera& main, const AffineMa
 		{ -3,-1,2 },	// NZ
 	};
 
-	const Matrix3& axis = mtx.axis;
+	const Matrix3 &axis = mtx.axis;
 
 	for (int i=0; i<6; i++) {
 		result[i] = main;
@@ -545,7 +545,7 @@ void RenderCamera::createCubemapCameras(const RenderCamera& main, const AffineMa
 }
 
 
-void RenderCamera::createCubemapCameras( const AffineMat& mtx, RenderCamera result[6], float znear/*=0.5f*/, float zfar/*=16.0f*/ )
+void RenderCamera::createCubemapCameras( const AffineMat &mtx, RenderCamera result[6], float znear/*=0.5f*/, float zfar/*=16.0f*/ )
 {
 	static float faces[6][3] = {
 		{ 1,2,3 },		// PX
@@ -556,7 +556,7 @@ void RenderCamera::createCubemapCameras( const AffineMat& mtx, RenderCamera resu
 		{ -3,-1,2 },	// NZ
 	};
 
-	const Matrix3& axis = mtx.axis;
+	const Matrix3 &axis = mtx.axis;
 
 	for (int i=0; i<6; i++) {
 		result[i].setOrigin(mtx.origin);
@@ -573,7 +573,7 @@ void RenderCamera::createCubemapCameras( const AffineMat& mtx, RenderCamera resu
 	}
 }
 
-void Convex::initFromCamera( const RenderCamera& camera )
+void Convex::initFromCamera( const RenderCamera &camera )
 {
 	Vector3 p;
 
@@ -612,9 +612,9 @@ void Convex::initFromCamera( const RenderCamera& camera )
 	m_planes[5].fitThroughPoint(p);
 }
 
-void Convex::initFromCamera( const RenderCamera& shadowCamera, const RenderCamera& visCamera )
+void Convex::initFromCamera( const RenderCamera &shadowCamera, const RenderCamera &visCamera )
 {
-	const Convex& visConvex = visCamera.m_convex;
+	const Convex &visConvex = visCamera.m_convex;
 
 	initFromCamera(shadowCamera);
 	return;
@@ -623,7 +623,7 @@ void Convex::initFromCamera( const RenderCamera& shadowCamera, const RenderCamer
 		return;
 
 	if (shadowCamera.isOrthoProjection()) {
-		const Vector3& forward = shadowCamera.getViewAxis()[0];
+		const Vector3 &forward = shadowCamera.getViewAxis()[0];
 		bool planevis[MAX_PLANES];
 
 		for (int i = 0; i < visConvex.m_numPlanes; i++) {

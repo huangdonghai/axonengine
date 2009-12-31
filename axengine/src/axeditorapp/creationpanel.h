@@ -23,7 +23,7 @@ public:
     ~CreationPanel();
 
 	// IObserver
-	virtual void doNotify(IObservable* subject, int arg);
+	virtual void doNotify(IObservable *subject, int arg);
 
 protected:
 	void initEntityList();
@@ -34,14 +34,14 @@ private:
 
 	EntityType mEntityType;
 	QString m_filename[ET_Max];
-	RenderEntity* m_renderActor;
+	RenderEntity *m_renderActor;
 
 private slots:
 	void on_selectTree_itemDoubleClicked(QTreeWidgetItem*,int);
 	void on_selectEntity_itemDoubleClicked(QTreeWidgetItem*,int);
 	void on_selectModel_itemDoubleClicked(QTreeWidgetItem*,int);
 	void on_modelButton_clicked();
-	void on_objectColor_colorChanged(const QColor& color);
+	void on_objectColor_colorChanged(const QColor &color);
 };
 
 #endif // CREATIONPANEL_H

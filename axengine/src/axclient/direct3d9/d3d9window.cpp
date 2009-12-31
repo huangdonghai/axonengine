@@ -27,7 +27,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 
-	D3D9window::D3D9window(const String& name) {
+	D3D9window::D3D9window(const String &name) {
 		m_swapChain = 0;
 		m_backbuffer = 0;
 		m_swapChainWnd = 0;
@@ -70,7 +70,7 @@ AX_BEGIN_NAMESPACE
 		m_lightBuffer = 0;
 	}
 
-	D3D9window::D3D9window(handle_t wndId, const String& name) : m_name(name) {
+	D3D9window::D3D9window(handle_t wndId, const String &name) : m_name(name) {
 		m_swapChain = 0;
 		m_backbuffer = 0;
 		m_swapChainWnd = 0;
@@ -94,14 +94,14 @@ AX_BEGIN_NAMESPACE
 	void D3D9window::bind() {
 		checkSwapChain();
 
-		IDirect3DSurface9* ds = d3d9TargetManager->getDepthStencil(m_swapChainSize.x, m_swapChainSize.y);
+		IDirect3DSurface9 *ds = d3d9TargetManager->getDepthStencil(m_swapChainSize.x, m_swapChainSize.y);
 
 		HRESULT hr;
 		V(d3d9Device->SetRenderTarget(0, m_backbuffer));
 		V(d3d9StateManager->setDepthStencilSurface(ds, TexFormat::D24S8));
 
 		// depth stencil
-//		D3D9target* m_depthStencil = d3d9TargetManager->allocTargetDX(RenderTarget::PermanentAlloc, m_swapChainSize.x, m_swapChainSize.y, TexFormat::D24S8);
+//		D3D9target *m_depthStencil = d3d9TargetManager->allocTargetDX(RenderTarget::PermanentAlloc, m_swapChainSize.x, m_swapChainSize.y, TexFormat::D24S8);
 	}
 
 	void D3D9window::unbind() {

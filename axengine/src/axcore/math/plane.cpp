@@ -11,7 +11,7 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-	Plane::Side Plane::side(const BoundingBox& bbox) const {
+	Plane::Side Plane::side(const BoundingBox &bbox) const {
 		int i;
 		float dist1, dist2;
 		int sides;
@@ -28,10 +28,10 @@ AX_BEGIN_NAMESPACE
 		}
 #else
 		// zsh hack地址，消除[]调用
-		const float* L = &bbox.min.x;
-		const float* H = &bbox.max.x;
-		float* D0 = &corners[0].x;
-		float* D1 = &corners[1].x;
+		const float *L = &bbox.min.x;
+		const float *H = &bbox.max.x;
+		float *D0 = &corners[0].x;
+		float *D1 = &corners[1].x;
 		for (i=0 ; i<3 ; i++) {
 			if (*(&a + i) < 0) {
 				D0[i] = L[i];

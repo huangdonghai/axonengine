@@ -33,7 +33,7 @@ String InputKey::getName() const {
 	return String();
 }
 
-int InputKey::getKey(const String& keyname)
+int InputKey::getKey(const String &keyname)
 {
 	if (keyname.empty()) {
 		Errorf("error keyname");
@@ -62,7 +62,7 @@ int InputKey::getKey(const String& keyname)
 // class IInputHandler
 //--------------------------------------------------------------------------
 
-void IInputHandler::handleEvent(InputEvent* e) {
+void IInputHandler::handleEvent(InputEvent *e) {
 	preHandleEvent(e);
 
 	onEvent(e);
@@ -73,7 +73,7 @@ void IInputHandler::handleEvent(InputEvent* e) {
 	switch (e->type) {
 	case InputEvent::KeyDown:
 		{
-			InputEvent* ke = static_cast<InputEvent*>(e);
+			InputEvent *ke = static_cast<InputEvent*>(e);
 			onKeyDown(ke);
 
 			break;
@@ -81,14 +81,14 @@ void IInputHandler::handleEvent(InputEvent* e) {
 
 	case InputEvent::KeyUp:
 		{
-			InputEvent* ke = static_cast<InputEvent*>(e);
+			InputEvent *ke = static_cast<InputEvent*>(e);
 			onKeyUp(ke);
 
 			break;
 		}
 	case InputEvent::MouseDown:
 		{
-			InputEvent* me = static_cast<InputEvent*>(e);
+			InputEvent *me = static_cast<InputEvent*>(e);
 			onMouseDown(me);
 
 			break;
@@ -96,7 +96,7 @@ void IInputHandler::handleEvent(InputEvent* e) {
 
 	case InputEvent::MouseUp:
 		{
-			InputEvent* me = static_cast<InputEvent*>(e);
+			InputEvent *me = static_cast<InputEvent*>(e);
 			onMouseUp(me);
 
 			break;
@@ -104,7 +104,7 @@ void IInputHandler::handleEvent(InputEvent* e) {
 
 	case InputEvent::MouseMove:
 		{
-			InputEvent* me = static_cast<InputEvent*>(e);
+			InputEvent *me = static_cast<InputEvent*>(e);
 			onMouseMove(me);
 
 			break;
@@ -112,7 +112,7 @@ void IInputHandler::handleEvent(InputEvent* e) {
 
 	case InputEvent::Wheel:
 		{
-			InputEvent* we = static_cast<InputEvent*>(e);
+			InputEvent *we = static_cast<InputEvent*>(e);
 			onMouseWheel(we);
 
 			break;
@@ -123,13 +123,13 @@ exit:
 	postHandleEvent(e);
 }
 
-void IInputHandler::onEvent(InputEvent* e) {}
-void IInputHandler::onKeyDown(InputEvent* e) {}
-void IInputHandler::onKeyUp(InputEvent* e) {}
-void IInputHandler::onMouseDown(InputEvent* e) {}
-void IInputHandler::onMouseUp(InputEvent* e) {}
-void IInputHandler::onMouseMove(InputEvent* e) {}
-void IInputHandler::onMouseWheel(InputEvent* e) {}
+void IInputHandler::onEvent(InputEvent *e) {}
+void IInputHandler::onKeyDown(InputEvent *e) {}
+void IInputHandler::onKeyUp(InputEvent *e) {}
+void IInputHandler::onMouseDown(InputEvent *e) {}
+void IInputHandler::onMouseUp(InputEvent *e) {}
+void IInputHandler::onMouseMove(InputEvent *e) {}
+void IInputHandler::onMouseWheel(InputEvent *e) {}
 
 
 //--------------------------------------------------------------------------
@@ -166,7 +166,7 @@ void InputSystem::tick()
 	processEvents();
 }
 
-void InputSystem::queEvent(const InputEvent& e) {
+void InputSystem::queEvent(const InputEvent &e) {
 	if (!m_isCapturing) {
 		return;
 	}
@@ -180,7 +180,7 @@ void InputSystem::queEvent(const InputEvent& e) {
 	m_eventWritePos++;
 }
 
-InputEvent* InputSystem::getEvent() {
+InputEvent *InputSystem::getEvent() {
 	if (m_eventReadPos == m_eventWritePos) {
 		return nullptr;
 	}
@@ -245,20 +245,20 @@ void InputSystem::stopCapture() {
 	m_isCapturing = false;
 }
 
-void InputSystem::registerEventSource(IInputSource* eventsource) {
+void InputSystem::registerEventSource(IInputSource *eventsource) {
 	m_eventSources.push_back(eventsource);
 }
 
-void InputSystem::removeEventSource(IInputSource* eventsource) {
+void InputSystem::removeEventSource(IInputSource *eventsource) {
 	m_eventSources.remove(eventsource);
 }
 
-void InputSystem::setGameWindow(RenderTarget* gamewindow)
+void InputSystem::setGameWindow(RenderTarget *gamewindow)
 {
 	m_gameWnd = gamewindow;
 }
 
-void InputSystem::queWinInput(void* msg)
+void InputSystem::queWinInput(void *msg)
 {
 	m_winInput->queWinInput((MSG*)msg);
 }

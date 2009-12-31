@@ -22,7 +22,7 @@ AX_BEGIN_NAMESPACE
 	struct PakFile;
 
 	struct SearchDir {
-		SearchDir(const String& dir, bool extractSrc = false) : dir(dir), extractSrc(extractSrc) {}
+		SearchDir(const String &dir, bool extractSrc = false) : dir(dir), extractSrc(extractSrc) {}
 
 		String dir;
 		bool extractSrc;
@@ -35,7 +35,7 @@ AX_BEGIN_NAMESPACE
 
 
 	// global variable
-	extern const char* const DEFAULT_CACHES_PATH;
+	extern const char *const DEFAULT_CACHES_PATH;
 
 	//------------------------------------------------------------------------------
 	// class File
@@ -74,14 +74,14 @@ AX_BEGIN_NAMESPACE
 		File();
 		virtual ~File();
 
-		FILE* getHandle() const { return m_handle; }
+		FILE *getHandle() const { return m_handle; }
 		String getName() const;
 		Type getType() const;
 		AccessMode getMode() const;
-		size_t read(void* buffer, size_t len);
-		char* readLine(char* buffer, int n);
-		size_t write(const void* buffer, size_t len);
-		int writeLine(const char* str);
+		size_t read(void *buffer, size_t len);
+		char *readLine(char *buffer, int n);
+		size_t write(const void *buffer, size_t len);
+		int writeLine(const char *str);
 		bool isReading() const;
 		size_t size();
 		int seek(int offset, SeekMode origin);
@@ -90,7 +90,7 @@ AX_BEGIN_NAMESPACE
 		int flush();
 		int forceFlush();
 		int close();
-		size_t CDECL printf(const char* format, ...);
+		size_t CDECL printf(const char *format, ...);
 
 		// read and write
 		inline int readInt() { int i; read(&i, 4); return i; }
@@ -107,12 +107,12 @@ AX_BEGIN_NAMESPACE
 
 		inline size_t writeInt(int i) { return write(&i, 4); }
 		inline size_t writeFloat(float f) { return write(&f, 4); }
-		inline size_t writeString(const String& s) { return write(s.c_str(), s.length() + 1); }
+		inline size_t writeString(const String &s) { return write(s.c_str(), s.length() + 1); }
 
 	private:
 		Type m_type;
 		AccessMode m_mode;
-		FILE* m_handle;
+		FILE *m_handle;
 		handle_t m_unzFile;
 		bool m_forceFlush;
 		int m_pos;
@@ -141,7 +141,7 @@ AX_BEGIN_NAMESPACE
 	typedef Sequence<FileInfo>	FileInfoSeq;
 
 	struct PakedFile {
-		PakFile* packfile;
+		PakFile *packfile;
 		int offset;
 	};
 
@@ -164,13 +164,13 @@ AX_BEGIN_NAMESPACE
 		PakedFolder();
 		~PakedFolder();
 
-		void addPath(const String& fullpath);
-		void addFile(const String& fullpath, PakedFile* info);
-		PakedFile* getFile(const String& fullpath);
-		void getFileInfos(const String& path, const String& exts, int flags, OUT FileInfoSeq& fis);
+		void addPath(const String &fullpath);
+		void addFile(const String &fullpath, PakedFile *info);
+		PakedFile *getFile(const String &fullpath);
+		void getFileInfos(const String &path, const String &exts, int flags, OUT FileInfoSeq &fis);
 
 	protected:
-		PakedFolder* getPath(const String& path, bool bAddPath = true);
+		PakedFolder *getPath(const String &path, bool bAddPath = true);
 
 	private:
 		typedef Dict<String,PakedFile*>	PackedFileDict;
@@ -178,7 +178,7 @@ AX_BEGIN_NAMESPACE
 		String m_fullName;
 		String m_name;
 		PackedFileDict m_packedFileDict;
-		PakedFolder* m_parent;
+		PakedFolder *m_parent;
 		PackedFolderList m_childrenList;
 	};
 
@@ -198,29 +198,29 @@ AX_BEGIN_NAMESPACE
 		void initialize();
 		void finalize();
 
-		void addGameDirectory(const String& dir, bool extractSrc = false);
+		void addGameDirectory(const String &dir, bool extractSrc = false);
 
-		bool ospathToDataPath(const String& path, String& gpath);
-		String dataPathToOsPath(const String& gpath);
-		String modPathToOsPath(const String& modpath);
+		bool ospathToDataPath(const String &path, String &gpath);
+		String dataPathToOsPath(const String &gpath);
+		String modPathToOsPath(const String &modpath);
 		String getDataPath();
-		StringSeq fileListByExts(const String& path, const String& exts, int flags);
-		FileInfoSeq getFileInfos(const String& path, const String& exts, int flags);
+		StringSeq fileListByExts(const String &path, const String &exts, int flags);
+		FileInfoSeq getFileInfos(const String &path, const String &exts, int flags);
 
 		/// below open file method return a File smart pointer, if failure, it contain
 		/// NULL pointer. when the pointer destructed, file object auto released
-		File* openFileByMode(const String& filename, File::AccessMode mode);
-		File* openFileRead(const String& filename);
-		File* openFileWrite(const String& filename);
-		File* openFileAppend(const String& filename);
+		File *openFileByMode(const String &filename, File::AccessMode mode);
+		File *openFileRead(const String &filename);
+		File *openFileWrite(const String &filename);
+		File *openFileAppend(const String &filename);
 
-		size_t readFile(const String& filename, void** buffer);
-		size_t readTextFile(const String& filename, void** buffer);
-		void freeFile(void* buffer);
-		void writeFile(const String& filename, const void* buffer, size_t size);
+		size_t readFile(const String &filename, void** buffer);
+		size_t readTextFile(const String &filename, void** buffer);
+		void freeFile(void *buffer);
+		void writeFile(const String &filename, const void *buffer, size_t size);
 
-		bool getFileModifyTime(const String& filename, longlong_t *time) const;
-		bool isFileExist(const String& filename) const;
+		bool getFileModifyTime(const String &filename, longlong_t *time) const;
+		bool isFileExist(const String &filename) const;
 
 		/*
 		 * Compare file modify time
@@ -232,15 +232,15 @@ AX_BEGIN_NAMESPACE
 		 *  1 First file time is greater than second file time. 
 		 *  2 Second file is not exist. 
 		 */
-		int compareFileModifyTime(const String& m_srcfile, const String& m_destfile);
+		int compareFileModifyTime(const String &m_srcfile, const String &m_destfile);
 
 		static String getDefaultDataPath();
 
 	protected:
-		void attachFileObject(File* cf);
-		void detachFileObject(File* cf);
-		PakFile* loadPakFile(const String& fullpath, const String& filename);
-		void addPakedFileInfo(const FileInfo* fi);
+		void attachFileObject(File *cf);
+		void detachFileObject(File *cf);
+		PakFile *loadPakFile(const String &fullpath, const String &filename);
+		void addPakedFileInfo(const FileInfo *fi);
 
 		void checkGamePath();
 		void addSearchPath();

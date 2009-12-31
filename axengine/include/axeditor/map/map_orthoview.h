@@ -19,19 +19,19 @@ public:
 		Top, Left, Front, Perspective, Number
 	};
 
-	MapView(MapContext* ctx);
+	MapView(MapContext *ctx);
 	virtual ~MapView();
 };
 
 class OrthoView : public MapView {
 public:
-	OrthoView(MapContext* con);
+	OrthoView(MapContext *con);
 	virtual ~OrthoView();
 
 protected:
 	// implement view
 	virtual void doRender();
-	virtual bool handleEvent(const InputEvent& e);
+	virtual bool handleEvent(const InputEvent &e);
 
 protected:
 	float m_scale;
@@ -39,17 +39,17 @@ protected:
 
 class TopView : public OrthoView {
 public:
-	TopView(MapContext* con);
+	TopView(MapContext *con);
 };
 
 class FrontView : public OrthoView {
 public:
-	FrontView(MapContext* con);
+	FrontView(MapContext *con);
 };
 
 class LeftView : public OrthoView {
 public:
-	LeftView(MapContext* con);
+	LeftView(MapContext *con);
 };
 
 AX_END_NAMESPACE

@@ -36,10 +36,10 @@ public:
 
 	};
 
-	MapTool(MapContext* ctx);
+	MapTool(MapContext *ctx);
 
 protected:
-	MapContext* m_mapContext;
+	MapContext *m_mapContext;
 };
 
 //--------------------------------------------------------------------------
@@ -48,35 +48,35 @@ protected:
 
 class TerrainRaiseTool : public MapTool {
 public:
-	TerrainRaiseTool(MapContext* context);
+	TerrainRaiseTool(MapContext *context);
 	virtual ~TerrainRaiseTool();
 
 	// Tool
-	virtual void doBindView(View* view);
+	virtual void doBindView(View *view);
 	virtual void doPress(int x, int y, int flags, float pressure);
 	virtual void doDrag(int x, int y, int flags, float pressure);
 	virtual void doMove(int x, int y);
 	virtual void doRelease(int x, int y);
-	virtual void doRender(const RenderCamera& camera);
+	virtual void doRender(const RenderCamera &camera);
 
-	virtual void onHistoryCreated(Action* action) { action->setMessage("Terrain Raise"); }
+	virtual void onHistoryCreated(Action *action) { action->setMessage("Terrain Raise"); }
 
 protected:
 	virtual float getWeight(float x, float y) const;
-	virtual void updatePrim(const Vector3& from);
+	virtual void updatePrim(const Vector3 &from);
 
 protected:
-	MapTerrain* m_terrain;
+	MapTerrain *m_terrain;
 	bool m_isValid;
 	float m_brushRadius;
 	float m_brushStrength;
 	float m_brushSoftness;
 	Vector2 m_center;
-	LinePrim* m_cursor;
+	LinePrim *m_cursor;
 	Rect m_editedRect;
 
 	MaterialPtr m_brushMat;
-	GroupPrim* m_brushPrims;
+	GroupPrim *m_brushPrims;
 };
 
 //--------------------------------------------------------------------------
@@ -85,10 +85,10 @@ protected:
 
 class TerrainLowerTool : public TerrainRaiseTool {
 public:
-	TerrainLowerTool(MapContext* context);
+	TerrainLowerTool(MapContext *context);
 	virtual ~TerrainLowerTool();
 
-	virtual void onHistoryCreated(Action* action) { action->setMessage("Terrain Lower"); }
+	virtual void onHistoryCreated(Action *action) { action->setMessage("Terrain Lower"); }
 
 protected:
 	virtual float getWeight(float x, float y) const;
@@ -100,13 +100,13 @@ protected:
 
 class TerrainFlatTool : public TerrainRaiseTool {
 public:
-	TerrainFlatTool(MapContext* context);
+	TerrainFlatTool(MapContext *context);
 	virtual ~TerrainFlatTool();
 
 	virtual void doPress(int x, int y, int flags, float pressure);
 	virtual void doDrag(int x, int y, int flags, float pressure);
 
-	virtual void onHistoryCreated(Action* action) { action->setMessage("Terrain Flat"); }
+	virtual void onHistoryCreated(Action *action) { action->setMessage("Terrain Flat"); }
 
 protected:
 	virtual float getWeight(float x, float y) const;
@@ -122,12 +122,12 @@ private:
 
 class TerrainSmoothTool : public TerrainRaiseTool {
 public:
-	TerrainSmoothTool(MapContext* context);
+	TerrainSmoothTool(MapContext *context);
 	virtual ~TerrainSmoothTool();
 
 	virtual void doDrag(int x, int y, int flags, float pressure);
 
-	virtual void onHistoryCreated(Action* action) { action->setMessage("Terrain Smooth"); }
+	virtual void onHistoryCreated(Action *action) { action->setMessage("Terrain Smooth"); }
 };
 
 
@@ -137,17 +137,17 @@ public:
 
 class TerrainGrabTool : public TerrainRaiseTool {
 public:
-	TerrainGrabTool(MapContext* context);
+	TerrainGrabTool(MapContext *context);
 	virtual ~TerrainGrabTool();
 
 	virtual void doPress(int x, int y, int flags, float pressure);
 	virtual void doDrag(int x, int y, int flags, float pressure);
 
-	virtual void onHistoryCreated(Action* action) { action->setMessage("Terrain Grab"); }
+	virtual void onHistoryCreated(Action *action) { action->setMessage("Terrain Grab"); }
 private:
 	bool m_isJustPressed;
 	int m_mouseY;
-	Image* m_baseHeight;
+	Image *m_baseHeight;
 };
 
 //--------------------------------------------------------------------------
@@ -156,7 +156,7 @@ private:
 
 class TerrainPaintTool : public TerrainRaiseTool {
 public:
-	TerrainPaintTool(MapContext* context);
+	TerrainPaintTool(MapContext *context);
 	virtual ~TerrainPaintTool();
 
 	virtual void doPress(int x, int y, int flags, float pressure);
@@ -164,8 +164,8 @@ public:
 	virtual void doRelease(int x, int y);
 
 protected:
-	MapLayerGen* m_layerGen;
-	Image* m_oldPixel;
+	MapLayerGen *m_layerGen;
+	Image *m_oldPixel;
 };
 
 //--------------------------------------------------------------------------
@@ -174,7 +174,7 @@ protected:
 
 class TerrainEraseTool : public TerrainPaintTool {
 public:
-	TerrainEraseTool(MapContext* context) : TerrainPaintTool(context) {}
+	TerrainEraseTool(MapContext *context) : TerrainPaintTool(context) {}
 	virtual void doPress(int x, int y, int flags, float pressure);
 	virtual void doRelease(int x, int y);
 };
@@ -186,18 +186,18 @@ public:
 
 class CreateStaticTool : public MapTool {
 public:
-	CreateStaticTool(MapContext* context);
+	CreateStaticTool(MapContext *context);
 	virtual ~CreateStaticTool();
 
-	virtual void doBindView(View* view) {}
+	virtual void doBindView(View *view) {}
 	virtual void doPress(int x, int y, int flags, float pressure);
 	virtual void doDrag(int x, int y, int flags, float pressure);
 	virtual void doMove(int x, int y) {}
 	virtual void doRelease(int x, int y);
-	virtual void doRender(const RenderCamera& camera) {}
+	virtual void doRender(const RenderCamera &camera) {}
 
 private:
-	MapStatic* m_agent;
+	MapStatic *m_agent;
 };
 
 //--------------------------------------------------------------------------
@@ -206,18 +206,18 @@ private:
 
 class CreateEntityTool : public MapTool {
 public:
-	CreateEntityTool(MapContext* context);
+	CreateEntityTool(MapContext *context);
 	virtual ~CreateEntityTool();
 
-	virtual void doBindView(View* view) {}
+	virtual void doBindView(View *view) {}
 	virtual void doPress(int x, int y, int flags, float pressure);
 	virtual void doDrag(int x, int y, int flags, float pressure);
 	virtual void doMove(int x, int y) {}
 	virtual void doRelease(int x, int y);
-	virtual void doRender(const RenderCamera& camera);
+	virtual void doRender(const RenderCamera &camera);
 
 private:
-	MapActor* m_agent;
+	MapActor *m_agent;
 };
 
 //--------------------------------------------------------------------------
@@ -227,18 +227,18 @@ private:
 #ifdef AX_CONFIG_OPTION_USE_SPEEDTREE_40
 class CreateTreeTool : public MapTool {
 public:
-	CreateTreeTool(MapContext* context);
+	CreateTreeTool(MapContext *context);
 	virtual ~CreateTreeTool();
 
-	virtual void doBindView(View* view) {}
+	virtual void doBindView(View *view) {}
 	virtual void doPress(int x, int y, int flags, float pressure);
 	virtual void doDrag(int x, int y, int flags, float pressure);
 	virtual void doMove(int x, int y) {}
 	virtual void doRelease(int x, int y);
-	virtual void doRender(const RenderCamera& camera) {}
+	virtual void doRender(const RenderCamera &camera) {}
 
 private:
-	MapSpeedTree* m_agent;
+	MapSpeedTree *m_agent;
 };
 #endif // AX_CONFIG_OPTION_USE_SPEEDTREE_40
 

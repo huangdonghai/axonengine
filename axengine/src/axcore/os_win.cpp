@@ -21,7 +21,7 @@ AX_BEGIN_NAMESPACE
 	/*-----------------------------------------------------------------------------
 		Nonstandard C API wrapper
 	-----------------------------------------------------------------------------*/
-	bool OsUtil::mkdir(const char* dirname ) {
+	bool OsUtil::mkdir(const char *dirname ) {
 		WString wdirname = u2w(dirname );
 		int ret = ::_wmkdir(wdirname.c_str() );
 

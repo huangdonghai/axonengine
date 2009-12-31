@@ -58,33 +58,33 @@ AX_BEGIN_NAMESPACE
 		return m_matrix_p.origin;
 	}
 
-	void GameObject::setOrigin_p(const Vector3& pos) {
+	void GameObject::setOrigin_p(const Vector3 &pos) {
 		m_matrix_p.origin = (pos);
 		m_matrixDirty = true;
 		onMatrixChanged();
 	}
 
-	const Matrix3& GameObject::getAxis_p() const {
+	const Matrix3 &GameObject::getAxis_p() const {
 		return m_matrix_p.axis;
 	}
 
-	void GameObject::setAxis_p(const Matrix3& axis) {
+	void GameObject::setAxis_p(const Matrix3 &axis) {
 		m_matrix_p.axis = (axis);
 		m_matrixDirty = true;
 		onMatrixChanged();
 	}
 
-	void GameObject::setMatrix_p(const AffineMat& matrix) {
+	void GameObject::setMatrix_p(const AffineMat &matrix) {
 		m_matrix_p = matrix;
 		m_matrixDirty = true;
 		onMatrixChanged();
 	}
 
-	const AffineMat& GameObject::getMatrix_p() const {
+	const AffineMat &GameObject::getMatrix_p() const {
 		return m_matrix_p;
 	}
 
-	void GameObject::setInstanceColor( const Vector3& color )
+	void GameObject::setInstanceColor( const Vector3 &color )
 	{
 		m_instanceColor_p = color;
 		onMatrixChanged();
@@ -105,19 +105,19 @@ AX_BEGIN_NAMESPACE
 	void GameObject::doDebugRender() const
 	{}
 
-	void GameObject::writeXml(File* f, int indent/*=0 */) {
+	void GameObject::writeXml(File *f, int indent/*=0 */) {
 		String indstr(indent*2, ' ');
 #define INDENT if (indent) f->printf("%s", indstr.c_str());
 
 		INDENT; f->printf("<node className=\"%s\"\n", this->getMetaInfo()->getTypeName());
 #if 0
 		// write properties
-		TypeInfo* typeinfo = getTypeInfo();
+		TypeInfo *typeinfo = getTypeInfo();
 
 		while (typeinfo) {
-			const MemberSeq& members = typeinfo->getMembers();
+			const MemberSeq &members = typeinfo->getMembers();
 
-			AX_FOREACH(Member* m, members) {
+			AX_FOREACH(Member *m, members) {
 				if (!m->isProperty()) {
 					continue;
 				}
@@ -139,9 +139,9 @@ AX_BEGIN_NAMESPACE
 #undef INDENT
 	}
 
-	void GameObject::readXml(const TiXmlElement* node)
+	void GameObject::readXml(const TiXmlElement *node)
 	{
-		const TiXmlAttribute* attr = node->FirstAttribute();
+		const TiXmlAttribute *attr = node->FirstAttribute();
 
 		for (; attr; attr = attr->Next()) {
 			this->setProperty(attr->Name(), attr->Value());

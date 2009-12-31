@@ -14,7 +14,7 @@ AX_BEGIN_NAMESPACE
 
 template< class T >
 class GfxToolFactory_ : public ToolFactory {
-	virtual Tool* create(Context* context) {
+	virtual Tool *create(Context *context) {
 		return new T(static_cast<GfxContext*>(context));
 	}
 };
@@ -22,7 +22,7 @@ class GfxToolFactory_ : public ToolFactory {
 
 GfxContext::GfxContext()
 {
-	State* state = new State();
+	State *state = new State();
 	setState(state);
 
 	m_toolFactories[Tool::Select] = new ToolFactory_<SelectTool>;
@@ -58,7 +58,7 @@ GfxContext::~GfxContext()
 
 }
 
-void GfxContext::doRender( const RenderCamera& camera, bool world /*= false*/ )
+void GfxContext::doRender( const RenderCamera &camera, bool world /*= false*/ )
 {
 	g_renderSystem->beginScene(camera);
 	g_renderSystem->addToScene(m_renderWorld);
@@ -81,7 +81,7 @@ void GfxContext::doRender( const RenderCamera& camera, bool world /*= false*/ )
 	g_renderSystem->endScene();
 }
 
-void GfxContext::doSelect( const RenderCamera& camera, int part )
+void GfxContext::doSelect( const RenderCamera &camera, int part )
 {
 
 }

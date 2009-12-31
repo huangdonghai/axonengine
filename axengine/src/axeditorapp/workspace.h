@@ -33,7 +33,7 @@ class Grabber : public QWidget {
 public:
 	enum Tracking { None, Vertical, Horizontal, Both };
 
-	Grabber(CrossSplitter* parent, Tracking tracking);
+	Grabber(CrossSplitter *parent, Tracking tracking);
 
 protected:
 	virtual void mouseMoveEvent(QMouseEvent * event);
@@ -42,7 +42,7 @@ protected:
 	virtual void leaveEvent(QEvent * event);
 
 private:
-	CrossSplitter* m_parent;
+	CrossSplitter *m_parent;
 	Tracking m_tracking;
 	bool m_isTracking;
 };
@@ -53,23 +53,23 @@ class CrossSplitter : public QFrame {
 public:
 	typedef Grabber::Tracking Tracking;
 
-	CrossSplitter(QWidget* parent, Workspace* ws);
+	CrossSplitter(QWidget *parent, Workspace *ws);
 	~CrossSplitter();
 
 	// frame maximum
 	void setFrameMaximun(int index, bool maximum);
 
 	// tracking
-	void beginTracking(Tracking tracking, const QPoint& pos);
-	void doTracking(const QPoint& pos);
-	void endTracking(const QPoint& pos);
+	void beginTracking(Tracking tracking, const QPoint &pos);
+	void doTracking(const QPoint &pos);
+	void endTracking(const QPoint &pos);
 
 protected:
 	void relayout();
 
 	// implement QT event handler
 	virtual void paintEvent(QPaintEvent*);
-	virtual void resizeEvent(QResizeEvent* event);
+	virtual void resizeEvent(QResizeEvent *event);
 	virtual void mouseMoveEvent(QMouseEvent * event);
 	virtual void mousePressEvent(QMouseEvent * event);
 	virtual void mouseReleaseEvent(QMouseEvent * event);
@@ -79,7 +79,7 @@ private:
 	enum { TrackingWidth = 4 };
 
 	QPointF m_splitPos;
-	Workspace* m_workspace;
+	Workspace *m_workspace;
 	QPoint m_beginTrackPos;
 	Tracking m_tracking;
 
@@ -90,9 +90,9 @@ private:
 	QRect m_verResizeRects[2];
 
 	// grabber widget
-	Grabber* m_horGrabbers[2];
-	Grabber* m_verGrabbers[2];
-	Grabber* m_bothGrabber;
+	Grabber *m_horGrabbers[2];
+	Grabber *m_verGrabbers[2];
+	Grabber *m_bothGrabber;
 
 	// maximum
 	bool m_frameMaximumed;
@@ -109,14 +109,14 @@ public:
     Workspace(QWidget *parent = 0);
     ~Workspace();
 
-	Frame* getActiveFrame();
+	Frame *getActiveFrame();
 	int getActiveFrameIndex();
-	Frame* getFrame(int idx) { return m_frames[idx]; }
-	void frameActive(Frame* frame);
+	Frame *getFrame(int idx) { return m_frames[idx]; }
+	void frameActive(Frame *frame);
 	void toggleMaximun();
 
 	// IObserver
-	virtual void doNotify(IObservable* subject, int arg);
+	virtual void doNotify(IObservable *subject, int arg);
 
 	void refreshBookmarks();
 
@@ -137,9 +137,9 @@ private slots:
 private:
     Ui::WorkspaceClass ui;
 
-	CrossSplitter* m_frameLayouter;
-	Frame* m_frames[4];
-	EditorFrame* m_editorFrames[View::MaxView];
+	CrossSplitter *m_frameLayouter;
+	Frame *m_frames[4];
+	EditorFrame *m_editorFrames[View::MaxView];
 	bool m_frameMaximumed;
 	int m_maximunIndex;
 };

@@ -33,11 +33,11 @@ public:
 	virtual void doRender() = 0;
 
 	// no paint engine
-	QPaintEngine* paintEngine() const { return NULL; }
+	QPaintEngine *paintEngine() const { return NULL; }
 
 protected:
 	// implement QT event handler
-	virtual void paintEvent(QPaintEvent* pe);
+	virtual void paintEvent(QPaintEvent *pe);
 	virtual void mouseMoveEvent(QMouseEvent * event);
 	virtual void mousePressEvent(QMouseEvent * event);
 	virtual void mouseReleaseEvent(QMouseEvent * event);
@@ -50,7 +50,7 @@ protected:
 	RenderCamera m_renderCamera;
 	bool m_renderCameraAdded;
 	bool m_isDrawAxis;
-	RenderTarget* m_renderTarget;
+	RenderTarget *m_renderTarget;
 	Vector3 m_viewOrg;
 	Angles m_viewAngles;
 	bool m_updateStoped;
@@ -74,15 +74,15 @@ public:
 	Q_OBJECT
 
 public:
-	PreviewWidget(QWidget* parent);
+	PreviewWidget(QWidget *parent);
 	virtual ~PreviewWidget();
 
 	// implement RenderWidget
 	virtual void doRender();
 
 	// public function
-	RenderWorld* getRenderWorld() { return m_renderWorld; }
-	void setFocusActor(RenderEntity* actor) { m_actor = actor; }
+	RenderWorld *getRenderWorld() { return m_renderWorld; }
+	void setFocusActor(RenderEntity *actor) { m_actor = actor; }
 
 protected:
 	virtual void mouseMoveEvent(QMouseEvent * event);
@@ -92,9 +92,9 @@ protected:
 
 protected:
 	enum ViewControl { NONE, ROTATEOBJECT, ZOOMVIEW, ROTATEVIEW };
-	RenderWorld* m_renderWorld;
-	RenderLight* m_globalLight;
-	RenderEntity* m_actor;
+	RenderWorld *m_renderWorld;
+	RenderLight *m_globalLight;
+	RenderEntity *m_actor;
 	ViewControl m_viewControl;
 };
 
@@ -108,28 +108,28 @@ public:
 	Q_OBJECT
 
 public:
-	uiRenderWidget(QWidget* parent);
+	uiRenderWidget(QWidget *parent);
 	~uiRenderWidget();
 
 	// implement RenderWidget
 	virtual void doRender();
 	virtual void setCursor(CursorType cursor_type);
 
-	virtual Render::Target* getRenderTarget(){ return 0;}
+	virtual Render::Target *getRenderTarget(){ return 0;}
 	virtual Rect getRect(){return Rect();}	
-	virtual void setCursorPos(const Point& pos){}
+	virtual void setCursorPos(const Point &pos){}
 	virtual void resetCursor() { unsetCursor(); }
 	virtual void setNeedUpdate();
 	virtual void setAutoUpdate(bool update);
 	UiContext m_uiContext;
-	void setEditor(QWidget* editor){m_parent = editor;}
+	void setEditor(QWidget *editor){m_parent = editor;}
 protected:
 	// implement QT event handler
-	virtual void paintEvent(QPaintEvent* pe);
+	virtual void paintEvent(QPaintEvent *pe);
 	virtual void mouseMoveEvent(QMouseEvent * event);
 	virtual void mousePressEvent(QMouseEvent * event);
 	virtual void mouseReleaseEvent(QMouseEvent * event);
-	void translateMouseEvent(QMouseEvent* e, Event* xe);
+	void translateMouseEvent(QMouseEvent *e, Event *xe);
 	QWidget*        m_parent;
 
 };
@@ -151,7 +151,7 @@ struct EmitterLine
         SAFEDELETE(line);
 	}
 
-	Render::Line* line;
+	Render::Line *line;
 	bool          isUse;
 };
 
@@ -180,8 +180,8 @@ struct ParticleAxis
 		SAFEDELETE(plane);
 	}
 
-	Render::Mesh* plane;
-	Render::PointPrim* point;
+	Render::Mesh *plane;
+	Render::PointPrim *point;
 
 	PARTICLESYSTEM::ParticleObject*  particle;
 
@@ -216,11 +216,11 @@ struct EmitterAngleHelper
 		SAFEDELETE(fan);
 	}
 
-	Render::Line* angleMinLine;
-	Render::Line* angleMaxLine;
-	Render::Line* circle;
-	Render::Mesh* fan;
-	Render::Mesh* fanReversed;	// 用于反面绘制扇形.
+	Render::Line *angleMinLine;
+	Render::Line *angleMaxLine;
+	Render::Line *circle;
+	Render::Mesh *fan;
+	Render::Mesh *fanReversed;	// 用于反面绘制扇形.
 
 	int minLineID, maxLineID;
 };
@@ -236,18 +236,18 @@ public:
 	typedef std::vector<PARTICLESYSTEM::ParticleEffect*>	ParticleEffectList;
 	typedef std::vector<Render::Model*>						ModelList;
 
-	ParticlePreviewWidget(QWidget* parent);
+	ParticlePreviewWidget(QWidget *parent);
 	virtual ~ParticlePreviewWidget();
 
 	virtual void doRender();
 
-	void setParticleEffectList(ParticleEffectList* parEffectList);
-	void addParticleEffect(PARTICLESYSTEM::ParticleEffect* parEffect);
+	void setParticleEffectList(ParticleEffectList *parEffectList);
+	void addParticleEffect(PARTICLESYSTEM::ParticleEffect *parEffect);
 
-	void setParticlePlayer(PARTICLEEDITOR::ParticlePlayer* particlePlayer);
-	//void setTimeSlider(QSlider* timeSlider);
-	void setKeyFrameSlider(KeyFrameSlider* keyframeSlider);
-	void setParticleEditor(ParticleEditor* particleEditor);
+	void setParticlePlayer(PARTICLEEDITOR::ParticlePlayer *particlePlayer);
+	//void setTimeSlider(QSlider *timeSlider);
+	void setKeyFrameSlider(KeyFrameSlider *keyframeSlider);
+	void setParticleEditor(ParticleEditor *particleEditor);
 
 	void clearParticleEffectList(bool destroyParticleEffects = false);
 
@@ -263,7 +263,7 @@ public:
 
 	bool           isRenderAxis(){return m_isRenderAxis;}
 
-	void           setBackColor(const Rgba& color){m_backColor = color;}
+	void           setBackColor(const Rgba &color){m_backColor = color;}
 
 	void           showEnv(bool show);
 
@@ -277,18 +277,18 @@ public:
 
     ParticleAxis*  getSelectedParticleEffect();
 
-	void           setSelectedParticle(PARTICLESYSTEM::ParticleObject* particle);
+	void           setSelectedParticle(PARTICLESYSTEM::ParticleObject *particle);
 
 	void           setPickedByParticleSystem(bool state);
 
 	void setShowEmitAngleHelper(bool showHelper){m_showEmitAngleHelper = showHelper;}
 	bool isShowEmitAngleHelper(){return m_showEmitAngleHelper;}
 
-	void setShowHelperEmitter(PARTICLESYSTEM::ParticleEmitter* emitter) {m_showHelperEmitter = emitter;}
-	PARTICLESYSTEM::ParticleEmitter* getShowHelperEmitter() {return m_showHelperEmitter;}
+	void setShowHelperEmitter(PARTICLESYSTEM::ParticleEmitter *emitter) {m_showHelperEmitter = emitter;}
+	PARTICLESYSTEM::ParticleEmitter *getShowHelperEmitter() {return m_showHelperEmitter;}
 
-	void            initTexQuad(const String& materialName,Vector2 startTexUV,float uvOffset);
-    void            initParticleModel(const String& modelFile);
+	void            initTexQuad(const String &materialName,Vector2 startTexUV,float uvOffset);
+    void            initParticleModel(const String &modelFile);
 	void            setShowTexture(bool show){m_isShowTexture = show;};
 	bool            isShowTexture(){return m_isShowTexture;}
 	void            setShowParticleModel(bool show){m_isShowParticleModel = show;}
@@ -303,32 +303,32 @@ protected:
 	virtual void mousePressEvent(QMouseEvent * e);
 	virtual void mouseReleaseEvent(QMouseEvent * e);
 
-	void doDrawEmitter(PARTICLESYSTEM::ParticleControler::ParticleEmitterList* emitterList);
-	void drawEmitter(PARTICLESYSTEM::ParticleObject* particle);
+	void doDrawEmitter(PARTICLESYSTEM::ParticleControler::ParticleEmitterList *emitterList);
+	void drawEmitter(PARTICLESYSTEM::ParticleObject *particle);
 
-	EmitterLine* getFreeEllipseLine();
+	EmitterLine *getFreeEllipseLine();
 
-	void drawEllipse(Vector3& center,float width,float height,float depth);
+	void drawEllipse(Vector3 &center,float width,float height,float depth);
 
-	EmitterLine* getFreeBoxLine();
+	EmitterLine *getFreeBoxLine();
 
-	void drawBox(Vector3& center,float width,float height,float depth);
+	void drawBox(Vector3 &center,float width,float height,float depth);
 
-	void            setupMeshLine(Render::Line*& line,const Vector3& pos,Render::Model*& model,const Vector3& scale,const Vector3& rotate,const Vector3& translate);
-	void            drawMeshLine(const String& modelFile,const Vector3& pos,const Vector3& scale,const Vector3& rotate,const Vector3& translate);
+	void            setupMeshLine(Render::Line*& line,const Vector3 &pos,Render::Model*& model,const Vector3 &scale,const Vector3 &rotate,const Vector3 &translate);
+	void            drawMeshLine(const String &modelFile,const Vector3 &pos,const Vector3 &scale,const Vector3 &rotate,const Vector3 &translate);
 	EmitterLine*    getFreeMeshLine();
 
 	void resetLineData();
 
-	void drawParticleAxis(PARTICLESYSTEM::ParticleObject* particle);
+	void drawParticleAxis(PARTICLESYSTEM::ParticleObject *particle);
 
 	void            drawStaticAxis();
 
-	ParticleAxis* getFreeParticleAxis();
+	ParticleAxis *getFreeParticleAxis();
 
-	void setupParticleAxis(ParticleAxis*& axis,const Vector3& pos,float length,Rgba color = Rgba(0,0,255,255));
+	void setupParticleAxis(ParticleAxis*& axis,const Vector3 &pos,float length,Rgba color = Rgba(0,0,255,255));
 
-	void updateSelectParticleEffect(ParticleAxis* axis);
+	void updateSelectParticleEffect(ParticleAxis *axis);
 
 	bool hasParticleEffectHolded();
 
@@ -344,13 +344,13 @@ protected:
 
 protected:
 
-	ParticleEffectList* m_parEffectList;
+	ParticleEffectList *m_parEffectList;
 	ModelList m_modelList;
-	PARTICLEEDITOR::ParticlePlayer* m_particlePlayer;	// 播放器信息,用于控制显示
+	PARTICLEEDITOR::ParticlePlayer *m_particlePlayer;	// 播放器信息,用于控制显示
 
-	//QSlider* m_timeSlider;
-	KeyFrameSlider* m_keyFrameSlider;
-	ParticleEditor* m_particleEditor;
+	//QSlider *m_timeSlider;
+	KeyFrameSlider *m_keyFrameSlider;
+	ParticleEditor *m_particleEditor;
 
 	ParticleTool*               m_tool;
 	Render::Mesh*                       m_texQuad;
@@ -381,7 +381,7 @@ protected:
 	bool                m_isRenderAxis;
 
 	bool m_showEmitAngleHelper;
-	PARTICLESYSTEM::ParticleEmitter* m_showHelperEmitter;
+	PARTICLESYSTEM::ParticleEmitter *m_showHelperEmitter;
 	// hCircleHelper(水平), vCircleHelper(竖直)
 	EmitterAngleHelper m_emitterHelper[2];
 	static float m_emitterHelperLength;

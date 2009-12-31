@@ -23,7 +23,7 @@ AX_BEGIN_NAMESPACE
 		float noise2(float x, float y);
 		float noise3(float x, float y, float z);
 
-		float noise2(const Vector2& v, int octaves, float persistence = 0.25f);
+		float noise2(const Vector2 &v, int octaves, float persistence = 0.25f);
 
 	private:
 		int xrand();

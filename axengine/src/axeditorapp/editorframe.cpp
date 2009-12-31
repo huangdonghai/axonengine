@@ -12,7 +12,7 @@ read the license and understand and accept it fully.
 #include "editorframe.h"
 #include "workbench.h"
 
-EditorFrame::EditorFrame(QWidget *parent, View* view)
+EditorFrame::EditorFrame(QWidget *parent, View *view)
 	: QWidget(parent, Qt::MSWindowsOwnDC)
 	, m_editorView(view)
 	, m_renderTarget(nullptr)
@@ -191,7 +191,7 @@ EditorFrame::~EditorFrame()
 	m_editorView->bindFrame(0);
 }
 
-RenderTarget* EditorFrame::getRenderTarget() {
+RenderTarget *EditorFrame::getRenderTarget() {
 	if (m_renderTarget == nullptr) {
 		WId wid = winId();
 		m_oldWId = wid;
@@ -283,7 +283,7 @@ void EditorFrame::setCursor(CursorType cursor_type) {
 	}
 }
 
-void EditorFrame::setCursorPos(const Point& pos) {
+void EditorFrame::setCursorPos(const Point &pos) {
 	QPoint p(pos.x, pos.y);
 	p = mapToGlobal(p);
 	cursor().setPos(p);
@@ -320,7 +320,7 @@ bool EditorFrame::eventFilter(QObject * watched, QEvent * event) {
 	return QWidget::eventFilter(watched, event);
 }
 
-void EditorFrame::paintEvent(QPaintEvent* pe) {
+void EditorFrame::paintEvent(QPaintEvent *pe) {
 	if (!updatesEnabled())
 		return;
 
@@ -329,7 +329,7 @@ void EditorFrame::paintEvent(QPaintEvent* pe) {
 #endif
 }
 
-void EditorFrame::translateMouseEvent(QMouseEvent* e, InputEvent* xe) {
+void EditorFrame::translateMouseEvent(QMouseEvent *e, InputEvent *xe) {
 	Qt::MouseButtons btns = e->buttons();
 	Qt::MouseButton btn = e->button();
 
@@ -374,7 +374,7 @@ void EditorFrame::translateMouseEvent(QMouseEvent* e, InputEvent* xe) {
 }
 
 
-void EditorFrame::mousePressEvent(QMouseEvent* e) {
+void EditorFrame::mousePressEvent(QMouseEvent *e) {
 	InputEvent xe;
 
 	TypeZero(&xe);
@@ -384,7 +384,7 @@ void EditorFrame::mousePressEvent(QMouseEvent* e) {
 	translateMouseEvent(e, &xe);
 }
 
-void EditorFrame::mouseReleaseEvent(QMouseEvent* e) {
+void EditorFrame::mouseReleaseEvent(QMouseEvent *e) {
 	InputEvent xe;
 
 	TypeZero(&xe);
@@ -394,7 +394,7 @@ void EditorFrame::mouseReleaseEvent(QMouseEvent* e) {
 	translateMouseEvent(e, &xe);
 }
 
-void EditorFrame::mouseMoveEvent(QMouseEvent* e) {
+void EditorFrame::mouseMoveEvent(QMouseEvent *e) {
 	int x = e->x();
 	int y = e->y();
 	static int last_x = x,last_y = y;
@@ -412,7 +412,7 @@ void EditorFrame::mouseMoveEvent(QMouseEvent* e) {
 	translateMouseEvent(e, &xe);
 }
 
-void EditorFrame::wheelEvent(QWheelEvent* e) {
+void EditorFrame::wheelEvent(QWheelEvent *e) {
 	InputEvent xe;
 
 	TypeZero(&xe);
@@ -438,18 +438,18 @@ void EditorFrame::wheelEvent(QWheelEvent* e) {
 	issueEvent(e, xe);
 }
 
-void EditorFrame::enterEvent(QEvent* e) {
+void EditorFrame::enterEvent(QEvent *e) {
 //	grabMouse();
 	setMouseTracking(true);
 }
 
-void EditorFrame::leaveEvent(QEvent* e) {
+void EditorFrame::leaveEvent(QEvent *e) {
 //	releaseMouse();
 	setMouseTracking(false);
 }
 
 #if 0
-void EditorFrame::tabletEvent(QTabletEvent* e) {
+void EditorFrame::tabletEvent(QTabletEvent *e) {
 	static int seq = 0;
 
 	Event xe;
@@ -557,7 +557,7 @@ localexit:
 }
 #endif
 
-void EditorFrame::keyPressEvent(QKeyEvent* e) {
+void EditorFrame::keyPressEvent(QKeyEvent *e) {
 	if (e->isAutoRepeat())
 		return;
 
@@ -587,7 +587,7 @@ void EditorFrame::keyPressEvent(QKeyEvent* e) {
 	issueEvent(e, xe);
 }
 
-void EditorFrame::keyReleaseEvent(QKeyEvent* e) {
+void EditorFrame::keyReleaseEvent(QKeyEvent *e) {
 	if (e->isAutoRepeat())
 		return;
 	int k = e->key();
@@ -616,7 +616,7 @@ void EditorFrame::keyReleaseEvent(QKeyEvent* e) {
 	issueEvent(e, xe);
 }
 
-void EditorFrame::timerEvent(QTimerEvent* e) {
+void EditorFrame::timerEvent(QTimerEvent *e) {
 	if (e->timerId() == m_autoUpdateTimer) {
 		update();
 		return;
@@ -664,7 +664,7 @@ void EditorFrame::stopCapture() {
 #endif
 
 #if 0
-bool EditorFrame::winEvent(MSG* msg, long * result) {
+bool EditorFrame::winEvent(MSG *msg, long * result) {
 	if (!m_isInEventCapture) {
 		return false;
 	}
@@ -678,7 +678,7 @@ bool EditorFrame::winEvent(MSG* msg, long * result) {
 
 	GetRawInputData((HRAWINPUT)msg->lParam, RID_INPUT, lpb, &dwSize, sizeof(RAWINPUTHEADER));
 
-	RAWINPUT* raw = (RAWINPUT*)lpb;
+	RAWINPUT *raw = (RAWINPUT*)lpb;
 
 	Event e;
 	TypeZero(&e);
@@ -708,7 +708,7 @@ void EditorFrame::resetCursor() {
 	this->unsetCursor();
 }
 
-void EditorFrame::issueEvent(QEvent* qe, InputEvent& xe)
+void EditorFrame::issueEvent(QEvent *qe, InputEvent &xe)
 {
 	if (m_isCapturing) {
 		g_inputSystem->queEvent(xe);

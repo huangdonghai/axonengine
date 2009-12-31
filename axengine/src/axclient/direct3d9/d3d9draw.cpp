@@ -13,7 +13,7 @@ read the license and understand and accept it fully.
 AX_BEGIN_NAMESPACE
 
 
-static void setMaterialUniforms(Material* mat) {
+static void setMaterialUniforms(Material *mat) {
 	if (!mat) {
 		AX_SU(g_matDiffuse, Vector3(1,1,1));
 		AX_SU(g_matSpecular, Vector3(0,0,0));
@@ -23,13 +23,13 @@ static void setMaterialUniforms(Material* mat) {
 
 	// set texgen parameters
 	if (mat->isBaseTcAnim()) {
-		const Matrix4* matrix = mat->getBaseTcMatrix();
+		const Matrix4 *matrix = mat->getBaseTcMatrix();
 		if (matrix) {
 			AX_SU(g_baseTcMatrix, *matrix);
 		}
 	}
 
-	const TexGen& tg = mat->getTexGen(SamplerType::Diffuse);
+	const TexGen &tg = mat->getTexGen(SamplerType::Diffuse);
 
 	if (tg.transform) {
 		AX_SU(g_diffuseTcMatrix, tg.matrix);
@@ -47,10 +47,10 @@ static void setMaterialUniforms(Material* mat) {
 	}
 }
 
-void D3D9draw::draw(Material* mat, Technique tech, D3D9geometry* prim)
+void D3D9draw::draw(Material *mat, Technique tech, D3D9geometry *prim)
 {
 	if (!mat) {
-		static D3D9shader* debugshader = d3d9ShaderManager->findShaderDX("_debug");
+		static D3D9shader *debugshader = d3d9ShaderManager->findShaderDX("_debug");
 
 		if (tech != Technique::Main) {
 			return;
@@ -72,7 +72,7 @@ void D3D9draw::draw(Material* mat, Technique tech, D3D9geometry* prim)
 
 	ShaderMacro macro = g_shaderMacro;
 
-	const ShaderMacro& matmacro = mat->getShaderMacro();
+	const ShaderMacro &matmacro = mat->getShaderMacro();
 
 	macro.mergeFrom(&matmacro);
 	if (!r_detail->getBool() && mat->haveDetail()) {
@@ -94,7 +94,7 @@ void D3D9draw::draw(Material* mat, Technique tech, D3D9geometry* prim)
 	}
 #endif
 
-	D3D9shader* shader = (D3D9shader*)d3d9ShaderManager->findShader(mat->getShaderNameId(), macro);
+	D3D9shader *shader = (D3D9shader*)d3d9ShaderManager->findShader(mat->getShaderNameId(), macro);
 
 	if (!shader->haveTechnique(tech)) {
 		return;
@@ -115,7 +115,7 @@ void D3D9draw::draw(Material* mat, Technique tech, D3D9geometry* prim)
 	}
 }
 
-void D3D9draw::draw(D3D9shader* shader, Technique tech, D3D9geometry* prim)
+void D3D9draw::draw(D3D9shader *shader, Technique tech, D3D9geometry *prim)
 {
 	if (r_nulldraw->getBool()) {
 		return;
@@ -142,13 +142,13 @@ D3D9draw::~D3D9draw()
 
 }
 
-Vector2 D3D9draw::drawString(Font* font, Rgba color, const TextQuad& tq, const Vector2& offset, const wchar_t* str, size_t len, const Vector2& scale, bool italic /*= false */)
+Vector2 D3D9draw::drawString(Font *font, Rgba color, const TextQuad &tq, const Vector2 &offset, const wchar_t *str, size_t len, const Vector2 &scale, bool italic /*= false */)
 {
 //	ulonglong_t t0 = OsUtil::microseconds();
 	size_t i;
 	uint_t count;
-	Texture* tex = nullptr;
-	Texture* newtex = nullptr;
+	Texture *tex = nullptr;
+	Texture *newtex = nullptr;
 	Vector4 tc;
 	float fontheight = font->getHeight();
 	float fontitalic;
@@ -165,7 +165,7 @@ Vector2 D3D9draw::drawString(Font* font, Rgba color, const TextQuad& tq, const V
 	count = 0;
 	font->getCharInfo(str[0], tex, tc);
 
-	BlendVertex* data = m_fontVerts;
+	BlendVertex *data = m_fontVerts;
 
 //	ulonglong_t t1 = OsUtil::microseconds();
 	for (i = 0; i < len; i++) {
@@ -183,7 +183,7 @@ Vector2 D3D9draw::drawString(Font* font, Rgba color, const TextQuad& tq, const V
 		}
 
 		// get glyph info
-		const GlyphInfo& glyphinfo = font->getGlyphInfo(str[i]);
+		const GlyphInfo &glyphinfo = font->getGlyphInfo(str[i]);
 
 		// adjust tc to char glyph width
 		tc[2] = tc[0] +(tc[2] - tc[0]) * (float)(glyphinfo.width + 4 * Font::ATLAS_PAD) / font->getWidth();
@@ -266,14 +266,14 @@ void D3D9draw::drawChars(int count)
 #endif
 }
 
-void D3D9draw::drawPrimitiveUP(Material* mat, Technique tech, void* vertices, int numverts)
+void D3D9draw::drawPrimitiveUP(Material *mat, Technique tech, void *vertices, int numverts)
 {
 
 }
 
-void D3D9draw::drawPostUP(Material* mat, PostMesh* mesh)
+void D3D9draw::drawPostUP(Material *mat, PostMesh *mesh)
 {
-	D3D9shader* shader = findShader(mat);
+	D3D9shader *shader = findShader(mat);
 
 	if (!shader) {
 		return;
@@ -282,7 +282,7 @@ void D3D9draw::drawPostUP(Material* mat, PostMesh* mesh)
 	drawPostUP(shader, mesh);
 }
 
-void D3D9draw::drawPostUP(D3D9shader* shader, PostMesh* mesh)
+void D3D9draw::drawPostUP(D3D9shader *shader, PostMesh *mesh)
 {
 	d3d9StateManager->setVertexDeclaration(m_postVertDecl->getObject());
 
@@ -295,10 +295,10 @@ void D3D9draw::drawPostUP(D3D9shader* shader, PostMesh* mesh)
 	shader->end();
 }
 
-D3D9shader* D3D9draw::findShader(Material* mat, Technique tech)
+D3D9shader *D3D9draw::findShader(Material *mat, Technique tech)
 {
 	if (!mat) {
-		static D3D9shader* debugshader = d3d9ShaderManager->findShaderDX("_debug");
+		static D3D9shader *debugshader = d3d9ShaderManager->findShaderDX("_debug");
 
 		if (tech != Technique::Main) {
 			return 0;
@@ -309,10 +309,10 @@ D3D9shader* D3D9draw::findShader(Material* mat, Technique tech)
 	setMaterialUniforms(mat);
 
 	ShaderMacro macro = g_shaderMacro;
-	const ShaderMacro& matmacro = mat->getShaderMacro();
+	const ShaderMacro &matmacro = mat->getShaderMacro();
 	macro.mergeFrom(&matmacro);
 
-	D3D9shader* shader = (D3D9shader*)d3d9ShaderManager->findShader(mat->getShaderNameId(), macro);
+	D3D9shader *shader = (D3D9shader*)d3d9ShaderManager->findShader(mat->getShaderNameId(), macro);
 
 	if (!shader->haveTechnique(tech)) {
 		return 0;

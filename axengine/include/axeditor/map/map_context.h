@@ -50,73 +50,73 @@ public:
 	String getTitle() const;
 	String getFilename() const;
 	bool createNew();
-	bool load(const String& filename);
+	bool load(const String &filename);
 	bool save();
-	bool saveAs(const String& filename);
+	bool saveAs(const String &filename);
 
 	// view process
-	void setActiveView(View* view) { m_activeView = view; }
-	View* getActiveView() const { return m_activeView; }
+	void setActiveView(View *view) { m_activeView = view; }
+	View *getActiveView() const { return m_activeView; }
 
 	Vector3 getViewPos();
 
-	MapTerrain* createTerrain(int tiles, int tilemeters);
-	MapTerrain* getTerrain();
-	void setTerrainMaterialDef(MapMaterialDef* matdef);
+	MapTerrain *createTerrain(int tiles, int tilemeters);
+	MapTerrain *getTerrain();
+	void setTerrainMaterialDef(MapMaterialDef *matdef);
 
-	GameWorld* getGameWorld() const { return m_gameWorld; }
+	GameWorld *getGameWorld() const { return m_gameWorld; }
 	void runGame();
 
 	// present
-	virtual void doRender(const RenderCamera& camera, bool world = false);
-	virtual void doSelect(const RenderCamera& camera, int part);
+	virtual void doRender(const RenderCamera &camera, bool world = false);
+	virtual void doSelect(const RenderCamera &camera, int part);
 
 	// bookmarks --timlly add
-	void addBookmark(const AffineMat& viewMatrix, const String& name = "", int id = -1);
+	void addBookmark(const AffineMat &viewMatrix, const String &name = "", int id = -1);
 	void addBookmark(const Bookmark &bookmark);
-	void deleteBookmark(const String& name);
+	void deleteBookmark(const String &name);
 	void deleteBookmark(int index);
 
 	int getNumBookmark();
-	Bookmark* getBookmark(const String& name);
-	Bookmark* getBookmark(int index);
+	Bookmark *getBookmark(const String &name);
+	Bookmark *getBookmark(int index);
 
 	void clearAllBookmarks();
 
 	// properties
-	void setActorProperty(const String& propName, const Variant& value);
+	void setActorProperty(const String &propName, const Variant &value);
 
 	// map state
-	MapState* getMapState() const { return m_mapState; }
-	void setMapState(MapState* val) { m_mapState = val; }
+	MapState *getMapState() const { return m_mapState; }
+	void setMapState(MapState *val) { m_mapState = val; }
 
 protected:
-	void writeToFile(File* f);
-	void readActor(const TiXmlElement* node);
+	void writeToFile(File *f);
+	void readActor(const TiXmlElement *node);
 
 	// save/load the helper info in the editor. --timlly add
-	void saveEditorInfo(const String& filename);
-	bool loadEditorInfo(const String& filename);
+	void saveEditorInfo(const String &filename);
+	bool loadEditorInfo(const String &filename);
 
 	// save/load the bookmark info. --timlly add
-	void saveBookmarkInfo(File* file, int indent);
-	void loadBookmarkInfo(const TiXmlElement* elem);
+	void saveBookmarkInfo(File *file, int indent);
+	void loadBookmarkInfo(const TiXmlElement *elem);
 
 private:
-	GameWorld* m_gameWorld;
+	GameWorld *m_gameWorld;
 	String m_title;
 	String m_filename;
-	MapTerrain* m_terrain;
-	TerrainFixed* m_terrainFixed;
+	MapTerrain *m_terrain;
+	TerrainFixed *m_terrainFixed;
 
 	// views
-	PerspectiveView* m_perspectiveView;
-	TopView* m_topView;
-	FrontView* m_frontView;
-	LeftView* m_leftView;
+	PerspectiveView *m_perspectiveView;
+	TopView *m_topView;
+	FrontView *m_frontView;
+	LeftView *m_leftView;
 
 	// map state
-	MapState* m_mapState;
+	MapState *m_mapState;
 
 	// bookmarks  --timlly add
 	Sequence<Bookmark>	m_bookmarks;
@@ -133,7 +133,7 @@ inline String MapContext::getFilename() const {
 	return m_filename;
 }
 
-inline MapTerrain* MapContext::getTerrain() {
+inline MapTerrain *MapContext::getTerrain() {
 	return m_terrain;
 }
 

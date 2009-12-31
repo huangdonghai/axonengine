@@ -61,11 +61,11 @@ int PointPrim::getNumPoints() const {
 	return m_numPoints;
 }
 
-const DebugVertex* PointPrim::getPointsPointer() const {
+const DebugVertex *PointPrim::getPointsPointer() const {
 	return m_points;
 }
 
-DebugVertex* PointPrim::lock() {
+DebugVertex *PointPrim::lock() {
 	return m_points;
 }
 void PointPrim::unlock() {
@@ -144,11 +144,11 @@ int LinePrim::getNumVertexes() const {
 	return m_numVertexes;
 }
 
-const DebugVertex* LinePrim::getVertexesPointer() const {
+const DebugVertex *LinePrim::getVertexesPointer() const {
 	return m_vertexes;
 }
 
-DebugVertex* LinePrim::lockVertexes() {
+DebugVertex *LinePrim::lockVertexes() {
 	return m_vertexes;
 }
 
@@ -161,11 +161,11 @@ int LinePrim::getNumIndexes() const {
 	return m_numIndexes;
 }
 
-const ushort_t* LinePrim::getIndexPointer() const {
+const ushort_t *LinePrim::getIndexPointer() const {
 	return m_indexes;
 }
 
-ushort_t* LinePrim::lockIndexes() {
+ushort_t *LinePrim::lockIndexes() {
 	return m_indexes;
 }
 
@@ -179,7 +179,7 @@ ushort_t LinePrim::getIndex(int order) const {
 	return m_indexes[order];
 }
 
-const LinePrim::VertexType& LinePrim::getVertex(int order) const {
+const LinePrim::VertexType &LinePrim::getVertex(int order) const {
 	AX_ASSERT(order >= 0 && order < m_numVertexes);
 	return m_vertexes[order];
 }
@@ -191,12 +191,12 @@ void LinePrim::setIndex(int order, int index) {
 	m_indexes[order] = index;
 }
 
-void LinePrim::setVertex(int order, const VertexType& vert) {
+void LinePrim::setVertex(int order, const VertexType &vert) {
 	AX_ASSERT(order >= 0 && order < m_numVertexes);
 	m_vertexes[order] = vert;
 }
 
-LinePrim::VertexType& LinePrim::getVertexRef(int order) {
+LinePrim::VertexType &LinePrim::getVertexRef(int order) {
 	AX_ASSERT(order >= 0 && order < m_numVertexes);
 	return m_vertexes[order];
 }
@@ -215,8 +215,8 @@ void LinePrim::unlock() {
 	m_isIndexBufferDirtied = true;
 }
 
-LinePrim* LinePrim::createAxis(Hint hint, float line_length) {
-	LinePrim* line = new LinePrim(hint);
+LinePrim *LinePrim::createAxis(Hint hint, float line_length) {
+	LinePrim *line = new LinePrim(hint);
 
 	line->init(6, 6);
 
@@ -247,8 +247,8 @@ LinePrim* LinePrim::createAxis(Hint hint, float line_length) {
 	return line;
 }
 
-LinePrim* LinePrim::createAxis(Hint hint, const Vector3& origin, const Matrix3& axis, float line_length) {
-	LinePrim* line = new LinePrim(hint);
+LinePrim *LinePrim::createAxis(Hint hint, const Vector3 &origin, const Matrix3 &axis, float line_length) {
+	LinePrim *line = new LinePrim(hint);
 
 	line->init(6, 6);
 
@@ -279,8 +279,8 @@ LinePrim* LinePrim::createAxis(Hint hint, const Vector3& origin, const Matrix3& 
 	return line;
 }
 
-LinePrim* LinePrim::createScreenRect(Hint hint, const Rect& rect, const Rgba& color) {
-	LinePrim* line = new LinePrim(hint);
+LinePrim *LinePrim::createScreenRect(Hint hint, const Rect &rect, const Rgba &color) {
+	LinePrim *line = new LinePrim(hint);
 
 	line->init(4, 8);
 
@@ -306,7 +306,7 @@ LinePrim* LinePrim::createScreenRect(Hint hint, const Rect& rect, const Rgba& co
 	return line;
 }
 
-bool LinePrim::setupScreenRect(LinePrim*& line, const Rect& rect, const Rgba& color) {
+bool LinePrim::setupScreenRect(LinePrim*& line, const Rect &rect, const Rgba &color) {
 	if (!line) {
 		line = createScreenRect(HintDynamic, rect, color);
 		return true;
@@ -325,8 +325,8 @@ bool LinePrim::setupScreenRect(LinePrim*& line, const Rect& rect, const Rgba& co
 	return true;
 }
 
-LinePrim* LinePrim::createLine(Hint hint, const Vector3& from, const Vector3& to, const Rgba& color) {
-	LinePrim* line = new LinePrim(hint);
+LinePrim *LinePrim::createLine(Hint hint, const Vector3 &from, const Vector3 &to, const Rgba &color) {
+	LinePrim *line = new LinePrim(hint);
 
 	line->init(2, 2);
 
@@ -342,7 +342,7 @@ LinePrim* LinePrim::createLine(Hint hint, const Vector3& from, const Vector3& to
 	return line;
 }
 
-bool LinePrim::setupLine(LinePrim*& line, const Vector3& from, const Vector3& to, const Rgba& color) {
+bool LinePrim::setupLine(LinePrim*& line, const Vector3 &from, const Vector3 &to, const Rgba &color) {
 	bool isinit = false;
 
 	if (!line) {
@@ -365,7 +365,7 @@ bool LinePrim::setupLine(LinePrim*& line, const Vector3& from, const Vector3& to
 	return isinit;
 }
 
-bool LinePrim::setupAxis(LinePrim*& line, const Vector3& origin, const Matrix3& axis, float length, Rgba xcolor, Rgba ycolor, Rgba zcolor) {
+bool LinePrim::setupAxis(LinePrim*& line, const Vector3 &origin, const Matrix3 &axis, float length, Rgba xcolor, Rgba ycolor, Rgba zcolor) {
 	bool isInit = false;
 
 	if (!line) {
@@ -404,13 +404,13 @@ bool LinePrim::setupAxis(LinePrim*& line, const Vector3& origin, const Matrix3& 
 	return isInit;
 }
 
-bool LinePrim::setupBoundingBox(LinePrim*& line, const Vector3& origin, const Matrix3& axis, const BoundingBox& inbbox, float scale/* =1.0f */, Hint hint /* = Primitive::HintDynamic */){
+bool LinePrim::setupBoundingBox(LinePrim*& line, const Vector3 &origin, const Matrix3 &axis, const BoundingBox &inbbox, float scale/* =1.0f */, Hint hint /* = Primitive::HintDynamic */){
 	bool isfirst = false;
 	if (!line) {
 		line = new LinePrim(hint);
 		line->init(32, 48);
 
-		ushort_t* indexes = line->lockIndexes();
+		ushort_t *indexes = line->lockIndexes();
 		for (int i = 0; i < 8; i++) {
 			indexes[i*6+0] = i * 4;
 			indexes[i*6+1] = i * 4 + 1;
@@ -434,7 +434,7 @@ bool LinePrim::setupBoundingBox(LinePrim*& line, const Vector3& origin, const Ma
 		bbox = inbbox;
 	}
 
-	VertexType* verts = line->lockVertexes();
+	VertexType *verts = line->lockVertexes();
 	for (int i = 0; i < 8; i++) {
 		Vector3 axisscale;
 		axisscale.x = i&1;
@@ -458,26 +458,26 @@ bool LinePrim::setupBoundingBox(LinePrim*& line, const Vector3& origin, const Ma
 	return isfirst;
 }
 
-bool LinePrim::setupCircle(LinePrim*& line, const Vector3& origin, const Vector3& p0, const Vector3& p1, const Rgba& color, int subdivided) {
+bool LinePrim::setupCircle(LinePrim*& line, const Vector3 &origin, const Vector3 &p0, const Vector3 &p1, const Rgba &color, int subdivided) {
 	return setupCircle(line, origin, p0, p1, color, subdivided, false, Plane());
 }
 
-bool LinePrim::setupCircle(LinePrim*& line, const Vector3& origin, const Vector3& p0, const Vector3& p1, const Rgba& color, int subdivided, const Plane& plane) {
+bool LinePrim::setupCircle(LinePrim*& line, const Vector3 &origin, const Vector3 &p0, const Vector3 &p1, const Rgba &color, int subdivided, const Plane &plane) {
 	return setupCircle(line, origin, p0, p1, color, subdivided, true, plane);
 }
 
-bool LinePrim::setupCircle(LinePrim*& line, const Vector3& origin, const Vector3& p0, const Vector3& p1, const Rgba& color, int subdivided,Hint hint){
+bool LinePrim::setupCircle(LinePrim*& line, const Vector3 &origin, const Vector3 &p0, const Vector3 &p1, const Rgba &color, int subdivided,Hint hint){
         return setupCircle(line, origin, p0, p1, color, subdivided, false, Plane(), hint);
 }
 
-bool LinePrim::setupCircle(LinePrim*& line, const Vector3& origin, const Vector3& p0, const Vector3& p1, const Rgba& color, int subdivided, bool clipplane, const Plane& plane,Hint hint /* = Primitive::HintDynamic */) {
+bool LinePrim::setupCircle(LinePrim*& line, const Vector3 &origin, const Vector3 &p0, const Vector3 &p1, const Rgba &color, int subdivided, bool clipplane, const Plane &plane,Hint hint /* = Primitive::HintDynamic */) {
 	AX_ASSERT(subdivided >= 3);
 	bool first = false;
 
 	if (!line) {
 		line = new LinePrim(HintDynamic);
 		line->init(subdivided, subdivided * 2);
-		ushort_t* pidx = line->lockIndexes();
+		ushort_t *pidx = line->lockIndexes();
 		for (int i = 0; i < subdivided; i++) {
 			*pidx++ = i;
 			*pidx++ = (i+1) % subdivided;
@@ -486,7 +486,7 @@ bool LinePrim::setupCircle(LinePrim*& line, const Vector3& origin, const Vector3
 		first = true;
 	}
 
-	VertexType* verts = line->lockVertexes();
+	VertexType *verts = line->lockVertexes();
 	float step = AX_PI * 2.0f / subdivided;
 	float angle = 0;
 	for (int i = 0; i < subdivided; i++) {
@@ -509,12 +509,12 @@ bool LinePrim::setupCircle(LinePrim*& line, const Vector3& origin, const Vector3
 	return first;
 }
 
-LinePrim* LinePrim::createWorldBoundingBox( Hint hint, const BoundingBox& bbox, const Rgba& color )
+LinePrim *LinePrim::createWorldBoundingBox( Hint hint, const BoundingBox &bbox, const Rgba &color )
 {
-	LinePrim* line = new LinePrim(hint);
+	LinePrim *line = new LinePrim(hint);
 
 	line->init(8, 24);
-	VertexType* verts = line->lockVertexes();
+	VertexType *verts = line->lockVertexes();
 	for (int i = 0; i < 2; i++) {
 		for (int j = 0; j < 2; j++) {
 			for (int k = 0; k < 2; k++) {
@@ -533,7 +533,7 @@ LinePrim* LinePrim::createWorldBoundingBox( Hint hint, const BoundingBox& bbox, 
 		0, 4, 1, 5, 3, 7, 2, 6
 	};
 	AX_ASSERT(ArraySize(s_indices) == line->getNumIndexes());
-	ushort_t* indexes = line->lockIndexes();
+	ushort_t *indexes = line->lockIndexes();
 	memcpy(indexes, s_indices, line->getNumIndexes() * sizeof(ushort_t));
 	line->unlockIndexes();
 
@@ -586,11 +586,11 @@ int MeshPrim::getNumVertexes() const {
 	return m_numVertexes;
 }
 
-const Vertex* MeshPrim::getVertexesPointer() const {
+const Vertex *MeshPrim::getVertexesPointer() const {
 	return m_vertexes;
 }
 
-Vertex* MeshPrim::lockVertexes() {
+Vertex *MeshPrim::lockVertexes() {
 	return m_vertexes;
 }
 
@@ -599,7 +599,7 @@ void MeshPrim::unlockVertexes() {
 	m_isVertexBufferDirtied = true;
 }
 
-const ushort_t* MeshPrim::getIndexPointer() const {
+const ushort_t *MeshPrim::getIndexPointer() const {
 	return m_indexes;
 }
 
@@ -607,7 +607,7 @@ int MeshPrim::getNumIndexes() const {
 	return m_numIndexes;
 }
 
-ushort_t* MeshPrim::lockIndexes() {
+ushort_t *MeshPrim::lockIndexes() {
 	return m_indexes;
 }
 
@@ -616,15 +616,15 @@ void MeshPrim::unlockIndexes() {
 	m_isIndexBufferDirtied = true;
 }
 
-LinePrim* MeshPrim::getTangentLine(float len) const {
+LinePrim *MeshPrim::getTangentLine(float len) const {
 	if (m_numVertexes == 0)
 		return NULL;
 
-	LinePrim* line = new LinePrim(HintFrame);
+	LinePrim *line = new LinePrim(HintFrame);
 
 	line->init(m_numVertexes * 6, m_numVertexes * 6);
-	DebugVertex* verts = line->lockVertexes();
-	ushort_t* idxes = line->lockIndexes();
+	DebugVertex *verts = line->lockVertexes();
+	ushort_t *idxes = line->lockIndexes();
 
 	for (int i = 0; i < m_numVertexes; i++) {
 		verts[i*6+0].xyz = m_vertexes[i].xyz;
@@ -659,15 +659,15 @@ LinePrim* MeshPrim::getTangentLine(float len) const {
 	return line;
 }
 
-LinePrim* MeshPrim::getNormalLine(float len) const {
+LinePrim *MeshPrim::getNormalLine(float len) const {
 	if (m_numVertexes == 0)
 		return NULL;
 
-	LinePrim* line = new LinePrim(HintFrame);
+	LinePrim *line = new LinePrim(HintFrame);
 
 	line->init(m_numVertexes * 2, m_numVertexes * 2);
-	DebugVertex* verts = line->lockVertexes();
-	ushort_t* idxes = line->lockIndexes();
+	DebugVertex *verts = line->lockVertexes();
+	ushort_t *idxes = line->lockIndexes();
 
 	for (int i = 0; i < m_numVertexes; i++) {
 		verts[i*2+0].xyz = m_vertexes[i].xyz;
@@ -712,11 +712,11 @@ void MeshPrim::computeTangentSpaceSlow()
 
 
 // static helper function
-MeshPrim* MeshPrim::createScreenQuad(Hint hint, const Rect& rect, const Rgba& color, Material* material, const Vector4& st) {
-	MeshPrim* quad = new MeshPrim(hint);
+MeshPrim *MeshPrim::createScreenQuad(Hint hint, const Rect &rect, const Rgba &color, Material *material, const Vector4 &st) {
+	MeshPrim *quad = new MeshPrim(hint);
 
 	quad->init(4, 6);
-	Vertex* verts = quad->lockVertexes();
+	Vertex *verts = quad->lockVertexes();
 	verts[0].xyz = Vector3(rect.x, rect.y, 0.0f);
 	verts[0].st.x = st[0];
 	verts[0].st.y = st[1];
@@ -754,7 +754,7 @@ MeshPrim* MeshPrim::createScreenQuad(Hint hint, const Rect& rect, const Rgba& co
 	verts[3].binormal = Vector3(0, 1, 0);
 	quad->unlockVertexes();
 
-	ushort_t* indexes = quad->lockIndexes();
+	ushort_t *indexes = quad->lockIndexes();
 	indexes[0] = 0;
 	indexes[1] = 1;
 	indexes[2] = 2;
@@ -768,8 +768,8 @@ MeshPrim* MeshPrim::createScreenQuad(Hint hint, const Rect& rect, const Rgba& co
 	return quad;
 }
 
-bool MeshPrim::setupScreenQuad(MeshPrim*& quad, const Rect& rect, const Rgba& color, Material* material, const Vector4& st) {
-	Vertex* verts = quad->lockVertexes();
+bool MeshPrim::setupScreenQuad(MeshPrim*& quad, const Rect &rect, const Rgba &color, Material *material, const Vector4 &st) {
+	Vertex *verts = quad->lockVertexes();
 	verts[0].xyz = Vector3(rect.x, rect.y, 0.0f);
 	verts[0].st.x = st[0];
 	verts[0].st.y = st[1];
@@ -807,7 +807,7 @@ bool MeshPrim::setupScreenQuad(MeshPrim*& quad, const Rect& rect, const Rgba& co
 	verts[3].binormal = Vector3(0, 1, 0);
 	quad->unlockVertexes();
 
-	ushort_t* indexes = quad->lockIndexes();
+	ushort_t *indexes = quad->lockIndexes();
 	indexes[0] = 0;
 	indexes[1] = 1;
 	indexes[2] = 2;
@@ -821,7 +821,7 @@ bool MeshPrim::setupScreenQuad(MeshPrim*& quad, const Rect& rect, const Rgba& co
 	return true;
 }
 
-bool MeshPrim::setupFan(MeshPrim*& mesh, const Vector3& center, const Vector3& v0, const Vector3& v1, float start, float end, Rgba color, int subdivided, Material* material) {
+bool MeshPrim::setupFan(MeshPrim*& mesh, const Vector3 &center, const Vector3 &v0, const Vector3 &v1, float start, float end, Rgba color, int subdivided, Material *material) {
 	AX_ASSERT(subdivided >= 1);
 
 	bool isinit = false;
@@ -859,7 +859,7 @@ bool MeshPrim::setupFan(MeshPrim*& mesh, const Vector3& center, const Vector3& v
 }
 
 
-bool MeshPrim::setupPolygon(MeshPrim*& mesh, int numverts, const Vector3* verts, Rgba color, Material* material) {
+bool MeshPrim::setupPolygon(MeshPrim*& mesh, int numverts, const Vector3 *verts, Rgba color, Material *material) {
 	AX_ASSERT(numverts >= 3);
 	bool isinit = false;
 	int numidxes =(numverts - 2) * 3;
@@ -889,7 +889,7 @@ bool MeshPrim::setupPolygon(MeshPrim*& mesh, int numverts, const Vector3* verts,
 	return isinit;
 }
 
-bool MeshPrim::setupBox(MeshPrim*& mesh, const BoundingBox& bbox, const Rgba& color)
+bool MeshPrim::setupBox(MeshPrim*& mesh, const BoundingBox &bbox, const Rgba &color)
 {
 	int numverts = 8;
 	int numidxes = 36;
@@ -899,7 +899,7 @@ bool MeshPrim::setupBox(MeshPrim*& mesh, const BoundingBox& bbox, const Rgba& co
 		mesh->init(8,36);
 	}
 
-	Vertex* vertexes = mesh->lockVertexes();
+	Vertex *vertexes = mesh->lockVertexes();
 	ushort_t*    indexes  = mesh->lockIndexes();
 
 	Vector3 bSize = bbox.max - bbox.min;
@@ -930,7 +930,7 @@ bool MeshPrim::setupBox(MeshPrim*& mesh, const BoundingBox& bbox, const Rgba& co
  	}
 
 // NOTES: debug cone, no texture coords
-bool MeshPrim::setupCone(MeshPrim*& cone, const Vector3& center, float radius, const Vector3& top, const Rgba& color, int subdivided) {
+bool MeshPrim::setupCone(MeshPrim*& cone, const Vector3 &center, float radius, const Vector3 &top, const Rgba &color, int subdivided) {
 	int numverts = subdivided + 2;		// number of subdivided + top + center
 	int numidxes = subdivided * 2 * 3;
 	bool isinit = false;
@@ -940,7 +940,7 @@ bool MeshPrim::setupCone(MeshPrim*& cone, const Vector3& center, float radius, c
 		cone->init(numverts, numidxes);
 
 		// triangles
-		ushort_t* indexes = cone->lockIndexes();
+		ushort_t *indexes = cone->lockIndexes();
 		for (int i = 0; i < subdivided; i++) {
 			int idx0 = i + 2;
 			int idx1 =(i + 1) % subdivided + 2;
@@ -958,7 +958,7 @@ bool MeshPrim::setupCone(MeshPrim*& cone, const Vector3& center, float radius, c
 	AX_ASSERT(numverts == cone->getNumVertexes());
 
 	// vertexes
-	Vertex* verts = cone->lockVertexes();
+	Vertex *verts = cone->lockVertexes();
 		// reset to zero
 		memset(verts, 0, sizeof(Vertex) * numverts);
 
@@ -1023,12 +1023,12 @@ bool MeshPrim::setupHexahedron(MeshPrim*& mesh, Vector3 volumeverts[8]) {
 			0, 2, 4, 4, 2, 6
 		};
 
-		ushort_t* indexes = mesh->lockIndexes();
+		ushort_t *indexes = mesh->lockIndexes();
 		memcpy(indexes, s_idxes, numindexes * sizeof(ushort_t));
 		mesh->unlockIndexes();
 
 		// set verts to 0
-		Vertex* verts = mesh->lockVertexes();
+		Vertex *verts = mesh->lockVertexes();
 		memset(verts, 0, numverts * sizeof(Vertex));
 		mesh->unlockIndexes();
 	}
@@ -1037,7 +1037,7 @@ bool MeshPrim::setupHexahedron(MeshPrim*& mesh, Vector3 volumeverts[8]) {
 		return isinit;
 	}
 
-	Vertex* verts = mesh->lockVertexes();
+	Vertex *verts = mesh->lockVertexes();
 	for (int i = 0; i < numverts; i++) {
 		verts[i].xyz = volumeverts[i];
 	}
@@ -1069,7 +1069,7 @@ TextPrim::TextPrim(Hint hint) : Primitive(hint), m_horizonAlign(Center), m_verti
 TextPrim::~TextPrim() {
 }
 
-void TextPrim::init(const Rect& rect, Rgba color, float aspect, int format, Font* font, const String& text) {
+void TextPrim::init(const Rect &rect, Rgba color, float aspect, int format, Font *font, const String &text) {
 	m_rect = rect;
 	m_color = color;
 	m_aspect = aspect;
@@ -1079,7 +1079,7 @@ void TextPrim::init(const Rect& rect, Rgba color, float aspect, int format, Font
 	m_isSimpleText = false;
 }
 
-void TextPrim::initSimple(const Vector3& xyz, Rgba color, const String& text, bool fixedWidth) {
+void TextPrim::initSimple(const Vector3 &xyz, Rgba color, const String &text, bool fixedWidth) {
 	m_isSimpleText = true;
 	m_color = color;
 	m_position = xyz;
@@ -1097,15 +1097,15 @@ void TextPrim::clear() {
 }
 
 // static helper function
-TextPrim* TextPrim::createSimpleText(Hint hint, const Vector3& xyz, const Rgba& color, const String& text, bool fixedWidth) {
-	TextPrim* rp_text = new TextPrim(hint);
+TextPrim *TextPrim::createSimpleText(Hint hint, const Vector3 &xyz, const Rgba &color, const String &text, bool fixedWidth) {
+	TextPrim *rp_text = new TextPrim(hint);
 	rp_text->initSimple(xyz, color, text, fixedWidth);
 
 	return rp_text;
 }
 
-TextPrim* TextPrim::createText(Hint hint, const Rect& rect, Font* font, const String& text, const Rgba& color, HorizonAlign halign, VerticalAlign valign, int format, float aspect) {
-	TextPrim* rp_text = new TextPrim(hint);
+TextPrim *TextPrim::createText(Hint hint, const Rect &rect, Font *font, const String &text, const Rgba &color, HorizonAlign halign, VerticalAlign valign, int format, float aspect) {
+	TextPrim *rp_text = new TextPrim(hint);
 
 	if (text.size() == 0)
 		Errorf("TextPrim::CreateText: null text");
@@ -1165,11 +1165,11 @@ int ChunkPrim::getNumVertexes() const {
 	return m_numVertexes;
 }
 
-const ChunkVertex* ChunkPrim::getVertexesPointer() const {
+const ChunkVertex *ChunkPrim::getVertexesPointer() const {
 	return m_vertexes;
 }
 
-ChunkVertex* ChunkPrim::lockVertexes() {
+ChunkVertex *ChunkPrim::lockVertexes() {
 	return m_vertexes;
 }
 
@@ -1182,11 +1182,11 @@ int ChunkPrim::getNumIndexes() const {
 	return m_numIndexes;
 }
 
-const ushort_t* ChunkPrim::getIndexesPointer() const {
+const ushort_t *ChunkPrim::getIndexesPointer() const {
 	return m_indexes;
 }
 
-ushort_t* ChunkPrim::lockIndexes() {
+ushort_t *ChunkPrim::lockIndexes() {
 	return m_indexes;
 }
 
@@ -1195,7 +1195,7 @@ void ChunkPrim::unlockIndexes() {
 	m_isIndexBufferDirtied = true;
 }
 
-void ChunkPrim::setTerrainRect(const Vector4& rect) {
+void ChunkPrim::setTerrainRect(const Vector4 &rect) {
 	m_terrainRect = rect;
 }
 
@@ -1203,23 +1203,23 @@ Vector4 ChunkPrim::getTerrainRect() const {
 	return m_terrainRect;
 }
 
-void  ChunkPrim::setColorTexture(Texture* color_texture) {
+void  ChunkPrim::setColorTexture(Texture *color_texture) {
 	m_colorTexture = color_texture;
 }
 
-Texture* ChunkPrim::getColorTexture() {
+Texture *ChunkPrim::getColorTexture() {
 	return m_colorTexture;
 }
 
-void ChunkPrim::setNormalTexture(Texture* dsdt) {
+void ChunkPrim::setNormalTexture(Texture *dsdt) {
 	m_normalTexture = dsdt;
 }
 
-Texture* ChunkPrim::getNormalTexture() {
+Texture *ChunkPrim::getNormalTexture() {
 	return m_normalTexture;
 }
 
-void ChunkPrim::setChunkRect(const Vector4& rect) {
+void ChunkPrim::setChunkRect(const Vector4 &rect) {
 	m_chunkRect = rect;
 }
 
@@ -1236,7 +1236,7 @@ int ChunkPrim::getNumLayers() const {
 	return m_numLayers;
 }
 
-void ChunkPrim::setLayers(int index, Texture* alpha, Material* detail, const Vector2& scale, bool isVerticalProjection) {
+void ChunkPrim::setLayers(int index, Texture *alpha, Material *detail, const Vector2 &scale, bool isVerticalProjection) {
 	if (index >= ChunkPrim::MAX_LAYERS) {
 		Debugf("MAX_LAYERS exceeded\n");
 		return;
@@ -1248,7 +1248,7 @@ void ChunkPrim::setLayers(int index, Texture* alpha, Material* detail, const Vec
 	m_layers[index].isVerticalProjection = isVerticalProjection;
 }
 
-Texture* ChunkPrim::getLayerAlpha(int index) const {
+Texture *ChunkPrim::getLayerAlpha(int index) const {
 	if (index >= ChunkPrim::MAX_LAYERS) {
 		return nullptr;
 	}
@@ -1256,7 +1256,7 @@ Texture* ChunkPrim::getLayerAlpha(int index) const {
 	return m_layers[index].alphaTex.get();
 }
 
-Material* ChunkPrim::getLayerDetail(int index) const {
+Material *ChunkPrim::getLayerDetail(int index) const {
 	if (index >= ChunkPrim::MAX_LAYERS) {
 		return nullptr;
 	}
@@ -1293,7 +1293,7 @@ GroupPrim::~GroupPrim() {
 	clear();
 }
 
-void GroupPrim::addPrimitive(Primitive* prim, bool needfree) {
+void GroupPrim::addPrimitive(Primitive *prim, bool needfree) {
 	m_primitives.push_back(prim);
 	m_needFrees.push_back(needfree);
 }
@@ -1302,7 +1302,7 @@ int GroupPrim::getPrimitiveCount() const {
 	return s2i(m_primitives.size());
 }
 
-Primitive* GroupPrim::getPrimitive(int index) {
+Primitive *GroupPrim::getPrimitive(int index) {
 	return m_primitives[index];
 }
 
@@ -1332,15 +1332,15 @@ RefPrim::~RefPrim() {
 	TypeFree(m_indexes);
 }
 
-Primitive* RefPrim::getRefered() const {
+Primitive *RefPrim::getRefered() const {
 	return m_refered;
 }
 
-void RefPrim::setRefered(Primitive* refered) {
+void RefPrim::setRefered(Primitive *refered) {
 	m_refered = refered;
 }
 
-void RefPrim::init(Primitive* refered, int numindexes /*= 0 */) {
+void RefPrim::init(Primitive *refered, int numindexes /*= 0 */) {
 	if (m_refered || m_numIndexes) {
 		Errorf("RefPrim::init: already initialized");
 		return;
@@ -1354,11 +1354,11 @@ int RefPrim::getNumIndexes() const {
 	return m_numIndexes;
 }
 
-const ushort_t* RefPrim::getIndexesPointer() const {
+const ushort_t *RefPrim::getIndexesPointer() const {
 	return m_indexes;
 }
 
-ushort_t* RefPrim::lockIndexes() {
+ushort_t *RefPrim::lockIndexes() {
 	return m_indexes;
 }
 
@@ -1382,22 +1382,22 @@ InstancePrim::InstancePrim(Hint hint) : Primitive(hint) {
 InstancePrim::~InstancePrim() {
 }
 
-Primitive* InstancePrim::getInstanced() const {
+Primitive *InstancePrim::getInstanced() const {
 	return m_instanced;
 }
 
-void InstancePrim::setInstanced(Primitive* instanced) {
+void InstancePrim::setInstanced(Primitive *instanced) {
 	m_instanced = instanced;
 	m_isDirtied = true;
 	setMaterial(instanced->getMaterial());
 }
 
-void InstancePrim::addInstance(const Param& param) {
+void InstancePrim::addInstance(const Param &param) {
 	m_params.push_back(param);
 	m_isDirtied = true;
 }
 
-void InstancePrim::addInstance( const AffineMat& mtx, const Vector4& user )
+void InstancePrim::addInstance( const AffineMat &mtx, const Vector4 &user )
 {
 	Param param;
 	param.worldMatrix = mtx;
@@ -1409,12 +1409,12 @@ int InstancePrim::getNumInstance() const {
 	return s2i(m_params.size());
 }
 
-const InstancePrim::Param& InstancePrim::getInstance(int index) const {
+const InstancePrim::Param &InstancePrim::getInstance(int index) const {
 	AX_ASSERT(index < getNumInstance());
 	return m_params[index];
 }
 
-const InstancePrim::ParamSeq& InstancePrim::getAllInstances() const {
+const InstancePrim::ParamSeq &InstancePrim::getAllInstances() const {
 	return m_params;
 }
 
@@ -1422,7 +1422,7 @@ void InstancePrim::clearAllInstances() {
 	m_params.clear();
 }
 
-void InstancePrim::setInstances(const ParamSeq& params) {
+void InstancePrim::setInstances(const ParamSeq &params) {
 	m_params = params;
 }
 
@@ -1442,7 +1442,7 @@ PrimitiveManager::~PrimitiveManager()
 
 }
 
-void PrimitiveManager::hintUncache( Primitive* prim )
+void PrimitiveManager::hintUncache( Primitive *prim )
 {
 	int id = prim->getCachedId();
 

@@ -65,14 +65,14 @@ AX_BEGIN_NAMESPACE
 		float buttonState(int bt);
 
 		// generate user input
-		void genKeyMove(UserInput& userInput);
-		void genMouseMove(UserInput& userInput);
-		void genButtons(UserInput& userInput);
+		void genKeyMove(UserInput &userInput);
+		void genMouseMove(UserInput &userInput);
+		void genButtons(UserInput &userInput);
 
 
 		// console command
-		void bind_f(const CmdArgs& args);
-		void bindlist_f(const CmdArgs& args);
+		void bind_f(const CmdArgs &args);
+		void bindlist_f(const CmdArgs &args);
 
 		// script command
 		void pauseGame(int key, bool isdown);

@@ -20,34 +20,34 @@ AX_BEGIN_NAMESPACE
 	struct AX_API PathUtil {
 		static bool isDirectoryLetter(char ch) { return ch == '\\' || ch == '/'; }
 
-		static String cleanPath(const String& path);
+		static String cleanPath(const String &path);
 
-		static const char* skipDir(const char* pathfile);
-		static void toUnixPath(String& path);
-		static void convertSlash(String& path, char slash);
+		static const char *skipDir(const char *pathfile);
+		static void toUnixPath(String &path);
+		static void convertSlash(String &path, char slash);
 
 		// static function
-		static void splitPath(const String& path, String& dir, String& fname, String& ext);
-		static String removeExt(const String& path);
-		static String removeDir(const String& path);
-		static String removeDirOne(const String& in);
-		static String removeFilename(const String& in);
+		static void splitPath(const String &path, String &dir, String &fname, String &ext);
+		static String removeExt(const String &path);
+		static String removeDir(const String &path);
+		static String removeDirOne(const String &in);
+		static String removeFilename(const String &in);
 
 		// get directory from full file path
-		static String getDir(const String& path);
-		static String getExt(const String& path);
-		static String getName(const String& path);
-		static bool createDir(const String& OSPath);
-		static bool haveDir(const String& path);
-		static String normalizePath(const String& path);
+		static String getDir(const String &path);
+		static String getExt(const String &path);
+		static String getName(const String &path);
+		static bool createDir(const String &OSPath);
+		static bool haveDir(const String &path);
+		static String normalizePath(const String &path);
 
 		// return an empty string if can't get a correct relative path
-		static String getRelativePath(const String& filename, const char* rootname = nullptr);
+		static String getRelativePath(const String &filename, const char *rootname = nullptr);
 
-		static bool getFileModifiedTime(const String& filename, longlong_t* t);
-		static StringSeq findFiles(const String& dir, const String& filter, bool dironly = false);
-		static StringSeq listFileByExts(const String& base, const String& path, const String& exts, uint_t flags);
-		static FileInfoSeq getFileInfos(const String& base, const String& path, const String& exts, int flags);
+		static bool getFileModifiedTime(const String &filename, longlong_t *t);
+		static StringSeq findFiles(const String &dir, const String &filter, bool dironly = false);
+		static StringSeq listFileByExts(const String &base, const String &path, const String &exts, uint_t flags);
+		static FileInfoSeq getFileInfos(const String &base, const String &path, const String &exts, int flags);
 	};
 
 AX_END_NAMESPACE

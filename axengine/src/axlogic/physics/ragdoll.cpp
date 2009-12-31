@@ -15,7 +15,7 @@ AX_BEGIN_NAMESPACE
 
 	enum { LAYER_TEST = 1 };
 
-	PhysicsRagdoll::PhysicsRagdoll(const String& name) {
+	PhysicsRagdoll::PhysicsRagdoll(const String &name) {
 		m_instance = nullptr;
 		m_ragdollToSkeletal = nullptr;
 		m_skeletalToRagdoll = nullptr;
@@ -29,7 +29,7 @@ AX_BEGIN_NAMESPACE
 			return;
 		}
 
-		hkaRagdollInstance* origin_instance_ = m_package->getRagdoll();
+		hkaRagdollInstance *origin_instance_ = m_package->getRagdoll();
 //		m_instance = origin_instance_->clone(hkpConstraintInstance::CLONE_DATAS_WITH_MOTORS);
 //		m_instance = origin_instance_;
 		m_instance = Util::clone(origin_instance_);
@@ -40,7 +40,7 @@ AX_BEGIN_NAMESPACE
 
 		m_pose = new hkaPose(m_instance->getSkeleton());
 
-		hkaSkeletonMapper* mapper = m_package->getMapper(nullptr);
+		hkaSkeletonMapper *mapper = m_package->getMapper(nullptr);
 		while (mapper) {
 			// Use the skeleton to determine which mapper is which
 			if (mapper->m_mapping.m_skeletonA == m_instance->m_skeleton) {
@@ -88,8 +88,8 @@ AX_BEGIN_NAMESPACE
 		return m_motionType;
 	}
 
-	void PhysicsRagdoll::mapOutSkeletalPose(HavokPose* pose) {
-		HavokPose* physicspose = (HavokPose*)pose;
+	void PhysicsRagdoll::mapOutSkeletalPose(HavokPose *pose) {
+		HavokPose *physicspose = (HavokPose*)pose;
 
 		if (!physicspose || !physicspose->m_havokPose) {
 			return;
@@ -103,19 +103,19 @@ AX_BEGIN_NAMESPACE
 		m_instance->getPoseModelSpace(m_pose->accessUnsyncedPoseModelSpace().begin(), qst);
 
 		// map to highres
-		hkaPose* poseHighRes = physicspose->m_havokPose;
+		hkaPose *poseHighRes = physicspose->m_havokPose;
 		poseHighRes->setToReferencePose();
 
 //		m_ragdollToSkeletal->mapPose(m_pose->getPoseModelSpace().begin(), poseHighRes->getPoseLocalSpace().begin(), poseHighRes->accessPoseModelSpace().begin(), hkaSkeletonMapper::CURRENT_POSE);
 		m_ragdollToSkeletal->mapPose(m_pose->getSyncedPoseModelSpace().begin(), poseHighRes->getSkeleton()->m_referencePose, poseHighRes->accessUnsyncedPoseModelSpace().begin(), hkaSkeletonMapper::CURRENT_POSE);
 	}
 
-	void PhysicsRagdoll::mapInSkeletalPose(HavokPose* pose) {
+	void PhysicsRagdoll::mapInSkeletalPose(HavokPose *pose) {
 		if (!m_pose) {
 			return;
 		}
 
-		HavokPose* physicspose = (HavokPose*)pose;
+		HavokPose *physicspose = (HavokPose*)pose;
 
 		hkArray<hkQsTransform> ragdollArrayModelSpace(m_instance->getNumBones());
 
@@ -135,7 +135,7 @@ AX_BEGIN_NAMESPACE
 	void PhysicsRagdoll::setAutoDeactive(bool val) {
 		// set all bodies to keyframed motion
 		for (int i = 0; i < m_instance->getNumBones(); i++) {
-			hkpRigidBody* rb = m_instance->getRigidBodyOfBone(i);
+			hkpRigidBody *rb = m_instance->getRigidBodyOfBone(i);
 			// Initialize with quality type and collision filter
 			if (!rb) {
 				continue;
@@ -159,7 +159,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 
-	void PhysicsRagdoll::setMatrix(const AffineMat& matrix) {
+	void PhysicsRagdoll::setMatrix(const AffineMat &matrix) {
 		m_matrix = matrix;
 	}
 
@@ -167,18 +167,18 @@ AX_BEGIN_NAMESPACE
 		return m_matrix;
 	}
 
-	void PhysicsRagdoll::bind(PhysicsWorld* world) {
+	void PhysicsRagdoll::bind(PhysicsWorld *world) {
 		m_instance->addToWorld(world->m_havokWorld, true);
 	}
 
-	void PhysicsRagdoll::unbind(PhysicsWorld* world) {
+	void PhysicsRagdoll::unbind(PhysicsWorld *world) {
 		m_instance->removeFromWorld();
 	}
 
 	void PhysicsRagdoll::setKeyframed() {
 		// set all bodies to keyframed motion
 		for (int i = 0; i < m_instance->getNumBones(); i++) {
-			hkpRigidBody* rb = m_instance->getRigidBodyOfBone(i);
+			hkpRigidBody *rb = m_instance->getRigidBodyOfBone(i);
 			// Initialize with quality type and collision filter
 			if (rb != HK_NULL) {
 				setBodyKeyframed(rb);
@@ -188,7 +188,7 @@ AX_BEGIN_NAMESPACE
 
 	void PhysicsRagdoll::setDynamic() {
 		for (int b = 0; b < m_instance->getNumBones(); b++) {
-			hkpRigidBody* rb = m_instance->getRigidBodyOfBone(b);
+			hkpRigidBody *rb = m_instance->getRigidBodyOfBone(b);
 
 			if (rb != HK_NULL) {
 				const int parentId = m_instance->getParentOfBone(b);
@@ -200,7 +200,7 @@ AX_BEGIN_NAMESPACE
 		setAutoDeactive(true);
 	}
 
-	void PhysicsRagdoll::setBodyKeyframed(hkpRigidBody* rb)
+	void PhysicsRagdoll::setBodyKeyframed(hkpRigidBody *rb)
 	{
 		const hkUint32 fi = hkpGroupFilter::calcFilterInfo(PhysicsWorld::LAYER_RAGDOLL_KEYFRAMED, 1, 0, 0);
 
@@ -219,7 +219,7 @@ AX_BEGIN_NAMESPACE
 		}
 	}
 
-	void PhysicsRagdoll::setBodyDynamic(hkpRigidBody* rb, int boneId, int parentId)
+	void PhysicsRagdoll::setBodyDynamic(hkpRigidBody *rb, int boneId, int parentId)
 	{
 		const hkUint32 newFi = hkpGroupFilter::calcFilterInfo(PhysicsWorld::LAYER_RAGDOLL_DYNAMIC, 1, boneId+1, parentId+1);
 //		const hkUint32 newFi = hkpGroupFilter::calcFilterInfo(PhysicsWorld::LAYER_RAGDOLL_DYNAMIC, 1, 0, 0);
@@ -235,7 +235,7 @@ AX_BEGIN_NAMESPACE
 			if (rb->getWorld())
 			{
 				rb->getWorld()->updateCollisionFilterOnEntity(rb, HK_UPDATE_FILTER_ON_ENTITY_FULL_CHECK, HK_UPDATE_COLLECTION_FILTER_PROCESS_SHAPE_COLLECTIONS);
-				const hkpCollisionFilter* filter = rb->getWorld()->getCollisionFilter();
+				const hkpCollisionFilter *filter = rb->getWorld()->getCollisionFilter();
 
 				AX_ASSERT(filter);
 			}

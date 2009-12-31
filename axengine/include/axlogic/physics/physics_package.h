@@ -29,11 +29,11 @@ AX_BEGIN_NAMESPACE
 	class HavokPackable {
 	public:
 		HavokPackable() { m_package = nullptr; }
-		HavokPackable(HavokPackage* package) : m_package(package) {}
+		HavokPackable(HavokPackage *package) : m_package(package) {}
 		virtual ~HavokPackable() { SafeRelease(m_package); }
 
 	protected:
-		HavokPackage* m_package;
+		HavokPackage *m_package;
 	};
 
 	//--------------------------------------------------------------------------
@@ -42,20 +42,20 @@ AX_BEGIN_NAMESPACE
 
 	class HavokAnimator {
 	public:
-		HavokAnimator(HavokRig* rig);
+		HavokAnimator(HavokRig *rig);
 		~HavokAnimator();
 
-		void addAnimation(HavokAnimation* anim);
-		void removeAnimation(HavokAnimation* anim);
+		void addAnimation(HavokAnimation *anim);
+		void removeAnimation(HavokAnimation *anim);
 		void removeAllAnimation();
-		void renderToPose(HavokPose* pose);
+		void renderToPose(HavokPose *pose);
 		void step(int frametime);
 
-		inline HavokRig* getRig() { return m_rig; }
+		inline HavokRig *getRig() { return m_rig; }
 
 	public:
-		HavokRig* m_rig;
-		hkaAnimatedSkeleton* m_animator;
+		HavokRig *m_rig;
+		hkaAnimatedSkeleton *m_animator;
 		List<HavokAnimation*>		m_animations;
 	};
 
@@ -65,7 +65,7 @@ AX_BEGIN_NAMESPACE
 
 	class HavokAnimation : HavokPackable {
 	public:
-		HavokAnimation(const String& name);
+		HavokAnimation(const String &name);
 		virtual ~HavokAnimation();
 
 		bool isValid() const;
@@ -78,8 +78,8 @@ AX_BEGIN_NAMESPACE
 		bool isAnimDone(float timeleft);
 
 	public:
-		hkaDefaultAnimationControl* m_controler;
-		hkaAnimationBinding* m_animBinding;
+		hkaDefaultAnimationControl *m_controler;
+		hkaAnimationBinding *m_animBinding;
 	};
 
 	//--------------------------------------------------------------------------
@@ -88,21 +88,21 @@ AX_BEGIN_NAMESPACE
 
 	class HavokRig : public HavokPackable {
 	public:
-		HavokRig(const String& name);
-		HavokRig(HavokPackage* package);
+		HavokRig(const String &name);
+		HavokRig(HavokPackage *package);
 		virtual ~HavokRig() {}
 
-		int findBoneIndexByName(const char* BoneName);
-		const char* findBoneNameByIndex(int BoneIndex);
+		int findBoneIndexByName(const char *BoneName);
+		const char *findBoneNameByIndex(int BoneIndex);
 		int getBoneCount();
 
 		// implement renderRig
-		HavokPose* createPose();
+		HavokPose *createPose();
 
 		bool isValid() const;
 
 	public:
-		hkaSkeleton* m_havokSkeleton;
+		hkaSkeleton *m_havokSkeleton;
 	};
 
 	//--------------------------------------------------------------------------
@@ -111,13 +111,13 @@ AX_BEGIN_NAMESPACE
 
 	class HavokPose {
 	public:
-		HavokPose(HavokRig* rig);
+		HavokPose(HavokRig *rig);
 		~HavokPose();
 
 		bool isValid() const;
 
 	public:
-		hkaPose* m_havokPose;
+		hkaPose *m_havokPose;
 	};
 
 	//--------------------------------------------------------------------------
@@ -130,62 +130,62 @@ AX_BEGIN_NAMESPACE
 		typedef List<MeshData*>	MeshDataList;
 
 		struct MaterialMap {
-			hkxMaterial* m_hkMat;
+			hkxMaterial *m_hkMat;
 			MaterialPtr m_axMat;
-			Texture* m_lightMap;
+			Texture *m_lightMap;
 		};
 		typedef Sequence<MaterialMap*>	MaterialMaps;
 
-		HavokPackage(const String& filename);
+		HavokPackage(const String &filename);
 		~HavokPackage();
 
 		// implement RefObject
 
-		const BoundingBox& getBoundingBox();
+		const BoundingBox &getBoundingBox();
 
 		// meshes
 		Primitives getPrimitives();
-		void issueToQueue(QueuedEntity* qactor, QueuedScene* qscene);
+		void issueToQueue(QueuedEntity *qactor, QueuedScene *qscene);
 
-		void initDynamicMeshes(MeshDataList& result);
-		void clearDynamicMeshes(MeshDataList& result);
-		void applyPose(HavokPose* pose, Primitives& prims);
+		void initDynamicMeshes(MeshDataList &result);
+		void clearDynamicMeshes(MeshDataList &result);
+		void applyPose(HavokPose *pose, Primitives &prims);
 
 		// animation
-		hkaSkeleton* getSkeleton();
+		hkaSkeleton *getSkeleton();
 
 		int getAnimationCount();
-		hkaAnimationBinding* getAnimation(int Index);
+		hkaAnimationBinding *getAnimation(int Index);
 
 		// physics
-		PhysicsRigid* getRigidBody();
-		hkpRigidBody* getRigidBodyHk() const;
-		hkaRagdollInstance* getRagdoll() const;
-		hkaSkeletonMapper* getMapper(hkaSkeletonMapper* current) const;
+		PhysicsRigid *getRigidBody();
+		hkpRigidBody *getRigidBodyHk() const;
+		hkaRagdollInstance *getRagdoll() const;
+		hkaSkeletonMapper *getMapper(hkaSkeletonMapper *current) const;
 
 	protected:
 		void generateStaticMesh();
 		void generateMeshData();
 		void findNodeTransform();
-		void findNodeTransform_r(hkxNode* node, const hkMatrix4& parentTransform);
-		void setMeshTransform(hkxMesh* mesh, const hkMatrix4& localTransform);
-		const char* getMeshName(hkxMesh* mesh);
-		hkaMeshBinding* findBinding(hkxMesh* mesh);
-		const MaterialMap* findMaterialMap(hkxMaterial* hkmat);
+		void findNodeTransform_r(hkxNode *node, const hkMatrix4 &parentTransform);
+		void setMeshTransform(hkxMesh *mesh, const hkMatrix4 &localTransform);
+		const char *getMeshName(hkxMesh *mesh);
+		hkaMeshBinding *findBinding(hkxMesh *mesh);
+		const MaterialMap *findMaterialMap(hkxMaterial *hkmat);
 
 	private:
 		enum{ MaxLod = 8 };
 
 		String m_name;
-		hkLoader* m_loader;
-		hkDataWorldDict* m_dataWorld;
-		hkRootLevelContainer* m_root;
-		hkpPhysicsData* m_physicsData;
-		hkaAnimationContainer* m_animationContainer;
-		hkxScene* m_sceneData;
-		hkaRagdollInstance* m_ragdoll;
-		hkaSkeletonMapper* m_mapper1;
-		hkaSkeletonMapper* m_mapper2;
+		hkLoader *m_loader;
+		hkDataWorldDict *m_dataWorld;
+		hkRootLevelContainer *m_root;
+		hkpPhysicsData *m_physicsData;
+		hkaAnimationContainer *m_animationContainer;
+		hkxScene *m_sceneData;
+		hkaRagdollInstance *m_ragdoll;
+		hkaSkeletonMapper *m_mapper1;
+		hkaSkeletonMapper *m_mapper2;
 
 		bool m_isMeshDataGenerated;
 		bool m_isStaticMeshGenerated;
@@ -206,8 +206,8 @@ AX_BEGIN_NAMESPACE
 
 	class AX_API HavokModel : public RenderEntity {
 	public:
-		HavokModel(const String& name);
-		HavokModel(HavokPackage* package);
+		HavokModel(const String &name);
+		HavokModel(HavokPackage *package);
 		virtual ~HavokModel();
 
 		// implement Render::Actor
@@ -215,18 +215,18 @@ AX_BEGIN_NAMESPACE
 		virtual BoundingBox getBoundingBox();
 		virtual Primitives getHitTestPrims();
 
-		virtual void issueToQueue(QueuedScene* qscene);
+		virtual void issueToQueue(QueuedScene *qscene);
 
 		// SkeletalMesh
-		virtual HavokRig* findRig() const;
-		virtual void setPose(const HavokPose* pose, int linkBoneIndex = -1);
+		virtual HavokRig *findRig() const;
+		virtual void setPose(const HavokPose *pose, int linkBoneIndex = -1);
 
 	protected:
 		void applyPose();
 
 	private:
-		HavokPackage* m_package;
-		HavokPose* m_pose;
+		HavokPackage *m_package;
+		HavokPose *m_pose;
 		bool m_poseDirty;
 		mutable BoundingBox m_poseBbox;
 		bool m_isMeshDataInited;
@@ -243,11 +243,11 @@ AX_BEGIN_NAMESPACE
 		HavokPackageManager();
 		~HavokPackageManager();
 
-		HavokPackage* findPackage(const String& name);
+		HavokPackage *findPackage(const String &name);
 
 	private:
 		friend class HavokPackage;
-		void removePackage(const String& name);
+		void removePackage(const String &name);
 
 	private:
 		typedef Dict<String,HavokPackage*,hash_pathname,equal_pathname> PackageDict;

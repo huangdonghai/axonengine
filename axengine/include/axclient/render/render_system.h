@@ -34,47 +34,47 @@ AX_BEGIN_NAMESPACE
 
 		ShaderQuality getShaderQuality();
 
-		const IRenderDriver::Info* getDriverInfo();
+		const IRenderDriver::Info *getDriverInfo();
 		uint_t getBackendCaps();
 		int getFrameNum() const;
 
 		// new rendering
-		void beginFrame(RenderTarget* target);
-		RenderTarget* getFrameTarget() const { return m_curTarget; }
-		void beginScene(const RenderCamera& view);
-		void addToScene(RenderWorld* world);
-		void addToScene(RenderEntity* re);
-		void addToScene(Primitive* primitive);
-		void addToOverlay(Primitive* primitive);
+		void beginFrame(RenderTarget *target);
+		RenderTarget *getFrameTarget() const { return m_curTarget; }
+		void beginScene(const RenderCamera &view);
+		void addToScene(RenderWorld *world);
+		void addToScene(RenderEntity *re);
+		void addToScene(Primitive *primitive);
+		void addToOverlay(Primitive *primitive);
 		void endScene();
 		void endFrame();
 
 		// new selection
-		void beginHitTest(const RenderCamera& view);
+		void beginHitTest(const RenderCamera &view);
 		void loadHitId(int id);
-		void hitTest(RenderEntity* re);
-		void hitTest(Primitive* prim);
-		void hitTest(Primitive* prim, const AffineMat& matrix);
+		void hitTest(RenderEntity *re);
+		void hitTest(Primitive *prim);
+		void hitTest(Primitive *prim, const AffineMat &matrix);
 		HitRecords endHitTest();
 
-		void screenShot(const String& name, const Rect& rect);
+		void screenShot(const String &name, const Rect &rect);
 
 		void info();
-		void test(RenderSystem* system) {}
+		void test(RenderSystem *system) {}
 
 		// textures for subscene's render target
-		RenderTarget* createWindowTarget(handle_t wndId, const String& name);
+		RenderTarget *createWindowTarget(handle_t wndId, const String &name);
 
 		// actor manager register
-		void addEntityManager(IEntityManager* manager);
-		void removeEntityManager(IEntityManager* manager);
+		void addEntityManager(IEntityManager *manager);
+		void removeEntityManager(IEntityManager *manager);
 		int getNumEntityManager() const;
-		IEntityManager* getEntityManager(int index) const;
+		IEntityManager *getEntityManager(int index) const;
 
 	protected:
 		// console command
-		void texlist_f(const CmdArgs& args);
-		void matlist_f(const CmdArgs& args);
+		void texlist_f(const CmdArgs &args);
+		void matlist_f(const CmdArgs &args);
 
 	public:
 		String name;
@@ -86,7 +86,7 @@ AX_BEGIN_NAMESPACE
 		bool m_isSelectMode;
 		int m_frameNum;
 
-		RenderTarget* m_curTarget;
+		RenderTarget *m_curTarget;
 
 		// current view buf
 		SceneSeq m_sceneSeq;
@@ -94,7 +94,7 @@ AX_BEGIN_NAMESPACE
 
 		// selection camera
 		RenderCamera m_selectionCamera;
-		Selection* m_selection;
+		Selection *m_selection;
 
 		// actor manager registry
 		Sequence<IEntityManager*>	m_entityManagers;

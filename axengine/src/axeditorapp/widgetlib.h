@@ -22,17 +22,17 @@ class ColorLabel : public QLabel {
 	Q_PROPERTY(QColor color READ color WRITE setColor)
 
 public:
-	ColorLabel(QWidget* parent);
+	ColorLabel(QWidget *parent);
 	~ColorLabel();
 
 public slots:
 	QColor color();
-	void setColor(const QColor& color);
-	void setColor(const Rgb& rgba);
+	void setColor(const QColor &color);
+	void setColor(const Rgb &rgba);
 
 signals:
-	void colorChanged(const QColor& color);
-	void colorEdited(const QColor& color);
+	void colorChanged(const QColor &color);
+	void colorEdited(const QColor &color);
 
 protected:
 	virtual void mousePressEvent(QMouseEvent * e);
@@ -57,17 +57,17 @@ public:
 
 public slots:
 	QColor color();
-	void setColor(const QColor& color);
+	void setColor(const QColor &color);
 
-	void textChanged(const QString& text);
+	void textChanged(const QString &text);
 
 signals:
-	void colorChanged(const QColor& color);
-	void colorEdited(const QColor& color);
+	void colorChanged(const QColor &color);
+	void colorEdited(const QColor &color);
 
 private:
-	ColorLabel* m_label;
-	QLineEdit* m_lineEdit;
+	ColorLabel *m_label;
+	QLineEdit *m_lineEdit;
 	QColor m_color;
 };
 

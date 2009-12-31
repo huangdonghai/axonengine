@@ -22,14 +22,14 @@ AX_BEGIN_NAMESPACE
 		m_havokRigid = nullptr;
 	}
 
-	PhysicsRigid::PhysicsRigid(HavokPackage* package, hkpRigidBody* rigid) {
+	PhysicsRigid::PhysicsRigid(HavokPackage *package, hkpRigidBody *rigid) {
 		m_package = package;
 		m_havokRigid = rigid;
 		m_havokRigid->setUserData(e2n(this));
 		setAutoDeactive(true);
 	}
 
-	PhysicsRigid::PhysicsRigid(const String& name)
+	PhysicsRigid::PhysicsRigid(const String &name)
 		: m_package(nullptr)
 		, m_havokRigid(nullptr)
 	{
@@ -78,7 +78,7 @@ AX_BEGIN_NAMESPACE
 		return m_havokRigid->isActive();
 	}
 
-	void PhysicsRigid::setMatrix(const AffineMat& matrix) {
+	void PhysicsRigid::setMatrix(const AffineMat &matrix) {
 		hkTransform hk;
 		Matrix3 axis = matrix.axis;
 		axis.removeScale();
@@ -124,13 +124,13 @@ AX_BEGIN_NAMESPACE
 		}
 	}
 
-	void PhysicsRigid::bind(PhysicsWorld* world) {
+	void PhysicsRigid::bind(PhysicsWorld *world) {
 		if (!m_havokRigid) return;
 
 		world->m_havokWorld->addEntity(m_havokRigid);
 	}
 
-	void PhysicsRigid::unbind(PhysicsWorld* world) {
+	void PhysicsRigid::unbind(PhysicsWorld *world) {
 		if (!m_havokRigid) return;
 
 		world->m_havokWorld->removeEntity(m_havokRigid);
@@ -142,7 +142,7 @@ AX_BEGIN_NAMESPACE
 
 	class MyHeightFieldShape : public hkpSampledHeightFieldShape {
 	public:
-		MyHeightFieldShape(const hkpSampledHeightFieldBaseCinfo& ci, const hkUint16* data, int size)
+		MyHeightFieldShape(const hkpSampledHeightFieldBaseCinfo &ci, const hkUint16 *data, int size)
 			: hkpSampledHeightFieldShape(ci)
 			, m_data(data)
 			, m_size(size)
@@ -162,17 +162,17 @@ AX_BEGIN_NAMESPACE
 			return false;
 		}
 
-		virtual void collideSpheres(const CollideSpheresInput& input, SphereCollisionOutput* outputArray) const {
+		virtual void collideSpheres(const CollideSpheresInput &input, SphereCollisionOutput *outputArray) const {
 			hkSampledHeightFieldShape_collideSpheres(*this, input, outputArray);
 		}
 
 	private:
-		const hkUint16* m_data;
+		const hkUint16 *m_data;
 		int m_size;
 	};
 
 
-	PhysicsTerrain::PhysicsTerrain(const ushort_t* data, int size, float tilemeters) {
+	PhysicsTerrain::PhysicsTerrain(const ushort_t *data, int size, float tilemeters) {
 		hkpSampledHeightFieldBaseCinfo shapeCinfo;
 		shapeCinfo.m_xRes = size;
 		shapeCinfo.m_zRes = size;
@@ -180,7 +180,7 @@ AX_BEGIN_NAMESPACE
 		shapeCinfo.m_minHeight = -1024.0f;
 		shapeCinfo.m_maxHeight = 1024.0f;
 
-		MyHeightFieldShape* shape = new MyHeightFieldShape(shapeCinfo, data, size);
+		MyHeightFieldShape *shape = new MyHeightFieldShape(shapeCinfo, data, size);
 
 		hkpRigidBodyCinfo ci;
 		ci.m_motionType = hkpMotion::MOTION_FIXED;

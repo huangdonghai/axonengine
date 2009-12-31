@@ -25,7 +25,7 @@ AX_BEGIN_NAMESPACE
 		}
 	}
 
-	inline void trTexFormat(TexFormat tex_format, GLenum& dataformat, GLenum& datatype, GLenum& internal_format) {
+	inline void trTexFormat(TexFormat tex_format, GLenum &dataformat, GLenum &datatype, GLenum &internal_format) {
 		switch (tex_format) {
 		case TexFormat::L8:
 			dataformat = GL_LUMINANCE;
@@ -216,7 +216,7 @@ AX_BEGIN_NAMESPACE
 		}
 	}
 
-	inline void trTexFilter(Texture::FilterMode filter, GLenum& min_filter, GLenum& mag_filter) {
+	inline void trTexFilter(Texture::FilterMode filter, GLenum &min_filter, GLenum &mag_filter) {
 		switch (filter) {
 		case Texture::FM_Nearest:
 			min_filter = GL_NEAREST;
@@ -286,7 +286,7 @@ AX_BEGIN_NAMESPACE
 		g_statistic->subValue(stat_textureMemory, m_videoMemoryUsed);
 	}
 
-	bool GLtexture::doInit(const String& name, intptr_t arg) {
+	bool GLtexture::doInit(const String &name, intptr_t arg) {
 		if (!PathUtil::haveDir(name))
 			m_name = "textures/" + name;
 		else
@@ -299,7 +299,7 @@ AX_BEGIN_NAMESPACE
 	bool GLtexture::loadFile2D() {
 		GLrender::checkErrors();
 
-		const byte_t* data;
+		const byte_t *data;
 		bool isMipmap;
 		int flags = g_renderDriver->getDriverInfo()->caps & IRenderDriver::Info::DXT ? 0 : Image::NoCompressed;
 
@@ -389,7 +389,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 #if 0
-	static char* __cubemapSuffix[] = { "_px", "_nx", "_py", "_ny", "_pz", "_nz" };
+	static char *__cubemapSuffix[] = { "_px", "_nx", "_py", "_ny", "_pz", "_nz" };
 
 	void GLTexture::LoadFileCUBE() {
 		if (mResourceId == 0)
@@ -413,7 +413,7 @@ AX_BEGIN_NAMESPACE
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, clamp);
 
 		String filename;
-		const byte_t* data;
+		const byte_t *data;
 		int i;
 		Image imagefile;
 		GLenum format, datatype, internalformat;
@@ -461,7 +461,7 @@ AX_BEGIN_NAMESPACE
 
 			mVideoMemoryUsed = getImageSize(imagefile.getFormat(), mWidth, mHeight) * 6;
 
-			byte_t* tempdata = (byte_t*)malloc(getImageSize(imagefile.getFormat(), mWidth, mHeight));
+			byte_t *tempdata = (byte_t*)malloc(getImageSize(imagefile.getFormat(), mWidth, mHeight));
 
 			Rect rect;
 			rect.width = mWidth; rect.height = mHeight;
@@ -566,13 +566,13 @@ AX_BEGIN_NAMESPACE
 		GLrender::checkErrors();
 	}
 
-	void GLtexture::getSize(int& width, int& height, int& depth) {
+	void GLtexture::getSize(int &width, int &height, int &depth) {
 		width = m_width;
 		height = m_height;
 		depth = m_depth;
 	}
 
-	void GLtexture::getSize(int& width, int& height) {
+	void GLtexture::getSize(int &width, int &height) {
 		width = m_width;
 		height = m_height;
 	}
@@ -584,7 +584,7 @@ AX_BEGIN_NAMESPACE
 		return m_format;
 	}
 
-	void GLtexture::uploadSubTexture(const Rect& rect, const void* pixels, TexFormat fmt) {
+	void GLtexture::uploadSubTexture(const Rect &rect, const void *pixels, TexFormat fmt) {
 		if (rect.isEmpty()) {
 			return;
 		}
@@ -611,7 +611,7 @@ AX_BEGIN_NAMESPACE
 	//	glThreadState->CheckErrors();
 	}
 #if 0
-	void GLtexture::uploadSubTextureImmediately(const Rect& rect, const void* pixels) {
+	void GLtexture::uploadSubTextureImmediately(const Rect &rect, const void *pixels) {
 		GLrender::checkErrors();
 
 		glActiveTexture(GL_TEXTURE0);
@@ -655,7 +655,7 @@ AX_BEGIN_NAMESPACE
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, mag_filter);
 	}
 
-	void GLtexture::saveToFile(const String& filename) {
+	void GLtexture::saveToFile(const String &filename) {
 		glBindTexture(GL_TEXTURE_2D, getObject());
 
 		int width, height;
@@ -668,7 +668,7 @@ AX_BEGIN_NAMESPACE
 		TexFormat texformat = trInternalFormat(internal_format);
 		Image result;
 		result.initImage(texformat, width, height);
-		void* data = Malloc(result.getDataSize(0));
+		void *data = Malloc(result.getDataSize(0));
 
 		int level = 0;
 		while (1) {
@@ -704,7 +704,7 @@ AX_BEGIN_NAMESPACE
 	void GLtexture::finalizeFactory() {
 	}
 
-	void GLtexture::copyFramebuffer(const Rect& r)
+	void GLtexture::copyFramebuffer(const Rect &r)
 	{
 		glBindTexture(GL_TEXTURE_2D, getObject());
 
@@ -728,7 +728,7 @@ AX_BEGIN_NAMESPACE
 		glTexParameteri(GL_TEXTURE_2D, GL_DEPTH_TEXTURE_MODE, mode);
 	}
 
-	void GLtexture::setBorderColor(const Rgba& color)
+	void GLtexture::setBorderColor(const Rgba &color)
 	{
 		glBindTexture(GL_TEXTURE_2D, getObject());
 

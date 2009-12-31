@@ -18,8 +18,8 @@ AX_BEGIN_NAMESPACE
 	//--------------------------------------------------------------------------
 	// class MapLayerGen
 	//--------------------------------------------------------------------------
-	MapAlphaBlock* const MapAlphaBlock::One = (MapAlphaBlock* const)Map::AlphaOneIndex;
-	MapAlphaBlock* const MapAlphaBlock::Zero = (MapAlphaBlock* const)Map::AlphaZeroIndex;
+	MapAlphaBlock *const MapAlphaBlock::One = (MapAlphaBlock *const)Map::AlphaOneIndex;
+	MapAlphaBlock *const MapAlphaBlock::Zero = (MapAlphaBlock *const)Map::AlphaZeroIndex;
 
 	MapAlphaBlock::MapAlphaBlock() {
 		m_isDirty = false;
@@ -28,11 +28,11 @@ AX_BEGIN_NAMESPACE
 	MapAlphaBlock::~MapAlphaBlock() {
 	}
 
-	const MapAlphaBlock::Data& MapAlphaBlock::getData() const {
+	const MapAlphaBlock::Data &MapAlphaBlock::getData() const {
 		return m_data;
 	}
 
-	MapAlphaBlock::Data& MapAlphaBlock::lock() {
+	MapAlphaBlock::Data &MapAlphaBlock::lock() {
 		return m_data;
 	}
 	void MapAlphaBlock::unlock() {
@@ -45,7 +45,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 
-	Texture* MapAlphaBlock::getTexture() {
+	Texture *MapAlphaBlock::getTexture() {
 		if (m_isDirty)
 			updateTexture();
 
@@ -71,13 +71,13 @@ AX_BEGIN_NAMESPACE
 		m_texture->uploadSubTexture(Rect(0,0,Map::ChunkPixels,Map::ChunkPixels), &m_data[0][0], AlphaFormat);
 	}
 
-	MapLayerGen::MapLayerGen(MapTerrain* terrain, int layerId) {
+	MapLayerGen::MapLayerGen(MapTerrain *terrain, int layerId) {
 		m_terrain = terrain;
 		m_layerId = layerId;
 
 		m_pixelIndexOffset = m_terrain->getChunkIndexOffset() * Map::ChunkPixels;
 
-		MapLayerDef* l = getLayerDef();
+		MapLayerDef *l = getLayerDef();
 
 		// init alphablocks
 		int numchunks = m_terrain->getNumChunks();
@@ -102,9 +102,9 @@ AX_BEGIN_NAMESPACE
 
 			String fn = PathUtil::removeExt(l->detailMat);
 
-			Texture* diffuse = Texture::load(fn);
-			Texture* normal = Texture::load(fn+"_n");
-			Texture* specular = Texture::load(fn+"_s");
+			Texture *diffuse = Texture::load(fn);
+			Texture *normal = Texture::load(fn+"_n");
+			Texture *specular = Texture::load(fn+"_s");
 
 			m_detailMat->setTexture(SamplerType::Diffuse, diffuse);
 			if (!normal->isDefaulted()) {
@@ -161,7 +161,7 @@ AX_BEGIN_NAMESPACE
 		// TODO free image and blocks
 		SafeDelete(m_colorTemplate);
 
-		MapLayerDef* l = getLayerDef();
+		MapLayerDef *l = getLayerDef();
 
 		if (!l->baseImage.empty()) {
 			m_colorTemplate = new Image();
@@ -217,21 +217,21 @@ AX_BEGIN_NAMESPACE
 
 
 
-	void MapLayerGen::load(File* f) {
+	void MapLayerGen::load(File *f) {
 //		m_layerId = f->readInt();
 		int numchunks = m_terrain->getNumChunks();
 
 		for (int y = 0; y < numchunks; y++) {
 			for (int x = 0; x < numchunks; x++) {
 				int type = f->readInt();
-				MapAlphaBlock* b = 0;
+				MapAlphaBlock *b = 0;
 				if (type == 0) {
 					b = MapAlphaBlock::Zero;
 				} else if (type == 1) {
 					b = MapAlphaBlock::One;
 				} else if (type == 2) {
 					b = m_terrain->allocAlphaBlock();
-					MapAlphaBlock::Data& d = b->lock();
+					MapAlphaBlock::Data &d = b->lock();
 					f->read(d, sizeof(MapAlphaBlock::Data));
 					b->unlock();
 				} else {
@@ -242,13 +242,13 @@ AX_BEGIN_NAMESPACE
 		}
 	}
 
-	void MapLayerGen::save(File* f) {
+	void MapLayerGen::save(File *f) {
 //		f->writeInt(m_layerId);
 		int numchunks = m_terrain->getNumChunks();
 
 		for (int y = 0; y < numchunks; y++) {
 			for (int x = 0; x < numchunks; x++) {
-				MapAlphaBlock* b = m_alphaBlocks[y*numchunks+x];
+				MapAlphaBlock *b = m_alphaBlocks[y*numchunks+x];
 				if (b == MapAlphaBlock::Zero) {
 					f->writeInt(0);
 				} else if (b == MapAlphaBlock::One) {
@@ -262,7 +262,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 
-	MapTerrain* MapLayerGen::getTerrain() const {
+	MapTerrain *MapLayerGen::getTerrain() const {
 		return m_terrain;
 	}
 
@@ -270,22 +270,22 @@ AX_BEGIN_NAMESPACE
 		return m_layerId;
 	}
 
-	MapLayerDef* MapLayerGen::getLayerDef() const {
+	MapLayerDef *MapLayerGen::getLayerDef() const {
 		return m_terrain->getMaterialDef()->findLayerDefById(m_layerId);
 	}
 
-	Image* MapLayerGen::getColorTemplate() const {
+	Image *MapLayerGen::getColorTemplate() const {
 		return m_colorTemplate;
 	}
 
-	MapAlphaBlock* MapLayerGen::getBlock(const Point& index) const {
+	MapAlphaBlock *MapLayerGen::getBlock(const Point &index) const {
 		Point offset = index + m_terrain->getChunkIndexOffset();
 		int idx = offset.y * m_terrain->getNumChunks() + offset.x;
 
 		return m_alphaBlocks[idx];
 	}
 
-	void MapLayerGen::setBlock(const Point& index, MapAlphaBlock* block) {
+	void MapLayerGen::setBlock(const Point &index, MapAlphaBlock *block) {
 		Point offset = index + m_terrain->getChunkIndexOffset();
 		int idx = offset.y * m_terrain->getNumChunks() + offset.x;
 
@@ -293,12 +293,12 @@ AX_BEGIN_NAMESPACE
 	}
 
 
-	bool MapLayerGen::isAlphaZero(const Point& index) const {
+	bool MapLayerGen::isAlphaZero(const Point &index) const {
 		intptr_t p = (intptr_t)getBlock(index);
 		return p == Map::AlphaZeroIndex;
 	}
 
-	bool MapLayerGen::isAlphaOne(const Point& index) const {
+	bool MapLayerGen::isAlphaOne(const Point &index) const {
 		intptr_t p = (intptr_t)getBlock(index);
 		return p == Map::AlphaOneIndex;
 	}
@@ -313,9 +313,9 @@ AX_BEGIN_NAMESPACE
 		}
 	}
 
-	void MapLayerGen::generateBlock(const Point& index) {
-		MapLayerDef* l = getLayerDef();
-		MapChunk* chunk = m_terrain->getChunk(index);
+	void MapLayerGen::generateBlock(const Point &index) {
+		MapLayerDef *l = getLayerDef();
+		MapChunk *chunk = m_terrain->getChunk(index);
 		BoundingRange chunkAltiRange = chunk->getAltitudeRange();
 		BoundingRange chunkSlopeRange = chunk->getSlopeRange();
 
@@ -325,7 +325,7 @@ AX_BEGIN_NAMESPACE
 		BoundingRange maxAltiRange = altiRange; maxAltiRange.inflate(ALTITUDE_BLUR);
 		BoundingRange maxSlopeRange = slopeRange; maxSlopeRange.inflate(SLOPE_BLUR);
 
-		MapAlphaBlock* block = nullptr;
+		MapAlphaBlock *block = nullptr;
 		if (slopeRange.contains(chunkSlopeRange) && altiRange.contains(chunkAltiRange)) {
 			block = MapAlphaBlock::One;
 		} else if (!maxSlopeRange.intersects(chunkSlopeRange) || !maxAltiRange.intersects(chunkAltiRange)) {
@@ -333,7 +333,7 @@ AX_BEGIN_NAMESPACE
 		} else {
 			Point pixelindex = index * Map::ChunkPixels;
 			block = m_terrain->allocAlphaBlock();
-			MapAlphaBlock::Data& data = block->lock();
+			MapAlphaBlock::Data &data = block->lock();
 
 			bool isZero = true; bool isOne = true;
 
@@ -377,7 +377,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 	Vector2 MapLayerGen::getDetailScale() const {
-		MapLayerDef* l = getLayerDef();
+		MapLayerDef *l = getLayerDef();
 		return l->uvScale;
 	}
 
@@ -386,7 +386,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 	bool MapLayerGen::isVerticalProjection() const {
-		MapLayerDef* l = getLayerDef();
+		MapLayerDef *l = getLayerDef();
 		return l->isVerticalProjection;
 	}
 
@@ -396,7 +396,7 @@ AX_BEGIN_NAMESPACE
 
 		chunkIndex = (chunkIndex + m_pixelIndexOffset) / Map::ChunkPixels - m_terrain->getChunkIndexOffset();
 
-		MapAlphaBlock* block = getBlock(chunkIndex);
+		MapAlphaBlock *block = getBlock(chunkIndex);
 
 		if (block == MapAlphaBlock::Zero)
 			return 0;
@@ -420,7 +420,7 @@ AX_BEGIN_NAMESPACE
 
 		chunkIndex = (chunkIndex + m_pixelIndexOffset) / Map::ChunkPixels - m_terrain->getChunkIndexOffset();
 
-		MapAlphaBlock* block = getBlock(chunkIndex);
+		MapAlphaBlock *block = getBlock(chunkIndex);
 
 		if (block == MapAlphaBlock::Zero) {
 			if (alpha == 0)
@@ -446,11 +446,11 @@ AX_BEGIN_NAMESPACE
 		block->unlock();
 	}
 
-	Image* MapLayerGen::copyAlpha(const Rect& r) const {
-		Image* result = new Image;
+	Image *MapLayerGen::copyAlpha(const Rect &r) const {
+		Image *result = new Image;
 
 		result->initImage(TexFormat::A8, r.width, r.height);
-		byte_t* dst = result->getWritablePointer(0);
+		byte_t *dst = result->getWritablePointer(0);
 
 		for (int y = r.y; y < r.yMax(); y++) {
 			for (int x = r.x; x < r.xMax(); x++) {
@@ -461,8 +461,8 @@ AX_BEGIN_NAMESPACE
 		return result;
 	}
 
-	void MapLayerGen::writeAlpha(const Rect& r, Image* image) {
-		const byte_t* dst = image->getData(0);
+	void MapLayerGen::writeAlpha(const Rect &r, Image *image) {
+		const byte_t *dst = image->getData(0);
 
 		for (int y = r.y; y < r.yMax(); y++) {
 			for (int x = r.x; x < r.xMax(); x++) {
@@ -501,7 +501,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 
-	void MapChunk::initialize(MapZone* zone, int x, int y) {
+	void MapChunk::initialize(MapZone *zone, int x, int y) {
 		finalize();
 
 		m_zone = zone;
@@ -596,12 +596,12 @@ AX_BEGIN_NAMESPACE
 		m_heightChanged = true;
 	}
 
-	void MapChunk::onCalculateLOD(MapEvent* e) {
+	void MapChunk::onCalculateLOD(MapEvent *e) {
 		if (r_lockLOD->getBool())
 			return;
 
 #if 1
-		const MapChunk* eyechunk = m_terrain->getPosChunk(e->camera->getOrigin());
+		const MapChunk *eyechunk = m_terrain->getPosChunk(e->camera->getOrigin());
 
 		if (eyechunk == this) {
 			AX_ASSERT(eyechunk);
@@ -609,8 +609,8 @@ AX_BEGIN_NAMESPACE
 #endif
 		float ref = r_terrainLOD->getFloat();
 		ref = fabs(ref);
-//		const renderCamera& camera = gRenderSystem->getActiveCamera();
-		const RenderCamera& camera = *e->camera;
+//		const renderCamera &camera = gRenderSystem->getActiveCamera();
+		const RenderCamera &camera = *e->camera;
 
 		Vector3 center = m_bbox.getCenter();
 		float dist = m_bbox.pointDistance(camera.getOrigin()); // (center - camera.getOrigin()).getLength();
@@ -705,7 +705,7 @@ AX_BEGIN_NAMESPACE
 		Rect rect = m_tilerect;
 		Point offset = m_tilerect.getMins() - rect.getMins();
 
-		ChunkVertex* verts = m_prim->lockVertexes();
+		ChunkVertex *verts = m_prim->lockVertexes();
 		for (j = rect.y; j <= rect.yMax(); j+=tilegridsize) {
 			for (i = rect.x; i <= rect.xMax(); i+=tilegridsize) {
 				// vertexes
@@ -721,7 +721,7 @@ AX_BEGIN_NAMESPACE
 		AX_ASSERT(j == rect.yMax() + tilegridsize);
 		AX_ASSERT((verts - m_prim->getVertexesPointer()) == m_prim->getNumVertexes());
 
-		ushort_t* idxes = m_prim->lockIndexes();
+		ushort_t *idxes = m_prim->lockIndexes();
 		int mapping[Map::ChunkTilesP1][Map::ChunkTilesP1];
 
 		for (j = 0; j <= num_tiles; j++) {
@@ -801,16 +801,16 @@ AX_BEGIN_NAMESPACE
 		ChunkPrim::Layer detaillayers[Map::MaxLayers];
 
 		for (int i = 0; i < m_terrain->getNumLayer(); i++) {
-			MapLayerGen* l = m_terrain->getLayerGen(i);
+			MapLayerGen *l = m_terrain->getLayerGen(i);
 
 			if (!l)
 				continue;
 
-			Material* detail = l->getDetailMat();
+			Material *detail = l->getDetailMat();
 			if (!detail)
 				continue;
 
-			MapAlphaBlock* block = l->getBlock(m_index);
+			MapAlphaBlock *block = l->getBlock(m_index);
 			if (block == MapAlphaBlock::Zero)
 				continue;
 
@@ -851,23 +851,23 @@ AX_BEGIN_NAMESPACE
 		Point pixeloffset = (m_index + m_terrain->getChunkIndexOffset()) * Map::ChunkPixels;
 
 		for (int i = 0; i < m_terrain->getNumLayer(); i++) {
-			MapLayerGen* l = m_terrain->getLayerGen(i);
+			MapLayerGen *l = m_terrain->getLayerGen(i);
 
 			if (!l)
 				continue;
 
-			MapAlphaBlock* block = l->getBlock(m_index);
+			MapAlphaBlock *block = l->getBlock(m_index);
 			if (block == MapAlphaBlock::Zero)
 				continue;
 
 			Bgr lcolor = l->getLayerDef()->color.bgr();
-			Image* image = l->getColorTemplate();
+			Image *image = l->getColorTemplate();
 
 			for (int y = 0; y < Map::ChunkPixels; y++) {
 				for (int x = 0; x < Map::ChunkPixels; x++) {
 					Bgr color = lcolor;
 					if (image) {
-						const byte_t* p = image->getPixel(0, pixeloffset.x + x, pixeloffset.y + y);
+						const byte_t *p = image->getPixel(0, pixeloffset.x + x, pixeloffset.y + y);
 						Bgr pixel(p[2], p[1], p[0]);
 						color *= pixel;
 					}
@@ -894,15 +894,15 @@ AX_BEGIN_NAMESPACE
 	}
 
 
-	void MapChunk::onGetViewedPrims(MapEvent* e) {
+	void MapChunk::onGetViewedPrims(MapEvent *e) {
 #if _DEBUG
-		const MapChunk* eyechunk = m_terrain->getPosChunk(e->camera->getOrigin());
+		const MapChunk *eyechunk = m_terrain->getPosChunk(e->camera->getOrigin());
 
 		if (eyechunk == this) {
 			AX_ASSERT(eyechunk);
 		}
 #endif
-		const RenderCamera& camera = *e->camera;
+		const RenderCamera &camera = *e->camera;
 #if 0
 		m_neighborLod.lods[0] = m_terrain->getChunkLod(Point(m_index.x + 1, m_index.y));
 		m_neighborLod.lods[1] = m_terrain->getChunkLod(Point(m_index.x, m_index.y + 1));
@@ -931,9 +931,9 @@ AX_BEGIN_NAMESPACE
 	}
 
 
-	void MapChunk::onUpdatePrimitive(MapEvent* e)
+	void MapChunk::onUpdatePrimitive(MapEvent *e)
 	{
-		const RenderCamera& camera = *e->camera;
+		const RenderCamera &camera = *e->camera;
 
 		m_neighborLod.lods[0] = m_terrain->getChunkLod(Point(m_index.x + 1, m_index.y));
 		m_neighborLod.lods[1] = m_terrain->getChunkLod(Point(m_index.x, m_index.y + 1));
@@ -947,7 +947,7 @@ AX_BEGIN_NAMESPACE
 		}
 	}
 
-	void MapChunk::onSelect(MapEvent* e) {
+	void MapChunk::onSelect(MapEvent *e) {
 		if (m_useZonePrim) {
 			return;
 		}
@@ -958,7 +958,7 @@ AX_BEGIN_NAMESPACE
 		g_renderSystem->hitTest(m_prim);
 	}
 
-	void MapChunk::doEvent(MapEvent* e) {
+	void MapChunk::doEvent(MapEvent *e) {
 		if (!m_tilerect.intersects(e->rect))
 			return;
 
@@ -1000,7 +1000,7 @@ AX_BEGIN_NAMESPACE
 		finalize();
 	}
 
-	void MapZone::initialize(MapTerrain* terrain, int x, int y) {
+	void MapZone::initialize(MapTerrain *terrain, int x, int y) {
 		finalize();
 
 		m_terrain = terrain;
@@ -1022,7 +1022,7 @@ AX_BEGIN_NAMESPACE
 
 			for (int j = 0; j < Map::ZoneChunks; j++) {
 				x = m_chunkIndexOffset.x + j;
-				MapChunk* chunk = TypeNew<MapChunk>();
+				MapChunk *chunk = TypeNew<MapChunk>();
 				chunk->initialize(this, x, y);
 				m_chunks[i][j] = chunk;
 			}
@@ -1085,14 +1085,14 @@ AX_BEGIN_NAMESPACE
 		SafeDelete(m_prim);
 	}
 
-	void MapZone::updatePrimVertexes(const Rect& rect_in) {
+	void MapZone::updatePrimVertexes(const Rect &rect_in) {
 		Rect rect = m_tilerect & rect_in;
 		int step = 1 << m_zonePrimLod;
 		int mask = (step - 1);
 		int stride = (Map::ZoneTiles >> m_zonePrimLod) + 1;
 		Point tileoffset = m_index * Map::ZoneTiles;
 
-		ChunkVertex* verts = m_prim->lockVertexes();
+		ChunkVertex *verts = m_prim->lockVertexes();
 		for (int y = rect.y; y < rect.yMax() + 1; y++) {
 			if ((y & mask) != 0) {
 				continue;
@@ -1104,7 +1104,7 @@ AX_BEGIN_NAMESPACE
 				}
 				float h = m_terrain->getHeight(x, y);
 				int offset = lineoffset + ((x-tileoffset.x)>>m_zonePrimLod);
-				ChunkVertex* vert = verts + offset;
+				ChunkVertex *vert = verts + offset;
 				vert->xyz.x = x * m_terrain->getTileMeters();
 				vert->xyz.y = y * m_terrain->getTileMeters();
 				vert->xyz.z = h;
@@ -1113,7 +1113,7 @@ AX_BEGIN_NAMESPACE
 		m_prim->unlockVertexes();
 	}
 
-	void MapZone::updateNormalTexture(const Rect& rect_in) {
+	void MapZone::updateNormalTexture(const Rect &rect_in) {
 		// calculate normal texture
 		Rect rect = m_tilerect & rect_in;
 
@@ -1122,8 +1122,8 @@ AX_BEGIN_NAMESPACE
 		}
 
 		float mpt2 = m_terrain->getTileMeters() * 4.0f;
-		byte_t* buf = TypeAlloc<byte_t>(Map::ZoneTiles*Map::ZoneTiles*4);
-		byte_t* pbuf = buf;
+		byte_t *buf = TypeAlloc<byte_t>(Map::ZoneTiles*Map::ZoneTiles*4);
+		byte_t *pbuf = buf;
 
 		for (int y = rect.y; y < rect.yMax(); y++) {
 			for (int x = rect.x; x < rect.xMax(); x++) {
@@ -1180,7 +1180,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 
-	void MapZone::onHeightChanged(MapEvent* e) {
+	void MapZone::onHeightChanged(MapEvent *e) {
 		updateNormalTexture(e->rect);
 		updatePrimVertexes(e->rect);
 
@@ -1208,7 +1208,7 @@ AX_BEGIN_NAMESPACE
 		m_bbox.max.z = maxz;
 	}
 
-	void MapZone::onCalculateLOD(MapEvent* e) {
+	void MapZone::onCalculateLOD(MapEvent *e) {
 		forwardEventToChunks(e);
 
 		m_lastLod = m_lod;
@@ -1220,12 +1220,12 @@ AX_BEGIN_NAMESPACE
 		}
 	}
 
-	void MapZone::onGetPrimitive(MapEvent* e) {
-		const RenderCamera& camera = *e->camera;
+	void MapZone::onGetPrimitive(MapEvent *e) {
+		const RenderCamera &camera = *e->camera;
 		if (r_frustumCull->getBool() && camera.cullBox(m_bbox))
 			return;
 #if 0
-		renderPrim* curprim = nullptr;
+		renderPrim *curprim = nullptr;
 
 		if (m_getPrimTimes != 0) {
 			sNumIndex = 0;
@@ -1238,9 +1238,9 @@ AX_BEGIN_NAMESPACE
 
 		if (m_getPrimTimes) {
 			if (sNumIndex) {
-				Render::RefPrim* ref = new Render::RefPrim(renderPrim::OneFrame);
+				Render::RefPrim *ref = new Render::RefPrim(renderPrim::OneFrame);
 				ref->initialize(m_prim, sNumIndex);
-				int* dst = ref->lockIndexes();
+				int *dst = ref->lockIndexes();
 				memcpy(dst, sTempIndexBuf, sNumIndex * sizeof(int));
 				ref->unlockIndexes();
 				ref->setActivedIndexes(sNumIndex);
@@ -1261,13 +1261,13 @@ AX_BEGIN_NAMESPACE
 #endif
 	}
 
-	void MapZone::onUpdatePrimitive(MapEvent* e) {
+	void MapZone::onUpdatePrimitive(MapEvent *e) {
 		m_prim->setActivedIndexes(0);
 
 		forwardEventToChunks(e);
 	}
 
-	void MapZone::onSelection(MapEvent* e) {
+	void MapZone::onSelection(MapEvent *e) {
 		if (e->camera->cullBox(m_bbox))
 			return;
 
@@ -1277,7 +1277,7 @@ AX_BEGIN_NAMESPACE
 		forwardEventToChunks(e);
 	}
 
-	void MapZone::doEvent(MapEvent* e) {
+	void MapZone::doEvent(MapEvent *e) {
 		if (!m_tilerect.intersects(e->rect))
 			return;
 
@@ -1314,7 +1314,7 @@ AX_BEGIN_NAMESPACE
 		return result * m_terrain->getTileMeters();
 	}
 
-	void MapZone::uploadColorTexture(const Point& chunk_idx, const byte_t* pixelbuf) {
+	void MapZone::uploadColorTexture(const Point &chunk_idx, const byte_t *pixelbuf) {
 		Point pixelpos = chunk_idx - m_chunkIndexOffset;
 		pixelpos *= Map::ChunkPixels;
 
@@ -1323,12 +1323,12 @@ AX_BEGIN_NAMESPACE
 		m_colorTexture->uploadSubTexture(rect, pixelbuf, TexFormat::BGR8);
 	}
 
-	void MapZone::addChunkToPrim(MapChunk* chunk) {
+	void MapZone::addChunkToPrim(MapChunk *chunk) {
 		AX_ASSERT(chunk->m_zone == this);
 		AX_ASSERT(chunk->m_lod >= m_zonePrimLod);
 
 		int curindexnum;
-		ushort_t* idxes;
+		ushort_t *idxes;
 
 		curindexnum = m_prim->getActivedIndexes();
 		idxes = m_prim->lockIndexes() + curindexnum;
@@ -1338,7 +1338,7 @@ AX_BEGIN_NAMESPACE
 		int num_tiles = (Map::ChunkTiles >> chunk->m_lod);
 		int num_tris = num_tiles * num_tiles * 2;
 
-		ushort_t* startidxes = idxes;
+		ushort_t *startidxes = idxes;
 		static int mapping[Map::ChunkTilesP1][Map::ChunkTilesP1];
 
 		Point chunkindex = chunk->m_index;
@@ -1425,7 +1425,7 @@ AX_BEGIN_NAMESPACE
 		m_prim->setActivedIndexes(curindexnum);
 	}
 
-	void MapZone::forwardEventToChunks(MapEvent* e) {
+	void MapZone::forwardEventToChunks(MapEvent *e) {
 		for (int i = 0; i < Map::ZoneChunks; i++) {
 			for (int j = 0; j < Map::ZoneChunks; j++) {
 				m_chunks[i][j]->doEvent(	e);
@@ -1530,7 +1530,7 @@ AX_BEGIN_NAMESPACE
 		int count = 0;
 		for (int y = -m_zoneIndexOffset; y < m_zoneIndexOffset; y++) {
 			for (int x = -m_zoneIndexOffset; x < m_zoneIndexOffset; x++) {
-				MapZone* zone = TypeNew<MapZone>();
+				MapZone *zone = TypeNew<MapZone>();
 				zone->initialize(this, x, y);
 				m_zones[count] = zone;
 				count++;
@@ -1539,7 +1539,7 @@ AX_BEGIN_NAMESPACE
 		AX_ASSERT(count == m_zoneCount);
 
 		// init materialdef
-		MapMaterialDef* matdef = new MapMaterialDef();
+		MapMaterialDef *matdef = new MapMaterialDef();
 		matdef->createLayerDef();
 		setMaterialDef(matdef, false);
 
@@ -1552,15 +1552,15 @@ AX_BEGIN_NAMESPACE
 		notify(RenderTerrain::HeightfieldSetted);
 	}
 
-	void MapTerrain::initFromXml(const String& map_name, const TiXmlElement* elem) {
+	void MapTerrain::initFromXml(const String &map_name, const TiXmlElement *elem) {
 		clear();
 
 		m_tiles = atoi(elem->Attribute("tilesize"));
 		m_tilemeters = atoi(elem->Attribute("tilemeters"));
-		const char* heightfile = elem->Attribute("heightmap");
-		const char* layerfile = elem->Attribute("layergen");
+		const char *heightfile = elem->Attribute("heightmap");
+		const char *layerfile = elem->Attribute("layergen");
 
-		const TiXmlElement* child = elem->FirstChildElement();
+		const TiXmlElement *child = elem->FirstChildElement();
 
 //		init(tilesize, tilemeter, heighfile);
 
@@ -1585,7 +1585,7 @@ AX_BEGIN_NAMESPACE
 
 		m_heighData = (ushort_t*)m_heightmap->getWritablePointer();
 
-		void* buf; size_t fsize;
+		void *buf; size_t fsize;
 		fsize = g_fileSystem->readFile(heightfile, &buf);
 		AX_ASSERT(fsize == m_tiles*m_tiles*2);
 		memcpy(m_heighData, buf, m_tiles*m_tiles*2);
@@ -1612,7 +1612,7 @@ AX_BEGIN_NAMESPACE
 		int count = 0;
 		for (int y = -m_zoneIndexOffset; y < m_zoneIndexOffset; y++) {
 			for (int x = -m_zoneIndexOffset; x < m_zoneIndexOffset; x++) {
-				MapZone* zone = TypeNew<MapZone>();
+				MapZone *zone = TypeNew<MapZone>();
 				zone->initialize(this, x, y);
 				m_zones[count] = zone;
 				count++;
@@ -1624,18 +1624,18 @@ AX_BEGIN_NAMESPACE
 		doHeightChanged(m_tilerect);
 
 		if (child && child->ValueTStr() == "materialDef") {
-			MapMaterialDef* matdef = new MapMaterialDef();
+			MapMaterialDef *matdef = new MapMaterialDef();
 			matdef->parseXml(child);
 			setMaterialDef(matdef, false);
 
 			if (m_numLayerGens && layerfile) {
-				File* f = g_fileSystem->openFileRead(layerfile);
+				File *f = g_fileSystem->openFileRead(layerfile);
 				int n = f->readInt();
 				AX_ASSERT(m_numLayerGens == n);
 
 				for (int i = 0; i < m_numLayerGens; i++) {
 					int id = f->readInt();
-					MapLayerGen* lg = getLayerGenById(id);
+					MapLayerGen *lg = getLayerGenById(id);
 					AX_ASSERT(lg);
 					lg->load(f);
 				}
@@ -1674,9 +1674,9 @@ AX_BEGIN_NAMESPACE
 		notify(RenderTerrain::HeightfieldSetted);
 	}
 
-	bool MapTerrain::loadColorTexture(const String& map_name) {
+	bool MapTerrain::loadColorTexture(const String &map_name) {
 		for (int i = 0; i < m_zoneCount; i++) {
-			MapZone* z = m_zones[i];
+			MapZone *z = m_zones[i];
 			Point zindex = z->getZoneIndex();
 
 			String texname;
@@ -1698,7 +1698,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 
-	void MapTerrain::writeXml(File* f, int indent) {
+	void MapTerrain::writeXml(File *f, int indent) {
 #define INDENT if (indent) f->printf("%s", ind.c_str());
 		String ind(indent*2, ' ');
 
@@ -1723,7 +1723,7 @@ AX_BEGIN_NAMESPACE
 		m_heightmap->saveFile_raw(heightfile);
 		if (m_numLayerGens) {
 
-			File* f = g_fileSystem->openFileWrite(layerfilename);
+			File *f = g_fileSystem->openFileWrite(layerfilename);
 			f->writeInt(m_numLayerGens);
 
 			for (int i = 0; i < m_numLayerGens; i++) {
@@ -1737,7 +1737,7 @@ AX_BEGIN_NAMESPACE
 
 		// write color texture
 		for (int i = 0; i < m_zoneCount; i++) {
-			Texture* tex = m_zones[i]->getColorTexture();
+			Texture *tex = m_zones[i]->getColorTexture();
 			if (!tex) {
 				continue;
 			}
@@ -1775,7 +1775,7 @@ AX_BEGIN_NAMESPACE
 		m_isHeightDirty = false;
 	}
 
-	void MapTerrain::doHeightChanged(const Rect& rect) {
+	void MapTerrain::doHeightChanged(const Rect &rect) {
 		MapEvent e;
 		e.type = MapEvent::HeightChanged;
 		e.rect = rect;
@@ -1786,7 +1786,7 @@ AX_BEGIN_NAMESPACE
 		m_heightDirtyLastView = true;
 	}
 
-	void MapTerrain::doUpdateNormalTextureLod(const Rect& tilerect) {
+	void MapTerrain::doUpdateNormalTextureLod(const Rect &tilerect) {
 		MapEvent e;
 		e.type = MapEvent::UpdateNormalMapLod;
 		e.rect = tilerect;
@@ -1794,7 +1794,7 @@ AX_BEGIN_NAMESPACE
 		doEvent(&e);
 	}
 
-	void MapTerrain::doUpdateLayer(const Rect& pixelrect) {
+	void MapTerrain::doUpdateLayer(const Rect &pixelrect) {
 		MapEvent e;
 		e.type = MapEvent::UpdateLayer;
 		e.rect = pixelrect / Map::TilePixels;
@@ -1803,7 +1803,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 
-	void MapTerrain::doLayerPainted(const Rect& rect) {
+	void MapTerrain::doLayerPainted(const Rect &rect) {
 		MapEvent e;
 		e.type = MapEvent::LayerPainted;
 		e.rect = rect / Map::TilePixels;
@@ -1811,7 +1811,7 @@ AX_BEGIN_NAMESPACE
 		doEvent(&e);
 	}
 
-	void MapTerrain::doUpdateColorTextureLod(const Rect& pixelrect) {
+	void MapTerrain::doUpdateColorTextureLod(const Rect &pixelrect) {
 		MapEvent e;
 		e.type = MapEvent::UpdateColorMapLod;
 		e.rect = pixelrect / Map::TilePixels;
@@ -1819,13 +1819,13 @@ AX_BEGIN_NAMESPACE
 		doEvent(&e);
 	}
 
-	void MapTerrain::doEvent(MapEvent* e) {
+	void MapTerrain::doEvent(MapEvent *e) {
 		for (int i = 0; i < m_zoneCount; i++) {
 			m_zones[i]->doEvent(e);
 		}
 	}
 
-	void MapTerrain::doSelect(const RenderCamera& camera) {
+	void MapTerrain::doSelect(const RenderCamera &camera) {
 		MapEvent e;
 		e.rect = m_tilerect;
 		e.type = MapEvent::Select;
@@ -1834,40 +1834,40 @@ AX_BEGIN_NAMESPACE
 		doEvent(&e);
 	}
 
-	Image* MapTerrain::copyHeight(const Rect& rect) const {
+	Image *MapTerrain::copyHeight(const Rect &rect) const {
 		Rect tr = rect;
 		tr.offset(m_tileOffset, m_tileOffset);
 
 		return m_heightmap->readSubImage(0, tr);
 	}
 
-	Image* MapTerrain::copyOldHeight(const Rect& rect) const {
+	Image *MapTerrain::copyOldHeight(const Rect &rect) const {
 		Rect tr = rect;
 		tr.offset(m_tileOffset, m_tileOffset);
 
 		return m_oldHeightmap->readSubImage(0, tr);
 	}
 
-	void MapTerrain::writeHeight(const Rect& rect, Image* image) {
+	void MapTerrain::writeHeight(const Rect &rect, Image *image) {
 		Rect tr = rect;
 		tr.offset(m_tileOffset, m_tileOffset);
 
 		m_heightmap->writeSubImage(image, Rect(0,0,tr.width,tr.height), Point(tr.x,tr.y));
 	}
 
-	void MapTerrain::writeOldHeight(const Rect& rect, Image* image) {
+	void MapTerrain::writeOldHeight(const Rect &rect, Image *image) {
 		Rect tr = rect;
 		tr.offset(m_tileOffset, m_tileOffset);
 
 		m_oldHeightmap->writeSubImage(image, Rect(0,0,tr.width,tr.height), Point(tr.x,tr.y));
 	}
 
-	Image* MapTerrain::copyFloatHeight(int size) const {
+	Image *MapTerrain::copyFloatHeight(int size) const {
 		AX_ASSERT(size > 0);
 
-		Image* result = new Image();
+		Image *result = new Image();
 		result->initImage(TexFormat::R32F, size, size);
-		float* pdata = (float*)result->getWritablePointer(0);
+		float *pdata = (float*)result->getWritablePointer(0);
 
 		float scale = (float)m_tiles / size;
 		for (int y = 0; y < size; y++) {
@@ -1894,11 +1894,11 @@ AX_BEGIN_NAMESPACE
 
 		for (int y = miny; y <= maxy; y++) {
 			for (int x = minx; x <= maxx; x++) {
-				const MapChunk* chunk = getChunk(Point(x,y));
+				const MapChunk *chunk = getChunk(Point(x,y));
 				if (!chunk)
 					continue;
 				if (chunk->m_useZonePrim) {
-					const MapZone* zone = chunk->m_zone;
+					const MapZone *zone = chunk->m_zone;
 					if (!zone->m_prim->getActivedIndexes()) {
 						continue;
 					}
@@ -1916,13 +1916,13 @@ AX_BEGIN_NAMESPACE
 		return result;
 	}
 
-	void MapTerrain::setMaterialDef(MapMaterialDef* matdef, bool undoable) {
+	void MapTerrain::setMaterialDef(MapMaterialDef *matdef, bool undoable) {
 		if (0 && undoable) {
 			if (m_materialDef == matdef) {
 				Errorf("%s: error param", __func__);
 			}
 
-//			TerrainMaterialDefHis* his = new TerrainMaterialDefHis(m_materialDef, matdef->clone(), this);
+//			TerrainMaterialDefHis *his = new TerrainMaterialDefHis(m_materialDef, matdef->clone(), this);
 //			gEditorContext->addHistory(his);
 			m_materialDef = matdef;
 		} else {
@@ -1934,8 +1934,8 @@ AX_BEGIN_NAMESPACE
 
 		int i;
 		for (i = 0; i < m_materialDef->getNumLayers(); i++) {
-			MapLayerDef* l = m_materialDef->getLayerDef(i);
-			MapLayerGen* lg = m_layerGenHash[l->id];
+			MapLayerDef *l = m_materialDef->getLayerDef(i);
+			MapLayerGen *lg = m_layerGenHash[l->id];
 
 			if (!lg) {
 				lg = new MapLayerGen(this, l->id);
@@ -1963,7 +1963,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 #if 0
-	void Terrain::setMaterialDefNoHistory(Map::MaterialDef* matdef) {
+	void Terrain::setMaterialDefNoHistory(Map::MaterialDef *matdef) {
 		if (m_materialDef == matdef) {
 			Errorf("%s: error param", __func__);
 		} else {
@@ -1975,11 +1975,11 @@ AX_BEGIN_NAMESPACE
 	}
 #endif
 
-	Image* MapTerrain::getSlopeImage() const {
+	Image *MapTerrain::getSlopeImage() const {
 		return m_slopeImage;
 	}
 
-	Image* MapTerrain::copySlopeImage(int size) const {
+	Image *MapTerrain::copySlopeImage(int size) const {
 		return m_slopeImage->resize(size, size);
 	}
 
@@ -2014,7 +2014,7 @@ AX_BEGIN_NAMESPACE
 			return;
 		}
 
-		MapLayerGen* lg = getLayerGenById(id);
+		MapLayerGen *lg = getLayerGenById(id);
 		if (!lg) {
 			return;
 		}
@@ -2026,8 +2026,8 @@ AX_BEGIN_NAMESPACE
 		lg->autoGenerate();
 	}
 
-	void MapTerrain::frameUpdate(QueuedScene* qscene) {
-		const Vector3& org = qscene->camera.getOrigin();
+	void MapTerrain::frameUpdate(QueuedScene *qscene) {
+		const Vector3 &org = qscene->camera.getOrigin();
 		if ((org - m_lastViewOrigin).getLength() < 32 && !m_heightDirtyLastView) {
 			return;
 		}
@@ -2081,7 +2081,7 @@ AX_BEGIN_NAMESPACE
 	}
 #endif
 
-	void MapTerrain::issueToQueue(QueuedScene* qscene)
+	void MapTerrain::issueToQueue(QueuedScene *qscene)
 	{
 		ulonglong_t start = OsUtil::microseconds();
 		MapEvent e;
@@ -2100,14 +2100,14 @@ AX_BEGIN_NAMESPACE
 	}
 
 #if 0
-	RenderPrims Terrain::getLightedPrimitives(Render::QueuedLight* light) {
+	RenderPrims Terrain::getLightedPrimitives(Render::QueuedLight *light) {
 		RenderPrims result;
 
 		return result;
 	}
 #endif
 
-	void MapTerrain::getHeightinfo(ushort_t*& datap, int& size, float& tilemeters) {
+	void MapTerrain::getHeightinfo(ushort_t*& datap, int &size, float &tilemeters) {
 		datap = m_heighData;
 		size = m_tiles;
 		tilemeters = m_tilemeters;

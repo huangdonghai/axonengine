@@ -16,7 +16,7 @@ AX_BEGIN_NAMESPACE
 // class TransformHis
 //--------------------------------------------------------------------------
 
-TransformHis::TransformHis(Context *context, const String& msg, int actorId, const AffineMat& oldmat, const AffineMat& newmat)
+TransformHis::TransformHis(Context *context, const String &msg, int actorId, const AffineMat &oldmat, const AffineMat &newmat)
 	: History(context, msg)
 {
 	m_actorId = actorId;
@@ -64,7 +64,7 @@ int TransformHis::getMemoryUsed() {
 // class GroupHis
 //--------------------------------------------------------------------------
 
-GroupHis::GroupHis(Context *context, const String& msg)
+GroupHis::GroupHis(Context *context, const String &msg)
 	: History(context, msg)
 {}
 
@@ -115,7 +115,7 @@ void GroupHis::append(Action *his) {
 // class DeleteHis
 //--------------------------------------------------------------------------
 
-DeleteHis::DeleteHis(Context *context, const String& msg, const AgentList& actorlist)
+DeleteHis::DeleteHis(Context *context, const String &msg, const AgentList &actorlist)
 	: History(context, msg)
 	, m_actorList(actorlist)
 {}
@@ -142,7 +142,7 @@ int DeleteHis::getMemoryUsed() {
 // class UndeleteHis
 //--------------------------------------------------------------------------
 
-UndeleteHis::UndeleteHis(Context *ctx, const String& msg, const AgentList& actorlist)
+UndeleteHis::UndeleteHis(Context *ctx, const String &msg, const AgentList &actorlist)
 	: History(ctx, msg)
 	, m_actorList(actorlist)
 {}
@@ -169,7 +169,7 @@ int UndeleteHis::getMemoryUsed() {
 // class PropertyEditHis
 //--------------------------------------------------------------------------
 
-PropertyEditHis::PropertyEditHis(Context *ctx, Agent *actor, const String& propname, const Variant& oldvalue, const Variant& newvalue) 
+PropertyEditHis::PropertyEditHis(Context *ctx, Agent *actor, const String &propname, const Variant &oldvalue, const Variant &newvalue) 
 	: History(ctx, "Property Edited")
 	, m_actor(actor)
 	, m_propName(propname)
@@ -200,7 +200,7 @@ int PropertyEditHis::getMemoryUsed() {
 // class SelectHis
 //--------------------------------------------------------------------------
 
-SelectHis::SelectHis(Context *ctx, const AgentList& oldlist, const AgentList& newlist)
+SelectHis::SelectHis(Context *ctx, const AgentList &oldlist, const AgentList &newlist)
 	: History(ctx, "Selection")
 	, m_oldlist(oldlist)
 	, m_newlist(newlist)
@@ -277,7 +277,7 @@ void HistoryManager::clear() {
 	m_redoList.clear();
 }
 
-void HistoryManager::begin(Context *ctx, const String& msg)
+void HistoryManager::begin(Context *ctx, const String &msg)
 {
 	GroupHis *groupHis = new GroupHis(ctx, msg);
 	m_stacked.push_front(groupHis);
@@ -289,7 +289,7 @@ void HistoryManager::end()
 		Errorf("history stack error");
 	}
 
-	GroupHis* gh = m_stacked.front();
+	GroupHis *gh = m_stacked.front();
 	m_stacked.pop_front();
 
 	if (gh->isEmpty())

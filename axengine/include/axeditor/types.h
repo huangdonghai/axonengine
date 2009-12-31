@@ -81,7 +81,7 @@ AX_BEGIN_NAMESPACE
 
 		Format format;
 		size_t dataSize;
-		void* data;
+		void *data;
 	};
 
 	struct Space {

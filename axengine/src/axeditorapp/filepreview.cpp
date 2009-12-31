@@ -22,20 +22,20 @@ FilePreview::~FilePreview(void)
 }
 
 static QWidget*
-CreateWidgetFromQPixmap(const QPixmap& pixmap, QWidget* parent) {
-	QLabel* label = new QLabel(parent);
+CreateWidgetFromQPixmap(const QPixmap &pixmap, QWidget *parent) {
+	QLabel *label = new QLabel(parent);
 	label->setScaledContents(true);
 	label->setPixmap(pixmap);
 	return label;
 }
 
 static QWidget*
-CreateWidgetFromImage(const String& filePathName, Image::FileType type, QWidget* parent) {
+CreateWidgetFromImage(const String &filePathName, Image::FileType type, QWidget *parent) {
 	Image image;
 	if (!image.loadFileByType(filePathName, type, Image::NoCompressed | Image::ExpandAlpha))
 		return NULL;
 
-	const byte_t* bits = image.getData(0, TexFormat::BGRA8);
+	const byte_t *bits = image.getData(0, TexFormat::BGRA8);
 
 	QImage imageQ(const_cast<byte_t*>(bits), image.getWidth(), image.getHeight(), QImage::Format_ARGB32);
 	QPixmap pixmap = QPixmap::fromImage(imageQ);
@@ -44,7 +44,7 @@ CreateWidgetFromImage(const String& filePathName, Image::FileType type, QWidget*
 }
 
 static QWidget*
-CreateWidgetFromQImageFile(const String& filePathName, QWidget* parent) {
+CreateWidgetFromQImageFile(const String &filePathName, QWidget *parent) {
 	QPixmap pixmap;
 	String gamePath = g_fileSystem->dataPathToOsPath(filePathName);
 	if (!pixmap.load(u2q(gamePath))) {
@@ -55,29 +55,29 @@ CreateWidgetFromQImageFile(const String& filePathName, QWidget* parent) {
 }
 
 static QWidget*
-CreateWidgetFrom3DFile(const String& filePathName, QWidget* parent) {
-	PreviewWidget* preview = new PreviewWidget(parent);
+CreateWidgetFrom3DFile(const String &filePathName, QWidget *parent) {
+	PreviewWidget *preview = new PreviewWidget(parent);
 	String modelName = PathUtil::removeExt(filePathName);
 #if 0
-	Render::Model* modelPtr = gRenderSystem->createModel(modelName);
+	Render::Model *modelPtr = gRenderSystem->createModel(modelName);
 #endif
 //	preview->setModel(modelPtr);
 	return preview;
 }
 
-static inline QWidget* CreateWidgetFromTga(const String& filePathName, QWidget* parent)
+static inline QWidget *CreateWidgetFromTga(const String &filePathName, QWidget *parent)
 {	return CreateWidgetFromImage(filePathName, Image::TGA, parent);	}
-static inline QWidget* CreateWidgetFromDds(const String& filePathName, QWidget* parent)
+static inline QWidget *CreateWidgetFromDds(const String &filePathName, QWidget *parent)
 {	return CreateWidgetFromImage(filePathName, Image::DDS, parent);	}
-static inline QWidget* CreateWidgetFromJp2(const String& filePathName, QWidget* parent)
+static inline QWidget *CreateWidgetFromJp2(const String &filePathName, QWidget *parent)
 {	return CreateWidgetFromImage(filePathName, Image::JP2, parent);	}
 #if 0
-static inline QWidget* CreateWidgetFromPng(const String& filePathName, QWidget* parent)
+static inline QWidget *CreateWidgetFromPng(const String &filePathName, QWidget *parent)
 {	return CreateWidgetFromCxImage(filePathName, Image::PNG, parent);	}
 #endif
-static inline QWidget* CreateWidgetFromHdr(const String& filePathName, QWidget* parent)
+static inline QWidget *CreateWidgetFromHdr(const String &filePathName, QWidget *parent)
 {	return CreateWidgetFromImage(filePathName, Image::HDR, parent);	}
-//static inline QWidget* CreateWidgetFromJpg(const String& filePathName, QWidget* parent)
+//static inline QWidget *CreateWidgetFromJpg(const String &filePathName, QWidget *parent)
 //{	return CreateWidgetFromCxImage(filePathName, Image::JPEG, parent);	}
 
 
@@ -107,7 +107,7 @@ FilePreview::Init(){
 }
 
 QWidget* 
-FilePreview::CreateWidget(const String& filePathName, QWidget* parent) {
+FilePreview::CreateWidget(const String &filePathName, QWidget *parent) {
 	String ext = PathUtil::getExt(filePathName);
 	if (ext[0] == L'.')
 		ext = ext.c_str() + 1;

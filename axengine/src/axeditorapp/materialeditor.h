@@ -23,8 +23,8 @@ public:
 
 protected:
 	void initWidgets();
-	void createMaterial(const String& shadername);
-	void initFromMaterial(const String& name);
+	void createMaterial(const String &shadername);
+	void initFromMaterial(const String &name);
 
 private:
 	Ui::MaterialEditorClass ui;
@@ -35,7 +35,7 @@ private slots:
 
 private:
 	Sequence<Material*> m_openedMat;
-	Material* m_curMat;
+	Material *m_curMat;
 };
 
 #endif // MATERIALEDITOR_H

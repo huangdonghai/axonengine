@@ -21,7 +21,7 @@ AX_BEGIN_NAMESPACE
 	FixedStringManager::~FixedStringManager()
 	{}
 
-	const String& FixedStringManager::getString( int handle ) const
+	const String &FixedStringManager::getString( int handle ) const
 	{
 		SCOPE_LOCK;
 
@@ -29,7 +29,7 @@ AX_BEGIN_NAMESPACE
 			Errorf("invalid handle");
 		}
 
-		const String* refstring = m_strings[handle];
+		const String *refstring = m_strings[handle];
 		if (!refstring) {
 			Errorf("not found");
 		}
@@ -37,14 +37,14 @@ AX_BEGIN_NAMESPACE
 		return *refstring;
 	}
 
-	int FixedStringManager::findString( const String& str )
+	int FixedStringManager::findString( const String &str )
 	{
 		SCOPE_LOCK;
 
 		Dict<const char*, int, hash_cstr, equal_cstr>::const_iterator it = m_dict.find(str.c_str());
 
 		if (it == m_dict.end()) {
-			const String* newsz = new String(str);
+			const String *newsz = new String(str);
 			m_strings.push_back(newsz);
 			int handle = m_strings.size() - 1;
 			m_dict[newsz->c_str()] = handle;
@@ -54,7 +54,7 @@ AX_BEGIN_NAMESPACE
 		}
 	}
 
-	int FixedStringManager::findString( const char* lpcz )
+	int FixedStringManager::findString( const char *lpcz )
 	{
 		if (!lpcz || !lpcz[0])
 			return 0;
@@ -62,7 +62,7 @@ AX_BEGIN_NAMESPACE
 		Dict<const char*, int, hash_cstr, equal_cstr>::const_iterator it = m_dict.find(lpcz);
 
 		if (it == m_dict.end()) {
-			const String* newsz = new String(lpcz);
+			const String *newsz = new String(lpcz);
 			m_strings.push_back(newsz);
 			int handle = m_strings.size() - 1;
 			m_dict[newsz->c_str()] = handle;
@@ -72,7 +72,7 @@ AX_BEGIN_NAMESPACE
 		}
 	}
 
-	FixedStringManager& FixedStringManager::get()
+	FixedStringManager &FixedStringManager::get()
 	{
 		static FixedStringManager instance;
 		return instance;

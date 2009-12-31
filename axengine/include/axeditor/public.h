@@ -38,8 +38,8 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-	AX_API extern MapContext* g_mapContext;
-	AX_API extern GfxContext* g_gfxContext;
+	AX_API extern MapContext *g_mapContext;
+	AX_API extern GfxContext *g_gfxContext;
 
 	AX_API void axEditorInit();
 	AX_API void axEditorQuit();

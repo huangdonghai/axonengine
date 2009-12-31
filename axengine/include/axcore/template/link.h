@@ -32,21 +32,21 @@ AX_BEGIN_NAMESPACE
 
 		void removeFromList( void );
 
-		type* getNext( void ) const;
-		type* getPrev( void ) const;
+		type *getNext( void ) const;
+		type *getPrev( void ) const;
 
-		type* getOwner( void ) const;
+		type *getOwner( void ) const;
 		void setOwner( type *object );
 
-		Link* getHead( void ) const;
-		Link* getNextNode( void ) const;
-		Link* getPrevNode( void ) const;
+		Link *getHead( void ) const;
+		Link *getNextNode( void ) const;
+		Link *getPrevNode( void ) const;
 
 	private:
-		Link* m_head;
-		Link* m_next;
-		Link* m_prev;
-		type* m_owner;
+		Link *m_head;
+		Link *m_next;
+		Link *m_prev;
+		type *m_owner;
 	};
 
 	template< class type >

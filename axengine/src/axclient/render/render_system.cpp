@@ -17,8 +17,8 @@ AX_BEGIN_NAMESPACE
 	static ulonglong_t __lastFrameTime;
 	static ulonglong_t __frameStartTime;
 
-	static const char* glname = "axopengl.driver";
-	static const char* d3d9name = "axdirect3d9.driver";
+	static const char *glname = "axopengl.driver";
+	static const char *d3d9name = "axdirect3d9.driver";
 
 	AX_BEGIN_COMMAND_MAP(RenderSystem)
 		AX_COMMAND_ENTRY("texlist",	texlist_f)
@@ -96,11 +96,11 @@ AX_BEGIN_NAMESPACE
 		return 0;
 	}
 
-	void RenderSystem::screenShot(const String& name, const Rect& rect) {
+	void RenderSystem::screenShot(const String &name, const Rect &rect) {
 	}
 
 	void RenderSystem::info() {
-		const IRenderDriver::Info* info = g_renderDriver->getDriverInfo();
+		const IRenderDriver::Info *info = g_renderDriver->getDriverInfo();
 
 		Printf("------- Render Driver Caps -------\n");
 
@@ -130,7 +130,7 @@ AX_BEGIN_NAMESPACE
 		}
 	}
 
-	void RenderSystem::beginFrame(RenderTarget* target) {
+	void RenderSystem::beginFrame(RenderTarget *target) {
 #if 0
 		g_assetManager->runFrame();
 #endif
@@ -138,7 +138,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 
-	void RenderSystem::beginScene(const RenderCamera& camera) {
+	void RenderSystem::beginScene(const RenderCamera &camera) {
 		if (m_curScene)
 			Errorf("already in a camera");
 
@@ -158,7 +158,7 @@ AX_BEGIN_NAMESPACE
 		m_curScene->primitives.reserve(256);
 	}
 
-	void RenderSystem::addToScene(RenderWorld* world) {
+	void RenderSystem::addToScene(RenderWorld *world) {
 		if (m_curScene->world) {
 			Errorf("RenderSystem::addToScene: renderWorld has already added.");
 		}
@@ -166,15 +166,15 @@ AX_BEGIN_NAMESPACE
 	}
 
 
-	void RenderSystem::addToScene(RenderEntity* re) {
+	void RenderSystem::addToScene(RenderEntity *re) {
 		m_curScene->actors.push_back(re);
 	}
 
-	void RenderSystem::addToScene(Primitive* primitive) {
+	void RenderSystem::addToScene(Primitive *primitive) {
 		m_curScene->primitives.push_back(primitive);
 	}
 
-	void RenderSystem::addToOverlay(Primitive* primitive) {
+	void RenderSystem::addToOverlay(Primitive *primitive) {
 		m_curScene->overlays.push_back(primitive);
 	}
 
@@ -203,7 +203,7 @@ AX_BEGIN_NAMESPACE
 			const int line_height = 12;
 
 			if (show_performer) {
-				const Statistic::IndexSeq& indexs = g_statistic->getIndexsForGroup(static_cast<Statistic::Group>(show_performer));
+				const Statistic::IndexSeq &indexs = g_statistic->getIndexsForGroup(static_cast<Statistic::Group>(show_performer));
 
 				Rect rect(0,0,120,12);
 
@@ -212,7 +212,7 @@ AX_BEGIN_NAMESPACE
 				String msg;
 				for (; it != indexs.end(); ++it) {
 					int index = *it;
-					const String& name = g_statistic->getValueName(index);
+					const String &name = g_statistic->getValueName(index);
 					int value = g_statistic->getValue(index);
 
 					StringUtil::sprintf(msg, "%32s: %d", name.c_str(), value);
@@ -223,7 +223,7 @@ AX_BEGIN_NAMESPACE
 						rect.x += 300;
 					}
 
-					TextPrim* text = TextPrim::createText(Primitive::HintFrame, rect, g_miniFont, msg, Rgba::White, TextPrim::Left);
+					TextPrim *text = TextPrim::createText(Primitive::HintFrame, rect, g_miniFont, msg, Rgba::White, TextPrim::Left);
 					addToScene(text);
 
 					rect.y += line_height;
@@ -234,7 +234,7 @@ AX_BEGIN_NAMESPACE
 				Rect rect(400,0,120,12);
 
 				String msg;
-				TextPrim* text;
+				TextPrim *text;
 
 				StringUtil::sprintf(msg, "%32s: %d", "Total Allocated", gMemoryInfo.totalAllocated);
 				text = TextPrim::createText(Primitive::HintFrame, rect, g_miniFont, msg, Rgba::White, TextPrim::Left); addToScene(text); rect.y += line_height;
@@ -285,9 +285,9 @@ AX_BEGIN_NAMESPACE
 		// add to render queue
 //		gQueryManager->runFrame();
 		for (size_t i = 0; i < m_sceneSeq.size(); i++) {
-			RenderScene* s_view = m_sceneSeq[i].get();
+			RenderScene *s_view = m_sceneSeq[i].get();
 
-			QueuedScene* queued = g_renderQueue->allocQueuedScene();
+			QueuedScene *queued = g_renderQueue->allocQueuedScene();
 			memset(queued, 0, sizeof(QueuedScene));
 			queued->source = s_view;
 			queued->camera = s_view->camera;
@@ -318,7 +318,7 @@ AX_BEGIN_NAMESPACE
 		g_renderQueue = g_queues[m_frameNum%2];
 	}
 
-	void RenderSystem::beginHitTest(const RenderCamera& view) {
+	void RenderSystem::beginHitTest(const RenderCamera &view) {
 		m_selectionCamera = view;
 
 		m_selection->beginSelect(view);
@@ -329,15 +329,15 @@ AX_BEGIN_NAMESPACE
 	}
 
 
-	void RenderSystem::hitTest(RenderEntity* re) {
+	void RenderSystem::hitTest(RenderEntity *re) {
 		m_selection->testEntity(re);
 	}
 
-	void RenderSystem::hitTest(Primitive* prim) {
+	void RenderSystem::hitTest(Primitive *prim) {
 		m_selection->testPrimitive(prim);
 	}
 
-	void RenderSystem::hitTest(Primitive* prim, const AffineMat& matrix) {
+	void RenderSystem::hitTest(Primitive *prim, const AffineMat &matrix) {
 		m_selection->testPrimitive(prim, matrix);
 	}
 
@@ -345,35 +345,35 @@ AX_BEGIN_NAMESPACE
 		return m_selection->endSelect();
 	}
 
-	RenderTarget* RenderSystem::createWindowTarget(handle_t wndId, const String& name) {
+	RenderTarget *RenderSystem::createWindowTarget(handle_t wndId, const String &name) {
 		return g_renderDriver->createWindowTarget(wndId, name);
 	}
 
 #if 0
 	// textures for subscene's render target
-	Target* RenderSystem::getColorTarget(int width, int height) {
+	Target *RenderSystem::getColorTarget(int width, int height) {
 		return g_renderDriver->getColorTarget(width, height);
 	}
 
-	Target* RenderSystem::getDepthTarget(int width, int height) {
+	Target *RenderSystem::getDepthTarget(int width, int height) {
 		return gRenderDriver->getDepthTarget(width, height);
 	}
 
 
-	void RenderSystem::addModelCreator(ModelCreator* creator) {
+	void RenderSystem::addModelCreator(ModelCreator *creator) {
 		m_modelCreators.push_back(creator);
 	}
 
-	void RenderSystem::removeModelCreator(ModelCreator* creator) {
+	void RenderSystem::removeModelCreator(ModelCreator *creator) {
 		m_modelCreators.remove(creator);
 	}
 
-	ModelInstance* RenderSystem::create(const String& name, intptr_t arg) {
+	ModelInstance *RenderSystem::create(const String &name, intptr_t arg) {
 		String ext = PathUtil::getExt(name);
 
-		ModelInstance* result = nullptr;
+		ModelInstance *result = nullptr;
 		for (List<ModelCreator*>::iterator it = m_modelCreators.begin(); it != m_modelCreators.end(); ++it) {
-			ModelCreator* creator = *it;
+			ModelCreator *creator = *it;
 			if (ext != creator->getExtension()) {
 				continue;
 			}
@@ -390,11 +390,11 @@ AX_BEGIN_NAMESPACE
 	}
 #endif
 
-	void RenderSystem::addEntityManager(IEntityManager* manager) {
+	void RenderSystem::addEntityManager(IEntityManager *manager) {
 		m_entityManagers.push_back(manager);
 	}
 
-	void RenderSystem::removeEntityManager(IEntityManager* manager) {
+	void RenderSystem::removeEntityManager(IEntityManager *manager) {
 		Sequence<IEntityManager*>::iterator it = m_entityManagers.begin();
 
 		for (; it != m_entityManagers.end(); ++it) {
@@ -409,21 +409,21 @@ AX_BEGIN_NAMESPACE
 		return s2i(m_entityManagers.size());
 	}
 
-	IEntityManager* RenderSystem::getEntityManager(int index) const {
+	IEntityManager *RenderSystem::getEntityManager(int index) const {
 		return m_entityManagers[index];
 	}
 
-	const IRenderDriver::Info* RenderSystem::getDriverInfo()
+	const IRenderDriver::Info *RenderSystem::getDriverInfo()
 	{
 		return g_renderDriver->getDriverInfo();
 	}
 
-	void RenderSystem::texlist_f( const CmdArgs& args )
+	void RenderSystem::texlist_f( const CmdArgs &args )
 	{
 		Texture::texlist_f(args);
 	}
 
-	void RenderSystem::matlist_f( const CmdArgs& args )
+	void RenderSystem::matlist_f( const CmdArgs &args )
 	{
 		Material::matlist_f(args);
 	}

@@ -33,7 +33,7 @@ void MapAgent::doHitTest() {
 }
 
 
-void MapAgent::setMatrix(const AffineMat& matrix) {
+void MapAgent::setMatrix(const AffineMat &matrix) {
 	m_gameObj->setMatrix_p(matrix);
 }
 
@@ -50,12 +50,12 @@ void MapAgent::doRender() {
 	m_gameObj->doDebugRender();
 }
 
-MapAgent* MapAgent::clone() const {
+MapAgent *MapAgent::clone() const {
 	return nullptr;
 }
 
 
-void MapAgent::writeXml(File* f, int indent) const {
+void MapAgent::writeXml(File *f, int indent) const {
 	String indstr(indent*2, ' ');
 #define INDENT if (indent) f->printf("%s", indstr.c_str());
 
@@ -71,11 +71,11 @@ void MapAgent::writeXml(File* f, int indent) const {
 #undef INDENT
 }
 
-void MapAgent::readXml(const TiXmlElement* node) {
+void MapAgent::readXml(const TiXmlElement *node) {
 
 }
 
-const char* MapAgent::typeToString(Type t) {
+const char *MapAgent::typeToString(Type t) {
 #define AX_ENUM_ITEM(e) case e: return #e;
 	switch (t) {
 		AX_ENUM_ITEM(kNone)
@@ -89,11 +89,11 @@ const char* MapAgent::typeToString(Type t) {
 	return nullptr;
 }
 
-MapAgent::Type MapAgent::stringToType(const char* str) {
+MapAgent::Type MapAgent::stringToType(const char *str) {
 #define AX_ENUM_ITEM(e) { #e, e },
 
 	static struct {
-		const char* str;
+		const char *str;
 		Type t;
 	} nameToType[] = {
 		AX_ENUM_ITEM(kNone)
@@ -113,7 +113,7 @@ MapAgent::Type MapAgent::stringToType(const char* str) {
 	return kNone;
 }
 
-Axon::Variant MapAgent::getProperty( const String& propname )
+Axon::Variant MapAgent::getProperty( const String &propname )
 {
 	if (m_gameObj)
 		return m_gameObj->getProperty(propname.c_str());
@@ -121,7 +121,7 @@ Axon::Variant MapAgent::getProperty( const String& propname )
 	return Variant();
 }
 
-void MapAgent::setProperty(const String& name, const Variant& value)
+void MapAgent::setProperty(const String &name, const Variant &value)
 {
 	if (m_gameObj) {
 		m_gameObj->setProperty(name.c_str(), value);
@@ -175,8 +175,8 @@ void MapAgent::doDeleteFlagChanged( bool del )
 //--------------------------------------------------------------------------
 
 MapStatic::MapStatic() {
-	MapContext* mapContext = static_cast<MapContext*>(m_context);
-	MapState* mapState = mapContext->getMapState();
+	MapContext *mapContext = static_cast<MapContext*>(m_context);
+	MapState *mapState = mapContext->getMapState();
 
 	m_gameFixed = new StaticFixed();
 	m_gameObj = m_gameFixed;
@@ -184,7 +184,7 @@ MapStatic::MapStatic() {
 	m_gameFixed->set_objectName(g_scriptSystem->generateObjectName(PathUtil::getName(mapState->staticModelName)));
 }
 
-MapStatic::MapStatic(const String& nametemplate) {
+MapStatic::MapStatic(const String &nametemplate) {
 	m_gameFixed = new StaticFixed();
 	m_gameObj = m_gameFixed;
 
@@ -208,8 +208,8 @@ void MapStatic::doRender() {
 	m_actorDirty = false;
 }
 
-MapAgent* MapStatic::clone() const {
-	MapStatic* result = new MapStatic();
+MapAgent *MapStatic::clone() const {
+	MapStatic *result = new MapStatic();
 
 	AX_ASSERT(result);
 
@@ -227,8 +227,8 @@ MapAgent* MapStatic::clone() const {
 
 #ifdef AX_CONFIG_OPTION_USE_SPEEDTREE_40
 MapSpeedTree::MapSpeedTree() {
-	MapContext* mapContext = static_cast<MapContext*>(m_context);
-	MapState* mapState = mapContext->getMapState();
+	MapContext *mapContext = static_cast<MapContext*>(m_context);
+	MapState *mapState = mapContext->getMapState();
 
 	m_gameFixed = new TreeFixed();
 	m_gameObj = m_gameFixed;
@@ -236,7 +236,7 @@ MapSpeedTree::MapSpeedTree() {
 	m_gameFixed->set_objectName(g_scriptSystem->generateObjectName(PathUtil::getName(mapState->treeFilename)));
 }
 
-MapSpeedTree::MapSpeedTree(const String& nametemplate) {
+MapSpeedTree::MapSpeedTree(const String &nametemplate) {
 	m_gameFixed = new TreeFixed();
 	m_gameObj = m_gameFixed;
 
@@ -260,8 +260,8 @@ void MapSpeedTree::doRender() {
 	m_actorDirty = false;
 }
 
-MapAgent* MapSpeedTree::clone() const {
-	MapSpeedTree* result = new MapSpeedTree();
+MapAgent *MapSpeedTree::clone() const {
+	MapSpeedTree *result = new MapSpeedTree();
 
 	AX_ASSERT(result);
 

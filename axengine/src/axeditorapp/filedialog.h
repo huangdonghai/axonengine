@@ -27,14 +27,14 @@ public:
 
 	friend class FileDialog;
 
-	FileItem(QTreeWidget* parent, const FileInfo& info, bool showext = true);
-	FileItem(QTreeWidgetItem* parent, const FileInfo& info, bool showext = true);
+	FileItem(QTreeWidget *parent, const FileInfo &info, bool showext = true);
+	FileItem(QTreeWidgetItem *parent, const FileInfo &info, bool showext = true);
 	~FileItem();
 
 	bool isDirectory() { return m_fileInfo.isDir; }
-	const FileInfo& getFileInfo() { return m_fileInfo; }
+	const FileInfo &getFileInfo() { return m_fileInfo; }
 
-	virtual bool operator<(const QTreeWidgetItem& other) const;
+	virtual bool operator<(const QTreeWidgetItem &other) const;
 
 private:
 	const FileInfo m_fileInfo;
@@ -57,22 +57,22 @@ public:
 	enum AcceptMode { AcceptOpen, AcceptSave };
 	enum DialogLabel { LookIn, FileName, FileType, Accept, Reject };
 
-	void setRootDir(const QString& dir);
+	void setRootDir(const QString &dir);
 	void setViewMode(ViewMode mode);
 	void setFileMode(FileMode mode);
 	void setAcceptMode(AcceptMode mode);
-	void setDefaultSuffix(const QString& suffix);
-	void setFilter(const QString& filter);
-	void setFilters(const QStringList& filters);
+	void setDefaultSuffix(const QString &suffix);
+	void setFilter(const QString &filter);
+	void setFilters(const QStringList &filters);
 	QString getFileName() const;
 
 	// public static function
-	static QString getDirectory(QWidget* parent = 0, const QString& caption = QString(), const QString& dir = QString());
-	static QString getOpenFileName(QWidget* parent = 0, const QString& caption = QString(), const QString& dir = QString(), const QString& filter = QString(), QString* selectedFilter = 0);
-	static QString getSaveFileName(QWidget* parent = 0, const QString& caption = QString(), const QString& dir = QString(), const QString& filter = QString(), QString* selectedFilter = 0);
+	static QString getDirectory(QWidget *parent = 0, const QString &caption = QString(), const QString &dir = QString());
+	static QString getOpenFileName(QWidget *parent = 0, const QString &caption = QString(), const QString &dir = QString(), const QString &filter = QString(), QString *selectedFilter = 0);
+	static QString getSaveFileName(QWidget *parent = 0, const QString &caption = QString(), const QString &dir = QString(), const QString &filter = QString(), QString *selectedFilter = 0);
 
 protected:
-	void browseDir(const QString& dir, bool addHistory);
+	void browseDir(const QString &dir, bool addHistory);
 	void updateWidget();
 
 private:
@@ -97,7 +97,7 @@ private:
 	QIcon m_dirIcon;
 	QIcon m_fileIcon;
 
-	QWidget* m_previewWidget;
+	QWidget *m_previewWidget;
 
 private slots:
 	void on_filenameEdit_textChanged(const QString &);

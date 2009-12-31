@@ -31,8 +31,8 @@ AX_BEGIN_NAMESPACE
 		};
 
 		RenderLight();
-		RenderLight(Type t, const Vector3& pos, Rgb color);
-		RenderLight(Type t, const Vector3& pos, Rgb color, float radius);
+		RenderLight(Type t, const Vector3 &pos, Rgb color);
+		RenderLight(Type t, const Vector3 &pos, Rgb color, float radius);
 		virtual ~RenderLight();
 
 		Type getLightType() const { return m_type; }
@@ -59,31 +59,31 @@ AX_BEGIN_NAMESPACE
 		void setEnvColor(Rgb color, float envIntensity = 1.0f);
 		Vector3 getGlobalLightDirection() const { return m_affineMat.origin.getNormalized(); }
 
-		void fillQueued(QueuedLight* queued);
+		void fillQueued(QueuedLight *queued);
 
 		// shadow
-		bool checkShadow(QueuedScene* qscene);
+		bool checkShadow(QueuedScene *qscene);
 		void linkShadow();
-		RenderLight* unlinkShadow();
+		RenderLight *unlinkShadow();
 		void freeShadowMap();
-		bool genShadowMap(QueuedScene* qscene);
+		bool genShadowMap(QueuedScene *qscene);
 
 		int getShadowMemoryUsed() const;
 
 		// implement Actor
 		virtual BoundingBox getLocalBoundingBox();
 		virtual BoundingBox getBoundingBox();
-		virtual void issueToQueue(QueuedScene* qscene);
+		virtual void issueToQueue(QueuedScene *qscene);
 
 	protected:
 		void initShadowInfo();
 		void clearShadowInfo();
 
 		// for light buffer drawing
-		void prepareLightBuffer(QueuedScene* scene);
-		void prepareLightBuffer_Global(QueuedScene* scene);
-		void prepareLightBuffer_Point(QueuedScene* scene);
-		void prepareLightBuffer_Spot(QueuedScene* scene);
+		void prepareLightBuffer(QueuedScene *scene);
+		void prepareLightBuffer_Global(QueuedScene *scene);
+		void prepareLightBuffer_Point(QueuedScene *scene);
+		void prepareLightBuffer_Spot(QueuedScene *scene);
 
 	private:
 		class ShadowInfo;
@@ -100,12 +100,12 @@ AX_BEGIN_NAMESPACE
 		int m_preferShadowMapSize;
 
 		// shadow info
-		ShadowInfo* m_shadowInfo;
+		ShadowInfo *m_shadowInfo;
 		Link<RenderLight> m_shadowLink;
 		int m_shadowMemoryUsed;
 
 		// for shadow map
-		QueuedLight* m_queuedLight;
+		QueuedLight *m_queuedLight;
 	};
 
 	struct QueuedShadow {
@@ -120,8 +120,8 @@ AX_BEGIN_NAMESPACE
 	struct QueuedLight {
 		typedef Vector3 VolumeVertexes[RenderLight::NUM_VOLUME_VERTEXES];
 
-		QueuedEntity* queuedActor;
-		RenderLight* preQueued;
+		QueuedEntity *queuedActor;
+		RenderLight *preQueued;
 
 		// queued struct
 		AffineMat matrix;
@@ -140,7 +140,7 @@ AX_BEGIN_NAMESPACE
 		bool isIntersectsNearPlane;
 		Matrix4 projMatrix;
 
-		QueuedShadow* shadowInfo;
+		QueuedShadow *shadowInfo;
 	};
 
 	typedef Sequence<RenderLight*> LightSeq;

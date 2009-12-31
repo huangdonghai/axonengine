@@ -104,9 +104,9 @@ AX_BEGIN_NAMESPACE
 		static int mapToBound(int n, int width);
 
 		// 获取checkPoint到线段p1, p2的最短距离  timlly add
-		static float getNearstDistanceSegment(const Vector3& p1, const Vector3& p2, const Vector3& checkPoint);
+		static float getNearstDistanceSegment(const Vector3 &p1, const Vector3 &p2, const Vector3 &checkPoint);
 		// 获取checkPoint到直线p1, p2的最短距离  timlly add
-		static float getNearstDistanceLine(const Vector3& p1, const Vector3& p2, const Vector3& checkPoint);
+		static float getNearstDistanceLine(const Vector3 &p1, const Vector3 &p2, const Vector3 &checkPoint);
 
 		// clamp
 		static int clampSbyte(int n);

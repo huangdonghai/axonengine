@@ -25,7 +25,7 @@ AX_BEGIN_NAMESPACE
 		virtual ~RenderTerrain() {}
 
 		virtual Kind getType() const { return RenderEntity::kTerrain; }
-		virtual void getHeightinfo(ushort_t*& datap, int& size, float& tilemeters) = 0;
+		virtual void getHeightinfo(ushort_t*& datap, int &size, float &tilemeters) = 0;
 	};
 
 AX_END_NAMESPACE

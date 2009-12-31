@@ -12,7 +12,7 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-GfxAgent::GfxAgent(GfxContext* ctx, GfxObject::GfxType gfxType)
+GfxAgent::GfxAgent(GfxContext *ctx, GfxObject::GfxType gfxType)
 	: Agent(ctx)
 	, m_gfxObj(0)
 	, m_bboxLine(0)
@@ -29,7 +29,7 @@ GfxAgent::~GfxAgent()
 	SafeDelete(m_bboxLine);
 }
 
-Agent* GfxAgent::clone() const
+Agent *GfxAgent::clone() const
 {
 	return 0;
 }
@@ -46,7 +46,7 @@ void GfxAgent::doRender()
 	}
 
 	if (m_isSelected && !m_isDeleted) {
-		const AffineMat& mat = m_gfxObj->getTm();
+		const AffineMat &mat = m_gfxObj->getTm();
 		LinePrim::setupBoundingBox(m_bboxLine, mat.origin, mat.axis, m_gfxObj->getLocalBoundingBox(), 1.05f);
 		g_renderSystem->addToScene(m_bboxLine);
 	}
@@ -54,12 +54,12 @@ void GfxAgent::doRender()
 //	m_gfxObj->doDebugRender();
 }
 
-void GfxAgent::setMatrix(const AffineMat& matrix)
+void GfxAgent::setMatrix(const AffineMat &matrix)
 {
 	m_gfxObj->setTm(matrix);
 }
 
-const AffineMat& GfxAgent::getMatrix() const
+const AffineMat &GfxAgent::getMatrix() const
 {
 	return m_gfxObj->getTm();
 }
@@ -69,12 +69,12 @@ BoundingBox GfxAgent::getBoundingBox()
 	return m_gfxObj->getBoundingBox();
 }
 
-Variant GfxAgent::getProperty(const String& propname)
+Variant GfxAgent::getProperty(const String &propname)
 {
 	return Variant();
 }
 
-void GfxAgent::setProperty(const String& propname, const Variant& value)
+void GfxAgent::setProperty(const String &propname, const Variant &value)
 {
 
 }

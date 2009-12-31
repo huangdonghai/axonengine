@@ -21,11 +21,11 @@ AX_BEGIN_NAMESPACE
 		FixedStringManager();
 		~FixedStringManager();
 
-		const String& getString(int handle) const;
-		int findString(const String& str);
-		int findString(const char* lpcz);
+		const String &getString(int handle) const;
+		int findString(const String &str);
+		int findString(const char *lpcz);
 
-		static FixedStringManager& get();
+		static FixedStringManager &get();
 
 	private:
 		Dict<const char*,int,hash_cstr, equal_cstr> m_dict;
@@ -37,17 +37,17 @@ AX_BEGIN_NAMESPACE
 		FixedString()
 		{ m_handle = FixedStringManager::EMPTY_HANDLE; }
 
-		FixedString(const FixedString& rhs)
+		FixedString(const FixedString &rhs)
 		{
 			m_handle = rhs.m_handle;
 		}
 
-		FixedString(const String& str)
+		FixedString(const String &str)
 		{
 			m_handle = FixedStringManager::get().findString(str.c_str());
 		}
 
-		FixedString(const char* lpcz)
+		FixedString(const char *lpcz)
 		{
 			m_handle = FixedStringManager::get().findString(lpcz);
 		}
@@ -55,7 +55,7 @@ AX_BEGIN_NAMESPACE
 		~FixedString()
 		{}
 
-		const String& toString() const {
+		const String &toString() const {
 			return FixedStringManager::get().getString(m_handle);
 		}
 
@@ -63,26 +63,26 @@ AX_BEGIN_NAMESPACE
 			return FixedStringManager::get().getString(m_handle);
 		}
 
-		const char* c_str() const {
+		const char *c_str() const {
 			return FixedStringManager::get().getString(m_handle).c_str();
 		}
 
-		FixedString& operator=(const FixedString& rhs) {
+		FixedString &operator=(const FixedString &rhs) {
 			m_handle = rhs.m_handle;
 			return *this;
 		}
 
-		FixedString& operator=(const String& rhs) {
+		FixedString &operator=(const String &rhs) {
 			m_handle = FixedStringManager::get().findString(rhs);
 			return *this;
 		}
 
-		FixedString& operator=(const char* lpcz) {
+		FixedString &operator=(const char *lpcz) {
 			m_handle = FixedStringManager::get().findString(lpcz);
 			return *this;
 		}
 
-		bool operator==(const FixedString& rhs) const {
+		bool operator==(const FixedString &rhs) const {
 			return m_handle == rhs.m_handle;
 		}
 
@@ -101,7 +101,7 @@ namespace std { namespace tr1 {
 
 	template<>
 	struct hash<::Axon::FixedString> {
-		size_t operator()(const ::Axon::FixedString& sm) const { return sm.hash(); }
+		size_t operator()(const ::Axon::FixedString &sm) const { return sm.hash(); }
 	};
 }}
 

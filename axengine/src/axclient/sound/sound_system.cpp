@@ -16,14 +16,14 @@ AX_BEGIN_NAMESPACE
 		AX_COMMAND_ENTRY("playSound", playSound_f)
 	AX_END_COMMAND_MAP()
 
-	static inline const FMOD_VECTOR* tr(const Vector3& v) {
+	static inline const FMOD_VECTOR *tr(const Vector3 &v) {
 		return (const FMOD_VECTOR*)&v[0];
 	}
 
 	struct FMOD_Callback {
 		static FMOD_RESULT F_CALLBACK open(const char *name, int unicode, unsigned int *filesize, void **handle, void **userdata)
 		{
-			File* f = g_fileSystem->openFileRead(name);
+			File *f = g_fileSystem->openFileRead(name);
 
 			if (!f)
 				return FMOD_ERR_FILE_NOTFOUND;
@@ -37,14 +37,14 @@ AX_BEGIN_NAMESPACE
 
 		static FMOD_RESULT F_CALLBACK close(void *handle, void *userdata)
 		{
-			File* f = (File*)handle;
+			File *f = (File*)handle;
 			f->close();
 			return FMOD_OK;
 		}
 
 		static FMOD_RESULT F_CALLBACK read(void *handle, void *buffer, unsigned int sizebytes, unsigned int *bytesread, void *userdata)
 		{
-			File* f = (File*)handle;
+			File *f = (File*)handle;
 			*bytesread = f->read(buffer, sizebytes);
 
 			if (*bytesread < sizebytes) {
@@ -56,7 +56,7 @@ AX_BEGIN_NAMESPACE
 
 		static FMOD_RESULT F_CALLBACK seek(void *handle, unsigned int pos, void *userdata)
 		{
-			File* f = (File*)handle;
+			File *f = (File*)handle;
 			f->seek(pos, File::SeekSet);
 			return FMOD_OK;
 		}
@@ -100,7 +100,7 @@ AX_BEGIN_NAMESPACE
 		ERRCHECK(result);
 	}
 
-	void SoundSystem::playSound_f( const CmdArgs& args )
+	void SoundSystem::playSound_f( const CmdArgs &args )
 	{
 		String name = "sounds/test.ogg";
 
@@ -114,28 +114,28 @@ AX_BEGIN_NAMESPACE
 
 		playSound(ChannelId_Any, m_commandSfx.get());
 #if 0
-		FMOD::Sound* sound;
+		FMOD::Sound *sound;
 		FMOD_RESULT result = m_fmodSystem->createSound(, FMOD_DEFAULT, 0, &sound);
 		
 		m_fmodSystem->playSound(FMOD_CHANNEL_FREE, sound, false, 0);
 
-		FMOD::Sound* sound2;
+		FMOD::Sound *sound2;
 		result = m_fmodSystem->createSound("sounds/test.ogg", FMOD_DEFAULT, 0, &sound2);
 #endif
 	}
 
-	SoundFx* SoundSystem::createSfx( const String& name )
+	SoundFx *SoundSystem::createSfx( const String &name )
 	{
 		SfxDict::const_iterator it = m_sfxDict.find(name);
 
 		if (it != m_sfxDict.end()) {
-			SoundFx* result = it->second;
+			SoundFx *result = it->second;
 			result->addref();
 			return result;
 		}
 
-		SoundFx* result = new SoundFx();
-		FMOD::Sound* fmodSound;
+		SoundFx *result = new SoundFx();
+		FMOD::Sound *fmodSound;
 
 		FMOD_RESULT hr = m_fmodSystem->createSound(name.c_str(), FMOD_3D | FMOD_SOFTWARE, 0, &fmodSound);
 
@@ -147,7 +147,7 @@ AX_BEGIN_NAMESPACE
 		return result;
 	}
 
-	void SoundSystem::_removeSfx( SoundFx* sfx )
+	void SoundSystem::_removeSfx( SoundFx *sfx )
 	{
 		SfxDict::iterator it = m_sfxDict.find(sfx->m_name);
 		if (it == m_sfxDict.end()) {
@@ -162,13 +162,13 @@ AX_BEGIN_NAMESPACE
 	void SoundSystem::tick()
 	{
 		if (m_activeWorld) {
-			const AffineMat& mat = m_activeWorld->m_listenerMatrix;
+			const AffineMat &mat = m_activeWorld->m_listenerMatrix;
 			m_fmodSystem->set3DListenerAttributes(0, tr(mat.origin), tr(m_activeWorld->m_listenerVelocity), tr(mat.axis[0]), tr(mat.axis[2]));
 		}
 		m_fmodSystem->update();
 	}
 
-	void SoundSystem::playSound( int channelId, SoundFx* sfx, LoopingMode looping /*= Looping_None*/ )
+	void SoundSystem::playSound( int channelId, SoundFx *sfx, LoopingMode looping /*= Looping_None*/ )
 	{
 		_playSound(0, 0, channelId, sfx, looping);
 	}
@@ -178,7 +178,7 @@ AX_BEGIN_NAMESPACE
 		_stopSound(0, 0, channelId);
 	}
 
-	void SoundSystem::_playSound( SoundWorld* world, SoundEntity* entity, int channelId, SoundFx* sfx, LoopingMode looping /*= Looping_None*/, float minDist /*= DEFAULT_MIN_DIST*/, float maxDist /*= DEFAULT_MAX_DIST*/ )
+	void SoundSystem::_playSound( SoundWorld *world, SoundEntity *entity, int channelId, SoundFx *sfx, LoopingMode looping /*= Looping_None*/, float minDist /*= DEFAULT_MIN_DIST*/, float maxDist /*= DEFAULT_MAX_DIST*/ )
 	{
 		if (!sfx || !sfx->isValid())
 			return;
@@ -190,8 +190,8 @@ AX_BEGIN_NAMESPACE
 
 		FMOD_RESULT hr;
 
-		FMOD::Channel* fmodChannel = 0;
-		SoundChannel* channel = 0;
+		FMOD::Channel *fmodChannel = 0;
+		SoundChannel *channel = 0;
 		SoundKey key(world,entity,channelId);
 		int index = -1;
 
@@ -248,7 +248,7 @@ AX_BEGIN_NAMESPACE
 		ERRCHECK(hr);
 	}
 
-	void SoundSystem::_stopSound( SoundWorld* world, SoundEntity* entity, int channelId )
+	void SoundSystem::_stopSound( SoundWorld *world, SoundEntity *entity, int channelId )
 	{
 		if (channelId == ChannelId_Any)
 			return;
@@ -259,7 +259,7 @@ AX_BEGIN_NAMESPACE
 			return;
 
 		int index = it->second;
-		SoundChannel& ch = m_channels[index];
+		SoundChannel &ch = m_channels[index];
 
 		AX_ASSERT(key == ch.m_key);
 
@@ -350,7 +350,7 @@ AX_BEGIN_NAMESPACE
 
 	void SoundSystem::_hintChannelEnd(int index)
 	{
-		SoundChannel& channel = m_channels[index];
+		SoundChannel &channel = m_channels[index];
 
 		if (channel.m_key.channelId == ChannelId_Any)
 			return;
@@ -363,7 +363,7 @@ AX_BEGIN_NAMESPACE
 		m_channelDict.erase(it);
 	}
 
-	void SoundSystem::setWorld( SoundWorld* world )
+	void SoundSystem::setWorld( SoundWorld *world )
 	{
 		m_activeWorld = world;
 	}

@@ -26,20 +26,20 @@ AX_BEGIN_NAMESPACE
 		Angles(const Vector3 &v);
 
 		void set(float pitch, float yaw, float roll);
-		Angles& zero(void);
+		Angles &zero(void);
 
 		float operator[](int index) const;
-		float& operator[](int index);
+		float &operator[](int index);
 		Angles operator-() const;			// negate angles, in general not the inverse rotation
-		Angles& operator=(const Angles &a);
+		Angles &operator=(const Angles &a);
 		Angles operator+(const Angles &a) const;
-		Angles& operator+=(const Angles &a);
+		Angles &operator+=(const Angles &a);
 		Angles operator-(const Angles &a) const;
-		Angles& operator-=(const Angles &a);
+		Angles &operator-=(const Angles &a);
 		Angles operator*(const float a) const;
-		Angles& operator*=(const float a);
+		Angles &operator*=(const float a);
 		Angles operator/(const float a) const;
-		Angles& operator/=(const float a);
+		Angles &operator/=(const float a);
 
 		friend Angles operator*(const float a, const Angles &b);
 
@@ -48,8 +48,8 @@ AX_BEGIN_NAMESPACE
 		bool operator==(const Angles &a) const;						// exact compare, no epsilon
 		bool operator!=(const Angles &a) const;						// exact compare, no epsilon
 
-		Angles& normalize360(void);	// normalizes 'this'
-		Angles& normalize180(void);	// normalizes 'this'
+		Angles &normalize360(void);	// normalizes 'this'
+		Angles &normalize180(void);	// normalizes 'this'
 
 		void clamp(const Angles &min, const Angles &max);
 
@@ -63,10 +63,10 @@ AX_BEGIN_NAMESPACE
 		Matrix3 toMatrix3(void) const;
 		Matrix4 toMatrix4(void) const;
 		Vector3 toAngularVelocity(void) const;
-		const float* toFloatPtr(void) const;
-		float* toFloatPtr(void);
+		const float *toFloatPtr(void) const;
+		float *toFloatPtr(void);
 
-		Angles& fromShort(short rhs[3]);
+		Angles &fromShort(short rhs[3]);
 		static Angles trShort(short rhs[3]);
 	};
 
@@ -121,7 +121,7 @@ AX_BEGIN_NAMESPACE
 		return Angles(pitch + a.pitch, yaw + a.yaw, roll + a.roll);
 	}
 
-	inline Angles& Angles::operator+=(const Angles &a) {
+	inline Angles &Angles::operator+=(const Angles &a) {
 		pitch += a.pitch;
 		yaw += a.yaw;
 		roll += a.roll;
@@ -133,7 +133,7 @@ AX_BEGIN_NAMESPACE
 		return Angles(pitch - a.pitch, yaw - a.yaw, roll - a.roll);
 	}
 
-	inline Angles& Angles::operator-=(const Angles &a) {
+	inline Angles &Angles::operator-=(const Angles &a) {
 		pitch -= a.pitch;
 		yaw -= a.yaw;
 		roll -= a.roll;
@@ -145,7 +145,7 @@ AX_BEGIN_NAMESPACE
 		return Angles(pitch * a, yaw * a, roll * a);
 	}
 
-	inline Angles& Angles::operator*=(float a) {
+	inline Angles &Angles::operator*=(float a) {
 		pitch *= a;
 		yaw *= a;
 		roll *= a;
@@ -157,7 +157,7 @@ AX_BEGIN_NAMESPACE
 		return Angles(pitch * inva, yaw * inva, roll * inva);
 	}
 
-	inline Angles& Angles::operator/=(float a) {
+	inline Angles &Angles::operator/=(float a) {
 		float inva = 1.0f / a;
 		pitch *= inva;
 		yaw *= inva;

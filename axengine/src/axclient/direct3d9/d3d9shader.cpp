@@ -13,12 +13,12 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-	static ID3DXEffectPool* s_effectPool = NULL;   // Effect pool for sharing parameters
+	static ID3DXEffectPool *s_effectPool = NULL;   // Effect pool for sharing parameters
 
 	// cache system samplers
 	static struct SamplerParam {
 		SamplerType type;
-		const char* paramname;
+		const char *paramname;
 	} samplername[] = {
 		SamplerType::Diffuse, "g_diffuseMap",
 		SamplerType::Normal, "g_normalMap",
@@ -41,10 +41,10 @@ AX_BEGIN_NAMESPACE
 
 	class EffectHelper {
 	public:
-		EffectHelper(ID3DXEffect* obj) : m_object(obj) {}
+		EffectHelper(ID3DXEffect *obj) : m_object(obj) {}
 
 		String getString(D3DXHANDLE h) {
-			const char* str;
+			const char *str;
 
 			HRESULT hr = m_object->GetString(h, &str);
 			if (SUCCEEDED(hr) && str && str[0]) {
@@ -65,7 +65,7 @@ AX_BEGIN_NAMESPACE
 			return 0;
 		}
 
-		String getAnno(D3DXHANDLE param, const char* anno_name) {
+		String getAnno(D3DXHANDLE param, const char *anno_name) {
 			String result;
 			D3DXHANDLE anno = m_object->GetAnnotationByName(param, anno_name);
 
@@ -77,7 +77,7 @@ AX_BEGIN_NAMESPACE
 		}
 
 	private:
-		ID3DXEffect* m_object;
+		ID3DXEffect *m_object;
 	};
 
 	class D3D9include : public ID3DXInclude {
@@ -103,7 +103,7 @@ AX_BEGIN_NAMESPACE
 	// class UniformCache
 	//--------------------------------------------------------------------------
 
-	D3D9uniform::D3D9uniform(UniformItem& item, D3DXHANDLE param)
+	D3D9uniform::D3D9uniform(UniformItem &item, D3DXHANDLE param)
 		: UniformItem(item)
 	{
 		m_src = &item;
@@ -125,7 +125,7 @@ AX_BEGIN_NAMESPACE
 		memcpy(m_datap, m_src->m_datap, m_dataSize);
 	}
 
-	void D3D9uniform::setUniform( UniformItem& item, const void* q )
+	void D3D9uniform::setUniform( UniformItem &item, const void *q )
 	{
 			// direct set
 		HRESULT hr;
@@ -138,7 +138,7 @@ AX_BEGIN_NAMESPACE
 		case UniformItem::vt_Vector4:
 			{
 				int n = (item.m_dataSize + 15) / 16;
-				const float* data = (const float*)q;
+				const float *data = (const float*)q;
 				if (item.m_vsregister) {
 					V(d3d9Device->SetVertexShaderConstantF(item.m_vsregister, data, n));
 				}
@@ -150,7 +150,7 @@ AX_BEGIN_NAMESPACE
 			break;
 		case UniformItem::vt_Vector2:
 			if (item.m_arraySize == 1 ) {
-				const float* data = (const float*)q;
+				const float *data = (const float*)q;
 				if (item.m_vsregister) {
 					V(d3d9Device->SetVertexShaderConstantF(item.m_vsregister, data, 1));
 				}
@@ -160,7 +160,7 @@ AX_BEGIN_NAMESPACE
 				}
 			} else {
 				Vector4 vec4[8];
-				const Vector2* vec2 = (const Vector2*)q;
+				const Vector2 *vec2 = (const Vector2*)q;
 				for (int i = 0; i < item.m_arraySize; i++) {
 					vec4[i].set(vec2[i].x, vec2[i].y, 0, 0);
 				}
@@ -175,7 +175,7 @@ AX_BEGIN_NAMESPACE
 			break;
 		case UniformItem::vt_Matrix3:
 			{
-				Matrix3& axis = *(Matrix3*)q;
+				Matrix3 &axis = *(Matrix3*)q;
 				Matrix4 matrix = axis;
 				if (item.m_vsregister) {
 					V(d3d9Device->SetVertexShaderConstantF(item.m_vsregister, matrix, 1));
@@ -188,7 +188,7 @@ AX_BEGIN_NAMESPACE
 			break;
 		case UniformItem::vt_AffineMat:
 			if (item.m_arraySize == 1) {
-				AffineMat& am = *(AffineMat*)q;
+				AffineMat &am = *(AffineMat*)q;
 				Matrix4 matrix = am.toMatrix4().getTranspose();
 
 				if (item.m_vsregister) {
@@ -213,7 +213,7 @@ AX_BEGIN_NAMESPACE
 					V(d3d9Device->SetPixelShaderConstantF(item.m_psregister, matrix, 4));
 				}
 			} else {
-				const Matrix4* old = (const Matrix4*)q;
+				const Matrix4 *old = (const Matrix4*)q;
 				Matrix4 matrix[8];
 				for (int i = 0; i < item.m_arraySize; i++) {
 					matrix[i] = old[i].getTranspose();
@@ -250,7 +250,7 @@ AX_BEGIN_NAMESPACE
 	D3D9shader::~D3D9shader()
 	{}
 
-	bool D3D9shader::doInit(const String& name, const ShaderMacro& macro)
+	bool D3D9shader::doInit(const String &name, const ShaderMacro &macro)
 	{
 		m_keyString = name;
 		String fullname = "shaders/" + name + ".fx";
@@ -287,7 +287,7 @@ AX_BEGIN_NAMESPACE
 #if 0
 		(hr = D3DXCreateEffectFromFile(d3d9Device, u2w(ospath).c_str(), &d3dxmacros[0], NULL, dwFlags, 0, &m_object, &errbuf));
 #else
-		void* filebuf;
+		void *filebuf;
 		size_t filesize;
 
 		filesize = g_fileSystem->readFile(fullname, &filebuf);
@@ -336,7 +336,7 @@ AX_BEGIN_NAMESPACE
 		return s2i(m_samplerannSeq.size());
 	}
 
-	SamplerAnno* D3D9shader::getSamplerAnno(int index) const {
+	SamplerAnno *D3D9shader::getSamplerAnno(int index) const {
 		return m_samplerannSeq[index];
 	}
 
@@ -344,7 +344,7 @@ AX_BEGIN_NAMESPACE
 		return 0;
 	}
 
-	ParameterAnno* D3D9shader::getTweakableDef(int index) {
+	ParameterAnno *D3D9shader::getTweakableDef(int index) {
 		return 0;
 	}
 
@@ -441,7 +441,7 @@ AX_BEGIN_NAMESPACE
 
 			if (filename[0] != '$') {
 #if 0
-				D3D9texture* tex = FindAsset_<D3D9texture>(filename);
+				D3D9texture *tex = FindAsset_<D3D9texture>(filename);
 				if (tex) {
 					m_object->SetTexture(texparam, tex->getObject());
 				}
@@ -460,7 +460,7 @@ AX_BEGIN_NAMESPACE
 				return;
 			}
 
-			D3D9samplerann* san = new D3D9samplerann;
+			D3D9samplerann *san = new D3D9samplerann;
 
 			san->m_param = texparam;
 			san->m_renderType = rendertype;
@@ -510,7 +510,7 @@ AX_BEGIN_NAMESPACE
 		return d3dtech;
 	}
 
-	D3DXHANDLE D3D9shader::getUsedParameter(const char* name)
+	D3DXHANDLE D3D9shader::getUsedParameter(const char *name)
 	{
 		D3DXHANDLE param = m_object->GetParameterByName(0, name);
 
@@ -536,7 +536,7 @@ AX_BEGIN_NAMESPACE
 		}
 	}
 
-	void D3D9shader::setSystemMap(SamplerType maptype, D3D9texture* tex)
+	void D3D9shader::setSystemMap(SamplerType maptype, D3D9texture *tex)
 	{
 		AX_ASSERT(maptype >= 0 && maptype < SamplerType::NUMBER_ALL);
 
@@ -586,8 +586,8 @@ AX_BEGIN_NAMESPACE
 		float invheight = 1.0f / height;
 
 		for (size_t i = 0; i < pixel2Texels.size(); i++) {
-			D3D9pixel2texel& p2t = pixel2Texels[i]; 
-			FloatSeq& data = p2t.m_scaledValue = p2t.m_pixelValue;
+			D3D9pixel2texel &p2t = pixel2Texels[i]; 
+			FloatSeq &data = p2t.m_scaledValue = p2t.m_pixelValue;
 
 			int numvalue = s2i(data.size()) / 2;
 			for (int j = 0; j < numvalue; j++) {
@@ -640,7 +640,7 @@ AX_BEGIN_NAMESPACE
 
 	}
 
-	void D3D9shader::setCoupled( Material* mtr )
+	void D3D9shader::setCoupled( Material *mtr )
 	{
 		m_coupled = mtr;
 	}
@@ -687,12 +687,12 @@ AX_BEGIN_NAMESPACE
 
 	}
 
-	Shader* D3D9shadermanager::findShader(const String& name, const ShaderMacro& macro)
+	Shader *D3D9shadermanager::findShader(const String &name, const ShaderMacro &macro)
 	{
 		return findShader(FixedString(name), macro);
 	}
 
-	Shader* D3D9shadermanager::findShader( const FixedString& nameId, const ShaderMacro& macro )
+	Shader *D3D9shadermanager::findShader( const FixedString &nameId, const ShaderMacro &macro )
 	{
 		D3D9_SCOPELOCK;
 
@@ -711,14 +711,14 @@ AX_BEGIN_NAMESPACE
 		return shader;
 	}
 
-	D3D9shader* D3D9shadermanager::findShaderDX(const String& name, const ShaderMacro& macro)
+	D3D9shader *D3D9shadermanager::findShaderDX(const String &name, const ShaderMacro &macro)
 	{
 		D3D9_SCOPELOCK;
 
 		return (D3D9shader*)findShader(name, macro);
 	}
 
-	void D3D9shadermanager::saveShaderCache( const String& name )
+	void D3D9shadermanager::saveShaderCache( const String &name )
 	{
 		String filename;
 		if (filename.empty())
@@ -744,7 +744,7 @@ AX_BEGIN_NAMESPACE
 			Dict<ShaderMacro,D3D9shader*>::const_iterator it2 = shaders.begin();
 
 			for (; it2 != shaders.end(); ++it2) {
-				TiXmlElement* item = new TiXmlElement("cacheItem");
+				TiXmlElement *item = new TiXmlElement("cacheItem");
 				item->SetAttribute("name", it->first.toString().c_str());
 				item->SetAttribute("macro", it2->first.toString());
 				root->LinkEndChild(item);
@@ -754,7 +754,7 @@ AX_BEGIN_NAMESPACE
 		doc.SaveFile(filename);
 	}
 
-	void D3D9shadermanager::applyShaderCache( const String& name )
+	void D3D9shadermanager::applyShaderCache( const String &name )
 	{
 		String filename;
 		if (filename.empty())
@@ -768,13 +768,13 @@ AX_BEGIN_NAMESPACE
 		if (!doc.LoadFile(filename, TIXML_ENCODING_UTF8))
 			return;
 
-		TiXmlElement* root = doc.RootElement();
+		TiXmlElement *root = doc.RootElement();
 		int version = 0;
 		root->Attribute("version", &version);
 		if (version != ShaderMacro::VERSION)
 			return;
 
-		TiXmlElement* item = root->FirstChildElement();
+		TiXmlElement *item = root->FirstChildElement();
 		String shadername = item->Attribute("name");
 		ShaderMacro macro;
 		for (; item; item = item->NextSiblingElement()) {
@@ -785,7 +785,7 @@ AX_BEGIN_NAMESPACE
 		}
 	}
 
-	D3D9technique::D3D9technique( D3D9shader* shader, D3DXHANDLE d3dxhandle )
+	D3D9technique::D3D9technique( D3D9shader *shader, D3DXHANDLE d3dxhandle )
 	{
 		m_shader = shader;
 		m_d3dxhandle = d3dxhandle;
@@ -813,7 +813,7 @@ AX_BEGIN_NAMESPACE
 
 	}
 
-	D3D9pass::D3D9pass( D3D9shader* shader, D3DXHANDLE d3dxhandle )
+	D3D9pass::D3D9pass( D3D9shader *shader, D3DXHANDLE d3dxhandle )
 	{
 		m_shader = shader;
 		m_d3dxhandle = d3dxhandle;
@@ -914,7 +914,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 
-	const D3D9pixel2texel*  D3D9pass::findPixel2Texel( const String& name )
+	const D3D9pixel2texel*  D3D9pass::findPixel2Texel( const String &name )
 	{
 		D3D9pixel2texels::const_iterator it = m_shader->pixel2Texels.begin();
 
@@ -952,7 +952,7 @@ AX_BEGIN_NAMESPACE
 #endif
 	}
 
-	void D3D9pass::initSampler( const D3DXCONSTANT_DESC& desc )
+	void D3D9pass::initSampler( const D3DXCONSTANT_DESC &desc )
 	{
 		// check material sampler
 		for (UINT i = 0; i < ArraySize(samplername); i++) {
@@ -964,7 +964,7 @@ AX_BEGIN_NAMESPACE
 
 		// check system sampler
 		for (int i = 0; i < Uniforms::NUM_UNIFORM_ITEMS; i++) {
-			UniformItem& item = g_uniforms.getItem(i);
+			UniformItem &item = g_uniforms.getItem(i);
 
 			if (item.m_valueType != UniformItem::vt_Texture)
 				continue;
@@ -977,9 +977,9 @@ AX_BEGIN_NAMESPACE
 
 		// check batch sampler
 		for (int i = 0; i < s2i(m_shader->m_samplerannSeq.size()); i++) {
-			D3D9samplerann* bs = m_shader->m_samplerannSeq[i];
+			D3D9samplerann *bs = m_shader->m_samplerannSeq[i];
 			if (bs->m_paramName == desc.Name) {
-				D3D9samplerann* newbs = new D3D9samplerann();
+				D3D9samplerann *newbs = new D3D9samplerann();
 				*newbs = *bs;
 				newbs->m_register = desc.RegisterIndex;
 				m_batchSamplers.push_back(newbs);
@@ -993,7 +993,7 @@ AX_BEGIN_NAMESPACE
 
 	void D3D9pass::begin()
 	{
-		Material* mtr = m_shader->m_coupled;
+		Material *mtr = m_shader->m_coupled;
 
 		// set shader
 		d3d9StateManager->SetVertexShader(m_vs);
@@ -1018,7 +1018,7 @@ AX_BEGIN_NAMESPACE
 				if (m_matSamplers[i] == -1)
 					continue;
 
-				Texture* tex = mtr->getTexture(i);
+				Texture *tex = mtr->getTexture(i);
 				d3d9StateManager->setTexture(m_matSamplers[i], tex);
 			}
 		} else {
@@ -1026,7 +1026,7 @@ AX_BEGIN_NAMESPACE
 				if (m_matSamplers[i] == -1)
 					continue;
 
-				Texture* tex = m_shader->m_samplerBound[i];
+				Texture *tex = m_shader->m_samplerBound[i];
 				d3d9StateManager->setTexture(m_matSamplers[i], tex);
 			}
 		}
@@ -1036,15 +1036,15 @@ AX_BEGIN_NAMESPACE
 		for (; it != m_sysSamplers.end(); ++it) {
 			int f = it->first;
 			int s = it->second;
-			UniformItem& item = g_uniforms.getItem(f);
-			Texture* tex = *(Texture**)item.m_datap;
+			UniformItem &item = g_uniforms.getItem(f);
+			Texture *tex = *(Texture**)item.m_datap;
 			d3d9StateManager->setTexture(s, tex);
 		}
 
 		// set batch sampler
 		int count = 0;
 		for (size_t i = 0; i < m_batchSamplers.size(); i++) {
-			D3D9samplerann* sa = m_batchSamplers[i];
+			D3D9samplerann *sa = m_batchSamplers[i];
 			if (sa->m_renderType == SamplerAnno::Reflection) {
 				if (!d3d9Interaction) {
 					continue;
@@ -1054,19 +1054,19 @@ AX_BEGIN_NAMESPACE
 					continue;
 				}
 
-				Interaction* ia = d3d9Interaction;
+				Interaction *ia = d3d9Interaction;
 
-				RenderTarget* target = ia->targets[count];
-				D3D9target* textarget = (D3D9target*)target;
-				D3D9texture* tex = textarget->getTextureDX();
+				RenderTarget *target = ia->targets[count];
+				D3D9target *textarget = (D3D9target*)target;
+				D3D9texture *tex = textarget->getTextureDX();
 				tex->setClampMode(Texture::CM_ClampToEdge);
 
 				d3d9StateManager->setTexture(sa->m_register, tex);
 			} else if (sa->m_renderType == SamplerAnno::SceneColor) {
 				Rect r = d3d9BoundTarget->getRect();
 
-				D3D9target* target = d3d9TargetManager->allocTargetDX(RenderTarget::TemporalAlloc, r.width, r.height, TexFormat::BGRA8);
-				D3D9texture* tex = target->getTextureDX();
+				D3D9target *target = d3d9TargetManager->allocTargetDX(RenderTarget::TemporalAlloc, r.width, r.height, TexFormat::BGRA8);
+				D3D9texture *tex = target->getTextureDX();
 				tex->setClampMode(Texture::CM_ClampToEdge);
 				target->copyFramebuffer(r);
 				d3d9StateManager->setTexture(sa->m_register, tex);
@@ -1076,7 +1076,7 @@ AX_BEGIN_NAMESPACE
 
 	void D3D9pass::setParameters()
 	{
-		const ShaderParams* mtrparams = 0;
+		const ShaderParams *mtrparams = 0;
 		if (m_shader->m_coupled) {
 			mtrparams = &m_shader->m_coupled->getParameters();
 
@@ -1086,8 +1086,8 @@ AX_BEGIN_NAMESPACE
 
 		// set constant
 		for (Dict<String,ParamDesc>::const_iterator it = m_vsParameters.begin(); it != m_vsParameters.end(); ++it) {
-			const ParamDesc& desc = it->second;
-			const float* value = 0;
+			const ParamDesc &desc = it->second;
+			const float *value = 0;
 
 			if (mtrparams) {
 				ShaderParams::const_iterator it2 = mtrparams->find(it->first);
@@ -1100,8 +1100,8 @@ AX_BEGIN_NAMESPACE
 		}
 
 		for (Dict<String,ParamDesc>::const_iterator it = m_psParameters.begin(); it != m_psParameters.end(); ++it) {
-			const ParamDesc& desc = it->second;
-			const float* value = 0;
+			const ParamDesc &desc = it->second;
+			const float *value = 0;
 
 			if (mtrparams) {
 				ShaderParams::const_iterator it2 = mtrparams->find(it->first);
@@ -1114,9 +1114,9 @@ AX_BEGIN_NAMESPACE
 		}
 	}
 
-	void D3D9pass::setParameter( const ParamDesc& param, const float* value, bool isPixelShader )
+	void D3D9pass::setParameter( const ParamDesc &param, const float *value, bool isPixelShader )
 	{
-		const float* realvalue = (const float*)param.d3dDesc.DefaultValue;
+		const float *realvalue = (const float*)param.d3dDesc.DefaultValue;
 
 		if (value)
 			realvalue = value;

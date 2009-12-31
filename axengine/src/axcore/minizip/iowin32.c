@@ -23,19 +23,19 @@
 
 voidpf ZCALLBACK win32_open_file_func OF((
    voidpf opaque,
-   const char* filename,
+   const char *filename,
    int mode));
 
 uLong ZCALLBACK win32_read_file_func OF((
    voidpf opaque,
    voidpf stream,
-   void* buf,
+   void *buf,
    uLong size));
 
 uLong ZCALLBACK win32_write_file_func OF((
    voidpf opaque,
    voidpf stream,
-   const void* buf,
+   const void *buf,
    uLong size));
 
 long ZCALLBACK win32_tell_file_func OF((
@@ -64,10 +64,10 @@ typedef struct
 
 voidpf ZCALLBACK win32_open_file_func (opaque, filename, mode)
    voidpf opaque;
-   const char* filename;
+   const char *filename;
    int mode;
 {
-    const char* mode_fopen = NULL;
+    const char *mode_fopen = NULL;
     DWORD dwDesiredAccess,dwCreationDisposition,dwShareMode,dwFlagsAndAttributes ;
     HANDLE hFile = 0;
     voidpf ret=NULL;
@@ -117,7 +117,7 @@ voidpf ZCALLBACK win32_open_file_func (opaque, filename, mode)
 uLong ZCALLBACK win32_read_file_func (opaque, stream, buf, size)
    voidpf opaque;
    voidpf stream;
-   void* buf;
+   void *buf;
    uLong size;
 {
     uLong ret=0;
@@ -140,7 +140,7 @@ uLong ZCALLBACK win32_read_file_func (opaque, stream, buf, size)
 uLong ZCALLBACK win32_write_file_func (opaque, stream, buf, size)
    voidpf opaque;
    voidpf stream;
-   const void* buf;
+   const void *buf;
    uLong size;
 {
     uLong ret=0;
@@ -257,7 +257,7 @@ int ZCALLBACK win32_error_file_func (opaque, stream)
 }
 
 void fill_win32_filefunc (pzlib_filefunc_def)
-  zlib_filefunc_def* pzlib_filefunc_def;
+  zlib_filefunc_def *pzlib_filefunc_def;
 {
     pzlib_filefunc_def->zopen_file = win32_open_file_func;
     pzlib_filefunc_def->zread_file = win32_read_file_func;

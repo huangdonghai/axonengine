@@ -11,11 +11,11 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-	int GLdriver::cachePrimitive(Primitive* prim) {
+	int GLdriver::cachePrimitive(Primitive *prim) {
 		return glPrimitiveManager->cachePrimitive(prim);
 	}
 
-	void GLdriver::uncachePrimitive(Primitive* prim) {
+	void GLdriver::uncachePrimitive(Primitive *prim) {
 		glPrimitiveManager->uncachePrimitive(prim);
 	}
 
@@ -38,7 +38,7 @@ AX_BEGIN_NAMESPACE
 
 	GLprimitive::~GLprimitive() {}
 
-	void GLprimitive::initialize(Primitive* src) {
+	void GLprimitive::initialize(Primitive *src) {
 		m_source = src;
 		m_hint = src->getHint();
 #if 0
@@ -88,7 +88,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 
-	void GLgeometry::initialize(Primitive* src) {
+	void GLgeometry::initialize(Primitive *src) {
 		GLprimitive::initialize(src);
 
 		switch (m_source->getType()) {
@@ -158,7 +158,7 @@ AX_BEGIN_NAMESPACE
 	void GLgeometry::drawElements() {
 
 		if (!m_instanceParams) {
-			GLindexbuffer* ib = &m_indexBuffer;
+			GLindexbuffer *ib = &m_indexBuffer;
 
 			if (m_overloadedIndexbuffer) {
 				ib = m_overloadedIndexbuffer;
@@ -171,7 +171,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 	void GLgeometry::drawElementsInstanced() {
-		GLindexbuffer* ib = &m_indexBuffer;
+		GLindexbuffer *ib = &m_indexBuffer;
 
 		if (m_overloadedIndexbuffer) {
 			ib = m_overloadedIndexbuffer;
@@ -179,10 +179,10 @@ AX_BEGIN_NAMESPACE
 
 		ib->bind();
 
-		const InstancePrim::ParamSeq& params = *m_instanceParams;
+		const InstancePrim::ParamSeq &params = *m_instanceParams;
 
 		for (size_t i = 0; i < params.size(); i++) {
-			const InstancePrim::Param& param = params[i];
+			const InstancePrim::Param &param = params[i];
 
 			glMultiTexCoord4fv(GL_TEXTURE2, param.worldMatrix.getRow(0));
 			glMultiTexCoord4fv(GL_TEXTURE3, param.worldMatrix.getRow(1));
@@ -235,9 +235,9 @@ AX_BEGIN_NAMESPACE
 		m_vertexDefs.push_back(VDF_tangent);
 		m_vertexDefs.push_back(VDF_binormal);
 
-		MeshPrim* src = (MeshPrim*)m_source;
+		MeshPrim *src = (MeshPrim*)m_source;
 
-		if (src->getIsStriped()) {
+		if (src->isStriped()) {
 			m_elementType = GL_TRIANGLE_STRIP;
 		} else {
 			m_elementType = GL_TRIANGLES;
@@ -255,7 +255,7 @@ AX_BEGIN_NAMESPACE
 
 		m_source->clearDirty();
 
-		PointPrim* Point = dynamic_cast<PointPrim*>(m_source);
+		PointPrim *Point = dynamic_cast<PointPrim*>(m_source);
 		AX_ASSERT(Point);
 
 		int refOffset = Point->getDrawOffset();
@@ -287,7 +287,7 @@ AX_BEGIN_NAMESPACE
 
 		m_source->clearDirty();
 
-		LinePrim* line = dynamic_cast<LinePrim*>(m_source);
+		LinePrim *line = dynamic_cast<LinePrim*>(m_source);
 		AX_ASSERT(line);
 
 		m_vertexCount = line->getNumVertexes();
@@ -317,7 +317,7 @@ AX_BEGIN_NAMESPACE
 
 		m_source->clearDirty();
 
-		MeshPrim* mesh = dynamic_cast<MeshPrim*>(m_source);
+		MeshPrim *mesh = dynamic_cast<MeshPrim*>(m_source);
 		AX_ASSERT(mesh);
 
 		m_vertexCount = mesh->getNumVertexes();
@@ -341,7 +341,7 @@ AX_BEGIN_NAMESPACE
 	// class GLtext
 	//------------------------------------------------------------------------------
 
-//	Material* GLtext::m_fontMtr;
+//	Material *GLtext::m_fontMtr;
 	GLtext::GLtext() {
 	}
 
@@ -349,10 +349,10 @@ AX_BEGIN_NAMESPACE
 	}
 
 
-	void GLtext::initialize(Primitive* src) {
+	void GLtext::initialize(Primitive *src) {
 		GLprimitive::initialize(src);
 
-		TextPrim* text = dynamic_cast<TextPrim*>(m_source);
+		TextPrim *text = dynamic_cast<TextPrim*>(m_source);
 		AX_ASSERT(text);
 
 		// copy text info from source primitive
@@ -397,7 +397,7 @@ AX_BEGIN_NAMESPACE
 		if (m_isSimpleText) {
 			width = 1.0f; height = 1.0f;
 
-			const Matrix3& axis = gCamera->getViewAxis();
+			const Matrix3 &axis = gCamera->getViewAxis();
 			tq.s_vector = -axis[1];
 			tq.t_vector = -axis[2];
 			tq.origin = m_position - tq.s_vector * width * 0.5f - tq.t_vector * height * 0.5f;
@@ -412,7 +412,7 @@ AX_BEGIN_NAMESPACE
 		}
 
 		WString wstr = u2w(m_text);
-		const wchar_t* pStr = wstr.c_str();
+		const wchar_t *pStr = wstr.c_str();
 		size_t total_len = wstr.length();
 		Vector2 scale, offset;
 		Vector2 startpos;
@@ -498,7 +498,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 	// implement GLprimitive
-	void GLterrain::initialize(Primitive* src) {
+	void GLterrain::initialize(Primitive *src) {
 		GLprimitive::initialize(src);
 
 		m_vertexStride = sizeof(ChunkVertex);
@@ -519,7 +519,7 @@ AX_BEGIN_NAMESPACE
 	void GLterrain::update() {
 		GLprimitive::update();
 
-		ChunkPrim* chunk = dynamic_cast<ChunkPrim*>(m_source);
+		ChunkPrim *chunk = dynamic_cast<ChunkPrim*>(m_source);
 		AX_ASSERT(chunk);
 
 		if (!m_source->isDirty())
@@ -619,7 +619,7 @@ AX_BEGIN_NAMESPACE
 		for (int i = 0; i < m_numLayers; i++) {
 			g_statistic->incValue(stat_numTerrainLayeredDrawElements);
 
-			ChunkPrim::Layer& l = m_layers[i];
+			ChunkPrim::Layer &l = m_layers[i];
 			l.detailMat->setTexture(SamplerType::TerrainColor, m_colorTexture);
 			l.detailMat->setTexture(SamplerType::TerrainNormal, m_normalTexture);
 			l.detailMat->setTexture(SamplerType::LayerAlpha, l.alphaTex);
@@ -643,16 +643,16 @@ AX_BEGIN_NAMESPACE
 	GLgroup::~GLgroup() {
 	}
 
-	void GLgroup::initialize(Primitive* src) {
+	void GLgroup::initialize(Primitive *src) {
 		GLprimitive::initialize(src);
 
-		GroupPrim* rpgroup = dynamic_cast<GroupPrim*>(src);
+		GroupPrim *rpgroup = dynamic_cast<GroupPrim*>(src);
 		AX_ASSERT(rpgroup);
 
 		uint_t count = rpgroup->getPrimitiveCount();
 
 		for (uint_t i = 0; i < count; i++) {
-			Primitive* s_prim = rpgroup->getPrimitive(i);
+			Primitive *s_prim = rpgroup->getPrimitive(i);
 			int id = glPrimitiveManager->cachePrimitive(s_prim);
 			m_primitives.push_back(id);
 		}
@@ -669,14 +669,14 @@ AX_BEGIN_NAMESPACE
 
 	void GLgroup::draw(Technique tech) {
 		for (size_t i = 0; i < m_primitives.size(); i++) {
-			GLprimitive* prim = glPrimitiveManager->getPrimitive(m_primitives[i]);
+			GLprimitive *prim = glPrimitiveManager->getPrimitive(m_primitives[i]);
 			prim->draw(tech);
 		}
 	}
 #if 0
 	void GLgroup::drawElements() {
 		for (size_t i = 0; i < m_primitives.size(); i++) {
-			GLprimitive* prim = glPrimitiveManager->getPrimitive(m_primitives[i]);
+			GLprimitive *prim = glPrimitiveManager->getPrimitive(m_primitives[i]);
 			prim->drawElements();
 		}
 	}
@@ -688,10 +688,10 @@ AX_BEGIN_NAMESPACE
 	GLref::GLref() {}
 	GLref::~GLref() {}
 
-	void GLref::initialize(Primitive* src) {
+	void GLref::initialize(Primitive *src) {
 		GLprimitive::initialize(src);
 
-		RefPrim* ref = dynamic_cast<RefPrim*>(src);
+		RefPrim *ref = dynamic_cast<RefPrim*>(src);
 		AX_ASSERT(ref);
 
 		m_cachedId = glPrimitiveManager->cachePrimitive(ref->getRefered());
@@ -715,7 +715,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 	void GLref::draw(Technique tech) {
-		GLprimitive* prim = glPrimitiveManager->getPrimitive(m_cachedId);
+		GLprimitive *prim = glPrimitiveManager->getPrimitive(m_cachedId);
 		if (m_material) {
 			prim->setOverloadMaterial(m_material);
 		}
@@ -748,7 +748,7 @@ AX_BEGIN_NAMESPACE
 	GLinstance::GLinstance() {}
 	GLinstance::~GLinstance() {}
 
-	void GLinstance::initialize(Primitive* src) {
+	void GLinstance::initialize(Primitive *src) {
 		GLprimitive::initialize(src);
 
 		update();
@@ -758,7 +758,7 @@ AX_BEGIN_NAMESPACE
 
 	void GLinstance::update() {
 		GLprimitive::update();
-		InstancePrim* gi = dynamic_cast<InstancePrim*>(m_source);
+		InstancePrim *gi = dynamic_cast<InstancePrim*>(m_source);
 		AX_ASSERT(gi);
 
 		m_instanced = glPrimitiveManager->cachePrimitive(gi->getInstanced());
@@ -769,7 +769,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 	void GLinstance::draw(Technique tech) {
-		GLprimitive* prim = glPrimitiveManager->getPrimitive(m_instanced);
+		GLprimitive *prim = glPrimitiveManager->getPrimitive(m_instanced);
 
 		prim->m_instanceParams = &m_params;
 		prim->draw(tech);
@@ -816,7 +816,7 @@ AX_BEGIN_NAMESPACE
 	void GLprimitivemanager::beginFrame() {
 	}
 
-	int GLprimitivemanager::cachePrimitive(Primitive* prim) {
+	int GLprimitivemanager::cachePrimitive(Primitive *prim) {
 		g_statistic->incValue(stat_numElements);
 
 		int f = prim->getCachedFrame();
@@ -830,7 +830,7 @@ AX_BEGIN_NAMESPACE
 		if (prim->getHint() != Primitive::HintFrame) {
 			if (h == 0) {
 				// init
-				GLprimitive* glprim = createPrim(prim);
+				GLprimitive *glprim = createPrim(prim);
 
 				findStaticFreeSlot(new_id);
 				linkId(new_id, glprim);
@@ -838,7 +838,7 @@ AX_BEGIN_NAMESPACE
 				prim->setCachedId(new_id);
 			} else {
 				// update
-				GLprimitive* glprim = getPrimitive(h);
+				GLprimitive *glprim = getPrimitive(h);
 				glprim->update();
 
 				new_id = h;
@@ -848,7 +848,7 @@ AX_BEGIN_NAMESPACE
 			if (isStatic(h))
 				uncachePrimitive(prim);
 
-			GLprimitive* glprim = createPrim(prim);
+			GLprimitive *glprim = createPrim(prim);
 
 			new_id = (int)((m_numFramePrims+1) | FRAME_FLAG);
 			m_numFramePrims++;
@@ -868,7 +868,7 @@ AX_BEGIN_NAMESPACE
 		return new_id;
 	}
 
-	void GLprimitivemanager::uncachePrimitive(Primitive* prim) {
+	void GLprimitivemanager::uncachePrimitive(Primitive *prim) {
 		SCOPE_LOCK;		// this function will called from main thread
 
 		int id = prim->getCachedId();
@@ -908,7 +908,7 @@ AX_BEGIN_NAMESPACE
 		m_framenum++;
 	}
 
-	GLprimitive* GLprimitivemanager::getPrimitive(int handle) {
+	GLprimitive *GLprimitivemanager::getPrimitive(int handle) {
 		if (handle == -1) {
 			return nullptr;
 		}
@@ -920,13 +920,13 @@ AX_BEGIN_NAMESPACE
 			return m_staticPrims[(h & INDEX_MASK)-1];
 	}
 
-	void GLprimitivemanager::findStaticFreeSlot(int& handle) {
+	void GLprimitivemanager::findStaticFreeSlot(int &handle) {
 		if (m_freePrimLink == NULL)
 			Errorf("GLprimitivemanager::findStaticFreeSlot: no free primitive slot");
 
 		// pop a free slot
 		GLprimitive** ptr = (GLprimitive**)m_freePrimLink;
-		intptr_t* link = (intptr_t*)m_freePrimLink;
+		intptr_t *link = (intptr_t*)m_freePrimLink;
 		m_freePrimLink = (void*)(*link);
 
 		handle = int((ptr - m_staticPrims) + 1);
@@ -934,7 +934,7 @@ AX_BEGIN_NAMESPACE
 		g_statistic->incValue(stat_staticPrims);
 	}
 
-	void GLprimitivemanager::linkId(int id, GLprimitive* glprim) {
+	void GLprimitivemanager::linkId(int id, GLprimitive *glprim) {
 		if (id == 0)
 			Errorf("GLprimitivemanager::linkId: error id");
 
@@ -948,8 +948,8 @@ AX_BEGIN_NAMESPACE
 		}
 	}
 
-	GLprimitive* GLprimitivemanager::createPrim(Primitive* prim) {
-		GLprimitive* glprim;
+	GLprimitive *GLprimitivemanager::createPrim(Primitive *prim) {
+		GLprimitive *glprim;
 
 		if (prim->getType() == Primitive::TextType)
 			glprim = new GLtext();

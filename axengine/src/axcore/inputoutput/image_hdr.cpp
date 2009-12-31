@@ -33,20 +33,20 @@ typedef struct {
 
 /* read or write headers */
 /* you may set rgbe_header_info to null if you want to */
-int RGBE_WriteHeader(File* fp, int width, int height, rgbe_header_info *info);
-int RGBE_ReadHeader(File* fp, int *width, int *height, rgbe_header_info *info);
+int RGBE_WriteHeader(File *fp, int width, int height, rgbe_header_info *info);
+int RGBE_ReadHeader(File *fp, int *width, int *height, rgbe_header_info *info);
 
 /* read or write pixels */
 /* can read or write pixels in chunks of any size including single pixels*/
-int RGBE_WritePixels(File* fp, float *data, int numpixels);
-int RGBE_ReadPixels(File* fp, float *data, int numpixels);
+int RGBE_WritePixels(File *fp, float *data, int numpixels);
+int RGBE_ReadPixels(File *fp, float *data, int numpixels);
 
 /* read or write run length encoded files */
 /* must be called to read or write whole scanlines */
-int RGBE_WritePixels_RLE(File* fp, float *data, int scanline_width, int num_scanlines);
-int RGBE_ReadPixels_RLE(File* fp, float *data, int scanline_width, int num_scanlines);
+int RGBE_WritePixels_RLE(File *fp, float *data, int scanline_width, int num_scanlines);
+int RGBE_ReadPixels_RLE(File *fp, float *data, int scanline_width, int num_scanlines);
 
-int RGBE_ReadPixels_Raw_RLE(File* fp, byte_t *data, int scanline_width, int num_scanlines);
+int RGBE_ReadPixels_Raw_RLE(File *fp, byte_t *data, int scanline_width, int num_scanlines);
 
 
 inline void float2rgbe(byte_t rgbe[4], float red, float green, float blue);
@@ -148,7 +148,7 @@ rgbe2float(float *red, float *green, float *blue, byte_t rgbe[4]) {
 
 /* default minimal header. modify if you want more information in header */
 int
-RGBE_WriteHeader(File* fp, int width, int height, rgbe_header_info *info) {
+RGBE_WriteHeader(File *fp, int width, int height, rgbe_header_info *info) {
 	char *programtype = "RGBE";
 
 	if (info && (info->valid & RGBE_VALID_PROGRAMTYPE))
@@ -173,7 +173,7 @@ RGBE_WriteHeader(File* fp, int width, int height, rgbe_header_info *info) {
 
 /* minimal header reading.  modify if you want to parse more information */
 int
-RGBE_ReadHeader(File* fp, int *width, int *height, rgbe_header_info *info) {
+RGBE_ReadHeader(File *fp, int *width, int *height, rgbe_header_info *info) {
 	char buf[128];
 	int found_format;
 	float tempf;
@@ -241,7 +241,7 @@ RGBE_ReadHeader(File* fp, int *width, int *height, rgbe_header_info *info) {
 /* simple write routine that does not use run length encoding */
 /* These routines can be made faster by allocating a larger buffer and
 	fread-ing and fwrite-ing the data in larger chunks */
-int RGBE_WritePixels(File* fp, float *data, int numpixels) {
+int RGBE_WritePixels(File *fp, float *data, int numpixels) {
 	byte_t rgbe[4];
 
 	while (numpixels-- > 0) {
@@ -255,7 +255,7 @@ int RGBE_WritePixels(File* fp, float *data, int numpixels) {
 }
 
 /* simple read routine.  will not correctly handle run length encoding */
-int RGBE_ReadPixels(File* fp, float* data, int numpixels) {
+int RGBE_ReadPixels(File *fp, float *data, int numpixels) {
 	byte_t rgbe[4];
 
 	while (numpixels-- > 0) {
@@ -269,7 +269,7 @@ int RGBE_ReadPixels(File* fp, float* data, int numpixels) {
 }
 
 
-int RGBE_ReadPixels_Raw(File* fp, byte_t *data, int numpixels) {
+int RGBE_ReadPixels_Raw(File *fp, byte_t *data, int numpixels) {
 	if (fp->read(data, 4 * numpixels) < size_t(4 * numpixels))
 		return rgbe_error(rgbe_read_error,NULL);
 
@@ -283,7 +283,7 @@ int RGBE_ReadPixels_Raw(File* fp, byte_t *data, int numpixels) {
 /* save some space.  For each scanline, each channel (r,g,b,e) is */
 /* encoded separately for better compression. */
 
-static int RGBE_WriteBytes_RLE(File* fp, byte_t *data, int numbytes) {
+static int RGBE_WriteBytes_RLE(File *fp, byte_t *data, int numbytes) {
 #define MINRUNLENGTH 4
 	int cur, beg_run, run_count, old_run_count, nonrun_count;
 	byte_t buf[2];
@@ -334,7 +334,7 @@ static int RGBE_WriteBytes_RLE(File* fp, byte_t *data, int numbytes) {
 #undef MINRUNLENGTH
 }
 
-int RGBE_WritePixels_RLE(File* fp, float *data, int scanline_width, int num_scanlines) {
+int RGBE_WritePixels_RLE(File *fp, float *data, int scanline_width, int num_scanlines) {
 	byte_t rgbe[4];
 	byte_t *buffer;
 	int i, err;
@@ -379,7 +379,7 @@ int RGBE_WritePixels_RLE(File* fp, float *data, int scanline_width, int num_scan
 	return RGBE_RETURN_SUCCESS;
 }
 
-int RGBE_ReadPixels_RLE(File* fp, float *data, int scanline_width, int num_scanlines) {
+int RGBE_ReadPixels_RLE(File *fp, float *data, int scanline_width, int num_scanlines) {
 	byte_t rgbe[4], *scanline_buffer, *ptr, *ptr_end;
 	int i, count;
 	byte_t buf[2];
@@ -464,7 +464,7 @@ int RGBE_ReadPixels_RLE(File* fp, float *data, int scanline_width, int num_scanl
 }
 
 
-int RGBE_ReadPixels_Raw_RLE(File* fp, byte_t *data, int scanline_width, int num_scanlines) {
+int RGBE_ReadPixels_Raw_RLE(File *fp, byte_t *data, int scanline_width, int num_scanlines) {
 	byte_t rgbe[4], *scanline_buffer, *ptr, *ptr_end;
 	int i, count;
 	byte_t buf[2];
@@ -555,11 +555,11 @@ int RGBE_ReadPixels_Raw_RLE(File* fp, byte_t *data, int scanline_width, int num_
 }
 
 bool
-Image::loadFile_hdr(const String& filename) {
+Image::loadFile_hdr(const String &filename) {
 	clear();
 
 	/* load file */ 
-	File* file = g_fileSystem->openFileRead(filename);
+	File *file = g_fileSystem->openFileRead(filename);
 
 	std::auto_ptr<File> fileptr(file);
 
@@ -573,7 +573,7 @@ Image::loadFile_hdr(const String& filename) {
 	}
 
 	if (m_loadFlags & Image::RgbeRaw) {
-		byte_t* pixels = new byte_t[m_width * m_height * 4];
+		byte_t *pixels = new byte_t[m_width * m_height * 4];
 		if (RGBE_ReadPixels_Raw_RLE(file, pixels, m_width, m_height)) {
 			SafeFree(pixels);
 			return false;
@@ -585,7 +585,7 @@ Image::loadFile_hdr(const String& filename) {
 		return true;
 	}
 
-	byte_t* pixels = new byte_t[m_width * m_height * RGBE_DATA_SIZE * sizeof(float)];
+	byte_t *pixels = new byte_t[m_width * m_height * RGBE_DATA_SIZE * sizeof(float)];
 	if (RGBE_ReadPixels_RLE(file, (float*)pixels, m_width, m_height)) {
 		SafeFree(pixels);
 		return false;

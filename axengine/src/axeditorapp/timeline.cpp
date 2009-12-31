@@ -81,7 +81,7 @@ void TimeLine::drawBackground(QPainter *painter, const QRectF &rectf)
 #endif
 }
 
-void TimeLine::drawLine(QPainter* painter, const QRect& rect, int stepf, int len, bool draw_text)
+void TimeLine::drawLine(QPainter *painter, const QRect &rect, int stepf, int len, bool draw_text)
 {
 	// draw step line
 	painter->setPen(Qt::gray);

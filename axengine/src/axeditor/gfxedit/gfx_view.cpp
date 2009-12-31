@@ -63,7 +63,7 @@ static LinePrim *createGrid()
 	return result;
 }
 
-GfxView::GfxView(GfxContext* ctx) : View(ctx)
+GfxView::GfxView(GfxContext *ctx) : View(ctx)
 {
 	m_tracking = kNone;
 	m_moving = 0;
@@ -83,7 +83,7 @@ void GfxView::doRender()
 	m_context->doRender(m_camera, true);
 }
 
-void GfxView::onKeyDown(InputEvent* e)
+void GfxView::onKeyDown(InputEvent *e)
 {
 #if 0
 	doUpdate();
@@ -116,7 +116,7 @@ void GfxView::onKeyDown(InputEvent* e)
 	}
 }
 
-void GfxView::onKeyUp(InputEvent* e)
+void GfxView::onKeyUp(InputEvent *e)
 {
 	setAutoUpdate(Default);
 
@@ -139,7 +139,7 @@ void GfxView::onKeyUp(InputEvent* e)
 	}
 }
 
-void GfxView::onMouseDown(InputEvent* e)
+void GfxView::onMouseDown(InputEvent *e)
 {
 	if (e->key == InputKey::MouseRight && e->flags & InputEvent::AltModifier) {
 		m_tracking = kPan;
@@ -197,7 +197,7 @@ void GfxView::onMouseDown(InputEvent* e)
 
 }
 
-void GfxView::onMouseUp(InputEvent* e)
+void GfxView::onMouseUp(InputEvent *e)
 {
 	//		if (e->key == InputKey::MouseRight) {
 	m_tracking = kNone;
@@ -207,10 +207,10 @@ void GfxView::onMouseUp(InputEvent* e)
 	//		}
 }
 
-void GfxView::onMouseMove(InputEvent* e)
+void GfxView::onMouseMove(InputEvent *e)
 {
-	GfxContext* mapContext = static_cast<GfxContext*>(m_context);
-	State* mapState = mapContext->getState();
+	GfxContext *mapContext = static_cast<GfxContext*>(m_context);
+	State *mapState = mapContext->getState();
 
 	if (!m_tracking)
 		return;
@@ -296,10 +296,10 @@ void GfxView::onMouseMove(InputEvent* e)
 	}
 }
 
-void GfxView::onMouseWheel(InputEvent* e)
+void GfxView::onMouseWheel(InputEvent *e)
 {
-	GfxContext* mapContext = static_cast<GfxContext*>(m_context);
-	State* mapState = mapContext->getState();
+	GfxContext *mapContext = static_cast<GfxContext*>(m_context);
+	State *mapState = mapContext->getState();
 
 	float delta = e->delta;
 
@@ -316,15 +316,15 @@ void GfxView::onMouseWheel(InputEvent* e)
 }
 
 
-void GfxView::handleEvent(InputEvent* e)
+void GfxView::handleEvent(InputEvent *e)
 {
 	View::handleEvent(e);
 }
 
 void GfxView::updateMove()
 {
-	GfxContext* mapContext = static_cast<GfxContext*>(m_context);
-	State* mapState = mapContext->getState();
+	GfxContext *mapContext = static_cast<GfxContext*>(m_context);
+	State *mapState = mapContext->getState();
 
 	int accel = m_moving & Accel;
 	accel *= 2;
@@ -351,7 +351,7 @@ void GfxView::updateMove()
 	Vector3 origin = m_eyeMatrix.origin + dir * dist;
 
 #if 0
-	Map::Terrain* terrain = m_context->getTerrain();
+	Map::Terrain *terrain = m_context->getTerrain();
 	if (mapState->followTerrain && terrain && terrain->isInWorld()) {
 		float h = terrain->getHeightByPos(m_eyeMatrix.origin) + m_camera.getZnear() * 2.0f;
 		if (origin.z < h) origin.z = h;

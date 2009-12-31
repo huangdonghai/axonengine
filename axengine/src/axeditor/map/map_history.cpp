@@ -16,7 +16,7 @@ AX_BEGIN_NAMESPACE
 	// class HeightmapHis, for terrain heightmap editing
 	//--------------------------------------------------------------------------
 
-	HeightmapHis::HeightmapHis(const String& msg, const Rect& rect, Image* olddata, Image* newdata, MapTerrain* terrain)
+	HeightmapHis::HeightmapHis(const String &msg, const Rect &rect, Image *olddata, Image *newdata, MapTerrain *terrain)
 		: MapHistory(msg)
 	{
 		m_tilerect = rect;
@@ -56,7 +56,7 @@ AX_BEGIN_NAMESPACE
 	// class TerrainMaterialDefHis, for terrain material def editing
 	//--------------------------------------------------------------------------
 
-	TerrainMaterialDefHis::TerrainMaterialDefHis(MapMaterialDef* old, MapMaterialDef* newdata, MapTerrain* terrain)
+	TerrainMaterialDefHis::TerrainMaterialDefHis(MapMaterialDef *old, MapMaterialDef *newdata, MapTerrain *terrain)
 		: MapHistory("MapMaterialDef Edit")
 	{
 		m_olddata = old;
@@ -93,7 +93,7 @@ AX_BEGIN_NAMESPACE
 	// class TerrainPaintHis
 	//--------------------------------------------------------------------------
 
-	TerrainPaintHis::TerrainPaintHis(const String& msg, const Rect& rect, int layerId, Image* olddata, Image* newdata)
+	TerrainPaintHis::TerrainPaintHis(const String &msg, const Rect &rect, int layerId, Image *olddata, Image *newdata)
 		: MapHistory(msg)
 	{
 		m_pixelrect = rect;
@@ -108,11 +108,11 @@ AX_BEGIN_NAMESPACE
 	}
 
 	void TerrainPaintHis::doIt() {
-		MapTerrain* terrain = m_context->getTerrain();
+		MapTerrain *terrain = m_context->getTerrain();
 		if (!terrain)
 			return;
 
-		MapLayerGen* lg = terrain->getLayerGenById(m_layerId);
+		MapLayerGen *lg = terrain->getLayerGenById(m_layerId);
 		if (!lg)
 			return;
 
@@ -122,11 +122,11 @@ AX_BEGIN_NAMESPACE
 	}
 
 	void TerrainPaintHis::undo() {
-		MapTerrain* terrain = m_context->getTerrain();
+		MapTerrain *terrain = m_context->getTerrain();
 		if (!terrain)
 			return;
 
-		MapLayerGen* lg = terrain->getLayerGenById(m_layerId);
+		MapLayerGen *lg = terrain->getLayerGenById(m_layerId);
 		if (!lg)
 			return;
 
@@ -154,7 +154,7 @@ AX_BEGIN_NAMESPACE
 
 	}
 
-	MapHistory::MapHistory( const String& msg ) : History(g_mapContext, msg)
+	MapHistory::MapHistory( const String &msg ) : History(g_mapContext, msg)
 	{
 
 	}

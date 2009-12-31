@@ -21,38 +21,38 @@ AX_BEGIN_NAMESPACE
 		GLprimitive();
 		virtual ~GLprimitive();
 
-		virtual void initialize(Primitive* source_primitive) = 0;
+		virtual void initialize(Primitive *source_primitive) = 0;
 		virtual void finalize() = 0;
 		virtual void update() = 0;
 		virtual void draw(Technique tech) = 0;
 //		virtual void drawElements() = 0;
 
-		void setOverloadMaterial(Material* mat) {
+		void setOverloadMaterial(Material *mat) {
 			m_overloadMaterial = mat;
 		}
 		void unsetOverloadMaterial() {
 			m_overloadMaterial = NULL;
 		}
 
-		Material* getMaterial() { return m_material; }
+		Material *getMaterial() { return m_material; }
 		inline bool isMatrixSet() const { return m_isMatrixSet; }
-		inline const Matrix4& getMatrix() const { return m_matrix; }
+		inline const Matrix4 &getMatrix() const { return m_matrix; }
 
 	protected:
-		Primitive* m_source;
+		Primitive *m_source;
 		Primitive::Hint m_hint;
-		Material* m_material;
+		Material *m_material;
 
 	public:
-		Material* m_overloadMaterial;
-		const InstancePrim::ParamSeq* m_instanceParams;
-		GLindexbuffer* m_overloadedIndexbuffer;
+		Material *m_overloadMaterial;
+		const InstancePrim::ParamSeq *m_instanceParams;
+		GLindexbuffer *m_overloadedIndexbuffer;
 		int m_activeIndexes;
 
 		bool m_isMatrixSet;
 		Matrix4 m_matrix;
 
-		Texture* m_lightmap;
+		Texture *m_lightmap;
 	};
 
 	//--------------------------------------------------------------------------
@@ -64,7 +64,7 @@ AX_BEGIN_NAMESPACE
 		GLgeometry();
 		virtual ~GLgeometry();
 
-		virtual void initialize(Primitive* source_primitive);
+		virtual void initialize(Primitive *source_primitive);
 		virtual void finalize();
 		virtual void update();
 		virtual void draw(Technique tech);
@@ -123,14 +123,14 @@ AX_BEGIN_NAMESPACE
 		GLtext();
 		virtual ~GLtext();
 
-		virtual void initialize(Primitive* source_primitive);
+		virtual void initialize(Primitive *source_primitive);
 		virtual void finalize();
 		virtual void update();
 		virtual void draw(Technique tech);
 
 	protected:
 #if 0
-		Vector2 drawString(Rgba color, const TextQuad& tq, const Vector2& xy, const wchar_t* str, size_t len, const Vector2& scale, bool italic = false);
+		Vector2 drawString(Rgba color, const TextQuad &tq, const Vector2 &xy, const wchar_t *str, size_t len, const Vector2 &scale, bool italic = false);
 #endif
 	private:
 		Rect m_rect;				// draw on this rect
@@ -138,14 +138,14 @@ AX_BEGIN_NAMESPACE
 		bool m_isSimpleText;
 		float m_aspect;
 		int m_format;			// format flags
-		Font* m_font;				// font used
+		Font *m_font;				// font used
 		String m_text;				// string to draw
 		TextPrim::HorizonAlign m_horizonAlign;
 		TextPrim::VerticalAlign m_verticalAlign;
 		Rgba m_color;
 
 #if 0
-		static Material* m_fontMtr;
+		static Material *m_fontMtr;
 #endif
 	};
 
@@ -159,7 +159,7 @@ AX_BEGIN_NAMESPACE
 		virtual ~GLterrain();
 
 		// implement GLprimitive
-		virtual void initialize(Primitive* source_primitive);
+		virtual void initialize(Primitive *source_primitive);
 		virtual void finalize();
 		virtual void update();
 		virtual void draw(Technique tech);
@@ -169,8 +169,8 @@ AX_BEGIN_NAMESPACE
 	private:
 		Vector4 m_terrainRect;
 
-		Texture* m_colorTexture;
-		Texture* m_normalTexture;
+		Texture *m_colorTexture;
+		Texture *m_normalTexture;
 		Vector4 m_zoneRect;
 
 		Vector4 m_chunkRect;
@@ -188,7 +188,7 @@ AX_BEGIN_NAMESPACE
 		GLgroup();
 		virtual ~GLgroup();
 
-		virtual void initialize(Primitive* source_primitive);
+		virtual void initialize(Primitive *source_primitive);
 		virtual void finalize();
 		virtual void update();
 		virtual void draw(Technique tech);
@@ -207,7 +207,7 @@ AX_BEGIN_NAMESPACE
 		GLref();
 		virtual ~GLref();
 
-		virtual void initialize(Primitive* source_primitive);
+		virtual void initialize(Primitive *source_primitive);
 		virtual void finalize();
 		virtual void update();
 		virtual void draw(Technique tech);
@@ -227,7 +227,7 @@ AX_BEGIN_NAMESPACE
 		GLinstance();
 		virtual ~GLinstance();
 
-		virtual void initialize(Primitive* src);
+		virtual void initialize(Primitive *src);
 		virtual void finalize();
 		virtual void update();
 		virtual void draw(Technique tech);
@@ -246,7 +246,7 @@ AX_BEGIN_NAMESPACE
 		GLenum bufferId;
 		GLuint bufferSize;
 		GLuint curOffset;
-		BufferPage* next;			// link to next page
+		BufferPage *next;			// link to next page
 	};
 
 	class GLprimitivemanager : public ThreadSafe {
@@ -257,17 +257,17 @@ AX_BEGIN_NAMESPACE
 		void initialize();
 		void finalize();
 		void beginFrame();
-		int cachePrimitive(Primitive* prim);
-		void uncachePrimitive(Primitive* prim);
+		int cachePrimitive(Primitive *prim);
+		void uncachePrimitive(Primitive *prim);
 		void endFrame();
-		GLprimitive* getPrimitive(int handle);
+		GLprimitive *getPrimitive(int handle);
 
 	protected:
-		void findStaticFreeSlot(int& handle);
+		void findStaticFreeSlot(int &handle);
 		bool isStatic(int id) { return(size_t(id) & FRAME_FLAG) == 0; }
 		bool isFrameHandle(int id) { return !isStatic(id); }
-		void linkId(int id, GLprimitive* glprim);
-		GLprimitive* createPrim(Primitive* prim);
+		void linkId(int id, GLprimitive *glprim);
+		GLprimitive *createPrim(Primitive *prim);
 
 	private:
 		enum {
@@ -280,19 +280,19 @@ AX_BEGIN_NAMESPACE
 		int m_framenum;
 		
 		int m_numStaticPrims;
-		GLprimitive* m_staticPrims[MAX_PRIMITIVES];
+		GLprimitive *m_staticPrims[MAX_PRIMITIVES];
 
 		int m_numFramePrims;
-		GLprimitive* m_framePrims[MAX_PRIMITIVES];
+		GLprimitive *m_framePrims[MAX_PRIMITIVES];
 
 		int numFreePrims;
-		void* m_freePrimLink;
+		void *m_freePrimLink;
 
 		int m_numWaitForDelete;
 		int m_waitForDelete[MAX_PRIMITIVES];
 
-		BufferPage* m_frameVertexBuffers;
-		BufferPage* m_frameIndexBuffers;
+		BufferPage *m_frameVertexBuffers;
+		BufferPage *m_frameIndexBuffers;
 	};
 
 AX_END_NAMESPACE

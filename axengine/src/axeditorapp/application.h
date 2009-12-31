@@ -36,7 +36,7 @@ public slots:
 	void myQuit();
 
 private:
-	QTimer* m_engTimer;
+	QTimer *m_engTimer;
 };
 
 #endif // APPLICATION_H

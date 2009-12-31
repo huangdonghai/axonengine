@@ -17,7 +17,7 @@ AX_BEGIN_NAMESPACE
 		return result;
 	}
 
-	bool Rect::fromString(const char* str) {
+	bool Rect::fromString(const char *str) {
 		int v = sscanf(str, "%d %d %d %d", &x, &y, &width, &height);
 		AX_ASSERT(v == 4);
 		return v == 4;

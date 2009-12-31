@@ -34,7 +34,7 @@ AX_BEGIN_NAMESPACE
 		clear();
 	}
 
-	void StaticFixed::set_model(const String& val)
+	void StaticFixed::set_model(const String &val)
 	{
 		m_modelName = val;
 	}
@@ -74,7 +74,7 @@ AX_BEGIN_NAMESPACE
 	// class TerrainFixed
 	//--------------------------------------------------------------------------
 
-	TerrainFixed::TerrainFixed(RenderTerrain* terr) {
+	TerrainFixed::TerrainFixed(RenderTerrain *terr) {
 		m_renderTerrain = terr;
 		m_physicsTerrain = nullptr;
 
@@ -100,7 +100,7 @@ AX_BEGIN_NAMESPACE
 		m_landscape->getGameWorld()->getPhysicsWorld()->removeEntity(m_physicsTerrain);
 	}
 
-	void TerrainFixed::doNotify(IObservable* subject, int arg) {
+	void TerrainFixed::doNotify(IObservable *subject, int arg) {
 		if (subject != m_renderTerrain) {
 			return;
 		}
@@ -116,7 +116,7 @@ AX_BEGIN_NAMESPACE
 			SafeDelete(m_physicsTerrain);
 		}
 
-		ushort_t* datap;
+		ushort_t *datap;
 		int size;
 		float tilemeters;
 
@@ -159,7 +159,7 @@ AX_BEGIN_NAMESPACE
 		SafeDelete(m_renderTree);
 	}
 
-	void TreeFixed::set_tree(const String& val) {
+	void TreeFixed::set_tree(const String &val) {
 		m_treeName = val;
 	}
 #endif // AX_CONFIG_OPTION_USE_SPEEDTREE_40
@@ -168,7 +168,7 @@ AX_BEGIN_NAMESPACE
 	// class Landscape
 	//--------------------------------------------------------------------------
 
-	Landscape::Landscape(GameWorld* world) {
+	Landscape::Landscape(GameWorld *world) {
 		m_world = world;
 
 		TypeZeroArray(m_fixeds);
@@ -180,7 +180,7 @@ AX_BEGIN_NAMESPACE
 	Landscape::~Landscape()
 	{}
 
-	void Landscape::addFixed(Fixed* fixed) {
+	void Landscape::addFixed(Fixed *fixed) {
 		AX_ASSERT(fixed->m_num == -1);
 
 		/*Fixed** free = m_freeList.get();
@@ -203,7 +203,7 @@ AX_BEGIN_NAMESPACE
 		fixed->doSpawn();
 	}
 
-	void Landscape::removeFixed(Fixed* fixed) {
+	void Landscape::removeFixed(Fixed *fixed) {
 		int num = fixed->m_num;
 		if (num < 0) {
 			return;

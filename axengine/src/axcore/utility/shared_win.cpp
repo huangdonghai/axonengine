@@ -16,7 +16,7 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-	void CDECL Errorf(const char* fmt, ...)
+	void CDECL Errorf(const char *fmt, ...)
 	{
 		va_list argptr;
 		int len;
@@ -66,7 +66,7 @@ AX_BEGIN_NAMESPACE
 		abort();
 	}
 
-	void CDECL Debugf(const char* fmt, ...)
+	void CDECL Debugf(const char *fmt, ...)
 	{
 		va_list argptr;
 		int len;
@@ -86,7 +86,7 @@ AX_BEGIN_NAMESPACE
 		}
 	}
 
-	void CDECL Printf(const char* fmt, ...)
+	void CDECL Printf(const char *fmt, ...)
 	{
 		va_list argptr;
 		int len;
@@ -153,7 +153,7 @@ AX_BEGIN_NAMESPACE
 	String OsUtil::getClipboardString()
 	{
 		String out;
-		wchar_t* data;
+		wchar_t *data;
 
 		if (!OpenClipboard(NULL))
 			return out;
@@ -169,7 +169,7 @@ AX_BEGIN_NAMESPACE
 		return out;
 	}
 
-	handle_t OsUtil::loadSysDll(const String& name)
+	handle_t OsUtil::loadSysDll(const String &name)
 	{
 		String libname = name + ".dll";
 
@@ -180,7 +180,7 @@ AX_BEGIN_NAMESPACE
 		return hDll;
 	}
 
-	handle_t OsUtil::loadDll(const String& name)
+	handle_t OsUtil::loadDll(const String &name)
 	{
 	#if 0
 		String libname = name + "D";
@@ -190,7 +190,7 @@ AX_BEGIN_NAMESPACE
 	#endif
 	}
 
-	void* OsUtil::getProcEntry(handle_t handle, const String& name)
+	void *OsUtil::getProcEntry(handle_t handle, const String &name)
 	{
 		return (void *)::GetProcAddress((HMODULE)handle, name.c_str());
 	}

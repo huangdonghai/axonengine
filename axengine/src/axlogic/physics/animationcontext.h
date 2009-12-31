@@ -25,7 +25,7 @@ AX_BEGIN_NAMESPACE
 	public:
 		friend class AnimationContext;
 
-		AnimationChannel(AnimationContext* context, int index, const String& name, const StringSeq& bones);
+		AnimationChannel(AnimationContext *context, int index, const String &name, const StringSeq &bones);
 		~AnimationChannel();
 
 		void step(int msec);
@@ -38,23 +38,23 @@ AX_BEGIN_NAMESPACE
 		void playCycle(int anim);
 		void playAnim(int anim);
 		bool isAnimDone(float timeleft);
-		void switchState(const String& state, float easein);
+		void switchState(const String &state, float easein);
 
 	private:
 		// assets
-		AnimationContext* m_context;
+		AnimationContext *m_context;
 		int m_index;
 		String m_channelName;
 		StringSeq m_bones;
-		HavokAnimator* m_animator;
-		HavokPose* m_pose;
+		HavokAnimator *m_animator;
+		HavokPose *m_pose;
 		Sequence<HavokAnimation*> m_animations;
 
 		// runtime
 		hkReal m_currentTime;
 		String m_state;
 		float m_easeinDuration;
-		HavokAnimation* m_currentAnimation;
+		HavokAnimation *m_currentAnimation;
 	};
 
 	//--------------------------------------------------------------------------
@@ -76,26 +76,26 @@ AX_BEGIN_NAMESPACE
 		AnimationContext();
 		virtual ~AnimationContext();
 
-		void initFromLua(const String& luaobj);
+		void initFromLua(const String &luaobj);
 
-		HavokPose* getPose() const;
+		HavokPose *getPose() const;
 
 		void step(int msec);
 
 	protected:
 		// init
-		void initChannel(const LuaTable& table);
+		void initChannel(const LuaTable &table);
 		void initBoneChannelMap();
 		void initAnimations();
 
 		// script method
-		void playCycle(const String& anim);
-		void playCycleSync(const String& anim, int syncState); // play cycled sync to other state
-		void playAnim(const String& anim);
+		void playCycle(const String &anim);
+		void playCycleSync(const String &anim, int syncState); // play cycled sync to other state
+		void playAnim(const String &anim);
 
 		bool isAnimDone(float timeleft);
 
-		void switchState(const String& state, float easein);
+		void switchState(const String &state, float easein);
 
 		void clear();
 
@@ -104,10 +104,10 @@ AX_BEGIN_NAMESPACE
 
 		String m_lua;
 		int m_numChannels;
-		AnimationChannel* m_channels[MAX_CHANNELS];
+		AnimationChannel *m_channels[MAX_CHANNELS];
 
 		// assets
-		HavokRig* m_rig;
+		HavokRig *m_rig;
 		int m_boneChannelMap[MAX_BONES]; // identify each bones channel
 		Dict<String,int> m_animDict; // map animations name and filename
 		StringSeq m_animations;

@@ -27,7 +27,7 @@ AX_BEGIN_NAMESPACE
 		Type type;
 		Rect rect;
 		Primitives primSeq;
-		const RenderCamera* camera;
+		const RenderCamera *camera;
 	};
 
 	//--------------------------------------------------------------------------
@@ -42,17 +42,17 @@ AX_BEGIN_NAMESPACE
 
 		typedef byte_t Data[Map::ChunkPixels][Map::ChunkPixels];
 
-		static MapAlphaBlock* const One;
-		static MapAlphaBlock* const Zero;
+		static MapAlphaBlock *const One;
+		static MapAlphaBlock *const Zero;
 
 		MapAlphaBlock();
 		~MapAlphaBlock();
 
-		const Data& getData() const;
-		Data& lock();
+		const Data &getData() const;
+		Data &lock();
 		void unlock();
 		void setAll(byte_t d);
-		Texture* getTexture();
+		Texture *getTexture();
 
 	protected:
 		void updateTexture();
@@ -65,21 +65,21 @@ AX_BEGIN_NAMESPACE
 
 	class AX_API MapLayerGen {
 	public:
-		MapLayerGen(MapTerrain* terrain, int layerId);
+		MapLayerGen(MapTerrain *terrain, int layerId);
 		~MapLayerGen();
 
 		void update();
-		void load(File* f);
-		void save(File* f);
-		MapTerrain* getTerrain() const;
+		void load(File *f);
+		void save(File *f);
+		MapTerrain *getTerrain() const;
 		int getLayerId() const;
-		MapLayerDef* getLayerDef() const;
-		Image* getColorTemplate() const;
-		MapAlphaBlock* getBlock(const Point& index) const;
-		bool isAlphaZero(const Point& index) const;
-		bool isAlphaOne(const Point& index) const;
+		MapLayerDef *getLayerDef() const;
+		Image *getColorTemplate() const;
+		MapAlphaBlock *getBlock(const Point &index) const;
+		bool isAlphaZero(const Point &index) const;
+		bool isAlphaOne(const Point &index) const;
 		void autoGenerate();
-		Material* getDetailMat() const;
+		Material *getDetailMat() const;
 		Vector2 getDetailScale() const;
 		bool isVerticalProjection() const;
 
@@ -88,24 +88,24 @@ AX_BEGIN_NAMESPACE
 		void setAlpha(int x, int y, float alpha);
 		void setByteAlpha(int x, int y, byte_t alpha);
 
-		Image* copyAlpha(const Rect& r) const;
-		void writeAlpha(const Rect& r, Image* image);
+		Image *copyAlpha(const Rect &r) const;
+		void writeAlpha(const Rect &r, Image *image);
 
 	protected:
-		void generateBlock(const Point& index);
-		void setBlock(const Point& index, MapAlphaBlock* block);
+		void generateBlock(const Point &index);
+		void setBlock(const Point &index, MapAlphaBlock *block);
 		void purifyBlock();
 
 	private:
-		MapTerrain* m_terrain;
+		MapTerrain *m_terrain;
 		int m_layerId;
 		int m_pixelIndexOffset;
-		Image* m_colorTemplate;
+		Image *m_colorTemplate;
 		MapAlphaBlock** m_alphaBlocks;
 		MaterialPtr m_detailMat;
 	};
 
-	inline Material* MapLayerGen::getDetailMat() const {
+	inline Material *MapLayerGen::getDetailMat() const {
 		return m_detailMat.get();
 	}
 
@@ -119,12 +119,12 @@ AX_BEGIN_NAMESPACE
 
 	class MapColorGen {
 	public:
-		MapColorGen(MapTerrain* terrain);
+		MapColorGen(MapTerrain *terrain);
 		~MapColorGen();
 
 	private:
-		MapTerrain* m_terrain;
-		MapColorBlock* m_colorIndexes;
+		MapTerrain *m_terrain;
+		MapColorBlock *m_colorIndexes;
 	};
 
 	typedef BlockAlloc<MapAlphaBlock>	AlphaBlockAllocator;
@@ -142,13 +142,13 @@ AX_BEGIN_NAMESPACE
 		MapChunk();
 		~MapChunk();
 
-		void initialize(MapZone* zone, int x, int y);
+		void initialize(MapZone *zone, int x, int y);
 		void finalize();
 
 		Vector4 getChunkRect() const;
 
 		sbyte_t getLod() const;
-		const BoundingBox& getBoundingBox() const;
+		const BoundingBox &getBoundingBox() const;
 		BoundingRange getAltitudeRange() const;
 		BoundingRange getSlopeRange() const;
 		void allocatePrimitive();
@@ -156,25 +156,25 @@ AX_BEGIN_NAMESPACE
 		void updateLayers();
 		void updateColorTexture();
 
-		void doEvent(MapEvent* e);
+		void doEvent(MapEvent *e);
 
 	protected:
 		// event
 		void onHeightChanged();
-		void onCalculateLOD(MapEvent* e);
+		void onCalculateLOD(MapEvent *e);
 		void onUpdateLayer();
 		void onLayerPainted();
-		void onSelect(MapEvent* e);
-		void onGetViewedPrims(MapEvent* e);
-		void onUpdatePrimitive(MapEvent* e);
+		void onSelect(MapEvent *e);
+		void onGetViewedPrims(MapEvent *e);
+		void onUpdatePrimitive(MapEvent *e);
 
 	private:
 		union NeighborLod {
 			sbyte_t lods[4];
 			int i;
 		};
-		MapTerrain* m_terrain;
-		MapZone* m_zone;
+		MapTerrain *m_terrain;
+		MapZone *m_zone;
 		Point m_index;			// in global
 		Rect m_tilerect;		// in global
 		BoundingBox m_bbox;
@@ -196,14 +196,14 @@ AX_BEGIN_NAMESPACE
 
 		// slope range
 
-		ChunkPrim* m_prim;
+		ChunkPrim *m_prim;
 	};
 
 	inline sbyte_t MapChunk::getLod() const {
 		return m_lod;
 	}
 
-	inline const BoundingBox& MapChunk::getBoundingBox() const {
+	inline const BoundingBox &MapChunk::getBoundingBox() const {
 		return m_bbox;
 	}
 
@@ -227,47 +227,47 @@ AX_BEGIN_NAMESPACE
 		MapZone();
 		~MapZone();
 
-		void initialize(MapTerrain* terrain, int x, int y);
+		void initialize(MapTerrain *terrain, int x, int y);
 		void finalize();
-		inline MapTerrain* getTerrain() { return m_terrain; }
+		inline MapTerrain *getTerrain() { return m_terrain; }
 		inline Point getZoneIndex() const { return m_index; }
-		MapChunk* getChunk(const Point& global_index);
-		const MapChunk* getChunk(const Point& global_index) const;
+		MapChunk *getChunk(const Point &global_index);
+		const MapChunk *getChunk(const Point &global_index) const;
 
-		inline Point chunkIndexMapToGlobal(const Point& idx) const;
-		inline Point chunkIndexMapToZone(const Point& idx) const;
+		inline Point chunkIndexMapToGlobal(const Point &idx) const;
+		inline Point chunkIndexMapToZone(const Point &idx) const;
 
-		void updatePrimVertexes(const Rect& rect);
-		void updateNormalTexture(const Rect& rect);
+		void updatePrimVertexes(const Rect &rect);
+		void updateNormalTexture(const Rect &rect);
 
-		void doEvent(MapEvent* e);
-		void addChunkToPrim(MapChunk* chunk);
+		void doEvent(MapEvent *e);
+		void addChunkToPrim(MapChunk *chunk);
 
 		Vector4 getZoneRect() const;
 
-		Texture* getNormalTexture() const;
-		Texture* getColorTexture() const;
-		void setColorTexture(Texture* tex);
-		void uploadColorTexture(const Point& chunk_idx, const byte_t* pixelbuf);
+		Texture *getNormalTexture() const;
+		Texture *getColorTexture() const;
+		void setColorTexture(Texture *tex);
+		void uploadColorTexture(const Point &chunk_idx, const byte_t *pixelbuf);
 
 	protected:
 		void updateColorTextureLod();
 		void updateNormalTextureLod();
 
-		void onHeightChanged(MapEvent* e);
-		void onCalculateLOD(MapEvent* e);
-		void onGetPrimitive(MapEvent* e);
-		void onUpdatePrimitive(MapEvent* e);
-		void onSelection(MapEvent* e);
-		void forwardEventToChunks(MapEvent* e);
+		void onHeightChanged(MapEvent *e);
+		void onCalculateLOD(MapEvent *e);
+		void onGetPrimitive(MapEvent *e);
+		void onUpdatePrimitive(MapEvent *e);
+		void onSelection(MapEvent *e);
+		void forwardEventToChunks(MapEvent *e);
 
 	private:
-		MapTerrain* m_terrain;
+		MapTerrain *m_terrain;
 		Point m_index;
 		Rect m_tilerect;
 		BoundingBox m_bbox;
 		MaterialPtr m_material;
-		ChunkPrim* m_prim;
+		ChunkPrim *m_prim;
 
 		Point m_chunkIndexOffset;
 		float m_maxerror;
@@ -275,35 +275,35 @@ AX_BEGIN_NAMESPACE
 		sbyte_t m_lod;
 		sbyte_t m_lastLod;
 		sbyte_t m_zonePrimLod;
-		MapChunk* m_chunks[Map::ZoneChunks][Map::ZoneChunks];
+		MapChunk *m_chunks[Map::ZoneChunks][Map::ZoneChunks];
 
 		TexturePtr m_normalTexture;
 		TexturePtr m_colorTexture;
 	};
 
-	inline MapChunk* MapZone::getChunk(const Point& global_index) {
+	inline MapChunk *MapZone::getChunk(const Point &global_index) {
 		Point index = global_index - m_chunkIndexOffset;
 		AX_ASSERT(index.x >= 0 && index.x < Map::ZoneChunks);
 		AX_ASSERT(index.y >= 0 && index.y < Map::ZoneChunks);
 		return m_chunks[index.y][index.x];
 	}
 
-	inline const MapChunk* MapZone::getChunk(const Point& global_index) const {
+	inline const MapChunk *MapZone::getChunk(const Point &global_index) const {
 		Point index = global_index - m_chunkIndexOffset;
 		AX_ASSERT(index.x >= 0 && index.x < Map::ZoneChunks);
 		AX_ASSERT(index.y >= 0 && index.y < Map::ZoneChunks);
 		return m_chunks[index.y][index.x];
 	}
 
-	inline Texture* MapZone::getNormalTexture() const {
+	inline Texture *MapZone::getNormalTexture() const {
 		return m_normalTexture.get();
 	}
 
-	inline Texture* MapZone::getColorTexture() const {
+	inline Texture *MapZone::getColorTexture() const {
 		return m_colorTexture.get();
 	}
 
-	inline void MapZone::setColorTexture(Texture* tex) {
+	inline void MapZone::setColorTexture(Texture *tex) {
 		m_colorTexture = tex;
 		if (m_prim) {
 			m_prim->setColorTexture(getColorTexture());
@@ -323,9 +323,9 @@ AX_BEGIN_NAMESPACE
 		virtual ~MapTerrain();
 
 		void init(int tiles, int tilemeters);
-		void initFromXml(const String& map_name, const TiXmlElement* elem);
+		void initFromXml(const String &map_name, const TiXmlElement *elem);
 		void clear();
-		void writeXml(File* f, int indent=0);
+		void writeXml(File *f, int indent=0);
 
 		float getTileMeters() const;
 		float getMeterPixels() const;
@@ -342,79 +342,79 @@ AX_BEGIN_NAMESPACE
 		float getHeight(int x, int y, bool local = false) const;
 		float getOldHeight(int x, int y, bool local = false) const;
 		float getPixelHeight(int x, int y) const;
-		float getHeightByPos(const Vector3& pos) const;
+		float getHeightByPos(const Vector3 &pos) const;
 		void setHeight(int x, int y, float h, bool local = false);
-		Image* copyHeight(const Rect& rect) const;
-		Image* copyOldHeight(const Rect& rect) const;
-		void writeHeight(const Rect& rect, Image* image);
-		void writeOldHeight(const Rect& rect, Image* image);
-		Image* copyFloatHeight(int size) const;	// need be freed by caller
+		Image *copyHeight(const Rect &rect) const;
+		Image *copyOldHeight(const Rect &rect) const;
+		void writeHeight(const Rect &rect, Image *image);
+		void writeOldHeight(const Rect &rect, Image *image);
+		Image *copyFloatHeight(int size) const;	// need be freed by caller
 
-		sbyte_t getChunkLod(const Point& global_index) const;
-		MapZone* getZone(const Point& global_index);
-		const MapZone* getZone(const Point& global_index) const;
-		MapChunk* getChunk(const Point& global_index);
-		const MapChunk* getChunk(const Point& global_index) const;
-		const MapChunk* getPosChunk(const Vector3& pos) const;
+		sbyte_t getChunkLod(const Point &global_index) const;
+		MapZone *getZone(const Point &global_index);
+		const MapZone *getZone(const Point &global_index) const;
+		MapChunk *getChunk(const Point &global_index);
+		const MapChunk *getChunk(const Point &global_index) const;
+		const MapChunk *getPosChunk(const Vector3 &pos) const;
 
-		void doHeightChanged(const Rect& tilerect);
-		void doUpdateNormalTextureLod(const Rect& tilerect);
-		void doUpdateLayer(const Rect& pixelrect);
-		void doLayerPainted(const Rect& pixelrect);
-		void doUpdateColorTextureLod(const Rect& pixelrect);
+		void doHeightChanged(const Rect &tilerect);
+		void doUpdateNormalTextureLod(const Rect &tilerect);
+		void doUpdateLayer(const Rect &pixelrect);
+		void doLayerPainted(const Rect &pixelrect);
+		void doUpdateColorTextureLod(const Rect &pixelrect);
 		void doCalculateLOD();
 
-		void doEvent(MapEvent* e);
-		void doSelect(const RenderCamera& camera);
+		void doEvent(MapEvent *e);
+		void doSelect(const RenderCamera &camera);
 
 		Primitives getPrimsByCircle(float x, float y, float radius);
 
 		// surface and material
-		MapMaterialDef* getMaterialDef() const;
-		void setMaterialDef(MapMaterialDef* matdef, bool undoable = true);
-		MapAlphaBlock* allocAlphaBlock();
+		MapMaterialDef *getMaterialDef() const;
+		void setMaterialDef(MapMaterialDef *matdef, bool undoable = true);
+		MapAlphaBlock *allocAlphaBlock();
 		void freeAlphaBlock(MapAlphaBlock*& block);
-		Image* getSlopeImage() const;
-		Image* copySlopeImage(int size) const;	// need be freed by caller
+		Image *getSlopeImage() const;
+		Image *copySlopeImage(int size) const;	// need be freed by caller
 		byte_t getSlope(int x, int y, bool local = false) const;
 		float getPixelSlope(int x, int y) const;
 		void setSlope(int x, int y, byte_t slope, bool local = false);
 		void generateZoneColor(bool doprogress = false);
 		void generateLayerAlpha(bool doprogress = false, int id = -1);
 		int getNumLayer() const;
-		MapLayerGen* getLayerGen(int layer) const;
-		MapLayerGen* getLayerGenById(int id) const;
+		MapLayerGen *getLayerGen(int layer) const;
+		MapLayerGen *getLayerGenById(int id) const;
 		MaterialPtr getLayerMat(int layer) const;
-		MapAlphaBlock* getAlphaBlock(int layer, const Point& index) const;
+		MapAlphaBlock *getAlphaBlock(int layer, const Point &index) const;
 
 		// implement renderActor
 		virtual BoundingBox getLocalBoundingBox() { return m_bbox; }
 		virtual BoundingBox getBoundingBox() { return m_bbox; }
 		virtual Kind getType() const { return RenderEntity::kTerrain; }
-		virtual void frameUpdate(QueuedScene* qscene);
+		virtual void frameUpdate(QueuedScene *qscene);
 
-		virtual void issueToQueue(QueuedScene* qscene);
+		virtual void issueToQueue(QueuedScene *qscene);
 
 #if 0
 		virtual Primitives getAllPrimitives();
 		virtual Primitives getViewedPrimitives();
-		virtual Primitives getLightedPrimitives(Render::QueuedLight* light);
+		virtual Primitives getLightedPrimitives(Render::QueuedLight *light);
 #endif
 
 		// implement renderTerrain
-		virtual void getHeightinfo(ushort_t*& datap, int& size, float& tilemeters);
+		virtual void getHeightinfo(ushort_t*& datap, int &size, float &tilemeters);
 
 	protected:
-		bool loadColorTexture(const String& map_name);
+		bool loadColorTexture(const String &map_name);
 
 	private:
-		Image* m_heightmap;
-		Image* m_oldHeightmap;
-		Image* m_slopeImage;
-		Image* m_colorImage;
-		Texture* m_normalTex;
+		Image *m_heightmap;
+		Image *m_oldHeightmap;
+		Image *m_slopeImage;
+		Image *m_colorImage;
+		Texture *m_normalTex;
 		bool m_isHeightDirty;
-		ushort_t* m_heighData;
+		ushort_t *m_heighData;
 		Vector2 m_heightBound;
 		Rect m_tilerect;
 		int m_tiles;
@@ -433,13 +433,13 @@ AX_BEGIN_NAMESPACE
 		// terrain materials
 		typedef Dict<int,MapLayerGen*> LayerGenHash;
 
-		MapMaterialDef* m_materialDef;
+		MapMaterialDef *m_materialDef;
 		AlphaBlockAllocator m_alphaAllocator;
 		ColorBlockAllocator m_colorAllocator;
 		int m_numLayerGens;
-		MapLayerGen* m_layerGens[Map::MaxLayers];
+		MapLayerGen *m_layerGens[Map::MaxLayers];
 		LayerGenHash m_layerGenHash;
-		MapColorGen* m_colorGen;
+		MapColorGen *m_colorGen;
 	};
 
 	inline float MapTerrain::getTileMeters() const {
@@ -490,7 +490,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 	inline float MapTerrain::getOldHeight(int x, int y, bool local) const {
-		const ushort_t* oldheightdata = (const ushort_t*)m_oldHeightmap->getData(0);
+		const ushort_t *oldheightdata = (const ushort_t*)m_oldHeightmap->getData(0);
 
 		if (!local) {
 			x += m_tileOffset; y += m_tileOffset;
@@ -522,7 +522,7 @@ AX_BEGIN_NAMESPACE
 		return p;
 	}
 
-	inline float MapTerrain::getHeightByPos(const Vector3& pos) const {
+	inline float MapTerrain::getHeightByPos(const Vector3 &pos) const {
 		float fx = pos.x / m_tilemeters; float fy = pos.y / m_tilemeters;
 
 		int x0 = floorf(fx); int x1 = ceilf(fx);
@@ -597,8 +597,8 @@ AX_BEGIN_NAMESPACE
 	}
 
 
-	inline sbyte_t MapTerrain::getChunkLod(const Point& global_index) const {
-		const MapChunk* c = getChunk(global_index);
+	inline sbyte_t MapTerrain::getChunkLod(const Point &global_index) const {
+		const MapChunk *c = getChunk(global_index);
 		if (c)
 			return c->getLod();
 
@@ -606,7 +606,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 	// if out of bound, return null
-	inline MapZone* MapTerrain::getZone(const Point& global_index) {
+	inline MapZone *MapTerrain::getZone(const Point &global_index) {
 		if (global_index.x < -m_zoneIndexOffset)
 			return nullptr;
 		if (global_index.x >= m_zoneIndexOffset)
@@ -622,7 +622,7 @@ AX_BEGIN_NAMESPACE
 		return m_zones[i];
 	}
 
-	inline const MapZone* MapTerrain::getZone(const Point& global_index) const {
+	inline const MapZone *MapTerrain::getZone(const Point &global_index) const {
 		if (global_index.x < -m_zoneIndexOffset)
 			return nullptr;
 		if (global_index.x >= m_zoneIndexOffset)
@@ -638,7 +638,7 @@ AX_BEGIN_NAMESPACE
 		return m_zones[i];
 	}
 
-	inline MapChunk* MapTerrain::getChunk(const Point& global_index) {
+	inline MapChunk *MapTerrain::getChunk(const Point &global_index) {
 		if (global_index.x < -m_chunkIndexOffset)
 			return nullptr;
 		if (global_index.x >= m_chunkIndexOffset)
@@ -650,7 +650,7 @@ AX_BEGIN_NAMESPACE
 
 		Point index = (global_index + m_chunkIndexOffset) / Map::ZoneChunks;
 		index -= m_zoneIndexOffset;
-		MapZone* z = getZone(index);
+		MapZone *z = getZone(index);
 
 		if (z == nullptr)
 			return nullptr;
@@ -658,7 +658,7 @@ AX_BEGIN_NAMESPACE
 		return z->getChunk(global_index);
 	}
 
-	inline const MapChunk* MapTerrain::getChunk(const Point& global_index) const {
+	inline const MapChunk *MapTerrain::getChunk(const Point &global_index) const {
 		if (global_index.x < -m_chunkIndexOffset)
 			return nullptr;
 		if (global_index.x >= m_chunkIndexOffset)
@@ -677,7 +677,7 @@ AX_BEGIN_NAMESPACE
 #endif
 
 		index -= m_zoneIndexOffset;
-		const MapZone* z = getZone(index);
+		const MapZone *z = getZone(index);
 
 		if (z == nullptr)
 			return nullptr;
@@ -685,7 +685,7 @@ AX_BEGIN_NAMESPACE
 		return z->getChunk(global_index);
 	}
 
-	inline const MapChunk* MapTerrain::getPosChunk(const Vector3& pos) const {
+	inline const MapChunk *MapTerrain::getPosChunk(const Vector3 &pos) const {
 		Point index;
 
 		index.x = floorf(pos.x / (Map::ChunkTiles * m_tilemeters));
@@ -694,11 +694,11 @@ AX_BEGIN_NAMESPACE
 		return getChunk(index);
 	}
 
-	inline MapMaterialDef* MapTerrain::getMaterialDef() const {
+	inline MapMaterialDef *MapTerrain::getMaterialDef() const {
 		return m_materialDef;
 	}
 
-	inline MapAlphaBlock* MapTerrain::allocAlphaBlock() {
+	inline MapAlphaBlock *MapTerrain::allocAlphaBlock() {
 		return m_alphaAllocator.alloc();
 	}
 
@@ -710,14 +710,14 @@ AX_BEGIN_NAMESPACE
 		return m_numLayerGens;
 	}
 
-	inline MapLayerGen* MapTerrain::getLayerGen(int layer) const {
+	inline MapLayerGen *MapTerrain::getLayerGen(int layer) const {
 		if (layer >= m_numLayerGens)
 			return nullptr;
 
 		return m_layerGens[layer];
 	}
 
-	inline MapLayerGen* MapTerrain::getLayerGenById(int id) const {
+	inline MapLayerGen *MapTerrain::getLayerGenById(int id) const {
 		for (int i = 0; i < m_numLayerGens; i++) {
 			if (m_layerGens[i]->getLayerId() == id)
 				return m_layerGens[i];
@@ -733,7 +733,7 @@ AX_BEGIN_NAMESPACE
 		return m_layerGens[layer]->getDetailMat();
 	}
 
-	inline MapAlphaBlock* MapTerrain::getAlphaBlock(int layer, const Point& index) const {
+	inline MapAlphaBlock *MapTerrain::getAlphaBlock(int layer, const Point &index) const {
 		if (layer >= m_numLayerGens)
 			return nullptr;
 

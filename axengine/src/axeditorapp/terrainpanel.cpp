@@ -91,7 +91,7 @@ TerrainPanel::TerrainPanel(QWidget *parent)
 	ui.rollupWidget->setAllPagesVisible(false);
 
 	// set envprops
-	MapEnvDef* def = g_mapContext->getGameWorld()->getEnvironment();
+	MapEnvDef *def = g_mapContext->getGameWorld()->getEnvironment();
 	ui.envProps->initFromObject(def);
 
 	g_mapContext->attachObserver(this);
@@ -105,13 +105,13 @@ TerrainPanel::~TerrainPanel()
 
 }
 
-void TerrainPanel::doNotify(IObservable* subject, int arg) {
-	MapContext* context = dynamic_cast<MapContext*>(subject);
+void TerrainPanel::doNotify(IObservable *subject, int arg) {
+	MapContext *context = dynamic_cast<MapContext*>(subject);
 	if (context != g_mapContext)
 		return;
 
 	if (arg & Context::EnvironmentChanged) {
-		MapEnvDef* def = g_mapContext->getGameWorld()->getEnvironment();
+		MapEnvDef *def = g_mapContext->getGameWorld()->getEnvironment();
 		ui.envProps->initFromObject(def);
 	}
 
@@ -125,33 +125,33 @@ void TerrainPanel::doNotify(IObservable* subject, int arg) {
 	ui.tableWidget->setRowCount(numBlocks);
 	for (int i = 0;i<numBlocks;i++){
 		blocksName = gEditorActiveAreaMgr->getBlocksName(i);
-		AreaBlocks* ab = gEditorActiveAreaMgr->getBlocks(blocksName);
+		AreaBlocks *ab = gEditorActiveAreaMgr->getBlocks(blocksName);
 		if (ab){
-			QTableWidgetItem* item = new QTableWidgetItem();
+			QTableWidgetItem *item = new QTableWidgetItem();
 			item->setText(u2q(ab->name()));
 			item->setData(Qt::UserRole,u2q(ab->realName()));
 			ui.tableWidget->setItem(i, 0, item);
 			ui.tableWidget->setRowHeight(i,16);
-			//QTableWidgetItem* item = ui.tableWidget->item(0,0);
+			//QTableWidgetItem *item = ui.tableWidget->item(0,0);
 			//item->setText(u2q(ab->name()));
 			//item->setData(Qt::UserRole,u2q(ab->realName()));
 		}
 	}
 #endif
 
-	MapTerrain* terrain = context->getTerrain();
+	MapTerrain *terrain = context->getTerrain();
 
 	if (!terrain)
 		return;
 
-	MapMaterialDef* matdef = terrain->getMaterialDef();
+	MapMaterialDef *matdef = terrain->getMaterialDef();
 
 	if (!matdef)
 		return;
 
 	for (int i = 0; i < matdef->getNumLayers(); i++) {
-		MapLayerDef* l = matdef->getLayerDef(i);
-		QTreeWidgetItem* item = new QTreeWidgetItem(ui.layerList);
+		MapLayerDef *l = matdef->getLayerDef(i);
+		QTreeWidgetItem *item = new QTreeWidgetItem(ui.layerList);
 		item->setText(0, u2q(matdef->getLayerDef(i)->name));
 		item->setData(0, Qt::UserRole, l->id);
 	}
@@ -167,7 +167,7 @@ void TerrainPanel::setParams() {
 	ui.SoftnessSlider->setValue(ui.brushSoftnessSpin->value());
 	ui.StrengthSlider->setValue(ui.brushStrengthSpin->value());
 
-	QTreeWidgetItem* item = ui.layerList->currentItem();
+	QTreeWidgetItem *item = ui.layerList->currentItem();
 	if (!item)
 		g_mapContext->getMapState()->terrainCurLayerId = -1;
 	else
@@ -184,7 +184,7 @@ void TerrainPanel::setParamsFramSlider() {
 	ui.brushSoftnessSpin->setValue(ui.SoftnessSlider->value());
 	ui.brushStrengthSpin->setValue(ui.StrengthSlider->value());
 
-	QTreeWidgetItem* item = ui.layerList->currentItem();
+	QTreeWidgetItem *item = ui.layerList->currentItem();
 	if (!item)
 		g_mapContext->getMapState()->terrainCurLayerId = -1;
 	else
@@ -251,7 +251,7 @@ void TerrainPanel::on_actionEnv_triggered()
 
 void TerrainPanel::on_applyEnv_clicked()
 {
-	MapEnvDef* def = g_mapContext->getGameWorld()->getEnvironment();
+	MapEnvDef *def = g_mapContext->getGameWorld()->getEnvironment();
 	ui.envProps->applyToObject(def);
 
 	g_mapContext->getGameWorld()->updateEnvdef();
@@ -339,9 +339,9 @@ void TerrainPanel::on_toolButton_clicked()
 	ui.tableWidget->setRowCount(numBlocks);
 	for (int i = 0;i<numBlocks;i++){
 		blocksName = gEditorActiveAreaMgr->getBlocksName(i);
-		AreaBlocks* ab = gEditorActiveAreaMgr->getBlocks(blocksName);
+		AreaBlocks *ab = gEditorActiveAreaMgr->getBlocks(blocksName);
 		if (ab){
-			QTableWidgetItem* item = new QTableWidgetItem();
+			QTableWidgetItem *item = new QTableWidgetItem();
 			item->setText(u2q(ab->name()));
 			item->setData(Qt::UserRole,u2q(ab->realName()));
 			ui.tableWidget->setItem(i, 0, item);
@@ -354,7 +354,7 @@ void TerrainPanel::on_toolButton_clicked()
 void TerrainPanel::on_toolButton_7_clicked()
 {
 #if 0
-	QTableWidgetItem* item = ui.tableWidget->currentItem();
+	QTableWidgetItem *item = ui.tableWidget->currentItem();
 	if (item){
 		String delName = q2u(item->text());
 		gEditorActiveAreaMgr->delBlocks(delName);
@@ -362,9 +362,9 @@ void TerrainPanel::on_toolButton_7_clicked()
 		ui.tableWidget->setRowCount(numBlocks);
 		for (int i = 0;i<numBlocks;i++){
 			String blocksName = gEditorActiveAreaMgr->getBlocksName(i);
-			AreaBlocks* ab = gEditorActiveAreaMgr->getBlocks(blocksName);
+			AreaBlocks *ab = gEditorActiveAreaMgr->getBlocks(blocksName);
 			if (ab){
-				QTableWidgetItem* item = new QTableWidgetItem();
+				QTableWidgetItem *item = new QTableWidgetItem();
 				item->setText(u2q(ab->name()));
 				item->setData(Qt::UserRole,u2q(ab->realName()));
 				ui.tableWidget->setItem(i, 0, item);
@@ -385,7 +385,7 @@ void TerrainPanel::on_tableWidget_currentCellChanged(int,int,int,int)
 	setParams();
 }
 
-void TerrainPanel::on_tableWidget_itemChanged(QTableWidgetItem* item)
+void TerrainPanel::on_tableWidget_itemChanged(QTableWidgetItem *item)
 {
 //	gEditorActiveAreaMgr->setBlocksName(q2u(item->data(Qt::UserRole).toString()),q2u(item->text()));
 }
@@ -394,7 +394,7 @@ void TerrainPanel::on_tableWidget_itemChanged(QTableWidgetItem* item)
 
 void TerrainPanel::on_numGrassPerLevel_editingFinished()
 {
-	MapTerrain* terrain = g_mapContext->getTerrain();
+	MapTerrain *terrain = g_mapContext->getTerrain();
 	if (!terrain)
 	{
 		return;
@@ -403,7 +403,7 @@ void TerrainPanel::on_numGrassPerLevel_editingFinished()
 
 void TerrainPanel::on_grassTypeAdd_released()
 {
-	MapTerrain* terrain = g_mapContext->getTerrain();
+	MapTerrain *terrain = g_mapContext->getTerrain();
 	if (!terrain)
 	{
 		return;
@@ -412,7 +412,7 @@ void TerrainPanel::on_grassTypeAdd_released()
 
 void TerrainPanel::on_grassTypeDelete_released()
 {
-	MapTerrain* terrain = g_mapContext->getTerrain();
+	MapTerrain *terrain = g_mapContext->getTerrain();
 	if (!terrain)
 	{
 		return;
@@ -421,7 +421,7 @@ void TerrainPanel::on_grassTypeDelete_released()
 
 void TerrainPanel::on_grassTypes_itemSelectionChanged()
 {
-	MapTerrain* terrain = g_mapContext->getTerrain();
+	MapTerrain *terrain = g_mapContext->getTerrain();
 	if (!terrain)
 	{
 		return;
@@ -430,7 +430,7 @@ void TerrainPanel::on_grassTypes_itemSelectionChanged()
 
 void TerrainPanel::on_grassIncidence_valueChanged(double value)
 {
-	MapTerrain* terrain = g_mapContext->getTerrain();
+	MapTerrain *terrain = g_mapContext->getTerrain();
 	if (!terrain)
 	{
 		return;
@@ -439,7 +439,7 @@ void TerrainPanel::on_grassIncidence_valueChanged(double value)
 
 void TerrainPanel::on_grassType_currentIndexChanged(int value)
 {
-	MapTerrain* terrain = g_mapContext->getTerrain();
+	MapTerrain *terrain = g_mapContext->getTerrain();
 	if (!terrain)
 	{
 		return;
@@ -448,7 +448,7 @@ void TerrainPanel::on_grassType_currentIndexChanged(int value)
 
 void TerrainPanel::on_grassWidth_valueChanged(double value)
 {
-	MapTerrain* terrain = g_mapContext->getTerrain();
+	MapTerrain *terrain = g_mapContext->getTerrain();
 	if (!terrain)
 	{
 		return;
@@ -457,7 +457,7 @@ void TerrainPanel::on_grassWidth_valueChanged(double value)
 
 void TerrainPanel::on_grassHeight_valueChanged(double value)
 {
-	MapTerrain* terrain = g_mapContext->getTerrain();
+	MapTerrain *terrain = g_mapContext->getTerrain();
 	if (!terrain)
 	{
 		return;
@@ -466,7 +466,7 @@ void TerrainPanel::on_grassHeight_valueChanged(double value)
 
 void TerrainPanel::on_grassMinScale_valueChanged(double value)
 {
-	MapTerrain* terrain = g_mapContext->getTerrain();
+	MapTerrain *terrain = g_mapContext->getTerrain();
 	if (!terrain)
 	{
 		return;
@@ -475,7 +475,7 @@ void TerrainPanel::on_grassMinScale_valueChanged(double value)
 
 void TerrainPanel::on_grassMaxScale_valueChanged(double value)
 {
-	MapTerrain* terrain = g_mapContext->getTerrain();
+	MapTerrain *terrain = g_mapContext->getTerrain();
 	if (!terrain)
 	{
 		return;
@@ -484,7 +484,7 @@ void TerrainPanel::on_grassMaxScale_valueChanged(double value)
 
 void TerrainPanel::on_textureBtn_released()
 {
-	MapTerrain* terrain = g_mapContext->getTerrain();
+	MapTerrain *terrain = g_mapContext->getTerrain();
 	if (!terrain)
 	{
 		return;
@@ -493,16 +493,16 @@ void TerrainPanel::on_textureBtn_released()
 
 void TerrainPanel::on_grassName_textEdited(QString text)
 {
-	MapTerrain* terrain = g_mapContext->getTerrain();
+	MapTerrain *terrain = g_mapContext->getTerrain();
 	if (!terrain)
 	{
 		return;
 	}
 }
 
-void TerrainPanel::on_grassColor_colorChanged(const QColor& color)
+void TerrainPanel::on_grassColor_colorChanged(const QColor &color)
 {
-	MapTerrain* terrain = g_mapContext->getTerrain();
+	MapTerrain *terrain = g_mapContext->getTerrain();
 	if (!terrain)
 	{
 		return;
@@ -511,7 +511,7 @@ void TerrainPanel::on_grassColor_colorChanged(const QColor& color)
 
 void TerrainPanel::on_modelBtn_released()
 {
-	MapTerrain* terrain = g_mapContext->getTerrain();
+	MapTerrain *terrain = g_mapContext->getTerrain();
 	if (!terrain)
 	{
 		return;
@@ -521,7 +521,7 @@ void TerrainPanel::on_modelBtn_released()
 
 void TerrainPanel::on_grassTransferZ_valueChanged(double value)
 {
-	MapTerrain* terrain = g_mapContext->getTerrain();
+	MapTerrain *terrain = g_mapContext->getTerrain();
 	if (!terrain)
 	{
 		return;

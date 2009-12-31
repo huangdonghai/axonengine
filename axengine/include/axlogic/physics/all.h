@@ -60,8 +60,8 @@ AX_END_NAMESPACE
 
 AX_BEGIN_NAMESPACE
 
-	extern PhysicsSystem* g_physicsSystem;
-	extern HavokPackageManager* g_havokPackageManager;
+	extern PhysicsSystem *g_physicsSystem;
+	extern HavokPackageManager *g_havokPackageManager;
 
 AX_END_NAMESPACE
 

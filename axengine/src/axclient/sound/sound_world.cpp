@@ -26,7 +26,7 @@ AX_BEGIN_NAMESPACE
 	{
 	}
 
-	void SoundWorld::addEntity( SoundEntity* entity )
+	void SoundWorld::addEntity( SoundEntity *entity )
 	{
 		AX_ASSERT(!entity->m_world);
 
@@ -42,7 +42,7 @@ AX_BEGIN_NAMESPACE
 		entity->m_entityId = id;
 	}
 
-	void SoundWorld::removeEntity( SoundEntity* entity )
+	void SoundWorld::removeEntity( SoundEntity *entity )
 	{
 		AX_ASSERT(entity->m_world == this);
 
@@ -55,7 +55,7 @@ AX_BEGIN_NAMESPACE
 		entity->m_entityId = ENTITYID_NULL;
 	}
 
-	void SoundWorld::playSound( int channelId, SoundFx* sfx, LoopingMode looping/*= Looping_None*/ )
+	void SoundWorld::playSound( int channelId, SoundFx *sfx, LoopingMode looping/*= Looping_None*/ )
 	{
 		g_soundSystem->_playSound(this, 0, channelId, sfx, looping);
 	}
@@ -65,13 +65,13 @@ AX_BEGIN_NAMESPACE
 		g_soundSystem->_stopSound(this, 0, channelId);
 	}
 
-	void SoundWorld::setListener( const AffineMat& matrix, const Vector3& velocity )
+	void SoundWorld::setListener( const AffineMat &matrix, const Vector3 &velocity )
 	{
 		m_listenerMatrix = matrix;
 		m_listenerVelocity = velocity;
 	}
 
-	SoundEntity* SoundWorld::getEntity( int id ) const
+	SoundEntity *SoundWorld::getEntity( int id ) const
 	{
 		return m_entities[id];
 	}

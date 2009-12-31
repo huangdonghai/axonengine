@@ -26,8 +26,8 @@ AX_BEGIN_NAMESPACE
 		int m_entityNum;
 		int m_channelId;
 
-		SoundWorld* m_world;
-		FMOD::Channel* m_fmodChannel;
+		SoundWorld *m_world;
+		FMOD::Channel *m_fmodChannel;
 	};
 
 	struct loopChannel_t {
@@ -36,8 +36,8 @@ AX_BEGIN_NAMESPACE
 		int m_entityNum;
 		int m_channelId;
 
-		SoundWorld* m_world;
-		FMOD::Channel* m_fmodChannel;
+		SoundWorld *m_world;
+		FMOD::Channel *m_fmodChannel;
 	};
 
 }

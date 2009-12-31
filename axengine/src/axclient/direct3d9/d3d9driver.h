@@ -31,16 +31,16 @@ AX_BEGIN_NAMESPACE
 		virtual bool isInRenderingThread();
 
 		// resource management
-		virtual RenderTarget* createWindowTarget(handle_t wndId, const String& name);
+		virtual RenderTarget *createWindowTarget(handle_t wndId, const String &name);
 
 #if 0
 		// primitive
-		virtual int cachePrimitive(Primitive* prim);
-		virtual void uncachePrimitive(Primitive* prim);
+		virtual int cachePrimitive(Primitive *prim);
+		virtual void uncachePrimitive(Primitive *prim);
 #endif
 
 		// caps
-		virtual const Info* getDriverInfo();
+		virtual const Info *getDriverInfo();
 		virtual uint_t getBackendCaps();
 
 #if 0
@@ -52,10 +52,10 @@ AX_BEGIN_NAMESPACE
 
 #if 0
 		// new selection
-		virtual void beginSelect(const RenderCamera& view);
+		virtual void beginSelect(const RenderCamera &view);
 		virtual void loadSelectId(int id);
-		virtual void testActor(Actor* re);
-		virtual void testPrimitive(Primitive* prim);
+		virtual void testActor(Actor *re);
+		virtual void testPrimitive(Primitive *prim);
 		virtual SelectRecordSeq endSelect();
 #endif
 		void reset(int width, int height, bool fullscreen);

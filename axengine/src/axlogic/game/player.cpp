@@ -26,16 +26,16 @@ AX_BEGIN_NAMESPACE
 
 	void Player::doThink()
 	{
-		const UserInput* userinput = g_gameSystem->getUserInput(m_entityNum);
+		const UserInput *userinput = g_gameSystem->getUserInput(m_entityNum);
 		m_physicsPlayer->runFrame(*userinput, m_world->getFrameTime());
 
 		m_body->setMatrix(m_physicsPlayer->getMatrix());
-		HavokPose* pose = m_physicsPlayer->getPose();
+		HavokPose *pose = m_physicsPlayer->getPose();
 		m_body->setPose(pose);
 		m_body->refresh();
 	}
 
-	void Player::setMatrix(const AffineMat& matrix)
+	void Player::setMatrix(const AffineMat &matrix)
 	{
 		m_physicsPlayer->setMatrix(matrix);
 	}

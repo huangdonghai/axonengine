@@ -22,53 +22,53 @@ AX_BEGIN_NAMESPACE
 
 		// ctor and dtor
 		Plane();
-		Plane(const Vector3& v, float dist=1);
-		Plane(const Plane& p);
+		Plane(const Vector3 &v, float dist=1);
+		Plane(const Plane &p);
 		Plane(float a, float b, float c, float d);
-		Plane(const Vector3& base, const Vector3& normal);
-		Plane(const Vector3& p0, const Vector3& p1, const Vector3& p2);
+		Plane(const Vector3 &base, const Vector3 &normal);
+		Plane(const Vector3 &p0, const Vector3 &p1, const Vector3 &p2);
 		~Plane();
 
 		// operator
-		bool operator==(const Plane& p) const;
-		bool operator!=(const Plane& p) const;
-		Plane operator+(const Plane& p) const;
+		bool operator==(const Plane &p) const;
+		bool operator!=(const Plane &p) const;
+		Plane operator+(const Plane &p) const;
 		Plane operator-() const;
-		Plane operator-(const Plane& p) const;
+		Plane operator-(const Plane &p) const;
 		Plane operator/(float scale) const;
 		Plane operator*(float scale) const;
-		float operator|(const Plane& p) const;
-		Plane operator+=(const Plane& p);
-		Plane operator-=(const Plane& p);
+		float operator|(const Plane &p) const;
+		Plane operator+=(const Plane &p);
+		Plane operator-=(const Plane &p);
 		Plane operator*=(float scale);
-		Plane operator*=(const Plane& p);
+		Plane operator*=(const Plane &p);
 		Plane operator/=(float p);
-		float& operator[](int index);
+		float &operator[](int index);
 		float operator[](int index) const;
-		float& operator[](size_t index);
+		float &operator[](size_t index);
 		float operator[](size_t index) const;
-		Plane& set(float a, float b, float c, float d=0);
+		Plane &set(float a, float b, float c, float d=0);
 		operator const float*() const;
-		float mapping(Vector3& p);
-		Vector3& normal();
-		const Vector3& getNormal() const;
-		void setNormal(const Vector3& n);
-		void fitThroughPoint(const Vector3& p);
+		float mapping(Vector3 &p);
+		Vector3 &normal();
+		const Vector3 &getNormal() const;
+		void setNormal(const Vector3 &n);
+		void fitThroughPoint(const Vector3 &p);
 
-		Side side(const BoundingBox& bbox) const;
-		float distance(const Vector3& v) const;
-		bool lineIntersection(const Vector3& start, const Vector3& end) const;
-		bool rayIntersection(const Vector3& start, const Vector3& dir, float& scale) const;
+		Side side(const BoundingBox &bbox) const;
+		float distance(const Vector3 &v) const;
+		bool lineIntersection(const Vector3 &start, const Vector3 &end) const;
+		bool rayIntersection(const Vector3 &start, const Vector3 &dir, float &scale) const;
 	};
 
 	inline Plane::Plane(){}
-	inline Plane::Plane(const Vector3& v, float dist) : a(v.x),b(v.y),c(v.z), d(dist) {}
-	inline Plane::Plane(const Plane& p) : a(p.a),b(p.b),c(p.c), d(p.d) {}
+	inline Plane::Plane(const Vector3 &v, float dist) : a(v.x),b(v.y),c(v.z), d(dist) {}
+	inline Plane::Plane(const Plane &p) : a(p.a),b(p.b),c(p.c), d(p.d) {}
 	inline Plane::Plane(float ix, float iy, float iz, float iw) : a(ix) , b(iy), c(iz), d(iw) {}
-	inline Plane::Plane(const Vector3& base, const Vector3& normal)
+	inline Plane::Plane(const Vector3 &base, const Vector3 &normal)
 		: a(normal.x), b(normal.y), c(normal.z)
 		, d(-(base|normal)) {}
-	inline Plane::Plane(const Vector3& p0, const Vector3& p1, const Vector3& p2) {
+	inline Plane::Plane(const Vector3 &p0, const Vector3 &p1, const Vector3 &p2) {
 		Vector3 n = ((p1-p0)^(p2-p0)).getNormalized();
 		float d = -(p0 | n);
 		*this = Plane(n, d);
@@ -76,19 +76,19 @@ AX_BEGIN_NAMESPACE
 	inline Plane::~Plane(){}
 
 	// operator
-	inline bool Plane::operator==(const Plane& p) const  {
+	inline bool Plane::operator==(const Plane &p) const  {
 		return a==p.a && b==p.b && c==p.c && d==p.d;
 	}
-	inline bool Plane::operator!=(const Plane& p) const {
+	inline bool Plane::operator!=(const Plane &p) const {
 		return a!=p.a || b!=p.b || c!=p.c || d!=p.d;
 	}
-	inline Plane Plane::operator+(const Plane& p) const {
+	inline Plane Plane::operator+(const Plane &p) const {
 		return Plane(a + p.a, b + p.b, c + p.c, d + p.d);
 	}
 	inline Plane Plane::operator-() const {
 		return Plane(-a, -b, -c, -d);
 	}
-	inline Plane Plane::operator-(const Plane& p) const {
+	inline Plane Plane::operator-(const Plane &p) const {
 		return Plane(a - p.a, b - p.b, c - p.c, d - p.d);
 	}
 	inline Plane Plane::operator/(float scale) const {
@@ -100,14 +100,14 @@ AX_BEGIN_NAMESPACE
 		return Plane(a * scale, b * scale, c * scale, d * scale);
 	}
 	// Dot Product
-	inline float Plane::operator|(const Plane& p) const {
+	inline float Plane::operator|(const Plane &p) const {
 		return a*p.a + b*p.b + c*p.c + d*p.d;
 	}
-	inline Plane Plane::operator+=(const Plane& p) {
+	inline Plane Plane::operator+=(const Plane &p) {
 		a += p.a; b += p.b; c += p.c; d += p.d;
 		return *this;
 	}
-	inline Plane Plane::operator-=(const Plane& p) {
+	inline Plane Plane::operator-=(const Plane &p) {
 		a -= p.a; b -= p.b; c -= p.c; d -= p.d;
 		return *this;
 	}
@@ -115,7 +115,7 @@ AX_BEGIN_NAMESPACE
 		a *= scale; b *= scale; c *= scale; d *= scale;
 		return *this;
 	}
-	inline Plane Plane::operator*=(const Plane& p) {
+	inline Plane Plane::operator*=(const Plane &p) {
 		a *= p.a; b *= p.b; c *= p.c; d *= p.d;
 		return *this;
 	}
@@ -124,7 +124,7 @@ AX_BEGIN_NAMESPACE
 		a *= rv; b *= rv; c *= rv; d *= rv;
 		return *this;
 	}
-	inline float& Plane::operator[](int index) {
+	inline float &Plane::operator[](int index) {
 		AX_STRICT_ASSERT(index>=0 && index<4);
 		return *(&a+index);
 	}
@@ -132,7 +132,7 @@ AX_BEGIN_NAMESPACE
 		AX_STRICT_ASSERT(index>=0 && index<4);
 		return *(&a+index);
 	}
-	inline float& Plane::operator[](size_t index) {
+	inline float &Plane::operator[](size_t index) {
 		AX_STRICT_ASSERT(index>=0 && index<4);
 		return *(&a+index);
 	}
@@ -140,32 +140,32 @@ AX_BEGIN_NAMESPACE
 		AX_STRICT_ASSERT(index>=0 && index<4);
 		return *(&a+index);
 	}
-	inline Plane& Plane::set(float ix, float iy, float iz, float iw) {
+	inline Plane &Plane::set(float ix, float iy, float iz, float iw) {
 		a = ix; b = iy; c = iz; d = iw;
 		return *this;
 	}
 	inline Plane::operator const float*() const {
 		return &a;
 	}
-	inline float Plane::mapping(Vector3& p) {
+	inline float Plane::mapping(Vector3 &p) {
 		return a*p.x + b*p.y + c*p.z - d;
 	}
-	inline Vector3& Plane::normal() {
+	inline Vector3 &Plane::normal() {
 		return *(Vector3*)this;
 	}
-	inline const Vector3& Plane::getNormal() const {
+	inline const Vector3 &Plane::getNormal() const {
 		return *(Vector3*)this;
 	}
-	inline void Plane::setNormal(const Vector3& n) {
+	inline void Plane::setNormal(const Vector3 &n) {
 		a = n.x; b = n.y; c = n.z;
 	}
-	inline void Plane::fitThroughPoint(const Vector3& p) {
+	inline void Plane::fitThroughPoint(const Vector3 &p) {
 		d = -(normal() | p);
 	}
-	inline float Plane::distance(const Vector3& v) const {
+	inline float Plane::distance(const Vector3 &v) const {
 		return a * v.x + b * v.y + c * v.z + d;
 	}
-	inline bool Plane::lineIntersection(const Vector3& start, const Vector3& end) const {
+	inline bool Plane::lineIntersection(const Vector3 &start, const Vector3 &end) const {
 		float d1, d2, fraction;
 
 		d1 = (getNormal() | start) + d;
@@ -183,7 +183,7 @@ AX_BEGIN_NAMESPACE
 		return (fraction >= 0.0f && fraction <= 1.0f);
 	}
 
-	inline bool Plane::rayIntersection(const Vector3& start, const Vector3& dir, float& scale) const {
+	inline bool Plane::rayIntersection(const Vector3 &start, const Vector3 &dir, float &scale) const {
 		float d1, d2;
 
 		d1 = (getNormal() | start) + d;

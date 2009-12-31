@@ -40,7 +40,7 @@ AX_BEGIN_NAMESPACE
 		m_realAllocated = false;
 	}
 
-	ReflectionTarget::ReflectionTarget(RenderWorld* world, RenderEntity* actor, Primitive* prim, int width, int height)
+	ReflectionTarget::ReflectionTarget(RenderWorld *world, RenderEntity *actor, Primitive *prim, int width, int height)
 	{
 		m_world = world;
 		m_actor = actor;
@@ -54,7 +54,7 @@ AX_BEGIN_NAMESPACE
 		g_targetManager->freeTarget(m_target);
 	}
 
-	void ReflectionTarget::update( QueuedScene* qscene )
+	void ReflectionTarget::update( QueuedScene *qscene )
 	{
 		bool needUpdate = false;
 
@@ -74,7 +74,7 @@ AX_BEGIN_NAMESPACE
 		if (!needUpdate)
 			return;
 
-		QueuedScene* subscene = qscene->addSubScene();
+		QueuedScene *subscene = qscene->addSubScene();
 		if (!subscene)
 			return;
 
@@ -92,23 +92,23 @@ AX_BEGIN_NAMESPACE
 	{
 	}
 
-	void TargetManager::allocReal( RenderTarget* target )
+	void TargetManager::allocReal( RenderTarget *target )
 	{
 		m_realAllocTargets.push_back(target);
 	}
 
-	void TargetManager::freeReal( RenderTarget* target )
+	void TargetManager::freeReal( RenderTarget *target )
 	{
 		m_freeRealTargets.push_back(target);
 	}
 
-	ReflectionTarget* TargetManager::findReflection( RenderWorld* world, RenderEntity* actor, Primitive* prim, int width, int height )
+	ReflectionTarget *TargetManager::findReflection( RenderWorld *world, RenderEntity *actor, Primitive *prim, int width, int height )
 	{
 		List<ReflectionTarget*>::iterator it = m_reflectionTargets.begin();
 
-		ReflectionTarget* reflTarget = 0;
+		ReflectionTarget *reflTarget = 0;
 		for (; it != m_reflectionTargets.end(); ++it) {
-			ReflectionTarget* curTarget = *it;
+			ReflectionTarget *curTarget = *it;
 
 			if (curTarget->m_world == world && curTarget->m_actor == actor && curTarget->m_prim == prim) {
 				reflTarget = curTarget;

@@ -17,8 +17,8 @@ AX_BEGIN_NAMESPACE
 		WinInput();
 		virtual ~WinInput();
 
-		void setWindow(RenderTarget* gamewnd);
-		void queWinInput(MSG* msg);
+		void setWindow(RenderTarget *gamewnd);
+		void queWinInput(MSG *msg);
 
 		// implement IInputSource
 		virtual void startCapture(InputSystem::CaptureMode capturemode);

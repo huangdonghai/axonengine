@@ -15,7 +15,7 @@ AX_BEGIN_NAMESPACE
 	// class GLtarget
 	//--------------------------------------------------------------------------
 
-	GLtarget::GLtarget(GLframebuffer* fb, int width, int height, TexFormat format, bool asrenderbuffer) {
+	GLtarget::GLtarget(GLframebuffer *fb, int width, int height, TexFormat format, bool asrenderbuffer) {
 		m_isRenderBuffer = false;
 		m_framebuffer = fb;
 		m_boundIndex = -1;
@@ -74,14 +74,14 @@ AX_BEGIN_NAMESPACE
 		m_framebuffer->unbind();
 	}
 
-	void GLtarget::attachDepth(RenderTarget* depth) {
+	void GLtarget::attachDepth(RenderTarget *depth) {
 		AX_ASSERT(depth->isTexture());
 		AX_ASSERT(depth->isDepthFormat());
-		GLtarget* gldepth = dynamic_cast<GLtarget*>(depth);
+		GLtarget *gldepth = dynamic_cast<GLtarget*>(depth);
 		attachDepth(gldepth);
 	}
 
-	void GLtarget::attachDepth(GLtarget* depth) {
+	void GLtarget::attachDepth(GLtarget *depth) {
 		if (!isColorFormat()) {
 			Errorf("GLtarget::attachDepth: attach depth to not a color target");
 			return;
@@ -94,7 +94,7 @@ AX_BEGIN_NAMESPACE
 		m_depthTarget = depth;
 	}
 
-	void GLtarget::attachColor(int index, RenderTarget* c) {
+	void GLtarget::attachColor(int index, RenderTarget *c) {
 		AX_ASSERT(index < MAX_COLOR_ATTACHMENT);
 		colorAttached[index] = (GLtarget*)c;
 	}
@@ -108,7 +108,7 @@ AX_BEGIN_NAMESPACE
 		TypeZeroArray(colorAttached);
 	}
 
-	RenderTarget* GLtarget::getColorAttached(int index) const {
+	RenderTarget *GLtarget::getColorAttached(int index) const {
 		AX_ASSERT(index < MAX_COLOR_ATTACHMENT);
 		return colorAttached[index];
 	}
@@ -121,7 +121,7 @@ AX_BEGIN_NAMESPACE
 		}
 	}
 
-	GLtarget* GLtarget::getColorAttachedGL(int index) const {
+	GLtarget *GLtarget::getColorAttachedGL(int index) const {
 		AX_ASSERT(index < MAX_COLOR_ATTACHMENT);
 		return colorAttached[index];
 	}
@@ -195,7 +195,7 @@ AX_BEGIN_NAMESPACE
 
 	void GLframebuffer::checkStatus(GLenum target) {
 		GLenum status = glCheckFramebufferStatusEXT(target);
-		char* error_string;
+		char *error_string;
 
 		if (status == GL_NO_ERROR || status == GL_FRAMEBUFFER_COMPLETE_EXT)
 			return;
@@ -232,7 +232,7 @@ AX_BEGIN_NAMESPACE
 		Errorf("GLframebuffer::checkStatus: %s", error_string);
 	}
 
-	void GLframebuffer::bind(GLtarget* target) {
+	void GLframebuffer::bind(GLtarget *target) {
 		m_boundTarget = target;
 
 		if (!target) {
@@ -248,7 +248,7 @@ AX_BEGIN_NAMESPACE
 			buffers.push_back(b + GL_COLOR_ATTACHMENT0_EXT);
 
 			for (int i = 0; i < RenderTarget::MAX_COLOR_ATTACHMENT; i++) {
-				GLtarget* attached = m_boundTarget->getColorAttachedGL(i);
+				GLtarget *attached = m_boundTarget->getColorAttachedGL(i);
 				if (!attached) {
 					continue;
 				}
@@ -263,7 +263,7 @@ AX_BEGIN_NAMESPACE
 			}
 
 			// attach depth and stencil
-			GLtarget* depth = m_boundTarget->getDepthAttachedGL();
+			GLtarget *depth = m_boundTarget->getDepthAttachedGL();
 			if (!depth) {
 				depth = allocTarget(RenderTarget::TemporalAlloc, TexFormat::D24);
 			}
@@ -279,19 +279,19 @@ AX_BEGIN_NAMESPACE
 			}
 #if 0
 			// attach color0
-			GLtexture* tex = m_boundTarget->getTextureGL();
+			GLtexture *tex = m_boundTarget->getTextureGL();
 			glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, tex->getTarget(), tex->getObject(), 0);
 
 			buffers.push_back(GL_COLOR_ATTACHMENT0_EXT);
 			// attach color0~N
 			for (int i = 0; i < Target::MAX_COLOR_ATTACHMENT; i++) {
-				GLtarget* attached = m_boundTarget->getColorAttachedGL(i);
+				GLtarget *attached = m_boundTarget->getColorAttachedGL(i);
 				if (!attached) {
 					continue;
 				}
 
 				buffers.push_back(GL_COLOR_ATTACHMENT0_EXT + i + 1);
-				GLtexture* tex = attached->getTextureGL();
+				GLtexture *tex = attached->getTextureGL();
 				glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT + i + 1, tex->getTarget(), tex->getObject(), 0);
 			}
 
@@ -320,7 +320,7 @@ AX_BEGIN_NAMESPACE
 			glReadBuffer(GL_NONE);
 
 			// attach depth and stencil
-			GLtarget* depth = m_boundTarget;
+			GLtarget *depth = m_boundTarget;
 			TexFormat tf = depth->getTextureGL()->getFormat();
 
 			bindDepth(depth);
@@ -352,7 +352,7 @@ AX_BEGIN_NAMESPACE
 	void GLframebuffer::newFrame(int frame) {
 		GLtargetseq::iterator it = m_targetpool.begin();
 		while (it != m_targetpool.end()) {
-			GLtarget* target = *it;
+			GLtarget *target = *it;
 
 			if (target->getHint() == RenderTarget::PermanentAlloc) {
 				++it;
@@ -373,7 +373,7 @@ AX_BEGIN_NAMESPACE
 	void GLframebuffer::endFrame() {
 	}
 
-	void GLframebuffer::blitColor(GLtexture* tex) {
+	void GLframebuffer::blitColor(GLtexture *tex) {
 		AX_ASSERT(m_boundColor && m_boundDepth);
 
 		glBindFramebufferEXT(GL_READ_FRAMEBUFFER_EXT, m_object);
@@ -393,7 +393,7 @@ AX_BEGIN_NAMESPACE
 		GLrender::checkErrors();
 	}
 
-	void GLframebuffer::blitDepth(GLtexture* tex) {
+	void GLframebuffer::blitDepth(GLtexture *tex) {
 		AX_ASSERT(m_boundDepth);
 		glBindFramebufferEXT(GL_READ_FRAMEBUFFER_EXT, m_object);
 
@@ -412,14 +412,14 @@ AX_BEGIN_NAMESPACE
 		return false;
 	}
 
-	GLtarget* GLframebuffer::allocTarget(RenderTarget::AllocHint hint, TexFormat texformat) {
+	GLtarget *GLframebuffer::allocTarget(RenderTarget::AllocHint hint, TexFormat texformat) {
 		if (!glFramebufferManager->isFormatSupport(texformat)) {
 			Errorf("GLframebuffer::allocTarget: can't support format %s", texformat.getStringName());
 			return nullptr;
 		}
 
-		GLtarget* result = nullptr;
-		AX_FOREACH(GLtarget* target, m_targetpool) {
+		GLtarget *result = nullptr;
+		AX_FOREACH(GLtarget *target, m_targetpool) {
 			if (target->getHint() != RenderTarget::Free) {
 				continue;
 			}
@@ -441,13 +441,13 @@ AX_BEGIN_NAMESPACE
 		return result;
 	}
 
-	void GLframebuffer::freeTarget(RenderTarget* target) {
+	void GLframebuffer::freeTarget(RenderTarget *target) {
 		if (!target->isTexture()) {
 			Errorf("GLframebuffer::freeTarget: target isn't a texture");
 			return;
 		}
 
-		GLtarget* gltarget = (GLtarget*)target;
+		GLtarget *gltarget = (GLtarget*)target;
 
 #if 0
 		if (gltarget->getHint() != Target::PermanentAlloc) {
@@ -459,19 +459,19 @@ AX_BEGIN_NAMESPACE
 		gltarget->setHint(RenderTarget::Free, glFramebufferManager->getFrame());
 	}
 
-	GLtexture* GLframebuffer::getBoundColor() const {
+	GLtexture *GLframebuffer::getBoundColor() const {
 		return m_boundTarget->getTextureGL();
 
 //		return (GLtexture*)m_boundColor->getTexture();
 	}
 
-	GLtexture* GLframebuffer::getBoundDepth() const {
+	GLtexture *GLframebuffer::getBoundDepth() const {
 		return m_boundDepth->getTextureGL();
 	}
 
-	GLenum GLframebuffer::bindColor(GLtarget* target) {
+	GLenum GLframebuffer::bindColor(GLtarget *target) {
 #if 1 // FOR TEST
-		GLtexture* textest = m_boundTarget->getTextureGL();
+		GLtexture *textest = m_boundTarget->getTextureGL();
 		glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, textest->getTarget(), textest->getObject(), 0);
 		return 0;
 #endif
@@ -497,16 +497,16 @@ AX_BEGIN_NAMESPACE
 		m_boundColor[found] = target;
 		target->m_boundIndex = found;
 
-		GLtexture* tex = m_boundTarget->getTextureGL();
+		GLtexture *tex = m_boundTarget->getTextureGL();
 		glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT+found, tex->getTarget(), tex->getObject(), 0);
 		return found;
 	}
 
-	void GLframebuffer::bindDepth(GLtarget* target) {
+	void GLframebuffer::bindDepth(GLtarget *target) {
 		{ // TEST
 			m_boundDepth = target;
 
-			GLtexture* tex = m_boundDepth->getTextureGL();
+			GLtexture *tex = m_boundDepth->getTextureGL();
 			TexFormat tf = tex->getFormat();
 
 			glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, tex->getTarget(), tex->getObject(), 0);
@@ -517,20 +517,20 @@ AX_BEGIN_NAMESPACE
 		}
 		m_boundDepth = target;
 
-		GLtexture* tex = m_boundDepth->getTextureGL();
+		GLtexture *tex = m_boundDepth->getTextureGL();
 		TexFormat tf = tex->getFormat();
 
 		glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, tex->getTarget(), tex->getObject(), 0);
 	}
 
-	void GLframebuffer::bindStencil(GLtarget* target) {
+	void GLframebuffer::bindStencil(GLtarget *target) {
 		if (m_boundStencil == target) {
 			return;
 		}
 		m_boundStencil = target;
 
 		if (target) {
-			GLtexture* tex = m_boundStencil->getTextureGL();
+			GLtexture *tex = m_boundStencil->getTextureGL();
 			glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_STENCIL_ATTACHMENT_EXT, tex->getTarget(), tex->getObject(), 0);
 		} else {
 			glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_STENCIL_ATTACHMENT_EXT, GL_TEXTURE_2D, 0, 0);
@@ -565,17 +565,17 @@ AX_BEGIN_NAMESPACE
 	void GLframebuffermanager::finalize() {
 	}
 
-	RenderTarget* GLframebuffermanager::allocTarget(RenderTarget::AllocHint hint, int width, int height, TexFormat texformat) {
-		GLframebuffer* fb = getFramebuffer(width, height);
+	RenderTarget *GLframebuffermanager::allocTarget(RenderTarget::AllocHint hint, int width, int height, TexFormat texformat) {
+		GLframebuffer *fb = getFramebuffer(width, height);
 		return fb->allocTarget(hint, texformat);
 	}
 
-	void GLframebuffermanager::freeTarget(RenderTarget* target) {
+	void GLframebuffermanager::freeTarget(RenderTarget *target) {
 		if (!target->isTexture()) {
 			return;
 		}
 
-		GLtarget* gltarget = (GLtarget*)target;
+		GLtarget *gltarget = (GLtarget*)target;
 		gltarget->getFramebuffer()->freeTarget(gltarget);
 	}
 
@@ -598,8 +598,8 @@ AX_BEGIN_NAMESPACE
 		}
 	}
 
-	GLframebuffer* GLframebuffermanager::getFramebuffer(int width, int height) {
-		GLframebuffer* fb = m_framebuffers[width][height];
+	GLframebuffer *GLframebuffermanager::getFramebuffer(int width, int height) {
+		GLframebuffer *fb = m_framebuffers[width][height];
 
 		if (!fb) {
 			fb = new GLframebuffer(width, height);
@@ -613,13 +613,13 @@ AX_BEGIN_NAMESPACE
 		glThread->preFrame();
 	}
 
-	extern void trTexFormat(TexFormat tex_format, GLenum& dataformat, GLenum& datatype, GLenum& internal_format);
+	extern void trTexFormat(TexFormat tex_format, GLenum &dataformat, GLenum &datatype, GLenum &internal_format);
 
 #define D(s) s, #s,
 
 	static struct {
 		GLenum e;
-		const char* s;
+		const char *s;
 	} formats[] = {
 		D(GL_R3_G3_B2)
 		D(GL_ALPHA4)
@@ -669,7 +669,7 @@ AX_BEGIN_NAMESPACE
 		D(GL_LUMINANCE_ALPHA16F_ARB)
 	};
 
-	inline const char* getName(int e) {
+	inline const char *getName(int e) {
 		for (size_t i = 0; i < ArraySize(formats); i++) {
 			if (formats[i].e == e) {
 				return formats[i].s;

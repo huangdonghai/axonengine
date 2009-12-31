@@ -22,7 +22,7 @@ AX_BEGIN_NAMESPACE
 		State();
 		virtual ~State();
 
-		void setTransformState(bool editable, bool clear, const Vector3& parameter);
+		void setTransformState(bool editable, bool clear, const Vector3 &parameter);
 
 		float moveSpeed;
 		SelectPart selectionPart;

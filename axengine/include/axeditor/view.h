@@ -15,11 +15,11 @@ AX_BEGIN_NAMESPACE
 // view frame is a widget/window can contain a View
 struct IViewFrame
 {
-	virtual RenderTarget* getRenderTarget() = 0;
+	virtual RenderTarget *getRenderTarget() = 0;
 	virtual Rect getRect() = 0;
 	virtual void setCursor(CursorType cursor_type) = 0;
 	virtual void resetCursor() = 0;
-	virtual void setCursorPos(const Point& pos) = 0;
+	virtual void setCursorPos(const Point &pos) = 0;
 	virtual void setNeedUpdate() = 0;
 	virtual void setAutoUpdate(bool update) = 0;
 	virtual void registerEventSource() = 0;
@@ -41,13 +41,13 @@ public:
 		Force, Default, Disabled
 	};
 
-	View(Context* context);
+	View(Context *context);
 	virtual ~View();
 
-	virtual void bindFrame(IViewFrame* container);
+	virtual void bindFrame(IViewFrame *container);
 
-	Context* getContext() { return m_context; }
-	String& getTitle();
+	Context *getContext() { return m_context; }
+	String &getTitle();
 	void setCursor(CursorType cursor_type) { if (m_frame) m_frame->setCursor(cursor_type); }
 	void resetCursor() { if (m_frame) m_frame->resetCursor(); }
 	Vector3 getCursorPos() { return m_cursorPos; }
@@ -57,21 +57,21 @@ public:
 
 	// select helper
 	// from screen pos trace world, if not interacted, then trace to water zero plane, if even not intersected, returned false
-	bool traceWorld(int x, int y, Vector3& result, int part);
-	bool traceWorld(Vector3& result); // use screen center to trace
-	void beginSelect(const Rect& r);
+	bool traceWorld(int x, int y, Vector3 &result, int part);
+	bool traceWorld(Vector3 &result); // use screen center to trace
+	void beginSelect(const Rect &r);
 	int endSelect();
 
-	bool selectRegion(const Rect& rect, SelectPart part, OUT Vector3& pos, OUT AgentList& retlist, bool onlynearest = false);
-	bool selectRegion(const Rect& rect, SelectPart part, OUT Vector3& pos);
+	bool selectRegion(const Rect &rect, SelectPart part, OUT Vector3 &pos, OUT AgentList &retlist, bool onlynearest = false);
+	bool selectRegion(const Rect &rect, SelectPart part, OUT Vector3 &pos);
 
-	const RenderCamera& getCamera() const { return m_camera; }
+	const RenderCamera &getCamera() const { return m_camera; }
 
-	void setEyeMatrix(const AffineMat& eyeMatrix) {m_eyeMatrix = eyeMatrix; }
-	const AffineMat& getEyeMatrix() const { return m_eyeMatrix; }
+	void setEyeMatrix(const AffineMat &eyeMatrix) {m_eyeMatrix = eyeMatrix; }
+	const AffineMat &getEyeMatrix() const { return m_eyeMatrix; }
 
 	// event handler
-	virtual void handleEvent(InputEvent* e);
+	virtual void handleEvent(InputEvent *e);
 
 protected:
 	virtual void doRender() = 0;
@@ -82,8 +82,8 @@ protected:
 	void drawFrameNum();
 
 protected:
-	Context* m_context;
-	IViewFrame* m_frame;
+	Context *m_context;
+	IViewFrame *m_frame;
 	String m_title;
 	RenderCamera m_camera;
 	int m_frameNumCur;
@@ -93,7 +93,7 @@ protected:
 	Vector3 m_cursorPos;
 	AffineMat m_eyeMatrix;
 	bool m_autoUpdate;
-	Font* m_font;
+	Font *m_font;
 };
 
 AX_END_NAMESPACE

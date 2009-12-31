@@ -35,17 +35,17 @@ AX_BEGIN_NAMESPACE
 
 	class GLrender {
 	public:
-		static void setMaterialParameter(Material* mat);
+		static void setMaterialParameter(Material *mat);
 
-		static void draw(Material* mat, Technique tech, GLgeometry* prim);
-		static void draw(GLshader* shader, Technique tech, GLgeometry* prim);
-		static void bindVertexBuffer(const VertexDefSeq& defs, GLsizei stride, GLenum bufId, GLuint offset);
-		static void bindVertexBuffer(const VertexDef* defs, GLsizei stride, GLenum bufId, GLuint offset);
+		static void draw(Material *mat, Technique tech, GLgeometry *prim);
+		static void draw(GLshader *shader, Technique tech, GLgeometry *prim);
+		static void bindVertexBuffer(const VertexDefSeq &defs, GLsizei stride, GLenum bufId, GLuint offset);
+		static void bindVertexBuffer(const VertexDef *defs, GLsizei stride, GLenum bufId, GLuint offset);
 		static void bindVertexBuffer(VertexType vt, GLenum bufId, GLuint offset);
 		static void checkForCgError();
-		static void checkForCgError(const char* shaderfile);
+		static void checkForCgError(const char *shaderfile);
 		static void checkErrors();
-		static void setViewport(const Rect& view_rect);
+		static void setViewport(const Rect &view_rect);
 	};
 
 	class GLfontrender {
@@ -58,7 +58,7 @@ AX_BEGIN_NAMESPACE
 
 		void initialize();
 		void finalize();
-		Vector2 drawString(Font* font, Rgba color, const TextQuad& tq, const Vector2& xy, const wchar_t* str, size_t len, const Vector2& scale, bool italic = false);
+		Vector2 drawString(Font *font, Rgba color, const TextQuad &tq, const Vector2 &xy, const wchar_t *str, size_t len, const Vector2 &scale, bool italic = false);
 
 	protected:
 		void draw(int count);
@@ -68,7 +68,7 @@ AX_BEGIN_NAMESPACE
 #if 0
 		GLindexbuffer m_indexBuffer;
 #endif
-		GLshader* m_shader;
+		GLshader *m_shader;
 		float m_posOffset;
 	};
 

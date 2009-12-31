@@ -14,7 +14,7 @@ AX_BEGIN_NAMESPACE
 		return 0;
 	}
 
-	handle_t GLdriver::createGLWindow(const String& wnd_name) {
+	handle_t GLdriver::createGLWindow(const String &wnd_name) {
 		WString ws = u2w(wnd_name);
 		WNDCLASSEX wcex;	
 		wcex.cbSize = sizeof(WNDCLASSEX);

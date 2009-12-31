@@ -16,7 +16,7 @@ AX_BEGIN_NAMESPACE
 
 	// console variable
 #define AX_CVARDECL(name, defaultstring, flags) \
-	Cvar* name;
+	Cvar *name;
 #include <axclient/cvardecls.h>
 #undef AX_CVARDECL
 
@@ -26,32 +26,32 @@ AX_BEGIN_NAMESPACE
 #undef AX_STATDECL
 
 	// public object
-	RenderSystem* g_renderSystem;
-	RenderQueue* g_renderQueue;
-	RenderQueue* g_queues[2];
+	RenderSystem *g_renderSystem;
+	RenderQueue *g_renderQueue;
+	RenderQueue *g_queues[2];
 	ShaderMacro g_shaderMacro;
 	Uniforms g_uniforms;
-	IRenderDriver* g_renderDriver;
+	IRenderDriver *g_renderDriver;
 
-	TargetManager* g_targetManager;
-	ShaderManager* g_shaderManager;
-	PrimitiveManager* g_primitiveManager;
+	TargetManager *g_targetManager;
+	ShaderManager *g_shaderManager;
+	PrimitiveManager *g_primitiveManager;
 
-	QueryManager* g_queryManager;
+	QueryManager *g_queryManager;
 
-	InputSystem* g_inputSystem;
-	SoundSystem* g_soundSystem;
+	InputSystem *g_inputSystem;
+	SoundSystem *g_soundSystem;
 
 	FontPtr g_defaultFont;
 	FontPtr g_consoleFont;
 	FontPtr g_miniFont;
 
 #ifdef AX_CONFIG_OPTION_USE_SPEEDTREE_40
-	TreeManager* g_treeManager;
+	TreeManager *g_treeManager;
 #endif // AX_CONFIG_OPTION_USE_SPEEDTREE_40
 
 	// xinput
-//	Xinput* gXinput;
+//	Xinput *gXinput;
 
 	void axClientInit() {
 

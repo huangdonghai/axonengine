@@ -20,7 +20,7 @@ AX_BEGIN_NAMESPACE
 		float x,y,z,w;
 
 		inline Quaternion() {}
-		inline Quaternion(const Quaternion& other) {
+		inline Quaternion(const Quaternion &other) {
 			x = other.x;
 			y = other.y;
 			z = other.z;
@@ -29,13 +29,13 @@ AX_BEGIN_NAMESPACE
 		inline Quaternion(float ix, float iy, float iz, float iw)
 			: x(ix), y(iy), z(iz), w(iw) {}
 
-		inline Quaternion(const Vector3& angles) {
+		inline Quaternion(const Vector3 &angles) {
 			fromEulerAngles(angles);
 		}
 
 		inline ~Quaternion() {}
 
-		inline Quaternion operator=(const Quaternion& other) {
+		inline Quaternion operator=(const Quaternion &other) {
 			x = other.x;
 			y = other.y;
 			z = other.z;
@@ -43,7 +43,7 @@ AX_BEGIN_NAMESPACE
 			return *this;
 		}
 
-		inline Quaternion operator+(const Quaternion& other) const {
+		inline Quaternion operator+(const Quaternion &other) const {
 			return Quaternion(x + other.x, y + other.y, z + other.z, w + other.w);
 		}
 
@@ -97,7 +97,7 @@ AX_BEGIN_NAMESPACE
 #endif
 		}
 
-		inline double dot(const Quaternion& other) const {
+		inline double dot(const Quaternion &other) const {
 			return (x * other.x) + (y * other.y) + (z * other.z) + (w * other.w);
 		}
 
@@ -105,11 +105,11 @@ AX_BEGIN_NAMESPACE
 			return *(&x+index);
 		}
 
-		inline float& operator[](int index) {
+		inline float &operator[](int index) {
 			return *(&x+index);
 		}
 
-		inline void fromEulerAngles(const Vector3& angles) {
+		inline void fromEulerAngles(const Vector3 &angles) {
 			float angle;
 			float sr, sp, sy, cr, cp, cy;
 
@@ -130,14 +130,14 @@ AX_BEGIN_NAMESPACE
 			w = cr*cp*cy+sr*sp*sy; // W
 		}
 
-		inline void fromCompact(const Vector3& compact) {
+		inline void fromCompact(const Vector3 &compact) {
 			x = compact.x;
 			y = compact.y;
 			z = compact.z;
 			computeW();
 		}
 
-		inline void fromCompact(const CompactQuat& cquat);
+		inline void fromCompact(const CompactQuat &cquat);
 
 		/** Gets the shortest arc quaternion to rotate this vector to the destination
 		vector.
@@ -147,7 +147,7 @@ AX_BEGIN_NAMESPACE
 		(if specified, or a generated axis if not) since in this case
 		ANY axis of rotation is valid.
 		*/
-		inline void fromVectorToVector(const Vector3& from,const Vector3& dest,const Vector3& fallbackAxis = Vector3(0.0f,0.0f,0.0f))
+		inline void fromVectorToVector(const Vector3 &from,const Vector3 &dest,const Vector3 &fallbackAxis = Vector3(0.0f,0.0f,0.0f))
 		{
 			// Copy, since cannot modify local
 			Vector3 v0 = from;
@@ -203,7 +203,7 @@ AX_BEGIN_NAMESPACE
 				w = sqrt(t);
 		}
 
-		inline void fromAxisAngle(const Vector3& axis, float angle) {
+		inline void fromAxisAngle(const Vector3 &axis, float angle) {
 			float sin_a = sin(angle * AX_D2R * 0.5f);
 			float cos_a = cos(angle * AX_D2R * 0.5f);
 			x = axis.x * sin_a;
@@ -212,7 +212,7 @@ AX_BEGIN_NAMESPACE
 			w = cos_a;
 		}
 
-		inline Quaternion slerp(const Quaternion& to, float t) const {
+		inline Quaternion slerp(const Quaternion &to, float t) const {
 			Quaternion temp;
 			float omega, cosom, sinom, scale0, scale1;
 
@@ -269,7 +269,7 @@ AX_BEGIN_NAMESPACE
 		void 			set(float m_x, float m_y, float m_z);
 
 		float operator[](int index) const;
-		float& operator[](int index);
+		float &operator[](int index);
 
 		bool compare(const CompactQuat &a) const;
 		bool compare(const CompactQuat &a, const float epsilon) const;
@@ -294,7 +294,7 @@ AX_BEGIN_NAMESPACE
 		return (&x)[ index ];
 	}
 
-	inline float& CompactQuat::operator[](int index) {
+	inline float &CompactQuat::operator[](int index) {
 		AX_STRICT_ASSERT((index >= 0) && (index < 3));
 		return (&x)[ index ];
 	}
@@ -340,7 +340,7 @@ AX_BEGIN_NAMESPACE
 		return &x;
 	}
 
-	inline void Quaternion::fromCompact(const CompactQuat& cquat) {
+	inline void Quaternion::fromCompact(const CompactQuat &cquat) {
 		x = cquat.x;
 		y = cquat.y;
 		z = cquat.z;

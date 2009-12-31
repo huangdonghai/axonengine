@@ -28,7 +28,7 @@ AX_BEGIN_NAMESPACE
 
 	}
 
-	int Statistic::getIndex(Group group, const String& name, bool autoreset) {
+	int Statistic::getIndex(Group group, const String &name, bool autoreset) {
 		if (group <= NoneGroup || group >= MaxGroup) {
 			Errorf(_("Statistic::Register: group out of bound"));
 			return 0;
@@ -66,7 +66,7 @@ AX_BEGIN_NAMESPACE
 		return result;
 	}
 
-	const Statistic::IndexSeq& Statistic::getIndexsForGroup(Group group) const {
+	const Statistic::IndexSeq &Statistic::getIndexsForGroup(Group group) const {
 		if (group <= NoneGroup || group >= MaxGroup) {
 			Errorf(_("Statistic::GetIndexsForGroup: group out of bound"));
 		}
@@ -74,7 +74,7 @@ AX_BEGIN_NAMESPACE
 		return m_indexsForGroup[group];
 	}
 
-	const String& Statistic::getValueName(int index) const {
+	const String &Statistic::getValueName(int index) const {
 		if (index >= MAX_PERFORMERS) {
 			Errorf(_("Statistic::GetValueName: MAX_PERFORMERS exceeded"));
 		}

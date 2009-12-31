@@ -22,7 +22,7 @@ AX_BEGIN_NAMESPACE
 	public:
 		friend class GLframebuffer;
 
-		GLtarget(GLframebuffer* fb, int width, int height, TexFormat format, bool asrenderbuffer = false);
+		GLtarget(GLframebuffer *fb, int width, int height, TexFormat format, bool asrenderbuffer = false);
 		virtual ~GLtarget();
 
 		// implement ITarget
@@ -30,35 +30,35 @@ AX_BEGIN_NAMESPACE
 		virtual Type getType();
 		virtual void bind();
 		virtual void unbind();
-		virtual Texture* getTexture() { return m_texture; }
+		virtual Texture *getTexture() { return m_texture; }
 		virtual bool isTexture() { return true;}
 		virtual bool isColorFormat() { return m_texture->getFormat().isColor(); }
 		virtual bool isDepthFormat() { return m_texture->getFormat().isDepth(); }
 		virtual bool isStencilFormat() { return m_texture->getFormat().isStencil(); }
 
-		virtual void attachDepth(RenderTarget* depth);
-		virtual RenderTarget* getDepthAttached() const { return m_depthTarget; }
+		virtual void attachDepth(RenderTarget *depth);
+		virtual RenderTarget *getDepthAttached() const { return m_depthTarget; }
 
-		virtual void attachColor(int index, RenderTarget* c);
+		virtual void attachColor(int index, RenderTarget *c);
 		virtual void detachColor(int index);
 		virtual void detachAllColor();
-		virtual RenderTarget* getColorAttached(int index) const;
+		virtual RenderTarget *getColorAttached(int index) const;
 
-		GLframebuffer* getFramebuffer() const { return m_framebuffer; }
-		GLtexture* getTextureGL() { return m_texture; }
+		GLframebuffer *getFramebuffer() const { return m_framebuffer; }
+		GLtexture *getTextureGL() { return m_texture; }
 
 		void setHint(AllocHint hint, int frame);
 		AllocHint getHint() const { return m_storeHint; }
 
-		void attachDepth(GLtarget* depth);
-		GLtarget* getDepthAttachedGL() const { return m_depthTarget; }
-		GLtarget* getColorAttachedGL(int index) const;
+		void attachDepth(GLtarget *depth);
+		GLtarget *getDepthAttachedGL() const { return m_depthTarget; }
+		GLtarget *getColorAttachedGL(int index) const;
 
 	private:
 		AllocHint m_storeHint;
 		bool m_isRenderBuffer;
-		GLframebuffer* m_framebuffer;
-		GLtexture* m_texture;
+		GLframebuffer *m_framebuffer;
+		GLtexture *m_texture;
 		GLenum m_renderBuffer;
 		int m_width;
 		int m_height;
@@ -66,8 +66,8 @@ AX_BEGIN_NAMESPACE
 
 		int m_boundIndex;
 
-		GLtarget* m_depthTarget;
-		GLtarget* colorAttached[MAX_COLOR_ATTACHMENT];
+		GLtarget *m_depthTarget;
+		GLtarget *colorAttached[MAX_COLOR_ATTACHMENT];
 	};
 
 	//--------------------------------------------------------------------------
@@ -81,22 +81,22 @@ AX_BEGIN_NAMESPACE
 		GLframebuffer(int width, int height);
 		~GLframebuffer();
 
-		GLtarget* allocTarget(RenderTarget::AllocHint hint, TexFormat texformat);
-		void freeTarget(RenderTarget* target);	// only permanent target need be free
+		GLtarget *allocTarget(RenderTarget::AllocHint hint, TexFormat texformat);
+		void freeTarget(RenderTarget *target);	// only permanent target need be free
 
 		void newFrame(int frame);
 		void endFrame();
 
 		uint_t getObject();
 
-		void bind(GLtarget* target);
+		void bind(GLtarget *target);
 		void unbind();
 
-		GLtexture* getBoundColor() const;
-		GLtexture* getBoundDepth() const;
+		GLtexture *getBoundColor() const;
+		GLtexture *getBoundDepth() const;
 
-		void blitColor(GLtexture* tex);
-		void blitDepth(GLtexture* tex);
+		void blitColor(GLtexture *tex);
+		void blitDepth(GLtexture *tex);
 
 		Rect getRect() const { return Rect(0,0,m_width,m_height); }
 
@@ -104,18 +104,18 @@ AX_BEGIN_NAMESPACE
 		void checkStatus(GLenum target);
 		bool checkColorFormat(TexFormat format);
 
-		GLenum bindColor(GLtarget* target);
-		void bindDepth(GLtarget* target);
-		void bindStencil(GLtarget* target);
+		GLenum bindColor(GLtarget *target);
+		void bindDepth(GLtarget *target);
+		void bindStencil(GLtarget *target);
 
 	private:
 		uint_t m_object;
 		uint_t m_object2;
 
-		GLtarget* m_boundColor[MAX_DRAW_BUFFERS];
-		GLtarget* m_boundDepth;
-		GLtarget* m_boundStencil;
-		GLtarget* m_boundTarget;
+		GLtarget *m_boundColor[MAX_DRAW_BUFFERS];
+		GLtarget *m_boundDepth;
+		GLtarget *m_boundStencil;
+		GLtarget *m_boundTarget;
 
 		GLsizei m_width, m_height;
 
@@ -138,8 +138,8 @@ AX_BEGIN_NAMESPACE
 		~GLframebuffermanager();
 
 		// implement TargetManager
-		virtual RenderTarget* allocTarget(RenderTarget::AllocHint hint, int width, int height, TexFormat texformat);
-		virtual void freeTarget(RenderTarget* target);	// only permanent target need be free
+		virtual RenderTarget *allocTarget(RenderTarget::AllocHint hint, int width, int height, TexFormat texformat);
+		virtual void freeTarget(RenderTarget *target);	// only permanent target need be free
 		virtual bool isFormatSupport(TexFormat format);
 		virtual TexFormat getSuggestFormat(RenderTarget::SuggestFormat sf);
 
@@ -147,10 +147,10 @@ AX_BEGIN_NAMESPACE
 		void finalize();
 
 		void preFrame();
-		GLframebuffer* getFramebuffer(int width, int height);
+		GLframebuffer *getFramebuffer(int width, int height);
 #if 0
-		GLtarget* getColorTarget(int width, int height);
-		GLtarget* getDepthTarget(int width, int height);
+		GLtarget *getColorTarget(int width, int height);
+		GLtarget *getDepthTarget(int width, int height);
 #endif
 		void endFrame();
 

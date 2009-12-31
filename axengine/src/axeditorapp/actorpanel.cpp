@@ -29,7 +29,7 @@ ActorPanel::~ActorPanel()
 	g_mapContext->detachObserver(this);
 }
 
-void ActorPanel::doNotify(IObservable* subject, int arg ) {
+void ActorPanel::doNotify(IObservable *subject, int arg ) {
 	if (subject != g_mapContext ) {
 		return;
 	}
@@ -42,7 +42,7 @@ void ActorPanel::doNotify(IObservable* subject, int arg ) {
 		return;
 	}
 
-	const AgentList& actorlist = g_mapContext->getSelection();
+	const AgentList &actorlist = g_mapContext->getSelection();
 
 	if (!actorlist.containsOne() ) {
 		ui.objectName->setText(QString("%1 objects").arg(actorlist.size()));
@@ -52,13 +52,13 @@ void ActorPanel::doNotify(IObservable* subject, int arg ) {
 		ui.cppType->setText("");
 		ui.scriptFile->setText("");
 	} else {
-		MapActor* actor = static_cast<MapActor*>(actorlist.back());
-		GameObject* node = actor->getGameObject();
+		MapActor *actor = static_cast<MapActor*>(actorlist.back());
+		GameObject *node = actor->getGameObject();
 		ui.propEditor->initFromObject(node );
 		ui.scriptProp->initScriptProp(node );
 		ui.objectName->setText(u2q(node->get_objectName()) );
 		ui.objectColor->setColor(actor->getColor() );
-		const ClassInfo* ci = actor->getGameObject()->getClassInfo();
+		const ClassInfo *ci = actor->getGameObject()->getClassInfo();
 		if (ci ) {
 			ui.scriptClass->setText(u2q(ci->m_className) );
 			QString filename = u2q("scripts/"+ ci->m_className );
@@ -92,9 +92,9 @@ void ActorPanel::onPropertyChanged(IProperty *property )
 	g_mapContext->setActorProperty(q2u(property->propertyName()), q2x(property->value()) );
 }
 
-void ActorPanel::on_objectColor_colorChanged( const QColor& color )
+void ActorPanel::on_objectColor_colorChanged( const QColor &color )
 {
-	const AgentList& actorlist = g_mapContext->getSelection();
+	const AgentList &actorlist = g_mapContext->getSelection();
 
 	actorlist.setColor(q2x(color));
 }

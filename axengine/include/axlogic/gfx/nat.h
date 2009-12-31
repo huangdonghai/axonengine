@@ -131,11 +131,11 @@ public:
 #if 0
 	virtual int getNumKeys ();
 	virtual void setNumKeys (int n);
-	virtual void getKey(int i, KeyBase* key);
-	virtual void setKey(int i, KeyBase* key);
+	virtual void getKey(int i, KeyBase *key);
+	virtual void setKey(int i, KeyBase *key);
 	virtual int appendKey(KeyBase *key);
 	virtual void sortKeys();
-	virtual DWORD& getTrackFlags ();
+	virtual DWORD &getTrackFlags ();
 	virtual int getKeySize ();
 #endif
 
@@ -143,8 +143,8 @@ public:
 	bool isSimple() const { return getControlType() <= kSimpleMax; }
 
 private:
-	Object* m_object;
-	Member* m_target;
+	Object *m_object;
+	Member *m_target;
 };
 
 class Animator
@@ -173,7 +173,7 @@ private:
 class FloatTrack : public Control
 {
 public:
-	FloatTrack(const String& name);
+	FloatTrack(const String &name);
 	virtual ~FloatTrack();
 
 private:
@@ -185,7 +185,7 @@ private:
 class VectorTrack : public Control
 {
 public:
-	VectorTrack(const String& name);
+	VectorTrack(const String &name);
 	virtual ~VectorTrack();
 
 private:
@@ -197,7 +197,7 @@ private:
 class ColorTrack : public Control
 {
 public:
-	ColorTrack(const String& name);
+	ColorTrack(const String &name);
 	virtual ~ColorTrack();
 
 private:

@@ -18,7 +18,7 @@ AX_BEGIN_NAMESPACE
 		return result;
 	}
 
-	bool Point::fromString(const char* str) {
+	bool Point::fromString(const char *str) {
 		int v = sscanf(str, "%d %d", &x, &y);
 		AX_ASSERT(v == 2);
 		return v == 2;

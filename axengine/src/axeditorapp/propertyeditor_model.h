@@ -59,7 +59,7 @@ public:
 
 	virtual QVariant data(const QModelIndex &index, int role) const;
 	virtual bool setData(const QModelIndex &index, const QVariant &value, int role);
-	void         refreshData(IProperty* prop);
+	void         refreshData(IProperty *prop);
 	virtual bool isEditable(const QModelIndex &index) const;
 	virtual QModelIndex buddy(const QModelIndex &index) const;
 

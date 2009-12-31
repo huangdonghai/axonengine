@@ -20,13 +20,13 @@ AX_BEGIN_NAMESPACE
 		virtual ~PhysicsShape();
 
 	protected:
-		hkpShape* m_rep;
+		hkpShape *m_rep;
 	};
 
 
 	class Heightfield : public PhysicsShape {
 	public:
-		Heightfield(const ushort_t* data, int size, float tilemeters);
+		Heightfield(const ushort_t *data, int size, float tilemeters);
 		virtual ~Heightfield();
 	};
 

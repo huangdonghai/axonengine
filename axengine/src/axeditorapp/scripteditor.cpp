@@ -15,12 +15,12 @@ read the license and understand and accept it fully.
 
 struct FileOpened {
 	QString filename;
-	QWidget* widget;
-	QsciScintilla* textEditor;
+	QWidget *widget;
+	QsciScintilla *textEditor;
 };
 
 typedef QVector<FileOpened>	FileOpenedSeq;
-QsciLexerLua* lexer;
+QsciLexerLua *lexer;
 
 FileOpenedSeq fileOpendSeq;
 
@@ -41,8 +41,8 @@ ScriptEditor::~ScriptEditor()
 
 }
 
-void ScriptEditor::openFile(const QString& filename) {
-	char* buf;
+void ScriptEditor::openFile(const QString &filename) {
+	char *buf;
 	size_t filesize = g_fileSystem->readFile(q2u(filename), (void**)&buf);
 
 	if (!filesize || !buf) {
@@ -74,12 +74,12 @@ void ScriptEditor::openFile(const QString& filename) {
 	ui.tabWidget->insertTab(0, fo.textEditor, filename);
 }
 
-void ScriptEditor::on_fileTree_itemDoubleClicked(QTreeWidgetItem* item,int) {
-	FileItem* f_item = dynamic_cast<FileItem*>(item);
+void ScriptEditor::on_fileTree_itemDoubleClicked(QTreeWidgetItem *item,int) {
+	FileItem *f_item = dynamic_cast<FileItem*>(item);
 	if (!f_item)
 		return;
 
-	const FileInfo& finfo = f_item->getFileInfo();
+	const FileInfo &finfo = f_item->getFileInfo();
 
 	if (f_item->isDirectory()) {
 		return;

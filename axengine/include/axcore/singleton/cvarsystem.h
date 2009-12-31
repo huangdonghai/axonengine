@@ -43,20 +43,20 @@ AX_BEGIN_NAMESPACE
 
 		bool isModified() const;
 		void clearModifiedFlag();
-		void forceSet(const String& sz_value);
+		void forceSet(const String &sz_value);
 		void forceSet(float float_value);
 		void forceSet(int int_value);
-		void set(const String& sz, bool force);
-		void set(const String& sz_value);
+		void set(const String &sz, bool force);
+		void set(const String &sz_value);
 		void set(float float_value);
 		void set(int int_value);
 
 		// static helper function
-		static Cvar* create(const String& name, const String& default_string, uint_t flags);
+		static Cvar *create(const String &name, const String &default_string, uint_t flags);
 
 	private:
 		Cvar();
-		Cvar(const String& name, const String& default_string, int flags);
+		Cvar(const String &name, const String &default_string, int flags);
 		~Cvar();
 
 		String m_name;
@@ -116,18 +116,18 @@ AX_BEGIN_NAMESPACE
 
 		void initialize();
 		void finalize();
-		Cvar* createCvar(const String& name, const String& defaultString, uint_t flags);
-		Cvar* createCvar(const String& name, const String& defaultString);
-		bool executeCommand(const CmdArgs& params);
+		Cvar *createCvar(const String &name, const String &defaultString, uint_t flags);
+		Cvar *createCvar(const String &name, const String &defaultString);
+		bool executeCommand(const CmdArgs &params);
 
 	protected:
-		void removeCvar(const String& name);
+		void removeCvar(const String &name);
 
 	private:
 		// console command
-		void set_f(const CmdArgs& param);
-		void list_f(const CmdArgs& param);
-		void toggleCvar_f(const CmdArgs& param);
+		void set_f(const CmdArgs &param);
+		void list_f(const CmdArgs &param);
+		void toggleCvar_f(const CmdArgs &param);
 
 	private:
 		// member data

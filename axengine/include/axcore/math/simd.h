@@ -20,7 +20,7 @@ AX_BEGIN_NAMESPACE
 		static void initialize();
 		virtual void computeTangentSpace(Vertex *verts, int numVerts, const ushort_t *indexes, int numIndexes);
 		virtual void computeTangentSpaceSlow(Vertex *verts, int numVerts, const ushort_t *indexes, int numIndexes);
-		virtual void findHeightMinMax(const ushort_t* data, int stride, const Rect& rect, ushort_t* minh, ushort_t* maxh);
+		virtual void findHeightMinMax(const ushort_t *data, int stride, const Rect &rect, ushort_t *minh, ushort_t *maxh);
 	};
 
 AX_END_NAMESPACE

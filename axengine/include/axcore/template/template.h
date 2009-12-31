@@ -64,7 +64,7 @@ AX_BEGIN_NAMESPACE
 
 
 	template <typename T>
-	size_t add_unique(std::vector < T >& array, const T& add) {
+	size_t add_unique(std::vector < T >& array, const T &add) {
 		size_t i;
 		for (i=0; i<array.size(); i++) {
 			if (array[i] == add)

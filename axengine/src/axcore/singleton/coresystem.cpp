@@ -64,7 +64,7 @@ AX_BEGIN_NAMESPACE
 
 	// register output system, core system can output info to multi target at
 	// the same time
-	void System::registerLog(ILogHandler* log) {
+	void System::registerLog(ILogHandler *log) {
 		size_t i;
 
 		for (i=0; i<m_logSeq.size(); i++) {
@@ -99,7 +99,7 @@ AX_BEGIN_NAMESPACE
 		}
 	}
 
-	void System::removeLog(ILogHandler* log) {
+	void System::removeLog(ILogHandler *log) {
 		Sequence<ILogHandler*>::iterator it;
 	//	mLogCol::iterator it;
 
@@ -116,9 +116,9 @@ AX_BEGIN_NAMESPACE
 		m_logSeq.erase(it);
 	}
 
-	void System::print(const char* text) {
+	void System::print(const char *text) {
 		// save to log buffer
-		const char* p = text;
+		const char *p = text;
 
 		for (; *p; p++) {
 			m_line[m_linePos] = *p;
@@ -141,7 +141,7 @@ AX_BEGIN_NAMESPACE
 
 	void System::printLine()
 	{
-		const char* p = m_line;
+		const char *p = m_line;
 		for (; *p; p++) {
 			m_logBuf[m_logBufPos&LOGBUFSIZEMASK] = *p;
 			m_logBufPos++;
@@ -157,7 +157,7 @@ AX_BEGIN_NAMESPACE
 		return ++m_lastId;
 	}
 
-	void System::registerProgress(IProgressHandler* progress) {
+	void System::registerProgress(IProgressHandler *progress) {
 		size_t i;
 
 		for (i=0; i<m_progressSeq.size(); i++) {
@@ -172,7 +172,7 @@ AX_BEGIN_NAMESPACE
 		m_progressSeq.push_back(progress);
 	}
 
-	void System::removeProgress(IProgressHandler* progress) {
+	void System::removeProgress(IProgressHandler *progress) {
 		Sequence<IProgressHandler*>::iterator it;
 		//	mLogCol::iterator it;
 
@@ -190,7 +190,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 	// implement IProgressHandler
-	void System::beginProgress(const String& title) {
+	void System::beginProgress(const String &title) {
 		sys_noSleep->set(true);
 
 		Sequence<IProgressHandler*>::iterator it;
@@ -200,7 +200,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 	// return false if want go on, otherwise return true
-	bool System::showProgress(uint_t percent, const String& msg) {
+	bool System::showProgress(uint_t percent, const String &msg) {
 		Sequence<IProgressHandler*>::iterator it;
 		bool ret;
 
@@ -244,11 +244,11 @@ AX_BEGIN_NAMESPACE
 		Printf("%s\n", features.c_str());
 	}
 
-	void System::registerTickable(TickPriority priority, ITickable* tickable) {
+	void System::registerTickable(TickPriority priority, ITickable *tickable) {
 		m_tickableLists[priority].push_back(tickable);
 	}
 
-	void System::removeTickable(TickPriority priority, ITickable* tickable) {
+	void System::removeTickable(TickPriority priority, ITickable *tickable) {
 		m_tickableLists[priority].remove(tickable);
 	}
 
@@ -263,7 +263,7 @@ AX_BEGIN_NAMESPACE
 	void System::forceTick(int mssleep)
 	{
 		for (int i = 0; i < TickNumber; i++) {
-			AX_FOREACH(ITickable* tickable, m_tickableLists[i]) {
+			AX_FOREACH(ITickable *tickable, m_tickableLists[i]) {
 				tickable->tick();
 			}
 		}

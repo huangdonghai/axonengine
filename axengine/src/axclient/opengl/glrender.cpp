@@ -15,7 +15,7 @@ AX_BEGIN_NAMESPACE
 
 	static MaterialPtr nullmaterial = nullptr;
 
-	static inline void setTextureParameter(CGparameter param, GLtexture* tex) {
+	static inline void setTextureParameter(CGparameter param, GLtexture *tex) {
 		if (tex == nullptr) {
 //			cgGLSetTextureParameter(param, 0);
 			return;
@@ -24,16 +24,16 @@ AX_BEGIN_NAMESPACE
 		cgGLSetTextureParameter(param, tex->getObject());
 	}
 
-	void GLrender::setMaterialParameter(Material* mat) {
+	void GLrender::setMaterialParameter(Material *mat) {
 		// set texgen parameters
 		if (mat->isBaseTcAnim()) {
-			const Matrix4* matrix = mat->getBaseTcMatrix();
+			const Matrix4 *matrix = mat->getBaseTcMatrix();
 			if (matrix) {
 				AX_SU(g_baseTcMatrix, *matrix);
 			}
 		}
 
-		const TexGen& tg = mat->getTexGen(SamplerType::Diffuse);
+		const TexGen &tg = mat->getTexGen(SamplerType::Diffuse);
 
 		if (tg.transform) {
 			AX_SU(g_diffuseTcMatrix, tg.matrix);
@@ -42,7 +42,7 @@ AX_BEGIN_NAMESPACE
 
 
 
-	void GLrender::draw(Material* mat, Technique tech, GLgeometry* prim) {
+	void GLrender::draw(Material *mat, Technique tech, GLgeometry *prim) {
 		if (!mat) {
 			if (!nullmaterial) {
 				nullmaterial = Material::load("null");
@@ -56,19 +56,19 @@ AX_BEGIN_NAMESPACE
 		ShaderMacro macro = g_shaderMacro;
 
 		// bind sample
-		GLtexture* diffuse = (GLtexture*)(mat->getTexture(SamplerType::Diffuse));
-		GLtexture* normalmap = (GLtexture*)mat->getTexture(SamplerType::Normal);
-		GLtexture* specular = (GLtexture*)mat->getTexture(SamplerType::Specular);
-		GLtexture* terrcolor = (GLtexture*)mat->getTexture(SamplerType::TerrainColor);
-		GLtexture* terrnormal = (GLtexture*)mat->getTexture(SamplerType::TerrainNormal);
-		GLtexture* layeralpha = (GLtexture*)mat->getTexture(SamplerType::LayerAlpha);
+		GLtexture *diffuse = (GLtexture*)(mat->getTexture(SamplerType::Diffuse));
+		GLtexture *normalmap = (GLtexture*)mat->getTexture(SamplerType::Normal);
+		GLtexture *specular = (GLtexture*)mat->getTexture(SamplerType::Specular);
+		GLtexture *terrcolor = (GLtexture*)mat->getTexture(SamplerType::TerrainColor);
+		GLtexture *terrnormal = (GLtexture*)mat->getTexture(SamplerType::TerrainNormal);
+		GLtexture *layeralpha = (GLtexture*)mat->getTexture(SamplerType::LayerAlpha);
 
-		const ShaderMacro& matmacro = mat->getShaderMacro();
+		const ShaderMacro &matmacro = mat->getShaderMacro();
 		macro.mergeFrom(&matmacro);
 
 #if 0
 		// set light parameter
-		Interaction* ia = gCurInteraction;
+		Interaction *ia = gCurInteraction;
 		if (ia &&(tech == Technique::Main || tech == Technique::Layer)) {
 			macro.setMacro(ShaderMacro::G_LT_NUMBER, ia->numLights);
 			bool haveshadow = false;
@@ -100,9 +100,9 @@ AX_BEGIN_NAMESPACE
 
 		ulonglong_t begin = OsUtil::microseconds();
 #if 0
-		GLshader* shader = (GLshader*)FindAsset_<Shader>(mat->getShaderName(), (intptr_t)&macro);
+		GLshader *shader = (GLshader*)FindAsset_<Shader>(mat->getShaderName(), (intptr_t)&macro);
 #else
-		GLshader* shader = glShaderManager->findShaderGL(mat->getShaderName(), macro);
+		GLshader *shader = glShaderManager->findShaderGL(mat->getShaderName(), macro);
 #endif
 		ulonglong_t end = OsUtil::microseconds();
 		g_statistic->addValue(stat_findShaderTime, end-begin);
@@ -133,7 +133,7 @@ AX_BEGIN_NAMESPACE
 		draw(shader, tech, prim);
 	}
 
-	void GLrender::draw(GLshader* shader, Technique tech, GLgeometry* prim) {
+	void GLrender::draw(GLshader *shader, Technique tech, GLgeometry *prim) {
 		if (r_nulldraw->getBool()) {
 			return;
 		}
@@ -149,7 +149,7 @@ AX_BEGIN_NAMESPACE
 
 	}
 
-	static void GetVertexDefInfo(VertexDef vdt, int& numcomponents, GLenum& datatype, int& bytes) {
+	static void GetVertexDefInfo(VertexDef vdt, int &numcomponents, GLenum &datatype, int &bytes) {
 		switch (vdt) {
 		case VDF_position:
 		case VDF_normal:
@@ -175,7 +175,7 @@ AX_BEGIN_NAMESPACE
 		}
 	}
 
-	void GLrender::bindVertexBuffer(const VertexDefSeq& defs, GLsizei stride, GLenum bufId, GLuint offset) {
+	void GLrender::bindVertexBuffer(const VertexDefSeq &defs, GLsizei stride, GLenum bufId, GLuint offset) {
 		bool position_have = false;
 		bool normal_have = false;
 		bool color_have = false;
@@ -268,7 +268,7 @@ AX_BEGIN_NAMESPACE
 		}
 	}
 
-	void GLrender::bindVertexBuffer(const VertexDef* defs, GLsizei stride, GLenum bufId, GLuint offset) {
+	void GLrender::bindVertexBuffer(const VertexDef *defs, GLsizei stride, GLenum bufId, GLuint offset) {
 		bool position_have = false;
 		bool normal_have = false;
 		bool color_have = false;
@@ -398,7 +398,7 @@ AX_BEGIN_NAMESPACE
 		VDF_invalid
 	};
 
-	static VertexDef* sAllDef[] = {
+	static VertexDef *sAllDef[] = {
 		sGeneric, sDebugVertex, sBlendVertex, sChunkVertex
 	};
 
@@ -424,7 +424,7 @@ AX_BEGIN_NAMESPACE
 		}
 	}
 
-	void GLrender::checkForCgError(const char* shaderfile) {
+	void GLrender::checkForCgError(const char *shaderfile) {
 #if 0
 		CGerror error;
 		const char *string = cgGetLastErrorString(&error);
@@ -453,7 +453,7 @@ AX_BEGIN_NAMESPACE
 #endif
 	}
 
-	void GLrender::setViewport(const Rect& rect) {
+	void GLrender::setViewport(const Rect &rect) {
 		glViewport(rect.x, rect.y, rect.width, rect.height);
 		glScissor(rect.x, rect.y, rect.width, rect.height);
 	}
@@ -465,7 +465,7 @@ AX_BEGIN_NAMESPACE
 #endif
 
 		GLenum error;
-		char* error_string;
+		char *error_string;
 
 		error = glGetError();
 		if (error != GL_NO_ERROR) {
@@ -516,7 +516,7 @@ AX_BEGIN_NAMESPACE
 		m_posOffset = (float)(Font::ATLAS_PAD) / Font::TEXTURE_SIZE;
 #if 0
 		m_indexBuffer.setData(nullptr, MAX_CHARS * 2 * 3, Primitive::Static, GL_UNSIGNED_SHORT);
-		ushort_t* pidx = (ushort_t*)m_indexBuffer.mapBuffer();
+		ushort_t *pidx = (ushort_t*)m_indexBuffer.mapBuffer();
 		for (int i = 0; i < MAX_CHARS; i++) {
 			pidx[0] = i * 4 + 0;
 			pidx[1] = i * 4 + 1;
@@ -534,11 +534,11 @@ AX_BEGIN_NAMESPACE
 
 	}
 
-	Vector2 GLfontrender::drawString(Font* font, Rgba color, const TextQuad& tq, const Vector2& offset, const wchar_t* str, size_t len, const Vector2& scale, bool italic /*= false */) {
+	Vector2 GLfontrender::drawString(Font *font, Rgba color, const TextQuad &tq, const Vector2 &offset, const wchar_t *str, size_t len, const Vector2 &scale, bool italic /*= false */) {
 		size_t i;
 		uint_t count;
-		Texture* tex = nullptr;
-		Texture* newtex = nullptr;
+		Texture *tex = nullptr;
+		Texture *newtex = nullptr;
 		Vector4 tc;
 		float fontheight = font->getHeight();
 		float fontitalic;
@@ -554,7 +554,7 @@ AX_BEGIN_NAMESPACE
 		m_vertexBuffer.bind();
 		GLrender::bindVertexBuffer(VertexType::kBlend, m_vertexBuffer.getObject(), 0);
 
-		BlendVertex* data = (BlendVertex*)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
+		BlendVertex *data = (BlendVertex*)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
 		count = 0;
 		font->getCharInfo(str[0], tex, tc);
 
@@ -577,7 +577,7 @@ AX_BEGIN_NAMESPACE
 			}
 
 			// get glyph info
-			const GlyphInfo& glyphinfo = font->getGlyphInfo(str[i]);
+			const GlyphInfo &glyphinfo = font->getGlyphInfo(str[i]);
 
 			// adjust tc to char glyph width
 			tc[2] = tc[0] +(tc[2] - tc[0]) * (float)(glyphinfo.width + 4 * Font::ATLAS_PAD) / font->getWidth();

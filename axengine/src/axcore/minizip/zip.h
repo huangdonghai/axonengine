@@ -103,7 +103,7 @@ typedef struct
     uLong       external_fa;    /* external file attributes        4 bytes */
 } zip_fileinfo;
 
-typedef const char* zipcharpc;
+typedef const char *zipcharpc;
 
 
 #define APPEND_STATUS_CREATE        (0)
@@ -132,17 +132,17 @@ extern zipFile ZEXPORT zipOpen OF((const char *pathname, int append));
 
 extern zipFile ZEXPORT zipOpen2 OF((const char *pathname,
                                    int append,
-                                   zipcharpc* globalcomment,
-                                   zlib_filefunc_def* pzlib_filefunc_def));
+                                   zipcharpc *globalcomment,
+                                   zlib_filefunc_def *pzlib_filefunc_def));
 
 extern int ZEXPORT zipOpenNewFileInZip OF((zipFile file,
-                       const char* filename,
-                       const zip_fileinfo* zipfi,
-                       const void* extrafield_local,
+                       const char *filename,
+                       const zip_fileinfo *zipfi,
+                       const void *extrafield_local,
                        uInt size_extrafield_local,
-                       const void* extrafield_global,
+                       const void *extrafield_global,
                        uInt size_extrafield_global,
-                       const char* comment,
+                       const char *comment,
                        int method,
                        int level));
 /*
@@ -160,13 +160,13 @@ extern int ZEXPORT zipOpenNewFileInZip OF((zipFile file,
 
 
 extern int ZEXPORT zipOpenNewFileInZip2 OF((zipFile file,
-                                            const char* filename,
-                                            const zip_fileinfo* zipfi,
-                                            const void* extrafield_local,
+                                            const char *filename,
+                                            const zip_fileinfo *zipfi,
+                                            const void *extrafield_local,
                                             uInt size_extrafield_local,
-                                            const void* extrafield_global,
+                                            const void *extrafield_global,
                                             uInt size_extrafield_global,
-                                            const char* comment,
+                                            const char *comment,
                                             int method,
                                             int level,
                                             int raw));
@@ -176,20 +176,20 @@ extern int ZEXPORT zipOpenNewFileInZip2 OF((zipFile file,
  */
 
 extern int ZEXPORT zipOpenNewFileInZip3 OF((zipFile file,
-                                            const char* filename,
-                                            const zip_fileinfo* zipfi,
-                                            const void* extrafield_local,
+                                            const char *filename,
+                                            const zip_fileinfo *zipfi,
+                                            const void *extrafield_local,
                                             uInt size_extrafield_local,
-                                            const void* extrafield_global,
+                                            const void *extrafield_global,
                                             uInt size_extrafield_global,
-                                            const char* comment,
+                                            const char *comment,
                                             int method,
                                             int level,
                                             int raw,
                                             int windowBits,
                                             int memLevel,
                                             int strategy,
-                                            const char* password,
+                                            const char *password,
                                             uLong crcForCtypting));
 
 /*
@@ -201,7 +201,7 @@ extern int ZEXPORT zipOpenNewFileInZip3 OF((zipFile file,
 
 
 extern int ZEXPORT zipWriteInFileInZip OF((zipFile file,
-                       const void* buf,
+                       const void *buf,
                        unsigned len));
 /*
   Write data in the zipfile
@@ -222,7 +222,7 @@ extern int ZEXPORT zipCloseFileInZipRaw OF((zipFile file,
 */
 
 extern int ZEXPORT zipClose OF((zipFile file,
-                const char* global_comment));
+                const char *global_comment));
 /*
   Close the zipfile
 */

@@ -24,7 +24,7 @@ GameWorld::GameWorld() {
 	m_firstFreeEntity = ActorNum::MAX_CLIENTS;
 	m_numClients = 0;
 
-	Landscape* landscape = new Landscape(this);
+	Landscape *landscape = new Landscape(this);
 	m_entities[ActorNum::LANDSCAPE] = landscape;
 
 	m_renderWorld = new RenderWorld();
@@ -75,7 +75,7 @@ void GameWorld::drawFrame()
 	m_lastCamera.setTime(m_lasttime);
 
 	if (m_entities[0]) {
-		Player* player = static_cast<Player*>(m_entities[0]);
+		Player *player = static_cast<Player*>(m_entities[0]);
 		AffineMat player3rd = player->getThirdPersonMatrix();
 		m_lastCamera.setOrigin(player3rd.origin);
 		m_lastCamera.setViewAxis(player3rd.axis);
@@ -86,7 +86,7 @@ void GameWorld::drawFrame()
 	g_renderSystem->endFrame();
 }
 
-void GameWorld::drawScene(const RenderCamera& camera)
+void GameWorld::drawScene(const RenderCamera &camera)
 {
 	m_lastCamera = camera;
 
@@ -94,7 +94,7 @@ void GameWorld::drawScene(const RenderCamera& camera)
 	g_soundSystem->setWorld(m_soundWorld);
 
 	if (m_entities[0] && !g_gameSystem->isRunning()) {
-		Player* player = static_cast<Player*>(m_entities[0]);
+		Player *player = static_cast<Player*>(m_entities[0]);
 		player->setMatrix(AffineMat(camera.getViewAxis(), camera.getOrigin()));
 	}
 
@@ -103,7 +103,7 @@ void GameWorld::drawScene(const RenderCamera& camera)
 	g_renderSystem->endScene();
 }
 
-void GameWorld::addActor(GameActor* entity) {
+void GameWorld::addActor(GameActor *entity) {
 	int start = m_firstFreeEntity;
 	int end = ActorNum::MAX_NORMAL;
 
@@ -138,7 +138,7 @@ void GameWorld::addActor(GameActor* entity) {
 	}
 }
 
-void GameWorld::removeActor(GameActor* entity) {
+void GameWorld::removeActor(GameActor *entity) {
 	int num = entity->m_entityNum;
 	if (num < 0) {
 		Errorf("not a valid entity number");
@@ -155,14 +155,14 @@ void GameWorld::removeActor(GameActor* entity) {
 	m_firstFreeEntity = num;
 }
 
-GameActor* GameWorld::createActor(const char* clsname) {
-	Object* obj = g_scriptSystem->createObject(clsname);
+GameActor *GameWorld::createActor(const char *clsname) {
+	Object *obj = g_scriptSystem->createObject(clsname);
 
 	if (!obj) {
 		return nullptr;
 	}
 
-	GameActor* ent = object_cast<GameActor*>(obj);
+	GameActor *ent = object_cast<GameActor*>(obj);
 
 	if (!ent) {
 		delete obj;
@@ -178,15 +178,15 @@ GameActor* GameWorld::createActor(const char* clsname) {
 	return ent;
 }
 
-void GameWorld::addFixed(Fixed* fixed) {
+void GameWorld::addFixed(Fixed *fixed) {
 	getLandscape()->addFixed(fixed);
 }
 
-void GameWorld::removeFixed(Fixed* fixed) {
+void GameWorld::removeFixed(Fixed *fixed) {
 	getLandscape()->removeFixed(fixed);
 }
 
-void GameWorld::doNotify(IObservable* subject, int arg) {
+void GameWorld::doNotify(IObservable *subject, int arg) {
 
 }
 
@@ -216,7 +216,7 @@ void GameWorld::updateEnvdef() {
 	m_outdoorEnv->setSunDir(sundir);
 }
 
-void GameWorld::setWindow(RenderTarget* targetWin)
+void GameWorld::setWindow(RenderTarget *targetWin)
 {
 	m_targetWindow = targetWin;
 }
@@ -236,7 +236,7 @@ void GameWorld::reset()
 
 }
 
-void GameWorld::addObject(GameObject* node)
+void GameWorld::addObject(GameObject *node)
 {
 	if (node->isFixed())
 		addFixed((Fixed*)node);
@@ -244,7 +244,7 @@ void GameWorld::addObject(GameObject* node)
 		addActor((GameActor*)node);
 }
 
-void GameWorld::removeObject(GameObject* node)
+void GameWorld::removeObject(GameObject *node)
 {
 	if (node->isFixed())
 		removeFixed((Fixed*)node);

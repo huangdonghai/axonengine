@@ -25,14 +25,14 @@ public:
     PropertyEditor(QWidget *parent = 0);
     ~PropertyEditor();
 
-	void initFromObject(Object* obj);
-	bool initScriptProp(Object* obj);
-	void applyToObject(Object* obj);
-    IProperty* initialInput() const;
+	void initFromObject(Object *obj);
+	bool initScriptProp(Object *obj);
+	void applyToObject(Object *obj);
+    IProperty *initialInput() const;
     bool isReadOnly() const;
 
-    PropertyEditorModel* editorModel() const { return m_model; }
-	void setData(const QString& propName,QVariant value);
+    PropertyEditorModel *editorModel() const { return m_model; }
+	void setData(const QString &propName,QVariant value);
 
 signals:
     void propertyChanged(IProperty *property);
@@ -58,8 +58,8 @@ private slots:
     void headerDoubleClicked(int);
 
 private:
-    PropertyEditorModel* m_model;
-    PropertyEditorDelegate* m_itemDelegate;
+    PropertyEditorModel *m_model;
+    PropertyEditorDelegate *m_itemDelegate;
 };
 
 #endif // PROPERTYEDITOR_H

@@ -21,7 +21,7 @@ AX_BEGIN_NAMESPACE
 
 	class MyHeightFieldShape : public hkpSampledHeightFieldShape {
 	public:
-		MyHeightFieldShape(const hkpSampledHeightFieldBaseCinfo& ci, const hkUint16* data)
+		MyHeightFieldShape(const hkpSampledHeightFieldBaseCinfo &ci, const hkUint16 *data)
 			:	hkpSampledHeightFieldShape(ci),
 			m_data(data)
 		{
@@ -40,16 +40,16 @@ AX_BEGIN_NAMESPACE
 			return false;
 		}
 
-		virtual void collideSpheres(const CollideSpheresInput& input, SphereCollisionOutput* outputArray) const {
+		virtual void collideSpheres(const CollideSpheresInput &input, SphereCollisionOutput *outputArray) const {
 			hkSampledHeightFieldShape_collideSpheres(*this, input, outputArray);
 		}
 
 	private:
-		const hkUint16* m_data;
+		const hkUint16 *m_data;
 	};
 
 
-	Heightfield::Heightfield(const ushort_t* data, int size, float tilemeters) {
+	Heightfield::Heightfield(const ushort_t *data, int size, float tilemeters) {
 		hkpSampledHeightFieldBaseCinfo ci;
 		ci.m_xRes = size;
 		ci.m_zRes = size;

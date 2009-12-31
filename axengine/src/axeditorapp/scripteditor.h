@@ -21,7 +21,7 @@ public:
 	ScriptEditor(QWidget *parent = 0);
 	~ScriptEditor();
 
-	void openFile(const QString& filename);
+	void openFile(const QString &filename);
 
 private:
 	Ui::ScriptEditorClass ui;

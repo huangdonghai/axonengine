@@ -51,15 +51,15 @@ AX_BEGIN_NAMESPACE
 		virtual bool isStencilFormat() { return false;}
 
 		// for render texture target
-		virtual void attachDepth(RenderTarget* depth) {}
-		virtual RenderTarget* getDepthAttached() const { return nullptr; }
+		virtual void attachDepth(RenderTarget *depth) {}
+		virtual RenderTarget *getDepthAttached() const { return nullptr; }
 
-		virtual void attachColor(int index, RenderTarget* c) {}
+		virtual void attachColor(int index, RenderTarget *c) {}
 		virtual void detachColor(int index) {}
 		virtual void detachAllColor() {}
-		virtual RenderTarget* getColorAttached(int index) const { return 0; }
+		virtual RenderTarget *getColorAttached(int index) const { return 0; }
 
-		virtual Texture* getTexture() { return nullptr; }
+		virtual Texture *getTexture() { return nullptr; }
 
 		// since qt maybe change window id, so we need this function
 		virtual void setWindowHandle(handle_t newId) {}
@@ -80,17 +80,17 @@ AX_BEGIN_NAMESPACE
 
 	class AX_API ReflectionTarget {
 	public:
-		ReflectionTarget(RenderWorld* world, RenderEntity* actor, Primitive* prim, int width, int height);
+		ReflectionTarget(RenderWorld *world, RenderEntity *actor, Primitive *prim, int width, int height);
 		~ReflectionTarget();
 
-		void update(QueuedScene* qscene);
+		void update(QueuedScene *qscene);
 
 	public:
-		RenderWorld* m_world;
-		RenderEntity* m_actor;
-		Primitive* m_prim;
+		RenderWorld *m_world;
+		RenderEntity *m_actor;
+		Primitive *m_prim;
 		RenderCamera m_camera;
-		RenderTarget* m_target;
+		RenderTarget *m_target;
 		int m_updateFrame;
 	};
 
@@ -99,20 +99,20 @@ AX_BEGIN_NAMESPACE
 		TargetManager();
 		virtual ~TargetManager() = 0;
 
-		virtual RenderTarget* allocTarget(RenderTarget::AllocHint hint, int width, int height, TexFormat texformat) = 0;
-		virtual void freeTarget(RenderTarget* target) = 0;	// only permanent target need be free
+		virtual RenderTarget *allocTarget(RenderTarget::AllocHint hint, int width, int height, TexFormat texformat) = 0;
+		virtual void freeTarget(RenderTarget *target) = 0;	// only permanent target need be free
 		virtual bool isFormatSupport(TexFormat format) = 0;
 		virtual TexFormat getSuggestFormat(RenderTarget::SuggestFormat sf) = 0;
 
-		RenderTarget* allocShadowMap(int width, int height);
-		void freeShadowMap(RenderTarget* target);
+		RenderTarget *allocShadowMap(int width, int height);
+		void freeShadowMap(RenderTarget *target);
 
-		ReflectionTarget* findReflection(RenderWorld* world, RenderEntity* actor, Primitive* prim, int width, int height);
+		ReflectionTarget *findReflection(RenderWorld *world, RenderEntity *actor, Primitive *prim, int width, int height);
 
 	protected:
 		friend class RenderTarget;
-		void allocReal(RenderTarget* target);
-		void freeReal(RenderTarget* target);
+		void allocReal(RenderTarget *target);
+		void freeReal(RenderTarget *target);
 
 	protected:
 		List<RenderTarget*> m_realAllocTargets;

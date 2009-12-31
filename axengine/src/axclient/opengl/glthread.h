@@ -12,17 +12,17 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-	extern GLwindow* gFrameWindow;	// cast from gFrameTarget
-	extern GLtarget* gWorldTarget;
-	extern GLtarget* gLinearDepth;
-	extern GLframebuffer* gWorldFramebuffer;
+	extern GLwindow *gFrameWindow;	// cast from gFrameTarget
+	extern GLtarget *gWorldTarget;
+	extern GLtarget *gLinearDepth;
+	extern GLframebuffer *gWorldFramebuffer;
 
 	extern bool gIsReflecting;
-	extern RenderTarget* gTarget;
-	extern RenderCamera* gCamera;
-	extern QueuedScene* gScene;
-	extern GLframebuffer* gFramebuffer;
-	extern const QueuedEntity* gActor;
+	extern RenderTarget *gTarget;
+	extern RenderCamera *gCamera;
+	extern QueuedScene *gScene;
+	extern GLframebuffer *gFramebuffer;
+	extern const QueuedEntity *gActor;
 
 #if 0
 	struct VertexDefInfo {
@@ -93,30 +93,30 @@ AX_BEGIN_NAMESPACE
 
 	protected:
 		void beginFrame();
-		void drawScene(QueuedScene* scene, const Clearer& clearer);
-		void setupScene(QueuedScene* scene, const Clearer* clearer = nullptr, RenderTarget* target = nullptr, RenderCamera* camera = nullptr);
-		void unsetScene(QueuedScene* scene, const Clearer* clearer = nullptr, RenderTarget* target = nullptr, RenderCamera* camera = nullptr);
+		void drawScene(QueuedScene *scene, const Clearer &clearer);
+		void setupScene(QueuedScene *scene, const Clearer *clearer = nullptr, RenderTarget *target = nullptr, RenderCamera *camera = nullptr);
+		void unsetScene(QueuedScene *scene, const Clearer *clearer = nullptr, RenderTarget *target = nullptr, RenderCamera *camera = nullptr);
 		void drawPrimitive(int prim_id);
-		void drawInteraction(Interaction* ia);
+		void drawInteraction(Interaction *ia);
 		void endFrame();
 
-		void drawPass_zfill(QueuedScene* scene);
-		void drawPass_overlay(QueuedScene* scene);
-		void drawPass_composite(QueuedScene* scene);
-		void drawPass_shadowGen(QueuedScene* scene);
+		void drawPass_zfill(QueuedScene *scene);
+		void drawPass_overlay(QueuedScene *scene);
+		void drawPass_composite(QueuedScene *scene);
+		void drawPass_shadowGen(QueuedScene *scene);
 #if 0
-		void drawPass_shadowMasks(QueuedScene* scene);
-		void drawPass_shadowMask(QueuedScene* scene, const Matrix4& matrix);
-		void drawPass_shadowBlur(QueuedScene* scene);
+		void drawPass_shadowMasks(QueuedScene *scene);
+		void drawPass_shadowMask(QueuedScene *scene, const Matrix4 &matrix);
+		void drawPass_shadowBlur(QueuedScene *scene);
 #endif
-		void drawPass_postprocess(QueuedScene* scene);
+		void drawPass_postprocess(QueuedScene *scene);
 
-		void drawScene_world(QueuedScene* scene, const Clearer& clearer);
-		void drawScene_worldSub(QueuedScene* scene);
-		void drawScene_noworld(QueuedScene* scene, const Clearer& clearer);
+		void drawScene_world(QueuedScene *scene, const Clearer &clearer);
+		void drawScene_worldSub(QueuedScene *scene);
+		void drawScene_noworld(QueuedScene *scene, const Clearer &clearer);
 
 		void cacheResource();
-		void cacheSceneRes(QueuedScene* scene);
+		void cacheSceneRes(QueuedScene *scene);
 
 		void beginQuery(int id);
 		void endQuery();

@@ -22,7 +22,7 @@ public:
     ~ActorPanel();
 
 	// IObserver
-	virtual void doNotify(IObservable* subject, int arg );
+	virtual void doNotify(IObservable *subject, int arg );
 
 private:
     Ui::ActorPanelClass ui;
@@ -30,7 +30,7 @@ private:
 private slots:
 	void onPropertyChanged(IProperty *property);
 	void on_editScript_clicked();
-	void on_objectColor_colorChanged(const QColor& color);
+	void on_objectColor_colorChanged(const QColor &color);
 };
 
 #endif // AX_EDITORAPP_ACTORPANEL_H

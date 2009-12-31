@@ -13,9 +13,9 @@ namespace {
 
 	using namespace Axon;
 	
-	const char* ClassFactoryReg = "ClassFactory";
+	const char *ClassFactoryReg = "ClassFactory";
 
-	String GetModuleIdFromClassName(const String& class_name) {
+	String GetModuleIdFromClassName(const String &class_name) {
 		String moduleid = class_name;
 
 		size_t pos = moduleid.find(".");
@@ -28,7 +28,7 @@ namespace {
 		return moduleid;
 	}
 
-	String GetClassIdFromClassName(const String& class_name) {
+	String GetClassIdFromClassName(const String &class_name) {
 		size_t pos = class_name.find(".");
 		if (pos != String::npos) {
 			return class_name.c_str() + pos + 1;
@@ -43,7 +43,7 @@ namespace {
 
 AX_BEGIN_NAMESPACE
 
-	Module::Module(const String& name)
+	Module::Module(const String &name)
 		: m_name(name)
 		, m_handle(NULL)
 		, m_classEntries(NULL)
@@ -68,7 +68,7 @@ AX_BEGIN_NAMESPACE
 			Errorf(_("Module::Module: cann't get class entry."));
 	}
 
-	Module::Module(const String& name, funcGetClassEntries func) : m_name(name), m_handle(NULL) {
+	Module::Module(const String &name, funcGetClassEntries func) : m_name(name), m_handle(NULL) {
 		m_classEntries = func();
 	}
 
@@ -77,8 +77,8 @@ AX_BEGIN_NAMESPACE
 			OsUtil::freeDll(m_handle);
 	}
 
-	const ClassEntry* Module::findClassEntry(const String& name) const {
-		const ClassEntry* entry;
+	const ClassEntry *Module::findClassEntry(const String &name) const {
+		const ClassEntry *entry;
 
 		for (entry = m_classEntries; entry->factory; entry++) {
 			if (entry->className == name)
@@ -88,7 +88,7 @@ AX_BEGIN_NAMESPACE
 		return NULL;
 	}
 
-	const ClassEntry* Module::getClassEntries() const {
+	const ClassEntry *Module::getClassEntries() const {
 		return m_classEntries;
 	}
 
@@ -111,14 +111,14 @@ AX_BEGIN_NAMESPACE
 	void ClassFactory::finalize() {
 	}
 
-	void* ClassFactory::createInstance(const String& class_name) {
+	void *ClassFactory::createInstance(const String &class_name) {
 		String mid = GetModuleIdFromClassName(class_name);
 
-		Module* module = findModule(mid);
+		Module *module = findModule(mid);
 
 		String cid = GetClassIdFromClassName(class_name);
 
-		const ClassEntry* entry = module->findClassEntry(cid);
+		const ClassEntry *entry = module->findClassEntry(cid);
 
 		if (!entry)
 			Errorf(_("ClassFactory::CreateInstance: cann't find entry for class '%s'"), class_name.c_str());
@@ -126,7 +126,7 @@ AX_BEGIN_NAMESPACE
 		return entry->factory();
 	}
 
-	void* ClassFactory::createInstanceByAlias(const String& class_alias) {
+	void *ClassFactory::createInstanceByAlias(const String &class_alias) {
 		if (!g_systemConfig)
 			Errorf(_("ClassFactory::CreateInstanceByAlias: system configure coundn't found"));
 
@@ -138,18 +138,18 @@ AX_BEGIN_NAMESPACE
 		return createInstance(class_alias);
 	}
 
-	void ClassFactory::registerStaticModule(const String& name, funcGetClassEntries func) {
-		Module* module = new Module(name, func);
+	void ClassFactory::registerStaticModule(const String &name, funcGetClassEntries func) {
+		Module *module = new Module(name, func);
 		m_moduleDict[name] = module;
 	}
 
 
-	Module* ClassFactory::findModule(const String& module_name) {
+	Module *ClassFactory::findModule(const String &module_name) {
 		ModuleDict::iterator it = m_moduleDict.find(module_name);
 		if (it != m_moduleDict.end())
 			return it->second;
 
-		Module* module = new Module(module_name);
+		Module *module = new Module(module_name);
 		m_moduleDict[module_name] = module;
 
 		return module;

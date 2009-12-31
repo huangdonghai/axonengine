@@ -22,18 +22,18 @@ AX_BEGIN_NAMESPACE
 		// implement ITickable
 		virtual void tick();
 
-		SoundFx* createSfx(const String& name);
-		SoundFx* createStream();
+		SoundFx *createSfx(const String &name);
+		SoundFx *createStream();
 
-		void setWorld(SoundWorld* world);
+		void setWorld(SoundWorld *world);
 
-		void playSound(int channelId, SoundFx* sfx, LoopingMode looping = Looping_None);
+		void playSound(int channelId, SoundFx *sfx, LoopingMode looping = Looping_None);
 		void stopSound(int channelId);
 
 		// BEGIN INTERNAL USE
-		void _removeSfx(SoundFx* sfx);
-		void _playSound(SoundWorld* world, SoundEntity* entity, int channelId, SoundFx* sfx, LoopingMode looping = Looping_None, float minDist = DEFAULT_MIN_DIST, float maxDist = DEFAULT_MAX_DIST);
-		void _stopSound(SoundWorld* world, SoundEntity* entity, int channelId);
+		void _removeSfx(SoundFx *sfx);
+		void _playSound(SoundWorld *world, SoundEntity *entity, int channelId, SoundFx *sfx, LoopingMode looping = Looping_None, float minDist = DEFAULT_MIN_DIST, float maxDist = DEFAULT_MAX_DIST);
+		void _stopSound(SoundWorld *world, SoundEntity *entity, int channelId);
 		void _hintChannelEnd(int index);
 		// END INTERNAL USE
 
@@ -43,10 +43,10 @@ AX_BEGIN_NAMESPACE
 		void shutdown();
 
 		// console command
-		void playSound_f(const CmdArgs& args);
+		void playSound_f(const CmdArgs &args);
 
 	private:
-		FMOD::System* m_fmodSystem;
+		FMOD::System *m_fmodSystem;
 		typedef Dict<String, SoundFx*, hash_pathname, equal_pathname> SfxDict;
 		SfxDict m_sfxDict;
 		SfxPtr m_commandSfx;
@@ -54,7 +54,7 @@ AX_BEGIN_NAMESPACE
 		SoundChannel m_channels[MAX_CHANNELS];
 		Dict<SoundKey,int> m_channelDict;
 
-		SoundWorld* m_activeWorld;
+		SoundWorld *m_activeWorld;
 	};
 
 AX_END_NAMESPACE

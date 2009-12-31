@@ -20,7 +20,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 
-	bool ConfigFile::load(const String& filename) {
+	bool ConfigFile::load(const String &filename) {
 		SCOPE_LOCK;
 	//	SCOPE_CONVERT;
 
@@ -30,7 +30,7 @@ AX_BEGIN_NAMESPACE
 
 		m_filename = filename;
 
-		char* buffer;
+		char *buffer;
 
 		size_t size = g_fileSystem->readFile(filename, (void**)&buffer);
 
@@ -50,21 +50,21 @@ AX_BEGIN_NAMESPACE
 			return false;
 		}
 
-		TiXmlNode* root = doc.FirstChild("ConfigRoot");
+		TiXmlNode *root = doc.FirstChild("ConfigRoot");
 
 		// no root
 		if (!root)
 			goto error_exit;
 
-		TiXmlElement* section;
-		TiXmlAttribute* attr;
+		TiXmlElement *section;
+		TiXmlAttribute *attr;
 		for (section = root->FirstChildElement("Section"); section; section = section->NextSiblingElement("Section")) {
 			// no more section
 			if (!section)
 				break;
 
 			// parse section name
-			const char* section_name = section->Attribute("name");
+			const char *section_name = section->Attribute("name");
 
 			// if no "name" attribute be found, skip this section
 			if (!section_name) {
@@ -74,7 +74,7 @@ AX_BEGIN_NAMESPACE
 
 			std::map<String, String>& item_hash = m_data[ section_name ];
 
-			TiXmlElement* item;
+			TiXmlElement *item;
 			for (item = section->FirstChildElement("Item"); item; item = item->NextSiblingElement("Item")) {
 				// no more item
 				if (!item)
@@ -125,11 +125,11 @@ AX_BEGIN_NAMESPACE
 	}
 
 	bool
-	ConfigFile::saveTo(const String& filename) const {
+	ConfigFile::saveTo(const String &filename) const {
 		SCOPE_LOCK;
 	//	SCOPE_CONVERT;
 
-		File* file = g_fileSystem->openFileWrite(filename);
+		File *file = g_fileSystem->openFileWrite(filename);
 
 		if (!file) {
 			Debugf(_("ConfigFile::SaveTo: cann't open file %s to write\n"), filename.c_str());
@@ -143,7 +143,7 @@ AX_BEGIN_NAMESPACE
 
 		for (; sit != m_data.end(); ++sit) {
 			file->printf("\t<Section name=\"%s\">\n", sit->first.c_str());
-			const ItemType& items = sit->second;
+			const ItemType &items = sit->second;
 			ItemType::const_iterator iit = items.begin();
 
 			for (; iit != items.end(); ++iit) {
@@ -184,7 +184,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 	size_t
-	ConfigFile::getItemCount(const String& section) const {
+	ConfigFile::getItemCount(const String &section) const {
 		SCOPE_LOCK;
 
 		SectionType::const_iterator section_it;
@@ -199,7 +199,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 	StringPairSeq
-	ConfigFile::getItems(const String& section) const {
+	ConfigFile::getItems(const String &section) const {
 		SCOPE_LOCK;
 
 		StringPairSeq spv;
@@ -210,7 +210,7 @@ AX_BEGIN_NAMESPACE
 		section_it = m_data.find(section);
 
 		if (section_it != m_data.end()) {
-			const ItemType& items = section_it->second;
+			const ItemType &items = section_it->second;
 
 			for (item_it = items.begin(); item_it != items.end(); ++item_it) {
 				spv.push_back(*item_it);
@@ -221,7 +221,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 	String
-	ConfigFile::getKeyValue(const String& section, const String& key) const {
+	ConfigFile::getKeyValue(const String &section, const String &key) const {
 		SCOPE_LOCK;
 
 		SectionType::const_iterator section_it;
@@ -231,7 +231,7 @@ AX_BEGIN_NAMESPACE
 		section_it = m_data.find(section);
 
 		if (section_it != m_data.end()) {
-			const ItemType& items = section_it->second;
+			const ItemType &items = section_it->second;
 
 			item_it = items.find(key);
 
@@ -243,7 +243,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 	void
-	ConfigFile::setValue(const String& section, const String& key, const String& value) {
+	ConfigFile::setValue(const String &section, const String &key, const String &value) {
 		SCOPE_LOCK;
 
 		m_data[section][key] = value;

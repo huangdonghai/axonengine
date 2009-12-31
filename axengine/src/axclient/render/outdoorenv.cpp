@@ -22,7 +22,7 @@ AX_BEGIN_NAMESPACE
 	static const int OCEAN_SUBDIVIDE = 32 * 4;
 	static const float OCEAN_MULTIPLY = 1.3f;
 
-	OutdoorEnv::OutdoorEnv(RenderWorld* world) : RenderEntity(kOutdoorEnv) {
+	OutdoorEnv::OutdoorEnv(RenderWorld *world) : RenderEntity(kOutdoorEnv) {
 		m_world = world;
 
 		m_haveSky = false;
@@ -97,7 +97,7 @@ AX_BEGIN_NAMESPACE
 		// box12
 		m_skybox12 = new MeshPrim(MeshPrim::HintStatic);
 		m_skybox12->init(8, 12);
-		Vertex* verts = m_skybox12->lockVertexes();
+		Vertex *verts = m_skybox12->lockVertexes();
 		for (int i = 0; i < 8; i++) {
 			verts[i].xyz.set(l_verts12[i]);
 			verts[i].st.set(l_verts12[i][3], l_verts12[i][4]);
@@ -105,7 +105,7 @@ AX_BEGIN_NAMESPACE
 		}
 		m_skybox12->unlockVertexes();
 
-		ushort_t* idxes = m_skybox12->lockIndexes();
+		ushort_t *idxes = m_skybox12->lockIndexes();
 		memcpy(idxes, l_idxes, 12 * sizeof(ushort_t));
 		m_skybox12->unlockIndexes();
 
@@ -141,7 +141,7 @@ AX_BEGIN_NAMESPACE
 		m_skybox5->unlockIndexes();
 	}
 
-	void OutdoorEnv::setSkyBoxTexture(const String& matname)
+	void OutdoorEnv::setSkyBoxTexture(const String &matname)
 	{
 		if (m_skyBoxMatName == matname)
 			return;
@@ -195,8 +195,8 @@ AX_BEGIN_NAMESPACE
 		m_skydome->init(numverts, numidxes);
 
 		// fill vertexes
-		Vertex* verts = m_skydome->lockVertexes();
-		Vertex* vertsStart = verts;
+		Vertex *verts = m_skydome->lockVertexes();
+		Vertex *vertsStart = verts;
 		memset(verts, 0, sizeof(Vertex) * numverts);
 
 		for (int i = 0; i <= halftess; i++) {
@@ -230,8 +230,8 @@ AX_BEGIN_NAMESPACE
 		m_skydome->unlockVertexes();
 
 		// fill indexes
-		ushort_t* idxes = m_skydome->lockIndexes();
-		ushort_t* idxesStart = idxes;
+		ushort_t *idxes = m_skydome->lockIndexes();
+		ushort_t *idxesStart = idxes;
 
 		for (int i = 0; i < halftess; i++) {
 			for (int j = 0; j < tess; j++) {
@@ -253,8 +253,8 @@ AX_BEGIN_NAMESPACE
 		AX_ASSERT(idxes - idxesStart == numidxes);
 		m_skydome->unlockIndexes();
 #if 0
-		Material* mat = Material::loadUnique("null");
-		Texture* tex = Texture::load("textures/testlalo");
+		Material *mat = Material::loadUnique("null");
+		Texture *tex = Texture::load("textures/testlalo");
 		mat->setTexture(SamplerType::Diffuse, tex);
 		m_skydome->setMaterial(mat);
 #endif
@@ -266,7 +266,7 @@ AX_BEGIN_NAMESPACE
 		}
 
 		m_skyNishitaRt = g_targetManager->allocTarget(RenderTarget::PermanentAlloc, 128, 64, TexFormat::RGBA16F);
-		RenderTarget* miert = g_targetManager->allocTarget(RenderTarget::PermanentAlloc, 128, 64, TexFormat::RGBA16F);
+		RenderTarget *miert = g_targetManager->allocTarget(RenderTarget::PermanentAlloc, 128, 64, TexFormat::RGBA16F);
 		m_skyNishitaRt->getTexture()->setClampMode(Texture::CM_ClampToEdge);
 		miert->getTexture()->setClampMode(Texture::CM_ClampToEdge);
 		m_skyNishitaRt->attachColor(0, miert);
@@ -299,8 +299,8 @@ AX_BEGIN_NAMESPACE
 		m_oceanMesh->init(numverts, numidxes);
 
 		// init render mesh's vertexbuffer and indexbuffer
-		Vertex* verts = m_oceanMesh->lockVertexes();
-		Vertex* oldverts = verts;
+		Vertex *verts = m_oceanMesh->lockVertexes();
+		Vertex *oldverts = verts;
 
 		// clear to zero
 		memset(verts, 0, sizeof(Vertex) * numverts);
@@ -339,8 +339,8 @@ AX_BEGIN_NAMESPACE
 		AX_ASSERT(verts - oldverts == numverts);
 
 		// fill index buffer
-		ushort_t* idxes = m_oceanMesh->lockIndexes();
-		ushort_t* oldidxes = idxes;
+		ushort_t *idxes = m_oceanMesh->lockIndexes();
+		ushort_t *oldidxes = idxes;
 
 		// innermost triangles
 		for (int i = 0; i < OCEAN_SUBDIVIDE; i++) {
@@ -410,7 +410,7 @@ AX_BEGIN_NAMESPACE
 	}
 #endif
 
-	void OutdoorEnv::frameUpdate(QueuedScene* qscene)
+	void OutdoorEnv::frameUpdate(QueuedScene *qscene)
 	{
 		if (!m_dateTimeInited) {
 			m_dateTime.initSystemTime(qscene->camera.getTime());
@@ -432,7 +432,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 
-	void OutdoorEnv::issueToQueue(QueuedScene* qscene)
+	void OutdoorEnv::issueToQueue(QueuedScene *qscene)
 	{
 		if (m_haveGlobalLight) {
 			qscene->addActor(this->getGlobalLight());
@@ -491,9 +491,9 @@ AX_BEGIN_NAMESPACE
 	}
 
 
-	void OutdoorEnv::genNishitaUpdateScene(QueuedScene* qscene)
+	void OutdoorEnv::genNishitaUpdateScene(QueuedScene *qscene)
 	{
-		QueuedScene* scene = qscene->addSubScene();
+		QueuedScene *scene = qscene->addSubScene();
 		if (!scene)
 			return;
 
@@ -503,11 +503,11 @@ AX_BEGIN_NAMESPACE
 		scene->camera.setTarget(m_skyNishitaRt);
 		scene->camera.setOverlay(0, 0, 128, 64);
 
-		MeshPrim* quad = MeshPrim::createScreenQuad(Primitive::HintFrame, Rect(0,0,128,64), Rgba::White, m_skyNishitaGenMat);
+		MeshPrim *quad = MeshPrim::createScreenQuad(Primitive::HintFrame, Rect(0,0,128,64), Rgba::White, m_skyNishitaGenMat);
 		scene->addInteraction(nullptr, quad);
 	}
 
-	RenderLight* OutdoorEnv::getGlobalLight() const
+	RenderLight *OutdoorEnv::getGlobalLight() const
 	{
 		return m_globalLight;
 	}
@@ -522,37 +522,37 @@ AX_BEGIN_NAMESPACE
 		m_haveSky = have;
 	}
 
-	void OutdoorEnv::setFog(const Vector3& color, float density)
+	void OutdoorEnv::setFog(const Vector3 &color, float density)
 	{
 		m_globalFog->setFogColor(color);
 		m_globalFog->setFogDensity(density);
 	}
 
-	void OutdoorEnv::setOceanFog(const Vector3& color, float density)
+	void OutdoorEnv::setOceanFog(const Vector3 &color, float density)
 	{
 		m_oceanFog->setFogColor(color);
 		m_oceanFog->setFogDensity(density);
 	}
 
-	void OutdoorEnv::setOceanMaterial(const String& matname)
+	void OutdoorEnv::setOceanMaterial(const String &matname)
 	{}
 
-	void OutdoorEnv::setSunColor(const Rgb& color, float intensity, float specularX)
+	void OutdoorEnv::setSunColor(const Rgb &color, float intensity, float specularX)
 	{
 		m_globalLight->setLightColor(color, intensity, specularX);
 	}
 
-	void OutdoorEnv::setSunDir(const Vector3& dir)
+	void OutdoorEnv::setSunDir(const Vector3 &dir)
 	{
 		m_globalLight->setOrigin(dir);
 	}
 
-	void OutdoorEnv::setSkyColor(const Rgb& color, float intensity)
+	void OutdoorEnv::setSkyColor(const Rgb &color, float intensity)
 	{
 		m_globalLight->setSkyColor(color, intensity);
 	}
 
-	void OutdoorEnv::setEnvColor(const Rgb& color, float intensity)
+	void OutdoorEnv::setEnvColor(const Rgb &color, float intensity)
 	{
 		m_globalLight->setEnvColor(color, intensity);
 	}

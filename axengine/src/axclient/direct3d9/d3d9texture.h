@@ -21,27 +21,27 @@ AX_BEGIN_NAMESPACE
 		virtual ~D3D9texture();
 
 		// implement Asset
-		virtual bool doInit(const String& name, intptr_t arg);
-		virtual void initialize(const FixedString& name, InitFlags flags);
+		virtual bool doInit(const String &name, intptr_t arg);
+		virtual void initialize(const FixedString &name, InitFlags flags);
 		virtual void initialize(TexFormat format, int width, int height, InitFlags flags = 0);
 		virtual bool isInitialized() { return m_initialized; }
-		virtual void getSize(int& width, int& height, int& depth);
+		virtual void getSize(int &width, int &height, int &depth);
 		virtual void setClampMode(ClampMode clampmode);
 		virtual void setFilterMode(FilterMode filtermode);
-		virtual void setBorderColor(const Rgba& color);
+		virtual void setBorderColor(const Rgba &color);
 		virtual void setHardwareShadowMap(bool enable);
 		virtual TexFormat getFormat();
 
-		virtual void saveToFile(const String& filename);
-		virtual void uploadSubTextureIm(const Rect& rect, const void* pixels, TexFormat format = TexFormat::AUTO);
+		virtual void saveToFile(const String &filename);
+		virtual void uploadSubTextureIm(const Rect &rect, const void *pixels, TexFormat format = TexFormat::AUTO);
 		virtual void generateMipmapIm();
 
 		// d3d specified
-		void getSize(int& width, int& height);
-		IDirect3DTexture9* getObject() { return m_object; }
+		void getSize(int &width, int &height);
+		IDirect3DTexture9 *getObject() { return m_object; }
 		FilterMode getFilterMode() { return m_filterMode; }
 		ClampMode getClampMode() { return m_clampMode; }
-		void copyFramebuffer(const Rect& r);
+		void copyFramebuffer(const Rect &r);
 		bool isHardwareShadowMap() const { return m_hardwareShadowMap; }
 
 		// set sampler state to device
@@ -50,16 +50,16 @@ AX_BEGIN_NAMESPACE
 		// manager
 		static void initManager();
 		static void finalizeManager();
-		static D3D9texture* getAppTexture(LPDIRECT3DBASETEXTURE9 d3dtex);
+		static D3D9texture *getAppTexture(LPDIRECT3DBASETEXTURE9 d3dtex);
 		static void syncFrame();
 		// end manager
 
 	protected:
-		bool loadFile2D(const String& filename);
+		bool loadFile2D(const String &filename);
 		void setPrivateData();
 		// Ya..., I have a loooooongest function name. who can write a longer?
 		bool checkIfSupportHardwareMipmapGeneration(D3DFORMAT d3dformat, DWORD d3dusage);
-		void uploadSubTextureIm(int level, const Rect& rect, const void* pixels, TexFormat format = TexFormat::AUTO);
+		void uploadSubTextureIm(int level, const Rect &rect, const void *pixels, TexFormat format = TexFormat::AUTO);
 
 	private:
 		bool m_initialized;
@@ -71,7 +71,7 @@ AX_BEGIN_NAMESPACE
 		int m_height;
 		int m_depth;
 		bool m_isMipmaped;
-		void* m_compressedData;
+		void *m_compressedData;
 		bool m_isLoadFromMemory;
 		uint_t m_videoMemoryUsed;
 		bool m_hardwareGenMipmap;
@@ -90,9 +90,9 @@ AX_BEGIN_NAMESPACE
 		D3D9texturemanager();
 		virtual ~D3D9texturemanager();
 
-		void addToDict(LPDIRECT3DBASETEXTURE9 d3dtex, D3D9texture* tex);
+		void addToDict(LPDIRECT3DBASETEXTURE9 d3dtex, D3D9texture *tex);
 		void removeFromDict(LPDIRECT3DBASETEXTURE9 d3dtex);
-		D3D9texture* getTex(LPDIRECT3DBASETEXTURE9 d3dtex) const;
+		D3D9texture *getTex(LPDIRECT3DBASETEXTURE9 d3dtex) const;
 
 		void syncFrame();
 
@@ -101,18 +101,18 @@ AX_BEGIN_NAMESPACE
 
 	protected:
 		// console command
-		void dumpTex_f(const CmdArgs& param);
+		void dumpTex_f(const CmdArgs &param);
 
 	private:
 		Dict<LPDIRECT3DBASETEXTURE9, D3D9texture*> m_texDict;
 	};
 
-	inline void D3D9texturemanager::addToDict( LPDIRECT3DBASETEXTURE9 d3dtex, D3D9texture* tex )
+	inline void D3D9texturemanager::addToDict( LPDIRECT3DBASETEXTURE9 d3dtex, D3D9texture *tex )
 	{
 		m_texDict[d3dtex] = tex;
 	}
 
-	inline D3D9texture* D3D9texturemanager::getTex( LPDIRECT3DBASETEXTURE9 d3dtex ) const
+	inline D3D9texture *D3D9texturemanager::getTex( LPDIRECT3DBASETEXTURE9 d3dtex ) const
 	{
 		Dict<LPDIRECT3DBASETEXTURE9, D3D9texture*>::const_iterator it = m_texDict.find(d3dtex);
 

@@ -22,7 +22,7 @@ struct EntityState {
 	int entityNumber;
 	BitMsg state;
 	byte_t stateBuf[MAX_ENTITY_STATE_SIZE];
-	EntityState* next;
+	EntityState *next;
 };
 
 struct Snapshot {
@@ -31,9 +31,9 @@ struct Snapshot {
 	};
 
 	int sequence;
-	EntityState* firstEntityState;
+	EntityState *firstEntityState;
 	int pvs[ENTITY_PVS_SIZE];
-	Snapshot* next;
+	Snapshot *next;
 };
 
 class ClientSlot {
@@ -50,7 +50,7 @@ protected:
 
 private:
 	State m_state;
-	Peer* m_netPeer;
+	Peer *m_netPeer;
 };
 
 class GameInput;
@@ -88,23 +88,23 @@ public:
 	void stopRunning();
 	bool isRunning() const { return m_running; }
 
-	void setGameWorld(GameWorld* gameworld);
+	void setGameWorld(GameWorld *gameworld);
 
 	// player
-	const UserInput* getUserInput(ActorNum clientNum);
+	const UserInput *getUserInput(ActorNum clientNum);
 
 protected:
 
 
 private:
-	GameInput* m_gameInput;
-	GameWorld* m_gameWorld;
+	GameInput *m_gameInput;
+	GameWorld *m_gameWorld;
 
 	// runtime
 	State m_state;
 
-	EntityState* m_clientEntityStates[ActorNum::MAX_CLIENTS][ActorNum::MAX_ACTORS];
-	Snapshot* m_clientSnapshots[ActorNum::MAX_CLIENTS];
+	EntityState *m_clientEntityStates[ActorNum::MAX_CLIENTS][ActorNum::MAX_ACTORS];
+	Snapshot *m_clientSnapshots[ActorNum::MAX_CLIENTS];
 	UserInput m_userInputs;
 
 	int m_starttime;

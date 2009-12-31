@@ -16,7 +16,7 @@ AX_BEGIN_NAMESPACE
 
 	MemoryInfo gMemoryInfo;
 
-	MemoryHeap* xGetHeap() {
+	MemoryHeap *xGetHeap() {
 		static bool initialized = false;
 		static MemoryHeap heap;
 		if (!initialized) {
@@ -28,12 +28,12 @@ AX_BEGIN_NAMESPACE
 	}
 
 	struct MemoryHeap::Page {								// allocation page
-		void* data;					// data pointer to allocated memory
+		void *data;					// data pointer to allocated memory
 		uint_t dataSize;				// number of bytes of memory 'data' points to
-		Page* next;					// next free page in same page manager
-		Page* prev;					// used only when allocated
+		Page *next;					// next free page in same page manager
+		Page *prev;					// used only when allocated
 		uint_t largestFree;			// this data used by the medium-size heap manager
-		void* firstFree;				// pointer to first free entry
+		void *firstFree;				// pointer to first free entry
 	};
 
 	//------------------------------------------------------------------------------
@@ -62,12 +62,12 @@ AX_BEGIN_NAMESPACE
 
 
 	struct MediumHeapEntry {
-		MemoryHeap::Page* page;					// pointer to page
+		MemoryHeap::Page *page;					// pointer to page
 		uint_t size;					// size of block
-		MediumHeapEntry* prev;					// previous block
-		MediumHeapEntry* next;					// next block
-		MediumHeapEntry* prevFree;				// previous free block
-		MediumHeapEntry* nextFree;				// next free block
+		MediumHeapEntry *prev;					// previous block
+		MediumHeapEntry *next;					// next block
+		MediumHeapEntry *prevFree;				// previous free block
+		MediumHeapEntry *nextFree;				// next free block
 		uint_t freeBlock;				// non-zero if free block
 	};
 
@@ -109,35 +109,35 @@ AX_BEGIN_NAMESPACE
 
 		return;
 
-		MemoryHeap::Page* p;
+		MemoryHeap::Page *p;
 
 		if (m_smallCurPage) {
 			freePage(m_smallCurPage);				// free small-heap current allocation page
 		}
 		p = m_smallFirstUsedPage;					// free small-heap allocated pages 
 		while (p) {
-			MemoryHeap::Page* next = p->next;
+			MemoryHeap::Page *next = p->next;
 			freePage(p);
 			p= next;
 		}
 
 		p = m_largeFirstUsedPage;					// free large-heap allocated pages
 		while (p) {
-			MemoryHeap::Page* next = p->next;
+			MemoryHeap::Page *next = p->next;
 			freePage(p);
 			p = next;
 		}
 
 		p = m_mediumFirstFreePage;					// free medium-heap allocated pages
 		while (p) {
-			MemoryHeap::Page* next = p->next;
+			MemoryHeap::Page *next = p->next;
 			freePage(p);
 			p = next;
 		}
 
 		p = m_mediumFirstUsedPage;					// free medium-heap allocated completely used pages
 		while (p) {
-			MemoryHeap::Page* next = p->next;
+			MemoryHeap::Page *next = p->next;
 			freePage(p);
 			p = next;
 		}
@@ -147,7 +147,7 @@ AX_BEGIN_NAMESPACE
 		AX_ASSERT(m_pagesAllocated == 0);
 	}
 
-	void* MemoryHeap::alloc(uint_t size) {
+	void *MemoryHeap::alloc(uint_t size) {
 		SCOPE_LOCK;
 
 		if (!m_initialized)
@@ -171,7 +171,7 @@ AX_BEGIN_NAMESPACE
 	#endif
 	}
 
-	void MemoryHeap::free(void* p) {
+	void MemoryHeap::free(void *p) {
 		SCOPE_LOCK;
 
 		if (!p) {
@@ -199,7 +199,7 @@ AX_BEGIN_NAMESPACE
 	#endif
 	}
 
-	void* MemoryHeap::alloc16(uint_t size) {
+	void *MemoryHeap::alloc16(uint_t size) {
 		SCOPE_LOCK;
 
 		byte_t *ptr, *alignedPtr;
@@ -213,16 +213,16 @@ AX_BEGIN_NAMESPACE
 		return (void *) alignedPtr;
 	}
 
-	void MemoryHeap::free16(void* p) {
+	void MemoryHeap::free16(void *p) {
 		SCOPE_LOCK;
 
 		Free((void *) *((size_t *) (((byte_t *) p) - 4)));
 	}
 
-	MemoryHeap::Page* MemoryHeap::allocatePage(uint_t bytes) {
+	MemoryHeap::Page *MemoryHeap::allocatePage(uint_t bytes) {
 		SCOPE_LOCK;
 
-		MemoryHeap::Page* p;
+		MemoryHeap::Page *p;
 
 		m_pageRequests++;
 
@@ -253,7 +253,7 @@ AX_BEGIN_NAMESPACE
 		return p;
 	}
 
-	void MemoryHeap::freePage(MemoryHeap::Page* p) {
+	void MemoryHeap::freePage(MemoryHeap::Page *p) {
 		SCOPE_LOCK;
 
 		AX_ASSERT(p);
@@ -267,7 +267,7 @@ AX_BEGIN_NAMESPACE
 		m_pagesAllocated--;
 	}
 
-	void* MemoryHeap::smallAllocate(uint_t bytes) {
+	void *MemoryHeap::smallAllocate(uint_t bytes) {
 		// we need the at least sizeof(uint_t) bytes for the free list
 		if (bytes < sizeof(uint_t)) {
 			bytes = sizeof(uint_t);
@@ -325,9 +325,9 @@ AX_BEGIN_NAMESPACE
 		m_smallFirstFree[ix] = (void *)d;		// link
 	}
 
-	void* MemoryHeap::mediumAllocateFromPage(MemoryHeap::Page* p, uint_t sizeNeeded) {
-		MediumHeapEntry* best, *nw = NULL;
-		byte_t* ret;
+	void *MemoryHeap::mediumAllocateFromPage(MemoryHeap::Page *p, uint_t sizeNeeded) {
+		MediumHeapEntry *best, *nw = NULL;
+		byte_t *ret;
 
 		best = (MediumHeapEntry *)(p->firstFree);			// first block is largest
 
@@ -384,9 +384,9 @@ AX_BEGIN_NAMESPACE
 
 	}
 
-	void* MemoryHeap::mediumAllocate(uint_t bytes) {
-		MemoryHeap::Page* p;
-		void* data;
+	void *MemoryHeap::mediumAllocate(uint_t bytes) {
+		MemoryHeap::Page *p;
+		void *data;
 
 		uint_t sizeNeeded = ALIGN_SIZE(bytes) + ALIGN_SIZE(MEDIUM_HEADER_SIZE);
 
@@ -484,8 +484,8 @@ AX_BEGIN_NAMESPACE
 	void MemoryHeap::mediumFree(void *ptr) {
 		((byte_t *)(ptr))[-1] = INVALID_ALLOC;
 
-		MediumHeapEntry* e = (MediumHeapEntry *)((byte_t *)ptr - ALIGN_SIZE(MEDIUM_HEADER_SIZE));
-		MemoryHeap::Page* p = e->page;
+		MediumHeapEntry *e = (MediumHeapEntry *)((byte_t *)ptr - ALIGN_SIZE(MEDIUM_HEADER_SIZE));
+		MemoryHeap::Page *p = e->page;
 		bool isInFreeList;
 
 		gMemoryInfo.freeMedium(e->size);
@@ -595,7 +595,7 @@ AX_BEGIN_NAMESPACE
 		} 
 	}
 
-	void* MemoryHeap::largeAllocate(uint_t bytes) {
+	void *MemoryHeap::largeAllocate(uint_t bytes) {
 		MemoryHeap::Page *p = allocatePage(bytes + ALIGN_SIZE(LARGE_HEADER_SIZE));
 
 		gMemoryInfo.allocLarge(p->dataSize);
@@ -606,8 +606,8 @@ AX_BEGIN_NAMESPACE
 			return NULL;
 		}
 
-		byte_t* d = (byte_t*)(p->data) + ALIGN_SIZE(LARGE_HEADER_SIZE);
-		uint_t* dw = (uint_t*)(d - ALIGN_SIZE(LARGE_HEADER_SIZE));
+		byte_t *d = (byte_t*)(p->data) + ALIGN_SIZE(LARGE_HEADER_SIZE);
+		uint_t *dw = (uint_t*)(d - ALIGN_SIZE(LARGE_HEADER_SIZE));
 		dw[0]	= (uintptr_t)p;				// write pointer back to page table
 		d[-1]	= LARGE_ALLOC;			// allocation identifier
 
@@ -623,7 +623,7 @@ AX_BEGIN_NAMESPACE
 
 	}
 	void MemoryHeap::largeFree(void *ptr) {
-		MemoryHeap::Page* pg;
+		MemoryHeap::Page *pg;
 
 		((byte_t *)(ptr))[-1] = INVALID_ALLOC;
 
@@ -655,7 +655,7 @@ AX_BEGIN_NAMESPACE
 		m_swapPage = NULL;
 
 	}
-	void MemoryHeap::freePageReal(MemoryHeap::Page* p) {
+	void MemoryHeap::freePageReal(MemoryHeap::Page *p) {
 		AX_ASSERT(p);
 		::free(p);
 	}
@@ -672,10 +672,10 @@ AX_BEGIN_NAMESPACE
 
 	struct MemoryStack::Mark {
 		uint_t pos;
-		MemoryHeap::Page* page;
+		MemoryHeap::Page *page;
 		uint_t offset;
 
-		Mark* next;
+		Mark *next;
 	};
 
 	MemoryStack::MemoryStack()
@@ -700,7 +700,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 	size_t MemoryStack::setMark() {
-		MemoryStack::Mark* mark = (MemoryStack::Mark*) Malloc(sizeof(MemoryStack::Mark));
+		MemoryStack::Mark *mark = (MemoryStack::Mark*) Malloc(sizeof(MemoryStack::Mark));
 
 		// record info
 		mark->pos = m_curPos;
@@ -714,7 +714,7 @@ AX_BEGIN_NAMESPACE
 		return m_markStack->pos;
 	}
 
-	void* MemoryStack::alloc(uint_t size) {
+	void *MemoryStack::alloc(uint_t size) {
 		size = ALIGN_SIZE(size);
 
 		if (!m_curPage) {
@@ -723,7 +723,7 @@ AX_BEGIN_NAMESPACE
 		}
 
 		if (m_curPage->dataSize - m_curPagePos < size) {
-			MemoryHeap::Page* page = xGetHeap()->allocatePage(std::max<uint_t>(STACK_PAGE_SIZE, size));
+			MemoryHeap::Page *page = xGetHeap()->allocatePage(std::max<uint_t>(STACK_PAGE_SIZE, size));
 			AX_ASSERT(page->dataSize >= size);
 			memset(page->data, 0, page->dataSize);
 			// add to link
@@ -732,14 +732,14 @@ AX_BEGIN_NAMESPACE
 			m_curPagePos = 0;
 		}
 
-		void* data = (byte_t*)m_curPage->data + m_curPagePos;
+		void *data = (byte_t*)m_curPage->data + m_curPagePos;
 		m_curPagePos += size;
 		m_curPos += size;
 
 		return data;
 	}
 
-	void* MemoryStack::alloc16(uint_t size) {
+	void *MemoryStack::alloc16(uint_t size) {
 		byte_t *ptr, *alignedPtr;
 
 		ptr = (byte_t *) alloc(size + 15);
@@ -760,7 +760,7 @@ AX_BEGIN_NAMESPACE
 		m_curPagePos = m_markStack->offset;
 
 		// free mark
-		MemoryStack::Mark* mark = m_markStack;
+		MemoryStack::Mark *mark = m_markStack;
 		m_markStack = mark->next;
 		Free(mark);
 
@@ -769,19 +769,19 @@ AX_BEGIN_NAMESPACE
 	}
 
 	void MemoryStack::clearUnusedPages() {
-		MemoryHeap::Page* p = m_curPage->next;
+		MemoryHeap::Page *p = m_curPage->next;
 		m_curPage->next = NULL;
 		while (p) {
-			MemoryHeap::Page* next = p->next;
+			MemoryHeap::Page *next = p->next;
 			xGetHeap()->freePage(p);
 			p = next;
 		}
 	}
 
 	void MemoryStack::clear() {
-		MemoryHeap::Page* p = m_curPage;
+		MemoryHeap::Page *p = m_curPage;
 		while (p) {
-			MemoryHeap::Page* next = p->next;
+			MemoryHeap::Page *next = p->next;
 			xGetHeap()->freePage(p);
 			p = next;
 		}
@@ -794,7 +794,7 @@ AX_BEGIN_NAMESPACE
 	// global function
 	//------------------------------------------------------------------------------
 
-	void* Malloc(size_t size) {
+	void *Malloc(size_t size) {
 #if 0
 		if (xGetHeap() == NULL) {
 			xGetHeap() = new MemoryHeap;
@@ -808,14 +808,14 @@ AX_BEGIN_NAMESPACE
 		return mem;
 
 	}
-	void Free(void* ptr) {
+	void Free(void *ptr) {
 		if (!ptr) {
 			return;
 		}
 		xGetHeap()->free(ptr);
 	}
 
-	void* Malloc16(size_t size) {
+	void *Malloc16(size_t size) {
 		if (!size) {
 			return NULL;
 		}
@@ -825,7 +825,7 @@ AX_BEGIN_NAMESPACE
 		return mem;
 	}
 
-	void Free16(void* ptr) {
+	void Free16(void *ptr) {
 		if (!ptr) {
 			return;
 		}

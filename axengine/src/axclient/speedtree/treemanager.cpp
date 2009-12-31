@@ -21,7 +21,7 @@ TreeManager::~TreeManager() {
 
 }
 
-TreeAsset* TreeManager::findAsset(const String& name, int seed) {
+TreeAsset *TreeManager::findAsset(const String &name, int seed) {
 	String key = TreeAsset::genKey(name, seed);
 	TreeAssetDict::iterator it = m_treeAssetDict.find(key);
 
@@ -30,7 +30,7 @@ TreeAsset* TreeManager::findAsset(const String& name, int seed) {
 		return it->second;
 	}
 
-	TreeAsset* result = new TreeAsset(this);
+	TreeAsset *result = new TreeAsset(this);
 	bool v = result->load(name, seed);
 
 	if (!v) {
@@ -43,23 +43,23 @@ TreeAsset* TreeManager::findAsset(const String& name, int seed) {
 	return result;
 }
 
-void TreeManager::addAsset(TreeAsset* wrapper) {
+void TreeManager::addAsset(TreeAsset *wrapper) {
 	m_treeAssetDict[wrapper->getKey()] = wrapper;
 }
 
-void TreeManager::removeAsset(TreeAsset* wrapper) {
+void TreeManager::removeAsset(TreeAsset *wrapper) {
 	m_treeAssetDict.erase(wrapper->getKey());
 }
 
-void TreeManager::addTree(TreeActor* tree) {
+void TreeManager::addTree(TreeActor *tree) {
 	m_treeDict.insert(tree);
 }
 
-void TreeManager::removeTree(TreeActor* tree) {
+void TreeManager::removeTree(TreeActor *tree) {
 	m_treeDict.erase(tree);
 }
 
-bool TreeManager::isSupportExt(const String& ext) const {
+bool TreeManager::isSupportExt(const String &ext) const {
 	if (ext == "spt") {
 		return true;
 	}
@@ -71,15 +71,15 @@ bool TreeManager::isSupportExt(const String& ext) const {
 	return false;
 }
 
-RenderEntity* TreeManager::create(const String& name, intptr_t arg) {
+RenderEntity *TreeManager::create(const String &name, intptr_t arg) {
 	return new TreeActor(name, arg);
 }
 
-void TreeManager::updateForFrame(QueuedScene* qscene ) {
+void TreeManager::updateForFrame(QueuedScene *qscene ) {
 	// do nothing
 }
 
-void TreeManager::issueToQueue(QueuedScene* qscene) {
+void TreeManager::issueToQueue(QueuedScene *qscene) {
 #if 0
 	if (!r_geoInstancing->getInteger()) {
 		return;

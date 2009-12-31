@@ -30,15 +30,15 @@ AX_BEGIN_NAMESPACE
 	protected:
 		void clear();
 		// script method
-		void loadAsset(const LuaTable& t);
+		void loadAsset(const LuaTable &t);
 
 
 	protected:
-		HavokRig* m_rig;
-		HavokPose* m_pose;
-		HavokModel* m_model;
-		HavokAnimation* m_animation;
-		HavokAnimator* m_animator;
+		HavokRig *m_rig;
+		HavokPose *m_pose;
+		HavokModel *m_model;
+		HavokAnimation *m_animation;
+		HavokAnimator *m_animator;
 	};
 
 AX_END_NAMESPACE

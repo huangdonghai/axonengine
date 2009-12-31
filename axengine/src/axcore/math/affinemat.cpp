@@ -26,7 +26,7 @@ AX_BEGIN_NAMESPACE
 		return result;
 	}
 
-	bool AffineMat::fromString(const char* str) {
+	bool AffineMat::fromString(const char *str) {
 		int v = sscanf(str, "%f %f %f %f %f %f %f %f %f %f %f %f"
 			, &axis[0][0], &axis[0][1], &axis[0][2]
 			, &axis[1][0], &axis[1][1], &axis[1][2]

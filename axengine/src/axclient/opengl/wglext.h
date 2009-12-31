@@ -474,7 +474,7 @@ typedef int (WINAPI * PFNWGLGETSWAPINTERVALEXTPROC) (void);
 #ifndef WGL_NV_vertex_array_range
 #define WGL_NV_vertex_array_range 1
 #ifdef WGL_WGLEXT_PROTOTYPES
-extern void* WINAPI wglAllocateMemoryNV (GLsizei, GLfloat, GLfloat, GLfloat);
+extern void *WINAPI wglAllocateMemoryNV (GLsizei, GLfloat, GLfloat, GLfloat);
 extern void WINAPI wglFreeMemoryNV (void *);
 #endif /* WGL_WGLEXT_PROTOTYPES */
 typedef void* (WINAPI * PFNWGLALLOCATEMEMORYNVPROC) (GLsizei size, GLfloat readfreq, GLfloat writefreq, GLfloat priority);

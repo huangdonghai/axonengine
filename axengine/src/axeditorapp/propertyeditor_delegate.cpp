@@ -189,7 +189,7 @@ QWidget *PropertyEditorDelegate::createEditor(QWidget *parent, const QStyleOptio
                         this, SLOT(resetProperty(const IProperty *, PropertyEditorModel *)));
 
             editor = editor_w_reset;
-            if (QLineEdit* edit = qobject_cast<QLineEdit*>(child_editor)) {
+            if (QLineEdit *edit = qobject_cast<QLineEdit*>(child_editor)) {
                 // in case of TextPropertyEditor install the filter on it's private QLineEdit
                 edit->installEventFilter(const_cast<PropertyEditorDelegate *>(this));
             } else

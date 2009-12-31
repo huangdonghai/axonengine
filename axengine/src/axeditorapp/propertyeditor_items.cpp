@@ -283,7 +283,7 @@ bool StringProperty::hasEditor() const
 
 QWidget *StringProperty::createEditor(QWidget *parent, const QObject *target, const char *receiver) const
 {
-	QLineEdit* textEditor = new QLineEdit(parent);
+	QLineEdit *textEditor = new QLineEdit(parent);
 
 	QObject::connect(textEditor, SIGNAL(textChanged(QString)), target, receiver);
 	return textEditor;
@@ -312,10 +312,10 @@ void StringProperty::updateValue(QWidget *editor)
 
 // -------------------------------------------------------------------------
 
-EnumProperty::EnumProperty(const Member::EnumItems& items, int value, const QString& name)
+EnumProperty::EnumProperty(const Member::EnumItems &items, int value, const QString &name)
 	: AbstractProperty<int>(value, name)
 {
-	AX_FOREACH(const Member::EnumItem& ei, items) {
+	AX_FOREACH(const Member::EnumItem &ei, items) {
 		m_items.push_back(qMakePair(u2q(ei.first), ei.second));
 	}
 }
@@ -332,7 +332,7 @@ void EnumProperty::setValue(const QVariant &value)
 
 QString EnumProperty::toString() const
 {
-	AX_FOREACH(const EnumItem& item, m_items) {
+	AX_FOREACH(const EnumItem &item, m_items) {
 		if (item.second == m_value) {
 			return item.first;
 		}
@@ -348,7 +348,7 @@ QWidget *EnumProperty::createEditor(QWidget *parent, const QObject *target, cons
 #if 0
 	combo->addItems(items());
 #else
-	AX_FOREACH(const EnumItem& item, m_items) {
+	AX_FOREACH(const EnumItem &item, m_items) {
 		combo->addItem(item.first, item.second);
 	}
 #endif
@@ -360,7 +360,7 @@ void EnumProperty::updateEditorContents(QWidget *editor)
 {
 	if (QComboBox *combo = qobject_cast<QComboBox*>(editor)) {
 		int index = 0;
-		AX_FOREACH(const EnumItem& item, m_items) {
+		AX_FOREACH(const EnumItem &item, m_items) {
 			if (item.second == m_value) {
 				break;
 			}
@@ -386,10 +386,10 @@ void EnumProperty::updateValue(QWidget *editor)
 
 // -------------------------------------------------------------------------
 
-FlagsProperty::FlagsProperty(const Member::EnumItems& items, int value, const QString& name)
+FlagsProperty::FlagsProperty(const Member::EnumItems &items, int value, const QString &name)
 	: AbstractProperty<int>(value, name)
 {
-	AX_FOREACH(const Member::EnumItem& ei, items) {
+	AX_FOREACH(const Member::EnumItem &ei, items) {
 		m_items.push_back(qMakePair(u2q(ei.first), ei.second));
 	}
 }
@@ -408,7 +408,7 @@ QString FlagsProperty::toString() const
 {
 	QString result;
 	bool first = true;
-	AX_FOREACH(const EnumItem& item, m_items) {
+	AX_FOREACH(const EnumItem &item, m_items) {
 		if ((item.second & m_value) == item.second) {
 			if (!first) {
 				result += "|";
@@ -428,7 +428,7 @@ QWidget *FlagsProperty::createEditor(QWidget *parent, const QObject *target, con
 	int initialIndex = -1;
 	int i = 0;
 	while (it.hasNext()) {
-		const EnumItem& ei = it.next();
+		const EnumItem &ei = it.next();
 		int value = ei.second;
 		bool checked = (value == 0) ? (v == 0) : ((value & v) == value);
 		l.append(FlagBoxModelItem(ei.first, value, checked));
@@ -1218,7 +1218,7 @@ void UrlProperty::updateValue(QWidget *editor)
 }
 #endif
 
-FileLineEdit::FileLineEdit(QWidget* parent, const QString& value, const QString& path, const QString& filter)
+FileLineEdit::FileLineEdit(QWidget *parent, const QString &value, const QString &path, const QString &filter)
 	: QWidget(parent), m_path(path), m_filter(filter)
 {
 	horizontalLayout = new QHBoxLayout(this);
@@ -1253,7 +1253,7 @@ void FileLineEdit::on_toolButton_clicked()
 	emit fileSelected(fn);
 }
 
-void FileLineEdit::setFilename(const QString& text)
+void FileLineEdit::setFilename(const QString &text)
 {
 	lineEdit->setText(text);
 }
@@ -1263,7 +1263,7 @@ QString FileLineEdit::filename() const
 	return lineEdit->text();
 }
 
-FileProperty::FileProperty(const QString& value, const QString& name, const QString& path, const QString& filter)
+FileProperty::FileProperty(const QString &value, const QString &name, const QString &path, const QString &filter)
  	: StringProperty(value, name)
 	, m_path(path)
 	, m_filter(filter)
@@ -1276,9 +1276,9 @@ bool FileProperty::hasEditor() const
 	return true;
 }
 
-QWidget* FileProperty::createEditor(QWidget *parent, const QObject *target, const char *receiver) const
+QWidget *FileProperty::createEditor(QWidget *parent, const QObject *target, const char *receiver) const
 {
-	FileLineEdit* editor = new FileLineEdit(parent, m_value, m_path, m_filter);
+	FileLineEdit *editor = new FileLineEdit(parent, m_value, m_path, m_filter);
 	QObject::connect(editor, SIGNAL(fileSelected(QString)), target, receiver);
 	return editor;
 }

@@ -28,7 +28,7 @@ read the license and understand and accept it fully.
 AX_BEGIN_NAMESPACE
 
 #define AX_CVARDECL(name, defaultstring, flags) \
-	AX_API extern Cvar* name;
+	AX_API extern Cvar *name;
 #include "cvardecls.h"
 #undef AX_CVARDECL
 
@@ -42,19 +42,19 @@ AX_BEGIN_NAMESPACE
 	AX_API extern FontPtr g_consoleFont;
 	AX_API extern FontPtr g_miniFont;
 
-	AX_API extern RenderSystem* g_renderSystem;
-	AX_API extern RenderQueue* g_renderQueue;
-	AX_API extern RenderQueue* g_queues[2];
+	AX_API extern RenderSystem *g_renderSystem;
+	AX_API extern RenderQueue *g_renderQueue;
+	AX_API extern RenderQueue *g_queues[2];
 	AX_API extern ShaderMacro g_shaderMacro;
 	AX_API extern Uniforms g_uniforms;
 
-	AX_API extern InputSystem* g_inputSystem;
-	AX_API extern SoundSystem* g_soundSystem;
+	AX_API extern InputSystem *g_inputSystem;
+	AX_API extern SoundSystem *g_soundSystem;
 
-	AX_API extern ShaderManager* g_shaderManager;
-	AX_API extern TargetManager* g_targetManager;
-	AX_API extern QueryManager* g_queryManager;
-	AX_API extern PrimitiveManager* g_primitiveManager;
+	AX_API extern ShaderManager *g_shaderManager;
+	AX_API extern TargetManager *g_targetManager;
+	AX_API extern QueryManager *g_queryManager;
+	AX_API extern PrimitiveManager *g_primitiveManager;
 
 	AX_API void axClientInit();
 	AX_API void axClientQuit();

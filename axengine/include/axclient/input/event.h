@@ -144,7 +144,7 @@ struct AX_API InputKey {
 	AX_DECLARE_ENUM(InputKey)
 
 	String getName() const;
-	static int getKey(const String& keyname);
+	static int getKey(const String &keyname);
 };
 
 //--------------------------------------------------------------------------
@@ -215,18 +215,18 @@ struct Event : public Event {
 
 class AX_API IInputHandler {
 public:
-	virtual void preHandleEvent(InputEvent* e) {}
-	virtual void handleEvent(InputEvent* e);
-	virtual void postHandleEvent(InputEvent* e) {}
+	virtual void preHandleEvent(InputEvent *e) {}
+	virtual void handleEvent(InputEvent *e);
+	virtual void postHandleEvent(InputEvent *e) {}
 
 protected:
-	virtual void onEvent(InputEvent* e);
-	virtual void onKeyDown(InputEvent* e);
-	virtual void onKeyUp(InputEvent* e);
-	virtual void onMouseDown(InputEvent* e);
-	virtual void onMouseUp(InputEvent* e);
-	virtual void onMouseMove(InputEvent* e);
-	virtual void onMouseWheel(InputEvent* e);
+	virtual void onEvent(InputEvent *e);
+	virtual void onKeyDown(InputEvent *e);
+	virtual void onKeyUp(InputEvent *e);
+	virtual void onMouseDown(InputEvent *e);
+	virtual void onMouseUp(InputEvent *e);
+	virtual void onMouseMove(InputEvent *e);
+	virtual void onMouseWheel(InputEvent *e);
 };
 
 //--------------------------------------------------------------------------
@@ -258,9 +258,9 @@ public:
 	virtual void tick();
 
 	// input event
-	void setGameWindow(RenderTarget* gamewindow);
-	void queEvent(const InputEvent& e);
-	InputEvent* getEvent();				// return null if no more event
+	void setGameWindow(RenderTarget *gamewindow);
+	void queEvent(const InputEvent &e);
+	InputEvent *getEvent();				// return null if no more event
 	void clearEvents();
 
 	void startCapture(CaptureMode mode);
@@ -269,11 +269,11 @@ public:
 	void setMouseMode(MouseMode mode);
 	void stopCapture();
 
-	void registerEventSource(IInputSource* eventsource);
-	void removeEventSource(IInputSource* eventsource);
+	void registerEventSource(IInputSource *eventsource);
+	void removeEventSource(IInputSource *eventsource);
 
 	// qt message must que to input system
-	void queWinInput(void* msg);
+	void queWinInput(void *msg);
 
 private:
 	// events
@@ -282,8 +282,8 @@ private:
 	int m_eventReadPos;
 	int m_eventWritePos;
 	List<IInputSource*>	m_eventSources;
-	RenderTarget* m_gameWnd;
-	WinInput* m_winInput;
+	RenderTarget *m_gameWnd;
+	WinInput *m_winInput;
 
 	bool m_isCapturing;
 	CaptureMode m_captureMode;

@@ -33,7 +33,7 @@ AX_BEGIN_NAMESPACE
 		virtual void doThink();
 
 		// method
-		void loadLight(const Variant& v);
+		void loadLight(const Variant &v);
 		void activeLight(bool isActive);
 
 	protected:
@@ -46,9 +46,9 @@ AX_BEGIN_NAMESPACE
 		void setupSpotPrim();
 
 	private:
-		RenderLight* m_renderLight;
-		MeshPrim* m_pointPrim;
-		MeshPrim* m_spotPrim;
+		RenderLight *m_renderLight;
+		MeshPrim *m_pointPrim;
+		MeshPrim *m_spotPrim;
 	};
 
 

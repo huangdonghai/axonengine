@@ -47,33 +47,33 @@ AX_BEGIN_NAMESPACE
 		}
 	}
 
-	const Vector3& RenderEntity::getOrigin() const {
+	const Vector3 &RenderEntity::getOrigin() const {
 		return m_affineMat.origin;
 	}
 
-	void RenderEntity::setOrigin(const Vector3& origin) {
+	void RenderEntity::setOrigin(const Vector3 &origin) {
 		m_affineMat.origin = origin;
 	}
 
-	const Matrix3& RenderEntity::getAxis() const {
+	const Matrix3 &RenderEntity::getAxis() const {
 		return m_affineMat.axis;
 	}
 
-	void RenderEntity::setAxis(const Angles& angles) {
+	void RenderEntity::setAxis(const Angles &angles) {
 		m_affineMat.setAxis(angles);
 		m_instanceParam.w = 1.0f;
 	}
 
-	void RenderEntity::setAxis(const Angles& angles, float scale) {
+	void RenderEntity::setAxis(const Angles &angles, float scale) {
 		m_affineMat.setAxis(angles, scale);
 		m_instanceParam.w = scale;
 	}
 
-	const AffineMat& RenderEntity::getMatrix() const {
+	const AffineMat &RenderEntity::getMatrix() const {
 		return m_affineMat;
 	}
 
-	void RenderEntity::setMatrix(const AffineMat& mat) {
+	void RenderEntity::setMatrix(const AffineMat &mat) {
 		m_affineMat = mat;
 		m_instanceParam.w = m_affineMat.axis[0].getLength();
 	}
@@ -103,7 +103,7 @@ AX_BEGIN_NAMESPACE
 		return(m_flags & flag) != 0;
 	}
 
-	void RenderEntity::setQueued(QueuedEntity* queued) {
+	void RenderEntity::setQueued(QueuedEntity *queued) {
 		m_queued = queued;
 #if 0
 		m_queued->modelMatrix = getModelMatrix();
@@ -114,7 +114,7 @@ AX_BEGIN_NAMESPACE
 		m_queued->distance = m_distance;
 	}
 
-	QueuedEntity* RenderEntity::getQueued() const {
+	QueuedEntity *RenderEntity::getQueued() const {
 		return m_queued;
 	}
 
@@ -124,7 +124,7 @@ AX_BEGIN_NAMESPACE
 		return m_affineMat.toMatrix4();
 	}
 
-	void RenderEntity::update(QueuedScene* qscene, Plane::Side side)
+	void RenderEntity::update(QueuedScene *qscene, Plane::Side side)
 	{
 		m_cullSide = side;
 		calculateLod(qscene);
@@ -135,14 +135,16 @@ AX_BEGIN_NAMESPACE
 			m_visFrameId = m_world->getVisFrameId();
 	}
 
-	void RenderEntity::frameUpdate(QueuedScene* qscene) {
+	void RenderEntity::frameUpdate(QueuedScene *qscene)
+	{
+		// do nothing
 	}
 
-	void RenderEntity::calculateLod(QueuedScene* qscene) {
+	void RenderEntity::calculateLod(QueuedScene *qscene) {
 		if (!m_world)
 			return;
 
-		const Vector3& org = qscene->camera.getOrigin();
+		const Vector3 &org = qscene->camera.getOrigin();
 		m_distance = m_linkedBbox.pointDistance(org);
 
 		if (m_distance < 1) {
@@ -198,7 +200,7 @@ AX_BEGIN_NAMESPACE
 		}
 
 		if (worldframe - m_visQuery->m_resultFrame < 20) {
-			if (m_visQuery->m_result < 10) {
+			if (m_visQuery->m_result == 0) {
 				// if is occluded, query every frame to avoid flick
 				m_queryCulled = true;
 				updateframe /= 2;
@@ -220,7 +222,7 @@ AX_BEGIN_NAMESPACE
 		return m_visFrameId == m_world->getVisFrameId();
 	}
 
-	void RenderEntity::updateCsm(QueuedScene* qscene, Plane::Side side)
+	void RenderEntity::updateCsm(QueuedScene *qscene, Plane::Side side)
 	{
 		if (!r_csmCull->getBool())
 			return;
@@ -249,7 +251,7 @@ AX_BEGIN_NAMESPACE
 		return m_shadowQuery->m_result == 0;
 	}
 
-	void RenderEntity::setInstanceColor(const Vector3& color)
+	void RenderEntity::setInstanceColor(const Vector3 &color)
 	{
 		m_instanceParam.x = color.x;
 		m_instanceParam.y = color.y;

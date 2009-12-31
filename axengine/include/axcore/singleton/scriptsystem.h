@@ -16,11 +16,11 @@ read the license and understand and accept it fully.
 #define AX_DECLARE_CLASS(classname, baseclass) public:			\
 	typedef classname ThisClass;											\
 	typedef baseclass BaseClass;											\
-	virtual ::Axon::MetaInfo* classname::getMetaInfo() const {				\
+	virtual ::Axon::MetaInfo *classname::getMetaInfo() const {				\
 		return classname::registerMetaInfo();								\
 	}																		\
-	static ::Axon::MetaInfo* classname::registerMetaInfo() {				\
-		static ::Axon::MetaInfo* typeinfo;									\
+	static ::Axon::MetaInfo *classname::registerMetaInfo() {				\
+		static ::Axon::MetaInfo *typeinfo;									\
 		if (!typeinfo) {													\
 			typeinfo = new ::Axon::MetaInfo_<classname>(#classname, BaseClass::registerMetaInfo()); \
 
@@ -55,22 +55,22 @@ AX_BEGIN_NAMESPACE
 		LuaTable(int index);
 
 		void beginRead() const;
-		Variant get(const String& n) const;
-		void set(const String& n, const Variant& v);
+		Variant get(const String &n) const;
+		void set(const String &n, const Variant &v);
 		int getLength() const;
 		// n is start from 0
 		Variant get(int n) const;
 		void endRead() const;
 
 		void beginIterator() const;
-		bool nextIterator(Variant& k, Variant& v) const;
+		bool nextIterator(Variant &k, Variant &v) const;
 		void endIterator() const;
 
 		Vector3 toVector3() const;
 		Rgb toColor() const;
 		Point toPoint() const;
 		Rect toRect() const;
-		Object* toObject() const;
+		Object *toObject() const;
 
 	public:
 		int m_index;
@@ -101,16 +101,16 @@ AX_BEGIN_NAMESPACE
 		Variant(bool v);
 		Variant(int v);
 		Variant(double v);
-		Variant(const String& v);
-		Variant(const char* v);
-		Variant(Object* v);
-		Variant(const Vector3& v);
-		Variant(const Point& v);
-		Variant(const Rect& v);
-		Variant(const Rgb& v);
-		Variant(const Variant& v);
-		Variant(const LuaTable& table);
-		Variant(const AffineMat& matrix);
+		Variant(const String &v);
+		Variant(const char *v);
+		Variant(Object *v);
+		Variant(const Vector3 &v);
+		Variant(const Point &v);
+		Variant(const Rect &v);
+		Variant(const Rgb &v);
+		Variant(const Variant &v);
+		Variant(const LuaTable &table);
+		Variant(const AffineMat &matrix);
 		~Variant();
 
 		void clear();
@@ -125,16 +125,16 @@ AX_BEGIN_NAMESPACE
 		operator Rect() const;
 		operator Rgb() const;
 		operator LuaTable() const;
-		Variant& operator=(const Variant& v);
+		Variant &operator=(const Variant &v);
 		operator AffineMat() const;
 
 		void set(int v);
 		void set(float v);
 		void set(double v);
-		void set(const char* v);
-		void set(const String& v);
-		void set(const Variant& v);
-		void set(Object* v);
+		void set(const char *v);
+		void set(const String &v);
+		void set(const Variant &v);
+		void set(Object *v);
 
 		bool toBool() const { return operator bool(); }
 		int toInt() const { return operator int(); }
@@ -143,7 +143,7 @@ AX_BEGIN_NAMESPACE
 		String toScript() const;
 
 		String toString() const;
-		void fromString(Type t, const char* str);
+		void fromString(Type t, const char *str);
 
 		template<class Q>
 		Q cast() {
@@ -156,9 +156,9 @@ AX_BEGIN_NAMESPACE
 			bool boolval;
 			int intval;
 			double realval;
-			Object* obj;
-			String* str;
-			AffineMat* mtr;
+			Object *obj;
+			String *str;
+			AffineMat *mtr;
 			byte_t minibuf[MINIBUF_SIZE];
 		};
 	};
@@ -171,23 +171,23 @@ AX_BEGIN_NAMESPACE
 
 	inline Variant::Variant(double v) : type(kFloat), realval(v) {}
 
-	inline Variant::Variant(const String& v) : type(kString), str(new String(v)) {}
+	inline Variant::Variant(const String &v) : type(kString), str(new String(v)) {}
 
-	inline Variant::Variant(const char* v) : type(kString), str(new String(v)) {}
+	inline Variant::Variant(const char *v) : type(kString), str(new String(v)) {}
 
-	inline Variant::Variant(Object* v) : type(kObject), obj(v) {}
+	inline Variant::Variant(Object *v) : type(kObject), obj(v) {}
 
-	inline Variant::Variant(const Vector3& v) : type(kVector3) { new (minibuf) Vector3(v); }
+	inline Variant::Variant(const Vector3 &v) : type(kVector3) { new (minibuf) Vector3(v); }
 
-	inline Variant::Variant(const Point& v) : type(kPoint) { new (minibuf) Point(v); }
+	inline Variant::Variant(const Point &v) : type(kPoint) { new (minibuf) Point(v); }
 
-	inline Variant::Variant(const Rect& v) : type(kRect) { new (minibuf) Rect(v); }
+	inline Variant::Variant(const Rect &v) : type(kRect) { new (minibuf) Rect(v); }
 	
-	inline Variant::Variant(const Rgb& v) : type(kColor) { new (minibuf) Rgb(v); }
+	inline Variant::Variant(const Rgb &v) : type(kColor) { new (minibuf) Rgb(v); }
 
-	inline Variant::Variant(const AffineMat& v) : type(kAffineMat), mtr(new AffineMat(v)) {}
+	inline Variant::Variant(const AffineMat &v) : type(kAffineMat), mtr(new AffineMat(v)) {}
 
-	inline Variant::Variant(const Variant& v) : type(v.type), realval(v.realval) {
+	inline Variant::Variant(const Variant &v) : type(v.type), realval(v.realval) {
 		if (type == kString) {
 			str = new String(*(String*)v.str);
 			return;
@@ -201,7 +201,7 @@ AX_BEGIN_NAMESPACE
 		::memcpy(minibuf, v.minibuf, MINIBUF_SIZE);
 	}
 
-	inline Variant::Variant(const LuaTable& rhs) : type(kTable) {
+	inline Variant::Variant(const LuaTable &rhs) : type(kTable) {
 		new(minibuf) LuaTable(rhs);
 	}
 
@@ -353,7 +353,7 @@ AX_BEGIN_NAMESPACE
 		}
 	}
 
-	inline Variant& Variant::operator=(const Variant& v) {
+	inline Variant &Variant::operator=(const Variant &v) {
 		set(v);
 		return *this;
 	}
@@ -384,19 +384,19 @@ AX_BEGIN_NAMESPACE
 		realval = v;
 	}
 
-	inline void Variant::set(const char* v) {
+	inline void Variant::set(const char *v) {
 		clear();
 		type = kString;
 		str = new String(v);
 	}
 
-	inline void Variant::set(const String& v) {
+	inline void Variant::set(const String &v) {
 		clear();
 		type = kString;
 		str = new String(v);
 	}
 
-	inline void Variant::set(const Variant& v) {
+	inline void Variant::set(const Variant &v) {
 		clear();
 		type = v.type;
 		::memcpy(minibuf, v.minibuf, MINIBUF_SIZE);
@@ -481,7 +481,7 @@ AX_BEGIN_NAMESPACE
 		return result;
 	}
 
-	inline void Variant::fromString(Type t, const char* str) {
+	inline void Variant::fromString(Type t, const char *str) {
 		clear();
 
 		switch (t) {
@@ -602,39 +602,39 @@ AX_BEGIN_NAMESPACE
 
 	template< class T >
 	struct variant_cast_helper {
-		T doCast(const Variant& v) {
+		T doCast(const Variant &v) {
 			return v;
 		}
 	};
 
 	template<>
 	struct variant_cast_helper<Object*> {
-		Object* doCast(const Variant& v) {
+		Object *doCast(const Variant &v) {
 			return v.operator Object*();
 		}
 	};
 
 	template<class T>
 	struct variant_cast_helper<T*> {
-		T* doCast(const Variant& v) {
-			Object* obj = variant_cast_helper<Object*>().doCast(v);
+		T *doCast(const Variant &v) {
+			Object *obj = variant_cast_helper<Object*>().doCast(v);
 			return object_cast<T*>(obj);
 		}
 	};
 
 	template<class T>
-	T variant_cast(const Variant& v) {
+	T variant_cast(const Variant &v) {
 		return variant_cast_helper<T>().doCast(v);
 	}
 #if 0
 	template<>
-	Object* variant_cast<Object*>(const Variant& v) {
+	Object *variant_cast<Object*>(const Variant &v) {
 		return v.operator Object*();
 	}
 
 	template<class T>
-	T* variant_cast<T*>(const Variant& v) {
-		Object* obj = variant_cast<Object*>(v);
+	T *variant_cast<T*>(const Variant &v) {
+		Object *obj = variant_cast<Object*>(v);
 		return 0;
 	}
 #endif
@@ -656,24 +656,24 @@ AX_BEGIN_NAMESPACE
 		typedef std::pair<String,int>	EnumItem;
 		typedef Sequence<EnumItem>		EnumItems;
 
-		Member(const char* name, Type t) : m_name(name), m_type(t), m_propKind(Variant::kEmpty) {}
+		Member(const char *name, Type t) : m_name(name), m_type(t), m_propKind(Variant::kEmpty) {}
 
 		bool isProperty() const { return m_type == kPropertyType; }
 		bool isMethod() const { return m_type == kMethodType; }
 		Type getType() const { return m_type; }
-		const char* getName() const { return m_name; }
+		const char *getName() const { return m_name; }
 		int getNumParams() const { return m_numParams; }
 		Variant::Type getPropType() const { return m_propType; }
 		int getPropKind() const { return m_propKind; }
-		const EnumItems& getEnumItems() const { return m_enumItems; }
+		const EnumItems &getEnumItems() const { return m_enumItems; }
 
 		// method
-		virtual int invoke(Object* obj, VariantSeq& stack) { AX_ASSERT(0);return 0;}
+		virtual int invoke(Object *obj, VariantSeq &stack) { AX_ASSERT(0);return 0;}
 
 		// property
-		virtual void setProperty(Object* obj, const Variant& val) { AX_ASSERT(0); }
-		virtual Variant getProperty(const Object* obj) { AX_ASSERT(0); return Variant(); }
-		virtual void *getPropertyPointer(const Object* obj) { AX_ASSERT(0); return 0; }
+		virtual void setProperty(Object *obj, const Variant &val) { AX_ASSERT(0); }
+		virtual Variant getProperty(const Object *obj) { AX_ASSERT(0); return Variant(); }
+		virtual void *getPropertyPointer(const Object *obj) { AX_ASSERT(0); return 0; }
 		virtual bool isConst() const { return false; }
 		virtual bool isAnimatable() const { return false; }
 
@@ -690,7 +690,7 @@ AX_BEGIN_NAMESPACE
 		}
 
 	protected:
-		const char* m_name;
+		const char *m_name;
 		Type m_type;
 		int m_numParams;
 		Variant::Type m_propType;
@@ -710,11 +710,11 @@ AX_BEGIN_NAMESPACE
 	public:
 		typedef M (T::*DataType);
 
-		SimpleProp_(const char* name, DataType d);
+		SimpleProp_(const char *name, DataType d);
 
-		virtual void setProperty(Object* obj, const Variant& val);
-		virtual Variant getProperty(const Object* obj);
-		virtual void *getPropertyPointer(const Object* obj);
+		virtual void setProperty(Object *obj, const Variant &val);
+		virtual Variant getProperty(const Object *obj);
+		virtual void *getPropertyPointer(const Object *obj);
 		virtual bool isConst() const { return false; }
 		virtual bool isAnimatable() const { return true; }
 
@@ -723,26 +723,26 @@ AX_BEGIN_NAMESPACE
 	};
 
 	template< class T, class M >
-	SimpleProp_<T,M>::SimpleProp_(const char* name, DataType d) : Member(name, Member::kPropertyType) {
+	SimpleProp_<T,M>::SimpleProp_(const char *name, DataType d) : Member(name, Member::kPropertyType) {
 		m_d = d;
 		m_propType = GetVariantType_<M>();
 	}
 
 	template< class T, class M >
-	void SimpleProp_<T,M>::setProperty(Object* obj, const Variant& val) {
-		T* t = (T*)obj;
+	void SimpleProp_<T,M>::setProperty(Object *obj, const Variant &val) {
+		T *t = (T*)obj;
 		t->*m_d = val;
 	}
 
 	template< class T, class M >
-	Variant SimpleProp_<T,M>::getProperty(const Object* obj) {
-		T* t = (T*)obj;
+	Variant SimpleProp_<T,M>::getProperty(const Object *obj) {
+		T *t = (T*)obj;
 		return t->*m_d;
 	}
 
 	template< class T, class M >
-	void* SimpleProp_<T,M>::getPropertyPointer(const Object* obj) {
-		T* t = (T*)obj;
+	void *SimpleProp_<T,M>::getPropertyPointer(const Object *obj) {
+		T *t = (T*)obj;
 		return &(t->*m_d);
 	}
 
@@ -756,11 +756,11 @@ AX_BEGIN_NAMESPACE
 		typedef GetType (T::*GetFunc)() const;
 		typedef void (T::*SetFunc)(SetType);
 
-		Property_(const char* name, GetFunc getfunc, SetFunc setfunc);
-		Property_(const char* name, GetFunc getfunc);
+		Property_(const char *name, GetFunc getfunc, SetFunc setfunc);
+		Property_(const char *name, GetFunc getfunc);
 
-		virtual void setProperty(Object* obj, const Variant& val);
-		virtual Variant getProperty(const Object* obj);
+		virtual void setProperty(Object *obj, const Variant &val);
+		virtual Variant getProperty(const Object *obj);
 		virtual bool isConst() const { return m_setFunc == nullptr; }
 
 	private:
@@ -769,7 +769,7 @@ AX_BEGIN_NAMESPACE
 	};
 
 	template< typename T, typename GetType, typename SetType >
-	Property_<T,GetType,SetType>::Property_(const char* name, GetFunc getfunc, SetFunc setfunc)
+	Property_<T,GetType,SetType>::Property_(const char *name, GetFunc getfunc, SetFunc setfunc)
 		: Member(name, Member::kPropertyType)
 		, m_getFunc(getfunc)
 		, m_setFunc(setfunc)
@@ -778,7 +778,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 	template< typename T, typename GetType, typename SetType >
-	Property_<T,GetType,SetType>::Property_(const char* name, GetFunc getfunc)
+	Property_<T,GetType,SetType>::Property_(const char *name, GetFunc getfunc)
 		: Member(name, Member::kPropertyType)
 		, m_getFunc(getfunc)
 		, m_setFunc(nullptr)
@@ -787,15 +787,15 @@ AX_BEGIN_NAMESPACE
 	}
 
 	template< typename T, typename GetType, typename SetType >
-	void Property_<T,GetType,SetType>::setProperty(Object* obj, const Variant& val) {
+	void Property_<T,GetType,SetType>::setProperty(Object *obj, const Variant &val) {
 		if (!m_setFunc) return;
-		T* t = (T*)obj;
+		T *t = (T*)obj;
 		(t->*m_setFunc)(val);
 	}
 
 	template< typename T, typename GetType, typename SetType >
-	Variant Property_<T,GetType,SetType>::getProperty(const Object* obj) {
-		T* t = (T*)obj;
+	Variant Property_<T,GetType,SetType>::getProperty(const Object *obj) {
+		T *t = (T*)obj;
 		return (t->*m_getFunc)();
 	}
 
@@ -809,7 +809,7 @@ AX_BEGIN_NAMESPACE
 	template< typename Rt >
 	struct ReturnSpecialization {
 		template< typename T >
-		static int call(T* object, Rt (T::*func)(), VariantSeq& stack) {
+		static int call(T *object, Rt (T::*func)(), VariantSeq &stack) {
 			Rt ret = (object->*func)();
 			Variant val(ret);
 			stack.push_back(val);
@@ -817,7 +817,7 @@ AX_BEGIN_NAMESPACE
 		}
 
 		template< typename T, typename P0 >
-		static int call(T* object, Rt (T::*func)(P0), VariantSeq& stack) {
+		static int call(T *object, Rt (T::*func)(P0), VariantSeq &stack) {
 			Rt ret = (object->*func)(P(0));
 			Variant val(ret);
 			stack.push_back(val);
@@ -825,7 +825,7 @@ AX_BEGIN_NAMESPACE
 		}
 
 		template< typename T, typename P0, typename P1 >
-		static int call(T* object, Rt (T::*func)(P0,P1), VariantSeq& stack) {
+		static int call(T *object, Rt (T::*func)(P0,P1), VariantSeq &stack) {
 			Rt ret = (object->*func)(P(0),P(1));
 			Variant val(ret);
 			stack.push_back(val);
@@ -833,7 +833,7 @@ AX_BEGIN_NAMESPACE
 		}
 
 		template< typename T, typename P0, typename P1, typename P2 >
-		static int call(T* object, Rt (T::*func)(P0,P1,P2), VariantSeq& stack) {
+		static int call(T *object, Rt (T::*func)(P0,P1,P2), VariantSeq &stack) {
 			Rt ret = (object->*func)(P(0),P(1),P(2));
 			Variant val(ret);
 			stack.push_back(val);
@@ -841,7 +841,7 @@ AX_BEGIN_NAMESPACE
 		}
 
 		template< typename T, typename P0, typename P1, typename P2, typename P3 >
-		static int call(T* object, Rt (T::*func)(P0,P1,P2,P3), VariantSeq& stack) {
+		static int call(T *object, Rt (T::*func)(P0,P1,P2,P3), VariantSeq &stack) {
 			Rt ret = (object->*func)(stack(0),stack(1),stack(2),stack(3));
 			Variant val(ret);
 			stack.push_back(val);
@@ -849,7 +849,7 @@ AX_BEGIN_NAMESPACE
 		}
 
 		template< typename T, typename P0, typename P1, typename P2, typename P3, typename P4 >
-		static int call(T* object, Rt (T::*func)(P0,P1,P2,P3,P4), VariantSeq& stack) {
+		static int call(T *object, Rt (T::*func)(P0,P1,P2,P3,P4), VariantSeq &stack) {
 			Rt ret = (object->*func)(P(0),P(1),P(2),P(3),P(4));
 			Variant val(ret);
 			stack.push_back(val);
@@ -861,37 +861,37 @@ AX_BEGIN_NAMESPACE
 	template<>
 	struct ReturnSpecialization< void > {
 		template< typename T >
-		static int call(T* object, void (T::*func)(), VariantSeq& stack) {
+		static int call(T *object, void (T::*func)(), VariantSeq &stack) {
 			(object->*func)();
 			return 0;
 		}
 
 		template< typename T, typename P0 >
-		static int call(T* object, void (T::*func)(P0), VariantSeq& stack) {
+		static int call(T *object, void (T::*func)(P0), VariantSeq &stack) {
 			(object->*func)(P(0));
 			return 0;
 		}
 
 		template< typename T, typename P0, typename P1 >
-		static int call(T* object, void (T::*func)(P0,P1), VariantSeq& stack) {
+		static int call(T *object, void (T::*func)(P0,P1), VariantSeq &stack) {
 			(object->*func)(P(0),P(1));
 			return 0;
 		}
 
 		template< typename T, typename P0, typename P1, typename P2 >
-		static int call(T* object, void (T::*func)(P0,P1,P2), VariantSeq& stack) {
+		static int call(T *object, void (T::*func)(P0,P1,P2), VariantSeq &stack) {
 			(object->*func)(P(0),P(1),P(2));
 			return 0;
 		}
 
 		template< typename T, typename P0, typename P1, typename P2, typename P3 >
-		static int call(T* object, void (T::*func)(P0,P1,P2,P3), VariantSeq& stack) {
+		static int call(T *object, void (T::*func)(P0,P1,P2,P3), VariantSeq &stack) {
 			(object->*func)(P(0),P(1),P(2),P(3));
 			return 0;
 		}
 
 		template< typename T, typename P0, typename P1, typename P2, typename P3, typename P4 >
-		static int call(T* object, void (T::*func)(P0,P1,P2,P3,P4), VariantSeq& stack) {
+		static int call(T *object, void (T::*func)(P0,P1,P2,P3,P4), VariantSeq &stack) {
 			(object->*func)(P(0),P(1),P(2),P(3),P(4));
 			return 0;
 		}
@@ -915,16 +915,16 @@ AX_BEGIN_NAMESPACE
 	public:
 		typedef Rt (T::*FunctionType)();
 
-		Method_(const char* name, FunctionType m)
+		Method_(const char *name, FunctionType m)
 			: Member(name, Member::kMethodType)
 			, m_m(m)
 		{
 			m_numParams = 0;
 		}
 
-		virtual int invoke(Object* obj, VariantSeq& stack) {
+		virtual int invoke(Object *obj, VariantSeq &stack) {
 			AX_ASSERT(stack.size() == getNumParams());
-			T* realobj = dynamic_cast<T*>(obj);
+			T *realobj = dynamic_cast<T*>(obj);
 			AX_ASSERT(realobj);
 			return ReturnSpecialization<Rt>::call(realobj, m_m, stack);
 		}
@@ -939,16 +939,16 @@ AX_BEGIN_NAMESPACE
 	public:
 		typedef Rt (T::*FunctionType)(Arg1);
 
-		Method_(const char* name, FunctionType m)
+		Method_(const char *name, FunctionType m)
 			: Member(name, Member::kMethodType)
 			, m_m(m)
 		{
 			m_numParams = 1;
 		}
 
-		virtual int invoke(Object* obj, VariantSeq& stack) {
+		virtual int invoke(Object *obj, VariantSeq &stack) {
 			AX_ASSERT(stack.size() == getNumParams());
-			T* realobj = dynamic_cast<T*>(obj);
+			T *realobj = dynamic_cast<T*>(obj);
 			AX_ASSERT(realobj);
 			return ReturnSpecialization<Rt>::call(realobj, m_m, stack);
 		}
@@ -963,16 +963,16 @@ AX_BEGIN_NAMESPACE
 	public:
 		typedef Rt (T::*FunctionType)(Arg1,Arg2);
 
-		Method_(const char* name, FunctionType m)
+		Method_(const char *name, FunctionType m)
 			: Member(name, Member::kMethodType)
 			, m_m(m)
 		{
 			m_numParams = 2;
 		}
 
-		virtual int invoke(Object* obj, VariantSeq& stack) {
+		virtual int invoke(Object *obj, VariantSeq &stack) {
 			AX_ASSERT(stack.size() == getNumParams());
-			T* realobj = dynamic_cast<T*>(obj);
+			T *realobj = dynamic_cast<T*>(obj);
 			AX_ASSERT(realobj);
 			return ReturnSpecialization<Rt>::call(realobj, m_m, stack);
 		}
@@ -987,16 +987,16 @@ AX_BEGIN_NAMESPACE
 	public:
 		typedef Rt (T::*FunctionType)(Arg1,Arg2,Arg3);
 
-		Method_(const char* name, FunctionType m)
+		Method_(const char *name, FunctionType m)
 			: Member(name, Member::kMethodType)
 			, m_m(m)
 		{
 			m_numParams = 3;
 		}
 
-		virtual int invoke(Object* obj, VariantSeq& stack) {
+		virtual int invoke(Object *obj, VariantSeq &stack) {
 			AX_ASSERT(stack.size() == getNumParams());
-			T* realobj = dynamic_cast<T*>(obj);
+			T *realobj = dynamic_cast<T*>(obj);
 			AX_ASSERT(realobj);
 			return ReturnSpecialization<Rt>::call(realobj, m_m, stack);
 		}
@@ -1011,16 +1011,16 @@ AX_BEGIN_NAMESPACE
 	public:
 		typedef Rt (T::*FunctionType)(Arg1,Arg2,Arg3,Arg4);
 
-		Method_(const char* name, FunctionType m)
+		Method_(const char *name, FunctionType m)
 			: Member(name, Member::kMethodType)
 			, m_m(m)
 		{
 			m_numParams = 4;
 		}
 
-		virtual int invoke(Object* obj, VariantSeq& stack) {
+		virtual int invoke(Object *obj, VariantSeq &stack) {
 			AX_ASSERT(stack.size() == getNumParams());
-			T* realobj = dynamic_cast<T*>(obj);
+			T *realobj = dynamic_cast<T*>(obj);
 			AX_ASSERT(realobj);
 			return ReturnSpecialization<Rt>::call(realobj, m_m, stack);
 		}
@@ -1035,16 +1035,16 @@ AX_BEGIN_NAMESPACE
 	public:
 		typedef Rt (T::*FunctionType)(Arg1,Arg2,Arg3,Arg4,Arg5);
 
-		Method_(const char* name, FunctionType m)
+		Method_(const char *name, FunctionType m)
 			: Member(name, Member::kMethodType)
 			, m_m(m)
 		{
 			m_numParams = 5;
 		}
 
-		virtual int invoke(Object* obj, VariantSeq& stack) {
+		virtual int invoke(Object *obj, VariantSeq &stack) {
 			AX_ASSERT(stack.size() == getNumParams());
-			T* realobj = dynamic_cast<T*>(obj);
+			T *realobj = dynamic_cast<T*>(obj);
 			AX_ASSERT(realobj);
 			return ReturnSpecialization<Rt>::call(realobj, m_m, stack);
 		}
@@ -1064,40 +1064,40 @@ AX_BEGIN_NAMESPACE
 	public:
 		friend class ScriptSystem;
 
-		MetaInfo(const char* classname, MetaInfo* base);
+		MetaInfo(const char *classname, MetaInfo *base);
 		virtual ~MetaInfo();
 
 		template< typename T, typename GetType, typename SetType >
-		MetaInfo& addProperty(const char* name, GetType (T::*get)() const, void (T::*set)(SetType));
+		MetaInfo &addProperty(const char *name, GetType (T::*get)() const, void (T::*set)(SetType));
 
 		template< typename T, typename GetType >
-		MetaInfo& addProperty(const char* name, GetType (T::*get)() const);
+		MetaInfo &addProperty(const char *name, GetType (T::*get)() const);
 
 		template< typename T, typename M >
-		MetaInfo& addProperty(const char* name, M (T::*d));
+		MetaInfo &addProperty(const char *name, M (T::*d));
 
 		template< typename Signature >
-		MetaInfo& addMethod(const char* name, Signature m);
+		MetaInfo &addMethod(const char *name, Signature m);
 
-		Member* findMember(const char* name) const;
-		MetaInfo* getBaseTypeInfo() const;
+		Member *findMember(const char *name) const;
+		MetaInfo *getBaseTypeInfo() const;
 
-		const char* getTypeName() const;
-		const MemberSeq& getMembers() const;
+		const char *getTypeName() const;
+		const MemberSeq &getMembers() const;
 
-		virtual Object* createObject() = 0;
+		virtual Object *createObject() = 0;
 
 	protected:
-		void addMember(Member* member);
+		void addMember(Member *member);
 
 	private:
-		const char* m_typeName;
-		MetaInfo* m_baseTypeInfo;
+		const char *m_typeName;
+		MetaInfo *m_baseTypeInfo;
 		MemberSeq m_members;
 		MemberDict m_memberDict;
 	};
 
-	inline MetaInfo::MetaInfo(const char* classname, MetaInfo* base)
+	inline MetaInfo::MetaInfo(const char *classname, MetaInfo *base)
 		: m_typeName(classname)
 		, m_baseTypeInfo(base)
 	{}
@@ -1105,40 +1105,40 @@ AX_BEGIN_NAMESPACE
 	inline MetaInfo::~MetaInfo() {}
 
 	template< typename T, typename GetType, typename SetType >
-	MetaInfo& MetaInfo::addProperty(const char* name, GetType (T::*get)() const, void (T::*set)(SetType)) {
-		Member* member = new Property_<T,GetType,SetType>(name, get, set);
+	MetaInfo &MetaInfo::addProperty(const char *name, GetType (T::*get)() const, void (T::*set)(SetType)) {
+		Member *member = new Property_<T,GetType,SetType>(name, get, set);
 		addMember(member);
 		return *this;
 	}
 
 	template< typename T, typename GetType >
-	MetaInfo& MetaInfo::addProperty(const char* name, GetType (T::*get)() const) {
-		Member* member = new Property_<T,GetType,GetType>(name, get);
+	MetaInfo &MetaInfo::addProperty(const char *name, GetType (T::*get)() const) {
+		Member *member = new Property_<T,GetType,GetType>(name, get);
 		addMember(member);
 		return *this;
 	}
 
 	template< typename T, typename M >
-	MetaInfo& MetaInfo::addProperty(const char* name, M (T::*d)) {
-		Member* member = new SimpleProp_<T,M>(name, d);
+	MetaInfo &MetaInfo::addProperty(const char *name, M (T::*d)) {
+		Member *member = new SimpleProp_<T,M>(name, d);
 		addMember(member);
 		return *this;
 	}
 
 
 	template< typename Signature >
-	MetaInfo& MetaInfo::addMethod(const char* name, Signature m) {
-		Member* member = new Method_<Signature>(name, m);
+	MetaInfo &MetaInfo::addMethod(const char *name, Signature m) {
+		Member *member = new Method_<Signature>(name, m);
 		addMember(member);
 		return *this;
 	}
 
-	inline void MetaInfo::addMember(Member* member) {
+	inline void MetaInfo::addMember(Member *member) {
 		m_members.push_back(member);
 		m_memberDict[member->getName()] = member;
 	}
 
-	inline Member* MetaInfo::findMember(const char* name) const {
+	inline Member *MetaInfo::findMember(const char *name) const {
 		MemberDict::const_iterator it = m_memberDict.find(name);
 
 		if (it != m_memberDict.end())
@@ -1146,15 +1146,15 @@ AX_BEGIN_NAMESPACE
 		return nullptr;
 	}
 
-	inline MetaInfo* MetaInfo::getBaseTypeInfo() const {
+	inline MetaInfo *MetaInfo::getBaseTypeInfo() const {
 		return m_baseTypeInfo;
 	}
 
-	inline const char* MetaInfo::getTypeName() const {
+	inline const char *MetaInfo::getTypeName() const {
 		return m_typeName;
 	}
 
-	inline const MemberSeq& MetaInfo::getMembers() const {
+	inline const MemberSeq &MetaInfo::getMembers() const {
 		return m_members;
 	}
 
@@ -1164,12 +1164,12 @@ AX_BEGIN_NAMESPACE
 	template< class T >
 	class MetaInfo_ : public MetaInfo {
 	public:
-		MetaInfo_(const char* classname, MetaInfo* base)
+		MetaInfo_(const char *classname, MetaInfo *base)
 			: MetaInfo(classname, base)
 		{}
 		virtual ~MetaInfo_() {}
 
-		virtual Object* createObject() {
+		virtual Object *createObject() {
 			return new T;
 		}
 	};
@@ -1183,22 +1183,22 @@ AX_BEGIN_NAMESPACE
 		friend class ClassInfo;
 		ScriptProp();
 
-		virtual void setProperty(Object* obj, const Variant& val);
-		virtual Variant getProperty(const Object* obj);
+		virtual void setProperty(Object *obj, const Variant &val);
+		virtual Variant getProperty(const Object *obj);
 		bool grouped() const { return m_group || m_propKind == kGroup; }
 
 	protected:
 		void init();
 		void initEnumItems();
 		int checkNameKind();
-		int checkTableKind(Variant& result);
+		int checkTableKind(Variant &result);
 		bool isStringType(int kind);
 
 	public:
 		String m_realName;
 		String m_showName;
 		Variant m_defaultValue;
-		ScriptProp* m_group;
+		ScriptProp *m_group;
 	};
 	typedef Sequence<ScriptProp*>		ScriptPropSeq;
 	typedef Dict<String,ScriptProp*> ScriptPropDict;
@@ -1212,12 +1212,12 @@ AX_BEGIN_NAMESPACE
 	public:
 		ClassInfo() {}
 
-		Variant getField(const String& field) const;
+		Variant getField(const String &field) const;
 		void initScriptProps();
 
 		String m_className;
 		String m_metaName;
-		MetaInfo* m_typeInfo;
+		MetaInfo *m_typeInfo;
 		ScriptPropSeq m_scriptPropSeq;
 		ScriptPropDict m_scriptProps;
 	};
@@ -1234,39 +1234,39 @@ AX_BEGIN_NAMESPACE
 
 		Object();
 #if 0
-		Object(const String& objname);
+		Object(const String &objname);
 #endif
 		virtual ~Object();
 
-		virtual MetaInfo* getMetaInfo() const;
+		virtual MetaInfo *getMetaInfo() const;
 		virtual String getNamespace() const { return String(); }
-		static MetaInfo* registerMetaInfo();
-		static MetaInfo* m_metaInfo;
+		static MetaInfo *registerMetaInfo();
+		static MetaInfo *m_metaInfo;
 
-		const ClassInfo* getClassInfo() const { return m_classInfo; }
+		const ClassInfo *getClassInfo() const { return m_classInfo; }
 
-		Member* findMember(const char* name) const;
-		Variant getProperty(const char* name) const;
-		bool setProperty(const char* name, const Variant& value);
-		bool setProperty(const char* name, const char* value);
-		void invokeMethod(const char* name, const Variant& arg1);
-		void invokeMethod(const char* name, const Variant& arg1, const Variant& arg2);
+		Member *findMember(const char *name) const;
+		Variant getProperty(const char *name) const;
+		bool setProperty(const char *name, const Variant &value);
+		bool setProperty(const char *name, const char *value);
+		void invokeMethod(const char *name, const Variant &arg1);
+		void invokeMethod(const char *name, const Variant &arg1, const Variant &arg2);
 
 		// properties
-		void set_objectName(const String& name);
+		void set_objectName(const String &name);
 		String get_objectName() const;
 
-		bool inherits(const char* cls) const;
-		bool isClass(const char* classname) const;
+		bool inherits(const char *cls) const;
+		bool isClass(const char *classname) const;
 
 		// read and write properties
-		void writeProperties(File* f, int indent=0) const;
-		void readProperties(const TiXmlElement* node);
-		void copyPropertiesFrom(const Object* rhs);
+		void writeProperties(File *f, int indent=0) const;
+		void readProperties(const TiXmlElement *node);
+		void copyPropertiesFrom(const Object *rhs);
 
 		// runtime
-		void setRuntime(const char* name, const Variant& val);
-		Variant getRuntime(const char* name);
+		void setRuntime(const char *name, const Variant &val);
+		Variant getRuntime(const char *name);
 
 		void doPropertyChanged();
 
@@ -1277,19 +1277,19 @@ AX_BEGIN_NAMESPACE
 		void invoke_onFinalize();
 		void invoke_onPropertyChanged();
 
-		void invokeCallback(const String& callback);
-		void invokeCallback(const String& callback, const Variant& param);
+		void invokeCallback(const String &callback);
+		void invokeCallback(const String &callback, const Variant &param);
 
-		void setObjectName(const String& name, bool force);
+		void setObjectName(const String &name, bool force);
 		void resetObjectName();
 
-		void raiseSignal(const String& signal, const Variant& param);
+		void raiseSignal(const String &signal, const Variant &param);
 
 		// event
-		void initClassInfo(const ClassInfo* ci);
+		void initClassInfo(const ClassInfo *ci);
 
 	private:
-		const ClassInfo* m_classInfo;
+		const ClassInfo *m_classInfo;
 		String m_objectNamespace;
 		String m_objectName;
 	};
@@ -1300,7 +1300,7 @@ AX_BEGIN_NAMESPACE
 	//--------------------------------------------------------------------------
 
 	class ScriptSystem;
-	extern AX_API ScriptSystem* g_scriptSystem;
+	extern AX_API ScriptSystem *g_scriptSystem;
 
 	class AX_API ScriptSystem
 	{
@@ -1313,48 +1313,48 @@ AX_BEGIN_NAMESPACE
 		void initialize();
 		void finalize();
 
-		void executeString(const String& text);
-		void executeString(const char* text);
-		void executeFile(const String& filename);
-		bool invokeLuaMethod(const char* methodName, VariantSeq& stack, int nResult);
-		bool invokeLuaMethod(const char* method, Variant& arg1);
-		bool invokeLuaScoped(const char* text,VariantSeq& stack, int nResult);
-		String generateLuaString(const String& text);
+		void executeString(const String &text);
+		void executeString(const char *text);
+		void executeFile(const String &filename);
+		bool invokeLuaMethod(const char *methodName, VariantSeq &stack, int nResult);
+		bool invokeLuaMethod(const char *method, Variant &arg1);
+		bool invokeLuaScoped(const char *text,VariantSeq &stack, int nResult);
+		String generateLuaString(const String &text);
 
-		Object* createObject(const char* classname);
-		Object* cloneObject(const Object* obj);
-		Object* findObject(const String& objectname);
+		Object *createObject(const char *classname);
+		Object *cloneObject(const Object *obj);
+		Object *findObject(const String &objectname);
 
 		// for automatic name gen
-		int getNameIndex(const String& str) const;
-		void updateNameIndex(const String& str);
-		int nextNameIndex(const String& str);
-		String generateObjectName(const String& str);
+		int getNameIndex(const String &str) const;
+		void updateNameIndex(const String &str);
+		int nextNameIndex(const String &str);
+		String generateObjectName(const String &str);
 
-		void registerType(MetaInfo* typeinfo);
-		void registerClass(const String& self, const String& base);
+		void registerType(MetaInfo *typeinfo);
+		void registerClass(const String &self, const String &base);
 
-		void getClassList(const char* prefix, bool sort, StringSeq& result) const;
+		void getClassList(const char *prefix, bool sort, StringSeq &result) const;
 
 		//
 		// read from lua state
 		//
 		void beginRead();
-		Variant readField(const char* objname, const char* fieldname);
-		Variant readField(const char* objname);
+		Variant readField(const char *objname, const char *fieldname);
+		Variant readField(const char *objname);
 		void endRead();
 
 		// connect signal and slot
-		bool connect(Object* sender, const String& sig, Object* recevier, const String& slot);
-		bool disconnect(Object* sender, const String& sig, Object* recevier, const String& slot);
+		bool connect(Object *sender, const String &sig, Object *recevier, const String &slot);
+		bool disconnect(Object *sender, const String &sig, Object *recevier, const String &slot);
 
 		// immediately read
-		Variant readFieldImmediately(const char* objname, const char* fieldname);
+		Variant readFieldImmediately(const char *objname, const char *fieldname);
 
-		const String& getPackagePath() { return m_packagePath; }
+		const String &getPackagePath() { return m_packagePath; }
 
 	protected:
-		void linkMetaInfoToClassInfo(MetaInfo* ti);
+		void linkMetaInfoToClassInfo(MetaInfo *ti);
 
 	private:
 		typedef Dict<String,ClassInfo*>	ClassInfoDict;
@@ -1374,7 +1374,7 @@ AX_BEGIN_NAMESPACE
 
 
 	template< class T >
-	T object_cast(Object* obj) {
+	T object_cast(Object *obj) {
 		if (obj->inherits(T(0)->registerMetaInfo()->getTypeName())) {
 			return (T)obj;
 		}

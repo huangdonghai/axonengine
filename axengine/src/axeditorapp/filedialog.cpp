@@ -16,7 +16,7 @@ read the license and understand and accept it fully.
 // Class FileItem
 //------------------------------------------------------------------------------
 
-FileItem::FileItem(QTreeWidget* parent, const FileInfo& info, bool showext)
+FileItem::FileItem(QTreeWidget *parent, const FileInfo &info, bool showext)
 	: QTreeWidgetItem(parent, info.isDir ? TypeDir : TypeFile)
 	, m_fileInfo(info)
 {
@@ -27,7 +27,7 @@ FileItem::FileItem(QTreeWidget* parent, const FileInfo& info, bool showext)
 	} else {
 		setText(0, u2q(m_fileInfo.filename));
 	}
-	const tm& t = m_fileInfo.localtime;
+	const tm &t = m_fileInfo.localtime;
 	setText(2, tmp.sprintf("%d-%d-%d %d:%d", t.tm_year+1900, t.tm_mon+1, t.tm_mday, t.tm_hour, t.tm_min));
 	
 	if (m_fileInfo.isDir) {
@@ -40,7 +40,7 @@ FileItem::FileItem(QTreeWidget* parent, const FileInfo& info, bool showext)
 	setData(0, Qt::UserRole, (qulonglong)&m_fileInfo);
 }
 
-FileItem::FileItem(QTreeWidgetItem* parent, const FileInfo& info, bool showext)
+FileItem::FileItem(QTreeWidgetItem *parent, const FileInfo &info, bool showext)
 	: QTreeWidgetItem(parent, info.isDir ? TypeDir : TypeFile)
 	, m_fileInfo(info)
 {
@@ -52,7 +52,7 @@ FileItem::FileItem(QTreeWidgetItem* parent, const FileInfo& info, bool showext)
 		setText(0, u2q(m_fileInfo.filename));
 	}
 
-	const tm& t = m_fileInfo.localtime;
+	const tm &t = m_fileInfo.localtime;
 	setText(2, tmp.sprintf("%d-%d-%d %d:%d", t.tm_year+1900, t.tm_mon+1, t.tm_mday, t.tm_hour, t.tm_min));
 
 	if (m_fileInfo.isDir) {
@@ -67,15 +67,15 @@ FileItem::FileItem(QTreeWidgetItem* parent, const FileInfo& info, bool showext)
 
 FileItem::~FileItem() {}
 
-bool FileItem::operator<(const QTreeWidgetItem& other) const {
+bool FileItem::operator<(const QTreeWidgetItem &other) const {
 	if (type() == other.type()) {
 		bool ok;
-		FileInfo* info = (FileInfo*)other.data(0, Qt::UserRole).toULongLong(&ok);
+		FileInfo *info = (FileInfo*)other.data(0, Qt::UserRole).toULongLong(&ok);
 
 		if (!ok)
 			return QTreeWidgetItem::operator <(other);
 
-		QTreeWidget* tree = treeWidget();
+		QTreeWidget *tree = treeWidget();
 		int column = tree->sortColumn();
 
 		if (column == 0)
@@ -122,7 +122,7 @@ FileDialog::FileDialog(QWidget *parent)
 	ui.rootDirTree->setIconSize(QSize(16, 16));
 	ui.actionBack->setDisabled(true);
 
-	QActionGroup* ag = new QActionGroup(this);
+	QActionGroup *ag = new QActionGroup(this);
 	ag->addAction(ui.actionListView);
 	ag->addAction(ui.actionDetailView);
 
@@ -138,7 +138,7 @@ FileDialog::~FileDialog()
 	//SafeDelete(mPreviewWidget);
 }
 
-void FileDialog::browseDir(const QString& dir, bool addHistory)
+void FileDialog::browseDir(const QString &dir, bool addHistory)
 {
 	ui.treeWidget->clear();
 
@@ -155,14 +155,14 @@ void FileDialog::browseDir(const QString& dir, bool addHistory)
 	}
 
 	m_curDir = dir;
-	QString& filter = ui.filterComboBox->currentText();
+	QString &filter = ui.filterComboBox->currentText();
 	m_fileInfos = g_fileSystem->getFileInfos(q2u(dir), q2u(filter), File::List_sort);
 
 	// add folder first
 	size_t i;
 	QString tmp;
 	for (i = 0; i < m_fileInfos.size(); i++) {
-		FileItem* item = new FileItem(ui.treeWidget, m_fileInfos[i]);
+		FileItem *item = new FileItem(ui.treeWidget, m_fileInfos[i]);
 	}
 	ui.treeWidget->resizeColumnToContents(0);
 	ui.treeWidget->resizeColumnToContents(1);
@@ -185,7 +185,7 @@ void FileDialog::browseDir(const QString& dir, bool addHistory)
 	ui.dirComboBox->setCurrentIndex(level - 1);
 }
 
-void FileDialog::setRootDir(const QString& dir)
+void FileDialog::setRootDir(const QString &dir)
 {
 	m_rootDir = dir;
 
@@ -203,7 +203,7 @@ void FileDialog::setRootDir(const QString& dir)
 		if (!m_rootInfos[i]. isDir)
 			continue;
 
-		FileItem* item = new FileItem(ui.rootDirTree, m_rootInfos[i]);
+		FileItem *item = new FileItem(ui.rootDirTree, m_rootInfos[i]);
 	}
 
 	browseDir(m_rootDir, false);
@@ -228,12 +228,12 @@ void FileDialog::setAcceptMode(AcceptMode mode)
 	updateWidget();
 }
 
-void FileDialog::setDefaultSuffix(const QString& suffix)
+void FileDialog::setDefaultSuffix(const QString &suffix)
 {
 	m_defaultSuffix = suffix;
 }
 
-void FileDialog::setFilter(const QString& filter)
+void FileDialog::setFilter(const QString &filter)
 {
 	StringList strs = StringUtil::tokenize(q2u(filter).c_str(), L'|');
 
@@ -248,7 +248,7 @@ void FileDialog::setFilter(const QString& filter)
 	updateWidget();
 }
 
-void FileDialog::setFilters(const QStringList& filters)
+void FileDialog::setFilters(const QStringList &filters)
 {
 	m_filters = filters;
 
@@ -289,9 +289,9 @@ void FileDialog::updateWidget()
 	}
 }
 
-void FileDialog::on_treeWidget_itemDoubleClicked(QTreeWidgetItem* item, int column )
+void FileDialog::on_treeWidget_itemDoubleClicked(QTreeWidgetItem *item, int column )
 {
-	FileItem* f_item = dynamic_cast<FileItem*>(item);
+	FileItem *f_item = dynamic_cast<FileItem*>(item);
 
 	if (!f_item)
 		return;
@@ -305,7 +305,7 @@ void FileDialog::on_treeWidget_itemDoubleClicked(QTreeWidgetItem* item, int colu
 	}
 }
 
-void FileDialog::on_rootDirTree_itemDoubleClicked(QTreeWidgetItem* item, int column)
+void FileDialog::on_rootDirTree_itemDoubleClicked(QTreeWidgetItem *item, int column)
 {
 	QString fullpath = m_rootDir + item->text(0) + "/";
 
@@ -349,9 +349,9 @@ void FileDialog::on_actionParentDir_triggered()
 	browseDir(par_path, true);
 }
 
-void FileDialog::on_treeWidget_itemClicked(QTreeWidgetItem* item, int column)
+void FileDialog::on_treeWidget_itemClicked(QTreeWidgetItem *item, int column)
 {
-	FileItem* f_item = dynamic_cast<FileItem*>(item);
+	FileItem *f_item = dynamic_cast<FileItem*>(item);
 
 	if (!f_item)
 		return;
@@ -381,7 +381,7 @@ void FileDialog::on_treeWidget_itemClicked(QTreeWidgetItem* item, int column)
 		}
 
 		FilePreview preview;
-		QWidget* widget = preview.CreateWidget(q2u(curFullName), ui.previewFrame);
+		QWidget *widget = preview.CreateWidget(q2u(curFullName), ui.previewFrame);
 		if (widget != NULL) {
 			m_previewWidget = widget;
 			ui.previewFrame->layout()->addWidget(widget);
@@ -393,7 +393,7 @@ void FileDialog::on_treeWidget_itemClicked(QTreeWidgetItem* item, int column)
 
 void FileDialog::on_dirComboBox_activated(int)
 {
-	QString& txt = ui.dirComboBox->currentText();
+	QString &txt = ui.dirComboBox->currentText();
 
 	browseDir(txt, true);
 }
@@ -412,12 +412,12 @@ void FileDialog::on_okButton_clicked()
 }
 
 
-QString FileDialog::getDirectory(QWidget* parent, const QString& caption, const QString& dir)
+QString FileDialog::getDirectory(QWidget *parent, const QString &caption, const QString &dir)
 {
 	return QString();
 }
 
-QString FileDialog::getOpenFileName(QWidget* parent, const QString& caption, const QString& dir, const QString& filter, QString* selectedFilter)
+QString FileDialog::getOpenFileName(QWidget *parent, const QString &caption, const QString &dir, const QString &filter, QString *selectedFilter)
 {
 	FileDialog dlg(parent);
 
@@ -437,7 +437,7 @@ QString FileDialog::getOpenFileName(QWidget* parent, const QString& caption, con
 	}
 }
 
-QString FileDialog::getSaveFileName(QWidget* parent, const QString& caption, const QString& dir, const QString& filter, QString* selectedFilter)
+QString FileDialog::getSaveFileName(QWidget *parent, const QString &caption, const QString &dir, const QString &filter, QString *selectedFilter)
 {
 	FileDialog dlg(parent);
 

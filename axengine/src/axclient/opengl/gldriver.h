@@ -34,9 +34,9 @@ AX_BEGIN_NAMESPACE
 		~GLdriver();
 
 	private:
-		bool findExtension(const char* extname);
-		void findFunction(void*& func, const char* name, const char* extname, bool extsupport);
-		void loadMatrix(GLenum mode, const Matrix4& m);
+		bool findExtension(const char *extname);
+		void findFunction(void*& func, const char *name, const char *extname, bool extsupport);
+		void loadMatrix(GLenum mode, const Matrix4 &m);
 
 	public:
 		// implement Render::IRenderDriver
@@ -49,17 +49,17 @@ AX_BEGIN_NAMESPACE
 		virtual bool isInRenderingThread() { return false; }
 
 		// resource management
-		virtual RenderTarget* createWindowTarget(handle_t wndId, const String& name);
+		virtual RenderTarget *createWindowTarget(handle_t wndId, const String &name);
 #if 0
-		virtual Target* getColorTarget(int width, int height);
-		virtual Target* getDepthTarget(int width, int height);
+		virtual Target *getColorTarget(int width, int height);
+		virtual Target *getDepthTarget(int width, int height);
 #endif
 		// primitive
-		virtual int cachePrimitive(Primitive* prim);
-		virtual void uncachePrimitive(Primitive* prim);
+		virtual int cachePrimitive(Primitive *prim);
+		virtual void uncachePrimitive(Primitive *prim);
 
 		// caps
-		virtual const Info* getDriverInfo();
+		virtual const Info *getDriverInfo();
 		virtual uint_t getBackendCaps();
 
 		// before runFrame, do some pre frame things
@@ -69,10 +69,10 @@ AX_BEGIN_NAMESPACE
 		virtual void runFrame();
 
 		// new selcection
-		virtual void beginSelect(const RenderCamera& view);
+		virtual void beginSelect(const RenderCamera &view);
 		virtual void loadSelectId(int id);
-		virtual void testActor(RenderEntity* re);
-		virtual void testPrimitive(Primitive* prim);
+		virtual void testActor(RenderEntity *re);
+		virtual void testPrimitive(Primitive *prim);
 		virtual HitRecords endSelect();
 
 		// occlusion query
@@ -81,11 +81,11 @@ AX_BEGIN_NAMESPACE
 		virtual int getQueryResult( int id ){ return 0; }
 
 	public:
-		static handle_t createGLWindow(const String& wnd_name);
+		static handle_t createGLWindow(const String &wnd_name);
 		
 	protected:
 		// console command
-		void dumpTex_f(const CmdArgs& param);
+		void dumpTex_f(const CmdArgs &param);
 
 	private:
 		bool m_initialized;

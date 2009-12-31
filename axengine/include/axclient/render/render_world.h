@@ -20,8 +20,8 @@ class RenderSystem;
 class QuadNode {
 public:
 	float dist[2];
-	QuadNode* parent;
-	QuadNode* children[4];
+	QuadNode *parent;
+	QuadNode *children[4];
 
 	float size;
 	BoundingBox bbox;
@@ -38,7 +38,7 @@ public:
 		lastUpdateFrame = 0;
 	}
 
-	void expandBbox(const BoundingBox& rhs) {
+	void expandBbox(const BoundingBox &rhs) {
 		if (bbox.contains(rhs))
 			return;
 
@@ -71,10 +71,10 @@ public:
 	void initialize(int worldSize = 1024);
 	void finalize();
 
-	void addEntity(RenderEntity* entity);
-	void removeEntity(RenderEntity* entity);
+	void addEntity(RenderEntity *entity);
+	void removeEntity(RenderEntity *entity);
 
-	OutdoorEnv* getOutdoorEnv() { return m_outdoorEnv; }
+	OutdoorEnv *getOutdoorEnv() { return m_outdoorEnv; }
 
 	int getVisFrameId() const { return m_visFrameId; }
 	int getShadowFrameId() const { return m_shadowFrameId; }
@@ -82,35 +82,35 @@ public:
 protected:
 	struct FrameData;
 
-	void updateEntity(RenderEntity* entity);
+	void updateEntity(RenderEntity *entity);
 
 	// add light, visarea, portal, occluder
-	void addLight(RenderLight* light);
+	void addLight(RenderLight *light);
 
 	void generateQuadNode();
-	void generateChildNode_r(QuadNode* node);
-	void linkEntity(RenderEntity* entity);
-	void unlinkEntity(RenderEntity* entity);
+	void generateChildNode_r(QuadNode *node);
+	void linkEntity(RenderEntity *entity);
+	void unlinkEntity(RenderEntity *entity);
 
 	// for internal use
-	void renderTo(QueuedScene* queued);
-	void renderTo(QueuedScene* queued, QuadNode* node);
+	void renderTo(QueuedScene *queued);
+	void renderTo(QueuedScene *queued, QuadNode *node);
 
 	// mark visible
-	void markVisible_r(QueuedScene* queued, QuadNode* node, Plane::Side parentSide);
+	void markVisible_r(QueuedScene *queued, QuadNode *node, Plane::Side parentSide);
 
-	void updateExposure(QueuedScene* qscene);
+	void updateExposure(QueuedScene *qscene);
 
 private:
 	float m_worldSize;
-	QuadNode* m_rootNode;
-	RenderTerrain* m_terrain;
-	OutdoorEnv* m_outdoorEnv;
+	QuadNode *m_rootNode;
+	RenderTerrain *m_terrain;
+	OutdoorEnv *m_outdoorEnv;
 
 	int m_histogram[HISTOGRAM_WIDTH];
 	int m_histogramAccumed[HISTOGRAM_WIDTH];
 	int m_curHistogramIndex;
-	Query* m_histogramQuery;
+	Query *m_histogramQuery;
 	float m_lastExposure;
 
 	bool m_updateShadowVis;

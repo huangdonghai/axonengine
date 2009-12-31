@@ -53,21 +53,21 @@ AX_BEGIN_NAMESPACE
 	};
 
 	// some global object
-	extern GLwindow* glInternalWindow;
+	extern GLwindow *glInternalWindow;
 	extern HGLRC					glContext;
-	extern GLdriver* glDriver;
-	extern IRenderDriver::Info* glDriverInfo;
-	extern GLthread* glThread;
+	extern GLdriver *glDriver;
+	extern IRenderDriver::Info *glDriverInfo;
+	extern GLthread *glThread;
 	extern CGcontext				glCgContext;
-	extern GLprimitivemanager* glPrimitiveManager;
-	extern GLframebuffermanager* glFramebufferManager;
-	extern GLshadermanager* glShaderManager;
-	extern GLpostprocess* glPostprocess;
+	extern GLprimitivemanager *glPrimitiveManager;
+	extern GLframebuffermanager *glFramebufferManager;
+	extern GLshadermanager *glShaderManager;
+	extern GLpostprocess *glPostprocess;
 
-	extern Material* glNullMat;
-	extern Interaction* gCurInteraction;
+	extern Material *glNullMat;
+	extern Interaction *gCurInteraction;
 
-	extern GLfontrender* glFontRender;
+	extern GLfontrender *glFontRender;
 
 AX_END_NAMESPACE
 

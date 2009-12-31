@@ -267,7 +267,7 @@ AX_BEGIN_NAMESPACE
 		time_t systime;
 		::time(&systime);
 
-		struct tm* stm = ::localtime(&systime);
+		struct tm *stm = ::localtime(&systime);
 
 		m_startData.year = stm->tm_year + 1900;
 		m_startData.month = stm->tm_mon + 1;
@@ -314,7 +314,7 @@ AX_BEGIN_NAMESPACE
 		time_t systime;
 		::time(&systime);
 
-		struct tm* stm = ::localtime(&systime);
+		struct tm *stm = ::localtime(&systime);
 
 		ushort_t year = stm->tm_year + 1900;
 		ushort_t month = stm->tm_mon + 1;
@@ -382,7 +382,7 @@ AX_BEGIN_NAMESPACE
 #endif
 
 	void DateTime::update(int curtime) {
-		Data& data = m_curData;
+		Data &data = m_curData;
 
 		m_curMilliseconds = curtime;
 
@@ -524,13 +524,13 @@ AX_BEGIN_NAMESPACE
 		return days; 
 	}
 
-	void DateTime::lunarYearToTianganDizhi(ushort_t lunarYear, ushort_t& tiangan, ushort_t& dizhi) {
+	void DateTime::lunarYearToTianganDizhi(ushort_t lunarYear, ushort_t &tiangan, ushort_t &dizhi) {
 		tiangan = (lunarYear - 4) % 10;
 		dizhi = (lunarYear - 4) % 12;
 	}
 
 	ushort_t DateTime::getLeapMonth(ushort_t lunarYear) {
-		byte_t& flag = gLunarMonth[(lunarYear - START_YEAR)/2];  
+		byte_t &flag = gLunarMonth[(lunarYear - START_YEAR)/2];  
 		return  (lunarYear - START_YEAR) % 2 ? flag & 0x0f : flag >> 4;  
 	}
 	  
@@ -582,13 +582,13 @@ AX_BEGIN_NAMESPACE
 	}
 	  
 
-	ushort_t DateTime::getLunarDate(ushort_t year, ushort_t month, ushort_t day, ushort_t &lunarYear, ushort_t &lunarMonth, ushort_t &lunarDay, bool& leapMonth) {
+	ushort_t DateTime::getLunarDate(ushort_t year, ushort_t month, ushort_t day, ushort_t &lunarYear, ushort_t &lunarMonth, ushort_t &lunarDay, bool &leapMonth) {
 		l_calcLunarDate(lunarYear, lunarMonth, lunarDay, leapMonth, calcDateDiff(year, month, day)); 
 
 		return l_getLunarHolDay(year, month, day); 
 	}
 	  
-	void DateTime::l_calcLunarDate(ushort_t &year, ushort_t &month, ushort_t &day, bool& leapMonth, int span_days) {
+	void DateTime::l_calcLunarDate(ushort_t &year, ushort_t &month, ushort_t &day, bool &leapMonth, int span_days) {
 		// 阳历1901年2月19日为阴历1901年正月初一
 		// 阳历1901年1月1日到2月19日共有49天
 		if (span_days < 49) {

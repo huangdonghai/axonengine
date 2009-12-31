@@ -23,7 +23,7 @@ AX_BEGIN_NAMESPACE
 		RenderWind();
 		~RenderWind();
 
-		void setWindStrengthAndDirection(float strength, const Vector3& direction);
+		void setWindStrengthAndDirection(float strength, const Vector3 &direction);
 
 		// parameter setting
 		void reset(void);
@@ -38,35 +38,35 @@ AX_BEGIN_NAMESPACE
 		void setLeafRustling(float fLowWindAngle, float fHighWindAngle, float fLowWindSpeed, float fHighWindSpeed);
 
 		// parameter getting
-		void getWindResponse(float& fResponse, float& fReponseLimit);
-		void getWindStrengthAndDirection(float& fWindStrength, float& fWindDirectionX, float& fWindDirectionY, float& fWindDirectionZ);
+		void getWindResponse(float &fResponse, float &fReponseLimit);
+		void getWindStrengthAndDirection(float &fWindStrength, float &fWindDirectionX, float &fWindDirectionY, float &fWindDirectionZ);
 		float getMaxBendAngle(void);
-		void getExponents(float& fBranchExponent, float& fLeafExponent);
-		void getGusting(float& fGustStrength, float& fGustFrequency, float& fGustDuration);
-		void getBranchHorizontal(float& fLowWindAngle, float& fHighWindAngle, float& fLowWindSpeed, float& fHighWindSpeed);
-		void getBranchVertical(float& fLowWindAngle, float& fHighWindAngle, float& fLowWindSpeed, float& fHighWindSpeed);
-		void getLeafRocking(float& fLowWindAngle, float& fHighWindAngle, float& fLowWindSpeed, float& fHighWindSpeed);
-		void getLeafRustling(float& fLowWindAngle, float& fHighWindAngle, float& fLowWindSpeed, float& fHighWindSpeed);
+		void getExponents(float &fBranchExponent, float &fLeafExponent);
+		void getGusting(float &fGustStrength, float &fGustFrequency, float &fGustDuration);
+		void getBranchHorizontal(float &fLowWindAngle, float &fHighWindAngle, float &fLowWindSpeed, float &fHighWindSpeed);
+		void getBranchVertical(float &fLowWindAngle, float &fHighWindAngle, float &fLowWindSpeed, float &fHighWindSpeed);
+		void getLeafRocking(float &fLowWindAngle, float &fHighWindAngle, float &fLowWindSpeed, float &fHighWindSpeed);
+		void getLeafRustling(float &fLowWindAngle, float &fHighWindAngle, float &fLowWindSpeed, float &fHighWindSpeed);
 
 		// render interface
 		void advance(float fCurrentTime, bool bUpdateMatrices = true, bool bUpdateLeafAngleMatrices = false, float fCameraX = 0.0f, float fCameraY = 0.0f, float fCameraZ = 1.0f);
 		void updateSpeedTreeRT(void);
 #if 0
-		void updateTree(CSpeedTreeRT* pTree);
+		void updateTree(CSpeedTreeRT *pTree);
 #endif
 		float getFinalStrength(void);
 		unsigned int getNumWindMatrices(void) const;
-		float* getWindMatrix(unsigned int uiIndex) const;
+		float *getWindMatrix(unsigned int uiIndex) const;
 		unsigned int getNumLeafAngleMatrices(void) const;
-		float* getLeafAngleMatrix(unsigned int uiIndex) const;
-		bool getRustleAngles(FloatSeq& vAngles) const;  // assumes vector is already appropriately sized
-		bool getRockAngles(FloatSeq& vAngles) const;    // assumes vector is already appropriately sized
+		float *getLeafAngleMatrix(unsigned int uiIndex) const;
+		bool getRustleAngles(FloatSeq &vAngles) const;  // assumes vector is already appropriately sized
+		bool getRockAngles(FloatSeq &vAngles) const;    // assumes vector is already appropriately sized
 		void getWindMatrix(Matrix4 output[]) const;
 		void getLeafAngles(Vector4 output[]) const;
 
 		// blending SpeedWinds into this one
-		void interpolateParameters(RenderWind* pWind1, RenderWind* pWind2, float fInterpolation);
-		void blendParameters(RenderWind** pWinds, float* pWeights, unsigned int uiNumWinds);
+		void interpolateParameters(RenderWind *pWind1, RenderWind *pWind2, float fInterpolation);
+		void blendParameters(RenderWind** pWinds, float *pWeights, unsigned int uiNumWinds);
 
 	protected:
 		struct OscillationParams {

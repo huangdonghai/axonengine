@@ -4068,7 +4068,7 @@ GLAPI GLboolean APIENTRY glIsBuffer (GLuint);
 GLAPI void APIENTRY glBufferData (GLenum, GLsizeiptr, const GLvoid *, GLenum);
 GLAPI void APIENTRY glBufferSubData (GLenum, GLintptr, GLsizeiptr, const GLvoid *);
 GLAPI void APIENTRY glGetBufferSubData (GLenum, GLintptr, GLsizeiptr, GLvoid *);
-GLAPI GLvoid* APIENTRY glMapBuffer (GLenum, GLenum);
+GLAPI GLvoid *APIENTRY glMapBuffer (GLenum, GLenum);
 GLAPI GLboolean APIENTRY glUnmapBuffer (GLenum);
 GLAPI void APIENTRY glGetBufferParameteriv (GLenum, GLenum, GLint *);
 GLAPI void APIENTRY glGetBufferPointerv (GLenum, GLenum, GLvoid* *);
@@ -4699,7 +4699,7 @@ GLAPI GLboolean APIENTRY glIsBufferARB (GLuint);
 GLAPI void APIENTRY glBufferDataARB (GLenum, GLsizeiptrARB, const GLvoid *, GLenum);
 GLAPI void APIENTRY glBufferSubDataARB (GLenum, GLintptrARB, GLsizeiptrARB, const GLvoid *);
 GLAPI void APIENTRY glGetBufferSubDataARB (GLenum, GLintptrARB, GLsizeiptrARB, GLvoid *);
-GLAPI GLvoid* APIENTRY glMapBufferARB (GLenum, GLenum);
+GLAPI GLvoid *APIENTRY glMapBufferARB (GLenum, GLenum);
 GLAPI GLboolean APIENTRY glUnmapBufferARB (GLenum);
 GLAPI void APIENTRY glGetBufferParameterivARB (GLenum, GLenum, GLint *);
 GLAPI void APIENTRY glGetBufferPointervARB (GLenum, GLenum, GLvoid* *);
@@ -6171,10 +6171,10 @@ typedef void (APIENTRYP PFNGLWINDOWPOS4SVMESAPROC) (const GLshort *v);
 #define GL_IBM_multimode_draw_arrays 1
 #ifdef GL_GLEXT_PROTOTYPES
 GLAPI void APIENTRY glMultiModeDrawArraysIBM (const GLenum *, const GLint *, const GLsizei *, GLsizei, GLint);
-GLAPI void APIENTRY glMultiModeDrawElementsIBM (const GLenum *, const GLsizei *, GLenum, const GLvoid* const *, GLsizei, GLint);
+GLAPI void APIENTRY glMultiModeDrawElementsIBM (const GLenum *, const GLsizei *, GLenum, const GLvoid *const *, GLsizei, GLint);
 #endif /* GL_GLEXT_PROTOTYPES */
 typedef void (APIENTRYP PFNGLMULTIMODEDRAWARRAYSIBMPROC) (const GLenum *mode, const GLint *first, const GLsizei *count, GLsizei primcount, GLint modestride);
-typedef void (APIENTRYP PFNGLMULTIMODEDRAWELEMENTSIBMPROC) (const GLenum *mode, const GLsizei *count, GLenum type, const GLvoid* const *indices, GLsizei primcount, GLint modestride);
+typedef void (APIENTRYP PFNGLMULTIMODEDRAWELEMENTSIBMPROC) (const GLenum *mode, const GLsizei *count, GLenum type, const GLvoid *const *indices, GLsizei primcount, GLint modestride);
 #endif
 
 #ifndef GL_IBM_vertex_array_lists
@@ -7128,7 +7128,7 @@ typedef void (APIENTRYP PFNGLPRIMITIVERESTARTINDEXNVPROC) (GLuint index);
 #ifndef GL_ATI_map_object_buffer
 #define GL_ATI_map_object_buffer 1
 #ifdef GL_GLEXT_PROTOTYPES
-GLAPI GLvoid* APIENTRY glMapObjectBufferATI (GLuint);
+GLAPI GLvoid *APIENTRY glMapObjectBufferATI (GLuint);
 GLAPI void APIENTRY glUnmapObjectBufferATI (GLuint);
 #endif /* GL_GLEXT_PROTOTYPES */
 typedef GLvoid* (APIENTRYP PFNGLMAPOBJECTBUFFERATIPROC) (GLuint buffer);

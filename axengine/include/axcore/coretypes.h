@@ -178,7 +178,7 @@ AX_BEGIN_NAMESPACE
 	typedef long long longlong_t;
 	typedef unsigned long long ulonglong_t;
 #endif
-	typedef void* handle_t;
+	typedef void *handle_t;
 #if 0
 	typedef float Float;
 	typedef double Double;
@@ -225,7 +225,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 	template<typename T>
-	void SafeClearContainer(T& t) {
+	void SafeClearContainer(T &t) {
 		T::iterator it = t.begin();
 		for (; it != t.end(); ++it) {
 			SafeDelete(*it);
@@ -310,8 +310,8 @@ AX_BEGIN_NAMESPACE
 		if (size == 1) return val;
 
 		T out;
-		byte_t* inp = reinterpret_cast<byte_t*>(&val);
-		byte_t* outp = reinterpret_cast<byte_t*>(&out);
+		byte_t *inp = reinterpret_cast<byte_t*>(&val);
+		byte_t *outp = reinterpret_cast<byte_t*>(&out);
 
 		for (size_t i=0; i<size; i++) {
 			outp[i] = inp[size-i-1];
@@ -357,14 +357,14 @@ AX_BEGIN_NAMESPACE
 		typedef ResourcePtr<T>	ThisType;
 	public:
 		typedef T ValueType;
-		typedef ValueType* Pointer;
+		typedef ValueType *Pointer;
 		typedef const Pointer ConstPointer;
 
 		ResourcePtr() : mObj(NULL) {}
-		ResourcePtr(T* obj) : mObj(obj) {
+		ResourcePtr(T *obj) : mObj(obj) {
 			SafeAddRef(mObj);
 		}
-		ResourcePtr(const ThisType& other) : mObj(other.mObj) {
+		ResourcePtr(const ThisType &other) : mObj(other.mObj) {
 			SafeAddRef(mObj);
 		}
 
@@ -378,19 +378,19 @@ AX_BEGIN_NAMESPACE
 			Clear();
 		}
 
-		ThisType& Attach(Pointer p) {
+		ThisType &Attach(Pointer p) {
 			Clear();
 			mObj = p;
 			SafeAddRef(mObj);
 			return *this;
 		}
 
-		ThisType& operator=(Pointer p) {
+		ThisType &operator=(Pointer p) {
 			Attach(p);
 			return *this;
 		}
 
-		ThisType& operator=(const ThisType& other) {
+		ThisType &operator=(const ThisType &other) {
 			Clear();
 			mObj = other.mObj;
 			if (mObj)
@@ -399,7 +399,7 @@ AX_BEGIN_NAMESPACE
 		}
 
 		template< typename Q >
-		ThisType& operator=(const ResourcePtr<Q> other) {
+		ThisType &operator=(const ResourcePtr<Q> other) {
 			Clear();
 			mObj = dynamic_cast<Pointer>(other.GetPointer());
 			if (mObj)
@@ -408,15 +408,15 @@ AX_BEGIN_NAMESPACE
 			return *this;
 		}
 
-		T* operator->() const { return mObj; }
+		T *operator->() const { return mObj; }
 		operator T*() const { return mObj; }
-		T& operator*() const { return *mObj; }
+		T &operator*() const { return *mObj; }
 
 		bool IsEmpty() const { return mObj == NULL; }
 		bool IsValid() const { return (mObj != 0); }
 		void Clear() { SafeRelease(mObj); }
 
-		bool operator==(const ThisType& other) {
+		bool operator==(const ThisType &other) {
 			return mObj == other.mObj;
 		}
 
@@ -427,7 +427,7 @@ AX_BEGIN_NAMESPACE
 		Pointer GetPointer() const { return mObj; }
 
 	private:
-		ValueType* mObj;
+		ValueType *mObj;
 	};
 
 	typedef ResourcePtr<Resource>	ResPtr;

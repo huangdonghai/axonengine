@@ -58,7 +58,7 @@ namespace {
 } // anonymous namespace
 
 //------------------------------------------------------------------------------
-RectLayout::RectLayout(TrackWidget* widget) : m_widget(widget)
+RectLayout::RectLayout(TrackWidget *widget) : m_widget(widget)
 {
 	setFlag(ItemClipsToShape);
 	setFlag(ItemClipsChildrenToShape);
@@ -116,7 +116,7 @@ void RectLayout::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
 
 //------------------------------------------------------------------------------
 
-ValueAxis::ValueAxis(TrackWidget* widget) : RectLayout(widget)
+ValueAxis::ValueAxis(TrackWidget *widget) : RectLayout(widget)
 {
 	m_minValue = 0.0f;
 	m_maxValue = 100.0f;
@@ -136,7 +136,7 @@ void ValueAxis::paint( QPainter *painter, const QStyleOptionGraphicsItem *option
 
 //------------------------------------------------------------------------------
 
-TrackNameItem::TrackNameItem( AnimWrapper* wrapper )
+TrackNameItem::TrackNameItem( AnimWrapper *wrapper )
 	: m_wrapper(wrapper)
 {}
 
@@ -154,7 +154,7 @@ void TrackNameItem::paint( QPainter * painter, const QStyleOptionGraphicsItem * 
 
 	QRectF left_rect(0, 0, LEFT_WIDTH, TRACK_HEIGHT);
 
-	const QPalette& pal = widget->palette();
+	const QPalette &pal = widget->palette();
 
 #if 0
 	painter->setPen(pal.color(QPalette::Window));
@@ -169,26 +169,26 @@ void TrackNameItem::paint( QPainter * painter, const QStyleOptionGraphicsItem * 
 }
 
 //------------------------------------------------------------------------------
-AnimWrapper::AnimWrapper(TrackWidget* widget) : m_widget(widget), m_parent(0)
+AnimWrapper::AnimWrapper(TrackWidget *widget) : m_widget(widget), m_parent(0)
 {
 	init();
 }
 
-AnimWrapper::AnimWrapper(AnimWrapper* parent) : m_widget(0), m_parent(parent)
-{
-	if (m_parent)
-		m_widget = m_parent->m_widget;
-	init();
-}
-
-AnimWrapper::AnimWrapper(AnimWrapper* parent, Control* anim) : m_widget(0), m_parent(parent)
+AnimWrapper::AnimWrapper(AnimWrapper *parent) : m_widget(0), m_parent(parent)
 {
 	if (m_parent)
 		m_widget = m_parent->m_widget;
 	init();
 }
 
-AnimWrapper::AnimWrapper(AnimWrapper* parent, AnimWrapper* preceding) : m_widget(0), m_parent(parent)
+AnimWrapper::AnimWrapper(AnimWrapper *parent, Control *anim) : m_widget(0), m_parent(parent)
+{
+	if (m_parent)
+		m_widget = m_parent->m_widget;
+	init();
+}
+
+AnimWrapper::AnimWrapper(AnimWrapper *parent, AnimWrapper *preceding) : m_widget(0), m_parent(parent)
 {
 	if (m_parent)
 		m_widget = m_parent->m_widget;
@@ -227,13 +227,13 @@ void AnimWrapper::init()
 	m_trackNameItem = new TrackNameItem(this);
 //	m_trackViewItem = new TrackViewItem(this);
 
-	RectLayout* track_left = m_widget->getLayoutFrame(TrackWidget::kTrackLeft);
+	RectLayout *track_left = m_widget->getLayoutFrame(TrackWidget::kTrackLeft);
 	m_trackNameItem->setParentItem(track_left);
 }
 
 //------------------------------------------------------------------------------
 
-TimeAxis::TimeAxis(TrackWidget* widget) : RectLayout(widget)
+TimeAxis::TimeAxis(TrackWidget *widget) : RectLayout(widget)
 {
 }
 
@@ -250,7 +250,7 @@ void TimeAxis::paint( QPainter *painter, const QStyleOptionGraphicsItem *option,
 	if (!widget)
 		return;
 
-	const QPalette& pal = widget->palette();
+	const QPalette &pal = widget->palette();
 
 	QRectF r = m_rect;
 
@@ -299,7 +299,7 @@ void TimeAxis::paint( QPainter *painter, const QStyleOptionGraphicsItem *option,
 }
 
 //------------------------------------------------------------------------------
-CurveRight::CurveRight( TrackWidget* widget ) : RectLayout(widget)
+CurveRight::CurveRight( TrackWidget *widget ) : RectLayout(widget)
 {
 	m_isPanning = false;
 	m_panningTicks = 0;
@@ -312,7 +312,7 @@ CurveRight::~CurveRight()
 void CurveRight::paint( QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget /*= 0*/ )
 {}
 
-void CurveRight::mouseMoveEvent( QGraphicsSceneMouseEvent* event )
+void CurveRight::mouseMoveEvent( QGraphicsSceneMouseEvent *event )
 {
 	if (!m_isPanning)
 		return;
@@ -320,7 +320,7 @@ void CurveRight::mouseMoveEvent( QGraphicsSceneMouseEvent* event )
 	m_widget->offsetAxis(event->pos(), m_panningTicks, m_panningValue);
 }
 
-void CurveRight::mousePressEvent( QGraphicsSceneMouseEvent* event )
+void CurveRight::mousePressEvent( QGraphicsSceneMouseEvent *event )
 {
 	if (event->button() != Qt::MidButton)
 		return;
@@ -333,7 +333,7 @@ void CurveRight::mousePressEvent( QGraphicsSceneMouseEvent* event )
 	setCursor(Qt::ClosedHandCursor);
 }
 
-void CurveRight::mouseReleaseEvent( QGraphicsSceneMouseEvent* event )
+void CurveRight::mouseReleaseEvent( QGraphicsSceneMouseEvent *event )
 {
 	m_isPanning = false;
 	unsetCursor();
@@ -345,7 +345,7 @@ void CurveRight::wheelEvent( QGraphicsSceneWheelEvent * event )
 }
 
 //------------------------------------------------------------------------------
-TrackRight::TrackRight( TrackWidget* widget ) : RectLayout(widget)
+TrackRight::TrackRight( TrackWidget *widget ) : RectLayout(widget)
 {
 	m_isPanning = false;
 	m_panningTicks = 0;
@@ -359,7 +359,7 @@ void TrackRight::paint( QPainter *painter, const QStyleOptionGraphicsItem *optio
 
 }
 
-void TrackRight::mouseMoveEvent( QGraphicsSceneMouseEvent* event )
+void TrackRight::mouseMoveEvent( QGraphicsSceneMouseEvent *event )
 {
 	if (!m_isPanning)
 		return;
@@ -368,7 +368,7 @@ void TrackRight::mouseMoveEvent( QGraphicsSceneMouseEvent* event )
 	m_widget->offsetTimeAxis(hpos, m_panningTicks);
 }
 
-void TrackRight::mousePressEvent( QGraphicsSceneMouseEvent* event )
+void TrackRight::mousePressEvent( QGraphicsSceneMouseEvent *event )
 {
 	if (event->button() != Qt::MidButton)
 		return;
@@ -380,7 +380,7 @@ void TrackRight::mousePressEvent( QGraphicsSceneMouseEvent* event )
 	setCursor(Qt::ClosedHandCursor);
 }
 
-void TrackRight::mouseReleaseEvent( QGraphicsSceneMouseEvent* event )
+void TrackRight::mouseReleaseEvent( QGraphicsSceneMouseEvent *event )
 {
 	m_isPanning = false;
 	unsetCursor();
@@ -428,7 +428,7 @@ TrackWidget::TrackWidget(QWidget *parent)
 	m_scene->addItem(m_frameTrackRight);
 	m_scene->addItem(m_valueAxis);
 
-	AnimWrapper* item = new AnimWrapper(this);
+	AnimWrapper *item = new AnimWrapper(this);
 	addAnimWrapper(item);
 	addAnimWrapper(new AnimWrapper(this));
 
@@ -452,7 +452,7 @@ void TrackWidget::resizeEvent(QResizeEvent * event)
 	relayout();
 }
 
-void TrackWidget::addAnimWrapper(AnimWrapper* track)
+void TrackWidget::addAnimWrapper(AnimWrapper *track)
 {
 	m_wrappers.push_back(track);
 	track->m_widget = this;
@@ -483,7 +483,7 @@ void TrackWidget::relayout()
 	int track_index = 0;
 
 	for (; it != m_wrappers.end(); ++it) {
-		AnimWrapper* track = *it;
+		AnimWrapper *track = *it;
 		track->setTrackIndex(track_index);
 		track_index++;
 	}
@@ -527,7 +527,7 @@ void TrackWidget::relayout()
 void TrackWidget::drawBackground( QPainter *painter, const QRectF &rectf )
 {
 	QRectF rect = this->rect();
-	const QPalette& pal = this->palette();
+	const QPalette &pal = this->palette();
 
 	// draw track background
 	QList<AnimWrapper*>::const_iterator it = m_wrappers.begin();
@@ -611,7 +611,7 @@ void TrackWidget::drawBackground( QPainter *painter, const QRectF &rectf )
 }
 
 
-RectLayout* TrackWidget::getLayoutFrame( LayoutFrameType lft ) const
+RectLayout *TrackWidget::getLayoutFrame( LayoutFrameType lft ) const
 {
 	switch (lft) {
 	case kCurveLeft:
@@ -681,7 +681,7 @@ void TrackWidget::scaleTimeAxis(int hpos, float factor)
 	offsetTimeAxis(hpos, ticks);
 }
 
-void TrackWidget::offsetAxis( const QPointF& pos, int ticks, float val )
+void TrackWidget::offsetAxis( const QPointF &pos, int ticks, float val )
 {
 	m_timeAxisOffset = pos.x() - (ticks - getStartTime_Show()) * m_timeAxisPixelsPerTick;
 //	pos.y() = m_y0 - 1 - (val - getMinValue_Show()) * m_valueAxisPixelsPerUnit - m_valueAxisOffset;
@@ -690,7 +690,7 @@ void TrackWidget::offsetAxis( const QPointF& pos, int ticks, float val )
 	relayout();
 }
 
-void TrackWidget::scaleAxis( const QPointF& pos, float factor )
+void TrackWidget::scaleAxis( const QPointF &pos, float factor )
 {
 	int ticks = hposTicks(pos.x());
 	float val = vposValue(pos.y());

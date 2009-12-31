@@ -11,12 +11,12 @@ read the license and understand and accept it fully.
 #include "materialeditor.h"
 #include "filedialog.h"
 
-static const char* gnRoot = "root";
-static const char* gnTexAnim = "texAnim";
-static const char* gnVertexDeform = "vtDeform";
-static const char* gnSampler = "sampler";
-static const char* gnRgbAnim = "rgbAnim";
-static const char* gnAlphaAnim = "alphaAnim";
+static const char *gnRoot = "root";
+static const char *gnTexAnim = "texAnim";
+static const char *gnVertexDeform = "vtDeform";
+static const char *gnSampler = "sampler";
+static const char *gnRgbAnim = "rgbAnim";
+static const char *gnAlphaAnim = "alphaAnim";
 
 
 MaterialEditor::MaterialEditor(QWidget *parent)
@@ -46,7 +46,7 @@ void MaterialEditor::initWidgets() {
 	StringSeq ss = g_fileSystem->fileListByExts("shaders/", ".fx", File::List_nodirectory|File::List_sort);
 	ui.shaderName->clear();
 
-	AX_FOREACH(const String& s, ss) {
+	AX_FOREACH(const String &s, ss) {
 		QString qs = u2q(PathUtil::getName(s));
 
 		if (!qs[0].isLetter()) {
@@ -62,8 +62,8 @@ void MaterialEditor::initWidgets() {
 	}
 }
 
-void MaterialEditor::on_matTree_itemActivated(QTreeWidgetItem* item,int) {
-	FileItem* fitem = (FileItem*)item;
+void MaterialEditor::on_matTree_itemActivated(QTreeWidgetItem *item,int) {
+	FileItem *fitem = (FileItem*)item;
 
 	g_globalData->curMaterial = u2q(fitem->getFileInfo().fullpath);
 
@@ -74,7 +74,7 @@ void MaterialEditor::on_actionRefresh_triggered() {
 
 }
 
-void MaterialEditor::initFromMaterial(const String& name) {
+void MaterialEditor::initFromMaterial(const String &name) {
 	MaterialPtr mat = Material::load(name);
 
 #if 0
@@ -83,24 +83,24 @@ void MaterialEditor::initFromMaterial(const String& name) {
 	}
 #endif
 
-	Shader* shader = mat->getShaderTemplate();
+	Shader *shader = mat->getShaderTemplate();
 	AX_ASSERT(shader);
 
 #if 0
 	// init shader features
-	const StringSeq& features = shader->getFeatures();
-	const StringSeq& fnames = shader->getFeatureNames();
-	const StringSeq& fdescs = shader->getFeatureDescs();
+	const StringSeq &features = shader->getFeatures();
+	const StringSeq &fnames = shader->getFeatureNames();
+	const StringSeq &fdescs = shader->getFeatureDescs();
 
 	for (size_t i = 0; i < features.size(); i++) {
-		QCheckBox* cb = new QCheckBox(ui.features);
+		QCheckBox *cb = new QCheckBox(ui.features);
 		cb->setText(u2q(fnames[i]));
 		cb->setToolTip(u2q(fdescs [i]));
 		ui.features->layout()->addWidget(cb);
 	}
 
 	// init shader parameter
-	Render::ParameterAnno* pa;
+	Render::ParameterAnno *pa;
 	ui.parameters->setInitialInput(nullptr);
 	PropertyCollection *collection = new PropertyCollection(QLatin1String("<root>"));
 

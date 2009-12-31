@@ -27,7 +27,7 @@ AX_BEGIN_NAMESPACE
 		virtual void doThink();
 		virtual bool isPlayer() const { return true; }
 
-		void setMatrix(const AffineMat& matrix);
+		void setMatrix(const AffineMat &matrix);
 		AffineMat getMatrix() const;
 		AffineMat getThirdPersonMatrix() const;
 
@@ -39,8 +39,8 @@ AX_BEGIN_NAMESPACE
 
 
 	private:
-		HavokModel* m_body;
-		PhysicsPlayer* m_physicsPlayer;
+		HavokModel *m_body;
+		PhysicsPlayer *m_physicsPlayer;
 		int m_health;
 	};
 

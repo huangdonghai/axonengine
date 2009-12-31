@@ -20,7 +20,7 @@ extern "C" {
 
 AX_USE_NAMESPACE;
 
-static lua_State* L;
+static lua_State *L;
 
 static void l_message(const char *pname, const char *msg)
 {
@@ -29,7 +29,7 @@ static void l_message(const char *pname, const char *msg)
 }
 
 
-static int xReport(lua_State *L, int status, const char* progname)
+static int xReport(lua_State *L, int status, const char *progname)
 {
 	if (status && !lua_isnil(L, -1)) {
 		const char *msg = lua_tostring(L, -1);
@@ -70,7 +70,7 @@ static int luaB_dofile (lua_State *L)
 	if (luaL_loadfile(L, fname) != 0) lua_error(L);
 #else
 	size_t filesize;
-	char* filebuf;
+	char *filebuf;
 
 	filesize = Axon::g_fileSystem->readFile(Axon::g_scriptSystem->getPackagePath() + fname, (void**)&filebuf);
 
@@ -87,7 +87,7 @@ static int luaB_dofile (lua_State *L)
 	return lua_gettop(L) - n;
 }
 
-static int luaB_registerClass(lua_State* L)
+static int luaB_registerClass(lua_State *L)
 {
 	const char *self = luaL_optstring(L, 1, NULL);
 	const char *base = luaL_optstring(L, 2, "");
@@ -169,7 +169,7 @@ static int loader_Lua (lua_State *L)
 	name = luaL_gsub(L, name, ".", "/");
 
 	size_t filesize;
-	char* filebuf;
+	char *filebuf;
 
 	filesize = Axon::g_fileSystem->readFile(Axon::g_scriptSystem->getPackagePath() + name + ".lua", (void**)&filebuf);
 
@@ -220,12 +220,12 @@ static void replaceLoader()
 
 AX_BEGIN_NAMESPACE
 
-static inline void xPushString(lua_State* L, const String& s)
+static inline void xPushString(lua_State *L, const String &s)
 {
 	lua_pushlstring(L, s.c_str(), s.length());
 }
 
-static Variant xReadStack(lua_State* L, int index)
+static Variant xReadStack(lua_State *L, int index)
 {
 	Variant ret;
 
@@ -256,7 +256,7 @@ static Variant xReadStack(lua_State* L, int index)
 }
 
 
-static void xPushObject(lua_State* L, Object* obj)
+static void xPushObject(lua_State *L, Object *obj)
 {
 #if 0
 	lua_boxpointer(L, (void*)obj);
@@ -268,7 +268,7 @@ static void xPushObject(lua_State* L, Object* obj)
 #endif
 }
 
-static void xPushStack(lua_State* L, const Variant& val)
+static void xPushStack(lua_State *L, const Variant &val)
 {
 	switch (val.type) {
 	case Variant::kBool:
@@ -290,7 +290,7 @@ static void xPushStack(lua_State* L, const Variant& val)
 		lua_newtable(L);
 		int index = lua_gettop(L);
 		LuaTable t(index);
-		Vector3* v = (Vector3*)val.minibuf;
+		Vector3 *v = (Vector3*)val.minibuf;
 		t.set("x", v->x);
 		t.set("y", v->y);
 		t.set("z", v->z);
@@ -300,7 +300,7 @@ static void xPushStack(lua_State* L, const Variant& val)
 		lua_newtable(L);
 		int index = lua_gettop(L);
 		LuaTable t(index);
-		Point* v = (Point*)val.minibuf;
+		Point *v = (Point*)val.minibuf;
 		t.set("x", v->x);
 		t.set("y", v->y);
 		break;
@@ -309,7 +309,7 @@ static void xPushStack(lua_State* L, const Variant& val)
 		lua_newtable(L);
 		int index = lua_gettop(L);
 		LuaTable t(index);
-		Rect* v = (Rect*)val.minibuf;
+		Rect *v = (Rect*)val.minibuf;
 		t.set("x", v->x);
 		t.set("y", v->y);
 		t.set("width" , v->width);
@@ -320,7 +320,7 @@ static void xPushStack(lua_State* L, const Variant& val)
 		lua_newtable(L);
 		int index = lua_gettop(L);
 		LuaTable t(index);
-		Rgb* v = (Rgb*)val.minibuf;
+		Rgb *v = (Rgb*)val.minibuf;
 		t.set("r", v->r/255.0f);
 		t.set("g", v->g/255.0f);
 		t.set("b", v->b/255.0f);
@@ -333,7 +333,7 @@ static void xPushStack(lua_State* L, const Variant& val)
 	}
 }
 
-static Object* xGetObject(lua_State* L, int index=1)
+static Object *xGetObject(lua_State *L, int index=1)
 {
 	if (!lua_istable(L, index)) {
 		return 0;
@@ -346,7 +346,7 @@ static Object* xGetObject(lua_State* L, int index=1)
 		lua_pop(L, 1);
 		return 0;
 	}
-	Object* obj = (Object*)lua_touserdata(L, -1);
+	Object *obj = (Object*)lua_touserdata(L, -1);
 	lua_pop(L, 1);
 
 	return obj;
@@ -356,14 +356,14 @@ static int xMetaCall(lua_State *L)
 {
 	// func id
 	luaL_checktype(L,lua_upvalueindex(1), LUA_TLIGHTUSERDATA);
-	Member* member = (Member*)lua_topointer(L, lua_upvalueindex(1));
+	Member *member = (Member*)lua_topointer(L, lua_upvalueindex(1));
 
 	// this object
 #if 0
 	luaL_checktype(L, 1, LUA_TUSERDATA);
-	Object* obj = (Object*)lua_unboxpointer(L, 1);
+	Object *obj = (Object*)lua_unboxpointer(L, 1);
 #else
-	Object* obj = xGetObject(L);
+	Object *obj = xGetObject(L);
 	if (!obj) {
 		return 0;
 	}
@@ -399,17 +399,17 @@ static int xMetaIndex(lua_State *L)
 {
 #if 0
 	luaL_checktype(L, 1, LUA_TUSERDATA);
-	Object* obj = (Object*)lua_unboxpointer(L, 1);
+	Object *obj = (Object*)lua_unboxpointer(L, 1);
 #else
-	Object* obj = xGetObject(L);
+	Object *obj = xGetObject(L);
 	if (!obj) {
 		return 0;
 	}
 #endif
-	const char* name = luaL_checkstring(L,2);
+	const char *name = luaL_checkstring(L,2);
 
 	// Is Attribute ?
-	Member* member = obj->findMember(name);
+	Member *member = obj->findMember(name);
 	if (!member)
 		return 0;
 
@@ -429,16 +429,16 @@ static int xMetaNewIndex(lua_State *L)
 {
 #if 0
 	luaL_checktype(L, 1, LUA_TUSERDATA);
-	Object* obj = (Object*)lua_unboxpointer(L, 1);
+	Object *obj = (Object*)lua_unboxpointer(L, 1);
 #else
-	Object* obj = xGetObject(L);
+	Object *obj = xGetObject(L);
 	if (!obj) {
 		return 0;
 	}
 #endif
-	const char* name = luaL_checkstring( L, 2);
+	const char *name = luaL_checkstring( L, 2);
 
-	Member* member = obj->findMember(name);
+	Member *member = obj->findMember(name);
 
 	if (!member) {
 		lua_rawset(L, 1);
@@ -453,7 +453,7 @@ static int xMetaNewIndex(lua_State *L)
 }
 
 // find a scoped variable in global
-static bool xGetGlobalScoped(lua_State* L, const char* name)
+static bool xGetGlobalScoped(lua_State *L, const char *name)
 {
 	char buf[32];
 	int num = 0;
@@ -498,7 +498,7 @@ static bool xGetGlobalScoped(lua_State* L, const char* name)
 }
 
 // find a scoped variable in stack top's table, table is popped
-static bool xGetScoped(lua_State* L, const char* name)
+static bool xGetScoped(lua_State *L, const char *name)
 {
 	char buf[32];
 	int num = 0;
@@ -540,7 +540,7 @@ static bool xGetScoped(lua_State* L, const char* name)
 	return true;
 }
 
-static bool xSetScoped(lua_State* L, const char* name, const Variant& val)
+static bool xSetScoped(lua_State *L, const char *name, const Variant &val)
 {
 	char buf[32];
 	int num = 0;
@@ -585,7 +585,7 @@ static bool xSetScoped(lua_State* L, const char* name, const Variant& val)
 	return true;
 }
 
-static int xPcall(lua_State* L, int numarg, int numresult)
+static int xPcall(lua_State *L, int numarg, int numresult)
 {
 	int s = lua_pcall(L, numarg, numresult, 0);
 	return xReport(L, s, 0);
@@ -619,7 +619,7 @@ void LuaTable::endRead() const
 	lua_settop(L,m_stackTop);
 }
 
-Variant LuaTable::get(const String& n) const
+Variant LuaTable::get(const String &n) const
 {
 	AX_ASSURE(m_isReading);
 
@@ -646,7 +646,7 @@ Variant LuaTable::get(int n) const
 	return xReadStack(L, -1);
 }
 
-void LuaTable::set(const String& n, const Variant& v)
+void LuaTable::set(const String &n, const Variant &v)
 {
 	lua_pushstring(L, n.c_str());
 	xPushStack(L, v);
@@ -697,10 +697,10 @@ Rect LuaTable::toRect() const
 	return result;
 }
 
-Object* LuaTable::toObject() const
+Object *LuaTable::toObject() const
 {
 	beginRead();
-	Object* result = get("__object");
+	Object *result = get("__object");
 	endRead();
 	return result;
 }
@@ -715,7 +715,7 @@ void LuaTable::beginIterator() const
 	m_isIteratoring = true;
 }
 
-bool LuaTable::nextIterator(Variant& k, Variant& v) const
+bool LuaTable::nextIterator(Variant &k, Variant &v) const
 {
 	AX_ASSURE(m_isIteratoring);
 
@@ -745,7 +745,7 @@ void LuaTable::endIterator() const
 // class Object
 //--------------------------------------------------------------------------
 
-MetaInfo* Object::m_metaInfo = nullptr;
+MetaInfo *Object::m_metaInfo = nullptr;
 
 Object::Object()
 {
@@ -774,7 +774,7 @@ Object::Object()
 }
 
 #if 0
-Object::Object(const String& objname)
+Object::Object(const String &objname)
 {
 	m_classInfo = 0;
 
@@ -817,12 +817,12 @@ Object::~Object()
 //		gScriptSystem->removeObject(this);
 }
 
-Member* Object::findMember(const char* name) const
+Member *Object::findMember(const char *name) const
 {
-	MetaInfo* typeinfo = getMetaInfo();
+	MetaInfo *typeinfo = getMetaInfo();
 
 	while (typeinfo) {
-		Member* member = typeinfo->findMember(name);
+		Member *member = typeinfo->findMember(name);
 		if (member) return member;
 		typeinfo = typeinfo->getBaseTypeInfo();
 	}
@@ -839,7 +839,7 @@ Member* Object::findMember(const char* name) const
 	return it->second;
 }
 
-MetaInfo* Object::getMetaInfo() const
+MetaInfo *Object::getMetaInfo() const
 {
 	if (!m_metaInfo) {
 		Object::registerMetaInfo();
@@ -849,7 +849,7 @@ MetaInfo* Object::getMetaInfo() const
 	return m_metaInfo;
 }
 
-MetaInfo* Object::registerMetaInfo()
+MetaInfo *Object::registerMetaInfo()
 {
 	if (!m_metaInfo) {
 		m_metaInfo = new MetaInfo_<Object>("Object", nullptr);
@@ -861,7 +861,7 @@ MetaInfo* Object::registerMetaInfo()
 }
 
 
-void Object::set_objectName(const String& name)
+void Object::set_objectName(const String &name)
 {
 	setObjectName(name, false);
 }
@@ -872,9 +872,9 @@ String Object::get_objectName() const
 }
 
 
-bool Object::inherits(const char* cls) const
+bool Object::inherits(const char *cls) const
 {
-	MetaInfo* typeinfo = getMetaInfo();
+	MetaInfo *typeinfo = getMetaInfo();
 
 	for (; typeinfo; typeinfo=typeinfo->getBaseTypeInfo()) {
 		if (Strequ(cls, typeinfo->getTypeName())) {
@@ -885,9 +885,9 @@ bool Object::inherits(const char* cls) const
 	return false;
 }
 
-Variant Object::getProperty(const char* name) const
+Variant Object::getProperty(const char *name) const
 {
-	Member* m = findMember(name);
+	Member *m = findMember(name);
 	if (!m || !m->isProperty()) {
 		return Variant();
 	}
@@ -895,9 +895,9 @@ Variant Object::getProperty(const char* name) const
 	return m->getProperty(this);
 }
 
-bool Object::setProperty(const char* name, const Variant& value)
+bool Object::setProperty(const char *name, const Variant &value)
 {
-	Member* m = findMember(name);
+	Member *m = findMember(name);
 	if (!m || !m->isProperty() || m->isConst()) {
 		return false;
 	}
@@ -907,9 +907,9 @@ bool Object::setProperty(const char* name, const Variant& value)
 	return true;
 }
 
-bool Object::setProperty(const char* name, const char* value)
+bool Object::setProperty(const char *name, const char *value)
 {
-	Member* member = findMember(name);
+	Member *member = findMember(name);
 
 	if (!member) {
 		return false;
@@ -930,18 +930,18 @@ bool Object::setProperty(const char* name, const char* value)
 	return true;
 }
 
-void Object::writeProperties(File* f, int indent) const
+void Object::writeProperties(File *f, int indent) const
 {
 	String indstr(indent*2, ' ');
 #define INDENT if (indent) f->printf("%s", indstr.c_str());
 
 	// write properties
-	MetaInfo* typeinfo = getMetaInfo();
+	MetaInfo *typeinfo = getMetaInfo();
 
 	while (typeinfo) {
-		const MemberSeq& members = typeinfo->getMembers();
+		const MemberSeq &members = typeinfo->getMembers();
 
-		AX_FOREACH(Member* m, members) {
+		AX_FOREACH(Member *m, members) {
 			if (!m->isProperty()) {
 				continue;
 			}
@@ -957,12 +957,12 @@ void Object::writeProperties(File* f, int indent) const
 	}
 
 	// write script properties
-	const ClassInfo* classinfo = getClassInfo();
+	const ClassInfo *classinfo = getClassInfo();
 	if (!classinfo) return;
 
-	const ScriptPropSeq& props = classinfo->m_scriptPropSeq;
+	const ScriptPropSeq &props = classinfo->m_scriptPropSeq;
 
-	AX_FOREACH(ScriptProp* m, props) {
+	AX_FOREACH(ScriptProp *m, props) {
 		if (m->getPropKind() == ScriptProp::kGroup)
 			continue;
 
@@ -972,28 +972,28 @@ void Object::writeProperties(File* f, int indent) const
 #undef INDENT
 }
 
-void Object::readProperties(const TiXmlElement* node)
+void Object::readProperties(const TiXmlElement *node)
 {
-	const TiXmlAttribute* attr = node->FirstAttribute();
+	const TiXmlAttribute *attr = node->FirstAttribute();
 
 	for (; attr; attr = attr->Next()) {
 		this->setProperty(attr->Name(), attr->Value());
 	}
 }
 
-void Object::copyPropertiesFrom(const Object* rhs)
+void Object::copyPropertiesFrom(const Object *rhs)
 {
 	// write properties
-	MetaInfo* typeinfo = rhs->getMetaInfo();
+	MetaInfo *typeinfo = rhs->getMetaInfo();
 
 	while (typeinfo) {
 		// don't copy objectname
 		if (typeinfo == Object::m_metaInfo)
 			break;
 
-		const MemberSeq& members = typeinfo->getMembers();
+		const MemberSeq &members = typeinfo->getMembers();
 
-		AX_FOREACH(Member* m, members) {
+		AX_FOREACH(Member *m, members) {
 			if (!m->isProperty()) {
 				continue;
 			}
@@ -1009,12 +1009,12 @@ void Object::copyPropertiesFrom(const Object* rhs)
 	}
 
 	// write script properties
-	const ClassInfo* classinfo = getClassInfo();
+	const ClassInfo *classinfo = getClassInfo();
 	if (!classinfo) return;
 
-	const ScriptPropSeq& props = classinfo->m_scriptPropSeq;
+	const ScriptPropSeq &props = classinfo->m_scriptPropSeq;
 
-	AX_FOREACH(ScriptProp* m, props) {
+	AX_FOREACH(ScriptProp *m, props) {
 		if (m->getPropKind() == ScriptProp::kGroup)
 			continue;
 
@@ -1023,7 +1023,7 @@ void Object::copyPropertiesFrom(const Object* rhs)
 }
 
 
-void Object::initClassInfo(const ClassInfo* ci)
+void Object::initClassInfo(const ClassInfo *ci)
 {
 	int top = lua_gettop(L);
 
@@ -1069,7 +1069,7 @@ void Object::initClassInfo(const ClassInfo* ci)
 	// TODO: rebind to object name
 }
 
-void Object::setObjectName(const String& name, bool force)
+void Object::setObjectName(const String &name, bool force)
 {
 	if (m_objectName == name && !force) {
 		return;
@@ -1173,7 +1173,7 @@ void Object::invoke_onPropertyChanged()
 	invokeCallback("onPropertyChanged");
 }
 
-void Object::invokeCallback(const String& callback)
+void Object::invokeCallback(const String &callback)
 {
 	int top = lua_gettop(L);
 
@@ -1197,7 +1197,7 @@ void Object::invokeCallback(const String& callback)
 	return;
 }
 
-void Object::invokeCallback(const String& callback, const Variant& param)
+void Object::invokeCallback(const String &callback, const Variant &param)
 {
 	int top = lua_gettop(L);
 
@@ -1224,9 +1224,9 @@ void Object::invokeCallback(const String& callback, const Variant& param)
 	return;
 }
 
-void Object::invokeMethod(const char* name, const Variant& arg1)
+void Object::invokeMethod(const char *name, const Variant &arg1)
 {
-	Member* member = findMember(name);
+	Member *member = findMember(name);
 
 	if (!member || !member->isMethod()) {
 		return;
@@ -1237,9 +1237,9 @@ void Object::invokeMethod(const char* name, const Variant& arg1)
 	member->invoke(this, vs);
 }
 
-void Object::invokeMethod(const char* name, const Variant& arg1, const Variant& arg2)
+void Object::invokeMethod(const char *name, const Variant &arg1, const Variant &arg2)
 {
-	Member* member = findMember(name);
+	Member *member = findMember(name);
 
 	if (!member || !member->isMethod()) {
 		return;
@@ -1251,7 +1251,7 @@ void Object::invokeMethod(const char* name, const Variant& arg1, const Variant& 
 	member->invoke(this, vs);
 }
 
-bool Object::isClass(const char* classname) const
+bool Object::isClass(const char *classname) const
 {
 	if (!m_classInfo) {
 		return false;
@@ -1260,7 +1260,7 @@ bool Object::isClass(const char* classname) const
 	return m_classInfo->m_className == classname;
 }
 
-void Object::setRuntime(const char* name, const Variant& val)
+void Object::setRuntime(const char *name, const Variant &val)
 {
 	int top = lua_gettop(L);
 
@@ -1276,7 +1276,7 @@ void Object::setRuntime(const char* name, const Variant& val)
 	return;
 }
 
-Variant Object::getRuntime(const char* name)
+Variant Object::getRuntime(const char *name)
 {
 	int top = lua_gettop(L);
 
@@ -1299,7 +1299,7 @@ Variant Object::getRuntime(const char* name)
 // class ScriptSystem
 //--------------------------------------------------------------------------
 struct Connection {
-	Object* obj;
+	Object *obj;
 	String callname;
 };
 
@@ -1377,7 +1377,7 @@ void ScriptSystem::finalize()
 }
 
 #if 0
-void ScriptSystem::addObject(const String& name, Object* obj)
+void ScriptSystem::addObject(const String &name, Object *obj)
 {
 	xPushObject(L,obj);
 	xPushString(L, name);
@@ -1386,12 +1386,12 @@ void ScriptSystem::addObject(const String& name, Object* obj)
 	lua_remove(L, lua_gettop(L));
 }
 
-void ScriptSystem::removeObject(const String& name) {}
+void ScriptSystem::removeObject(const String &name) {}
 
-void ScriptSystem::removeObject(Object* obj) {}
+void ScriptSystem::removeObject(Object *obj) {}
 #endif
 
-void ScriptSystem::executeString(const String& text)
+void ScriptSystem::executeString(const String &text)
 {
 	int s = luaL_loadbuffer(L, text.c_str(), text.size(), 0);
 	if (s==0) {
@@ -1401,7 +1401,7 @@ void ScriptSystem::executeString(const String& text)
 	xReport(L, s, 0);
 }
 
-void ScriptSystem::executeString(const char* text)
+void ScriptSystem::executeString(const char *text)
 {
 	int s = luaL_loadstring(L, text);
 	if (s==0) {
@@ -1411,10 +1411,10 @@ void ScriptSystem::executeString(const char* text)
 	xReport(L, s, 0);
 }
 
-void ScriptSystem::executeFile(const String& filename)
+void ScriptSystem::executeFile(const String &filename)
 {
 	size_t filesize;
-	char* filebuf;
+	char *filebuf;
 
 	filesize = g_fileSystem->readFile(m_packagePath + filename, (void**)&filebuf);
 
@@ -1429,7 +1429,7 @@ void ScriptSystem::executeFile(const String& filename)
 	xReport(L, s, filename.c_str());
 }
 
-bool ScriptSystem::invokeLuaMethod(const char* methodName, VariantSeq& stack, int nResult)
+bool ScriptSystem::invokeLuaMethod(const char *methodName, VariantSeq &stack, int nResult)
 {
 	int top = lua_gettop(L);
 
@@ -1460,7 +1460,7 @@ errquit:
 	return false;
 }
 
-bool ScriptSystem::invokeLuaMethod(const char* method, Variant& arg1)
+bool ScriptSystem::invokeLuaMethod(const char *method, Variant &arg1)
 {
 	VariantSeq vseq;
 	vseq.push_back(arg1);
@@ -1479,10 +1479,10 @@ bool ScriptSystem::invokeLuaScoped(const char *text, Axon::VariantSeq &stack, in
 		String membername = fullName.substr(idx_end+1,fullName.size());
 		xPushString(L, objectname);
 		lua_rawget(L, LUA_GLOBALSINDEX);
-		Object* obj = xGetObject(L, lua_gettop(L));
+		Object *obj = xGetObject(L, lua_gettop(L));
 		lua_pop(L,1);
 		if (obj) {								
-			Member* mb = obj->findMember(membername.c_str());
+			Member *mb = obj->findMember(membername.c_str());
 			if (mb && mb->isMethod())
 				mb->invoke(obj,stack);
 		} else {
@@ -1511,7 +1511,7 @@ bool ScriptSystem::invokeLuaScoped(const char *text, Axon::VariantSeq &stack, in
 	return true;
 }
 
-String ScriptSystem::generateLuaString(const String& text)
+String ScriptSystem::generateLuaString(const String &text)
 {
 	String result = text;
 	String::size_type idx_end = text.find('.');
@@ -1529,7 +1529,7 @@ String ScriptSystem::generateLuaString(const String& text)
 		String membername = text.substr(idx_end+1,text.size());
 		xPushString(L, objectname);
 		lua_rawget(L, LUA_GLOBALSINDEX);
-		Object* obj = xGetObject(L, lua_gettop(L));
+		Object *obj = xGetObject(L, lua_gettop(L));
 		lua_pop(L,1);
 		id = lua_gettop(L);
 		if (obj){								
@@ -1555,7 +1555,7 @@ String ScriptSystem::generateLuaString(const String& text)
 	return result;
 }
 
-inline String xRemoveScope(const String& str)
+inline String xRemoveScope(const String &str)
 {
 	size_t pos = str.rfind('.');
 	if (pos == String::npos || pos >= str.length()-1) {
@@ -1565,7 +1565,7 @@ inline String xRemoveScope(const String& str)
 	return str.substr(pos+1, str.length()-pos-1);
 }
 
-inline String xRemoveIndex(const String& str)
+inline String xRemoveIndex(const String &str)
 {
 	// first get index from str
 	String::const_reverse_iterator it = str.rbegin();
@@ -1591,7 +1591,7 @@ inline String xRemoveIndex(const String& str)
 	return str.substr(0, str.size() - count - 1);
 }
 
-int ScriptSystem::getNameIndex(const String& str) const
+int ScriptSystem::getNameIndex(const String &str) const
 {
 	StringIntDict::const_iterator it = m_objectNameGen.find(xRemoveIndex(str));
 	if (it == m_objectNameGen.end())
@@ -1599,7 +1599,7 @@ int ScriptSystem::getNameIndex(const String& str) const
 	return it->second;
 }
 
-void ScriptSystem::updateNameIndex(const String& str)
+void ScriptSystem::updateNameIndex(const String &str)
 {
 	// first get index from str
 	String::const_reverse_iterator it = str.rbegin();
@@ -1611,7 +1611,7 @@ void ScriptSystem::updateNameIndex(const String& str)
 		}
 		count++;
 	}
-	const char* p = &*it;
+	const char *p = &*it;
 
 	bool noindex = false;
 	if (!count) {
@@ -1642,12 +1642,12 @@ void ScriptSystem::updateNameIndex(const String& str)
 	m_objectNameGen[name] = index+1;
 }
 
-int ScriptSystem::nextNameIndex(const String& str)
+int ScriptSystem::nextNameIndex(const String &str)
 {
 	return m_objectNameGen[str]++;
 }
 
-String ScriptSystem::generateObjectName(const String& str)
+String ScriptSystem::generateObjectName(const String &str)
 {
 	String noindex = xRemoveScope(xRemoveIndex(str));
 
@@ -1661,25 +1661,25 @@ String ScriptSystem::generateObjectName(const String& str)
 	return result;
 }
 
-void ScriptSystem::registerType(MetaInfo* typeinfo)
+void ScriptSystem::registerType(MetaInfo *typeinfo)
 {
 	m_typeInfoReg[typeinfo->getTypeName()] = typeinfo;
 
 	linkMetaInfoToClassInfo(typeinfo);
 }
 
-Object* ScriptSystem::createObject(const char* classname)
+Object *ScriptSystem::createObject(const char *classname)
 {
 	ClassInfoDict::const_iterator cit = m_classInfoReg.find(classname);
 	if (cit != m_classInfoReg.end()) {
-		ClassInfo* ci = cit->second;
+		ClassInfo *ci = cit->second;
 
 		if (!ci->m_typeInfo) {
 			Errorf("can't find type info");
 		}
 
 		// create object
-		Object* obj = ci->m_typeInfo->createObject();
+		Object *obj = ci->m_typeInfo->createObject();
 		obj->initClassInfo(ci);
 
 		obj->invoke_onInit();
@@ -1693,14 +1693,14 @@ Object* ScriptSystem::createObject(const char* classname)
 		return nullptr;
 	}
 
-	Object* obj = it->second->createObject();
+	Object *obj = it->second->createObject();
 	obj->invoke_onInit();
 	return obj;
 }
 
-Object* ScriptSystem::cloneObject(const Object* obj)
+Object *ScriptSystem::cloneObject(const Object *obj)
 {
-	Object* result = 0;
+	Object *result = 0;
 	
 	if (obj->getClassInfo())
 		result = createObject(obj->getClassInfo()->m_className.c_str());
@@ -1717,11 +1717,11 @@ Object* ScriptSystem::cloneObject(const Object* obj)
 	return result;
 }
 
-Object* ScriptSystem::findObject(const String& objectname)
+Object *ScriptSystem::findObject(const String &objectname)
 {
 	xPushString(L, objectname);
 	lua_rawget(L, LUA_GLOBALSINDEX);
-	Object* result = xGetObject(L, lua_gettop(L));
+	Object *result = xGetObject(L, lua_gettop(L));
 	lua_pop(L,1);
 	return result;
 }
@@ -1736,7 +1736,7 @@ void ScriptSystem::beginRead()
 	m_readTop = lua_gettop(L);
 }
 
-Variant ScriptSystem::readField(const char* objname, const char* fieldname)
+Variant ScriptSystem::readField(const char *objname, const char *fieldname)
 {
 	if (!m_isReading) {
 		Errorf("not in reading");
@@ -1757,7 +1757,7 @@ Variant ScriptSystem::readField(const char* objname, const char* fieldname)
 	return result;
 }
 
-Variant ScriptSystem::readField(const char* objname)
+Variant ScriptSystem::readField(const char *objname)
 {
 	if (!m_isReading) {
 		Errorf("not in reading");
@@ -1779,7 +1779,7 @@ void ScriptSystem::endRead()
 	m_isReading = false;
 }
 
-Variant ScriptSystem::readFieldImmediately(const char* objname, const char* fieldname)
+Variant ScriptSystem::readFieldImmediately(const char *objname, const char *fieldname)
 {
 	Variant result;
 
@@ -1797,7 +1797,7 @@ Variant ScriptSystem::readFieldImmediately(const char* objname, const char* fiel
 	return result;
 }
 
-void ScriptSystem::registerClass(const String& self, const String& base)
+void ScriptSystem::registerClass(const String &self, const String &base)
 {
 	ClassInfoDict::iterator it = m_classInfoReg.find(self);
 
@@ -1805,7 +1805,7 @@ void ScriptSystem::registerClass(const String& self, const String& base)
 		Errorf("Class already registered");
 	}
 
-	ClassInfo* classInfo = new ClassInfo;
+	ClassInfo *classInfo = new ClassInfo;
 	classInfo->m_className = self;
 	classInfo->m_metaName = base;
 	classInfo->m_typeInfo = 0;
@@ -1814,19 +1814,19 @@ void ScriptSystem::registerClass(const String& self, const String& base)
 	classInfo->initScriptProps();
 }
 
-void ScriptSystem::linkMetaInfoToClassInfo(MetaInfo* ti)
+void ScriptSystem::linkMetaInfoToClassInfo(MetaInfo *ti)
 {
 	ClassInfoDict::iterator it = m_classInfoReg.begin();
 
 	for (; it != m_classInfoReg.end(); ++it) {
-		ClassInfo* ci = it->second;
+		ClassInfo *ci = it->second;
 		if (ci->m_metaName == ti->m_typeName) {
 			ci->m_typeInfo = ti;
 		}
 	}
 }
 
-void ScriptSystem::getClassList(const char* prefix, bool sort, StringSeq& result) const
+void ScriptSystem::getClassList(const char *prefix, bool sort, StringSeq &result) const
 {
 	ClassInfoDict::const_iterator it = m_classInfoReg.begin();
 	size_t prefixlen = 0;
@@ -1836,7 +1836,7 @@ void ScriptSystem::getClassList(const char* prefix, bool sort, StringSeq& result
 	}
 
 	for (; it != m_classInfoReg.end(); ++it) {
-		ClassInfo* ci = it->second;
+		ClassInfo *ci = it->second;
 		if (prefixlen) {
 			if (strncmp(prefix, ci->m_className.c_str(), prefixlen) != 0) {
 				continue;
@@ -1853,7 +1853,7 @@ void ScriptSystem::getClassList(const char* prefix, bool sort, StringSeq& result
 	}
 }
 
-bool lesser(const ScriptProp* a, const ScriptProp* b)
+bool lesser(const ScriptProp *a, const ScriptProp *b)
 {
 	if (!a->grouped() && b->grouped()) {
 		return true;
@@ -1888,7 +1888,7 @@ void ClassInfo::initScriptProps()
 //			Printf("%s - %s\n", lua_typename(L, lua_type(L, -2)), lua_typename(L, lua_type(L, -1)));
 
 		AX_ASSERT(lua_isstring(L,-2));
-		ScriptProp* sa = new ScriptProp();
+		ScriptProp *sa = new ScriptProp();
 
 		sa->m_realName = lua_tostring(L, -2);
 		sa->m_group = 0;
@@ -1900,7 +1900,7 @@ void ClassInfo::initScriptProps()
 			lua_pushnil(L);
 			while (lua_next(L,-2)) {
 				AX_ASSERT(lua_isstring(L,-2));
-				ScriptProp* child = new ScriptProp();
+				ScriptProp *child = new ScriptProp();
 
 				child->m_group = sa;
 				child->m_realName = lua_tostring(L, -2);
@@ -1926,7 +1926,7 @@ void ClassInfo::initScriptProps()
 	std::sort(m_scriptPropSeq.begin(), m_scriptPropSeq.end(), lesser);
 }
 
-Variant ClassInfo::getField(const String& field) const
+Variant ClassInfo::getField(const String &field) const
 {
 	Variant result;
 
@@ -2008,7 +2008,7 @@ if (h##x = lua_isnumber(L, -1) ? true : false) { \
 lua_pop(L, 1) 
 
 
-int ScriptProp::checkTableKind(Variant& result)
+int ScriptProp::checkTableKind(Variant &result)
 {
 	int kind = Variant::kEmpty;
 
@@ -2061,7 +2061,7 @@ void ScriptProp::initEnumItems()
 		if (lua_type(L,-2) != LUA_TSTRING)
 			continue;
 
-		const char* name = lua_tostring(L, -2);
+		const char *name = lua_tostring(L, -2);
 
 		if (name[0] == '_') {
 			continue;
@@ -2131,7 +2131,7 @@ void ScriptProp::init()
 ScriptProp::ScriptProp() : Member(0, Member::kPropertyType)
 {}
 
-void ScriptProp::setProperty(Object* obj, const Variant& val)
+void ScriptProp::setProperty(Object *obj, const Variant &val)
 {
 	if (m_propKind == kGroup)
 		return;
@@ -2146,7 +2146,7 @@ void ScriptProp::setProperty(Object* obj, const Variant& val)
 	lua_settop(L, top);
 }
 
-Variant ScriptProp::getProperty(const Object* obj)
+Variant ScriptProp::getProperty(const Object *obj)
 {
 	Variant result;
 

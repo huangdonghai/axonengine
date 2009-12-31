@@ -16,7 +16,7 @@ AX_BEGIN_NAMESPACE
 	class AX_API MapHistory : public History {
 	public:
 		MapHistory();
-		MapHistory(const String& msg);
+		MapHistory(const String &msg);
 	};
 
 	//--------------------------------------------------------------------------
@@ -25,7 +25,7 @@ AX_BEGIN_NAMESPACE
 
 	class HeightmapHis : public MapHistory {
 	public:
-		HeightmapHis(const String& msg, const Rect& rect, Image* olddata, Image* newdata, MapTerrain* terrain);
+		HeightmapHis(const String &msg, const Rect &rect, Image *olddata, Image *newdata, MapTerrain *terrain);
 		virtual ~HeightmapHis();
 
 		// implement Action
@@ -37,9 +37,9 @@ AX_BEGIN_NAMESPACE
 
 	private:
 		Rect m_tilerect;
-		Image* m_oldData;
-		Image* m_newData;
-		MapTerrain* m_terrain;
+		Image *m_oldData;
+		Image *m_newData;
+		MapTerrain *m_terrain;
 	};
 
 	//--------------------------------------------------------------------------
@@ -48,7 +48,7 @@ AX_BEGIN_NAMESPACE
 
 	class TerrainMaterialDefHis : public MapHistory {
 	public:
-		TerrainMaterialDefHis(MapMaterialDef* old, MapMaterialDef* newdata, MapTerrain* terrain);
+		TerrainMaterialDefHis(MapMaterialDef *old, MapMaterialDef *newdata, MapTerrain *terrain);
 		virtual ~TerrainMaterialDefHis();
 
 		// implement Action
@@ -59,9 +59,9 @@ AX_BEGIN_NAMESPACE
 		virtual int getMemoryUsed();
 
 	private:
-		MapMaterialDef* m_olddata;
-		MapMaterialDef* m_newdata;
-		MapTerrain* m_terrain;
+		MapMaterialDef *m_olddata;
+		MapMaterialDef *m_newdata;
+		MapTerrain *m_terrain;
 	};
 
 	//--------------------------------------------------------------------------
@@ -79,7 +79,7 @@ AX_BEGIN_NAMESPACE
 
 	class TerrainPaintHis : public MapHistory {
 	public:
-		TerrainPaintHis(const String& msg, const Rect& rect, int layerId, Image* olddata, Image* newdata);
+		TerrainPaintHis(const String &msg, const Rect &rect, int layerId, Image *olddata, Image *newdata);
 		virtual ~TerrainPaintHis();
 
 		virtual void doIt();
@@ -91,8 +91,8 @@ AX_BEGIN_NAMESPACE
 	private:
 		Rect m_pixelrect;
 		int m_layerId;
-		Image* m_olddata;
-		Image* m_newdata;
+		Image *m_olddata;
+		Image *m_newdata;
 	};
 
 AX_END_NAMESPACE

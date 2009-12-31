@@ -117,8 +117,8 @@ typedef struct unz_file_info_s
     tm_unz tmu_date;
 } unz_file_info;
 
-extern int ZEXPORT unzStringFileNameCompare OF ((const char* fileName1,
-                                                 const char* fileName2,
+extern int ZEXPORT unzStringFileNameCompare OF ((const char *fileName1,
+                                                 const char *fileName2,
                                                  int iCaseSensitivity));
 /*
    Compare two filename (fileName1,fileName2).
@@ -142,7 +142,7 @@ extern unzFile ZEXPORT unzOpen OF((const char *path));
 */
 
 extern unzFile ZEXPORT unzOpen2 OF((const char *path,
-                                    zlib_filefunc_def* pzlib_filefunc_def));
+                                    zlib_filefunc_def *pzlib_filefunc_def));
 /*
    Open a Zip file, like unzOpen, but provide a set of file low level API
       for read/write the zip file (see ioapi.h)
@@ -213,11 +213,11 @@ typedef struct unz_file_pos_s
 
 extern int ZEXPORT unzGetFilePos(
     unzFile file,
-    unz_file_pos* file_pos);
+    unz_file_pos *file_pos);
 
 extern int ZEXPORT unzGoToFilePos(
     unzFile file,
-    unz_file_pos* file_pos);
+    unz_file_pos *file_pos);
 
 /* ****************************************** */
 
@@ -254,7 +254,7 @@ extern int ZEXPORT unzOpenCurrentFile OF((unzFile file));
 */
 
 extern int ZEXPORT unzOpenCurrentFilePassword OF((unzFile file,
-                                                  const char* password));
+                                                  const char *password));
 /*
   Open for reading data the current file in the zipfile.
   password is a crypting password
@@ -262,8 +262,8 @@ extern int ZEXPORT unzOpenCurrentFilePassword OF((unzFile file,
 */
 
 extern int ZEXPORT unzOpenCurrentFile2 OF((unzFile file,
-                                           int* method,
-                                           int* level,
+                                           int *method,
+                                           int *level,
                                            int raw));
 /*
   Same than unzOpenCurrentFile, but open for read raw the file (not uncompress)
@@ -275,10 +275,10 @@ extern int ZEXPORT unzOpenCurrentFile2 OF((unzFile file,
 */
 
 extern int ZEXPORT unzOpenCurrentFile3 OF((unzFile file,
-                                           int* method,
-                                           int* level,
+                                           int *method,
+                                           int *level,
                                            int raw,
-                                           const char* password));
+                                           const char *password));
 /*
   Same than unzOpenCurrentFile, but open for read raw the file (not uncompress)
     if raw==1
@@ -343,7 +343,7 @@ extern uLong ZEXPORT unzGetOffset (unzFile file);
 /* Set the current file offset */
 extern int ZEXPORT unzSetOffset (unzFile file, uLong pos);
 
-extern unzFile ZEXPORT unzReOpen OF((const char* path, unzFile file));
+extern unzFile ZEXPORT unzReOpen OF((const char *path, unzFile file));
 
 
 #ifdef __cplusplus

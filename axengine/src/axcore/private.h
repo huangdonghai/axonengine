@@ -13,9 +13,9 @@ read the license and understand and accept it fully.
 #include <axcore/public.h>
 
 AX_BEGIN_NAMESPACE
-	void DetectCpuInfo(CpuInfo& cpu_info );
+	void DetectCpuInfo(CpuInfo &cpu_info );
 
-	extern FILE* g_logFile;
+	extern FILE *g_logFile;
 
 }
 #endif // AX_ENGINE_PRIVATE_H

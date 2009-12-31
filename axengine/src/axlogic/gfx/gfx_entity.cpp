@@ -47,14 +47,22 @@ Primitives GfxEntity::getHitTestPrims()
 	return Primitives();
 }
 
-void GfxEntity::frameUpdate( QueuedScene *qscene )
+void GfxEntity::frameUpdate(QueuedScene *qscene)
 {
-
+	Sequence<GfxObject*>::iterator it = m_objects.begin();
+	for (; it != m_objects.end(); ++it) {
+		GfxObject *obj = *it;
+		obj->frameUpdate(qscene);
+	}
 }
 
-void GfxEntity::issueToQueue( QueuedScene *qscene )
+void GfxEntity::issueToQueue(QueuedScene *qscene)
 {
-
+	Sequence<GfxObject*>::iterator it = m_objects.begin();
+	for (; it != m_objects.end(); ++it) {
+		GfxObject *obj = *it;
+		obj->issueToQueue(qscene);
+	}
 }
 
 void GfxEntity::addObject( GfxObject *obj )

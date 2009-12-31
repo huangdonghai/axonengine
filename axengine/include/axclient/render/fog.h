@@ -26,8 +26,8 @@ public:
 	float getFogDensity() const { return m_fogDensity; }
 	void setFogDensity(float val) { m_fogDensity = val; }
 
-	void fillQueuedFog(QueuedFog* queued);
-	QueuedFog* getQueuedFog() const { return m_queuedFog;}
+	void fillQueuedFog(QueuedFog *queued);
+	QueuedFog *getQueuedFog() const { return m_queuedFog;}
 
 	// implement fog
 	virtual BoundingBox getLocalBoundingBox();
@@ -38,7 +38,7 @@ public:
 private:
 	Vector4 m_fogColor;
 	float m_fogDensity;
-	QueuedFog* m_queuedFog;
+	QueuedFog *m_queuedFog;
 };
 
 
@@ -46,7 +46,7 @@ struct QueuedFog {
 	Vector4 m_fogParams;
 };
 
-inline void RenderFog::fillQueuedFog(QueuedFog* queued) {
+inline void RenderFog::fillQueuedFog(QueuedFog *queued) {
 	m_queuedFog = queued;
 	m_queuedFog->m_fogParams = m_fogColor;
 	m_queuedFog->m_fogParams.w = m_fogDensity;

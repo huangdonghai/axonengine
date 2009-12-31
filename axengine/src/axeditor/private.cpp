@@ -12,8 +12,8 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-	MapContext* g_mapContext = 0;
-	GfxContext* g_gfxContext = 0;
+	MapContext *g_mapContext = 0;
+	GfxContext *g_gfxContext = 0;
 
 	void axEditorInit() {
 		g_mapContext = new MapContext();

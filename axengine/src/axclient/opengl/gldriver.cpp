@@ -45,7 +45,7 @@ AX_BEGIN_NAMESPACE
 	GLdriver::~GLdriver() {
 	}
 
-	bool GLdriver::findExtension(const char* extname) {
+	bool GLdriver::findExtension(const char *extname) {
 		bool found = strstr(glDriverInfo->extension.c_str(), extname) != NULL;
 
 	#ifdef OS_WIN
@@ -68,7 +68,7 @@ AX_BEGIN_NAMESPACE
 		return found;
 	}
 
-	void GLdriver::findFunction(void*& func, const char* name, const char* extname, bool extsupport) {
+	void GLdriver::findFunction(void*& func, const char *name, const char *extname, bool extsupport) {
 		if (!extsupport)
 			return;
 
@@ -129,7 +129,7 @@ AX_BEGIN_NAMESPACE
 		GLrender::checkErrors();
 
 		// init device info
-		Info* glDriverInfo = new Info();
+		Info *glDriverInfo = new Info();
 		Axon::glDriverInfo = glDriverInfo;
 		glDriverInfo->driverType = Info::OpenGL;
 		glDriverInfo->highestQualitySupport = ShaderQuality::Low;
@@ -249,7 +249,7 @@ AX_BEGIN_NAMESPACE
 #if 0
 		CGstate state = cgGetFirstState(glCgContext);
 		while (state) {
-			const char* n = cgGetStateName(state);
+			const char *n = cgGetStateName(state);
 			Printf("%s ", n);
 			state = cgGetNextState(state);
 		}
@@ -293,7 +293,7 @@ AX_BEGIN_NAMESPACE
 		Printf("..Finalized GLdriver\n");
 	}
 
-	const IRenderDriver::Info* GLdriver::getDriverInfo() {
+	const IRenderDriver::Info *GLdriver::getDriverInfo() {
 		return glDriverInfo;
 	}
 
@@ -301,7 +301,7 @@ AX_BEGIN_NAMESPACE
 		return 0;
 	}
 
-	void GLdriver::loadMatrix(GLenum mode, const Matrix4& m) {
+	void GLdriver::loadMatrix(GLenum mode, const Matrix4 &m) {
 		glMatrixMode(mode);
 		glLoadMatrixf(m.m[0]);
 	}
@@ -309,7 +309,7 @@ AX_BEGIN_NAMESPACE
 
 	static int select_time;
 	static Matrix4 select_viewmatrix;
-	void GLdriver::beginSelect(const RenderCamera& view) {
+	void GLdriver::beginSelect(const RenderCamera &view) {
 		select_time = OsUtil::milliseconds();
 
 		loadMatrix(GL_PROJECTION, view.getProjMatrix());
@@ -332,7 +332,7 @@ AX_BEGIN_NAMESPACE
 		glLoadName(id);
 	}
 
-	void GLdriver::testActor(RenderEntity* re) {
+	void GLdriver::testActor(RenderEntity *re) {
 #if 0
 		glMatrixMode(GL_MODELVIEW);
 		glPushMatrix();
@@ -345,7 +345,7 @@ AX_BEGIN_NAMESPACE
 		Primitives::iterator it;
 
 		for (it = prims.begin(); it != prims.end(); ++it) {
-			Primitive* prim = *it;
+			Primitive *prim = *it;
 
 			testPrimitive(prim);
 		}
@@ -357,7 +357,7 @@ AX_BEGIN_NAMESPACE
 #endif
 	}
 
-	static inline void testMesh(MeshPrim* mesh) {
+	static inline void testMesh(MeshPrim *mesh) {
 		GLrender::bindVertexBuffer(VertexType::kVertex, 0, (uintptr_t)mesh->getVertexesPointer());
 		GLrender::checkErrors();
 
@@ -370,7 +370,7 @@ AX_BEGIN_NAMESPACE
 		glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, mesh->getIndexPointer());
 	}
 
-	static inline void testLine(LinePrim* line) {
+	static inline void testLine(LinePrim *line) {
 		GLrender::bindVertexBuffer(VertexType::kDebug, 0, (uintptr_t)line->getVertexesPointer());
 
 		int count = line->getActivedIndexes();
@@ -382,18 +382,18 @@ AX_BEGIN_NAMESPACE
 		glDrawElements(GL_LINES, count, GL_UNSIGNED_INT, line->getIndexPointer());
 	}
 
-	void GLdriver::testPrimitive(Primitive* prim) {
+	void GLdriver::testPrimitive(Primitive *prim) {
 		int id = prim->getCachedId();
 
 		if (id <= 0) {
-			MeshPrim* mesh = dynamic_cast<MeshPrim*>(prim);
+			MeshPrim *mesh = dynamic_cast<MeshPrim*>(prim);
 
 			if (mesh) {
 				testMesh(mesh);
 				return;
 			}
 
-			LinePrim* line = dynamic_cast<LinePrim*>(prim);
+			LinePrim *line = dynamic_cast<LinePrim*>(prim);
 
 			if (line) {
 				testLine(line);
@@ -402,12 +402,12 @@ AX_BEGIN_NAMESPACE
 			return;
 		}
 
-		GLprimitive* glprim = glPrimitiveManager->getPrimitive(id);
+		GLprimitive *glprim = glPrimitiveManager->getPrimitive(id);
 
 		if (!glprim)
 			return;
 
-		GLgeometry* glgeo = dynamic_cast<GLgeometry*>(glprim);
+		GLgeometry *glgeo = dynamic_cast<GLgeometry*>(glprim);
 		if (!glgeo)
 			return;
 
@@ -438,8 +438,8 @@ AX_BEGIN_NAMESPACE
 		if (!recordCount)
 			return selectBuffer;
 
-		GLHitRecord* p = (GLHitRecord*)m_selectBuffer;
-		GLHitRecord* end = (GLHitRecord*)m_selectBuffer + recordCount;
+		GLHitRecord *p = (GLHitRecord*)m_selectBuffer;
+		GLHitRecord *end = (GLHitRecord*)m_selectBuffer + recordCount;
 
 		int hitCount = 0;
 		while (p != end) {
@@ -470,8 +470,8 @@ AX_BEGIN_NAMESPACE
 		return r_hdr->getInteger() && glDriverInfo->caps & Info::HDR;
 	}
 
-	RenderTarget* GLdriver::createWindowTarget(handle_t wndId, const String& name) {
-		GLwindow* state = new GLwindow(wndId, name);
+	RenderTarget *GLdriver::createWindowTarget(handle_t wndId, const String &name) {
+		GLwindow *state = new GLwindow(wndId, name);
 		AX_ASSERT(state);
 		return state;
 	}
@@ -482,9 +482,9 @@ AX_BEGIN_NAMESPACE
 	AX_END_COMMAND_MAP()
 
 
-	static const String getImageFilename(const char* ext) {
+	static const String getImageFilename(const char *ext) {
 		String filename;
-		char* pattern;
+		char *pattern;
 		int i;
 
 		/* find a file name */
@@ -502,12 +502,12 @@ AX_BEGIN_NAMESPACE
 		return filename;
 	}
 
-	void GLdriver::dumpTex_f(const CmdArgs& params) {
+	void GLdriver::dumpTex_f(const CmdArgs &params) {
 		if (params.tokened.size() != 2) {
 			Printf("Usage: writeTexture <tex_name>\n");
 			return;
 		}
-		const String& imagename = params.tokened[1];
+		const String &imagename = params.tokened[1];
 
 		TexturePtr tex = Texture::load(imagename);
 
@@ -518,7 +518,7 @@ AX_BEGIN_NAMESPACE
 
 		int width, height, internal_format;
 
-		GLtexture* gltex = dynamic_cast<GLtexture*>(tex.get());
+		GLtexture *gltex = dynamic_cast<GLtexture*>(tex.get());
 		AX_ASSERT(gltex);
 
 #if 0
@@ -530,7 +530,7 @@ AX_BEGIN_NAMESPACE
 		glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_HEIGHT, &height);
 		glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_INTERNAL_FORMAT, &internal_format);
 
-		byte_t* pixels = NULL;
+		byte_t *pixels = NULL;
 		if (gltex->getFormat().isFloat()) {
 			pixels = new byte_t[width*height*8];
 			glGetTexImage(GL_TEXTURE_2D, 0, GL_BGRA, GL_HALF_FLOAT_ARB, pixels);

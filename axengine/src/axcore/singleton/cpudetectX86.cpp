@@ -757,7 +757,7 @@ unsigned char CPUCount(unsigned int *TotAvailLogical,
 #define MMXPLUS_FLAG 0x1000000 // 1<<24
 
 
-void DetectCpuInfo(CpuInfo& cpu_info) {
+void DetectCpuInfo(CpuInfo &cpu_info) {
 #ifdef _MSC_VER
 	const unsigned char hex_chars[16] =
 	    { '0', '1', '2', '3', '4', '5', '6', '7',

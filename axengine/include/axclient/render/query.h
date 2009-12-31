@@ -26,7 +26,7 @@ AX_BEGIN_NAMESPACE
 
 		void setType(QueryType type) { m_type = type; }
 		QueryType getType() const { return m_type; }
-		void issueQuery(int frameId, const BoundingBox& bbox);
+		void issueQuery(int frameId, const BoundingBox &bbox);
 
 	protected:
 		Query();
@@ -43,9 +43,9 @@ AX_BEGIN_NAMESPACE
 	public:
 		virtual ~QueryManager() {}
 
-		virtual Query* allocQuery() = 0;
+		virtual Query *allocQuery() = 0;
 		virtual void freeQuery(Query*& query) = 0;
-		virtual void issueQuery(Query* query, int frameId, const BoundingBox& bbox) = 0;
+		virtual void issueQuery(Query *query, int frameId, const BoundingBox &bbox) = 0;
 	};
 
 AX_END_NAMESPACE

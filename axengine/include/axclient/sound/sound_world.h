@@ -18,22 +18,22 @@ AX_BEGIN_NAMESPACE
 		SoundWorld();
 		~SoundWorld();
 
-		void addEntity(SoundEntity* entity);
-		void removeEntity(SoundEntity* entity);
+		void addEntity(SoundEntity *entity);
+		void removeEntity(SoundEntity *entity);
 
-		SoundEntity* getEntity(int id) const;
+		SoundEntity *getEntity(int id) const;
 
-		void playSound(int channelId, SoundFx* sfx, LoopingMode = Looping_None);
+		void playSound(int channelId, SoundFx *sfx, LoopingMode = Looping_None);
 		void stopSound(int channelId);
 
-		void setListener(const AffineMat& matrix, const Vector3& velocity);
+		void setListener(const AffineMat &matrix, const Vector3 &velocity);
 
 	private:
 		friend class SoundSystem;
 
-		SoundEntity* m_entities[MAX_ENTITIES];
+		SoundEntity *m_entities[MAX_ENTITIES];
 		List<int> m_freeEntities;
-		FMOD::ChannelGroup* m_channelGroup;
+		FMOD::ChannelGroup *m_channelGroup;
 		AffineMat m_listenerMatrix;
 		Vector3 m_listenerVelocity;
 	};

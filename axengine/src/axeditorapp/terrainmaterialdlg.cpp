@@ -50,29 +50,29 @@ void TerrainMaterialDlg::initMaterialDef() {
 	ui.layerList->clear();
 
 	for (int i = 0; i < m_materialDef->getNumLayers(); i++) {
-		MapLayerDef* l = m_materialDef->getLayerDef(i);
+		MapLayerDef *l = m_materialDef->getLayerDef(i);
 
-		QTreeWidgetItem* item = new QTreeWidgetItem(ui.layerList, QStringList(u2q(l->name)));
+		QTreeWidgetItem *item = new QTreeWidgetItem(ui.layerList, QStringList(u2q(l->name)));
 		item->setData(0, Qt::UserRole, l->id);
 		item->setFlags(item->flags() | Qt::ItemIsEditable);
 	}
 
-	QTreeWidgetItem* item = ui.layerList->topLevelItem(0);
+	QTreeWidgetItem *item = ui.layerList->topLevelItem(0);
 	ui.layerList->setCurrentItem(item);
 //	on_layerList_currentItemChanged(item, nullptr);
 }
 
-MapLayerDef* TerrainMaterialDlg::getLayerDef(QTreeWidgetItem* item) {
+MapLayerDef *TerrainMaterialDlg::getLayerDef(QTreeWidgetItem *item) {
 	int id = item->data(0, Qt::UserRole).toInt();
 
 	return m_materialDef->findLayerDefById(id);
 }
 
-void TerrainMaterialDlg::writeToDef(QTreeWidgetItem* item) {
+void TerrainMaterialDlg::writeToDef(QTreeWidgetItem *item) {
 	if (!item)
 		return;
 
-	MapLayerDef* l = getLayerDef(item);
+	MapLayerDef *l = getLayerDef(item);
 
 	if (!l) return;
 
@@ -92,11 +92,11 @@ void TerrainMaterialDlg::writeToDef(QTreeWidgetItem* item) {
 	l->isVerticalProjection = ui.vertical->isChecked();
 }
 
-void TerrainMaterialDlg::readFromDef(QTreeWidgetItem* item) {
+void TerrainMaterialDlg::readFromDef(QTreeWidgetItem *item) {
 	if (!item)
 		return;
 
-	MapLayerDef* l = getLayerDef(item);
+	MapLayerDef *l = getLayerDef(item);
 
 	if (!l) return;
 
@@ -155,8 +155,8 @@ void TerrainMaterialDlg::updataMaskPreview() {
 
 	QImage image(256, 256, QImage::Format_ARGB32);
 
-	const float* ph = (const float*)m_heightImage->getData(0);
-	const byte_t* ps = m_slopeImage->getData(0);
+	const float *ph = (const float*)m_heightImage->getData(0);
+	const byte_t *ps = m_slopeImage->getData(0);
 
 	for (int y = 0; y < 256; y++) {
 		for (int x = 0; x < 256; x++) {
@@ -180,12 +180,12 @@ void TerrainMaterialDlg::on_add_clicked()
 	if (ui.layerList->topLevelItemCount() >= Map::MaxLayers)
 		return;
 
-	MapLayerDef* layer = m_materialDef->createLayerDef();
+	MapLayerDef *layer = m_materialDef->createLayerDef();
 
 	if (!layer)
 		return;
 
-	QTreeWidgetItem* item = new QTreeWidgetItem(ui.layerList, QStringList(u2q(layer->name)));
+	QTreeWidgetItem *item = new QTreeWidgetItem(ui.layerList, QStringList(u2q(layer->name)));
 	item->setData(0, Qt::UserRole, layer->id);
 	item->setFlags(item->flags() | Qt::ItemIsEditable);
 	ui.layerList->editItem(item);
@@ -195,11 +195,11 @@ void TerrainMaterialDlg::on_add_clicked()
 void TerrainMaterialDlg::on_del_clicked()
 {
 	int idx2 = ui.layerList->currentIndex().row();
-	QTreeWidgetItem* item = ui.layerList->currentItem();
+	QTreeWidgetItem *item = ui.layerList->currentItem();
 	if (!item)
 		return;
 
-	MapLayerDef* l = getLayerDef(item);
+	MapLayerDef *l = getLayerDef(item);
 
 	if (!l)
 		return;
@@ -209,8 +209,8 @@ void TerrainMaterialDlg::on_del_clicked()
 
 	int idx = ui.layerList->indexOfTopLevelItem(item);
 
-	QTreeWidgetItem* backup = item;
-	QTreeWidgetItem* taken = ui.layerList->takeTopLevelItem(idx);
+	QTreeWidgetItem *backup = item;
+	QTreeWidgetItem *taken = ui.layerList->takeTopLevelItem(idx);
 
 	AX_ASSERT(taken == backup);
 	SafeDelete(taken);
@@ -221,14 +221,14 @@ void TerrainMaterialDlg::on_moveUp_clicked()
 	if (ui.layerList->topLevelItemCount() < 2)
 		return;
 
-	QTreeWidgetItem* item = ui.layerList->currentItem();
+	QTreeWidgetItem *item = ui.layerList->currentItem();
 	if (!item) return;
 
 	int idx = ui.layerList->indexOfTopLevelItem(item);
 	if (idx == 0)
 		return;
 
-	QTreeWidgetItem* taken = ui.layerList->takeTopLevelItem(idx);
+	QTreeWidgetItem *taken = ui.layerList->takeTopLevelItem(idx);
 
 	ui.layerList->insertTopLevelItem(idx - 1, taken);
 
@@ -240,14 +240,14 @@ void TerrainMaterialDlg::on_moveDown_clicked()
 	if (ui.layerList->topLevelItemCount() < 2)
 		return;
 
-	QTreeWidgetItem* item = ui.layerList->currentItem();
+	QTreeWidgetItem *item = ui.layerList->currentItem();
 	if (!item) return;
 
 	int idx = ui.layerList->indexOfTopLevelItem(item);
 	if (idx == ui.layerList->topLevelItemCount() - 1)
 		return;
 
-	QTreeWidgetItem* taked = ui.layerList->takeTopLevelItem(idx);
+	QTreeWidgetItem *taked = ui.layerList->takeTopLevelItem(idx);
 
 	ui.layerList->insertTopLevelItem(idx + 1, taked);
 
@@ -268,7 +268,7 @@ void TerrainMaterialDlg::on_selectDetail_clicked()
 	ui.detailMat->setText(file);
 }
 
-void TerrainMaterialDlg::on_layerList_currentItemChanged(QTreeWidgetItem* cur,QTreeWidgetItem* prev)
+void TerrainMaterialDlg::on_layerList_currentItemChanged(QTreeWidgetItem *cur,QTreeWidgetItem *prev)
 {
 	writeToDef(prev);
 
@@ -296,7 +296,7 @@ void TerrainMaterialDlg::apply()
 
 	// reorder material def for layerList
 	for (int i = 0; i < ui.layerList->topLevelItemCount(); i++) {
-		QTreeWidgetItem* item = ui.layerList->topLevelItem(i);
+		QTreeWidgetItem *item = ui.layerList->topLevelItem(i);
 		m_materialDef->setLayer(i, getLayerDef(item));
 	}
 
@@ -315,7 +315,7 @@ void TerrainMaterialDlg::on_apply_clicked()
 	initMaterialDef();
 
 	if (cur != -1) {
-		QTreeWidgetItem* item = ui.layerList->topLevelItem(cur);
+		QTreeWidgetItem *item = ui.layerList->topLevelItem(cur);
 		if (!item)
 			return;
 
@@ -323,12 +323,12 @@ void TerrainMaterialDlg::on_apply_clicked()
 	}
 }
 
-void TerrainMaterialDlg::on_layerList_itemChanged(QTreeWidgetItem* item,int column)
+void TerrainMaterialDlg::on_layerList_itemChanged(QTreeWidgetItem *item,int column)
 {
 	if (column != 0)
 		return;
 
-	MapLayerDef* l = getLayerDef(item);
+	MapLayerDef *l = getLayerDef(item);
 
 	if (!l) return;
 
@@ -392,7 +392,7 @@ void TerrainMaterialDlg::updateBaseImage() {
 		ui.baseImagePreview->clear();
 		ui.baseImageSize->clear();
 	} else {
-		const byte_t* bits = image.getData(0, TexFormat::BGRA8);
+		const byte_t *bits = image.getData(0, TexFormat::BGRA8);
 
 		QImage imageQ(const_cast<byte_t*>(bits), image.getWidth(), image.getHeight(), QImage::Format_ARGB32);
 		QPixmap pixmap = QPixmap::fromImage(imageQ);
@@ -405,7 +405,7 @@ void TerrainMaterialDlg::updateBaseImage() {
 }
 
 void TerrainMaterialDlg::writeCurrentDef() {
-	QTreeWidgetItem* item = ui.layerList->currentItem();
+	QTreeWidgetItem *item = ui.layerList->currentItem();
 	writeToDef(item);
 }
 

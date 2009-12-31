@@ -48,7 +48,7 @@ AX_BEGIN_NAMESPACE
 		if (m_queryPos - m_readPos > NUMBER - 1)
 			return false;
 
-		IDirect3DQuery9* object = m_queries[m_queryPos%NUMBER];
+		IDirect3DQuery9 *object = m_queries[m_queryPos%NUMBER];
 		object->Issue(D3DISSUE_BEGIN);
 		m_quering = true;
 		return true;
@@ -57,7 +57,7 @@ AX_BEGIN_NAMESPACE
 	void D3D9query::endQuery()
 	{
 		AX_ASSERT(m_quering);
-		IDirect3DQuery9* object = m_queries[m_queryPos%NUMBER];
+		IDirect3DQuery9 *object = m_queries[m_queryPos%NUMBER];
 		object->Issue(D3DISSUE_END);
 		m_quering = false;
 
@@ -69,7 +69,7 @@ AX_BEGIN_NAMESPACE
 		if (m_readPos >= m_queryPos)
 			return -1;
 
-		IDirect3DQuery9* object = m_queries[m_readPos%NUMBER];
+		IDirect3DQuery9 *object = m_queries[m_readPos%NUMBER];
 		DWORD numberOfPixelsDrawn;
 		HRESULT hr = object->GetData(&numberOfPixelsDrawn, sizeof(numberOfPixelsDrawn), 0);
 
@@ -99,12 +99,12 @@ AX_BEGIN_NAMESPACE
 
 	}
 
-	Query* D3D9querymanager::allocQuery()
+	Query *D3D9querymanager::allocQuery()
 	{
 		D3D9_SCOPELOCK;
 
 		if (m_freeQueries.empty()) {
-			D3D9query* query = new D3D9query();
+			D3D9query *query = new D3D9query();
 			m_queries.push_back(query);
 			int handle = (int)m_queries.size() - 1;
 			query->m_id = handle;
@@ -121,17 +121,17 @@ AX_BEGIN_NAMESPACE
 	{
 		D3D9_SCOPELOCK;
 
-		D3D9query* d3d9query = (D3D9query*)query;
+		D3D9query *d3d9query = (D3D9query*)query;
 		m_freeQueries.push_back(d3d9query->m_id);
 	}
 
-	void D3D9querymanager::issueQuery( Query* query, int frameId, const BoundingBox& bbox )
+	void D3D9querymanager::issueQuery( Query *query, int frameId, const BoundingBox &bbox )
 	{
-		D3D9query* d3d9query = static_cast<D3D9query*>(query);
+		D3D9query *d3d9query = static_cast<D3D9query*>(query);
 		if (!d3d9query->canQuery())
 			return;
 
-		ActiveQuery* active = m_issuedQueryAlloc.alloc();
+		ActiveQuery *active = m_issuedQueryAlloc.alloc();
 		query->m_queryFrame = frameId;
 		active->frameTarget = g_renderSystem->getFrameTarget();
 		active->query = d3d9query;
@@ -148,8 +148,8 @@ AX_BEGIN_NAMESPACE
 			List<ActiveQuery*>::iterator it = m_activeQuery[i].begin();
 
 			while (it != m_activeQuery[i].end()) {
-				ActiveQuery* issued = *it;
-				D3D9query* query = static_cast<D3D9query*>(issued->query);
+				ActiveQuery *issued = *it;
+				D3D9query *query = static_cast<D3D9query*>(issued->query);
 
 				int result = query->getResult();
 

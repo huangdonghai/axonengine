@@ -47,7 +47,7 @@ AX_BEGIN_NAMESPACE
 		byte_t pixel_size, attributes; 
 	}; 
 
-	void Image::writeTGA(const String& filename, const byte_t *pixels, int width, int height) { 
+	void Image::writeTGA(const String &filename, const byte_t *pixels, int width, int height) { 
 		TgaHeader header; 
 		byte_t *filebuf; 
 		byte_t *d; 
@@ -102,7 +102,7 @@ AX_BEGIN_NAMESPACE
 		delete [](filebuf); 
 	} 
 	 
-	void WriteTGA24(const String& filename, const byte_t *pixels, int width, int height) { 
+	void WriteTGA24(const String &filename, const byte_t *pixels, int width, int height) { 
 		TgaHeader header; 
 		byte_t *filebuf; 
 		byte_t *d; 
@@ -153,7 +153,7 @@ AX_BEGIN_NAMESPACE
 	 
 	#if 0
 		Printf("write file %s\n", filename.c_str());
-		FILE* hf = fopen(filename,"wb");
+		FILE *hf = fopen(filename,"wb");
 		if (!hf)
 			return;
 		fwrite(filebuf, fsize,1,hf);
@@ -166,14 +166,14 @@ AX_BEGIN_NAMESPACE
 	}
 
 	bool
-	Image::loadFile_tga(const String& filename) {
+	Image::loadFile_tga(const String &filename) {
 		// clear first
 		clear();
 
 		int w, h, x, y; 
 		int realrow, truerow, baserow; 
 		int i, temp1, temp2; 
-		byte_t* dst; 
+		byte_t *dst; 
 		int dstbpp; 
 		int pixel_size; 
 		byte_t r, g, b, a, j, k, l; 
@@ -183,9 +183,9 @@ AX_BEGIN_NAMESPACE
 		int rlencoded; 
 		int RLE_count; 
 		int RLE_flag; 
-		byte_t* ColorMap; 
-		byte_t* data; 
-		byte_t* pdata; 
+		byte_t *ColorMap; 
+		byte_t *data; 
+		byte_t *pdata; 
 		int size; 
 		int interleave; 
 		int origin; 
@@ -372,7 +372,7 @@ AX_BEGIN_NAMESPACE
 		m_height = h; 
 
 		size = w * h * 4; 
-		byte_t* pixels = new byte_t[size]; 
+		byte_t *pixels = new byte_t[size]; 
 		memset(pixels, 0, size); 
 
 		/* read the Targa file body and convert to portable format. */ 
@@ -545,7 +545,7 @@ AX_BEGIN_NAMESPACE
 		return m_dataPresent = true; 
 	}
 
-	void Image::saveFile_tga(const String& filename) {
+	void Image::saveFile_tga(const String &filename) {
 		if (m_format == TexFormat::BGR8) {
 			WriteTGA24(filename, getData(0), m_width, m_height);
 

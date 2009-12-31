@@ -33,12 +33,12 @@ QuickConsole::~QuickConsole()
 }
 
 // implement iLogHandler
-void QuickConsole::print(const char* text) {
+void QuickConsole::print(const char *text) {
 	// we should parse text format escape
 	char line[1024];
 
-	const char* f = text;
-	char* t = line;
+	const char *f = text;
+	char *t = line;
 
 	while (1) {
 		if (*f == FORMAT_ESCAPE) {
@@ -101,13 +101,13 @@ void QuickConsole::print(const char* text) {
 	ui.message->verticalScrollBar()->setValue(ui.message->verticalScrollBar()->maximum());
 }
 
-void QuickConsole::print(const String& str) {
+void QuickConsole::print(const String &str) {
 	print(str.c_str());
 }
 
 #if 0
 void
-QuickConsole::Print(const char* text) {
+QuickConsole::Print(const char *text) {
 	SCOPE_CONVERT;
 
 	Print(M2W(text));
@@ -131,7 +131,7 @@ void QuickConsole::on_input_returnPressed()
 	g_cmdSystem->executeString(q2u(text));
 }
 
-void QuickConsole::setInput(QString& str)
+void QuickConsole::setInput(QString &str)
 {
 	ui.input->clear();
 	ui.input->insert(str);
@@ -140,7 +140,7 @@ void QuickConsole::setInput(QString& str)
 bool QuickConsole::eventFilter (QObject * watched, QEvent * event)
 {
 	if (watched == ui.input && event->type() == QEvent::KeyPress) {
-		QKeyEvent* e = (QKeyEvent*)event;
+		QKeyEvent *e = (QKeyEvent*)event;
 		if (e->key() == Qt::Key_Up) {
 
 			// backup current input if need

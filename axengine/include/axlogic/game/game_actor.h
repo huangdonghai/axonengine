@@ -73,7 +73,7 @@ public:
 	virtual bool isPlayer() const { return false; }
 
 	// implement IObserver
-	virtual void doNotify(IObservable* subject, int arg);
+	virtual void doNotify(IObservable *subject, int arg);
 
 	virtual void setState(State state);
 	inline State getState() { return m_state; }
@@ -94,7 +94,7 @@ protected:
 
 protected:
 	ActorNum m_entityNum;
-	GameWorld* m_world;			// world the entity has added to
+	GameWorld *m_world;			// world the entity has added to
 
 private:
 	State m_state;
@@ -117,11 +117,11 @@ public:
 	bool updateSpawnId( void );
 
 	bool isValid( void ) const;
-	type* getEntity( void ) const;
+	type *getEntity( void ) const;
 	int getEntityNum( void ) const;
 
 private:
-	GameWorld* m_world;
+	GameWorld *m_world;
 	int m_spawnId;
 };
 
@@ -194,12 +194,12 @@ public:
 	// properties
 
 protected:
-	void loadAsset(const LuaTable& t);
+	void loadAsset(const LuaTable &t);
 	void clear();
 
 protected:
-	HavokModel* m_model;
-	PhysicsRigid* m_rigid;
+	HavokModel *m_model;
+	PhysicsRigid *m_rigid;
 };
 
 AX_END_NAMESPACE

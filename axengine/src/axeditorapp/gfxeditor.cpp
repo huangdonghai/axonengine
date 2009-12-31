@@ -55,7 +55,7 @@ void GfxEditor::createActions()
 	addEditorTool(editorTool::CreateRibbon, ui.actionAddRibbon);
 }
 
-void GfxEditor::onEditorToolTriggered(QAction* action)
+void GfxEditor::onEditorToolTriggered(QAction *action)
 {
 	int type = Tool::None;
 	if (action) {
@@ -65,21 +65,21 @@ void GfxEditor::onEditorToolTriggered(QAction* action)
 	m_gfxContext->doTool(type);
 }
 
-void GfxEditor::onEditorActionTriggered(QAction* action)
+void GfxEditor::onEditorActionTriggered(QAction *action)
 {
 	int type = action->data().toInt();
 
 	g_mapContext->doAction(type);
 }
 
-void GfxEditor::addEditorTool(int toolType, QAction* action)
+void GfxEditor::addEditorTool(int toolType, QAction *action)
 {
 	action->setCheckable(true);
 	action->setData(toolType);
 	m_editorTools->addAction(action);
 }
 
-void GfxEditor::addEditorAction(int actionType, QAction* action)
+void GfxEditor::addEditorAction(int actionType, QAction *action)
 {
 	action->setCheckable(false);
 	action->setData(actionType);

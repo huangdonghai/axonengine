@@ -23,21 +23,21 @@ AX_BEGIN_NAMESPACE
 		inline ~Point(){}
 
 		// algo
-		inline Point operator+(const Point& v) const {
+		inline Point operator+(const Point &v) const {
 			return Point(x + v.x, y + v.y);
 		}
 
 		inline Point operator+(int v) const {
 			return Point(x+v, y+v);
 		}
-		inline Point& operator+=(int v) {
+		inline Point &operator+=(int v) {
 			x += v; y += v;
 			return *this;
 		}
 		inline Point operator-(int v) const {
 			return Point(x-v, y-v);
 		}
-		inline Point& operator-=(int v) {
+		inline Point &operator-=(int v) {
 			x -= v;
 			y -= v;
 			return *this;
@@ -46,7 +46,7 @@ AX_BEGIN_NAMESPACE
 		inline Point operator-() const {
 			return Point(-x, -y);
 		}
-		inline Point operator-(const Point& v) const {
+		inline Point operator-(const Point &v) const {
 			return Point(x - v.x, y - v.y);
 		}
 		// scale the vector
@@ -54,11 +54,11 @@ AX_BEGIN_NAMESPACE
 			return Point(x*scale, y*scale);
 		}
 		// multiply
-		inline Point operator*(const Point& v) const {
+		inline Point operator*(const Point &v) const {
 			return Point(x*v.x, y*v.y);
 		}
 		// div
-		inline Point operator/(const Point& v) const {
+		inline Point operator/(const Point &v) const {
 			return Point(x/v.x, y/v.y);
 		}
 		// inverse scale
@@ -66,23 +66,23 @@ AX_BEGIN_NAMESPACE
 			return Point(x/scale, y/scale);
 		}
 		// Dot Product
-		inline int operator|(const Point& v) const {
+		inline int operator|(const Point &v) const {
 			return x*v.x + y*v.y;
 		}
 		// compare
-		inline bool operator==(const Point& v) const {
+		inline bool operator==(const Point &v) const {
 			return x==v.x && y==v.y;
 		}
-		bool operator!=(const Point& v) const {
+		bool operator!=(const Point &v) const {
 			return x!=v.x || y!=v.y;
 		}
 
 		// assign operator
-		inline Point operator+=(const Point& v) {
+		inline Point operator+=(const Point &v) {
 			x += v.x; y += v.y;
 			return *this;
 		}
-		inline Point operator-=(const Point& v) {
+		inline Point operator-=(const Point &v) {
 			x -= v.x; y -= v.y;
 			return *this;
 		}
@@ -94,15 +94,15 @@ AX_BEGIN_NAMESPACE
 			x /= v; y /= v;
 			return *this;
 		}
-		inline Point operator*=(const Point& v) {
+		inline Point operator*=(const Point &v) {
 			x *= v.x; y *= v.y;
 			return *this;
 		}
-		inline Point operator/=(const Point& v) {
+		inline Point operator/=(const Point &v) {
 			x /= v.x; y /= v.y;
 			return *this;
 		}
-		inline int& operator[](int index) {
+		inline int &operator[](int index) {
 			AX_STRICT_ASSERT(index >= 0);
 			AX_STRICT_ASSERT(index < 2);
 			return *(&x + index);
@@ -138,7 +138,7 @@ AX_BEGIN_NAMESPACE
 			x=0;y=0;
 		}
 		// Set value
-		inline Point& set(int ix=0, int iy=0) {
+		inline Point &set(int ix=0, int iy=0) {
 			x = ix; y = iy;
 			return *this;
 		}
@@ -147,7 +147,7 @@ AX_BEGIN_NAMESPACE
 		}
 
 		String toString() const;
-		bool fromString(const char* str);
+		bool fromString(const char *str);
 	};
 
 

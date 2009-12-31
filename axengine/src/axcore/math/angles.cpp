@@ -11,7 +11,7 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-	void Angles::toVectors(Vector3* forward, Vector3* left, Vector3* up) const
+	void Angles::toVectors(Vector3 *forward, Vector3 *left, Vector3 *up) const
 	{
 		float angle;
 		float sr, sp, sy, cr, cp, cy;
@@ -65,7 +65,7 @@ AX_BEGIN_NAMESPACE
 		return axis;
 	}
 
-	Angles& Angles::normalize360(void)
+	Angles &Angles::normalize360(void)
 	{
 		for (int i = 0; i < 3; i++) {
 			if (((*this)[i] >= 360.0f) || ((*this)[i] < 0.0f)) {
@@ -83,7 +83,7 @@ AX_BEGIN_NAMESPACE
 		return *this;
 	}
 
-	Angles& Angles::normalize180(void)
+	Angles &Angles::normalize180(void)
 	{
 		normalize360();
 
@@ -101,7 +101,7 @@ AX_BEGIN_NAMESPACE
 		return *this;
 	}
 
-	Angles& Angles::fromShort(short rhs[3])
+	Angles &Angles::fromShort(short rhs[3])
 	{
 		for (int i = 0; i < 3; i++) {
 			(*this)[i] = rhs[i] * 360.0f / 65536.0f;

@@ -24,24 +24,24 @@ AX_BEGIN_NAMESPACE
 		// constructor and destructor
 		Rgb();
 		Rgb(byte_t ir, byte_t ig, byte_t ib);
-		Rgb(const Vector3& vec);
+		Rgb(const Vector3 &vec);
 
 		// operator overridden
-		bool operator==(const Rgb& color) const;
-		bool operator!=(const Rgb& color) const;
+		bool operator==(const Rgb &color) const;
+		bool operator!=(const Rgb &color) const;
 		void clear();
-		Rgb& set(byte_t ir, byte_t ig, byte_t ib);
-		Rgb operator*(const Rgb& other);
-		Rgb& operator*=(const Rgb& other);
+		Rgb &set(byte_t ir, byte_t ig, byte_t ib);
+		Rgb operator*(const Rgb &other);
+		Rgb &operator*=(const Rgb &other);
 		Rgb operator*(float scale);
 		Rgb operator*=(float scale);
-		byte_t& operator[](int index);
+		byte_t &operator[](int index);
 		byte_t operator[](int index) const;
 
-		void fromVector(const Vector3& v);
+		void fromVector(const Vector3 &v);
 		Vector3 toVector() const;
 		String toString() const;
-		bool fromString(const char* str);
+		bool fromString(const char *str);
 
 		const static Rgb Black ;
 		const static Rgb Red ;
@@ -60,27 +60,27 @@ AX_BEGIN_NAMESPACE
 	inline Rgb::Rgb() {}
 	inline Rgb::Rgb(byte_t ir, byte_t ig, byte_t ib)
 		: r(ir), g(ig), b(ib) {}
-	inline Rgb::Rgb(const Vector3& vec)
+	inline Rgb::Rgb(const Vector3 &vec)
 		: r(Math::clampByte(vec.x*255.f))
 		, g(Math::clampByte(vec.y*255.f))
 		, b(Math::clampByte(vec.z*255.f)) {}
 
 	// operator overridden
-	inline bool Rgb::operator==(const Rgb& color) const {
+	inline bool Rgb::operator==(const Rgb &color) const {
 		return r == color.r && g == color.g && b == color.b;
 	}
 
-	inline bool Rgb::operator!=(const Rgb& color) const {
+	inline bool Rgb::operator!=(const Rgb &color) const {
 		return r != color.r || g != color.g || b != color.b;
 	}
 
 	inline void Rgb::clear() { r = g = b = 0; }
 
-	inline Rgb& Rgb::set(byte_t ir, byte_t ig, byte_t ib) {
+	inline Rgb &Rgb::set(byte_t ir, byte_t ig, byte_t ib) {
 		r=ir; g=ig; b=ib; return *this;
 	}
 
-	inline Rgb Rgb::operator*(const Rgb& other) {
+	inline Rgb Rgb::operator*(const Rgb &other) {
 		Rgb c;
 		c.r = ((int)r * other.r) >> 8;
 		c.g = ((int)g * other.g) >> 8;
@@ -88,7 +88,7 @@ AX_BEGIN_NAMESPACE
 		return c;
 	}
 
-	inline Rgb& Rgb::operator*=(const Rgb& other) {
+	inline Rgb &Rgb::operator*=(const Rgb &other) {
 		r = ((int)r * other.r) >> 8;
 		g = ((int)g * other.g) >> 8;
 		b = ((int)b * other.b) >> 8;
@@ -112,7 +112,7 @@ AX_BEGIN_NAMESPACE
 		return *this;
 	}
 
-	inline byte_t& Rgb::operator[](int index) {
+	inline byte_t &Rgb::operator[](int index) {
 		AX_STRICT_ASSERT(index>=0 && index < 3);
 		return *(&r+index);
 	}
@@ -122,7 +122,7 @@ AX_BEGIN_NAMESPACE
 		return *(&r+index);
 	}
 
-	inline void Rgb::fromVector(const Vector3& v) {
+	inline void Rgb::fromVector(const Vector3 &v) {
 		r = Math::clampByte(v.x * 255.0f);
 		g = Math::clampByte(v.y * 255.0f);
 		b = Math::clampByte(v.z * 255.0f);
@@ -146,35 +146,35 @@ AX_BEGIN_NAMESPACE
 		Rgba(byte_t ir, byte_t ig, byte_t ib, byte_t ia=0xFF);
 		Rgba(int ir, int ig, int ib, int ia=0xFF);
 		Rgba(float _r, float _g, float _b, float _a = 1.0f);
-		Rgba(const Vector3& vec);
-		Rgba(const Vector4& vec);
-		Rgba& operator=(const Vector3& v);
-		Rgba& operator=(const Vector4& v);
+		Rgba(const Vector3 &vec);
+		Rgba(const Vector4 &vec);
+		Rgba &operator=(const Vector3 &v);
+		Rgba &operator=(const Vector4 &v);
 
-		bool operator==(const Rgba& color) const;
-		bool operator!=(const Rgba& color) const ;
+		bool operator==(const Rgba &color) const;
+		bool operator!=(const Rgba &color) const ;
 		operator const byte_t*() const;
 		void clear();
-		Rgba& set(byte_t ir, byte_t ig, byte_t ib, byte_t ia=255);
-		Rgba& set(const Rgb& rgb);
-		Rgba operator*(const Rgba& other) const;
+		Rgba &set(byte_t ir, byte_t ig, byte_t ib, byte_t ia=255);
+		Rgba &set(const Rgb &rgb);
+		Rgba operator*(const Rgba &other) const;
 		Rgba operator*(float scale) const;
-		Rgba operator+(const Rgba& other) const;
-		Rgba operator-(const Rgba& other) const;
-		Rgba& operator*=(float scale);
-		Rgba& operator+=(const Rgba& other);
+		Rgba operator+(const Rgba &other) const;
+		Rgba operator-(const Rgba &other) const;
+		Rgba &operator*=(float scale);
+		Rgba &operator+=(const Rgba &other);
 		Vector4 toVector() const;
-		byte_t& operator[](int index);
+		byte_t &operator[](int index);
 		byte_t operator[](int index) const;
 
 		String toStringRgb() const;
-		void parseRgb(const char* text);
+		void parseRgb(const char *text);
 
 		Bgr bgr() const;
 		Rgb rgb() const { return Rgb(r,g,b); }
 
 		String toString() const;
-		void fromString(const char* str);
+		void fromString(const char *str);
 
 		static Rgba randColor();
 
@@ -208,20 +208,20 @@ AX_BEGIN_NAMESPACE
 		, a(Math::clampByte(_a*255.f)) {}
 
 
-	inline Rgba::Rgba(const Vector3& vec)
+	inline Rgba::Rgba(const Vector3 &vec)
 		: r(Math::clampByte(vec.x*255.f))
 		, g(Math::clampByte(vec.y*255.f))
 		, b(Math::clampByte(vec.z*255.f))
 		, a(255) {}
 
-	inline Rgba::Rgba(const Vector4& vec)
+	inline Rgba::Rgba(const Vector4 &vec)
 		: r(Math::clampByte(vec.x*255.f))
 		, g(Math::clampByte(vec.y*255.f))
 		, b(Math::clampByte(vec.z*255.f))
 		, a(Math::clampByte(vec.w*255.f)) {}
 
 	// operator overridden
-	inline Rgba& Rgba::operator=(const Vector3& v) {
+	inline Rgba &Rgba::operator=(const Vector3 &v) {
 		r = Math::clampByte(v.x*255.f);
 		g = Math::clampByte(v.y*255.f);
 		b = Math::clampByte(v.z*255.f);
@@ -229,18 +229,18 @@ AX_BEGIN_NAMESPACE
 		return *this;
 	}
 
-	inline Rgba& Rgba::operator=(const Vector4& v) {
+	inline Rgba &Rgba::operator=(const Vector4 &v) {
 		r = Math::clampByte(v.x*255.f);
 		g = Math::clampByte(v.y*255.f);
 		b = Math::clampByte(v.z*255.f);
 		a = Math::clampByte(v.w*255.f);
 		return *this;
 	}
-	inline bool Rgba::operator==(const Rgba& color) const {
+	inline bool Rgba::operator==(const Rgba &color) const {
 		return r == color.r && g == color.g && b == color.b && a == color.a;
 	}
 
-	inline bool Rgba::operator!=(const Rgba& color) const {
+	inline bool Rgba::operator!=(const Rgba &color) const {
 		return r != color.r || g != color.g || b != color.b || a != color.a;
 	}
 
@@ -248,15 +248,15 @@ AX_BEGIN_NAMESPACE
 
 	inline void Rgba::clear() { r=g=b=a=0; }
 
-	inline Rgba& Rgba::set(byte_t ir, byte_t ig, byte_t ib, byte_t ia) {
+	inline Rgba &Rgba::set(byte_t ir, byte_t ig, byte_t ib, byte_t ia) {
 		r=ir; g=ig; b=ib; a=ia; return *this;
 	}
 
-	inline Rgba& Rgba::set(const Rgb& rgb) {
+	inline Rgba &Rgba::set(const Rgb &rgb) {
 		r=rgb.r; g=rgb.g; b=rgb.b; a=255; return *this;
 	}
 
-	inline Rgba Rgba::operator*(const Rgba& other) const {
+	inline Rgba Rgba::operator*(const Rgba &other) const {
 		Rgba c;
 		c.r = ((int)r * other.r) >> 8;
 		c.g = ((int)g * other.g) >> 8;
@@ -275,7 +275,7 @@ AX_BEGIN_NAMESPACE
 		return c;
 	}
 
-	inline Rgba Rgba::operator+(const Rgba& other) const {
+	inline Rgba Rgba::operator+(const Rgba &other) const {
 		Rgba c;
 
 		c.r = r + other.r;
@@ -286,7 +286,7 @@ AX_BEGIN_NAMESPACE
 		return c;
 	}
 
-	inline Rgba Rgba::operator-(const Rgba& other) const {
+	inline Rgba Rgba::operator-(const Rgba &other) const {
 		Rgba c;
 
 		c.r = r - other.r;
@@ -297,11 +297,11 @@ AX_BEGIN_NAMESPACE
 		return c;
 	}
 
-	inline Rgba& Rgba::operator*=(float scale) {
+	inline Rgba &Rgba::operator*=(float scale) {
 		return *this = (*this * scale);
 	}
 
-	inline Rgba& Rgba::operator+=(const Rgba& other) {
+	inline Rgba &Rgba::operator+=(const Rgba &other) {
 		return *this = (*this + other);
 	}
 
@@ -315,7 +315,7 @@ AX_BEGIN_NAMESPACE
 		return result;
 	}
 
-	inline byte_t& Rgba::operator[](int index) {
+	inline byte_t &Rgba::operator[](int index) {
 		AX_STRICT_ASSERT(index>=0);
 		AX_STRICT_ASSERT(index<4);
 		return *(&r+index);
@@ -335,7 +335,7 @@ AX_BEGIN_NAMESPACE
 		return result;
 	}
 
-	inline void Rgba::parseRgb(const char* text) {
+	inline void Rgba::parseRgb(const char *text) {
 		int _r, _g, _b;
 		int v = sscanf(text, "%d,%d,%d", &_r, &_g, &_b);
 		AX_STRICT_ASSERT(v = 3);
@@ -361,49 +361,49 @@ AX_BEGIN_NAMESPACE
 		// constructor and destructor
 		Bgr();
 		Bgr(byte_t ir, byte_t ig, byte_t ib);
-		Bgr(const Vector3& vec);
+		Bgr(const Vector3 &vec);
 
 		// operator overridden
-		bool operator==(const Bgr& color) const;
-		bool operator!=(const Bgr& color) const;
+		bool operator==(const Bgr &color) const;
+		bool operator!=(const Bgr &color) const;
 		void clear();
-		Bgr& set(byte_t ir, byte_t ig, byte_t ib);
-		Bgr operator*(const Bgr& other) const;
-		Bgr& operator*=(const Bgr& other);
+		Bgr &set(byte_t ir, byte_t ig, byte_t ib);
+		Bgr operator*(const Bgr &other) const;
+		Bgr &operator*=(const Bgr &other);
 		Bgr operator*(int filter) const;
-		Bgr& operator*=(int filter);
+		Bgr &operator*=(int filter);
 		Bgr operator*(float scale) const;
-		Bgr& operator*=(float scale);
-		Bgr operator+(const Bgr& other) const;
-		Bgr& operator+=(const Bgr& other);
-		byte_t& operator[](int index);
+		Bgr &operator*=(float scale);
+		Bgr operator+(const Bgr &other) const;
+		Bgr &operator+=(const Bgr &other);
+		byte_t &operator[](int index);
 		byte_t operator[](int index) const;
 	};
 
 	inline Bgr::Bgr() {}
 	inline Bgr::Bgr(byte_t ir, byte_t ig, byte_t ib)
 		: r(ir), g(ig), b(ib) {}
-	inline Bgr::Bgr(const Vector3& vec)
+	inline Bgr::Bgr(const Vector3 &vec)
 		: r(Math::clampByte(vec.x*255.f))
 		, g(Math::clampByte(vec.y*255.f))
 		, b(Math::clampByte(vec.z*255.f)) {}
 
 	// operator overridden
-	inline bool Bgr::operator==(const Bgr& color) const {
+	inline bool Bgr::operator==(const Bgr &color) const {
 		return r == color.r && g == color.g && b == color.b;
 	}
 
-	inline bool Bgr::operator!=(const Bgr& color) const {
+	inline bool Bgr::operator!=(const Bgr &color) const {
 		return r != color.r || g != color.g || b != color.b;
 	}
 
 	inline void Bgr::clear() { r = g = b = 0; }
 
-	inline Bgr& Bgr::set(byte_t ir, byte_t ig, byte_t ib) {
+	inline Bgr &Bgr::set(byte_t ir, byte_t ig, byte_t ib) {
 		r=ir; g=ig; b=ib; return *this;
 	}
 
-	inline Bgr Bgr::operator*(const Bgr& other) const {
+	inline Bgr Bgr::operator*(const Bgr &other) const {
 		Bgr c;
 		c.r = ((int)r * other.r) / 255;
 		c.g = ((int)g * other.g) / 255;
@@ -411,7 +411,7 @@ AX_BEGIN_NAMESPACE
 		return c;
 	}
 
-	inline Bgr& Bgr::operator*=(const Bgr& other) {
+	inline Bgr &Bgr::operator*=(const Bgr &other) {
 		r = ((int)r * other.r) / 255;
 		g = ((int)g * other.g) / 255;
 		b = ((int)b * other.b) / 255;
@@ -426,7 +426,7 @@ AX_BEGIN_NAMESPACE
 		return c;
 	}
 
-	inline Bgr& Bgr::operator*=(int filter) {
+	inline Bgr &Bgr::operator*=(int filter) {
 		r = ((int)r * filter) / 255;
 		g = ((int)g * filter) / 255;
 		b = ((int)b * filter) / 255;
@@ -442,14 +442,14 @@ AX_BEGIN_NAMESPACE
 		return c;
 	}
 
-	inline Bgr& Bgr::operator*=(float scale) {
+	inline Bgr &Bgr::operator*=(float scale) {
 		r = Math::clampByte(scale * r);
 		g = Math::clampByte(scale * g);
 		b = Math::clampByte(scale * b);
 		return *this;
 	}
 
-	inline Bgr Bgr::operator+(const Bgr& other) const {
+	inline Bgr Bgr::operator+(const Bgr &other) const {
 		Bgr c;
 		c.r = Math::clampByte((int)r + other.r);
 		c.g = Math::clampByte((int)g + other.g);
@@ -457,14 +457,14 @@ AX_BEGIN_NAMESPACE
 		return c;
 	}
 
-	inline Bgr& Bgr::operator+=(const Bgr& other) {
+	inline Bgr &Bgr::operator+=(const Bgr &other) {
 		r = Math::clampByte((int)r + other.r);
 		g = Math::clampByte((int)g + other.g);
 		b = Math::clampByte((int)b + other.b);
 		return *this;
 	}
 
-	inline byte_t& Bgr::operator[](int index) {
+	inline byte_t &Bgr::operator[](int index) {
 		AX_STRICT_ASSERT(index>=0 && index < 3);
 		return ((byte_t*)this)[index];
 	}
@@ -488,20 +488,20 @@ AX_BEGIN_NAMESPACE
 		Bgra(byte_t ir, byte_t ig, byte_t ib, byte_t ia=0xFF)
 			: b(ib), g(ig), r(ir), a(ia) {}
 
-		Bgra(const Vector3& vec)
+		Bgra(const Vector3 &vec)
 			: b(Math::clampByte(vec.z*255.f))
 			, g(Math::clampByte(vec.y*255.f))
 			, r(Math::clampByte(vec.x*255.f))
 			, a(255) {}
 
-		Bgra(const Vector4& plane)
+		Bgra(const Vector4 &plane)
 			: b(Math::clampByte(plane.z*255.f))
 			, g(Math::clampByte(plane.y*255.f))
 			, r(Math::clampByte(plane.x*255.f))
 			, a(Math::clampByte(plane.w*255.f)) {}
 
 		// operator overridden
-		Bgra& operator=(const Vector3& v) {
+		Bgra &operator=(const Vector3 &v) {
 			r = Math::clampByte(v.x*255.f);
 			g = Math::clampByte(v.y*255.f);
 			b = Math::clampByte(v.z*255.f);
@@ -509,18 +509,18 @@ AX_BEGIN_NAMESPACE
 			return *this;
 		}
 
-		Bgra& operator=(const Vector4& v) {
+		Bgra &operator=(const Vector4 &v) {
 			r = Math::clampByte(v.x*255.f);
 			g = Math::clampByte(v.y*255.f);
 			b = Math::clampByte(v.z*255.f);
 			a = Math::clampByte(v.w*255.f);
 			return *this;
 		}
-		bool operator==(const Bgra& color) const {
+		bool operator==(const Bgra &color) const {
 			return r == color.r && g == color.g && b == color.b && a == color.a;
 		}
 
-		bool operator!=(const Bgra& color) const {
+		bool operator!=(const Bgra &color) const {
 			return r != color.r || g != color.g || b != color.b || a != color.a;
 		}
 
@@ -528,11 +528,11 @@ AX_BEGIN_NAMESPACE
 
 		void clear() { r=g=b=a=0; }
 
-		Bgra& Set(byte_t ir, byte_t ig, byte_t ib, byte_t ia=255) {
+		Bgra &Set(byte_t ir, byte_t ig, byte_t ib, byte_t ia=255) {
 			r=ir; g=ig; b=ib; a=ia; return *this;
 		}
 
-		Bgra operator*(const Bgra& other) const {
+		Bgra operator*(const Bgra &other) const {
 			Bgra c;
 			c.r = ((int)r * other.r) >> 8;
 			c.g = ((int)g * other.g) >> 8;
@@ -551,7 +551,7 @@ AX_BEGIN_NAMESPACE
 			return c;
 		}
 
-		Bgra operator+(const Bgra& other) const {
+		Bgra operator+(const Bgra &other) const {
 			Bgra c;
 
 			c.r = r + other.r;
@@ -562,7 +562,7 @@ AX_BEGIN_NAMESPACE
 			return c;
 		}
 
-		Bgra operator-(const Bgra& other) const {
+		Bgra operator-(const Bgra &other) const {
 			Bgra c;
 
 			c.r = r - other.r;

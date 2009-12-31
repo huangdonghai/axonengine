@@ -12,9 +12,9 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-	static D3D9texturemanager* s_manager;
+	static D3D9texturemanager *s_manager;
 
-	inline bool trTexFormat(TexFormat texformat, D3DFORMAT& d3dformat) {
+	inline bool trTexFormat(TexFormat texformat, D3DFORMAT &d3dformat) {
 		d3dformat = D3DFMT_UNKNOWN;
 
 		switch (texformat) {
@@ -193,7 +193,7 @@ AX_BEGIN_NAMESPACE
 		g_statistic->subValue(stat_textureMemory, m_videoMemoryUsed);
 	}
 
-	bool D3D9texture::doInit(const String& name, intptr_t arg)
+	bool D3D9texture::doInit(const String &name, intptr_t arg)
 	{
 		AX_ASSERT(!m_initialized);
 
@@ -256,25 +256,25 @@ AX_BEGIN_NAMESPACE
 		setPrivateData();
 	}
 
-	void D3D9texture::initialize( const FixedString& name, InitFlags flags )
+	void D3D9texture::initialize( const FixedString &name, InitFlags flags )
 	{
 		doInit(name, flags);
 	}
 
-	void D3D9texture::getSize(int& width, int& height, int& depth)
+	void D3D9texture::getSize(int &width, int &height, int &depth)
 	{
 		width = m_width;
 		height = m_height;
 		depth = m_depth;
 	}
 
-	void D3D9texture::getSize(int& width, int& height)
+	void D3D9texture::getSize(int &width, int &height)
 	{
 		width = m_width;
 		height = m_height;
 	}
 
-	void D3D9texture::uploadSubTextureIm(const Rect& rect, const void* pixels, TexFormat format /*= TexFormat::AUTO */)
+	void D3D9texture::uploadSubTextureIm(const Rect &rect, const void *pixels, TexFormat format /*= TexFormat::AUTO */)
 	{
 		D3D9_SCOPELOCK;
 
@@ -311,7 +311,7 @@ AX_BEGIN_NAMESPACE
 		SAFE_RELEASE(surface);
 	}
 
-	void D3D9texture::uploadSubTextureIm(int level, const Rect& rect, const void* pixels, TexFormat format /*= TexFormat::AUTO */)
+	void D3D9texture::uploadSubTextureIm(int level, const Rect &rect, const void *pixels, TexFormat format /*= TexFormat::AUTO */)
 	{
 		D3D9_SCOPELOCK;
 
@@ -358,7 +358,7 @@ AX_BEGIN_NAMESPACE
 		m_filterMode = filtermode;
 	}
 
-	void D3D9texture::setBorderColor(const Rgba& color)
+	void D3D9texture::setBorderColor(const Rgba &color)
 	{
 		m_borderColor = D3DCOLOR_RGBA(color.r, color.g, color.b, color.a);
 	}
@@ -368,7 +368,7 @@ AX_BEGIN_NAMESPACE
 		m_hardwareShadowMap = enable;
 	}
 
-	void D3D9texture::saveToFile(const String& filename)
+	void D3D9texture::saveToFile(const String &filename)
 	{
 		String ospath = g_fileSystem->modPathToOsPath(filename);
 		HRESULT hr;
@@ -394,7 +394,7 @@ AX_BEGIN_NAMESPACE
 		V(m_object->LockRect(0, &lockedRect, 0, 0));
 		V(m_object->UnlockRect(0));
 
-		D3D9texture* dummy = new D3D9texture();
+		D3D9texture *dummy = new D3D9texture();
 		dummy->initialize(TexFormat::BGRA8, m_width, m_height, Texture::IF_AutoGenMipmap);
 		dummy->uploadSubTextureIm(Rect(0,0,m_width,m_height), lockedRect.pBits, m_format);
 //		dummy->saveToFile("test.dds");
@@ -429,12 +429,12 @@ AX_BEGIN_NAMESPACE
 		return m_format;
 	}
 
-	bool D3D9texture::loadFile2D(const String& filename)
+	bool D3D9texture::loadFile2D(const String &filename)
 	{
 		D3D9_SCOPELOCK;
 
 		HRESULT hr;
-		const byte_t* data;
+		const byte_t *data;
 		int flags = 0;
 
 		if (!(m_initFlags.isSet(IF_NoMipmap)))
@@ -562,14 +562,14 @@ AX_BEGIN_NAMESPACE
 	void D3D9texture::setPrivateData()
 	{
 #if 0
-		void* data = this;
+		void *data = this;
 		m_object->SetPrivateData(d3d9ResGuid, &data, sizeof(void*), 0);
 #else
 		s_manager->addToDict(m_object, this);
 #endif
 	}
 
-	void D3D9texture::copyFramebuffer(const Rect& r)
+	void D3D9texture::copyFramebuffer(const Rect &r)
 	{
 
 	}
@@ -609,7 +609,7 @@ AX_BEGIN_NAMESPACE
 		SafeDelete(s_manager);
 	}
 
-	D3D9texture* D3D9texture::getAppTexture( LPDIRECT3DBASETEXTURE9 d3dtex )
+	D3D9texture *D3D9texture::getAppTexture( LPDIRECT3DBASETEXTURE9 d3dtex )
 	{
 		return s_manager->getTex(d3dtex);
 	}
@@ -624,9 +624,9 @@ AX_BEGIN_NAMESPACE
 		AX_COMMAND_ENTRY("dumpTex",	dumpTex_f)
 	AX_END_COMMAND_MAP()
 
-	static const String getImageFilename(const char* ext) {
+	static const String getImageFilename(const char *ext) {
 		String filename;
-		char* pattern;
+		char *pattern;
 		int i;
 
 		/* find a file name */
@@ -654,13 +654,13 @@ AX_BEGIN_NAMESPACE
 		g_cmdSystem->removeHandler(this);
 	}
 
-	void D3D9texturemanager::dumpTex_f(const CmdArgs& params)
+	void D3D9texturemanager::dumpTex_f(const CmdArgs &params)
 	{
 		if (params.tokened.size() != 2) {
 			Printf("Usage: dumpTex <tex_name>\n");
 			return;
 		}
-		const String& texname = params.tokened[1];
+		const String &texname = params.tokened[1];
 
 		TexturePtr tex = Texture::load(texname);
 
@@ -686,7 +686,7 @@ AX_BEGIN_NAMESPACE
 			// load commands
 			LoadCmdList::const_iterator it = m_loadCmdList.begin();
 			for (; it != m_loadCmdList.end(); ++it) {
-				const LoadCmd* cmd = &*it;
+				const LoadCmd *cmd = &*it;
 
 				if (!cmd->texName.empty()) {
 					cmd->texture->initialize(cmd->texName, cmd->initFlags);
@@ -702,7 +702,7 @@ AX_BEGIN_NAMESPACE
 			// upload commands
 			UploadCmdList::const_iterator it = m_uploadCmdList.begin();
 			for (; it != m_uploadCmdList.end(); ++it) {
-				const UploadCmd* cmd = &*it;
+				const UploadCmd *cmd = &*it;
 
 				if (cmd->pixel) {
 					cmd->texture->uploadSubTextureIm(cmd->rect, cmd->pixel, cmd->format);
@@ -727,7 +727,7 @@ AX_BEGIN_NAMESPACE
 			// check need free
 			Link<Texture>* it = m_needFreeHead.getNextNode();
 			while (it) {
-				D3D9texture* owner = (D3D9texture*)it->getOwner();
+				D3D9texture *owner = (D3D9texture*)it->getOwner();
 				Link<Texture>* next = it->getNextNode();
 				it->removeFromList();
 				m_textureDict.erase(owner->getKey());

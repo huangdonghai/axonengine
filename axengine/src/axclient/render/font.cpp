@@ -26,8 +26,8 @@ namespace {
 
 	FT_Library gFT_Library;
 
-	const char* gFontPath = "fonts";
-	const char* gFontDefFileExt = ".font";
+	const char *gFontPath = "fonts";
+	const char *gFontDefFileExt = ".font";
 
 	const float FONT_SIZE_SCALE = 1.f / 64;
 	const int FONT_METRIC_SHIFT_BITS = 6;
@@ -47,8 +47,8 @@ namespace {
 		void finalize();
 		BufInfo getFontFileBuf(const String filename);
 
-		FontRp load(const String& name, int w, int h);
-		void deleteFont(Font* font);
+		FontRp load(const String &name, int w, int h);
+		void deleteFont(Font *font);
 
 	private:
 		bool m_initialized;
@@ -99,7 +99,7 @@ namespace {
 
 		String filename = gFontPath;
 		filename += "/" + name;
-		void* buf;
+		void *buf;
 		size_t size;
 
 		size = g_fileSystem->readFile(filename, &buf);
@@ -117,7 +117,7 @@ namespace {
 		return buf_info;
 	}
 
-	FontRp Manager::load( const String& name, int w, int h )
+	FontRp Manager::load( const String &name, int w, int h )
 	{
 		FixedString key = Font::normalizeKey(name, w, h);
 
@@ -127,7 +127,7 @@ namespace {
 			return it->second;
 		}
 
-		Font* result = new Font();
+		Font *result = new Font();
 		result->doInit(name, w, h);
 
 		m_fontDict[key] = result;
@@ -136,12 +136,12 @@ namespace {
 		return result;
 	}
 
-	void Manager::deleteFont( Font* font )
+	void Manager::deleteFont( Font *font )
 	{
 		// TODO: wait for delete
 	}
 
-	static Manager* s_fontManager = 0;
+	static Manager *s_fontManager = 0;
 }
 
 AX_BEGIN_NAMESPACE
@@ -151,7 +151,7 @@ AX_BEGIN_NAMESPACE
 	// class FontFace
 	//------------------------------------------------------------------------------
 
-	FontFace::FontFace(const FaceDef* def, int nWidth, int nHeight)
+	FontFace::FontFace(const FaceDef *def, int nWidth, int nHeight)
 		: m_def(def)
 	{
 		BufInfo info = s_fontManager->getFontFileBuf(def->filename);
@@ -204,7 +204,7 @@ AX_BEGIN_NAMESPACE
 		m_faceInfo.heightAdjust = maxAscender - m_faceInfo.ascender;
 	}
 
-	bool FontFace::getGlyphInfo(wchar_t ch, GlyphInfo& ginfo) {
+	bool FontFace::getGlyphInfo(wchar_t ch, GlyphInfo &ginfo) {
 		FT_UInt glyph_index = 0;
 
 		glyph_index = FT_Get_Char_Index(m_ftface, ch);
@@ -224,7 +224,7 @@ AX_BEGIN_NAMESPACE
 		return true;
 	}
 
-	bool FontFace::getCharBitmap(wchar_t ch, int width, int height, byte_t* data) {
+	bool FontFace::getCharBitmap(wchar_t ch, int width, int height, byte_t *data) {
 		FT_UInt glyph_index = 0;
 
 		glyph_index = FT_Get_Char_Index(m_ftface, ch);
@@ -253,7 +253,7 @@ AX_BEGIN_NAMESPACE
 		memset(data, 0, width * height);
 
 		int h, w, wr, hr;
-		FT_Bitmap& bitmap = m_ftface->glyph->bitmap;
+		FT_Bitmap &bitmap = m_ftface->glyph->bitmap;
 		w_start = m_ftface->glyph->bitmap_left;
 		w_start = Font::ATLAS_PAD;
 		h_start = m_faceInfo.height - m_ftface->glyph->bitmap_top + m_faceInfo.heightAdjust + Font::ATLAS_PAD;
@@ -296,7 +296,7 @@ AX_BEGIN_NAMESPACE
 	Font::~Font()
 	{}
 
-	bool Font::doInit(const String& name, int w, int h)
+	bool Font::doInit(const String &name, int w, int h)
 	{
 		m_name = name;
 #if 0
@@ -324,7 +324,7 @@ AX_BEGIN_NAMESPACE
 		int maxViewHeight = 0;
 		int maxAscender = 0;
 		for (i=0; i<m_faceDefs.size(); i++) {
-			FontFace* face = new FontFace(&m_faceDefs[i], m_width, m_height);
+			FontFace *face = new FontFace(&m_faceDefs[i], m_width, m_height);
 			m_fontFaces.push_back(face);
 
 			FaceInfo faceinfo = face->getFaceInfo();
@@ -369,7 +369,7 @@ AX_BEGIN_NAMESPACE
 	bool Font::parseFontDef()
 	{
 		String fname = m_name + ".font";
-		char* fbuf;
+		char *fbuf;
 		size_t fsize;
 
 		fsize = g_fileSystem->readFile(fname, (void**)&fbuf);
@@ -389,20 +389,20 @@ AX_BEGIN_NAMESPACE
 			return false;
 		}
 
-		const TiXmlElement* root = doc.FirstChildElement("font");
+		const TiXmlElement *root = doc.FirstChildElement("font");
 
 		// no root
 		if (!root)
 			return false;
 
-		const TiXmlElement* elem = nullptr;
+		const TiXmlElement *elem = nullptr;
 		for (elem = root->FirstChildElement(); elem; elem = elem->NextSiblingElement()) {
 			if (elem->ValueTStr() != "face")
 				continue;
 
-			const char* file = elem->Attribute("file");
-			const char* aa = elem->Attribute("antialias");
-			const char* scale = elem->Attribute("scale");
+			const char *file = elem->Attribute("file");
+			const char *aa = elem->Attribute("antialias");
+			const char *scale = elem->Attribute("scale");
 			if (!file || !aa) return false;
 
 			FaceDef def;
@@ -431,7 +431,7 @@ AX_BEGIN_NAMESPACE
 		return m_name;
 	}
 
-	uint_t Font::getStringWidth(const WString& string)
+	uint_t Font::getStringWidth(const WString &string)
 	{
 		uint_t width = 0;
 
@@ -456,7 +456,7 @@ AX_BEGIN_NAMESPACE
 
 	uint_t Font::m_getCharWidth(wchar_t ch)
 	{
-		GlyphInfo& ginfo = m_glyphInfos[ch];
+		GlyphInfo &ginfo = m_glyphInfos[ch];
 
 		// if have cached, return
 		if (ginfo.advance != 0xFF)
@@ -483,11 +483,11 @@ AX_BEGIN_NAMESPACE
 		return ginfo.advance;
 	}
 
-	size_t Font::updateTexture(const wchar_t* str)
+	size_t Font::updateTexture(const wchar_t *str)
 	{
 		size_t i;
 		wchar_t c;
-		byte_t* data = (byte_t*)Alloca(m_width*m_height);
+		byte_t *data = (byte_t*)Alloca(m_width*m_height);
 
 		m_texAtlas->newFrame();
 
@@ -505,17 +505,17 @@ AX_BEGIN_NAMESPACE
 		return i;
 	}
 
-	void Font::getCharInfo(int id, Texture*& tex, Vector4& tc)
+	void Font::getCharInfo(int id, Texture*& tex, Vector4 &tc)
 	{
 		return m_texAtlas->getChunkInfo(id, tex, tc);
 	}
 
-	const GlyphInfo& Font::getGlyphInfo(wchar_t c)
+	const GlyphInfo &Font::getGlyphInfo(wchar_t c)
 	{
 		return m_glyphInfos[c];
 	}
 
-	bool Font::uploadCharGlyph(wchar_t c, byte_t* data)
+	bool Font::uploadCharGlyph(wchar_t c, byte_t *data)
 	{
 #if  1
 		if (m_glyphInfos[c].advance == 0xFF) {
@@ -539,7 +539,7 @@ AX_BEGIN_NAMESPACE
 		m_texAtlas->newFrame();
 	}
 
-	FontRp Font::load( const String& name, int w, int h )
+	FontRp Font::load( const String &name, int w, int h )
 	{
 		return s_fontManager->load(name, w, h);
 	}
@@ -559,7 +559,7 @@ AX_BEGIN_NAMESPACE
 		s_fontManager->deleteFont(this);
 	}
 
-	FixedString Font::normalizeKey( const String& name, int w, int h )
+	FixedString Font::normalizeKey( const String &name, int w, int h )
 	{
 		std::stringstream ss;
 		ss << name << "_" << w << "x" << h;

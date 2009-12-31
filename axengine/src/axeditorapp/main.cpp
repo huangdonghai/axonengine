@@ -71,7 +71,7 @@ int main(int argc, char *argv[])
 	splash->showMessage(QObject::tr("Initializing axEditor..."), align, Qt::black);
 
     g_workbench = new Workbench();
-	//ParticleEditor* editor = new ParticleEditor();
+	//ParticleEditor *editor = new ParticleEditor();
     bool v = g_app->connect(g_app, SIGNAL(lastWindowClosed()), g_app, SLOT(quit()));
 	AX_ASSERT(v);
 	v = g_app->connect(g_app, SIGNAL(aboutToQuit()), g_app, SLOT(myQuit()));

@@ -40,7 +40,7 @@ AX_BEGIN_NAMESPACE
 
 	}
 
-	void Animated::loadAsset(const LuaTable& t)
+	void Animated::loadAsset(const LuaTable &t)
 	{
 		clear();
 

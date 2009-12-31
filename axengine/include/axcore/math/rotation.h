@@ -16,11 +16,11 @@ AX_BEGIN_NAMESPACE
 
 	struct AX_API Rotate : public Vector3 {
 	public:
-		void fromAxis(const Matrix3& axis);
+		void fromAxis(const Matrix3 &axis);
 		Matrix3 toAxis() const;
 	};
 
-	inline void Rotate::fromAxis(const Matrix3& axis) {
+	inline void Rotate::fromAxis(const Matrix3 &axis) {
 		double theta;
 		double cp;
 		double sp;

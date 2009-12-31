@@ -20,7 +20,7 @@ AX_BEGIN_NAMESPACE
 		return result;
 	}
 
-	bool Vector3::fromString(const char* str) {
+	bool Vector3::fromString(const char *str) {
 		int v = sscanf(str, "%f %f %f", &x, &y, &z);
 		AX_ASSERT(v == 3);
 		return v == 3;

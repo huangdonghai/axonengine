@@ -38,7 +38,7 @@ protected:
 
 private:
 	Sequence<GfxObject*> m_objects;
-	Animator* m_animator;
+	Animator *m_animator;
 };
 
 AX_END_NAMESPACE

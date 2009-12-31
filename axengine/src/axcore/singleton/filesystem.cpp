@@ -17,7 +17,7 @@ namespace {
 	using namespace Axon;
 	
 	/// default game path
-	const char* const DEFAULT_DATA_PATH = "data";
+	const char *const DEFAULT_DATA_PATH = "data";
 
 	int fileLength(FILE *fp)
 	{
@@ -32,7 +32,7 @@ namespace {
 			return end;
 	}
 
-	String fullPath(const String& base, const String& path, const String& file)
+	String fullPath(const String &base, const String &path, const String &file)
 	{
 			String fullpath;
 
@@ -52,7 +52,7 @@ namespace {
 			return fullpath;
 	}
 
-	String fullPath(const String& base, const String& file)
+	String fullPath(const String &base, const String &file)
 	{
 			String fullpath = fullPath(base, file, "");
 
@@ -81,28 +81,28 @@ AX_BEGIN_NAMESPACE
 	PakedFolder::~PakedFolder()
 	{}
 
-	void PakedFolder::addPath(const String& fullpath)
+	void PakedFolder::addPath(const String &fullpath)
 	{
 		getPath(fullpath);
 	}
 
-	void PakedFolder::addFile(const String& fullpath, PakedFile* info)
+	void PakedFolder::addFile(const String &fullpath, PakedFile *info)
 	{
 		String path = PathUtil::getDir(fullpath);
 
-		PakedFolder* pf = getPath(path);
+		PakedFolder *pf = getPath(path);
 
 		AX_ASSERT(pf);
 
 		pf->m_packedFileDict[fullpath] = info;
 	}
 
-	PakedFile* PakedFolder::getFile(const String& fullpath)
+	PakedFile *PakedFolder::getFile(const String &fullpath)
 	{
 		return NULL;
 	}
 
-	void PakedFolder::getFileInfos(const String& path, const String& exts, int flags, OUT FileInfoSeq& fis)
+	void PakedFolder::getFileInfos(const String &path, const String &exts, int flags, OUT FileInfoSeq &fis)
 	{
 		String new_path;
 		if (!PathUtil::isDirectoryLetter(path[0])) {
@@ -115,7 +115,7 @@ AX_BEGIN_NAMESPACE
 			new_path += '/';
 		}
 
-		PakedFolder* pf = getPath(new_path, false);
+		PakedFolder *pf = getPath(new_path, false);
 
 		if (!pf)
 			return;
@@ -145,7 +145,7 @@ AX_BEGIN_NAMESPACE
 
 		for (it = pf->m_packedFileDict.begin(); it != pf->m_packedFileDict.end(); ++it) {
 			FileInfo info;
-			PakedFile* pf = it->second;
+			PakedFile *pf = it->second;
 			unz_file_info file_info;
 			char entryName[260];
 
@@ -178,7 +178,7 @@ AX_BEGIN_NAMESPACE
 		}
 	}
 
-	PakedFolder* PakedFolder::getPath(const String& path, bool bAddPath)
+	PakedFolder *PakedFolder::getPath(const String &path, bool bAddPath)
 	{
 		if (path == m_fullName)
 			return this;
@@ -195,7 +195,7 @@ AX_BEGIN_NAMESPACE
 		}
 
 		// find subpath
-		PakedFolder* ret = NULL;
+		PakedFolder *ret = NULL;
 		PackedFolderList::iterator it;
 		for (it = m_childrenList.begin(); it != m_childrenList.end(); ++it) {
 			if ((*it)->m_fullName == subpath) {
@@ -254,7 +254,7 @@ AX_BEGIN_NAMESPACE
 		return m_mode;
 	}
 
-	size_t File::read(void* buffer, size_t len)
+	size_t File::read(void *buffer, size_t len)
 	{
 		SCOPE_LOCK;
 
@@ -270,7 +270,7 @@ AX_BEGIN_NAMESPACE
 		return len;
 	}
 
-	char* File::readLine(char* buffer, int n)
+	char *File::readLine(char *buffer, int n)
 	{
 		SCOPE_LOCK;
 
@@ -283,12 +283,12 @@ AX_BEGIN_NAMESPACE
 		}
 	}
 
-	size_t File::write(const void* buffer, size_t len)
+	size_t File::write(const void *buffer, size_t len)
 	{
 		SCOPE_LOCK;
 
 		size_t size = len;
-		const byte_t* buf = (byte_t*)buffer;
+		const byte_t *buf = (byte_t*)buffer;
 
 		bool failedonce = false;
 		while (size) {
@@ -316,7 +316,7 @@ AX_BEGIN_NAMESPACE
 		return len;
 	}
 
-	int File::writeLine(const char* str)
+	int File::writeLine(const char *str)
 	{
 		SCOPE_LOCK;
 
@@ -416,7 +416,7 @@ AX_BEGIN_NAMESPACE
 		return ret;
 	}
 
-	size_t CDECL File::printf(const char* format, ...)
+	size_t CDECL File::printf(const char *format, ...)
 	{
 		char temp[4096];
 		va_list argptr;
@@ -479,7 +479,7 @@ AX_BEGIN_NAMESPACE
 	{}
 
 
-	void FileSystem::addGameDirectory(const String& dir, bool extractSrc)
+	void FileSystem::addGameDirectory(const String &dir, bool extractSrc)
 	{
 		SCOPE_LOCK;
 
@@ -504,7 +504,7 @@ AX_BEGIN_NAMESPACE
 		for (; it != strvec.end(); ++it) {
 			String fullpath = fullPath(dir, *it);
 
-			PakFile* packfile = loadPakFile(fullpath, *it);
+			PakFile *packfile = loadPakFile(fullpath, *it);
 
 			m_pakFiles.push_back(packfile);
 		}
@@ -513,7 +513,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 
-	bool FileSystem::ospathToDataPath(const String& path, String& gpath)
+	bool FileSystem::ospathToDataPath(const String &path, String &gpath)
 	{
 		SCOPE_LOCK;
 
@@ -559,7 +559,7 @@ AX_BEGIN_NAMESPACE
 		return true;
 	}
 
-	String FileSystem::dataPathToOsPath(const String& gpath)
+	String FileSystem::dataPathToOsPath(const String &gpath)
 	{
 		String fullpath = m_dataPath;
 		if (gpath.length()) {
@@ -576,7 +576,7 @@ AX_BEGIN_NAMESPACE
 		return m_dataPath;
 	}
 
-	StringSeq FileSystem::fileListByExts(const String& path, const String& exts, int flags)
+	StringSeq FileSystem::fileListByExts(const String &path, const String &exts, int flags)
 	{
 		SCOPE_LOCK;
 
@@ -587,7 +587,7 @@ AX_BEGIN_NAMESPACE
 		return PathUtil::listFileByExts(datapath, fullpath, exts, flags);
 	}
 
-	FileInfoSeq FileSystem::getFileInfos(const String& path, const String& exts, int flags)
+	FileInfoSeq FileSystem::getFileInfos(const String &path, const String &exts, int flags)
 	{
 		SCOPE_LOCK;
 
@@ -595,7 +595,7 @@ AX_BEGIN_NAMESPACE
 
 		m_pakedFolders.getFileInfos(path, exts, flags, fis);
 
-		AX_FOREACH(const SearchDir& sp, m_searchDirs) {
+		AX_FOREACH(const SearchDir &sp, m_searchDirs) {
 			String datapath = sp.dir + AX_PATH_SEP_STR;
 			String fullpath = sp.dir;
 
@@ -615,12 +615,12 @@ AX_BEGIN_NAMESPACE
 	}
 
 
-	File* FileSystem::openFileByMode(const String& filename, File::AccessMode mode)
+	File *FileSystem::openFileByMode(const String &filename, File::AccessMode mode)
 	{
 		SCOPE_LOCK;
 
 		bool sync;
-		File* file = 0;
+		File *file = 0;
 
 		sync = false;
 
@@ -641,11 +641,11 @@ AX_BEGIN_NAMESPACE
 		return file;
 	}
 
-	File* FileSystem::openFileRead(const String& filename)
+	File *FileSystem::openFileRead(const String &filename)
 	{
 		SCOPE_LOCK;
 
-		File* file = nullptr;
+		File *file = nullptr;
 
 		if (filename.empty())
 			return file;
@@ -661,7 +661,7 @@ AX_BEGIN_NAMESPACE
 			/* real file */
 			String path = fullPath(sp->dir, filename);
 
-			FILE* fp = NULL;
+			FILE *fp = NULL;
 			gzFile gzf = NULL;
 
 			fp = fopen(u2l(path).c_str(), "rb");
@@ -684,9 +684,9 @@ AX_BEGIN_NAMESPACE
 
 				PathUtil::createDir(extractDir);
 
-				FILE* fw = fopen(u2l(extractDir).c_str(), "wb");
+				FILE *fw = fopen(u2l(extractDir).c_str(), "wb");
 				if (fw) {
-					byte_t* buf = new byte_t[file->m_size];
+					byte_t *buf = new byte_t[file->m_size];
 					file->read( buf, file->m_size);
 					file->seek(0, File::SeekSet);
 					fwrite(buf, file->m_size, 1, fw);
@@ -708,7 +708,7 @@ AX_BEGIN_NAMESPACE
 
 		EntryDict::iterator it = m_pakedFileDict.find(fn);
 		if (it != m_pakedFileDict.end()) {
-			PakedFile* packedfile = it->second;
+			PakedFile *packedfile = it->second;
 
 			file = new File;
 			file->m_type = File::Zipped;
@@ -731,7 +731,7 @@ AX_BEGIN_NAMESPACE
 		return file;
 	}
 
-	File* FileSystem::openFileWrite(const String& filename)
+	File *FileSystem::openFileWrite(const String &filename)
 	{
 		SCOPE_LOCK;
 
@@ -742,7 +742,7 @@ AX_BEGIN_NAMESPACE
 
 		PathUtil::createDir(path);
 
-		FILE* fp = NULL;
+		FILE *fp = NULL;
 		gzFile gzf = NULL;
 
 		{
@@ -752,7 +752,7 @@ AX_BEGIN_NAMESPACE
 			}
 		}
 
-		File* cf(new File);
+		File *cf(new File);
 
 		cf->m_type = File::Stdio;
 		cf->m_handle = fp;
@@ -765,7 +765,7 @@ AX_BEGIN_NAMESPACE
 		return cf;
 	}
 
-	File* FileSystem::openFileAppend(const String& filename)
+	File *FileSystem::openFileAppend(const String &filename)
 	{
 		SCOPE_LOCK;
 
@@ -773,13 +773,13 @@ AX_BEGIN_NAMESPACE
 
 		PathUtil::createDir(path);
 
-		FILE* fp = fopen(u2l(path).c_str(), "ab+");
+		FILE *fp = fopen(u2l(path).c_str(), "ab+");
 
 		if (!fp) {
 			return nullptr;
 		}
 
-		File* cf(new File);
+		File *cf(new File);
 
 		cf->m_type = File::Stdio;
 		cf->m_handle = fp;
@@ -792,7 +792,7 @@ AX_BEGIN_NAMESPACE
 		return cf;
 	}
 
-	size_t FileSystem::readFile(const String& filename, void **buffer)
+	size_t FileSystem::readFile(const String &filename, void **buffer)
 	{
 		SCOPE_LOCK;
 
@@ -803,7 +803,7 @@ AX_BEGIN_NAMESPACE
 			return 0;
 		}
 
-		File* fp = openFileRead(filename);
+		File *fp = openFileRead(filename);
 		std::auto_ptr<File> autofp(fp);
 
 		if (!fp) {
@@ -838,7 +838,7 @@ AX_BEGIN_NAMESPACE
 		SafeDeleteArray(buffer);
 	}
 
-	void FileSystem::writeFile(const String& filename, const void *buffer, size_t size)
+	void FileSystem::writeFile(const String &filename, const void *buffer, size_t size)
 	{
 		SCOPE_LOCK;
 
@@ -846,7 +846,7 @@ AX_BEGIN_NAMESPACE
 			return;
 		}
 
-		File* fp = openFileWrite(filename);
+		File *fp = openFileWrite(filename);
 		if (!fp) {
 			return;
 		}
@@ -857,7 +857,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 
-	int FileSystem::compareFileModifyTime(const String& srcfile, const String& destfile)
+	int FileSystem::compareFileModifyTime(const String &srcfile, const String &destfile)
 	{
 		longlong_t start = OsUtil::microseconds();
 
@@ -881,14 +881,14 @@ AX_BEGIN_NAMESPACE
 	}
 
 
-	void FileSystem::attachFileObject(File* cf)
+	void FileSystem::attachFileObject(File *cf)
 	{
 		SCOPE_LOCK;
 
 		m_fileList.push_front(cf);
 	}
 
-	void FileSystem::detachFileObject(File* cf)
+	void FileSystem::detachFileObject(File *cf)
 	{
 		SCOPE_LOCK;
 
@@ -901,13 +901,13 @@ AX_BEGIN_NAMESPACE
 		}
 	}
 
-	PakFile* FileSystem::loadPakFile(const String& fullpath, const String& filename)
+	PakFile *FileSystem::loadPakFile(const String &fullpath, const String &filename)
 	{
 		unzFile unzfile;
 		unz_global_info global_info;
 		unz_file_info file_info;
 		char entryName[260];
-		PakFile* packfile;
+		PakFile *packfile;
 
 		uint_t i;
 		size_t len;
@@ -943,7 +943,7 @@ AX_BEGIN_NAMESPACE
 			if (packedname[packedname.size()-1] == AX_PATH_SEP) {
 				m_pakedFolders.addPath(packedname);
 			} else {
-				PakedFile* packed = new PakedFile;
+				PakedFile *packed = new PakedFile;
 				packed->packfile = packfile;
 				packed->offset = unzGetOffset(unzfile);
 
@@ -955,7 +955,7 @@ AX_BEGIN_NAMESPACE
 		return packfile;
 	}
 
-	bool FileSystem::getFileModifyTime(const String& filename, longlong_t *time) const
+	bool FileSystem::getFileModifyTime(const String &filename, longlong_t *time) const
 	{
 		SCOPE_LOCK;
 
@@ -980,7 +980,7 @@ AX_BEGIN_NAMESPACE
 
 		EntryDict::const_iterator it = m_pakedFileDict.find(fn);
 		if (it != m_pakedFileDict.end()) {
-			PakedFile* packedfile = it->second;
+			PakedFile *packedfile = it->second;
 
 			unz_file_info file_info;
 			unzSetOffset(packedfile->packfile->unzfile, packedfile->offset);
@@ -995,12 +995,12 @@ AX_BEGIN_NAMESPACE
 		return false;
 	}
 
-	bool FileSystem::isFileExist(const String& filename) const
+	bool FileSystem::isFileExist(const String &filename) const
 	{
 		return getFileModifyTime(filename, nullptr);
 	}
 
-	size_t FileSystem::readTextFile(const String& filename, void** buffer)
+	size_t FileSystem::readTextFile(const String &filename, void** buffer)
 	{
 		return 0;
 	}
@@ -1028,7 +1028,7 @@ AX_BEGIN_NAMESPACE
 		m_modPath = m_dataPath;
 
 		String modfilename = m_gamePath + "/modpath.txt";
-		FILE* f = fopen(u2l(modfilename).c_str(), "rb");
+		FILE *f = fopen(u2l(modfilename).c_str(), "rb");
 		if (!f) {
 			return;
 		}
@@ -1050,7 +1050,7 @@ AX_BEGIN_NAMESPACE
 	void FileSystem::addSearchPath()
 	{
 		String modfilename = m_gamePath + "/searchpath.txt";
-		FILE* f = fopen(u2l(modfilename).c_str(), "rb");
+		FILE *f = fopen(u2l(modfilename).c_str(), "rb");
 		if (!f) {
 			return;
 		}
@@ -1089,7 +1089,7 @@ AX_BEGIN_NAMESPACE
 		fclose(f);
 	}
 
-	String FileSystem::modPathToOsPath(const String& modpath)
+	String FileSystem::modPathToOsPath(const String &modpath)
 	{
 		String fullpath = m_modPath;
 		if (modpath.length()) {
@@ -1104,7 +1104,7 @@ AX_BEGIN_NAMESPACE
 	void FileSystem::checkGamePath()
 	{
 		String modfilename = m_gamePath + "/gamepath.txt";
-		FILE* f = fopen(u2l(modfilename).c_str(), "rb");
+		FILE *f = fopen(u2l(modfilename).c_str(), "rb");
 		if (!f) {
 			return;
 		}

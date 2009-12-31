@@ -29,7 +29,7 @@ public:
 private:
 };
 
-Grabber::Grabber(CrossSplitter* parent, Tracking tracking)
+Grabber::Grabber(CrossSplitter *parent, Tracking tracking)
 	: QWidget(parent)
 	, m_parent(parent)
 	, m_tracking(tracking)
@@ -92,7 +92,7 @@ void Grabber::leaveEvent(QEvent * event) {
 }
 
 
-CrossSplitter::CrossSplitter(QWidget* parent, Workspace* ws)
+CrossSplitter::CrossSplitter(QWidget *parent, Workspace *ws)
 	: QFrame(parent)
 	, m_splitPos(0.5, 0.5)
 	, m_workspace(ws)
@@ -104,7 +104,7 @@ CrossSplitter::CrossSplitter(QWidget* parent, Workspace* ws)
 	m_rubberBands[1] = NULL;
 #endif
 	for (int i=0; i<4; i++) {
-		Frame* frame = ws->getFrame(i);
+		Frame *frame = ws->getFrame(i);
 		frame->setParent(this);
 	}
 
@@ -124,7 +124,7 @@ void CrossSplitter::setFrameMaximun(int index, bool maximum) {
 	relayout();
 }
 
-void CrossSplitter::beginTracking(Tracking tracking, const QPoint& pos) {
+void CrossSplitter::beginTracking(Tracking tracking, const QPoint &pos) {
 	m_tracking = tracking;
 	AX_ASSERT(m_tracking != Grabber::None);
 
@@ -149,7 +149,7 @@ void CrossSplitter::beginTracking(Tracking tracking, const QPoint& pos) {
 #endif
 }
 
-void CrossSplitter::doTracking(const QPoint& pos) {
+void CrossSplitter::doTracking(const QPoint &pos) {
 #if 0
 	if (m_tracking & Grabber::Horizontal) {
 		QRect rect(pos.x()-(TrackingWidth>>1) - 1, 0, TrackingWidth+2, size().height());
@@ -177,7 +177,7 @@ void CrossSplitter::doTracking(const QPoint& pos) {
 	relayout();
 }
 
-void CrossSplitter::endTracking(const QPoint& pos) {
+void CrossSplitter::endTracking(const QPoint &pos) {
 
 	if (m_tracking & Grabber::Horizontal) {
 		m_splitPos.setX((float)pos.x() / size().width());
@@ -264,11 +264,11 @@ void CrossSplitter::relayout() {
 	update();
 }
 
-void CrossSplitter::paintEvent(QPaintEvent* pe) {
+void CrossSplitter::paintEvent(QPaintEvent *pe) {
 	QFrame::paintEvent(pe);
 }
 
-void CrossSplitter::resizeEvent(QResizeEvent* event) {
+void CrossSplitter::resizeEvent(QResizeEvent *event) {
 	relayout();
 }
 
@@ -325,7 +325,7 @@ Workspace::~Workspace()
 	g_mapContext->getMapState()->detachObserver(this);
 }
 
-Frame* Workspace::getActiveFrame() {
+Frame *Workspace::getActiveFrame() {
 	for (int i = 0; i < 4; i++) {
 		if (m_frames[i]->isActived())
 			return m_frames[i];
@@ -344,7 +344,7 @@ int Workspace::getActiveFrameIndex() {
 }
 
 
-void Workspace::frameActive(Frame* frame) {
+void Workspace::frameActive(Frame *frame) {
 	// clear first
 	for (int i = 0; i < 4; i++) {
 		if (m_frames[i] == frame)
@@ -379,7 +379,7 @@ void Workspace::on_transformAbsOrRel_clicked()
 	g_mapContext->getMapState()->notify(State::Transform);
 }
 
-void Workspace::doNotify(IObservable* subject, int arg)
+void Workspace::doNotify(IObservable *subject, int arg)
 {
 	if (subject != g_mapContext->getMapState())
 		return;
@@ -422,12 +422,12 @@ void Workspace::on_transformX_editingFinished()
 			return;
 	}
 
-	Tool* tool = g_mapContext->getTool();
+	Tool *tool = g_mapContext->getTool();
 
 	if (!tool)
 		return;
 
-	TransformTool* transformtool = dynamic_cast<TransformTool*>(tool);
+	TransformTool *transformtool = dynamic_cast<TransformTool*>(tool);
 
 	if (!transformtool)
 		return;
@@ -450,12 +450,12 @@ void Workspace::on_transformY_editingFinished()
 			return;
 	}
 
-	Tool* tool = g_mapContext->getTool();
+	Tool *tool = g_mapContext->getTool();
 
 	if (!tool)
 		return;
 
-	TransformTool* transformtool = dynamic_cast<TransformTool*>(tool);
+	TransformTool *transformtool = dynamic_cast<TransformTool*>(tool);
 
 	if (!transformtool)
 		return;
@@ -478,12 +478,12 @@ void Workspace::on_transformZ_editingFinished()
 			return;
 	}
 
-	Tool* tool = g_mapContext->getTool();
+	Tool *tool = g_mapContext->getTool();
 
 	if (!tool)
 		return;
 
-	TransformTool* transformtool = dynamic_cast<TransformTool*>(tool);
+	TransformTool *transformtool = dynamic_cast<TransformTool*>(tool);
 
 	if (!transformtool)
 		return;
@@ -538,7 +538,7 @@ void Workspace::on_bookmarkGoto_released()
 		return ;
 	}
 
-	Bookmark* bookmark = g_mapContext->getBookmark(ui.bookmarkList->currentIndex());
+	Bookmark *bookmark = g_mapContext->getBookmark(ui.bookmarkList->currentIndex());
 
 	if (bookmark != NULL)
 	{
@@ -548,7 +548,7 @@ void Workspace::on_bookmarkGoto_released()
 
 void Workspace::on_bookmarkAdd_released()
 {
-	const RenderCamera& camera = g_mapContext->getActiveView()->getCamera();
+	const RenderCamera &camera = g_mapContext->getActiveView()->getCamera();
 	
 	AffineMat viewMatrix;
 
@@ -597,7 +597,7 @@ void Workspace::refreshBookmarks()
 	}
 
 	int n = g_mapContext->getNumBookmark();
-	Bookmark* bookmark = 0;
+	Bookmark *bookmark = 0;
 
 	for (int i=0; i<n; ++i)
 	{

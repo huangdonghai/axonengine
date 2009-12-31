@@ -21,7 +21,7 @@ namespace Axon
 
 		int    nDiv;
 
-		Curve(const Vector3& A_, const Vector3& B_, const Vector3& C_, int m_nDiv) 
+		Curve(const Vector3 &A_, const Vector3 &B_, const Vector3 &C_, int m_nDiv) 
 			: A(A_)
 			, B(B_)
 			, C(C_)
@@ -30,7 +30,7 @@ namespace Axon
 
 		}
 
-		Curve(const Vector3& A_, const Vector3& B_, const Vector3& C_) 
+		Curve(const Vector3 &A_, const Vector3 &B_, const Vector3 &C_) 
 			: A(A_)
 			, B(B_)
 			, C(C_)
@@ -42,7 +42,7 @@ namespace Axon
 		{	
 		};
 
-		void putCurve(const Vector3& A_, const Vector3& B_, const Vector3& C_) 
+		void putCurve(const Vector3 &A_, const Vector3 &B_, const Vector3 &C_) 
 		{
 			A = A_;
 			B = B_;
@@ -51,7 +51,7 @@ namespace Axon
 			nDiv = (int)(std::max(abs((int)A.x),abs((int)A.y))/DIV_FACTOR);
 		}
 
-		void GetCurve(float x,float y, Point points[], int& PointCount)
+		void GetCurve(float x,float y, Point points[], int &PointCount)
 		{
 			int X,Y;
 			float  t,f,g,h;
@@ -112,15 +112,15 @@ namespace Axon
 		bool isDirty() { return m_dirty; }
 
 		int getNumControlPoint() { return (int) m_controlPoints.size(); }
-		Vector3& getControlPoint(int pos);
-		//Vector3& getControlPoint(const Vector3& point);
-		void addControlPoint(const Vector3& point);
-		void addControlPoint(int pos, const Vector3& point);
+		Vector3 &getControlPoint(int pos);
+		//Vector3 &getControlPoint(const Vector3 &point);
+		void addControlPoint(const Vector3 &point);
+		void addControlPoint(int pos, const Vector3 &point);
 		void deleteControlPoint(int pos);
-		void deleteControlPoint(const Vector3& point);
+		void deleteControlPoint(const Vector3 &point);
 		void deleteAllControlPoints();
 
-		int getControlPointIndex(const Vector3& point);
+		int getControlPointIndex(const Vector3 &point);
 
 		// 根据控制点集获取所有的曲线.若将宽度设为零,返回线段集合.
 		void getAllPoints(std::vector<Vector3>& result);

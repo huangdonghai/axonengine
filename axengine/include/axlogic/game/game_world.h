@@ -37,40 +37,40 @@ public:
 
 	void reset();
 
-	void setWindow(RenderTarget* targetWin);
-	RenderTarget* getWindow() { return m_targetWindow; }
+	void setWindow(RenderTarget *targetWin);
+	RenderTarget *getWindow() { return m_targetWindow; }
 
 	void runFrame(int what, int frametime);
 	void drawFrame();
-	void drawScene(const RenderCamera& camera);
+	void drawScene(const RenderCamera &camera);
 
-	void addObject(GameObject* node);
-	void removeObject(GameObject* node);
+	void addObject(GameObject *node);
+	void removeObject(GameObject *node);
 
-	GameActor* getActor(int num) const;
-	Landscape* getLandscape() const;
-	RenderWorld* getRenderWorld() const;
-	PhysicsWorld* getPhysicsWorld() const;
-	SoundWorld* getSoundWorld() const;
+	GameActor *getActor(int num) const;
+	Landscape *getLandscape() const;
+	RenderWorld *getRenderWorld() const;
+	PhysicsWorld *getPhysicsWorld() const;
+	SoundWorld *getSoundWorld() const;
 	int getFrameTime() const;
 
-	MapEnvDef* getEnvironment() const { return m_mapEnvDef; }
+	MapEnvDef *getEnvironment() const { return m_mapEnvDef; }
 	void updateEnvdef();
 
 	// implement IObserver
-	virtual void doNotify(IObservable* subject, int arg);
+	virtual void doNotify(IObservable *subject, int arg);
 
 	AffineMat getLastViewMatrix() const;
 
 	// static function
-	static GameActor* createActor(const char* clsname);
+	static GameActor *createActor(const char *clsname);
 
 protected:
-	void addActor(GameActor* entity);
-	void removeActor(GameActor* entity);
+	void addActor(GameActor *entity);
+	void removeActor(GameActor *entity);
 
-	void addFixed(Fixed* fixed);
-	void removeFixed(Fixed* fixed);
+	void addFixed(Fixed *fixed);
+	void removeFixed(Fixed *fixed);
 
 	void restoreActors();
 
@@ -79,46 +79,46 @@ private:
 	bool m_onlyClient;
 	bool m_multiPlayer;
 
-	GameActor* m_entities[ActorNum::MAX_ACTORS];
+	GameActor *m_entities[ActorNum::MAX_ACTORS];
 	int m_spawnIds[ActorNum::MAX_ACTORS];// for use in EntityPtr
 	int m_numEntities;
 	int m_firstFreeEntity;
 	int m_numClients;
 
-	PhysicsWorld* m_physicsWorld;
-	RenderWorld* m_renderWorld;
-	SoundWorld* m_soundWorld;
-	OutdoorEnv* m_outdoorEnv;
-	MapEnvDef* m_mapEnvDef;
+	PhysicsWorld *m_physicsWorld;
+	RenderWorld *m_renderWorld;
+	SoundWorld *m_soundWorld;
+	OutdoorEnv *m_outdoorEnv;
+	MapEnvDef *m_mapEnvDef;
 
 	uint_t m_lasttime;
 	int m_frametime;
 	RenderCamera m_lastCamera;
-	RenderTarget* m_targetWindow;
+	RenderTarget *m_targetWindow;
 };
 
-inline GameActor* GameWorld::getActor(int num) const
+inline GameActor *GameWorld::getActor(int num) const
 {
 	AX_ASSERT(num >= 0 && num < ActorNum::MAX_ACTORS);
 	return m_entities[num];
 }
 
-inline Landscape* GameWorld::getLandscape() const
+inline Landscape *GameWorld::getLandscape() const
 {
 	return static_cast<Landscape*>(m_entities[ActorNum::LANDSCAPE]);
 }
 
-inline RenderWorld* GameWorld::getRenderWorld() const
+inline RenderWorld *GameWorld::getRenderWorld() const
 {
 	return m_renderWorld;
 }
 
-inline PhysicsWorld* GameWorld::getPhysicsWorld() const
+inline PhysicsWorld *GameWorld::getPhysicsWorld() const
 {
 	return m_physicsWorld;
 }
 
-inline SoundWorld* GameWorld::getSoundWorld() const
+inline SoundWorld *GameWorld::getSoundWorld() const
 {
 	return m_soundWorld;
 }

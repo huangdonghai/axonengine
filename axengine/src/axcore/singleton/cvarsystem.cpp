@@ -32,7 +32,7 @@ AX_BEGIN_NAMESPACE
 	{
 	}
 
-	Cvar::Cvar(const String& name, const String& default_string, int flags)
+	Cvar::Cvar(const String &name, const String &default_string, int flags)
 		: m_name(name)
 		, m_defaultString(default_string)
 		, m_latchedString()
@@ -49,7 +49,7 @@ AX_BEGIN_NAMESPACE
 		g_cvarSystem->removeCvar(m_name);
 	}
 
-	void Cvar::set(const String& sz, bool force) {
+	void Cvar::set(const String &sz, bool force) {
 		String value;
 
 		if (sz.empty()) {
@@ -100,7 +100,7 @@ AX_BEGIN_NAMESPACE
 		m_integerValue = atoi(m_stringValue.c_str());
 	}
 
-	void Cvar::forceSet(const String& sz_value) {
+	void Cvar::forceSet(const String &sz_value) {
 		set(sz_value, true);
 	}
 
@@ -124,7 +124,7 @@ AX_BEGIN_NAMESPACE
 		set(buf, true);
 	}
 
-	void Cvar::set(const String& sz_value) {
+	void Cvar::set(const String &sz_value) {
 		set(sz_value, false);
 	}
 
@@ -148,8 +148,8 @@ AX_BEGIN_NAMESPACE
 		set(buf, false);
 	}
 
-	Cvar* Cvar::create(const String& name, const String& default_string, uint_t flags) {
-		Cvar* cvar = new Cvar;
+	Cvar *Cvar::create(const String &name, const String &default_string, uint_t flags) {
+		Cvar *cvar = new Cvar;
 
 		cvar->m_name = name;
 		cvar->m_defaultString = default_string;
@@ -179,7 +179,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 
-	void CvarSystem::removeCvar(const String& name) {
+	void CvarSystem::removeCvar(const String &name) {
 		return;
 #if 0
 		if (m_cvarDict.exist(name)) {
@@ -234,8 +234,8 @@ AX_BEGIN_NAMESPACE
 		Printf(_("Finalized CvarSystem\n"));
 	}
 
-	Cvar* CvarSystem::createCvar(const String& name, const String& defaultString, uint_t flags) {
-		Cvar* cvar = nullptr;
+	Cvar *CvarSystem::createCvar(const String &name, const String &defaultString, uint_t flags) {
+		Cvar *cvar = nullptr;
 
 		if (name.empty() /*|| defaultString.empty()*/) {
 			Errorf(_("CvarSystem::createCvar: null parameter"));
@@ -262,16 +262,16 @@ AX_BEGIN_NAMESPACE
 		return cvar;
 	}
 
-	Cvar* CvarSystem::createCvar(const String& name, const String& defaultString) {
+	Cvar *CvarSystem::createCvar(const String &name, const String &defaultString) {
 		return createCvar(name, defaultString, Cvar::Archive);
 	}
 
-	bool CvarSystem::executeCommand(const CmdArgs& params) {
+	bool CvarSystem::executeCommand(const CmdArgs &params) {
 		CvarDict::iterator it = m_cvarDict.find(params.tokened[0]);
 		if (it == m_cvarDict.end())
 			return false;
 
-		Cvar* cvar = m_cvarDict[ params.tokened[0] ];
+		Cvar *cvar = m_cvarDict[ params.tokened[0] ];
 		if (params.tokened.size() == 1) {
 			Printf(_("\"%s\" is:\"%s\" default:\"%s\"\n"), cvar->m_name.c_str(), cvar->m_stringValue.c_str(), cvar->m_defaultString.c_str());
 			if ((cvar->m_flags & Cvar::Latch) && !cvar->m_latchedString.empty()) {
@@ -287,10 +287,10 @@ AX_BEGIN_NAMESPACE
 
 
 	// console command
-	void CvarSystem::list_f(const CmdArgs& param) {
+	void CvarSystem::list_f(const CmdArgs &param) {
 		CvarDict::iterator it = m_cvarDict.begin();
 		int count = 0;
-		const char* arg;
+		const char *arg;
 		char flags[16];
 
 		if (param.tokened.size() > 1) {
@@ -320,10 +320,10 @@ AX_BEGIN_NAMESPACE
 		Printf(_("%i total console variables\n"), count);
 	}
 
-	void CvarSystem::toggleCvar_f(const CmdArgs& param) {
+	void CvarSystem::toggleCvar_f(const CmdArgs &param) {
 	}
 
-	void CvarSystem::set_f(const CmdArgs& params) {
+	void CvarSystem::set_f(const CmdArgs &params) {
 		if (params.tokened.size() < 3) {
 			return;
 		}

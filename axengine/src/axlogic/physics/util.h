@@ -15,72 +15,72 @@ read the license and understand and accept it fully.
 AX_BEGIN_NAMESPACE
 
 	// cast entity pointer to number
-	inline hkUlong e2n(PhysicsEntity* ent) {
+	inline hkUlong e2n(PhysicsEntity *ent) {
 		return hkUlong(ent);
 	}
 
 	// cast number to entity pointer
-	inline PhysicsEntity* n2e(hkUlong ul) {
+	inline PhysicsEntity *n2e(hkUlong ul) {
 		return (PhysicsEntity*)ul;
 	}
 
-	inline void h2x(const hkVector4& hk, Vector3& ax) {
+	inline void h2x(const hkVector4 &hk, Vector3 &ax) {
 		hk.store3(&ax[0]);
 	}
 
-	inline Vector3 h2x(const hkVector4& h) {
+	inline Vector3 h2x(const hkVector4 &h) {
 		return *(Vector3*)&h;
 	}
 
-	inline void x2h(const Vector3& ax, hkVector4& hk) {
+	inline void x2h(const Vector3 &ax, hkVector4 &hk) {
 		hk.set(ax.x, ax.y, ax.z);
 	}
 
-	inline hkVector4 x2h(const Vector3& ax) {
+	inline hkVector4 x2h(const Vector3 &ax) {
 		hkVector4 hk;
 		x2h(ax, hk);
 		return hk;
 	}
 
-	inline void h2x(const hkRotation& hk, Matrix3& ax) {
+	inline void h2x(const hkRotation &hk, Matrix3 &ax) {
 		h2x(hk.getColumn(0), ax[0]);
 		h2x(hk.getColumn(1), ax[1]);
 		h2x(hk.getColumn(2), ax[2]);
 	}
 
-	inline void x2h(const Matrix3& ax, hkRotation& hk) {
+	inline void x2h(const Matrix3 &ax, hkRotation &hk) {
 		hk.setCols(x2h(ax[0]), x2h(ax[1]), x2h(ax[2]));
 	}
 
-	inline hkRotation x2h(const Matrix3& ax) {
+	inline hkRotation x2h(const Matrix3 &ax) {
 		hkRotation hk;
 		x2h(ax, hk);
 		return hk;
 	}
 
-	inline void h2x(const hkTransform& hk, AffineMat& ax) {
+	inline void h2x(const hkTransform &hk, AffineMat &ax) {
 		h2x(hk.getTranslation(), ax.origin);
 		h2x(hk.getRotation(), ax.axis);
 	}
 
-	inline AffineMat h2x(const hkTransform& hk) {
+	inline AffineMat h2x(const hkTransform &hk) {
 		AffineMat ax;
 		h2x(hk, ax);
 		return ax;
 	}
 
-	inline void x2h(const AffineMat& ax, hkTransform& hk) {
+	inline void x2h(const AffineMat &ax, hkTransform &hk) {
 		hk.setTranslation(x2h(ax.origin));
 		hk.setRotation(x2h(ax.axis));
 	}
 
-	inline hkTransform x2h(const AffineMat& ax) {
+	inline hkTransform x2h(const AffineMat &ax) {
 		hkTransform hk;
 		x2h(ax, hk);
 		return hk;
 	}
 
-	inline AffineMat h2x(const hkMatrix4& hk) {
+	inline AffineMat h2x(const hkMatrix4 &hk) {
 		AffineMat ax;
 		h2x(hk.getColumn(0), ax.axis[0]);
 		h2x(hk.getColumn(1), ax.axis[1]);
@@ -127,7 +127,7 @@ AX_BEGIN_NAMESPACE
 		}
 	}
 
-	inline String h2x(hkxMaterial* mat) {
+	inline String h2x(hkxMaterial *mat) {
 		if (!mat) {
 			return String();
 		}
@@ -141,7 +141,7 @@ AX_BEGIN_NAMESPACE
 			return String();
 		}
 
-		hkxTextureFile* texfile = (hkxTextureFile*)mat->m_stages->m_texture.m_object;
+		hkxTextureFile *texfile = (hkxTextureFile*)mat->m_stages->m_texture.m_object;
 		if (!texfile) {
 			return String();
 		}
@@ -150,13 +150,13 @@ AX_BEGIN_NAMESPACE
 		return PathUtil::removeExt(result);
 	}
 
-	inline void h2x(const hkAabb& aabb, BoundingBox& bbox) {
+	inline void h2x(const hkAabb &aabb, BoundingBox &bbox) {
 		h2x(aabb.m_min, bbox.min);
 		h2x(aabb.m_max, bbox.max);
 	}
 
 	struct Util {
-		static inline hkaRagdollInstance* clone(hkaRagdollInstance* src) {
+		static inline hkaRagdollInstance *clone(hkaRagdollInstance *src) {
 			hkArray<hkpRigidBody*> rigidbodies;
 			hkArray<hkpConstraintInstance*> constraints;
 
@@ -164,10 +164,10 @@ AX_BEGIN_NAMESPACE
 
 			// clone rigidbodies
 			for (int i = 0; i < src->getNumBones(); i++) {
-				hkpRigidBody* rb = src->getRigidBodyOfBone(i);
+				hkpRigidBody *rb = src->getRigidBodyOfBone(i);
 				// Initialize with quality type and collision filter
 				if (rb != HK_NULL) {
-					hkpRigidBody* cloned = rb->clone();
+					hkpRigidBody *cloned = rb->clone();
 					rigidbodies.pushBack(cloned);
 					rigidbodymap[rb] = cloned;
 				} else {
@@ -178,9 +178,9 @@ AX_BEGIN_NAMESPACE
 			// clone constraints
 			const hkArray<hkpConstraintInstance*>& src_constraints = src->getConstraintArray();
 			for (int i = 0; i < src_constraints.getSize(); i++) {
-				hkpConstraintInstance* constraint = src_constraints[i];
-				hkpRigidBody* enta = constraint->getRigidBodyA();
-				hkpRigidBody* entb = constraint->getRigidBodyB();
+				hkpConstraintInstance *constraint = src_constraints[i];
+				hkpRigidBody *enta = constraint->getRigidBodyA();
+				hkpRigidBody *entb = constraint->getRigidBodyB();
 				enta = rigidbodymap[enta];
 				entb = rigidbodymap[entb];
 
@@ -191,7 +191,7 @@ AX_BEGIN_NAMESPACE
 				constraints.pushBack(constraint);
 			}
 
-			hkaRagdollInstance* result = new hkaRagdollInstance(rigidbodies, constraints, src->m_skeleton, src->m_boneToRigidBodyMap);
+			hkaRagdollInstance *result = new hkaRagdollInstance(rigidbodies, constraints, src->m_skeleton, src->m_boneToRigidBodyMap);
 			return result;
 		}
 	};

@@ -140,13 +140,13 @@ AX_BEGIN_NAMESPACE
 
 	bool D3D9driver::isHDRRendering() { return false; }
 
-	RenderTarget* D3D9driver::createWindowTarget(handle_t wndId, const String& name) {
-		D3D9window* state = new D3D9window(wndId, name);
+	RenderTarget *D3D9driver::createWindowTarget(handle_t wndId, const String &name) {
+		D3D9window *state = new D3D9window(wndId, name);
 		AX_ASSERT(state);
 		return state;
 	}
 
-	const IRenderDriver::Info* D3D9driver::getDriverInfo() {
+	const IRenderDriver::Info *D3D9driver::getDriverInfo() {
 		return d3d9DriverInfo;
 	}
 
@@ -158,13 +158,13 @@ AX_BEGIN_NAMESPACE
 		d3d9Thread->preFrame();
 	}
 
-	void D3D9driver::beginSelect(const RenderCamera& view) {}
+	void D3D9driver::beginSelect(const RenderCamera &view) {}
 
 	void D3D9driver::loadSelectId(int id) {}
 
-	void D3D9driver::testActor(Actor* re) {}
+	void D3D9driver::testActor(Actor *re) {}
 
-	void D3D9driver::testPrimitive(Primitive* prim) {}
+	void D3D9driver::testPrimitive(Primitive *prim) {}
 
 	SelectRecordSeq D3D9driver::endSelect() {
 		return SelectRecordSeq();

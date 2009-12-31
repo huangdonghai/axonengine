@@ -18,7 +18,7 @@ class Workspace;
 class IPanel {
 public:
 	virtual QString getTitle() = 0;
-	virtual QWidget* getWidget() = 0;
+	virtual QWidget *getWidget() = 0;
 };
 
 class Frame : public QFrame
@@ -26,12 +26,12 @@ class Frame : public QFrame
 	Q_OBJECT
 
 public:
-	Frame(QWidget *parent, Workspace* ws);
+	Frame(QWidget *parent, Workspace *ws);
 	~Frame();
 
 	void setEditorActive(bool a) { m_editorActive = a; }
 	bool isActived() { return m_editorActive; }
-	void setPanel(IPanel* panel);
+	void setPanel(IPanel *panel);
 
 protected:
 	// Qt event
@@ -42,9 +42,9 @@ protected:
 private:
 	Ui::FrameClass ui;
 
-	Workspace* m_workspace;
+	Workspace *m_workspace;
 	bool m_editorActive;
-	IPanel* m_panel;
+	IPanel *m_panel;
 
 private slots:
 	void on_toggleMax_clicked();

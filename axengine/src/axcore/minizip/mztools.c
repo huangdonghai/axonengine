@@ -28,16 +28,16 @@
 } while (0)
 
 extern int ZEXPORT unzRepair(file, fileOut, fileOutTmp, nRecovered, bytesRecovered)
-const char* file;
-const char* fileOut;
-const char* fileOutTmp;
-uLong* nRecovered;
-uLong* bytesRecovered;
+const char *file;
+const char *fileOut;
+const char *fileOutTmp;
+uLong *nRecovered;
+uLong *bytesRecovered;
 {
   int err = Z_OK;
-  FILE* fpZip = fopen(file, "rb");
-  FILE* fpOut = fopen(fileOut, "wb");
-  FILE* fpOutCD = fopen(fileOutTmp, "wb");
+  FILE *fpZip = fopen(file, "rb");
+  FILE *fpOut = fopen(fileOut, "wb");
+  FILE *fpOutCD = fopen(fileOutTmp, "wb");
   if (fpZip != NULL &&  fpOut != NULL) {
     int entries = 0;
     uLong totalBytes = 0;
@@ -111,7 +111,7 @@ uLong* bytesRecovered;
             dataSize = uncpsize;
           }
           if (dataSize > 0) {
-            char* data = malloc(dataSize);
+            char *data = malloc(dataSize);
             if (data != NULL) {
               if ((int)fread(data, 1, dataSize, fpZip) == dataSize) {
                 if ((int)fwrite(data, 1, dataSize, fpOut) == dataSize) {
@@ -137,7 +137,7 @@ uLong* bytesRecovered;
         /* Central directory entry */
         {
           char header[46];
-          char* comment = "";
+          char *comment = "";
           int comsize = (int) strlen(comment);
           WRITE_32(header, 0x02014b50);
           WRITE_16(header + 4, version);
@@ -212,7 +212,7 @@ uLong* bytesRecovered;
     {
       int entriesZip = entries;
       char header[22];
-      char* comment = ""; // "ZIP File recovered by zlib/minizip/mztools";
+      char *comment = ""; // "ZIP File recovered by zlib/minizip/mztools";
       int comsize = (int) strlen(comment);
       if (entriesZip > 0xffff) {
         entriesZip = 0xffff;

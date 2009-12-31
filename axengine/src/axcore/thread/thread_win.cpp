@@ -94,7 +94,7 @@ AX_BEGIN_NAMESPACE
 	DWORD WINAPI ThreadProc(LPVOID lpParameter)
 	{
 	//	BT_SetTerminate(); // set_terminate() must be called from every thread
-		Thread* thread = (Thread*)lpParameter;
+		Thread *thread = (Thread*)lpParameter;
 		thread->doRun();
 
 		return 0;

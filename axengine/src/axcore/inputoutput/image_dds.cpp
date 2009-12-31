@@ -133,11 +133,11 @@ AX_BEGIN_NAMESPACE
 		int loadFlag;
 		TexFormat outFormat;
 
-		byte_t* inData;
+		byte_t *inData;
 		uint_t inDataSize;			// current org data block's size
 		uint_t inDataSizeAll;
 
-		byte_t* outData;
+		byte_t *outData;
 		uint_t outDataSize;
 
 		uint_t width,height,depth;
@@ -152,7 +152,7 @@ AX_BEGIN_NAMESPACE
 		uint_t outbpd;		// byte per page(depth)
 	};
 
-	static void Color565To888(ushort_t c565, Rgba* out) {
+	static void Color565To888(ushort_t c565, Rgba *out) {
 		out->b = c565 & 0x1f;
 		out->g = (c565 & 0x7E0) >> 5;
 		out->r = (c565 & 0xF800) >> 11;
@@ -166,9 +166,9 @@ AX_BEGIN_NAMESPACE
 		out->b |= out->b >> 5;
 	}
 
-	static bool DecompressDXT1(DdsReadParams* pParams) {
+	static bool DecompressDXT1(DdsReadParams *pParams) {
 		Rgba colours[4];
-		byte_t* pInData = pParams->inData;
+		byte_t *pInData = pParams->inData;
 		colours[0].a = 0xFF;
 		colours[1].a = 0xFF;
 		colours[2].a = 0xFF;
@@ -226,15 +226,15 @@ AX_BEGIN_NAMESPACE
 		return true;
 	}
 
-	static bool DecompressDXT3(DdsReadParams* pParams) {
+	static bool DecompressDXT3(DdsReadParams *pParams) {
 		Rgba colours[4];
-		byte_t* pInData = pParams->inData;
+		byte_t *pInData = pParams->inData;
 
 		for (int z = 0; z < (int)pParams->depth; z++) {
 			for (int y = 0; y < (int)pParams->height; y += 4) {
 				for (int x = 0; x < (int)pParams->width; x += 4) {
 
-					byte_t* pAlpha = pInData;
+					byte_t *pAlpha = pInData;
 					pInData += 8;
 					ushort_t color_0 = LittleShort(*(ushort_t*)pInData);
 					ushort_t color_1 = LittleShort(*(ushort_t*)(pInData+2));
@@ -283,10 +283,10 @@ AX_BEGIN_NAMESPACE
 		return true;
 	}
 
-	static bool DecompressDXT5(DdsReadParams* pParams) {
+	static bool DecompressDXT5(DdsReadParams *pParams) {
 		Rgba colours[4];
 		byte_t 		alphas[8];
-		byte_t* pInData = pParams->inData;
+		byte_t *pInData = pParams->inData;
 
 		for (int z = 0; z < (int)pParams->depth; z++) {
 			for (int y = 0; y < (int)pParams->height; y += 4) {
@@ -295,7 +295,7 @@ AX_BEGIN_NAMESPACE
 					alphas[0] = pInData[0];
 					alphas[1] = pInData[1];
 
-					byte_t* alphamask = pInData + 2;
+					byte_t *alphamask = pInData + 2;
 					pInData += 8;
 
 					ushort_t color_0 = LittleShort(*(ushort_t*)pInData);
@@ -363,7 +363,7 @@ AX_BEGIN_NAMESPACE
 		return true;
 	}
 
-	static void ChangeHeaderIntOrder(DdsHeader* pHeader){
+	static void ChangeHeaderIntOrder(DdsHeader *pHeader){
 		pHeader->Size1 = LittleInt(pHeader->Size1);
 		pHeader->Size2 = LittleInt(pHeader->Size2);
 		pHeader->Flags1 = LittleInt(pHeader->Flags1);
@@ -386,7 +386,7 @@ AX_BEGIN_NAMESPACE
 		pHeader->TextureStage = LittleInt(pHeader->TextureStage);
 	}
 
-	static bool CheckHeaderIsValid(DdsHeader* pHeader){
+	static bool CheckHeaderIsValid(DdsHeader *pHeader){
 		if (*(uint_t*)pHeader->Signature != AX_MAKEFOURCC('D', 'D', 'S', ' '))
 			return false;
 		//if (Strnicmp((const char*)pHeader->Signature, "DDS ", 4))
@@ -404,7 +404,7 @@ AX_BEGIN_NAMESPACE
 		return true;
 	}
 
-	static bool GetFormatAndBlockSize(DdsHeader* pHeader, DdsReadParams* pParams) {
+	static bool GetFormatAndBlockSize(DdsHeader *pHeader, DdsReadParams *pParams) {
 		if (pHeader->Flags2 & DDS_FOURCC) {
 			uint_t size1 = ((pHeader->Width + 3)/4) * ((pHeader->Height + 3)/4) * pHeader->Depth;
 			uint_t size2 = pHeader->Width * pHeader->Height * pHeader->Depth;
@@ -521,7 +521,7 @@ AX_BEGIN_NAMESPACE
 		}
 	}
 
-	static void RepairLinearSize(DdsHeader* pHeader, DdsReadParams* pParams) {
+	static void RepairLinearSize(DdsHeader *pHeader, DdsReadParams *pParams) {
 		if (!(pHeader->ddsCaps2 & DDS_VOLUME))
 			pParams->depth = 1;
 
@@ -563,7 +563,7 @@ AX_BEGIN_NAMESPACE
 		pParams->linearSize *= pParams->depth;
 	}
 
-	static uint_t GetMipmapLinearSize(DdsHeader* pHeader, DdsReadParams* pParams, uint_t factor) {
+	static uint_t GetMipmapLinearSize(DdsHeader *pHeader, DdsReadParams *pParams, uint_t factor) {
 
 		if (!(pHeader->Flags1 & DDS_LINEARSIZE))
 			return pParams->linearSize >> 1;
@@ -610,7 +610,7 @@ AX_BEGIN_NAMESPACE
 		}
 	}
 
-	static bool DecompressARGB(DdsHeader* pHeader, DdsReadParams* pParams) {
+	static bool DecompressARGB(DdsHeader *pHeader, DdsReadParams *pParams) {
 		byte_t RedL,RedR,GreenL,GreenR,BlueL,BlueR,AlphaL,AlphaR;
 		GetBitsFromMask(pHeader->RBitMask, &RedL, &RedR);
 		GetBitsFromMask(pHeader->GBitMask, &GreenL, &GreenR);
@@ -622,9 +622,9 @@ AX_BEGIN_NAMESPACE
 		int count = pParams->inDataSize / pParams->inbpp;
 	#else
 		int count = pParams->outDataSize / pParams->outbpp;
-		byte_t* inptr = pParams->inData;
+		byte_t *inptr = pParams->inData;
 		pParams->inData += pParams->linearSize;
-		byte_t* outptr = pParams->outData;
+		byte_t *outptr = pParams->outData;
 	#endif
 		switch (pParams->outbpp){
 		case 1:
@@ -681,7 +681,7 @@ AX_BEGIN_NAMESPACE
 		return true;
 	}
 
-	static bool DecompressDdsData(DdsHeader* pHeader, DdsReadParams* pParams) {
+	static bool DecompressDdsData(DdsHeader *pHeader, DdsReadParams *pParams) {
 		switch (pParams->format){
 		case PF_ARGB:
 		case PF_RGB:
@@ -741,7 +741,7 @@ AX_BEGIN_NAMESPACE
 		return true;
 	}
 
-	static void GetOutFormat(DdsReadParams* pParams){
+	static void GetOutFormat(DdsReadParams *pParams){
 		switch (pParams->formatType){
 		case DDS_TYPE_ARGB:
 			switch (pParams->format) {
@@ -812,7 +812,7 @@ AX_BEGIN_NAMESPACE
 		}
 	}
 
-	static bool AllocImage(DdsHeader* pHeader, DdsReadParams* pParams){
+	static bool AllocImage(DdsHeader *pHeader, DdsReadParams *pParams){
 		if (pParams->loadFlag & Image::NoCompressed || pParams->outFormat.isByte()) {
 			pParams->outbpl = pParams->outbpp * pParams->width;
 			pParams->outbpd = pParams->outbpl * pParams->height;
@@ -832,7 +832,7 @@ AX_BEGIN_NAMESPACE
 		return true;
 	}
 
-	static void CheckRGBOrder(DdsReadParams* pParams){
+	static void CheckRGBOrder(DdsReadParams *pParams){
 		if (!(pParams->loadFlag & Image::RgbOrder))
 			return;
 
@@ -845,7 +845,7 @@ AX_BEGIN_NAMESPACE
 			return;
 
 		uint_t pixelCount = pParams->height * pParams->width * pParams->depth;
-		byte_t* pBuf = pParams->outData;
+		byte_t *pBuf = pParams->outData;
 		for (uint_t i=0; i<pixelCount; i++) {
 			byte_t t = pBuf[0];
 			pBuf[0] = pBuf[2];
@@ -854,7 +854,7 @@ AX_BEGIN_NAMESPACE
 		}
 	}
 
-	static bool Load_dds_data(DdsHeader* pHeader, DdsReadParams* pParams, Image::DataBufferSeq& dataBufs){
+	static bool Load_dds_data(DdsHeader *pHeader, DdsReadParams *pParams, Image::DataBufferSeq &dataBufs){
 		if (!AllocImage(pHeader, pParams))
 			return false;
 
@@ -891,7 +891,7 @@ AX_BEGIN_NAMESPACE
 		return true;
 	}
 
-	bool Image::loadFile_dds(const String& filename){
+	bool Image::loadFile_dds(const String &filename){
 		// clear first
 		clear();
 
@@ -904,9 +904,9 @@ AX_BEGIN_NAMESPACE
 
 		// auto free file data
 		class TempFreeFile {
-			byte_t* mpFileData;
+			byte_t *mpFileData;
 		public:
-			TempFreeFile(byte_t* pFileData):mpFileData(pFileData){}
+			TempFreeFile(byte_t *pFileData):mpFileData(pFileData){}
 			~TempFreeFile(){ g_fileSystem->freeFile(mpFileData); }
 		};
 		TempFreeFile t(params.inData);
@@ -1000,12 +1000,12 @@ AX_BEGIN_NAMESPACE
 		bool needCompress;
 		int loadflags;
 
-		const byte_t* inData;
+		const byte_t *inData;
 		uint_t inDataSize;			// current org data block's size
 
-		byte_t* outData;
+		byte_t *outData;
 		uint_t outDataSize;
-		File* outfp;
+		File *outfp;
 
 		uint_t width,height,depth;
 		uint_t linearSize; 		// Formless late-allocated optimized surface size
@@ -1024,7 +1024,7 @@ AX_BEGIN_NAMESPACE
 		return count;
 	}
 
-	static bool FillHeader(DdsHeader* pHeader, DdsWriteParams* pParams, uint_t width, uint_t height, uint_t depth, uint_t dataCount, TexFormat format){
+	static bool FillHeader(DdsHeader *pHeader, DdsWriteParams *pParams, uint_t width, uint_t height, uint_t depth, uint_t dataCount, TexFormat format){
 		memset(pParams, 0, sizeof(DdsWriteParams));
 		memset(pHeader, 0, sizeof(DdsHeader));
 		pHeader->Flags1 = DDS_LINEARSIZE | DDS_MIPMAPCOUNT | DDS_WIDTH | DDS_HEIGHT | DDS_CAPS | DDS_PIXELFORMAT;
@@ -1134,7 +1134,7 @@ AX_BEGIN_NAMESPACE
 		return true;
 	}
 
-	static void ChangeFormatToNormal(DdsWriteParams* pParams, byte_t** ppNewMem){
+	static void ChangeFormatToNormal(DdsWriteParams *pParams, byte_t** ppNewMem){
 		uint_t pixelCount = pParams->width * pParams->height * pParams->depth;
 		pParams->inDataSize = pixelCount * sizeof(Rgba);
 
@@ -1142,7 +1142,7 @@ AX_BEGIN_NAMESPACE
 			return;
 		}
 
-		Rgba* pBuffer = new Rgba[pixelCount];
+		Rgba *pBuffer = new Rgba[pixelCount];
 		*ppNewMem = (byte_t*)pBuffer;
 
 		switch (pParams->orgFormat)
@@ -1194,7 +1194,7 @@ AX_BEGIN_NAMESPACE
 		pParams->inData = *ppNewMem;
 	}
 
-	static void GetBlock(Rgba* block, DdsWriteParams* pParams, const byte_t* data) {
+	static void GetBlock(Rgba *block, DdsWriteParams *pParams, const byte_t *data) {
 		uint_t i = 0;
 		Rgba fill = *(Rgba*)data;
 		for (uint_t y=0; y < 4; y++) {
@@ -1215,7 +1215,7 @@ AX_BEGIN_NAMESPACE
 		return (dr * dr + dg * dg + db * db);
 	}
 
-	static ushort_t ColorRGBAto565(Rgba* c) {
+	static ushort_t ColorRGBAto565(Rgba *c) {
 		return ((c->r >> 3) << 11) | ((c->g >> 2) << 5) | (c->b >> 3);
 	}
 
@@ -1226,7 +1226,7 @@ AX_BEGIN_NAMESPACE
 	static const int INSET_SHIFT = 4; // inset the bounding box with (range >> shift)
 
 	template< int C_SHIFT, int C_DELTA, int C_MASK >
-	void GetMinMax(byte_t* pMin, byte_t* pMax) {
+	void GetMinMax(byte_t *pMin, byte_t *pMax) {
 		if (*pMin > *pMax) {
 			std::swap(pMin, pMax);
 		}
@@ -1247,7 +1247,7 @@ AX_BEGIN_NAMESPACE
 		}
 	}
 	#if 0
-	static void ChooseEndpoints2(ColorRGBA* block, ColorRGBA* minColor, ColorRGBA* maxColor) {
+	static void ChooseEndpoints2(ColorRGBA *block, ColorRGBA *minColor, ColorRGBA *maxColor) {
 		minColor->r = minColor->g = minColor->b = 255;
 		maxColor->r = maxColor->g = maxColor->b = 0;
 
@@ -1277,7 +1277,7 @@ AX_BEGIN_NAMESPACE
 		GetMinMax< 5, add5, mask5 >(&minColor->b, &maxColor->b);
 	}
 	#endif
-	static void ChooseEndpoints(Rgba* block, Rgba* rgba1, Rgba* rgba2) {
+	static void ChooseEndpoints(Rgba *block, Rgba *rgba1, Rgba *rgba2) {
 		uint_t farthest = 0;
 		int pos1 = 0, pos2 = 0;
 
@@ -1299,7 +1299,7 @@ AX_BEGIN_NAMESPACE
 		GetMinMax< 5, add5, mask5 >(&rgba1->b, &rgba2->b);
 	}
 
-	static uint_t GenBitMask(Rgba *c1, Rgba *c2, int numCols, Rgba* block) {
+	static uint_t GenBitMask(Rgba *c1, Rgba *c2, int numCols, Rgba *block) {
 		byte_t mask[16];
 		Rgba colours[4];
 
@@ -1345,7 +1345,7 @@ AX_BEGIN_NAMESPACE
 		return bitMask;
 	}
 
-	void ChooseAlphaEndpoints(Rgba* block, byte_t *high, byte_t *low) {
+	void ChooseAlphaEndpoints(Rgba *block, byte_t *high, byte_t *low) {
 		*high = block[0].a;
 		*low = block[0].a;
 
@@ -1367,7 +1367,7 @@ AX_BEGIN_NAMESPACE
 		}
 	}
 
-	void GenAlphaBitMask(byte_t a0, byte_t a1, Rgba* block, byte_t* outMask) {
+	void GenAlphaBitMask(byte_t a0, byte_t a1, Rgba *block, byte_t *outMask) {
 		byte_t alphas[8];
 		byte_t mask[16];
 
@@ -1421,7 +1421,7 @@ AX_BEGIN_NAMESPACE
 		outMask[5] = ((mask[13] & 0x06) >> 1) | (mask[14] << 2) | (mask[15] << 5);
 	}
 
-	void DXT1CheckOrder(Rgba* block, Rgba *c1, Rgba *c2, bool* pHasAlpha){
+	void DXT1CheckOrder(Rgba *block, Rgba *c1, Rgba *c2, bool *pHasAlpha){
 		// check & change order
 		bool hasAlpha = false;
 		for (uint_t i=0 ; i < DDS_DXT_BLOCK_SIZE; i++) {
@@ -1440,7 +1440,7 @@ AX_BEGIN_NAMESPACE
 
 	//NV_ERROR_CODE nvDXTReadCallback(void *buffer, size_t count, void * userData)
 	//{
-	//	std::istream* s = static_cast<std::istream*>(userData);
+	//	std::istream *s = static_cast<std::istream*>(userData);
 	//	s->read(static_cast<char*>(buffer), (std::streamsize)count);
 	//	return s->good() ? NV_OK : NV_READ_FAILED;
 	//}
@@ -1449,7 +1449,7 @@ AX_BEGIN_NAMESPACE
 		if (mipMapData)
 		{
 			// means a MIP map
-			DdsWriteParams* pParams = static_cast<DdsWriteParams*>(userData);
+			DdsWriteParams *pParams = static_cast<DdsWriteParams*>(userData);
 			pParams->outfp->Write(static_cast<const char*>(buffer), count);
 		}
 		else
@@ -1461,7 +1461,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 
-	void NvDxtCompress(DdsWriteParams* pParams) {
+	void NvDxtCompress(DdsWriteParams *pParams) {
 		nvCompressionOptions options;
 		//options.SetQuality(kQualityFastest, 200);
 		options.UseExisitingMIPMaps();
@@ -1480,10 +1480,10 @@ AX_BEGIN_NAMESPACE
 	}
 	#endif
 
-	void MyDxt1Compress(DdsWriteParams* pParams) {
+	void MyDxt1Compress(DdsWriteParams *pParams) {
 		Rgba block[DDS_DXT_BLOCK_SIZE];
-		byte_t* pWriteBuf = pParams->outData;
-		const byte_t* pReadBuf = pParams->inData;
+		byte_t *pWriteBuf = pParams->outData;
+		const byte_t *pReadBuf = pParams->inData;
 
 		for (uint_t z=0; z < pParams->depth; z++) {
 			for (uint_t y=0; y < pParams->height; y += 4) {
@@ -1509,10 +1509,10 @@ AX_BEGIN_NAMESPACE
 		}
 	}
 
-	void MyDxt3Compress(DdsWriteParams* pParams) {
+	void MyDxt3Compress(DdsWriteParams *pParams) {
 		Rgba block[DDS_DXT_BLOCK_SIZE];
-		byte_t* pWriteBuf = pParams->outData;
-		const byte_t* pReadBuf = pParams->inData;
+		byte_t *pWriteBuf = pParams->outData;
+		const byte_t *pReadBuf = pParams->inData;
 
 		for (uint_t z=0; z < pParams->depth; z++) {
 			for (uint_t y=0; y < pParams->height; y += 4) {
@@ -1545,10 +1545,10 @@ AX_BEGIN_NAMESPACE
 		}
 	}
 
-	void MyDxt5Compress(DdsWriteParams* pParams) {
+	void MyDxt5Compress(DdsWriteParams *pParams) {
 		Rgba block[DDS_DXT_BLOCK_SIZE];
-		byte_t* pWriteBuf = pParams->outData;
-		const byte_t* pReadBuf = pParams->inData;
+		byte_t *pWriteBuf = pParams->outData;
+		const byte_t *pReadBuf = pParams->inData;
 
 		for (uint_t z=0; z < pParams->depth; z++) {
 			for (uint_t y=0; y < pParams->height; y += 4) {
@@ -1589,8 +1589,8 @@ AX_BEGIN_NAMESPACE
 		}
 	}
 
-	void Compress(DdsWriteParams* pParams) {
-		byte_t* pNewMem = NULL;
+	void Compress(DdsWriteParams *pParams) {
+		byte_t *pNewMem = NULL;
 		ChangeFormatToNormal(pParams, &pNewMem);
 
 		//CALC_FUNC_RUN_TIME;
@@ -1619,7 +1619,7 @@ AX_BEGIN_NAMESPACE
 		}
 	}
 
-	void CopyData(DdsWriteParams* pParams){
+	void CopyData(DdsWriteParams *pParams){
 		switch (pParams->outFormat)
 		{
 		case PF_DXT1:
@@ -1662,8 +1662,8 @@ AX_BEGIN_NAMESPACE
 		pParams->outfp->write(pParams->outData, pParams->linearSize);
 	}
 
-	void Image::saveFile_dds(const String& filename, bool bFast) {
-		File* fp = g_fileSystem->openFileWrite(filename);
+	void Image::saveFile_dds(const String &filename, bool bFast) {
+		File *fp = g_fileSystem->openFileWrite(filename);
 
 		DdsHeader header;
 		DdsWriteParams params;

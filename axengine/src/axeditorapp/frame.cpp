@@ -12,7 +12,7 @@ read the license and understand and accept it fully.
 #include "frame.h"
 #include "workspace.h"
 
-Frame::Frame(QWidget *parent, Workspace* ws)
+Frame::Frame(QWidget *parent, Workspace *ws)
 	: QFrame(parent)
 	, m_workspace(ws)
 	, m_editorActive(false)
@@ -25,11 +25,11 @@ Frame::~Frame()
 {
 }
 
-void Frame::focusInEvent(QFocusEvent* event) {
+void Frame::focusInEvent(QFocusEvent *event) {
 	m_workspace->frameActive(this);
 }
 
-void Frame::setPanel(IPanel* panel) {
+void Frame::setPanel(IPanel *panel) {
 	if (m_panel) {
 		m_panel->getWidget()->setParent(0);
 		m_panel->getWidget()->hide();
@@ -39,7 +39,7 @@ void Frame::setPanel(IPanel* panel) {
 	ui.label->setText(m_panel->getTitle());
 }
 
-void Frame::paintEvent(QPaintEvent* event) {
+void Frame::paintEvent(QPaintEvent *event) {
 	QFrame::paintEvent(event);
 
 	QPen pen;

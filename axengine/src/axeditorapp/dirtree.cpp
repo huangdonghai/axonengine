@@ -26,7 +26,7 @@ void DirTree::refresh() {
 
 	clear();
 	for (size_t i = 0; i < infos.size(); i++) {
-		FileItem* item = new FileItem(this, infos[i], m_showExt);
+		FileItem *item = new FileItem(this, infos[i], m_showExt);
 
 		if (infos[i].isDir) {
 			browseSub_r(infos[i].fullpath, item);
@@ -39,10 +39,10 @@ void DirTree::refresh() {
 	}
 }
 
-void DirTree::browseSub_r(const String& path, QTreeWidgetItem* parentItem) {
+void DirTree::browseSub_r(const String &path, QTreeWidgetItem *parentItem) {
 	FileInfoSeq infos = g_fileSystem->getFileInfos(path, q2u(m_filter), File::List_sort);
 	for (size_t i = 0; i < infos.size(); i++) {
-		FileItem* child = new FileItem(parentItem, infos[i], m_showExt);
+		FileItem *child = new FileItem(parentItem, infos[i], m_showExt);
 
 		if (infos[i].isDir) {
 			browseSub_r(infos[i].fullpath, child);
@@ -50,10 +50,10 @@ void DirTree::browseSub_r(const String& path, QTreeWidgetItem* parentItem) {
 	}
 }
 
-static inline bool RemoveEmpty_r(FileItem* item) {
+static inline bool RemoveEmpty_r(FileItem *item) {
 	bool notempty = false;
 	for (int i = item->childCount() - 1; i >= 0; i--) {
-		FileItem* child = (FileItem*)item->child(i);
+		FileItem *child = (FileItem*)item->child(i);
 		if (child->isDirectory()) {
 			bool foundfile = RemoveEmpty_r(child);
 			if (!foundfile) {
@@ -71,23 +71,23 @@ static inline bool RemoveEmpty_r(FileItem* item) {
 
 void DirTree::removeEmpty() {
 	for (int i = topLevelItemCount()-1; i >= 0 ; i--) {
-		FileItem* item = (FileItem*)topLevelItem(i);
+		FileItem *item = (FileItem*)topLevelItem(i);
 
 		if (!item->isDirectory())
 			continue;
 
 		bool notempty = RemoveEmpty_r(item);
 		if (!notempty) {
-			FileItem* taken = (FileItem*)takeTopLevelItem(i);
+			FileItem *taken = (FileItem*)takeTopLevelItem(i);
 			AX_ASSERT(taken == item);
 			delete taken;
 		}
 	}
 }
 
-static inline void RemoveFile_r(FileItem* item) {
+static inline void RemoveFile_r(FileItem *item) {
 	for (int i = item->childCount() - 1; i >= 0; i--) {
-		FileItem* child = (FileItem*)item->child(i);
+		FileItem *child = (FileItem*)item->child(i);
 		if (child->isDirectory()) {
 			RemoveFile_r(child);
 		} else {
@@ -99,7 +99,7 @@ static inline void RemoveFile_r(FileItem* item) {
 void DirTree::removeFile()
 {
 	for (int i = topLevelItemCount()-1; i >= 0 ; i--) {
-		FileItem* item = (FileItem*)topLevelItem(i);
+		FileItem *item = (FileItem*)topLevelItem(i);
 
 		if (!item->isDirectory())
 			continue;

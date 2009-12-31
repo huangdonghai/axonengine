@@ -77,14 +77,14 @@ void SelectByNameDlg::refreshDlg()
 
 	ui.selection->clear();
 
-	const ActorDict& actorDict = g_mapContext->getActorDict();
+	const ActorDict &actorDict = g_mapContext->getActorDict();
 
-	QTreeWidgetItem* item;
+	QTreeWidgetItem *item;
 	ActorDict::const_iterator itr;
 
 	for (itr=actorDict.begin(); itr!=actorDict.end(); ++itr)
 	{
-		MapActor* actor = static_cast<MapActor*>(itr->second);
+		MapActor *actor = static_cast<MapActor*>(itr->second);
 
 		if (actor == NULL || actor->isDeleted())
 		{
@@ -97,7 +97,7 @@ void SelectByNameDlg::refreshDlg()
 		{
 			String str = actor->getGameObject()->get_objectName();
 
-			QTreeWidgetItem* item = new QTreeWidgetItem(ui.selection);
+			QTreeWidgetItem *item = new QTreeWidgetItem(ui.selection);
 
 			item->setText(0, u2q(str));
 			item->setData(0, Qt::UserRole, QVariant(actor->getId()));
@@ -111,7 +111,7 @@ void SelectByNameDlg::refreshDlg()
 
 		for (int i=0; i<ui.selection->topLevelItemCount(); ++i)
 		{
-			QTreeWidgetItem* item = ui.selection->topLevelItem(i);
+			QTreeWidgetItem *item = ui.selection->topLevelItem(i);
 
 			QList<QString>::iterator it;
 			for (it=selectedNames.begin(); it!=selectedNames.end(); ++it)
@@ -167,7 +167,7 @@ void SelectByNameDlg::on_input_textEdited(QString text)
 
 	for (int i=0; i<ui.selection->topLevelItemCount(); ++i)
 	{
-		QTreeWidgetItem* item = ui.selection->topLevelItem(i);
+		QTreeWidgetItem *item = ui.selection->topLevelItem(i);
 
 		QString str = item->text(0).left(text.length());
 
@@ -240,9 +240,9 @@ void SelectByNameDlg::on_selection_itemSelectionChanged()
 	g_mapContext->selectNone();
 
 	AgentList actorList;
-	//const ActorDict& actorDict = gEditorContext->getActorDict();
+	//const ActorDict &actorDict = gEditorContext->getActorDict();
 
-	QTreeWidgetItem* item;
+	QTreeWidgetItem *item;
 	ActorDict::const_iterator itr;
 
 	//for (itr=actorDict.begin(); itr!=actorDict.end(); ++itr)
@@ -336,7 +336,7 @@ void SelectByNameDlg::on_selectInvert_released()
 
 	for (int i=0; i<ui.selection->topLevelItemCount(); ++i)
 	{
-		QTreeWidgetItem* item = ui.selection->topLevelItem(i);
+		QTreeWidgetItem *item = ui.selection->topLevelItem(i);
 
 		item->setSelected(!(item->isSelected()));
 	}
@@ -463,7 +463,7 @@ void SelectByNameDlg::resetCamera()
 	{
 		int id = itemList[0]->data(0, Qt::UserRole).toInt();
 
-		Agent* actor = g_mapContext->findActor(id);
+		Agent *actor = g_mapContext->findActor(id);
 
 		if (actor != NULL)
 		{

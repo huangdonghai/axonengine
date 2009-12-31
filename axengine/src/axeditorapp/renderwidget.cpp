@@ -42,7 +42,7 @@ void RenderWidget::setStopUpdate(bool stop)
 	m_updateStoped = stop;
 }
 
-void RenderWidget::paintEvent(QPaintEvent* pe)
+void RenderWidget::paintEvent(QPaintEvent *pe)
 {
 	if (m_updateStoped)
 		return;
@@ -73,7 +73,7 @@ void RenderWidget::paintEvent(QPaintEvent* pe)
 		if (m_isDrawAxis)
 		{
 			float line_length = 1.0f;
-			LinePrim* axis_line = LinePrim::createAxis(Primitive::HintFrame, line_length);
+			LinePrim *axis_line = LinePrim::createAxis(Primitive::HintFrame, line_length);
 			g_renderSystem->addToScene(axis_line);
 		}
 		
@@ -152,9 +152,9 @@ void RenderWidget::drawAxis()
 	g_renderSystem->beginScene(camera);
 
 #if 0
-	Render::Line* axis_line = Render::Line::createAxis(Render::Primitive::OneFrame, line_length);
+	Render::Line *axis_line = Render::Line::createAxis(Render::Primitive::OneFrame, line_length);
 	line_length += 0.2f;
-	Render::Text* text = Render::Text::createSimpleText(Render::Primitive::OneFrame, Vector3(line_length, 0, 0), Color4::Red, "x");
+	Render::Text *text = Render::Text::createSimpleText(Render::Primitive::OneFrame, Vector3(line_length, 0, 0), Color4::Red, "x");
 	gRenderSystem->addToScene(text);
 
 	text = Render::Text::createSimpleText(Render::Primitive::OneFrame, Vector3(0, line_length, 0), Color4::Green, "y");
@@ -198,7 +198,7 @@ void RenderWidget::drawFrameNum()
 	rect.y = rv.getViewRect().height - 24;
 	rect.width = 120;
 	rect.height = g_consoleFont->getHeight();
-	TextPrim* prim = TextPrim::createText(Primitive::HintFrame, rect, g_consoleFont, text, Rgba::Green);
+	TextPrim *prim = TextPrim::createText(Primitive::HintFrame, rect, g_consoleFont, text, Rgba::Green);
 
 	g_renderSystem->beginScene(rv);
 	g_renderSystem->addToScene(prim);
@@ -209,7 +209,7 @@ void RenderWidget::drawFrameNum()
 // class PreviewWidget
 //------------------------------------------------------------------------------
 
-PreviewWidget::PreviewWidget(QWidget* parent)
+PreviewWidget::PreviewWidget(QWidget *parent)
 	: RenderWidget(parent)
 	, m_viewControl(NONE)
 	, m_actor(NULL)
@@ -258,7 +258,7 @@ void PreviewWidget::mouseMoveEvent(QMouseEvent * event)
 			angles.pitch = Math::clamp(m_viewAngles.pitch, -90.f, 90.f);
 			m_actor->setAxis(angles);
 #else
-			const AffineMat& mat = m_actor->getMatrix();
+			const AffineMat &mat = m_actor->getMatrix();
 			AffineMat other;
 			other.setOrigin(0, 0, 0);
 
@@ -312,7 +312,7 @@ void PreviewWidget::mouseReleaseEvent(QMouseEvent * event)
 //------------------------------------------------------------------------------
 
 
-uiRenderWidget::uiRenderWidget(QWidget* parent)
+uiRenderWidget::uiRenderWidget(QWidget *parent)
 	: RenderWidget(parent){
 		m_uiContext.bindFrame(this);
 }
@@ -321,7 +321,7 @@ uiRenderWidget::~uiRenderWidget() {
 	SafeDelete(m_renderTarget);
 }
 
-void uiRenderWidget::paintEvent(QPaintEvent* pe) {
+void uiRenderWidget::paintEvent(QPaintEvent *pe) {
 	if (m_updateStoped)
 		return;
 
@@ -358,13 +358,13 @@ void uiRenderWidget::doRender() {
 }
 
 void uiRenderWidget::setAutoUpdate(bool update){
-	UiEditor* editor = dynamic_cast<UiEditor*>(m_parent);
+	UiEditor *editor = dynamic_cast<UiEditor*>(m_parent);
 	editor->setEditorCtrl(m_uiContext.getCurrentWidget());
 }
 
 void uiRenderWidget::setNeedUpdate(){
 	update();
-	UiEditor* editor = dynamic_cast<UiEditor*>(m_parent);
+	UiEditor *editor = dynamic_cast<UiEditor*>(m_parent);
 	editor->refreshCtrlPos();
 	editor->refreshCtrlExt();
 	
@@ -403,7 +403,7 @@ void uiRenderWidget::mouseReleaseEvent(QMouseEvent *event){
 	m_uiContext.handleEvent(&xe);
 }
 
-void uiRenderWidget::translateMouseEvent(QMouseEvent* e, Event* xe) {
+void uiRenderWidget::translateMouseEvent(QMouseEvent *e, Event *xe) {
 	Qt::MouseButtons btns = e->buttons();
 	Qt::MouseButton btn = e->button();
 
@@ -514,10 +514,10 @@ void uiRenderWidget::setCursor(CursorType cursor_type) {
 // ======================================================
 
 float ParticlePreviewWidget::m_emitterHelperLength = 3;
-Render::Line* selectedLine = NULL;
+Render::Line *selectedLine = NULL;
 bool emitterHelperHandling = false;
 
-ParticlePreviewWidget::ParticlePreviewWidget(QWidget* parent)
+ParticlePreviewWidget::ParticlePreviewWidget(QWidget *parent)
 	: PreviewWidget(parent),
 	m_parEffectList(NULL),
 	m_renderWorldAdded(false),
@@ -593,7 +593,7 @@ ParticlePreviewWidget::~ParticlePreviewWidget()
 	//FreeAsset_(m_material);
 }
 
-void ParticlePreviewWidget::initParticleModel(const String& modelFile)
+void ParticlePreviewWidget::initParticleModel(const String &modelFile)
 {
 	if (m_particleModel)
 	{
@@ -603,7 +603,7 @@ void ParticlePreviewWidget::initParticleModel(const String& modelFile)
 	m_particleModel = new Render::Model(modelFile);
 }
 
-void ParticlePreviewWidget::initTexQuad(const String& materialName,Vector2 startTexUV,float uvOffset)
+void ParticlePreviewWidget::initTexQuad(const String &materialName,Vector2 startTexUV,float uvOffset)
 {
 	if (!m_texQuad)
 	{
@@ -626,7 +626,7 @@ void ParticlePreviewWidget::initTexQuad(const String& materialName,Vector2 start
 		m_material = Material::loadUnique(materialName);
 	}
 
-	Vertex* vertexData = m_texQuad->lockVertexes();
+	Vertex *vertexData = m_texQuad->lockVertexes();
 
 	vertexData[0].st = startTexUV;
 	vertexData[1].st = Vector2(startTexUV.x,startTexUV.y + uvOffset);
@@ -662,7 +662,7 @@ void ParticlePreviewWidget::drawTexQuadOrParticleModel()
 
 	if (m_isShowTexture && m_texQuad)
 	{
-		Vertex* vertexData = m_texQuad->lockVertexes();
+		Vertex *vertexData = m_texQuad->lockVertexes();
 
 		vertexData[0].xyz = drawPos - widthVec * halfLength + heightVec * halfLength;
 		vertexData[0].rgba = Rgba(255,255,255,255);
@@ -675,7 +675,7 @@ void ParticlePreviewWidget::drawTexQuadOrParticleModel()
 
 		m_texQuad->unlockVertexes();
 
-		int* indexData = m_texQuad->lockIndexes();
+		int *indexData = m_texQuad->lockIndexes();
 
 		int index[6] = {2,1,0,0,3,2};
 
@@ -797,7 +797,7 @@ void ParticlePreviewWidget::updateParticleEffects(float elapsedTime)
 	}
 }
 
-void ParticlePreviewWidget::setParticleEditor(ParticleEditor* particleEditor)
+void ParticlePreviewWidget::setParticleEditor(ParticleEditor *particleEditor)
 {
 	AX_ASSERT(particleEditor != NULL);
 
@@ -864,9 +864,9 @@ void ParticlePreviewWidget::doRender()
 
 			m_lastTime = Milliseconds();
 
-			ParticleEffectList* effectList = m_particlePlayer->getOwner()->getParticleEffectList();
+			ParticleEffectList *effectList = m_particlePlayer->getOwner()->getParticleEffectList();
 			ParticleEffectList::iterator it;
-			ParticleEffect::ParticleSystemList* systemList;
+			ParticleEffect::ParticleSystemList *systemList;
 			ParticleEffect::ParticleSystemList::iterator it_sym;
 
 			if (m_isRenderSelectRect)
@@ -887,7 +887,7 @@ void ParticlePreviewWidget::doRender()
 				}
 			}
 
-			ParticleAxis* selectedParticle = getSelectedParticleEffect();
+			ParticleAxis *selectedParticle = getSelectedParticleEffect();
 
 			if (selectedParticle)
 			{
@@ -940,8 +940,8 @@ void ParticlePreviewWidget::doRender()
 
 				float hMinAngle(0), hMaxAngle(0);
 
-				ParticleEmitterDlg* emitterDlg = NULL;
-				IParticleObjectDlg* parDlg = m_particleEditor->getParticleDialogManager()->getActiveParticleDlg();
+				ParticleEmitterDlg *emitterDlg = NULL;
+				IParticleObjectDlg *parDlg = m_particleEditor->getParticleDialogManager()->getActiveParticleDlg();
 
 				if (parDlg != NULL && parDlg->getDlgType() == "ParticleEmitter")
 				{
@@ -1104,11 +1104,11 @@ void ParticlePreviewWidget::drawStaticAxis()
 	float length = m_distScale * 20;
 
 	Matrix3 axisMat(-1.0f,0.0f,0.0f,0.0f,1.0f,0.0f,0.0f,0.0f,1.0f);
-	Render::Line* axisLine = Render::Line::createAxis(Render::Primitive::OneFrame,drawPos,axisMat,length);
+	Render::Line *axisLine = Render::Line::createAxis(Render::Primitive::OneFrame,drawPos,axisMat,length);
 	gRenderSystem->addToScene(axisLine);
 }
 
-void ParticlePreviewWidget::setParticleEffectList(ParticleEffectList* parEffectList)
+void ParticlePreviewWidget::setParticleEffectList(ParticleEffectList *parEffectList)
 {
 	AX_ASSERT(parEffectList != NULL);
 
@@ -1138,8 +1138,8 @@ void ParticlePreviewWidget::refresh()
 	// 调整m_parModelList的大小,以使它与m_parEffectList的大小一样
 	if (m_modelList.size() < m_parEffectList->size())
 	{
-		Render::Model* parModel = NULL;
-		ParticleModelInstance* parInstance = NULL;
+		Render::Model *parModel = NULL;
+		ParticleModelInstance *parInstance = NULL;
 
 		for (int i=0; i<m_parEffectList->size() - m_modelList.size(); ++i)
 		{
@@ -1164,7 +1164,7 @@ void ParticlePreviewWidget::refresh()
 	// 将ParticleEffect加入Model,并将Model加入RenderWorld中
 	for (int i=0; i<m_modelList.size(); ++i)
 	{
-		ParticleModelInstance* parModelIns = (ParticleModelInstance*) m_modelList[i]->getInstance();
+		ParticleModelInstance *parModelIns = (ParticleModelInstance*) m_modelList[i]->getInstance();
 		parModelIns->setParticleEffect((*m_parEffectList)[i]);
 
 		m_renderWorld->addActor(m_modelList[i]);
@@ -1173,7 +1173,7 @@ void ParticlePreviewWidget::refresh()
 	m_renderWorldAdded = true;
 }
 
-void ParticlePreviewWidget::addParticleEffect(ParticleEffect* parEffect)
+void ParticlePreviewWidget::addParticleEffect(ParticleEffect *parEffect)
 {
 	m_renderWorldAdded = false;
 
@@ -1216,14 +1216,14 @@ void ParticlePreviewWidget::clearParticleEffectList(bool destroyParticleEffects)
 	//m_parEffectList->clear();
 }
 
-void ParticlePreviewWidget::setParticlePlayer(ParticlePlayer* particlePlayer)
+void ParticlePreviewWidget::setParticlePlayer(ParticlePlayer *particlePlayer)
 {
 	AX_ASSERT(particlePlayer != NULL);
 
 	m_particlePlayer = particlePlayer;
 }
 
-void ParticlePreviewWidget::setKeyFrameSlider(KeyFrameSlider* keyFrameSlider)
+void ParticlePreviewWidget::setKeyFrameSlider(KeyFrameSlider *keyFrameSlider)
 {
 	AX_ASSERT(keyFrameSlider != NULL);
 
@@ -1241,7 +1241,7 @@ bool ParticlePreviewWidget::hasParticleEffectHolded()
 	return false;
 }
 
-/*bool ParticlePreviewWidget::clipTest(int x, int y, Plane* clickPlane, float& result) 
+/*bool ParticlePreviewWidget::clipTest(int x, int y, Plane *clickPlane, float &result) 
 {
 	Vector3 start = m_renderCamera.getOrigin();
 	Vector3 end(x, y, 1);
@@ -1409,11 +1409,11 @@ void ParticlePreviewWidget::mouseMoveEvent(QMouseEvent * e)
 			//lastResult = result;
 			result = result * 180.0f / AX_PI;
 
-			IParticleObjectDlg* parDlg = m_particleEditor->getParticleDialogManager()->getActiveParticleDlg();
+			IParticleObjectDlg *parDlg = m_particleEditor->getParticleDialogManager()->getActiveParticleDlg();
 
 			if (parDlg->getDlgType() == "ParticleEmitter")
 			{
-				ParticleEmitterDlg* emitterDlg = (ParticleEmitterDlg*) parDlg;
+				ParticleEmitterDlg *emitterDlg = (ParticleEmitterDlg*) parDlg;
 
 				if (emitterDlg->isKeyFrameEnabled() == false)
 				{
@@ -1471,7 +1471,7 @@ void ParticlePreviewWidget::mouseMoveEvent(QMouseEvent * e)
 
     m_tool->doMove(pos.x(),pos.y());	
 
-	ParticleObject* effect = m_tool->getSelectedParticleEffect();
+	ParticleObject *effect = m_tool->getSelectedParticleEffect();
 
 	if (effect)
 	{
@@ -1514,7 +1514,7 @@ void ParticlePreviewWidget::mouseMoveEvent(QMouseEvent * e)
 		Vector3 newPos = pos;
 		if (m_isLocked)
 		{
-			ParticleAxis* axis = getSelectedParticleEffect();
+			ParticleAxis *axis = getSelectedParticleEffect();
 			Vector3 parPos;
 
 			GET_PARTICLE_POS(axis->particle,parPos);
@@ -1558,7 +1558,7 @@ void ParticlePreviewWidget::keyPressEvent(QKeyEvent *e)
 
 	if (e->key() == Qt::Key_Z)
 	{
-		ParticleEffectList* effectList = m_particleEditor->getParticleContext()->getParticleEffectList();
+		ParticleEffectList *effectList = m_particleEditor->getParticleContext()->getParticleEffectList();
 		ParticleEffectList::iterator it;
 		Vector3 posAll = Vector3(0.0f,0.0f,0.0f);
 
@@ -1580,7 +1580,7 @@ void ParticlePreviewWidget::keyPressEvent(QKeyEvent *e)
 
 	if (e->key() == Qt::Key_Shift)
 	{
-		ParticleAxis* axis = getSelectedParticleEffect();
+		ParticleAxis *axis = getSelectedParticleEffect();
 
 		if (!axis)
 			return;
@@ -1611,13 +1611,13 @@ void ParticlePreviewWidget::keyReleaseEvent(QKeyEvent *e)
 	}
 }
 
-void ParticlePreviewWidget::updateSelectParticleEffect(ParticleAxis* axis)
+void ParticlePreviewWidget::updateSelectParticleEffect(ParticleAxis *axis)
 {
     for (int i = 0;i < 1000;i ++)
 	{
 		if ((&m_axis[i]) == axis)
 		{
-			ParticleAxis* curSelected = getSelectedParticleEffect();
+			ParticleAxis *curSelected = getSelectedParticleEffect();
 
 			if (curSelected)
 				m_axis[i].m_isRenderEmitterLine = curSelected->m_isRenderEmitterLine;
@@ -1630,7 +1630,7 @@ void ParticlePreviewWidget::updateSelectParticleEffect(ParticleAxis* axis)
 	}
 }
 
-ParticleAxis* ParticlePreviewWidget::getSelectedParticleEffect()
+ParticleAxis *ParticlePreviewWidget::getSelectedParticleEffect()
 {
 	for (int i = 0;i < 1000;i ++)
 	{
@@ -1748,7 +1748,7 @@ void ParticlePreviewWidget::mousePressEvent(QMouseEvent * e)
 	
 }
 
-void ParticlePreviewWidget::setupMeshLine(Render::Line*& line,const Vector3& pos,Render::Model*& model,const Vector3& scale,const Vector3& rotate,const Vector3& translate)
+void ParticlePreviewWidget::setupMeshLine(Render::Line*& line,const Vector3 &pos,Render::Model*& model,const Vector3 &scale,const Vector3 &rotate,const Vector3 &translate)
 {
 	Render::Primitives primitives = model->getAllPrimitives();
 	Render::Primitives::iterator it;
@@ -1757,7 +1757,7 @@ void ParticlePreviewWidget::setupMeshLine(Render::Line*& line,const Vector3& pos
 
 	for (it = primitives.begin();it != primitives.end();++ it)
 	{
-		Render::Mesh* mesh = static_cast<Render::Mesh*>((*it));
+		Render::Mesh *mesh = static_cast<Render::Mesh*>((*it));
 		vertexNum += mesh->getNumVertexes();
 		indexNum += mesh->getNumIndexes();
 	}
@@ -1779,22 +1779,22 @@ void ParticlePreviewWidget::setupMeshLine(Render::Line*& line,const Vector3& pos
 		line->initialize(vertexNum,indexNum);
 	}
 
-	Vertex* meshVertexes;
+	Vertex *meshVertexes;
 	int meshVertexNum;
-	int* meshIndexes;
+	int *meshIndexes;
 	int meshIndexNum;
 	AffineMat mat;
 	mat.setIdentity();
 	mat.translateSelf(translate.x,translate.y,translate.z);
 	mat.scaleSelf(scale.x,scale.y,scale.z);
 	mat.rotateSelf(rotate.x,rotate.y,rotate.z);
-	DebugVertex* lineVertexes = line->lockVertexes();
+	DebugVertex *lineVertexes = line->lockVertexes();
 	int vexIndex = 0;
 	int idxIndex = 0;
-	int* lineIndexes = line->lockIndexes();
+	int *lineIndexes = line->lockIndexes();
 	for (it = primitives.begin();it != primitives.end();++ it)
 	{
-		Render::Mesh* mesh = static_cast<Render::Mesh*>((*it));
+		Render::Mesh *mesh = static_cast<Render::Mesh*>((*it));
 	    meshVertexes = mesh->lockVertexes();
 		meshIndexes = mesh->lockIndexes();
 		meshVertexNum = mesh->getNumVertexes();
@@ -1821,10 +1821,10 @@ void ParticlePreviewWidget::setupMeshLine(Render::Line*& line,const Vector3& pos
 	line->unlockIndexes();
 }
 
-void ParticlePreviewWidget::drawMeshLine(const String& modelFile,const Vector3& pos,const Vector3& scale,const Vector3& rotate,const Vector3& translate)
+void ParticlePreviewWidget::drawMeshLine(const String &modelFile,const Vector3 &pos,const Vector3 &scale,const Vector3 &rotate,const Vector3 &translate)
 {
     static String lastModelFile = modelFile;
-	static Render::Model* model = NULL;
+	static Render::Model *model = NULL;
 
 	if (lastModelFile != modelFile || model == NULL)
 	{
@@ -1832,13 +1832,13 @@ void ParticlePreviewWidget::drawMeshLine(const String& modelFile,const Vector3& 
 		model = new Render::Model(modelFile);
 	}
 
-	EmitterLine* line = getFreeMeshLine();
+	EmitterLine *line = getFreeMeshLine();
 
 	setupMeshLine(line->line,pos,model,scale,rotate,translate);
 	gRenderSystem->addToScene(line->line);
 }
 
-void ParticlePreviewWidget::doDrawEmitter(ParticleControler::ParticleEmitterList* emitterList)
+void ParticlePreviewWidget::doDrawEmitter(ParticleControler::ParticleEmitterList *emitterList)
 {
 	ParticleControler::ParticleEmitterList::iterator it_em;
 
@@ -1846,34 +1846,34 @@ void ParticlePreviewWidget::doDrawEmitter(ParticleControler::ParticleEmitterList
 	{
 		if ((*it_em)->getEmitterType() == "BoxEmitter")
 		{
-			BoxEmitter* emitter = static_cast<BoxEmitter*>(*it_em);
+			BoxEmitter *emitter = static_cast<BoxEmitter*>(*it_em);
 			drawBox(emitter->getCurrentEmitterData().m_position,emitter->getCurrentInnerWidth(),emitter->getCurrentInnerHeight(),emitter->getCurrentInnerDepth());
 			drawBox(emitter->getCurrentEmitterData().m_position,emitter->getCurrentOuterWidth(),emitter->getCurrentOuterHeight(),emitter->getCurrentOuterDepth());
 		}
 		else if ((*it_em)->getEmitterType() == "SphereEmitter")
 		{
-			SphereEmitter* emitter = static_cast<SphereEmitter*>(*it_em);
+			SphereEmitter *emitter = static_cast<SphereEmitter*>(*it_em);
 			drawEllipse(emitter->getCurrentEmitterData().m_position,emitter->getCurrentInnerWidth(),emitter->getCurrentInnerHeight(),emitter->getCurrentInnerDepth());
 			drawEllipse(emitter->getCurrentEmitterData().m_position,emitter->getCurrentOuterWidth(),emitter->getCurrentOuterHeight(),emitter->getCurrentOuterDepth());
 		}
 		else if ((*it_em)->getEmitterType() == "MeshEmitter")
 		{
-            MeshEmitter* emitter = static_cast<MeshEmitter*>(*it_em);
+            MeshEmitter *emitter = static_cast<MeshEmitter*>(*it_em);
 			drawMeshLine(emitter->getModelName(),emitter->getCenterPos(),emitter->getMeshScale(),emitter->getMeshRotate(),emitter->getMeshTranslate());
 		}
 	}
 }
 
-void ParticlePreviewWidget::drawEmitter(ParticleObject* particle)
+void ParticlePreviewWidget::drawEmitter(ParticleObject *particle)
 {
-	ParticleControler::ParticleEmitterList* emitterList;
+	ParticleControler::ParticleEmitterList *emitterList;
 	ParticleEffect::ParticleSystemList::iterator it;
 	ParticleControler::ParticleEmitterList::iterator it_em;
 
 	if (particle->getTopChildrenType() == "ParticleEffect")
 	{
-		ParticleEffect* effect = static_cast<ParticleEffect*>(particle);
-		ParticleEffect::ParticleSystemList* particleList = effect->getParticleSystemList();
+		ParticleEffect *effect = static_cast<ParticleEffect*>(particle);
+		ParticleEffect::ParticleSystemList *particleList = effect->getParticleSystemList();
 		for (it = particleList->begin();it != particleList->end();++ it)
 		{
 			emitterList = (*it)->getParticleEmitterList();
@@ -1882,13 +1882,13 @@ void ParticlePreviewWidget::drawEmitter(ParticleObject* particle)
 	}
 	else
 	{
-		ParticleSystem* system = static_cast<ParticleSystem*>(particle);
+		ParticleSystem *system = static_cast<ParticleSystem*>(particle);
 
 		doDrawEmitter(system->getParticleEmitterList());
 	}
 }
 
-EmitterLine* ParticlePreviewWidget::getFreeMeshLine()
+EmitterLine *ParticlePreviewWidget::getFreeMeshLine()
 {
 	for (int i = 0;i < 1000;++ i)
 	{
@@ -1902,7 +1902,7 @@ EmitterLine* ParticlePreviewWidget::getFreeMeshLine()
 	return NULL;
 }
 
-EmitterLine* ParticlePreviewWidget::getFreeEllipseLine()
+EmitterLine *ParticlePreviewWidget::getFreeEllipseLine()
 {
     for (int i = 0;i < 1000;++ i)
 	{
@@ -1916,10 +1916,10 @@ EmitterLine* ParticlePreviewWidget::getFreeEllipseLine()
 	return NULL;
 }
 
-void ParticlePreviewWidget::drawEllipse(Vector3& center,float width,float height,float depth)
+void ParticlePreviewWidget::drawEllipse(Vector3 &center,float width,float height,float depth)
 {
-	EmitterLine* verticalCircle = getFreeEllipseLine();
-	EmitterLine* horizontalCircle = getFreeEllipseLine();
+	EmitterLine *verticalCircle = getFreeEllipseLine();
+	EmitterLine *horizontalCircle = getFreeEllipseLine();
 
 	Vector3 upAxis    = Vector3(0.0f,0.0f,height);
 	Vector3 rightAxis = Vector3(0.0f,width,0.0f);
@@ -1948,7 +1948,7 @@ void ParticlePreviewWidget::setPickedByParticleSystem(bool state)
 	m_particleEditor->getParticleGlobalSettingDlg()->setRenderSelectParticleAxisCheck(m_isRenderAxis);
 }
 
-EmitterLine* ParticlePreviewWidget::getFreeBoxLine()
+EmitterLine *ParticlePreviewWidget::getFreeBoxLine()
 {
 	for (int i = 0;i < 1000;++ i)
 	{
@@ -1961,9 +1961,9 @@ EmitterLine* ParticlePreviewWidget::getFreeBoxLine()
 	return NULL;
 }
 
-void ParticlePreviewWidget::drawBox(Vector3& center,float width,float height,float depth)
+void ParticlePreviewWidget::drawBox(Vector3 &center,float width,float height,float depth)
 {
-	EmitterLine* boxLine = getFreeBoxLine();
+	EmitterLine *boxLine = getFreeBoxLine();
 
 	Matrix3 axis;
 	axis.setIdentity();
@@ -1986,7 +1986,7 @@ void ParticlePreviewWidget::resetLineData()
 
 }
 
-ParticleAxis* ParticlePreviewWidget::getFreeParticleAxis()
+ParticleAxis *ParticlePreviewWidget::getFreeParticleAxis()
 {
 	for (int i = 0;i < 1000;++ i)
 	{
@@ -1999,7 +1999,7 @@ ParticleAxis* ParticlePreviewWidget::getFreeParticleAxis()
 	return NULL;
 }
 
-void ParticlePreviewWidget::setupParticleAxis(ParticleAxis*& axis,const Vector3& pos,float length,Rgba color /* = Rgba */)
+void ParticlePreviewWidget::setupParticleAxis(ParticleAxis*& axis,const Vector3 &pos,float length,Rgba color /* = Rgba */)
 {
 	if (!axis->plane)
 	{
@@ -2032,7 +2032,7 @@ void ParticlePreviewWidget::setupParticleAxis(ParticleAxis*& axis,const Vector3&
 	widthVec.normalize();
 	heightVec.normalize();
 	
-	Vertex* vertexData = axis->plane->lockVertexes();
+	Vertex *vertexData = axis->plane->lockVertexes();
 
 	vertexData[0].xyz = pos - (widthVec * (width / 2)) + (heightVec * (height / 2));// Vector3(pos.x,pos.y - width / 2,pos.z + height / 2);
 	vertexData[0].rgba = color;
@@ -2045,7 +2045,7 @@ void ParticlePreviewWidget::setupParticleAxis(ParticleAxis*& axis,const Vector3&
 
 	axis->plane->unlockVertexes();
 
-	int* indexData = axis->plane->lockIndexes();
+	int *indexData = axis->plane->lockIndexes();
 
 	int index[6] = {0,1,2,2,3,0};
 
@@ -2076,9 +2076,9 @@ void ParticlePreviewWidget::setupParticleAxis(ParticleAxis*& axis,const Vector3&
 
 }
 
-void ParticlePreviewWidget::drawParticleAxis(PARTICLESYSTEM::ParticleObject* particle)
+void ParticlePreviewWidget::drawParticleAxis(PARTICLESYSTEM::ParticleObject *particle)
 {
-    ParticleAxis* axis = getFreeParticleAxis(); 
+    ParticleAxis *axis = getFreeParticleAxis(); 
 	Vector3 pos;
 	GET_PARTICLE_POS(particle,pos);
 
@@ -2098,13 +2098,13 @@ void ParticlePreviewWidget::drawParticleAxis(PARTICLESYSTEM::ParticleObject* par
 
 void ParticlePreviewWidget::setRenderEmitterLineOfSelectedParticle(bool state)
 {
-    ParticleAxis* selectedParticle = getSelectedParticleEffect();
+    ParticleAxis *selectedParticle = getSelectedParticleEffect();
 
 	if (selectedParticle)
 	    selectedParticle->m_isRenderEmitterLine = state;
 }
 
-void ParticlePreviewWidget::setSelectedParticle(ParticleObject* particle)
+void ParticlePreviewWidget::setSelectedParticle(ParticleObject *particle)
 {
 	for (int i = 0;i < 1000;++ i)
 	{
@@ -2131,7 +2131,7 @@ void ParticlePreviewWidget::setSelectedParticle(ParticleObject* particle)
 size_t ParticlePreviewWidget::stasticsNumActiveParticle()
 {
 	ParticleEffectList::iterator it_par;
-	ParticleEffect::ParticleSystemList* sysList;
+	ParticleEffect::ParticleSystemList *sysList;
 	ParticleEffect::ParticleSystemList::iterator it_sys;
 	size_t numActiveParticle = 0;
 	size_t curSysActivePar = 0;
@@ -2179,7 +2179,7 @@ void ParticlePreviewWidget::showHelpText()
 	Vector3 drawPos = pos - widthVec * 13 + heightVec * 14 * scale;
 
 	frameNum ++;
-	Render::Text* tex = Render::Text::createSimpleText(Render::Primitive::OneFrame,drawPos,Rgba(255,0,0,255),ufpsStr);
+	Render::Text *tex = Render::Text::createSimpleText(Render::Primitive::OneFrame,drawPos,Rgba(255,0,0,255),ufpsStr);
 	g_renderSystem->addToScene(tex);
 
 	size_t numActivePar = stasticsNumActiveParticle();
@@ -2187,7 +2187,7 @@ void ParticlePreviewWidget::showHelpText()
 	String uNumParStr = q2u(qStr);
 	drawPos -= heightVec;
 	drawPos += widthVec * 0.7f;
-	Render::Text* numParTex = Render::Text::createSimpleText(Render::Primitive::OneFrame,drawPos,Rgba(255,0,0,255),uNumParStr);
+	Render::Text *numParTex = Render::Text::createSimpleText(Render::Primitive::OneFrame,drawPos,Rgba(255,0,0,255),uNumParStr);
 	g_renderSystem->addToScene(numParTex);
 
 }

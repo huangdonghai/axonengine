@@ -28,17 +28,17 @@ AX_BEGIN_NAMESPACE
 		inline ~Matrix2() {}
 
 		// operator
-		inline Vector2& operator[] (int index) {
+		inline Vector2 &operator[] (int index) {
 			AX_STRICT_ASSERT(index>=0 && index<2);
 			return *(Vector2*)m[index];
 		}
 
-		inline const Vector2& operator[] (int index) const {
+		inline const Vector2 &operator[] (int index) const {
 			AX_STRICT_ASSERT(index>=0 && index<2);
 			return *(Vector2*)m[index];
 		}
 
-		inline Matrix2 operator*(const Matrix2& im) const {
+		inline Matrix2 operator*(const Matrix2 &im) const {
 			Matrix2 om;
 
 			om[0][0] = m[0][0]*im[0][0] + m[1][0]*im[0][1];

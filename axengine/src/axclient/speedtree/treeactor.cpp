@@ -13,7 +13,7 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-	TreeActor::TreeActor(const String& filename, int seed) : RenderEntity(kSpeedTree) {
+	TreeActor::TreeActor(const String &filename, int seed) : RenderEntity(kSpeedTree) {
 		m_treeAsset = g_treeManager->findAsset(filename, seed);
 		m_treeAsset->addActor(this);
 
@@ -35,7 +35,7 @@ AX_BEGIN_NAMESPACE
 		return getLocalBoundingBox().getTransformed(m_affineMat);
 	}
 
-	void TreeActor::frameUpdate(QueuedScene* qscene)
+	void TreeActor::frameUpdate(QueuedScene *qscene)
 	{
 		m_instanceParam[InstanceScale] = m_affineMat.getScales();
 	}
@@ -45,7 +45,7 @@ AX_BEGIN_NAMESPACE
 		return m_treeAsset->getAllPrimitives(m_lod);
 	}
 
-	void TreeActor::issueToQueue(QueuedScene* qscene) {
+	void TreeActor::issueToQueue(QueuedScene *qscene) {
 		if (!r_speedtree->getBool()) {
 			return;
 		}

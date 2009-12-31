@@ -13,7 +13,7 @@ AX_BEGIN_NAMESPACE
 
 	const Matrix3 Matrix3::Identity(1,0,0,0,1,0,0,0,1);
 
-	void Matrix3::fromAngles(const Angles& angles) {
+	void Matrix3::fromAngles(const Angles &angles) {
 		angles.toVectors(&m[0], &m[1], &m[2]);
 	}
 
@@ -48,7 +48,7 @@ AX_BEGIN_NAMESPACE
 		return angles;
 	}
 
-	void Matrix3::toAnglesScale(Angles& angles, float& scale) const {
+	void Matrix3::toAnglesScale(Angles &angles, float &scale) const {
 		Matrix3 temp = *this;
 		scale = temp.removeScale();
 		angles = temp.toAngles();
@@ -77,6 +77,6 @@ AX_BEGIN_NAMESPACE
 		return result;
 	}
 
-	void Matrix3::fromString(const char* str) {}
+	void Matrix3::fromString(const char *str) {}
 
 }

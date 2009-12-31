@@ -18,7 +18,7 @@ void Agent::beginTransform()
 	m_oldscale = m_oldmatrixNoScale.axis.removeScale();
 }
 
-void Agent::doTransform(const AffineMat& mat, bool local)
+void Agent::doTransform(const AffineMat &mat, bool local)
 {
 	AffineMat newmatrix;
 	if (local) {
@@ -36,9 +36,9 @@ void Agent::doTransform(const AffineMat& mat, bool local)
 	}
 }
 
-Action* Agent::endTransform()
+Action *Agent::endTransform()
 {
-	TransformHis* his = new TransformHis(m_context, "Transform", m_id, m_oldMatrix, getMatrix());
+	TransformHis *his = new TransformHis(m_context, "Transform", m_id, m_oldMatrix, getMatrix());
 	return his;
 }
 
@@ -56,7 +56,7 @@ void Agent::setOrigin(int index, float f)
 #endif
 }
 
-void Agent::setOrigin( const Vector3& pos )
+void Agent::setOrigin( const Vector3 &pos )
 {
 	AffineMat mat = getMatrix();
 	mat.origin = pos;
@@ -112,14 +112,14 @@ void Agent::setId(int newid)
 	m_context->addActor(this);
 }
 
-void Agent::setAxis( const Matrix3& axis )
+void Agent::setAxis( const Matrix3 &axis )
 {
 	AffineMat mat = getMatrix();
 	mat.axis = axis;
 	setMatrix(mat);
 }
 
-Agent::Agent(Context* ctx)
+Agent::Agent(Context *ctx)
 {
 	m_context = ctx;
 	m_isHovering = false;
@@ -141,35 +141,35 @@ Agent::~Agent()
 // class AgentList
 //--------------------------------------------------------------------------
 
-Action* AgentList::endTransform() const {
+Action *AgentList::endTransform() const {
 	if (empty()) return nullptr;
 
-	Context* ctx = front()->getContext();
-	GroupHis* group = new GroupHis(ctx, "Transform");
+	Context *ctx = front()->getContext();
+	GroupHis *group = new GroupHis(ctx, "Transform");
 
 	AgentList::const_iterator it = begin();
 	for (; it != end(); ++it) {
-		Action* his = (*it)->endTransform();
+		Action *his = (*it)->endTransform();
 		if (his) group->append(his);
 	}
 
 	return group;
 }
 
-void AgentList::setNodeProperty(const String& propname, const Variant& value) const
+void AgentList::setNodeProperty(const String &propname, const Variant &value) const
 {
 	if (empty()) return;
 
-	Context* ctx = front()->getContext();
-	GroupHis* group = nullptr;
+	Context *ctx = front()->getContext();
+	GroupHis *group = nullptr;
 	if (!containsOne()) {
 		group = new GroupHis(ctx, "Edit Property");
 	}
 
-	History* his = nullptr;
+	History *his = nullptr;
 	AgentList::const_iterator it = begin();
 	for (; it != end(); ++it) {
-		Agent* actor = *it;
+		Agent *actor = *it;
 
 		Variant oldvalue = actor->getProperty(propname.c_str());
 		his = new PropertyEditHis(ctx, actor,propname,oldvalue,value);

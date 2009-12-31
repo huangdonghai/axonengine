@@ -119,7 +119,7 @@ AX_BEGIN_NAMESPACE
 		}
 	}
 
-	void Simd::findHeightMinMax(const ushort_t* data, int stride, const Rect& rect, ushort_t* minh, ushort_t* maxh) {
+	void Simd::findHeightMinMax(const ushort_t *data, int stride, const Rect &rect, ushort_t *minh, ushort_t *maxh) {
 
 	}
 
@@ -227,7 +227,7 @@ AX_BEGIN_NAMESPACE
 			if (!used[i])
 				continue;
 
-			Vertex* v = verts + i;
+			Vertex *v = verts + i;
 			Vector3 b = v->normal ^ v->tangent;
 
 			if ((b | v->binormal) < 0)

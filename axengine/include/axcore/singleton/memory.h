@@ -143,44 +143,44 @@ AX_BEGIN_NAMESPACE
 		void initialize();
 		void finalize();
 
-		void* alloc(uint_t size);
-		void free(void* p);
-		void* alloc16(uint_t size);			// allocate 16 byte aligned memory
-		void free16(void* p);				// free 16 byte aligned memory
+		void *alloc(uint_t size);
+		void free(void *p);
+		void *alloc16(uint_t size);			// allocate 16 byte aligned memory
+		void free16(void *p);				// free 16 byte aligned memory
 
 		// move to public for MemoryStack use
-		Page* allocatePage(uint_t bytes);
-		void freePage(Page* p);
+		Page *allocatePage(uint_t bytes);
+		void freePage(Page *p);
 
 	protected:
 
-		void* smallAllocate(uint_t bytes);
+		void *smallAllocate(uint_t bytes);
 		void smallFree(void *ptr);
 
-		void* mediumAllocateFromPage(Page* p, uint_t sizeNeeded);
-		void* mediumAllocate(uint_t bytes);
+		void *mediumAllocateFromPage(Page *p, uint_t sizeNeeded);
+		void *mediumAllocate(uint_t bytes);
 		void mediumFree(void *ptr);
 
-		void* largeAllocate(uint_t bytes);
+		void *largeAllocate(uint_t bytes);
 		void largeFree(void *ptr);
 
 		void releaseSwappedPages(void);
-		void freePageReal(Page* p);
+		void freePageReal(Page *p);
 
 	private:
 		bool m_initialized;
-		void* m_smallFirstFree[256];
-		Page* m_smallCurPage;			
+		void *m_smallFirstFree[256];
+		Page *m_smallCurPage;			
 		uint_t m_smallCurPageOffset;			
-		Page* m_smallFirstUsedPage;		
+		Page *m_smallFirstUsedPage;		
 
-		Page* m_mediumFirstFreePage;	
-		Page* m_mediumLastFreePage;		
-		Page* m_mediumFirstUsedPage;	
+		Page *m_mediumFirstFreePage;	
+		Page *m_mediumLastFreePage;		
+		Page *m_mediumFirstUsedPage;	
 
-		Page* m_largeFirstUsedPage;		
+		Page *m_largeFirstUsedPage;		
 
-		Page* m_swapPage;
+		Page *m_swapPage;
 
 		uint_t m_pagesAllocated;				
 
@@ -193,13 +193,13 @@ AX_BEGIN_NAMESPACE
 	//------------------------------------------------------------------------------
 
 
-	AX_API void* Malloc(size_t size);
-	AX_API void Free(void* ptr);
-	AX_API void* Malloc16(size_t size);
-	AX_API void Free16(void* ptr);
+	AX_API void *Malloc(size_t size);
+	AX_API void Free(void *ptr);
+	AX_API void *Malloc16(size_t size);
+	AX_API void Free16(void *ptr);
 
 	template<typename T>
-	T* TypeAlloc(size_t count = 1) {
+	T *TypeAlloc(size_t count = 1) {
 		return (T*)Malloc(count * sizeof(T));
 	}
 
@@ -213,8 +213,8 @@ AX_BEGIN_NAMESPACE
 	}
 
 	template<typename T>
-	T* TypeNew() {
-		T* p = TypeAlloc<T>(1);
+	T *TypeNew() {
+		T *p = TypeAlloc<T>(1);
 
 		new(p) T;
 
@@ -222,8 +222,8 @@ AX_BEGIN_NAMESPACE
 	}
 
 	template<typename T, typename Arg1>
-	T* TypeNew(Arg1 arg1) {
-		T* p = TypeAlloc<T>(1);
+	T *TypeNew(Arg1 arg1) {
+		T *p = TypeAlloc<T>(1);
 
 		new(p) T(arg1);
 
@@ -239,7 +239,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 	template<typename T>
-	T* TypeAlloc16(size_t count = 1) {
+	T *TypeAlloc16(size_t count = 1) {
 		return (T*)Malloc16(count * sizeof(T));
 	}
 
@@ -253,7 +253,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 	template<typename T>
-	void TypeFreeContainer(T& t) {
+	void TypeFreeContainer(T &t) {
 		T::iterator it = t.begin();
 		for (; it != t.end(); ++it) {
 			TypeFree(*it);
@@ -289,8 +289,8 @@ AX_BEGIN_NAMESPACE
 		void finalize();
 
 		uint_t setMark();					// return pos for PopMark, for internal check
-		void* alloc(uint_t size);
-		void* alloc16(uint_t size);		// allocate 16 byte aligned memory
+		void *alloc(uint_t size);
+		void *alloc16(uint_t size);		// allocate 16 byte aligned memory
 		void popMark(uint_t pos);
 
 		void clear();
@@ -300,17 +300,17 @@ AX_BEGIN_NAMESPACE
 
 	private:
 		bool m_initialized;
-		MemoryHeap::Page* m_curPage;
-		Mark* m_markStack;
+		MemoryHeap::Page *m_curPage;
+		Mark *m_markStack;
 		uint_t m_curPos;
 		uint_t m_curPagePos;
 	};
 
 	struct AutoMemoryMark {
 		uint_t mark;
-		MemoryStack* stack;
+		MemoryStack *stack;
 
-		inline AutoMemoryMark(MemoryStack* _stack) : mark(stack->setMark()), stack(_stack) {}
+		inline AutoMemoryMark(MemoryStack *_stack) : mark(stack->setMark()), stack(_stack) {}
 		inline ~AutoMemoryMark() { stack->popMark(mark); }
 	};
 
@@ -375,27 +375,27 @@ AX_BEGIN_NAMESPACE
 		FreeList() { m_head = nullptr; }
 		~FreeList() {}
 
-		void add(T& t);
-		T* get();
+		void add(T &t);
+		T *get();
 
 	private:
-		void* m_head;
+		void *m_head;
 	};
 
 	template< class T >
-	void FreeList<T>::add(T& t) {
+	void FreeList<T>::add(T &t) {
 		void** p = (void**)&t;
 		*p = m_head;
 		m_head = p;
 	}
 
 	template< class T >
-	T* FreeList<T>::get() {
+	T *FreeList<T>::get() {
 		if (m_head == nullptr) {
 			return 0;
 		}
 
-		T* result = (T*)m_head;
+		T *result = (T*)m_head;
 		m_head = *(intptr_t**)m_head;
 		return (T*)result;
 	}
@@ -412,7 +412,7 @@ AX_BEGIN_NAMESPACE
 
 		void clear(void);
 
-		T* alloc(void);
+		T *alloc(void);
 		void free(T *element);
 
 		int getTotalCount(void) const { return total; }
@@ -421,17 +421,17 @@ AX_BEGIN_NAMESPACE
 
 	private:
 		struct Element {
-			Element* next;
+			Element *next;
 			T t;
 		};
 
 		struct Block {
 			Element elements[blockSize];
-			Block* next;
+			Block *next;
 		};
 
-		Block* blocks;
-		Element* freelist;
+		Block *blocks;
+		Element *freelist;
 		int total;
 		int active;
 	};
@@ -502,44 +502,44 @@ AX_END_NAMESPACE
 // memory stack don't need delete
 //------------------------------------------------------------------------------
 
-inline void* operator new(size_t count, Axon::MemoryStack* stack) {
+inline void *operator new(size_t count, Axon::MemoryStack *stack) {
 	return stack->alloc((Axon::uint_t)count);
 }
 
-inline void* operator new[](size_t count, Axon::MemoryStack* stack) {
+inline void *operator new[](size_t count, Axon::MemoryStack *stack) {
 	return stack->alloc((Axon::uint_t)count);
 }
 
-inline void operator delete(void* p, Axon::MemoryStack* stack) {
+inline void operator delete(void *p, Axon::MemoryStack *stack) {
 	// do nothing
 }
 
-inline void operator delete[](void* p, Axon::MemoryStack* stack) {
+inline void operator delete[](void *p, Axon::MemoryStack *stack) {
 	// do nothing
 }
 
 #if 0
 
-void* operator new(size_t count);
-void* operator new[](size_t count);
-void operator delete(void* p);
-void operator delete[](void* p);
+void *operator new(size_t count);
+void *operator new[](size_t count);
+void operator delete(void *p);
+void operator delete[](void *p);
 
 #else
 
-inline void* operator new(size_t count) {
+inline void *operator new(size_t count) {
 	return Axon::Malloc(count);
 }
 
-inline void* operator new[](size_t count) {
+inline void *operator new[](size_t count) {
 	return Axon::Malloc(count);
 }
 
-inline void operator delete(void* p) {
+inline void operator delete(void *p) {
 	return Axon::Free(p);
 }
 
-inline void operator delete[](void* p) {
+inline void operator delete[](void *p) {
 	return Axon::Free(p);
 }
 

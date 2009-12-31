@@ -50,31 +50,31 @@ namespace {
 
 AX_BEGIN_NAMESPACE
 
-	FileSystem* g_fileSystem;
-	CmdSystem* g_cmdSystem;
-	CvarSystem* g_cvarSystem;
-	ConfigFile* g_systemConfig;
-	System* g_system;
-	ClassFactory* g_classFactory;
-	ScriptSystem* g_scriptSystem;
-	Statistic* g_statistic;
-	Simd* g_simd;
+	FileSystem *g_fileSystem;
+	CmdSystem *g_cmdSystem;
+	CvarSystem *g_cvarSystem;
+	ConfigFile *g_systemConfig;
+	System *g_system;
+	ClassFactory *g_classFactory;
+	ScriptSystem *g_scriptSystem;
+	Statistic *g_statistic;
+	Simd *g_simd;
 
-	FILE* g_logFile;
+	FILE *g_logFile;
 
 	// global cvar
 #define AX_CVARDECL(name, defaultstring, flags) \
-	Cvar* name;
+	Cvar *name;
 #include <axcore/cvardecls.h>
 #undef AX_CVARDECL
 
 	void terminateHandler() {
 		MessageBoxW(NULL, L"terminateHandler", L"Error", MB_ICONERROR | MB_OK | MB_TASKMODAL);
-		int* p = 0;
+		int *p = 0;
 		*p = 0;
 	}
 
-	void axCoreInit(int argc, char* argv[]) {
+	void axCoreInit(int argc, char *argv[]) {
 		static bool _isInitialized = false;
 
 		SetupExceptionHandler();

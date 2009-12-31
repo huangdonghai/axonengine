@@ -13,7 +13,7 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-	extern IDirect3DDevice9* d3d9Device;
+	extern IDirect3DDevice9 *d3d9Device;
 
 
 	template <typename _Kty, typename _Ty>
@@ -99,15 +99,15 @@ AX_BEGIN_NAMESPACE
 		void EndFrameStats();
 #if 0
 		virtual DWORD getRenderState(D3DRENDERSTATETYPE state) { return 0; }
-		virtual IDirect3DVertexShader9* getVertexShader() { return 0;}
-		virtual IDirect3DPixelShader9* getPixelShader() { return 0; }
-		virtual void setTexture(int stage, Texture* tex) {}
+		virtual IDirect3DVertexShader9 *getVertexShader() { return 0;}
+		virtual IDirect3DPixelShader9 *getPixelShader() { return 0; }
+		virtual void setTexture(int stage, Texture *tex) {}
 #endif
 		// my wrapper
-		HRESULT setDepthStencilSurface(IDirect3DSurface9* obj, TexFormat format);
+		HRESULT setDepthStencilSurface(IDirect3DSurface9 *obj, TexFormat format);
 
 		TexFormat getDepthStencilFormat() const { return m_depthStencilFormat; }
-		void setVertexDeclaration(IDirect3DVertexDeclaration9* vertdecl);
+		void setVertexDeclaration(IDirect3DVertexDeclaration9 *vertdecl);
 
 		void setSamplerStateBlock(DWORD stage, Texture::ClampMode clampmode, Texture::FilterMode filtermode);
 
@@ -115,7 +115,7 @@ AX_BEGIN_NAMESPACE
 		void onDeviceLost();
 #if 0
 		// Create a state manager interface for the device
-		static CStateManagerInterface* Create(LPDIRECT3DDEVICE9 pDevice);
+		static CStateManagerInterface *Create(LPDIRECT3DDEVICE9 pDevice);
 #endif
 		// methods inherited from ID3DXEffectStateManager
 		STDMETHOD(QueryInterface)(THIS_ REFIID iid, LPVOID *ppv)
@@ -166,13 +166,13 @@ AX_BEGIN_NAMESPACE
 		}
 		STDMETHOD(SetTexture)(THIS_ DWORD dwStage, LPDIRECT3DBASETEXTURE9 pTexture);
 
-		void setTexture(int stage, Texture* tex) {
+		void setTexture(int stage, Texture *tex) {
 			if (!tex) {
 				SetTexture(stage, 0);
 				return;
 			}
 
-			D3D9texture* d3d9tex = (D3D9texture*)tex;
+			D3D9texture *d3d9tex = (D3D9texture*)tex;
 			SetTexture(stage, d3d9tex->getObject());
 		}
 
@@ -288,11 +288,11 @@ AX_BEGIN_NAMESPACE
 			return cacheRenderStates.get_val(state);
 		}
 
-		IDirect3DVertexShader9* getVertexShader() {
+		IDirect3DVertexShader9 *getVertexShader() {
 			return m_vertexShader;
 		}
 
-		IDirect3DPixelShader9* getPixelShader() {
+		IDirect3DPixelShader9 *getPixelShader() {
 			return m_pixelShader;
 		}
 
@@ -337,11 +337,11 @@ AX_BEGIN_NAMESPACE
 		UINT m_nFilteredStateChangesPerFrame;
 
 	private:
-		IDirect3DSurface9* m_depthStencilSurface;
+		IDirect3DSurface9 *m_depthStencilSurface;
 		TexFormat m_depthStencilFormat;
-		IDirect3DVertexDeclaration9* m_vertexDeclaration;
+		IDirect3DVertexDeclaration9 *m_vertexDeclaration;
 		Dict<int,IDirect3DStateBlock9*> m_states;
-		IDirect3DStateBlock9* m_stageSamplerStates[MAX_STAGES];
+		IDirect3DStateBlock9 *m_stageSamplerStates[MAX_STAGES];
 	};
 
 AX_END_NAMESPACE

@@ -24,7 +24,7 @@ AX_BEGIN_NAMESPACE
 			return grid * i;
 		}
 
-		inline static Vector3 snap(const Vector3& v, float grid) {
+		inline static Vector3 snap(const Vector3 &v, float grid) {
 			Vector3 result;
 			result.x = snap(v.x, grid);
 			result.y = snap(v.y, grid);

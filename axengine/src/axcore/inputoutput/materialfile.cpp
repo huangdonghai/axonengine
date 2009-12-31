@@ -13,7 +13,7 @@ read the license and understand and accept it fully.
 namespace {
 	using namespace Axon;
 
-	int getMapType(const char* name) {
+	int getMapType(const char *name) {
 		if (Strequ(name, "diffuse")) {
 			return SamplerType::Diffuse;
 		} else if (Strequ(name, "specular")) {
@@ -30,7 +30,7 @@ namespace {
 AX_BEGIN_NAMESPACE
 
 	// static member
-	MaterialDecl* MaterialDecl::ms_defaulted;
+	MaterialDecl *MaterialDecl::ms_defaulted;
 	MaterialDecl::MaterialDeclDict MaterialDecl::ms_declDict;
 	MaterialDecl::FailureSet MaterialDecl::ms_failureSet;
 	// end static member
@@ -39,7 +39,7 @@ AX_BEGIN_NAMESPACE
 	MaterialDecl::MaterialDecl() {
 		m_shaderGenMask = 0;
 		m_surfaceType = SurfaceType::Dust;
-		const char* s = m_surfaceType.toString();
+		const char *s = m_surfaceType.toString();
 		SurfaceType st2 = SurfaceType::fromString("Water");
 
 		memset(m_textures, 0, sizeof(TextureDef*) * SamplerType::NUMBER_ALL);
@@ -62,12 +62,12 @@ AX_BEGIN_NAMESPACE
 		// free params
 	}
 
-	bool MaterialDecl::tryLoad(const String& name) {
+	bool MaterialDecl::tryLoad(const String &name) {
 		m_key = normalizeKey(name);
 
 		String filename = m_key.toString() + ".mtr";
 
-		char* buffer;
+		char *buffer;
 		size_t size;
 
 		size = g_fileSystem->readFile(filename, (void**)&buffer);
@@ -92,8 +92,8 @@ AX_BEGIN_NAMESPACE
 			return false;
 		}
 
-		const TiXmlElement* root = doc.FirstChildElement("material");
-		const TiXmlAttribute* attr = NULL;
+		const TiXmlElement *root = doc.FirstChildElement("material");
+		const TiXmlAttribute *attr = NULL;
 
 		// no root
 		if (!root)
@@ -101,7 +101,7 @@ AX_BEGIN_NAMESPACE
 
 		// parse attribute
 		for (attr = root->FirstAttribute(); attr; attr = attr->Next()) {
-			const String& attrname = attr->NameTStr();
+			const String &attrname = attr->NameTStr();
 			if (attrname == "flags") {
 
 			} else if (attrname == "shader") {
@@ -126,7 +126,7 @@ AX_BEGIN_NAMESPACE
 		}
 
 		// parse texture
-		const TiXmlElement* elem = NULL;
+		const TiXmlElement *elem = NULL;
 		for (elem = root->FirstChildElement(); elem; elem = elem->NextSiblingElement()) {
 			if (Strequ(elem->Value(), "texture")) {
 				int maptype = -1;
@@ -177,7 +177,7 @@ error_exit:
 		return false;
 	}
 
-	FixedString MaterialDecl::normalizeKey(const String& name)
+	FixedString MaterialDecl::normalizeKey(const String &name)
 	{
 		FixedString key;
 
@@ -191,7 +191,7 @@ error_exit:
 		return key;
 	}
 
-	MaterialDecl* MaterialDecl::load( const String& name )
+	MaterialDecl *MaterialDecl::load( const String &name )
 	{
 		// normalize key first
 		FixedString key = normalizeKey(name);
@@ -211,7 +211,7 @@ error_exit:
 		}
 
 		// try load
-		MaterialDecl* result = new MaterialDecl();
+		MaterialDecl *result = new MaterialDecl();
 		bool success = result->tryLoad(key);
 		if (success) {
 			ms_declDict[key] = result;

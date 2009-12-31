@@ -28,7 +28,7 @@ public:
 	void setCurTime(int val) { m_curTime = val; }
 
 protected:
-	void drawLine(QPainter* painter, const QRect& rect, int stepf, int len, bool draw_text);
+	void drawLine(QPainter *painter, const QRect &rect, int stepf, int len, bool draw_text);
 	virtual void drawBackground(QPainter *painter, const QRectF &rect);
 
 private:

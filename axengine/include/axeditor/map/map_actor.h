@@ -19,19 +19,19 @@ AX_BEGIN_NAMESPACE
 	class AX_API MapActor : public MapAgent {
 	public:
 		MapActor();
-		MapActor(const String& type);
+		MapActor(const String &type);
 		virtual ~MapActor();
 
 		// implement Actor
 		virtual void doRender();
 		virtual Type getType() const { return kEntity; }
-		virtual MapAgent* clone() const;
+		virtual MapAgent *clone() const;
 
-		GameActor* getGameEntity() const { return m_gameEntity; }
+		GameActor *getGameEntity() const { return m_gameEntity; }
 
 	protected:
-		GameActor* m_gameEntity;
-		MeshPrim* m_iconPrim;
+		GameActor *m_gameEntity;
+		MeshPrim *m_iconPrim;
 	};
 
 AX_END_NAMESPACE

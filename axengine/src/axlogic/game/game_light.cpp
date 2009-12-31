@@ -46,7 +46,7 @@ AX_BEGIN_NAMESPACE
 		GameActor::doThink();
 	}
 
-	void GameLight::loadLight(const Variant& v) {
+	void GameLight::loadLight(const Variant &v) {
 		clear();
 
 		if (v.type != Variant::kTable) {
@@ -111,7 +111,7 @@ AX_BEGIN_NAMESPACE
 				5, 2, 1, 5, 3, 2, 5, 4, 3, 5, 1, 4,
 			};
 
-			ushort_t* idx = m_pointPrim->lockIndexes();
+			ushort_t *idx = m_pointPrim->lockIndexes();
 			memcpy(idx, s_indices, sizeof(s_indices));
 			m_pointPrim->unlockIndexes();
 		}
@@ -120,7 +120,7 @@ AX_BEGIN_NAMESPACE
 		const float size = 0.5f;
 		const float height = size * AX_SQRT1_2;
 
-		Vertex* verts = m_pointPrim->lockVertexes();
+		Vertex *verts = m_pointPrim->lockVertexes();
 
 		Matrix3 axis = Matrix3::getIdentity();
 		Vector3 forward = axis[0].getNormalized();
@@ -158,7 +158,7 @@ AX_BEGIN_NAMESPACE
 				9, 10, 11, 12, 13, 14, 15, 16, 17
 			};
 
-			ushort_t* idx = m_spotPrim->lockIndexes();
+			ushort_t *idx = m_spotPrim->lockIndexes();
 			memcpy(idx, s_indices, sizeof(s_indices));
 			m_spotPrim->unlockIndexes();
 		}
@@ -194,7 +194,7 @@ AX_BEGIN_NAMESPACE
 			0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 4, 4, 4
 		};
 
-		Vertex* verts = m_spotPrim->lockVertexes();
+		Vertex *verts = m_spotPrim->lockVertexes();
 		for (int i=0; i<18; i++) {
 			verts[i].xyz = pos[s_posindices[i]];
 			verts[i].rgba = facecolor[s_colorindices[i]];

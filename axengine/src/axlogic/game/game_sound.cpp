@@ -39,7 +39,7 @@ AX_BEGIN_NAMESPACE
 
 	}
 
-	void GameSound::loadSound( const Variant& v )
+	void GameSound::loadSound( const Variant &v )
 	{
 		clear();
 

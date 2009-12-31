@@ -20,7 +20,7 @@ AX_BEGIN_NAMESPACE
 		UuidCreate((UUID*)this);
 	}
 
-	Uuid& Uuid::fromString( const String& str )
+	Uuid &Uuid::fromString( const String &str )
 	{
 		UuidFromStringA((RPC_CSTR)str.c_str(), (UUID*)this);
 		return *this;
@@ -40,7 +40,7 @@ AX_BEGIN_NAMESPACE
 
 	size_t Uuid::hash() const
 	{
-		const size_t* rep = reinterpret_cast<const size_t*>(this);
+		const size_t *rep = reinterpret_cast<const size_t*>(this);
 		size_t result = rep[0];
 
 		hash_combine(result, rep[1]);

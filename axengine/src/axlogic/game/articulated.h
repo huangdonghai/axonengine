@@ -31,7 +31,7 @@ AX_BEGIN_NAMESPACE
 		String m_ragdollName;
 
 	protected:
-		PhysicsRagdoll* m_ragdoll;
+		PhysicsRagdoll *m_ragdoll;
 	};
 
 AX_END_NAMESPACE

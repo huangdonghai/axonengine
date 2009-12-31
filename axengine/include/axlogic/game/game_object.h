@@ -62,18 +62,18 @@ AX_BEGIN_NAMESPACE
 		virtual bool isFixed() const { return false; }
 
 		// read and write
-		void writeXml(File* f, int indent=0);
-		void readXml(const TiXmlElement* node);
+		void writeXml(File *f, int indent=0);
+		void readXml(const TiXmlElement *node);
 
 		// matrix
 		Vector3 getOrigin_p() const;
-		void setOrigin_p(const Vector3& pos);
-		const Matrix3& getAxis_p() const;
-		void setAxis_p(const Matrix3& axis);
-		void setMatrix_p(const AffineMat& matrix);
-		const AffineMat& getMatrix_p() const;
+		void setOrigin_p(const Vector3 &pos);
+		const Matrix3 &getAxis_p() const;
+		void setAxis_p(const Matrix3 &axis);
+		void setMatrix_p(const AffineMat &matrix);
+		const AffineMat &getMatrix_p() const;
 		Vector3 getInstanceColor() const { return m_instanceColor_p; }
-		void setInstanceColor(const Vector3& color);
+		void setInstanceColor(const Vector3 &color);
 
 		// properties
 		bool get_outdoorOnly() const { return m_outdoorOnly; }
@@ -86,14 +86,14 @@ AX_BEGIN_NAMESPACE
 		void set_lodRatio(float val) { m_lodRatio = val; }
 
 	protected:
-		void setRenderEntity(RenderEntity* entity) { m_renderEntity = entity; }
-		RenderEntity* getRenderEntity() const { return m_renderEntity; };
+		void setRenderEntity(RenderEntity *entity) { m_renderEntity = entity; }
+		RenderEntity *getRenderEntity() const { return m_renderEntity; };
 
-		void setPhysicsEntity(PhysicsEntity* physics) { m_physicsEntity = physics; }
-		PhysicsEntity* getPhysicsEntity() const { return m_physicsEntity; }
+		void setPhysicsEntity(PhysicsEntity *physics) { m_physicsEntity = physics; }
+		PhysicsEntity *getPhysicsEntity() const { return m_physicsEntity; }
 
-		void setSoundEntity(SoundEntity* entity) { m_soundEntity = entity; }
-		SoundEntity* getSoundEntity() const { return m_soundEntity; }
+		void setSoundEntity(SoundEntity *entity) { m_soundEntity = entity; }
+		SoundEntity *getSoundEntity() const { return m_soundEntity; }
 
 		virtual void onMatrixChanged();
 		virtual void onPropertyChanged();
@@ -113,9 +113,9 @@ AX_BEGIN_NAMESPACE
 		bool m_spawned;
 
 	private:
-		RenderEntity* m_renderEntity;
-		PhysicsEntity* m_physicsEntity;
-		SoundEntity* m_soundEntity;
+		RenderEntity *m_renderEntity;
+		PhysicsEntity *m_physicsEntity;
+		SoundEntity *m_soundEntity;
 	};
 
 

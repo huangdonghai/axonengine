@@ -35,7 +35,7 @@ AX_BEGIN_NAMESPACE
 		void initialize();
 		void finalize();
 
-		int getIndex(Group group, const String& name, bool autoreset = false);
+		int getIndex(Group group, const String &name, bool autoreset = false);
 		void setValue(int index, int value);
 		void resetValue(int index);
 		void addValue(int index, int added);
@@ -44,8 +44,8 @@ AX_BEGIN_NAMESPACE
 		void decValue(int index);
 
 		int getValue(int index);
-		const IndexSeq& getIndexsForGroup(Group group) const;
-		const String& getValueName(int index) const;
+		const IndexSeq &getIndexsForGroup(Group group) const;
+		const String &getValueName(int index) const;
 
 	private:
 		enum { MAX_PERFORMERS = 4096 };

@@ -19,8 +19,8 @@ public:
 	virtual ~GfxContext();
 
 	// implement Context
-	virtual void doRender(const RenderCamera& camera, bool world = false);
-	virtual void doSelect(const RenderCamera& camera, int part);
+	virtual void doRender(const RenderCamera &camera, bool world = false);
+	virtual void doSelect(const RenderCamera &camera, int part);
 
 private:
 	RenderWorld *m_renderWorld;

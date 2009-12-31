@@ -83,7 +83,7 @@ AX_BEGIN_NAMESPACE
 		static ushort_t lunarYearDays(ushort_t lunarYear);
 
 		// return lunar year's tiangan and dizhi
-		static void lunarYearToTianganDizhi(ushort_t lunarYear, ushort_t& tiangan, ushort_t& dizhi);
+		static void lunarYearToTianganDizhi(ushort_t lunarYear, ushort_t &tiangan, ushort_t &dizhi);
 
 		// 返回阴历lunarYear年的闰月月份，如没有返回0
 		//  1901年1月---2050年12月
@@ -103,11 +103,11 @@ AX_BEGIN_NAMESPACE
 
 		// 计算公历iYear年iMonth月iDay日对应的阴历日期,返回对应的阴历节气 0-24
 		// 1901年1月1日---2050年12月31日
-		static ushort_t getLunarDate(ushort_t year, ushort_t month, ushort_t day, ushort_t &lunarYear, ushort_t &lunarMonth, ushort_t &lunarDay, bool& leapMonth);
+		static ushort_t getLunarDate(ushort_t year, ushort_t month, ushort_t day, ushort_t &lunarYear, ushort_t &lunarMonth, ushort_t &lunarDay, bool &leapMonth);
 
 	protected:
 		// 计算从1901年1月1日过span_days天后的阴历日期
-		static void l_calcLunarDate(ushort_t &year, ushort_t &month ,ushort_t &day, bool& leapMonth, int span_days);
+		static void l_calcLunarDate(ushort_t &year, ushort_t &month ,ushort_t &day, bool &leapMonth, int span_days);
 
 		// 计算从1901年1月1日过span_days天后的阳历日期
 		static void l_calcDate(ushort_t &year, ushort_t &month ,ushort_t &day, int span_days);

@@ -34,7 +34,7 @@ AX_BEGIN_NAMESPACE
 
 	State::~State() {}
 
-	void State::setTransformState(bool editable, bool clear, const Vector3& parameter)
+	void State::setTransformState(bool editable, bool clear, const Vector3 &parameter)
 	{
 		transformState.editable = editable;
 		transformState.clear = clear;

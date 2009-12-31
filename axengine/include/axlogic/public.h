@@ -33,11 +33,11 @@ read the license and understand and accept it fully.
 AX_BEGIN_NAMESPACE
 
 #define AX_CVARDECL(name, defaultstring, flags) \
-	AX_API extern Cvar* name;
+	AX_API extern Cvar *name;
 #include "logiccvars.h"
 #undef AX_CVARDECL
 
-	AX_API extern GameSystem* g_gameSystem;
+	AX_API extern GameSystem *g_gameSystem;
 
 	AX_API extern void axLogicInit();
 	AX_API extern void axLogicQuit();

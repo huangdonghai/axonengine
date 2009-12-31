@@ -20,7 +20,7 @@ namespace { namespace Internal {
 		return pc == CG_PARAMETERCLASS_SAMPLER;
 	}
 
-	inline int getAnnoInt(CGparameter param, const char* name, int defaultValue) {
+	inline int getAnnoInt(CGparameter param, const char *name, int defaultValue) {
 		CGannotation anno = cgGetNamedParameterAnnotation(param, name);
 
 		if (!anno) {
@@ -36,7 +36,7 @@ namespace { namespace Internal {
 
 		int nvalues;
 
-		const int* values = cgGetIntAnnotationValues(anno, &nvalues);
+		const int *values = cgGetIntAnnotationValues(anno, &nvalues);
 		if (!nvalues) {
 			return defaultValue;
 		}
@@ -44,7 +44,7 @@ namespace { namespace Internal {
 		return *values;
 	}
 
-	inline int getAnnoInt(CGparameter param, const char* annoname) {
+	inline int getAnnoInt(CGparameter param, const char *annoname) {
 		return getAnnoInt(param, annoname, 0);
 
 		CGannotation anno = cgGetNamedParameterAnnotation(param, annoname);
@@ -62,7 +62,7 @@ namespace { namespace Internal {
 
 		int nvalues;
 
-		const int* values = cgGetIntAnnotationValues(anno, &nvalues);
+		const int *values = cgGetIntAnnotationValues(anno, &nvalues);
 		if (!nvalues) {
 			return 0;
 		}
@@ -70,8 +70,8 @@ namespace { namespace Internal {
 		return *values;
 	}
 
-	inline const char* getAnnoString(CGparameter param, const char* annoname) {
-		const char* result = "";
+	inline const char *getAnnoString(CGparameter param, const char *annoname) {
+		const char *result = "";
 
 		CGannotation anno = cgGetNamedParameterAnnotation(param, annoname);
 
@@ -115,7 +115,7 @@ AX_BEGIN_NAMESPACE
 		cgDestroyEffect(m_cgfx);
 	}
 
-	bool GLshader::doInit(const String& name, const ShaderMacro& macro) {
+	bool GLshader::doInit(const String &name, const ShaderMacro &macro) {
 		m_name = name;
 
 		String fullname = "shaders/" + name + ".fx";
@@ -153,7 +153,7 @@ AX_BEGIN_NAMESPACE
 		// cache system samplers
 		static struct SamplerParam {
 			SamplerType type;
-			const char* paramname;
+			const char *paramname;
 		} samplername[] = {
 			SamplerType::Diffuse, "g_diffuseMap",
 			SamplerType::Normal, "g_normalMap",
@@ -216,7 +216,7 @@ AX_BEGIN_NAMESPACE
 		return s2i(m_samplerannSeq.size());
 	}
 
-	SamplerAnno* GLshader::getSamplerAnno(int index) const {
+	SamplerAnno *GLshader::getSamplerAnno(int index) const {
 		AX_ASSERT(index >= 0 && index < getNumSampler());
 		return m_samplerannSeq[index];
 	}
@@ -225,7 +225,7 @@ AX_BEGIN_NAMESPACE
 		return 0;
 	}
 
-	ParameterAnno* GLshader::getTweakableDef(int index) {
+	ParameterAnno *GLshader::getTweakableDef(int index) {
 		return nullptr;
 	}
 
@@ -237,7 +237,7 @@ AX_BEGIN_NAMESPACE
 		CGannotation annon = cgGetNamedParameterAnnotation(script, tech.toString().c_str());
 		if (!annon) return nullptr;
 
-		const char* techname = cgGetStringAnnotationValue(annon);
+		const char *techname = cgGetStringAnnotationValue(annon);
 		if (!techname || !techname[0]) return nullptr;
 
 		CGtechnique cgtech = cgGetNamedTechnique(m_cgfx, techname);
@@ -253,7 +253,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 
-	void GLshader::setSystemMap(SamplerType maptype, GLtexture* tex) {
+	void GLshader::setSystemMap(SamplerType maptype, GLtexture *tex) {
 		if (r_nulldraw->getBool()) {
 			return;
 		}
@@ -287,7 +287,7 @@ AX_BEGIN_NAMESPACE
 		}
 
 		int count = 0;
-		AX_FOREACH(CGsamplerann* sa, m_samplerannSeq) {
+		AX_FOREACH(CGsamplerann *sa, m_samplerannSeq) {
 			if (sa->m_renderType == SamplerAnno::Reflection) {
 				if (!gCurInteraction) {
 					continue;
@@ -297,11 +297,11 @@ AX_BEGIN_NAMESPACE
 					continue;
 				}
 
-				Interaction* ia = gCurInteraction;
+				Interaction *ia = gCurInteraction;
 
-				RenderTarget* target = ia->targets[count];
-				GLtarget* textarget = (GLtarget*)target;
-				GLtexture* tex = textarget->getTextureGL();
+				RenderTarget *target = ia->targets[count];
+				GLtarget *textarget = (GLtarget*)target;
+				GLtexture *tex = textarget->getTextureGL();
 
 				cgGLSetupSampler(sa->m_param, tex->getObject());
 			} else if (sa->m_renderType == SamplerAnno::SceneColor) {
@@ -309,23 +309,23 @@ AX_BEGIN_NAMESPACE
 					continue;
 				}
 #if 1
-				RenderTarget* target = gWorldFramebuffer->allocTarget(RenderTarget::PermanentAlloc, TexFormat::RGBA8);
-				GLtarget* textarget = (GLtarget*)target;
-				GLtexture* tex = textarget->getTextureGL();
+				RenderTarget *target = gWorldFramebuffer->allocTarget(RenderTarget::PermanentAlloc, TexFormat::RGBA8);
+				GLtarget *textarget = (GLtarget*)target;
+				GLtexture *tex = textarget->getTextureGL();
 #if 0
 				gWorldFramebuffer->blitColor(tex);
 #else
 				tex->copyFramebuffer(target->getRect());
 #endif
 #else
-				GLtexture* tex = gFramebuffer->getBoundColor();
+				GLtexture *tex = gFramebuffer->getBoundColor();
 #endif
 				cgGLSetupSampler(sa->m_param, tex->getObject());
 #if 0
 			} else if (sa->m_renderType == SamplerAnno::Zbuffer) {
 //				if (gWorldFramebuffer) {
-//					GLtexture* tex = gWorldFramebuffer->getBoundDepth();
-					GLtexture* tex = gLinearDepth->getTextureGL();
+//					GLtexture *tex = gWorldFramebuffer->getBoundDepth();
+					GLtexture *tex = gLinearDepth->getTextureGL();
 					tex->setDepthTextureMode(GL_LUMINANCE);
 					tex->setHardwareShadowMap(false);
 					cgGLSetupSampler(sa->m_param, tex->getObject());
@@ -335,12 +335,12 @@ AX_BEGIN_NAMESPACE
 		}
 	}
 
-	void GLshader::setInteractionParameter(const ShaderParams& params) {
+	void GLshader::setInteractionParameter(const ShaderParams &params) {
 		ShaderParams::const_iterator it = params.begin();
 
 		for (; it != params.end(); ++it) {
-			const String& n = it->first;
-			const FloatSeq& v = it->second;
+			const String &n = it->first;
+			const FloatSeq &v = it->second;
 
 			setParameter(n.c_str(), &v[0], s2i(v.size()));
 		}
@@ -353,7 +353,7 @@ AX_BEGIN_NAMESPACE
 		return 0;
 	}
 
-	bool GLshader::setParameter(const char* name, float v) {
+	bool GLshader::setParameter(const char *name, float v) {
 		CGparameter param = getEffectParameter(name);
 		if (!param) {
 			return false;
@@ -364,7 +364,7 @@ AX_BEGIN_NAMESPACE
 		return true;
 	}
 
-	bool GLshader::setParameter(const char* name, const Vector2& v) {
+	bool GLshader::setParameter(const char *name, const Vector2 &v) {
 		CGparameter param = getEffectParameter(name);
 		if (!param) {
 			return false;
@@ -375,7 +375,7 @@ AX_BEGIN_NAMESPACE
 		return true;
 	}
 
-	bool GLshader::setParameter(const char* name, const Vector3& v) {
+	bool GLshader::setParameter(const char *name, const Vector3 &v) {
 		CGparameter param = getEffectParameter(name);
 		if (!param) {
 			return false;
@@ -386,7 +386,7 @@ AX_BEGIN_NAMESPACE
 		return true;
 	}
 
-	bool GLshader::setParameter(const char* name, const Vector4& v) {
+	bool GLshader::setParameter(const char *name, const Vector4 &v) {
 		CGparameter param = getEffectParameter(name);
 		if (!param) {
 			return false;
@@ -397,7 +397,7 @@ AX_BEGIN_NAMESPACE
 		return true;
 	}
 
-	bool GLshader::setParameter(const char* name, const Matrix4& v) {
+	bool GLshader::setParameter(const char *name, const Matrix4 &v) {
 		CGparameter param = getEffectParameter(name);
 		if (!param) {
 			return false;
@@ -408,7 +408,7 @@ AX_BEGIN_NAMESPACE
 		return true;
 	}
 
-	bool GLshader::setParameter(const char* name, const float* v, int len) {
+	bool GLshader::setParameter(const char *name, const float *v, int len) {
 		CGparameter param = getEffectParameter(name);
 		if (!param) {
 			return false;
@@ -418,7 +418,7 @@ AX_BEGIN_NAMESPACE
 		return true;
 	}
 
-	bool GLshader::setParameter(const char* name, const Vector2 v[], int len) {
+	bool GLshader::setParameter(const char *name, const Vector2 v[], int len) {
 		CGparameter param = getEffectParameter(name);
 		if (!param) {
 			return false;
@@ -428,7 +428,7 @@ AX_BEGIN_NAMESPACE
 		return true;
 	}
 
-	bool GLshader::setParameter(const char* name, const Vector3 v[], int len) {
+	bool GLshader::setParameter(const char *name, const Vector3 v[], int len) {
 		CGparameter param = getEffectParameter(name);
 		if (!param) {
 			return false;
@@ -438,7 +438,7 @@ AX_BEGIN_NAMESPACE
 		return true;
 	}
 
-	bool GLshader::setParameter(const char* name, const Vector4 v[], int len) {
+	bool GLshader::setParameter(const char *name, const Vector4 v[], int len) {
 		CGparameter param = getEffectParameter(name);
 		if (!param) {
 			return false;
@@ -448,7 +448,7 @@ AX_BEGIN_NAMESPACE
 		return true;
 	}
 
-	bool GLshader::setParameter(const char* name, const Matrix4 v[], int len) {
+	bool GLshader::setParameter(const char *name, const Matrix4 v[], int len) {
 		CGparameter param = getEffectParameter(name);
 		if (!param) {
 			return false;
@@ -458,11 +458,11 @@ AX_BEGIN_NAMESPACE
 		return true;
 	}
 
-	bool GLshader::setParameter(const char* name, GLtexture* texture) {
+	bool GLshader::setParameter(const char *name, GLtexture *texture) {
 		return true;
 	}
 
-	CGtechnique GLshader::getTechnique(const char* name) {
+	CGtechnique GLshader::getTechnique(const char *name) {
 		return nullptr;
 	}
 
@@ -472,7 +472,7 @@ AX_BEGIN_NAMESPACE
 		CGtype type = cgGetParameterType(param);
 
 		for (; param; param = cgGetNextParameter(param)) {
-			const char* name = cgGetParameterName(param);
+			const char *name = cgGetParameterName(param);
 			CGtype type = cgGetParameterType(param);
 			if (Internal::isSamplerType(type)) {
 				initSamplerAnn(param);
@@ -501,7 +501,7 @@ AX_BEGIN_NAMESPACE
 			return;
 		}
 
-		const char* filename = Internal::getAnnoString(texparam, "file");
+		const char *filename = Internal::getAnnoString(texparam, "file");
 		if (!filename || !filename[0]) {
 			return;
 		}
@@ -510,7 +510,7 @@ AX_BEGIN_NAMESPACE
 			Printf("%s", filename);
 
 			TexturePtr tex = GLtexture::load(filename);
-			GLtexture* gltex = AX_REFPTR_CAST(GLtexture, tex);
+			GLtexture *gltex = AX_REFPTR_CAST(GLtexture, tex);
 			if (gltex) {
 				cgGLSetupSampler(param, gltex->getObject());
 			}
@@ -528,7 +528,7 @@ AX_BEGIN_NAMESPACE
 			return;
 		}
 
-		CGsamplerann* san = new CGsamplerann;
+		CGsamplerann *san = new CGsamplerann;
 
 		san->m_param = param;
 		san->m_renderType = rendertype;
@@ -544,7 +544,7 @@ AX_BEGIN_NAMESPACE
 	void GLshader::initParameterAnn(CGparameter param) {
 		initPixelToTexel(param);
 
-		const char* uiwidget = Internal::getAnnoString(param, "UIWidget");
+		const char *uiwidget = Internal::getAnnoString(param, "UIWidget");
 		if (!uiwidget || !uiwidget[0]) {
 			return;
 		}
@@ -553,7 +553,7 @@ AX_BEGIN_NAMESPACE
 			return;
 		}
 
-		const char* uiname = Internal::getAnnoString(param, "UIName");
+		const char *uiname = Internal::getAnnoString(param, "UIName");
 	}
 
 
@@ -563,7 +563,7 @@ AX_BEGIN_NAMESPACE
 			return;
 		}
 
-		const char* pixel_param_name = Internal::getAnnoString(param, "pixelToTexel");
+		const char *pixel_param_name = Internal::getAnnoString(param, "pixelToTexel");
 		if (!pixel_param_name || !pixel_param_name[0]) {
 			return;
 		}
@@ -590,7 +590,7 @@ AX_BEGIN_NAMESPACE
 
 	void GLshader::setPixelToTexel(int width, int height)
 	{
-		AX_FOREACH(const CGpixeltotexel& p2t, pixel2Texels) {
+		AX_FOREACH(const CGpixeltotexel &p2t, pixel2Texels) {
 			FloatSeq data = p2t.m_pixelValue;
 
 			int numvalue = s2i(data.size()) / 2;
@@ -609,11 +609,11 @@ AX_BEGIN_NAMESPACE
 		return m_haveTextureTarget;
 	}
 
-	const StringSeq& GLshader::getFeatures() const {
+	const StringSeq &GLshader::getFeatures() const {
 		return m_features;
 	}
 
-	const StringSeq& GLshader::getMacroParameters() const {
+	const StringSeq &GLshader::getMacroParameters() const {
 		return m_macroParameters;
 	}
 
@@ -625,12 +625,12 @@ AX_BEGIN_NAMESPACE
 		CGannotation annon = cgGetNamedParameterAnnotation(script, "Features");
 		if (!annon) return;
 
-		const char* value = cgGetStringAnnotationValue(annon);
+		const char *value = cgGetStringAnnotationValue(annon);
 		if (!value || !value[0]) return;
 
 		StringList flist = StringUtil::tokenize(value, '|');
 
-		AX_FOREACH(const String& s, flist) {
+		AX_FOREACH(const String &s, flist) {
 			StringSeq ftext = StringUtil::tokenizeSeq(s.c_str(), ':');
 
 			if (ftext.size() < 3) {
@@ -651,12 +651,12 @@ AX_BEGIN_NAMESPACE
 		CGannotation annon = cgGetNamedParameterAnnotation(script, "MacroParameters");
 		if (!annon) return;
 
-		const char* value = cgGetStringAnnotationValue(annon);
+		const char *value = cgGetStringAnnotationValue(annon);
 		if (!value || !value[0]) return;
 
 		StringList flist = StringUtil::tokenize(value, '|');
 
-		AX_FOREACH(const String& s, flist) {
+		AX_FOREACH(const String &s, flist) {
 			StringSeq ftext = StringUtil::tokenizeSeq(s.c_str(), ':');
 
 			if (!ftext.size()) {
@@ -677,7 +677,7 @@ AX_BEGIN_NAMESPACE
 
 	void GLshader::setSU() {
 		for (int i = 0; i < m_numUniformCaches; i++) {
-			GLuniform* uc = m_uniformCaches[i];
+			GLuniform *uc = m_uniformCaches[i];
 
 			if (uc->isCached()) {
 				g_statistic->incValue(stat_shaderParamCached);
@@ -696,8 +696,8 @@ AX_BEGIN_NAMESPACE
 		TypeZeroArray(m_uniformCaches);
 
 		for (int i = 0; i<Uniforms::NUM_UNIFORM_ITEMS; i++) {
-			UniformItem& item = g_uniforms.getItem(i);
-			const char* name = item.getName();
+			UniformItem &item = g_uniforms.getItem(i);
+			const char *name = item.getName();
 			CGparameter h = getEffectParameter(name);
 
 			if (h) {
@@ -712,7 +712,7 @@ AX_BEGIN_NAMESPACE
 		}
 	}
 
-	CGparameter GLshader::getEffectParameter(const char* name) {
+	CGparameter GLshader::getEffectParameter(const char *name) {
 		CGparameter param = cgGetNamedEffectParameter(m_cgfx, name);
 
 		if (!param) {
@@ -732,9 +732,9 @@ AX_BEGIN_NAMESPACE
 		}
 	}
 
-	void GLshader::setUniformCache(GLuniform* uc)
+	void GLshader::setUniformCache(GLuniform *uc)
 	{
-		const UniformItem* ui = uc->m_src;
+		const UniformItem *ui = uc->m_src;
 
 		switch (ui->m_valueType) {
 		case UniformItem::vt_empty:
@@ -799,7 +799,7 @@ AX_BEGIN_NAMESPACE
 			break;
 		case UniformItem::vt_Texture:
 			if (ui->m_arraySize == 1) {
-				GLtexture* tex = *(GLtexture**)(ui->m_datap);
+				GLtexture *tex = *(GLtexture**)(ui->m_datap);
 				if (tex) {
 					cgGLSetTextureParameter(uc->m_param, tex->getObject());
 				} else {
@@ -823,7 +823,7 @@ AX_BEGIN_NAMESPACE
 
 		m_textureState = cgGetFirstSamplerState(glCgContext);
 		while (m_textureState) {
-			const char* n = cgGetStateName(m_textureState);
+			const char *n = cgGetStateName(m_textureState);
 			if (Striequ("texture", n)) {
 				break;
 			}
@@ -839,17 +839,17 @@ AX_BEGIN_NAMESPACE
 	{
 	}
 
-	Shader* GLshadermanager::findShader(const String& name, const ShaderMacro& macro)
+	Shader *GLshadermanager::findShader(const String &name, const ShaderMacro &macro)
 	{
 		return findShaderGL(name, macro);
 	}
 
-	Shader* GLshadermanager::findShader( const FixedString& nameId, const ShaderMacro& macro )
+	Shader *GLshadermanager::findShader( const FixedString &nameId, const ShaderMacro &macro )
 	{
 		return 0;
 	}
 
-	GLshader* GLshadermanager::findShaderGL(const String& name, const ShaderMacro& macro)
+	GLshader *GLshadermanager::findShaderGL(const String &name, const ShaderMacro &macro)
 	{
 		ShaderPool::const_iterator it = m_shaderPool.find(name);
 		if (it != m_shaderPool.end()) {
@@ -873,12 +873,12 @@ AX_BEGIN_NAMESPACE
 		return shader;
 	}
 
-	void GLshadermanager::saveShaderCache( const String& name )
+	void GLshadermanager::saveShaderCache( const String &name )
 	{
 
 	}
 
-	void GLshadermanager::applyShaderCache( const String& name )
+	void GLshadermanager::applyShaderCache( const String &name )
 	{
 
 	}

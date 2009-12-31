@@ -25,7 +25,7 @@ AX_BEGIN_NAMESPACE
 		m_needUpdate = false;
 	}
 
-	UniformItem::UniformItem(const UniformItem& rhs)
+	UniformItem::UniformItem(const UniformItem &rhs)
 	{
 		m_valueType = rhs.m_valueType;
 		m_arraySize = rhs.m_arraySize;
@@ -56,7 +56,7 @@ AX_BEGIN_NAMESPACE
 		return 0;
 	}
 
-	void UniformItem::init(ValueType vt, const char* name, int vsreg, int psreg, int arraysize /*= 1 */)
+	void UniformItem::init(ValueType vt, const char *name, int vsreg, int psreg, int arraysize /*= 1 */)
 	{
 		m_valueType = vt;
 		m_arraySize = arraysize;
@@ -115,7 +115,7 @@ AX_BEGIN_NAMESPACE
 
 	}
 
-	UniformItem& Uniforms::getItem(int itemname)
+	UniformItem &Uniforms::getItem(int itemname)
 	{
 		return m_items[itemname];
 	}
@@ -126,7 +126,7 @@ AX_BEGIN_NAMESPACE
 		TypeZeroArray(m_psIsShared);
 
 		for (int i = 0; i < NUM_UNIFORM_ITEMS; i++) {
-			UniformItem& item = m_items[i];
+			UniformItem &item = m_items[i];
 
 			if (!item.m_vsregister && !item.m_psregister)
 				continue;
@@ -171,7 +171,7 @@ AX_BEGIN_NAMESPACE
 		int m_size;
 	};
 
-	ShaderMacro::ShaderMacroDefs* ShaderMacro::m_defs = 0;
+	ShaderMacro::ShaderMacroDefs *ShaderMacro::m_defs = 0;
 
 	ShaderMacro::ShaderMacro()
 	{
@@ -184,7 +184,7 @@ AX_BEGIN_NAMESPACE
 		clear();
 	}
 
-	ShaderMacro::ShaderMacro(const ShaderMacro& rhs)
+	ShaderMacro::ShaderMacro(const ShaderMacro &rhs)
 	{
 //		m_data = TypeAlloc<int>(m_defs->m_size);
 		for (size_t i = 0; i < ArraySize(m_data); i++) {
@@ -205,7 +205,7 @@ AX_BEGIN_NAMESPACE
 	void ShaderMacro::setMacro(Flag f, int value)
 	{
 		AX_ASSERT(f < NUM_FLAGS);
-		const ShaderMacroDefs::Item& item = m_defs->m_items[f];
+		const ShaderMacroDefs::Item &item = m_defs->m_items[f];
 
 		AX_ASSERT(value >= 0 && value <(1<<item.numbits));
 
@@ -226,7 +226,7 @@ AX_BEGIN_NAMESPACE
 	int ShaderMacro::getMacro(Flag f) const
 	{
 		AX_ASSERT(f < NUM_FLAGS);
-		const ShaderMacroDefs::Item& item = m_defs->m_items[f];
+		const ShaderMacroDefs::Item &item = m_defs->m_items[f];
 
 		return (m_data[item.intoffset] & ~item.mask) >> item.offset;
 	}
@@ -242,10 +242,10 @@ AX_BEGIN_NAMESPACE
 	}
 
 #define AX_DECL_MACRO(m, s) #m,
-	const char* ShaderMacro::getMacroName(int f) {
+	const char *ShaderMacro::getMacroName(int f) {
 		AX_ASSERT(f <= NUM_FLAGS);
 
-		static const char* macro_names[NUM_FLAGS] = {
+		static const char *macro_names[NUM_FLAGS] = {
 			AX_SHADERMACRO_DEFS
 		};
 
@@ -291,7 +291,7 @@ AX_BEGIN_NAMESPACE
 		return result;
 	}
 
-	void ShaderMacro::mergeFrom(const ShaderMacro* from)
+	void ShaderMacro::mergeFrom(const ShaderMacro *from)
 	{
 		if (this == from) {
 			return;
@@ -330,7 +330,7 @@ AX_BEGIN_NAMESPACE
 		m_defs = new ShaderMacroDefs();
 	}
 
-	bool ShaderMacro::operator==(const ShaderMacro& rhs) const
+	bool ShaderMacro::operator==(const ShaderMacro &rhs) const
 	{
 		for (size_t i = 0; i < ArraySize(m_data); i++) {
 			if (m_data[i] != rhs.m_data[i]) {
@@ -347,7 +347,7 @@ AX_BEGIN_NAMESPACE
 		return result;
 	}
 
-	void ShaderMacro::fromString( const String& str )
+	void ShaderMacro::fromString( const String &str )
 	{
 		int v = sscanf(str.c_str(), "%x %x %x %x", &m_data[0], &m_data[1], &m_data[2], &m_data[3]);
 		AX_ASSERT(v == 4);

@@ -34,7 +34,7 @@ AX_BEGIN_NAMESPACE
 		virtual void doThink();
 
 		// method
-		void loadSound(const Variant& v);
+		void loadSound(const Variant &v);
 		void activeSound(bool isActive);
 
 	private:

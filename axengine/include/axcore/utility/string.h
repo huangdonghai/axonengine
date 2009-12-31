@@ -46,35 +46,35 @@ AX_BEGIN_NAMESPACE
 	typedef std::wstring WString;
 
 
-	AX_API WString u2w(const String& utf8str);
-	AX_API WString u2w(const char* utf8str);
-	AX_API String l2u(const char* localstr);
-	AX_API String l2u(const String& lstr);
-	AX_API String u2l(const char* localstr);
-	AX_API String u2l(const String& lstr);
-	AX_API String w2u(const wchar_t* localstr);
-	AX_API String w2u(const WString& localstr);
-	AX_API WString l2w(const char* localstr);
-	AX_API WString l2w(const String& lstr);
-	AX_API String w2l(const wchar_t* localstr);
-	AX_API String w2l(const WString& lstr);
+	AX_API WString u2w(const String &utf8str);
+	AX_API WString u2w(const char *utf8str);
+	AX_API String l2u(const char *localstr);
+	AX_API String l2u(const String &lstr);
+	AX_API String u2l(const char *localstr);
+	AX_API String u2l(const String &lstr);
+	AX_API String w2u(const wchar_t *localstr);
+	AX_API String w2u(const WString &localstr);
+	AX_API WString l2w(const char *localstr);
+	AX_API WString l2w(const String &lstr);
+	AX_API String w2l(const wchar_t *localstr);
+	AX_API String w2l(const WString &lstr);
 
 	#define _(ascii_str) (ascii_str)
 
 	struct AX_API StringUtil {
-		static int vsnprintf(char* buffer, size_t count, const char* format, va_list argptr);
-		static int CDECL snprintf(char* buffer, size_t count, const char* format, ...);
-		static int CDECL sprintf(String& str, const char* format, ...);
-		static int stricmp(const char* string1, const char* string2);
-		static int strnicmp(const char* string1, const char* string2, size_t count);
-		static char* strncpyz(char* strDest, const char* strSource, size_t count);
-		static char* strlwr(char* string);
-		static StringList tokenize(const char* text, char split = ' ');
-		static StringSeq tokenizeSeq(const char* text, char split = ' ');
-		static bool filterString(const char* filter, const char* fname, bool casesensitive);
+		static int vsnprintf(char *buffer, size_t count, const char *format, va_list argptr);
+		static int CDECL snprintf(char *buffer, size_t count, const char *format, ...);
+		static int CDECL sprintf(String &str, const char *format, ...);
+		static int stricmp(const char *string1, const char *string2);
+		static int strnicmp(const char *string1, const char *string2, size_t count);
+		static char *strncpyz(char *strDest, const char *strSource, size_t count);
+		static char *strlwr(char *string);
+		static StringList tokenize(const char *text, char split = ' ');
+		static StringSeq tokenizeSeq(const char *text, char split = ' ');
+		static bool filterString(const char *filter, const char *fname, bool casesensitive);
 	};
 
-	inline int StringUtil::vsnprintf(char *buffer, size_t count, const char* format, va_list argptr) {
+	inline int StringUtil::vsnprintf(char *buffer, size_t count, const char *format, va_list argptr) {
 		return ::vsnprintf_s(buffer, count, _TRUNCATE, format, argptr);
 	}
 
@@ -89,7 +89,7 @@ AX_BEGIN_NAMESPACE
 		return len;
 	}
 
-	inline int CDECL StringUtil::sprintf(String& str, const char* format, ...) {
+	inline int CDECL StringUtil::sprintf(String &str, const char *format, ...) {
 		char tmp[1024];
 		va_list argptr;
 		int len;
@@ -111,7 +111,7 @@ AX_BEGIN_NAMESPACE
 		return ::_strnicmp(string1, string2, count);
 	}
 
-	inline char* StringUtil::strncpyz(char *strDest, const char *strSource, uint_t count) {
+	inline char *StringUtil::strncpyz(char *strDest, const char *strSource, uint_t count) {
 		if (!strDest){
 			return NULL;
 		}
@@ -126,7 +126,7 @@ AX_BEGIN_NAMESPACE
 		return strDest;
 	}
 
-	inline char* StringUtil::strlwr(char* string) {
+	inline char *StringUtil::strlwr(char *string) {
 		return _strlwr(string);
 	}
 

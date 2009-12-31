@@ -16,7 +16,7 @@ read the license and understand and accept it fully.
 AX_BEGIN_NAMESPACE
 
 	struct DeleteArray {
-		void operator()(void* ptr)
+		void operator()(void *ptr)
 		{
 			delete[] ptr;
 		}
@@ -32,7 +32,7 @@ AX_BEGIN_NAMESPACE
 		shared_array() : BaseType()
 		{}
 
-		explicit shared_array(T* obj) : BaseType(obj, DeleteArray())
+		explicit shared_array(T *obj) : BaseType(obj, DeleteArray())
 		{}
 	};
 
@@ -63,29 +63,29 @@ AX_BEGIN_NAMESPACE
 		typedef SharedPtr<T>	ThisType;
 	public:
 		typedef T ValueType;
-		typedef ValueType* Pointer;
+		typedef ValueType *Pointer;
 		typedef const Pointer ConstPointer;
 		typedef SharedRef<T>	RefType;
 
 		SharedPtr() : m_obj(NULL), m_counter(NULL) {}
-		explicit SharedPtr(T* obj) : m_obj(obj), m_counter(NULL) {
+		explicit SharedPtr(T *obj) : m_obj(obj), m_counter(NULL) {
 			if (obj) {
 				m_counter = new SharedCount();
 				m_counter->addRef();
 			}
 		}
-		explicit SharedPtr(T* obj, SharedCount* counter) : m_obj(obj), m_counter(counter) {
+		explicit SharedPtr(T *obj, SharedCount *counter) : m_obj(obj), m_counter(counter) {
 			if (obj && !m_counter) {
 				m_counter = new SharedCount();
 			}
 			if (m_counter)
 				m_counter->addRef();
 		}
-		SharedPtr(const ThisType& other) : m_obj(other.m_obj), m_counter(other.m_counter) {
+		SharedPtr(const ThisType &other) : m_obj(other.m_obj), m_counter(other.m_counter) {
 			if (m_counter)
 				m_counter->addRef();
 		}
-		SharedPtr(const RefType& other) : m_obj(other.GetPointer()), m_counter(other.GetCounter()) {
+		SharedPtr(const RefType &other) : m_obj(other.GetPointer()), m_counter(other.GetCounter()) {
 			if (m_counter)
 				m_counter->addRef();
 		}
@@ -121,7 +121,7 @@ AX_BEGIN_NAMESPACE
 			clear();
 		}
 
-		ThisType& operator=(const ThisType& other) {
+		ThisType &operator=(const ThisType &other) {
 			clear();
 			m_obj = other.m_obj;
 			m_counter = other.m_counter;
@@ -130,7 +130,7 @@ AX_BEGIN_NAMESPACE
 			return *this;
 		}
 
-		T* operator->() const {
+		T *operator->() const {
 			return m_obj;
 		}
 
@@ -138,7 +138,7 @@ AX_BEGIN_NAMESPACE
 			return m_obj;
 		}
 
-		T& operator*() const {
+		T &operator*() const {
 			return *m_obj;
 		}
 
@@ -159,7 +159,7 @@ AX_BEGIN_NAMESPACE
 			}
 		}
 		template< typename Q >
-		ThisType& operator=(const SharedRef<Q>& other) {
+		ThisType &operator=(const SharedRef<Q>& other) {
 			clear();
 			if (other.GetPointer() == NULL)
 				return *this;
@@ -176,7 +176,7 @@ AX_BEGIN_NAMESPACE
 		}
 
 		template< typename Q >
-		ThisType& operator=(const SharedPtr<Q>& other) {
+		ThisType &operator=(const SharedPtr<Q>& other) {
 			clear();
 			if (other.GetPointer() == NULL)
 				return *this;
@@ -192,7 +192,7 @@ AX_BEGIN_NAMESPACE
 			return *this;
 		}
 
-		bool operator==(const ThisType& other) {
+		bool operator==(const ThisType &other) {
 			return m_obj == other.m_obj && m_counter == other.m_counter;
 		}
 
@@ -201,11 +201,11 @@ AX_BEGIN_NAMESPACE
 		}
 
 		Pointer getPointer() const { return m_obj; }
-		SharedCount* getCounter() const { return m_counter; }
+		SharedCount *getCounter() const { return m_counter; }
 
 	private:
-		ValueType* m_obj;
-		SharedCount* m_counter;
+		ValueType *m_obj;
+		SharedCount *m_counter;
 	};
 
 	// use delete[] to destruct the object
@@ -214,17 +214,17 @@ AX_BEGIN_NAMESPACE
 	public:
 		typedef SharedArray<T>	ThisType;
 		typedef T ValueType;
-		typedef ValueType* Pointer;
+		typedef ValueType *Pointer;
 		typedef const Pointer ConstPointer;
 
 		SharedArray() : m_obj(NULL), m_counter(NULL) {}
-		explicit SharedArray(T* obj) : m_obj(obj), m_counter(NULL) {
+		explicit SharedArray(T *obj) : m_obj(obj), m_counter(NULL) {
 			if (obj) {
 				m_counter = new SharedCount();
 				m_counter->addRef();
 			}
 		}
-		SharedArray(const ThisType& other) : m_obj(other.m_obj), m_counter(other.m_counter) {
+		SharedArray(const ThisType &other) : m_obj(other.m_obj), m_counter(other.m_counter) {
 			if (m_counter)
 				m_counter->addRef();
 		}
@@ -232,7 +232,7 @@ AX_BEGIN_NAMESPACE
 			clear();
 		}
 
-		ThisType& operator=(const ThisType& other) {
+		ThisType &operator=(const ThisType &other) {
 			clear();
 			m_obj = other.m_obj;
 			m_counter = other.m_counter;
@@ -242,7 +242,7 @@ AX_BEGIN_NAMESPACE
 			return *this;
 		}
 
-		T* operator->() const {
+		T *operator->() const {
 			return m_obj;
 		}
 
@@ -250,7 +250,7 @@ AX_BEGIN_NAMESPACE
 			return m_obj;
 		}
 
-		T& operator*() const {
+		T &operator*() const {
 			return *m_obj;
 		}
 
@@ -272,8 +272,8 @@ AX_BEGIN_NAMESPACE
 		}
 
 	private:
-		ValueType* m_obj;
-		SharedCount* m_counter;
+		ValueType *m_obj;
+		SharedCount *m_counter;
 	};
 
 	// use free() to destruct the object
@@ -282,17 +282,17 @@ AX_BEGIN_NAMESPACE
 	public:
 		typedef SharedBuf<T>	ThisType;
 		typedef T ValueType;
-		typedef ValueType* Pointer;
+		typedef ValueType *Pointer;
 		typedef const Pointer ConstPointer;
 
 		SharedBuf() : mObj(NULL), mCounter(NULL) {}
-		explicit SharedBuf(T* obj) : mObj(obj), mCounter(NULL) {
+		explicit SharedBuf(T *obj) : mObj(obj), mCounter(NULL) {
 			if (obj) {
 				mCounter = new SharedCount();
 				mCounter->AddRef();
 			}
 		}
-		SharedBuf(const ThisType& other) : mObj(other.mObj), mCounter(other.mCounter) {
+		SharedBuf(const ThisType &other) : mObj(other.mObj), mCounter(other.mCounter) {
 			if (mCounter)
 				mCounter->AddRef();
 		}
@@ -300,7 +300,7 @@ AX_BEGIN_NAMESPACE
 			Clear();
 		}
 
-		ThisType& operator=(const ThisType& other) {
+		ThisType &operator=(const ThisType &other) {
 			Clear();
 			mObj = other.mObj;
 			mCounter = other.mCounter;
@@ -310,10 +310,10 @@ AX_BEGIN_NAMESPACE
 			return *this;
 		}
 
-		T* GetPointer() const { return mObj; }
-		T* operator->() const { return mObj; }
+		T *GetPointer() const { return mObj; }
+		T *operator->() const { return mObj; }
 		operator T*() const { return mObj; }
-		T& operator*() const { return *mObj; }
+		T &operator*() const { return *mObj; }
 		bool IsValid() const { return mObj != NULL; }
 
 		void Clear() {
@@ -330,8 +330,8 @@ AX_BEGIN_NAMESPACE
 		}
 
 	private:
-		ValueType* mObj;
-		SharedCount* mCounter;
+		ValueType *mObj;
+		SharedCount *mCounter;
 	};
 
 	/*!
@@ -349,7 +349,7 @@ AX_BEGIN_NAMESPACE
 	public:
 		typedef SharedRef<T>	ThisType;
 		typedef T ValueType;
-		typedef ValueType* Pointer;
+		typedef ValueType *Pointer;
 		typedef const Pointer ConstPointer;
 		typedef SharedPtr<T>	SharedPointer;
 
@@ -357,15 +357,15 @@ AX_BEGIN_NAMESPACE
 			: mObj(NULL)
 			, mCounter(NULL) {}
 
-		SharedRef(const ThisType& other)
+		SharedRef(const ThisType &other)
 			: mObj(other.mObj)
 			, mCounter(other.mCounter) {}
 
-		SharedRef(const SharedPointer& other)
+		SharedRef(const SharedPointer &other)
 			: mObj(other.GetPointer())
 			, mCounter(other.GetCounter()) {}
 
-		explicit SharedRef(T* obj)
+		explicit SharedRef(T *obj)
 			: mObj(obj)
 			, mCounter(NULL) {
 				if (obj) {
@@ -376,13 +376,13 @@ AX_BEGIN_NAMESPACE
 		~SharedRef() {
 		}
 
-		ThisType& operator=(const ThisType& other) {
+		ThisType &operator=(const ThisType &other) {
 			mObj = other.mObj;
 			mCounter = other.mCounter;
 			return *this;
 		}
 
-		ThisType& operator=(const SharedPointer& other) {
+		ThisType &operator=(const SharedPointer &other) {
 			mObj = other.mObj;
 			mCounter = other.mCounter;
 			return *this;
@@ -396,7 +396,7 @@ AX_BEGIN_NAMESPACE
 			return mObj;
 		}
 
-		T& operator*() const {
+		T &operator*() const {
 			return *mObj;
 		}
 
@@ -405,11 +405,11 @@ AX_BEGIN_NAMESPACE
 		}
 
 		Pointer GetPointer() const { return mObj; }
-		SharedCount* GetCounter() const { return mCounter; }
+		SharedCount *GetCounter() const { return mCounter; }
 
 	private:
-		ValueType* mObj;
-		SharedCount* mCounter;
+		ValueType *mObj;
+		SharedCount *mCounter;
 	};
 
 	// render resource, register counted

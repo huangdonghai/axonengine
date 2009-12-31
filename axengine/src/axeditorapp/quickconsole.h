@@ -25,13 +25,13 @@ public:
 
 	// implement ILogHandler
 #if 0
-	virtual void Print(const Wchar* text);
+	virtual void Print(const Wchar *text);
 #endif
-	virtual void print(const String& str);
-	virtual void print(const char* text);
+	virtual void print(const String &str);
+	virtual void print(const char *text);
 
 private:
-	void setInput(QString& str);
+	void setInput(QString &str);
 
 private slots:
 	void on_toolButton_clicked();
@@ -43,7 +43,7 @@ private:
 	QVector<QString> inputHistory;
 	QVector<QString>::iterator currentHistory;
 	QString currentInput;
-	ConsoleDlg* mConsoleDlg;
+	ConsoleDlg *mConsoleDlg;
 };
 
 #endif // CXQUICKCONSOLE_H

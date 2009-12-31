@@ -18,13 +18,13 @@ namespace Axon{namespace Game{
 
 		// properties
 		String get_modelName() const;
-		void set_modelName(const String& val);
+		void set_modelName(const String &val);
 
 		// implement Entity
 		virtual void doThink();
 
-		void               setParticleModel(ParticleEffect* particle,bool needFree = true);
-		PARTICLESYSTEM::ParticleEffect* getParticleEffect();
+		void               setParticleModel(ParticleEffect *particle,bool needFree = true);
+		PARTICLESYSTEM::ParticleEffect *getParticleEffect();
 
 	protected:
         String              m_modelName;

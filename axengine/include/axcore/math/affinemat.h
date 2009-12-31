@@ -21,33 +21,33 @@ AX_BEGIN_NAMESPACE
 		static const AffineMat Identity;
 
 		AffineMat();
-		AffineMat(const Matrix3& axis,  const Vector3& origin);
+		AffineMat(const Matrix3 &axis,  const Vector3 &origin);
 		AffineMat(float f[12]);
 		AffineMat(float f0, float f1, float f2, float f3, float f4, float f5, float f6, float f7, float f8, float f9, float f10, float f11 );
-		AffineMat(const Angles& angles, const Vector3& origin);
-		AffineMat(const Angles& angles, const Vector3& origin, float scale);
+		AffineMat(const Angles &angles, const Vector3 &origin);
+		AffineMat(const Angles &angles, const Vector3 &origin, float scale);
 		~AffineMat();
 
 		void setIdentity();
-		void set(const Matrix3& axis,  const Vector3& origin);
-		void setInverse(const Matrix3& axis,  const Vector3& origin);
+		void set(const Matrix3 &axis,  const Vector3 &origin);
+		void setInverse(const Matrix3 &axis,  const Vector3 &origin);
 		void setInverse();
 		void setOrigin(float x, float y, float z);
-		void setAxis(const Angles& angles);
-		void setAxis(const Angles& angles, float scale);
+		void setAxis(const Angles &angles);
+		void setAxis(const Angles &angles, float scale);
 		Angles getAngles() const;
 		float getScales() const;
 
-		void fromMatrix4(const Matrix4& mat4x4);
+		void fromMatrix4(const Matrix4 &mat4x4);
 		Matrix4 toMatrix4() const;
 
-		Vector3 transformPoint(const Vector3& point) const;
-		Vector3 transformNormal(const Vector3& normal) const;
+		Vector3 transformPoint(const Vector3 &point) const;
+		Vector3 transformNormal(const Vector3 &normal) const;
 
-		AffineMat multiply(const AffineMat& other) const;
-		AffineMat& multiplySelf(const AffineMat& other);
-		const float* toFloatPointer() const;
-		float* toFloatPointer();
+		AffineMat multiply(const AffineMat &other) const;
+		AffineMat &multiplySelf(const AffineMat &other);
+		const float *toFloatPointer() const;
+		float *toFloatPointer();
 
 		Vector4 getRow(int index) const;
 
@@ -57,24 +57,24 @@ AX_BEGIN_NAMESPACE
 		void initRotateByAngles(float pitch, float yaw, float roll);
 		void initScale(float x, float y, float z);
 		void translateSelf(float x, float y, float z);
-		void translateSelf(const Vector3& v) { translateSelf(v.x, v.y, v.z); }
+		void translateSelf(const Vector3 &v) { translateSelf(v.x, v.y, v.z); }
 		void rotateSelf(float x, float y, float z);
 		void rotateSelfByAngles(float pitch, float yaw, float roll);
 		void scaleSelf(float x, float y, float z);
 
 		String toString() const;
-		bool fromString(const char* str);
+		bool fromString(const char *str);
 
 		static AffineMat getIdentity() { AffineMat result; result.setIdentity(); return result; }
 
 		// operator
-		bool operator==(const AffineMat& other) const;
-		bool operator!=(const AffineMat& other) const;
-		Vector3& operator[](int index);
-		const Vector3& operator[](int index) const;
-		AffineMat operator*(const AffineMat& other) const;
-		AffineMat& operator*=(const AffineMat& other);
-		Vector3 operator*(const Vector3& point) const;
+		bool operator==(const AffineMat &other) const;
+		bool operator!=(const AffineMat &other) const;
+		Vector3 &operator[](int index);
+		const Vector3 &operator[](int index) const;
+		AffineMat operator*(const AffineMat &other) const;
+		AffineMat &operator*=(const AffineMat &other);
+		Vector3 operator*(const Vector3 &point) const;
 
 		Matrix3 axis;
 		Vector3 origin;
@@ -83,7 +83,7 @@ AX_BEGIN_NAMESPACE
 	inline AffineMat::AffineMat()
 	{}
 
-	inline AffineMat::AffineMat(const Matrix3& rotation, const Vector3& org)
+	inline AffineMat::AffineMat(const Matrix3 &rotation, const Vector3 &org)
 	{
 		axis = rotation;
 		origin = org;
@@ -105,13 +105,13 @@ AX_BEGIN_NAMESPACE
 		origin.set(f9, f10, f11);
 	}
 
-	inline AffineMat::AffineMat(const Angles& angles, const Vector3& org)
+	inline AffineMat::AffineMat(const Angles &angles, const Vector3 &org)
 	{
 		axis.fromAngles(angles);
 		origin = org;
 	}
 
-	inline AffineMat::AffineMat(const Angles& angles, const Vector3& org, float scale)
+	inline AffineMat::AffineMat(const Angles &angles, const Vector3 &org, float scale)
 	{
 		axis.fromAnglesScales(angles, scale);
 		origin = org;
@@ -126,13 +126,13 @@ AX_BEGIN_NAMESPACE
 		origin.set(0, 0, 0);
 	}
 
-	inline void AffineMat::set(const Matrix3& rot,  const Vector3& org)
+	inline void AffineMat::set(const Matrix3 &rot,  const Vector3 &org)
 	{
 		axis = rot;
 		origin = org;
 	}
 
-	inline void AffineMat::setInverse(const Matrix3& rot,  const Vector3& org)
+	inline void AffineMat::setInverse(const Matrix3 &rot,  const Vector3 &org)
 	{
 		axis = rot.getTranspose();
 		origin = -(axis * org);
@@ -144,12 +144,12 @@ AX_BEGIN_NAMESPACE
 		origin.set(x, y, z);
 	}
 
-	inline void AffineMat::setAxis(const Angles& angles)
+	inline void AffineMat::setAxis(const Angles &angles)
 	{
 		axis.fromAngles(angles);
 	}
 
-	inline void AffineMat::setAxis(const Angles& angles, float scale)
+	inline void AffineMat::setAxis(const Angles &angles, float scale)
 	{
 		axis.fromAnglesScales(angles, scale);
 	}
@@ -164,7 +164,7 @@ AX_BEGIN_NAMESPACE
 		return axis[0].getLength();
 	}
 
-	inline void AffineMat::fromMatrix4(const Matrix4& mat4x4)
+	inline void AffineMat::fromMatrix4(const Matrix4 &mat4x4)
 	{
 		Matrix3 axis;
 		Vector3 origin;
@@ -177,17 +177,17 @@ AX_BEGIN_NAMESPACE
 		return Matrix4(axis, origin);
 	}
 
-	inline Vector3 AffineMat::transformPoint(const Vector3& point) const
+	inline Vector3 AffineMat::transformPoint(const Vector3 &point) const
 	{
 		return axis * point + origin;
 	}
 
-	inline Vector3 AffineMat::transformNormal(const Vector3& normal) const
+	inline Vector3 AffineMat::transformNormal(const Vector3 &normal) const
 	{
 		return transformPoint(normal);
 	}
 
-	inline AffineMat AffineMat::multiply(const AffineMat& other) const
+	inline AffineMat AffineMat::multiply(const AffineMat &other) const
 	{
 		AffineMat result;
 		result.origin = axis * other.origin + origin;
@@ -195,18 +195,18 @@ AX_BEGIN_NAMESPACE
 		return result;
 	}
 
-	inline AffineMat& AffineMat::multiplySelf(const AffineMat& other)
+	inline AffineMat &AffineMat::multiplySelf(const AffineMat &other)
 	{
 		*this = multiply(other);
 		return *this;
 	}
 
-	inline const float* AffineMat::toFloatPointer() const
+	inline const float *AffineMat::toFloatPointer() const
 	{
 		return (const float*)this;
 	}
 
-	inline float* AffineMat::toFloatPointer()
+	inline float *AffineMat::toFloatPointer()
 	{
 		return (float*)this;
 	}
@@ -289,10 +289,10 @@ AX_BEGIN_NAMESPACE
 		*this *= t;
 	}
 
-	inline bool AffineMat::operator==(const AffineMat& other) const
+	inline bool AffineMat::operator==(const AffineMat &other) const
 	{
-		const float* lhs = this->toFloatPointer();
-		const float* rhs = other.toFloatPointer();
+		const float *lhs = this->toFloatPointer();
+		const float *rhs = other.toFloatPointer();
 
 		for (int i = 0; i < 12; i++) {
 			if (lhs[i] != rhs[i]) {
@@ -303,35 +303,35 @@ AX_BEGIN_NAMESPACE
 		return true;
 	}
 
-	inline bool AffineMat::operator!=(const AffineMat& other) const
+	inline bool AffineMat::operator!=(const AffineMat &other) const
 	{
 		return !this->operator ==(other);
 	}
 
-	inline Vector3& AffineMat::operator[](int index)
+	inline Vector3 &AffineMat::operator[](int index)
 	{
 		AX_STRICT_ASSERT(index >= 0 && index < 4);
 		return axis[index];
 	}
 
-	inline const Vector3& AffineMat::operator[](int index) const
+	inline const Vector3 &AffineMat::operator[](int index) const
 	{
 		AX_STRICT_ASSERT(index >= 0 && index < 4);
 		return axis[index];
 	}
 
-	inline AffineMat AffineMat::operator*(const AffineMat& other) const
+	inline AffineMat AffineMat::operator*(const AffineMat &other) const
 	{
 		return multiply(other);
 	}
 
-	inline AffineMat& AffineMat::operator*=(const AffineMat& other)
+	inline AffineMat &AffineMat::operator*=(const AffineMat &other)
 	{
 		return multiplySelf(other);
 	}
 
 
-	inline Vector3 AffineMat::operator*(const Vector3& point) const
+	inline Vector3 AffineMat::operator*(const Vector3 &point) const
 	{
 		return transformPoint(point);
 	}

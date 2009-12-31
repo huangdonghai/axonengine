@@ -22,7 +22,7 @@ public:
     ~TerrainPanel();
 
 	// IObserver
-	virtual void doNotify(IObservable* subject, int arg);
+	virtual void doNotify(IObservable *subject, int arg);
 
 protected:
 	void setParams();
@@ -30,7 +30,7 @@ protected:
 
 private:
     Ui::TerrainPanelClass ui;
-	QActionGroup* m_actionGroup;
+	QActionGroup *m_actionGroup;
 
 private slots:
 	void on_actionRiverRoad_triggered();

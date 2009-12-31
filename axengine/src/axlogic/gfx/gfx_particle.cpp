@@ -85,7 +85,38 @@ static BlockAlloc<Particle> ParticleAllocator;
 
 ParticleEmitter::ParticleEmitter()
 {
+	// animatable
+	m_EmissionSpeed = 1.0f;
+	m_SpeedVariation = 0;
+	m_VerticalRange = 0;		// Drifting away vertically. (range: 0 to pi)
+	m_HorizontalRange = 0;	// They can do it horizontally too! (range: 0 to 2*pi)
+	m_Gravity = 9.8f;			// Fall down, apple!
+	m_Lifespan = 10.0f;			// Everyone has to die.
+	m_EmissionRate = 10.0f;		// Stread your particles, emitter.
+	m_EmissionAreaLength = 1; // Well, you can do that in this area.
+	m_EmissionAreaWidth = 1;
+	m_Gravity2 = 0;			// A second gravity? Its strong.
+	m_Enabled = 1.0f;
 
+	// init info
+	for (int i = 0; i < 3; i++) {
+		m_colors[i] = Vector4::One;
+		m_sizes[i] = 1;
+	}
+
+	m_mid = 0.5f;
+	m_slowdown = 0;
+	m_rotation = 0;
+//	int m_blend, m_order, m_type;
+	m_rows = 1;
+	m_cols = 1;
+	m_tiles;
+	m_billboard = true;
+	m_flags = 0;
+
+	// runtime
+	m_mesh = NULL;
+	m_remain = 0;
 }
 
 ParticleEmitter::~ParticleEmitter()
@@ -93,21 +124,21 @@ ParticleEmitter::~ParticleEmitter()
 
 }
 
-Particle* ParticleEmitter::planeEmit(float width, float length, float speed, float variant, float spread, float spread2)
+Particle *ParticleEmitter::planeEmit(float width, float length, float speed, float variant, float spread, float spread2)
 {
-	Particle* p = ParticleAllocator.alloc();
+	Particle *p = ParticleAllocator.alloc();
 
 	p->pos = Vector3(randfloat(-length,length), 0, randfloat(-width,width));
-	Vector3 dir = Vector3(0,1,0);
+	Vector3 dir = Vector3(0,0,1.0f);
 
 	p->dir = dir;//.normalize();
-	p->down = Vector3(0,-1.0f,0); // dir * -1.0f;
+	p->down = Vector3(0,0,-1.0f); // dir * -1.0f;
 	p->speed = dir * speed * (1.0f+randfloat(-variant,variant));
 
 	return 0;
 }
 
-Particle* ParticleEmitter::sphereEmit(float w, float l, float spd, float var, float spr, float spr2)
+Particle *ParticleEmitter::sphereEmit(float w, float l, float spd, float var, float spr, float spr2)
 {
 	return 0;
 }
@@ -129,27 +160,21 @@ Primitives ParticleEmitter::getHitTestPrims()
 
 void ParticleEmitter::frameUpdate(QueuedScene *qscene)
 {
-	float grav = m_Gravity;
-	float deaccel = m_Gravity2;
-
 	// spawn new particles
-	float frate = m_EmissionRate;
-	float flife = m_Lifespan;
 	float dt = qscene->camera.getFrameTime() * 0.001f;
 
-	float rem = m_remain;
-	float ftospawn = (dt * frate / flife) + rem;
+	float ftospawn = (dt * m_EmissionRate / m_Lifespan) + m_remain;
 	if (ftospawn < 1.0f) {
-		rem = ftospawn;
-		if (rem<0) 
-			rem = 0;
+		m_remain = ftospawn;
+		if (m_remain<0) 
+			m_remain = 0;
 	} else {
 		int tospawn = (int)ftospawn;
 
 		if ((tospawn + m_particles.size()) > MAX_PARTICLES) // Error check to prevent the program from trying to load insane amounts of particles.
 			tospawn = (int)m_particles.size() - MAX_PARTICLES;
 
-		rem = ftospawn - (float)tospawn;
+		m_remain = ftospawn - (float)tospawn;
 
 
 		float w = m_EmissionAreaWidth * 0.5f;
@@ -162,7 +187,7 @@ void ParticleEmitter::frameUpdate(QueuedScene *qscene)
 
 		if (en) {
 			for (int i=0; i<tospawn; i++) {
-				Particle* p = planeEmit(w, l, spd, var, spr, spr2);
+				Particle *p = planeEmit(w, l, spd, var, spr, spr2);
 				m_particles.push_back(p);
 			}
 		}
@@ -172,7 +197,7 @@ void ParticleEmitter::frameUpdate(QueuedScene *qscene)
 
 	for (List<Particle*>::iterator it = m_particles.begin(); it != m_particles.end(); ) {
 		Particle &p = **it;
-		p.speed += p.down * grav * dt - p.dir * deaccel * dt;
+		p.speed += p.down * m_Gravity * dt - p.dir * m_Gravity2 * dt;
 
 		if (m_slowdown>0) {
 			mspeed = expf(-1.0f * m_slowdown * p.life);

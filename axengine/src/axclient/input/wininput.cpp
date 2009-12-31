@@ -407,7 +407,7 @@ AX_BEGIN_NAMESPACE
 		}
 	}
 
-	void WinInput::setWindow(RenderTarget* gamewnd)
+	void WinInput::setWindow(RenderTarget *gamewnd)
 	{
 		if (gamewnd) {
 			m_hwnd = (HWND)gamewnd->getWindowHandle();
@@ -416,7 +416,7 @@ AX_BEGIN_NAMESPACE
 		}
 	}
 
-	void WinInput::queWinInput(MSG* msg)
+	void WinInput::queWinInput(MSG *msg)
 	{
 		UINT dwSize;
 
@@ -436,10 +436,10 @@ AX_BEGIN_NAMESPACE
 		if (GetRawInputData((HRAWINPUT)msg->lParam, RID_INPUT, lpb, &dwSize, sizeof(RAWINPUTHEADER)) != dwSize)
 			OutputDebugString (TEXT("GetRawInputData doesn't return correct size !\n")); 
 
-		RAWINPUT* raw = (RAWINPUT*)lpb;
+		RAWINPUT *raw = (RAWINPUT*)lpb;
 
 		if (raw->header.dwType == RIM_TYPEKEYBOARD) {
-			RAWKEYBOARD& rk = raw->data.keyboard;
+			RAWKEYBOARD &rk = raw->data.keyboard;
 
 			InputEvent e;
 			TypeZero(&e);
@@ -461,7 +461,7 @@ AX_BEGIN_NAMESPACE
 			g_inputSystem->queEvent(e);
 
 		} else if (raw->header.dwType == RIM_TYPEMOUSE) {
-			RAWMOUSE& rm = raw->data.mouse;
+			RAWMOUSE &rm = raw->data.mouse;
 
 			Printf("%x %x %d %d\n", rm.usFlags, rm.usButtonFlags, rm.lLastX, rm.lLastY);
 		} 

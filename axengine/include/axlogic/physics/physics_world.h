@@ -35,18 +35,18 @@ AX_BEGIN_NAMESPACE
 
 		void step(int frametime);
 
-		void addEntity(PhysicsEntity* entity);
-		void removeEntity(PhysicsEntity* entity);
+		void addEntity(PhysicsEntity *entity);
+		void removeEntity(PhysicsEntity *entity);
 
 	protected:
 		void stepMt(int frametime);
 
 	public:
-		hkpWorld* m_havokWorld;
+		hkpWorld *m_havokWorld;
 
 	private:
-		hkVisualDebugger* m_vdb;
-		hkpMultithreadingUtil* m_multithreadingUtil;
+		hkVisualDebugger *m_vdb;
+		hkpMultithreadingUtil *m_multithreadingUtil;
 		float m_physicsDeltaTime;
 	};
 

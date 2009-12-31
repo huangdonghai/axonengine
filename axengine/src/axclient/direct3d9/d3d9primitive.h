@@ -33,38 +33,38 @@ AX_BEGIN_NAMESPACE
 		D3D9primitive();
 		virtual ~D3D9primitive();
 
-		virtual void initialize(Primitive* source_primitive) = 0;
+		virtual void initialize(Primitive *source_primitive) = 0;
 		virtual void finalize() = 0;
 		virtual void update() = 0;
 		virtual void draw(Technique tech) = 0;
 		virtual Type getType() = 0 { return kAbstract; }
 
-		void setOverloadMaterial(Material* mat) {
+		void setOverloadMaterial(Material *mat) {
 			m_overloadMaterial = mat;
 		}
 		void unsetOverloadMaterial() {
 			m_overloadMaterial = NULL;
 		}
 
-		Material* getMaterial() { return m_material; }
+		Material *getMaterial() { return m_material; }
 		inline bool isMatrixSet() const { return m_isMatrixSet; }
-		const Matrix4& getMatrix() const { return m_matrix; }
+		const Matrix4 &getMatrix() const { return m_matrix; }
 
 	protected:
-		Primitive* m_src;
+		Primitive *m_src;
 		Primitive::Hint m_hint;
-		Material* m_material;
+		Material *m_material;
 
 	public:
-		Material* m_overloadMaterial;
-		D3D9instancedbuffer* m_instanceBuffer;
-		D3D9indexobject* m_overloadedIndexObj;
+		Material *m_overloadMaterial;
+		D3D9instancedbuffer *m_instanceBuffer;
+		D3D9indexobject *m_overloadedIndexObj;
 		int m_activeIndexes;
 
 		bool m_isMatrixSet;
 		Matrix4 m_matrix;
 
-		Texture* m_lightmap;
+		Texture *m_lightmap;
 	};
 
 	//--------------------------------------------------------------------------
@@ -78,7 +78,7 @@ AX_BEGIN_NAMESPACE
 		D3D9geometry();
 		virtual ~D3D9geometry();
 
-		virtual void initialize(Primitive* source_primitive);
+		virtual void initialize(Primitive *source_primitive);
 		virtual void finalize();
 		virtual void update();
 		virtual void draw(Technique tech);
@@ -118,7 +118,7 @@ AX_BEGIN_NAMESPACE
 		D3D9text();
 		virtual ~D3D9text();
 
-		virtual void initialize(Primitive* source_primitive);
+		virtual void initialize(Primitive *source_primitive);
 		virtual void finalize();
 		virtual void update();
 		virtual void draw(Technique tech);
@@ -130,7 +130,7 @@ AX_BEGIN_NAMESPACE
 		bool m_isSimpleText;
 		float m_aspect;
 		int m_format;			// format flags
-		Font* m_font;				// font used
+		Font *m_font;				// font used
 		String m_text;				// string to draw
 		TextPrim::HorizonAlign m_horizonAlign;
 		TextPrim::VerticalAlign m_verticalAlign;
@@ -147,7 +147,7 @@ AX_BEGIN_NAMESPACE
 		virtual ~D3D9terrain();
 
 		// implement D3D9primitive
-		virtual void initialize(Primitive* source_primitive);
+		virtual void initialize(Primitive *source_primitive);
 		virtual void finalize();
 		virtual void update();
 		virtual void draw(Technique tech);
@@ -158,8 +158,8 @@ AX_BEGIN_NAMESPACE
 	private:
 		Vector4 m_terrainRect;
 
-		Texture* m_colorTexture;
-		Texture* m_normalTexture;
+		Texture *m_colorTexture;
+		Texture *m_normalTexture;
 		Vector4 m_zoneRect;
 
 		Vector4 m_chunkRect;
@@ -179,7 +179,7 @@ AX_BEGIN_NAMESPACE
 		D3D9group();
 		virtual ~D3D9group();
 
-		virtual void initialize(Primitive* source_primitive);
+		virtual void initialize(Primitive *source_primitive);
 		virtual void finalize();
 		virtual void update();
 		virtual void draw(Technique tech);
@@ -198,7 +198,7 @@ AX_BEGIN_NAMESPACE
 		D3D9ref();
 		virtual ~D3D9ref();
 
-		virtual void initialize(Primitive* source_primitive);
+		virtual void initialize(Primitive *source_primitive);
 		virtual void finalize();
 		virtual void update();
 		virtual void draw(Technique tech);
@@ -218,7 +218,7 @@ AX_BEGIN_NAMESPACE
 		D3D9instance();
 		virtual ~D3D9instance();
 
-		virtual void initialize(Primitive* src);
+		virtual void initialize(Primitive *src);
 		virtual void finalize();
 		virtual void update();
 		virtual void draw(Technique tech);
@@ -236,18 +236,18 @@ AX_BEGIN_NAMESPACE
 
 		void syncFrame();
 
-		int cachePrimitive(Primitive* prim);
-		void uncachePrimitive(Primitive* prim);
-		D3D9primitive* getPrimitive(int handle);
+		int cachePrimitive(Primitive *prim);
+		void uncachePrimitive(Primitive *prim);
+		D3D9primitive *getPrimitive(int handle);
 
 		void onDeviceLost();
 		void onReset();
 
 	protected:
-		void findStaticFreeSlot(int& handle);
-		void linkId(int id, D3D9primitive* glprim);
-		D3D9primitive* createPrim(Primitive* prim);
-		void freePrim(D3D9primitive* prim);
+		void findStaticFreeSlot(int &handle);
+		void linkId(int id, D3D9primitive *glprim);
+		D3D9primitive *createPrim(Primitive *prim);
+		void freePrim(D3D9primitive *prim);
 
 	private:
 		enum {
@@ -257,12 +257,12 @@ AX_BEGIN_NAMESPACE
 		int m_frameId;
 
 		int m_numStaticPrims;
-		D3D9primitive* m_staticPrims[MAX_PRIMITIVES];
+		D3D9primitive *m_staticPrims[MAX_PRIMITIVES];
 
 		int m_numFramePrims;
-		D3D9primitive* m_framePrims[MAX_PRIMITIVES];
+		D3D9primitive *m_framePrims[MAX_PRIMITIVES];
 
-		void* m_freePrimLink;
+		void *m_freePrimLink;
 
 		int m_numWaitForDelete;
 		int m_waitForDelete[MAX_PRIMITIVES];
@@ -275,7 +275,7 @@ AX_BEGIN_NAMESPACE
 		BlockAlloc<D3D9instance>	m_instanceAlloc;
 	};
 
-	inline D3D9primitive* D3D9primitivemanager::getPrimitive(int handle) {
+	inline D3D9primitive *D3D9primitivemanager::getPrimitive(int handle) {
 		if (handle == -1) {
 			return nullptr;
 		}

@@ -113,7 +113,7 @@ AX_BEGIN_NAMESPACE
 		float vec[2] = { x, y };
 		int 			bx0, bx1, by0, by1, b00, b10, b01, b11;
 		float 			rx0, rx1, ry0, ry1, sx, sy, a, b, t, u, v;
-		const float* q;
+		const float *q;
 		register int i, j;
 
 		setup(0, bx0,bx1, rx0,rx1);
@@ -147,7 +147,7 @@ AX_BEGIN_NAMESPACE
 		float vec[3] = { x, y, z };
 		int bx0, bx1, by0, by1, bz0, bz1, b00, b10, b01, b11;
 		float rx0, rx1, ry0, ry1, rz0, rz1, sy, sz, a, b, c, d, t, u, v;
-		const float* q;
+		const float *q;
 		register int i, j;
 
 		setup(0, bx0,bx1, rx0,rx1);
@@ -191,7 +191,7 @@ AX_BEGIN_NAMESPACE
 		return lerp(sz, c, d);
 	}
 
-	float PerlinNoise::noise2(const Vector2& vec, int octaves, float persistence) {
+	float PerlinNoise::noise2(const Vector2 &vec, int octaves, float persistence) {
 		octaves += 1;
 
 		float amplitude = 1.f;
