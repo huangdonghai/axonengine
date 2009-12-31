@@ -272,7 +272,7 @@ void Selection::testLine(const LinePrim *line)
 void Selection::testMesh(const MeshPrim *mesh)
 {
 	// 转换顶点坐标成为归一化坐标
-	const Vertex *vertexs = mesh->getVertexesPointer();
+	const MeshVertex *vertexs = mesh->getVertexesPointer();
 
 	int numVexTranslate = mesh->getNumVertexes();
 

@@ -120,6 +120,8 @@ protected:
 	Particle *planeEmit(float width, float length, float speed, float variant, float spread, float spread2);
 	Particle *sphereEmit(float w, float l, float spd, float var, float spr, float spr2);
 
+	void checkMesh(int numverts, int numindices);
+
 private:
 	// BEGIN ANIMATABLE PROPERTIES
 	float m_EmissionSpeed;

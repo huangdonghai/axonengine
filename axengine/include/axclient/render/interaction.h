@@ -26,7 +26,7 @@ AX_BEGIN_NAMESPACE
 
 		uint_t sortkey;
 
-		QueuedEntity *qactor;
+		QueuedEntity *queuedEntity;
 		Primitive *primitive;
 
 		int numTargets;

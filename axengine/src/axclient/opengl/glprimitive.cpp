@@ -225,7 +225,7 @@ AX_BEGIN_NAMESPACE
 
 
 	void GLgeometry::initMesh() {
-		m_vertexStride = sizeof(Vertex);
+		m_vertexStride = sizeof(MeshVertex);
 
 		m_vertexDefs.push_back(VDF_position);
 		m_vertexDefs.push_back(VDF_baseTc);

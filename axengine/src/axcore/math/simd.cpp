@@ -15,12 +15,12 @@ AX_BEGIN_NAMESPACE
 		g_simd = new Simd();
 	}
 
-	void Simd::computeTangentSpace(Vertex *verts, int numVerts, const ushort_t *indexes, int numIndexes) {
+	void Simd::computeTangentSpace(MeshVertex *verts, int numVerts, const ushort_t *indexes, int numIndexes) {
 		bool *used = (bool *)Alloca16(numVerts * sizeof(used[0]));
 		memset(used, 0, numVerts * sizeof(used[0]));
 
 		for (int i = 0; i < numIndexes; i += 3) {
-			Vertex *a, *b, *c;
+			MeshVertex *a, *b, *c;
 			unsigned long signBit;
 			float d0[5], d1[5], f, area;
 			Vector3 n, t0, t1;
@@ -123,14 +123,14 @@ AX_BEGIN_NAMESPACE
 
 	}
 
-	void Simd::computeTangentSpaceSlow( Vertex *verts, int numVerts, const ushort_t *indexes, int numIndexes )
+	void Simd::computeTangentSpaceSlow( MeshVertex *verts, int numVerts, const ushort_t *indexes, int numIndexes )
 	{
 		bool *used = (bool *)Alloca16(numVerts * sizeof(used[0]));
 		memset(used, 0, numVerts * sizeof(used[0]));
 
 		// pass one
 		for (int i = 0; i < numIndexes; i += 3) {
-			Vertex *a, *b, *c;
+			MeshVertex *a, *b, *c;
 			unsigned long signBit;
 			float d0[5], d1[5], f, area;
 			Vector3 n, t0, t1;
@@ -227,7 +227,7 @@ AX_BEGIN_NAMESPACE
 			if (!used[i])
 				continue;
 
-			Vertex *v = verts + i;
+			MeshVertex *v = verts + i;
 			Vector3 b = v->normal ^ v->tangent;
 
 			if ((b | v->binormal) < 0)

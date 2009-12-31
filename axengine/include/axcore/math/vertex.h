@@ -48,7 +48,7 @@ AX_BEGIN_NAMESPACE
 		Sequence<ElementDecl> m_elemDecls;
 	};
 
-	struct Vertex {
+	struct MeshVertex {
 		Vector3 xyz;
 		Vector2 st;
 		Rgba rgba;

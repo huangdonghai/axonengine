@@ -13,45 +13,45 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-	TreeActor::TreeActor(const String &filename, int seed) : RenderEntity(kSpeedTree) {
-		m_treeAsset = g_treeManager->findAsset(filename, seed);
-		m_treeAsset->addActor(this);
+TreeActor::TreeActor(const String &filename, int seed) : RenderEntity(kSpeedTree) {
+	m_treeAsset = g_treeManager->findAsset(filename, seed);
+	m_treeAsset->addActor(this);
 
-		m_instanceParam[LeafAngleScalarX] = 1;
-		m_instanceParam[LeafAngleScalarY] = 1;
-		setWindMatrixOffset(float(rand()) / RAND_MAX);
+	m_instanceParam[LeafAngleScalarX] = 1;
+	m_instanceParam[LeafAngleScalarY] = 1;
+	setWindMatrixOffset(float(rand()) / RAND_MAX);
+}
+
+TreeActor::~TreeActor() {
+	m_treeAsset->removeActor(this);
+	SafeRelease(m_treeAsset);
+}
+
+BoundingBox TreeActor::getLocalBoundingBox() {
+	return m_treeAsset->getBoundingBox();
+}
+
+BoundingBox TreeActor::getBoundingBox() {
+	return getLocalBoundingBox().getTransformed(m_affineMat);
+}
+
+void TreeActor::frameUpdate(QueuedScene *qscene)
+{
+	m_instanceParam[InstanceScale] = m_affineMat.getScales();
+}
+
+
+Primitives TreeActor::getHitTestPrims() {
+	return m_treeAsset->getAllPrimitives(m_lod);
+}
+
+void TreeActor::issueToQueue(QueuedScene *qscene) {
+	if (!r_speedtree->getBool()) {
+		return;
 	}
 
-	TreeActor::~TreeActor() {
-		m_treeAsset->removeActor(this);
-		SafeRelease(m_treeAsset);
-	}
-
-	BoundingBox TreeActor::getLocalBoundingBox() {
-		return m_treeAsset->getBoundingBox();
-	}
-
-	BoundingBox TreeActor::getBoundingBox() {
-		return getLocalBoundingBox().getTransformed(m_affineMat);
-	}
-
-	void TreeActor::frameUpdate(QueuedScene *qscene)
-	{
-		m_instanceParam[InstanceScale] = m_affineMat.getScales();
-	}
-
-
-	Primitives TreeActor::getHitTestPrims() {
-		return m_treeAsset->getAllPrimitives(m_lod);
-	}
-
-	void TreeActor::issueToQueue(QueuedScene *qscene) {
-		if (!r_speedtree->getBool()) {
-			return;
-		}
-
-		m_treeAsset->issueToQueue(this, qscene);
-	}
+	m_treeAsset->issueToQueue(this, qscene);
+}
 
 AX_END_NAMESPACE
 

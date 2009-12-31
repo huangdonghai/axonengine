@@ -550,9 +550,6 @@ MeshPrim::MeshPrim(Hint hint)
 	, m_vertexes(NULL)
 	, m_numIndexes(0)
 	, m_indexes(NULL)
-#if 0
-	, m_currentIndexNum(0)
-#endif
 {
 	m_type = MeshType;
 	m_isStriped = false;
@@ -563,7 +560,7 @@ MeshPrim::~MeshPrim() {
 }
 
 void MeshPrim::init(int numverts, int numidxes) {
-	if (numverts == m_numVertexes && numidxes == m_numIndexes)
+	if (numverts <= m_numVertexes && numidxes <= m_numIndexes)
 		return;
 
 	// clear old data first
@@ -571,7 +568,7 @@ void MeshPrim::init(int numverts, int numidxes) {
 
 	m_numVertexes = numverts;
 	m_numIndexes = numidxes;
-	m_vertexes = TypeAlloc<Vertex>(numverts);
+	m_vertexes = TypeAlloc<MeshVertex>(numverts);
 	m_indexes = TypeAlloc<ushort_t>(numidxes);
 }
 
@@ -586,11 +583,11 @@ int MeshPrim::getNumVertexes() const {
 	return m_numVertexes;
 }
 
-const Vertex *MeshPrim::getVertexesPointer() const {
+const MeshVertex *MeshPrim::getVertexesPointer() const {
 	return m_vertexes;
 }
 
-Vertex *MeshPrim::lockVertexes() {
+MeshVertex *MeshPrim::lockVertexes() {
 	return m_vertexes;
 }
 
@@ -716,7 +713,7 @@ MeshPrim *MeshPrim::createScreenQuad(Hint hint, const Rect &rect, const Rgba &co
 	MeshPrim *quad = new MeshPrim(hint);
 
 	quad->init(4, 6);
-	Vertex *verts = quad->lockVertexes();
+	MeshVertex *verts = quad->lockVertexes();
 	verts[0].xyz = Vector3(rect.x, rect.y, 0.0f);
 	verts[0].st.x = st[0];
 	verts[0].st.y = st[1];
@@ -769,7 +766,7 @@ MeshPrim *MeshPrim::createScreenQuad(Hint hint, const Rect &rect, const Rgba &co
 }
 
 bool MeshPrim::setupScreenQuad(MeshPrim*& quad, const Rect &rect, const Rgba &color, Material *material, const Vector4 &st) {
-	Vertex *verts = quad->lockVertexes();
+	MeshVertex *verts = quad->lockVertexes();
 	verts[0].xyz = Vector3(rect.x, rect.y, 0.0f);
 	verts[0].st.x = st[0];
 	verts[0].st.y = st[1];
@@ -837,7 +834,7 @@ bool MeshPrim::setupFan(MeshPrim*& mesh, const Vector3 &center, const Vector3 &v
 			mesh->m_indexes[i*3+1] = i + 1;
 			mesh->m_indexes[i*3+2] = i + 2;
 		}
-		memset(mesh->m_vertexes, 0, sizeof(Vertex) * numverts);
+		memset(mesh->m_vertexes, 0, sizeof(MeshVertex) * numverts);
 		mesh->setMaterial(material);
 		mesh->unlockIndexes();
 	}
@@ -899,7 +896,7 @@ bool MeshPrim::setupBox(MeshPrim*& mesh, const BoundingBox &bbox, const Rgba &co
 		mesh->init(8,36);
 	}
 
-	Vertex *vertexes = mesh->lockVertexes();
+	MeshVertex *vertexes = mesh->lockVertexes();
 	ushort_t*    indexes  = mesh->lockIndexes();
 
 	Vector3 bSize = bbox.max - bbox.min;
@@ -958,9 +955,9 @@ bool MeshPrim::setupCone(MeshPrim*& cone, const Vector3 &center, float radius, c
 	AX_ASSERT(numverts == cone->getNumVertexes());
 
 	// vertexes
-	Vertex *verts = cone->lockVertexes();
+	MeshVertex *verts = cone->lockVertexes();
 		// reset to zero
-		memset(verts, 0, sizeof(Vertex) * numverts);
+		memset(verts, 0, sizeof(MeshVertex) * numverts);
 
 		// vertex 0 is top
 		verts[0].xyz = top;
@@ -1028,8 +1025,8 @@ bool MeshPrim::setupHexahedron(MeshPrim*& mesh, Vector3 volumeverts[8]) {
 		mesh->unlockIndexes();
 
 		// set verts to 0
-		Vertex *verts = mesh->lockVertexes();
-		memset(verts, 0, numverts * sizeof(Vertex));
+		MeshVertex *verts = mesh->lockVertexes();
+		memset(verts, 0, numverts * sizeof(MeshVertex));
 		mesh->unlockIndexes();
 	}
 
@@ -1037,7 +1034,7 @@ bool MeshPrim::setupHexahedron(MeshPrim*& mesh, Vector3 volumeverts[8]) {
 		return isinit;
 	}
 
-	Vertex *verts = mesh->lockVertexes();
+	MeshVertex *verts = mesh->lockVertexes();
 	for (int i = 0; i < numverts; i++) {
 		verts[i].xyz = volumeverts[i];
 	}

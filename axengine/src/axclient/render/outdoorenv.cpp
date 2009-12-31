@@ -97,7 +97,7 @@ AX_BEGIN_NAMESPACE
 		// box12
 		m_skybox12 = new MeshPrim(MeshPrim::HintStatic);
 		m_skybox12->init(8, 12);
-		Vertex *verts = m_skybox12->lockVertexes();
+		MeshVertex *verts = m_skybox12->lockVertexes();
 		for (int i = 0; i < 8; i++) {
 			verts[i].xyz.set(l_verts12[i]);
 			verts[i].st.set(l_verts12[i][3], l_verts12[i][4]);
@@ -195,9 +195,9 @@ AX_BEGIN_NAMESPACE
 		m_skydome->init(numverts, numidxes);
 
 		// fill vertexes
-		Vertex *verts = m_skydome->lockVertexes();
-		Vertex *vertsStart = verts;
-		memset(verts, 0, sizeof(Vertex) * numverts);
+		MeshVertex *verts = m_skydome->lockVertexes();
+		MeshVertex *vertsStart = verts;
+		memset(verts, 0, sizeof(MeshVertex) * numverts);
 
 		for (int i = 0; i <= halftess; i++) {
 			float y = (float)i / halftess;
@@ -299,11 +299,11 @@ AX_BEGIN_NAMESPACE
 		m_oceanMesh->init(numverts, numidxes);
 
 		// init render mesh's vertexbuffer and indexbuffer
-		Vertex *verts = m_oceanMesh->lockVertexes();
-		Vertex *oldverts = verts;
+		MeshVertex *verts = m_oceanMesh->lockVertexes();
+		MeshVertex *oldverts = verts;
 
 		// clear to zero
-		memset(verts, 0, sizeof(Vertex) * numverts);
+		memset(verts, 0, sizeof(MeshVertex) * numverts);
 
 		// first vertex is zero center
 		verts->xyz.set(0, 0, 0);
@@ -435,15 +435,15 @@ AX_BEGIN_NAMESPACE
 	void OutdoorEnv::issueToQueue(QueuedScene *qscene)
 	{
 		if (m_haveGlobalLight) {
-			qscene->addActor(this->getGlobalLight());
+			qscene->addEntity(this->getGlobalLight());
 			getGlobalLight()->issueToQueue(qscene);
 		}
 
-		qscene->addActor(m_globalFog);
+		qscene->addEntity(m_globalFog);
 		qscene->globalFog = m_globalFog->getQueuedFog();
 
 		if (m_haveOcean) {
-			qscene->addActor(m_oceanFog);
+			qscene->addEntity(m_oceanFog);
 			qscene->waterFog = m_oceanFog->getQueuedFog();
 		}
 
@@ -470,22 +470,22 @@ AX_BEGIN_NAMESPACE
 					m_lastNishitaParams = curparam;
 					genNishitaUpdateScene(qscene);
 				}
-				qscene->addInteraction(m_queued, m_skydome);
+				qscene->addInteraction(this, m_skydome);
 			} else {
-				qscene->addInteraction(m_queued, m_skybox12);
-				qscene->addInteraction(m_queued, m_skybox34);
-				qscene->addInteraction(m_queued, m_skybox5);
+				qscene->addInteraction(this, m_skybox12);
+				qscene->addInteraction(this, m_skybox34);
+				qscene->addInteraction(this, m_skybox5);
 			}
 		}
 
 		if (haveocean) {
-			qscene->addInteraction(m_queued, m_oceanMesh);
+			qscene->addInteraction(this, m_oceanMesh);
 		}
 #if 0
 		PrimitiveSeq prims = this->getViewedPrimitives();
 
 		for (size_t i = 0; i < prims.size(); i++) {
-			qscene->addInteraction(m_queued, prims[i]);
+			qscene->addInteraction(this, prims[i]);
 		}
 #endif
 	}

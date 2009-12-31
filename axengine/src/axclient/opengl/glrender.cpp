@@ -403,7 +403,7 @@ AX_BEGIN_NAMESPACE
 	};
 
 	static int sStrides[] = {
-		sizeof(Vertex), sizeof(DebugVertex), sizeof(BlendVertex), sizeof(ChunkVertex)
+		sizeof(MeshVertex), sizeof(DebugVertex), sizeof(BlendVertex), sizeof(ChunkVertex)
 	};
 
 	void GLrender::bindVertexBuffer(VertexType vt, GLenum bufId, GLuint offset) {

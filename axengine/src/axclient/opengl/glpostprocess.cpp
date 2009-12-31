@@ -109,7 +109,7 @@ AX_BEGIN_NAMESPACE
 		Rgba color(255, 255, 255, 255);
 
 		m_screenQuad->init(4, 6);
-		Vertex *verts = m_screenQuad->lockVertexes();
+		MeshVertex *verts = m_screenQuad->lockVertexes();
 //		verts[0].xyz = Vector3(rect.x, rect.y, 0.0f);
 		verts[0].st.x = 0;
 		verts[0].st.y = 1;
@@ -187,7 +187,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 	void GLpostprocess::updateScreenQuad(const Rect &rect) {
-		Vertex *verts = m_screenQuad->lockVertexes();
+		MeshVertex *verts = m_screenQuad->lockVertexes();
 		verts[0].xyz = Vector3(rect.x, rect.y, 0.0f);
 		verts[1].xyz = Vector3(rect.x + rect.width, rect.y, 0.0f);
 		verts[2].xyz = Vector3(rect.x, rect.y + rect.height, 0.0f);

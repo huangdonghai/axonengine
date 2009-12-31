@@ -222,7 +222,7 @@ private:
 
 class AX_API MeshPrim : public Primitive {
 public:
-	typedef Vertex VertexType;
+	typedef MeshVertex VertexType;
 
 	MeshPrim(Hint hint);
 	virtual ~MeshPrim();
@@ -231,8 +231,8 @@ public:
 	void clear();
 
 	int getNumVertexes() const;
-	const Vertex *getVertexesPointer() const;
-	Vertex *lockVertexes();
+	const MeshVertex *getVertexesPointer() const;
+	MeshVertex *lockVertexes();
 	void unlockVertexes();
 
 	const ushort_t *getIndexPointer() const;
@@ -267,7 +267,7 @@ public:
 
 private:
 	int m_numVertexes;
-	Vertex *m_vertexes;
+	MeshVertex *m_vertexes;
 	int m_numIndexes;
 	ushort_t *m_indexes;
 	bool m_isStriped;

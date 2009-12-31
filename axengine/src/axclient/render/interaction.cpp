@@ -45,8 +45,8 @@ AX_BEGIN_NAMESPACE
 		}
 
 		int distance = 0;
-		if (qactor) {
-			distance = qactor->distance * 1024;
+		if (queuedEntity) {
+			distance = queuedEntity->distance * 1024;
 		}
 
 		sortkey = (sortkey << 28) + ((uint_t)(distance) &0x0fffffff);

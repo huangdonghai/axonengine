@@ -330,8 +330,8 @@ AX_BEGIN_NAMESPACE
 
 		if (axis == m_highlit) meshcolor.a = 64;
 
-		Vertex *mverts = mesh->lockVertexes();
-		if (first) memset(mverts, 0, sizeof(Vertex) * 4);
+		MeshVertex *mverts = mesh->lockVertexes();
+		if (first) memset(mverts, 0, sizeof(MeshVertex) * 4);
 		mverts[0].xyz = m_pos;
 		mverts[0].rgba = meshcolor;
 		mverts[1].xyz = m_pos + v0 * length;
@@ -690,14 +690,14 @@ AX_BEGIN_NAMESPACE
 			idx[0] = 0; idx[1] = 1; idx[2] = 2;
 			idx[3] = 2; idx[4] = 1; idx[5] = 3;
 			mesh->unlockIndexes();
-			Vertex *vert = mesh->lockVertexes();
-			memset(vert, 0, sizeof(Vertex) * 4);
+			MeshVertex *vert = mesh->lockVertexes();
+			memset(vert, 0, sizeof(MeshVertex) * 4);
 			mesh->unlockVertexes();
 		}
 
 		float len = 6.0f * m_scale;
 		const Matrix3 &axis = camera.getViewAxis();
-		Vertex *vert = mesh->lockVertexes();
+		MeshVertex *vert = mesh->lockVertexes();
 		vert[0].xyz = pos + axis[1] * len - axis[2] * len;
 		vert[0].rgba = color;
 		vert[1].xyz = pos - axis[1] * len - axis[2] * len;

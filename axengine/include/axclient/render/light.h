@@ -120,7 +120,7 @@ AX_BEGIN_NAMESPACE
 	struct QueuedLight {
 		typedef Vector3 VolumeVertexes[RenderLight::NUM_VOLUME_VERTEXES];
 
-		QueuedEntity *queuedActor;
+		QueuedEntity *queuedEntity;
 		RenderLight *preQueued;
 
 		// queued struct

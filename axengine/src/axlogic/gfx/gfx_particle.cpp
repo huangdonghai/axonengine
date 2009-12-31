@@ -11,9 +11,9 @@ read the license and understand and accept it fully.
 
 #include "gfx_local.h"
 
-namespace {
+AX_BEGIN_NAMESPACE
 
-	AX_USE_NAMESPACE;
+namespace {
 
 	float frand()
 	{
@@ -79,8 +79,6 @@ namespace {
 
 } // anonymous namespace
 
-AX_BEGIN_NAMESPACE
-
 static BlockAlloc<Particle> ParticleAllocator;
 
 ParticleEmitter::ParticleEmitter()
@@ -115,8 +113,8 @@ ParticleEmitter::ParticleEmitter()
 	m_flags = 0;
 
 	// runtime
-	m_mesh = NULL;
 	m_remain = 0;
+	m_mesh = new MeshPrim(Primitive::HintDynamic);
 }
 
 ParticleEmitter::~ParticleEmitter()
@@ -216,11 +214,45 @@ void ParticleEmitter::frameUpdate(QueuedScene *qscene)
 		else 
 			++it;
 	}
+
+	//
+	// setup mesh
+	//
+
+	int numVerts = m_particles.size() * 4;
+	int numIndexes = m_particles.size() * 6;
+	checkMesh(numVerts, numIndexes);
 }
 
-void ParticleEmitter::issueToQueue( QueuedScene *qscene )
+void ParticleEmitter::issueToQueue(QueuedScene *qscene)
 {
+	if (!m_Enabled)
+		return;
 
+	qscene->addInteraction(m_entity, m_mesh);
+}
+
+void ParticleEmitter::checkMesh(int numverts, int numindices)
+{
+	int oldNumVerts = m_mesh->getNumVertexes();
+	int oldNumIndices = m_mesh->getNumIndexes();
+
+	if (numverts <= oldNumVerts && numindices <= oldNumIndices)
+		return;
+
+	m_mesh->init(numverts, numindices);
+
+	// fill indices
+	ushort_t *indices = m_mesh->lockIndexes();
+	for (int i = 0; i < numindices / 6; i++) {
+		indices[i*6] = i;
+		indices[i*6] = i + 1;
+		indices[i*6] = i + 2;
+		indices[i*6] = i + 2;
+		indices[i*6] = i + 1;
+		indices[i*6] = i + 3;
+	}
+	m_mesh->unlockIndexes();
 }
 
 AX_END_NAMESPACE

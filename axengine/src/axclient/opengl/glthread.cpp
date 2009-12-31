@@ -343,7 +343,7 @@ AX_BEGIN_NAMESPACE
 		}
 
 		// check actor
-		const QueuedEntity *re = ia->qactor;
+		const QueuedEntity *re = ia->queuedEntity;
 		if (re != gActor || prim->isMatrixSet() || primMatrixSet) {
 			gActor = re;
 
@@ -438,7 +438,7 @@ AX_BEGIN_NAMESPACE
 						continue;
 					LinePrim *line = mesh->getNormalLine(normallen);
 					Interaction *ia = g_renderQueue->allocInteraction();
-					ia->qactor = scene->interactions[j]->qactor;
+					ia->queuedEntity = scene->interactions[j]->queuedEntity;
 					ia->primitive = line;
 					ia->resource = glPrimitiveManager->cachePrimitive(line);
 
@@ -461,7 +461,7 @@ AX_BEGIN_NAMESPACE
 					continue;
 				LinePrim *line = mesh->getTangentLine(tangentlen);
 				Interaction *ia = g_renderQueue->allocInteraction();
-				ia->qactor = scene->interactions[j]->qactor;
+				ia->queuedEntity = scene->interactions[j]->queuedEntity;
 				ia->primitive = line;
 				ia->resource = glPrimitiveManager->cachePrimitive(line);
 

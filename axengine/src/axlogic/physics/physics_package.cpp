@@ -819,8 +819,8 @@ AX_BEGIN_NAMESPACE
 
 			bool haveTangents = helper.haveTangents();
 
-			Vertex *verts = m_renderMesh->lockVertexes();
-			memset(verts, 0, sizeof(Vertex) * numverts);
+			MeshVertex *verts = m_renderMesh->lockVertexes();
+			memset(verts, 0, sizeof(MeshVertex) * numverts);
 			for (int i = 0; i < numverts; i++) {
 				if (m_haveLocalTransform) {
 					verts[i].xyz = m_localTransform * helper.getPostion(i);
@@ -977,7 +977,7 @@ errexit:
 
 			if (!mesh) continue;
 
-			const Vertex *verts = mesh->getVertexesPointer();
+			const MeshVertex *verts = mesh->getVertexesPointer();
 			for (int j = 0; j < mesh->getNumVertexes(); j++) {
 				m_staticBbox.expandBy(verts[j].xyz);
 			}
@@ -1157,7 +1157,7 @@ errexit:
 	}
 
 
-	void HavokPackage::issueToQueue(QueuedEntity *qactor, QueuedScene *qscene )
+	void HavokPackage::issueToQueue(RenderEntity *qactor, QueuedScene *qscene )
 	{
 		generateStaticMesh();
 
@@ -1423,7 +1423,7 @@ final:
 			return;
 
 		if (!m_pose) {
-			m_package->issueToQueue(m_queued, qscene);
+			m_package->issueToQueue(this, qscene);
 			return;
 		}
 
@@ -1438,7 +1438,7 @@ final:
 		}
 
 		AX_FOREACH (HavokPackage::MeshData *data, m_mestDataList) {
-			qscene->addInteraction(m_queued, data->m_renderMesh);
+			qscene->addInteraction(this, data->m_renderMesh);
 		}
 	}
 

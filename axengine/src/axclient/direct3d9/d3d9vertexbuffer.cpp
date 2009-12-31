@@ -65,7 +65,7 @@ AX_BEGIN_NAMESPACE
 	};
 
 	static UINT s_strides[] = {
-		sizeof(Vertex), sizeof(BlendVertex), sizeof(DebugVertex), sizeof(ChunkVertex)
+		sizeof(MeshVertex), sizeof(BlendVertex), sizeof(DebugVertex), sizeof(ChunkVertex)
 	};
 
 	static DWORD s_lockNewFrame = D3DLOCK_DISCARD/* | D3DLOCK_NOOVERWRITE*/;

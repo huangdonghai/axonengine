@@ -145,7 +145,7 @@ AX_BEGIN_NAMESPACE
 
 		// meshes
 		Primitives getPrimitives();
-		void issueToQueue(QueuedEntity *qactor, QueuedScene *qscene);
+		void issueToQueue(RenderEntity *qactor, QueuedScene *qscene);
 
 		void initDynamicMeshes(MeshDataList &result);
 		void clearDynamicMeshes(MeshDataList &result);

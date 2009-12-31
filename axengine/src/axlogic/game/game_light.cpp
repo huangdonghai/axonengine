@@ -120,7 +120,7 @@ AX_BEGIN_NAMESPACE
 		const float size = 0.5f;
 		const float height = size * AX_SQRT1_2;
 
-		Vertex *verts = m_pointPrim->lockVertexes();
+		MeshVertex *verts = m_pointPrim->lockVertexes();
 
 		Matrix3 axis = Matrix3::getIdentity();
 		Vector3 forward = axis[0].getNormalized();
@@ -194,7 +194,7 @@ AX_BEGIN_NAMESPACE
 			0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 4, 4, 4
 		};
 
-		Vertex *verts = m_spotPrim->lockVertexes();
+		MeshVertex *verts = m_spotPrim->lockVertexes();
 		for (int i=0; i<18; i++) {
 			verts[i].xyz = pos[s_posindices[i]];
 			verts[i].rgba = facecolor[s_colorindices[i]];

@@ -149,7 +149,7 @@ void RenderWorld::renderTo(QueuedScene *qscene) {
 			qscene->exposure = m_lastExposure;
 		}
 
-		qscene->addActor(m_outdoorEnv);
+		qscene->addEntity(m_outdoorEnv);
 		m_outdoorEnv->issueToQueue(qscene);
 
 		if (m_shadowDir != m_outdoorEnv->getGlobalLight()->getGlobalLightDirection()) {
@@ -203,7 +203,7 @@ void RenderWorld::renderTo(QueuedScene *qscene) {
 
 	g_statistic->setValue(stat_worldGlobalLights, qscene->globalLight ? 1 : 0);
 	g_statistic->setValue(stat_worldLights, qscene->numLights);
-	g_statistic->setValue(stat_worldActors, qscene->numActors);
+	g_statistic->setValue(stat_worldActors, qscene->numEntities);
 	g_statistic->setValue(stat_worldInteractions, qscene->numInteractions);
 
 	// check interactions, if need subscene
@@ -322,7 +322,7 @@ void RenderWorld::renderTo( QueuedScene *qscene, QuadNode *node )
 			qscene->exposure = m_lastExposure;
 		}
 
-		qscene->addActor(m_outdoorEnv);
+		qscene->addEntity(m_outdoorEnv);
 		m_outdoorEnv->issueToQueue(qscene);
 
 		if (m_shadowDir != m_outdoorEnv->getGlobalLight()->getGlobalLightDirection()) {
@@ -391,9 +391,9 @@ void RenderWorld::markVisible_r(QueuedScene *qscene, QuadNode *node, Plane::Side
 		}
 	}
 
-	for (RenderEntity *la = node->linkHead.getNext(); la; la = la->m_nodeLink.getNext()) {
+	for (RenderEntity *entity = node->linkHead.getNext(); entity; entity = entity->m_nodeLink.getNext()) {
 		if (qscene->sceneType == QueuedScene::ShadowGen && qscene->sourceLight->type == RenderLight::kGlobal) {
-			if (la->isCsmCulled()) {
+			if (entity->isCsmCulled()) {
 				g_statistic->incValue(stat_csmCulled);
 				continue;
 			} else {
@@ -401,7 +401,7 @@ void RenderWorld::markVisible_r(QueuedScene *qscene, QuadNode *node, Plane::Side
 			}
 		}
 
-		const BoundingBox &bbox = la->m_linkedBbox;
+		const BoundingBox &bbox = entity->m_linkedBbox;
 		// if node is cross frustum, we check entity's bbox
 		Plane::Side actorSide = side;
 		if (side == Plane::Cross && r_cullActor->getBool()) {
@@ -412,22 +412,22 @@ void RenderWorld::markVisible_r(QueuedScene *qscene, QuadNode *node, Plane::Side
 		}
 
 		if (qscene->sceneType == QueuedScene::WorldMain) {
-			la->update(qscene, actorSide);
+			entity->update(qscene, actorSide);
 
-			if (la->m_queryCulled)
+			if (entity->m_queryCulled)
 				continue;
 		}
 
 		if (m_updateShadowVis) {
-			la->updateCsm(qscene, actorSide);
+			entity->updateCsm(qscene, actorSide);
 		}
 
-		if (la->m_viewDistCulled)
+		if (entity->m_viewDistCulled)
 			continue;
 
 		// check if is light
-		if (la->getKind() == RenderEntity::kLight || s_drawActor) {
-			la->m_queued = qscene->addActor(la);
+		if (entity->getKind() == RenderEntity::kLight || s_drawActor) {
+			qscene->addEntity(entity);
 		}
 
 		if (!s_drawActor) {
@@ -441,7 +441,7 @@ void RenderWorld::markVisible_r(QueuedScene *qscene, QuadNode *node, Plane::Side
 			qscene->addInteraction(la->queued, prims[i]);
 		}
 #endif
-		la->issueToQueue(qscene);
+		entity->issueToQueue(qscene);
 	}
 
 	if (node->children[0]) {

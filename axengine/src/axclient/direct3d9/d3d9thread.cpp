@@ -319,7 +319,7 @@ AX_BEGIN_NAMESPACE
 		}
 
 		// check actor
-		const QueuedEntity *re = ia->qactor;
+		const QueuedEntity *re = ia->queuedEntity;
 		if (re != d3d9Actor || prim->isMatrixSet() || primMatrixSet) {
 			d3d9Actor = re;
 
@@ -429,7 +429,7 @@ AX_BEGIN_NAMESPACE
 						continue;
 					LinePrim *line = mesh->getNormalLine(normallen);
 					Interaction *ia = d3d9Queue->allocInteraction();
-					ia->qactor = scene->interactions[j]->qactor;
+					ia->queuedEntity = scene->interactions[j]->queuedEntity;
 					ia->primitive = line;
 //					ia->resource = d3d9PrimitiveManager->cachePrimitive(line);
 
@@ -452,7 +452,7 @@ AX_BEGIN_NAMESPACE
 					continue;
 				LinePrim *line = mesh->getTangentLine(tangentlen);
 				Interaction *ia = d3d9Queue->allocInteraction();
-				ia->qactor = scene->interactions[j]->qactor;
+				ia->queuedEntity = scene->interactions[j]->queuedEntity;
 				ia->primitive = line;
 //				ia->resource = d3d9PrimitiveManager->cachePrimitive(line);
 
