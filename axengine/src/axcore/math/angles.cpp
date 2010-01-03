@@ -11,111 +11,111 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-	void Angles::toVectors(Vector3 *forward, Vector3 *left, Vector3 *up) const
-	{
-		float angle;
-		float sr, sp, sy, cr, cp, cy;
-		// static to help MS compiler fp bugs
+void Angles::toVectors(Vector3 *forward, Vector3 *left, Vector3 *up) const
+{
+	float angle;
+	float sr, sp, sy, cr, cp, cy;
+	// static to help MS compiler fp bugs
 
-		angle = Math::d2r(yaw);
-		sy = sin(angle);
-		cy = cos(angle);
-		angle = Math::d2r(pitch);
-		sp = sin(angle);
-		cp = cos(angle);
-		angle = Math::d2r(roll);
-		sr = sin(angle);
-		cr = cos(angle);
+	angle = Math::d2r(yaw);
+	sy = sin(angle);
+	cy = cos(angle);
+	angle = Math::d2r(pitch);
+	sp = sin(angle);
+	cp = cos(angle);
+	angle = Math::d2r(roll);
+	sr = sin(angle);
+	cr = cos(angle);
 
-		forward->x = cp * cy;
-		forward->y = cp * sy;
-		forward->z = -sp;
+	forward->x = cp * cy;
+	forward->y = cp * sy;
+	forward->z = -sp;
 
-		if (left) {
-			left->x = sr * sp * cy + cr * -sy;
-			left->y = sr * sp * sy + cr * cy;
-			left->z = sr * cp;
-		}
-
-		if (up) {
-			up->x = (cr * sp * cy + -sr * -sy);
-			up->y = (cr * sp * sy + -sr * cy);
-			up->z = cr * cp;
-		}
+	if (left) {
+		left->x = sr * sp * cy + cr * -sy;
+		left->y = sr * sp * sy + cr * cy;
+		left->z = sr * cp;
 	}
 
-	Vector3 Angles::toForward(void) const
-	{
-		float sp, sy, cp, cy;
-
-		float angle = yaw * AX_D2R;
-		sy = sin(angle);
-		cy = cos(angle);
-		angle = pitch * AX_D2R;
-		sp = sin(angle);
-		cp = cos(angle);
-
-		return Vector3(cp * cy, cp * sy, -sp);
+	if (up) {
+		up->x = (cr * sp * cy + -sr * -sy);
+		up->y = (cr * sp * sy + -sr * cy);
+		up->z = cr * cp;
 	}
+}
 
-	Matrix3 Angles::toMatrix3(void) const
-	{
-		Matrix3 axis;
-		toVectors(&axis[0], &axis[1], &axis[2]);
-		return axis;
-	}
+Vector3 Angles::toForward(void) const
+{
+	float sp, sy, cp, cy;
 
-	Angles &Angles::normalize360(void)
-	{
-		for (int i = 0; i < 3; i++) {
-			if (((*this)[i] >= 360.0f) || ((*this)[i] < 0.0f)) {
-				(*this)[i] -= floor((*this)[i] / 360.0f) * 360.0f;
+	float angle = yaw * AX_D2R;
+	sy = sin(angle);
+	cy = cos(angle);
+	angle = pitch * AX_D2R;
+	sp = sin(angle);
+	cp = cos(angle);
 
-				if ((*this)[i] >= 360.0f) {
-					(*this)[i] -= 360.0f;
-				}
-				if ((*this)[i] < 0.0f) {
-					(*this)[i] += 360.0f;
-				}
+	return Vector3(cp * cy, cp * sy, -sp);
+}
+
+Matrix3 Angles::toMatrix3(void) const
+{
+	Matrix3 axis;
+	toVectors(&axis[0], &axis[1], &axis[2]);
+	return axis;
+}
+
+Angles &Angles::normalize360(void)
+{
+	for (int i = 0; i < 3; i++) {
+		if (((*this)[i] >= 360.0f) || ((*this)[i] < 0.0f)) {
+			(*this)[i] -= floor((*this)[i] / 360.0f) * 360.0f;
+
+			if ((*this)[i] >= 360.0f) {
+				(*this)[i] -= 360.0f;
+			}
+			if ((*this)[i] < 0.0f) {
+				(*this)[i] += 360.0f;
 			}
 		}
-
-		return *this;
 	}
 
-	Angles &Angles::normalize180(void)
-	{
-		normalize360();
+	return *this;
+}
 
-		if (pitch > 180.0f) {
-			pitch -= 360.0f;
-		}
+Angles &Angles::normalize180(void)
+{
+	normalize360();
 
-		if (yaw > 180.0f) {
-			yaw -= 360.0f;
-		}
-
-		if (roll > 180.0f) {
-			roll -= 360.0f;
-		}
-		return *this;
+	if (pitch > 180.0f) {
+		pitch -= 360.0f;
 	}
 
-	Angles &Angles::fromShort(short rhs[3])
-	{
-		for (int i = 0; i < 3; i++) {
-			(*this)[i] = rhs[i] * 360.0f / 65536.0f;
-		}
-
-		return *this;
+	if (yaw > 180.0f) {
+		yaw -= 360.0f;
 	}
 
-	Angles Angles::trShort(short rhs[3])
-	{
-		Angles result;
-		result.fromShort(rhs);
-		return result;
+	if (roll > 180.0f) {
+		roll -= 360.0f;
 	}
+	return *this;
+}
+
+Angles &Angles::fromShort(short rhs[3])
+{
+	for (int i = 0; i < 3; i++) {
+		(*this)[i] = rhs[i] * 360.0f / 65536.0f;
+	}
+
+	return *this;
+}
+
+Angles Angles::trShort(short rhs[3])
+{
+	Angles result;
+	result.fromShort(rhs);
+	return result;
+}
 
 
 AX_END_NAMESPACE

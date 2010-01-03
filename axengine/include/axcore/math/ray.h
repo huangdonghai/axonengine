@@ -14,15 +14,15 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-	struct AX_API Ray {
-	public:
-		Ray();
-		Ray(const Vector3 &start, const Vector3 &dir);
+struct AX_API Ray {
+public:
+	Ray();
+	Ray(const Vector3 &start, const Vector3 &dir);
 
-	private:
-		Vector3 m_start;
-		Vector3 m_dir;
-	};
+private:
+	Vector3 m_start;
+	Vector3 m_dir;
+};
 AX_END_NAMESPACE
 
 #endif // end guardian

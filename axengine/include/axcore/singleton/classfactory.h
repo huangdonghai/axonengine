@@ -34,49 +34,49 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-	struct ClassEntry {
-		const char *className;
-		void* (*factory)();
-	};
+struct ClassEntry {
+	const char *className;
+	void* (*factory)();
+};
 
-	typedef const ClassEntry* (*funcGetClassEntries)();
+typedef const ClassEntry* (*funcGetClassEntries)();
 
-	class Module {
-	public:
-		Module(const String &name);
-		Module(const String &name, funcGetClassEntries);
-		~Module();
+class Module {
+public:
+	Module(const String &name);
+	Module(const String &name, funcGetClassEntries);
+	~Module();
 
-		const ClassEntry *findClassEntry(const String &name) const;
-		const ClassEntry *getClassEntries() const;
+	const ClassEntry *findClassEntry(const String &name) const;
+	const ClassEntry *getClassEntries() const;
 
-	private:
-		String m_name;
-		handle_t m_handle;
-		const ClassEntry *m_classEntries;
-	};
+private:
+	String m_name;
+	handle_t m_handle;
+	const ClassEntry *m_classEntries;
+};
 
-	typedef Dict<String, Module*>	ModuleDict;
+typedef Dict<String, Module*>	ModuleDict;
 
 
-	class AX_API ClassFactory {
-	public:
-		ClassFactory();
-		virtual ~ClassFactory();
+class AX_API ClassFactory {
+public:
+	ClassFactory();
+	virtual ~ClassFactory();
 
-		void initialize();
-		void finalize();
-		void *createInstance(const String &class_name);
-		void *createInstanceByAlias(const String &class_alias);
-		void registerStaticModule(const String &module, funcGetClassEntries);
+	void initialize();
+	void finalize();
+	void *createInstance(const String &class_name);
+	void *createInstanceByAlias(const String &class_alias);
+	void registerStaticModule(const String &module, funcGetClassEntries);
 
-	protected:
-		// find a module have loaded, if not load yet, load it
-		Module *findModule(const String &module_name);
+protected:
+	// find a module have loaded, if not load yet, load it
+	Module *findModule(const String &module_name);
 
-	private:
-		ModuleDict m_moduleDict;
-	};
+private:
+	ModuleDict m_moduleDict;
+};
 
 AX_END_NAMESPACE
 

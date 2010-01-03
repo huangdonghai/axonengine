@@ -12,16 +12,16 @@ read the license and understand and accept it fully.
 AX_BEGIN_NAMESPACE
 
 
-	Axon::String Point::toString() const {
-		String result;
-		StringUtil::sprintf(result, "%d %d", x, y);
-		return result;
-	}
+Axon::String Point::toString() const {
+	String result;
+	StringUtil::sprintf(result, "%d %d", x, y);
+	return result;
+}
 
-	bool Point::fromString(const char *str) {
-		int v = sscanf(str, "%d %d", &x, &y);
-		AX_ASSERT(v == 2);
-		return v == 2;
-	}
+bool Point::fromString(const char *str) {
+	int v = sscanf(str, "%d %d", &x, &y);
+	AX_ASSERT(v == 2);
+	return v == 2;
+}
 
 AX_END_NAMESPACE

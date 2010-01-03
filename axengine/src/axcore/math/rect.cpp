@@ -11,16 +11,16 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-	Axon::String Rect::toString() const {
-		String result;
-		StringUtil::sprintf(result, "%d %d %d %d", x, y, width, height);
-		return result;
-	}
+Axon::String Rect::toString() const {
+	String result;
+	StringUtil::sprintf(result, "%d %d %d %d", x, y, width, height);
+	return result;
+}
 
-	bool Rect::fromString(const char *str) {
-		int v = sscanf(str, "%d %d %d %d", &x, &y, &width, &height);
-		AX_ASSERT(v == 4);
-		return v == 4;
-	}
+bool Rect::fromString(const char *str) {
+	int v = sscanf(str, "%d %d %d %d", &x, &y, &width, &height);
+	AX_ASSERT(v == 4);
+	return v == 4;
+}
 
 AX_END_NAMESPACE

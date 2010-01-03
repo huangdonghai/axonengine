@@ -54,271 +54,271 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-	// forward declaration
-	struct Vector2;
-	struct Vector3;
-	struct Vector4;
-	struct Plane;
-	struct Matrix2;
-	struct Matrix3;
-	struct Matrix4;
-	struct Point;
-	struct Rect;
-	struct Quaternion;
-	struct Angles;
-	struct BoundingBox;
-	struct AffineMat;
-	struct Rgb;
-	struct Rgba;
-	struct Bgr;
-	struct Bgra;
+// forward declaration
+struct Vector2;
+struct Vector3;
+struct Vector4;
+struct Plane;
+struct Matrix2;
+struct Matrix3;
+struct Matrix4;
+struct Point;
+struct Rect;
+struct Quaternion;
+struct Angles;
+struct BoundingBox;
+struct AffineMat;
+struct Rgb;
+struct Rgba;
+struct Bgr;
+struct Bgra;
 
 
 
-	struct AX_API Math {
-		enum Constant {
-			IEEE_FLT_MANTISSA_BITS = 23,
-			IEEE_FLT_EXPONENT_BITS = 8,
-			IEEE_FLT_EXPONENT_BIAS = 127,
-			IEEE_FLT_SIGN_BIT = 31
-		};
-
-		static void initialize();
-
-		static float rsqrt(float x);
-		static void sincos(float a, float &s, float &c);		// sine and cosine with 32 bits precision
-		static void sincos16(float a, float &s, float &c);	// sine and cosine with 16 bits precision
-		static void sincos64(float a, double &s, double &c);	// sine and cosine with 64 bits precision
-
-		static float normalizeDegree(float degree);
-		static float d2r(float in);
-		static float r2d(float in);
-		static int nextPowerOfTwo(int x);
-		static int previousPowerOfTwo(const int v);
-		static int nearestPowerOfTwo(const int v);
-		static bool isPowerOfTwo(int n);
-		static int countMipmaps(int w, int h, int d);
-
-		// map a value to range [0, width)
-		static int mapToRange(int v, int l, int h);
-		static int mapToBound(int n, int width);
-
-		// 获取checkPoint到线段p1, p2的最短距离  timlly add
-		static float getNearstDistanceSegment(const Vector3 &p1, const Vector3 &p2, const Vector3 &checkPoint);
-		// 获取checkPoint到直线p1, p2的最短距离  timlly add
-		static float getNearstDistanceLine(const Vector3 &p1, const Vector3 &p2, const Vector3 &checkPoint);
-
-		// clamp
-		static int clampSbyte(int n);
-		static int clampByte(int n);
-		static int clampUshort(int n);
-		static float saturate(float f);
-
-		static int floatToBits(float f, int exponentBits, int mantissaBits);
-		static float bitsToFloat(int i, int exponentBits, int mantissaBits);
-
-		static int angleToByte(float angle) { return (int)(angle * 256.0f / 360.0f ) & 255; }
-		static float byteToAngle(int x) { return (x) * ( 360.0f / 256.0f );}
-
-		static int angleToShort(float angle) { return (int)(angle * 65536.0f / 360.0f ) & 65535; }
-		static float shortToAngle(int x) { return (x) * ( 360.0f / 65536.0f );}
-
-		template<typename T>
-		static T abs(T x);
-
-		template<typename T>
-		static T clamp(T v, T l, T h);
-
-		template<typename T>
-		static T sign(T x);
+struct AX_API Math {
+	enum Constant {
+		IEEE_FLT_MANTISSA_BITS = 23,
+		IEEE_FLT_EXPONENT_BITS = 8,
+		IEEE_FLT_EXPONENT_BIAS = 127,
+		IEEE_FLT_SIGN_BIT = 31
 	};
 
-	// 1 / sqrt(x)
-	inline float Math::rsqrt(float x) {
-		long i;
-		float y, r;
+	static void initialize();
 
-		y = x * 0.5f;
-		i = *reinterpret_cast<long *>(&x);
-		i = 0x5f3759df - (i >> 1);
-		r = *reinterpret_cast<float *>(&i);
-		r = r * (1.5f - r * r * y);
-		return r;
-	}
+	static float rsqrt(float x);
+	static void sincos(float a, float &s, float &c);		// sine and cosine with 32 bits precision
+	static void sincos16(float a, float &s, float &c);	// sine and cosine with 16 bits precision
+	static void sincos64(float a, double &s, double &c);	// sine and cosine with 64 bits precision
 
-	inline void Math::sincos(float a, float &s, float &c) {
-#ifdef _WIN32
-		_asm {
-			fld a
-			fsincos
-			mov ecx, c
-			mov edx, s
-			fstp dword ptr [ecx]
-			fstp dword ptr [edx]
-		}
-#else
-		s = sinf(a);
-		c = cosf(a);
-#endif
-	}
-
-	inline void Math::sincos16(float a, float &s, float &c) {
-		float t, d;
-
-		const float pi2 = AX_PI * 2.0f;
-		if ((a < 0.0f) || (a >= pi2)) {
-			a -= floorf(a / pi2) * pi2;
-		}
-
-		if (a < AX_PI) {
-			if (a > AX_PI_2) {
-				a = AX_PI - a;
-				d = -1.0f;
-			} else {
-				d = 1.0f;
-			}
-		} else {
-			if (a > AX_PI + AX_PI_2) {
-				a = a - pi2;
-				d = 1.0f;
-			} else {
-				a = AX_PI - a;
-				d = -1.0f;
-			}
-		}
-
-		t = a * a;
-		s = a * (((((-2.39e-08f * t + 2.7526e-06f) * t - 1.98409e-04f) * t + 8.3333315e-03f) * t - 1.666666664e-01f) * t + 1.0f);
-		c = d * (((((-2.605e-07f * t + 2.47609e-05f) * t - 1.3888397e-03f) * t + 4.16666418e-02f) * t - 4.999999963e-01f) * t + 1.0f);
-	}
-
-	inline void Math::sincos64(float a, double &s, double &c) {
-#ifdef _WIN32
-		_asm {
-			fld a
-			fsincos
-			mov ecx, c
-			mov edx, s
-			fstp qword ptr [ecx]
-			fstp qword ptr [edx]
-		}
-#else
-		s = sin(a);
-		c = cos(a);
-#endif
-	}
-
-	inline int Math::mapToRange(int v, int l, int h) {
-		v = v - l;
-		int len = h - l;
-
-		int mod =  v % len;
-		if (mod >= 0)
-			return mod;
-		return len + mod;
-	}
-
-	inline float Math::d2r(float in) {
-		return in * AX_D2R;
-	}
-
-	inline float Math::r2d(float in) {
-		return in * AX_R2D;
-	}
-
-	/** Return the next power of two. 
-	* @see http://graphics.stanford.edu/~seander/bithacks.html
-	* @warning Behaviour for 0 is undefined.
-	* @note isPowerOfTwo(x) == true -> nextPowerOfTwo(x) == x
-	* @note nextPowerOfTwo(x) = 2 << log2(x-1)
-	*/
-	inline int Math::nextPowerOfTwo(int x) {
-		if(!x) return 1;
-		// On modern CPUs this is as fast as using the bsr instruction.
-		x--;
-		x |= x >> 1;
-		x |= x >> 2;
-		x |= x >> 4;
-		x |= x >> 8;
-		x |= x >> 16;
-		return x+1;	
-	}
-
-	/// Return true if @a n is a power of two.
-	inline bool Math::isPowerOfTwo(int n) {
-		return (n & (n-1)) == 0;
-	}
-
-	inline int Math::countMipmaps(int w, int h, int d) {
-		int mipmap = 0;
-
-		while (w != 1 || h != 1 || d != 1) {
-			w = std::max(1, w / 2);
-			h = std::max(1, h / 2);
-			d = std::max(1, d / 2);
-			mipmap++;
-		}
-
-		return mipmap + 1;
-	}
-
-	// 1 -> 1, 2 -> 2, 3 -> 2, 4 -> 4, 5 -> 4, ...
-	inline int Math::previousPowerOfTwo(const int v) {
-		return nextPowerOfTwo(v + 1) / 2;
-	}
-
-	inline int Math::nearestPowerOfTwo(const int v) {
-		const int np2 = nextPowerOfTwo(v);
-		const int pp2 = previousPowerOfTwo(v);
-
-		if (np2 - v <= v - pp2) {
-			return np2;
-		} else {
-			return pp2;
-		}
-	}
+	static float normalizeDegree(float degree);
+	static float d2r(float in);
+	static float r2d(float in);
+	static int nextPowerOfTwo(int x);
+	static int previousPowerOfTwo(const int v);
+	static int nearestPowerOfTwo(const int v);
+	static bool isPowerOfTwo(int n);
+	static int countMipmaps(int w, int h, int d);
 
 	// map a value to range [0, width)
-	inline int Math::mapToBound(int n, int width) {
-		n = n % width;
-		if (n < 0)
-			n += width;
+	static int mapToRange(int v, int l, int h);
+	static int mapToBound(int n, int width);
 
-		return n;
-	}
+	// 获取checkPoint到线段p1, p2的最短距离  timlly add
+	static float getNearstDistanceSegment(const Vector3 &p1, const Vector3 &p2, const Vector3 &checkPoint);
+	// 获取checkPoint到直线p1, p2的最短距离  timlly add
+	static float getNearstDistanceLine(const Vector3 &p1, const Vector3 &p2, const Vector3 &checkPoint);
 
-	inline int Math::clampByte(int n) {
-		return clamp<int>(n, 0, 255);
-	}
+	// clamp
+	static int clampSbyte(int n);
+	static int clampByte(int n);
+	static int clampUshort(int n);
+	static float saturate(float f);
 
-	inline int Math::clampSbyte(int n) {
-		return clamp<int>(n, -128, 127);
-	}
+	static int floatToBits(float f, int exponentBits, int mantissaBits);
+	static float bitsToFloat(int i, int exponentBits, int mantissaBits);
 
-	inline int Math::clampUshort(int n) {
-		return clamp<int>(n, 0, 0xffff);
-	}
+	static int angleToByte(float angle) { return (int)(angle * 256.0f / 360.0f ) & 255; }
+	static float byteToAngle(int x) { return (x) * ( 360.0f / 256.0f );}
 
-	inline float Math::saturate(float f) {
-		return clamp(f, 0.0f, 1.0f);
-	}
-
-	template<typename T>
-	T Math::abs(T x) {
-		return x > 0 ? x : -x;
-	}
+	static int angleToShort(float angle) { return (int)(angle * 65536.0f / 360.0f ) & 65535; }
+	static float shortToAngle(int x) { return (x) * ( 360.0f / 65536.0f );}
 
 	template<typename T>
-	T Math::clamp(T v, T l, T h) {
-		return ((v) < (l) ? (l) : (v) > (h) ? (h) : (v));
-	}
+	static T abs(T x);
 
 	template<typename T>
-	T Math::sign(T x) {
-		if (x > 0) return 1;
-		if (x < 0) return -1;
-		return 0;
+	static T clamp(T v, T l, T h);
+
+	template<typename T>
+	static T sign(T x);
+};
+
+// 1 / sqrt(x)
+inline float Math::rsqrt(float x) {
+	long i;
+	float y, r;
+
+	y = x * 0.5f;
+	i = *reinterpret_cast<long *>(&x);
+	i = 0x5f3759df - (i >> 1);
+	r = *reinterpret_cast<float *>(&i);
+	r = r * (1.5f - r * r * y);
+	return r;
+}
+
+inline void Math::sincos(float a, float &s, float &c) {
+#ifdef _WIN32
+	_asm {
+		fld a
+		fsincos
+		mov ecx, c
+		mov edx, s
+		fstp dword ptr [ecx]
+		fstp dword ptr [edx]
 	}
+#else
+	s = sinf(a);
+	c = cosf(a);
+#endif
+}
+
+inline void Math::sincos16(float a, float &s, float &c) {
+	float t, d;
+
+	const float pi2 = AX_PI * 2.0f;
+	if ((a < 0.0f) || (a >= pi2)) {
+		a -= floorf(a / pi2) * pi2;
+	}
+
+	if (a < AX_PI) {
+		if (a > AX_PI_2) {
+			a = AX_PI - a;
+			d = -1.0f;
+		} else {
+			d = 1.0f;
+		}
+	} else {
+		if (a > AX_PI + AX_PI_2) {
+			a = a - pi2;
+			d = 1.0f;
+		} else {
+			a = AX_PI - a;
+			d = -1.0f;
+		}
+	}
+
+	t = a * a;
+	s = a * (((((-2.39e-08f * t + 2.7526e-06f) * t - 1.98409e-04f) * t + 8.3333315e-03f) * t - 1.666666664e-01f) * t + 1.0f);
+	c = d * (((((-2.605e-07f * t + 2.47609e-05f) * t - 1.3888397e-03f) * t + 4.16666418e-02f) * t - 4.999999963e-01f) * t + 1.0f);
+}
+
+inline void Math::sincos64(float a, double &s, double &c) {
+#ifdef _WIN32
+	_asm {
+		fld a
+		fsincos
+		mov ecx, c
+		mov edx, s
+		fstp qword ptr [ecx]
+		fstp qword ptr [edx]
+	}
+#else
+	s = sin(a);
+	c = cos(a);
+#endif
+}
+
+inline int Math::mapToRange(int v, int l, int h) {
+	v = v - l;
+	int len = h - l;
+
+	int mod =  v % len;
+	if (mod >= 0)
+		return mod;
+	return len + mod;
+}
+
+inline float Math::d2r(float in) {
+	return in * AX_D2R;
+}
+
+inline float Math::r2d(float in) {
+	return in * AX_R2D;
+}
+
+/** Return the next power of two. 
+* @see http://graphics.stanford.edu/~seander/bithacks.html
+* @warning Behaviour for 0 is undefined.
+* @note isPowerOfTwo(x) == true -> nextPowerOfTwo(x) == x
+* @note nextPowerOfTwo(x) = 2 << log2(x-1)
+*/
+inline int Math::nextPowerOfTwo(int x) {
+	if(!x) return 1;
+	// On modern CPUs this is as fast as using the bsr instruction.
+	x--;
+	x |= x >> 1;
+	x |= x >> 2;
+	x |= x >> 4;
+	x |= x >> 8;
+	x |= x >> 16;
+	return x+1;	
+}
+
+/// Return true if @a n is a power of two.
+inline bool Math::isPowerOfTwo(int n) {
+	return (n & (n-1)) == 0;
+}
+
+inline int Math::countMipmaps(int w, int h, int d) {
+	int mipmap = 0;
+
+	while (w != 1 || h != 1 || d != 1) {
+		w = std::max(1, w / 2);
+		h = std::max(1, h / 2);
+		d = std::max(1, d / 2);
+		mipmap++;
+	}
+
+	return mipmap + 1;
+}
+
+// 1 -> 1, 2 -> 2, 3 -> 2, 4 -> 4, 5 -> 4, ...
+inline int Math::previousPowerOfTwo(const int v) {
+	return nextPowerOfTwo(v + 1) / 2;
+}
+
+inline int Math::nearestPowerOfTwo(const int v) {
+	const int np2 = nextPowerOfTwo(v);
+	const int pp2 = previousPowerOfTwo(v);
+
+	if (np2 - v <= v - pp2) {
+		return np2;
+	} else {
+		return pp2;
+	}
+}
+
+// map a value to range [0, width)
+inline int Math::mapToBound(int n, int width) {
+	n = n % width;
+	if (n < 0)
+		n += width;
+
+	return n;
+}
+
+inline int Math::clampByte(int n) {
+	return clamp<int>(n, 0, 255);
+}
+
+inline int Math::clampSbyte(int n) {
+	return clamp<int>(n, -128, 127);
+}
+
+inline int Math::clampUshort(int n) {
+	return clamp<int>(n, 0, 0xffff);
+}
+
+inline float Math::saturate(float f) {
+	return clamp(f, 0.0f, 1.0f);
+}
+
+template<typename T>
+T Math::abs(T x) {
+	return x > 0 ? x : -x;
+}
+
+template<typename T>
+T Math::clamp(T v, T l, T h) {
+	return ((v) < (l) ? (l) : (v) > (h) ? (h) : (v));
+}
+
+template<typename T>
+T Math::sign(T x) {
+	if (x > 0) return 1;
+	if (x < 0) return -1;
+	return 0;
+}
 
 AX_END_NAMESPACE
 

@@ -12,7 +12,6 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-
 static void setMaterialUniforms(Material *mat) {
 	if (!mat) {
 		AX_SU(g_matDiffuse, Vector3(1,1,1));

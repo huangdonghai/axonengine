@@ -11,266 +11,266 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-	System::System()
-		: m_initialized(0)
-		, m_logBufPos(0)
-		, m_lastId(0)
-	{
-		m_linePos = 0;
-		m_canExit = false;
-	}
+System::System()
+	: m_initialized(0)
+	, m_logBufPos(0)
+	, m_lastId(0)
+{
+	m_linePos = 0;
+	m_canExit = false;
+}
 
-	System::~System() {
-	}
+System::~System() {
+}
 
 
-	void System::initialize() {
-		if (m_initialized)
-			return;
+void System::initialize() {
+	if (m_initialized)
+		return;
 
-		memset(m_logBuf, 0, sizeof(m_logBuf));
+	memset(m_logBuf, 0, sizeof(m_logBuf));
 
-		Printf(S_COLOR_RED "Axon Engine Version ");
-		Printf(AX_VERSION "\n");
+	Printf(S_COLOR_RED "Axon Engine Version ");
+	Printf(AX_VERSION "\n");
 
-		Printf(_("Initializing System...\n"));
+	Printf(_("Initializing System...\n"));
 
-		// setup cpuinfo
-		DetectCpuInfo(m_cpuInfo);
-		printCpuInfo();
+	// setup cpuinfo
+	DetectCpuInfo(m_cpuInfo);
+	printCpuInfo();
 
-		// init engine time and random seed
-		OsUtil::milliseconds();
+	// init engine time and random seed
+	OsUtil::milliseconds();
 
-		::setlocale(LC_ALL, ".ACP");
-		Printf(_("..set locale to system default\n"));
+	::setlocale(LC_ALL, ".ACP");
+	Printf(_("..set locale to system default\n"));
 
 
 #if 0
-		TypeZeroArray(m_events);
-		m_eventReadPos = 0;
-		m_eventWritePos = 0;
+	TypeZeroArray(m_events);
+	m_eventReadPos = 0;
+	m_eventWritePos = 0;
 #endif
 
-		m_initialized = true;
+	m_initialized = true;
 
-		Printf(_("Initialized BaseSystem\n"));
+	Printf(_("Initialized BaseSystem\n"));
+}
+
+void System::finalize() {
+	Printf(_("Finalizing BaseSystem...\n"));
+	Printf(_("Finalized BaseSystem\n"));
+}
+
+// register output system, core system can output info to multi target at
+// the same time
+void System::registerLog(ILogHandler *log) {
+	size_t i;
+
+	for (i=0; i<m_logSeq.size(); i++) {
+		if (m_logSeq[i] == log)
+			break;
 	}
 
-	void System::finalize() {
-		Printf(_("Finalizing BaseSystem...\n"));
-		Printf(_("Finalized BaseSystem\n"));
+	if (i != m_logSeq.size()) {
+		return;
 	}
 
-	// register output system, core system can output info to multi target at
-	// the same time
-	void System::registerLog(ILogHandler *log) {
-		size_t i;
+	m_logSeq.push_back(log);
 
-		for (i=0; i<m_logSeq.size(); i++) {
-			if (m_logSeq[i] == log)
-				break;
-		}
+	// print logbuf to new logsystem
+	if (m_logBufPos < LOGBUFSIZE) {		// direct print if not rewind
+		log->print(m_logBuf);
+	} else {							// rewinded logbuf
+		uint_t pos = m_logBufPos & LOGBUFSIZEMASK;
 
-		if (i != m_logSeq.size()) {
-			return;
-		}
+		// print first segment
+		log->print(m_logBuf+pos);
 
-		m_logSeq.push_back(log);
+		// backup cursor char
+		char c = m_logBuf[pos];
+		m_logBuf[pos] = 0;
 
-		// print logbuf to new logsystem
-		if (m_logBufPos < LOGBUFSIZE) {		// direct print if not rewind
-			log->print(m_logBuf);
-		} else {							// rewinded logbuf
-			uint_t pos = m_logBufPos & LOGBUFSIZEMASK;
+		// print rewinded segment
+		log->print(m_logBuf);
 
-			// print first segment
-			log->print(m_logBuf+pos);
+		// restore backuped char
+		m_logBuf[pos] = c;
+	}
+}
 
-			// backup cursor char
-			char c = m_logBuf[pos];
-			m_logBuf[pos] = 0;
+void System::removeLog(ILogHandler *log) {
+	Sequence<ILogHandler*>::iterator it;
+//	mLogCol::iterator it;
 
-			// print rewinded segment
-			log->print(m_logBuf);
+	it = m_logSeq.begin();
 
-			// restore backuped char
-			m_logBuf[pos] = c;
-		}
+	for (; it != m_logSeq.end(); ++it) {
+		if (*it == log)
+			break;
 	}
 
-	void System::removeLog(ILogHandler *log) {
-		Sequence<ILogHandler*>::iterator it;
+	if (it == m_logSeq.end())
+		return;
+
+	m_logSeq.erase(it);
+}
+
+void System::print(const char *text) {
+	// save to log buffer
+	const char *p = text;
+
+	for (; *p; p++) {
+		m_line[m_linePos] = *p;
+		m_linePos++;
+
+		if (*p == '\n') {
+			m_line[m_linePos] = 0;
+			m_linePos = 0;
+			printLine();
+		}
+
+		if (m_linePos == LINE_SIZE) {
+			m_line[LINE_SIZE-2] = '\n';
+			m_line[LINE_SIZE-1] = 0;
+			m_linePos = 0;
+			printLine();
+		}
+	}
+}
+
+void System::printLine()
+{
+	const char *p = m_line;
+	for (; *p; p++) {
+		m_logBuf[m_logBufPos&LOGBUFSIZEMASK] = *p;
+		m_logBufPos++;
+	}
+
+	Sequence<ILogHandler*>::iterator it=m_logSeq.begin();
+	for (; it!=m_logSeq.end(); ++it) {
+		(*it)->print(m_line);
+	}
+}
+
+int System::generateId() {
+	return ++m_lastId;
+}
+
+void System::registerProgress(IProgressHandler *progress) {
+	size_t i;
+
+	for (i=0; i<m_progressSeq.size(); i++) {
+		if (m_progressSeq[i] == progress)
+			break;
+	}
+
+	if (i != m_progressSeq.size()) {
+		return;
+	}
+
+	m_progressSeq.push_back(progress);
+}
+
+void System::removeProgress(IProgressHandler *progress) {
+	Sequence<IProgressHandler*>::iterator it;
 	//	mLogCol::iterator it;
 
-		it = m_logSeq.begin();
+	it = m_progressSeq.begin();
 
-		for (; it != m_logSeq.end(); ++it) {
-			if (*it == log)
-				break;
-		}
-
-		if (it == m_logSeq.end())
-			return;
-
-		m_logSeq.erase(it);
+	for (; it != m_progressSeq.end(); ++it) {
+		if (*it == progress)
+			break;
 	}
 
-	void System::print(const char *text) {
-		// save to log buffer
-		const char *p = text;
+	if (it == m_progressSeq.end())
+		return;
 
-		for (; *p; p++) {
-			m_line[m_linePos] = *p;
-			m_linePos++;
+	m_progressSeq.erase(it);
+}
 
-			if (*p == '\n') {
-				m_line[m_linePos] = 0;
-				m_linePos = 0;
-				printLine();
-			}
+// implement IProgressHandler
+void System::beginProgress(const String &title) {
+	sys_noSleep->set(true);
 
-			if (m_linePos == LINE_SIZE) {
-				m_line[LINE_SIZE-2] = '\n';
-				m_line[LINE_SIZE-1] = 0;
-				m_linePos = 0;
-				printLine();
-			}
-		}
+	Sequence<IProgressHandler*>::iterator it;
+	for (it=m_progressSeq.begin(); it!=m_progressSeq.end(); ++it) {
+		(*it)->beginProgress(title);
+	}
+}
+
+// return false if want go on, otherwise return true
+bool System::showProgress(uint_t percent, const String &msg) {
+	Sequence<IProgressHandler*>::iterator it;
+	bool ret;
+
+	for (it=m_progressSeq.begin(); it!=m_progressSeq.end(); ++it) {
+		ret |= (*it)->showProgress(percent, msg);
 	}
 
-	void System::printLine()
-	{
-		const char *p = m_line;
-		for (; *p; p++) {
-			m_logBuf[m_logBufPos&LOGBUFSIZEMASK] = *p;
-			m_logBufPos++;
-		}
+	return ret;
+}
 
-		Sequence<ILogHandler*>::iterator it=m_logSeq.begin();
-		for (; it!=m_logSeq.end(); ++it) {
-			(*it)->print(m_line);
-		}
+void System::endProgress() {
+	Sequence<IProgressHandler*>::iterator it;
+	for (it=m_progressSeq.begin(); it!=m_progressSeq.end(); ++it) {
+		(*it)->endProgress();
 	}
 
-	int System::generateId() {
-		return ++m_lastId;
+	sys_noSleep->set(false);
+}
+
+void System::printCpuInfo() {
+	Printf(_("..found %s\n"), m_cpuInfo.cpu_type.c_str());
+	Printf(_("..found %d logical cores\n"), m_cpuInfo.numLogicCores);
+
+	String features = "..features:";
+
+	if (m_cpuInfo.features & PF_MMX)
+		features += " MMX";
+	if (m_cpuInfo.features & PF_3DNOW)
+		features += " 3DNOW";
+	if (m_cpuInfo.features & PF_SSE)
+		features += " SSE";
+	if (m_cpuInfo.features & PF_SSE2)
+		features += " SSE2";
+	if (m_cpuInfo.features & PF_SSE3)
+		features += " SSE3";
+	if (m_cpuInfo.features & PF_ALTIVEC)
+		features += " ALTIVEC";
+	if (m_cpuInfo.features & PF_HTT)
+		features += " HTT";
+
+	Printf("%s\n", features.c_str());
+}
+
+void System::registerTickable(TickPriority priority, ITickable *tickable) {
+	m_tickableLists[priority].push_back(tickable);
+}
+
+void System::removeTickable(TickPriority priority, ITickable *tickable) {
+	m_tickableLists[priority].remove(tickable);
+}
+
+int System::run() {
+	while (!m_canExit) {
+		forceTick(0);
 	}
 
-	void System::registerProgress(IProgressHandler *progress) {
-		size_t i;
+	return 0;
+}
 
-		for (i=0; i<m_progressSeq.size(); i++) {
-			if (m_progressSeq[i] == progress)
-				break;
-		}
-
-		if (i != m_progressSeq.size()) {
-			return;
-		}
-
-		m_progressSeq.push_back(progress);
-	}
-
-	void System::removeProgress(IProgressHandler *progress) {
-		Sequence<IProgressHandler*>::iterator it;
-		//	mLogCol::iterator it;
-
-		it = m_progressSeq.begin();
-
-		for (; it != m_progressSeq.end(); ++it) {
-			if (*it == progress)
-				break;
-		}
-
-		if (it == m_progressSeq.end())
-			return;
-
-		m_progressSeq.erase(it);
-	}
-
-	// implement IProgressHandler
-	void System::beginProgress(const String &title) {
-		sys_noSleep->set(true);
-
-		Sequence<IProgressHandler*>::iterator it;
-		for (it=m_progressSeq.begin(); it!=m_progressSeq.end(); ++it) {
-			(*it)->beginProgress(title);
+void System::forceTick(int mssleep)
+{
+	for (int i = 0; i < TickNumber; i++) {
+		AX_FOREACH(ITickable *tickable, m_tickableLists[i]) {
+			tickable->tick();
 		}
 	}
 
-	// return false if want go on, otherwise return true
-	bool System::showProgress(uint_t percent, const String &msg) {
-		Sequence<IProgressHandler*>::iterator it;
-		bool ret;
-
-		for (it=m_progressSeq.begin(); it!=m_progressSeq.end(); ++it) {
-			ret |= (*it)->showProgress(percent, msg);
-		}
-
-		return ret;
-	}
-
-	void System::endProgress() {
-		Sequence<IProgressHandler*>::iterator it;
-		for (it=m_progressSeq.begin(); it!=m_progressSeq.end(); ++it) {
-			(*it)->endProgress();
-		}
-
-		sys_noSleep->set(false);
-	}
-
-	void System::printCpuInfo() {
-		Printf(_("..found %s\n"), m_cpuInfo.cpu_type.c_str());
-		Printf(_("..found %d logical cores\n"), m_cpuInfo.numLogicCores);
-
-		String features = "..features:";
-
-		if (m_cpuInfo.features & PF_MMX)
-			features += " MMX";
-		if (m_cpuInfo.features & PF_3DNOW)
-			features += " 3DNOW";
-		if (m_cpuInfo.features & PF_SSE)
-			features += " SSE";
-		if (m_cpuInfo.features & PF_SSE2)
-			features += " SSE2";
-		if (m_cpuInfo.features & PF_SSE3)
-			features += " SSE3";
-		if (m_cpuInfo.features & PF_ALTIVEC)
-			features += " ALTIVEC";
-		if (m_cpuInfo.features & PF_HTT)
-			features += " HTT";
-
-		Printf("%s\n", features.c_str());
-	}
-
-	void System::registerTickable(TickPriority priority, ITickable *tickable) {
-		m_tickableLists[priority].push_back(tickable);
-	}
-
-	void System::removeTickable(TickPriority priority, ITickable *tickable) {
-		m_tickableLists[priority].remove(tickable);
-	}
-
-	int System::run() {
-		while (!m_canExit) {
-			forceTick(0);
-		}
-
-		return 0;
-	}
-
-	void System::forceTick(int mssleep)
-	{
-		for (int i = 0; i < TickNumber; i++) {
-			AX_FOREACH(ITickable *tickable, m_tickableLists[i]) {
-				tickable->tick();
-			}
-		}
-
-		if (mssleep && !sys_noSleep->getBool())
-			OsUtil::sleep(mssleep);
-	}
+	if (mssleep && !sys_noSleep->getBool())
+		OsUtil::sleep(mssleep);
+}
 
 AX_END_NAMESPACE
 

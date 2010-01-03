@@ -176,7 +176,7 @@ public:
 	QueuedScene *allocQueuedScene();
 	void addScene(QueuedScene *scene);
 	Interaction *allocInteraction();
-	Interaction** allocInteractionPointer(int num);
+	Interaction **allocInteractionPointer(int num);
 	QueuedLight *allocQueuedLight();
 	QueuedEntity *allocQueuedActor(int num = 1);
 	int *allocPrimitives(int num);

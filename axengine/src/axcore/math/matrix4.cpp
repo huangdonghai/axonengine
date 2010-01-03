@@ -11,19 +11,19 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-	const Matrix4 Matrix4::Identity(
-		1,0,0,0,
-		0,1,0,0,
-		0,0,1,0,
-		0,0,0,1);
+const Matrix4 Matrix4::Identity(
+	1,0,0,0,
+	0,1,0,0,
+	0,0,1,0,
+	0,0,0,1);
 
-	AffineMat Matrix4::getAffineMat() const {
-		AffineMat result;
+AffineMat Matrix4::getAffineMat() const {
+	AffineMat result;
 
-		extract3x3Matrix(result.axis);
-		result.origin = m[3].xyz();
+	extract3x3Matrix(result.axis);
+	result.origin = m[3].xyz();
 
-		return result;
-	}
+	return result;
+}
 
 AX_END_NAMESPACE

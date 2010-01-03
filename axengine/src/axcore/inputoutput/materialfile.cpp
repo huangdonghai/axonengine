@@ -10,229 +10,230 @@ read the license and understand and accept it fully.
 
 #include "../private.h"
 
-namespace {
-	using namespace Axon;
-
-	int getMapType(const char *name) {
-		if (Strequ(name, "diffuse")) {
-			return SamplerType::Diffuse;
-		} else if (Strequ(name, "specular")) {
-			return SamplerType::Specular;
-		} else if (Strequ(name, "normal")) {
-			return SamplerType::Normal;
-		}
-
-		return -1;
-	}
-}
-
 
 AX_BEGIN_NAMESPACE
 
-	// static member
-	MaterialDecl *MaterialDecl::ms_defaulted;
-	MaterialDecl::MaterialDeclDict MaterialDecl::ms_declDict;
-	MaterialDecl::FailureSet MaterialDecl::ms_failureSet;
-	// end static member
-
-
-	MaterialDecl::MaterialDecl() {
-		m_shaderGenMask = 0;
-		m_surfaceType = SurfaceType::Dust;
-		const char *s = m_surfaceType.toString();
-		SurfaceType st2 = SurfaceType::fromString("Water");
-
-		memset(m_textures, 0, sizeof(TextureDef*) * SamplerType::NUMBER_ALL);
-		m_diffuse.set(255, 255, 255, 255);
-		m_specular.set(0, 0, 0, 0);
-		m_emission.set(0, 0, 0, 0);
-		m_specExp = 10.f;
-		m_specLevel = 1.0f;
-		m_opacity = 1.0f;
-		m_detailScale = 20;
-
-		m_flags = 0;
-
-		TypeZeroArray(m_features);
-		TypeZeroArray(m_literals);
+namespace {
+int getMapType(const char *name) {
+	if (Strequ(name, "diffuse")) {
+		return SamplerType::Diffuse;
+	} else if (Strequ(name, "specular")) {
+		return SamplerType::Specular;
+	} else if (Strequ(name, "normal")) {
+		return SamplerType::Normal;
 	}
 
-	MaterialDecl::~MaterialDecl() {
-		// free texture
-		// free params
-	}
+	return -1;
+}
+}
 
-	bool MaterialDecl::tryLoad(const String &name) {
-		m_key = normalizeKey(name);
+// static member
+MaterialDecl *MaterialDecl::ms_defaulted;
+MaterialDecl::MaterialDeclDict MaterialDecl::ms_declDict;
+MaterialDecl::FailureSet MaterialDecl::ms_failureSet;
+// end static member
 
-		String filename = m_key.toString() + ".mtr";
 
-		char *buffer;
-		size_t size;
+MaterialDecl::MaterialDecl()
+{
+	m_shaderGenMask = 0;
+	m_surfaceType = SurfaceType::Dust;
+	const char *s = m_surfaceType.toString();
+	SurfaceType st2 = SurfaceType::fromString("Water");
 
-		size = g_fileSystem->readFile(filename, (void**)&buffer);
+	memset(m_textures, 0, sizeof(TextureDef*) * SamplerType::NUMBER_ALL);
+	m_diffuse.set(255, 255, 255, 255);
+	m_specular.set(0, 0, 0, 0);
+	m_emission.set(0, 0, 0, 0);
+	m_specExp = 10.f;
+	m_specLevel = 1.0f;
+	m_opacity = 1.0f;
+	m_detailScale = 20;
 
-		if (!size || !buffer) {
+	m_flags = 0;
+
+	TypeZeroArray(m_features);
+	TypeZeroArray(m_literals);
+}
+
+MaterialDecl::~MaterialDecl()
+{
+	// free texture
+	// free params
+}
+
+bool MaterialDecl::tryLoad(const String &name)
+{
+	m_key = normalizeKey(name);
+
+	String filename = m_key.toString() + ".mtr";
+
+	char *buffer;
+	size_t size;
+
+	size = g_fileSystem->readFile(filename, (void**)&buffer);
+
+	if (!size || !buffer) {
 //			Debugf("%s: cann't open material file %s\n", __func__, filename.c_str());
-			return false;
-		}
+		return false;
+	}
 
-		TiXmlDocument doc;
+	TiXmlDocument doc;
 
-		doc.Parse(buffer, NULL, TIXML_ENCODING_UTF8);
-		g_fileSystem->freeFile(buffer);
+	doc.Parse(buffer, NULL, TIXML_ENCODING_UTF8);
+	g_fileSystem->freeFile(buffer);
 
-		if (doc.Error()) {
-			Errorf("%s: error parse %s in line %d - %s"
-				, __func__
-				, filename.c_str()
-				, doc.ErrorRow()
-				, doc.ErrorDesc());
-			doc.Clear();
-			return false;
-		}
-
-		const TiXmlElement *root = doc.FirstChildElement("material");
-		const TiXmlAttribute *attr = NULL;
-
-		// no root
-		if (!root)
-			goto error_exit;
-
-		// parse attribute
-		for (attr = root->FirstAttribute(); attr; attr = attr->Next()) {
-			const String &attrname = attr->NameTStr();
-			if (attrname == "flags") {
-
-			} else if (attrname == "shader") {
-				m_shaderName = attr->Value();
-			} else if (attrname == "twosided") {
-				m_flags.set(TwoSided, attr->IntValue() ? true : false);
-			} else if (attrname == "wireframed") {
-				m_flags.set(Wireframed, attr->IntValue() ? true : false);
-			} else if (attrname == "physicsHelper") {
-				m_flags.set(PhysicsHelper, attr->IntValue() ? true : false);
-			} else if (attrname == "diffuse") {
-				m_diffuse.fromString(attr->Value());
-			} else if (attrname == "features") {
-				int value = attr->IntValue();
-				for (int i = 0; i < MAX_FEATURES; i++) {
-					if (value & (1<<i))
-						m_features[i] = true;
-					else
-						m_features[i] = false;
-				}
-			}
-		}
-
-		// parse texture
-		const TiXmlElement *elem = NULL;
-		for (elem = root->FirstChildElement(); elem; elem = elem->NextSiblingElement()) {
-			if (Strequ(elem->Value(), "texture")) {
-				int maptype = -1;
-				for (attr = elem->FirstAttribute(); attr; attr = attr->Next()) {
-					if (Strequ(attr->Name(), "map")) {
-						maptype = getMapType(attr->Value());
-						if (maptype < 0)
-							continue;
-						AX_ASSERT(maptype < SamplerType::NUMBER_ALL);
-						if (m_textures[maptype] != nullptr)
-							continue;
-
-						m_textures[maptype] = new TextureDef;
-
-					} else if (Strequ(attr->Name(), "file")) {
-						if (maptype < 0)
-							Errorf("%s: map not set", __func__);
-						m_textures[maptype]->file = attr->Value();
-					} else if (attr->NameTStr() == "clamp") {
-						m_textures[maptype]->clamp = !!attr->IntValue();
-					} else if (attr->NameTStr() == "clampToEdge") {
-						m_textures[maptype]->clampToEdge = !!attr->IntValue();
-					}
-				}
-
-			} else if (Strequ(elem->Value(), "shaderParam")) {
-
-			}
-		}
-
-#if 0
-		if (!(arg & JustParse)) {
-			// set texture
-			for (int i = 0; i < MapNumber; i++) {
-				if (m_textures[i] == nullptr)
-					continue;
-
-				m_textures[i]->texture = gAssetManager->findAsset<Texture>(m_textures[i]->file);
-			}
-		}
-#endif
-		// free XML doc
-		doc.Clear();
-		return true;
-
-error_exit:
+	if (doc.Error()) {
+		Errorf("%s: error parse %s in line %d - %s"
+			, __func__
+			, filename.c_str()
+			, doc.ErrorRow()
+			, doc.ErrorDesc());
 		doc.Clear();
 		return false;
 	}
 
-	FixedString MaterialDecl::normalizeKey(const String &name)
-	{
-		FixedString key;
+	const TiXmlElement *root = doc.FirstChildElement("material");
+	const TiXmlAttribute *attr = NULL;
 
-		if (!PathUtil::haveDir(name))
-			key = "materials/" + name;
-		else
-			key = name;
+	// no root
+	if (!root)
+		goto error_exit;
 
-		key = PathUtil::removeExt(key);
+	// parse attribute
+	for (attr = root->FirstAttribute(); attr; attr = attr->Next()) {
+		const String &attrname = attr->NameTStr();
+		if (attrname == "flags") {
 
-		return key;
-	}
-
-	MaterialDecl *MaterialDecl::load( const String &name )
-	{
-		// normalize key first
-		FixedString key = normalizeKey(name);
-
-		{ // check if already loaded
-			MaterialDeclDict::const_iterator it = ms_declDict.find(key);
-			if (it != ms_declDict.end())
-				return it->second;
-		}
-
-		{
-			// check if already checked
-			FailureSet::const_iterator it = ms_failureSet.find(key);
-			if (it != ms_failureSet.end()) {
-				return ms_defaulted;
+		} else if (attrname == "shader") {
+			m_shaderName = attr->Value();
+		} else if (attrname == "twosided") {
+			m_flags.set(TwoSided, attr->IntValue() ? true : false);
+		} else if (attrname == "wireframed") {
+			m_flags.set(Wireframed, attr->IntValue() ? true : false);
+		} else if (attrname == "physicsHelper") {
+			m_flags.set(PhysicsHelper, attr->IntValue() ? true : false);
+		} else if (attrname == "diffuse") {
+			m_diffuse.fromString(attr->Value());
+		} else if (attrname == "features") {
+			int value = attr->IntValue();
+			for (int i = 0; i < MAX_FEATURES; i++) {
+				if (value & (1<<i))
+					m_features[i] = true;
+				else
+					m_features[i] = false;
 			}
 		}
+	}
 
-		// try load
-		MaterialDecl *result = new MaterialDecl();
-		bool success = result->tryLoad(key);
-		if (success) {
-			ms_declDict[key] = result;
-		} else {
-			delete result;
-			result = ms_defaulted;
-			ms_failureSet.insert(key);
+	// parse texture
+	const TiXmlElement *elem = NULL;
+	for (elem = root->FirstChildElement(); elem; elem = elem->NextSiblingElement()) {
+		if (Strequ(elem->Value(), "texture")) {
+			int maptype = -1;
+			for (attr = elem->FirstAttribute(); attr; attr = attr->Next()) {
+				if (Strequ(attr->Name(), "map")) {
+					maptype = getMapType(attr->Value());
+					if (maptype < 0)
+						continue;
+					AX_ASSERT(maptype < SamplerType::NUMBER_ALL);
+					if (m_textures[maptype] != nullptr)
+						continue;
+
+					m_textures[maptype] = new TextureDef;
+
+				} else if (Strequ(attr->Name(), "file")) {
+					if (maptype < 0)
+						Errorf("%s: map not set", __func__);
+					m_textures[maptype]->file = attr->Value();
+				} else if (attr->NameTStr() == "clamp") {
+					m_textures[maptype]->clamp = !!attr->IntValue();
+				} else if (attr->NameTStr() == "clampToEdge") {
+					m_textures[maptype]->clampToEdge = !!attr->IntValue();
+				}
+			}
+
+		} else if (Strequ(elem->Value(), "shaderParam")) {
+
 		}
-
-		return result;
 	}
 
-	void MaterialDecl::initManager()
+#if 0
+	if (!(arg & JustParse)) {
+		// set texture
+		for (int i = 0; i < MapNumber; i++) {
+			if (m_textures[i] == nullptr)
+				continue;
+
+			m_textures[i]->texture = gAssetManager->findAsset<Texture>(m_textures[i]->file);
+		}
+	}
+#endif
+	// free XML doc
+	doc.Clear();
+	return true;
+
+error_exit:
+	doc.Clear();
+	return false;
+}
+
+FixedString MaterialDecl::normalizeKey(const String &name)
+{
+	FixedString key;
+
+	if (!PathUtil::haveDir(name))
+		key = "materials/" + name;
+	else
+		key = name;
+
+	key = PathUtil::removeExt(key);
+
+	return key;
+}
+
+MaterialDecl *MaterialDecl::load( const String &name )
+{
+	// normalize key first
+	FixedString key = normalizeKey(name);
+
+	{ // check if already loaded
+		MaterialDeclDict::const_iterator it = ms_declDict.find(key);
+		if (it != ms_declDict.end())
+			return it->second;
+	}
+
 	{
-		ms_defaulted = load("default");
+		// check if already checked
+		FailureSet::const_iterator it = ms_failureSet.find(key);
+		if (it != ms_failureSet.end()) {
+			return ms_defaulted;
+		}
 	}
 
-	void MaterialDecl::finalizeManager()
-	{
-		// do nothing
+	// try load
+	MaterialDecl *result = new MaterialDecl();
+	bool success = result->tryLoad(key);
+	if (success) {
+		ms_declDict[key] = result;
+	} else {
+		delete result;
+		result = ms_defaulted;
+		ms_failureSet.insert(key);
 	}
+
+	return result;
+}
+
+void MaterialDecl::initManager()
+{
+	ms_defaulted = load("default");
+}
+
+void MaterialDecl::finalizeManager()
+{
+	// do nothing
+}
 
 AX_END_NAMESPACE
 

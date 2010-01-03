@@ -15,31 +15,31 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-	class AX_API PerlinNoise {
-	public:
-		PerlinNoise(uint_t seed = 0);
+class AX_API PerlinNoise {
+public:
+	PerlinNoise(uint_t seed = 0);
 
-		float noise(float x);
-		float noise2(float x, float y);
-		float noise3(float x, float y, float z);
+	float noise(float x);
+	float noise2(float x, float y);
+	float noise3(float x, float y, float z);
 
-		float noise2(const Vector2 &v, int octaves, float persistence = 0.25f);
+	float noise2(const Vector2 &v, int octaves, float persistence = 0.25f);
 
-	private:
-		int xrand();
+private:
+	int xrand();
 
-	private:
-		enum {
-			B = 0x100, BM = 0xff, N = 0x1000, NP = 12,   /* 2^N */
-			NM = 0xfff
-		};
-
-		uint_t m_holdrand;
-		int p[B + B + 2];
-		float g3[B + B + 2][3];
-		float g2[B + B + 2][2];
-		float 	g1[B + B + 2];
+private:
+	enum {
+		B = 0x100, BM = 0xff, N = 0x1000, NP = 12,   /* 2^N */
+		NM = 0xfff
 	};
+
+	uint_t m_holdrand;
+	int p[B + B + 2];
+	float g3[B + B + 2][3];
+	float g2[B + B + 2][2];
+	float 	g1[B + B + 2];
+};
 
 AX_END_NAMESPACE
 

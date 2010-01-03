@@ -105,13 +105,12 @@ AX_BEGIN_NAMESPACE
 
 		u = rx0 * g1[ p[ bx0 ] ];
 		v = rx1 * g1[ p[ bx1 ] ];
-
 		return lerp(sx, u, v);
 	}
 
 	float PerlinNoise::noise2(float x, float y) {
 		float vec[2] = { x, y };
-		int 			bx0, bx1, by0, by1, b00, b10, b01, b11;
+	int 			bx0, bx1, by0, by1, b00, b10, b01, b11;
 		float 			rx0, rx1, ry0, ry1, sx, sy, a, b, t, u, v;
 		const float *q;
 		register int i, j;
@@ -165,11 +164,10 @@ AX_BEGIN_NAMESPACE
 		t  = s_curve(rx0);
 		sy = s_curve(ry0);
 		sz = s_curve(rz0);
-
 #define at3(rx,ry,rz) (rx * q[0] + ry * q[1] + rz * q[2])
 
 		q = g3[ b00 + bz0 ] ; u = at3(rx0,ry0,rz0);
-		q = g3[ b10 + bz0 ] ; v = at3(rx1,ry0,rz0);
+	q = g3[ b10 + bz0 ] ; v = at3(rx1,ry0,rz0);
 		a = lerp(t, u, v);
 
 		q = g3[ b01 + bz0 ] ; u = at3(rx0,ry1,rz0);

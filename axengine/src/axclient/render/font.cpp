@@ -14,11 +14,6 @@ read the license and understand and accept it fully.
 #include FT_FREETYPE_H
 #include FT_GLYPH_H
 
-// FIXME: make windows happy
-#undef GetCharWidth
-#undef createFont
-
-
 #define AX_DEFAULT_FONTSIZE 14
 
 namespace {

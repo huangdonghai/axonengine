@@ -77,9 +77,9 @@ namespace {
 		else return interpolate<T>((life-mid) / (1.0f-mid),b,c);
 	}
 
-} // anonymous namespace
+	static BlockAlloc<Particle> ParticleAllocator;
 
-static BlockAlloc<Particle> ParticleAllocator;
+} // anonymous namespace
 
 ParticleEmitter::ParticleEmitter()
 {

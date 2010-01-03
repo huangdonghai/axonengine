@@ -13,66 +13,66 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-	class D3D9query : public Query {
-	public:
-		enum {
-			NUMBER = 2
-		};
-
-		friend class D3D9querymanager;
-
-		D3D9query();
-		virtual ~D3D9query();
-
-		bool canQuery() const;
-		bool beginQuery();
-		void endQuery();
-		int getResult(); // if return -1, not queried
-		void reset(); // reset state
-
-	private:
-		int m_id;
-		IDirect3DQuery9 *m_queries[NUMBER];
-		int m_queryPos;
-		int m_readPos;
-		bool m_quering;
+class D3D9query : public Query {
+public:
+	enum {
+		NUMBER = 2
 	};
 
-	class D3D9querymanager : public QueryManager {
-	public:
-		struct ActiveQuery {
-			RenderTarget *frameTarget;
-			D3D9query *query;
-			int frameId;
-			BoundingBox bbox;
-			bool issued;
-		};
+	friend class D3D9querymanager;
 
-		enum {
-			MAX_ISSUED_QUERIES = 1024
-		};
+	D3D9query();
+	virtual ~D3D9query();
 
-		D3D9querymanager();
-		virtual ~D3D9querymanager();
+	bool canQuery() const;
+	bool beginQuery();
+	void endQuery();
+	int getResult(); // if return -1, not queried
+	void reset(); // reset state
 
-		virtual Query *allocQuery();
-		virtual void freeQuery(Query*& query);
-		virtual void issueQuery(Query *query, int frameId, const BoundingBox &bbox);
+private:
+	int m_id;
+	IDirect3DQuery9 *m_queries[NUMBER];
+	int m_queryPos;
+	int m_readPos;
+	bool m_quering;
+};
 
-		// must called sync main thread
-		void syncFrame();
-
-		// called in render thread
-		const List<ActiveQuery*>& getActiveQuery(Query::QueryType type) const;
-
-	private:
-		Sequence<D3D9query*> m_queries;
-		List<int> m_freeQueries;
-
-		BlockAlloc<ActiveQuery> m_issuedQueryAlloc;
-		List<ActiveQuery*> m_activeQuery[Query::QueryType_Number];
-		List<ActiveQuery*> m_frameIssuedQuery[Query::QueryType_Number];
+class D3D9querymanager : public QueryManager {
+public:
+	struct ActiveQuery {
+		RenderTarget *frameTarget;
+		D3D9query *query;
+		int frameId;
+		BoundingBox bbox;
+		bool issued;
 	};
+
+	enum {
+		MAX_ISSUED_QUERIES = 1024
+	};
+
+	D3D9querymanager();
+	virtual ~D3D9querymanager();
+
+	virtual Query *allocQuery();
+	virtual void freeQuery(Query*& query);
+	virtual void issueQuery(Query *query, int frameId, const BoundingBox &bbox);
+
+	// must called sync main thread
+	void syncFrame();
+
+	// called in render thread
+	const List<ActiveQuery*>& getActiveQuery(Query::QueryType type) const;
+
+private:
+	Sequence<D3D9query*> m_queries;
+	List<int> m_freeQueries;
+
+	BlockAlloc<ActiveQuery> m_issuedQueryAlloc;
+	List<ActiveQuery*> m_activeQuery[Query::QueryType_Number];
+	List<ActiveQuery*> m_frameIssuedQuery[Query::QueryType_Number];
+};
 
 AX_END_NAMESPACE
 

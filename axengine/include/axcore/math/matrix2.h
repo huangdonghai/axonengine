@@ -14,48 +14,48 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-	//--------------------------------------------------------------------------
-	// Matrix2
-	//--------------------------------------------------------------------------
+//--------------------------------------------------------------------------
+// Matrix2
+//--------------------------------------------------------------------------
 
-	struct AX_API Matrix2 {
-		float m[2][2];
+struct AX_API Matrix2 {
+	float m[2][2];
 
-		inline Matrix2() {}
-		inline Matrix2(const float in[4]) {
-			memcpy(m, in, sizeof(m));
-		}
-		inline ~Matrix2() {}
+	inline Matrix2() {}
+	inline Matrix2(const float in[4]) {
+		memcpy(m, in, sizeof(m));
+	}
+	inline ~Matrix2() {}
 
-		// operator
-		inline Vector2 &operator[] (int index) {
-			AX_STRICT_ASSERT(index>=0 && index<2);
-			return *(Vector2*)m[index];
-		}
+	// operator
+	inline Vector2 &operator[] (int index) {
+		AX_STRICT_ASSERT(index>=0 && index<2);
+		return *(Vector2*)m[index];
+	}
 
-		inline const Vector2 &operator[] (int index) const {
-			AX_STRICT_ASSERT(index>=0 && index<2);
-			return *(Vector2*)m[index];
-		}
+	inline const Vector2 &operator[] (int index) const {
+		AX_STRICT_ASSERT(index>=0 && index<2);
+		return *(Vector2*)m[index];
+	}
 
-		inline Matrix2 operator*(const Matrix2 &im) const {
-			Matrix2 om;
+	inline Matrix2 operator*(const Matrix2 &im) const {
+		Matrix2 om;
 
-			om[0][0] = m[0][0]*im[0][0] + m[1][0]*im[0][1];
-			om[0][1] = m[0][1]*im[0][0] + m[1][1]*im[0][1];
+		om[0][0] = m[0][0]*im[0][0] + m[1][0]*im[0][1];
+		om[0][1] = m[0][1]*im[0][0] + m[1][1]*im[0][1];
 
-			om[1][0] = m[0][0]*im[1][0] + m[1][0]*im[1][1];
-			om[1][1] = m[0][1]*im[1][0] + m[1][1]*im[1][1];
+		om[1][0] = m[0][0]*im[1][0] + m[1][0]*im[1][1];
+		om[1][1] = m[0][1]*im[1][0] + m[1][1]*im[1][1];
 
-			return om;
-		}
+		return om;
+	}
 
-		// function
-		inline void setIdentity() {
-			m[0][0] = 1;	m[0][1] = 0;
-			m[1][0] = 0;	m[1][1] = 1;
-		}
-	};
+	// function
+	inline void setIdentity() {
+		m[0][0] = 1;	m[0][1] = 0;
+		m[1][0] = 0;	m[1][1] = 1;
+	}
+};
 
 
 AX_END_NAMESPACE

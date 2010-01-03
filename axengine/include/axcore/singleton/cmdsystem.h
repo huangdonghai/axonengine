@@ -52,82 +52,82 @@ public:														\
 
 AX_BEGIN_NAMESPACE
 
-	struct CmdArgs {
-		StringSeq tokened;	// tokenized parameter by ' '(SPACE), usually use this
-		String rawParam;	// raw parameter string, for some complicate, scription command
+struct CmdArgs {
+	StringSeq tokened;	// tokenized parameter by ' '(SPACE), usually use this
+	String rawParam;	// raw parameter string, for some complicate, scription command
+};
+
+struct CmdEntry {
+	const char *name;
+	void *fn;
+};
+
+struct ICmdHandler {
+	virtual CmdEntry *GetCmdEntries(uint_t *datasize) = 0;	// for internal use
+	virtual void HandleCmd(const CmdArgs &params) = 0;
+	virtual ~ICmdHandler() = 0 {}
+};
+
+
+struct Cmd {
+	String name;
+	ICmdHandler *handler;
+};
+
+typedef Dict<String, Cmd, hash_istr, equal_istr> CmdDict;
+
+#if 1
+class AX_API CmdSystem : public ICmdHandler
+{
+	AX_DECLARE_COMMAND_HANDLER(CmdSystem);
+
+public:
+	// parameters for console command execution
+	enum ExecType {
+		Exec_Immediately,	// execute immediately, don't add to command buffer
+		Exec_Append,		// add to end of the command buffer (normal case)
+		Exec_Insert // insert to command buffer head
 	};
 
-	struct CmdEntry {
-		const char *name;
-		void *fn;
-	};
+	CmdSystem();
+	~CmdSystem();
 
-	struct ICmdHandler {
-		virtual CmdEntry *GetCmdEntries(uint_t *datasize) = 0;	// for internal use
-		virtual void HandleCmd(const CmdArgs &params) = 0;
-		virtual ~ICmdHandler() = 0 {}
-	};
+	void initialize(void);
+	void finalize(void);
+	bool isCmd(const String &name);
+	void executeString(const String &text, ExecType cet = Exec_Immediately);
+	void enumerate(void (*func)(const String &name));
+	void registerHandler(ICmdHandler *handler);
+	void removeHandler(ICmdHandler *handler);
+	void runFrame(uint_t frame_time);
 
+public:
+	// console command
+	bool executeCmd(const CmdArgs &params);
+	CmdArgs parseCmdString(const String &text);
 
-	struct Cmd {
-		String name;
-		ICmdHandler *handler;
-	};
+	void list_f(const CmdArgs &param);
+	void quit_f(const CmdArgs &param);
+	void crash_f(const CmdArgs &param);
+	void error_f(const CmdArgs &param);
+	void debug_f(const CmdArgs &param);
+	void script_f(const CmdArgs &param);
+	void runFile_f(const CmdArgs &param);
 
-	typedef Dict<String, Cmd, hash_istr, equal_istr> CmdDict;
+	void execCmdLine(int argc, char *argv[]);
+	// script command
+	int list_s(int);
 
-	#if 1
-	class AX_API CmdSystem : public ICmdHandler
-	{
-		AX_DECLARE_COMMAND_HANDLER(CmdSystem);
+private:
+	// member data
+	CmdDict m_cmdDict;
 
-	public:
-		// parameters for console command execution
-		enum ExecType {
-			Exec_Immediately,	// execute immediately, don't add to command buffer
-			Exec_Append,		// add to end of the command buffer (normal case)
-			Exec_Insert // insert to command buffer head
-		};
-
-		CmdSystem();
-		~CmdSystem();
-
-		void initialize(void);
-		void finalize(void);
-		bool isCmd(const String &name);
-		void executeString(const String &text, ExecType cet = Exec_Immediately);
-		void enumerate(void (*func)(const String &name));
-		void registerHandler(ICmdHandler *handler);
-		void removeHandler(ICmdHandler *handler);
-		void runFrame(uint_t frame_time);
-
-	public:
-		// console command
-		bool executeCmd(const CmdArgs &params);
-		CmdArgs parseCmdString(const String &text);
-
-		void list_f(const CmdArgs &param);
-		void quit_f(const CmdArgs &param);
-		void crash_f(const CmdArgs &param);
-		void error_f(const CmdArgs &param);
-		void debug_f(const CmdArgs &param);
-		void script_f(const CmdArgs &param);
-		void runFile_f(const CmdArgs &param);
-
-		void execCmdLine(int argc, char *argv[]);
-		// script command
-		int list_s(int);
-
-	private:
-		// member data
-		CmdDict m_cmdDict;
-
-		// console command buffer
-		enum { CMD_BUFFER_SIZE = 0x4000 };
-		char m_buffer[CMD_BUFFER_SIZE];
-		size_t m_bufferCurSize;
-	};
-	#endif
+	// console command buffer
+	enum { CMD_BUFFER_SIZE = 0x4000 };
+	char m_buffer[CMD_BUFFER_SIZE];
+	size_t m_bufferCurSize;
+};
+#endif
 
 AX_END_NAMESPACE
 
