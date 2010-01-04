@@ -51,11 +51,11 @@ void TreeManager::removeAsset(TreeAsset *wrapper) {
 	m_treeAssetDict.erase(wrapper->getKey());
 }
 
-void TreeManager::addTree(TreeActor *tree) {
+void TreeManager::addTree(TreeEntity *tree) {
 	m_treeDict.insert(tree);
 }
 
-void TreeManager::removeTree(TreeActor *tree) {
+void TreeManager::removeTree(TreeEntity *tree) {
 	m_treeDict.erase(tree);
 }
 
@@ -72,7 +72,7 @@ bool TreeManager::isSupportExt(const String &ext) const {
 }
 
 RenderEntity *TreeManager::create(const String &name, intptr_t arg) {
-	return new TreeActor(name, arg);
+	return new TreeEntity(name, arg);
 }
 
 void TreeManager::updateForFrame(QueuedScene *qscene ) {

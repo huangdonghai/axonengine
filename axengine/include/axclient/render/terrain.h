@@ -13,20 +13,16 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-	class TerrainChunk : public RenderEntity {
-	public:
-	};
+class AX_API RenderTerrain : public RenderEntity, public IObservable {
+public:
+	enum { HeightfieldSetted = 1 };
 
-	class AX_API RenderTerrain : public RenderEntity, public IObservable {
-	public:
-		enum { HeightfieldSetted = 1 };
+	RenderTerrain() : RenderEntity(kTerrain) {}
+	virtual ~RenderTerrain() {}
 
-		RenderTerrain() : RenderEntity(kTerrain) {}
-		virtual ~RenderTerrain() {}
-
-		virtual Kind getType() const { return RenderEntity::kTerrain; }
-		virtual void getHeightinfo(ushort_t*& datap, int &size, float &tilemeters) = 0;
-	};
+	virtual Kind getType() const { return RenderEntity::kTerrain; }
+	virtual void getHeightinfo(ushort_t*& datap, int &size, float &tilemeters) = 0;
+};
 
 AX_END_NAMESPACE
 

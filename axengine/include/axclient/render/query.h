@@ -13,40 +13,40 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-	class AX_API Query {
-	public:
-		enum QueryType {
-			QueryType_Vis,
-			QueryType_Shadow,
-			QueryType_Number
-		};
-
-		friend class QueryManager;
-		friend class BlockAlloc<Query>;
-
-		void setType(QueryType type) { m_type = type; }
-		QueryType getType() const { return m_type; }
-		void issueQuery(int frameId, const BoundingBox &bbox);
-
-	protected:
-		Query();
-		virtual ~Query();
-		QueryType m_type;
-
-	public:
-		int m_queryFrame;
-		int m_resultFrame;
-		int m_result;
+class AX_API Query {
+public:
+	enum QueryType {
+		QueryType_Vis,
+		QueryType_Shadow,
+		QueryType_Number
 	};
 
-	class QueryManager {
-	public:
-		virtual ~QueryManager() {}
+	friend class QueryManager;
+	friend class BlockAlloc<Query>;
 
-		virtual Query *allocQuery() = 0;
-		virtual void freeQuery(Query*& query) = 0;
-		virtual void issueQuery(Query *query, int frameId, const BoundingBox &bbox) = 0;
-	};
+	void setType(QueryType type) { m_type = type; }
+	QueryType getType() const { return m_type; }
+	void issueQuery(int frameId, const BoundingBox &bbox);
+
+protected:
+	Query();
+	virtual ~Query();
+	QueryType m_type;
+
+public:
+	int m_queryFrame;
+	int m_resultFrame;
+	int m_result;
+};
+
+class QueryManager {
+public:
+	virtual ~QueryManager() {}
+
+	virtual Query *allocQuery() = 0;
+	virtual void freeQuery(Query*& query) = 0;
+	virtual void issueQuery(Query *query, int frameId, const BoundingBox &bbox) = 0;
+};
 
 AX_END_NAMESPACE
 #endif

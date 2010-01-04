@@ -14,30 +14,30 @@ read the license and understand and accept it fully.
 AX_BEGIN_NAMESPACE
 
 #if 0
-	struct ConvexSide {
-		Vector4 plane;
-		bool isSolid;
-	};
+struct ConvexSide {
+	Vector4 plane;
+	bool isSolid;
+};
 
-	typedef Sequence<ConvexSide> ConvexSideSeq;
+typedef Sequence<ConvexSide> ConvexSideSeq;
 
-	struct Convex {
-		int numPlanes;
-		ConvexSideSeq sides;
-	};
-	typedef Sequence<Convex> ConvexSeq;
+struct Convex {
+	int numPlanes;
+	ConvexSideSeq sides;
+};
+typedef Sequence<Convex> ConvexSeq;
 
-	class VisArea : public Actor {
-	public:
-		BoundingBox m_linkedBbox;
-		float m_height;
-		Sequence<Vector3>	points;
+class VisArea : public Actor {
+public:
+	BoundingBox m_linkedBbox;
+	float m_height;
+	Sequence<Vector3>	points;
 
-		Portal *m_portals;
-		bool inSun;
-		IntSeq brushes;
-		Primitives primitives;
-	};
+	Portal *m_portals;
+	bool inSun;
+	IntSeq brushes;
+	Primitives primitives;
+};
 #endif
 
 AX_END_NAMESPACE

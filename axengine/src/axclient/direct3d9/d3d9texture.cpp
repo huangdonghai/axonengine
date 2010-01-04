@@ -716,26 +716,26 @@ void D3D9texturemanager::syncFrame()
 
 	{
 		// gen mipmap
-		Link<Texture>* it = m_needGenMipmapHead.getNextNode();
-		for (; it; it = it->getNextNode()) {
-			it->getOwner()->generateMipmapIm();
+		MipmapList::iterator it = m_needGenMipmapHead.begin();
+		for (; it != m_needGenMipmapHead.end(); ++it) {
+			it->generateMipmapIm();
 		}
-		m_needGenMipmapHead.clearList();
+		m_needGenMipmapHead.clear();
 	}
 
 	{
 		// check need free
-		Link<Texture>* it = m_needFreeHead.getNextNode();
-		while (it) {
-			D3D9texture *owner = (D3D9texture*)it->getOwner();
-			Link<Texture>* next = it->getNextNode();
-			it->removeFromList();
+		NeedfreeList::iterator it = m_needFreeHead.begin();
+		while (it != m_needFreeHead.end()) {
+			D3D9texture *owner = (D3D9texture *)&*it;
+			NeedfreeList::iterator next = ++it;
+			m_needFreeHead.erase(owner);
 			m_textureDict.erase(owner->getKey());
 			SafeDelete(owner);
 
 			it = next;
 		}
-		m_needFreeHead.clearList();
+		m_needFreeHead.clear();
 	}
 }
 

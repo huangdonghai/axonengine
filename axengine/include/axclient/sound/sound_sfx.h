@@ -13,24 +13,24 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-	class AX_API SoundFx : public RefObject {
-	public:
-		friend class SoundSystem;
+class AX_API SoundFx : public RefObject {
+public:
+	friend class SoundSystem;
 
-		// implement RefObject
-		virtual void deleteThis();
+	// implement RefObject
+	virtual void deleteThis();
 
-		bool isValid() const { return m_fmodSound != 0; }
+	bool isValid() const { return m_fmodSound != 0; }
 
-	private:
-		SoundFx();
-		virtual ~SoundFx();
+private:
+	SoundFx();
+	virtual ~SoundFx();
 
-		String m_name;
-		FMOD::Sound *m_fmodSound;
-	};
+	String m_name;
+	FMOD::Sound *m_fmodSound;
+};
 
-	typedef RefPtr<SoundFx> SfxPtr;
+typedef RefPtr<SoundFx> SfxPtr;
 
 AX_END_NAMESPACE
 

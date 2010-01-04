@@ -551,7 +551,7 @@ void TreeAsset::buildLeafMesh() {
 	}
 }
 
-void TreeAsset::issueToQueue(TreeActor *actor, QueuedScene *qscene) {
+void TreeAsset::issueToQueue(TreeEntity *actor, QueuedScene *qscene) {
 #if 0
 	if (r_geoInstancing->getInteger() != 0) {
 		return;

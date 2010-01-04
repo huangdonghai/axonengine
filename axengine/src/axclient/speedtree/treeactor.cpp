@@ -13,7 +13,9 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-TreeActor::TreeActor(const String &filename, int seed) : RenderEntity(kSpeedTree) {
+TreeEntity::TreeEntity(const String &filename, int seed)
+	: RenderEntity(kSpeedTree)
+{
 	m_treeAsset = g_treeManager->findAsset(filename, seed);
 	m_treeAsset->addActor(this);
 
@@ -22,30 +24,35 @@ TreeActor::TreeActor(const String &filename, int seed) : RenderEntity(kSpeedTree
 	setWindMatrixOffset(float(rand()) / RAND_MAX);
 }
 
-TreeActor::~TreeActor() {
+TreeEntity::~TreeEntity()
+{
 	m_treeAsset->removeActor(this);
 	SafeRelease(m_treeAsset);
 }
 
-BoundingBox TreeActor::getLocalBoundingBox() {
+BoundingBox TreeEntity::getLocalBoundingBox()
+{
 	return m_treeAsset->getBoundingBox();
 }
 
-BoundingBox TreeActor::getBoundingBox() {
+BoundingBox TreeEntity::getBoundingBox()
+{
 	return getLocalBoundingBox().getTransformed(m_affineMat);
 }
 
-void TreeActor::frameUpdate(QueuedScene *qscene)
+void TreeEntity::frameUpdate(QueuedScene *qscene)
 {
 	m_instanceParam[InstanceScale] = m_affineMat.getScales();
 }
 
 
-Primitives TreeActor::getHitTestPrims() {
+Primitives TreeEntity::getHitTestPrims()
+{
 	return m_treeAsset->getAllPrimitives(m_lod);
 }
 
-void TreeActor::issueToQueue(QueuedScene *qscene) {
+void TreeEntity::issueToQueue(QueuedScene *qscene)
+{
 	if (!r_speedtree->getBool()) {
 		return;
 	}

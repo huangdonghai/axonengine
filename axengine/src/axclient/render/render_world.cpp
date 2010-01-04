@@ -391,7 +391,8 @@ void RenderWorld::markVisible_r(QueuedScene *qscene, QuadNode *node, Plane::Side
 		}
 	}
 
-	for (RenderEntity *entity = node->linkHead.getNext(); entity; entity = entity->m_nodeLink.getNext()) {
+	for (IntrusiveList<RenderEntity>::iterator it = node->linkHead.begin(); it != node->linkHead.end(); ++it) {
+		RenderEntity *entity = &*it;
 		if (qscene->sceneType == QueuedScene::ShadowGen && qscene->sourceLight->type == RenderLight::kGlobal) {
 			if (entity->isCsmCulled()) {
 				g_statistic->incValue(stat_csmCulled);
@@ -557,7 +558,11 @@ void RenderWorld::linkEntity(RenderEntity *entity) {
 	}
 
 	// link to it
-	entity->m_nodeLink.addToEnd(node->linkHead);
+#if 0
+	entity->m_link.addToEnd(node->linkHead);
+#else
+	node->linkHead.push_back(entity);
+#endif
 	entity->m_linkedNode = node;
 
 	// expand node's boundingbox
@@ -573,7 +578,11 @@ void RenderWorld::unlinkEntity(RenderEntity *la) {
 	if (!la->isLight())
 		node->frameUpdated(m_visFrameId);
 
-	la->m_nodeLink.removeFromList();
+#if 0
+	la->m_link.removeFromList();
+#else
+	node->linkHead.erase(la);
+#endif
 }
 
 void RenderWorld::updateExposure(QueuedScene *qscene) {

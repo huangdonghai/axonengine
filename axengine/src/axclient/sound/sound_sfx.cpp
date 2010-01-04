@@ -13,20 +13,20 @@ read the license and understand and accept it fully.
 AX_BEGIN_NAMESPACE
 
 
-	SoundFx::SoundFx()
-	{
+SoundFx::SoundFx()
+{
 
-	}
+}
 
-	SoundFx::~SoundFx()
-	{
-		SafeRelease(m_fmodSound);
-	}
+SoundFx::~SoundFx()
+{
+	SafeRelease(m_fmodSound);
+}
 
-	void SoundFx::deleteThis()
-	{
-		g_soundSystem->_removeSfx(this);
-	}
+void SoundFx::deleteThis()
+{
+	g_soundSystem->_removeSfx(this);
+}
 
 AX_END_NAMESPACE
 

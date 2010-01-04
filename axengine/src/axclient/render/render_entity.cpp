@@ -35,7 +35,7 @@ RenderEntity::RenderEntity(Kind k)
 	m_queryCulled = false;
 	m_visFrameId = 0;
 
-	m_nodeLink.setOwner(this);
+//	m_link.setOwner(this);
 }
 
 RenderEntity::~RenderEntity()

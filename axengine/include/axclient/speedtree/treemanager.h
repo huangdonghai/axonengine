@@ -22,8 +22,8 @@ public:
 
 	void addAsset(TreeAsset *wrapper);
 	void removeAsset(TreeAsset *wrapper);
-	void addTree(TreeActor *tree);
-	void removeTree(TreeActor *tree);
+	void addTree(TreeEntity *tree);
+	void removeTree(TreeEntity *tree);
 
 	// implement IEntityManager
 	virtual bool isSupportExt(const String &ext) const;
@@ -35,7 +35,7 @@ private:
 	typedef Dict<String, TreeAsset*>	TreeAssetDict;
 	TreeAssetDict m_treeAssetDict;
 
-	typedef DictSet<TreeActor*>		TreeDict;
+	typedef DictSet<TreeEntity*>		TreeDict;
 	TreeDict m_treeDict;
 
 	TreeAsset *m_defaulted;

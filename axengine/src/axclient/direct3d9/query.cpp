@@ -12,90 +12,90 @@ read the license and understand and accept it fully.
 AX_BEGIN_NAMESPACE
 
 
-	Query::Query()
-	{
-		m_queryFrame = -1;
-		m_resultFrame = -1;
-		m_result = 0;
-	}
+Query::Query()
+{
+	m_queryFrame = -1;
+	m_resultFrame = -1;
+	m_result = 0;
+}
 
-	Query::~Query()
-	{
-	}
+Query::~Query()
+{
+}
 
-	void Query::issueQuery( int frameId, const BoundingBox &bbox )
-	{
-		g_queryManager->issueQuery(this, frameId, bbox);
-	}
+void Query::issueQuery( int frameId, const BoundingBox &bbox )
+{
+	g_queryManager->issueQuery(this, frameId, bbox);
+}
 
 #if 0
-	QueryManager::QueryManager()
-	{
+QueryManager::QueryManager()
+{
 
-	}
+}
 
-	QueryManager::~QueryManager()
-	{
+QueryManager::~QueryManager()
+{
 
-	}
-	Query *QueryManager::allocQuery()
-	{
-		return m_queryAlloc.alloc();
-	}
+}
+Query *QueryManager::allocQuery()
+{
+	return m_queryAlloc.alloc();
+}
 
-	void QueryManager::freeQuery( Query*& query )
-	{
-		m_queryAlloc.free(query);
-		query = 0;
-	}
+void QueryManager::freeQuery( Query*& query )
+{
+	m_queryAlloc.free(query);
+	query = 0;
+}
 
-	void QueryManager::issueQuery( Query *query, int frameId, const BoundingBox &bbox )
-	{
-		ActiveQuery *active = m_issuedQueryAlloc.alloc();
-		query->m_queryFrame = frameId;
-		active->query = query;
-		active->frameId = frameId;
-		active->bbox = bbox;
-		active->issued = false;
+void QueryManager::issueQuery( Query *query, int frameId, const BoundingBox &bbox )
+{
+	ActiveQuery *active = m_issuedQueryAlloc.alloc();
+	query->m_queryFrame = frameId;
+	active->query = query;
+	active->frameId = frameId;
+	active->bbox = bbox;
+	active->issued = false;
 
-		m_activeQuery[query->m_type].push_back(active);
-	}
+	m_activeQuery[query->m_type].push_back(active);
+}
 
-	void QueryManager::runFrame()
-	{
-		for (int i = 0; i < Query::QueryType_Number; i++) {
-			List<ActiveQuery*>::iterator it = m_activeQuery[i].begin();
+void QueryManager::runFrame()
+{
+	for (int i = 0; i < Query::QueryType_Number; i++) {
+		List<ActiveQuery*>::iterator it = m_activeQuery[i].begin();
 
-			while (it != m_activeQuery[i].end()) {
-				ActiveQuery *issued = *it;
+		while (it != m_activeQuery[i].end()) {
+			ActiveQuery *issued = *it;
 
-				// object is freed
-				if (issued->query->m_objectId < 0) {
-					it = m_activeQuery[i].erase(it);
-					continue;
-				}
-
-				int result = gRenderDriver->getQueryResult(issued->query->m_objectId);
-
-				if (result < 0) {
-					++it;
-					continue;
-				}
-
-				issued->query->m_resultFrame = issued->frameId;
-				issued->query->m_result = result;
-
+			// object is freed
+			if (issued->query->m_objectId < 0) {
 				it = m_activeQuery[i].erase(it);
-
-				m_issuedQueryAlloc.free(issued);
+				continue;
 			}
+
+			int result = gRenderDriver->getQueryResult(issued->query->m_objectId);
+
+			if (result < 0) {
+				++it;
+				continue;
+			}
+
+			issued->query->m_resultFrame = issued->frameId;
+			issued->query->m_result = result;
+
+			it = m_activeQuery[i].erase(it);
+
+			m_issuedQueryAlloc.free(issued);
 		}
 	}
+}
 
-	const List<QueryManager::ActiveQuery*>& QueryManager::getActiveQuery( Query::QueryType type ) const
-	{
-		return m_activeQuery[type];
-	}
+const List<QueryManager::ActiveQuery*>& QueryManager::getActiveQuery( Query::QueryType type ) const
+{
+	return m_activeQuery[type];
+}
 #endif
 
 AX_END_NAMESPACE

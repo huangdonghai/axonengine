@@ -11,70 +11,70 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-	SoundWorld::SoundWorld()
-	{
-		TypeZeroArray(m_entities);
-		for (int i = 0; i < MAX_ENTITIES; i++) {
-			m_freeEntities.push_front(i);
-		}
-
-		m_listenerMatrix.setIdentity();
-		m_listenerVelocity.clear();
+SoundWorld::SoundWorld()
+{
+	TypeZeroArray(m_entities);
+	for (int i = 0; i < MAX_ENTITIES; i++) {
+		m_freeEntities.push_front(i);
 	}
 
-	SoundWorld::~SoundWorld()
-	{
+	m_listenerMatrix.setIdentity();
+	m_listenerVelocity.clear();
+}
+
+SoundWorld::~SoundWorld()
+{
+}
+
+void SoundWorld::addEntity( SoundEntity *entity )
+{
+	AX_ASSERT(!entity->m_world);
+
+	if (m_freeEntities.empty()) {
+		Errorf("no free entity");
 	}
 
-	void SoundWorld::addEntity( SoundEntity *entity )
-	{
-		AX_ASSERT(!entity->m_world);
+	int id = m_freeEntities.front();
+	m_freeEntities.pop_front();
 
-		if (m_freeEntities.empty()) {
-			Errorf("no free entity");
-		}
+	m_entities[id] = entity;
+	entity->m_world = this;
+	entity->m_entityId = id;
+}
 
-		int id = m_freeEntities.front();
-		m_freeEntities.pop_front();
+void SoundWorld::removeEntity( SoundEntity *entity )
+{
+	AX_ASSERT(entity->m_world == this);
 
-		m_entities[id] = entity;
-		entity->m_world = this;
-		entity->m_entityId = id;
-	}
+	int id = entity->m_entityId;
 
-	void SoundWorld::removeEntity( SoundEntity *entity )
-	{
-		AX_ASSERT(entity->m_world == this);
+	AX_ASSERT(entity == m_entities[id]);
 
-		int id = entity->m_entityId;
+	m_entities[id] = 0;
+	entity->m_world = 0;
+	entity->m_entityId = ENTITYID_NULL;
+}
 
-		AX_ASSERT(entity == m_entities[id]);
+void SoundWorld::playSound( int channelId, SoundFx *sfx, LoopingMode looping/*= Looping_None*/ )
+{
+	g_soundSystem->_playSound(this, 0, channelId, sfx, looping);
+}
 
-		m_entities[id] = 0;
-		entity->m_world = 0;
-		entity->m_entityId = ENTITYID_NULL;
-	}
+void SoundWorld::stopSound( int channelId )
+{
+	g_soundSystem->_stopSound(this, 0, channelId);
+}
 
-	void SoundWorld::playSound( int channelId, SoundFx *sfx, LoopingMode looping/*= Looping_None*/ )
-	{
-		g_soundSystem->_playSound(this, 0, channelId, sfx, looping);
-	}
+void SoundWorld::setListener( const AffineMat &matrix, const Vector3 &velocity )
+{
+	m_listenerMatrix = matrix;
+	m_listenerVelocity = velocity;
+}
 
-	void SoundWorld::stopSound( int channelId )
-	{
-		g_soundSystem->_stopSound(this, 0, channelId);
-	}
-
-	void SoundWorld::setListener( const AffineMat &matrix, const Vector3 &velocity )
-	{
-		m_listenerMatrix = matrix;
-		m_listenerVelocity = velocity;
-	}
-
-	SoundEntity *SoundWorld::getEntity( int id ) const
-	{
-		return m_entities[id];
-	}
+SoundEntity *SoundWorld::getEntity( int id ) const
+{
+	return m_entities[id];
+}
 
 AX_END_NAMESPACE
 

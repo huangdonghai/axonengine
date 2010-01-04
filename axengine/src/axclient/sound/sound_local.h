@@ -13,31 +13,31 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-	inline void ERRCHECK(FMOD_RESULT result)
-	{
-		if (result != FMOD_OK) {
-			Errorf("FMOD error! (%d) %s\n", result, FMOD_ErrorString(result));
-		}
+inline void ERRCHECK(FMOD_RESULT result)
+{
+	if (result != FMOD_OK) {
+		Errorf("FMOD error! (%d) %s\n", result, FMOD_ErrorString(result));
 	}
-
-	struct channel_t {
-		int m_startTime;
-		int m_finishTime;
-		int m_entityNum;
-		int m_channelId;
-
-		SoundWorld *m_world;
-		FMOD::Channel *m_fmodChannel;
-	};
-
-	struct loopChannel_t {
-		int m_startTime;
-		int m_finishTime;
-		int m_entityNum;
-		int m_channelId;
-
-		SoundWorld *m_world;
-		FMOD::Channel *m_fmodChannel;
-	};
-
 }
+
+struct channel_t {
+	int m_startTime;
+	int m_finishTime;
+	int m_entityNum;
+	int m_channelId;
+
+	SoundWorld *m_world;
+	FMOD::Channel *m_fmodChannel;
+};
+
+struct loopChannel_t {
+	int m_startTime;
+	int m_finishTime;
+	int m_entityNum;
+	int m_channelId;
+
+	SoundWorld *m_world;
+	FMOD::Channel *m_fmodChannel;
+};
+
+AX_END_NAMESPACE

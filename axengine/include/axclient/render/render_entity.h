@@ -51,9 +51,10 @@ class QuadNode;
 
 class AX_API RenderEntity
 {
-public:
 	friend class RenderWorld;
+	friend class QuadNode;
 
+public:
 	enum Flag {
 		DepthHack = 1, OutsideOnly = 2
 	};
@@ -140,7 +141,7 @@ protected:
 	bool m_queryCulled;
 
 	// linked info
-	Link<RenderEntity>			m_nodeLink;
+	IntrusiveLink<RenderEntity> m_link;
 	QuadNode *m_linkedNode;
 	int m_linkedFrame;
 

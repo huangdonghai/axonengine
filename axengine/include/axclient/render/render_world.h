@@ -25,7 +25,7 @@ public:
 
 	float size;
 	BoundingBox bbox;
-	Link<RenderEntity> linkHead;
+	IntrusiveList<RenderEntity> linkHead;
 	int lastUpdateFrame;
 
 	QuadNode() {
@@ -57,7 +57,8 @@ public:
 	}
 };
 
-class AX_API RenderWorld {
+class AX_API RenderWorld
+{
 public:
 	friend class RenderSystem;
 
@@ -121,7 +122,8 @@ private:
 	static int m_frameNum;
 
 public:
-	Link<RenderLight> m_shadowLink;
+	typedef IntrusiveList<RenderLight, &RenderLight::m_shadowLink> ShadowList;
+	ShadowList m_shadowLink;
 };
 
 AX_END_NAMESPACE

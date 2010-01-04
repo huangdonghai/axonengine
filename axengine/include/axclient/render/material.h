@@ -14,7 +14,8 @@ AX_BEGIN_NAMESPACE
 
 AX_DECLARE_REFPTR(Material);
 
-class AX_API Material : public RefObject {
+class AX_API Material : public RefObject
+{
 public:
 	// implement RefObject
 	virtual void deleteThis();
@@ -122,15 +123,18 @@ private:
 	bool m_p2tEnabled;
 	int m_p2tWidth, m_p2tHeight;
 
-	// delete link
-	Link<Material> m_needDeleteLink;
-
+private:
 	// management
 	typedef Dict<FixedString, Material*> MaterialDict;
 	static MaterialDict ms_materialDict;
-	static Link<Material> ms_needDeleteLinkHead;
+//	static IntrusiveList<Material, &Material::m_needDeleteLink> ms_needDeleteLinkHead;
 
 	static void _deleteMaterial(Material *mat);
+
+public:
+	// delete link
+	IntrusiveLink<Material> m_needDeleteLink;
+
 };
 
 inline void splitVectorToColor(const Vector3 &v, float &multiply, Rgb &color) {

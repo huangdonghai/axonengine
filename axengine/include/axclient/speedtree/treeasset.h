@@ -16,7 +16,7 @@ class CSpeedTreeRT;
 
 AX_BEGIN_NAMESPACE
 
-class TreeActor;
+class TreeEntity;
 class TreeManager;
 
 // NOTE: TreeAsset not managed by AssetManager, but managed by TreeManager
@@ -35,10 +35,10 @@ public:
 	BoundingBox getBoundingBox() const;
 	Primitives getAllPrimitives(float lod) const;
 
-	void addActor(TreeActor *actor);
-	void removeActor(TreeActor *actor);
+	void addActor(TreeEntity *actor);
+	void removeActor(TreeEntity *actor);
 
-	void issueToQueue(TreeActor *actor, QueuedScene *qscene);
+	void issueToQueue(TreeEntity *actor, QueuedScene *qscene);
 #if 0
 	void issueToQueueInstancing(QueuedScene *qscene);
 #endif
@@ -87,11 +87,11 @@ inline String TreeAsset::genKey(const String &filename, int seed) {
 	return result;
 }
 
-inline void TreeAsset::addActor(TreeActor *actor) {
+inline void TreeAsset::addActor(TreeEntity *actor) {
 	m_treeActors.insert(actor);
 }
 
-inline void TreeAsset::removeActor(TreeActor *actor) {
+inline void TreeAsset::removeActor(TreeEntity *actor) {
 	m_treeActors.erase(actor);
 }
 

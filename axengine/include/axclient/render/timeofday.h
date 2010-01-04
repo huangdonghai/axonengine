@@ -13,58 +13,58 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-	class TimeOfDay {
+class TimeOfDay {
+public:
+	enum Category {
+		CatSun, CatDaySky, CatNightSky, CatMoon, CatDayLight, CatNightLight
+	};
+
+	enum ItemKind {
+		kSunColor,
+
+		NUM_ITEM_KINDS
+	};
+
+	enum ItemDataType {
+		dFloat, dColor
+	};
+
+	union ItemValue {
+		float fValue;
+		int colorValue;
+	};
+
+	struct ItemData {
+		float time;		// time in [0~1]
+		ItemValue value;
+	};
+
+	typedef Sequence<ItemData> ItemDataSeq;
+
+	class Item {
 	public:
-		enum Category {
-			CatSun, CatDaySky, CatNightSky, CatMoon, CatDayLight, CatNightLight
-		};
-
-		enum ItemKind {
-			kSunColor,
-
-			NUM_ITEM_KINDS
-		};
-
-		enum ItemDataType {
-			dFloat, dColor
-		};
-
-		union ItemValue {
-			float fValue;
-			int colorValue;
-		};
-
-		struct ItemData {
-			float time;		// time in [0~1]
-			ItemValue value;
-		};
-
-		typedef Sequence<ItemData> ItemDataSeq;
-
-		class Item {
-		public:
-			String getName() const;
-			void addControlPoint(int minutes, float value);
-			void addControlPoint(int minutes, Rgb color);
-			float getFloatValue(int minutes) const;
-			Rgb getColorValue(int minutes) const;
-
-		private:
-			String m_name;
-			Category m_category;
-			ItemDataType m_dataType;
-			ItemDataSeq m_datas;
-		};
-
-		TimeOfDay();
-		~TimeOfDay();
-
-		void addValue(ItemKind k, int minutes, float value);
-		void addValue(ItemKind k, int minutes, Rgb color);
+		String getName() const;
+		void addControlPoint(int minutes, float value);
+		void addControlPoint(int minutes, Rgb color);
+		float getFloatValue(int minutes) const;
+		Rgb getColorValue(int minutes) const;
 
 	private:
-		Item m_items[NUM_ITEM_KINDS];
+		String m_name;
+		Category m_category;
+		ItemDataType m_dataType;
+		ItemDataSeq m_datas;
 	};
+
+	TimeOfDay();
+	~TimeOfDay();
+
+	void addValue(ItemKind k, int minutes, float value);
+	void addValue(ItemKind k, int minutes, Rgb color);
+
+private:
+	Item m_items[NUM_ITEM_KINDS];
+};
 
 AX_END_NAMESPACE
 

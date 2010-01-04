@@ -218,42 +218,6 @@
 					RelativePath="..\..\..\include\axcore\stdinc.h"
 					>
 				</File>
-				<Filter
-					Name="template"
-					>
-					<File
-						RelativePath="..\..\..\include\axcore\template\enum.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\..\include\axcore\template\foreach.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\..\include\axcore\template\hash.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\..\include\axcore\template\link.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\..\include\axcore\template\nullptr.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\..\include\axcore\template\sharedptr.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\..\include\axcore\template\static_assert.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\..\include\axcore\template\template.h"
-						>
-					</File>
-				</Filter>
 			</Filter>
 		</Filter>
 		<Filter
@@ -844,6 +808,42 @@
 			</File>
 			<File
 				RelativePath="..\..\..\src\axcore\minizip\zip.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="template"
+			>
+			<File
+				RelativePath="..\..\..\include\axcore\template\enum.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\axcore\template\foreach.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\axcore\template\hash.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\axcore\template\link.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\axcore\template\nullptr.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\axcore\template\sharedptr.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\axcore\template\static_assert.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\axcore\template\template.h"
 				>
 			</File>
 		</Filter>

@@ -15,7 +15,7 @@ AX_BEGIN_NAMESPACE
 
 class TreeAsset;
 
-class AX_API TreeActor : public RenderEntity {
+class AX_API TreeEntity : public RenderEntity {
 public:
 	friend class TreeAsset;
 
@@ -26,8 +26,8 @@ public:
 		InstanceScale = 3
 	};
 
-	TreeActor(const String &filename, int seed = 1);
-	~TreeActor();
+	TreeEntity(const String &filename, int seed = 1);
+	~TreeEntity();
 
 	void setWindMatrixOffset(float fOffset) { m_instanceParam[WindMatrixOffset] = float(int(10.0f * fOffset)); }
 
@@ -47,7 +47,7 @@ private:
 	Vector4 m_instanceParam;
 };
 
-typedef DictSet<TreeActor*> TreeDict;
+typedef DictSet<TreeEntity*> TreeDict;
 
 AX_END_NAMESPACE
 

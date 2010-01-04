@@ -13,7 +13,7 @@ AX_BEGIN_NAMESPACE
 
 // static member
 Material::MaterialDict Material::ms_materialDict;
-Link<Material> Material::ms_needDeleteLinkHead;
+IntrusiveList<Material, &Material::m_needDeleteLink> ms_needDeleteLinkHead;
 
 Material::Material()
 {
@@ -31,8 +31,9 @@ Material::Material()
 
 	TypeZeroArray(m_features);
 	TypeZeroArray(m_literals);
-
+#if 0
 	m_needDeleteLink.setOwner(this);
+#endif
 }
 
 Material::~Material()
@@ -274,7 +275,8 @@ MaterialRp Material::load(const String &name)
 
 	if (it != ms_materialDict.end()) {
 		Material *mat = it->second;
-		mat->m_needDeleteLink.removeFromList();
+		if (mat->m_needDeleteLink.isLinked())
+			ms_needDeleteLinkHead.erase(mat);
 		mat->addref();
 		return mat;
 	}
@@ -313,11 +315,16 @@ void Material::finalizeManager()
 
 void Material::_deleteMaterial( Material *mat )
 {
+#if 0
 	mat->m_needDeleteLink.addToEnd(ms_needDeleteLinkHead);
+#else
+	ms_needDeleteLinkHead.push_back(mat);
+#endif
 }
 
 void Material::syncFrame()
 {
+#if 0
 	Link<Material>* node = ms_needDeleteLinkHead.getNextNode();
 
 	while (node) {
@@ -332,6 +339,18 @@ void Material::syncFrame()
 	}
 
 	ms_needDeleteLinkHead.clearList();
+#else
+	IntrusiveList<Material, &Material::m_needDeleteLink>::iterator it = ms_needDeleteLinkHead.begin();
+
+	while (it != ms_needDeleteLinkHead.end()) {
+		IntrusiveList<Material, &Material::m_needDeleteLink>::iterator oldIt = it;
+		++it;
+		Material *mat = &*oldIt;
+		ms_materialDict.erase(mat->getKey());
+		ms_needDeleteLinkHead.erase(oldIt);
+		delete mat;
+	}
+#endif
 }
 
 void Material::deleteThis()

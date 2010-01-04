@@ -272,7 +272,11 @@ void QueuedScene::checkLights()
 
 	// add to world's shadow link
 	for (int i = 0; i < numShadowed; i++) {
+#if 0
 		shadowed[i]->preQueued->linkShadow();
+#else
+		world->m_shadowLink.push_front(shadowed[i]->preQueued);
+#endif
 	}
 
 	// check shadow map memory used
@@ -283,6 +287,7 @@ void QueuedScene::checkLights()
 	int desired = r_shadowPoolSize->getInteger();
 	desired = Math::clamp(desired, 8, 128) * 1024 * 1024;
 
+#if 0
 	RenderLight *light = world->m_shadowLink.getNext();
 	while (light) {
 		if (totalUsed > desired) {
@@ -297,7 +302,23 @@ void QueuedScene::checkLights()
 		}
 		light = light->m_shadowLink.getNext();
 	}
-
+#else
+	RenderWorld::ShadowList::iterator it = world->m_shadowLink.begin();
+	while (it != world->m_shadowLink.end()) {
+		RenderLight *light = &*it;
+		if (totalUsed > desired) {
+			frameFreed += light->getShadowMemoryUsed();
+			light->freeShadowMap();
+			it = world->m_shadowLink.erase(it);
+			continue;
+		}
+		totalUsed += light->getShadowMemoryUsed();
+		if (light->genShadowMap(this)) {
+			frameUsed += light->getShadowMemoryUsed();
+		}
+		++it;
+	}
+#endif
 	g_statistic->setValue(stat_shadowPoolSize, totalUsed);
 	g_statistic->setValue(stat_shadowPoolUsed, frameUsed);
 	g_statistic->setValue(stat_shadowPoolFreed, frameFreed);

@@ -12,49 +12,49 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-	static int eyeInWaterSort[] = {
-		Shader::SortHint_opacit,
-		Shader::SortHint_decal,
-		Shader::SortHint_aboveWater,
-		Shader::SortHint_water,
-		Shader::SortHint_underWater,
-	};
+static int eyeInWaterSort[] = {
+	Shader::SortHint_opacit,
+	Shader::SortHint_decal,
+	Shader::SortHint_aboveWater,
+	Shader::SortHint_water,
+	Shader::SortHint_underWater,
+};
 
 
-	void Interaction::calcSort(bool eyeInWater) {
-		sortkey = Shader::SortHint_opacit << 28;
+void Interaction::calcSort(bool eyeInWater) {
+	sortkey = Shader::SortHint_opacit << 28;
 
-		Material *mat = primitive->getMaterial();
+	Material *mat = primitive->getMaterial();
 
-		if (!mat) {
-			return;
-		}
-
-		Shader *shader = mat->getShaderTemplate();
-
-		if (!shader) {
-			return;
-		}
-
-		sortkey = shader->getSortHint();
-
-		Texture *tex = mat->getTexture(SamplerType::Diffuse);
-
-		if (eyeInWater) {
-			sortkey = eyeInWaterSort[sortkey];
-		}
-
-		int distance = 0;
-		if (queuedEntity) {
-			distance = queuedEntity->distance * 1024;
-		}
-
-		sortkey = (sortkey << 28) + ((uint_t)(distance) &0x0fffffff);
+	if (!mat) {
+		return;
 	}
 
-	void Interaction::setupShader() {
+	Shader *shader = mat->getShaderTemplate();
 
+	if (!shader) {
+		return;
 	}
+
+	sortkey = shader->getSortHint();
+
+	Texture *tex = mat->getTexture(SamplerType::Diffuse);
+
+	if (eyeInWater) {
+		sortkey = eyeInWaterSort[sortkey];
+	}
+
+	int distance = 0;
+	if (queuedEntity) {
+		distance = queuedEntity->distance * 1024;
+	}
+
+	sortkey = (sortkey << 28) + ((uint_t)(distance) &0x0fffffff);
+}
+
+void Interaction::setupShader() {
+
+}
 
 AX_END_NAMESPACE
 
