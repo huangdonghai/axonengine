@@ -73,12 +73,19 @@ private:
 	pointer m_end;		// for iterator
 };
 
-struct Particle {
-	Vector3 pos, speed, down, origin, dir;
-	Vector3 corners[4];
-	float size, life, maxlife;
-	int tile;
-	Vector4 color;
+class Particle {
+	friend class ParticleEmitter;
+public:
+	Particle() {}
+	~Particle() {}
+
+private:
+	IntrusiveLink<Particle> m_link;
+	Vector3 m_pos, m_speed, m_down, m_origin, m_dir;
+	Vector3 m_corners[4];
+	float m_size, m_life, m_maxlife;
+	int m_tile;
+	Vector4 m_color;
 };
 
 class ParticleEmitter : public GfxObject
@@ -125,10 +132,10 @@ protected:
 private:
 	// BEGIN ANIMATABLE PROPERTIES
 	float m_EmissionSpeed;
-	float m_SpeedVariation;		// Variation in the flying-speed. (range: 0 to 1)
+	float m_SpeedVariation;		// Variation in the flying-m_speed. (range: 0 to 1)
 	float m_VerticalRange;		// Drifting away vertically. (range: 0 to pi)
 	float m_HorizontalRange;	// They can do it horizontally too! (range: 0 to 2*pi)
-	float m_Gravity;			// Fall down, apple!
+	float m_Gravity;			// Fall m_down, apple!
 	float m_Lifespan;			// Everyone has to die.
 	float m_EmissionRate;		// Stread your particles, emitter.
 	float m_EmissionAreaLength; // Well, you can do that in this area.
@@ -151,7 +158,9 @@ private:
 	// runtime
 	MeshPrim *m_mesh;
 	float m_remain;
-	List<Particle*> m_particles;
+	typedef IntrusiveList<Particle> ParticleList;
+	ParticleList m_particles;
+	AffineMat m_objToWorld;
 };
 
 AX_END_NAMESPACE

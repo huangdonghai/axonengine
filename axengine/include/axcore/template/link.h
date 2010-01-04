@@ -423,22 +423,23 @@ public:
 	static void transfer(IntrusiveList<T,link_ptr> *src,
 		IntrusiveList<T,link_ptr> *dest) {
 			if (!src->empty()) {
-				dest->link_.next = src->link_.next;
-				dest->link_.prev = src->link_.prev;
-				(dest->link_.next->*link_ptr).prev = dest->end_node();
-				(dest->link_.prev->*link_ptr).next = dest->end_node();
+				dest->m_link.next = src->m_link.next;
+				dest->m_link.prev = src->m_link.prev;
+				(dest->m_link.next->*link_ptr).prev = dest->end_node();
+				(dest->m_link.prev->*link_ptr).next = dest->end_node();
 				src->clear();
 			}
 	}
 
 	// Constructor.
 	IntrusiveList() {
-		link_.next = link_.prev = end_node();
+		m_link.next = m_link.prev = end_node();
+		m_size = 0;
 	}
 
 	// Iterator routines.
-	iterator begin() { return iterator(link_.next); }
-	const_iterator begin() const { return const_iterator(link_.next); }
+	iterator begin() { return iterator(m_link.next); }
+	const_iterator begin() const { return const_iterator(m_link.next); }
 	iterator end() { return iterator(end_node()); }
 	const_iterator end() const { return const_iterator(end_node()); }
 	reverse_iterator rbegin() { return reverse_iterator(end()); }
@@ -447,34 +448,35 @@ public:
 	const_reverse_iterator rend() const { return const_reverse_iterator(begin()); }
 
 	// Size routines.
-	bool empty() const { return (link_.next == end_node()); }
-	size_type size() const { return distance(begin(), end()); }
+	bool empty() const { return (m_link.next == end_node()); }
+	size_type size() const { /*return distance(begin(), end());*/ return m_size; }
 	size_type max_size() const { return size_type(-1); }
 
 	// Front and back accessors.
-	reference front() { return *link_.next; }
-	const_reference front() const { return *link_.next; }
-	reference back() { return *link_.prev; }
-	const_reference back() const { return *link_.prev; }
+	reference front() { return *m_link.next; }
+	const_reference front() const { return *m_link.next; }
+	reference back() { return *m_link.prev; }
+	const_reference back() const { return *m_link.prev; }
 
 	// Insertion routines.
-	static iterator insert(T *position, T *obj) {
+	iterator insert(T *position, T *obj) {
 		T *next = position;
 		T *prev = (position->*link_ptr).prev;
 		(next->*link_ptr).prev = obj;
 		(obj->*link_ptr).next = next;
 		(obj->*link_ptr).prev = prev;
 		(prev->*link_ptr).next = obj;
+		m_size++;
 		return iterator(obj);
 	}
 	static iterator insert(iterator position, T *obj) {
 		return insert(position.node, obj);
 	}
-	void push_front(T *obj) { insert(link_.next, obj); }
+	void push_front(T *obj) { insert(m_link.next, obj); }
 	void push_back(T *obj) { insert(end_node(), obj); }
 
 	// Removal routines.
-	static iterator erase(T *obj) {
+	iterator erase(T *obj) {
 		// Fix up the next and previous links for the previous and next objects.
 		T *next = (obj->*link_ptr).next;
 		T *prev = (obj->*link_ptr).prev;
@@ -485,15 +487,16 @@ public:
 		// crash instead of possibly corrupting the list structure.
 		(obj->*link_ptr).next = NULL;
 		(obj->*link_ptr).prev = NULL;
+		m_size--;
 		return iterator(next);
 	}
-	static iterator erase(iterator position) { return erase(position.node); }
-	void pop_front() { erase(link_.next); }
-	void pop_back() { erase(link_.prev); }
+	iterator erase(iterator position) { return erase(position.node); }
+	void pop_front() { erase(m_link.next); }
+	void pop_back() { erase(m_link.prev); }
 
 	// Utility routines.
 	void clear() {
-		link_.next = link_.prev = end_node();
+		m_link.next = m_link.prev = end_node();
 	}
 	void swap(IntrusiveList<T,link_ptr> &x) {
 		IntrusiveList<T,link_ptr> tmp;
@@ -503,7 +506,8 @@ public:
 	}
 
 private:
-	IntrusiveLink<T> link_;
+	IntrusiveLink<T> m_link;
+	size_type m_size;
 
 private:
 	// Disabled copy constructor and assignment operator.

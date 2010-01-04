@@ -29,7 +29,7 @@ public:
 		ChunkType,
 		GroupType,			// grouped primitive, maybe for gui system
 		ReferenceType,		// a reference to another primitive, but can use different entity and material etc...
-		InstancingType // geometry instancing type, instancing a primitive many time with different parameter
+		InstancingType		// geometry instancing type, instancing a primitive many time with different parameter
 	};
 
 	enum Hint {
@@ -48,10 +48,10 @@ public:
 	inline void setCachedFrame(int frame) { m_cachedFrame = frame; }
 	inline Type getType() const { return m_type; }
 
-	inline bool isDirty() const { return m_isDirtied; }
-	inline bool isVertexBufferDirty() const { return m_isVertexBufferDirtied; }
-	inline bool isIndexBufferDirty() const { return m_isIndexBufferDirtied; }
-	inline void clearDirty() { m_isDirtied = m_isVertexBufferDirtied = m_isIndexBufferDirtied = false; }
+	inline bool isDirty() const { return m_isDirty; }
+	inline bool isVertexBufferDirty() const { return m_isVertexBufferDirty; }
+	inline bool isIndexBufferDirty() const { return m_isIndexBufferDirty; }
+	inline void clearDirty() { m_isDirty = m_isVertexBufferDirty = m_isIndexBufferDirty = false; }
 
 	inline void setMatrix(const Matrix4 &matrix) { m_isMatrixSet = true; m_matrix = matrix; }
 	inline bool isMatrixSet() const { return m_isMatrixSet; }
@@ -73,9 +73,12 @@ protected:
 	int m_cachedId;		// used by render driver
 	int m_cachedFrame;
 	const Hint m_hint;
-	bool m_isDirtied;		// dirtied
-	bool m_isVertexBufferDirtied;
-	bool m_isIndexBufferDirtied;
+
+	bool m_isDirty;		// dirty
+	bool m_isVertexBufferDirty;
+	bool m_isIndexBufferDirty;
+	bool m_isWorldSpace; // primitive already in world space, so don't need model transform
+
 	Type m_type;
 	MaterialPtr m_material;
 	TexturePtr m_lightMap;
@@ -392,7 +395,7 @@ public:
 	Texture *getLayerAlpha(int index) const;
 	Material *getLayerDetail(int index) const;
 	Vector2 getLayerScale(int index) const;
-	void setLayerVisible(bool visible) { m_layerVisible = visible; m_isDirtied = true; }
+	void setLayerVisible(bool visible) { m_layerVisible = visible; m_isDirty = true; }
 	bool getLayerVisible() const { return m_layerVisible; }
 	bool isLayerVerticalProjection(int index) const;
 

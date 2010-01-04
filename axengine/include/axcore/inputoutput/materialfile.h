@@ -247,8 +247,8 @@ private:
 	static MaterialDeclDict ms_declDict;
 	static FailureSet ms_failureSet;
 };
-}
 
+AX_END_NAMESPACE
 
 #endif // end guardian
 

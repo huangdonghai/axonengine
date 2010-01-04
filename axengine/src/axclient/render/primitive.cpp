@@ -52,9 +52,9 @@ void PointPrim::initialize(int num_points) {
 	TypeFree(m_points);
 	m_points = TypeAlloc<DebugVertex>(m_numPoints);
 
-	m_isDirtied = true;
-	m_isVertexBufferDirtied = true;
-	m_isIndexBufferDirtied = true;
+	m_isDirty = true;
+	m_isVertexBufferDirty = true;
+	m_isIndexBufferDirty = true;
 }
 
 int PointPrim::getNumPoints() const {
@@ -69,8 +69,8 @@ DebugVertex *PointPrim::lock() {
 	return m_points;
 }
 void PointPrim::unlock() {
-	m_isDirtied = true;
-	m_isVertexBufferDirtied = true;
+	m_isDirty = true;
+	m_isVertexBufferDirty = true;
 }
 
 void PointPrim::setPointSize(float point_size) {
@@ -127,9 +127,9 @@ void LinePrim::init(int numverts, int numindexes) {
 	m_vertexes = TypeAlloc<DebugVertex>(m_numVertexes);
 	m_indexes = TypeAlloc<ushort_t>(numindexes);
 
-	m_isDirtied = true;
-	m_isVertexBufferDirtied = true;
-	m_isIndexBufferDirtied = true;
+	m_isDirty = true;
+	m_isVertexBufferDirty = true;
+	m_isIndexBufferDirty = true;
 }
 
 void LinePrim::clear() {
@@ -153,8 +153,8 @@ DebugVertex *LinePrim::lockVertexes() {
 }
 
 void LinePrim::unlockVertexes() {
-	m_isDirtied = true;
-	m_isVertexBufferDirtied = true;
+	m_isDirty = true;
+	m_isVertexBufferDirty = true;
 }
 
 int LinePrim::getNumIndexes() const {
@@ -170,8 +170,8 @@ ushort_t *LinePrim::lockIndexes() {
 }
 
 void LinePrim::unlockIndexes() {
-	m_isDirtied = true;
-	m_isIndexBufferDirtied = true;
+	m_isDirty = true;
+	m_isIndexBufferDirty = true;
 }
 
 ushort_t LinePrim::getIndex(int order) const {
@@ -210,9 +210,9 @@ float LinePrim::getLineWidth() const {
 }
 
 void LinePrim::unlock() {
-	m_isDirtied = true;
-	m_isVertexBufferDirtied = true;
-	m_isIndexBufferDirtied = true;
+	m_isDirty = true;
+	m_isVertexBufferDirty = true;
+	m_isIndexBufferDirty = true;
 }
 
 LinePrim *LinePrim::createAxis(Hint hint, float line_length) {
@@ -592,8 +592,8 @@ MeshVertex *MeshPrim::lockVertexes() {
 }
 
 void MeshPrim::unlockVertexes() {
-	m_isDirtied = true;
-	m_isVertexBufferDirtied = true;
+	m_isDirty = true;
+	m_isVertexBufferDirty = true;
 }
 
 const ushort_t *MeshPrim::getIndexPointer() const {
@@ -609,8 +609,8 @@ ushort_t *MeshPrim::lockIndexes() {
 }
 
 void MeshPrim::unlockIndexes() {
-	m_isDirtied = true;
-	m_isIndexBufferDirtied = true;
+	m_isDirty = true;
+	m_isIndexBufferDirty = true;
 }
 
 LinePrim *MeshPrim::getTangentLine(float len) const {
@@ -1171,8 +1171,8 @@ ChunkVertex *ChunkPrim::lockVertexes() {
 }
 
 void ChunkPrim::unlockVertexes() {
-	m_isDirtied = true;
-	m_isVertexBufferDirtied = true;
+	m_isDirty = true;
+	m_isVertexBufferDirty = true;
 }
 
 int ChunkPrim::getNumIndexes() const {
@@ -1188,8 +1188,8 @@ ushort_t *ChunkPrim::lockIndexes() {
 }
 
 void ChunkPrim::unlockIndexes() {
-	m_isDirtied = true;
-	m_isIndexBufferDirtied = true;
+	m_isDirty = true;
+	m_isIndexBufferDirty = true;
 }
 
 void ChunkPrim::setTerrainRect(const Vector4 &rect) {
@@ -1226,7 +1226,7 @@ Vector4 ChunkPrim::getChunkRect() const {
 
 void ChunkPrim::setNumLayers(int n) {
 	m_numLayers = std::min<int>(n,MAX_LAYERS);
-	m_isDirtied = true;
+	m_isDirty = true;
 }
 
 int ChunkPrim::getNumLayers() const {
@@ -1360,8 +1360,8 @@ ushort_t *RefPrim::lockIndexes() {
 }
 
 void RefPrim::unlockIndexes() {
-	m_isDirtied = true;
-	m_isIndexBufferDirtied = true;
+	m_isDirty = true;
+	m_isIndexBufferDirty = true;
 }
 
 //--------------------------------------------------------------------------
@@ -1385,13 +1385,13 @@ Primitive *InstancePrim::getInstanced() const {
 
 void InstancePrim::setInstanced(Primitive *instanced) {
 	m_instanced = instanced;
-	m_isDirtied = true;
+	m_isDirty = true;
 	setMaterial(instanced->getMaterial());
 }
 
 void InstancePrim::addInstance(const Param &param) {
 	m_params.push_back(param);
-	m_isDirtied = true;
+	m_isDirty = true;
 }
 
 void InstancePrim::addInstance( const AffineMat &mtx, const Vector4 &user )

@@ -88,7 +88,7 @@ ParticleEmitter::ParticleEmitter()
 	m_SpeedVariation = 0;
 	m_VerticalRange = 0;		// Drifting away vertically. (range: 0 to pi)
 	m_HorizontalRange = 0;	// They can do it horizontally too! (range: 0 to 2*pi)
-	m_Gravity = 9.8f;			// Fall down, apple!
+	m_Gravity = 9.8f;			// Fall m_down, apple!
 	m_Lifespan = 10.0f;			// Everyone has to die.
 	m_EmissionRate = 10.0f;		// Stread your particles, emitter.
 	m_EmissionAreaLength = 1; // Well, you can do that in this area.
@@ -126,12 +126,12 @@ Particle *ParticleEmitter::planeEmit(float width, float length, float speed, flo
 {
 	Particle *p = ParticleAllocator.alloc();
 
-	p->pos = Vector3(randfloat(-length,length), 0, randfloat(-width,width));
+	p->m_pos = Vector3(randfloat(-length,length), 0, randfloat(-width,width));
 	Vector3 dir = Vector3(0,0,1.0f);
 
-	p->dir = dir;//.normalize();
-	p->down = Vector3(0,0,-1.0f); // dir * -1.0f;
-	p->speed = dir * speed * (1.0f+randfloat(-variant,variant));
+	p->m_dir = dir;//.normalize();
+	p->m_down = Vector3(0,0,-1.0f); // dir * -1.0f;
+	p->m_speed = dir * speed * (1.0f+randfloat(-variant,variant));
 
 	return 0;
 }
@@ -158,6 +158,9 @@ Primitives ParticleEmitter::getHitTestPrims()
 
 void ParticleEmitter::frameUpdate(QueuedScene *qscene)
 {
+	// object to world
+	m_objToWorld = m_entity->getMatrix() * m_tm;
+
 	// spawn new particles
 	float dt = qscene->camera.getFrameTime() * 0.001f;
 
@@ -193,20 +196,20 @@ void ParticleEmitter::frameUpdate(QueuedScene *qscene)
 
 	float mspeed = 1.0f;
 
-	for (List<Particle*>::iterator it = m_particles.begin(); it != m_particles.end(); ) {
-		Particle &p = **it;
-		p.speed += p.down * m_Gravity * dt - p.dir * m_Gravity2 * dt;
+	for (ParticleList::iterator it = m_particles.begin(); it != m_particles.end(); ++it) {
+		Particle &p = *it;
+		p.m_speed += p.m_down * m_Gravity * dt - p.m_dir * m_Gravity2 * dt;
 
 		if (m_slowdown>0) {
-			mspeed = expf(-1.0f * m_slowdown * p.life);
+			mspeed = expf(-1.0f * m_slowdown * p.m_life);
 		}
-		p.pos += p.speed * mspeed * dt;
+		p.m_pos += p.m_speed * mspeed * dt;
 
-		p.life += dt;
-		float rlife = p.life / p.maxlife;
-		// calculate size and color based on lifetime
-		p.size = lifeRamp<float>(rlife, m_mid, m_sizes[0], m_sizes[1], m_sizes[2]);
-		p.color = lifeRamp<Vector4>(rlife, m_mid, m_colors[0], m_colors[1], m_colors[2]);
+		p.m_life += dt;
+		float rlife = p.m_life / p.m_maxlife;
+		// calculate size and m_color based on lifetime
+		p.m_size = lifeRamp<float>(rlife, m_mid, m_sizes[0], m_sizes[1], m_sizes[2]);
+		p.m_color = lifeRamp<Vector4>(rlife, m_mid, m_colors[0], m_colors[1], m_colors[2]);
 
 		// kill off old particles
 		if (rlife >= 1.0f) 
@@ -222,6 +225,10 @@ void ParticleEmitter::frameUpdate(QueuedScene *qscene)
 	int numVerts = m_particles.size() * 4;
 	int numIndexes = m_particles.size() * 6;
 	checkMesh(numVerts, numIndexes);
+
+	for (ParticleList::iterator it = m_particles.begin(); it != m_particles.end(); ++it) {
+		Particle &p = *it;
+	}
 }
 
 void ParticleEmitter::issueToQueue(QueuedScene *qscene)
@@ -245,12 +252,12 @@ void ParticleEmitter::checkMesh(int numverts, int numindices)
 	// fill indices
 	ushort_t *indices = m_mesh->lockIndexes();
 	for (int i = 0; i < numindices / 6; i++) {
-		indices[i*6] = i;
-		indices[i*6] = i + 1;
-		indices[i*6] = i + 2;
-		indices[i*6] = i + 2;
-		indices[i*6] = i + 1;
-		indices[i*6] = i + 3;
+		indices[i*6] = i * 4;
+		indices[i*6] = i * 4 + 1;
+		indices[i*6] = i * 4 + 2;
+		indices[i*6] = i * 4 + 2;
+		indices[i*6] = i * 4 + 1;
+		indices[i*6] = i * 4 + 3;
 	}
 	m_mesh->unlockIndexes();
 }
