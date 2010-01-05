@@ -12,6 +12,24 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
+Agent::Agent(Context *ctx)
+{
+	m_context = ctx;
+	m_isHovering = false;
+	m_isSelected = false;
+	m_isDeleted = false;
+	m_isInGame = false;
+
+	m_id = m_context->genAgentId();
+	m_context->addToHash(this);
+	m_actorDirty = true;
+}
+
+Agent::~Agent()
+{
+	m_context->removeFromHash(this);
+}
+
 void Agent::beginTransform()
 {
 	m_oldMatrix = m_oldmatrixNoScale = getMatrix();
@@ -97,9 +115,9 @@ void Agent::setRotate(int index, float f)
 void Agent::setDeleted(bool deleted)
 {
 	if (!m_isDeleted && deleted)
-		doDeleteFlagChanged(true);
+		addToContext();
 	else if (m_isDeleted && !deleted)
-		doDeleteFlagChanged(false);
+		removeFromContext();
 
 	m_isDeleted = deleted;
 	m_actorDirty = true;
@@ -107,9 +125,9 @@ void Agent::setDeleted(bool deleted)
 
 void Agent::setId(int newid)
 {
-	m_context->removeActor(this);
+	m_context->removeFromHash(this);
 	m_id = newid;
-	m_context->addActor(this);
+	m_context->addToHash(this);
 }
 
 void Agent::setAxis( const Matrix3 &axis )
@@ -117,24 +135,6 @@ void Agent::setAxis( const Matrix3 &axis )
 	AffineMat mat = getMatrix();
 	mat.axis = axis;
 	setMatrix(mat);
-}
-
-Agent::Agent(Context *ctx)
-{
-	m_context = ctx;
-	m_isHovering = false;
-	m_isSelected = false;
-	m_isDeleted = false;
-	m_isInGame = false;
-
-	m_id = m_context->generateActorId();
-	m_context->addActor(this);
-	m_actorDirty = true;
-}
-
-Agent::~Agent()
-{
-	m_context->removeActor(this);
 }
 
 //--------------------------------------------------------------------------

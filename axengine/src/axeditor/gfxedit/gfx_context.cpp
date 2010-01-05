@@ -69,7 +69,7 @@ void GfxContext::doRender( const RenderCamera &camera, bool world /*= false*/ )
 	AgentDict::iterator it = m_agentDict.begin();
 
 	for (; it != m_agentDict.end(); ++it) {
-		if (it->second) it->second->doRender();
+		if (it->second) it->second->drawHelper();
 	}
 
 	if (m_tool) {
@@ -81,7 +81,7 @@ void GfxContext::doRender( const RenderCamera &camera, bool world /*= false*/ )
 	g_renderSystem->endScene();
 }
 
-void GfxContext::doSelect( const RenderCamera &camera, int part )
+void GfxContext::doHitTest( const RenderCamera &camera, int part )
 {
 
 }

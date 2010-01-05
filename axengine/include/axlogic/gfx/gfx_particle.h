@@ -150,7 +150,7 @@ private:
 	float m_mid, m_slowdown, m_rotation;
 	Vector3 m_pos;
 	int m_blend, m_order, m_type;
-	int m_rows, m_cols;
+	int m_tileRows, m_tileCols;
 	Sequence<Vector4> m_tiles;
 	bool m_billboard;
 	int m_flags;

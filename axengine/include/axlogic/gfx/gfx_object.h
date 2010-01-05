@@ -21,6 +21,9 @@ class GfxObject : public Object
 	AX_DECLARE_CLASS(GfxObject, Object)
 		AX_SIMPLEPROP(tm)
 	AX_END_CLASS()
+
+	friend class GfxEntity;
+
 public:
 	enum GfxType {
 		kVirtualBase,

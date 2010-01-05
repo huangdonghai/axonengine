@@ -14,12 +14,13 @@ AX_BEGIN_NAMESPACE
 
 GfxAgent::GfxAgent(GfxContext *ctx, GfxObject::GfxType gfxType)
 	: Agent(ctx)
+	, m_gfxCtx(ctx)
 	, m_gfxObj(0)
 	, m_bboxLine(0)
 {
 	switch (gfxType) {
-		case GfxObject::kParticleEmitter:
-			m_gfxObj = new ParticleEmitter();
+	case GfxObject::kParticleEmitter:
+		m_gfxObj = new ParticleEmitter();
 	}
 }
 
@@ -34,12 +35,12 @@ Agent *GfxAgent::clone() const
 	return 0;
 }
 
-void GfxAgent::doDeleteFlagChanged(bool del)
+void GfxAgent::deleteFlagChanged(bool del)
 {
 
 }
 
-void GfxAgent::doRender()
+void GfxAgent::drawHelper()
 {
 	if (!r_helper->getBool()) {
 		return;
@@ -92,6 +93,16 @@ Rgb GfxAgent::getColor() const
 void GfxAgent::setColor(Rgb val)
 {
 
+}
+
+void GfxAgent::addToContext()
+{
+	m_gfxCtx->getGfxEntity()->addObject(m_gfxObj);
+}
+
+void GfxAgent::removeFromContext()
+{
+	m_gfxCtx->getGfxEntity()->removeObject(m_gfxObj);
 }
 
 AX_END_NAMESPACE

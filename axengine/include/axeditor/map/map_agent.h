@@ -24,17 +24,12 @@ public:
 		kNone, kStatic, kSpeedTree, kBrush, kEntity
 	};
 
-	enum Flag {
-		Selected = 1, Hovering = 2, Hided = 4, Deleted = 8, Locked = 0x10
-	};
-
 	MapAgent();
 	virtual ~MapAgent();
 
 	// implement Editor::Agent
 	virtual MapAgent *clone() const;
-	virtual void doDeleteFlagChanged(bool del);
-	virtual void doRender();
+	virtual void drawHelper();
 
 	virtual void setMatrix(const AffineMat &matrix);
 	virtual const AffineMat &getMatrix() const { return m_gameObj->getMatrix_p(); }
@@ -49,13 +44,14 @@ public:
 	virtual Rgb getColor() const;
 	virtual void setColor(Rgb val);
 
+	virtual void addToContext();
+	virtual void removeFromContext();
+
 	// MapAgent interface
 	virtual Type getType() const { return kNone; }
 
 	MapContext *getMapContext() const { return (MapContext*)(m_context); }
 
-	void bindToGame();
-	void unbindToGame();
 	void doHitTest();
 
 	void writeXml(File *f, int indent=0) const;
@@ -85,7 +81,7 @@ public:
 	virtual ~MapStatic();
 
 	// implement editor actor
-	virtual void doRender();
+	virtual void drawHelper();
 	virtual MapAgent *clone() const;
 	virtual Type getType() const { return kStatic; }
 
@@ -106,7 +102,7 @@ public:
 	virtual ~MapSpeedTree();
 
 	// implement editor actor
-	virtual void doRender();
+	virtual void drawHelper();
 	virtual MapAgent *clone() const;
 	virtual Type getType() const { return kSpeedTree; }
 

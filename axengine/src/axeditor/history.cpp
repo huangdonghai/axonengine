@@ -27,7 +27,7 @@ TransformHis::TransformHis(Context *context, const String &msg, int actorId, con
 TransformHis::~TransformHis() {}
 
 void TransformHis::doIt() {
-	Agent *actor = m_context->findActor(m_actorId);
+	Agent *actor = m_context->findAgent(m_actorId);
 
 	if (!actor) {
 		return;
@@ -39,7 +39,7 @@ void TransformHis::doIt() {
 }
 
 void TransformHis::undo() {
-	Agent *actor = m_context->findActor(m_actorId);
+	Agent *actor = m_context->findAgent(m_actorId);
 
 	if (!actor) {
 		return;

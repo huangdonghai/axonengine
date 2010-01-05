@@ -37,7 +37,7 @@ public:
 protected:
 
 private:
-	Sequence<GfxObject*> m_objects;
+	List<GfxObject*> m_objects;
 	Animator *m_animator;
 };
 

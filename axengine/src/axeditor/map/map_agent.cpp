@@ -37,7 +37,7 @@ void MapAgent::setMatrix(const AffineMat &matrix) {
 	m_gameObj->setMatrix_p(matrix);
 }
 
-void MapAgent::doRender() {
+void MapAgent::drawHelper() {
 	if (!r_helper->getBool()) {
 		return;
 	}
@@ -135,14 +135,14 @@ void MapAgent::doPropertyChanged()
 		m_gameObj->doPropertyChanged();
 }
 
-void MapAgent::bindToGame()
+void MapAgent::addToContext()
 {
 	AX_ASSURE(!m_isInGame);
 	getMapContext()->getGameWorld()->addObject(m_gameObj);
 	m_isInGame = true;
 }
 
-void MapAgent::unbindToGame()
+void MapAgent::removeFromContext()
 {
 	AX_ASSURE(m_isInGame);
 	getMapContext()->getGameWorld()->removeObject(m_gameObj);
@@ -158,17 +158,6 @@ void MapAgent::setColor( Rgb val )
 {
 	m_gameObj->setInstanceColor(val.toVector());
 }
-
-void MapAgent::doDeleteFlagChanged( bool del )
-{
-	if (del) {
-		static_cast<MapContext*>(m_context)->getGameWorld()->removeObject(m_gameObj);
-	} else {
-		static_cast<MapContext*>(m_context)->getGameWorld()->addObject(m_gameObj);
-	}
-}
-
-
 
 //--------------------------------------------------------------------------
 // class MapStatic
@@ -194,11 +183,11 @@ MapStatic::MapStatic(const String &nametemplate) {
 MapStatic::~MapStatic() {
 }
 
-void MapStatic::doRender() {
+void MapStatic::drawHelper() {
 	if (m_isDeleted)
 		return;
 
-	MapAgent::doRender();
+	MapAgent::drawHelper();
 
 	if (!m_actorDirty)
 		return;
@@ -216,7 +205,7 @@ MapAgent *MapStatic::clone() const {
 	result->m_gameObj->copyPropertiesFrom(m_gameObj);
 	result->setMatrix(getMatrix());
 	result->setColor(getColor());
-	result->bindToGame();
+	result->addToContext();
 
 	return result;
 }
@@ -246,11 +235,11 @@ MapSpeedTree::MapSpeedTree(const String &nametemplate) {
 MapSpeedTree::~MapSpeedTree() {
 }
 
-void MapSpeedTree::doRender() {
+void MapSpeedTree::drawHelper() {
 	if (m_isDeleted)
 		return;
 
-	MapAgent::doRender();
+	MapAgent::drawHelper();
 
 	if (!m_actorDirty)
 		return;
@@ -268,7 +257,7 @@ MapAgent *MapSpeedTree::clone() const {
 	result->m_gameObj->copyPropertiesFrom(m_gameObj);
 	result->setMatrix(getMatrix());
 	result->setColor(getColor());
-	result->bindToGame();
+	result->addToContext();
 
 	return result;
 }

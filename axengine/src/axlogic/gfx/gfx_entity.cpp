@@ -30,16 +30,14 @@ GfxEntity::~GfxEntity()
 
 BoundingBox GfxEntity::getLocalBoundingBox()
 {
-	BoundingBox result = BoundingBox::EmptyBox;
+	BoundingBox result = BoundingBox::UnitBox;
 
 	return result;
 }
 
 BoundingBox GfxEntity::getBoundingBox()
 {
-	BoundingBox result = BoundingBox::EmptyBox;
-
-	return result;
+	return getLocalBoundingBox().getTransformed(m_affineMat);
 }
 
 Primitives GfxEntity::getHitTestPrims()
@@ -49,7 +47,7 @@ Primitives GfxEntity::getHitTestPrims()
 
 void GfxEntity::frameUpdate(QueuedScene *qscene)
 {
-	Sequence<GfxObject*>::iterator it = m_objects.begin();
+	List<GfxObject*>::iterator it = m_objects.begin();
 	for (; it != m_objects.end(); ++it) {
 		GfxObject *obj = *it;
 		obj->frameUpdate(qscene);
@@ -58,7 +56,7 @@ void GfxEntity::frameUpdate(QueuedScene *qscene)
 
 void GfxEntity::issueToQueue(QueuedScene *qscene)
 {
-	Sequence<GfxObject*>::iterator it = m_objects.begin();
+	List<GfxObject*>::iterator it = m_objects.begin();
 	for (; it != m_objects.end(); ++it) {
 		GfxObject *obj = *it;
 		obj->issueToQueue(qscene);
@@ -68,11 +66,12 @@ void GfxEntity::issueToQueue(QueuedScene *qscene)
 void GfxEntity::addObject( GfxObject *obj )
 {
 	m_objects.push_back(obj);
+	obj->m_entity = this;
 }
 
 void GfxEntity::removeObject( GfxObject *obj )
 {
-	Sequence<GfxObject*>::iterator it = m_objects.begin();
+	List<GfxObject*>::iterator it = m_objects.begin();
 	for (; it != m_objects.end(); ++it) {
 		if (*it == obj) {
 			m_objects.erase(it);

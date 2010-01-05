@@ -258,7 +258,7 @@ bool View::selectRegion(const Rect &rect, SelectPart part, OUT Vector3 &pos, OUT
 
 	g_renderSystem->beginHitTest(cam);
 
-	m_context->doSelect(cam, part);
+	m_context->doHitTest(cam, part);
 
 	HitRecords records = g_renderSystem->endHitTest();
 
@@ -269,7 +269,7 @@ bool View::selectRegion(const Rect &rect, SelectPart part, OUT Vector3 &pos, OUT
 	Agent *minzActor = 0;
 	for (size_t i = 0; i < records.size(); i++) {
 		int id = records[i].name;
-		Agent *ed = m_context->findActor(id);
+		Agent *ed = m_context->findAgent(id);
 
 		AX_ASSERT(ed);
 
@@ -308,7 +308,7 @@ bool View::selectRegion(const Rect &rect, SelectPart part, OUT Vector3 &pos)
 			terrain->doSelect(cam);
 	}
 #endif
-	m_context->doSelect(cam, part);
+	m_context->doHitTest(cam, part);
 
 	HitRecords records = g_renderSystem->endHitTest();
 

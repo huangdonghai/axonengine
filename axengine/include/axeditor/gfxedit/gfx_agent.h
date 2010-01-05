@@ -22,8 +22,8 @@ public:
 
 	// implement Agent
 	virtual Agent *clone() const;
-	virtual void doDeleteFlagChanged(bool del);
-	virtual void doRender();
+	virtual void deleteFlagChanged(bool del);
+	virtual void drawHelper();
 
 	virtual void setMatrix(const AffineMat &matrix);
 	virtual const AffineMat &getMatrix() const;
@@ -37,7 +37,11 @@ public:
 	virtual Rgb getColor() const;
 	virtual void setColor(Rgb val);
 
+	virtual void addToContext();
+	virtual void removeFromContext();
+
 private:
+	GfxContext *m_gfxCtx;
 	GfxObject *m_gfxObj;
 	LinePrim *m_bboxLine;
 };

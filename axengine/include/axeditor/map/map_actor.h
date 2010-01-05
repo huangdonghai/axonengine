@@ -23,7 +23,7 @@ AX_BEGIN_NAMESPACE
 		virtual ~MapActor();
 
 		// implement Actor
-		virtual void doRender();
+		virtual void drawHelper();
 		virtual Type getType() const { return kEntity; }
 		virtual MapAgent *clone() const;
 

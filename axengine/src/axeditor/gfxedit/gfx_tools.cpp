@@ -47,6 +47,8 @@ void GfxObjectCreationTool::doPress(int x, int y, int flags, float pressure)
 	}
 
 	m_gfxAgent->bindToGame();
+#else
+	m_gfxAgent->addToContext();
 #endif
 
 	GroupHis *grouphis = new GroupHis(m_context, "Create GfxObject");

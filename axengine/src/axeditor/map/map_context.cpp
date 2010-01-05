@@ -319,7 +319,7 @@ void MapContext::doRender(const RenderCamera &camera, bool world) {
 	AgentDict::iterator it = m_agentDict.begin();
 
 	for (; it != m_agentDict.end(); ++it) {
-		if (it->second) it->second->doRender();
+		if (it->second) it->second->drawHelper();
 	}
 
 	if (m_tool) {
@@ -329,7 +329,7 @@ void MapContext::doRender(const RenderCamera &camera, bool world) {
 	g_renderSystem->endScene();
 }
 
-void MapContext::doSelect(const RenderCamera &camera, int part) {
+void MapContext::doHitTest(const RenderCamera &camera, int part) {
 	// select terrain
 	if (part & SelectPart::kTerrain) {
 		if (m_terrain)
@@ -456,7 +456,7 @@ void MapContext::readActor(const TiXmlElement *node) {
 	actor->setColor(color);
 	actor->setId(id);
 
-	actor->bindToGame();
+	actor->addToContext();
 
 	// update some info
 	m_maxId = std::max(id, m_maxId);

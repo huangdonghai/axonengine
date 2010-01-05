@@ -13,40 +13,40 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-	class AX_API State : public IObservable {
-	public:
-		enum ObserverFlag {
-			TerrainBrush, Transform, TransformToApp
-		};
-
-		State();
-		virtual ~State();
-
-		void setTransformState(bool editable, bool clear, const Vector3 &parameter);
-
-		float moveSpeed;
-		SelectPart selectionPart;
-
-		// transform, app->dll
-		int cursorSelectSize;
-		int gizmoSize;
-		TransformTool::Space transformSpace;
-		TransformTool::Center transformCenter;
-		bool transformRel;		// relatively transform
-
-		// transform, dll->app
-		struct TransformState {
-			bool editable;
-			bool clear;
-			Vector3 parameter;
-		} transformState;
-
-		// snap
-		bool isSnapToGrid;
-		float snapToGrid;
-		bool isSnapToAngle;
-		float snapToAngle;
+class AX_API State : public IObservable {
+public:
+	enum ObserverFlag {
+		TerrainBrush, Transform, TransformToApp
 	};
+
+	State();
+	virtual ~State();
+
+	void setTransformState(bool editable, bool clear, const Vector3 &parameter);
+
+	float moveSpeed;
+	SelectPart selectionPart;
+
+	// transform, app->dll
+	int cursorSelectSize;
+	int gizmoSize;
+	TransformTool::Space transformSpace;
+	TransformTool::Center transformCenter;
+	bool transformRel;		// relatively transform
+
+	// transform, dll->app
+	struct TransformState {
+		bool editable;
+		bool clear;
+		Vector3 parameter;
+	} transformState;
+
+	// snap
+	bool isSnapToGrid;
+	float snapToGrid;
+	bool isSnapToAngle;
+	float snapToAngle;
+};
 
 AX_END_NAMESPACE
 

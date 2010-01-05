@@ -21,6 +21,7 @@ Primitive::Primitive(Hint hint)
 	, m_hint(hint)
 	, m_type(NoneType)
 {
+	m_isWorldSpace = false;
 	m_material = 0;
 	m_lightMap = 0;
 	m_isMatrixSet = false;

@@ -16,6 +16,7 @@ AX_BEGIN_NAMESPACE
 GfxObject::GfxObject()
 {
 	m_tm.setIdentity();
+	m_entity = 0;
 }
 
 GfxObject::~GfxObject()

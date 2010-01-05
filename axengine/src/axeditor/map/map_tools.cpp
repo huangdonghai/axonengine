@@ -535,7 +535,7 @@ void CreateStaticTool::doPress(int x, int y, int flags, float pressure) {
 
 	m_agent->setOrigin(from);
 
-	m_agent->bindToGame();
+	m_agent->addToContext();
 
 	GroupHis *grouphis = new GroupHis(m_context, "Create MapStatic");
 
@@ -605,7 +605,7 @@ void CreateEntityTool::doPress(int x, int y, int flags, float pressure) {
 	m_agent->getGameEntity()->autoGenerateName();
 	m_agent->setOrigin(from);
 
-	m_agent->bindToGame();
+	m_agent->addToContext();
 
 	GroupHis *grouphis = new GroupHis(m_context, "Create Entity");
 
@@ -679,7 +679,7 @@ void CreateTreeTool::doPress(int x, int y, int flags, float pressure) {
 		from = Internal::snap(from, m_mapContext->getMapState()->snapToGrid);
 	}
 
-	m_agent->bindToGame();
+	m_agent->addToContext();
 
 	GroupHis *grouphis = new GroupHis(m_context, "Create MapSpeedTree");
 

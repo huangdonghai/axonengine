@@ -20,7 +20,9 @@ public:
 
 	// implement Context
 	virtual void doRender(const RenderCamera &camera, bool world = false);
-	virtual void doSelect(const RenderCamera &camera, int part);
+	virtual void doHitTest(const RenderCamera &camera, int part);
+
+	GfxEntity *getGfxEntity() { return m_gfxEntity; }
 
 private:
 	RenderWorld *m_renderWorld;

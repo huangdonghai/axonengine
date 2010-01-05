@@ -12,117 +12,119 @@ read the license and understand and accept it fully.
 #define AX_EDITOR_ACTION_H
 
 AX_BEGIN_NAMESPACE
-	//--------------------------------------------------------------------------
-	// class Action
-	//--------------------------------------------------------------------------
 
-	class AX_API Action {
-	public:
-		// editor action
-		enum Type {
-			None, Delete, Redo, Undo, Clone,
-			UserDefined = 128,
-			MaxType = 256
-		};
+//--------------------------------------------------------------------------
+// class Action
+//--------------------------------------------------------------------------
 
-		Action(Context *context) : m_context(context) {}
-		virtual ~Action() {}
-
-		virtual void doIt() = 0;
-		virtual void undo() { /* do nothing default */}
-		virtual bool isUndoable() { return false; }
-		virtual String getName() { return "Action"; }
-		virtual String getMessage() { return getName(); }
-		virtual void setMessage(const String &msg) { /* do nothing default */}
-		virtual int getMemoryUsed() { return 0; }
-
-	protected:
-		Context *m_context;
+class AX_API Action {
+public:
+	// editor action
+	enum Type {
+		None, Delete, Redo, Undo, Clone,
+		UserDefined = 128,
+		MaxType = 256
 	};
 
-	//--------------------------------------------------------------------------
-	// class ActionFactory
-	//--------------------------------------------------------------------------
+	Action(Context *context) : m_context(context) {}
+	virtual ~Action() {}
 
-	class ActionFactory {
-	public:
-		virtual Action *create(Context *context) = 0;
-	};
+	virtual void doIt() = 0;
+	virtual void undo() { /* do nothing default */}
+	virtual bool isUndoable() { return false; }
+	virtual String getName() { return "Action"; }
+	virtual String getMessage() { return getName(); }
+	virtual void setMessage(const String &msg) { /* do nothing default */}
+	virtual int getMemoryUsed() { return 0; }
 
-	template< class T >
-	class ActionFactory_ : public ActionFactory {
-		virtual Action *create(Context *context) {
-			return new T(context);
-		}
-	};
+protected:
+	Context *m_context;
+};
 
-	//--------------------------------------------------------------------------
-	// class UndoAction, undo action
-	//--------------------------------------------------------------------------
+//--------------------------------------------------------------------------
+// class ActionFactory
+//--------------------------------------------------------------------------
 
-	class UndoAction : public Action {
-	public:
-		UndoAction(Context *context);
-		virtual ~UndoAction();
+class ActionFactory {
+public:
+	virtual Action *create(Context *context) = 0;
+};
 
-		virtual void doIt();
-	};
+template< class T >
+class ActionFactory_ : public ActionFactory {
+	virtual Action *create(Context *context) {
+		return new T(context);
+	}
+};
 
-	//--------------------------------------------------------------------------
-	// class RedoAction, redo action
-	//--------------------------------------------------------------------------
+//--------------------------------------------------------------------------
+// class UndoAction, undo action
+//--------------------------------------------------------------------------
 
-	class RedoAction : public Action {
-	public:
-		RedoAction(Context *context);
-		virtual ~RedoAction();
+class UndoAction : public Action {
+public:
+	UndoAction(Context *context);
+	virtual ~UndoAction();
 
-		virtual void doIt();
-	};
+	virtual void doIt();
+};
 
-	//--------------------------------------------------------------------------
-	// class DeleteAction, undo action
-	//--------------------------------------------------------------------------
+//--------------------------------------------------------------------------
+// class RedoAction, redo action
+//--------------------------------------------------------------------------
 
-	class DeleteAction : public Action {
-	public:
-		DeleteAction(Context *context);
-		virtual ~DeleteAction();
+class RedoAction : public Action {
+public:
+	RedoAction(Context *context);
+	virtual ~RedoAction();
 
-		virtual void doIt();
-		virtual void undo();
-		virtual bool isUndoable() { return true; }
-		virtual String getName() { return "Delete"; }
-		virtual String getMessage() { return getName(); }
-		virtual int getMemoryUsed();
+	virtual void doIt();
+};
 
-	private:
-		bool m_isFirst;
-		AgentList m_actorlist;
-	};
+//--------------------------------------------------------------------------
+// class DeleteAction, undo action
+//--------------------------------------------------------------------------
 
-	//--------------------------------------------------------------------------
-	// class CloneAction, clone action
-	//--------------------------------------------------------------------------
+class DeleteAction : public Action {
+public:
+	DeleteAction(Context *context);
+	virtual ~DeleteAction();
 
-	class History;
-	class CloneAction : public Action {
-	public:
-		CloneAction(Context *context);
-		virtual ~CloneAction();
+	virtual void doIt();
+	virtual void undo();
+	virtual bool isUndoable() { return true; }
+	virtual String getName() { return "Delete"; }
+	virtual String getMessage() { return getName(); }
+	virtual int getMemoryUsed();
 
-		virtual void doIt();
-		virtual void undo();
-		virtual bool isUndoable() { return true; }
-		virtual String getName() { return "Clone"; }
-		virtual String getMessage() { return getName(); }
-		virtual int getMemoryUsed();
+private:
+	bool m_isFirst;
+	AgentList m_actorlist;
+};
 
-	private:
-		bool m_isFirst;
-		AgentList m_actorlist;
-		History *m_selectionHis;
-	};
+//--------------------------------------------------------------------------
+// class CloneAction, clone action
+//--------------------------------------------------------------------------
+
+class History;
+class CloneAction : public Action {
+public:
+	CloneAction(Context *context);
+	virtual ~CloneAction();
+
+	virtual void doIt();
+	virtual void undo();
+	virtual bool isUndoable() { return true; }
+	virtual String getName() { return "Clone"; }
+	virtual String getMessage() { return getName(); }
+	virtual int getMemoryUsed();
+
+private:
+	bool m_isFirst;
+	AgentList m_actorlist;
+	History *m_selectionHis;
+};
+
 AX_END_NAMESPACE
 
 #endif

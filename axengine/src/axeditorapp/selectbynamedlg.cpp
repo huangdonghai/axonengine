@@ -266,7 +266,7 @@ void SelectByNameDlg::on_selection_itemSelectionChanged()
 	for (int i=0; i<itemList.size(); ++i)
 	{
 		int id = itemList[i]->data(0, Qt::UserRole).toInt();
-		actorList.push_back(g_mapContext->findActor(id));
+		actorList.push_back(g_mapContext->findAgent(id));
 	}
 
 	if (actorList.empty() == false)
@@ -463,7 +463,7 @@ void SelectByNameDlg::resetCamera()
 	{
 		int id = itemList[0]->data(0, Qt::UserRole).toInt();
 
-		Agent *actor = g_mapContext->findActor(id);
+		Agent *actor = g_mapContext->findAgent(id);
 
 		if (actor != NULL)
 		{

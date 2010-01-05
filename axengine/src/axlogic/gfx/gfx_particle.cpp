@@ -106,11 +106,24 @@ ParticleEmitter::ParticleEmitter()
 	m_slowdown = 0;
 	m_rotation = 0;
 //	int m_blend, m_order, m_type;
-	m_rows = 1;
-	m_cols = 1;
-	m_tiles;
 	m_billboard = true;
 	m_flags = 0;
+
+	// tiles
+	m_tileRows = 1;
+	m_tileCols = 1;
+
+	for (int i = 0; i < m_tileRows; i++) {
+		float ds = 1.0f / m_tileCols;
+		float dt = 1.0f / m_tileRows;
+		float t = float(i) / m_tileRows;
+		for (int j = 0; j < m_tileCols; j++) {
+			float s = float(j) / m_tileCols;
+
+			Vector4 tc(s, t, s+ds, t+dt);
+			m_tiles.push_back(tc);
+		}
+	}
 
 	// runtime
 	m_remain = 0;
@@ -133,7 +146,7 @@ Particle *ParticleEmitter::planeEmit(float width, float length, float speed, flo
 	p->m_down = Vector3(0,0,-1.0f); // dir * -1.0f;
 	p->m_speed = dir * speed * (1.0f+randfloat(-variant,variant));
 
-	return 0;
+	return p;
 }
 
 Particle *ParticleEmitter::sphereEmit(float w, float l, float spd, float var, float spr, float spr2)
@@ -225,10 +238,35 @@ void ParticleEmitter::frameUpdate(QueuedScene *qscene)
 	int numVerts = m_particles.size() * 4;
 	int numIndexes = m_particles.size() * 6;
 	checkMesh(numVerts, numIndexes);
+	const Matrix3& viewaxis = qscene->camera.getViewAxis();
+
+	const Vector3& right = viewaxis[1];
+	const Vector3& up = viewaxis[2];
+
+	MeshVertex *verts = m_mesh->lockVertexes();
 
 	for (ParticleList::iterator it = m_particles.begin(); it != m_particles.end(); ++it) {
 		Particle &p = *it;
+		Vector4 &tc = m_tiles[p.m_tile];
+
+		verts[0].xyz = p.m_pos - (right + up) * p.m_size;
+		verts[0].st.set(tc[0], tc[0]);
+		verts[0].rgba = p.m_color;
+
+		verts[1].xyz = p.m_pos + (right - up) * p.m_size;
+		verts[1].st.set(tc[1], tc[0]);
+		verts[1].rgba = p.m_color;
+
+		verts[2].xyz = p.m_pos + (right + up) * p.m_size;
+		verts[2].st.set(tc[1], tc[1]);
+		verts[2].rgba = p.m_color;
+
+		verts[3].xyz = p.m_pos - (right - up) * p.m_size;
+		verts[3].st.set(tc[0], tc[1]);
+		verts[3].rgba = p.m_color;
 	}
+
+	m_mesh->unlockVertexes();
 }
 
 void ParticleEmitter::issueToQueue(QueuedScene *qscene)
@@ -255,8 +293,8 @@ void ParticleEmitter::checkMesh(int numverts, int numindices)
 		indices[i*6] = i * 4;
 		indices[i*6] = i * 4 + 1;
 		indices[i*6] = i * 4 + 2;
-		indices[i*6] = i * 4 + 2;
 		indices[i*6] = i * 4 + 1;
+		indices[i*6] = i * 4 + 2;
 		indices[i*6] = i * 4 + 3;
 	}
 	m_mesh->unlockIndexes();

@@ -19,12 +19,11 @@ public:
 	virtual ~Agent();
 
 	enum Flag {
-		Selected = 1, Hovering = 2, Hided = 4, Deleted = 8, Locked = 0x10
+		Selected = 1, Hovering = 2, Hidden = 4, Deleted = 8, Locked = 0x10
 	};
 
 	virtual Agent *clone() const = 0;
-	virtual void doDeleteFlagChanged(bool del) = 0;
-	virtual void doRender() = 0;
+	virtual void drawHelper() = 0;
 
 	virtual void setMatrix(const AffineMat &matrix) = 0;
 	virtual const AffineMat &getMatrix() const = 0;
@@ -37,6 +36,9 @@ public:
 
 	virtual Rgb getColor() const = 0;
 	virtual void setColor(Rgb val) = 0;
+
+	virtual void addToContext() = 0;
+	virtual void removeFromContext() = 0;
 
 	void beginTransform();
 	void doTransform(const AffineMat &mat, bool local);

@@ -13,84 +13,85 @@ read the license and understand and accept it fully.
 #include <bitset>
 
 AX_BEGIN_NAMESPACE
-	// some typedef
 
-	class Agent;
-	class AgentList;
+// some typedef
 
-	class Action;
-	class Tool;
+class Agent;
+class AgentList;
 
-	class Context;
+class Action;
+class Tool;
 
-	class View;
-	class PerspectiveView;
-	class MapOverallView;
+class Context;
 
-	// cursor
-	struct CursorType {
-		enum Type {
-			Default,
-			Arrow,			// standard arrow cursor 
-			UpArrow,		// upwards arrow 
-			Cross,			// crosshair 
-			Wait,			// hourglass/watch 
-			IBeam,			// ibeam/text entry 
-			SizeVer,		// vertical resize 
-			SizeHor,		// horizontal resize 
-			SizeFDiag,		// diagonal resize () 
-			SizeBDiag,		// diagonal resize (/) 
-			SizeAll,		// all directions resize 
-			Blank,			// blank/invisible cursor 
-			SplitV,			// vertical splitting 
-			SplitH,			// horizontal splitting 
-			PointingHand,	// a pointing hand 
-			Forbidden,		// a slashed circle 
-			WhatsThis,		// an arrow with a question mark 
-			Busy,			// standard arrow with hourglass/watch
+class View;
+class PerspectiveView;
+class MapOverallView;
 
-			ViewRotate,
-			ViewZoom,
-			ViewPan,
-		} t;
-		AX_DECLARE_ENUM(CursorType);
-	};
+// cursor
+struct CursorType {
+	enum Type {
+		Default,
+		Arrow,			// standard arrow cursor 
+		UpArrow,		// upwards arrow 
+		Cross,			// crosshair 
+		Wait,			// hourglass/watch 
+		IBeam,			// ibeam/text entry 
+		SizeVer,		// vertical resize 
+		SizeHor,		// horizontal resize 
+		SizeFDiag,		// diagonal resize () 
+		SizeBDiag,		// diagonal resize (/) 
+		SizeAll,		// all directions resize 
+		Blank,			// blank/invisible cursor 
+		SplitV,			// vertical splitting 
+		SplitH,			// horizontal splitting 
+		PointingHand,	// a pointing hand 
+		Forbidden,		// a slashed circle 
+		WhatsThis,		// an arrow with a question mark 
+		Busy,			// standard arrow with hourglass/watch
 
-	struct SelectPart {
-		enum Type {
-			kTerrain = 1,
-			kStatic = 2,
-			kVegetation = 4,
-			kActor = 8,
+		ViewRotate,
+		ViewZoom,
+		ViewPan,
+	} t;
+	AX_DECLARE_ENUM(CursorType);
+};
 
-			All = 0xFFFFFFFF
-		} t;
-		AX_DECLARE_ENUM(SelectPart);
-	};
+struct SelectPart {
+	enum Type {
+		kTerrain = 1,
+		kStatic = 2,
+		kVegetation = 4,
+		kActor = 8,
 
+		All = 0xFFFFFFFF
+	} t;
+	AX_DECLARE_ENUM(SelectPart);
+};
+
+// clipboard
+struct ClipBoardData {
 	// clipboard
-	struct ClipBoardData {
-		// clipboard
-		enum Format {
-			Empty, Text, MapActor, Actor,
+	enum Format {
+		Empty, Text, MapActor, Actor,
 
-			UserDefined = 128,
+		UserDefined = 128,
 
-			MaxFormat = 256
-		};
-
-		Format format;
-		size_t dataSize;
-		void *data;
+		MaxFormat = 256
 	};
 
-	struct Space {
-		enum Type {
-			WorldSpace, ViewSpace, ObjectSpace
-		} t;
+	Format format;
+	size_t dataSize;
+	void *data;
+};
 
-		AX_DECLARE_ENUM(Space);
-	};
+struct Space {
+	enum Type {
+		WorldSpace, ViewSpace, ObjectSpace
+	} t;
+
+	AX_DECLARE_ENUM(Space);
+};
 
 AX_END_NAMESPACE
 

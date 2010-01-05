@@ -22,7 +22,7 @@ MapActor::MapActor(const String &type) {
 	m_gameEntity = gameworld->createActor(type.c_str());
 	m_gameObj = m_gameEntity;
 
-//		bindToGame();
+//		addToContext();
 
 	const ClassInfo *ci = m_gameEntity->getClassInfo();
 	if (!ci) {
@@ -51,7 +51,7 @@ MapActor::~MapActor() {
 }
 
 
-void MapActor::doRender()
+void MapActor::drawHelper()
 {
 	if (m_isDeleted)
 		return;
@@ -63,7 +63,7 @@ void MapActor::doRender()
 		g_renderSystem->addToScene(m_iconPrim);
 	}
 
-	return MapAgent::doRender();
+	return MapAgent::drawHelper();
 }
 
 MapAgent *MapActor::clone() const
@@ -77,7 +77,7 @@ MapAgent *MapActor::clone() const
 	newent->setMatrix(getMatrix());
 	newent->setColor(getColor());
 
-	newent->bindToGame();
+	newent->addToContext();
 	return newent;
 }
 

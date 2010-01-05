@@ -69,7 +69,7 @@ public:
 
 	// present
 	virtual void doRender(const RenderCamera &camera, bool world = false);
-	virtual void doSelect(const RenderCamera &camera, int part);
+	virtual void doHitTest(const RenderCamera &camera, int part);
 
 	// bookmarks --timlly add
 	void addBookmark(const AffineMat &viewMatrix, const String &name = "", int id = -1);

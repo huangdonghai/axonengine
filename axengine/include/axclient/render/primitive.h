@@ -53,6 +53,9 @@ public:
 	inline bool isIndexBufferDirty() const { return m_isIndexBufferDirty; }
 	inline void clearDirty() { m_isDirty = m_isVertexBufferDirty = m_isIndexBufferDirty = false; }
 
+	inline bool isWorldSpace() const { return m_isWorldSpace; }
+	inline void setWorldSpace(bool val) { m_isWorldSpace = val; }
+
 	inline void setMatrix(const Matrix4 &matrix) { m_isMatrixSet = true; m_matrix = matrix; }
 	inline bool isMatrixSet() const { return m_isMatrixSet; }
 	inline Matrix4 getMatrix() const { return m_matrix; }
@@ -70,14 +73,14 @@ public:
 	Interaction *getHeadInteraction() const { return m_headInteraction; }
 
 protected:
-	int m_cachedId;		// used by render driver
-	int m_cachedFrame;
 	const Hint m_hint;
-
 	bool m_isDirty;		// dirty
 	bool m_isVertexBufferDirty;
 	bool m_isIndexBufferDirty;
 	bool m_isWorldSpace; // primitive already in world space, so don't need model transform
+
+	int m_cachedId;		// used by render driver
+	int m_cachedFrame;
 
 	Type m_type;
 	MaterialPtr m_material;
