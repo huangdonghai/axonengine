@@ -81,6 +81,8 @@ namespace {
 
 } // anonymous namespace
 
+
+
 ParticleEmitter::ParticleEmitter()
 {
 	// animatable
@@ -88,9 +90,9 @@ ParticleEmitter::ParticleEmitter()
 	m_SpeedVariation = 0;
 	m_VerticalRange = 0;		// Drifting away vertically. (range: 0 to pi)
 	m_HorizontalRange = 0;	// They can do it horizontally too! (range: 0 to 2*pi)
-	m_Gravity = 9.8f;			// Fall m_down, apple!
+	m_Gravity = 0.0f;			// Fall m_down, apple!
 	m_Lifespan = 10.0f;			// Everyone has to die.
-	m_EmissionRate = 10.0f;		// Stread your particles, emitter.
+	m_EmissionRate = 100.0f;		// Stread your particles, emitter.
 	m_EmissionAreaLength = 1; // Well, you can do that in this area.
 	m_EmissionAreaWidth = 1;
 	m_Gravity2 = 0;			// A second gravity? Its strong.
@@ -99,7 +101,7 @@ ParticleEmitter::ParticleEmitter()
 	// init info
 	for (int i = 0; i < 3; i++) {
 		m_colors[i] = Vector4::One;
-		m_sizes[i] = 1;
+		m_sizes[i] = 0.25f;
 	}
 
 	m_mid = 0.5f;
@@ -139,12 +141,20 @@ Particle *ParticleEmitter::planeEmit(float width, float length, float speed, flo
 {
 	Particle *p = ParticleAllocator.alloc();
 
-	p->m_pos = Vector3(randfloat(-length,length), 0, randfloat(-width,width));
+	p->m_pos = Vector3(randfloat(-length,length), randfloat(-width,width), 0);
 	Vector3 dir = Vector3(0,0,1.0f);
 
 	p->m_dir = dir;//.normalize();
 	p->m_down = Vector3(0,0,-1.0f); // dir * -1.0f;
 	p->m_speed = dir * speed * (1.0f+randfloat(-variant,variant));
+
+	p->m_life = 0;
+	p->m_maxlife = m_Lifespan;
+	p->m_origin = p->m_pos;
+	p->m_tile = 0;
+
+	// transform to world space
+	p->m_pos = m_objToWorld * p->m_pos;
 
 	return p;
 }
@@ -176,6 +186,7 @@ void ParticleEmitter::frameUpdate(QueuedScene *qscene)
 
 	// spawn new particles
 	float dt = qscene->camera.getFrameTime() * 0.001f;
+	dt = 0.02f;
 
 	float ftospawn = (dt * m_EmissionRate / m_Lifespan) + m_remain;
 	if (ftospawn < 1.0f) {
@@ -189,7 +200,6 @@ void ParticleEmitter::frameUpdate(QueuedScene *qscene)
 			tospawn = (int)m_particles.size() - MAX_PARTICLES;
 
 		m_remain = ftospawn - (float)tospawn;
-
 
 		float w = m_EmissionAreaWidth * 0.5f;
 		float l = m_EmissionAreaLength * 0.5f;
@@ -209,7 +219,7 @@ void ParticleEmitter::frameUpdate(QueuedScene *qscene)
 
 	float mspeed = 1.0f;
 
-	for (ParticleList::iterator it = m_particles.begin(); it != m_particles.end(); ++it) {
+	for (ParticleList::iterator it = m_particles.begin(); it != m_particles.end(); /*++it*/) {
 		Particle &p = *it;
 		p.m_speed += p.m_down * m_Gravity * dt - p.m_dir * m_Gravity2 * dt;
 
@@ -226,7 +236,7 @@ void ParticleEmitter::frameUpdate(QueuedScene *qscene)
 
 		// kill off old particles
 		if (rlife >= 1.0f) 
-			m_particles.erase(it++);
+			it = m_particles.erase(it);
 		else 
 			++it;
 	}
@@ -264,6 +274,8 @@ void ParticleEmitter::frameUpdate(QueuedScene *qscene)
 		verts[3].xyz = p.m_pos - (right - up) * p.m_size;
 		verts[3].st.set(tc[0], tc[1]);
 		verts[3].rgba = p.m_color;
+
+		verts += 4;
 	}
 
 	m_mesh->unlockVertexes();
@@ -290,12 +302,12 @@ void ParticleEmitter::checkMesh(int numverts, int numindices)
 	// fill indices
 	ushort_t *indices = m_mesh->lockIndexes();
 	for (int i = 0; i < numindices / 6; i++) {
-		indices[i*6] = i * 4;
-		indices[i*6] = i * 4 + 1;
-		indices[i*6] = i * 4 + 2;
-		indices[i*6] = i * 4 + 1;
-		indices[i*6] = i * 4 + 2;
-		indices[i*6] = i * 4 + 3;
+		indices[i*6 + 0] = i * 4;
+		indices[i*6 + 1] = i * 4 + 1;
+		indices[i*6 + 2] = i * 4 + 2;
+		indices[i*6 + 3] = i * 4 + 0;
+		indices[i*6 + 4] = i * 4 + 2;
+		indices[i*6 + 5] = i * 4 + 3;
 	}
 	m_mesh->unlockIndexes();
 }

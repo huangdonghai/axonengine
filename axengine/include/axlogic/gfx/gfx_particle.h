@@ -76,7 +76,11 @@ private:
 class Particle {
 	friend class ParticleEmitter;
 public:
-	Particle() {}
+	Particle()
+	{
+		m_tile = 0;
+	}
+
 	~Particle() {}
 
 private:
