@@ -40,6 +40,7 @@ require("Utils");
 
 -- load class
 require("Object");
+require("Gfx");
 require("Game");
 require("Physics");
 -- require("Ui");

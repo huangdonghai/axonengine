@@ -609,11 +609,11 @@
 			Name="scripts"
 			>
 			<File
-				RelativePath=".\scripts\ClassReg.lua"
+				RelativePath=".\scripts\Game.lua"
 				>
 			</File>
 			<File
-				RelativePath=".\scripts\Game.lua"
+				RelativePath=".\scripts\gfx.lua"
 				>
 			</File>
 			<File
@@ -737,6 +737,14 @@
 				</File>
 				<File
 					RelativePath=".\scripts\physics\Male.lua"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Gfx"
+				>
+				<File
+					RelativePath=".\scripts\gfx\particleemitter.lua"
 					>
 				</File>
 			</Filter>

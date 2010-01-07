@@ -7,8 +7,6 @@ By continuing to use, modify, or distribute this file you indicate that you have
 read the license and understand and accept it fully.
 */
 
-
-
 #include "gfx_local.h"
 
 AX_BEGIN_NAMESPACE
@@ -81,21 +79,21 @@ namespace {
 
 } // anonymous namespace
 
-
-
+// 中文恰好是两倍宽度
+// 中文恰好是两倍宽度
 ParticleEmitter::ParticleEmitter()
 {
 	// animatable
 	m_EmissionSpeed = 1.0f;
 	m_SpeedVariation = 0;
 	m_VerticalRange = 0;		// Drifting away vertically. (range: 0 to pi)
-	m_HorizontalRange = 0;	// They can do it horizontally too! (range: 0 to 2*pi)
+	m_HorizontalRange = 0;		// They can do it horizontally too! (range: 0 to 2*pi)
 	m_Gravity = 0.0f;			// Fall m_down, apple!
 	m_Lifespan = 10.0f;			// Everyone has to die.
-	m_EmissionRate = 100.0f;		// Stread your particles, emitter.
-	m_EmissionAreaLength = 1; // Well, you can do that in this area.
+	m_EmissionRate = 100.0f;	// Stread your particles, emitter.
+	m_EmissionAreaLength = 1;	// Well, you can do that in this area.
 	m_EmissionAreaWidth = 1;
-	m_Gravity2 = 0;			// A second gravity? Its strong.
+	m_Gravity2 = 0;				// A second gravity? Its strong.
 	m_Enabled = 1.0f;
 
 	// init info

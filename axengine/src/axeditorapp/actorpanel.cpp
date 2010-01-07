@@ -70,7 +70,7 @@ void ActorPanel::doNotify(IObservable *subject, int arg ) {
 			}
 			ui.scriptFile->setText(filename + ".lua" );
 		}
-		ui.cppType->setText(u2q(actor->getGameObject()->getMetaInfo()->getTypeName()) );
+		ui.cppType->setText(u2q(actor->getGameObject()->getMetaInfo()->getName()) );
 	}
 
 	if (actorlist.empty() ) {

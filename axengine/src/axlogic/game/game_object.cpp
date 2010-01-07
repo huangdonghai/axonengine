@@ -109,7 +109,7 @@ AX_BEGIN_NAMESPACE
 		String indstr(indent*2, ' ');
 #define INDENT if (indent) f->printf("%s", indstr.c_str());
 
-		INDENT; f->printf("<node className=\"%s\"\n", this->getMetaInfo()->getTypeName());
+		INDENT; f->printf("<node className=\"%s\"\n", this->getMetaInfo()->getName());
 #if 0
 		// write properties
 		TypeInfo *typeinfo = getTypeInfo();

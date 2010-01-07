@@ -824,7 +824,7 @@ Member *Object::findMember(const char *name) const
 	while (typeinfo) {
 		Member *member = typeinfo->findMember(name);
 		if (member) return member;
-		typeinfo = typeinfo->getBaseTypeInfo();
+		typeinfo = typeinfo->getBase();
 	}
 
 	if (!m_classInfo) {
@@ -876,8 +876,8 @@ bool Object::inherits(const char *cls) const
 {
 	MetaInfo *typeinfo = getMetaInfo();
 
-	for (; typeinfo; typeinfo=typeinfo->getBaseTypeInfo()) {
-		if (Strequ(cls, typeinfo->getTypeName())) {
+	for (; typeinfo; typeinfo=typeinfo->getBase()) {
+		if (Strequ(cls, typeinfo->getName())) {
 			return true;
 		}
 	}
@@ -953,7 +953,7 @@ void Object::writeProperties(File *f, int indent) const
 			INDENT; f->printf("  %s=\"%s\"\n", m->getName(), getProperty(m->getName()).toString().c_str());
 		}
 
-		typeinfo = typeinfo->getBaseTypeInfo();
+		typeinfo = typeinfo->getBase();
 	}
 
 	// write script properties
@@ -1005,7 +1005,7 @@ void Object::copyPropertiesFrom(const Object *rhs)
 			setProperty(m->getName(), m->getProperty(rhs));
 		}
 
-		typeinfo = typeinfo->getBaseTypeInfo();
+		typeinfo = typeinfo->getBase();
 	}
 
 	// write script properties
@@ -1661,11 +1661,11 @@ String ScriptSystem::generateObjectName(const String &str)
 	return result;
 }
 
-void ScriptSystem::registerType(MetaInfo *typeinfo)
+void ScriptSystem::registerType(MetaInfo *metainfo)
 {
-	m_typeInfoReg[typeinfo->getTypeName()] = typeinfo;
+	m_typeInfoReg[metainfo->getName()] = metainfo;
 
-	linkMetaInfoToClassInfo(typeinfo);
+	linkMetaInfoToClassInfo(metainfo);
 }
 
 Object *ScriptSystem::createObject(const char *classname)
@@ -1814,14 +1814,15 @@ void ScriptSystem::registerClass(const String &self, const String &base)
 	classInfo->initScriptProps();
 }
 
-void ScriptSystem::linkMetaInfoToClassInfo(MetaInfo *ti)
+void ScriptSystem::linkMetaInfoToClassInfo(MetaInfo *mi)
 {
 	ClassInfoDict::iterator it = m_classInfoReg.begin();
 
 	for (; it != m_classInfoReg.end(); ++it) {
 		ClassInfo *ci = it->second;
-		if (ci->m_metaName == ti->m_typeName) {
-			ci->m_typeInfo = ti;
+		if (ci->m_metaName == mi->m_name) {
+			ci->m_typeInfo = mi;
+			mi->m_classInfo = ci;
 		}
 	}
 }

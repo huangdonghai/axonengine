@@ -263,9 +263,9 @@ void PropertyEditor::initFromObject(Object *obj) {
 
 	MetaInfo *typeinfo = obj->getMetaInfo();
 
-	for (; typeinfo; typeinfo = typeinfo->getBaseTypeInfo()) {
+	for (; typeinfo; typeinfo = typeinfo->getBase()) {
 		IProperty *p;
-		p = new SeparatorProperty("", typeinfo->getTypeName()); collection->addProperty(p);
+		p = new SeparatorProperty("", typeinfo->getName()); collection->addProperty(p);
 
 		const MemberSeq &members = typeinfo->getMembers();
 

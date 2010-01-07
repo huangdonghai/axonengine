@@ -13,16 +13,16 @@ read the license and understand and accept it fully.
 #ifndef AX_SCRIPTSYSTEM_H
 #define AX_SCRIPTSYSTEM_H
 
-#define AX_DECLARE_CLASS(classname, baseclass) public:			\
-	typedef classname ThisClass;											\
-	typedef baseclass BaseClass;											\
-	virtual ::Axon::MetaInfo *classname::getMetaInfo() const {				\
-		return classname::registerMetaInfo();								\
-	}																		\
-	static ::Axon::MetaInfo *classname::registerMetaInfo() {				\
-		static ::Axon::MetaInfo *typeinfo;									\
-		if (!typeinfo) {													\
-			typeinfo = new ::Axon::MetaInfo_<classname>(#classname, BaseClass::registerMetaInfo()); \
+#define AX_DECLARE_CLASS(classname, baseclass) public: \
+	typedef classname ThisClass; \
+	typedef baseclass BaseClass; \
+	virtual ::Axon::MetaInfo *classname::getMetaInfo() const { \
+		return classname::registerMetaInfo(); \
+	} \
+	static ::Axon::MetaInfo *classname::registerMetaInfo() { \
+		static ::Axon::MetaInfo *typeinfo; \
+		if (!typeinfo) { \
+			typeinfo = new ::Axon::MetaInfo_<classname>(#classname, BaseClass::registerMetaInfo());
 
 #define AX_CONSTPROP(name) typeinfo->addProperty(#name, &ThisClass::get_##name);
 #define AX_PROP(name) typeinfo->addProperty(#name, &ThisClass::get_##name, &ThisClass::set_##name);
@@ -30,11 +30,11 @@ read the license and understand and accept it fully.
 
 #define AX_METHOD(name) typeinfo->addMethod(#name, &ThisClass::name);
 
-#define AX_END_CLASS()													\
-				g_scriptSystem->registerType(typeinfo);					\
-			}															\
-		return typeinfo;												\
-	}																	\
+#define AX_END_CLASS() \
+				g_scriptSystem->registerType(typeinfo); \
+			} \
+		return typeinfo; \
+	}
 
 
 #define AX_REGISTER_CLASS(cppname) cppname::registerMetaInfo();
@@ -653,8 +653,8 @@ public:
 		kEnum = Variant::kMaxType, kFlag, kTexture, kModel, kMaterial, kAnimation, kSpeedTree, kSound, kGroup
 	};
 
-	typedef std::pair<String,int>	EnumItem;
-	typedef Sequence<EnumItem>		EnumItems;
+	typedef std::pair<String,int> EnumItem;
+	typedef Sequence<EnumItem> EnumItems;
 
 	Member(const char *name, Type t) : m_name(name), m_type(t), m_propKind(Variant::kEmpty) {}
 
@@ -1058,12 +1058,12 @@ private:
 //--------------------------------------------------------------------------
 // class MetaInfo
 //--------------------------------------------------------------------------
-
+class ClassInfo;
 class AX_API MetaInfo
 {
-public:
 	friend class ScriptSystem;
 
+public:
 	MetaInfo(const char *classname, MetaInfo *base);
 	virtual ~MetaInfo();
 
@@ -1080,9 +1080,9 @@ public:
 	MetaInfo &addMethod(const char *name, Signature m);
 
 	Member *findMember(const char *name) const;
-	MetaInfo *getBaseTypeInfo() const;
+	MetaInfo *getBase() const;
 
-	const char *getTypeName() const;
+	const char *getName() const;
 	const MemberSeq &getMembers() const;
 
 	virtual Object *createObject() = 0;
@@ -1091,15 +1091,17 @@ protected:
 	void addMember(Member *member);
 
 private:
-	const char *m_typeName;
-	MetaInfo *m_baseTypeInfo;
+	const char *m_name;
+	MetaInfo *m_base;
+	ClassInfo *m_classInfo;
 	MemberSeq m_members;
 	MemberDict m_memberDict;
 };
 
 inline MetaInfo::MetaInfo(const char *classname, MetaInfo *base)
-	: m_typeName(classname)
-	, m_baseTypeInfo(base)
+	: m_name(classname)
+	, m_base(base)
+	, m_classInfo(nullptr)
 {}
 
 inline MetaInfo::~MetaInfo() {}
@@ -1146,12 +1148,12 @@ inline Member *MetaInfo::findMember(const char *name) const {
 	return nullptr;
 }
 
-inline MetaInfo *MetaInfo::getBaseTypeInfo() const {
-	return m_baseTypeInfo;
+inline MetaInfo *MetaInfo::getBase() const {
+	return m_base;
 }
 
-inline const char *MetaInfo::getTypeName() const {
-	return m_typeName;
+inline const char *MetaInfo::getName() const {
+	return m_name;
 }
 
 inline const MemberSeq &MetaInfo::getMembers() const {
@@ -1200,7 +1202,7 @@ public:
 	Variant m_defaultValue;
 	ScriptProp *m_group;
 };
-typedef Sequence<ScriptProp*>		ScriptPropSeq;
+typedef Sequence<ScriptProp*> ScriptPropSeq;
 typedef Dict<String,ScriptProp*> ScriptPropDict;
 
 
@@ -1331,7 +1333,7 @@ public:
 	int nextNameIndex(const String &str);
 	String generateObjectName(const String &str);
 
-	void registerType(MetaInfo *typeinfo);
+	void registerType(MetaInfo *metainfo);
 	void registerClass(const String &self, const String &base);
 
 	void getClassList(const char *prefix, bool sort, StringSeq &result) const;
@@ -1375,7 +1377,7 @@ private:
 
 template< class T >
 T object_cast(Object *obj) {
-	if (obj->inherits(T(0)->registerMetaInfo()->getTypeName())) {
+	if (obj->inherits(T(0)->registerMetaInfo()->getName())) {
 		return (T)obj;
 	}
 	return nullptr;
