@@ -42,46 +42,6 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-template< class T >
-struct variant_cast_helper {
-	T doCast(const Variant &v) {
-		return v;
-	}
-};
-
-template<>
-struct variant_cast_helper<Object*> {
-	Object *doCast(const Variant &v) {
-		return v.operator Object*();
-	}
-};
-
-template<class T>
-struct variant_cast_helper<T*> {
-	T *doCast(const Variant &v) {
-		Object *obj = variant_cast_helper<Object*>().doCast(v);
-		return object_cast<T*>(obj);
-	}
-};
-
-template<class T>
-T variant_cast(const Variant &v) {
-	return variant_cast_helper<T>().doCast(v);
-}
-#if 0
-template<>
-Object *variant_cast<Object*>(const Variant &v) {
-	return v.operator Object*();
-}
-
-template<class T>
-T *variant_cast<T*>(const Variant &v) {
-	Object *obj = variant_cast<Object*>(v);
-	return 0;
-}
-#endif
-
-
 //--------------------------------------------------------------------------
 // class ScriptSystem
 //--------------------------------------------------------------------------
@@ -169,7 +129,6 @@ T object_cast(Object *obj) {
 }
 
 AX_END_NAMESPACE
-
 
 #endif // AX_SCRIPTSYSTEM_H
 

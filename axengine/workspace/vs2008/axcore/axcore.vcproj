@@ -847,6 +847,50 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="script"
+			>
+			<File
+				RelativePath="..\..\..\src\axcore\script\metainfo.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\axcore\script\object.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\axcore\script\script_p.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\axcore\script\script_system.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\axcore\script\variant.cpp"
+				>
+			</File>
+			<Filter
+				Name="public"
+				>
+				<File
+					RelativePath="..\..\..\include\axcore\script\metainfo.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\include\axcore\script\object.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\include\axcore\script\script_system.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\include\axcore\script\variant.h"
+					>
+				</File>
+			</Filter>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>
