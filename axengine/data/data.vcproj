@@ -748,6 +748,18 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="utlis"
+				>
+				<File
+					RelativePath=".\scripts\utils\all.nut"
+					>
+				</File>
+				<File
+					RelativePath=".\scripts\utils\vector3.nut"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<File
 			RelativePath=".\system.cfg"
