@@ -22,7 +22,7 @@
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="4"
 			InheritedPropertySheets="..\propsheet\debug.vsprops"
-			CharacterSet="1"
+			CharacterSet="0"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -80,7 +80,7 @@
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="4"
 			InheritedPropertySheets="..\propsheet\release.vsprops"
-			CharacterSet="1"
+			CharacterSet="0"
 			WholeProgramOptimization="0"
 			>
 			<Tool

@@ -30,6 +30,7 @@ AX_BEGIN_NAMESPACE
 
 		err_msg += buffer;
 		WString wstr = u2w(buffer);
+		String lstr = w2l(wstr);
 		wprintf(L"%s", wstr.c_str());
 		OutputDebugStringW(wstr.c_str());
 
@@ -51,7 +52,7 @@ AX_BEGIN_NAMESPACE
 		BTTrace trace(NULL, BTLF_TEXT);
 		BT_AddLogFile(trace.GetFileName());
 		trace.Clear();
-		trace.Insert(BTLL_ERROR,  wstr.c_str());
+		trace.Insert(BTLL_ERROR,  lstr.c_str());
 		trace.Close();
 
 #if 0

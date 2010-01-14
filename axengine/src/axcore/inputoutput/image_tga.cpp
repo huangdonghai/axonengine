@@ -253,31 +253,16 @@ AX_BEGIN_NAMESPACE
 		case 16:
 		case 24:
 			if (m_loadFlags & Image::ExpandAlpha) {
-				if (!(m_loadFlags & Image::RgbOrder)) {
-					m_format = TexFormat::BGRX8;
-					dstbpp = 4;
-				} else {
-					m_format = TexFormat::RGBX8;
-					dstbpp = 4;
-				}
+				m_format = TexFormat::BGRX8;
+				dstbpp = 4;
 			} else {
-				if (!(m_loadFlags & Image::RgbOrder)) {
-					m_format = TexFormat::BGR8;
-					dstbpp = 3;
-				} else {
-					m_format = TexFormat::RGB8;
-					dstbpp = 3;
-				}
+				m_format = TexFormat::BGR8;
+				dstbpp = 3;
 			}
 			break;
 		case 32:
-			if (!(m_loadFlags & Image::RgbOrder)) {
-				m_format = TexFormat::BGRA8;
-				dstbpp = 4;
-			} else {
-				m_format = TexFormat::RGBA8;
-				dstbpp = 4;
-			}
+			m_format = TexFormat::BGRA8;
+			dstbpp = 4;
 			break;
 		default:
 			Errorf("LoadTGA(%s): Only 8, 15, 16, 24 or 32 bit images (with colormaps) supported\n", filename.c_str());

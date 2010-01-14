@@ -832,6 +832,7 @@ static bool AllocImage(DdsHeader *pHeader, DdsReadParams *pParams){
 	return true;
 }
 
+#if 0
 static void CheckRGBOrder(DdsReadParams *pParams){
 	if (!(pParams->loadFlag & Image::RgbOrder))
 		return;
@@ -853,6 +854,7 @@ static void CheckRGBOrder(DdsReadParams *pParams){
 		pBuf += channels;
 	}
 }
+#endif
 
 static bool Load_dds_data(DdsHeader *pHeader, DdsReadParams *pParams, Image::DataBufferSeq &dataBufs){
 	if (!AllocImage(pHeader, pParams))
@@ -861,7 +863,9 @@ static bool Load_dds_data(DdsHeader *pHeader, DdsReadParams *pParams, Image::Dat
 	if (!DecompressDdsData(pHeader, pParams))
 		return false;
 
+#if 0
 	CheckRGBOrder(pParams);
+#endif
 
 	dataBufs.push_back(shared_array<byte_t>(pParams->outData));
 
@@ -881,9 +885,9 @@ static bool Load_dds_data(DdsHeader *pHeader, DdsReadParams *pParams, Image::Dat
 
 		if (!DecompressDdsData(pHeader, pParams))
 			return false;
-
+#if 0
 		CheckRGBOrder(pParams);
-
+#endif
 		dataBufs.push_back(shared_array<byte_t>(pParams->outData));
 	}
 
@@ -976,12 +980,14 @@ bool Image::loadFile_dds(const String &filename){
 			return false;
 	}
 
+#if 0
 	if ((params.loadFlag & Image::RgbOrder)){
 		if (params.outFormat == TexFormat::BGRA8)
 			params.outFormat = TexFormat::RGBA8;
 		else if (params.outFormat == TexFormat::BGR8)
 			params.outFormat = TexFormat::RGB8;
 	}
+#endif
 	m_format = params.outFormat;
 	m_dataPresent = true;
 

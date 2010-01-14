@@ -16,7 +16,7 @@ AX_BEGIN_NAMESPACE
 
 	handle_t GLdriver::createGLWindow(const String &wnd_name) {
 		WString ws = u2w(wnd_name);
-		WNDCLASSEX wcex;	
+		WNDCLASSEXW wcex;	
 		wcex.cbSize = sizeof(WNDCLASSEX);
 		wcex.style = 0;
 		wcex.lpfnWndProc = (WNDPROC)WndProc;
@@ -30,7 +30,7 @@ AX_BEGIN_NAMESPACE
 		wcex.lpszClassName = ws.c_str();
 		wcex.hIconSm = 0;
 
-		if (!::RegisterClassEx(&wcex)) {
+		if (!::RegisterClassExW(&wcex)) {
 			Errorf("GLdriver::CreateGLWindow: cann't create OpenGL window");
 			return 0;
 		}
@@ -39,7 +39,7 @@ AX_BEGIN_NAMESPACE
 		dwExStyle = 0;		
 		dwStyle = WS_OVERLAPPED|WS_BORDER|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX;
 
-		HWND hwnd = ::CreateWindowEx(dwExStyle
+		HWND hwnd = ::CreateWindowExW(dwExStyle
 			, ws.c_str()
 			, ws.c_str()
 			, dwStyle

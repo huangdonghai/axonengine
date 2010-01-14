@@ -17,6 +17,7 @@ read the license and understand and accept it fully.
 AX_BEGIN_NAMESPACE
 
 lua_State *L;
+SquirrelVM *g_mainVM;
 
 static void l_message(const char *pname, const char *msg)
 {
@@ -657,11 +658,16 @@ void ScriptSystem::initialize()
 
 	Printf(_("..created userdata object for engine object\n"));
 
+	g_mainVM = new SquirrelVM();
+	_INIT_CLASS(Vector3);
+
 	Printf(_("Initialized ScriptSystem\n"));
 }
 
 void ScriptSystem::finalize()
 {
+	SafeDelete(g_mainVM);
+
 	lua_close(L);
 }
 
@@ -699,6 +705,14 @@ void ScriptSystem::executeString(const char *text)
 	}
 	xReport(L, s, 0);
 }
+
+
+void ScriptSystem::executeLine( const char *text )
+{
+	SquirrelObject bytecode = g_mainVM->compileBuffer(text);
+	g_mainVM->runScript(bytecode);
+}
+
 
 void ScriptSystem::executeFile(const String &filename)
 {

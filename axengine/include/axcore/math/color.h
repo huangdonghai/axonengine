@@ -586,6 +586,20 @@ inline Bgr Rgba::bgr() const {
 	return Bgr(r,g,b);
 }
 
+
+struct Color3 : public Vector3
+{
+public:
+	// constructor and destructor
+	inline Color3() {}
+	inline Color3(float ix, float iy, float iz) : Vector3(ix,iy,iz) {}
+	inline Color3(const Vector2 &v, float iz) : Vector3(v, iz) {}
+	inline Color3(const Vector3& vec3) : Vector3(vec3) {}
+	inline ~Color3() {}
+};
+
+
+
 AX_END_NAMESPACE
 
 #endif // end guardian

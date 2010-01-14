@@ -357,7 +357,6 @@ public:
 	};
 
 	enum LoadFlag {
-		RgbOrder = 1,		// rgb order, other wise bgr order
 		NoCompressed = 2,		// don't load compressed file
 		ExpandAlpha = 4,		// expand alpha, fill alpha if need
 		RgbeRaw = 8,		// don't translate rgbe hdr to float

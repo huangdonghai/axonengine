@@ -27,10 +27,10 @@ namespace {
 		BT_InstallSehFilter();
 
 		// Setup exception handler
-		BT_SetAppName(L"Axon Engine");
+		BT_SetAppName("Axon Engine");
 //		BT_SetSupportEMail(L"bugs@axonengine.com");
 		BT_SetFlags(BTF_DETAILEDMODE/*BTF_EDITMAIL| | BTF_ATTACHREPORT | BTF_SCREENCAPTURE*/);
-		BT_SetSupportURL(L"http://www.axonengine.com");
+		BT_SetSupportURL("http://www.axonengine.com");
 
 		// = BugTrapServer ===========================================
 //		BT_SetSupportServer(L"axon.ddns.info", 9999);

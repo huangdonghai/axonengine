@@ -22,7 +22,7 @@
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="4"
 			InheritedPropertySheets="..\propsheet\debug.vsprops"
-			CharacterSet="1"
+			CharacterSet="0"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -79,7 +79,7 @@
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="4"
 			InheritedPropertySheets="..\propsheet\release.vsprops"
-			CharacterSet="1"
+			CharacterSet="0"
 			WholeProgramOptimization="0"
 			>
 			<Tool
@@ -851,6 +851,10 @@
 			Name="script"
 			>
 			<File
+				RelativePath="..\..\..\src\axcore\script\matrix.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\axcore\script\metainfo.cpp"
 				>
 			</File>
@@ -872,6 +876,22 @@
 			</File>
 			<File
 				RelativePath="..\..\..\src\axcore\script\sq_binding.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\axcore\script\sq_color.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\axcore\script\sq_helper.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\axcore\script\sq_helper.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\axcore\script\sq_vector3.cpp"
 				>
 			</File>
 			<File

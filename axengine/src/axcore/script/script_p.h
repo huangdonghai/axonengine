@@ -18,8 +18,13 @@ extern "C" {
 #include <sqstdaux.h>
 
 #include "sq_binding.h"
+#include "sq_helper.h"
 
 AX_BEGIN_NAMESPACE
+
+_DECL_CLASS(Vector3);
+_DECL_CLASS(Color3);
+
 
 extern lua_State *L;
 Variant xReadStack(lua_State *L, int index);
@@ -30,5 +35,7 @@ void xPushString(lua_State *L, const String &s);
 int xPcall(lua_State *L, int numarg, int numresult);
 bool xSetScoped(lua_State *L, const char *name, const Variant &val);
 bool xGetScoped(lua_State *L, const char *name);
+
+extern SquirrelVM *g_mainVM;
 
 AX_END_NAMESPACE

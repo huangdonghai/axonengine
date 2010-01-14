@@ -62,6 +62,7 @@ public:
 
 	void executeString(const String &text);
 	void executeString(const char *text);
+	void executeLine(const char *text);
 	void executeFile(const String &filename);
 	bool invokeLuaMethod(const char *methodName, VariantSeq &stack, int nResult);
 	bool invokeLuaMethod(const char *method, Variant &arg1);

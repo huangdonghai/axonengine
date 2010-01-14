@@ -39,13 +39,13 @@ struct ScriptNamespaceDecl  {
 };
 
 #define _BEGIN_CLASS(classname)  \
-		int __##classname##__typeof(HSQUIRRELVM v) \
-		{ \
-			sq_pushstring(v,_SC(#classname),-1); \
-			return 1; \
-		} \
-		struct ScriptClassMemberDecl __##classname##_members[] = { \
-		{_SC("_typeof"),__##classname##__typeof,1,NULL},
+	int __##classname##__typeof(HSQUIRRELVM v) \
+	{ \
+		sq_pushstring(v,_SC(#classname),-1); \
+		return 1; \
+	} \
+	struct ScriptClassMemberDecl __##classname##_members[] = { \
+	{_SC("_typeof"),__##classname##__typeof,1,NULL},
 
 #define _BEGIN_NAMESPACE(xnamespace) struct ScriptClassMemberDecl __##xnamespace##_members[] = {
 #define _BEGIN_NAMESPACE_CONSTANTS(xnamespace) {NULL,NULL,0,NULL}}; \
@@ -78,7 +78,7 @@ struct SquirrelClassDecl __##classname##_decl = {  \
 	int __##classname##_##name(HSQUIRRELVM v)
 
 #define _INIT_STATIC_NAMESPACE(classname) CreateStaticNamespace(SquirrelVM::GetVMPtr(),&__##classname##_decl);
-#define _INIT_CLASS(classname)CreateClass(SquirrelVM::GetVMPtr(),&__##classname##_decl);
+#define _INIT_CLASS(classname)CreateClass(SquirrelVM::ms_rootVM,&__##classname##_decl);
 
 #define _DECL_STATIC_NAMESPACE(xnamespace) extern struct ScriptNamespaceDecl __##xnamespace##_decl;
 #define _DECL_CLASS(classname) extern struct SquirrelClassDecl __##classname##_decl;
@@ -105,8 +105,8 @@ struct SquirrelClassDecl __##classname##_decl = {  \
 
 
 #define _DECL_NATIVE_CONSTRUCTION(classname,cppclass) \
-	BOOL push_##classname(cppclass &quat); \
-	SquirrelObject new_##classname(cppclass &quat);
+	BOOL push_##classname(HSQUIRRELVM v, cppclass &quat); \
+	SquirrelObject new_##classname(HSQUIRRELVM v, cppclass &quat);
 
 #define _IMPL_NATIVE_CONSTRUCTION(classname,cppclass) \
 static int classname##_release_hook(SQUserPointer p, int size) \
@@ -117,29 +117,29 @@ static int classname##_release_hook(SQUserPointer p, int size) \
 	} \
 	return 0; \
 } \
-BOOL push_##classname(cppclass &quat) \
+BOOL push_##classname(HSQUIRRELVM v, cppclass &quat) \
 { \
 	cppclass *newquat = new cppclass; \
 	*newquat = quat; \
-	if(!CreateNativeClassInstance(SquirrelVM::GetVMPtr(),_SC(#classname),newquat,classname##_release_hook)) { \
+	if(!CreateNativeClassInstance(v,_SC(#classname),newquat,classname##_release_hook)) { \
 		delete newquat; \
 		return FALSE; \
 	} \
 	return TRUE; \
 } \
-SquirrelObject new_##classname(cppclass &quat) \
+SquirrelObject new_##classname(HSQUIRRELVM v, cppclass &quat) \
 { \
 	SquirrelObject ret; \
-	if(push_##classname(quat)) { \
+	if(push_##classname(v, quat)) { \
 		ret.AttachToStackObject(-1); \
-		sq_pop(SquirrelVM::GetVMPtr(),1); \
+		sq_pop(v,1); \
 	} \
 	return ret; \
 } \
-int construct_##classname(cppclass *p) \
+int construct_##classname(HSQUIRRELVM v, cppclass *p) \
 { \
-	sq_setinstanceup(SquirrelVM::GetVMPtr(),1,p); \
-	sq_setreleasehook(SquirrelVM::GetVMPtr(),1,classname##_release_hook); \
+	sq_setinstanceup(v,1,p); \
+	sq_setreleasehook(v,1,classname##_release_hook); \
 	return 1; \
 }
 

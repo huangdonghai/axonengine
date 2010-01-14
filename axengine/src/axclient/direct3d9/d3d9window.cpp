@@ -34,7 +34,7 @@ D3D9window::D3D9window(const String &name) {
 	m_presentInterval = 0;
 
 	WString ws = u2w(name);
-	WNDCLASSEX wcex;	
+	WNDCLASSEXW wcex;	
 	wcex.cbSize = sizeof(WNDCLASSEX);
 	wcex.style = 0;
 	wcex.lpfnWndProc = (WNDPROC)WndProc;
@@ -48,7 +48,7 @@ D3D9window::D3D9window(const String &name) {
 	wcex.lpszClassName = ws.c_str();
 	wcex.hIconSm = 0;
 
-	if (!::RegisterClassEx(&wcex)) {
+	if (!::RegisterClassExW(&wcex)) {
 		Errorf("GLdriver::CreateGLWindow: cann't create OpenGL window");
 		return;
 	}
@@ -57,13 +57,13 @@ D3D9window::D3D9window(const String &name) {
 	dwExStyle = 0;		
 	dwStyle = WS_OVERLAPPED|WS_BORDER|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX;
 
-	m_wndId = ::CreateWindowEx(dwExStyle
+	m_wndId = ::CreateWindowExW(dwExStyle
 		, ws.c_str()
 		, ws.c_str()
 		, dwStyle
 		, 0, 0, 640,480
 		, NULL, NULL
-		, (HINSTANCE)GetModuleHandle(NULL)
+		, (HINSTANCE)GetModuleHandleW(NULL)
 		, NULL);
 
 	m_gbuffer = 0;

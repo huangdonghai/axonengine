@@ -372,7 +372,7 @@ void D3D9texture::saveToFile(const String &filename)
 {
 	String ospath = g_fileSystem->modPathToOsPath(filename);
 	HRESULT hr;
-	V(D3DXSaveTextureToFile(u2w(ospath).c_str(), D3DXIFF_DDS, m_object, 0));
+	V(D3DXSaveTextureToFileW(u2w(ospath).c_str(), D3DXIFF_DDS, m_object, 0));
 }
 
 void D3D9texture::generateMipmapIm()

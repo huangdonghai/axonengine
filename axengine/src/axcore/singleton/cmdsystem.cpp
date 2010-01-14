@@ -52,8 +52,13 @@ bool CmdSystem::isCmd(const String &name) {
 void CmdSystem::executeString(const String &text, ExecType cet) {
 	// check if is script command first
 	if (text.size() > 1) {
-		if (text[0] == L'/') {
+		if (text[0] == '/') {
 			g_scriptSystem->executeString(text.c_str() + 1);
+			return;
+		}
+
+		if (text[0] == '\\') {
+			g_scriptSystem->executeLine(text.c_str() + 1);
 			return;
 		}
 	}

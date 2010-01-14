@@ -21,10 +21,10 @@ struct AX_API Vector3 {
 	static const Vector3 Zero;
 
 	// constructor and destructor
-	inline Vector3(){}
-	inline Vector3(float ix, float iy, float iz) : x(ix), y(iy), z(iz){}
+	inline Vector3() {}
+	inline Vector3(float ix, float iy, float iz) : x(ix), y(iy), z(iz) {}
 	inline Vector3(const Vector2 &v, float iz) : x(v.x), y(v.y), z(iz) {}
-	inline ~Vector3(){}
+	inline ~Vector3() {}
 
 	// algo
 	inline Vector3 operator+(const Vector3 &v) const {
