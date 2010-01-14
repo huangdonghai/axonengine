@@ -9,6 +9,16 @@ extern "C" {
 	#include <lualib.h>
 }
 
+#include <squirrel.h>
+#include <sqstdblob.h>
+#include <sqstdsystem.h>
+#include <sqstdio.h>
+#include <sqstdmath.h>	
+#include <sqstdstring.h>
+#include <sqstdaux.h>
+
+#include "sq_binding.h"
+
 AX_BEGIN_NAMESPACE
 
 extern lua_State *L;

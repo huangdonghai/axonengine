@@ -21,6 +21,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build rules", "build rules"
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "axcore", "axcore\axcore.vcproj", "{977E338E-EC28-4FD3-8564-4CA1D8E9BD73}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B6A99EC1-432C-4911-A571-14FDC5EA4430} = {B6A99EC1-432C-4911-A571-14FDC5EA4430}
+		{2C3BABE5-E3C5-4B8E-8F76-F2C29849CB3F} = {2C3BABE5-E3C5-4B8E-8F76-F2C29849CB3F}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "axclient", "axclient\axclient.vcproj", "{C2922808-698C-40BC-BCED-CACA35163A84}"
 EndProject
@@ -37,6 +41,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "axeditorapp", "axeditorapp\
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "data", "..\..\data\data.vcproj", "{DC8FF16E-34F1-44DA-AE1E-48715EBD581D}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "squirrel", "..\..\..\..\_axisv\SQUIRREL2\squirrel\squirrel.vcproj", "{2C3BABE5-E3C5-4B8E-8F76-F2C29849CB3F}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sqstdlib", "..\..\..\..\_axisv\SQUIRREL2\sqstdlib\sqstdlib.vcproj", "{B6A99EC1-432C-4911-A571-14FDC5EA4430}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -66,6 +74,14 @@ Global
 		{B30947E7-9FEC-408A-A73F-42FCC08AD988}.Release|Win32.Build.0 = Release|Win32
 		{DC8FF16E-34F1-44DA-AE1E-48715EBD581D}.Debug|Win32.ActiveCfg = Debug|Win32
 		{DC8FF16E-34F1-44DA-AE1E-48715EBD581D}.Release|Win32.ActiveCfg = Release|Win32
+		{2C3BABE5-E3C5-4B8E-8F76-F2C29849CB3F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{2C3BABE5-E3C5-4B8E-8F76-F2C29849CB3F}.Debug|Win32.Build.0 = Debug|Win32
+		{2C3BABE5-E3C5-4B8E-8F76-F2C29849CB3F}.Release|Win32.ActiveCfg = Release|Win32
+		{2C3BABE5-E3C5-4B8E-8F76-F2C29849CB3F}.Release|Win32.Build.0 = Release|Win32
+		{B6A99EC1-432C-4911-A571-14FDC5EA4430}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B6A99EC1-432C-4911-A571-14FDC5EA4430}.Debug|Win32.Build.0 = Debug|Win32
+		{B6A99EC1-432C-4911-A571-14FDC5EA4430}.Release|Win32.ActiveCfg = Release|Win32
+		{B6A99EC1-432C-4911-A571-14FDC5EA4430}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
