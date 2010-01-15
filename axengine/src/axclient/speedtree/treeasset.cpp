@@ -495,7 +495,7 @@ void TreeAsset::buildLeafMesh() {
 
 			const CSpeedTreeRT::SGeometry::SLeaf::SMesh *pMesh = pCard->m_pMesh;
 
-			AffineMat matrix;
+			Matrix3x4 matrix;
 			Matrix3 &axis = matrix.axis;
 			Vector3 &org = matrix.origin;
 

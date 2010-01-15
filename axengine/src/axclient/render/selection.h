@@ -34,7 +34,7 @@ public:
 	void loadSelectId(int id);
 	void testEntity(RenderEntity *re);
 	void testPrimitive(Primitive *prim);
-	void testPrimitive(Primitive *prim, const AffineMat &matrix);
+	void testPrimitive(Primitive *prim, const Matrix3x4 &matrix);
 	HitRecords endSelect();
 
 	bool isSelectMode()	{return m_isSelectMode;}

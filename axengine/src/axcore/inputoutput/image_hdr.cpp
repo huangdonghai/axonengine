@@ -572,6 +572,7 @@ Image::loadFile_hdr(const String &filename) {
 		return false;
 	}
 
+#if 0
 	if (m_loadFlags & Image::RgbeRaw) {
 		byte_t *pixels = new byte_t[m_width * m_height * 4];
 		if (RGBE_ReadPixels_Raw_RLE(file, pixels, m_width, m_height)) {
@@ -584,6 +585,7 @@ Image::loadFile_hdr(const String &filename) {
 
 		return true;
 	}
+#endif
 
 	byte_t *pixels = new byte_t[m_width * m_height * RGBE_DATA_SIZE * sizeof(float)];
 	if (RGBE_ReadPixels_RLE(file, (float*)pixels, m_width, m_height)) {

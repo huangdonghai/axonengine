@@ -57,7 +57,7 @@ VertexOut VP_main(VertexIn IN) {
 
 /********* pixel shaders ********/
 half4 FP_main(VertexOut IN) : COLOR {
-#if G_D3D
+#if !G_D3D
 	half4 c = IN.color.bgra;
 #else
 	half4 c = IN.color;

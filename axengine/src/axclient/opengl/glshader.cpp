@@ -309,7 +309,7 @@ AX_BEGIN_NAMESPACE
 					continue;
 				}
 #if 1
-				RenderTarget *target = gWorldFramebuffer->allocTarget(RenderTarget::PermanentAlloc, TexFormat::RGBA8);
+				RenderTarget *target = gWorldFramebuffer->allocTarget(RenderTarget::PermanentAlloc, TexFormat::BGRA8);
 				GLtarget *textarget = (GLtarget*)target;
 				GLtexture *tex = textarget->getTextureGL();
 #if 0
@@ -370,7 +370,7 @@ AX_BEGIN_NAMESPACE
 			return false;
 		}
 
-		cgSetParameter2fv(param, v.toFloatPointer());
+		cgSetParameter2fv(param, v.c_ptr());
 
 		return true;
 	}
@@ -381,7 +381,7 @@ AX_BEGIN_NAMESPACE
 			return false;
 		}
 
-		cgSetParameter3fv(param, v);
+		cgSetParameter3fv(param, v.c_ptr());
 
 		return true;
 	}
@@ -392,7 +392,7 @@ AX_BEGIN_NAMESPACE
 			return false;
 		}
 
-		cgSetParameter4fv(param, v);
+		cgSetParameter4fv(param, v.c_ptr());
 
 		return true;
 	}
@@ -403,7 +403,7 @@ AX_BEGIN_NAMESPACE
 			return false;
 		}
 
-		cgSetMatrixParameterfc(param, v.toFloatPointer());
+		cgSetMatrixParameterfc(param, v.c_ptr());
 
 		return true;
 	}
@@ -424,7 +424,7 @@ AX_BEGIN_NAMESPACE
 			return false;
 		}
 
-		cgSetParameterValuefc(param, len * 2, v[0].toFloatPointer());
+		cgSetParameterValuefc(param, len * 2, v[0].c_ptr());
 		return true;
 	}
 
@@ -434,7 +434,7 @@ AX_BEGIN_NAMESPACE
 			return false;
 		}
 
-		cgSetParameterValuefc(param, len * 3, v[0]);
+		cgSetParameterValuefc(param, len * 3, v[0].c_ptr());
 		return true;
 	}
 
@@ -444,7 +444,7 @@ AX_BEGIN_NAMESPACE
 			return false;
 		}
 
-		cgSetParameterValuefc(param, len * 4, v[0]);
+		cgSetParameterValuefc(param, len * 4, v[0].c_ptr());
 		return true;
 	}
 
@@ -454,7 +454,7 @@ AX_BEGIN_NAMESPACE
 			return false;
 		}
 
-		cgSetParameterValuefc(param, len * 16, v[0]);
+		cgSetParameterValuefc(param, len * 16, v[0].c_ptr());
 		return true;
 	}
 

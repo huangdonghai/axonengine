@@ -246,7 +246,7 @@ struct AX_API BoundingBox {
 	BoundingBox intersected(const BoundingBox &other) const;
 	BoundingBox united(const BoundingBox &other) const;
 
-	BoundingBox getTransformed(const AffineMat &matrix) const;
+	BoundingBox getTransformed(const Matrix3x4 &matrix) const;
 	float pointDistance(const Vector3 &point);
 };
 

@@ -22,22 +22,24 @@ struct AX_API Vector2 {
 	Vector2(float ix, float iy);
 	~Vector2();
 
-	Vector2 operator+(const Vector2 &v) const;
 	Vector2 operator-() const;
+
+	Vector2 operator+(const Vector2 &v) const;
 	Vector2 operator-(const Vector2 &v) const;
-	Vector2 operator*(const float scale) const;
 	Vector2 operator*(const Vector2 &v) const;
 	Vector2 operator/(const Vector2 &v) const;
+	Vector2 operator*(const float scale) const;
 	Vector2 operator/(float scale) const;
+
 	float operator|(const Vector2 &v) const;
 	bool operator==(const Vector2 &v) const;
 	bool operator!=(const Vector2 &v) const;
 	Vector2 operator+=(const Vector2 &v);
 	Vector2 operator-=(const Vector2 &v);
-	Vector2 operator*=(float scale);
-	Vector2 operator/=(float v);
 	Vector2 operator*=(const Vector2 &v);
 	Vector2 operator/=(const Vector2 &v);
+	Vector2 operator*=(float scale);
+	Vector2 operator/=(float v);
 	float &operator[](int index);
 	const float &operator[](int index) const;
 	float getMax() const;
@@ -50,13 +52,13 @@ struct AX_API Vector2 {
 	Vector2 getNormalized();
 	void clear();
 	Vector2 &set(float ix=0.0f, float iy=0.0f);
-	const float *toFloatPointer() const;
+	const float *c_ptr() const;
 	String toString() const;
 	bool parse(const String &str);
 	bool parse(const char *text);
 };
 
-inline Vector2::Vector2(){}
+inline Vector2::Vector2() {}
 inline Vector2::Vector2(float ix, float iy) : x(ix), y(iy) {}
 inline Vector2::~Vector2(){}
 
@@ -186,7 +188,7 @@ inline Vector2 &Vector2::set(float ix, float iy) {
 	x = ix; y = iy;
 	return *this;
 }
-inline const float *Vector2::toFloatPointer() const {
+inline const float *Vector2::c_ptr() const {
 	return &x;
 }
 

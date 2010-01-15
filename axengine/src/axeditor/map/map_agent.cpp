@@ -33,7 +33,7 @@ void MapAgent::doHitTest() {
 }
 
 
-void MapAgent::setMatrix(const AffineMat &matrix) {
+void MapAgent::setMatrix(const Matrix3x4 &matrix) {
 	m_gameObj->setMatrix_p(matrix);
 }
 

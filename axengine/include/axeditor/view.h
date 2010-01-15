@@ -67,8 +67,8 @@ public:
 
 	const RenderCamera &getCamera() const { return m_camera; }
 
-	void setEyeMatrix(const AffineMat &eyeMatrix) {m_eyeMatrix = eyeMatrix; }
-	const AffineMat &getEyeMatrix() const { return m_eyeMatrix; }
+	void setEyeMatrix(const Matrix3x4 &eyeMatrix) {m_eyeMatrix = eyeMatrix; }
+	const Matrix3x4 &getEyeMatrix() const { return m_eyeMatrix; }
 
 	// event handler
 	virtual void handleEvent(InputEvent *e);
@@ -91,7 +91,7 @@ protected:
 	uint_t m_frameTime;
 	float m_fps;
 	Vector3 m_cursorPos;
-	AffineMat m_eyeMatrix;
+	Matrix3x4 m_eyeMatrix;
 	bool m_autoUpdate;
 	Font *m_font;
 };

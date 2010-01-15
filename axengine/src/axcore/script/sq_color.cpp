@@ -1,5 +1,6 @@
 #include "script_p.h"
 
+#if 1
 AX_BEGIN_NAMESPACE
 
 _IMPL_NATIVE_CONSTRUCTION(Color3, Color3);
@@ -12,9 +13,9 @@ _MEMBER_FUNCTION_IMPL(Color3, constructor)
 	int nparams = sa.GetParamCount();
 	switch (nparams) {
 	case 1:
-		temp.x = 0;
-		temp.y = 0;
-		temp.z = 0;
+		temp.r = 0;
+		temp.g = 0;
+		temp.b = 0;
 		break;
 	case 2:
 		if (sa.GetType(2) == OT_INSTANCE) {
@@ -24,9 +25,9 @@ _MEMBER_FUNCTION_IMPL(Color3, constructor)
 		}
 		break;
 	case 4:
-		temp.x = sa.GetFloat(2);
-		temp.y = sa.GetFloat(3);
-		temp.z = sa.GetFloat(4);
+		temp.r = sa.GetFloat(2);
+		temp.g = sa.GetFloat(3);
+		temp.b = sa.GetFloat(4);
 		break;
 	default:
 		return sa.ThrowError(_SC("Color3() wrong parameters"));
@@ -43,14 +44,14 @@ _MEMBER_FUNCTION_IMPL(Color3,_set)
 	const SQChar *s = sa.GetString(2);
 	int index = s?s[0]:sa.GetInt(2);
 	switch(index) {
-	case 0: case 'x': case 'r':
-		return sa.Return(self->x = sa.GetFloat(3));
+	case 0: case 'r':
+		return sa.Return(self->r = sa.GetFloat(3));
 		break;
-	case 1: case 'y': case 'g':
-		return sa.Return(self->y = sa.GetFloat(3));
+	case 1: case 'g':
+		return sa.Return(self->g = sa.GetFloat(3));
 		break;
-	case 2: case 'z': case 'b':
-		return sa.Return(self->z = sa.GetFloat(3));
+	case 2: case 'b':
+		return sa.Return(self->b = sa.GetFloat(3));
 		break;
 	}
 
@@ -66,9 +67,9 @@ _MEMBER_FUNCTION_IMPL(Color3,_get)
 		return SQ_ERROR;
 	int index = s && (s[1] == 0)?s[0]:sa.GetInt(2);
 	switch(index) {
-		case 0: case 'x': case 'r': return sa.Return(self->x); break;
-		case 1: case 'y': case 'g':	return sa.Return(self->y); break;
-		case 2: case 'z': case 'b': return sa.Return(self->z); break;
+		case 0: case 'r': return sa.Return(self->r); break;
+		case 1: case 'g': return sa.Return(self->g); break;
+		case 2: case 'b': return sa.Return(self->b); break;
 	}
 	return SQ_ERROR;
 }
@@ -100,7 +101,7 @@ _MEMBER_FUNCTION_IMPL(Color3,_cmp)
 	StackHandler sa(v);
 	_CHECK_SELF(Color3,Color3);
 	_CHECK_INST_PARAM(vec,2,Color3,Color3);
-	if((*self) == (*vec))
+	if ((*self) == (*vec))
 		return sa.Return(0);
 	if((*self) < (*vec))
 		return sa.Return(-1);
@@ -145,74 +146,6 @@ _MEMBER_FUNCTION_IMPL(Color3,_div)
 	return sa.Return(so);
 }
 
-_MEMBER_FUNCTION_IMPL(Color3,DotProduct)
-{
-	StackHandler sa(v);
-	_CHECK_SELF(Color3,Color3);
-	_CHECK_INST_PARAM(vec,2,Color3,Color3);
-	return sa.Return(*self | *vec);
-}
-
-_MEMBER_FUNCTION_IMPL(Color3,CrossProduct)
-{
-	StackHandler sa(v);
-	_CHECK_SELF(Color3,Color3);
-	_CHECK_INST_PARAM(vec,2,Color3,Color3);
-	Color3 ret;
-	ret = *self ^ *vec;
-	SquirrelObject so = new_Color3(v, ret);
-	return sa.Return(so);
-}
-
-_MEMBER_FUNCTION_IMPL(Color3,SquareDistance)
-{
-	StackHandler sa(v);
-	_CHECK_SELF(Color3,Color3);
-	_CHECK_INST_PARAM(vec,2,Color3,Color3);
-	Color3 tmp = *self - *vec;
-	return sa.Return(tmp.getLengthSquared());
-}
-
-_MEMBER_FUNCTION_IMPL(Color3,Distance)
-{
-	StackHandler sa(v);
-	_CHECK_SELF(Color3,Color3);
-	_CHECK_INST_PARAM(vec,2,Color3,Color3);
-	Color3 tmp = *self - *vec;
-	return sa.Return(tmp.getLength());
-}
-
-_MEMBER_FUNCTION_IMPL(Color3,Length)
-{
-	StackHandler sa(v);
-	_CHECK_SELF(Color3,Color3);
-	return sa.Return(self->getLength());
-}
-
-_MEMBER_FUNCTION_IMPL(Color3,SquareLength)
-{
-	StackHandler sa(v);
-	_CHECK_SELF(Color3,Color3);
-	return sa.Return(self->getLengthSquared());
-}
-
-_MEMBER_FUNCTION_IMPL(Color3,Normalize)
-{
-	_CHECK_SELF(Color3,Color3);
-	self->normalize();
-	return 0;
-}
-
-_MEMBER_FUNCTION_IMPL(Color3,GetNormalized)
-{
-	StackHandler sa(v);
-	_CHECK_SELF(Color3,Color3);
-	Color3 tmp = self->getNormalized();
-	SquirrelObject so = new_Color3(v, tmp);
-	return sa.Return(so);
-}
-
-
 _BEGIN_CLASS(Color3)
 _MEMBER_FUNCTION(Color3,constructor,-1,_SC(".n|xnn"))
 _MEMBER_FUNCTION(Color3,_set,3,_SC("xs|n"))
@@ -223,14 +156,8 @@ _MEMBER_FUNCTION(Color3,_mul,2,_SC("xn"))
 _MEMBER_FUNCTION(Color3,_div,2,_SC("xn"))
 _MEMBER_FUNCTION(Color3,_nexti,2,_SC("x"))
 _MEMBER_FUNCTION(Color3,_cmp,2,_SC("xx"))
-_MEMBER_FUNCTION(Color3,DotProduct,2,_SC("xx"))
-_MEMBER_FUNCTION(Color3,CrossProduct,2,_SC("xx"))
-_MEMBER_FUNCTION(Color3,SquareDistance,2,_SC("xx"))
-_MEMBER_FUNCTION(Color3,Distance,2,_SC("xx"))
-_MEMBER_FUNCTION(Color3,Length,1,_SC("x"))
-_MEMBER_FUNCTION(Color3,SquareLength,1,_SC("x"))
-_MEMBER_FUNCTION(Color3,Normalize,1,_SC("x"))
-_MEMBER_FUNCTION(Color3,GetNormalized,1,_SC("x"))
 _END_CLASS(Color3)
 
 AX_END_NAMESPACE
+
+#endif

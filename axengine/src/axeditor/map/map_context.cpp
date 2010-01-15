@@ -390,7 +390,7 @@ void MapContext::readActor(const TiXmlElement *node) {
 	}
 
 	int id;
-	AffineMat matrix;
+	Matrix3x4 matrix;
 	Rgb color;
 
 	const char *v = node->Attribute("id", &id);
@@ -463,7 +463,7 @@ void MapContext::readActor(const TiXmlElement *node) {
 	g_scriptSystem->updateNameIndex(gamenode->get_objectName());
 }
 
-void MapContext::addBookmark(const AffineMat &viewMatrix, const String &name, int id)
+void MapContext::addBookmark(const Matrix3x4 &viewMatrix, const String &name, int id)
 {
 	Bookmark bookmark;
 

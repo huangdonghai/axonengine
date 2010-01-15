@@ -90,6 +90,17 @@ void Rgba::fromString(const char *str) {
 	r = _r; g = _g; b = _b; a = _a;
 }
 
+String Color3::toString() const {
+	String result;
+	StringUtil::sprintf(result, "%f %f %f", r, g, b);
+	return result;
+}
+
+bool Color3::fromString(const char *str) {
+	int v = sscanf(str, "%f %f %f", &r, &g, &b);
+	AX_ASSERT(v == 3);
+	return v == 3;
+}
 
 AX_END_NAMESPACE
 

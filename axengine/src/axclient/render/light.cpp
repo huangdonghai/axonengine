@@ -489,7 +489,7 @@ public:
 
 	bool initPoint()
 	{
-		const AffineMat &mtx = m_light->getMatrix();
+		const Matrix3x4 &mtx = m_light->getMatrix();
 
 		if (m_origin == mtx.origin && m_radius == m_light->getRadius()) {
 			return false;
@@ -523,7 +523,7 @@ public:
 
 	bool initSpot()
 	{
-		const AffineMat &mtx = m_light->getMatrix();
+		const Matrix3x4 &mtx = m_light->getMatrix();
 
 		if (m_origin == mtx.origin && m_axis == mtx.axis && m_radius == m_light->getRadius()) {
 			return false;
@@ -972,20 +972,20 @@ int RenderLight::getShadowMemoryUsed() const
 	return m_shadowMemoryUsed;
 }
 
-void RenderLight::setLightColor( Rgb color, float intensity, float specularX )
+void RenderLight::setLightColor(const Color3 &color, float intensity, float specularX)
 {
-	m_color.xyz() = color.toVector() * intensity;
+	m_color.xyz() = color.toVector3() * intensity;
 	m_color.w = m_color.xyz().getLength() * specularX;
 }
 
-void RenderLight::setSkyColor( Rgb color, float skyIntensity /*= 1.0f*/ )
+void RenderLight::setSkyColor(const Color3 &color, float skyIntensity /*= 1.0f*/)
 {
-	m_skyColor = color.toVector() * skyIntensity;
+	m_skyColor = color.toVector3() * skyIntensity;
 }
 
-void RenderLight::setEnvColor( Rgb color, float envIntensity /*= 1.0f*/ )
+void RenderLight::setEnvColor(const Color3 &color, float envIntensity /*= 1.0f*/)
 {
-	m_envColor = color.toVector() * envIntensity;
+	m_envColor = color.toVector3() * envIntensity;
 }
 
 

@@ -24,6 +24,7 @@ AX_BEGIN_NAMESPACE
 
 _DECL_CLASS(Vector3);
 _DECL_CLASS(Color3);
+_DECL_CLASS(Matrix)
 
 
 extern lua_State *L;

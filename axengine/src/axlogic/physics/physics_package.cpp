@@ -774,7 +774,7 @@ public:
 	int m_lod;
 	bool m_needFreeRenderMesh;
 	bool m_haveLocalTransform;
-	AffineMat m_localTransform;
+	Matrix3x4 m_localTransform;
 
 	MeshData(HavokPackage *package) {
 		m_package = package;

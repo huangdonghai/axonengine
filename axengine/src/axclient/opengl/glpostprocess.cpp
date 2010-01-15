@@ -266,8 +266,8 @@ AX_BEGIN_NAMESPACE
 		m_matShadowMask->setPixelToTexel(width, height);
 
 		m_matShadowMask->setTexture(SamplerType::Diffuse, tex);
-		m_matShadowMask->setParameter("s_shadowMatrix", 16, matrix);
-		m_matShadowMask->setParameter("s_shadowRange", 2, zrange.toFloatPointer());
+		m_matShadowMask->setParameter("s_shadowMatrix", 16, matrix.c_ptr());
+		m_matShadowMask->setParameter("s_shadowRange", 2, zrange.c_ptr());
 
 		m_matShadowMask->setFeature(0, front);
 		m_matShadowMask->setFeature(1, false);
@@ -292,12 +292,12 @@ AX_BEGIN_NAMESPACE
 		m_matShadowMask->setPixelToTexel(width, height);
 
 		m_matShadowMask->setTexture(SamplerType::Diffuse, tex);
-		m_matShadowMask->setParameter("s_shadowMatrix", 16, matrix);
-		m_matShadowMask->setParameter("s_shadowRange", 2, zrange.toFloatPointer());
+		m_matShadowMask->setParameter("s_shadowMatrix", 16, matrix.c_ptr());
+		m_matShadowMask->setParameter("s_shadowRange", 2, zrange.c_ptr());
 
-		m_matShadowMask->setParameter("s_minRange", 4, minrange);
-		m_matShadowMask->setParameter("s_maxRange", 4, maxrange);
-		m_matShadowMask->setParameter("s_offsetScales", 16, scaleoffset);
+		m_matShadowMask->setParameter("s_minRange", 4, minrange.c_ptr());
+		m_matShadowMask->setParameter("s_maxRange", 4, maxrange.c_ptr());
+		m_matShadowMask->setParameter("s_offsetScales", 16, scaleoffset.c_ptr());
 
 		m_matShadowMask->setFeature(0, front);
 		m_matShadowMask->setFeature(1, true);
@@ -317,7 +317,7 @@ AX_BEGIN_NAMESPACE
 //		getSampleOffsets_GaussBlur5x5(viewport.z, viewport.w, sSampleOffsets, sSampleWeights);
 		getSamplerOffsets_Gauss1D(viewport.z, viewport.w, 5, sSampleOffsets, sSampleWeights, is_du);
 		m_matShadowBlur->setTexture(SamplerType::Diffuse, texture);
-		m_matShadowBlur->setParameter("g_sampleOffsets", 32 * 2, sSampleOffsets[0].toFloatPointer());
+		m_matShadowBlur->setParameter("g_sampleOffsets", 32 * 2, sSampleOffsets[0].c_ptr());
 		m_matShadowBlur->setParameter("g_sampleWeights", 32, sSampleWeights);
 
 		m_screenQuad->setMaterial(m_matShadowBlur);

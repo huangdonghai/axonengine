@@ -64,12 +64,15 @@ inline String q2u(const QString &qstr) {
 	return String(ba.constData(), ba.size());
 }
 
-inline QColor x2q(const Rgb &x) {
-	return QColor(x.r, x.g, x.b);
+inline QColor x2q(const Color3 &x) {
+	Rgb rgb = x.toRgb();
+	return QColor(rgb.r, rgb.g, rgb.b);
 }
 
-inline Rgb q2x(const QColor &q) {
-	return Rgb(q.red(), q.green(), q.blue());
+inline Color3 q2x(const QColor &q) {
+	Color3 res = Color3(q.red(), q.green(), q.blue());
+	res *= 1.0f / 255.0f;
+	return res;
 }
 
 inline Variant q2x(const QVariant &q) {

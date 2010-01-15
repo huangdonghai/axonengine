@@ -59,7 +59,7 @@ void MapActor::drawHelper()
 	if (m_iconPrim) {
 		Vector4 param = m_gameEntity->getOrigin_p();
 		param.w = 0.25f;
-		m_iconPrim->getMaterial()->setParameter("s_iconparam", 4, param);
+		m_iconPrim->getMaterial()->setParameter("s_iconparam", 4, param.c_ptr());
 		g_renderSystem->addToScene(m_iconPrim);
 	}
 

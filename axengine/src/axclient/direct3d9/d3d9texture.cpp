@@ -46,18 +46,6 @@ inline bool trTexFormat(TexFormat texformat, D3DFORMAT &d3dformat) {
 		d3dformat = D3DFMT_A8;
 		break;
 
-	case TexFormat::RGB8:
-//			d3dformat = D3DFMT_UNKNOWN;
-		break;
-
-	case TexFormat::RGBA8:
-//			d3dformat = D3DFMT_UNKNOWN;
-		break;
-
-	case TexFormat::RGBX8:
-//			d3dformat = D3DFMT_UNKNOWN;
-		break;
-
 	case TexFormat::BGR8:
 		d3dformat = D3DFMT_R8G8B8;
 		break;

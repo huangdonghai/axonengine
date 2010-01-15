@@ -34,8 +34,8 @@ AX_BEGIN_NAMESPACE
 		virtual void setActive(bool activate);
 		virtual bool isActive() const;
 		virtual void setAutoDeactive(bool val);
-		virtual void setMatrix(const AffineMat &matrix);
-		virtual AffineMat getMatrix() const;
+		virtual void setMatrix(const Matrix3x4 &matrix);
+		virtual Matrix3x4 getMatrix() const;
 		virtual void setMotionType(MotionType motion);
 		virtual MotionType getMotionType() const;
 		virtual Type getType() const { return kRigidBody; }
@@ -45,7 +45,7 @@ AX_BEGIN_NAMESPACE
 	protected:
 		HavokPackage *m_package;
 		hkpRigidBody *m_havokRigid;
-		AffineMat m_matrix;
+		Matrix3x4 m_matrix;
 		MotionType m_motionType;
 	};
 

@@ -45,24 +45,6 @@ AX_BEGIN_NAMESPACE
 			internal_format = GL_ALPHA4;
 			break;
 
-		case TexFormat::RGB8:
-			dataformat = GL_RGB;
-			datatype = GL_UNSIGNED_BYTE;
-			internal_format = GL_RGB8;
-			break;
-
-		case TexFormat::RGBA8:
-			dataformat = GL_RGBA;
-			datatype = GL_UNSIGNED_BYTE;
-			internal_format = GL_RGBA8;
-			break;
-
-		case TexFormat::RGBX8:
-			dataformat = GL_RGBA;
-			datatype = GL_UNSIGNED_BYTE;
-			internal_format = GL_RGBA8;
-			break;
-
 		case TexFormat::BGR8:
 			dataformat = GL_BGR;
 			datatype = GL_UNSIGNED_BYTE;
@@ -732,9 +714,9 @@ AX_BEGIN_NAMESPACE
 	{
 		glBindTexture(GL_TEXTURE_2D, getObject());
 
-		Vector4 fcolor = color.toVector();
+		Vector4 fcolor = color.toVector4();
 
-		glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, fcolor);
+		glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, fcolor.c_ptr());
 	}
 
 	void GLtexture::setHardwareShadowMap(bool enable)

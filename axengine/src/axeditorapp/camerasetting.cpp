@@ -54,7 +54,7 @@ void CameraSetting::on_eyeX_valueChanged(double value)
 
 	v.x = value;
 
-	AffineMat mat;
+	Matrix3x4 mat;
 	mat.axis = (camara.getViewAxis());
 	mat.origin = (v);
 
@@ -70,7 +70,7 @@ void CameraSetting::on_eyeY_valueChanged(double value)
 
 	v.y = value;
 
-	AffineMat mat;
+	Matrix3x4 mat;
 	mat.axis = (camara.getViewAxis());
 	mat.origin = (v);
 
@@ -85,7 +85,7 @@ void CameraSetting::on_eyeZ_valueChanged(double value)
 	CheckIsEqual(v.z - value);
 	v.z = value;
 
-	AffineMat mat;
+	Matrix3x4 mat;
 	mat.axis = (camara.getViewAxis());
 	mat.origin = (v);
 
@@ -100,7 +100,7 @@ void CameraSetting::on_dirX_valueChanged(double value)
 	CheckIsEqual(mat3[DirIndex].x - value);
 	mat3[DirIndex].x = value;
 
-	AffineMat mat;
+	Matrix3x4 mat;
 	mat.axis = (mat3);
 	mat.origin = (camara.getOrigin());
 
@@ -115,7 +115,7 @@ void CameraSetting::on_dirY_valueChanged(double value)
 	CheckIsEqual(mat3[DirIndex].y - value);
 	mat3[DirIndex].y = value;
 
-	AffineMat mat;
+	Matrix3x4 mat;
 	mat.axis = (mat3);
 	mat.origin = (camara.getOrigin());
 
@@ -130,7 +130,7 @@ void CameraSetting::on_dirZ_valueChanged(double value)
 	CheckIsEqual(mat3[DirIndex].z - value);
 	mat3[DirIndex].z = value;
 
-	AffineMat mat;
+	Matrix3x4 mat;
 	mat.axis = (mat3);
 	mat.origin = (camara.getOrigin());
 
@@ -145,7 +145,7 @@ void CameraSetting::on_upX_valueChanged(double value)
 	CheckIsEqual(mat3[UpIndex].x - value);
 	mat3[UpIndex].x = value;
 
-	AffineMat mat;
+	Matrix3x4 mat;
 	mat.axis = (mat3);
 	mat.origin = (camara.getOrigin());
 
@@ -160,7 +160,7 @@ void CameraSetting::on_upY_valueChanged(double value)
 	CheckIsEqual(mat3[UpIndex].y - value);
 	mat3[UpIndex].y = value;
 
-	AffineMat mat;
+	Matrix3x4 mat;
 	mat.axis = (mat3);
 	mat.origin = (camara.getOrigin());
 
@@ -175,7 +175,7 @@ void CameraSetting::on_upZ_valueChanged(double value)
 	CheckIsEqual(mat3[UpIndex].z - value);
 	mat3[UpIndex].z = value;
 
-	AffineMat mat;
+	Matrix3x4 mat;
 	mat.axis = (mat3);
 	mat.origin = (camara.getOrigin());
 

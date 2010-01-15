@@ -492,7 +492,7 @@ class AX_API InstancePrim : public Primitive {
 public:
 	// per instance parameter
 	struct Param {
-		AffineMat worldMatrix;
+		Matrix3x4 worldMatrix;
 		Vector4 userDefined;		// user defined param
 	};
 
@@ -506,7 +506,7 @@ public:
 
 	void clearAllInstances();
 	void addInstance(const Param &param);
-	void addInstance(const AffineMat &mtx, const Vector4 &user);
+	void addInstance(const Matrix3x4 &mtx, const Vector4 &user);
 	void setInstances(const ParamSeq &params);
 	int getNumInstance() const;
 	const Param &getInstance(int index) const;

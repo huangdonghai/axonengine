@@ -1057,9 +1057,11 @@ static bool FillHeader(DdsHeader *pHeader, DdsWriteParams *pParams, uint_t width
 	case TexFormat::DXT3:		pHeader->FourCC = AX_MAKEFOURCC('D','X','T','3');		outFormat = PF_DXT3; break;
 	case TexFormat::DXT5:		pHeader->FourCC = AX_MAKEFOURCC('D','X','T','5');		outFormat = PF_DXT5; break;
 
+#if 0
 	case TexFormat::RGB8:		pHeader->FourCC = AX_MAKEFOURCC('D','X','T','1');		outFormat = PF_DXT1;	pParams->needCompress = true; break;
 	case TexFormat::RGBA8:		pHeader->FourCC = AX_MAKEFOURCC('D','X','T','5');		outFormat = PF_DXT5;	pParams->needCompress = true; break;
 	case TexFormat::RGBX8:		pHeader->FourCC = AX_MAKEFOURCC('D','X','T','1');		outFormat = PF_DXT1;	pParams->needCompress = true; break;
+#endif
 	case TexFormat::BGR8:		pHeader->FourCC = AX_MAKEFOURCC('D','X','T','1');		outFormat = PF_DXT1;	pParams->needCompress = true; break;
 	case TexFormat::BGRA8:		pHeader->FourCC = AX_MAKEFOURCC('D','X','T','5');		outFormat = PF_DXT5;	pParams->needCompress = true; break;
 	case TexFormat::BGRX8:		pHeader->FourCC = AX_MAKEFOURCC('D','X','T','1');		outFormat = PF_DXT1;	pParams->needCompress = true; break;
@@ -1144,15 +1146,17 @@ static void ChangeFormatToNormal(DdsWriteParams *pParams, byte_t** ppNewMem){
 	uint_t pixelCount = pParams->width * pParams->height * pParams->depth;
 	pParams->inDataSize = pixelCount * sizeof(Rgba);
 
+#if 0
 	if (pParams->orgFormat == TexFormat::RGBA8) {
 		return;
 	}
-
+#endif
 	Rgba *pBuffer = new Rgba[pixelCount];
 	*ppNewMem = (byte_t*)pBuffer;
 
 	switch (pParams->orgFormat)
 	{
+#if 0
 	case TexFormat::RGB8:	
 		for (uint_t i=0; i<pixelCount; i++) {
 			pBuffer[i].r = pParams->inData[i * 3];
@@ -1170,6 +1174,7 @@ static void ChangeFormatToNormal(DdsWriteParams *pParams, byte_t** ppNewMem){
 			pBuffer[i].a = 255;
 		}
 		break;
+#endif
 	case TexFormat::BGR8:
 		for (uint_t i=0; i<pixelCount; i++) {
 			pBuffer[i].r = pParams->inData[i * 3 + 2];

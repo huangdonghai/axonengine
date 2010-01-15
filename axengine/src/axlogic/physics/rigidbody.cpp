@@ -78,12 +78,12 @@ AX_BEGIN_NAMESPACE
 		return m_havokRigid->isActive();
 	}
 
-	void PhysicsRigid::setMatrix(const AffineMat &matrix) {
+	void PhysicsRigid::setMatrix(const Matrix3x4 &matrix) {
 		hkTransform hk;
 		Matrix3 axis = matrix.axis;
 		axis.removeScale();
 
-		AffineMat newmtx(axis, matrix.origin);
+		Matrix3x4 newmtx(axis, matrix.origin);
 		x2h(newmtx, hk);
 
 		if (m_havokRigid) {
@@ -93,7 +93,7 @@ AX_BEGIN_NAMESPACE
 		m_matrix = matrix;
 	}
 
-	AffineMat PhysicsRigid::getMatrix() const {
+	Matrix3x4 PhysicsRigid::getMatrix() const {
 		if (m_havokRigid) {
 			return h2x(m_havokRigid->getTransform());
 		}

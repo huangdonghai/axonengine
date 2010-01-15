@@ -38,7 +38,7 @@ public:
 
 private:
 	// BEGIN ANIMATABLE PROPERTIES
-	Rgb m_color;
+	Color3 m_color;
 	float m_opacity;
 	float m_above, m_below;
 	// END ANIMATABLE PROPERTIES

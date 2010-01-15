@@ -83,8 +83,8 @@ AX_BEGIN_NAMESPACE
 		virtual void setActive(bool activate);
 		virtual bool isActive() const;
 		virtual void setAutoDeactive(bool val);
-		virtual void setMatrix(const AffineMat &matrix);
-		virtual AffineMat getMatrix() const;
+		virtual void setMatrix(const Matrix3x4 &matrix);
+		virtual Matrix3x4 getMatrix() const;
 		virtual Type getType() const { return kPlayer; }
 		virtual void bind(PhysicsWorld *world);
 		virtual void unbind(PhysicsWorld *world);
@@ -92,7 +92,7 @@ AX_BEGIN_NAMESPACE
 		// get & set
 		void setLinearVelocity(const Vector3 &velocity);
 		HavokPose *getPose() const { return m_bodyAnimContext.getPose(); }
-		AffineMat getThirdPerson();
+		Matrix3x4 getThirdPerson();
 
 		void runFrame(const UserInput &userinput, int msec);
 

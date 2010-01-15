@@ -25,8 +25,8 @@ public:
 	virtual void deleteFlagChanged(bool del);
 	virtual void drawHelper();
 
-	virtual void setMatrix(const AffineMat &matrix);
-	virtual const AffineMat &getMatrix() const;
+	virtual void setMatrix(const Matrix3x4 &matrix);
+	virtual const Matrix3x4 &getMatrix() const;
 
 	virtual BoundingBox getBoundingBox();
 

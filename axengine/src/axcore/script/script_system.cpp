@@ -660,6 +660,8 @@ void ScriptSystem::initialize()
 
 	g_mainVM = new SquirrelVM();
 	_INIT_CLASS(Vector3);
+	_INIT_CLASS(Color3);
+	_INIT_CLASS(Matrix);
 
 	Printf(_("Initialized ScriptSystem\n"));
 }

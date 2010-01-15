@@ -39,11 +39,11 @@ public:
 	void setFog(const Vector3 &color, float density);
 	void setOceanFog(const Vector3 &color, float density);
 	void setOceanMaterial(const String &matname);
-	void setSunColor(const Rgb &color, float intensity, float specularX);
+	void setSunColor(const Color3 &color, float intensity, float specularX);
 	void setCastShadow(bool val);
 	void setSunDir(const Vector3 &dir);
-	void setSkyColor(const Rgb &color, float intensity);
-	void setEnvColor(const Rgb &color, float intensity);
+	void setSkyColor(const Color3 &color, float intensity);
+	void setEnvColor(const Color3 &color, float intensity);
 	void setSkyBoxTexture(const String &matname);
 
 	RenderLight *getGlobalLight() const;

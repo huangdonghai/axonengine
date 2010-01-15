@@ -181,7 +181,7 @@ int ScriptProp::checkTableKind(Variant &result)
 		result.set(Rect(x,y,width,height));
 	} else if (hr && hg && hb) {
 		kind = Variant::kColor;
-		result.set(Rgb(r,g,b));
+		result.set(Color3(r,g,b));
 	} else if (hx && hy) {
 		kind = Variant::kPoint;
 		result.set(Point(x,y));
@@ -307,7 +307,7 @@ Variant ScriptProp::getProperty(const Object *obj)
 	if (xGetScoped(L, ("Properties." + m_realName).c_str())) {
 		result = xReadStack(L,-1);
 		if (m_propKind == Variant::kColor) {
-			result = (Rgb)result;
+			result = (Color3)result;
 		} else if (m_propKind == Variant::kVector3) {
 			result = (Vector3)result;
 		} else if (m_propKind == Variant::kPoint) {

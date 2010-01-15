@@ -344,7 +344,7 @@ void RenderSystem::hitTest(Primitive *prim)
 	m_selection->testPrimitive(prim);
 }
 
-void RenderSystem::hitTest(Primitive *prim, const AffineMat &matrix)
+void RenderSystem::hitTest(Primitive *prim, const Matrix3x4 &matrix)
 {
 	m_selection->testPrimitive(prim, matrix);
 }

@@ -165,38 +165,38 @@ void D3D9uniform::setUniform( UniformItem &item, const void *q )
 				vec4[i].set(vec2[i].x, vec2[i].y, 0, 0);
 			}
 			if (item.m_vsregister) {
-				V(d3d9Device->SetVertexShaderConstantF(item.m_vsregister, vec4[0], item.m_arraySize));
+				V(d3d9Device->SetVertexShaderConstantF(item.m_vsregister, vec4[0].c_ptr(), item.m_arraySize));
 			}
 
 			if (item.m_psregister) {
-				V(d3d9Device->SetPixelShaderConstantF(item.m_psregister, vec4[0], item.m_arraySize));
+				V(d3d9Device->SetPixelShaderConstantF(item.m_psregister, vec4[0].c_ptr(), item.m_arraySize));
 			}
 		}
 		break;
 	case UniformItem::vt_Matrix3:
 		{
 			Matrix3 &axis = *(Matrix3*)q;
-			Matrix4 matrix = axis;
+			Matrix4 matrix(axis, Vector3::Zero);
 			if (item.m_vsregister) {
-				V(d3d9Device->SetVertexShaderConstantF(item.m_vsregister, matrix, 1));
+				V(d3d9Device->SetVertexShaderConstantF(item.m_vsregister, matrix.c_ptr(), 1));
 			}
 
 			if (item.m_psregister) {
-				V(d3d9Device->SetPixelShaderConstantF(item.m_psregister, matrix, 1));
+				V(d3d9Device->SetPixelShaderConstantF(item.m_psregister, matrix.c_ptr(), 1));
 			}
 		}
 		break;
 	case UniformItem::vt_AffineMat:
 		if (item.m_arraySize == 1) {
-			AffineMat &am = *(AffineMat*)q;
+			Matrix3x4 &am = *(Matrix3x4*)q;
 			Matrix4 matrix = am.toMatrix4().getTranspose();
 
 			if (item.m_vsregister) {
-				V(d3d9Device->SetVertexShaderConstantF(item.m_vsregister, matrix, 3));
+				V(d3d9Device->SetVertexShaderConstantF(item.m_vsregister, matrix.c_ptr(), 3));
 			}
 
 			if (item.m_psregister) {
-				V(d3d9Device->SetPixelShaderConstantF(item.m_psregister, matrix, 3));
+				V(d3d9Device->SetPixelShaderConstantF(item.m_psregister, matrix.c_ptr(), 3));
 			}
 		} else {
 			Errorf("not support");
@@ -206,11 +206,11 @@ void D3D9uniform::setUniform( UniformItem &item, const void *q )
 		if (item.m_arraySize == 1) {
 			Matrix4 matrix = ((const Matrix4*)item.m_datap)->getTranspose();
 			if (item.m_vsregister) {
-				V(d3d9Device->SetVertexShaderConstantF(item.m_vsregister, matrix, 4));
+				V(d3d9Device->SetVertexShaderConstantF(item.m_vsregister, matrix.c_ptr(), 4));
 			}
 
 			if (item.m_psregister) {
-				V(d3d9Device->SetPixelShaderConstantF(item.m_psregister, matrix, 4));
+				V(d3d9Device->SetPixelShaderConstantF(item.m_psregister, matrix.c_ptr(), 4));
 			}
 		} else {
 			const Matrix4 *old = (const Matrix4*)q;
@@ -220,11 +220,11 @@ void D3D9uniform::setUniform( UniformItem &item, const void *q )
 			}
 
 			if (item.m_vsregister) {
-				V(d3d9Device->SetVertexShaderConstantF(item.m_vsregister, matrix[0], 4 * item.m_arraySize));
+				V(d3d9Device->SetVertexShaderConstantF(item.m_vsregister, matrix[0].c_ptr(), 4 * item.m_arraySize));
 			}
 
 			if (item.m_psregister) {
-				V(d3d9Device->SetPixelShaderConstantF(item.m_psregister, matrix[0], 4 * item.m_arraySize));
+				V(d3d9Device->SetPixelShaderConstantF(item.m_psregister, matrix[0].c_ptr(), 4 * item.m_arraySize));
 			}
 		}
 		break;

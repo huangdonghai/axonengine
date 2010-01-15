@@ -55,10 +55,10 @@ public:
 	float getSpotAngle() const { return m_spotAngle; }
 	void setSpotAngle(float val) { m_spotAngle = val; }
 
-	void setLightColor(Rgb color, float intensity = 1.0f, float specularX = 1.0f);
+	void setLightColor(const Color3 &color, float intensity = 1.0f, float specularX = 1.0f);
 	Vector4 getLightColor() const { return m_color; }
-	void setSkyColor(Rgb color, float skyIntensity = 1.0f);
-	void setEnvColor(Rgb color, float envIntensity = 1.0f);
+	void setSkyColor(const Color3 &color, float skyIntensity = 1.0f);
+	void setEnvColor(const Color3 &color, float envIntensity = 1.0f);
 	Vector3 getGlobalLightDirection() const { return m_affineMat.origin.getNormalized(); }
 
 	void fillQueued(QueuedLight *queued);
@@ -128,7 +128,7 @@ struct QueuedLight {
 	RenderLight *preQueued;
 
 	// queued struct
-	AffineMat matrix;
+	Matrix3x4 matrix;
 	RenderLight::Type type;
 	float radius;
 	Vector4 pos;

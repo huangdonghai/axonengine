@@ -24,7 +24,7 @@ struct TexFormat {
 		RG16,			// for indirect texture
 
 		// 8 bits image
-		L8, LA8, A8, RGB8, RGBA8, RGBX8, BGR8, BGRA8, BGRX8,
+		L8, LA8, A8, BGR8, BGRA8, BGRX8,
 
 		// compressed image
 		DXT1, DXT3, DXT5,
@@ -105,12 +105,6 @@ inline int TexFormat::getNumComponents() const {
 		return 2;
 	case A8:				// 8 bits alpha: font texture use this
 		return 1;
-	case RGB8:
-		return 3;
-	case RGBA8:
-		return 4;
-	case RGBX8:
-		return 4;
 	case BGR8:
 		return 3;
 	case BGRA8:
@@ -275,12 +269,6 @@ inline const char *TexFormat::getStringName() const {
 		return "LA8";
 	case A8:				// 8 bits alpha: font texture use this
 		return "A8";
-	case RGB8:
-		return "RGB8";
-	case RGBA8:
-		return "RGBA8";
-	case RGBX8:
-		return "RGBX8";
 	case BGR8:
 		return "BGR8";
 	case BGRA8:
@@ -359,10 +347,6 @@ public:
 	enum LoadFlag {
 		NoCompressed = 2,		// don't load compressed file
 		ExpandAlpha = 4,		// expand alpha, fill alpha if need
-		RgbeRaw = 8,		// don't translate rgbe hdr to float
-		// if not set rgbeFloat or rgbeHalf, will auto set this
-		RgbeFloat = 0x10,		// convert rgbe to float
-		RgbeHalf = 0x20,		// convert rgbe to half float(float16)
 		Mipmap = 0x40,		// generate mipmap if need
 		Cubemap = 0x80,		// is a cubemap
 	};

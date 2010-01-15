@@ -550,7 +550,7 @@ void Workspace::on_bookmarkAdd_released()
 {
 	const RenderCamera &camera = g_mapContext->getActiveView()->getCamera();
 	
-	AffineMat viewMatrix;
+	Matrix3x4 viewMatrix;
 
 	viewMatrix.origin = (camera.getOrigin());
 	viewMatrix.axis = (camera.getViewAxis());

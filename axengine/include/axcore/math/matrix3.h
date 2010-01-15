@@ -69,8 +69,8 @@ struct AX_API Matrix3
 	// remove shear transform
 	void removeShear();
 
-	const float *toFloatPointer() const;
-	operator const float*() const;
+	const float *c_ptr() const;
+	float *w_ptr() { return (float *)this; } // writable pointer
 
 	String toString() const;
 	void fromString(const char *str);
@@ -281,13 +281,7 @@ inline void Matrix3::removeShear()
 	m[1] = m[2] ^ m[0];
 }
 
-
-inline Matrix3::operator const float*() const
-{
-	return (float*)this;
-}
-
-inline const float *Matrix3::toFloatPointer() const
+inline const float *Matrix3::c_ptr() const
 {
 	return (const float*)this;
 }

@@ -69,7 +69,7 @@ struct AX_API Matrix4 {
 	Vector3 transformNormal(const Vector3 &v) const;
 
 	Matrix4 getTranspose() const;
-	AffineMat getAffineMat() const;
+	Matrix3x4 getAffineMat() const;
 
 	float getDeterminant() const;
 	Matrix4 getInverse() const;
@@ -109,8 +109,8 @@ struct AX_API Matrix4 {
 	const Vector4 &operator[](int index) const;
 	Vector4 operator*(const Vector4 &p) const;
 	Vector3 operator*(const Vector3 &p) const;
-	const float *toFloatPointer() const;
-	operator const float*() const;
+	const float *c_ptr() const;
+	float *w_ptr() { return (float *)this; } // writable pointer
 };
 
 inline Matrix4::Matrix4() {}
@@ -742,14 +742,7 @@ inline void Matrix4::fromRotate(const Vector3 &pos,const Vector3 &axis,float ang
 	*this = transMatrix1 * rotateMatrix * transMatrix2;
 }
 
-
-
-inline Matrix4::operator const float*() const
-{
-	return (float*)this;
-}
-
-inline const float *Matrix4::toFloatPointer() const
+inline const float *Matrix4::c_ptr() const
 {
 	return (const float*)this;
 }

@@ -10,7 +10,7 @@ read the license and understand and accept it fully.
 
 
 
-#ifndef AX_SCRIPTSYSTEM_H
+#if 0
 #define AX_SCRIPTSYSTEM_H
 
 #define AX_DECLARE_CLASS(classname, baseclass) public: \

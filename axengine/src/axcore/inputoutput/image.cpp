@@ -32,9 +32,11 @@ bool Image::loadFile(const String &filename, int flags)
 	clear();
 
 	m_loadFlags = flags;
+#if 0
 	if (!(flags & RgbeFloat) || !(flags & RgbeHalf)) {
 		flags |= RgbeRaw;
 	}
+#endif
 	m_dataPresent = false;
 
 	if (loadFile_dds(filename + ".dds")) {
@@ -47,10 +49,11 @@ bool Image::loadFile(const String &filename, int flags)
 bool Image::loadFileByType(const String &filename, FileType filetype, int flags)
 {
 	m_loadFlags = flags;
+#if 0
 	if (!(flags & RgbeFloat) || !(flags & RgbeHalf)) {
 		flags |=RgbeRaw;
 	}
-
+#endif
 	bool loaded = false;
 
 	if (filetype == DDS) {
@@ -767,97 +770,11 @@ int Image::convertFormatTo(TexFormat format, int level, byte_t *pBuf) const
 		return ret;
 
 	switch (format) {
-	case TexFormat::L8:				// 8 bits luminance, alpha is always 1.0
-	case TexFormat::LA8:				// 8 bits luminance & alpha
-	case TexFormat::A8:				// 8 bits alpha: font texture use this
-	case TexFormat::RGB8:
+	case TexFormat::L8:	 // 8 bits luminance, alpha is always 1.0
+	case TexFormat::LA8: // 8 bits luminance & alpha
+	case TexFormat::A8: // 8 bits alpha: font texture use this
 		Errorf(_("Image::convertFormatTo: run to not write code."));
 		break;
-	case TexFormat::RGBA8:
-		{
-			const byte_t *src = m_datas[level].get();
-			for (int h = 0; h < height; h++) {
-				for (int w = 0; w < width; w++) {
-					switch (m_format)
-					{
-					case TexFormat::L8:				// 8 bits luminance, alpha is always 1.0
-					case TexFormat::A8:				// 8 bits alpha: font texture use this
-						pBuf[0] = pBuf[1] = pBuf[2] = src[0];
-						pBuf[3] = 255;
-						src++;
-						break;
-					case TexFormat::LA8:				// 8 bits luminance & alpha
-						pBuf[0] = pBuf[1] = pBuf[2] = src[0];
-						pBuf[3] = src[1];
-						src += 2;
-						break;
-					case TexFormat::RGB8:
-						pBuf[0] = src[0];
-						pBuf[1] = src[1];
-						pBuf[2] = src[2];
-						pBuf[3] = 255;
-						src += 3;
-						break;
-					case TexFormat::RGBX8:				// rgb: x is reserved not use: 32 bits
-						pBuf[0] = src[0];
-						pBuf[1] = src[1];
-						pBuf[2] = src[2];
-						pBuf[3] = 255;
-						src += 4;
-						break;
-					case TexFormat::BGR8:
-						pBuf[0] = src[2];
-						pBuf[1] = src[1];
-						pBuf[2] = src[0];
-						pBuf[3] = 255;
-						src += 3;
-						break;
-					case TexFormat::BGRA8:
-						pBuf[0] = src[2];
-						pBuf[1] = src[1];
-						pBuf[2] = src[0];
-						pBuf[3] = src[3];
-						src += 4;
-						break;
-					case TexFormat::BGRX8:				// bgr: x is reserved not use: 32 bits
-						pBuf[0] = src[2];
-						pBuf[1] = src[1];
-						pBuf[2] = src[0];
-						pBuf[3] = 255;
-						src += 4;
-						break;
-						// compressed image
-					case TexFormat::DXT1:
-					case TexFormat::DXT3:
-					case TexFormat::DXT5:
-						Errorf("If need DDS format, please use flag IFLF_no_compressed.");
-						break;
-						// 16 bits fixed image
-					case TexFormat::L16:				// 16 bits int texture: terrain heightmap use this
-						pBuf[0] = pBuf[1] = pBuf[2] = src[1];
-						pBuf[3] = 255;
-						src += 2;
-						break;
-						// 16 bits float image
-					case TexFormat::R16F:				// 16 bits float luminance: alpha is always 1.0
-					case TexFormat::RG16F:
-					case TexFormat::RGBA16F:
-						Errorf("run to not complete code");
-						break;
-						// 32 bits float image
-					case TexFormat::R32F:				// 16 bits float luminance: alpha is always 1.0
-					case TexFormat::RG32F:
-					case TexFormat::RGBA32F:
-					default:
-						Errorf("run to not complete code");
-						break;
-					}
-					pBuf += 4;
-				}
-			}
-		}
-		break;
-	case TexFormat::RGBX8:				// rgb: x is reserved not use: 32 bits
 	case TexFormat::BGR8:
 		Errorf("Image::ConvertFormatTo: run to not write code.");
 		break;
@@ -890,27 +807,6 @@ int Image::convertFormatTo(TexFormat format, int level, byte_t *pBuf) const
 						pBuf[0] = src[0];
 						pBuf[1] = src[1];
 						pBuf[2] = src[2];
-						pBuf[3] = 255;
-						src += 4;
-						break;
-					case TexFormat::RGB8:
-						pBuf[0] = src[2];
-						pBuf[1] = src[1];
-						pBuf[2] = src[0];
-						pBuf[3] = 255;
-						src += 3;
-						break;
-					case TexFormat::RGBA8:
-						pBuf[0] = src[2];
-						pBuf[1] = src[1];
-						pBuf[2] = src[0];
-						pBuf[3] = src[3];
-						src += 4;
-						break;
-					case TexFormat::RGBX8:				// bgr: x is reserved not use: 32 bits
-						pBuf[0] = src[2];
-						pBuf[1] = src[1];
-						pBuf[2] = src[0];
 						pBuf[3] = 255;
 						src += 4;
 						break;

@@ -127,7 +127,7 @@ struct AX_API Vector4 {
 		x = ix; y = iy; z = iz; w = iw;
 		return *this;
 	}
-	inline operator const float*() const {
+	inline const float* c_ptr() const {
 		return &x;
 	}
 	inline float mapping(Vector3 &p) {

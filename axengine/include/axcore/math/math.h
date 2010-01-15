@@ -67,13 +67,15 @@ struct Rect;
 struct Quaternion;
 struct Angles;
 struct BoundingBox;
-struct AffineMat;
+struct Matrix3x4;
 struct Rgb;
 struct Rgba;
+struct Color3;
+
+#if 0
 struct Bgr;
 struct Bgra;
-
-
+#endif
 
 struct AX_API Math {
 	enum Constant {

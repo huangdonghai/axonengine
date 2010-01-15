@@ -28,7 +28,7 @@ public:
 	void endIterator() const;
 
 	Vector3 toVector3() const;
-	Rgb toColor() const;
+	Color3 toColor() const;
 	Point toPoint() const;
 	Rect toRect() const;
 	Object *toObject() const;
@@ -68,10 +68,10 @@ public:
 	Variant(const Vector3 &v);
 	Variant(const Point &v);
 	Variant(const Rect &v);
-	Variant(const Rgb &v);
+	Variant(const Color3 &v);
 	Variant(const Variant &v);
 	Variant(const LuaTable &table);
-	Variant(const AffineMat &matrix);
+	Variant(const Matrix3x4 &matrix);
 	~Variant();
 
 	void clear();
@@ -84,10 +84,10 @@ public:
 	operator Vector3() const;
 	operator Point() const;
 	operator Rect() const;
-	operator Rgb() const;
+	operator Color3() const;
 	operator LuaTable() const;
 	Variant &operator=(const Variant &v);
-	operator AffineMat() const;
+	operator Matrix3x4() const;
 
 	void set(int v);
 	void set(float v);
@@ -119,7 +119,7 @@ public:
 		double realval;
 		Object *obj;
 		String *str;
-		AffineMat *mtr;
+		Matrix3x4 *mtr;
 		byte_t minibuf[MINIBUF_SIZE];
 	};
 };
@@ -144,9 +144,9 @@ inline Variant::Variant(const Point &v) : type(kPoint) { new (minibuf) Point(v);
 
 inline Variant::Variant(const Rect &v) : type(kRect) { new (minibuf) Rect(v); }
 
-inline Variant::Variant(const Rgb &v) : type(kColor) { new (minibuf) Rgb(v); }
+inline Variant::Variant(const Color3 &v) : type(kColor) { new (minibuf) Color3(v); }
 
-inline Variant::Variant(const AffineMat &v) : type(kAffineMat), mtr(new AffineMat(v)) {}
+inline Variant::Variant(const Matrix3x4 &v) : type(kAffineMat), mtr(new Matrix3x4(v)) {}
 
 inline Variant::Variant(const Variant &v) : type(v.type), realval(v.realval) {
 	if (type == kString) {
@@ -155,7 +155,7 @@ inline Variant::Variant(const Variant &v) : type(v.type), realval(v.realval) {
 	}
 
 	if (type == kAffineMat) {
-		mtr = new AffineMat(*(AffineMat*)v.mtr);
+		mtr = new Matrix3x4(*(Matrix3x4*)v.mtr);
 		return;
 	}
 
@@ -270,7 +270,7 @@ inline Variant::operator Rect() const {
 	return Rect();
 }
 
-inline Variant::operator AffineMat() const {
+inline Variant::operator Matrix3x4() const {
 	switch (type) {
 	case kTable:
 		break;
@@ -279,16 +279,16 @@ inline Variant::operator AffineMat() const {
 		break;
 	}
 
-	return AffineMat();
+	return Matrix3x4();
 }
 
-inline Variant::operator Rgb() const {
+inline Variant::operator Color3() const {
 	switch (type) {
 	case kTable:
 		return ((LuaTable*)minibuf)->toColor();
 		break;
 	case kColor:
-		return *(Rgb*)minibuf;
+		return *(Color3*)minibuf;
 		break;
 	}
 
@@ -411,25 +411,25 @@ inline String Variant::toString() const {
 	case kVector3:
 		{
 			Vector3 v = *this;
-			StringUtil::sprintf(result, "%f %f %f", v.x, v.y, v.z);
+			return v.toString();
 			break;
 		}
 	case kColor:
 		{
-			Rgb v = *this;
-			StringUtil::sprintf(result, "%d %d %d", v.r, v.g, v.b);
+			Color3 v = *this;
+			return v.toString();
 			break;
 		}
 	case kPoint:
 		{
 			Point v = *this;
-			StringUtil::sprintf(result, "%d %d", v.x, v.y);
+			return v.toString();
 			break;
 		}
 	case kRect:
 		{
 			Rect v = *this;
-			StringUtil::sprintf(result, "%d %d %d %d", v.x, v.y, v.width, v.height);
+			return v.toString();
 			break;
 		}
 	case kAffineMat:
@@ -473,7 +473,7 @@ inline void Variant::fromString(Type t, const char *str) {
 		}
 	case kColor:
 		{
-			Rgb v;
+			Color3 v;
 			v.fromString(str);
 			this->set(v);
 			break;
@@ -492,7 +492,7 @@ inline void Variant::fromString(Type t, const char *str) {
 		}
 	case kAffineMat:
 		{
-			AffineMat v;
+			Matrix3x4 v;
 			v.fromString(str);
 			this->set(v);
 			break;
@@ -537,7 +537,7 @@ inline Variant::Type GetVariantType_<Vector3>() {
 }
 
 template<>
-inline Variant::Type GetVariantType_<Rgb>() {
+inline Variant::Type GetVariantType_<Color3>() {
 	return Variant::kColor;
 }
 
@@ -557,7 +557,7 @@ inline Variant::Type GetVariantType_<Object*>() {
 }
 
 template<>
-inline Variant::Type GetVariantType_<AffineMat>() {
+inline Variant::Type GetVariantType_<Matrix3x4>() {
 	return Variant::kAffineMat;
 }
 

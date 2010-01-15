@@ -20,8 +20,8 @@ public:
 	SoundEntity();
 	~SoundEntity();
 
-	AffineMat getMatrix() const { return m_matrix; }
-	void setMatrix(AffineMat val) { m_matrix = val; }
+	Matrix3x4 getMatrix() const { return m_matrix; }
+	void setMatrix(Matrix3x4 val) { m_matrix = val; }
 	Vector3 getVelocity() const { return m_velocity; }
 	void setVelocity(Vector3 val) { m_velocity = val; }
 
@@ -34,7 +34,7 @@ private:
 
 	SoundWorld *m_world;
 	int m_entityId;
-	AffineMat m_matrix;
+	Matrix3x4 m_matrix;
 	Vector3 m_velocity;
 };
 

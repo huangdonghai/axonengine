@@ -7,10 +7,10 @@ AX_BEGIN_NAMESPACE
 //--------------------------------------------------------------------------
 
 LuaTable::LuaTable(int index)
-: m_index(index)
-, m_isReading(false)
-, m_isIteratoring(false)
-, m_stackTop(0)
+	: m_index(index)
+	, m_isReading(false)
+	, m_isIteratoring(false)
+	, m_stackTop(0)
 {
 	if (m_index < 0) {
 		m_index = lua_gettop(L) + m_index + 1;
@@ -75,13 +75,13 @@ Vector3 LuaTable::toVector3() const
 	return result;
 }
 
-Rgb LuaTable::toColor() const
+Color3 LuaTable::toColor() const
 {
-	Rgb result;
+	Color3 result;
 	beginRead();
-	result.r = get("r").toFloat() * 255;
-	result.g = get("g").toFloat() * 255;
-	result.b = get("b").toFloat() * 255;
+	result.r = get("r").toFloat();
+	result.g = get("g").toFloat();
+	result.b = get("b").toFloat();
 	endRead();
 	return result;
 }

@@ -41,7 +41,7 @@ protected:
 
 class TransformHis : public History {
 public:
-	TransformHis(Context *context, const String &msg, int actorId, const AffineMat &oldmat, const AffineMat &newmat);
+	TransformHis(Context *context, const String &msg, int actorId, const Matrix3x4 &oldmat, const Matrix3x4 &newmat);
 	virtual ~TransformHis();
 
 	virtual void doIt();
@@ -52,8 +52,8 @@ public:
 
 private:
 	int m_actorId;
-	AffineMat m_oldMat;
-	AffineMat m_newMat;
+	Matrix3x4 m_oldMat;
+	Matrix3x4 m_newMat;
 };
 
 //--------------------------------------------------------------------------

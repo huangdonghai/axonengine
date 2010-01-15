@@ -162,7 +162,7 @@ void SoundSystem::_removeSfx( SoundFx *sfx )
 void SoundSystem::tick()
 {
 	if (m_activeWorld) {
-		const AffineMat &mat = m_activeWorld->m_listenerMatrix;
+		const Matrix3x4 &mat = m_activeWorld->m_listenerMatrix;
 		m_fmodSystem->set3DListenerAttributes(0, tr(mat.origin), tr(m_activeWorld->m_listenerVelocity), tr(mat.axis[0]), tr(mat.axis[2]));
 	}
 	m_fmodSystem->update();

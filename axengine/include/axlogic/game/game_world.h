@@ -60,7 +60,7 @@ public:
 	// implement IObserver
 	virtual void doNotify(IObservable *subject, int arg);
 
-	AffineMat getLastViewMatrix() const;
+	Matrix3x4 getLastViewMatrix() const;
 
 	// static function
 	static GameActor *createActor(const char *clsname);

@@ -390,7 +390,7 @@ void D3D9postprocess::maskShadow(Vector3 volume[8], const Matrix4 &matrix, D3D9t
 #else
 	AX_SU(g_csmOffsetScales, fixmtx);
 #endif
-	m_mtrShadowMask->setParameter("s_shadowRange", 2, zrange.toFloatPointer());
+	m_mtrShadowMask->setParameter("s_shadowRange", 2, zrange.c_ptr());
 	m_mtrShadowMask->setFeature(0, front);
 	m_mtrShadowMask->setFeature(1, true);
 
@@ -404,7 +404,7 @@ void D3D9postprocess::shadowBlur(D3D9texture *texture, bool is_du) {
 	//		getSampleOffsets_GaussBlur5x5(viewport.z, viewport.w, sSampleOffsets, sSampleWeights);
 	getSamplerOffsets_Gauss1D(viewport.z, viewport.w, 5, sSampleOffsets, sSampleWeights, is_du);
 	m_mtrShadowBlur->setTexture(SamplerType::Diffuse, texture);
-	m_mtrShadowBlur->setParameter("g_sampleOffsets", 32 * 2, sSampleOffsets[0].toFloatPointer());
+	m_mtrShadowBlur->setParameter("g_sampleOffsets", 32 * 2, sSampleOffsets[0].c_ptr());
 	m_mtrShadowBlur->setParameter("g_sampleWeights", 32, sSampleWeights);
 
 	const Rect &r = d3d9Camera->getViewRect();
@@ -559,9 +559,9 @@ void D3D9postprocess::drawLight(Vector3 volume[8], QueuedLight *light)
 
 	m_mtrPointLight->setFeature(F_SPOTLIGHT, light->type == RenderLight::kSpot);
 
-	m_mtrPointLight->setParameter("s_lightColor", 4, light->color);
-	m_mtrPointLight->setParameter("s_lightPos", 4, lightpos);
-	m_mtrPointLight->setParameter("s_lightMatrix", 16, light->projMatrix.getTranspose());
+	m_mtrPointLight->setParameter("s_lightColor", 4, light->color.c_ptr());
+	m_mtrPointLight->setParameter("s_lightPos", 4, lightpos.c_ptr());
+	m_mtrPointLight->setParameter("s_lightMatrix", 16, light->projMatrix.getTranspose().c_ptr());
 
 	d3d9Draw->drawPostUP(m_mtrPointLight, m_hexahedron);
 }
@@ -587,9 +587,9 @@ void D3D9postprocess::drawLightShadowed(Vector3 volume[8], QueuedLight *light, c
 	m_mtrPointLight->setFeature(F_SHADOWED, true);
 	m_mtrPointLight->setFeature(F_SPOTLIGHT, light->type == RenderLight::kSpot);
 
-	m_mtrPointLight->setParameter("s_lightColor", 4, light->color);
-	m_mtrPointLight->setParameter("s_lightPos", 4, lightpos);
-	m_mtrPointLight->setParameter("s_lightMatrix", 16, light->projMatrix.getTranspose());
+	m_mtrPointLight->setParameter("s_lightColor", 4, light->color.c_ptr());
+	m_mtrPointLight->setParameter("s_lightPos", 4, lightpos.c_ptr());
+	m_mtrPointLight->setParameter("s_lightMatrix", 16, light->projMatrix.getTranspose().c_ptr());
 
 #if 0
 	m_mtrPointLight->setParameter("s_shadowMatrix", 16, matrix.getTranspose());
@@ -664,7 +664,7 @@ void D3D9postprocess::drawGlobalLight( Vector3 volume[8], QueuedLight *light )
 		g_splitRanges[2] = (g_splitRanges[2] - fixmtx[2].zw()) / fixmtx[2].xy();
 		g_splitRanges[3] = (g_splitRanges[3] - fixmtx[3].zw()) / fixmtx[3].xy();
 #endif
-		m_mtrGlobalLight->setParameter("s_splitRanges", 16, g_splitRanges.getTranspose());
+		m_mtrGlobalLight->setParameter("s_splitRanges", 16, g_splitRanges.getTranspose().c_ptr());
 
 		m_mtrGlobalLight->setPixelToTexel(width, height);
 	}
@@ -679,10 +679,10 @@ void D3D9postprocess::drawGlobalLight( Vector3 volume[8], QueuedLight *light )
 	m_mtrGlobalLight->setFeature(F_DIRECTION_LIGHT, !light->color.xyz().isZero());
 	m_mtrGlobalLight->setFeature(F_SKY_LIGHT, !light->skyColor.isZero());
 	m_mtrGlobalLight->setFeature(F_ENV_LIGHT, !light->envColor.isZero());
-	m_mtrGlobalLight->setParameter("s_lightColor", 4, light->color);
-	m_mtrGlobalLight->setParameter("s_skyColor", 3, light->skyColor);
-	m_mtrGlobalLight->setParameter("s_envColor", 3, light->envColor);
-	m_mtrGlobalLight->setParameter("s_lightPos", 4, lightpos);
+	m_mtrGlobalLight->setParameter("s_lightColor", 4, light->color.c_ptr());
+	m_mtrGlobalLight->setParameter("s_skyColor", 3, light->skyColor.c_ptr());
+	m_mtrGlobalLight->setParameter("s_envColor", 3, light->envColor.c_ptr());
+	m_mtrGlobalLight->setParameter("s_lightPos", 4, lightpos.c_ptr());
 
 	d3d9Draw->drawPostUP(m_mtrGlobalLight, m_hexahedron);
 }

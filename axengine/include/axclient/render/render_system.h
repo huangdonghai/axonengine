@@ -53,7 +53,7 @@ public:
 	void loadHitId(int id);
 	void hitTest(RenderEntity *re);
 	void hitTest(Primitive *prim);
-	void hitTest(Primitive *prim, const AffineMat &matrix);
+	void hitTest(Primitive *prim, const Matrix3x4 &matrix);
 	HitRecords endHitTest();
 
 	void screenShot(const String &name, const Rect &rect);

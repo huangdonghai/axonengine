@@ -27,7 +27,7 @@ float Script : STANDARDSGLOBAL <
 VertexOut VP_main(VertexIn IN) {
     VertexOut OUT = (VertexOut)0;
 
-#if G_D3D
+#if !G_D3D
 	OUT.color = IN.color.bgra;
 #else
 	OUT.color = IN.color;

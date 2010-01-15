@@ -845,7 +845,7 @@ AX_BEGIN_NAMESPACE
 	void MapChunk::updateColorTexture() {
 		int count = 0;
 
-		Bgr pixelbuf[Map::ChunkPixels][Map::ChunkPixels];
+		Rgb pixelbuf[Map::ChunkPixels][Map::ChunkPixels];
 		memset(pixelbuf, 255, sizeof(pixelbuf));
 
 		Point pixeloffset = (m_index + m_terrain->getChunkIndexOffset()) * Map::ChunkPixels;
@@ -860,15 +860,15 @@ AX_BEGIN_NAMESPACE
 			if (block == MapAlphaBlock::Zero)
 				continue;
 
-			Bgr lcolor = l->getLayerDef()->color.bgr();
+			Rgb lcolor = l->getLayerDef()->color.rgb();
 			Image *image = l->getColorTemplate();
 
 			for (int y = 0; y < Map::ChunkPixels; y++) {
 				for (int x = 0; x < Map::ChunkPixels; x++) {
-					Bgr color = lcolor;
+					Rgb color = lcolor;
 					if (image) {
 						const byte_t *p = image->getPixel(0, pixeloffset.x + x, pixeloffset.y + y);
-						Bgr pixel(p[2], p[1], p[0]);
+						Rgb pixel(p[2], p[1], p[0]);
 						color *= pixel;
 					}
 					if (block == MapAlphaBlock::One) {

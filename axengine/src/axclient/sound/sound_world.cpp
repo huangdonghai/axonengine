@@ -65,7 +65,7 @@ void SoundWorld::stopSound( int channelId )
 	g_soundSystem->_stopSound(this, 0, channelId);
 }
 
-void SoundWorld::setListener( const AffineMat &matrix, const Vector3 &velocity )
+void SoundWorld::setListener( const Matrix3x4 &matrix, const Vector3 &velocity )
 {
 	m_listenerMatrix = matrix;
 	m_listenerVelocity = velocity;

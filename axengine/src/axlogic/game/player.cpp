@@ -35,12 +35,12 @@ AX_BEGIN_NAMESPACE
 		m_body->refresh();
 	}
 
-	void Player::setMatrix(const AffineMat &matrix)
+	void Player::setMatrix(const Matrix3x4 &matrix)
 	{
 		m_physicsPlayer->setMatrix(matrix);
 	}
 
-	AffineMat Player::getMatrix() const
+	Matrix3x4 Player::getMatrix() const
 	{
 		return m_physicsPlayer->getMatrix();
 	}
@@ -77,7 +77,7 @@ AX_BEGIN_NAMESPACE
 		m_physicsPlayer->setLinearVelocity(Vector3(0,0,0));
 	}
 
-	AffineMat Player::getThirdPersonMatrix() const
+	Matrix3x4 Player::getThirdPersonMatrix() const
 	{
 		return m_physicsPlayer->getThirdPerson();
 	}

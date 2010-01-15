@@ -76,7 +76,7 @@ void GameWorld::drawFrame()
 
 	if (m_entities[0]) {
 		Player *player = static_cast<Player*>(m_entities[0]);
-		AffineMat player3rd = player->getThirdPersonMatrix();
+		Matrix3x4 player3rd = player->getThirdPersonMatrix();
 		m_lastCamera.setOrigin(player3rd.origin);
 		m_lastCamera.setViewAxis(player3rd.axis);
 	}
@@ -90,12 +90,12 @@ void GameWorld::drawScene(const RenderCamera &camera)
 {
 	m_lastCamera = camera;
 
-	m_soundWorld->setListener(AffineMat(camera.getViewAxis(), camera.getOrigin()), Vector3(0,0,0));
+	m_soundWorld->setListener(Matrix3x4(camera.getViewAxis(), camera.getOrigin()), Vector3(0,0,0));
 	g_soundSystem->setWorld(m_soundWorld);
 
 	if (m_entities[0] && !g_gameSystem->isRunning()) {
 		Player *player = static_cast<Player*>(m_entities[0]);
-		player->setMatrix(AffineMat(camera.getViewAxis(), camera.getOrigin()));
+		player->setMatrix(Matrix3x4(camera.getViewAxis(), camera.getOrigin()));
 	}
 
 	g_renderSystem->beginScene(camera);
@@ -193,8 +193,8 @@ void GameWorld::doNotify(IObservable *subject, int arg) {
 void GameWorld::updateEnvdef() {
 	m_outdoorEnv->setHaveFarSky(m_mapEnvDef->m_haveSkyBox);
 	m_outdoorEnv->setHaveOcean(m_mapEnvDef->m_haveOcean);
-	m_outdoorEnv->setFog(m_mapEnvDef->m_fogColor.toVector(), m_mapEnvDef->m_fogDensity);
-	m_outdoorEnv->setOceanFog(m_mapEnvDef->m_oceanFogColor.toVector(), m_mapEnvDef->m_oceanFogDensity);
+	m_outdoorEnv->setFog(m_mapEnvDef->m_fogColor.toVector3(), m_mapEnvDef->m_fogDensity);
+	m_outdoorEnv->setOceanFog(m_mapEnvDef->m_oceanFogColor.toVector3(), m_mapEnvDef->m_oceanFogDensity);
 	m_outdoorEnv->setHaveGlobalLight(m_mapEnvDef->m_haveGlobalLight);
 	m_outdoorEnv->setSunColor(m_mapEnvDef->m_sunColor, m_mapEnvDef->m_sunColorX, 1);
 	m_outdoorEnv->setSkyColor(m_mapEnvDef->m_skyColor, m_mapEnvDef->m_skyColorX);
@@ -252,9 +252,9 @@ void GameWorld::removeObject(GameObject *node)
 		removeActor((GameActor*)node);
 }
 
-AffineMat GameWorld::getLastViewMatrix() const
+Matrix3x4 GameWorld::getLastViewMatrix() const
 {
-	return AffineMat(m_lastCamera.getViewAxis(), m_lastCamera.getOrigin());
+	return Matrix3x4(m_lastCamera.getViewAxis(), m_lastCamera.getOrigin());
 }
 
 AX_END_NAMESPACE

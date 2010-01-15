@@ -155,7 +155,7 @@ protected:
 	// pure virtual need be implemented in subclass
 	virtual bool doBegin(int x, int y) = 0;
 	virtual bool doTranslateVector(const Vector3 &v, Vector3 &result) = 0;
-	virtual bool doTransform(const Vector3 &v, int index, AffineMat &result) = 0;
+	virtual bool doTransform(const Vector3 &v, int index, Matrix3x4 &result) = 0;
 	virtual void doEnd(int x, int y, Action *his) = 0;
 	virtual void doUpdateMode() = 0;
 
@@ -167,7 +167,7 @@ protected:
 	bool m_isSelectMode;
 	Vector3 m_gizmoCenter;
 	Matrix3 m_gizmoAxis;
-	AffineMat m_beginMatrix;
+	Matrix3x4 m_beginMatrix;
 	int m_highlit;
 	Vector2 m_beginTrack;
 	float m_distScale;
@@ -193,7 +193,7 @@ protected:
 	// implement TransformTool
 	virtual bool doBegin(int x, int y);
 	virtual bool doTranslateVector(const Vector3 &v, Vector3 &result);
-	virtual bool doTransform(const Vector3 &v, int index, AffineMat &result);
+	virtual bool doTransform(const Vector3 &v, int index, Matrix3x4 &result);
 	virtual void doEnd(int x, int y, Action *his);
 	virtual void doUpdateMode();
 
@@ -226,7 +226,7 @@ protected:
 	// implement TransformTool
 	virtual bool doBegin(int x, int y);
 	virtual bool doTranslateVector(const Vector3 &v, Vector3 &result);
-	virtual bool doTransform(const Vector3 &v, int index, AffineMat &result);
+	virtual bool doTransform(const Vector3 &v, int index, Matrix3x4 &result);
 	virtual void doEnd(int x, int y, Action *his);
 	virtual void doUpdateMode();
 
@@ -260,7 +260,7 @@ protected:
 	// implement TransformTool
 	virtual bool doBegin(int x, int y);
 	virtual bool doTranslateVector(const Vector3 &v, Vector3 &result);
-	virtual bool doTransform(const Vector3 &v, int index, AffineMat &result);
+	virtual bool doTransform(const Vector3 &v, int index, Matrix3x4 &result);
 	virtual void doEnd(int x, int y, Action *his);
 	virtual void doUpdateMode();
 

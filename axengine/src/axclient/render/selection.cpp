@@ -151,7 +151,7 @@ void Selection::testPrimitive(Primitive *prim)
 	}
 }
 
-void Selection::testPrimitive(Primitive *prim, const AffineMat &matrix)
+void Selection::testPrimitive(Primitive *prim, const Matrix3x4 &matrix)
 {
 	// 如果不是Actor,则视矩阵不用乘以模型矩阵
 	m_selectModelViewMatrix = m_selectionCamera.getViewMatrix() * matrix.toMatrix4();

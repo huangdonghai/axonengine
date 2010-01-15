@@ -159,11 +159,11 @@ AX_BEGIN_NAMESPACE
 	}
 
 
-	void PhysicsRagdoll::setMatrix(const AffineMat &matrix) {
+	void PhysicsRagdoll::setMatrix(const Matrix3x4 &matrix) {
 		m_matrix = matrix;
 	}
 
-	Axon::AffineMat PhysicsRagdoll::getMatrix() const {
+	Axon::Matrix3x4 PhysicsRagdoll::getMatrix() const {
 		return m_matrix;
 	}
 

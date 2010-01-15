@@ -26,7 +26,7 @@ struct Bookmark
 {
 	int id;
 	String name;
-	AffineMat viewMatrix;
+	Matrix3x4 viewMatrix;
 };
 
 class AX_API MapContext : public Context {
@@ -72,7 +72,7 @@ public:
 	virtual void doHitTest(const RenderCamera &camera, int part);
 
 	// bookmarks --timlly add
-	void addBookmark(const AffineMat &viewMatrix, const String &name = "", int id = -1);
+	void addBookmark(const Matrix3x4 &viewMatrix, const String &name = "", int id = -1);
 	void addBookmark(const Bookmark &bookmark);
 	void deleteBookmark(const String &name);
 	void deleteBookmark(int index);

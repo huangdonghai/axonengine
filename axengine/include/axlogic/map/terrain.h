@@ -114,7 +114,7 @@ AX_BEGIN_NAMESPACE
 	//--------------------------------------------------------------------------
 
 	struct MapColorBlock {
-		Bgra data[Map::ChunkPixels][Map::ChunkPixels];
+		Rgba data[Map::ChunkPixels][Map::ChunkPixels];
 	};
 
 	class MapColorGen {

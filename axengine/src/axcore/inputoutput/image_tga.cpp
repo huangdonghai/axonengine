@@ -448,26 +448,11 @@ AX_BEGIN_NAMESPACE
 
 	PixEncode: 
 				if (mapped) {
-					if (m_format == TexFormat::RGB8) {
-						map_idx = l * 4;
-						*dst++ = ColorMap[map_idx + 0];
-						*dst++ = ColorMap[map_idx + 1];
-						*dst++ = ColorMap[map_idx + 2];
-						continue;
-					} 
 					if (m_format == TexFormat::BGR8) {
 						map_idx = l * 4;
 						*dst++ = ColorMap[map_idx + 2];
 						*dst++ = ColorMap[map_idx + 1];
 						*dst++ = ColorMap[map_idx + 0];
-						continue;
-					} 
-					if (m_format == TexFormat::RGBA8 || m_format == TexFormat::RGBX8) { 
-						map_idx = l * 4; 
-						*dst++ = ColorMap[map_idx + 0]; 
-						*dst++ = ColorMap[map_idx + 1]; 
-						*dst++ = ColorMap[map_idx + 2]; 
-						*dst++ = ColorMap[map_idx + 3];
 						continue;
 					} 
 					if (m_format == TexFormat::BGRA8 || m_format == TexFormat::BGRX8) { 
@@ -479,23 +464,10 @@ AX_BEGIN_NAMESPACE
 						continue;
 					} 
 				} else { 
-					if (m_format == TexFormat::RGB8) { 
-						*dst++ = r; 
-						*dst++ = g; 
-						*dst++ = b; 
-						continue;
-					} 
 					if (m_format == TexFormat::BGR8) { 
 						*dst++ = b; 
 						*dst++ = g; 
 						*dst++ = r; 
-						continue;
-					} 
-					if (m_format == TexFormat::RGBA8 || m_format == TexFormat::RGBX8) { 
-						*dst++ = r; 
-						*dst++ = g; 
-						*dst++ = b; 
-						*dst++ = a; 
 						continue;
 					} 
 					if (m_format == TexFormat::BGRA8 || m_format == TexFormat::BGRX8) { 

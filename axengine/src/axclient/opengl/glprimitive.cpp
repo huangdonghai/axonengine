@@ -184,10 +184,10 @@ AX_BEGIN_NAMESPACE
 		for (size_t i = 0; i < params.size(); i++) {
 			const InstancePrim::Param &param = params[i];
 
-			glMultiTexCoord4fv(GL_TEXTURE2, param.worldMatrix.getRow(0));
-			glMultiTexCoord4fv(GL_TEXTURE3, param.worldMatrix.getRow(1));
-			glMultiTexCoord4fv(GL_TEXTURE4, param.worldMatrix.getRow(2));
-			glMultiTexCoord4fv(GL_TEXTURE5, param.userDefined);
+			glMultiTexCoord4fv(GL_TEXTURE2, param.worldMatrix.getRow(0).c_ptr());
+			glMultiTexCoord4fv(GL_TEXTURE3, param.worldMatrix.getRow(1).c_ptr());
+			glMultiTexCoord4fv(GL_TEXTURE4, param.worldMatrix.getRow(2).c_ptr());
+			glMultiTexCoord4fv(GL_TEXTURE5, param.userDefined.c_ptr());
 
 			ib->drawElementsWithoutBind(m_elementType);
 		}

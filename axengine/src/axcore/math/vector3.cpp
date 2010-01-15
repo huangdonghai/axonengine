@@ -14,7 +14,7 @@ AX_BEGIN_NAMESPACE
 const Vector3 Vector3::One = Vector3(1,1,1);
 const Vector3 Vector3::Zero = Vector3(0,0,0);
 
-Axon::String Vector3::toString() const {
+String Vector3::toString() const {
 	String result;
 	StringUtil::sprintf(result, "%f %f %f", x, y, z);
 	return result;

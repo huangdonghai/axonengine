@@ -14,7 +14,8 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-struct AX_API Vector3 {
+struct AX_API Vector3
+{
 	float x, y, z;
 
 	static const Vector3 One;
@@ -68,8 +69,20 @@ struct AX_API Vector3 {
 	inline bool operator==(const Vector3 &v) const {
 		return x==v.x && y==v.y && z==v.z;
 	}
-	bool operator!=(const Vector3 &v) const {
+	inline bool operator!=(const Vector3 &v) const {
 		return x!=v.x || y!=v.y || z!=v.z;
+	}
+	inline bool operator<(const Vector3 &rhs) const {
+		return x < rhs.x && y < rhs.y && z < rhs.z;
+	}
+	inline bool operator<=(const Vector3 &rhs) const {
+		return x <= rhs.x && y <= rhs.y && z <= rhs.z;
+	}
+	inline bool operator>(const Vector3 &rhs) const {
+		return !operator<=(rhs);
+	}
+	inline bool operator>=(const Vector3 &rhs) const {
+		return !operator<(rhs);
 	}
 
 	// assign operator
@@ -163,7 +176,8 @@ struct AX_API Vector3 {
 		x = p[0]; y = p[1]; z = p[2];
 		return *this;
 	}
-	inline operator const float*() const {
+
+	inline const float* c_ptr() const {
 		return &x;
 	}
 

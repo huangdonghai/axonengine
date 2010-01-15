@@ -303,7 +303,7 @@ AX_BEGIN_NAMESPACE
 
 	void GLdriver::loadMatrix(GLenum mode, const Matrix4 &m) {
 		glMatrixMode(mode);
-		glLoadMatrixf(m.m[0]);
+		glLoadMatrixf(m.c_ptr());
 	}
 
 

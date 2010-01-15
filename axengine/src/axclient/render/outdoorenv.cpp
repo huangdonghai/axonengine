@@ -44,13 +44,13 @@ OutdoorEnv::OutdoorEnv(RenderWorld *world) : RenderEntity(kOutdoorEnv) {
 	// global fog
 	m_globalFog = new RenderFog();
 	m_globalFog->setFogDensity(0.0004f);
-	m_globalFog->setFogColor(Rgba(119,171,201).toVector());
+	m_globalFog->setFogColor(Rgba(119,171,201).toVector4());
 	m_globalFog->setWorld(m_world);
 
 	// ocean fog
 	m_oceanFog = new RenderFog();
 	m_oceanFog->setFogDensity(0.04f);
-	m_oceanFog->setFogColor(Rgba(119,201,171).toVector() * 0.25f);
+	m_oceanFog->setFogColor(Rgba(119,201,171).toVector4() * 0.25f);
 	m_oceanFog->setWorld(m_world);
 
 	TypeZero(&m_lastNishitaParams);
@@ -537,7 +537,7 @@ void OutdoorEnv::setOceanFog(const Vector3 &color, float density)
 void OutdoorEnv::setOceanMaterial(const String &matname)
 {}
 
-void OutdoorEnv::setSunColor(const Rgb &color, float intensity, float specularX)
+void OutdoorEnv::setSunColor(const Color3 &color, float intensity, float specularX)
 {
 	m_globalLight->setLightColor(color, intensity, specularX);
 }
@@ -547,12 +547,12 @@ void OutdoorEnv::setSunDir(const Vector3 &dir)
 	m_globalLight->setOrigin(dir);
 }
 
-void OutdoorEnv::setSkyColor(const Rgb &color, float intensity)
+void OutdoorEnv::setSkyColor(const Color3 &color, float intensity)
 {
 	m_globalLight->setSkyColor(color, intensity);
 }
 
-void OutdoorEnv::setEnvColor(const Rgb &color, float intensity)
+void OutdoorEnv::setEnvColor(const Color3 &color, float intensity)
 {
 	m_globalLight->setEnvColor(color, intensity);
 }

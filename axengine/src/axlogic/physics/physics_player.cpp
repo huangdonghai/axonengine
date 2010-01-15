@@ -75,17 +75,17 @@ AX_BEGIN_NAMESPACE
 
 	void PhysicsPlayer::setAutoDeactive(bool val) {}
 
-	void PhysicsPlayer::setMatrix(const AffineMat &matrix) {
+	void PhysicsPlayer::setMatrix(const Matrix3x4 &matrix) {
 		m_characterProxy->setPosition(x2h(matrix.origin));
 		m_viewAxis = matrix.axis;
 		m_viewAngles = m_viewAxis.toAngles();
 	}
 
-	AffineMat PhysicsPlayer::getMatrix() const {
+	Matrix3x4 PhysicsPlayer::getMatrix() const {
 		Angles objangle = m_viewAngles;
 		objangle.pitch = 0;
 		objangle.roll = 0;
-		return AffineMat(objangle, h2x(m_characterProxy->getPosition()));
+		return Matrix3x4(objangle, h2x(m_characterProxy->getPosition()));
 	}
 
 	void PhysicsPlayer::bind(PhysicsWorld *world) {
@@ -268,14 +268,14 @@ AX_BEGIN_NAMESPACE
 		m_characterProxy->setLinearVelocity(x2h(velocity));
 	}
 
-	AffineMat PhysicsPlayer::getThirdPerson()
+	Matrix3x4 PhysicsPlayer::getThirdPerson()
 	{
 		Vector3 org = h2x(m_characterProxy->getPosition());
 		if (m_viewType == ViewType_ThirdPerson) {
 			org.z += 1.9f;
 			Vector3 torg = org - m_viewAxis[0] * m_viewDist - m_viewAxis[1] * 0.5f;
 
-			return AffineMat(m_viewAxis, torg);
+			return Matrix3x4(m_viewAxis, torg);
 		} else {
 			org.z += 1.9f;
 			Vector3 forward = m_viewAxis[0];
@@ -285,7 +285,7 @@ AX_BEGIN_NAMESPACE
 
 			org += forward * (0.25f + z * 0.25);
 
-			return AffineMat(m_viewAxis, org);
+			return Matrix3x4(m_viewAxis, org);
 		}
 	}
 

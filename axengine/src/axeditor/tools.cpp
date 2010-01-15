@@ -435,7 +435,7 @@ bool TransformTool::begin(bool mouse, int x, int y, int flags) {
 
 	const AgentList &actorlist = m_context->getSelection();
 
-	m_beginMatrix = AffineMat(m_gizmoAxis, m_gizmoCenter);
+	m_beginMatrix = Matrix3x4(m_gizmoAxis, m_gizmoCenter);
 	actorlist.beginTransform();
 
 	return doBegin(x, y);
@@ -455,7 +455,7 @@ void TransformTool::transform(const Vector3 &v, int index)
 
 	m_context->getState()->setTransformState(false, false, translated);
 
-	AffineMat result;
+	Matrix3x4 result;
 	if (!doTransform(translated, index, result))
 		return;
 
@@ -523,7 +523,7 @@ void MoveTool::doDrag(int x, int y, int flags, float pressure)
 	TransformTool::doDrag(x, y, flags, pressure);
 }
 
-bool MoveTool::doTransform(const Vector3 &dist, int index, AffineMat &result) {
+bool MoveTool::doTransform(const Vector3 &dist, int index, Matrix3x4 &result) {
 #if 0
 	bool v;
 	Vector3 cliped, dist;
@@ -560,7 +560,7 @@ bool MoveTool::doTransform(const Vector3 &dist, int index, AffineMat &result) {
 	}
 
 	if (m_context->getState()->transformSpace != ObjectSpace) {
-		AffineMat mat1, mat2, mat3;
+		Matrix3x4 mat1, mat2, mat3;
 		mat1.setInverse(m_beginMatrix.axis, m_beginMatrix.origin);
 		mat2.initTranslate(dist.x, dist.y, dist.z);
 		mat3 = m_beginMatrix;
@@ -606,7 +606,7 @@ bool MoveTool::doTransform(const Vector3 &dist, int index, AffineMat &result) {
 	}
 
 	// apply to gizmo
-	AffineMat temp;
+	Matrix3x4 temp;
 
 	if (m_context->getState()->transformSpace == ObjectSpace) {
 		temp = m_beginMatrix * result;
@@ -779,7 +779,7 @@ bool RotateTool::doBegin(int x, int y) {
 	return clipTest(x, y, m_beginClip);
 }
 
-bool RotateTool::doTransform(const Vector3 &rotate, int index, AffineMat &result ) {
+bool RotateTool::doTransform(const Vector3 &rotate, int index, Matrix3x4 &result ) {
 	const AgentList &actorlist = m_context->getSelection();
 
 	if (!m_isMouseInput && !m_context->getState()->transformRel && m_context->getState()->transformSpace == WorldSpace) {
@@ -791,7 +791,7 @@ bool RotateTool::doTransform(const Vector3 &rotate, int index, AffineMat &result
 	}
 
 	if (m_context->getState()->transformSpace != ObjectSpace) {
-		AffineMat mat1, mat2, mat3;
+		Matrix3x4 mat1, mat2, mat3;
 
 		mat1.setInverse(m_beginMatrix.axis, m_beginMatrix.origin);
 		mat2.initRotation(rotate.x, rotate.y, rotate.z);
@@ -811,7 +811,7 @@ bool RotateTool::doTransform(const Vector3 &rotate, int index, AffineMat &result
 	}
 
 	// apply to gizmo
-	AffineMat gizmoMat;
+	Matrix3x4 gizmoMat;
 	if (m_isMouseInput && m_context->getState()->snapToAngle) {
 		Vector3 r = getRotate(m_angle);
 		gizmoMat.initRotation(r.x, r.y, r.z);
@@ -1014,11 +1014,11 @@ bool ScaleTool::doBegin(int x, int y) {
 	return clipTest(x, y, m_beginClip);
 }
 
-bool ScaleTool::doTransform(const Vector3 &dist, int index, AffineMat &result) {
+bool ScaleTool::doTransform(const Vector3 &dist, int index, Matrix3x4 &result) {
 	AgentList actorlist = m_context->getSelection();
 
 	if (m_context->getState()->transformSpace != ObjectSpace) {
-		AffineMat mat1, mat2, mat3;
+		Matrix3x4 mat1, mat2, mat3;
 		mat1.setInverse(m_beginMatrix.axis, m_beginMatrix.origin);
 		mat2.initScale(dist.x, dist.y, dist.z);
 		mat3 = m_beginMatrix;
@@ -1033,7 +1033,7 @@ bool ScaleTool::doTransform(const Vector3 &dist, int index, AffineMat &result) {
 	}
 
 	// apply to gizmo
-	AffineMat temp;
+	Matrix3x4 temp;
 
 	if (m_context->getState()->transformSpace == ObjectSpace) {
 		temp = m_beginMatrix * result;
