@@ -9,8 +9,8 @@ read the license and understand and accept it fully.
 
 
 
-#ifndef AX_AFFINEMAT_H
-#define AX_AFFINEMAT_H
+#ifndef AX_MATRIX3X4_H
+#define AX_MATRIX3X4_H
 
 AX_BEGIN_NAMESPACE
 
