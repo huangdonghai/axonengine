@@ -124,7 +124,7 @@ inline int ScriptProp::checkNameKind()
 		} else if (ks == "vec") {
 			kind = Variant::kVector3;
 		} else if (ks == "color") {
-			kind = Variant::kColor;
+			kind = Variant::kColor3;
 		} else if (ks == "point") {
 			kind = Variant::kPoint;
 		} else if (ks == "rect") {
@@ -180,7 +180,7 @@ int ScriptProp::checkTableKind(Variant &result)
 		kind = Variant::kRect;
 		result.set(Rect(x,y,width,height));
 	} else if (hr && hg && hb) {
-		kind = Variant::kColor;
+		kind = Variant::kColor3;
 		result.set(Color3(r,g,b));
 	} else if (hx && hy) {
 		kind = Variant::kPoint;
@@ -306,7 +306,7 @@ Variant ScriptProp::getProperty(const Object *obj)
 	lua_rawget(L, LUA_REGISTRYINDEX);
 	if (xGetScoped(L, ("Properties." + m_realName).c_str())) {
 		result = xReadStack(L,-1);
-		if (m_propKind == Variant::kColor) {
+		if (m_propKind == Variant::kColor3) {
 			result = (Color3)result;
 		} else if (m_propKind == Variant::kVector3) {
 			result = (Vector3)result;

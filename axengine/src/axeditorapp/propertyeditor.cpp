@@ -297,7 +297,7 @@ void PropertyEditor::initFromObject(Object *obj) {
 			case Variant::kVector3:
 				p = new VectorProperty(m->getProperty(obj), m->getName());
 				break;
-			case Variant::kColor:
+			case Variant::kColor3:
 				p = new ColorProperty(x2q(m->getProperty(obj)), m->getName());
 				break;
 			}
@@ -410,7 +410,7 @@ bool PropertyEditor::initScriptProp(Object *obj) {
 		case Variant::kVector3:
 			p = new VectorProperty(m->getProperty(obj), m->getName());
 			break;
-		case Variant::kColor:
+		case Variant::kColor3:
 			p = new ColorProperty(x2q(m->getProperty(obj)), m->getName());
 			break;
 		case Variant::kPoint:

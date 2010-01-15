@@ -48,7 +48,7 @@ class AX_API Variant
 {
 public:
 	enum Type {
-		kEmpty, kBool, kInt, kFloat, kString, kObject, kTable, kVector3, kColor, kPoint, kRect, kAffineMat, kMaxType
+		kEmpty, kBool, kInt, kFloat, kString, kObject, kTable, kVector3, kColor3, kPoint, kRect, kMatrix3x4, kMaxType
 	};
 
 	enum {
@@ -144,9 +144,9 @@ inline Variant::Variant(const Point &v) : type(kPoint) { new (minibuf) Point(v);
 
 inline Variant::Variant(const Rect &v) : type(kRect) { new (minibuf) Rect(v); }
 
-inline Variant::Variant(const Color3 &v) : type(kColor) { new (minibuf) Color3(v); }
+inline Variant::Variant(const Color3 &v) : type(kColor3) { new (minibuf) Color3(v); }
 
-inline Variant::Variant(const Matrix3x4 &v) : type(kAffineMat), mtr(new Matrix3x4(v)) {}
+inline Variant::Variant(const Matrix3x4 &v) : type(kMatrix3x4), mtr(new Matrix3x4(v)) {}
 
 inline Variant::Variant(const Variant &v) : type(v.type), realval(v.realval) {
 	if (type == kString) {
@@ -154,7 +154,7 @@ inline Variant::Variant(const Variant &v) : type(v.type), realval(v.realval) {
 		return;
 	}
 
-	if (type == kAffineMat) {
+	if (type == kMatrix3x4) {
 		mtr = new Matrix3x4(*(Matrix3x4*)v.mtr);
 		return;
 	}
@@ -171,7 +171,7 @@ inline Variant::~Variant() { clear(); }
 inline void Variant::clear() {
 	if (type == kString) {
 		delete str;
-	} else if (type == kAffineMat) {
+	} else if (type == kMatrix3x4) {
 		delete mtr;
 	}
 	type = kEmpty;
@@ -287,7 +287,7 @@ inline Variant::operator Color3() const {
 	case kTable:
 		return ((LuaTable*)minibuf)->toColor();
 		break;
-	case kColor:
+	case kColor3:
 		return *(Color3*)minibuf;
 		break;
 	}
@@ -362,7 +362,9 @@ inline void Variant::set(const Variant &v) {
 	type = v.type;
 	::memcpy(minibuf, v.minibuf, MINIBUF_SIZE);
 	if (type == kString) {
-		str = new String(*(String*)v.str);
+		str = new String(*v.str);
+	} else if (type == kMatrix3x4) {
+		mtr = new Matrix3x4(*v.mtr);
 	}
 }
 
@@ -414,7 +416,7 @@ inline String Variant::toString() const {
 			return v.toString();
 			break;
 		}
-	case kColor:
+	case kColor3:
 		{
 			Color3 v = *this;
 			return v.toString();
@@ -432,7 +434,7 @@ inline String Variant::toString() const {
 			return v.toString();
 			break;
 		}
-	case kAffineMat:
+	case kMatrix3x4:
 		{
 			return mtr->toString();
 		}
@@ -471,7 +473,7 @@ inline void Variant::fromString(Type t, const char *str) {
 			this->set(v);
 			break;
 		}
-	case kColor:
+	case kColor3:
 		{
 			Color3 v;
 			v.fromString(str);
@@ -490,7 +492,7 @@ inline void Variant::fromString(Type t, const char *str) {
 			Rect v; v.fromString(str); this->set(v);
 			break;
 		}
-	case kAffineMat:
+	case kMatrix3x4:
 		{
 			Matrix3x4 v;
 			v.fromString(str);
@@ -538,7 +540,7 @@ inline Variant::Type GetVariantType_<Vector3>() {
 
 template<>
 inline Variant::Type GetVariantType_<Color3>() {
-	return Variant::kColor;
+	return Variant::kColor3;
 }
 
 template<>
@@ -558,7 +560,7 @@ inline Variant::Type GetVariantType_<Object*>() {
 
 template<>
 inline Variant::Type GetVariantType_<Matrix3x4>() {
-	return Variant::kAffineMat;
+	return Variant::kMatrix3x4;
 }
 
 template< class T >

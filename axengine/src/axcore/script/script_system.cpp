@@ -309,7 +309,7 @@ void xPushStack(lua_State *L, const Variant &val)
 		t.set("height" , v->height);
 		break;
 	}
-	case Variant::kColor:{
+	case Variant::kColor3:{
 		lua_newtable(L);
 		int index = lua_gettop(L);
 		LuaTable t(index);
