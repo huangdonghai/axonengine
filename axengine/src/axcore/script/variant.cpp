@@ -2,6 +2,7 @@
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/at.hpp>
 #include <boost/mpl/if.hpp>
+#include <boost/mpl/int.hpp>
 
 AX_BEGIN_NAMESPACE
 
@@ -10,7 +11,7 @@ typedef boost::mpl::vector<void,bool,int,float,String,Object *, LuaTable,Vector3
 
 typedef bool (*castFunc)(const void *from, void *to);
 
-template <class T, class Q, class Can = boost::mpl::int_<1>::type >
+template <class T, class Q, class Can = boost::mpl::int_<1> >
 class CastHelper_ {
 	static bool CastFunc(const void *from, void *to)
 	{
@@ -22,7 +23,7 @@ class CastHelper_ {
 	}
 };
 
-template <class T, class Q, boost::mpl::int_<0>::type >
+template <class T, class Q, boost::mpl::int_<2> >
 class CastHelper_ {
 	static bool CastFunc(const void *from, void *to)
 	{
