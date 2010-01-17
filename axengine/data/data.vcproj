@@ -633,6 +633,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\scripts\start.nut"
+				>
+			</File>
+			<File
 				RelativePath=".\scripts\test.lua"
 				>
 			</File>
@@ -649,6 +653,10 @@
 				>
 				<File
 					RelativePath=".\scripts\game\Fixed.lua"
+					>
+				</File>
+				<File
+					RelativePath=".\scripts\game\game_all.nut"
 					>
 				</File>
 				<File
@@ -707,6 +715,10 @@
 						>
 					</File>
 					<File
+						RelativePath=".\scripts\game\Effect\light.nut"
+						>
+					</File>
+					<File
 						RelativePath=".\scripts\game\Effect\Particle.lua"
 						>
 					</File>
@@ -736,11 +748,19 @@
 				Name="Physics"
 				>
 				<File
+					RelativePath=".\scripts\physics\animationcontext.nut"
+					>
+				</File>
+				<File
 					RelativePath=".\scripts\physics\Dog.lua"
 					>
 				</File>
 				<File
 					RelativePath=".\scripts\physics\Male.lua"
+					>
+				</File>
+				<File
+					RelativePath=".\scripts\physics\male.nut"
 					>
 				</File>
 			</Filter>

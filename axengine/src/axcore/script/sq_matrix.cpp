@@ -20,16 +20,16 @@ _MEMBER_FUNCTION_IMPL(Matrix, constructor)
 				else return sa.ThrowError(_SC("Matrix() invalid instance type"));
 			} else {
 				SquirrelObject arr = sa.GetObjectHandle(2);
-				if (arr.Len() != Matrix3x4::NumFloat) {
+				if (arr.len() != Matrix3x4::NumFloat) {
 					return sa.ThrowError(_SC("Matrix(array) need a 12 elements array"));
 				}
 				float *fp = temp.w_ptr();
 				SquirrelObject idx, val;
-				if(arr.BeginIteration()) {
-					while(arr.Next(idx,val)) {
-						fp[idx.ToInteger()] = val.ToFloat();
+				if(arr.beginIteration()) {
+					while(arr.next(idx,val)) {
+						fp[idx.toInteger()] = val.toFloat();
 					}
-					arr.EndIteration();
+					arr.endIteration();
 				}
 			}
 			break;

@@ -1,8 +1,110 @@
 #include "script_p.h"
+#include <boost/mpl/vector.hpp>
+#include <boost/mpl/at.hpp>
+#include <boost/mpl/if.hpp>
 
 AX_BEGIN_NAMESPACE
 
-String Variant::toString() const {
+typedef boost::mpl::vector<void,bool,int,float,String,Object *, LuaTable,Vector3,Color3,Point,Rect,Matrix3x4> VariantTL;
+
+
+typedef bool (*castFunc)(const void *from, void *to);
+
+template <class T, class Q, class Can = boost::mpl::int_<1>::type >
+class CastHelper_ {
+	static bool CastFunc(const void *from, void *to)
+	{
+		if (std::tr1::is_convertible<T,Q>::value) {
+			*(Q *)to = *(const T *)from;
+			return true;
+		}
+		return false;
+	}
+};
+
+template <class T, class Q, boost::mpl::int_<0>::type >
+class CastHelper_ {
+	static bool CastFunc(const void *from, void *to)
+	{
+		return false;
+	}
+};
+
+
+struct TypeHandler {
+	int dataSize;
+	bool canCast[Variant::kMaxType];
+	castFunc castFuncs[Variant::kMaxType];
+
+	virtual void construct(void *ptr) = 0;
+	virtual void destruct(void *ptr) = 0;
+};
+
+#define CANCAST(x) canCast[x] = std::tr1::is_convertible<T, boost::mpl::at<VariantTL, boost::mpl::int_<x> >::type>::value
+#define CASTFUNC(x) boost::mpl::if_< \
+	std::tr1::is_convertible<T, boost::mpl::at<VariantTL, boost::mpl::int_<x> >::type>::value, \
+	CastFunc<T, boost::mpl::at<VariantTL, boost::mpl::int_<x> >::type>, int \
+>::type
+
+template <class T>
+struct TypeHandler_ : public TypeHandler
+{
+	TypeHandler_()
+	{
+		dataSize = sizeof(T);
+
+//		CANCAST(0);
+		CANCAST(1);
+		CANCAST(2);
+		CANCAST(3);
+		CANCAST(4);
+		CANCAST(5);
+		CANCAST(6);
+		CANCAST(7);
+		CANCAST(8);
+		CANCAST(9);
+		CANCAST(10);
+		CANCAST(11);
+
+		boost::mpl::if_<
+			boost::mpl::int_<std::tr1::is_convertible<T, boost::mpl::at<VariantTL, boost::mpl::int_<0> >::type>::value>,
+			1, 2
+		>::type t;
+#if 0
+//		CASTFUNC(0);
+//		castFuncs[1] = CastFunc<T, boost::mpl::at<VariantTL, boost::mpl::int_<1> >::type>;
+		CASTFUNC(1);
+		CASTFUNC(2);
+		CASTFUNC(3);
+		CASTFUNC(4);
+		CASTFUNC(5);
+		CASTFUNC(6);
+		CASTFUNC(7);
+		CASTFUNC(8);
+		CASTFUNC(9);
+		CASTFUNC(10);
+		CASTFUNC(11);
+#endif
+	}
+
+	void construct(void *ptr)
+	{
+		new (ptr) T();
+	}
+
+	void destruct(void *ptr)
+	{
+		((T *)(ptr))->~T();
+	}
+};
+
+void testhandler()
+{
+	TypeHandler *th = new TypeHandler_<int>();
+}
+
+String Variant::toString() const
+{
 	String result;
 	switch (type) {
 	case kEmpty:

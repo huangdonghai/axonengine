@@ -43,13 +43,13 @@ _MEMBER_FUNCTION_IMPL(Vector3,_set)
 	const SQChar *s = sa.GetString(2);
 	int index = s?s[0]:sa.GetInt(2);
 	switch(index) {
-	case 0: case 'x': case 'r':
+	case 0: case 'x':
 		return sa.Return(self->x = sa.GetFloat(3));
 		break;
-	case 1: case 'y': case 'g':
+	case 1: case 'y':
 		return sa.Return(self->y = sa.GetFloat(3));
 		break;
-	case 2: case 'z': case 'b':
+	case 2: case 'z':
 		return sa.Return(self->z = sa.GetFloat(3));
 		break;
 	}
@@ -66,9 +66,9 @@ _MEMBER_FUNCTION_IMPL(Vector3,_get)
 		return SQ_ERROR;
 	int index = s && (s[1] == 0)?s[0]:sa.GetInt(2);
 	switch(index) {
-		case 0: case 'x': case 'r': return sa.Return(self->x); break;
-		case 1: case 'y': case 'g':	return sa.Return(self->y); break;
-		case 2: case 'z': case 'b': return sa.Return(self->z); break;
+		case 0: case 'x': return sa.Return(self->x); break;
+		case 1: case 'y': return sa.Return(self->y); break;
+		case 2: case 'z': return sa.Return(self->z); break;
 	}
 	return SQ_ERROR;
 }
@@ -88,9 +88,9 @@ _MEMBER_FUNCTION_IMPL(Vector3,_nexti)
 	}
 	switch(index) {
 		case 0xFFFFFFFF: return sa.Return(_SC("x"));
-		case 0: case 'x': case 'r': return sa.Return(_SC("y"));
-		case 1: case 'y': case 'g': return sa.Return(_SC("z"));
-		case 2: case 'z': case 'b': return sa.Return();
+		case 0: case 'x': return sa.Return(_SC("y"));
+		case 1: case 'y': return sa.Return(_SC("z"));
+		case 2: case 'z': return sa.Return();
 	}
 	return sa.Return(_SC("invalid index"));
 }

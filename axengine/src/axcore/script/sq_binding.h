@@ -136,7 +136,7 @@ SquirrelObject new_##classname(HSQUIRRELVM v, cppclass &quat) \
 { \
 	SquirrelObject ret; \
 	if(push_##classname(v, quat)) { \
-		ret.AttachToStackObject(-1); \
+		ret.attachToStackObject(-1); \
 		sq_pop(v,1); \
 	} \
 	return ret; \

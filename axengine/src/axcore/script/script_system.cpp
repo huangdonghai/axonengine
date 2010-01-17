@@ -596,10 +596,13 @@ struct Connection {
 typedef List<Connection> ConnectionSeq;
 typedef Dict<Object*,Dict<String, ConnectionSeq>> Connections;
 
+extern void testhandler();
 ScriptSystem::ScriptSystem()
 {
 	m_isReading = false;
 	m_readTop = 0;
+
+	testhandler();
 }
 
 ScriptSystem::~ScriptSystem()

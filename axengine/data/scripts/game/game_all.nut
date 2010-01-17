@@ -1,0 +1,2 @@
+
+dofile("game/effect/light");
