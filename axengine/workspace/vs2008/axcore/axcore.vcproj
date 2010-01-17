@@ -891,6 +891,18 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\axcore\script\sq_object.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\axcore\script\sq_point.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\axcore\script\sq_rect.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\axcore\script\sq_vector3.cpp"
 				>
 			</File>
@@ -915,6 +927,10 @@
 				</File>
 				<File
 					RelativePath="..\..\..\include\axcore\script\variant.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\include\axcore\script\variant.inl"
 					>
 				</File>
 			</Filter>

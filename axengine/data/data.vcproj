@@ -621,6 +621,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\scripts\object.nut"
+				>
+			</File>
+			<File
 				RelativePath=".\scripts\Physics.lua"
 				>
 			</File>

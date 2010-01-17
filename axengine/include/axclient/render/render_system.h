@@ -21,7 +21,7 @@ public:
 	// script
 	AX_DECLARE_CLASS(RenderSystem, Object)
 		AX_METHOD(info)
-		AX_METHOD(test)
+		AX_METHOD(testArgs)
 	AX_END_CLASS()
 
 	AX_DECLARE_COMMAND_HANDLER(RenderSystem);
@@ -59,7 +59,7 @@ public:
 	void screenShot(const String &name, const Rect &rect);
 
 	void info();
-	void test(RenderSystem *system) {}
+	int testArgs(int arg0, float arg1, const Vector3 &arg2, const Color3 &arg3, const Rect &arg4);
 
 	// textures for subscene's render target
 	RenderTarget *createWindowTarget(handle_t wndId, const String &name);

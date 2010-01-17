@@ -221,8 +221,8 @@ T *TypeNew() {
 	return p;
 }
 
-template<typename T, typename Arg1>
-T *TypeNew(Arg1 arg1) {
+template<typename T, typename Arg0>
+T *TypeNew(Arg0 arg1) {
 	T *p = TypeAlloc<T>(1);
 
 	new(p) T(arg1);

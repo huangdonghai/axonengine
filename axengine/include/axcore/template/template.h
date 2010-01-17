@@ -100,7 +100,7 @@ AX_BEGIN_NAMESPACE
 	// remove_const_referance
 	template< class T >
 	struct remove_const_reference {
-		typedef typename remove_reference<typename remove_const<T>::type>::type type;
+		typedef typename remove_const<typename remove_reference<T>::type>::type type;
 	};
 
 

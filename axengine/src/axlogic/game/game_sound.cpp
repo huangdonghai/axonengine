@@ -14,70 +14,64 @@ AX_BEGIN_NAMESPACE
 
 
 
-	GameSound::GameSound()
-	{
+GameSound::GameSound()
+{
 
-	}
+}
 
-	GameSound::~GameSound()
-	{
+GameSound::~GameSound()
+{
 
-	}
+}
 
-	void GameSound::doHitTest() const
-	{
+void GameSound::doHitTest() const
+{
 
-	}
+}
 
-	void GameSound::doDebugRender() const
-	{
+void GameSound::doDebugRender() const
+{
 
-	}
+}
 
-	void GameSound::doThink()
-	{
+void GameSound::doThink()
+{
 
-	}
+}
 
-	void GameSound::loadSound( const Variant &v )
-	{
-		clear();
+void GameSound::loadSound(const LuaTable &table)
+{
+	clear();
 
-		if (v.type != Variant::kTable) {
-			return;
+	table.beginRead();
+	String name = table.get("sound");
+	m_minDist = table.get("minDist");
+	m_maxDist = table.get("maxDist");
+	m_looping = table.get("looping");
+	m_interval = table.get("interval");
+	table.endRead();
+
+	if (name.empty())
+		return;
+
+	m_sfx << g_soundSystem->createSfx(name);
+}
+
+void GameSound::activeSound( bool isActive )
+{
+	if (isActive && m_sfx) {
+		LoopingMode looping = Looping_None;
+		if (m_looping) {
+			looping = Looping_Forever;
 		}
-
-		LuaTable table = v;
-
-		table.beginRead();
-		String name = table.get("sound");
-		m_minDist = table.get("minDist");
-		m_maxDist = table.get("maxDist");
-		m_looping = table.get("looping");
-		m_interval = table.get("interval");
-		table.endRead();
-
-		if (name.empty())
-			return;
-
-		m_sfx << g_soundSystem->createSfx(name);
+		getSoundEntity()->playSound(SndChannelId_Ambient, m_sfx, looping, m_minDist, m_maxDist);
 	}
+}
 
-	void GameSound::activeSound( bool isActive )
-	{
-		if (isActive && m_sfx) {
-			LoopingMode looping = Looping_None;
-			if (m_looping) {
-				looping = Looping_Forever;
-			}
-			getSoundEntity()->playSound(SndChannelId_Ambient, m_sfx, looping, m_minDist, m_maxDist);
-		}
-	}
-
-	void GameSound::clear()
-	{
-		m_sfx.clear();
-	}
+void GameSound::clear()
+{
+	m_sfx.clear();
+}
 
 AX_END_NAMESPACE
 

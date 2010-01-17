@@ -2,6 +2,128 @@
 
 AX_BEGIN_NAMESPACE
 
+bool MetaInfo::invokeMethod(Object *obj, const char *methodName, ReturnArgument ret, Argument arg0, Argument arg1, Argument arg2, Argument arg3, Argument arg4)
+{
+	Member *member = findMember(methodName);
+
+	if (!member)
+		return false;
+
+	if (member->getType() != Member::kMethodType)
+		return false;
+
+	// check types
+	Variant::Type needReturnType = member->getReturnType();
+	ReturnArgument realRet = ret;
+	bool castRet = false;
+	if (ret.typeId != needReturnType) {
+		if (needReturnType != Variant::kEmpty && ret.typeId != Variant::kEmpty) {
+			if (!Variant::canCast(needReturnType, ret.typeId))
+				return false;
+			else {
+				realRet.typeId = needReturnType;
+				realRet.data = Alloca(Variant::getTypeSize(realRet.typeId));
+				castRet = true;
+			}
+		}
+	}
+
+	Argument *args[] = { &arg0, &arg1, &arg2, &arg3, &arg4 };
+
+	const Variant::Type *needTypeIds = member->getArgsType();
+	for (int i = 0; i <member->argc(); i++) {
+		if (args[i]->typeId == needTypeIds[i])
+			continue;
+
+		if (!Variant::canCast(args[i]->typeId, needTypeIds[i]))
+			return false;
+
+		void *tempData = Alloca(Variant::getTypeSize(needTypeIds[i]));
+		Argument tempArg(needTypeIds[i], tempData);
+		bool casted = Variant::rawCast(args[i]->typeId, args[i]->data, tempArg.typeId, tempData);
+		if (!casted)
+			return false;
+
+		*args[i] = tempArg;
+	}
+
+	const void *argDatas[] = {
+		arg0.data, arg1.data, arg2.data, arg3.data, arg4.data
+	};
+
+	// really call
+	int numResult = member->invoke(obj, realRet.data, argDatas);
+
+	if (numResult && castRet) {
+		return Variant::rawCast(realRet.typeId, realRet.data, ret.typeId, ret.data);
+	}
+
+	return true;
+}
+
+bool MetaInfo::getProperty( Object *obj, const char *propname, ReturnArgument ret )
+{
+	Member *member = findMember(propname);
+
+	if (!member)
+		return false;
+
+	if (member->getType() != Member::kPropertyType)
+		return false;
+
+	Variant::Type needReturnType = member->getPropType();
+	ReturnArgument realRet = ret;
+	bool castRet = false;
+	if (ret.typeId != needReturnType) {
+		if (needReturnType != Variant::kEmpty && ret.typeId != Variant::kEmpty) {
+			if (!Variant::canCast(needReturnType, ret.typeId))
+				return false;
+			else {
+				realRet.typeId = needReturnType;
+				realRet.data = Alloca(Variant::getTypeSize(realRet.typeId));
+				castRet = true;
+			}
+		}
+	}
+
+	int numResult = member->getProperty(obj, realRet.data);
+	if (numResult && castRet) {
+		return Variant::rawCast(realRet.typeId, realRet.data, ret.typeId, ret.data);
+	}
+
+	return true;
+}
+
+bool MetaInfo::setProperty( Object *obj, const char *propname, Argument arg )
+{
+	Member *member = findMember(propname);
+
+	if (!member)
+		return false;
+
+	if (member->getType() != Member::kPropertyType)
+		return false;
+
+	Variant::Type propTypeId = member->getPropType();
+	Argument realArg = arg;
+
+	if (realArg.typeId != propTypeId) {
+		if (!Variant::canCast(realArg.typeId, propTypeId))
+			return false;
+
+		realArg.typeId = propTypeId;
+		void *realData = Alloca(Variant::getTypeSize(propTypeId));
+		bool casted = Variant::rawCast(arg.typeId, arg.data, propTypeId, realData);
+		if (!casted)
+			return false;
+
+		realArg.data = realData;
+	}
+
+	return member->setProperty(obj, realArg.data);
+}
+
+
 bool lesser(const ScriptProp *a, const ScriptProp *b)
 {
 	if (!a->grouped() && b->grouped()) {

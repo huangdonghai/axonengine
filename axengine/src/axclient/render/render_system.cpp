@@ -442,5 +442,10 @@ void RenderSystem::matlist_f( const CmdArgs &args )
 	Material::matlist_f(args);
 }
 
+int RenderSystem::testArgs( int arg0, float arg1, const Vector3 &arg2, const Color3 &arg3, const Rect &arg4 )
+{
+	return 1975;
+}
+
 AX_END_NAMESPACE
 

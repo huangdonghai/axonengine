@@ -363,7 +363,7 @@ static int xMetaCall(lua_State *L)
 #endif
 	// params
 	VariantSeq stack;
-	int need = member->getNumParams();
+	int need = member->argc();
 	int i; int count = 0;
 	for (i=2; i<=lua_gettop(L); i++) {
 		if (count == need)
@@ -634,8 +634,8 @@ void ScriptSystem::initialize()
 	lua_rawget(L, LUA_GLOBALSINDEX);
 	AX_ASSERT(lua_istable(L, -1));
 	lua_pushliteral(L, "path");
-//		lua_gettable(L, -2);
-//		AX_ASSERT(lua_isstring(L, -1));
+//	lua_gettable(L, -2);
+//	AX_ASSERT(lua_isstring(L, -1));
 	xPushString(L, packageFind);
 	lua_settable(L, -3);
 	lua_pop(L, 1);
@@ -661,6 +661,8 @@ void ScriptSystem::initialize()
 	g_mainVM = new SquirrelVM();
 	_INIT_CLASS(Vector3);
 	_INIT_CLASS(Color3);
+	_INIT_CLASS(Point);
+	_INIT_CLASS(Rect);
 	_INIT_CLASS(Matrix);
 
 	Printf(_("Initialized ScriptSystem\n"));

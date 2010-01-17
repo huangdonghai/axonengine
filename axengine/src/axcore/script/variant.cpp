@@ -2,6 +2,259 @@
 
 AX_BEGIN_NAMESPACE
 
+String Variant::toString() const {
+	String result;
+	switch (type) {
+	case kEmpty:
+		break;
+	case kBool:
+		StringUtil::sprintf(result, "%d", boolval);
+		break;
+	case kInt:
+		StringUtil::sprintf(result, "%d", intval);
+		break;
+	case kFloat:
+		StringUtil::sprintf(result, "%f", realval);
+		break;
+	case kString:
+		result = *str;
+		break;
+	case kObject:
+		break;
+	case kTable:
+		break;
+	case kVector3:
+		{
+			Vector3 v = *this;
+			return v.toString();
+			break;
+		}
+	case kColor3:
+		{
+			Color3 v = *this;
+			return v.toString();
+			break;
+		}
+	case kPoint:
+		{
+			Point v = *this;
+			return v.toString();
+			break;
+		}
+	case kRect:
+		{
+			Rect v = *this;
+			return v.toString();
+			break;
+		}
+	case kMatrix3x4:
+		{
+			return mtr->toString();
+		}
+	default:
+		AX_NO_DEFAULT;
+	}
+	return result;
+}
+
+void Variant::fromString(Type t, const char *str) {
+	clear();
+
+	switch (t) {
+	case kEmpty:
+		break;
+	case kBool:
+		this->set(atoi(str) ? true : false);
+		break;
+	case kInt:
+		this->set(atoi(str));
+		break;
+	case kFloat:
+		this->set(atof(str));
+		break;
+	case kString:
+		this->set(str);
+		break;
+	case kObject:
+		break;
+	case kTable:
+		break;
+	case kVector3:
+		{
+			Vector3 v;
+			v.fromString(str);
+			this->set(v);
+			break;
+		}
+	case kColor3:
+		{
+			Color3 v;
+			v.fromString(str);
+			this->set(v);
+			break;
+		}
+	case kPoint:
+		{
+			Point v;
+			v.fromString(str);
+			this->set(v);
+			break;
+		}
+	case kRect:
+		{
+			Rect v; v.fromString(str); this->set(v);
+			break;
+		}
+	case kMatrix3x4:
+		{
+			Matrix3x4 v;
+			v.fromString(str);
+			this->set(v);
+			break;
+		}
+	default:
+		AX_NO_DEFAULT;
+	}
+}
+
+int Variant::getTypeSize(Type t)
+{
+	switch (t) {
+	case kEmpty: return 0;
+	case kBool: return sizeof(bool);
+	case kInt: return sizeof(int);
+	case kFloat: return sizeof(float);
+	case kString: return sizeof(String);
+	case kObject: return sizeof(Object *);
+	case kTable: return sizeof(LuaTable);
+	case kVector3: return sizeof(Vector3);
+	case kColor3: return sizeof(Color3);
+	case kPoint: return sizeof(Point);
+	case kRect: return sizeof(Rect);
+	case kMatrix3x4: return sizeof(Matrix3x4);
+	default: AX_NO_DEFAULT;
+	}
+	return 0;
+}
+
+bool Variant::canCast(Type fromType, Type toType)
+{
+	if (fromType == toType)
+		return true;
+
+	switch (fromType) {
+	case kEmpty: return false;
+	case kBool:
+		switch (toType) {
+		case kInt:
+		case kFloat:
+			return true;
+		}
+		return false;
+	case kInt:
+		switch (toType) {
+		case kBool:
+		case kFloat:
+			return true;
+		}
+		return false;
+	case kFloat:
+		switch (toType) {
+		case kBool:
+		case kInt:
+			return true;
+		}
+		return false;
+	case kString:
+	case kObject:
+	case kTable:
+	case kVector3:
+	case kColor3:
+	case kPoint:
+	case kRect:
+	case kMatrix3x4:
+		return false;
+	default: AX_NO_DEFAULT;
+	}
+	return false;
+}
+
+bool Variant::rawCast(Type fromType, const void *fromData, Type toType, void *toData)
+{
+	if (!canCast(fromType, toType))
+		return false;
+
+	switch (fromType) {
+	case kEmpty: return false;
+	case kBool:
+		switch (toType) {
+		case kInt:
+			{
+				const bool &from = *(const bool *)fromData;
+				int &to = *(int *)toData;
+				to = from;
+				return true;
+			}
+		case kFloat:
+			{
+				const bool &from = *(const bool *)fromData;
+				float &to = *(float *)toData;
+				to = from;
+				return true;
+			}
+		}
+		return false;
+	case kInt:
+		switch (toType) {
+		case kBool:
+			{
+				const int &from = *(const int *)fromData;
+				bool &to = *(bool *)toData;
+				to = from != 0;
+				return true;
+			}
+		case kFloat:
+			{
+				const int &from = *(const int *)fromData;
+				float &to = *(float *)toData;
+				to = from;
+				return true;
+			}
+		}
+		return false;
+	case kFloat:
+		switch (toType) {
+		case kBool:
+			{
+				const float &from = *(const float *)fromData;
+				bool &to = *(bool *)toData;
+				to = from != 0.0f;
+				return true;
+			}
+		case kInt:
+			{
+				const float &from = *(const float *)fromData;
+				int &to = *(int *)toData;
+				to = from;
+				return true;
+			}
+		}
+		return false;
+	case kString:
+	case kObject:
+	case kTable:
+	case kVector3:
+	case kColor3:
+	case kPoint:
+	case kRect:
+	case kMatrix3x4:
+		return false;
+	default: AX_NO_DEFAULT;
+	}
+	return false;
+}
+
+
 //--------------------------------------------------------------------------
 // class LuaTable
 //--------------------------------------------------------------------------

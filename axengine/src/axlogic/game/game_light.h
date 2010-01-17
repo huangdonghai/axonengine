@@ -14,42 +14,42 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-	class GameLight : public GameActor
-	{
-		AX_DECLARE_CLASS(GameLight, GameActor)
-			AX_METHOD(loadLight)
-			AX_METHOD(activeLight)
-		AX_END_CLASS()
+class GameLight : public GameActor
+{
+	AX_DECLARE_CLASS(GameLight, GameActor)
+		AX_METHOD(loadLight)
+		AX_METHOD(activeLight)
+	AX_END_CLASS()
 
-	public:
-		GameLight();
-		virtual ~GameLight();
+public:
+	GameLight();
+	virtual ~GameLight();
 
-		// implement Node
-		virtual void doHitTest() const;
-		virtual void doDebugRender() const;
+	// implement Node
+	virtual void doHitTest() const;
+	virtual void doDebugRender() const;
 
-		// implememt GameActor
-		virtual void doThink();
+	// implememt GameActor
+	virtual void doThink();
 
-		// method
-		void loadLight(const Variant &v);
-		void activeLight(bool isActive);
+	// method
+	void loadLight(const LuaTable &v);
+	void activeLight(bool isActive);
 
-	protected:
-		virtual void clear();
+protected:
+	virtual void clear();
 #if 0
-		virtual void onMatrixChanged();
+	virtual void onMatrixChanged();
 #endif
-		void setupHelper();
-		void setupPointPrim();
-		void setupSpotPrim();
+	void setupHelper();
+	void setupPointPrim();
+	void setupSpotPrim();
 
-	private:
-		RenderLight *m_renderLight;
-		MeshPrim *m_pointPrim;
-		MeshPrim *m_spotPrim;
-	};
+private:
+	RenderLight *m_renderLight;
+	MeshPrim *m_pointPrim;
+	MeshPrim *m_spotPrim;
+};
 
 
 AX_END_NAMESPACE

@@ -3,6 +3,37 @@
 
 AX_BEGIN_NAMESPACE
 
+enum {
+	AX_MAX_ARGS = 5
+};
+
+struct Argument
+{
+	Argument(Variant::Type t = Variant::kEmpty, const void *d = 0) : typeId(t), data(d) {}
+	Variant::Type typeId;
+	const void *data;
+};
+
+struct ReturnArgument
+{
+	ReturnArgument(Variant::Type t = Variant::kEmpty, void *d = 0) : typeId(t), data(d) {}
+	Variant::Type typeId;
+	void *data;
+};
+
+template <class T>
+Argument MakeArgument_(const T &aData) {
+	return Argument(GetVariantType_<T>(), static_cast<const void *>(&aData));
+}
+
+template <class T>
+ReturnArgument MakeReturnArgument_(T &aData) {
+	return ReturnArgument(GetVariantType_<T>(), static_cast<void *>(&aData));
+}
+
+#define AX_ARG(x) MakeArgument_(x)
+#define AX_RETURN_ARG(x) MakeReturnArgument_(x)
+
 //--------------------------------------------------------------------------
 // class Member
 //--------------------------------------------------------------------------
@@ -10,6 +41,8 @@ AX_BEGIN_NAMESPACE
 class AX_API Member
 {
 public:
+	typedef int (*ScriptFunc)(void *vm);
+
 	enum Type {
 		kPropertyType, kMethodType
 	};
@@ -27,13 +60,16 @@ public:
 	bool isMethod() const { return m_type == kMethodType; }
 	Type getType() const { return m_type; }
 	const char *getName() const { return m_name; }
-	int getNumParams() const { return m_numParams; }
+	int argc() const { return m_argc; }
 	Variant::Type getPropType() const { return m_propType; }
 	int getPropKind() const { return m_propKind; }
 	const EnumItems &getEnumItems() const { return m_enumItems; }
+	const Variant::Type *getArgsType() const { return m_argsType; }
+	Variant::Type getReturnType() const { return m_returnType; }
 
 	// method
-	virtual int invoke(Object *obj, VariantSeq &stack) { AX_ASSERT(0);return 0;}
+	virtual int invoke(Object *obj, VariantSeq &stack) { AX_ASSERT(0); return 0;}
+	virtual int invoke(Object *obj, void *ret, const void **argv) { return 0; }
 
 	// property
 	virtual void setProperty(Object *obj, const Variant &val) { AX_ASSERT(0); }
@@ -41,6 +77,9 @@ public:
 	virtual void *getPropertyPointer(const Object *obj) { AX_ASSERT(0); return 0; }
 	virtual bool isConst() const { return false; }
 	virtual bool isAnimatable() const { return false; }
+	virtual bool getProperty(Object *obj, void *argv) { return false; }
+	virtual bool setProperty(Object *obj, const void *argv) { return false; }
+	virtual bool resetProperty(Object *obj) { return false; }
 
 	static Variant::Type kindToType(int k)
 	{
@@ -48,16 +87,23 @@ public:
 			return Variant::Type(k);
 		}
 		switch (k) {
-case kEnum: case kFlag: return Variant::kInt;
-case kTexture: case kModel: case kMaterial: case kAnimation: case kSpeedTree: case kSound: return Variant::kString;
-default: return Variant::kEmpty;
+		case kEnum: case kFlag: return Variant::kInt;
+		case kTexture: case kModel: case kMaterial: case kAnimation: case kSpeedTree: case kSound: return Variant::kString;
+		default: return Variant::kEmpty;
 		}
 	}
 
 protected:
 	const char *m_name;
 	Type m_type;
-	int m_numParams;
+
+	// for method
+	int m_argc;
+	Variant::Type m_returnType;
+	Variant::Type m_argsType[AX_MAX_ARGS];
+	ScriptFunc m_scriptFunc;
+
+	// for property
 	Variant::Type m_propType;
 	int m_propKind;
 	EnumItems m_enumItems;
@@ -82,40 +128,65 @@ public:
 	virtual void *getPropertyPointer(const Object *obj);
 	virtual bool isConst() const { return false; }
 	virtual bool isAnimatable() const { return true; }
+	virtual bool getProperty(Object *obj, void *argv);
+	virtual bool setProperty(Object *obj, const void *argv);
 
 private:
 	DataType m_d;
 };
 
-template< class T, class M >
+template <class T, class M>
 SimpleProp_<T,M>::SimpleProp_(const char *name, DataType d) : Member(name, Member::kPropertyType) {
 	m_d = d;
 	m_propType = GetVariantType_<M>();
 }
 
-template< class T, class M >
+template <class T, class M>
 void SimpleProp_<T,M>::setProperty(Object *obj, const Variant &val) {
 	T *t = (T*)obj;
 	t->*m_d = val;
 }
 
-template< class T, class M >
+template <class T, class M>
 Variant SimpleProp_<T,M>::getProperty(const Object *obj) {
 	T *t = (T*)obj;
 	return t->*m_d;
 }
 
-template< class T, class M >
+template <class T, class M>
 void *SimpleProp_<T,M>::getPropertyPointer(const Object *obj) {
 	T *t = (T*)obj;
 	return &(t->*m_d);
+}
+
+template <class T, class M>
+bool SimpleProp_<T,M>::getProperty(Object *obj, void *argv)
+{
+	if (!argv)
+		return false;
+
+	T *t = (T*)obj;
+	*reinterpret_cast<M*>(argv) = t->*m_d;
+
+	return true;
+}
+
+template <class T, class M>
+bool SimpleProp_<T,M>::setProperty(Object *obj, const void *argv)
+{
+	if (!argv)
+		return false;
+
+	T *t = (T*)obj;
+	t->*m_d = *reinterpret_cast<const M*>(argv);
+	return true;
 }
 
 //--------------------------------------------------------------------------
 // template Property_
 //--------------------------------------------------------------------------
 
-template< typename T, typename GetType, typename SetType >
+template <typename T, typename GetType, typename SetType>
 class Property_ : public Member {
 public:
 	typedef GetType (T::*GetFunc)() const;
@@ -127,26 +198,47 @@ public:
 	virtual void setProperty(Object *obj, const Variant &val);
 	virtual Variant getProperty(const Object *obj);
 	virtual bool isConst() const { return m_setFunc == nullptr; }
+	virtual bool getProperty(Object *obj, void *argv)
+	{
+		if (!argv)
+			return false;
+
+		T *t = (T*)obj;
+		*(reinterpret_cast<GetType*>(argv)) = (t->*m_getFunc)();
+		return true;
+	}
+	virtual bool setProperty(Object *obj, const void *argv)
+	{
+		if (!argv || !m_setFunc)
+			return false;
+
+		T *t = (T*)obj;
+		(t->*m_setFunc)(*reinterpret_cast<const GetType*>(argv));
+		return true;
+	}
 
 private:
 	GetFunc m_getFunc;
 	SetFunc m_setFunc;
 };
 
-template< typename T, typename GetType, typename SetType >
+template<typename T, typename GetType, typename SetType>
 Property_<T,GetType,SetType>::Property_(const char *name, GetFunc getfunc, SetFunc setfunc)
-: Member(name, Member::kPropertyType)
-, m_getFunc(getfunc)
-, m_setFunc(setfunc)
+	: Member(name, Member::kPropertyType)
+	, m_getFunc(getfunc)
+	, m_setFunc(setfunc)
 {
-	m_propType = GetVariantType_<GetType>();
+	Variant::Type getTypeId = GetVariantType_<remove_const_reference<GetType>::type>();
+	Variant::Type setTypeId = GetVariantType_<remove_const_reference<SetType>::type>();
+	AX_ASSERT(getTypeId == setTypeId);
+	m_propType = getTypeId;
 }
 
 template< typename T, typename GetType, typename SetType >
 Property_<T,GetType,SetType>::Property_(const char *name, GetFunc getfunc)
-: Member(name, Member::kPropertyType)
-, m_getFunc(getfunc)
-, m_setFunc(nullptr)
+	: Member(name, Member::kPropertyType)
+	, m_getFunc(getfunc)
+	, m_setFunc(nullptr)
 {
 	m_propType = GetVariantType_<GetType>();
 }
@@ -170,9 +262,83 @@ Variant Property_<T,GetType,SetType>::getProperty(const Object *obj) {
 //--------------------------------------------------------------------------
 
 #define P(x) stack[x].cast<remove_const_reference<P##x>::type>()
+#define ARG(x) *reinterpret_cast<std::tr1::add_pointer<std::tr1::add_const<remove_const_reference<Arg##x>::type>::type>::type>(argv[x])
+#define RET *reinterpret_cast<std::tr1::add_pointer<Rt>::type>(ret)
 
-template< typename Rt >
+template <typename Rt>
 struct ReturnSpecialization {
+	template <typename T>
+	static int xcall(T *object, Rt (T::*func)(), void *ret, const void **argv)
+	{
+		if (ret) {
+			RET = (object->*func)();
+			return 1;
+		} else {
+			(object->*func)();
+			return 0;
+		}
+	}
+
+	template< typename T, typename Arg0 >
+	static int xcall(T *object, Rt (T::*func)(Arg0), void *ret, const void **argv)
+	{
+		if (ret) {
+			RET = (object->*func)(ARG(0));
+			return 1;
+		} else {
+			(object->*func)(ARG(0));
+			return 0;
+		}
+	}
+
+	template< typename T, typename Arg0, typename Arg1 >
+	static int xcall(T *object, Rt (T::*func)(Arg0, Arg1), void *ret, const void **argv)
+	{
+		if (ret) {
+			RET = (object->*func)(ARG(0), ARG(1));
+			return 1;
+		} else {
+			(object->*func)(ARG(0), ARG(1));
+			return 0;
+		}
+	}
+
+	template< typename T, typename Arg0, typename Arg1, typename Arg2 >
+	static int xcall(T *object, Rt (T::*func)(Arg0, Arg1, Arg2), void *ret, const void **argv)
+	{
+		if (ret) {
+			RET = (object->*func)(ARG(0), ARG(1), ARG(2));
+			return 1;
+		} else {
+			RET = (object->*func)(ARG(0), ARG(1), ARG(2));
+			return 0;
+		}
+	}
+
+	template< typename T, typename Arg0, typename Arg1, typename Arg2, typename Arg3 >
+	static int xcall(T *object, Rt (T::*func)(Arg0, Arg1, Arg2, Arg3), void *ret, const void **argv)
+	{
+		if (ret) {
+			RET = (object->*func)(ARG(0), ARG(1), ARG(2), ARG(3));
+			return 1;
+		} else {
+			(object->*func)(ARG(0), ARG(1), ARG(2), ARG(3));
+			return 0;
+		}
+	}
+
+	template< typename T, typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4 >
+	static int xcall(T *object, Rt (T::*func)(Arg0, Arg1, Arg2, Arg3, Arg4), void *ret, const void **argv)
+	{
+		if (ret) {
+			RET = (object->*func)(ARG(0), ARG(1), ARG(2), ARG(3), ARG(4));
+			return 1;
+		} else {
+			(object->*func)(ARG(0), ARG(1), ARG(2), ARG(3), ARG(4));
+			return 0;
+		}
+	}
+
 	template< typename T >
 	static int call(T *object, Rt (T::*func)(), VariantSeq &stack) {
 		Rt ret = (object->*func)();
@@ -220,11 +386,52 @@ struct ReturnSpecialization {
 		stack.push_back(val);
 		return 1;
 	}
-
 };
 
-template<>
-struct ReturnSpecialization< void > {
+template <>
+struct ReturnSpecialization<void> {
+	template <typename T>
+	static int xcall(T *object, void (T::*func)(), void *ret, const void **argv)
+	{
+		(object->*func)();
+		return 0;
+	}
+
+	template<typename T, typename Arg0>
+	static int xcall(T *object, void (T::*func)(Arg0), void *ret, const void **argv)
+	{
+		(object->*func)(ARG(0));
+		return 0;
+	}
+
+	template<typename T, typename Arg0, typename Arg1>
+	static int xcall(T *object, void (T::*func)(Arg0, Arg1), void *ret, const void **argv)
+	{
+		(object->*func)(ARG(0), ARG(1));
+		return 0;
+	}
+
+	template<typename T, typename Arg0, typename Arg1, typename Arg2>
+	static int xcall(T *object, void (T::*func)(Arg0, Arg1, Arg2), void *ret, const void **argv)
+	{
+		(object->*func)(ARG(0), ARG(1), ARG(2));
+		return 0;
+	}
+
+	template<typename T, typename Arg0, typename Arg1, typename Arg2, typename Arg3>
+	static int xcall(T *object, void (T::*func)(Arg0, Arg1, Arg2, Arg3), void *ret, const void **argv)
+	{
+		(object->*func)(ARG(0), ARG(1), ARG(2), ARG(3));
+		return 0;
+	}
+
+	template<typename T, typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4>
+	static int xcall(T *object, void (T::*func)(Arg0, Arg1, Arg2, Arg3, Arg4), void *ret, const void **argv)
+	{
+		(object->*func)(ARG(0), ARG(1), ARG(2), ARG(3), ARG(4));
+		return 0;
+	}
+
 	template< typename T >
 	static int call(T *object, void (T::*func)(), VariantSeq &stack) {
 		(object->*func)();
@@ -267,15 +474,20 @@ struct ReturnSpecialization< void > {
 //--------------------------------------------------------------------------
 // template Method_
 //--------------------------------------------------------------------------
-
+extern int ScriptMetacall(void *vm, Member *member);
 template< typename Signature >
 class Method_ : public Member {
 public:
 	AX_STATIC_ASSERT(0);
+
+	static int scriptEntry(void *vm)
+	{
+		return ScriptMetacall(vm, this);
+	}
 private:
 };
 
-template< typename Rt, typename T >
+template<typename Rt, typename T>
 class Method_<Rt (T::*)()> : public Member {
 public:
 	typedef Rt (T::*FunctionType)();
@@ -284,14 +496,24 @@ public:
 		: Member(name, Member::kMethodType)
 		, m_m(m)
 	{
-		m_numParams = 0;
+		m_argc = 0;
+		m_returnType = GetVariantType_<Rt>();
 	}
 
-	virtual int invoke(Object *obj, VariantSeq &stack) {
-		AX_ASSERT(stack.size() == getNumParams());
+	virtual int invoke(Object *obj, VariantSeq &stack)
+	{
+		AX_ASSERT(stack.size() == argc());
 		T *realobj = dynamic_cast<T*>(obj);
 		AX_ASSERT(realobj);
 		return ReturnSpecialization<Rt>::call(realobj, m_m, stack);
+	}
+
+	virtual int invoke(Object *obj, void *ret, const void **argv)
+	{
+		T *realobj = dynamic_cast<T*>(obj);
+		AX_ASSERT(realobj);
+
+		return ReturnSpecialization<Rt>::xcall(realobj, m_m, ret, argv);
 	}
 
 private:
@@ -299,23 +521,33 @@ private:
 	FunctionType m_m;
 };
 
-template< typename Rt, typename T, typename Arg1 >
-class Method_<Rt (T::*)(Arg1)> : public Member {
+template< typename Rt, typename T, typename Arg0 >
+class Method_<Rt (T::*)(Arg0)> : public Member {
 public:
-	typedef Rt (T::*FunctionType)(Arg1);
+	typedef Rt (T::*FunctionType)(Arg0);
 
 	Method_(const char *name, FunctionType m)
 		: Member(name, Member::kMethodType)
 		, m_m(m)
 	{
-		m_numParams = 1;
+		m_argc = 1;
+		m_returnType = GetVariantType_<Rt>();
+		m_argsType[0] = GetVariantType_<remove_const_reference<Arg0>::type>();
 	}
 
 	virtual int invoke(Object *obj, VariantSeq &stack) {
-		AX_ASSERT(stack.size() == getNumParams());
+		AX_ASSERT(stack.size() == argc());
 		T *realobj = dynamic_cast<T*>(obj);
 		AX_ASSERT(realobj);
 		return ReturnSpecialization<Rt>::call(realobj, m_m, stack);
+	}
+
+	virtual int invoke(Object *obj, void *ret, const void **argv)
+	{
+		T *realobj = dynamic_cast<T*>(obj);
+		AX_ASSERT(realobj);
+
+		return ReturnSpecialization<Rt>::xcall(realobj, m_m, ret, argv);
 	}
 
 private:
@@ -323,23 +555,34 @@ private:
 	FunctionType m_m;
 };
 
-template< typename Rt, typename T, typename Arg1, typename Arg2 >
-class Method_<Rt (T::*)(Arg1,Arg2)> : public Member {
+template< typename Rt, typename T, typename Arg0, typename Arg1 >
+class Method_<Rt (T::*)(Arg0,Arg1)> : public Member {
 public:
-	typedef Rt (T::*FunctionType)(Arg1,Arg2);
+	typedef Rt (T::*FunctionType)(Arg0,Arg1);
 
 	Method_(const char *name, FunctionType m)
 		: Member(name, Member::kMethodType)
 		, m_m(m)
 	{
-		m_numParams = 2;
+		m_argc = 2;
+		m_returnType = GetVariantType_<Rt>();
+		m_argsType[0] = GetVariantType_<remove_const_reference<Arg0>::type>();
+		m_argsType[1] = GetVariantType_<remove_const_reference<Arg1>::type>();
 	}
 
 	virtual int invoke(Object *obj, VariantSeq &stack) {
-		AX_ASSERT(stack.size() == getNumParams());
+		AX_ASSERT(stack.size() == argc());
 		T *realobj = dynamic_cast<T*>(obj);
 		AX_ASSERT(realobj);
 		return ReturnSpecialization<Rt>::call(realobj, m_m, stack);
+	}
+
+	virtual int invoke(Object *obj, void *ret, const void **argv)
+	{
+		T *realobj = dynamic_cast<T*>(obj);
+		AX_ASSERT(realobj);
+
+		return ReturnSpecialization<Rt>::xcall(realobj, m_m, ret, argv);
 	}
 
 private:
@@ -347,23 +590,35 @@ private:
 	FunctionType m_m;
 };
 
-template< typename Rt, typename T, typename Arg1, typename Arg2, typename Arg3 >
-class Method_<Rt (T::*)(Arg1,Arg2,Arg3)> : public Member {
+template< typename Rt, typename T, typename Arg0, typename Arg1, typename Arg2 >
+class Method_<Rt (T::*)(Arg0,Arg1,Arg2)> : public Member {
 public:
-	typedef Rt (T::*FunctionType)(Arg1,Arg2,Arg3);
+	typedef Rt (T::*FunctionType)(Arg0,Arg1,Arg2);
 
 	Method_(const char *name, FunctionType m)
 		: Member(name, Member::kMethodType)
 		, m_m(m)
 	{
-		m_numParams = 3;
+		m_argc = 3;
+		m_returnType = GetVariantType_<Rt>();
+		m_argsType[0] = GetVariantType_<remove_const_reference<Arg0>::type>();
+		m_argsType[1] = GetVariantType_<remove_const_reference<Arg1>::type>();
+		m_argsType[2] = GetVariantType_<remove_const_reference<Arg2>::type>();
 	}
 
 	virtual int invoke(Object *obj, VariantSeq &stack) {
-		AX_ASSERT(stack.size() == getNumParams());
+		AX_ASSERT(stack.size() == argc());
 		T *realobj = dynamic_cast<T*>(obj);
 		AX_ASSERT(realobj);
 		return ReturnSpecialization<Rt>::call(realobj, m_m, stack);
+	}
+
+	virtual int invoke(Object *obj, void *ret, const void **argv)
+	{
+		T *realobj = dynamic_cast<T*>(obj);
+		AX_ASSERT(realobj);
+
+		return ReturnSpecialization<Rt>::xcall(realobj, m_m, ret, argv);
 	}
 
 private:
@@ -371,23 +626,36 @@ private:
 	FunctionType m_m;
 };
 
-template< typename Rt, typename T, typename Arg1, typename Arg2, typename Arg3, typename Arg4 >
-class Method_<Rt (T::*)(Arg1,Arg2,Arg3,Arg4)> : public Member {
+template< typename Rt, typename T, typename Arg0, typename Arg1, typename Arg2, typename Arg3 >
+class Method_<Rt (T::*)(Arg0,Arg1,Arg2,Arg3)> : public Member {
 public:
-	typedef Rt (T::*FunctionType)(Arg1,Arg2,Arg3,Arg4);
+	typedef Rt (T::*FunctionType)(Arg0,Arg1,Arg2,Arg3);
 
 	Method_(const char *name, FunctionType m)
 		: Member(name, Member::kMethodType)
 		, m_m(m)
 	{
-		m_numParams = 4;
+		m_argc = 4;
+		m_returnType = GetVariantType_<Rt>();
+		m_argsType[0] = GetVariantType_<remove_const_reference<Arg0>::type>();
+		m_argsType[1] = GetVariantType_<remove_const_reference<Arg1>::type>();
+		m_argsType[2] = GetVariantType_<remove_const_reference<Arg2>::type>();
+		m_argsType[3] = GetVariantType_<remove_const_reference<Arg3>::type>();
 	}
 
 	virtual int invoke(Object *obj, VariantSeq &stack) {
-		AX_ASSERT(stack.size() == getNumParams());
+		AX_ASSERT(stack.size() == argc());
 		T *realobj = dynamic_cast<T*>(obj);
 		AX_ASSERT(realobj);
 		return ReturnSpecialization<Rt>::call(realobj, m_m, stack);
+	}
+
+	virtual int invoke(Object *obj, void *ret, const void **argv)
+	{
+		T *realobj = dynamic_cast<T*>(obj);
+		AX_ASSERT(realobj);
+
+		return ReturnSpecialization<Rt>::xcall(realobj, m_m, ret, argv);
 	}
 
 private:
@@ -395,30 +663,44 @@ private:
 	FunctionType m_m;
 };
 
-template< typename Rt, typename T, typename Arg1, typename Arg2, typename Arg3, typename Arg4, typename Arg5 >
-class Method_<Rt (T::*)(Arg1,Arg2,Arg3,Arg4,Arg5)> : public Member {
+template< typename Rt, typename T, typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4 >
+class Method_<Rt (T::*)(Arg0,Arg1,Arg2,Arg3,Arg4)> : public Member {
 public:
-	typedef Rt (T::*FunctionType)(Arg1,Arg2,Arg3,Arg4,Arg5);
+	typedef Rt (T::*FunctionType)(Arg0,Arg1,Arg2,Arg3,Arg4);
 
 	Method_(const char *name, FunctionType m)
 		: Member(name, Member::kMethodType)
 		, m_m(m)
 	{
-		m_numParams = 5;
+		m_argc = 5;
+		m_returnType = GetVariantType_<Rt>();
+		m_argsType[0] = GetVariantType_<remove_const_reference<Arg0>::type>();
+		m_argsType[1] = GetVariantType_<remove_const_reference<Arg1>::type>();
+		m_argsType[2] = GetVariantType_<remove_const_reference<Arg2>::type>();
+		m_argsType[3] = GetVariantType_<remove_const_reference<Arg3>::type>();
+		m_argsType[4] = GetVariantType_<remove_const_reference<Arg4>::type>();
 	}
 
 	virtual int invoke(Object *obj, VariantSeq &stack) {
-		AX_ASSERT(stack.size() == getNumParams());
+		AX_ASSERT(stack.size() == argc());
 		T *realobj = dynamic_cast<T*>(obj);
 		AX_ASSERT(realobj);
 		return ReturnSpecialization<Rt>::call(realobj, m_m, stack);
+	}
+
+	virtual int invoke(Object *obj, void *ret, const void **argv)
+	{
+		T *realobj = dynamic_cast<T*>(obj);
+		AX_ASSERT(realobj);
+
+		return ReturnSpecialization<Rt>::xcall(realobj, m_m, ret, argv);
 	}
 
 private:
 	String m_name;
 	FunctionType m_m;
 };
-
+#undef ARG
 
 //--------------------------------------------------------------------------
 // class MetaInfo
@@ -450,6 +732,41 @@ public:
 	const char *getName() const;
 	const MemberSeq &getMembers() const;
 
+	bool invokeMethod(Object *obj, const char *methodName, ReturnArgument ret, Argument arg0, Argument arg1, Argument arg2, Argument arg3, Argument arg4);
+	bool getProperty(Object *obj, const char *propname, ReturnArgument ret);
+	bool setProperty(Object *obj, const char *propname, Argument arg);
+
+	template <class Rt>
+	bool getProperty_(Object *obj, const char *propname, Rt &ret);
+	template <class Arg>
+	bool setProperty_(Object *obj, const char *propname, const Arg &arg);
+
+	// invoke helper
+	bool invokeMethodWithoutReturn_(Object *obj, const char *methodName);
+	template <class A0>
+	bool invokeMethodWithoutReturn_(Object *obj, const char *methodName, const A0 &a0);
+	template <class A0, class A1>
+	bool invokeMethodWithoutReturn_(Object *obj, const char *methodName, const A0 &a0, const A1 &a1);
+	template <class A0, class A1, class A2>
+	bool invokeMethodWithoutReturn_(Object *obj, const char *methodName, const A0 &a0, const A1 &a1, const A2 &a2);
+	template <class A0, class A1, class A2, class A3>
+	bool invokeMethodWithoutReturn_(Object *obj, const char *methodName, const A0 &a0, const A1 &a1, const A2 &a2, const A3 &a3);
+	template <class A0, class A1, class A2, class A3, class A4>
+	bool invokeMethodWithoutReturn_(Object *obj, const char *methodName, const A0 &a0, const A1 &a1, const A2 &a2, const A3 &a3, const A4 &a4);
+
+	template <class Rt>
+	bool invokeMethod_(Object *obj, const char *methodName, Rt &ret);
+	template <class Rt, class A0>
+	bool invokeMethod_(Object *obj, const char *methodName, Rt &ret, const A0 &a0);
+	template <class Rt, class A0, class A1>
+	bool invokeMethod_(Object *obj, const char *methodName, Rt &ret, const A0 &a0, const A1 &a1);
+	template <class Rt, class A0, class A1, class A2>
+	bool invokeMethod_(Object *obj, const char *methodName, Rt &ret, const A0 &a0, const A1 &a1, const A2 &a2);
+	template <class Rt, class A0, class A1, class A2, class A3>
+	bool invokeMethod_(Object *obj, const char *methodName, Rt &ret, const A0 &a0, const A1 &a1, const A2 &a2, const A3 &a3);
+	template <class Rt, class A0, class A1, class A2, class A3, class A4>
+	bool invokeMethod_(Object *obj, const char *methodName, Rt &ret, const A0 &a0, const A1 &a1, const A2 &a2, const A3 &a3, const A4 &a4);
+
 	virtual Object *createObject() = 0;
 
 protected:
@@ -464,9 +781,9 @@ private:
 };
 
 inline MetaInfo::MetaInfo(const char *classname, MetaInfo *base)
-: m_name(classname)
-, m_base(base)
-, m_classInfo(nullptr)
+	: m_name(classname)
+	, m_base(base)
+	, m_classInfo(nullptr)
 {}
 
 inline MetaInfo::~MetaInfo() {}
@@ -524,6 +841,91 @@ inline const char *MetaInfo::getName() const {
 inline const MemberSeq &MetaInfo::getMembers() const {
 	return m_members;
 }
+
+template <class Arg>
+bool MetaInfo::setProperty_( Object *obj, const char *propname, const Arg &arg )
+{
+	return setProperty(obj, propname, AX_REG(arg));
+}
+
+template <class Rt>
+bool MetaInfo::getProperty_( Object *obj, const char *propname, Rt &ret )
+{
+	return getProperty(obj, propname, AX_RETURN_ARG(ret));
+}
+
+
+inline bool MetaInfo::invokeMethodWithoutReturn_(Object *obj, const char *methodName)
+{
+	return invokeMethod(obj, methodName, ReturnArgument(), Argument(), Argument(), Argument(), Argument(), Argument());
+}
+
+template <class A0>
+bool MetaInfo::invokeMethodWithoutReturn_(Object *obj, const char *methodName, const A0 &a0)
+{
+	return invokeMethod(obj, methodName, ReturnArgument(), AX_ARG(a0), Argument(), Argument(), Argument(), Argument());
+}
+
+template <class A0, class A1>
+bool MetaInfo::invokeMethodWithoutReturn_(Object *obj, const char *methodName, const A0 &a0, const A1 &a1)
+{
+	return invokeMethod(obj, methodName, ReturnArgument(), AX_ARG(a0), AX_ARG(a1), Argument(), Argument(), Argument());
+}
+
+template <class A0, class A1, class A2>
+bool MetaInfo::invokeMethodWithoutReturn_(Object *obj, const char *methodName, const A0 &a0, const A1 &a1, const A2 &a2)
+{
+	return invokeMethod(obj, methodName, ReturnArgument(), AX_ARG(a0), AX_ARG(a1), AX_ARG(a2), Argument(), Argument());
+}
+
+template <class A0, class A1, class A2, class A3>
+bool MetaInfo::invokeMethodWithoutReturn_(Object *obj, const char *methodName, const A0 &a0, const A1 &a1, const A2 &a2, const A3 &a3)
+{
+	return invokeMethod(obj, methodName, ReturnArgument(), AX_ARG(a0), AX_ARG(a1), AX_ARG(a2), AX_ARG(a3), Argument());
+}
+
+template <class A0, class A1, class A2, class A3, class A4>
+bool MetaInfo::invokeMethodWithoutReturn_(Object *obj, const char *methodName, const A0 &a0, const A1 &a1, const A2 &a2, const A3 &a3, const A4 &a4)
+{
+	return invokeMethod(obj, methodName, ReturnArgument(), AX_ARG(a0), AX_ARG(a1), AX_ARG(a2), AX_ARG(a3), AX_ARG(a4));
+}
+
+template <class Rt>
+bool MetaInfo::invokeMethod_(Object *obj, const char *methodName, Rt &ret)
+{
+	return invokeMethod(obj, methodName, AX_RETURN_ARG(ret), Argument(), Argument(), Argument(), Argument(), Argument());
+}
+
+template <class Rt, class A0>
+bool MetaInfo::invokeMethod_(Object *obj, const char *methodName, Rt &ret, const A0 &a0)
+{
+	return invokeMethod(obj, methodName, AX_RETURN_ARG(ret), AX_ARG(a0), Argument(), Argument(), Argument(), Argument());
+}
+
+template <class Rt, class A0, class A1>
+bool MetaInfo::invokeMethod_(Object *obj, const char *methodName, Rt &ret, const A0 &a0, const A1 &a1)
+{
+	return invokeMethod(obj, methodName, AX_RETURN_ARG(ret), AX_ARG(a0), AX_ARG(a1), Argument(), Argument(), Argument());
+}
+
+template <class Rt, class A0, class A1, class A2>
+bool MetaInfo::invokeMethod_(Object *obj, const char *methodName, Rt &ret, const A0 &a0, const A1 &a1, const A2 &a2)
+{
+	return invokeMethod(obj, methodName, AX_RETURN_ARG(ret), AX_ARG(a0), AX_ARG(a1), AX_ARG(a2), Argument(), Argument());
+}
+
+template <class Rt, class A0, class A1, class A2, class A3>
+bool MetaInfo::invokeMethod_(Object *obj, const char *methodName, Rt &ret, const A0 &a0, const A1 &a1, const A2 &a2, const A3 &a3)
+{
+	return invokeMethod(obj, methodName, AX_RETURN_ARG(ret), AX_ARG(a0), AX_ARG(a1), AX_ARG(a2), AX_ARG(a3), Argument());
+}
+
+template <class Rt, class A0, class A1, class A2, class A3, class A4>
+bool MetaInfo::invokeMethod_(Object *obj, const char *methodName, Rt &ret, const A0 &a0, const A1 &a1, const A2 &a2, const A3 &a3, const A4 &a4)
+{
+	return invokeMethod(obj, methodName, AX_RETURN_ARG(ret), AX_ARG(a0), AX_ARG(a1), AX_ARG(a2), AX_ARG(a3), AX_ARG(a4));
+}
+
 
 //--------------------------------------------------------------------------
 // class MetaInfo_

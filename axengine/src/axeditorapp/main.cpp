@@ -12,6 +12,13 @@ read the license and understand and accept it fully.
 #include "workbench.h"
 #include "application.h"
 
+void testArgs()
+{
+	MetaInfo *metainfo = g_renderSystem->getMetaInfo();
+	int result;
+	bool v = metainfo->invokeMethod_(g_renderSystem, "testArgs", result, 1.0f, true, Vector3(0,1,2), Color3(1,1,1), Rect(0,0,640,480));
+}
+
 /**
   Change our current directory to be the same as the directory containing the .exe.
   Visual C++ starts us in the project directory by default, and the config file
@@ -67,6 +74,8 @@ int main(int argc, char *argv[])
 	axLogicInit();
 	splash->showMessage(QObject::tr("Initializing axEditor module..."), align, Qt::black);
 	axEditorInit();
+
+	testArgs();
 
 	splash->showMessage(QObject::tr("Initializing axEditor..."), align, Qt::black);
 

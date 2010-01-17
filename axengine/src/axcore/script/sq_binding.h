@@ -11,6 +11,7 @@ struct ScriptClassMemberDecl  {
 };
 
 struct SquirrelClassDecl  {
+	const Variant::Type typeId;
 	const SQChar *name;
 	const SQChar *base;
 	const ScriptClassMemberDecl *members;
@@ -67,7 +68,7 @@ struct ScriptNamespaceDecl __##classname##_decl = {   \
 
 #define _END_CLASS(classname) {NULL,NULL,0,NULL}}; \
 struct SquirrelClassDecl __##classname##_decl = {  \
-	_SC(#classname), NULL, __##classname##_members };
+	classname##_getId(), _SC(#classname), NULL, __##classname##_members };
 
 
 #define _END_CLASS_INHERITANCE(classname,base) {NULL,NULL,NULL,NULL}}; \
@@ -109,6 +110,10 @@ struct SquirrelClassDecl __##classname##_decl = {  \
 	SquirrelObject new_##classname(HSQUIRRELVM v, cppclass &quat);
 
 #define _IMPL_NATIVE_CONSTRUCTION(classname,cppclass) \
+static Variant::Type classname##_getId() \
+{ \
+	return GetVariantType_<cppclass>(); \
+} \
 static int classname##_release_hook(SQUserPointer p, int size) \
 { \
 	if(p) { \

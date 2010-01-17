@@ -14,35 +14,35 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-	class GameSound : public GameActor
-	{
-		AX_DECLARE_CLASS(GameSound, GameActor)
-			AX_METHOD(loadSound)
-			AX_METHOD(activeSound)
-		AX_END_CLASS()
+class GameSound : public GameActor
+{
+	AX_DECLARE_CLASS(GameSound, GameActor)
+		AX_METHOD(loadSound)
+		AX_METHOD(activeSound)
+	AX_END_CLASS()
 
-	public:
-		GameSound();
-		virtual ~GameSound();
+public:
+	GameSound();
+	virtual ~GameSound();
 
-		// implement Node
-		virtual void doHitTest() const;
-		virtual void doDebugRender() const;
-		virtual void clear();
+	// implement Node
+	virtual void doHitTest() const;
+	virtual void doDebugRender() const;
+	virtual void clear();
 
-		// implement GameActor
-		virtual void doThink();
+	// implement GameActor
+	virtual void doThink();
 
-		// method
-		void loadSound(const Variant &v);
-		void activeSound(bool isActive);
+	// method
+	void loadSound(const LuaTable &v);
+	void activeSound(bool isActive);
 
-	private:
-		SfxPtr m_sfx;
-		float m_minDist, m_maxDist;
-		bool m_looping;
-		float m_interval;
-	};
+private:
+	SfxPtr m_sfx;
+	float m_minDist, m_maxDist;
+	bool m_looping;
+	float m_interval;
+};
 
 AX_END_NAMESPACE
 
