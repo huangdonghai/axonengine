@@ -78,7 +78,7 @@ struct SquirrelClassDecl __##classname##_decl = {  \
 #define _MEMBER_FUNCTION_IMPL(classname,name) \
 	int __##classname##_##name(HSQUIRRELVM v)
 
-#define _INIT_STATIC_NAMESPACE(classname) CreateStaticNamespace(SquirrelVM::GetVMPtr(),&__##classname##_decl);
+#define _INIT_STATIC_NAMESPACE(classname) CreateStaticNamespace(SquirrelVM::getVM(),&__##classname##_decl);
 #define _INIT_CLASS(classname)CreateClass(SquirrelVM::ms_rootVM,&__##classname##_decl);
 
 #define _DECL_STATIC_NAMESPACE(xnamespace) extern struct ScriptNamespaceDecl __##xnamespace##_decl;

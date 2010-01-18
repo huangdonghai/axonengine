@@ -9,7 +9,7 @@ _MEMBER_FUNCTION_IMPL(Rect, constructor)
 	Rect temp;
 	Rect *newv = NULL;
 	StackHandler sa(v);
-	int nparams = sa.GetParamCount();
+	int nparams = sa.getParamCount();
 	switch (nparams) {
 	case 1:
 		temp.x = 0;
@@ -18,20 +18,20 @@ _MEMBER_FUNCTION_IMPL(Rect, constructor)
 		temp.height = 0;
 		break;
 	case 2:
-		if (sa.GetType(2) == OT_INSTANCE) {
+		if (sa.getType(2) == OT_INSTANCE) {
 			_CHECK_INST_PARAM(vec,2,Rect,Rect);
 			if(vec)	temp = *vec;
-			else return sa.ThrowError(_SC("Rect() invalid instance type"));
+			else return sa.throwError(_SC("Rect() invalid instance type"));
 		}
 		break;
 	case 5:
-		temp.x = sa.GetInt(2);
-		temp.y = sa.GetInt(3);
-		temp.width = sa.GetInt(4);
-		temp.height = sa.GetInt(5);
+		temp.x = sa.getInt(2);
+		temp.y = sa.getInt(3);
+		temp.width = sa.getInt(4);
+		temp.height = sa.getInt(5);
 		break;
 	default:
-		return sa.ThrowError(_SC("Rect() wrong parameters"));
+		return sa.throwError(_SC("Rect() wrong parameters"));
 	}
 	newv = new Rect(temp);
 	return construct_Rect(v, newv);

@@ -9,19 +9,19 @@ _MEMBER_FUNCTION_IMPL(Matrix, constructor)
 	Matrix3x4 temp;
 	Matrix3x4 *newm = NULL;
 	StackHandler sa(v);
-	switch (sa.GetParamCount()) {
+	switch (sa.getParamCount()) {
 		case 1:
 			temp.setIdentity();
 			break;
 		case 2:
-			if (sa.GetType(2) == OT_INSTANCE) {
+			if (sa.getType(2) == OT_INSTANCE) {
 				_CHECK_INST_PARAM(mat,2,Matrix3x4,Matrix);
 				if(mat)	temp = *mat;
-				else return sa.ThrowError(_SC("Matrix() invalid instance type"));
+				else return sa.throwError(_SC("Matrix() invalid instance type"));
 			} else {
-				SquirrelObject arr = sa.GetObjectHandle(2);
+				SquirrelObject arr = sa.getObjectHandle(2);
 				if (arr.len() != Matrix3x4::NumFloat) {
-					return sa.ThrowError(_SC("Matrix(array) need a 12 elements array"));
+					return sa.throwError(_SC("Matrix(array) need a 12 elements array"));
 				}
 				float *fp = temp.w_ptr();
 				SquirrelObject idx, val;
@@ -34,7 +34,7 @@ _MEMBER_FUNCTION_IMPL(Matrix, constructor)
 			}
 			break;
 		default:
-			return sa.ThrowError(_SC("Matrix() wrong number of parameters"));
+			return sa.throwError(_SC("Matrix() wrong number of parameters"));
 			break;
 	}
 	newm = new Matrix3x4(temp);
@@ -45,10 +45,10 @@ _MEMBER_FUNCTION_IMPL(Matrix,_set)
 {
 	StackHandler sa(v);
 	_CHECK_SELF(Matrix3x4,Matrix);
-	int index = sa.GetInt(2);
+	int index = sa.getInt(2);
 	if (index < 0 && index >= Matrix3x4::NumFloat)
 		return SQ_ERROR;
-	self->w_ptr()[index] = sa.GetFloat(2);
+	self->w_ptr()[index] = sa.getFloat(2);
 	return SQ_OK;
 }
 
@@ -56,7 +56,7 @@ _MEMBER_FUNCTION_IMPL(Matrix,_get)
 {
 	StackHandler sa(v);
 	_CHECK_SELF(Matrix3x4,Matrix);
-	int index = sa.GetInt(2);
+	int index = sa.getInt(2);
 	if (index < 0 && index >= Matrix3x4::NumFloat)
 		return SQ_ERROR;
 	return sa.Return(self->w_ptr()[index]);
@@ -88,7 +88,7 @@ _MEMBER_FUNCTION_IMPL(Matrix,_mul)
 {
 	StackHandler sa(v);
 	_CHECK_SELF(Matrix3x4,Matrix);
-	int t = sa.GetType(2);
+	int t = sa.getType(2);
 	if (t == OT_INSTANCE) {
 		_CHECK_INST_PARAM(mat,2,Matrix3x4,Matrix);
 		Matrix3x4 tm = (*self)*(*mat);

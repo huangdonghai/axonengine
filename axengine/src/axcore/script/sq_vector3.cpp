@@ -9,7 +9,7 @@ _MEMBER_FUNCTION_IMPL(Vector3, constructor)
 	Vector3 temp;
 	Vector3 *newv = NULL;
 	StackHandler sa(v);
-	int nparams = sa.GetParamCount();
+	int nparams = sa.getParamCount();
 	switch (nparams) {
 	case 1:
 		temp.x = 0;
@@ -17,19 +17,19 @@ _MEMBER_FUNCTION_IMPL(Vector3, constructor)
 		temp.z = 0;
 		break;
 	case 2:
-		if (sa.GetType(2) == OT_INSTANCE) {
+		if (sa.getType(2) == OT_INSTANCE) {
 			_CHECK_INST_PARAM(vec,2,Vector3,Vector3);
 			if(vec)	temp = *vec;
-			else return sa.ThrowError(_SC("Vector3() invalid instance type"));
+			else return sa.throwError(_SC("Vector3() invalid instance type"));
 		}
 		break;
 	case 4:
-		temp.x = sa.GetFloat(2);
-		temp.y = sa.GetFloat(3);
-		temp.z = sa.GetFloat(4);
+		temp.x = sa.getFloat(2);
+		temp.y = sa.getFloat(3);
+		temp.z = sa.getFloat(4);
 		break;
 	default:
-		return sa.ThrowError(_SC("Vector3() wrong parameters"));
+		return sa.throwError(_SC("Vector3() wrong parameters"));
 	}
 	newv = new Vector3(temp);
 	return construct_Vector3(g_mainVM->m_vm, newv);
@@ -40,17 +40,17 @@ _MEMBER_FUNCTION_IMPL(Vector3,_set)
 {
 	StackHandler sa(v);
 	_CHECK_SELF(Vector3,Vector3);
-	const SQChar *s = sa.GetString(2);
-	int index = s?s[0]:sa.GetInt(2);
+	const SQChar *s = sa.getString(2);
+	int index = s?s[0]:sa.getInt(2);
 	switch(index) {
 	case 0: case 'x':
-		return sa.Return(self->x = sa.GetFloat(3));
+		return sa.Return(self->x = sa.getFloat(3));
 		break;
 	case 1: case 'y':
-		return sa.Return(self->y = sa.GetFloat(3));
+		return sa.Return(self->y = sa.getFloat(3));
 		break;
 	case 2: case 'z':
-		return sa.Return(self->z = sa.GetFloat(3));
+		return sa.Return(self->z = sa.getFloat(3));
 		break;
 	}
 
@@ -61,10 +61,10 @@ _MEMBER_FUNCTION_IMPL(Vector3,_get)
 {
 	StackHandler sa(v);
 	_CHECK_SELF(Vector3,Vector3);
-	const SQChar *s = sa.GetString(2);
+	const SQChar *s = sa.getString(2);
 	if(s && (s[1] != 0))
 		return SQ_ERROR;
-	int index = s && (s[1] == 0)?s[0]:sa.GetInt(2);
+	int index = s && (s[1] == 0)?s[0]:sa.getInt(2);
 	switch(index) {
 		case 0: case 'x': return sa.Return(self->x); break;
 		case 1: case 'y': return sa.Return(self->y); break;
@@ -78,13 +78,13 @@ _MEMBER_FUNCTION_IMPL(Vector3,_nexti)
 	StackHandler sa(v);
 	_CHECK_SELF(Vector3,Vector3);
 	int index = -1;
-	if(sa.GetType(2) == OT_NULL) {
+	if(sa.getType(2) == OT_NULL) {
 		index = -1;
 	} else {
-		const SQChar *s = sa.GetString(2);
+		const SQChar *s = sa.getString(2);
 		if (s && (s[1] != 0))
 			return SQ_ERROR;
-		index = s && (s[1] == 0)?s[0]:sa.GetInt(2);
+		index = s && (s[1] == 0)?s[0]:sa.getInt(2);
 	}
 	switch(index) {
 		case 0xFFFFFFFF: return sa.Return(_SC("x"));
@@ -131,7 +131,7 @@ _MEMBER_FUNCTION_IMPL(Vector3,_mul)
 {
 	StackHandler sa(v);
 	_CHECK_SELF(Vector3,Vector3);
-	Vector3 tv = (*self)*sa.GetFloat(2);
+	Vector3 tv = (*self)*sa.getFloat(2);
 	SquirrelObject so = new_Vector3(v, tv);
 	return sa.Return(so);
 }
@@ -140,7 +140,7 @@ _MEMBER_FUNCTION_IMPL(Vector3,_div)
 {
 	StackHandler sa(v);
 	_CHECK_SELF(Vector3,Vector3);
-	Vector3 tv = (*self)/sa.GetFloat(2);
+	Vector3 tv = (*self)/sa.getFloat(2);
 	SquirrelObject so = new_Vector3(v, tv);
 	return sa.Return(so);
 }

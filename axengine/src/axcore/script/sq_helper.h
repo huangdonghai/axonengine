@@ -169,7 +169,7 @@ struct StackHandler
 		this->v = v;
 	}
 
-	SQFloat GetFloat(int idx)
+	SQFloat getFloat(int idx)
 	{
 		SQFloat x = 0.0f;
 		if(idx > 0 && idx <= _top) {
@@ -178,7 +178,7 @@ struct StackHandler
 		return x;
 	}
 
-	SQInteger GetInt(int idx)
+	SQInteger getInt(int idx)
 	{
 		SQInteger x = 0;
 		if(idx > 0 && idx <= _top) {
@@ -187,7 +187,7 @@ struct StackHandler
 		return x;
 	}
 
-	HSQOBJECT GetObjectHandle(int idx)
+	HSQOBJECT getObjectHandle(int idx)
 	{
 		HSQOBJECT x;
 		if(idx > 0 && idx <= _top) {
@@ -197,7 +197,7 @@ struct StackHandler
 		return x;
 	}
 
-	const SQChar *GetString(int idx)
+	const SQChar *getString(int idx)
 	{
 		const SQChar *x = NULL;
 		if(idx > 0 && idx <= _top) {
@@ -206,7 +206,7 @@ struct StackHandler
 		return x;
 	}
 
-	SQUserPointer GetUserPointer(int idx)
+	SQUserPointer getUserPointer(int idx)
 	{
 		SQUserPointer x = 0;
 		if(idx > 0 && idx <= _top) {
@@ -215,7 +215,7 @@ struct StackHandler
 		return x;
 	}
 
-	SQUserPointer GetInstanceUp(int idx, SQUserPointer tag)
+	SQUserPointer getInstanceUp(int idx, SQUserPointer tag)
 	{
 		SQUserPointer self;
 		if(SQ_FAILED(sq_getinstanceup(v, idx,(SQUserPointer*)&self, tag)))
@@ -223,7 +223,7 @@ struct StackHandler
 		return self;
 	}
 
-	SQUserPointer GetUserData(int idx, SQUserPointer tag=0)
+	SQUserPointer getUserData(int idx, SQUserPointer tag=0)
 	{
 		SQUserPointer otag;
 		SQUserPointer up;
@@ -236,7 +236,7 @@ struct StackHandler
 		return NULL;
 	}
 
-	bool GetBool(int idx)
+	bool getBool(int idx)
 	{
 		SQBool ret;
 		if(idx > 0 && idx <= _top) {
@@ -246,7 +246,7 @@ struct StackHandler
 		return FALSE;
 	}
 
-	int GetType(int idx)
+	int getType(int idx)
 	{
 		if(idx > 0 && idx <= _top) {
 			return sq_gettype(v, idx);
@@ -254,7 +254,7 @@ struct StackHandler
 		return -1;
 	}
 
-	int GetParamCount() {
+	int getParamCount() {
 		return _top;
 	}
 
@@ -295,11 +295,11 @@ struct StackHandler
 
 	int Return() { return 0; }
 
-	int ThrowError(const SQChar *error) {
+	int throwError(const SQChar *error) {
 		return sq_throwerror(v, error);
 	}
 
-	HSQUIRRELVM GetVMPtr() { return v; }
+	HSQUIRRELVM getVM() { return v; }
 private:
 	int _top;
 	HSQUIRRELVM v;

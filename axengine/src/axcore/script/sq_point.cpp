@@ -9,25 +9,25 @@ _MEMBER_FUNCTION_IMPL(Point, constructor)
 	Point temp;
 	Point *newv = NULL;
 	StackHandler sa(v);
-	int nparams = sa.GetParamCount();
+	int nparams = sa.getParamCount();
 	switch (nparams) {
 	case 1:
 		temp.x = 0;
 		temp.y = 0;
 		break;
 	case 2:
-		if (sa.GetType(2) == OT_INSTANCE) {
+		if (sa.getType(2) == OT_INSTANCE) {
 			_CHECK_INST_PARAM(vec,2,Point,Point);
 			if(vec)	temp = *vec;
-			else return sa.ThrowError(_SC("Point() invalid instance type"));
+			else return sa.throwError(_SC("Point() invalid instance type"));
 		}
 		break;
 	case 3:
-		temp.x = sa.GetInt(2);
-		temp.y = sa.GetInt(3);
+		temp.x = sa.getInt(2);
+		temp.y = sa.getInt(3);
 		break;
 	default:
-		return sa.ThrowError(_SC("Point() wrong parameters"));
+		return sa.throwError(_SC("Point() wrong parameters"));
 	}
 	newv = new Point(temp);
 	return construct_Point(v, newv);

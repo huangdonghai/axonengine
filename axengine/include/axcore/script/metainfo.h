@@ -101,7 +101,7 @@ protected:
 	int m_argc;
 	Variant::Type m_returnType;
 	Variant::Type m_argsType[AX_MAX_ARGS];
-	ScriptFunc m_scriptFunc;
+	ScriptValue m_scriptClosure;
 
 	// for property
 	Variant::Type m_propType;
