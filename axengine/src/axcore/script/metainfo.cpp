@@ -17,7 +17,7 @@ bool MetaInfo::invokeMethod(Object *obj, const char *methodName, ReturnArgument 
 	ReturnArgument realRet = ret;
 	bool castRet = false;
 	if (ret.typeId != needReturnType) {
-		if (needReturnType != Variant::kEmpty && ret.typeId != Variant::kEmpty) {
+		if (needReturnType != Variant::kVoid && ret.typeId != Variant::kVoid) {
 			if (!Variant::canCast(needReturnType, ret.typeId))
 				return false;
 			else {
@@ -75,7 +75,7 @@ bool MetaInfo::getProperty( Object *obj, const char *propname, ReturnArgument re
 	ReturnArgument realRet = ret;
 	bool castRet = false;
 	if (ret.typeId != needReturnType) {
-		if (needReturnType != Variant::kEmpty && ret.typeId != Variant::kEmpty) {
+		if (needReturnType != Variant::kVoid && ret.typeId != Variant::kVoid) {
 			if (!Variant::canCast(needReturnType, ret.typeId))
 				return false;
 			else {
@@ -212,7 +212,7 @@ Variant ClassInfo::getField(const String &field) const
 
 inline int ScriptProp::checkNameKind()
 {
-	int kind = Variant::kEmpty;
+	int kind = Variant::kVoid;
 
 	size_t pos = m_realName.find('_');
 	if (pos != String::npos) {
@@ -281,7 +281,7 @@ inline bool ScriptProp::isStringType(int kind)
 
 int ScriptProp::checkTableKind(Variant &result)
 {
-	int kind = Variant::kEmpty;
+	int kind = Variant::kVoid;
 
 	bool hx, hy, hz, hr, hg, hb, hwidth, hheight;
 	float x, y, z, r, g, b, width, height;
@@ -352,12 +352,12 @@ void ScriptProp::init()
 	int valuetype = lua_type(L,-1);
 	switch (valuetype) {
 		case LUA_TBOOLEAN:
-			AX_ASSURE(kindFromName == Variant::kEmpty || kindFromName == Variant::kBool);
+			AX_ASSURE(kindFromName == Variant::kVoid || kindFromName == Variant::kBool);
 			m_propKind = Variant::kBool;
 			m_defaultValue.set(lua_toboolean(L,-1) ? true : false);
 			break;
 		case LUA_TNUMBER:
-			if (kindFromName == Variant::kEmpty || kindFromName == Variant::kFloat) {
+			if (kindFromName == Variant::kVoid || kindFromName == Variant::kFloat) {
 				m_propKind = Variant::kFloat;
 			} else if (kindFromName == Variant::kInt) {
 				m_propKind = Variant::kInt;
@@ -367,7 +367,7 @@ void ScriptProp::init()
 			m_defaultValue.set(lua_tonumber(L,-1));
 			break;
 		case LUA_TSTRING:
-			if (kindFromName == Variant::kEmpty) {
+			if (kindFromName == Variant::kVoid) {
 				m_propKind = Variant::kString;
 			} else if (isStringType(kindFromName)) {
 				m_propKind = kindFromName;
@@ -382,10 +382,10 @@ void ScriptProp::init()
 				initEnumItems();
 			} else {
 				m_propKind = checkTableKind(m_defaultValue);
-				if (kindFromName != Variant::kEmpty && m_propKind != kindFromName) {
+				if (kindFromName != Variant::kVoid && m_propKind != kindFromName) {
 					Errorf("Why here?");
 				}
-				if (!m_group && kindFromName == Variant::kEmpty) {
+				if (!m_group && kindFromName == Variant::kVoid) {
 					m_propKind = kGroup;
 				}
 			}

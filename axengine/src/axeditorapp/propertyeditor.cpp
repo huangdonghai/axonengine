@@ -390,7 +390,7 @@ bool PropertyEditor::initScriptProp(Object *obj) {
 		IProperty *group = 0;
 
 		switch (m->getPropKind()) {
-		case Variant::kEmpty:
+		case Variant::kVoid:
 			break;
 		case Variant::kBool:
 			p = new BoolProperty(m->getProperty(obj), m->getName());

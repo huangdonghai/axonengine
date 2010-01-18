@@ -9,14 +9,14 @@ enum {
 
 struct Argument
 {
-	Argument(Variant::Type t = Variant::kEmpty, const void *d = 0) : typeId(t), data(d) {}
+	Argument(Variant::Type t = Variant::kVoid, const void *d = 0) : typeId(t), data(d) {}
 	Variant::Type typeId;
 	const void *data;
 };
 
 struct ReturnArgument
 {
-	ReturnArgument(Variant::Type t = Variant::kEmpty, void *d = 0) : typeId(t), data(d) {}
+	ReturnArgument(Variant::Type t = Variant::kVoid, void *d = 0) : typeId(t), data(d) {}
 	Variant::Type typeId;
 	void *data;
 };
@@ -54,7 +54,7 @@ public:
 	typedef std::pair<String,int> EnumItem;
 	typedef Sequence<EnumItem> EnumItems;
 
-	Member(const char *name, Type t) : m_name(name), m_type(t), m_propKind(Variant::kEmpty) {}
+	Member(const char *name, Type t) : m_name(name), m_type(t), m_propKind(Variant::kVoid) {}
 
 	bool isProperty() const { return m_type == kPropertyType; }
 	bool isMethod() const { return m_type == kMethodType; }
@@ -89,7 +89,7 @@ public:
 		switch (k) {
 		case kEnum: case kFlag: return Variant::kInt;
 		case kTexture: case kModel: case kMaterial: case kAnimation: case kSpeedTree: case kSound: return Variant::kString;
-		default: return Variant::kEmpty;
+		default: return Variant::kVoid;
 		}
 	}
 

@@ -6,25 +6,27 @@
 
 AX_BEGIN_NAMESPACE
 
-typedef boost::mpl::vector<void,bool,int,float,String,Object *, LuaTable,Vector3,Color3,Point,Rect,Matrix3x4> VariantTL;
+using namespace boost;
 
+typedef mpl::vector<void,bool,int,float,String,Object *,Vector3,Color3,Point,Rect,Matrix3x4, LuaTable> VariantTL;
 
 typedef bool (*castFunc)(const void *from, void *to);
 
-template <class T, class Q, class Can = boost::mpl::int_<1> >
-class CastHelper_ {
+template <class T, class Q, class Can>
+struct CastHelper_ {
 	static bool CastFunc(const void *from, void *to)
 	{
 		if (std::tr1::is_convertible<T,Q>::value) {
 			*(Q *)to = *(const T *)from;
 			return true;
 		}
+
 		return false;
 	}
 };
 
-template <class T, class Q, boost::mpl::int_<2> >
-class CastHelper_ {
+template <class T, class Q>
+struct CastHelper_<T, Q, mpl::int_<0>> {
 	static bool CastFunc(const void *from, void *to)
 	{
 		return false;
@@ -32,29 +34,49 @@ class CastHelper_ {
 };
 
 
-struct TypeHandler {
+class TypeHandler
+{
+public:
 	int dataSize;
-	bool canCast[Variant::kMaxType];
-	castFunc castFuncs[Variant::kMaxType];
-
+	virtual bool canCast(Variant::Type toType) = 0;
+	virtual bool rawCast(const void *fromData, Variant::Type toType, void *toData) = 0;
+	virtual void construct(void *ptr, const void *copyfrom) = 0;
 	virtual void construct(void *ptr) = 0;
 	virtual void destruct(void *ptr) = 0;
 };
 
-#define CANCAST(x) canCast[x] = std::tr1::is_convertible<T, boost::mpl::at<VariantTL, boost::mpl::int_<x> >::type>::value
-#define CASTFUNC(x) boost::mpl::if_< \
-	std::tr1::is_convertible<T, boost::mpl::at<VariantTL, boost::mpl::int_<x> >::type>::value, \
-	CastFunc<T, boost::mpl::at<VariantTL, boost::mpl::int_<x> >::type>, int \
->::type
+class TypeHandler_Generic : public TypeHandler
+{
+public:
+	virtual bool canCast(Variant::Type toType)
+	{
+		return canCasts[toType];
+	}
+
+	virtual bool rawCast(const void *fromData, Variant::Type toType, void *toData)
+	{
+		return castFuncs[toType](fromData, toData);
+	}
+
+protected:
+	bool canCasts[Variant::kMaxType];
+	castFunc castFuncs[Variant::kMaxType];
+};
+
+#define CANCAST(x) canCasts[x] = std::tr1::is_convertible<T, mpl::at<VariantTL, mpl::int_<x> >::type>::value
+#define CASTFUNC(x) castFuncs[x] = &CastHelper_<T, mpl::at<VariantTL, mpl::int_<x>>::type, mpl::int_<std::tr1::is_convertible<T, mpl::at<VariantTL, mpl::int_<x>>::type>::value>>::CastFunc
 
 template <class T>
-struct TypeHandler_ : public TypeHandler
+class TypeHandler_ : public TypeHandler_Generic
 {
+public:
 	TypeHandler_()
 	{
 		dataSize = sizeof(T);
+		int vs = sizeof(Variant);
+		int ss = sizeof(String);
 
-//		CANCAST(0);
+		CANCAST(0);
 		CANCAST(1);
 		CANCAST(2);
 		CANCAST(3);
@@ -67,13 +89,7 @@ struct TypeHandler_ : public TypeHandler
 		CANCAST(10);
 		CANCAST(11);
 
-		boost::mpl::if_<
-			boost::mpl::int_<std::tr1::is_convertible<T, boost::mpl::at<VariantTL, boost::mpl::int_<0> >::type>::value>,
-			1, 2
-		>::type t;
-#if 0
-//		CASTFUNC(0);
-//		castFuncs[1] = CastFunc<T, boost::mpl::at<VariantTL, boost::mpl::int_<1> >::type>;
+		CASTFUNC(0);
 		CASTFUNC(1);
 		CASTFUNC(2);
 		CASTFUNC(3);
@@ -85,7 +101,11 @@ struct TypeHandler_ : public TypeHandler
 		CASTFUNC(9);
 		CASTFUNC(10);
 		CASTFUNC(11);
-#endif
+	}
+
+	void construct(void *ptr, const void *copyfrom)
+	{
+		new (ptr) T(*(const T *)copyfrom);
 	}
 
 	void construct(void *ptr)
@@ -99,6 +119,25 @@ struct TypeHandler_ : public TypeHandler
 	}
 };
 
+#undef CANCAST
+#undef CASTFUNC
+
+#define NEW_TH(x) new TypeHandler_<mpl::at<VariantTL, mpl::int_<x> >::type>
+static TypeHandler *s_typeHandlers[Variant::kMaxType] = {
+	0,
+	NEW_TH(1),
+	NEW_TH(2),
+	NEW_TH(3),
+	NEW_TH(4),
+	NEW_TH(5),
+	NEW_TH(6),
+	NEW_TH(7),
+	NEW_TH(8),
+	NEW_TH(9),
+	NEW_TH(10),
+	NEW_TH(11),
+};
+
 void testhandler()
 {
 	TypeHandler *th = new TypeHandler_<int>();
@@ -108,7 +147,7 @@ String Variant::toString() const
 {
 	String result;
 	switch (type) {
-	case kEmpty:
+	case kVoid:
 		break;
 	case kBool:
 		StringUtil::sprintf(result, "%d", boolval);
@@ -160,11 +199,12 @@ String Variant::toString() const
 	return result;
 }
 
-void Variant::fromString(Type t, const char *str) {
+void Variant::fromString(Type t, const char *str)
+{
 	clear();
 
 	switch (t) {
-	case kEmpty:
+	case kVoid:
 		break;
 	case kBool:
 		this->set(atoi(str) ? true : false);
@@ -222,8 +262,11 @@ void Variant::fromString(Type t, const char *str) {
 
 int Variant::getTypeSize(Type t)
 {
+#if 1
+	return s_typeHandlers[t]->dataSize;
+#else
 	switch (t) {
-	case kEmpty: return 0;
+	case kVoid: return 0;
 	case kBool: return sizeof(bool);
 	case kInt: return sizeof(int);
 	case kFloat: return sizeof(float);
@@ -238,15 +281,18 @@ int Variant::getTypeSize(Type t)
 	default: AX_NO_DEFAULT;
 	}
 	return 0;
+#endif
 }
 
 bool Variant::canCast(Type fromType, Type toType)
 {
 	if (fromType == toType)
 		return true;
-
+#if 1
+	return s_typeHandlers[fromType]->canCast(toType);
+#else
 	switch (fromType) {
-	case kEmpty: return false;
+	case kVoid: return false;
 	case kBool:
 		switch (toType) {
 		case kInt:
@@ -280,15 +326,18 @@ bool Variant::canCast(Type fromType, Type toType)
 	default: AX_NO_DEFAULT;
 	}
 	return false;
+#endif
 }
 
 bool Variant::rawCast(Type fromType, const void *fromData, Type toType, void *toData)
 {
 	if (!canCast(fromType, toType))
 		return false;
-
+#if 1
+	return s_typeHandlers[fromType]->rawCast(fromData, toType, toData);
+#else
 	switch (fromType) {
-	case kEmpty: return false;
+	case kVoid: return false;
 	case kBool:
 		switch (toType) {
 		case kInt:
@@ -355,12 +404,38 @@ bool Variant::rawCast(Type fromType, const void *fromData, Type toType, void *to
 	default: AX_NO_DEFAULT;
 	}
 	return false;
+#endif
 }
 
+void Variant::construct( Variant::Type t, const void *fromData )
+{
+#if 0
+	type = t;
+	TypeHandler *h = s_typeHandlers[t];
+
+	void *toData = 0;
+	if (h->dataSize > MINIBUF_SIZE) {
+		isMinibuf = false;
+		toData = dataPtr = Malloc(h->dataSize);
+	} else {
+		isMinibuf = true;
+		toData = &minibuf;
+	}
+	h->construct(toData, fromData);
+#endif
+}
 
 //--------------------------------------------------------------------------
 // class LuaTable
 //--------------------------------------------------------------------------
+
+LuaTable::LuaTable() : m_index(-10000), m_isReading(false), m_isIteratoring(false), m_stackTop(0)
+{}
+
+
+LuaTable::LuaTable( const LuaTable &rhs ) : m_index(rhs.m_index), m_isReading(false), m_isIteratoring(false), m_stackTop(0)
+{
+}
 
 LuaTable::LuaTable(int index)
 	: m_index(index)
@@ -369,7 +444,7 @@ LuaTable::LuaTable(int index)
 	, m_stackTop(0)
 {
 	if (m_index < 0) {
-		m_index = lua_gettop(L) + m_index + 1;
+		const_cast<int&>(m_index) = lua_gettop(L) + m_index + 1;
 	}
 }
 
@@ -506,6 +581,13 @@ void LuaTable::endIterator() const
 	AX_ASSURE(m_isIteratoring);
 
 	lua_settop(L,m_stackTop);
+}
+
+
+LuaTable & LuaTable::operator=( const LuaTable &rhs )
+{
+	const_cast<int&>(m_index) = rhs.m_index;
+	return *this;
 }
 
 AX_END_NAMESPACE

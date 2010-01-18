@@ -1,6 +1,6 @@
 AX_BEGIN_NAMESPACE
 
-inline Variant::Variant() : type(kEmpty) {}
+inline Variant::Variant() : type(kVoid) {}
 
 inline Variant::Variant(bool v) : type(kBool), boolval(v) {}
 
@@ -50,7 +50,7 @@ inline void Variant::clear() {
 	} else if (type == kMatrix3x4) {
 		delete mtr;
 	}
-	type = kEmpty;
+	type = kVoid;
 }
 
 inline Variant::operator bool() const {

@@ -13,7 +13,9 @@ class Variant;
 struct AX_API LuaTable
 {
 public:
-	LuaTable(int index);
+	LuaTable();
+	LuaTable(const LuaTable &rhs);
+	explicit LuaTable(int index);
 
 	void beginRead() const;
 	Variant get(const String &n) const;
@@ -33,8 +35,17 @@ public:
 	Rect toRect() const;
 	Object *toObject() const;
 
+	// type conversion
+	operator Vector3() const { return toVector3(); }
+	operator Color3() const { return toColor(); }
+	operator Point() const { return toPoint(); }
+	operator Rect() const { return toRect(); }
+	operator Object *() const { return toObject(); }
+
+	LuaTable &operator=(const LuaTable &rhs);
+
 public:
-	int m_index;
+	const int m_index;
 	mutable bool m_isReading;
 	mutable bool m_isIteratoring;
 	mutable int m_stackTop;
@@ -48,14 +59,14 @@ class AX_API Variant
 {
 public:
 	enum Type {
-		kEmpty, kBool, kInt, kFloat, kString, kObject, kTable, kVector3, kColor3, kPoint, kRect, kMatrix3x4, kMaxType
+		kVoid, kBool, kInt, kFloat, kString, kObject, kVector3, kColor3, kPoint, kRect, kMatrix3x4, kTable, kMaxType
 	};
 
 	enum {
 		MINIBUF_SIZE = 4 * sizeof(float)
 	};
 
-	Type getType() const { return type; }
+	Type getType() const { return (Type)type; }
 
 	// constructor
 	Variant();
@@ -113,8 +124,9 @@ public:
 	static bool canCast(Type fromType, Type toType);
 	static bool rawCast(Type fromType, const void *fromData, Type toType, void *toData);
 
+	void construct(Variant::Type t, const void *fromData);
+
 	// member variable
-	Type type;
 	union {
 		bool boolval;
 		int intval;
@@ -122,8 +134,12 @@ public:
 		Object *obj;
 		String *str;
 		Matrix3x4 *mtr;
+		void *dataPtr;
 		byte_t minibuf[MINIBUF_SIZE];
 	};
+
+	int type : 30;
+	int isMinibuf : 1;
 };
 
 
@@ -137,7 +153,7 @@ inline Variant::Type GetVariantType_() {
 
 template<>
 inline Variant::Type GetVariantType_<void>() {
-	return Variant::kEmpty;
+	return Variant::kVoid;
 }
 
 template<>

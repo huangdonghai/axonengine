@@ -319,7 +319,7 @@ void xPushStack(lua_State *L, const Variant &val)
 		t.set("b", v->b/255.0f);
 		break;
 	}
-	case Variant::kEmpty:
+	case Variant::kVoid:
 	default:
 		lua_pushnil(L);
 		break;
