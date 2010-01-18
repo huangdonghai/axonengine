@@ -489,7 +489,7 @@ public:
 
 	bool initPoint()
 	{
-		const Matrix3x4 &mtx = m_light->getMatrix();
+		const Matrix &mtx = m_light->getMatrix();
 
 		if (m_origin == mtx.origin && m_radius == m_light->getRadius()) {
 			return false;
@@ -523,7 +523,7 @@ public:
 
 	bool initSpot()
 	{
-		const Matrix3x4 &mtx = m_light->getMatrix();
+		const Matrix &mtx = m_light->getMatrix();
 
 		if (m_origin == mtx.origin && m_axis == mtx.axis && m_radius == m_light->getRadius()) {
 			return false;

@@ -36,7 +36,7 @@ inline Variant::Variant(const Rect &v)
 inline Variant::Variant(const Color3 &v)
 { construct(kColor3, &v); }
 
-inline Variant::Variant(const Matrix3x4 &v)
+inline Variant::Variant(const Matrix &v)
 { construct(kMatrix3x4, &v); }
 
 inline Variant::Variant(const Variant &v)
@@ -78,9 +78,9 @@ inline Variant::operator Rect() const
 	return castHelper<Rect>();
 }
 
-inline Variant::operator Matrix3x4() const
+inline Variant::operator Matrix() const
 {
-	return castHelper<Matrix3x4>();
+	return castHelper<Matrix>();
 }
 
 inline Variant::operator Color3() const

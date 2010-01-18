@@ -11,10 +11,10 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-const Matrix3x4 Matrix3x4::Identity(1,0,0,0,1,0,0,0,1,0,0,0);
+const Matrix Matrix::Identity(1,0,0,0,1,0,0,0,1,0,0,0);
 
 
-String Matrix3x4::toString() const
+String Matrix::toString() const
 {
 	String result;
 
@@ -27,7 +27,7 @@ String Matrix3x4::toString() const
 	return result;
 }
 
-bool Matrix3x4::fromString(const char *str)
+bool Matrix::fromString(const char *str)
 {
 	int v = sscanf(str, "%f %f %f %f %f %f %f %f %f %f %f %f"
 		, &axis[0][0], &axis[0][1], &axis[0][2]
@@ -38,7 +38,7 @@ bool Matrix3x4::fromString(const char *str)
 	return(v == 12);
 }
 
-void Matrix3x4::setInverse()
+void Matrix::setInverse()
 {
 	float m10 = axis[1][0], m11 = axis[1][1], m12 = axis[1][2];
 	float m20 = axis[2][0], m21 = axis[2][1], m22 = axis[2][2];

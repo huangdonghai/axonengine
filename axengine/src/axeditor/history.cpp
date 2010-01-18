@@ -16,7 +16,7 @@ AX_BEGIN_NAMESPACE
 // class TransformHis
 //--------------------------------------------------------------------------
 
-TransformHis::TransformHis(Context *context, const String &msg, int actorId, const Matrix3x4 &oldmat, const Matrix3x4 &newmat)
+TransformHis::TransformHis(Context *context, const String &msg, int actorId, const Matrix &oldmat, const Matrix &newmat)
 	: History(context, msg)
 {
 	m_actorId = actorId;

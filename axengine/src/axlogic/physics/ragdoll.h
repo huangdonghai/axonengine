@@ -25,8 +25,8 @@ AX_BEGIN_NAMESPACE
 		virtual void setAutoDeactive(bool val);
 		virtual void setActive(bool activate);
 		virtual bool isActive() const;
-		virtual void setMatrix(const Matrix3x4 &matrix);
-		virtual Matrix3x4 getMatrix() const;
+		virtual void setMatrix(const Matrix &matrix);
+		virtual Matrix getMatrix() const;
 		void setMotionType(MotionType motion);
 		MotionType getMotionType() const;
 		virtual Type getType() const { return kRagdoll; }
@@ -49,7 +49,7 @@ AX_BEGIN_NAMESPACE
 		hkaPose *m_pose;
 		MotionType m_motionType;
 		bool m_isValid;
-		Matrix3x4 m_matrix;
+		Matrix m_matrix;
 	};
 
 AX_END_NAMESPACE

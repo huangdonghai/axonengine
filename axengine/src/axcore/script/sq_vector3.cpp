@@ -6,33 +6,29 @@ _IMPL_NATIVE_CONSTRUCTION(Vector3, Vector3);
 
 _MEMBER_FUNCTION_IMPL(Vector3, constructor)
 {
-	Vector3 temp;
-	Vector3 *newv = NULL;
 	StackHandler sa(v);
+	_CHECK_SELF(Vector3, Vector3);
 	int nparams = sa.getParamCount();
 	switch (nparams) {
 	case 1:
-		temp.x = 0;
-		temp.y = 0;
-		temp.z = 0;
+		self->set(0, 0, 0);
 		break;
 	case 2:
 		if (sa.getType(2) == OT_INSTANCE) {
 			_CHECK_INST_PARAM(vec,2,Vector3,Vector3);
-			if(vec)	temp = *vec;
+			if (vec) *self = *vec;
 			else return sa.throwError(_SC("Vector3() invalid instance type"));
 		}
 		break;
 	case 4:
-		temp.x = sa.getFloat(2);
-		temp.y = sa.getFloat(3);
-		temp.z = sa.getFloat(4);
+		self->x = sa.getFloat(2);
+		self->y = sa.getFloat(3);
+		self->z = sa.getFloat(4);
 		break;
 	default:
 		return sa.throwError(_SC("Vector3() wrong parameters"));
 	}
-	newv = new Vector3(temp);
-	return construct_Vector3(g_mainVM->m_vm, newv);
+	return 1;
 }
 
 

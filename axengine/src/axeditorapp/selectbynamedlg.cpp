@@ -467,7 +467,7 @@ void SelectByNameDlg::resetCamera()
 
 		if (actor != NULL)
 		{
-			Matrix3x4 mat;
+			Matrix mat;
 
 			mat.axis = (g_mapContext->getActiveView()->getCamera().getViewAxis());
 			mat.origin = (actor->getOrigin() - mat.axis[0] * 10);

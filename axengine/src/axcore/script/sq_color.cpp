@@ -7,33 +7,29 @@ _IMPL_NATIVE_CONSTRUCTION(Color3, Color3);
 
 _MEMBER_FUNCTION_IMPL(Color3, constructor)
 {
-	Color3 temp;
-	Color3 *newv = NULL;
 	StackHandler sa(v);
+	_CHECK_SELF(Color3, Color3);
 	int nparams = sa.getParamCount();
 	switch (nparams) {
 	case 1:
-		temp.r = 0;
-		temp.g = 0;
-		temp.b = 0;
+		self->set(0,0,0);
 		break;
 	case 2:
 		if (sa.getType(2) == OT_INSTANCE) {
 			_CHECK_INST_PARAM(vec,2,Color3,Color3);
-			if(vec)	temp = *vec;
+			if (vec) *self = *vec;
 			else return sa.throwError(_SC("Color3() invalid instance type"));
 		}
 		break;
 	case 4:
-		temp.r = sa.getFloat(2);
-		temp.g = sa.getFloat(3);
-		temp.b = sa.getFloat(4);
+		self->r = sa.getFloat(2);
+		self->g = sa.getFloat(3);
+		self->b = sa.getFloat(4);
 		break;
 	default:
 		return sa.throwError(_SC("Color3() wrong parameters"));
 	}
-	newv = new Color3(temp);
-	return construct_Color3(g_mainVM->m_vm, newv);
+	return 1;
 }
 
 

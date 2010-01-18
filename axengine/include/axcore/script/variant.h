@@ -93,7 +93,7 @@ public:
 	Variant(const Color3 &v);
 	Variant(const Variant &v);
 	Variant(const LuaTable &table);
-	Variant(const Matrix3x4 &matrix);
+	Variant(const Matrix &matrix);
 	~Variant();
 
 	void clear();
@@ -108,7 +108,7 @@ public:
 	operator Color3() const;
 	operator LuaTable() const;
 	Variant &operator=(const Variant &v);
-	operator Matrix3x4() const;
+	operator Matrix() const;
 
 	String toString() const;
 	void fromString(Type t, const char *str);
@@ -223,7 +223,7 @@ inline Variant::Type GetVariantType_<Object*>() {
 }
 
 template<>
-inline Variant::Type GetVariantType_<Matrix3x4>() {
+inline Variant::Type GetVariantType_<Matrix>() {
 	return Variant::kMatrix3x4;
 }
 

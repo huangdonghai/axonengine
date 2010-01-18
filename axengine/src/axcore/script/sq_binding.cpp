@@ -55,7 +55,7 @@ BOOL CreateStaticNamespace(HSQUIRRELVM v,ScriptNamespaceDecl *sn)
 	return TRUE;
 }
 
-BOOL CreateClass(HSQUIRRELVM v,SquirrelClassDecl *cd)
+BOOL CreateClass(HSQUIRRELVM v, SquirrelClassDecl *cd)
 {
 	int n = 0;
 	int oldtop = sq_gettop(v);
@@ -72,10 +72,8 @@ BOOL CreateClass(HSQUIRRELVM v,SquirrelClassDecl *cd)
 		sq_settop(v,oldtop);
 		return FALSE;
 	}
-//  sq_settypetag(v,-1,(unsigned int)cd);
-#ifdef _WIN32
-#pragma warning(disable : 4311)
-#endif
+
+	sq_setclassudsize(v, -1, Variant::getTypeSize(cd->typeId));
 	sq_settypetag(v,-1,reinterpret_cast<SQUserPointer>(cd));
 	const ScriptClassMemberDecl *members = cd->members;
 	const ScriptClassMemberDecl *m = NULL;
@@ -128,7 +126,8 @@ BOOL CreateNativeClassInstance(HSQUIRRELVM v, const SQChar *classname, SQUserPoi
 		sq_settop(v,oldtop);
 		return FALSE;
 	}
-	sq_setreleasehook(v,-1,hook);
+	if (hook)
+		sq_setreleasehook(v,-1,hook);
 	return TRUE;
 }
 

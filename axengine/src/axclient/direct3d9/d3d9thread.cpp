@@ -260,7 +260,7 @@ void D3D9thread::setupScene(QueuedScene *scene, const D3D9clearer *clearer, Rend
 	d3d9Interaction = nullptr;
 	d3d9Actor = nullptr;
 
-	AX_SU(g_modelMatrix, Matrix3x4::getIdentity());
+	AX_SU(g_modelMatrix, Matrix::getIdentity());
 	AX_SU(g_instanceParam, Vector4(0,0,0,1));
 
 	Rect r = target->getRect();
@@ -302,7 +302,7 @@ void D3D9thread::drawPrimitive(int prim_id)
 	// check actor
 	if (d3d9Actor) {
 		d3d9Actor = nullptr;
-		AX_SU(g_modelMatrix, Matrix3x4::getIdentity());
+		AX_SU(g_modelMatrix, Matrix::getIdentity());
 	}
 	prim->draw(Technique::Main);
 }
@@ -334,7 +334,7 @@ void D3D9thread::drawInteraction(Interaction *ia)
 			AX_SU(g_instanceParam, d3d9Actor->instanceParam);
 
 			if (prim->isMatrixSet()) {
-				Matrix3x4 mat = prim->getMatrix().getAffineMat();
+				Matrix mat = prim->getMatrix().getAffineMat();
 				mat = d3d9Actor->matrix * mat;
 				AX_SU(g_modelMatrix, d3d9Actor->matrix);
 			}
@@ -345,7 +345,7 @@ void D3D9thread::drawInteraction(Interaction *ia)
 //					glDepthRange(0, 1);
 			}
 		} else {
-			AX_SU(g_modelMatrix, Matrix3x4::getIdentity());
+			AX_SU(g_modelMatrix, Matrix::getIdentity());
 			AX_SU(g_instanceParam, Vector4(0,0,0,1));
 		}
 	}

@@ -18,7 +18,7 @@ const BoundingBox BoundingBox::LargestBox(-99999,-99999,-99999,99999,99999,99999
 
 
 // some function is recursively referanced, so move to here
-BoundingBox BoundingBox::getTransformed(const Matrix3x4 &matrix) const {
+BoundingBox BoundingBox::getTransformed(const Matrix &matrix) const {
 	int i;
 	Vector3 center, extents, rotatedExtents;
 	BoundingBox out;

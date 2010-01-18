@@ -281,7 +281,7 @@ void PerspectiveView::onMouseMove(InputEvent *e)
 
 	if (m_tracking == kRotate) {
 		Point delta = e->pos - m_trackingPos;
-		Matrix3x4 mat1, mat2, mat3;
+		Matrix mat1, mat2, mat3;
 #if 1
 		Vector3 offset = m_eyeMatrix.origin - m_trackingCenter;
 		Angles angles = m_eyeMatrix.getAngles();

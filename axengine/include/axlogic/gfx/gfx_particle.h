@@ -164,7 +164,7 @@ private:
 	float m_remain;
 	typedef IntrusiveList<Particle> ParticleList;
 	ParticleList m_particles;
-	Matrix3x4 m_objToWorld;
+	Matrix m_objToWorld;
 };
 
 AX_END_NAMESPACE

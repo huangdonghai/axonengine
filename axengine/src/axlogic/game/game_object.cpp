@@ -74,13 +74,13 @@ AX_BEGIN_NAMESPACE
 		onMatrixChanged();
 	}
 
-	void GameObject::setMatrix_p(const Matrix3x4 &matrix) {
+	void GameObject::setMatrix_p(const Matrix &matrix) {
 		m_matrix_p = matrix;
 		m_matrixDirty = true;
 		onMatrixChanged();
 	}
 
-	const Matrix3x4 &GameObject::getMatrix_p() const {
+	const Matrix &GameObject::getMatrix_p() const {
 		return m_matrix_p;
 	}
 

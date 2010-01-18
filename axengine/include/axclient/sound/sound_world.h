@@ -26,7 +26,7 @@ public:
 	void playSound(int channelId, SoundFx *sfx, LoopingMode = Looping_None);
 	void stopSound(int channelId);
 
-	void setListener(const Matrix3x4 &matrix, const Vector3 &velocity);
+	void setListener(const Matrix &matrix, const Vector3 &velocity);
 
 private:
 	friend class SoundSystem;
@@ -34,7 +34,7 @@ private:
 	SoundEntity *m_entities[MAX_ENTITIES];
 	List<int> m_freeEntities;
 	FMOD::ChannelGroup *m_channelGroup;
-	Matrix3x4 m_listenerMatrix;
+	Matrix m_listenerMatrix;
 	Vector3 m_listenerVelocity;
 };
 

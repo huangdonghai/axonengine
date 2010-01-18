@@ -27,9 +27,9 @@ AX_BEGIN_NAMESPACE
 		virtual void doThink();
 		virtual bool isPlayer() const { return true; }
 
-		void setMatrix(const Matrix3x4 &matrix);
-		Matrix3x4 getMatrix() const;
-		Matrix3x4 getThirdPersonMatrix() const;
+		void setMatrix(const Matrix &matrix);
+		Matrix getMatrix() const;
+		Matrix getThirdPersonMatrix() const;
 
 	protected:
 		virtual void reload();

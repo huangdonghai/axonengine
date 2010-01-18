@@ -31,8 +31,8 @@ public:
 	virtual MapAgent *clone() const;
 	virtual void drawHelper();
 
-	virtual void setMatrix(const Matrix3x4 &matrix);
-	virtual const Matrix3x4 &getMatrix() const { return m_gameObj->getMatrix_p(); }
+	virtual void setMatrix(const Matrix &matrix);
+	virtual const Matrix &getMatrix() const { return m_gameObj->getMatrix_p(); }
 
 	virtual BoundingBox getBoundingBox() { return m_gameObj->getBoundingBox(); }
 

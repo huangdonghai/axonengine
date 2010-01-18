@@ -67,7 +67,7 @@ struct Rect;
 struct Quaternion;
 struct Angles;
 struct BoundingBox;
-struct Matrix3x4;
+struct Matrix;
 struct Rgb;
 struct Rgba;
 struct Color3;

@@ -8,7 +8,7 @@ AX_BEGIN_NAMESPACE
 
 using namespace boost;
 
-typedef mpl::vector<void,bool,int,float,String,Object *,Vector3,Color3,Point,Rect,Matrix3x4, LuaTable> VariantTL;
+typedef mpl::vector<void,bool,int,float,String,Object *,Vector3,Color3,Point,Rect,Matrix, LuaTable> VariantTL;
 
 typedef bool (*castFunc)(const void *from, void *to);
 
@@ -171,7 +171,7 @@ String Variant::toString() const
 		}
 	case kMatrix3x4:
 		{
-			return ref<Matrix3x4>().toString();
+			return ref<Matrix>().toString();
 		}
 	default:
 		AX_NO_DEFAULT;
@@ -231,7 +231,7 @@ void Variant::fromString(Type t, const char *str)
 		}
 	case kMatrix3x4:
 		{
-			Matrix3x4 v;
+			Matrix v;
 			v.fromString(str);
 			*this = v;
 			break;

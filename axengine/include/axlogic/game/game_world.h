@@ -60,7 +60,7 @@ public:
 	// implement IObserver
 	virtual void doNotify(IObservable *subject, int arg);
 
-	Matrix3x4 getLastViewMatrix() const;
+	Matrix getLastViewMatrix() const;
 
 	// static function
 	static GameActor *createActor(const char *clsname);

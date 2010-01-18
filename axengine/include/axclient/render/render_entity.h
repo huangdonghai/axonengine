@@ -20,7 +20,7 @@ struct QueuedEntity {
 		MAX_TARGETS = 8
 	};
 
-	Matrix3x4 matrix;
+	Matrix matrix;
 	Vector4 instanceParam;
 	int flags;			// Actor::Flag
 
@@ -75,8 +75,8 @@ public:
 	const Matrix3 &getAxis() const;
 	void setAxis(const Angles &angles);
 	void setAxis(const Angles &angles, float scale);
-	const Matrix3x4 &getMatrix() const;
-	void setMatrix(const Matrix3x4 &mat);
+	const Matrix &getMatrix() const;
+	void setMatrix(const Matrix &mat);
 
 	void setInstanceColor(const Vector3 &color);
 	Vector3 getInstanceColor() const;
@@ -124,7 +124,7 @@ protected:
 
 protected:
 	const Kind m_kind;
-	Matrix3x4 m_affineMat;
+	Matrix m_affineMat;
 	int m_flags;
 	Vector4 m_instanceParam;
 

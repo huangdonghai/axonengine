@@ -69,7 +69,7 @@ struct AX_API Matrix4 {
 	Vector3 transformNormal(const Vector3 &v) const;
 
 	Matrix4 getTranspose() const;
-	Matrix3x4 getAffineMat() const;
+	Matrix getAffineMat() const;
 
 	float getDeterminant() const;
 	Matrix4 getInverse() const;

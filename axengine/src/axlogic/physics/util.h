@@ -58,30 +58,30 @@ AX_BEGIN_NAMESPACE
 		return hk;
 	}
 
-	inline void h2x(const hkTransform &hk, Matrix3x4 &ax) {
+	inline void h2x(const hkTransform &hk, Matrix &ax) {
 		h2x(hk.getTranslation(), ax.origin);
 		h2x(hk.getRotation(), ax.axis);
 	}
 
-	inline Matrix3x4 h2x(const hkTransform &hk) {
-		Matrix3x4 ax;
+	inline Matrix h2x(const hkTransform &hk) {
+		Matrix ax;
 		h2x(hk, ax);
 		return ax;
 	}
 
-	inline void x2h(const Matrix3x4 &ax, hkTransform &hk) {
+	inline void x2h(const Matrix &ax, hkTransform &hk) {
 		hk.setTranslation(x2h(ax.origin));
 		hk.setRotation(x2h(ax.axis));
 	}
 
-	inline hkTransform x2h(const Matrix3x4 &ax) {
+	inline hkTransform x2h(const Matrix &ax) {
 		hkTransform hk;
 		x2h(ax, hk);
 		return hk;
 	}
 
-	inline Matrix3x4 h2x(const hkMatrix4 &hk) {
-		Matrix3x4 ax;
+	inline Matrix h2x(const hkMatrix4 &hk) {
+		Matrix ax;
 		h2x(hk.getColumn(0), ax.axis[0]);
 		h2x(hk.getColumn(1), ax.axis[1]);
 		h2x(hk.getColumn(2), ax.axis[2]);

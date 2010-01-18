@@ -276,7 +276,7 @@ AX_BEGIN_NAMESPACE
 		gCurInteraction = nullptr;
 		gActor = nullptr;
 
-		AX_SU(g_modelMatrix, Matrix3x4::getIdentity());
+		AX_SU(g_modelMatrix, Matrix::getIdentity());
 		AX_SU(g_instanceParam, Vector4(0,0,0,1));
 
 		Rect r = target->getRect();
@@ -327,7 +327,7 @@ AX_BEGIN_NAMESPACE
 		if (gActor) {
 			gActor = nullptr;
 			glDepthRange(0, 1);
-			AX_SU(g_modelMatrix, Matrix3x4::getIdentity());
+			AX_SU(g_modelMatrix, Matrix::getIdentity());
 		}
 		prim->draw(Technique::Main);
 	}
@@ -358,7 +358,7 @@ AX_BEGIN_NAMESPACE
 				AX_SU(g_instanceParam, gActor->instanceParam);
 
 				if (prim->isMatrixSet()) {
-					Matrix3x4 mat = prim->getMatrix().getAffineMat();
+					Matrix mat = prim->getMatrix().getAffineMat();
 					mat = gActor->matrix * mat;
 					AX_SU(g_modelMatrix, gActor->matrix);
 				}
@@ -370,7 +370,7 @@ AX_BEGIN_NAMESPACE
 				}
 			} else {
 				glDepthRange(0, 1);
-				AX_SU(g_modelMatrix, Matrix3x4::getIdentity());
+				AX_SU(g_modelMatrix, Matrix::getIdentity());
 				AX_SU(g_instanceParam, Vector4(0,0,0,1));
 			}
 		}

@@ -35,12 +35,12 @@ AX_BEGIN_NAMESPACE
 		m_body->refresh();
 	}
 
-	void Player::setMatrix(const Matrix3x4 &matrix)
+	void Player::setMatrix(const Matrix &matrix)
 	{
 		m_physicsPlayer->setMatrix(matrix);
 	}
 
-	Matrix3x4 Player::getMatrix() const
+	Matrix Player::getMatrix() const
 	{
 		return m_physicsPlayer->getMatrix();
 	}
@@ -77,7 +77,7 @@ AX_BEGIN_NAMESPACE
 		m_physicsPlayer->setLinearVelocity(Vector3(0,0,0));
 	}
 
-	Matrix3x4 Player::getThirdPersonMatrix() const
+	Matrix Player::getThirdPersonMatrix() const
 	{
 		return m_physicsPlayer->getThirdPerson();
 	}

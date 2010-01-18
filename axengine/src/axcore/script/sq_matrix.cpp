@@ -2,28 +2,29 @@
 
 AX_BEGIN_NAMESPACE
 
-_IMPL_NATIVE_CONSTRUCTION(Matrix, Matrix3x4);
+_IMPL_NATIVE_CONSTRUCTION(Matrix, Matrix);
 
 _MEMBER_FUNCTION_IMPL(Matrix, constructor)
 {
-	Matrix3x4 temp;
-	Matrix3x4 *newm = NULL;
 	StackHandler sa(v);
+	_CHECK_SELF(Matrix,Matrix);
 	switch (sa.getParamCount()) {
 		case 1:
-			temp.setIdentity();
+			self->setIdentity();
 			break;
 		case 2:
 			if (sa.getType(2) == OT_INSTANCE) {
-				_CHECK_INST_PARAM(mat,2,Matrix3x4,Matrix);
-				if(mat)	temp = *mat;
-				else return sa.throwError(_SC("Matrix() invalid instance type"));
+				_CHECK_INST_PARAM(mat,2,Matrix,Matrix);
+				if (mat)
+					*self = *mat;
+				else
+					return sa.throwError(_SC("Matrix() invalid instance type"));
 			} else {
 				SquirrelObject arr = sa.getObjectHandle(2);
-				if (arr.len() != Matrix3x4::NumFloat) {
+				if (arr.len() != Matrix::NumFloat) {
 					return sa.throwError(_SC("Matrix(array) need a 12 elements array"));
 				}
-				float *fp = temp.w_ptr();
+				float *fp = self->w_ptr();
 				SquirrelObject idx, val;
 				if(arr.beginIteration()) {
 					while(arr.next(idx,val)) {
@@ -37,16 +38,15 @@ _MEMBER_FUNCTION_IMPL(Matrix, constructor)
 			return sa.throwError(_SC("Matrix() wrong number of parameters"));
 			break;
 	}
-	newm = new Matrix3x4(temp);
-	return construct_Matrix(g_mainVM->ms_rootVM, newm);
+	return 1;
 }
 
 _MEMBER_FUNCTION_IMPL(Matrix,_set)
 {
 	StackHandler sa(v);
-	_CHECK_SELF(Matrix3x4,Matrix);
+	_CHECK_SELF(Matrix,Matrix);
 	int index = sa.getInt(2);
-	if (index < 0 && index >= Matrix3x4::NumFloat)
+	if (index < 0 && index >= Matrix::NumFloat)
 		return SQ_ERROR;
 	self->w_ptr()[index] = sa.getFloat(2);
 	return SQ_OK;
@@ -55,9 +55,9 @@ _MEMBER_FUNCTION_IMPL(Matrix,_set)
 _MEMBER_FUNCTION_IMPL(Matrix,_get)
 {
 	StackHandler sa(v);
-	_CHECK_SELF(Matrix3x4,Matrix);
+	_CHECK_SELF(Matrix,Matrix);
 	int index = sa.getInt(2);
-	if (index < 0 && index >= Matrix3x4::NumFloat)
+	if (index < 0 && index >= Matrix::NumFloat)
 		return SQ_ERROR;
 	return sa.Return(self->w_ptr()[index]);
 }
@@ -87,11 +87,11 @@ _MEMBER_FUNCTION_IMPL(Matrix,_sub)
 _MEMBER_FUNCTION_IMPL(Matrix,_mul)
 {
 	StackHandler sa(v);
-	_CHECK_SELF(Matrix3x4,Matrix);
+	_CHECK_SELF(Matrix,Matrix);
 	int t = sa.getType(2);
 	if (t == OT_INSTANCE) {
-		_CHECK_INST_PARAM(mat,2,Matrix3x4,Matrix);
-		Matrix3x4 tm = (*self)*(*mat);
+		_CHECK_INST_PARAM(mat,2,Matrix,Matrix);
+		Matrix tm = (*self)*(*mat);
         SquirrelObject so = new_Matrix(v, tm);
         return sa.Return(so);
 	}
@@ -116,7 +116,7 @@ _MEMBER_FUNCTION_IMPL(Matrix,_div)
 #endif
 _MEMBER_FUNCTION_IMPL(Matrix,setIdentity)
 {
-	_CHECK_SELF(Matrix3x4,Matrix);
+	_CHECK_SELF(Matrix,Matrix);
 	self->setIdentity();
 	return 0;
 }

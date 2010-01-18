@@ -128,7 +128,7 @@ struct QueuedLight {
 	RenderLight *preQueued;
 
 	// queued struct
-	Matrix3x4 matrix;
+	Matrix matrix;
 	RenderLight::Type type;
 	float radius;
 	Vector4 pos;

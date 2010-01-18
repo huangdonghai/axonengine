@@ -25,8 +25,8 @@ public:
 	virtual Agent *clone() const = 0;
 	virtual void drawHelper() = 0;
 
-	virtual void setMatrix(const Matrix3x4 &matrix) = 0;
-	virtual const Matrix3x4 &getMatrix() const = 0;
+	virtual void setMatrix(const Matrix &matrix) = 0;
+	virtual const Matrix &getMatrix() const = 0;
 
 	virtual BoundingBox getBoundingBox() = 0;
 
@@ -41,7 +41,7 @@ public:
 	virtual void removeFromContext() = 0;
 
 	void beginTransform();
-	void doTransform(const Matrix3x4 &mat, bool local);
+	void doTransform(const Matrix &mat, bool local);
 	void setOrigin(int index, float f);
 	void setRotate(int index, float f);
 	Action *endTransform();
@@ -66,8 +66,8 @@ protected:
 	bool m_isSelected : 1;
 	bool m_isDeleted : 1;
 	bool m_isInGame : 1;
-	Matrix3x4 m_oldMatrix;
-	Matrix3x4 m_oldmatrixNoScale;
+	Matrix m_oldMatrix;
+	Matrix m_oldmatrixNoScale;
 	float m_oldscale;
 	bool m_actorDirty;
 };
@@ -80,7 +80,7 @@ class AX_API AgentList : public List<Agent*> {
 public:
 	bool containsOne() const;	// if contains one object, return true
 	void beginTransform() const;
-	void doTransform(const Matrix3x4 &mat, bool local) const;
+	void doTransform(const Matrix &mat, bool local) const;
 	void setOrigin(int index, float f) const;
 	void setRotate(int index, float f) const;
 	Action *endTransform() const;
@@ -109,7 +109,7 @@ inline void AgentList::beginTransform() const {
 	std::for_each(begin(), end(), std::mem_fun(&Agent::beginTransform));
 }
 
-inline void AgentList::doTransform(const Matrix3x4 &mat, bool local) const {
+inline void AgentList::doTransform(const Matrix &mat, bool local) const {
 	AgentList::const_iterator it = begin();
 	for (; it != end(); ++it) {
 		(*it)->doTransform(mat, local);

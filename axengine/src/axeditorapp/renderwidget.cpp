@@ -258,8 +258,8 @@ void PreviewWidget::mouseMoveEvent(QMouseEvent * event)
 			angles.pitch = Math::clamp(m_viewAngles.pitch, -90.f, 90.f);
 			m_actor->setAxis(angles);
 #else
-			const Matrix3x4 &mat = m_actor->getMatrix();
-			Matrix3x4 other;
+			const Matrix &mat = m_actor->getMatrix();
+			Matrix other;
 			other.setOrigin(0, 0, 0);
 
 #endif

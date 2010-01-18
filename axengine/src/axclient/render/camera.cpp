@@ -515,7 +515,7 @@ void RenderCamera::adjustProjMatrixForReflection()
 	ModifyProjectionMatrix(cplane, &m_projMatrix[0][0]);
 }
 
-void RenderCamera::createCubemapCameras(const RenderCamera &main, const Matrix3x4 &mtx, RenderCamera result[6], float znear/*=0.5f*/, float zfar/*=16.0f */)
+void RenderCamera::createCubemapCameras(const RenderCamera &main, const Matrix &mtx, RenderCamera result[6], float znear/*=0.5f*/, float zfar/*=16.0f */)
 {
 	static float faces[6][3] = {
 		{ 1,2,3 },		// PX
@@ -545,7 +545,7 @@ void RenderCamera::createCubemapCameras(const RenderCamera &main, const Matrix3x
 }
 
 
-void RenderCamera::createCubemapCameras( const Matrix3x4 &mtx, RenderCamera result[6], float znear/*=0.5f*/, float zfar/*=16.0f*/ )
+void RenderCamera::createCubemapCameras( const Matrix &mtx, RenderCamera result[6], float znear/*=0.5f*/, float zfar/*=16.0f*/ )
 {
 	static float faces[6][3] = {
 		{ 1,2,3 },		// PX

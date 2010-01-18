@@ -17,8 +17,8 @@ const Matrix4 Matrix4::Identity(
 	0,0,1,0,
 	0,0,0,1);
 
-Matrix3x4 Matrix4::getAffineMat() const {
-	Matrix3x4 result;
+Matrix Matrix4::getAffineMat() const {
+	Matrix result;
 
 	extract3x3Matrix(result.axis);
 	result.origin = m[3].xyz();

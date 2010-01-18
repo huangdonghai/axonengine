@@ -161,8 +161,8 @@ public:
 	// convert camera z to perspective z
 	float calcPerspectiveZ(float cameraZ) const;
 
-	static void createCubemapCameras(const RenderCamera &main, const Matrix3x4 &mtx,  RenderCamera result[6], float znear=0.5f, float zfar=16.0f);
-	static void createCubemapCameras(const Matrix3x4 &mtx,  RenderCamera result[6], float znear=0.5f, float zfar=16.0f);
+	static void createCubemapCameras(const RenderCamera &main, const Matrix &mtx,  RenderCamera result[6], float znear=0.5f, float zfar=16.0f);
+	static void createCubemapCameras(const Matrix &mtx,  RenderCamera result[6], float znear=0.5f, float zfar=16.0f);
 
 protected:
 	//

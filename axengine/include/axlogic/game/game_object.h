@@ -70,8 +70,8 @@ AX_BEGIN_NAMESPACE
 		void setOrigin_p(const Vector3 &pos);
 		const Matrix3 &getAxis_p() const;
 		void setAxis_p(const Matrix3 &axis);
-		void setMatrix_p(const Matrix3x4 &matrix);
-		const Matrix3x4 &getMatrix_p() const;
+		void setMatrix_p(const Matrix &matrix);
+		const Matrix &getMatrix_p() const;
 		Vector3 getInstanceColor() const { return m_instanceColor_p; }
 		void setInstanceColor(const Vector3 &color);
 
@@ -101,7 +101,7 @@ AX_BEGIN_NAMESPACE
 		virtual void clear() {};
 
 	protected:
-		Matrix3x4 m_matrix_p;
+		Matrix m_matrix_p;
 		Vector3 m_instanceColor_p;
 		bool m_matrixDirty;
 		bool m_outdoorOnly;

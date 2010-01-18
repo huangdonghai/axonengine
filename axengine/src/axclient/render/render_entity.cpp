@@ -75,12 +75,12 @@ void RenderEntity::setAxis(const Angles &angles, float scale)
 	m_instanceParam.w = scale;
 }
 
-const Matrix3x4 &RenderEntity::getMatrix() const
+const Matrix &RenderEntity::getMatrix() const
 {
 	return m_affineMat;
 }
 
-void RenderEntity::setMatrix(const Matrix3x4 &mat)
+void RenderEntity::setMatrix(const Matrix &mat)
 {
 	m_affineMat = mat;
 	m_instanceParam.w = m_affineMat.axis[0].getLength();

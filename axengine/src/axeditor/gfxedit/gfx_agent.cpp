@@ -47,7 +47,7 @@ void GfxAgent::drawHelper()
 	}
 
 	if (m_isSelected && !m_isDeleted) {
-		const Matrix3x4 &mat = m_gfxObj->getTm();
+		const Matrix &mat = m_gfxObj->getTm();
 		LinePrim::setupBoundingBox(m_bboxLine, mat.origin, mat.axis, m_gfxObj->getLocalBoundingBox(), 1.05f);
 		g_renderSystem->addToScene(m_bboxLine);
 	}
@@ -55,12 +55,12 @@ void GfxAgent::drawHelper()
 //	m_gfxObj->doDebugRender();
 }
 
-void GfxAgent::setMatrix(const Matrix3x4 &matrix)
+void GfxAgent::setMatrix(const Matrix &matrix)
 {
 	m_gfxObj->setTm(matrix);
 }
 
-const Matrix3x4 &GfxAgent::getMatrix() const
+const Matrix &GfxAgent::getMatrix() const
 {
 	return m_gfxObj->getTm();
 }

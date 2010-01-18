@@ -38,8 +38,8 @@ public:
 
 	virtual GfxType getGfxType() const { return kVirtualBase; }
 
-	const Matrix3x4 &getTm() const { return m_tm; }
-	void setTm(const Matrix3x4 &mat) { m_tm = mat; }
+	const Matrix &getTm() const { return m_tm; }
+	void setTm(const Matrix &mat) { m_tm = mat; }
 
 	// interface, routed from GfxEntity
 	virtual BoundingBox getLocalBoundingBox();
@@ -52,7 +52,7 @@ protected:
 	GfxEntity *m_entity;
 
 	// animatable properties
-	Matrix3x4 m_tm;
+	Matrix m_tm;
 };
 
 AX_END_NAMESPACE

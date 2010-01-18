@@ -36,9 +36,9 @@ void Agent::beginTransform()
 	m_oldscale = m_oldmatrixNoScale.axis.removeScale();
 }
 
-void Agent::doTransform(const Matrix3x4 &mat, bool local)
+void Agent::doTransform(const Matrix &mat, bool local)
 {
-	Matrix3x4 newmatrix;
+	Matrix newmatrix;
 	if (local) {
 		newmatrix = m_oldmatrixNoScale * mat;
 	} else {
@@ -68,7 +68,7 @@ void Agent::setOrigin(int index, float f)
 	org[index] = f;
 	m_gameNode->setOrigin_p(org);
 #else
-	Matrix3x4 matrix = getMatrix();
+	Matrix matrix = getMatrix();
 	matrix.origin[index] = f;
 	setMatrix(matrix);
 #endif
@@ -76,7 +76,7 @@ void Agent::setOrigin(int index, float f)
 
 void Agent::setOrigin( const Vector3 &pos )
 {
-	Matrix3x4 mat = getMatrix();
+	Matrix mat = getMatrix();
 	mat.origin = pos;
 	setMatrix(mat);
 }
@@ -97,7 +97,7 @@ void Agent::setRotate(int index, float f)
 
 	m_gameNode->setAxis_p(ortho);
 #else
-	Matrix3x4 matrix = getMatrix();
+	Matrix matrix = getMatrix();
 	Matrix3 ortho = matrix.axis;
 	ortho.removeShear();
 	Rotate rotate;
@@ -132,7 +132,7 @@ void Agent::setId(int newid)
 
 void Agent::setAxis( const Matrix3 &axis )
 {
-	Matrix3x4 mat = getMatrix();
+	Matrix mat = getMatrix();
 	mat.axis = axis;
 	setMatrix(mat);
 }

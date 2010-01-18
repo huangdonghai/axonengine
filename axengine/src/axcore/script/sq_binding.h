@@ -114,19 +114,11 @@ static Variant::Type classname##_getId() \
 { \
 	return GetVariantType_<cppclass>(); \
 } \
-static int classname##_release_hook(SQUserPointer p, int size) \
-{ \
-	if(p) { \
-		cppclass *pv = (cppclass *)p; \
-		delete pv; \
-	} \
-	return 0; \
-} \
 BOOL push_##classname(HSQUIRRELVM v, cppclass &quat) \
 { \
 	cppclass *newquat = new cppclass; \
 	*newquat = quat; \
-	if(!CreateNativeClassInstance(v,_SC(#classname),newquat,classname##_release_hook)) { \
+	if (!CreateNativeClassInstance(v,_SC(#classname),newquat,0)) { \
 		delete newquat; \
 		return FALSE; \
 	} \
@@ -135,18 +127,13 @@ BOOL push_##classname(HSQUIRRELVM v, cppclass &quat) \
 SquirrelObject new_##classname(HSQUIRRELVM v, cppclass &quat) \
 { \
 	SquirrelObject ret; \
-	if(push_##classname(v, quat)) { \
+	if (push_##classname(v, quat)) { \
 		ret.attachToStackObject(-1); \
 		sq_pop(v,1); \
 	} \
 	return ret; \
 } \
-int construct_##classname(HSQUIRRELVM v, cppclass *p) \
-{ \
-	sq_setinstanceup(v,1,p); \
-	sq_setreleasehook(v,1,classname##_release_hook); \
-	return 1; \
-}
+
 
 BOOL CreateStaticClass(HSQUIRRELVM v,SquirrelClassDecl *cd);
 BOOL CreateStaticNamespace(HSQUIRRELVM v,ScriptNamespaceDecl *sn);

@@ -24,6 +24,7 @@ struct AX_API Rect {
 	~Rect();
 
 	// add need function below
+	Rect& set(int _x, int _y, int _w, int _h) { x=_x; y=_y; width=_w; height=_h; return *this; }
 	void clear();
 	bool operator==(const Rect &other) const;
 	bool contains(int ix, int iy) const;

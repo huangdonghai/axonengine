@@ -1395,7 +1395,7 @@ void InstancePrim::addInstance(const Param &param) {
 	m_isDirty = true;
 }
 
-void InstancePrim::addInstance( const Matrix3x4 &mtx, const Vector4 &user )
+void InstancePrim::addInstance( const Matrix &mtx, const Vector4 &user )
 {
 	Param param;
 	param.worldMatrix = mtx;

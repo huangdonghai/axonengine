@@ -44,8 +44,8 @@ AX_BEGIN_NAMESPACE
 		virtual void setActive(bool activate) = 0;
 		virtual bool isActive() const = 0;
 		virtual void setAutoDeactive(bool val) = 0;
-		virtual void setMatrix(const Matrix3x4 &matrix) = 0;
-		virtual Matrix3x4 getMatrix() const = 0;
+		virtual void setMatrix(const Matrix &matrix) = 0;
+		virtual Matrix getMatrix() const = 0;
 		virtual Type getType() const { return kInvalid; }
 		virtual void bind(PhysicsWorld *world) = 0;
 		virtual void unbind(PhysicsWorld *world) = 0;
