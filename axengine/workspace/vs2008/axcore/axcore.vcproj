@@ -292,15 +292,15 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\axcore\math\matrix.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\axcore\math\matrix2.cpp"
 				>
 			</File>
 			<File
 				RelativePath="..\..\..\src\axcore\math\matrix3.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\axcore\math\matrix3x4.cpp"
 				>
 			</File>
 			<File
@@ -375,15 +375,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\include\axcore\math\matrix.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\include\axcore\math\matrix2.h"
 					>
 				</File>
 				<File
 					RelativePath="..\..\..\include\axcore\math\matrix3.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\include\axcore\math\matrix3x4.h"
 					>
 				</File>
 				<File

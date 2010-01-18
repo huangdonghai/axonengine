@@ -8,6 +8,9 @@ AX_BEGIN_NAMESPACE
 //--------------------------------------------------------------------------
 
 class File;
+class Object;
+typedef Object *ObjectStar;
+
 class AX_API Object {
 public:
 	friend class ScriptSystem;

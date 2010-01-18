@@ -134,7 +134,8 @@ public:
 	static bool canCast(Type fromType, Type toType);
 	static bool rawCast(Type fromType, const void *fromData, Type toType, void *toData);
 
-	void construct(Variant::Type t, const void *fromData);
+protected:
+	void init(Variant::Type t, const void *fromData);
 	void *getPtr() { if (m_isMinibuf) return m_minibuf; else return m_voidstar; }
 	const void *getPtr() const { if (m_isMinibuf) return m_minibuf; else return m_voidstar; }
 	TypeHandler *getTypeHandler() const;

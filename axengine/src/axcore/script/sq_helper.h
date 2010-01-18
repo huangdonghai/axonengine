@@ -153,6 +153,7 @@ public:
 	SquirrelObject &set(_ty & val);
 
 	// === END code suggestion from the Wiki ===
+	ReturnArgument tryToReturnArgument();
 
 private:
 	bool getSlot(const SQChar *name) const;
@@ -300,10 +301,13 @@ struct StackHandler
 	}
 
 	HSQUIRRELVM getVM() { return v; }
+
 private:
 	int _top;
 	HSQUIRRELVM v;
 };
+
+void push(HSQUIRRELVM vm, Variant::Type t, const void *data);
 
 AX_END_NAMESPACE
 

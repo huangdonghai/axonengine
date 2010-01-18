@@ -283,10 +283,10 @@ void xPushStack(lua_State *L, const Variant &val)
 		lua_newtable(L);
 		int index = lua_gettop(L);
 		LuaTable t(index);
-		Vector3 *v = (Vector3*)val.getPtr();
-		t.set("x", v->x);
-		t.set("y", v->y);
-		t.set("z", v->z);
+		const Vector3 &v = val.ref<Vector3>();
+		t.set("x", v.x);
+		t.set("y", v.y);
+		t.set("z", v.z);
 		break;
 	}
 	case Variant::kPoint:{

@@ -38,7 +38,7 @@ _MEMBER_FUNCTION_IMPL(Vector3,_set)
 	_CHECK_SELF(Vector3,Vector3);
 	const SQChar *s = sa.getString(2);
 	int index = s?s[0]:sa.getInt(2);
-	switch(index) {
+	switch (index) {
 	case 0: case 'x':
 		return sa.Return(self->x = sa.getFloat(3));
 		break;
@@ -58,10 +58,10 @@ _MEMBER_FUNCTION_IMPL(Vector3,_get)
 	StackHandler sa(v);
 	_CHECK_SELF(Vector3,Vector3);
 	const SQChar *s = sa.getString(2);
-	if(s && (s[1] != 0))
+	if (s && (s[1] != 0))
 		return SQ_ERROR;
 	int index = s && (s[1] == 0)?s[0]:sa.getInt(2);
-	switch(index) {
+	switch (index) {
 		case 0: case 'x': return sa.Return(self->x); break;
 		case 1: case 'y': return sa.Return(self->y); break;
 		case 2: case 'z': return sa.Return(self->z); break;
@@ -74,7 +74,7 @@ _MEMBER_FUNCTION_IMPL(Vector3,_nexti)
 	StackHandler sa(v);
 	_CHECK_SELF(Vector3,Vector3);
 	int index = -1;
-	if(sa.getType(2) == OT_NULL) {
+	if (sa.getType(2) == OT_NULL) {
 		index = -1;
 	} else {
 		const SQChar *s = sa.getString(2);

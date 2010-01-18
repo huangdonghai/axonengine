@@ -4,46 +4,46 @@ inline Variant::Variant() : m_type(kVoid), m_isMinibuf(true), m_voidstar(0)
 {}
 
 inline Variant::Variant(bool v)
-{ construct(kBool, &v); }
+{ init(kBool, &v); }
 
 inline Variant::Variant(int v)
-{ construct(kInt, &v); }
+{ init(kInt, &v); }
 
 inline Variant::Variant(float v)
-{ construct(kFloat, &v); }
+{ init(kFloat, &v); }
 
 inline Variant::Variant(const String &v)
-{ construct(kString, &v); }
+{ init(kString, &v); }
 
 inline Variant::Variant(const char *v)
 {
 	String str(v);
-	construct(kString, &str);
+	init(kString, &str);
 }
 
 inline Variant::Variant(Object *v)
-{ construct(kObject, &v); }
+{ init(kObject, &v); }
 
 inline Variant::Variant(const Vector3 &v)
-{ construct(kVector3, &v); }
+{ init(kVector3, &v); }
 
 inline Variant::Variant(const Point &v)
-{ construct(kPoint, &v); }
+{ init(kPoint, &v); }
 
 inline Variant::Variant(const Rect &v)
-{ construct(kRect, &v); }
+{ init(kRect, &v); }
 
 inline Variant::Variant(const Color3 &v)
-{ construct(kColor3, &v); }
+{ init(kColor3, &v); }
 
 inline Variant::Variant(const Matrix &v)
-{ construct(kMatrix3x4, &v); }
+{ init(kMatrix3x4, &v); }
 
 inline Variant::Variant(const Variant &v)
-{ construct(v.m_type, v.getPtr()); }
+{ init(v.m_type, v.getPtr()); }
 
 inline Variant::Variant(const LuaTable &rhs)
-{ construct(kTable, &rhs); }
+{ init(kTable, &rhs); }
 
 inline Variant::~Variant()
 { clear(); }
@@ -100,7 +100,7 @@ inline Variant::operator Object*() const
 
 inline Variant &Variant::operator=(const Variant &v) {
 	clear();
-	construct(v.m_type, v.getPtr());
+	init(v.m_type, v.getPtr());
 	return *this;
 }
 

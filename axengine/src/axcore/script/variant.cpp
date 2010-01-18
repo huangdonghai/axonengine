@@ -262,7 +262,7 @@ bool Variant::rawCast(Type fromType, const void *fromData, Type toType, void *to
 	return s_typeHandlers[fromType]->rawCast(fromData, toType, toData);
 }
 
-void Variant::construct( Variant::Type t, const void *fromData )
+void Variant::init( Variant::Type t, const void *fromData )
 {
 	m_type = t;
 	TypeHandler *h = s_typeHandlers[t];

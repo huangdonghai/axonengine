@@ -27,6 +27,7 @@ _DECL_CLASS(Color3);
 _DECL_CLASS(Point);
 _DECL_CLASS(Rect);
 _DECL_CLASS(Matrix)
+_DECL_CLASS(Object_c)
 
 
 extern lua_State *L;

@@ -339,14 +339,9 @@ AX_END_NAMESPACE
 #include "angles.h"
 #include "vertex.h"
 #include "rotation.h"
-#include "matrix3x4.h"
+#include "matrix.h"
 #include "simd.h"
 #include "perlinnoise.h"
 #include "spline.h"
-
-AX_BEGIN_NAMESPACE
-
-}
-
 
 #endif // AX_CORE_MATH_H
