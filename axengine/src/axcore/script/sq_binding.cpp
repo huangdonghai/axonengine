@@ -98,7 +98,7 @@ BOOL CreateClass(HSQUIRRELVM v,SquirrelClassDecl *cd)
 BOOL CreateNativeClassInstance(HSQUIRRELVM v, const SQChar *classname, SQUserPointer ud, SQRELEASEHOOK hook)
 {
 	// If we don't do this, SquirrelVM keeps an old pointer around and this 
-	// will be used by SquirrelObject. That crashes when using several VMs.
+	// will be used by HSqObject. That crashes when using several VMs.
 	// FIXME: really need this?
 	//  SquirrelVM::Init( v );
 
@@ -118,7 +118,7 @@ BOOL CreateNativeClassInstance(HSQUIRRELVM v, const SQChar *classname, SQUserPoi
 #ifdef SQ_USE_CLASS_INHERITANCE
 	HSQOBJECT ho;
 	sq_getstackobj(v, -1, &ho); // OT_INSTANCE
-	SquirrelObject instance(ho);
+	HSqObject instance(ho);
 	SqPlus::PopulateAncestry(v, instance, ud);
 #endif
 

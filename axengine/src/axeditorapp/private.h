@@ -87,7 +87,7 @@ inline Variant q2x(const QVariant &q) {
 	}
 
 	if (type == QVariant::Double) {
-		return Variant(q.toDouble());
+		return Variant(q.toFloat());
 	}
 
 	if (type == QVariant::String) {

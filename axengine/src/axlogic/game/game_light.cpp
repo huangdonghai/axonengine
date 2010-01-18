@@ -60,13 +60,13 @@ void GameLight::loadLight(const LuaTable &table) {
 	table.beginRead();
 	m_renderLight = new RenderLight();
 	float spotangle = table.get("spotAngle");
-	m_renderLight->setLightType(RenderLight::Type(table.get("type").toInt()));
+	m_renderLight->setLightType(RenderLight::Type((int)table.get("type")));
 	m_renderLight->setSpotAngle(spotangle);
-	m_renderLight->setLightColor(table.get("color"),table.get("intensity").toFloat(),table.get("specularX").toFloat());
+	m_renderLight->setLightColor(table.get("color"),table.get("intensity"),table.get("specularX"));
 	m_renderLight->setRadius(table.get("radius"));
-	m_renderLight->setCastShadowMap(table.get("castShadowMap").toBool());
+	m_renderLight->setCastShadowMap(table.get("castShadowMap"));
 	m_renderLight->setMatrix(m_matrix_p);
-	m_renderLight->setShadowMapSize(table.get("shadowMapSize").toInt());
+	m_renderLight->setShadowMapSize(table.get("shadowMapSize"));
 	table.endRead();
 
 	setupHelper();

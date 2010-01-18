@@ -547,7 +547,7 @@ Variant Object::getRuntime(const char *name)
 	lua_getfield(L, -2, name);
 	Variant result = xReadStack(L,-1);
 
-	if (result.type == Variant::kTable) {
+	if (result.getType() == Variant::kTable) {
 		Errorf("cann't get Lua table in getRuntime");
 	}
 

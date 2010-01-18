@@ -34,37 +34,28 @@ struct CastHelper_<T, Q, mpl::int_<0>> {
 };
 
 
-class TypeHandler
-{
-public:
-	int dataSize;
-	virtual bool canCast(Variant::Type toType) = 0;
-	virtual bool rawCast(const void *fromData, Variant::Type toType, void *toData) = 0;
-	virtual void construct(void *ptr, const void *copyfrom) = 0;
-	virtual void construct(void *ptr) = 0;
-	virtual void destruct(void *ptr) = 0;
-};
-
-class TypeHandler_Generic : public TypeHandler
+class TypeHandler_Generic : public Variant::TypeHandler
 {
 public:
 	virtual bool canCast(Variant::Type toType)
 	{
-		return canCasts[toType];
+		return m_canCasts[toType];
 	}
 
 	virtual bool rawCast(const void *fromData, Variant::Type toType, void *toData)
 	{
-		return castFuncs[toType](fromData, toData);
+		return m_castFuncs[toType](fromData, toData);
 	}
 
 protected:
-	bool canCasts[Variant::kMaxType];
-	castFunc castFuncs[Variant::kMaxType];
+	bool m_canCasts[Variant::kMaxType];
+	castFunc m_castFuncs[Variant::kMaxType];
 };
 
-#define CANCAST(x) canCasts[x] = std::tr1::is_convertible<T, mpl::at<VariantTL, mpl::int_<x> >::type>::value
-#define CASTFUNC(x) castFuncs[x] = &CastHelper_<T, mpl::at<VariantTL, mpl::int_<x>>::type, mpl::int_<std::tr1::is_convertible<T, mpl::at<VariantTL, mpl::int_<x>>::type>::value>>::CastFunc
+#define VT(x) mpl::at<VariantTL, mpl::int_<x>>::type
+#define VTI(x) GetVariantType_<VT(x)>()
+#define CANCAST(x) m_canCasts[VTI(x)] = std::tr1::is_convertible<T, VT(x)>::value
+#define CASTFUNC(x) m_castFuncs[VTI(x)] = &CastHelper_<T, VT(x), mpl::int_<std::tr1::is_convertible<T, VT(x)>::value>>::CastFunc
 
 template <class T>
 class TypeHandler_ : public TypeHandler_Generic
@@ -72,9 +63,9 @@ class TypeHandler_ : public TypeHandler_Generic
 public:
 	TypeHandler_()
 	{
-		dataSize = sizeof(T);
-		int vs = sizeof(Variant);
-		int ss = sizeof(String);
+		m_dataSize = sizeof(T);
+		TypeZeroArray(m_canCasts);
+		TypeZeroArray(m_castFuncs);
 
 		CANCAST(0);
 		CANCAST(1);
@@ -123,7 +114,7 @@ public:
 #undef CASTFUNC
 
 #define NEW_TH(x) new TypeHandler_<mpl::at<VariantTL, mpl::int_<x> >::type>
-static TypeHandler *s_typeHandlers[Variant::kMaxType] = {
+static Variant::TypeHandler *s_typeHandlers[Variant::kMaxType] = {
 	0,
 	NEW_TH(1),
 	NEW_TH(2),
@@ -136,62 +127,51 @@ static TypeHandler *s_typeHandlers[Variant::kMaxType] = {
 	NEW_TH(9),
 	NEW_TH(10),
 	NEW_TH(11),
+	ScriptValue::getTypeHandler()
 };
-
-void testhandler()
-{
-	TypeHandler *th = new TypeHandler_<int>();
-}
+AX_STATIC_ASSERT(13==Variant::kMaxType);
+#undef NEW_TH
 
 String Variant::toString() const
 {
 	String result;
-	switch (type) {
+	switch (m_type) {
 	case kVoid:
 		break;
 	case kBool:
-		StringUtil::sprintf(result, "%d", boolval);
+		StringUtil::sprintf(result, "%d", bool(*this));
 		break;
 	case kInt:
-		StringUtil::sprintf(result, "%d", intval);
+		StringUtil::sprintf(result, "%d", int(*this));
 		break;
 	case kFloat:
-		StringUtil::sprintf(result, "%f", realval);
+		StringUtil::sprintf(result, "%f", float(*this));
 		break;
 	case kString:
-		result = *str;
-		break;
+		return ref<String>();
 	case kObject:
 		break;
 	case kTable:
 		break;
 	case kVector3:
 		{
-			Vector3 v = *this;
-			return v.toString();
-			break;
+			return ref<Vector3>().toString();
 		}
 	case kColor3:
 		{
-			Color3 v = *this;
-			return v.toString();
-			break;
+			return ref<Color3>().toString();
 		}
 	case kPoint:
 		{
-			Point v = *this;
-			return v.toString();
-			break;
+			return ref<Point>().toString();
 		}
 	case kRect:
 		{
-			Rect v = *this;
-			return v.toString();
-			break;
+			return ref<Rect>().toString();
 		}
 	case kMatrix3x4:
 		{
-			return mtr->toString();
+			return ref<Matrix3x4>().toString();
 		}
 	default:
 		AX_NO_DEFAULT;
@@ -207,16 +187,16 @@ void Variant::fromString(Type t, const char *str)
 	case kVoid:
 		break;
 	case kBool:
-		this->set(atoi(str) ? true : false);
+		*this = (atoi(str) ? true : false);
 		break;
 	case kInt:
-		this->set(atoi(str));
+		*this = (atoi(str));
 		break;
 	case kFloat:
-		this->set(atof(str));
+		*this = float(atof(str));
 		break;
 	case kString:
-		this->set(str);
+		*this = (str);
 		break;
 	case kObject:
 		break;
@@ -226,33 +206,34 @@ void Variant::fromString(Type t, const char *str)
 		{
 			Vector3 v;
 			v.fromString(str);
-			this->set(v);
+			*this = (v);
 			break;
 		}
 	case kColor3:
 		{
 			Color3 v;
 			v.fromString(str);
-			this->set(v);
+			*this = (v);
 			break;
 		}
 	case kPoint:
 		{
 			Point v;
 			v.fromString(str);
-			this->set(v);
+			*this = (v);
 			break;
 		}
 	case kRect:
 		{
-			Rect v; v.fromString(str); this->set(v);
+			Rect v; v.fromString(str);
+			*this = (v);
 			break;
 		}
 	case kMatrix3x4:
 		{
 			Matrix3x4 v;
 			v.fromString(str);
-			this->set(v);
+			*this = v;
 			break;
 		}
 	default:
@@ -262,168 +243,63 @@ void Variant::fromString(Type t, const char *str)
 
 int Variant::getTypeSize(Type t)
 {
-#if 1
-	return s_typeHandlers[t]->dataSize;
-#else
-	switch (t) {
-	case kVoid: return 0;
-	case kBool: return sizeof(bool);
-	case kInt: return sizeof(int);
-	case kFloat: return sizeof(float);
-	case kString: return sizeof(String);
-	case kObject: return sizeof(Object *);
-	case kTable: return sizeof(LuaTable);
-	case kVector3: return sizeof(Vector3);
-	case kColor3: return sizeof(Color3);
-	case kPoint: return sizeof(Point);
-	case kRect: return sizeof(Rect);
-	case kMatrix3x4: return sizeof(Matrix3x4);
-	default: AX_NO_DEFAULT;
-	}
-	return 0;
-#endif
+	return s_typeHandlers[t]->m_dataSize;
 }
 
 bool Variant::canCast(Type fromType, Type toType)
 {
 	if (fromType == toType)
 		return true;
-#if 1
+
 	return s_typeHandlers[fromType]->canCast(toType);
-#else
-	switch (fromType) {
-	case kVoid: return false;
-	case kBool:
-		switch (toType) {
-		case kInt:
-		case kFloat:
-			return true;
-		}
-		return false;
-	case kInt:
-		switch (toType) {
-		case kBool:
-		case kFloat:
-			return true;
-		}
-		return false;
-	case kFloat:
-		switch (toType) {
-		case kBool:
-		case kInt:
-			return true;
-		}
-		return false;
-	case kString:
-	case kObject:
-	case kTable:
-	case kVector3:
-	case kColor3:
-	case kPoint:
-	case kRect:
-	case kMatrix3x4:
-		return false;
-	default: AX_NO_DEFAULT;
-	}
-	return false;
-#endif
 }
 
 bool Variant::rawCast(Type fromType, const void *fromData, Type toType, void *toData)
 {
 	if (!canCast(fromType, toType))
 		return false;
-#if 1
+
 	return s_typeHandlers[fromType]->rawCast(fromData, toType, toData);
-#else
-	switch (fromType) {
-	case kVoid: return false;
-	case kBool:
-		switch (toType) {
-		case kInt:
-			{
-				const bool &from = *(const bool *)fromData;
-				int &to = *(int *)toData;
-				to = from;
-				return true;
-			}
-		case kFloat:
-			{
-				const bool &from = *(const bool *)fromData;
-				float &to = *(float *)toData;
-				to = from;
-				return true;
-			}
-		}
-		return false;
-	case kInt:
-		switch (toType) {
-		case kBool:
-			{
-				const int &from = *(const int *)fromData;
-				bool &to = *(bool *)toData;
-				to = from != 0;
-				return true;
-			}
-		case kFloat:
-			{
-				const int &from = *(const int *)fromData;
-				float &to = *(float *)toData;
-				to = from;
-				return true;
-			}
-		}
-		return false;
-	case kFloat:
-		switch (toType) {
-		case kBool:
-			{
-				const float &from = *(const float *)fromData;
-				bool &to = *(bool *)toData;
-				to = from != 0.0f;
-				return true;
-			}
-		case kInt:
-			{
-				const float &from = *(const float *)fromData;
-				int &to = *(int *)toData;
-				to = from;
-				return true;
-			}
-		}
-		return false;
-	case kString:
-	case kObject:
-	case kTable:
-	case kVector3:
-	case kColor3:
-	case kPoint:
-	case kRect:
-	case kMatrix3x4:
-		return false;
-	default: AX_NO_DEFAULT;
-	}
-	return false;
-#endif
 }
 
 void Variant::construct( Variant::Type t, const void *fromData )
 {
-#if 0
-	type = t;
+	m_type = t;
 	TypeHandler *h = s_typeHandlers[t];
 
 	void *toData = 0;
-	if (h->dataSize > MINIBUF_SIZE) {
-		isMinibuf = false;
-		toData = dataPtr = Malloc(h->dataSize);
+	if (h->m_dataSize > MINIBUF_SIZE) {
+		m_isMinibuf = false;
+		toData = m_voidstar = Malloc(h->m_dataSize);
 	} else {
-		isMinibuf = true;
-		toData = &minibuf;
+		m_isMinibuf = true;
+		toData = m_minibuf;
 	}
 	h->construct(toData, fromData);
-#endif
 }
+
+Variant::TypeHandler * Variant::getTypeHandler() const
+{
+	AX_ASSERT(m_type < kMaxType);
+	return s_typeHandlers[m_type];
+}
+
+void Variant::clear()
+{
+	TypeHandler *handler = getTypeHandler();
+	if (!handler)
+		return;
+
+	void *data = getPtr();
+	handler->destruct(data);
+
+	if (!m_isMinibuf) {
+		Free(m_voidstar);
+	}
+
+	m_type = kVoid;
+}
+
 
 //--------------------------------------------------------------------------
 // class LuaTable
@@ -434,8 +310,7 @@ LuaTable::LuaTable() : m_index(-10000), m_isReading(false), m_isIteratoring(fals
 
 
 LuaTable::LuaTable( const LuaTable &rhs ) : m_index(rhs.m_index), m_isReading(false), m_isIteratoring(false), m_stackTop(0)
-{
-}
+{}
 
 LuaTable::LuaTable(int index)
 	: m_index(index)
@@ -469,7 +344,7 @@ Variant LuaTable::get(const String &n) const
 	lua_rawget(L, m_index);
 	Variant result = xReadStack(L, -1);
 
-	if (result.type != Variant::kTable) {
+	if (result.getType() != Variant::kTable) {
 		lua_pop(L, 1);
 	}
 	return result;
@@ -510,9 +385,9 @@ Color3 LuaTable::toColor() const
 {
 	Color3 result;
 	beginRead();
-	result.r = get("r").toFloat();
-	result.g = get("g").toFloat();
-	result.b = get("b").toFloat();
+	result.r = get("r");
+	result.g = get("g");
+	result.b = get("b");
 	endRead();
 	return result;
 }

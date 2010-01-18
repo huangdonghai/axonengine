@@ -38,6 +38,7 @@ read the license and understand and accept it fully.
 #include "./script/variant.h"
 #include "./script/metainfo.h"
 #include "./script/object.h"
+#include "./script/script_value.h"
 #include "./script/script_system.h"
 #include "./singleton/scriptsystem.h"
 #include "./singleton/classfactory.h"

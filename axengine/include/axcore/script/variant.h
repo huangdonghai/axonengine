@@ -59,20 +59,31 @@ class AX_API Variant
 {
 public:
 	enum Type {
-		kVoid, kBool, kInt, kFloat, kString, kObject, kVector3, kColor3, kPoint, kRect, kMatrix3x4, kTable, kMaxType
+		kVoid, kBool, kInt, kFloat, kString, kObject, kVector3, kColor3, kPoint, kRect, kMatrix3x4, kTable, kScriptValue, kMaxType
 	};
 
 	enum {
-		MINIBUF_SIZE = 4 * sizeof(float)
+		MINIBUF_SIZE = 3 * sizeof(float)
 	};
 
-	Type getType() const { return (Type)type; }
+	class TypeHandler
+	{
+	public:
+		int m_dataSize;
+		virtual bool canCast(Variant::Type toType) = 0;
+		virtual bool rawCast(const void *fromData, Variant::Type toType, void *toData) = 0;
+		virtual void construct(void *ptr, const void *copyfrom) = 0;
+		virtual void construct(void *ptr) = 0;
+		virtual void destruct(void *ptr) = 0;
+	};
+
+	Type getType() const { return (Type)m_type; }
 
 	// constructor
 	Variant();
 	Variant(bool v);
 	Variant(int v);
-	Variant(double v);
+	Variant(float v);
 	Variant(const String &v);
 	Variant(const char *v);
 	Variant(Object *v);
@@ -89,7 +100,6 @@ public:
 	operator bool() const;
 	operator int() const;
 	operator float() const;
-	operator double() const;
 	operator String() const;
 	operator Object*() const;
 	operator Vector3() const;
@@ -100,18 +110,6 @@ public:
 	Variant &operator=(const Variant &v);
 	operator Matrix3x4() const;
 
-	void set(int v);
-	void set(float v);
-	void set(double v);
-	void set(const char *v);
-	void set(const String &v);
-	void set(const Variant &v);
-	void set(Object *v);
-
-	bool toBool() const { return operator bool(); }
-	int toInt() const { return operator int(); }
-	float toFloat() const { return operator float(); }
-
 	String toString() const;
 	void fromString(Type t, const char *str);
 
@@ -120,26 +118,49 @@ public:
 		return variant_cast<Q>(*this);
 	}
 
+	template<class Q>
+	Q& ref() {
+		AX_ASSERT(GetVariantType_<Q>() == m_type);
+		return *(Q *)getPtr();
+	}
+
+	template<class Q>
+	const Q& ref() const {
+		AX_ASSERT(GetVariantType_<Q>() == m_type);
+		return *(const Q *)getPtr();
+	}
+
 	static int getTypeSize(Type t);
 	static bool canCast(Type fromType, Type toType);
 	static bool rawCast(Type fromType, const void *fromData, Type toType, void *toData);
 
 	void construct(Variant::Type t, const void *fromData);
+	void *getPtr() { if (m_isMinibuf) return m_minibuf; else return m_voidstar; }
+	const void *getPtr() const { if (m_isMinibuf) return m_minibuf; else return m_voidstar; }
+	TypeHandler *getTypeHandler() const;
+
+private:
+	template <class Q>
+	Q castHelper() const
+	{
+		Q result;
+		TypeHandler *handler = getTypeHandler();
+		Type toType = GetVariantType_<Q>();
+		if (handler && handler->canCast(toType)) {
+			handler->rawCast(getPtr(), toType, &result);
+		}
+		return result;
+	}
+
 
 	// member variable
 	union {
-		bool boolval;
-		int intval;
-		double realval;
-		Object *obj;
-		String *str;
-		Matrix3x4 *mtr;
-		void *dataPtr;
-		byte_t minibuf[MINIBUF_SIZE];
+		void *m_voidstar;
+		byte_t m_minibuf[MINIBUF_SIZE];
 	};
 
-	int type : 30;
-	int isMinibuf : 1;
+	Type m_type : 30;
+	int m_isMinibuf : 1;
 };
 
 

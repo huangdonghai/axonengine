@@ -867,6 +867,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\axcore\script\script_value.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\axcore\script\sq_binding.cpp"
 				>
 			</File>
@@ -923,6 +927,10 @@
 				</File>
 				<File
 					RelativePath="..\..\..\include\axcore\script\script_system.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\include\axcore\script\script_value.h"
 					>
 				</File>
 				<File

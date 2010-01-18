@@ -297,16 +297,16 @@ int ScriptProp::checkTableKind(Variant &result)
 
 	if (hx && hy && hz) {
 		kind = Variant::kVector3;
-		result.set(Vector3(x,y,z));
+		result = (Vector3(x,y,z));
 	} else if (hx && hy && hwidth && hheight) {
 		kind = Variant::kRect;
-		result.set(Rect(x,y,width,height));
+		result = (Rect(x,y,width,height));
 	} else if (hr && hg && hb) {
 		kind = Variant::kColor3;
-		result.set(Color3(r,g,b));
+		result = (Color3(r,g,b));
 	} else if (hx && hy) {
 		kind = Variant::kPoint;
-		result.set(Point(x,y));
+		result = (Point(x,y));
 	}
 
 	return kind;
@@ -321,7 +321,7 @@ void ScriptProp::initEnumItems()
 		enumItem.beginRead();
 		if (enumItem.getLength() >= 2) {
 			String key = enumItem.get(0).toString();
-			int val = enumItem.get(1).toInt();
+			int val = enumItem.get(1);
 			m_enumItems.push_back(std::make_pair(key, val));
 		}
 		enumItem.endRead();
@@ -354,7 +354,7 @@ void ScriptProp::init()
 		case LUA_TBOOLEAN:
 			AX_ASSURE(kindFromName == Variant::kVoid || kindFromName == Variant::kBool);
 			m_propKind = Variant::kBool;
-			m_defaultValue.set(lua_toboolean(L,-1) ? true : false);
+			m_defaultValue = (lua_toboolean(L,-1) ? true : false);
 			break;
 		case LUA_TNUMBER:
 			if (kindFromName == Variant::kVoid || kindFromName == Variant::kFloat) {
@@ -364,7 +364,7 @@ void ScriptProp::init()
 			} else {
 				Errorf("Why here?");
 			}
-			m_defaultValue.set(lua_tonumber(L,-1));
+			m_defaultValue = float(lua_tonumber(L,-1));
 			break;
 		case LUA_TSTRING:
 			if (kindFromName == Variant::kVoid) {
@@ -374,7 +374,7 @@ void ScriptProp::init()
 			} else {
 				Errorf("Why here?");
 			}
-			m_defaultValue.set(lua_tostring(L,-1));
+			m_defaultValue = (lua_tostring(L,-1));
 			break;
 		case LUA_TTABLE:
 			if (kindFromName == kEnum || kindFromName == kFlag) {
@@ -436,7 +436,7 @@ Variant ScriptProp::getProperty(const Object *obj)
 			result = (Point)result;
 		} else if (m_propKind == Variant::kRect) {
 			result = (Rect)result;
-		} else if (result.type == Variant::kTable) {
+		} else if (result.getType() == Variant::kTable) {
 			result.clear();
 		}
 	}

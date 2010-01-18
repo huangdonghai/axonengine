@@ -227,7 +227,7 @@ Variant xReadStack(lua_State *L, int index)
 		ret = lua_toboolean(L, index) ? true : false;
 		break;
 	case LUA_TNUMBER:
-		ret = Variant(luaL_checknumber(L,index));
+		ret = Variant((float)luaL_checknumber(L,index));
 		break;
 	case LUA_TSTRING:
 		ret = Variant(String(luaL_checkstring( L, index)));
@@ -263,27 +263,27 @@ static void xPushObject(lua_State *L, Object *obj)
 
 void xPushStack(lua_State *L, const Variant &val)
 {
-	switch (val.type) {
+	switch (val.getType()) {
 	case Variant::kBool:
-		lua_pushboolean(L, val.boolval);
+		lua_pushboolean(L, (bool)val);
 		break;
 	case Variant::kInt:
-		lua_pushnumber(L,val.intval);
+		lua_pushnumber(L, (int)val);
 		break;
 	case Variant::kFloat:
-		lua_pushnumber(L,val.realval);
+		lua_pushnumber(L, (float)val);
 		break;
 	case Variant::kString:
-		xPushString(L, *val.str);
+		xPushString(L, (String)val);
 		break;
 	case Variant::kObject:
-		xPushObject(L, val.obj);
+		xPushObject(L, (Object *)val);
 		break;
 	case Variant::kVector3: {
 		lua_newtable(L);
 		int index = lua_gettop(L);
 		LuaTable t(index);
-		Vector3 *v = (Vector3*)val.minibuf;
+		Vector3 *v = (Vector3*)val.getPtr();
 		t.set("x", v->x);
 		t.set("y", v->y);
 		t.set("z", v->z);
@@ -293,7 +293,7 @@ void xPushStack(lua_State *L, const Variant &val)
 		lua_newtable(L);
 		int index = lua_gettop(L);
 		LuaTable t(index);
-		Point *v = (Point*)val.minibuf;
+		Point *v = (Point*)val.getPtr();
 		t.set("x", v->x);
 		t.set("y", v->y);
 		break;
@@ -302,7 +302,7 @@ void xPushStack(lua_State *L, const Variant &val)
 		lua_newtable(L);
 		int index = lua_gettop(L);
 		LuaTable t(index);
-		Rect *v = (Rect*)val.minibuf;
+		Rect *v = (Rect*)val.getPtr();
 		t.set("x", v->x);
 		t.set("y", v->y);
 		t.set("width" , v->width);
@@ -313,7 +313,7 @@ void xPushStack(lua_State *L, const Variant &val)
 		lua_newtable(L);
 		int index = lua_gettop(L);
 		LuaTable t(index);
-		Rgb *v = (Rgb*)val.minibuf;
+		Color3 *v = (Color3*)val.getPtr();
 		t.set("r", v->r/255.0f);
 		t.set("g", v->g/255.0f);
 		t.set("b", v->b/255.0f);
@@ -596,13 +596,10 @@ struct Connection {
 typedef List<Connection> ConnectionSeq;
 typedef Dict<Object*,Dict<String, ConnectionSeq>> Connections;
 
-extern void testhandler();
 ScriptSystem::ScriptSystem()
 {
 	m_isReading = false;
 	m_readTop = 0;
-
-	testhandler();
 }
 
 ScriptSystem::~ScriptSystem()
@@ -798,7 +795,7 @@ bool ScriptSystem::invokeLuaScoped(const char *text, Axon::VariantSeq &stack, in
 		} else {
 			lua_getglobal(L,objectname.c_str());
 			Variant variant = xReadStack(L,-1);
-			if (Variant::kTable == variant.type) {
+			if (Variant::kTable == variant.getType()) {
 				xPushString(L, membername);
 				lua_gettable(L, -2);
 				lua_pushvalue(L, -2);
@@ -829,7 +826,7 @@ String ScriptSystem::generateLuaString(const String &text)
 		int id = lua_gettop(L);
 		lua_getglobal(L,text.c_str());
 		Variant variant = xReadStack(L,-1);
-		if (variant.type == Variant::kString)
+		if (variant.getType() == Variant::kString)
 			result = variant.toString();
 		lua_pop(L,1);
 		id = lua_gettop(L);
@@ -844,17 +841,17 @@ String ScriptSystem::generateLuaString(const String &text)
 		id = lua_gettop(L);
 		if (obj){								
 			Variant var = obj->getProperty(membername.c_str());
-			if (var.type == Variant::kString)
+			if (var.getType() == Variant::kString)
 				result = var;						
 		}else{
 			lua_getglobal(L,objectname.c_str());
 			Variant variant = xReadStack(L,-1);
 			
-			if (variant.type == Variant::kTable){
+			if (variant.getType() == Variant::kTable){
 				xPushString(L, membername);
 				lua_gettable(L, -2);
 				Variant res = xReadStack(L,-1);
-				if (res.type == Variant::kString)
+				if (res.getType() == Variant::kString)
 					result = res.toString();
 				lua_pop(L,1);
 			}

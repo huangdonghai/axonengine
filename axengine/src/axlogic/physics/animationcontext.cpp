@@ -149,8 +149,8 @@ AX_BEGIN_NAMESPACE
 
 				Variant k, v;
 				while (animations.nextIterator(k,v)) {
-					AX_ASSURE(k.type == Variant::kString);
-					AX_ASSURE(v.type == Variant::kString);
+					AX_ASSURE(k.getType() == Variant::kString);
+					AX_ASSURE(v.getType() == Variant::kString);
 
 					// check duplicated
 					AX_ASSURE(m_animDict.find(k.toString()) == m_animDict.end())
