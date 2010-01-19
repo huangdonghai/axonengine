@@ -21,71 +21,71 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-	template< class T >
-	struct Enum {
-		typedef typename T::Type enum_type;
+template< class T >
+struct Enum {
+	typedef typename T::Type enum_type;
 
-		int e;
+	int e;
 
-		Enum();
-		Enum(T t);
-		Enum(int t);
-		~Enum();
+	Enum();
+	Enum(T t);
+	Enum(int t);
+	~Enum();
 
-		Enum &operator=(enum_type t);
-		Enum &operator=(int t);
-	};
+	Enum &operator=(enum_type t);
+	Enum &operator=(int t);
+};
 
-	template<class T>
-	Enum<T>::Enum() {}
+template<class T>
+Enum<T>::Enum() {}
 
-	template<class T>
-	Enum<T>::Enum(T t) {
-		e = t;
-	}
+template<class T>
+Enum<T>::Enum(T t) {
+	e = t;
+}
 
-	template<class T>
-	Enum<T>::Enum(int t) {
-		e = (T)t;
-	}
+template<class T>
+Enum<T>::Enum(int t) {
+	e = (T)t;
+}
 
-	template<class T>
-	Enum<T>::~Enum() {}
+template<class T>
+Enum<T>::~Enum() {}
 
-	template<class T>
-	Enum<T>& Enum<T>::operator=(enum_type t) {
-		e = t;
-		return *this;
-	}
+template<class T>
+Enum<T>& Enum<T>::operator=(enum_type t) {
+	e = t;
+	return *this;
+}
 
-	template<class T>
-	Enum<T>& Enum<T>::operator=(int t) {
-		e = t;
-		return *this;
-	}
+template<class T>
+Enum<T>& Enum<T>::operator=(int t) {
+	e = t;
+	return *this;
+}
 
-	template< class E >
-	class Flags_ {
-	public:
-		Flags_() {}
-		Flags_(int i) : m_data(i) {}
-		~Flags_() {}
+template< class E >
+class Flags_ {
+public:
+	Flags_() {}
+	Flags_(int i) : m_data(i) {}
+	~Flags_() {}
 
-		void set(int e) { m_data |= e; }
-		void set(int e, bool f) { if (f) set(e); else unset(e); }
-		void unset(int e) { m_data &= ~e; }
-		void setAll() { m_data = -1; }
-		void unsetAll() { m_data = 0; }
-		bool isSet(E e) const { return (m_data&e)!= 0; }
-		bool isntSet(E e) const { return !isSet(e); }
-		bool isSetAny(int e) const { return (m_data & e) != 0; }
-		bool isSetAll(int e) const { return (m_data & e) == e; }
+	void set(int e) { m_data |= e; }
+	void set(int e, bool f) { if (f) set(e); else unset(e); }
+	void unset(int e) { m_data &= ~e; }
+	void setAll() { m_data = -1; }
+	void unsetAll() { m_data = 0; }
+	bool isSet(E e) const { return (m_data&e)!= 0; }
+	bool isntSet(E e) const { return !isSet(e); }
+	bool isSetAny(int e) const { return (m_data & e) != 0; }
+	bool isSetAll(int e) const { return (m_data & e) == e; }
 
-		operator int() const { return m_data; }
+	operator int() const { return m_data; }
 
-	private:
-		int m_data;
-	};
+private:
+	int m_data;
+};
 
 AX_END_NAMESPACE
 

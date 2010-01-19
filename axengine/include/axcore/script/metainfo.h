@@ -9,15 +9,29 @@ enum {
 
 struct Argument
 {
-	Argument(Variant::Type t = Variant::kVoid, const void *d = 0) : typeId(t), data(d) {}
-	Variant::Type typeId;
+	Argument(Variant::TypeId t = Variant::kVoid, const void *d = 0) : typeId(t), data(d) {}
+	Variant::TypeId typeId;
 	const void *data;
 };
 
 struct ReturnArgument
 {
-	ReturnArgument(Variant::Type t = Variant::kVoid, void *d = 0) : typeId(t), data(d) {}
-	Variant::Type typeId;
+	ReturnArgument(Variant::TypeId t = Variant::kVoid, void *d = 0) : typeId(t), data(d) {}
+
+	Variant::TypeId typeId;
+	void *data;
+};
+
+struct Result : Noncopyable
+{
+	Result(Variant::TypeId t = Variant::kVoid, void *d = 0,
+		bool _needFree = false, bool _needDestruct = false)
+		: typeId(t), data(d), needFree(_needFree), needDesturct(_needDestruct)
+	{}
+
+	Variant::TypeId typeId : 30;
+	bool needFree : 1;
+	bool needDesturct : 1;
 	void *data;
 };
 
@@ -61,11 +75,11 @@ public:
 	Type getType() const { return m_type; }
 	const char *getName() const { return m_name; }
 	int argc() const { return m_argc; }
-	Variant::Type getPropType() const { return m_propType; }
+	Variant::TypeId getPropType() const { return m_propType; }
 	int getPropKind() const { return m_propKind; }
 	const EnumItems &getEnumItems() const { return m_enumItems; }
-	const Variant::Type *getArgsType() const { return m_argsType; }
-	Variant::Type getReturnType() const { return m_returnType; }
+	const Variant::TypeId *getArgsType() const { return m_argsType; }
+	Variant::TypeId getReturnType() const { return m_returnType; }
 
 	// method
 	virtual int invoke(Object *obj, VariantSeq &stack) { AX_ASSERT(0); return 0;}
@@ -81,10 +95,10 @@ public:
 	virtual bool setProperty(Object *obj, const void *argv) { return false; }
 	virtual bool resetProperty(Object *obj) { return false; }
 
-	static Variant::Type kindToType(int k)
+	static Variant::TypeId kindToType(int k)
 	{
 		if (k < Variant::kMaxType) {
-			return Variant::Type(k);
+			return Variant::TypeId(k);
 		}
 		switch (k) {
 		case kEnum: case kFlag: return Variant::kInt;
@@ -99,12 +113,12 @@ protected:
 
 	// for method
 	int m_argc;
-	Variant::Type m_returnType;
-	Variant::Type m_argsType[AX_MAX_ARGS];
+	Variant::TypeId m_returnType;
+	Variant::TypeId m_argsType[AX_MAX_ARGS];
 	ScriptValue m_scriptClosure;
 
 	// for property
-	Variant::Type m_propType;
+	Variant::TypeId m_propType;
 	int m_propKind;
 	EnumItems m_enumItems;
 };
@@ -228,8 +242,8 @@ Property_<T,GetType,SetType>::Property_(const char *name, GetFunc getfunc, SetFu
 	, m_getFunc(getfunc)
 	, m_setFunc(setfunc)
 {
-	Variant::Type getTypeId = GetVariantType_<remove_const_reference<GetType>::type>();
-	Variant::Type setTypeId = GetVariantType_<remove_const_reference<SetType>::type>();
+	Variant::TypeId getTypeId = GetVariantType_<remove_const_reference<GetType>::type>();
+	Variant::TypeId setTypeId = GetVariantType_<remove_const_reference<SetType>::type>();
 	AX_ASSERT(getTypeId == setTypeId);
 	m_propType = getTypeId;
 }
@@ -732,9 +746,9 @@ public:
 	const char *getName() const;
 	const MemberSeq &getMembers() const;
 
-	bool invokeMethod(Object *obj, const char *methodName, ReturnArgument ret, Argument arg0, Argument arg1, Argument arg2, Argument arg3, Argument arg4);
-	bool getProperty(Object *obj, const char *propname, ReturnArgument ret);
-	bool setProperty(Object *obj, const char *propname, Argument arg);
+	bool invokeMethod(Object *obj, const char *methodName, const ReturnArgument &ret, const Argument &arg0, const Argument &arg1, const Argument &arg2, const Argument &arg3, const Argument &arg4);
+	bool getProperty(Object *obj, const char *propname, const ReturnArgument & ret);
+	bool setProperty(Object *obj, const char *propname, const Argument & arg);
 
 	template <class Rt>
 	bool getProperty_(Object *obj, const char *propname, Rt &ret);

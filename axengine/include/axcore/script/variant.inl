@@ -37,13 +37,17 @@ inline Variant::Variant(const Color3 &v)
 { init(kColor3, &v); }
 
 inline Variant::Variant(const Matrix &v)
-{ init(kMatrix3x4, &v); }
+{ init(kMatrix, &v); }
 
 inline Variant::Variant(const Variant &v)
-{ init(v.m_type, v.getPtr()); }
+{ init(v.m_type, v.getPointer()); }
 
 inline Variant::Variant(const LuaTable &rhs)
 { init(kTable, &rhs); }
+
+
+inline Variant::Variant( TypeId typeId )
+{ init(typeId, 0); }
 
 inline Variant::~Variant()
 { clear(); }
@@ -100,7 +104,7 @@ inline Variant::operator Object*() const
 
 inline Variant &Variant::operator=(const Variant &v) {
 	clear();
-	init(v.m_type, v.getPtr());
+	init(v.m_type, v.getPointer());
 	return *this;
 }
 

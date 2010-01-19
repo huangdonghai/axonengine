@@ -2,7 +2,9 @@
 
 AX_BEGIN_NAMESPACE
 
-bool MetaInfo::invokeMethod(Object *obj, const char *methodName, ReturnArgument ret, Argument arg0, Argument arg1, Argument arg2, Argument arg3, Argument arg4)
+bool MetaInfo::invokeMethod(Object *obj, const char *methodName, const ReturnArgument &ret,
+							const Argument &arg0, const Argument &arg1, const Argument &arg2,
+							const Argument &arg3, const Argument &arg4)
 {
 	Member *member = findMember(methodName);
 
@@ -13,8 +15,8 @@ bool MetaInfo::invokeMethod(Object *obj, const char *methodName, ReturnArgument 
 		return false;
 
 	// check types
-	Variant::Type needReturnType = member->getReturnType();
-	ReturnArgument realRet = ret;
+	Variant::TypeId needReturnType = member->getReturnType();
+	Result realRet(ret.typeId, ret.data);
 	bool castRet = false;
 	if (ret.typeId != needReturnType) {
 		if (needReturnType != Variant::kVoid && ret.typeId != Variant::kVoid) {
@@ -23,28 +25,33 @@ bool MetaInfo::invokeMethod(Object *obj, const char *methodName, ReturnArgument 
 			else {
 				realRet.typeId = needReturnType;
 				realRet.data = Alloca(Variant::getTypeSize(realRet.typeId));
+				realRet.needDesturct = true;
 				castRet = true;
 			}
 		}
 	}
 
-	Argument *args[] = { &arg0, &arg1, &arg2, &arg3, &arg4 };
+	Argument args[] = { arg0, arg1, arg2, arg3, arg4 };
 
-	const Variant::Type *needTypeIds = member->getArgsType();
+	Result realArg[AX_MAX_ARGS];
+	const Variant::TypeId *needTypeIds = member->getArgsType();
 	for (int i = 0; i <member->argc(); i++) {
-		if (args[i]->typeId == needTypeIds[i])
+		if (args[i].typeId == needTypeIds[i])
 			continue;
 
-		if (!Variant::canCast(args[i]->typeId, needTypeIds[i]))
+		if (!Variant::canCast(args[i].typeId, needTypeIds[i]))
 			return false;
 
 		void *tempData = Alloca(Variant::getTypeSize(needTypeIds[i]));
-		Argument tempArg(needTypeIds[i], tempData);
-		bool casted = Variant::rawCast(args[i]->typeId, args[i]->data, tempArg.typeId, tempData);
+		realArg[i].typeId = needTypeIds[i];
+		realArg[i].data = tempData;
+		realArg[i].needDesturct = true;
+		bool casted = Variant::rawCast(args[i].typeId, args[i].data, realArg[i].typeId, tempData);
 		if (!casted)
 			return false;
 
-		*args[i] = tempArg;
+		args[i].typeId = realArg[i].typeId;
+		args[i].data = realArg[i].data;
 	}
 
 	const void *argDatas[] = {
@@ -61,7 +68,7 @@ bool MetaInfo::invokeMethod(Object *obj, const char *methodName, ReturnArgument 
 	return true;
 }
 
-bool MetaInfo::getProperty( Object *obj, const char *propname, ReturnArgument ret )
+bool MetaInfo::getProperty( Object *obj, const char *propname, const ReturnArgument &ret )
 {
 	Member *member = findMember(propname);
 
@@ -71,8 +78,8 @@ bool MetaInfo::getProperty( Object *obj, const char *propname, ReturnArgument re
 	if (member->getType() != Member::kPropertyType)
 		return false;
 
-	Variant::Type needReturnType = member->getPropType();
-	ReturnArgument realRet = ret;
+	Variant::TypeId needReturnType = member->getPropType();
+	Result realRet(ret.typeId, ret.data);
 	bool castRet = false;
 	if (ret.typeId != needReturnType) {
 		if (needReturnType != Variant::kVoid && ret.typeId != Variant::kVoid) {
@@ -81,6 +88,7 @@ bool MetaInfo::getProperty( Object *obj, const char *propname, ReturnArgument re
 			else {
 				realRet.typeId = needReturnType;
 				realRet.data = Alloca(Variant::getTypeSize(realRet.typeId));
+				realRet.needDesturct = true;
 				castRet = true;
 			}
 		}
@@ -94,7 +102,7 @@ bool MetaInfo::getProperty( Object *obj, const char *propname, ReturnArgument re
 	return true;
 }
 
-bool MetaInfo::setProperty( Object *obj, const char *propname, Argument arg )
+bool MetaInfo::setProperty( Object *obj, const char *propname, const Argument &arg )
 {
 	Member *member = findMember(propname);
 
@@ -104,7 +112,7 @@ bool MetaInfo::setProperty( Object *obj, const char *propname, Argument arg )
 	if (member->getType() != Member::kPropertyType)
 		return false;
 
-	Variant::Type propTypeId = member->getPropType();
+	Variant::TypeId propTypeId = member->getPropType();
 	Argument realArg = arg;
 
 	if (realArg.typeId != propTypeId) {
@@ -436,7 +444,7 @@ Variant ScriptProp::getProperty(const Object *obj)
 			result = (Point)result;
 		} else if (m_propKind == Variant::kRect) {
 			result = (Rect)result;
-		} else if (result.getType() == Variant::kTable) {
+		} else if (result.getTypeId() == Variant::kTable) {
 			result.clear();
 		}
 	}

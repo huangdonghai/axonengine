@@ -831,6 +831,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\include\axcore\template\noncopyable.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\include\axcore\template\nullptr.h"
 				>
 			</File>

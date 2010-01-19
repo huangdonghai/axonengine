@@ -147,8 +147,8 @@ private:
 	typedef Dict<String,ClassInfo*>	ClassInfoDict;
 	ClassInfoDict m_classInfoReg;
 
-	typedef Dict<const char*, MetaInfo*, hash_cstr, equal_cstr> TypeInfoDict;
-	TypeInfoDict m_typeInfoReg;
+	typedef Dict<const char*, MetaInfo*, hash_cstr, equal_cstr> MetaInfoDict;
+	MetaInfoDict m_typeInfoReg;
 
 	typedef Dict<String,int> StringIntDict;
 	StringIntDict m_objectNameGen;

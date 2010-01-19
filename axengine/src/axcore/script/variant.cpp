@@ -37,12 +37,12 @@ struct CastHelper_<T, Q, mpl::int_<0>> {
 class TypeHandler_Generic : public Variant::TypeHandler
 {
 public:
-	virtual bool canCast(Variant::Type toType)
+	virtual bool canCast(Variant::TypeId toType)
 	{
 		return m_canCasts[toType];
 	}
 
-	virtual bool rawCast(const void *fromData, Variant::Type toType, void *toData)
+	virtual bool rawCast(const void *fromData, Variant::TypeId toType, void *toData)
 	{
 		return m_castFuncs[toType](fromData, toData);
 	}
@@ -169,7 +169,7 @@ String Variant::toString() const
 		{
 			return ref<Rect>().toString();
 		}
-	case kMatrix3x4:
+	case kMatrix:
 		{
 			return ref<Matrix>().toString();
 		}
@@ -179,7 +179,7 @@ String Variant::toString() const
 	return result;
 }
 
-void Variant::fromString(Type t, const char *str)
+void Variant::fromString(TypeId t, const char *str)
 {
 	clear();
 
@@ -229,7 +229,7 @@ void Variant::fromString(Type t, const char *str)
 			*this = (v);
 			break;
 		}
-	case kMatrix3x4:
+	case kMatrix:
 		{
 			Matrix v;
 			v.fromString(str);
@@ -241,12 +241,12 @@ void Variant::fromString(Type t, const char *str)
 	}
 }
 
-int Variant::getTypeSize(Type t)
+int Variant::getTypeSize(TypeId t)
 {
 	return s_typeHandlers[t]->m_dataSize;
 }
 
-bool Variant::canCast(Type fromType, Type toType)
+bool Variant::canCast(TypeId fromType, TypeId toType)
 {
 	if (fromType == toType)
 		return true;
@@ -254,7 +254,7 @@ bool Variant::canCast(Type fromType, Type toType)
 	return s_typeHandlers[fromType]->canCast(toType);
 }
 
-bool Variant::rawCast(Type fromType, const void *fromData, Type toType, void *toData)
+bool Variant::rawCast(TypeId fromType, const void *fromData, TypeId toType, void *toData)
 {
 	if (!canCast(fromType, toType))
 		return false;
@@ -262,7 +262,7 @@ bool Variant::rawCast(Type fromType, const void *fromData, Type toType, void *to
 	return s_typeHandlers[fromType]->rawCast(fromData, toType, toData);
 }
 
-void Variant::init( Variant::Type t, const void *fromData )
+void Variant::init(Variant::TypeId t, const void *fromData)
 {
 	m_type = t;
 	TypeHandler *h = s_typeHandlers[t];
@@ -275,10 +275,14 @@ void Variant::init( Variant::Type t, const void *fromData )
 		m_isMinibuf = true;
 		toData = m_minibuf;
 	}
-	h->construct(toData, fromData);
+
+	if (fromData)
+		h->construct(toData, fromData);
+	else
+		h->construct(toData);
 }
 
-Variant::TypeHandler * Variant::getTypeHandler() const
+Variant::TypeHandler * Variant::getHandler() const
 {
 	AX_ASSERT(m_type < kMaxType);
 	return s_typeHandlers[m_type];
@@ -286,11 +290,11 @@ Variant::TypeHandler * Variant::getTypeHandler() const
 
 void Variant::clear()
 {
-	TypeHandler *handler = getTypeHandler();
+	TypeHandler *handler = getHandler();
 	if (!handler)
 		return;
 
-	void *data = getPtr();
+	void *data = getPointer();
 	handler->destruct(data);
 
 	if (!m_isMinibuf) {
@@ -300,6 +304,11 @@ void Variant::clear()
 	m_type = kVoid;
 }
 
+Variant::TypeHandler * Variant::getHandler(Variant::TypeId typeId)
+{
+	AX_ASSERT(typeId >= 0 && typeId < kMaxType);
+	return s_typeHandlers[typeId];
+}
 
 //--------------------------------------------------------------------------
 // class LuaTable
@@ -344,7 +353,7 @@ Variant LuaTable::get(const String &n) const
 	lua_rawget(L, m_index);
 	Variant result = xReadStack(L, -1);
 
-	if (result.getType() != Variant::kTable) {
+	if (result.getTypeId() != Variant::kTable) {
 		lua_pop(L, 1);
 	}
 	return result;

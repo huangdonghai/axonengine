@@ -12,12 +12,12 @@ namespace {
 			m_dataSize = sizeof(ScriptValue);
 		}
 
-		virtual bool canCast(Variant::Type toType)
+		virtual bool canCast(Variant::TypeId toType)
 		{
 			return true;
 		}
 
-		virtual bool rawCast(const void *fromData, Variant::Type toType, void *toData)
+		virtual bool rawCast(const void *fromData, Variant::TypeId toType, void *toData)
 		{
 			const ScriptValue &from = *reinterpret_cast<const ScriptValue*>(fromData);
 			return from.rawCast(toType, toData);
@@ -49,7 +49,7 @@ ScriptValue::~ScriptValue()
 	SafeDelete(m_d);
 }
 
-bool ScriptValue::rawCast(Variant::Type toType, void *toData) const
+bool ScriptValue::rawCast(Variant::TypeId toType, void *toData) const
 {
 	switch (toType) {
 	case Variant::kVoid:
@@ -71,7 +71,7 @@ bool ScriptValue::rawCast(Variant::Type toType, void *toData) const
 	case Variant::kColor3:
 	case Variant::kPoint:
 	case Variant::kRect:
-	case Variant::kMatrix3x4:
+	case Variant::kMatrix:
 	case Variant::kScriptValue:
 	default:
 		return false;

@@ -14,15 +14,16 @@ read the license and understand and accept it fully.
 #define AX_STATICASSERT_H
 
 AX_BEGIN_NAMESPACE
-	// HP aCC cannot deal with missing names for template value parameters
-	template <bool x> struct STATIC_ASSERTION_FAILURE;
 
-	template <> struct STATIC_ASSERTION_FAILURE<true> { enum { value = 1 }; };
+// HP aCC cannot deal with missing names for template value parameters
+template <bool x> struct STATIC_ASSERTION_FAILURE;
 
-	// HP aCC cannot deal with missing names for template value parameters
-	template<int x> struct static_assert_test{};
+template <> struct STATIC_ASSERTION_FAILURE<true> { enum { value = 1 }; };
 
-}
+// HP aCC cannot deal with missing names for template value parameters
+template<int x> struct static_assert_test{};
+
+AX_END_NAMESPACE
 
 #define AX_STATIC_ASSERT(B) \
 	typedef ::Axon::static_assert_test<\

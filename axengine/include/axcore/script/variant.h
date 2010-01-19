@@ -57,27 +57,30 @@ public:
 
 class AX_API Variant
 {
-public:
-	enum Type {
-		kVoid, kBool, kInt, kFloat, kString, kObject, kVector3, kColor3, kPoint, kRect, kMatrix3x4, kTable, kScriptValue, kMaxType
-	};
-
 	enum {
 		MINIBUF_SIZE = 3 * sizeof(float)
+	};
+
+public:
+	enum TypeId {
+		kVoid, kBool, kInt, kFloat, kString, kObject, kVector3, kColor3, kPoint, kRect, kMatrix, kTable, kScriptValue, kMaxType
 	};
 
 	class TypeHandler
 	{
 	public:
 		int m_dataSize;
-		virtual bool canCast(Variant::Type toType) = 0;
-		virtual bool rawCast(const void *fromData, Variant::Type toType, void *toData) = 0;
+		virtual bool canCast(Variant::TypeId toType) = 0;
+		virtual bool rawCast(const void *fromData, Variant::TypeId toType, void *toData) = 0;
 		virtual void construct(void *ptr, const void *copyfrom) = 0;
 		virtual void construct(void *ptr) = 0;
 		virtual void destruct(void *ptr) = 0;
 	};
 
-	Type getType() const { return (Type)m_type; }
+	// info get
+	TypeId getTypeId() const { return (TypeId)m_type; }
+	void *getPointer() { if (m_isMinibuf) return m_minibuf; else return m_voidstar; }
+	const void *getPointer() const { if (m_isMinibuf) return m_minibuf; else return m_voidstar; }
 
 	// constructor
 	Variant();
@@ -94,6 +97,7 @@ public:
 	Variant(const Variant &v);
 	Variant(const LuaTable &table);
 	Variant(const Matrix &matrix);
+	explicit Variant(TypeId typeId);
 	~Variant();
 
 	void clear();
@@ -111,44 +115,48 @@ public:
 	operator Matrix() const;
 
 	String toString() const;
-	void fromString(Type t, const char *str);
+	void fromString(TypeId t, const char *str);
 
 	template<class Q>
-	Q cast() {
+	Q cast()
+	{
 		return variant_cast<Q>(*this);
 	}
 
 	template<class Q>
-	Q& ref() {
+	Q& ref()
+	{
 		AX_ASSERT(GetVariantType_<Q>() == m_type);
-		return *(Q *)getPtr();
+		return *(Q *)getPointer();
 	}
 
 	template<class Q>
 	const Q& ref() const {
 		AX_ASSERT(GetVariantType_<Q>() == m_type);
-		return *(const Q *)getPtr();
+		return *(const Q *)getPointer();
 	}
 
-	static int getTypeSize(Type t);
-	static bool canCast(Type fromType, Type toType);
-	static bool rawCast(Type fromType, const void *fromData, Type toType, void *toData);
+	static int getTypeSize(TypeId t);
+	static bool canCast(TypeId fromType, TypeId toType);
+	static bool rawCast(TypeId fromType, const void *fromData, TypeId toType, void *toData);
+	static void construct(TypeId typeId, void *ptr, const void *copyfrom);
+	static void construct(TypeId typeId, void *ptr);
+	static void destruct(TypeId typeId, void *ptr);
 
 protected:
-	void init(Variant::Type t, const void *fromData);
-	void *getPtr() { if (m_isMinibuf) return m_minibuf; else return m_voidstar; }
-	const void *getPtr() const { if (m_isMinibuf) return m_minibuf; else return m_voidstar; }
-	TypeHandler *getTypeHandler() const;
+	void init(Variant::TypeId t, const void *fromData);
+	TypeHandler *getHandler() const;
+	static TypeHandler *getHandler(Variant::TypeId typeId);
 
 private:
 	template <class Q>
 	Q castHelper() const
 	{
 		Q result;
-		TypeHandler *handler = getTypeHandler();
-		Type toType = GetVariantType_<Q>();
+		TypeHandler *handler = getHandler();
+		TypeId toType = GetVariantType_<Q>();
 		if (handler && handler->canCast(toType)) {
-			handler->rawCast(getPtr(), toType, &result);
+			handler->rawCast(getPointer(), toType, &result);
 		}
 		return result;
 	}
@@ -160,76 +168,96 @@ private:
 		byte_t m_minibuf[MINIBUF_SIZE];
 	};
 
-	Type m_type : 30;
+	TypeId m_type : 30;
 	int m_isMinibuf : 1;
 };
 
+inline void Variant::construct(TypeId type, void *ptr, const void *copyfrom)
+{
+	TypeHandler *handler = getHandler(type);
+	AX_ASSERT(handler);
+	handler->construct(ptr, copyfrom);
+}
+
+inline void Variant::construct(TypeId type, void *ptr)
+{
+	TypeHandler *handler = getHandler(type);
+	AX_ASSERT(handler);
+	handler->construct(ptr);
+}
+
+inline void Variant::destruct(TypeId type, void *ptr)
+{
+	TypeHandler *handler = getHandler(type);
+	AX_ASSERT(handler);
+	handler->destruct(ptr);
+}
 
 typedef Sequence<Variant> VariantSeq;
 
 template< typename T >
-inline Variant::Type GetVariantType_() {
+inline Variant::TypeId GetVariantType_() {
 	// must be specialized, or raise a static error
 	AX_STATIC_ASSERT(0);
 }
 
 template<>
-inline Variant::Type GetVariantType_<void>() {
+inline Variant::TypeId GetVariantType_<void>() {
 	return Variant::kVoid;
 }
 
 template<>
-inline Variant::Type GetVariantType_<int>() {
+inline Variant::TypeId GetVariantType_<int>() {
 	return Variant::kInt;
 }
 
 template<>
-inline Variant::Type GetVariantType_<bool>() {
+inline Variant::TypeId GetVariantType_<bool>() {
 	return Variant::kBool;
 }
 
 template<>
-inline Variant::Type GetVariantType_<float>() {
+inline Variant::TypeId GetVariantType_<float>() {
 	return Variant::kFloat;
 }
 
 template<>
-inline Variant::Type GetVariantType_<String>() {
+inline Variant::TypeId GetVariantType_<String>() {
 	return Variant::kString;
 }
 
 template<>
-inline Variant::Type GetVariantType_<Vector3>() {
+inline Variant::TypeId GetVariantType_<Vector3>() {
 	return Variant::kVector3;
 }
 
 template<>
-inline Variant::Type GetVariantType_<Color3>() {
+inline Variant::TypeId GetVariantType_<Color3>() {
 	return Variant::kColor3;
 }
 
 template<>
-inline Variant::Type GetVariantType_<Point>() {
+inline Variant::TypeId GetVariantType_<Point>() {
 	return Variant::kPoint;
 }
 
 template<>
-inline Variant::Type GetVariantType_<Rect>() {
+inline Variant::TypeId GetVariantType_<Rect>() {
 	return Variant::kRect;
 }
 
 template<>
-inline Variant::Type GetVariantType_<Object*>() {
+inline Variant::TypeId GetVariantType_<Object*>() {
 	return Variant::kObject;
 }
 
 template<>
-inline Variant::Type GetVariantType_<Matrix>() {
-	return Variant::kMatrix3x4;
+inline Variant::TypeId GetVariantType_<Matrix>() {
+	return Variant::kMatrix;
 }
 
 template<>
-inline Variant::Type GetVariantType_<LuaTable>() {
+inline Variant::TypeId GetVariantType_<LuaTable>() {
 	return Variant::kTable;
 }
 

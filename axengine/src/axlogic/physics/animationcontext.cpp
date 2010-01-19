@@ -149,8 +149,8 @@ void AnimationContext::initFromLua(const String &luaobj)
 
 			Variant k, v;
 			while (animations.nextIterator(k,v)) {
-				AX_ASSURE(k.getType() == Variant::kString);
-				AX_ASSURE(v.getType() == Variant::kString);
+				AX_ASSURE(k.getTypeId() == Variant::kString);
+				AX_ASSURE(v.getTypeId() == Variant::kString);
 
 				// check duplicated
 				AX_ASSURE(m_animDict.find(k.toString()) == m_animDict.end())

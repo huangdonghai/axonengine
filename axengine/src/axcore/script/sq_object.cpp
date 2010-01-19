@@ -2,17 +2,10 @@
 
 AX_BEGIN_NAMESPACE
 
-// because squirrel don't support upvalues link lua, so we need register meta
-// method to class
-int axCallMetamethod(HSQUIRRELVM v)
-{
-	StackHandler sa(v);
-	return sa.Return(0);
-}
-
-extern int ScriptMetacall(void *vm, Member *member)
+int ScriptMetacall(void *vm, Member *member)
 {
 	HSQUIRRELVM v = static_cast<HSQUIRRELVM>(vm);
+	_CHECK_SELF(ObjectStar, Object_c);
 
 	return 0;
 }
@@ -41,18 +34,17 @@ _MEMBER_FUNCTION_IMPL(Object_c, _get)
 	if (!member) return SQ_ERROR;
 
 	if (member->isProperty()) {
-		Variant::Type propType = member->getPropType();
-		ReturnArgument retarg(propType, Alloca(Variant::getTypeSize(propType)));
+		Variant::TypeId propType = member->getPropType();
+		Variant arg(propType);
 
-		bool success = member->getProperty(obj, retarg.data);
+		bool success = member->getProperty(obj, arg.getPointer());
 		if (!success)
 			return SQ_ERROR;
 
-		push(v, propType, retarg.data);
-		return 1;
+		return sa.retRawData(Argument(arg.getTypeId(), arg.getPointer()));
 	}
 
-	return 0;
+	return SQ_ERROR;
 //	return sa.Return(member->m_scriptClosure);
 }
 
@@ -67,15 +59,31 @@ _MEMBER_FUNCTION_IMPL(Object_c, _set)
 
 	if (!member || !member->isProperty()) return SQ_ERROR;
 
-	Variant::Type propType = member->getPropType();
-	ReturnArgument retarg(propType, Alloca(Variant::getTypeSize(propType)));
+	Variant::TypeId propType = member->getPropType();
+	Result value;
+	sa.getRawData(3, value);
 
-	bool success = member->getProperty(obj, retarg.data);
-	if (!success)
+	// type is matched
+	if (value.typeId == propType) {
+		bool success = member->setProperty(obj, value.data);
+		return success ? 0 : SQ_ERROR;
+	}
+
+	Variant castTo(propType);
+	bool success = Variant::rawCast(value.typeId, value.data, propType, castTo.getPointer());
+	if (!success) {
 		return SQ_ERROR;
+	}
 
-	push(v, propType, retarg.data);
-	return 1;
+	success = member->setProperty(obj, castTo.getPointer());
+
+	return success ? 0 : SQ_ERROR;
 }
+
+_BEGIN_CLASS(Object_c)
+_MEMBER_FUNCTION(Object_c,constructor,-1,_SC("."))
+_MEMBER_FUNCTION(Object_c,_set,3,_SC("xs|n"))
+_MEMBER_FUNCTION(Object_c,_get,2,_SC("xs|n"))
+_END_CLASS(Object_c)
 
 AX_END_NAMESPACE

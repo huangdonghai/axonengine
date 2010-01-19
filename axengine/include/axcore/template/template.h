@@ -37,6 +37,7 @@ read the license and understand and accept it fully.
 #ifndef AX_TEMPLATE_H
 #define AX_TEMPLATE_H
 
+#include "noncopyable.h"
 #include "link.h"
 #include "enum.h"
 #include "sharedptr.h"

@@ -11,7 +11,7 @@ struct ScriptClassMemberDecl  {
 };
 
 struct SquirrelClassDecl  {
-	const Variant::Type typeId;
+	const Variant::TypeId typeId;
 	const SQChar *name;
 	const SQChar *base;
 	const ScriptClassMemberDecl *members;
@@ -110,7 +110,7 @@ struct SquirrelClassDecl __##classname##_decl = {  \
 	SquirrelObject new_##classname(HSQUIRRELVM v, cppclass &quat);
 
 #define _IMPL_NATIVE_CONSTRUCTION(classname,cppclass) \
-static Variant::Type classname##_getId() \
+static Variant::TypeId classname##_getId() \
 { \
 	return GetVariantType_<cppclass>(); \
 } \

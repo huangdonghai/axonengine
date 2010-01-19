@@ -263,7 +263,7 @@ static void xPushObject(lua_State *L, Object *obj)
 
 void xPushStack(lua_State *L, const Variant &val)
 {
-	switch (val.getType()) {
+	switch (val.getTypeId()) {
 	case Variant::kBool:
 		lua_pushboolean(L, (bool)val);
 		break;
@@ -289,34 +289,34 @@ void xPushStack(lua_State *L, const Variant &val)
 		t.set("z", v.z);
 		break;
 	}
-	case Variant::kPoint:{
+	case Variant::kPoint: {
 		lua_newtable(L);
 		int index = lua_gettop(L);
 		LuaTable t(index);
-		Point *v = (Point*)val.getPtr();
-		t.set("x", v->x);
-		t.set("y", v->y);
+		const Point &v = val.ref<Point>();
+		t.set("x", v.x);
+		t.set("y", v.y);
 		break;
 	}
-	case Variant::kRect:{
+	case Variant::kRect: {
 		lua_newtable(L);
 		int index = lua_gettop(L);
 		LuaTable t(index);
-		Rect *v = (Rect*)val.getPtr();
-		t.set("x", v->x);
-		t.set("y", v->y);
-		t.set("width" , v->width);
-		t.set("height" , v->height);
+		const Rect &v = val.ref<Rect>();
+		t.set("x", v.x);
+		t.set("y", v.y);
+		t.set("width" , v.width);
+		t.set("height" , v.height);
 		break;
 	}
-	case Variant::kColor3:{
+	case Variant::kColor3: {
 		lua_newtable(L);
 		int index = lua_gettop(L);
 		LuaTable t(index);
-		Color3 *v = (Color3*)val.getPtr();
-		t.set("r", v->r/255.0f);
-		t.set("g", v->g/255.0f);
-		t.set("b", v->b/255.0f);
+		const Color3 &v = val.ref<Color3>();
+		t.set("r", v.r);
+		t.set("g", v.g);
+		t.set("b", v.b);
 		break;
 	}
 	case Variant::kVoid:
@@ -795,7 +795,7 @@ bool ScriptSystem::invokeLuaScoped(const char *text, Axon::VariantSeq &stack, in
 		} else {
 			lua_getglobal(L,objectname.c_str());
 			Variant variant = xReadStack(L,-1);
-			if (Variant::kTable == variant.getType()) {
+			if (Variant::kTable == variant.getTypeId()) {
 				xPushString(L, membername);
 				lua_gettable(L, -2);
 				lua_pushvalue(L, -2);
@@ -826,11 +826,11 @@ String ScriptSystem::generateLuaString(const String &text)
 		int id = lua_gettop(L);
 		lua_getglobal(L,text.c_str());
 		Variant variant = xReadStack(L,-1);
-		if (variant.getType() == Variant::kString)
+		if (variant.getTypeId() == Variant::kString)
 			result = variant.toString();
 		lua_pop(L,1);
 		id = lua_gettop(L);
-	}else{
+	} else {
 		int id = lua_gettop(L);
 		String objectname = text.substr(0,idx_end);
 		String membername = text.substr(idx_end+1,text.size());
@@ -841,17 +841,17 @@ String ScriptSystem::generateLuaString(const String &text)
 		id = lua_gettop(L);
 		if (obj){								
 			Variant var = obj->getProperty(membername.c_str());
-			if (var.getType() == Variant::kString)
+			if (var.getTypeId() == Variant::kString)
 				result = var;						
 		}else{
 			lua_getglobal(L,objectname.c_str());
 			Variant variant = xReadStack(L,-1);
 			
-			if (variant.getType() == Variant::kTable){
+			if (variant.getTypeId() == Variant::kTable){
 				xPushString(L, membername);
 				lua_gettable(L, -2);
 				Variant res = xReadStack(L,-1);
-				if (res.getType() == Variant::kString)
+				if (res.getTypeId() == Variant::kString)
 					result = res.toString();
 				lua_pop(L,1);
 			}
@@ -994,7 +994,7 @@ Object *ScriptSystem::createObject(const char *classname)
 		return obj;
 	}
 
-	TypeInfoDict::const_iterator it = m_typeInfoReg.find(classname);
+	MetaInfoDict::const_iterator it = m_typeInfoReg.find(classname);
 
 	if (it == m_typeInfoReg.end()) {
 		return nullptr;

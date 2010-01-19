@@ -259,6 +259,14 @@ struct StackHandler
 		return _top;
 	}
 
+	void getRawData(int idx, Result &result);
+
+	int retRawData(const Argument &arg)
+	{
+		// TODO
+		return 0;
+	}
+
 	int Return(const SQChar *s)
 	{
 		sq_pushstring(v, s,-1);
@@ -306,8 +314,6 @@ private:
 	int _top;
 	HSQUIRRELVM v;
 };
-
-void push(HSQUIRRELVM vm, Variant::Type t, const void *data);
 
 AX_END_NAMESPACE
 

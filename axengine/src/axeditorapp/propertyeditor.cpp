@@ -280,7 +280,7 @@ void PropertyEditor::initFromObject(Object *obj) {
 
 			p = nullptr;
 
-			Variant::Type type = m->getPropType();
+			Variant::TypeId type = m->getPropType();
 			switch (type) {
 			case Variant::kBool:
 				p = new BoolProperty(m->getProperty(obj), m->getName());
