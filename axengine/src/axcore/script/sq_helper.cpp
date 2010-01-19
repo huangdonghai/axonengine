@@ -856,69 +856,69 @@ void StackHandler::getRawData( int idx, Result &result)
 	result.data = 0;
 
 	switch (t._type) {
-		case OT_NULL:
-			return;
-		case OT_INTEGER:
-			result.typeId = Variant::kInt;
-			result.data = &t._unVal.nInteger;
-			return;
-		case OT_FLOAT:
-			result.typeId = Variant::kFloat;
-			result.data = &t._unVal.fFloat;
-			return;
-		case OT_BOOL:
-			result.typeId = Variant::kBool;
-			result.data = &t._unVal;
-			return;
-		case OT_STRING:
-			{
-				result.typeId = Variant::kString;
-				String *str = new String(sq_objtostring(&t));
-				result.data = str;
-				result.needDesturct = true;
-				result.needFree = true;
-			}
-			return;
-		case OT_TABLE:
-		case OT_ARRAY:
-		case OT_USERDATA:
-		case OT_CLOSURE:
-		case OT_NATIVECLOSURE:
-		case OT_GENERATOR:
-		case OT_USERPOINTER:
-		case OT_THREAD:
-		case OT_FUNCPROTO:
-		case OT_CLASS:
-		case OT_WEAKREF:
-			return;
-		case OT_INSTANCE:
-			{
-				SquirrelClassDecl *typetag;
-				void *userdata;
-				sq_getobjtypetag(&t, (SQUserPointer *)&typetag);
-				sq_getinstanceup(v, idx, &userdata, typetag);
+	case OT_NULL:
+		return;
+	case OT_INTEGER:
+		result.typeId = Variant::kInt;
+		result.data = &t._unVal.nInteger;
+		return;
+	case OT_FLOAT:
+		result.typeId = Variant::kFloat;
+		result.data = &t._unVal.fFloat;
+		return;
+	case OT_BOOL:
+		result.typeId = Variant::kBool;
+		result.data = &t._unVal;
+		return;
+	case OT_STRING:
+		{
+			result.typeId = Variant::kString;
+			String *str = new String(sq_objtostring(&t));
+			result.data = str;
+			result.needDesturct = true;
+			result.needFree = true;
+		}
+		return;
+	case OT_TABLE:
+	case OT_ARRAY:
+	case OT_USERDATA:
+	case OT_CLOSURE:
+	case OT_NATIVECLOSURE:
+	case OT_GENERATOR:
+	case OT_USERPOINTER:
+	case OT_THREAD:
+	case OT_FUNCPROTO:
+	case OT_CLASS:
+	case OT_WEAKREF:
+		return;
+	case OT_INSTANCE:
+		{
+			SquirrelClassDecl *typetag;
+			void *userdata;
+			sq_getobjtypetag(&t, (SQUserPointer *)&typetag);
+			sq_getinstanceup(v, idx, &userdata, typetag);
 
-				if (typetag == &__Vector3_decl) {
-					result.typeId = Variant::kVector3;
-					result.data = userdata;
-				} else if (typetag == &__Color3_decl) {
-					result.typeId = Variant::kColor3;
-					result.data = userdata;
-				} else if (typetag == &__Point_decl) {
-					result.typeId = Variant::kPoint;
-					result.data = userdata;
-				} else if (typetag == &__Rect_decl) {
-					result.typeId = Variant::kRect;
-					result.data = userdata;
-				} else if (typetag == &__Matrix_decl) {
-					result.typeId = Variant::kMatrix;
-					result.data = userdata;
-				} else if (typetag == &__Object_c_decl) {
-					result.typeId = Variant::kObject;
-					result.data = userdata;
-				}
+			if (typetag == &__Vector3_decl) {
+				result.typeId = Variant::kVector3;
+				result.data = userdata;
+			} else if (typetag == &__Color3_decl) {
+				result.typeId = Variant::kColor3;
+				result.data = userdata;
+			} else if (typetag == &__Point_decl) {
+				result.typeId = Variant::kPoint;
+				result.data = userdata;
+			} else if (typetag == &__Rect_decl) {
+				result.typeId = Variant::kRect;
+				result.data = userdata;
+			} else if (typetag == &__Matrix_decl) {
+				result.typeId = Variant::kMatrix;
+				result.data = userdata;
+			} else if (typetag == &__Object_c_decl) {
+				result.typeId = Variant::kObject;
+				result.data = userdata;
 			}
-			return;
+		}
+		return;
 	}
 	return;
 }

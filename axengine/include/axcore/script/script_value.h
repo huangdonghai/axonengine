@@ -12,7 +12,6 @@ public:
 	ScriptValue();
 	~ScriptValue();
 
-
 	bool rawCast(Variant::TypeId toType, void *toData) const;
 	static Variant::TypeHandler *getTypeHandler();
 

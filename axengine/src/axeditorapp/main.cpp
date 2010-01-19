@@ -14,6 +14,9 @@ read the license and understand and accept it fully.
 
 void testArgs()
 {
+	Variant v1(1);
+	v1 = 3;
+	v1 = Vector3(0,1,2);
 	MetaInfo *metainfo = g_renderSystem->getMetaInfo();
 	int result;
 	bool v = metainfo->invokeMethod_(g_renderSystem, "testArgs", result, 1.0f, true, Vector3(0,1,2), Color3(1,1,1), Rect(0,0,640,480));

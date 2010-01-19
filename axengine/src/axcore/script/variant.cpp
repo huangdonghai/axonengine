@@ -4,6 +4,16 @@
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/int.hpp>
 
+/*
+	STORE		DESTRUCTION	NEEDFREE	POINTER		WRITABLE
+
+	isHeap		true		true		pointer		false
+	isMinibuf	true		false		minibuf		false
+	isStack		true		false		pointer		false
+	isRef		false		false		pointer		false
+	isConstRef	false		false		pointer		true
+*/
+
 AX_BEGIN_NAMESPACE
 
 using namespace boost;

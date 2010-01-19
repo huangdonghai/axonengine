@@ -24,14 +24,31 @@ struct ReturnArgument
 
 struct Result : Noncopyable
 {
-	Result(Variant::TypeId t = Variant::kVoid, void *d = 0,
-		bool _needFree = false, bool _needDestruct = false)
-		: typeId(t), data(d), needFree(_needFree), needDesturct(_needDestruct)
+	Result(Variant::TypeId t = Variant::kVoid, void *d = 0
+		, bool _needDestruct = false, bool _needFree = false)
+		: typeId(t), data(d), needDestruct(_needDestruct), needFree(_needFree)
 	{}
 
+	Result(Variant::TypeId t) : typeId(t), data(Malloc(Variant::getTypeSize(t))), needDestruct(true), needFree(true) {}
+
+	~Result() { clear(); }
+
+	void clear()
+	{
+		if (needDestruct) {
+			Variant::destruct(typeId, data);
+		}
+
+		if (needFree) {
+			Free(data);
+		}
+
+		typeId = Variant::kVoid; data = 0; needDestruct = false; needFree = false;
+	}
+
 	Variant::TypeId typeId : 30;
+	bool needDestruct : 1;
 	bool needFree : 1;
-	bool needDesturct : 1;
 	void *data;
 };
 
@@ -47,6 +64,7 @@ ReturnArgument MakeReturnArgument_(T &aData) {
 
 #define AX_ARG(x) MakeArgument_(x)
 #define AX_RETURN_ARG(x) MakeReturnArgument_(x)
+#define AX_RESULT(name, typeId) Result name(typeId, Alloca(Variant::getTypeSize(typeId)), true, false)
 
 //--------------------------------------------------------------------------
 // class Member
