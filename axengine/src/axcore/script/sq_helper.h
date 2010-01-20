@@ -29,12 +29,18 @@ public:
 	SquirrelObject runFile(const SQChar *s, SquirrelObject *_this = NULL);
 	SquirrelObject runBuffer(const SQChar *s, SquirrelObject *_this = NULL);
 
+	static SquirrelObject createClosure(const SQChar *name, SQFUNCTION f, 	SQInteger nparamscheck, const SQChar *typemask);
+
 protected:
+	static void createObjectClosure();
+
 	// replace print
 	static void printFunc(HSQUIRRELVM v, const SQChar* s,...);
 
 public:
 	static HSQUIRRELVM ms_rootVM;
+	static SquirrelObject ms_getClosure;
+	static SquirrelObject ms_setClosure;
 	HSQUIRRELVM m_vm;
 };
 

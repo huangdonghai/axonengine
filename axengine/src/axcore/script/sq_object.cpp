@@ -81,9 +81,16 @@ _MEMBER_FUNCTION_IMPL(Object_c, _set)
 }
 
 _BEGIN_CLASS(Object_c)
-_MEMBER_FUNCTION(Object_c,constructor,-1,_SC("."))
-_MEMBER_FUNCTION(Object_c,_set,3,_SC("xs|n"))
-_MEMBER_FUNCTION(Object_c,_get,2,_SC("xs|n"))
+_MEMBER_FUNCTION(Object_c,constructor, -1, _SC("."))
+_MEMBER_FUNCTION(Object_c,_set, 3, _SC("xs|n"))
+_MEMBER_FUNCTION(Object_c,_get, 2, _SC("xs|n"))
 _END_CLASS(Object_c)
+
+
+void SquirrelVM::createObjectClosure()
+{
+	SquirrelVM::ms_setClosure = SquirrelVM::createClosure("_get", __Object_c__set, 3, _SC("xs|n"));
+	SquirrelVM::ms_getClosure = SquirrelVM::createClosure("_set", __Object_c__get, 2, _SC("xs|n"));
+}
 
 AX_END_NAMESPACE

@@ -11,7 +11,7 @@ static SQRESULT _loadfile(HSQUIRRELVM v, const SQChar *filename, SQBool printerr
 	size_t filesize = g_fileSystem->readFile(name, (void **)&filebuf);
 
 	if (!filesize && !filebuf) {
-		return sq_throwerror(v,_SC("cannot open the file"));
+		return sq_throwerror(v, _SC("cannot open the file"));
 	}
 
 	if (SQ_SUCCEEDED(sq_compilebuffer(v, filebuf, filesize, filename, printerror))) {
@@ -24,7 +24,7 @@ static SQRESULT _loadfile(HSQUIRRELVM v, const SQChar *filename, SQBool printerr
 
 static SQRESULT _dofile(HSQUIRRELVM v,const SQChar *filename,SQBool retval,SQBool printerror)
 {
-	if(SQ_SUCCEEDED(_loadfile(v,filename,printerror))) {
+	if (SQ_SUCCEEDED(_loadfile(v,filename,printerror))) {
 		sq_push(v,-2);
 		if(SQ_SUCCEEDED(sq_call(v,1,retval,SQTrue))) {
 			sq_remove(v,retval?-2:-1); //removes the closure
@@ -40,12 +40,15 @@ static SQInteger loadfile(HSQUIRRELVM v)
 	const SQChar *filename;
 	SQBool printerror = SQFalse;
 	sq_getstring(v,2,&filename);
-	if(sq_gettop(v) >= 3) {
+
+	if (sq_gettop(v) >= 3) {
 		sq_getbool(v,3,&printerror);
 	}
-	if(SQ_SUCCEEDED(_loadfile(v,filename,printerror)))
+
+	if (SQ_SUCCEEDED(_loadfile(v,filename,printerror)))
 		return 1;
-	return SQ_ERROR; //propagates the error
+
+	return SQ_ERROR; // propagates the error
 }
 
 static SQInteger dofile(HSQUIRRELVM v)
@@ -53,17 +56,32 @@ static SQInteger dofile(HSQUIRRELVM v)
 	const SQChar *filename;
 	SQBool printerror = SQFalse;
 	sq_getstring(v,2,&filename);
-	if(sq_gettop(v) >= 3) {
+
+	if (sq_gettop(v) >= 3) {
 		sq_getbool(v,3,&printerror);
 	}
+
 	sq_push(v,1); //repush the this
-	if(SQ_SUCCEEDED(_dofile(v,filename,SQTrue,printerror)))
+	if (SQ_SUCCEEDED(_dofile(v,filename,SQTrue,printerror)))
 		return 1;
+
 	return SQ_ERROR; //propagates the error
 }
 
+static SQInteger registerClass(HSQUIRRELVM v)
+{
+	SquirrelObject so; so.attachToStackObject(2);
+	return SQ_ERROR;
+}
 
 HSQUIRRELVM SquirrelVM::ms_rootVM = 0;
+
+static SQRegFunction ax_funcs[] = {
+	{ "loadfile", &loadfile, -2, _SC(".sb") },
+	{ "dofile", &dofile, -2, _SC(".sb") },
+	{ "AX_REGISTER_CLASS", &registerClass, -2, _SC(".y") },
+	{ 0, 0 }
+};
 
 SquirrelError::SquirrelError(SquirrelVM *vm) 
 {
@@ -78,11 +96,6 @@ SquirrelError::SquirrelError(SquirrelVM *vm)
 	}
 }
 
-static SQRegFunction ax_funcs[]={
-	{ "loadfile", &loadfile, -2, _SC(".sb") },
-	{ "dofile", &dofile, -2, _SC(".sb") },
-	{ 0, 0 }
-};
 
 SquirrelVM::SquirrelVM()
 {
@@ -120,6 +133,8 @@ SquirrelVM::SquirrelVM()
 		i++;
 	}
 	sq_settop(ms_rootVM, top);
+
+	createObjectClosure();
 
 	m_vm = ms_rootVM;
 }
@@ -194,6 +209,18 @@ SquirrelObject SquirrelVM::runBuffer(const SQChar *s, SquirrelObject *_this /*= 
 {
 	SquirrelObject bytecode = compileBuffer(s);
 	return runBytecode(bytecode, _this);
+}
+
+SquirrelObject SquirrelVM::createClosure( const SQChar *name, SQFUNCTION f, SQInteger nparamscheck, const SQChar *typemask )
+{
+	sq_newclosure(ms_rootVM, f, 0);
+	sq_setparamscheck(ms_rootVM, nparamscheck, typemask);
+	sq_setnativeclosurename(ms_rootVM, -1, name);
+
+	SquirrelObject sobj;
+	sobj.attachToStackObject(-1);
+	sq_pop(ms_rootVM, 1);
+	return sobj;
 }
 
 

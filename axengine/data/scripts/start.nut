@@ -4,4 +4,5 @@ _C <- getconsttable();
 
 ::print("I'm start\n");
 
-dofile("game/game_all.nut");
+::dofile("object.nut");
+::dofile("game/game_all.nut");
