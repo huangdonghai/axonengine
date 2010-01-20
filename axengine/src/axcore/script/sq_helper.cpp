@@ -71,10 +71,16 @@ static SQInteger dofile(HSQUIRRELVM v)
 static SQInteger registerClass(HSQUIRRELVM v)
 {
 	SquirrelObject so; so.attachToStackObject(2);
-	return SQ_ERROR;
+
+	so.setValue("_get", SquirrelVM::ms_getClosure);
+	so.setValue("_set", SquirrelVM::ms_setClosure);
+
+	return SQ_OK;
 }
 
 HSQUIRRELVM SquirrelVM::ms_rootVM = 0;
+SquirrelObject SquirrelVM::ms_getClosure;
+SquirrelObject SquirrelVM::ms_setClosure;
 
 static SQRegFunction ax_funcs[] = {
 	{ "loadfile", &loadfile, -2, _SC(".sb") },

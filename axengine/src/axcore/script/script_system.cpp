@@ -664,6 +664,7 @@ void ScriptSystem::initialize()
 	_INIT_CLASS(Point);
 	_INIT_CLASS(Rect);
 	_INIT_CLASS(Matrix);
+	_INIT_CLASS(Object_c);
 
 	g_mainVM->runFile("start.nut");
 
@@ -676,21 +677,6 @@ void ScriptSystem::finalize()
 
 	lua_close(L);
 }
-
-#if 0
-void ScriptSystem::addObject(const String &name, Object *obj)
-{
-	xPushObject(L,obj);
-	xPushString(L, name);
-	lua_pushvalue(L, -2);
-	lua_rawset(L, LUA_GLOBALSINDEX);
-	lua_remove(L, lua_gettop(L));
-}
-
-void ScriptSystem::removeObject(const String &name) {}
-
-void ScriptSystem::removeObject(Object *obj) {}
-#endif
 
 void ScriptSystem::executeString(const String &text)
 {

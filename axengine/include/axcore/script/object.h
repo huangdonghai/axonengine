@@ -16,9 +16,6 @@ public:
 	friend class ScriptSystem;
 
 	Object();
-#if 0
-	Object(const String &objname);
-#endif
 	virtual ~Object();
 
 	virtual MetaInfo *getMetaInfo() const;
@@ -68,7 +65,6 @@ protected:
 
 	void raiseSignal(const String &signal, const Variant &param);
 
-	// event
 	void initClassInfo(const ClassInfo *ci);
 
 private:

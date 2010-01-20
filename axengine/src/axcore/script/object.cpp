@@ -32,37 +32,14 @@ Object::Object()
 
 	// balance stack
 	lua_pop(L, 1);
+
+	// create squirrel object
+	sq_pushregistrytable(SquirrelVM::ms_rootVM);
+	sq_pushuserpointer(SquirrelVM::ms_rootVM, this);
+	CreateNativeClassInstance(SquirrelVM::ms_rootVM, "Object_c", this), 0);
+	sq_rawset(SquirrelVM::ms_rootVM, -3);
+	sq_pop(SquirrelVM::ms_rootVM, 1);
 }
-
-#if 0
-Object::Object(const String &objname)
-{
-	m_classInfo = 0;
-
-	int top = lua_gettop(L);
-	lua_pushlightuserdata(L, this);
-	lua_newtable(L);
-	lua_rawset(L, LUA_REGISTRYINDEX);		// stack poped
-
-	// get table just created
-	lua_pushlightuserdata(L, this);
-	lua_rawget(L, LUA_REGISTRYINDEX);
-
-	// set metatable
-	luaL_getmetatable(L, OBJECT_MT);
-	lua_setmetatable(L, -2);
-
-	// set __object
-	lua_pushliteral(L, "__object");
-	lua_pushlightuserdata(L, this);
-	lua_rawset(L, -3);
-
-	// balance stack
-	lua_pop(L, 1);
-
-	set_objectName(objname);
-}
-#endif
 
 Object::~Object()
 {
@@ -339,6 +316,16 @@ void Object::setObjectName(const String &name, bool force)
 	resetObjectName();
 
 	m_objectName = name;
+	{
+		int top = sq_gettop(SquirrelVM::ms_rootVM);
+		sq_pushroottable(SquirrelVM::ms_rootVM);
+		sq_pushregistrytable(SquirrelVM::ms_rootVM);
+		sq_pushstring(SquirrelVM::ms_rootVM, name.c_str(), name.size());
+		sq_pushuserpointer(SquirrelVM::ms_rootVM, this);
+		sq_rawget(SquirrelVM::ms_rootVM, -3);
+		sq_rawset(SquirrelVM::ms_rootVM, -4);
+		sq_settop(SquirrelVM::ms_rootVM, top);
+	}
 	m_objectNamespace = getNamespace();
 
 	if (m_objectName.empty())

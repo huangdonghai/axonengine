@@ -926,27 +926,27 @@
 				Name="metatype"
 				>
 				<File
-					RelativePath="..\..\..\src\axcore\script\sq_color.cpp"
+					RelativePath="..\..\..\src\axcore\script\mt_color3.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\src\axcore\script\sq_matrix.cpp"
+					RelativePath="..\..\..\src\axcore\script\mt_matrix.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\src\axcore\script\sq_object.cpp"
+					RelativePath="..\..\..\src\axcore\script\mt_object.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\src\axcore\script\sq_point.cpp"
+					RelativePath="..\..\..\src\axcore\script\mt_point.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\src\axcore\script\sq_rect.cpp"
+					RelativePath="..\..\..\src\axcore\script\mt_rect.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\src\axcore\script\sq_vector3.cpp"
+					RelativePath="..\..\..\src\axcore\script\mt_vector3.cpp"
 					>
 				</File>
 			</Filter>
