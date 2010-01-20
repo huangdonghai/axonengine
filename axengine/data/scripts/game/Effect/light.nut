@@ -2,7 +2,7 @@ enum LightType {
 	None, SunLight, PointLight, SpotLight
 }
 
-class Light </ cppClass = "GameLight" group = "Game.Effect" />
+class Game.Effect.Light extends GameLight </ cppClass = "GameLight" group = "Game.Effect" />
 {
 	</ editable = true />
 	active = true;

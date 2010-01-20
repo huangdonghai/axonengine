@@ -261,6 +261,12 @@ inline Variant::TypeId GetVariantType_<LuaTable>() {
 	return Variant::kTable;
 }
 
+class ScriptValue;
+template<>
+inline Variant::TypeId GetVariantType_<ScriptValue>() {
+	return Variant::kScriptValue;
+}
+
 // variant cast
 template< class T >
 struct variant_cast_helper {

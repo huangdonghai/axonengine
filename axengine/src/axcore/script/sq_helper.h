@@ -21,10 +21,16 @@ public:
 	SquirrelVM(HSQUIRRELVM vm);
 	~SquirrelVM();
 
-	SquirrelObject compileScript(const SQChar *s);
-	SquirrelObject compileBuffer(const SQChar *s, const SQChar *debugInfo=_SC("console_buffer"));
-	SquirrelObject runScript(const SquirrelObject &bytecode, SquirrelObject *_this = NULL);
+	SquirrelObject compileFile(const SQChar *filename);
+	SquirrelObject compileBuffer(const SQChar *buf, const SQChar *debugInfo=_SC("console_buffer"));
 
+	SquirrelObject runBytecode(const SquirrelObject &bytecode, SquirrelObject *_this = NULL);
+
+	SquirrelObject runFile(const SQChar *s, SquirrelObject *_this = NULL);
+	SquirrelObject runBuffer(const SQChar *s, SquirrelObject *_this = NULL);
+
+protected:
+	// replace print
 	static void printFunc(HSQUIRRELVM v, const SQChar* s,...);
 
 public:
@@ -153,7 +159,7 @@ public:
 	SquirrelObject &set(_ty & val);
 
 	// === END code suggestion from the Wiki ===
-	ReturnArgument tryToReturnArgument();
+	Ref tryToReturnArgument();
 
 private:
 	bool getSlot(const SQChar *name) const;
@@ -259,9 +265,9 @@ struct StackHandler
 		return _top;
 	}
 
-	void getRawData(int idx, Result &result);
+	void getRawData(int idx, Value &result);
 
-	int retRawData(const Argument &arg)
+	int retRawData(const ConstRef &arg)
 	{
 		// TODO
 		return 0;

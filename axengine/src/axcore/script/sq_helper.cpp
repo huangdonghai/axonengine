@@ -2,6 +2,67 @@
 
 AX_BEGIN_NAMESPACE
 
+static SQRESULT _loadfile(HSQUIRRELVM v, const SQChar *filename, SQBool printerror)
+{
+	String name = "scripts/";
+	name += filename;
+
+	char *filebuf;
+	size_t filesize = g_fileSystem->readFile(name, (void **)&filebuf);
+
+	if (!filesize && !filebuf) {
+		return sq_throwerror(v,_SC("cannot open the file"));
+	}
+
+	if (SQ_SUCCEEDED(sq_compilebuffer(v, filebuf, filesize, filename, printerror))) {
+		return SQ_OK;
+	} else {
+		return SQ_ERROR;
+	}
+
+}
+
+static SQRESULT _dofile(HSQUIRRELVM v,const SQChar *filename,SQBool retval,SQBool printerror)
+{
+	if(SQ_SUCCEEDED(_loadfile(v,filename,printerror))) {
+		sq_push(v,-2);
+		if(SQ_SUCCEEDED(sq_call(v,1,retval,SQTrue))) {
+			sq_remove(v,retval?-2:-1); //removes the closure
+			return 1;
+		}
+		sq_pop(v,1); //removes the closure
+	}
+	return SQ_ERROR;
+}
+
+static SQInteger loadfile(HSQUIRRELVM v)
+{
+	const SQChar *filename;
+	SQBool printerror = SQFalse;
+	sq_getstring(v,2,&filename);
+	if(sq_gettop(v) >= 3) {
+		sq_getbool(v,3,&printerror);
+	}
+	if(SQ_SUCCEEDED(_loadfile(v,filename,printerror)))
+		return 1;
+	return SQ_ERROR; //propagates the error
+}
+
+static SQInteger dofile(HSQUIRRELVM v)
+{
+	const SQChar *filename;
+	SQBool printerror = SQFalse;
+	sq_getstring(v,2,&filename);
+	if(sq_gettop(v) >= 3) {
+		sq_getbool(v,3,&printerror);
+	}
+	sq_push(v,1); //repush the this
+	if(SQ_SUCCEEDED(_dofile(v,filename,SQTrue,printerror)))
+		return 1;
+	return SQ_ERROR; //propagates the error
+}
+
+
 HSQUIRRELVM SquirrelVM::ms_rootVM = 0;
 
 SquirrelError::SquirrelError(SquirrelVM *vm) 
@@ -17,6 +78,11 @@ SquirrelError::SquirrelError(SquirrelVM *vm)
 	}
 }
 
+static SQRegFunction ax_funcs[]={
+	{ "loadfile", &loadfile, -2, _SC(".sb") },
+	{ "dofile", &dofile, -2, _SC(".sb") },
+	{ 0, 0 }
+};
 
 SquirrelVM::SquirrelVM()
 {
@@ -38,6 +104,22 @@ SquirrelVM::SquirrelVM()
 	sqstd_seterrorhandlers(ms_rootVM);
 	//TODO error handler, compiler error handler
 	sq_pop(ms_rootVM, 1);
+
+	// register or replace functions
+	int top = sq_gettop(ms_rootVM);
+	sq_pushroottable(ms_rootVM);
+
+	int i = 0;
+	while (ax_funcs[i].name != 0) {
+		SQRegFunction &f = ax_funcs[i];
+		sq_pushstring(ms_rootVM, f.name, -1);
+		sq_newclosure(ms_rootVM, f.f, 0);
+		sq_setparamscheck(ms_rootVM, f.nparamscheck, f.typemask);
+		sq_setnativeclosurename(ms_rootVM, -1, f.name);
+		sq_createslot(ms_rootVM, -3);
+		i++;
+	}
+	sq_settop(ms_rootVM, top);
 
 	m_vm = ms_rootVM;
 }
@@ -62,10 +144,10 @@ void SquirrelVM::printFunc(HSQUIRRELVM v, const SQChar* s, ...)
 	va_end(vl);
 }
 
-SquirrelObject SquirrelVM::compileScript(const SQChar *s)
+SquirrelObject SquirrelVM::compileFile(const SQChar *filename)
 {
-	SquirrelObject ret;
-	if (SQ_SUCCEEDED(sqstd_loadfile(m_vm, s, 1))) {
+	if (SQ_SUCCEEDED(_loadfile(m_vm, filename, 1))) {
+		SquirrelObject ret;
 		ret.attachToStackObject(-1);
 		sq_pop(m_vm, 1);
 		return ret;
@@ -84,7 +166,7 @@ SquirrelObject SquirrelVM::compileBuffer(const SQChar *s, const SQChar *debugInf
 	throw SquirrelError(this);
 }
 
-SquirrelObject SquirrelVM::runScript(const SquirrelObject &bytecode, SquirrelObject *_this /*= NULL*/)
+SquirrelObject SquirrelVM::runBytecode(const SquirrelObject &bytecode, SquirrelObject *_this /*= NULL*/)
 {
 	SquirrelObject ret;
 	sq_pushobject(m_vm, bytecode._o);
@@ -101,6 +183,19 @@ SquirrelObject SquirrelVM::runScript(const SquirrelObject &bytecode, SquirrelObj
 	sq_pop(m_vm, 1);
 	throw SquirrelError(this);
 }
+
+SquirrelObject SquirrelVM::runFile(const SQChar *s, SquirrelObject *_this /*= NULL*/)
+{
+	SquirrelObject bytecode = compileFile(s);
+	return runBytecode(bytecode, _this);
+}
+
+SquirrelObject SquirrelVM::runBuffer(const SQChar *s, SquirrelObject *_this /*= NULL*/)
+{
+	SquirrelObject bytecode = compileBuffer(s);
+	return runBytecode(bytecode, _this);
+}
+
 
 SquirrelObject::SquirrelObject(void)
 {
@@ -845,38 +940,30 @@ void SquirrelObject::endIteration()
 	sq_pop(SquirrelVM::ms_rootVM, 2);
 }
 
-void StackHandler::getRawData( int idx, Result &result)
+void StackHandler::getRawData( int idx, Value &result)
 {
 	// make sure result is emtpy first
-	AX_ASSERT(result.typeId == Variant::kVoid);
+	AX_ASSERT(result.getTypeId() == Variant::kVoid);
 
 	HSQOBJECT t;
 	sq_getstackobj(SquirrelVM::ms_rootVM, idx, &t);
-	result.typeId = Variant::kVoid;
-	result.data = 0;
 
 	switch (t._type) {
 	case OT_NULL:
 		return;
 	case OT_INTEGER:
-		result.typeId = Variant::kInt;
-		result.data = &t._unVal.nInteger;
+		result.init(Variant::kInt, &t._unVal.nInteger);
 		return;
 	case OT_FLOAT:
-		result.typeId = Variant::kFloat;
-		result.data = &t._unVal.fFloat;
+		result.init(Variant::kFloat, &t._unVal.fFloat);
 		return;
 	case OT_BOOL:
-		result.typeId = Variant::kBool;
-		result.data = &t._unVal;
+		result.init(Variant::kBool, &t._unVal.nInteger);
 		return;
 	case OT_STRING:
 		{
-			result.typeId = Variant::kString;
-			String *str = new String(sq_objtostring(&t));
-			result.data = str;
-			result.needDesturct = true;
-			result.needFree = true;
+			result.init(Variant::kString);
+			result.ref<String>() = sq_objtostring(&t);
 		}
 		return;
 	case OT_TABLE:
@@ -890,6 +977,10 @@ void StackHandler::getRawData( int idx, Result &result)
 	case OT_FUNCPROTO:
 	case OT_CLASS:
 	case OT_WEAKREF:
+		{
+			result.init(Variant::kScriptValue);
+			result.ref<ScriptValue>().getSquirrelObject() = t;
+		}
 		return;
 	case OT_INSTANCE:
 		{
@@ -899,23 +990,17 @@ void StackHandler::getRawData( int idx, Result &result)
 			sq_getinstanceup(v, idx, &userdata, typetag);
 
 			if (typetag == &__Vector3_decl) {
-				result.typeId = Variant::kVector3;
-				result.data = userdata;
+				result.init(Variant::kVector3, userdata);
 			} else if (typetag == &__Color3_decl) {
-				result.typeId = Variant::kColor3;
-				result.data = userdata;
+				result.init(Variant::kColor3, userdata);
 			} else if (typetag == &__Point_decl) {
-				result.typeId = Variant::kPoint;
-				result.data = userdata;
+				result.init(Variant::kPoint, userdata);
 			} else if (typetag == &__Rect_decl) {
-				result.typeId = Variant::kRect;
-				result.data = userdata;
+				result.init(Variant::kRect, userdata);
 			} else if (typetag == &__Matrix_decl) {
-				result.typeId = Variant::kMatrix;
-				result.data = userdata;
+				result.init(Variant::kMatrix, userdata);
 			} else if (typetag == &__Object_c_decl) {
-				result.typeId = Variant::kObject;
-				result.data = userdata;
+				result.init(Variant::kObject, userdata);
 			}
 		}
 		return;

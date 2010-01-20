@@ -12,6 +12,9 @@ public:
 	ScriptValue();
 	~ScriptValue();
 
+	SquirrelObject& getSquirrelObject() { return *m_d; }
+	const SquirrelObject& getSquirrelObject() const { return *m_d; }
+
 	bool rawCast(Variant::TypeId toType, void *toData) const;
 	static Variant::TypeHandler *getTypeHandler();
 

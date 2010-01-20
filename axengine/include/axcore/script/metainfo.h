@@ -7,64 +7,165 @@ enum {
 	AX_MAX_ARGS = 5
 };
 
-struct Argument
+class ConstRef;
+class Ref;
+class Value;
+
+class ConstRef
 {
-	Argument(Variant::TypeId t = Variant::kVoid, const void *d = 0) : typeId(t), data(d) {}
-	Variant::TypeId typeId;
-	const void *data;
+public:
+	ConstRef(Variant::TypeId t = Variant::kVoid, const void *d = 0) : m_typeId(t), m_voidstar(d) {}
+
+	Variant::TypeId getTypeId() const { return m_typeId; }
+	const void *getPointer() const { return m_voidstar; }
+	void set(Variant::TypeId id, const void *ptr) { m_typeId = id; m_voidstar = ptr; }
+
+	template <class Q>
+	static ConstRef make(const Q &aData) {
+		return ConstRef(GetVariantType_<Q>(), static_cast<const void *>(&aData));
+	}
+
+	bool castTo(Variant::TypeId id, void *data) const
+	{
+		return Variant::rawCast(m_typeId, m_voidstar, id, data);
+	}
+
+	bool castTo(const Value &val) const;
+
+private:
+	Variant::TypeId m_typeId;
+	const void *m_voidstar;
 };
 
-struct ReturnArgument
+class Ref
 {
-	ReturnArgument(Variant::TypeId t = Variant::kVoid, void *d = 0) : typeId(t), data(d) {}
+public:
+	Ref(Variant::TypeId t = Variant::kVoid, void *d = 0) : m_typeId(t), m_voidstar(d) {}
 
-	Variant::TypeId typeId;
-	void *data;
+	Variant::TypeId getTypeId() const { return m_typeId; }
+	void *getPointer() const { return m_voidstar; }
+	void set(Variant::TypeId id, void *ptr) { m_typeId = id; m_voidstar = ptr; }
+
+	template <class Q>
+	static Ref make(Q &aData) {
+		return Ref(GetVariantType_<Q>(), static_cast<void *>(&aData));
+	}
+
+	bool castTo(Variant::TypeId id, void *data) const
+	{
+		return Variant::rawCast(m_typeId, m_voidstar, id, data);
+	}
+
+private:
+	Variant::TypeId m_typeId;
+	void *m_voidstar;
 };
 
-struct Result : Noncopyable
+class Value : Noncopyable
 {
-	Result(Variant::TypeId t = Variant::kVoid, void *d = 0
-		, bool _needDestruct = false, bool _needFree = false)
-		: typeId(t), data(d), needDestruct(_needDestruct), needFree(_needFree)
+public:
+	Value() : m_typeId(Variant::kVoid), m_voidstar(0), m_needDestruct(false), m_needFree(false) {}
+	Value(Variant::TypeId t, void *d, bool nd = false, bool nf = false)
+		: m_typeId(t), m_voidstar(d), m_needDestruct(nd), m_needFree(nf)
 	{}
 
-	Result(Variant::TypeId t) : typeId(t), data(Malloc(Variant::getTypeSize(t))), needDestruct(true), needFree(true) {}
+	Value(Variant::TypeId t) : m_typeId(t), m_voidstar(Malloc(Variant::getTypeSize(t))), m_needDestruct(true), m_needFree(true)
+	{
+		if (m_needDestruct) {
+			Variant::construct(m_typeId, m_voidstar);
+		}
+	}
 
-	~Result() { clear(); }
+	~Value() { clear(); }
+
+	void init(Variant::TypeId id)
+	{
+		clear();
+		m_typeId = id;
+		m_voidstar = Malloc(Variant::getTypeSize(id));
+		m_needDestruct = true;
+		m_needFree = true;
+
+		Variant::construct(m_typeId, m_voidstar);
+	}
+
+	void init(Variant::TypeId id, void *data, bool destruct = false)
+	{
+		clear();
+		m_typeId = id;
+		m_voidstar = data;
+		m_needDestruct = destruct;
+
+		if (destruct) {
+			Variant::construct(m_typeId, m_voidstar);
+		}
+	}
+
+	Variant::TypeId getTypeId() const { return m_typeId; }
+	void *getPointer() const { return m_voidstar; }
+
+	template<class Q>
+	Q& ref()
+	{
+		AX_ASSERT(GetVariantType_<Q>() == m_typeId);
+		return *(Q *)m_voidstar;
+	}
+
+	template<class Q>
+	const Q& ref() const {
+		AX_ASSERT(GetVariantType_<Q>() == m_typeId);
+		return *(const Q *)m_voidstar;
+	}
+
 
 	void clear()
 	{
-		if (needDestruct) {
-			Variant::destruct(typeId, data);
+		if (m_typeId == Variant::kVoid)
+			return;
+
+		if (m_needDestruct) {
+			Variant::destruct(m_typeId, m_voidstar);
 		}
 
-		if (needFree) {
-			Free(data);
+		if (m_needFree) {
+			Free(m_voidstar);
 		}
 
-		typeId = Variant::kVoid; data = 0; needDestruct = false; needFree = false;
+		m_typeId = Variant::kVoid; m_voidstar = 0; m_needDestruct = false; m_needFree = false;
 	}
 
-	Variant::TypeId typeId : 30;
-	bool needDestruct : 1;
-	bool needFree : 1;
-	void *data;
+	bool castTo(Variant::TypeId id, void *data) const
+	{
+		return Variant::rawCast(m_typeId, m_voidstar, id, data);
+	}
+
+	bool castTo(const Ref &ref) const
+	{
+		return castTo(ref.getTypeId(), ref.getPointer());
+	}
+
+	bool castTo(const Value &val) const
+	{
+		return castTo(val.getTypeId(), val.getPointer());
+	}
+
+private:
+	Variant::TypeId m_typeId : 30;
+	bool m_needDestruct : 1;
+	bool m_needFree : 1;
+	void *m_voidstar;
 };
 
-template <class T>
-Argument MakeArgument_(const T &aData) {
-	return Argument(GetVariantType_<T>(), static_cast<const void *>(&aData));
+inline bool ConstRef::castTo(const Value &val) const
+{
+	return castTo(val.getTypeId(), val.getPointer());
 }
 
-template <class T>
-ReturnArgument MakeReturnArgument_(T &aData) {
-	return ReturnArgument(GetVariantType_<T>(), static_cast<void *>(&aData));
-}
 
-#define AX_ARG(x) MakeArgument_(x)
-#define AX_RETURN_ARG(x) MakeReturnArgument_(x)
-#define AX_RESULT(name, typeId) Result name(typeId, Alloca(Variant::getTypeSize(typeId)), true, false)
+#define AX_ARG(x) ConstRef::make(x)
+#define AX_RETURN_ARG(x) Ref::make(x)
+#define AX_RESULT(name, id) Value name(m_typeId, Alloca(Variant::getTypeSize(id)), true, false)
+#define AX_STACK_VALUE(name, id) name.init(id, Alloca(Variant::getTypeSize(id)), true)
 
 //--------------------------------------------------------------------------
 // class Member
@@ -342,7 +443,7 @@ struct ReturnSpecialization {
 			RET = (object->*func)(ARG(0), ARG(1), ARG(2));
 			return 1;
 		} else {
-			RET = (object->*func)(ARG(0), ARG(1), ARG(2));
+			(object->*func)(ARG(0), ARG(1), ARG(2));
 			return 0;
 		}
 	}
@@ -516,7 +617,6 @@ public:
 	{
 		return ScriptMetacall(vm, this);
 	}
-private:
 };
 
 template<typename Rt, typename T>
@@ -764,9 +864,9 @@ public:
 	const char *getName() const;
 	const MemberSeq &getMembers() const;
 
-	bool invokeMethod(Object *obj, const char *methodName, const ReturnArgument &ret, const Argument &arg0, const Argument &arg1, const Argument &arg2, const Argument &arg3, const Argument &arg4);
-	bool getProperty(Object *obj, const char *propname, const ReturnArgument & ret);
-	bool setProperty(Object *obj, const char *propname, const Argument & arg);
+	bool invokeMethod(Object *obj, const char *methodName, const Ref &ret, const ConstRef &arg0, const ConstRef &arg1, const ConstRef &arg2, const ConstRef &arg3, const ConstRef &arg4);
+	bool getProperty(Object *obj, const char *propname, const Ref & ret);
+	bool setProperty(Object *obj, const char *propname, const ConstRef & arg);
 
 	template <class Rt>
 	bool getProperty_(Object *obj, const char *propname, Rt &ret);
@@ -889,67 +989,67 @@ bool MetaInfo::getProperty_( Object *obj, const char *propname, Rt &ret )
 
 inline bool MetaInfo::invokeMethodWithoutReturn_(Object *obj, const char *methodName)
 {
-	return invokeMethod(obj, methodName, ReturnArgument(), Argument(), Argument(), Argument(), Argument(), Argument());
+	return invokeMethod(obj, methodName, Ref(), ConstRef(), ConstRef(), ConstRef(), ConstRef(), ConstRef());
 }
 
 template <class A0>
 bool MetaInfo::invokeMethodWithoutReturn_(Object *obj, const char *methodName, const A0 &a0)
 {
-	return invokeMethod(obj, methodName, ReturnArgument(), AX_ARG(a0), Argument(), Argument(), Argument(), Argument());
+	return invokeMethod(obj, methodName, Ref(), AX_ARG(a0), ConstRef(), ConstRef(), ConstRef(), ConstRef());
 }
 
 template <class A0, class A1>
 bool MetaInfo::invokeMethodWithoutReturn_(Object *obj, const char *methodName, const A0 &a0, const A1 &a1)
 {
-	return invokeMethod(obj, methodName, ReturnArgument(), AX_ARG(a0), AX_ARG(a1), Argument(), Argument(), Argument());
+	return invokeMethod(obj, methodName, Ref(), AX_ARG(a0), AX_ARG(a1), ConstRef(), ConstRef(), ConstRef());
 }
 
 template <class A0, class A1, class A2>
 bool MetaInfo::invokeMethodWithoutReturn_(Object *obj, const char *methodName, const A0 &a0, const A1 &a1, const A2 &a2)
 {
-	return invokeMethod(obj, methodName, ReturnArgument(), AX_ARG(a0), AX_ARG(a1), AX_ARG(a2), Argument(), Argument());
+	return invokeMethod(obj, methodName, Ref(), AX_ARG(a0), AX_ARG(a1), AX_ARG(a2), ConstRef(), ConstRef());
 }
 
 template <class A0, class A1, class A2, class A3>
 bool MetaInfo::invokeMethodWithoutReturn_(Object *obj, const char *methodName, const A0 &a0, const A1 &a1, const A2 &a2, const A3 &a3)
 {
-	return invokeMethod(obj, methodName, ReturnArgument(), AX_ARG(a0), AX_ARG(a1), AX_ARG(a2), AX_ARG(a3), Argument());
+	return invokeMethod(obj, methodName, Ref(), AX_ARG(a0), AX_ARG(a1), AX_ARG(a2), AX_ARG(a3), ConstRef());
 }
 
 template <class A0, class A1, class A2, class A3, class A4>
 bool MetaInfo::invokeMethodWithoutReturn_(Object *obj, const char *methodName, const A0 &a0, const A1 &a1, const A2 &a2, const A3 &a3, const A4 &a4)
 {
-	return invokeMethod(obj, methodName, ReturnArgument(), AX_ARG(a0), AX_ARG(a1), AX_ARG(a2), AX_ARG(a3), AX_ARG(a4));
+	return invokeMethod(obj, methodName, Ref(), AX_ARG(a0), AX_ARG(a1), AX_ARG(a2), AX_ARG(a3), AX_ARG(a4));
 }
 
 template <class Rt>
 bool MetaInfo::invokeMethod_(Object *obj, const char *methodName, Rt &ret)
 {
-	return invokeMethod(obj, methodName, AX_RETURN_ARG(ret), Argument(), Argument(), Argument(), Argument(), Argument());
+	return invokeMethod(obj, methodName, AX_RETURN_ARG(ret), ConstRef(), ConstRef(), ConstRef(), ConstRef(), ConstRef());
 }
 
 template <class Rt, class A0>
 bool MetaInfo::invokeMethod_(Object *obj, const char *methodName, Rt &ret, const A0 &a0)
 {
-	return invokeMethod(obj, methodName, AX_RETURN_ARG(ret), AX_ARG(a0), Argument(), Argument(), Argument(), Argument());
+	return invokeMethod(obj, methodName, AX_RETURN_ARG(ret), AX_ARG(a0), ConstRef(), ConstRef(), ConstRef(), ConstRef());
 }
 
 template <class Rt, class A0, class A1>
 bool MetaInfo::invokeMethod_(Object *obj, const char *methodName, Rt &ret, const A0 &a0, const A1 &a1)
 {
-	return invokeMethod(obj, methodName, AX_RETURN_ARG(ret), AX_ARG(a0), AX_ARG(a1), Argument(), Argument(), Argument());
+	return invokeMethod(obj, methodName, AX_RETURN_ARG(ret), AX_ARG(a0), AX_ARG(a1), ConstRef(), ConstRef(), ConstRef());
 }
 
 template <class Rt, class A0, class A1, class A2>
 bool MetaInfo::invokeMethod_(Object *obj, const char *methodName, Rt &ret, const A0 &a0, const A1 &a1, const A2 &a2)
 {
-	return invokeMethod(obj, methodName, AX_RETURN_ARG(ret), AX_ARG(a0), AX_ARG(a1), AX_ARG(a2), Argument(), Argument());
+	return invokeMethod(obj, methodName, AX_RETURN_ARG(ret), AX_ARG(a0), AX_ARG(a1), AX_ARG(a2), ConstRef(), ConstRef());
 }
 
 template <class Rt, class A0, class A1, class A2, class A3>
 bool MetaInfo::invokeMethod_(Object *obj, const char *methodName, Rt &ret, const A0 &a0, const A1 &a1, const A2 &a2, const A3 &a3)
 {
-	return invokeMethod(obj, methodName, AX_RETURN_ARG(ret), AX_ARG(a0), AX_ARG(a1), AX_ARG(a2), AX_ARG(a3), Argument());
+	return invokeMethod(obj, methodName, AX_RETURN_ARG(ret), AX_ARG(a0), AX_ARG(a1), AX_ARG(a2), AX_ARG(a3), ConstRef());
 }
 
 template <class Rt, class A0, class A1, class A2, class A3, class A4>

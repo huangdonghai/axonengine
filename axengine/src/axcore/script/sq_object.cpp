@@ -41,7 +41,7 @@ _MEMBER_FUNCTION_IMPL(Object_c, _get)
 		if (!success)
 			return SQ_ERROR;
 
-		return sa.retRawData(Argument(arg.getTypeId(), arg.getPointer()));
+		return sa.retRawData(ConstRef(arg.getTypeId(), arg.getPointer()));
 	}
 
 	return SQ_ERROR;
@@ -60,17 +60,17 @@ _MEMBER_FUNCTION_IMPL(Object_c, _set)
 	if (!member || !member->isProperty()) return SQ_ERROR;
 
 	Variant::TypeId propType = member->getPropType();
-	Result value;
+	Value value;
 	sa.getRawData(3, value);
 
 	// type is matched
-	if (value.typeId == propType) {
-		bool success = member->setProperty(obj, value.data);
+	if (value.getTypeId() == propType) {
+		bool success = member->setProperty(obj, value.getPointer());
 		return success ? 0 : SQ_ERROR;
 	}
 
-	Variant castTo(propType);
-	bool success = Variant::rawCast(value.typeId, value.data, propType, castTo.getPointer());
+	Value castTo(propType);
+	bool success = value.castTo(castTo);
 	if (!success) {
 		return SQ_ERROR;
 	}

@@ -665,6 +665,8 @@ void ScriptSystem::initialize()
 	_INIT_CLASS(Rect);
 	_INIT_CLASS(Matrix);
 
+	g_mainVM->runFile("start.nut");
+
 	Printf(_("Initialized ScriptSystem\n"));
 }
 
@@ -714,7 +716,7 @@ void ScriptSystem::executeString(const char *text)
 void ScriptSystem::executeLine( const char *text )
 {
 	SquirrelObject bytecode = g_mainVM->compileBuffer(text);
-	g_mainVM->runScript(bytecode);
+	g_mainVM->runBytecode(bytecode);
 }
 
 

@@ -2,9 +2,9 @@
 
 AX_BEGIN_NAMESPACE
 
-bool MetaInfo::invokeMethod(Object *obj, const char *methodName, const ReturnArgument &ret,
-							const Argument &arg0, const Argument &arg1, const Argument &arg2,
-							const Argument &arg3, const Argument &arg4)
+bool MetaInfo::invokeMethod(Object *obj, const char *methodName, const Ref &ret,
+							const ConstRef &arg0, const ConstRef &arg1, const ConstRef &arg2,
+							const ConstRef &arg3, const ConstRef &arg4)
 {
 	Member *member = findMember(methodName);
 
@@ -16,59 +16,55 @@ bool MetaInfo::invokeMethod(Object *obj, const char *methodName, const ReturnArg
 
 	// check types
 	Variant::TypeId needReturnType = member->getReturnType();
-	Result realRet(ret.typeId, ret.data);
+	Value realRet(ret.getTypeId(), ret.getPointer());
 	bool castRet = false;
-	if (ret.typeId != needReturnType) {
-		if (needReturnType != Variant::kVoid && ret.typeId != Variant::kVoid) {
-			if (!Variant::canCast(needReturnType, ret.typeId))
+
+	if (ret.getTypeId() != needReturnType) {
+		if (needReturnType != Variant::kVoid && ret.getTypeId() != Variant::kVoid) {
+			if (!Variant::canCast(needReturnType, ret.getTypeId())) {
 				return false;
-			else {
-				realRet.typeId = needReturnType;
-				realRet.data = Alloca(Variant::getTypeSize(realRet.typeId));
-				realRet.needDesturct = true;
+			} else {
+				AX_STACK_VALUE(realRet, needReturnType);
 				castRet = true;
 			}
 		}
 	}
 
-	Argument args[] = { arg0, arg1, arg2, arg3, arg4 };
+	ConstRef args[] = { arg0, arg1, arg2, arg3, arg4 };
 
-	Result realArg[AX_MAX_ARGS];
+	Value realArg[AX_MAX_ARGS];
 	const Variant::TypeId *needTypeIds = member->getArgsType();
 	for (int i = 0; i <member->argc(); i++) {
-		if (args[i].typeId == needTypeIds[i])
+		if (args[i].getTypeId() == needTypeIds[i])
 			continue;
 
-		if (!Variant::canCast(args[i].typeId, needTypeIds[i]))
+		if (!Variant::canCast(args[i].getTypeId(), needTypeIds[i]))
 			return false;
 
-		void *tempData = Alloca(Variant::getTypeSize(needTypeIds[i]));
-		realArg[i].typeId = needTypeIds[i];
-		realArg[i].data = tempData;
-		realArg[i].needDesturct = true;
-		bool casted = Variant::rawCast(args[i].typeId, args[i].data, realArg[i].typeId, tempData);
+		AX_STACK_VALUE(realArg[i], needTypeIds[i]);
+
+		bool casted = args[i].castTo(realArg[i]);
 		if (!casted)
 			return false;
 
-		args[i].typeId = realArg[i].typeId;
-		args[i].data = realArg[i].data;
+		args[i].set(realArg[i].getTypeId(), realArg[i].getPointer());
 	}
 
 	const void *argDatas[] = {
-		arg0.data, arg1.data, arg2.data, arg3.data, arg4.data
+		arg0.getPointer(), arg1.getPointer(), arg2.getPointer(), arg3.getPointer(), arg4.getPointer()
 	};
 
 	// really call
-	int numResult = member->invoke(obj, realRet.data, argDatas);
+	int numResult = member->invoke(obj, realRet.getPointer(), argDatas);
 
 	if (numResult && castRet) {
-		return Variant::rawCast(realRet.typeId, realRet.data, ret.typeId, ret.data);
+		return realRet.castTo(ret);
 	}
 
 	return true;
 }
 
-bool MetaInfo::getProperty( Object *obj, const char *propname, const ReturnArgument &ret )
+bool MetaInfo::getProperty( Object *obj, const char *propname, const Ref &ret )
 {
 	Member *member = findMember(propname);
 
@@ -79,30 +75,29 @@ bool MetaInfo::getProperty( Object *obj, const char *propname, const ReturnArgum
 		return false;
 
 	Variant::TypeId needReturnType = member->getPropType();
-	Result realRet(ret.typeId, ret.data);
+	Value realRet(ret.getTypeId(), ret.getPointer());
 	bool castRet = false;
-	if (ret.typeId != needReturnType) {
-		if (needReturnType != Variant::kVoid && ret.typeId != Variant::kVoid) {
-			if (!Variant::canCast(needReturnType, ret.typeId))
+
+	if (ret.getTypeId() != needReturnType) {
+		if (needReturnType != Variant::kVoid && ret.getTypeId() != Variant::kVoid) {
+			if (!Variant::canCast(needReturnType, ret.getTypeId())) {
 				return false;
-			else {
-				realRet.typeId = needReturnType;
-				realRet.data = Alloca(Variant::getTypeSize(realRet.typeId));
-				realRet.needDesturct = true;
+			} else {
+				AX_STACK_VALUE(realRet, needReturnType);
 				castRet = true;
 			}
 		}
 	}
 
-	int numResult = member->getProperty(obj, realRet.data);
+	int numResult = member->getProperty(obj, realRet.getPointer());
 	if (numResult && castRet) {
-		return Variant::rawCast(realRet.typeId, realRet.data, ret.typeId, ret.data);
+		return realRet.castTo(ret);
 	}
 
 	return true;
 }
 
-bool MetaInfo::setProperty( Object *obj, const char *propname, const Argument &arg )
+bool MetaInfo::setProperty( Object *obj, const char *propname, const ConstRef &arg )
 {
 	Member *member = findMember(propname);
 
@@ -113,22 +108,22 @@ bool MetaInfo::setProperty( Object *obj, const char *propname, const Argument &a
 		return false;
 
 	Variant::TypeId propTypeId = member->getPropType();
-	Argument realArg = arg;
+	Value argValue;
+	const void *argData = arg.getPointer();
 
-	if (realArg.typeId != propTypeId) {
-		if (!Variant::canCast(realArg.typeId, propTypeId))
+	if (arg.getTypeId() != propTypeId) {
+		if (!Variant::canCast(arg.getTypeId(), propTypeId))
 			return false;
 
-		realArg.typeId = propTypeId;
-		void *realData = Alloca(Variant::getTypeSize(propTypeId));
-		bool casted = Variant::rawCast(arg.typeId, arg.data, propTypeId, realData);
+		AX_STACK_VALUE(argValue, propTypeId);
+		bool casted = arg.castTo(argValue);
 		if (!casted)
 			return false;
 
-		realArg.data = realData;
+		argData = argValue.getPointer();
 	}
 
-	return member->setProperty(obj, realArg.data);
+	return member->setProperty(obj, argData);
 }
 
 
