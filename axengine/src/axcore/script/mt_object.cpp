@@ -2,22 +2,50 @@
 
 AX_BEGIN_NAMESPACE
 
-int ScriptMetacall(void *vm, Member *member)
+int ScriptMetacall(HSQUIRRELVM v)
 {
-	HSQUIRRELVM v = static_cast<HSQUIRRELVM>(vm);
-	_CHECK_SELF(ObjectStar, Object_c);
+	StackHandler sa(v);
+	_CHECK_SELF_OBJ();
+	int nargs = sa.getParamCount();
 
-	return 0;
+	Member *member = (Member *)sa.getUserPointer(nargs);
+
+	AX_ASSERT(member->isMethod());
+
+	int argc = member->argc();
+	if (nargs - 2 < argc)
+		return SQ_ERROR;
+
+	const Variant::TypeId * argTypes = member->getArgsType();
+	Value values[AX_MAX_ARGS];
+	const void *argv[AX_MAX_ARGS];
+
+	for (int i = 0; i < argc; i++) {
+		sa.getRawData(i+2, values[i]);
+
+		if (values[i].getTypeId() != argTypes[i]) {
+			bool castSuccess = values[i].castSelf(argTypes[i]);
+			if (!castSuccess)
+				return SQ_ERROR;
+		}
+
+		argv[i] = values[i].getPointer();
+	}
+
+	Value ret(member->getReturnType());
+	int nret = member->invoke(self, ret.getPointer(), argv);
+
+	if (nret = 0) return 0;
+
+	return sa.retRawData(ConstRef(ret.getTypeId(), ret.getPointer()));
 }
-
-#define STACK_RET(name, id)
 
 _IMPL_NATIVE_CONSTRUCTION(Object_c, ObjectStar);
 
 _MEMBER_FUNCTION_IMPL(Object_c, constructor)
 {
 	StackHandler sa(v);
-	_CHECK_SELF(ObjectStar, Object_c);
+	_CHECK_SELF_OBJ();
 	self = 0;
 	return 1;
 }
@@ -25,10 +53,9 @@ _MEMBER_FUNCTION_IMPL(Object_c, constructor)
 _MEMBER_FUNCTION_IMPL(Object_c, _get)
 {
 	StackHandler sa(v);
-	_CHECK_SELF(ObjectStar, Object_c);
-	ObjectStar obj = *self;
+	_CHECK_SELF_OBJ();
 	const SQChar *s = sa.getString(2);
-	MetaInfo *metaInfo = obj->getMetaInfo();
+	MetaInfo *metaInfo = self->getMetaInfo();
 	Member *member = metaInfo->findMember(s);
 
 	if (!member) return SQ_ERROR;
@@ -37,13 +64,14 @@ _MEMBER_FUNCTION_IMPL(Object_c, _get)
 		Variant::TypeId propType = member->getPropType();
 		Variant arg(propType);
 
-		bool success = member->getProperty(obj, arg.getPointer());
+		bool success = member->getProperty(self, arg.getPointer());
 		if (!success)
 			return SQ_ERROR;
 
 		return sa.retRawData(ConstRef(arg.getTypeId(), arg.getPointer()));
 	}
 
+	return sa.Return(member->getScriptClousure().getSquirrelObject());
 	return SQ_ERROR;
 //	return sa.Return(member->m_scriptClosure);
 }
@@ -51,10 +79,9 @@ _MEMBER_FUNCTION_IMPL(Object_c, _get)
 _MEMBER_FUNCTION_IMPL(Object_c, _set)
 {
 	StackHandler sa(v);
-	_CHECK_SELF(ObjectStar, Object_c);
-	ObjectStar obj = *self;
+	_CHECK_SELF_OBJ();
 	const SQChar *s = sa.getString(2);
-	MetaInfo *metaInfo = obj->getMetaInfo();
+	MetaInfo *metaInfo = self->getMetaInfo();
 	Member *member = metaInfo->findMember(s);
 
 	if (!member || !member->isProperty()) return SQ_ERROR;
@@ -65,17 +92,17 @@ _MEMBER_FUNCTION_IMPL(Object_c, _set)
 
 	// type is matched
 	if (value.getTypeId() == propType) {
-		bool success = member->setProperty(obj, value.getPointer());
+		bool success = member->setProperty(self, value.getPointer());
 		return success ? 0 : SQ_ERROR;
 	}
 
-	Value castTo(propType);
-	bool success = value.castTo(castTo);
+	Value casted(propType);
+	bool success = value.castTo(casted);
 	if (!success) {
 		return SQ_ERROR;
 	}
 
-	success = member->setProperty(obj, castTo.getPointer());
+	success = member->setProperty(self, casted.getPointer());
 
 	return success ? 0 : SQ_ERROR;
 }

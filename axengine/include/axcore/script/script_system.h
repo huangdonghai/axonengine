@@ -101,6 +101,8 @@ public:
 
 	const String &getPackagePath() { return m_packagePath; }
 
+	static ScriptValue createMetaClosure(Member *method);
+
 protected:
 	void linkMetaInfoToClassInfo(MetaInfo *ti);
 

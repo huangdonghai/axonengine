@@ -38,7 +38,7 @@ protected:
 	static void printFunc(HSQUIRRELVM v, const SQChar* s,...);
 
 public:
-	static HSQUIRRELVM ms_rootVM;
+	static HSQUIRRELVM VM;   // main vm
 	static SquirrelObject ms_getClosure;
 	static SquirrelObject ms_setClosure;
 	HSQUIRRELVM m_vm;
@@ -54,7 +54,7 @@ public:
 	SquirrelObject(const SquirrelObject &o);
 	SquirrelObject(HSQOBJECT o);
 
-#if 1
+#if 0
 	template <typename _ty>
 	SquirrelObject(const _ty & val) { sq_resetobject(&_o); set((_ty &)val); } // Cast away const to avoid compiler SqPlus::Push() match issue.
 	template <typename _ty>
@@ -151,6 +151,7 @@ public:
 	// === Return base class of object using sq_getbase() === 
 	SquirrelObject getBase();
 
+#if 0
 	// === BEGIN code suggestion from the Wiki ===
 	// get any bound type from this SquirrelObject. Note that Squirrel's handling of references and pointers still holds here.
 	template<typename _ty>
@@ -163,7 +164,7 @@ public:
 	// set any bound type to this SquirrelObject. Note that Squirrel's handling of references and pointers still holds here.
 	template<typename _ty>
 	SquirrelObject &set(_ty & val);
-
+#endif
 	// === END code suggestion from the Wiki ===
 	Ref tryToReturnArgument();
 
@@ -185,7 +186,7 @@ struct StackHandler
 	SQFloat getFloat(int idx)
 	{
 		SQFloat x = 0.0f;
-		if(idx > 0 && idx <= _top) {
+		if (idx > 0 && idx <= _top) {
 			sq_getfloat(v, idx, &x);
 		}
 		return x;
@@ -194,7 +195,7 @@ struct StackHandler
 	SQInteger getInt(int idx)
 	{
 		SQInteger x = 0;
-		if(idx > 0 && idx <= _top) {
+		if (idx > 0 && idx <= _top) {
 			sq_getinteger(v, idx, &x);
 		}
 		return x;
@@ -203,7 +204,7 @@ struct StackHandler
 	HSQOBJECT getObjectHandle(int idx)
 	{
 		HSQOBJECT x;
-		if(idx > 0 && idx <= _top) {
+		if (idx > 0 && idx <= _top) {
 			sq_resetobject(&x);
 			sq_getstackobj(v, idx, &x);
 		}
@@ -213,7 +214,7 @@ struct StackHandler
 	const SQChar *getString(int idx)
 	{
 		const SQChar *x = NULL;
-		if(idx > 0 && idx <= _top) {
+		if (idx > 0 && idx <= _top) {
 			sq_getstring(v, idx, &x);
 		}
 		return x;
@@ -222,7 +223,7 @@ struct StackHandler
 	SQUserPointer getUserPointer(int idx)
 	{
 		SQUserPointer x = 0;
-		if(idx > 0 && idx <= _top) {
+		if (idx > 0 && idx <= _top) {
 			sq_getuserpointer(v, idx, &x);
 		}
 		return x;
@@ -231,7 +232,7 @@ struct StackHandler
 	SQUserPointer getInstanceUp(int idx, SQUserPointer tag)
 	{
 		SQUserPointer self;
-		if(SQ_FAILED(sq_getinstanceup(v, idx,(SQUserPointer*)&self, tag)))
+		if (SQ_FAILED(sq_getinstanceup(v, idx,(SQUserPointer*)&self, tag)))
 			return NULL;
 		return self;
 	}
@@ -240,7 +241,7 @@ struct StackHandler
 	{
 		SQUserPointer otag;
 		SQUserPointer up;
-		if(idx > 0 && idx <= _top) {
+		if (idx > 0 && idx <= _top) {
 			if(SQ_SUCCEEDED(sq_getuserdata(v, idx, &up,&otag))) {
 				if(tag == otag)
 					return up;

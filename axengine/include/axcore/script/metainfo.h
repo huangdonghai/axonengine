@@ -30,7 +30,7 @@ public:
 		return Variant::rawCast(m_typeId, m_voidstar, id, data);
 	}
 
-	bool castTo(const Value &val) const;
+	bool castTo(Value &val) const;
 
 private:
 	Variant::TypeId m_typeId;
@@ -40,7 +40,7 @@ private:
 class Ref
 {
 public:
-	Ref(Variant::TypeId t = Variant::kVoid, void *d = 0) : m_typeId(t), m_voidstar(d) {}
+	explicit Ref(Variant::TypeId t = Variant::kVoid, void *d = 0) : m_typeId(t), m_voidstar(d) {}
 
 	Variant::TypeId getTypeId() const { return m_typeId; }
 	void *getPointer() const { return m_voidstar; }
@@ -64,16 +64,20 @@ private:
 class Value : Noncopyable
 {
 public:
-	Value() : m_typeId(Variant::kVoid), m_voidstar(0), m_needDestruct(false), m_needFree(false) {}
-	Value(Variant::TypeId t, void *d, bool nd = false, bool nf = false)
-		: m_typeId(t), m_voidstar(d), m_needDestruct(nd), m_needFree(nf)
-	{}
+	enum {
+		MINIBUF_SIZE = sizeof(void *)
+	};
 
-	Value(Variant::TypeId t) : m_typeId(t), m_voidstar(Malloc(Variant::getTypeSize(t))), m_needDestruct(true), m_needFree(true)
+	Value() : m_typeId(Variant::kVoid), m_voidstar(0), m_needDestruct(false), m_needFree(false) {}
+
+	explicit Value(Variant::TypeId t)
 	{
-		if (m_needDestruct) {
-			Variant::construct(m_typeId, m_voidstar);
-		}
+		_init(t);
+	}
+
+	Value(Variant::TypeId t, void *d, bool copy)
+	{
+		_init(t, d, copy);
 	}
 
 	~Value() { clear(); }
@@ -81,40 +85,33 @@ public:
 	void init(Variant::TypeId id)
 	{
 		clear();
-		m_typeId = id;
-		m_voidstar = Malloc(Variant::getTypeSize(id));
-		m_needDestruct = true;
-		m_needFree = true;
-
-		Variant::construct(m_typeId, m_voidstar);
+		_init(id);
 	}
 
-	void init(Variant::TypeId id, void *data, bool destruct = false)
+	void init(Variant::TypeId id, void *data, bool copy = false)
 	{
 		clear();
-		m_typeId = id;
-		m_voidstar = data;
-		m_needDestruct = destruct;
-
-		if (destruct) {
-			Variant::construct(m_typeId, m_voidstar);
-		}
+		_init(id, data, copy);
 	}
 
 	Variant::TypeId getTypeId() const { return m_typeId; }
-	void *getPointer() const { return m_voidstar; }
+
+	const void *getPointer() const
+	{ if (m_isMinibuf) return m_minibuf; else return m_voidstar; }
+	void *getPointer()
+	{ if (m_isMinibuf) return m_minibuf; else return m_voidstar; }
 
 	template<class Q>
 	Q& ref()
 	{
 		AX_ASSERT(GetVariantType_<Q>() == m_typeId);
-		return *(Q *)m_voidstar;
+		return *(Q *)getPointer();
 	}
 
 	template<class Q>
 	const Q& ref() const {
 		AX_ASSERT(GetVariantType_<Q>() == m_typeId);
-		return *(const Q *)m_voidstar;
+		return *(const Q *)getPointer();
 	}
 
 
@@ -124,19 +121,19 @@ public:
 			return;
 
 		if (m_needDestruct) {
-			Variant::destruct(m_typeId, m_voidstar);
+			Variant::destruct(m_typeId, getPointer());
 		}
 
 		if (m_needFree) {
 			Free(m_voidstar);
 		}
 
-		m_typeId = Variant::kVoid; m_voidstar = 0; m_needDestruct = false; m_needFree = false;
+		m_typeId = Variant::kVoid; m_voidstar = 0; m_needDestruct = false; m_needFree = false; m_isMinibuf = false;
 	}
 
 	bool castTo(Variant::TypeId id, void *data) const
 	{
-		return Variant::rawCast(m_typeId, m_voidstar, id, data);
+		return Variant::rawCast(m_typeId, getPointer(), id, data);
 	}
 
 	bool castTo(const Ref &ref) const
@@ -144,19 +141,76 @@ public:
 		return castTo(ref.getTypeId(), ref.getPointer());
 	}
 
-	bool castTo(const Value &val) const
+	bool castTo(Value &val) const
 	{
 		return castTo(val.getTypeId(), val.getPointer());
 	}
 
+	bool castSelf(Variant::TypeId toId)
+	{
+		if (m_typeId == toId) return true;
+		if (!Variant::canCast(m_typeId, toId)) return false;
+
+		void *toData = Alloca(Variant::getTypeSize(toId));
+		Variant::construct(toId, toData);
+
+		bool castSuccess = Variant::rawCast(m_typeId, getPointer(), toId, toData);
+		if (!castSuccess) {
+			Variant::destruct(toId, toData);
+			Free(toData);
+			return false;
+		}
+
+		init(toId, toData);
+		return true;
+	}
+
+protected:
+	void _init(Variant::TypeId id)
+	{
+		if (Variant::getTypeSize(id) < MINIBUF_SIZE)
+			m_isMinibuf = true;
+
+		m_typeId = id;
+		if (!m_isMinibuf) {
+			m_voidstar = Malloc(Variant::getTypeSize(id));
+			m_needFree = true;
+		}
+
+		m_needDestruct = true;
+
+		Variant::construct(m_typeId, getPointer());
+	}
+
+	void _init(Variant::TypeId id, void *data, bool copy = false)
+	{
+		m_typeId = id;
+		if (Variant::getTypeSize(id) < MINIBUF_SIZE) {
+			m_isMinibuf = true;
+			m_needDestruct = true;
+			Variant::construct(m_typeId, getPointer(), data);
+			return;
+		}
+
+		m_needDestruct = false;
+
+//		if (destruct) {
+//			Variant::construct(m_typeId, getPointer());
+//		}
+	}
+
 private:
-	Variant::TypeId m_typeId : 30;
+	Variant::TypeId m_typeId : 16;
 	bool m_needDestruct : 1;
 	bool m_needFree : 1;
-	void *m_voidstar;
+	bool m_isMinibuf : 1;
+	union {
+		void *m_voidstar;
+		byte_t m_minibuf[MINIBUF_SIZE];
+	};
 };
 
-inline bool ConstRef::castTo(const Value &val) const
+inline bool ConstRef::castTo(Value &val) const
 {
 	return castTo(val.getTypeId(), val.getPointer());
 }
@@ -165,7 +219,7 @@ inline bool ConstRef::castTo(const Value &val) const
 #define AX_ARG(x) ConstRef::make(x)
 #define AX_RETURN_ARG(x) Ref::make(x)
 #define AX_RESULT(name, id) Value name(m_typeId, Alloca(Variant::getTypeSize(id)), true, false)
-#define AX_STACK_VALUE(name, id) name.init(id, Alloca(Variant::getTypeSize(id)), true)
+#define AX_STACK_VALUE(name, id) name._init(id, Alloca(Variant::getTypeSize(id)), true)
 
 //--------------------------------------------------------------------------
 // class Member
@@ -199,6 +253,7 @@ public:
 	const EnumItems &getEnumItems() const { return m_enumItems; }
 	const Variant::TypeId *getArgsType() const { return m_argsType; }
 	Variant::TypeId getReturnType() const { return m_returnType; }
+	ScriptValue &getScriptClousure() { return m_scriptClosure; }
 
 	// method
 	virtual int invoke(Object *obj, VariantSeq &stack) { AX_ASSERT(0); return 0;}
@@ -607,16 +662,11 @@ struct ReturnSpecialization<void> {
 //--------------------------------------------------------------------------
 // template Method_
 //--------------------------------------------------------------------------
-extern int ScriptMetacall(void *vm, Member *member);
+
 template< typename Signature >
 class Method_ : public Member {
 public:
 	AX_STATIC_ASSERT(0);
-
-	static int scriptEntry(void *vm)
-	{
-		return ScriptMetacall(vm, this);
-	}
 };
 
 template<typename Rt, typename T>
@@ -630,6 +680,7 @@ public:
 	{
 		m_argc = 0;
 		m_returnType = GetVariantType_<Rt>();
+		m_scriptClosure = ScriptSystem::createMetaClosure(this);
 	}
 
 	virtual int invoke(Object *obj, VariantSeq &stack)
@@ -665,6 +716,7 @@ public:
 		m_argc = 1;
 		m_returnType = GetVariantType_<Rt>();
 		m_argsType[0] = GetVariantType_<remove_const_reference<Arg0>::type>();
+		m_scriptClosure = ScriptSystem::createMetaClosure(this);
 	}
 
 	virtual int invoke(Object *obj, VariantSeq &stack) {
@@ -700,6 +752,7 @@ public:
 		m_returnType = GetVariantType_<Rt>();
 		m_argsType[0] = GetVariantType_<remove_const_reference<Arg0>::type>();
 		m_argsType[1] = GetVariantType_<remove_const_reference<Arg1>::type>();
+		m_scriptClosure = ScriptSystem::createMetaClosure(this);
 	}
 
 	virtual int invoke(Object *obj, VariantSeq &stack) {
@@ -736,6 +789,7 @@ public:
 		m_argsType[0] = GetVariantType_<remove_const_reference<Arg0>::type>();
 		m_argsType[1] = GetVariantType_<remove_const_reference<Arg1>::type>();
 		m_argsType[2] = GetVariantType_<remove_const_reference<Arg2>::type>();
+		m_scriptClosure = ScriptSystem::createMetaClosure(this);
 	}
 
 	virtual int invoke(Object *obj, VariantSeq &stack) {
@@ -773,6 +827,7 @@ public:
 		m_argsType[1] = GetVariantType_<remove_const_reference<Arg1>::type>();
 		m_argsType[2] = GetVariantType_<remove_const_reference<Arg2>::type>();
 		m_argsType[3] = GetVariantType_<remove_const_reference<Arg3>::type>();
+		m_scriptClosure = ScriptSystem::createMetaClosure(this);
 	}
 
 	virtual int invoke(Object *obj, VariantSeq &stack) {
@@ -811,6 +866,7 @@ public:
 		m_argsType[2] = GetVariantType_<remove_const_reference<Arg2>::type>();
 		m_argsType[3] = GetVariantType_<remove_const_reference<Arg3>::type>();
 		m_argsType[4] = GetVariantType_<remove_const_reference<Arg4>::type>();
+		m_scriptClosure = ScriptSystem::createMetaClosure(this);
 	}
 
 	virtual int invoke(Object *obj, VariantSeq &stack) {

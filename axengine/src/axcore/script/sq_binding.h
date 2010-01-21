@@ -79,7 +79,7 @@ struct SquirrelClassDecl __##classname##_decl = {  \
 	int __##classname##_##name(HSQUIRRELVM v)
 
 #define _INIT_STATIC_NAMESPACE(classname) CreateStaticNamespace(SquirrelVM::getVM(),&__##classname##_decl);
-#define _INIT_CLASS(classname)CreateClass(SquirrelVM::ms_rootVM,&__##classname##_decl);
+#define _INIT_CLASS(classname)CreateClass(SquirrelVM::VM,&__##classname##_decl);
 
 #define _DECL_STATIC_NAMESPACE(xnamespace) extern struct ScriptNamespaceDecl __##xnamespace##_decl;
 #define _DECL_CLASS(classname) extern struct SquirrelClassDecl __##classname##_decl;
@@ -87,6 +87,12 @@ struct SquirrelClassDecl __##classname##_decl = {  \
 #define _CHECK_SELF(cppclass, scriptclass) \
 	cppclass *self = NULL; \
 	if (SQ_FAILED(sq_getinstanceup(v, 1, (SQUserPointer*)&self, (SQUserPointer)&__##scriptclass##_decl))) { \
+		return sq_throwerror(v, _SC("invalid instance type"));\
+	}
+
+#define _CHECK_SELF_OBJ() \
+	ObjectStar self = NULL; \
+	if (SQ_FAILED(sq_getinstanceup(v, 1, (SQUserPointer*)&self, (SQUserPointer)&__##Object_c##_decl))) { \
 		return sq_throwerror(v, _SC("invalid instance type"));\
 	}
 
@@ -116,10 +122,7 @@ static Variant::TypeId classname##_getId() \
 } \
 bool push_##classname(HSQUIRRELVM v, cppclass &quat) \
 { \
-	cppclass *newquat = new cppclass; \
-	*newquat = quat; \
-	if (!CreateNativeClassInstance(v, _SC(#classname), newquat, 0)) { \
-		delete newquat; \
+	if (!CreateNativeClassInstance(v, _SC(#classname), &quat)) { \
 		return FALSE; \
 	} \
 	return TRUE; \
@@ -137,7 +140,7 @@ SquirrelObject new_##classname(HSQUIRRELVM v, cppclass &quat) \
 
 bool CreateStaticNamespace(HSQUIRRELVM v, ScriptNamespaceDecl *sn);
 bool CreateClass(HSQUIRRELVM v, SquirrelClassDecl *cd);
-bool CreateNativeClassInstance(HSQUIRRELVM v, const SQChar *classname, SQUserPointer ud, SQRELEASEHOOK hook);
+bool CreateNativeClassInstance(HSQUIRRELVM v, const SQChar *classname, SQUserPointer ud);
 
 AX_END_NAMESPACE
 

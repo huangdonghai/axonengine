@@ -906,6 +906,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\include\axcore\script\script_all.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\include\axcore\script\script_system.h"
 					>
 				</File>

@@ -61,9 +61,17 @@ class AX_API Variant
 		MINIBUF_SIZE = 3 * sizeof(float)
 	};
 
+	enum StoreMode {
+		StoreMinibuf, StoreHeap, StoreRef, StoreStack
+	};
+
 public:
 	enum TypeId {
 		kVoid, kBool, kInt, kFloat, kString, kObject, kVector3, kColor3, kPoint, kRect, kMatrix, kTable, kScriptValue, kMaxType
+	};
+
+	enum InitMode {
+		InitCopy, InitRef, InitStack
 	};
 
 	class TypeHandler
@@ -98,7 +106,10 @@ public:
 	Variant(const LuaTable &table);
 	Variant(const Matrix &matrix);
 	explicit Variant(TypeId typeId);
+	explicit Variant(TypeId typeId, void * data, InitMode initMode=InitCopy);
 	~Variant();
+
+	void init(TypeId typeId, void *data, InitMode initMode = InitCopy);
 
 	void clear();
 	operator bool() const;
@@ -144,7 +155,7 @@ public:
 	static void destruct(TypeId typeId, void *ptr);
 
 protected:
-	void init(Variant::TypeId t, const void *fromData);
+	void _init(Variant::TypeId t, const void *fromData, InitMode initMode = InitCopy);
 	TypeHandler *getHandler() const;
 	static TypeHandler *getHandler(Variant::TypeId typeId);
 
@@ -168,7 +179,8 @@ private:
 		byte_t m_minibuf[MINIBUF_SIZE];
 	};
 
-	TypeId m_type : 30;
+	TypeId m_type : 16;
+	StoreMode m_storeMode : 7;
 	int m_isMinibuf : 1;
 };
 
@@ -294,18 +306,6 @@ template<class T>
 T variant_cast(const Variant &v) {
 	return variant_cast_helper<T>().doCast(v);
 }
-#if 0
-template<>
-Object *variant_cast<Object*>(const Variant &v) {
-	return v.operator Object*();
-}
-
-template<class T>
-T *variant_cast<T*>(const Variant &v) {
-	Object *obj = variant_cast<Object*>(v);
-	return 0;
-}
-#endif
 
 AX_END_NAMESPACE
 

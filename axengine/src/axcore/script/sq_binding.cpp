@@ -93,7 +93,7 @@ bool CreateClass(HSQUIRRELVM v, SquirrelClassDecl *cd)
 	return true;
 }
 
-bool CreateNativeClassInstance(HSQUIRRELVM v, const SQChar *classname, SQUserPointer ud, SQRELEASEHOOK hook)
+bool CreateNativeClassInstance(HSQUIRRELVM v, const SQChar *classname, SQUserPointer ud)
 {
 	int oldtop = sq_gettop(v);
 	sq_pushroottable(v);
@@ -128,10 +128,12 @@ bool CreateNativeClassInstance(HSQUIRRELVM v, const SQChar *classname, SQUserPoi
 		sq_settop(v, oldtop);
 		return false;
 	}
-	memcpy(ptr, ud, Variant::getTypeSize(classDecl->typeId));
+	if (Variant::getTypeSize(classDecl->typeId) > sizeof(void *)) {
+		memcpy(ptr, ud, Variant::getTypeSize(classDecl->typeId));
+	} else {
+		sq_setinstanceup(v, -1, ud);
+	}
 #endif
-	if (hook)
-		sq_setreleasehook(v, -1, hook);
 
 	return true;
 }

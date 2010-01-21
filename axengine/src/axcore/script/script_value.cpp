@@ -44,6 +44,12 @@ namespace {
 ScriptValue::ScriptValue() : m_d(new SquirrelObject())
 {}
 
+ScriptValue::ScriptValue(const SquirrelObject &sobj) : m_d(new SquirrelObject(sobj))
+{}
+
+ScriptValue::ScriptValue(const ScriptValue &rhs) : m_d(new SquirrelObject(*rhs.m_d))
+{}
+
 ScriptValue::~ScriptValue()
 {
 	SafeDelete(m_d);
@@ -83,6 +89,12 @@ bool ScriptValue::rawCast(Variant::TypeId toType, void *toData) const
 Variant::TypeHandler * ScriptValue::getTypeHandler()
 {
 	return &s_scriptValueHandler;
+}
+
+ScriptValue& ScriptValue::operator=(const ScriptValue &rhs)
+{
+	*m_d = *rhs.m_d;
+	return *this;
 }
 
 AX_END_NAMESPACE

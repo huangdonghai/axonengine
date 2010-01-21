@@ -5,13 +5,12 @@
 #include <boost/mpl/int.hpp>
 
 /*
-	STORE		DESTRUCTION	NEEDFREE	POINTER		WRITABLE
+	STORE		DESTRUCTION	NEEDFREE	POINTER
 
-	isHeap		true		true		pointer		false
-	isMinibuf	true		false		minibuf		false
-	isStack		true		false		pointer		false
-	isRef		false		false		pointer		false
-	isConstRef	false		false		pointer		true
+	isHeap		true		true		pointer
+	isMinibuf	true		false		minibuf
+	isRef		false		false		pointer
+	isStack		true		false		pointer
 */
 
 AX_BEGIN_NAMESPACE
@@ -272,7 +271,7 @@ bool Variant::rawCast(TypeId fromType, const void *fromData, TypeId toType, void
 	return s_typeHandlers[fromType]->rawCast(fromData, toType, toData);
 }
 
-void Variant::init(Variant::TypeId t, const void *fromData)
+void Variant::_init(Variant::TypeId t, const void *fromData, InitMode initMode)
 {
 	m_type = t;
 	TypeHandler *h = s_typeHandlers[t];
@@ -319,6 +318,18 @@ Variant::TypeHandler * Variant::getHandler(Variant::TypeId typeId)
 	AX_ASSERT(typeId >= 0 && typeId < kMaxType);
 	return s_typeHandlers[typeId];
 }
+
+Variant::Variant(TypeId typeId, void * data, InitMode initMode/*=InitCopy*/)
+{
+	_init(typeId, data, initMode);
+}
+
+void Variant::init( TypeId typeId, void *data, InitMode initMode /*= InitCopy*/ )
+{
+	clear();
+	_init(typeId, data, initMode);
+}
+
 
 //--------------------------------------------------------------------------
 // class LuaTable

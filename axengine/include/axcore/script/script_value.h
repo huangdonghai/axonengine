@@ -10,7 +10,11 @@ class ScriptValue
 {
 public:
 	ScriptValue();
+	ScriptValue(const ScriptValue &rhs);
+	ScriptValue(const SquirrelObject &sobj);
 	~ScriptValue();
+
+	ScriptValue& operator=(const ScriptValue &rhs);
 
 	SquirrelObject& getSquirrelObject() { return *m_d; }
 	const SquirrelObject& getSquirrelObject() const { return *m_d; }

@@ -97,9 +97,9 @@ static inline int calcNumRegister( UniformItem::ValueType vt )
 
 Uniforms::Uniforms()
 {
-#define AX_ARRAY_UNIFORM(shadertype, axtype, name, num, vsreg, psreg) m_items[name].init(UniformItem::vt_##axtype, #name, vsreg, psreg, num);
-#define AX_UNIFORM(fxtype, axtype, name, vsreg, psreg) m_items[name].init(UniformItem::vt_##axtype, #name, vsreg, psreg, 1);
-#define AX_TEXTURE_UNIFORM(fxtype, name) m_items[name].init(UniformItem::vt_Texture, #name, 0, 0, 1);
+#define AX_ARRAY_UNIFORM(shadertype, axtype, name, num, vsreg, psreg) m_items[name]._init(UniformItem::vt_##axtype, #name, vsreg, psreg, num);
+#define AX_UNIFORM(fxtype, axtype, name, vsreg, psreg) m_items[name]._init(UniformItem::vt_##axtype, #name, vsreg, psreg, 1);
+#define AX_TEXTURE_UNIFORM(fxtype, name) m_items[name]._init(UniformItem::vt_Texture, #name, 0, 0, 1);
 
 	AX_UNIFORM_DEFS
 

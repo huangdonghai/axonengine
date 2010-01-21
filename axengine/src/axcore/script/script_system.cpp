@@ -1149,5 +1149,22 @@ void ScriptSystem::getClassList(const char *prefix, bool sort, StringSeq &result
 	}
 }
 
+extern int ScriptMetacall(HSQUIRRELVM vm);
+
+ScriptValue ScriptSystem::createMetaClosure(Member *method)
+{
+	int top = 0;
+	sq_pushuserpointer(SquirrelVM::VM, method);
+	sq_newclosure(SquirrelVM::VM, ScriptMetacall, 1);
+	sq_setparamscheck(SquirrelVM::VM, 0, 0);
+	sq_setnativeclosurename(SquirrelVM::VM, -1, method->getName());
+
+	SquirrelObject sobj;
+	sobj.attachToStackObject(-1);
+	sq_settop(SquirrelVM::VM, top);
+
+	return sobj;
+}
+
 AX_END_NAMESPACE
 
