@@ -27,8 +27,12 @@ _DECL_CLASS(Color3);
 _DECL_CLASS(Point);
 _DECL_CLASS(Rect);
 _DECL_CLASS(Matrix)
-_DECL_CLASS(Object_c)
-
+_DECL_CLASS(Object_c);
+_DECL_NATIVE_CONSTRUCTION(Vector3, Vector3);
+_DECL_NATIVE_CONSTRUCTION(Color3, Color3);
+_DECL_NATIVE_CONSTRUCTION(Point, Point);
+_DECL_NATIVE_CONSTRUCTION(Rect, Rect);
+_DECL_NATIVE_CONSTRUCTION(Matrix, Matrix);
 
 extern lua_State *L;
 Variant xReadStack(lua_State *L, int index);

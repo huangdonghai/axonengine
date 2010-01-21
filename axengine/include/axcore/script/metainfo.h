@@ -3,224 +3,6 @@
 
 AX_BEGIN_NAMESPACE
 
-enum {
-	AX_MAX_ARGS = 5
-};
-
-class ConstRef;
-class Ref;
-class Value;
-
-class ConstRef
-{
-public:
-	ConstRef(Variant::TypeId t = Variant::kVoid, const void *d = 0) : m_typeId(t), m_voidstar(d) {}
-
-	Variant::TypeId getTypeId() const { return m_typeId; }
-	const void *getPointer() const { return m_voidstar; }
-	void set(Variant::TypeId id, const void *ptr) { m_typeId = id; m_voidstar = ptr; }
-
-	template <class Q>
-	static ConstRef make(const Q &aData) {
-		return ConstRef(GetVariantType_<Q>(), static_cast<const void *>(&aData));
-	}
-
-	bool castTo(Variant::TypeId id, void *data) const
-	{
-		return Variant::rawCast(m_typeId, m_voidstar, id, data);
-	}
-
-	bool castTo(Value &val) const;
-
-private:
-	Variant::TypeId m_typeId;
-	const void *m_voidstar;
-};
-
-class Ref
-{
-public:
-	explicit Ref(Variant::TypeId t = Variant::kVoid, void *d = 0) : m_typeId(t), m_voidstar(d) {}
-
-	Variant::TypeId getTypeId() const { return m_typeId; }
-	void *getPointer() const { return m_voidstar; }
-	void set(Variant::TypeId id, void *ptr) { m_typeId = id; m_voidstar = ptr; }
-
-	template <class Q>
-	static Ref make(Q &aData) {
-		return Ref(GetVariantType_<Q>(), static_cast<void *>(&aData));
-	}
-
-	bool castTo(Variant::TypeId id, void *data) const
-	{
-		return Variant::rawCast(m_typeId, m_voidstar, id, data);
-	}
-
-private:
-	Variant::TypeId m_typeId;
-	void *m_voidstar;
-};
-
-class Value : Noncopyable
-{
-public:
-	enum {
-		MINIBUF_SIZE = sizeof(void *)
-	};
-
-	Value() : m_typeId(Variant::kVoid), m_voidstar(0), m_needDestruct(false), m_needFree(false) {}
-
-	explicit Value(Variant::TypeId t)
-	{
-		_init(t);
-	}
-
-	Value(Variant::TypeId t, void *d, bool copy)
-	{
-		_init(t, d, copy);
-	}
-
-	~Value() { clear(); }
-
-	void init(Variant::TypeId id)
-	{
-		clear();
-		_init(id);
-	}
-
-	void init(Variant::TypeId id, void *data, bool copy = false)
-	{
-		clear();
-		_init(id, data, copy);
-	}
-
-	Variant::TypeId getTypeId() const { return m_typeId; }
-
-	const void *getPointer() const
-	{ if (m_isMinibuf) return m_minibuf; else return m_voidstar; }
-	void *getPointer()
-	{ if (m_isMinibuf) return m_minibuf; else return m_voidstar; }
-
-	template<class Q>
-	Q& ref()
-	{
-		AX_ASSERT(GetVariantType_<Q>() == m_typeId);
-		return *(Q *)getPointer();
-	}
-
-	template<class Q>
-	const Q& ref() const {
-		AX_ASSERT(GetVariantType_<Q>() == m_typeId);
-		return *(const Q *)getPointer();
-	}
-
-
-	void clear()
-	{
-		if (m_typeId == Variant::kVoid)
-			return;
-
-		if (m_needDestruct) {
-			Variant::destruct(m_typeId, getPointer());
-		}
-
-		if (m_needFree) {
-			Free(m_voidstar);
-		}
-
-		m_typeId = Variant::kVoid; m_voidstar = 0; m_needDestruct = false; m_needFree = false; m_isMinibuf = false;
-	}
-
-	bool castTo(Variant::TypeId id, void *data) const
-	{
-		return Variant::rawCast(m_typeId, getPointer(), id, data);
-	}
-
-	bool castTo(const Ref &ref) const
-	{
-		return castTo(ref.getTypeId(), ref.getPointer());
-	}
-
-	bool castTo(Value &val) const
-	{
-		return castTo(val.getTypeId(), val.getPointer());
-	}
-
-	bool castSelf(Variant::TypeId toId)
-	{
-		if (m_typeId == toId) return true;
-		if (!Variant::canCast(m_typeId, toId)) return false;
-
-		void *toData = Alloca(Variant::getTypeSize(toId));
-		Variant::construct(toId, toData);
-
-		bool castSuccess = Variant::rawCast(m_typeId, getPointer(), toId, toData);
-		if (!castSuccess) {
-			Variant::destruct(toId, toData);
-			Free(toData);
-			return false;
-		}
-
-		init(toId, toData);
-		return true;
-	}
-
-protected:
-	void _init(Variant::TypeId id)
-	{
-		if (Variant::getTypeSize(id) < MINIBUF_SIZE)
-			m_isMinibuf = true;
-
-		m_typeId = id;
-		if (!m_isMinibuf) {
-			m_voidstar = Malloc(Variant::getTypeSize(id));
-			m_needFree = true;
-		}
-
-		m_needDestruct = true;
-
-		Variant::construct(m_typeId, getPointer());
-	}
-
-	void _init(Variant::TypeId id, void *data, bool copy = false)
-	{
-		m_typeId = id;
-		if (Variant::getTypeSize(id) < MINIBUF_SIZE) {
-			m_isMinibuf = true;
-			m_needDestruct = true;
-			Variant::construct(m_typeId, getPointer(), data);
-			return;
-		}
-
-		m_needDestruct = false;
-
-//		if (destruct) {
-//			Variant::construct(m_typeId, getPointer());
-//		}
-	}
-
-private:
-	Variant::TypeId m_typeId : 16;
-	bool m_needDestruct : 1;
-	bool m_needFree : 1;
-	bool m_isMinibuf : 1;
-	union {
-		void *m_voidstar;
-		byte_t m_minibuf[MINIBUF_SIZE];
-	};
-};
-
-inline bool ConstRef::castTo(Value &val) const
-{
-	return castTo(val.getTypeId(), val.getPointer());
-}
-
-
-#define AX_ARG(x) ConstRef::make(x)
-#define AX_RETURN_ARG(x) Ref::make(x)
-#define AX_RESULT(name, id) Value name(m_typeId, Alloca(Variant::getTypeSize(id)), true, false)
-#define AX_STACK_VALUE(name, id) name._init(id, Alloca(Variant::getTypeSize(id)), true)
-
 //--------------------------------------------------------------------------
 // class Member
 //--------------------------------------------------------------------------
@@ -228,6 +10,10 @@ inline bool ConstRef::castTo(Value &val) const
 class AX_API Member
 {
 public:
+	enum {
+		MaxArgs = 5
+	};
+
 	typedef int (*ScriptFunc)(void *vm);
 
 	enum Type {
@@ -288,7 +74,7 @@ protected:
 	// for method
 	int m_argc;
 	Variant::TypeId m_returnType;
-	Variant::TypeId m_argsType[AX_MAX_ARGS];
+	Variant::TypeId m_argsType[MaxArgs];
 	ScriptValue m_scriptClosure;
 
 	// for property
@@ -658,6 +444,8 @@ struct ReturnSpecialization<void> {
 
 };
 #undef P
+#undef ARG
+#undef RET
 
 //--------------------------------------------------------------------------
 // template Method_

@@ -271,17 +271,18 @@ bool Variant::rawCast(TypeId fromType, const void *fromData, TypeId toType, void
 	return s_typeHandlers[fromType]->rawCast(fromData, toType, toData);
 }
 
-void Variant::_init(Variant::TypeId t, const void *fromData, InitMode initMode)
+
+void Variant::_init( Variant::TypeId t, const void *fromData )
 {
 	m_type = t;
 	TypeHandler *h = s_typeHandlers[t];
 
 	void *toData = 0;
 	if (h->m_dataSize > MINIBUF_SIZE) {
-		m_isMinibuf = false;
+		m_storeMode = StoreHeap;
 		toData = m_voidstar = Malloc(h->m_dataSize);
 	} else {
-		m_isMinibuf = true;
+		m_storeMode = StoreMinibuf;
 		toData = m_minibuf;
 	}
 
@@ -289,6 +290,41 @@ void Variant::_init(Variant::TypeId t, const void *fromData, InitMode initMode)
 		h->construct(toData, fromData);
 	else
 		h->construct(toData);
+
+	return;
+}
+
+void Variant::_init(Variant::TypeId t, void *fromData, InitMode initMode)
+{
+	m_type = t;
+	TypeHandler *h = s_typeHandlers[t];
+
+	if (initMode == InitCopy) {
+		void *toData = 0;
+		if (h->m_dataSize > MINIBUF_SIZE) {
+			m_storeMode = StoreHeap;
+			toData = m_voidstar = Malloc(h->m_dataSize);
+		} else {
+			m_storeMode = StoreMinibuf;
+			toData = m_minibuf;
+		}
+
+		if (fromData)
+			h->construct(toData, fromData);
+		else
+			h->construct(toData);
+
+		return;
+	}
+
+	m_voidstar = fromData;
+
+	if (initMode == InitRef) {
+		m_storeMode = StoreRef;
+	} else {
+		m_storeMode = StoreStack;
+		h->construct(m_voidstar);
+	}
 }
 
 Variant::TypeHandler * Variant::getHandler() const
@@ -304,9 +340,11 @@ void Variant::clear()
 		return;
 
 	void *data = getPointer();
-	handler->destruct(data);
 
-	if (!m_isMinibuf) {
+	if (m_storeMode != StoreRef)
+		handler->destruct(data);
+
+	if (m_storeMode == StoreHeap) {
 		Free(m_voidstar);
 	}
 

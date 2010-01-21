@@ -93,7 +93,7 @@ bool CreateClass(HSQUIRRELVM v, SquirrelClassDecl *cd)
 	return true;
 }
 
-bool CreateNativeClassInstance(HSQUIRRELVM v, const SQChar *classname, SQUserPointer ud)
+bool CreateNativeClassInstance(HSQUIRRELVM v, const SQChar *classname, const void *ud)
 {
 	int oldtop = sq_gettop(v);
 	sq_pushroottable(v);
@@ -131,7 +131,7 @@ bool CreateNativeClassInstance(HSQUIRRELVM v, const SQChar *classname, SQUserPoi
 	if (Variant::getTypeSize(classDecl->typeId) > sizeof(void *)) {
 		memcpy(ptr, ud, Variant::getTypeSize(classDecl->typeId));
 	} else {
-		sq_setinstanceup(v, -1, ud);
+		sq_setinstanceup(v, -1, const_cast<void *>(ud));
 	}
 #endif
 

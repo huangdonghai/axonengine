@@ -272,13 +272,9 @@ struct StackHandler
 		return _top;
 	}
 
-	void getRawData(int idx, Value &result);
+	void getRawData(int idx, Variant &result);
 
-	int retRawData(const ConstRef &arg)
-	{
-		// TODO
-		return 0;
-	}
+	int retRawData(const ConstRef &arg);
 
 	int Return(const SQChar *s)
 	{

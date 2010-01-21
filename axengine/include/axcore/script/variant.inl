@@ -1,6 +1,6 @@
 AX_BEGIN_NAMESPACE
 
-inline Variant::Variant() : m_type(kVoid), m_isMinibuf(true), m_voidstar(0)
+inline Variant::Variant() : m_type(kVoid), m_storeMode(StoreMinibuf), m_voidstar(0)
 {}
 
 inline Variant::Variant(bool v)
@@ -113,6 +113,12 @@ inline Variant::operator String() const
 {
 	return castHelper<String>();
 }
+
+inline bool ConstRef::castTo(Variant &val) const
+{
+	return castTo(val.getTypeId(), val.getPointer());
+}
+
 #if 0
 inline void Variant::set(int v) {
 	clear();

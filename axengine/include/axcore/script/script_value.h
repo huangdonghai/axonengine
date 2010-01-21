@@ -16,8 +16,8 @@ public:
 
 	ScriptValue& operator=(const ScriptValue &rhs);
 
-	SquirrelObject& getSquirrelObject() { return *m_d; }
-	const SquirrelObject& getSquirrelObject() const { return *m_d; }
+//	SquirrelObject& getSquirrelObject() { return *m_d; }
+	SquirrelObject& getSquirrelObject() const { return *m_d; }
 
 	bool rawCast(Variant::TypeId toType, void *toData) const;
 	static Variant::TypeHandler *getTypeHandler();

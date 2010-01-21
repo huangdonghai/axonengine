@@ -972,7 +972,7 @@ void SquirrelObject::endIteration()
 	sq_pop(SquirrelVM::VM, 2);
 }
 
-void StackHandler::getRawData( int idx, Value &result)
+void StackHandler::getRawData( int idx, Variant &result)
 {
 	// make sure result is emtpy first
 	AX_ASSERT(result.getTypeId() == Variant::kVoid);
@@ -1022,22 +1022,69 @@ void StackHandler::getRawData( int idx, Value &result)
 			sq_getinstanceup(v, idx, &userdata, typetag);
 
 			if (typetag == &__Vector3_decl) {
-				result.init(Variant::kVector3, userdata);
+				result.init(Variant::kVector3, userdata, Variant::InitRef);
 			} else if (typetag == &__Color3_decl) {
-				result.init(Variant::kColor3, userdata);
+				result.init(Variant::kColor3, userdata, Variant::InitRef);
 			} else if (typetag == &__Point_decl) {
-				result.init(Variant::kPoint, userdata);
+				result.init(Variant::kPoint, userdata, Variant::InitRef);
 			} else if (typetag == &__Rect_decl) {
-				result.init(Variant::kRect, userdata);
+				result.init(Variant::kRect, userdata, Variant::InitRef);
 			} else if (typetag == &__Matrix_decl) {
-				result.init(Variant::kMatrix, userdata);
+				result.init(Variant::kMatrix, userdata, Variant::InitRef);
 			} else if (typetag == &__Object_c_decl) {
-				result.init(Variant::kObject, userdata);
+				result.init(Variant::kObject, userdata, Variant::InitRef);
 			}
 		}
 		return;
 	}
 	return;
+}
+
+int StackHandler::retRawData(const ConstRef &arg)
+{
+	if (arg.getTypeId() == Variant::kVoid)
+		return 0;
+
+	switch (arg.getTypeId()) {
+	case Variant::kVoid:
+		return 0;
+	case Variant::kBool:
+		sq_pushbool(v, arg.ref<bool>());
+		return 1;
+	case Variant::kInt:
+		sq_pushinteger(v, arg.ref<int>());
+		return 1;
+	case Variant::kFloat:
+		sq_pushfloat(v, arg.ref<float>());
+		return 1;
+	case Variant::kString:
+		sq_pushstring(v, arg.ref<String>().c_str(), arg.ref<String>().size());
+		return 1;
+	case Variant::kObject:
+		return 0;
+	case Variant::kVector3:
+		push_Vector3(v, arg.ref<Vector3>());
+		return 1;
+	case Variant::kColor3:
+		push_Color3(v, arg.ref<Color3>());
+		return 1;
+	case Variant::kPoint:
+		push_Point(v, arg.ref<Point>());
+		return 1;
+	case Variant::kRect:
+		push_Rect(v, arg.ref<Rect>());
+		return 1;
+	case Variant::kMatrix:
+		push_Matrix(v, arg.ref<Matrix>());
+		return 1;
+	case Variant::kTable:
+		return 0;
+	case Variant::kScriptValue:
+		sq_pushobject(v, arg.ref<ScriptValue>().getSquirrelObject());
+		return 1;
+	}
+
+	return 0;
 }
 
 

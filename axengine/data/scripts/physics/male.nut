@@ -1,7 +1,8 @@
 
 class LegsChannel extends AnimationChannel
 {
-	commonLoco = function(context)
+	function commonLoco(context)
+	{
 		if (context.IN_FORWARD) {
 			if (context.IN_RUSH) {
 				context.switchState( "run", 0.1 );

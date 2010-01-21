@@ -1,6 +1,12 @@
 #ifndef AX_VARIANT_H
 #define AX_VARIANT_H
 
+#define AX_ARG(x) ConstRef::make(x)
+#define AX_RETURN_ARG(x) Ref::make(x)
+#define AX_DECL_STACK_VARIANT(name, id) Variant name(id, Alloca(Variant::getTypeSize(id)), Variant::InitStack)
+#define AX_INIT_STACK_VARIANT(name, id) name.init(id, Alloca(Variant::getTypeSize(id)), Variant::InitStack)
+
+
 AX_BEGIN_NAMESPACE
 
 class Object;
@@ -51,6 +57,11 @@ public:
 	mutable int m_stackTop;
 };
 
+class Variant;
+class ConstRef;
+class Ref;
+
+
 //--------------------------------------------------------------------------
 // class Variant
 //--------------------------------------------------------------------------
@@ -87,8 +98,8 @@ public:
 
 	// info get
 	TypeId getTypeId() const { return (TypeId)m_type; }
-	void *getPointer() { if (m_isMinibuf) return m_minibuf; else return m_voidstar; }
-	const void *getPointer() const { if (m_isMinibuf) return m_minibuf; else return m_voidstar; }
+	void *getPointer() { if (m_storeMode == StoreMinibuf) return m_minibuf; else return m_voidstar; }
+	const void *getPointer() const { if (m_storeMode == StoreMinibuf) return m_minibuf; else return m_voidstar; }
 
 	// constructor
 	Variant();
@@ -109,6 +120,8 @@ public:
 	explicit Variant(TypeId typeId, void * data, InitMode initMode=InitCopy);
 	~Variant();
 
+	void init(TypeId typeId) { clear(); _init(typeId, 0); }
+	void init(TypeId typeId, const void *data) { clear(); _init(typeId, data); }
 	void init(TypeId typeId, void *data, InitMode initMode = InitCopy);
 
 	void clear();
@@ -147,6 +160,11 @@ public:
 		return *(const Q *)getPointer();
 	}
 
+	bool castSelf(Variant::TypeId toId);
+	bool castTo(const Ref &ref);
+	bool castTo(TypeId typeId, void *data);
+
+
 	static int getTypeSize(TypeId t);
 	static bool canCast(TypeId fromType, TypeId toType);
 	static bool rawCast(TypeId fromType, const void *fromData, TypeId toType, void *toData);
@@ -155,7 +173,8 @@ public:
 	static void destruct(TypeId typeId, void *ptr);
 
 protected:
-	void _init(Variant::TypeId t, const void *fromData, InitMode initMode = InitCopy);
+	void _init(Variant::TypeId t, const void *fromData);
+	void _init(Variant::TypeId t, void *fromData, InitMode initMode);
 	TypeHandler *getHandler() const;
 	static TypeHandler *getHandler(Variant::TypeId typeId);
 
@@ -163,9 +182,13 @@ private:
 	template <class Q>
 	Q castHelper() const
 	{
-		Q result;
 		TypeHandler *handler = getHandler();
 		TypeId toType = GetVariantType_<Q>();
+
+		if (m_type == toType)
+			return ref<Q>();
+
+		Q result;
 		if (handler && handler->canCast(toType)) {
 			handler->rawCast(getPointer(), toType, &result);
 		}
@@ -181,8 +204,72 @@ private:
 
 	TypeId m_type : 16;
 	StoreMode m_storeMode : 7;
-	int m_isMinibuf : 1;
 };
+
+class ConstRef
+{
+public:
+	ConstRef(Variant::TypeId t = Variant::kVoid, const void *d = 0) : m_typeId(t), m_voidstar(d) {}
+
+	Variant::TypeId getTypeId() const { return m_typeId; }
+	const void *getPointer() const { return m_voidstar; }
+	void set(Variant::TypeId id, const void *ptr) { m_typeId = id; m_voidstar = ptr; }
+
+	template <class Q>
+	static ConstRef make(const Q &aData) {
+		return ConstRef(GetVariantType_<Q>(), static_cast<const void *>(&aData));
+	}
+
+	template <class Q>
+	const Q &ref() const
+	{
+		AX_ASSERT(GetVariantType_<Q>() == m_typeId);
+		return *reinterpret_cast<const Q *>(m_voidstar);
+	}
+
+	bool castTo(Variant::TypeId id, void *data) const
+	{
+		return Variant::rawCast(m_typeId, m_voidstar, id, data);
+	}
+
+	bool castTo(Variant &val) const;
+
+private:
+	Variant::TypeId m_typeId;
+	const void *m_voidstar;
+};
+
+class Ref
+{
+public:
+	explicit Ref(Variant::TypeId t = Variant::kVoid, void *d = 0) : m_typeId(t), m_voidstar(d) {}
+
+	Variant::TypeId getTypeId() const { return m_typeId; }
+	void *getPointer() const { return m_voidstar; }
+	void set(Variant::TypeId id, void *ptr) { m_typeId = id; m_voidstar = ptr; }
+
+	template <class Q>
+	static Ref make(Q &aData) {
+		return Ref(GetVariantType_<Q>(), static_cast<void *>(&aData));
+	}
+
+	template <class Q>
+	Q &ref() const
+	{
+		AX_ASSERT(GetVariantType_<Q>() == m_typeId);
+		return *reinterpret_cast<Q *>(m_voidstar);
+	}
+
+	bool castTo(Variant::TypeId id, void *data) const
+	{
+		return Variant::rawCast(m_typeId, m_voidstar, id, data);
+	}
+
+private:
+	Variant::TypeId m_typeId;
+	void *m_voidstar;
+};
+
 
 inline void Variant::construct(TypeId type, void *ptr, const void *copyfrom)
 {
@@ -203,6 +290,32 @@ inline void Variant::destruct(TypeId type, void *ptr)
 	TypeHandler *handler = getHandler(type);
 	AX_ASSERT(handler);
 	handler->destruct(ptr);
+}
+
+inline bool Variant::castSelf( Variant::TypeId toId )
+{
+	if (m_type == toId) return true;
+	if (!canCast(m_type, toId)) return false;
+
+	AX_DECL_STACK_VARIANT(casted, toId);
+
+	bool castSuccess = castTo(casted.getTypeId(), casted.getPointer());
+	if (!castSuccess) {
+		return false;
+	}
+
+	*this = casted;
+	return true;
+}
+
+inline bool Variant::castTo( const Ref &ref )
+{
+	return castTo(ref.getTypeId(), ref.getPointer());
+}
+
+inline bool Variant::castTo( TypeId typeId, void *data )
+{
+	return rawCast(m_type, getPointer(), typeId, data);
 }
 
 typedef Sequence<Variant> VariantSeq;

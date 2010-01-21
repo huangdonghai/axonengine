@@ -16,7 +16,7 @@ bool MetaInfo::invokeMethod(Object *obj, const char *methodName, const Ref &ret,
 
 	// check types
 	Variant::TypeId needReturnType = member->getReturnType();
-	Value realRet(ret.getTypeId(), ret.getPointer());
+	Variant realRet(ret.getTypeId(), ret.getPointer(), Variant::InitRef);
 	bool castRet = false;
 
 	if (ret.getTypeId() != needReturnType) {
@@ -24,7 +24,7 @@ bool MetaInfo::invokeMethod(Object *obj, const char *methodName, const Ref &ret,
 			if (!Variant::canCast(needReturnType, ret.getTypeId())) {
 				return false;
 			} else {
-				AX_STACK_VALUE(realRet, needReturnType);
+				AX_INIT_STACK_VARIANT(realRet, needReturnType);
 				castRet = true;
 			}
 		}
@@ -32,7 +32,7 @@ bool MetaInfo::invokeMethod(Object *obj, const char *methodName, const Ref &ret,
 
 	ConstRef args[] = { arg0, arg1, arg2, arg3, arg4 };
 
-	Value realArg[AX_MAX_ARGS];
+	Variant realArg[Member::MaxArgs];
 	const Variant::TypeId *needTypeIds = member->getArgsType();
 	for (int i = 0; i <member->argc(); i++) {
 		if (args[i].getTypeId() == needTypeIds[i])
@@ -41,7 +41,7 @@ bool MetaInfo::invokeMethod(Object *obj, const char *methodName, const Ref &ret,
 		if (!Variant::canCast(args[i].getTypeId(), needTypeIds[i]))
 			return false;
 
-		AX_STACK_VALUE(realArg[i], needTypeIds[i]);
+		AX_INIT_STACK_VARIANT(realArg[i], needTypeIds[i]);
 
 		bool casted = args[i].castTo(realArg[i]);
 		if (!casted)
@@ -51,7 +51,7 @@ bool MetaInfo::invokeMethod(Object *obj, const char *methodName, const Ref &ret,
 	}
 
 	const void *argDatas[] = {
-		arg0.getPointer(), arg1.getPointer(), arg2.getPointer(), arg3.getPointer(), arg4.getPointer()
+		args[0].getPointer(), args[1].getPointer(), args[2].getPointer(), args[3].getPointer(), args[4].getPointer()
 	};
 
 	// really call
@@ -75,7 +75,7 @@ bool MetaInfo::getProperty( Object *obj, const char *propname, const Ref &ret )
 		return false;
 
 	Variant::TypeId needReturnType = member->getPropType();
-	Value realRet(ret.getTypeId(), ret.getPointer());
+	Variant realRet(ret.getTypeId(), ret.getPointer(), Variant::InitRef);
 	bool castRet = false;
 
 	if (ret.getTypeId() != needReturnType) {
@@ -83,7 +83,7 @@ bool MetaInfo::getProperty( Object *obj, const char *propname, const Ref &ret )
 			if (!Variant::canCast(needReturnType, ret.getTypeId())) {
 				return false;
 			} else {
-				AX_STACK_VALUE(realRet, needReturnType);
+				AX_INIT_STACK_VARIANT(realRet, needReturnType);
 				castRet = true;
 			}
 		}
@@ -108,14 +108,14 @@ bool MetaInfo::setProperty( Object *obj, const char *propname, const ConstRef &a
 		return false;
 
 	Variant::TypeId propTypeId = member->getPropType();
-	Value argValue;
+	Variant argValue;
 	const void *argData = arg.getPointer();
 
 	if (arg.getTypeId() != propTypeId) {
 		if (!Variant::canCast(arg.getTypeId(), propTypeId))
 			return false;
 
-		AX_STACK_VALUE(argValue, propTypeId);
+		AX_INIT_STACK_VARIANT(argValue, propTypeId);
 		bool casted = arg.castTo(argValue);
 		if (!casted)
 			return false;
