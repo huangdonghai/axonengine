@@ -452,7 +452,7 @@ SqClass::SqClass(const String &name)
 {
 	HSQUIRRELVM vm = VM;
 
-	SquirrelObject so; so.attachToStackObject(vm, 2);
+	SquirrelObject so = g_mainVM->getScoped(name.c_str());
 
 	so.setValue("_get", SquirrelVM::ms_getClosure);
 	so.setValue("_set", SquirrelVM::ms_setClosure);

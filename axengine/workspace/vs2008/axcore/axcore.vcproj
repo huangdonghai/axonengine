@@ -883,6 +883,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\axcore\script\sq_vm.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\axcore\script\sq_vm.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\axcore\script\variant.cpp"
 				>
 			</File>

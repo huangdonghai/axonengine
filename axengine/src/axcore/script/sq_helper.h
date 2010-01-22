@@ -14,37 +14,6 @@ public:
 	const SQChar *desc;
 };
 
-class SquirrelVM
-{
-public:
-	SquirrelVM();
-	SquirrelVM(HSQUIRRELVM vm);
-	~SquirrelVM();
-
-	SquirrelObject compileFile(const SQChar *filename);
-	SquirrelObject compileBuffer(const SQChar *buf, const SQChar *debugInfo=_SC("console_buffer"));
-
-	SquirrelObject runBytecode(const SquirrelObject &bytecode, SquirrelObject *_this = NULL);
-
-	SquirrelObject runFile(const SQChar *s, SquirrelObject *_this = NULL);
-	SquirrelObject runBuffer(const SQChar *s, SquirrelObject *_this = NULL);
-
-	SquirrelObject getScoped(const char *name);
-	SquirrelObject getScoped(const SquirrelObject &obj, const char *name);
-
-	static SquirrelObject createClosure(const SQChar *name, SQFUNCTION f, 	SQInteger nparamscheck, const SQChar *typemask);
-
-protected:
-	static void createObjectClosure();
-
-	// replace print
-	static void printFunc(HSQUIRRELVM v, const SQChar* s,...);
-
-public:
-	static SquirrelObject ms_getClosure;
-	static SquirrelObject ms_setClosure;
-	HSQUIRRELVM m_vm;
-};
 
 class SquirrelObject
 {

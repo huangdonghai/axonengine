@@ -17,6 +17,7 @@ extern "C" {
 #include <sqstdstring.h>
 #include <sqstdaux.h>
 
+#include "sq_vm.h"
 #include "sq_binding.h"
 #include "sq_helper.h"
 
