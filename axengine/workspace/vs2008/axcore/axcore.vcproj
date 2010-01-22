@@ -496,10 +496,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axcore\singleton\scriptsystem.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\src\axcore\singleton\statistic.cpp"
 				>
 			</File>
@@ -536,10 +532,6 @@
 				</File>
 				<File
 					RelativePath="..\..\..\include\axcore\singleton\memory.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\include\axcore\singleton\scriptsystem.h"
 					>
 				</File>
 				<File

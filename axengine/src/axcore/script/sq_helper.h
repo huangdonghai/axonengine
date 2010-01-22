@@ -29,6 +29,9 @@ public:
 	SquirrelObject runFile(const SQChar *s, SquirrelObject *_this = NULL);
 	SquirrelObject runBuffer(const SQChar *s, SquirrelObject *_this = NULL);
 
+	SquirrelObject getScoped(const char *name);
+	SquirrelObject getScoped(const SquirrelObject &obj, const char *name);
+
 	static SquirrelObject createClosure(const SQChar *name, SQFUNCTION f, 	SQInteger nparamscheck, const SQChar *typemask);
 
 protected:
@@ -38,7 +41,6 @@ protected:
 	static void printFunc(HSQUIRRELVM v, const SQChar* s,...);
 
 public:
-	static HSQUIRRELVM VM;   // main vm
 	static SquirrelObject ms_getClosure;
 	static SquirrelObject ms_setClosure;
 	HSQUIRRELVM m_vm;
@@ -54,25 +56,12 @@ public:
 	SquirrelObject(const SquirrelObject &o);
 	SquirrelObject(HSQOBJECT o);
 
-#if 0
-	template <typename _ty>
-	SquirrelObject(const _ty & val) { sq_resetobject(&_o); set((_ty &)val); } // Cast away const to avoid compiler SqPlus::Push() match issue.
-	template <typename _ty>
-	SquirrelObject(_ty & val) { sq_resetobject(&_o); set(val); }
-	template <typename _ty>
-	SquirrelObject(_ty * val) { sq_resetobject(&_o); setByValue(val); } // set() would also be OK here. setByValue() to save potential compiler overhead.
-#endif
-
-	SquirrelObject& operator = (HSQOBJECT ho);
-	SquirrelObject& operator = (const SquirrelObject &o);
-	SquirrelObject& operator = (int n);
-	SquirrelObject& operator = (HSQUIRRELVM v);
-
-	operator HSQOBJECT& (){ return _o; } 
+	SQObjectType getType();
+	operator HSQOBJECT& () const { return _o; } 
 	bool operator == (const SquirrelObject& o);
 	bool compareUserPointer(const SquirrelObject& o);
 
-	void attachToStackObject(int idx);
+	void attachToStackObject(HSQUIRRELVM vm, int idx);
 	void reset(void); // Release (any) reference and reset _o.
 	SquirrelObject clone();
 	bool setValue(const SquirrelObject &key, const SquirrelObject &val);
@@ -133,7 +122,6 @@ public:
 	const SQChar *getString(int key) const;
 	bool getBool(int key) const;
 	SquirrelObject getAttributes(const SQChar *key = NULL);
-	SQObjectType getType();
 	HSQOBJECT & getObjectHandle() const {return *(HSQOBJECT*)&_o;}
 	bool beginIteration();
 	bool next(SquirrelObject &key, SquirrelObject &value);
@@ -172,7 +160,24 @@ private:
 	bool getSlot(const SQChar *name) const;
 	bool rawGetSlot(const SQChar *name) const;
 	bool getSlot(int key) const;
-	HSQOBJECT _o;
+	mutable HSQOBJECT _o;
+};
+
+struct ScopedStack
+{
+	ScopedStack(HSQUIRRELVM v)
+	{
+		m_top = sq_gettop(v);
+		m_vm = v;
+	}
+
+	~ScopedStack()
+	{
+		sq_settop(m_vm, m_top);
+	}
+
+	HSQUIRRELVM m_vm;
+	int m_top;
 };
 
 struct StackHandler

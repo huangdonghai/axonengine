@@ -18,6 +18,7 @@ AX_BEGIN_NAMESPACE
 
 lua_State *L;
 SquirrelVM *g_mainVM;
+HSQUIRRELVM VM;
 
 static void l_message(const char *pname, const char *msg)
 {
@@ -806,6 +807,7 @@ bool ScriptSystem::invokeLuaScoped(const char *text, Axon::VariantSeq &stack, in
 	return true;
 }
 
+#if 0
 String ScriptSystem::generateLuaString(const String &text)
 {
 	String result = text;
@@ -849,6 +851,7 @@ String ScriptSystem::generateLuaString(const String &text)
 	}
 	return result;
 }
+#endif
 
 inline String xRemoveScope(const String &str)
 {
@@ -1109,6 +1112,18 @@ void ScriptSystem::registerClass(const String &self, const String &base)
 	classInfo->initScriptProps();
 }
 
+
+void ScriptSystem::registerSqClass( const String &name )
+{
+	SqClassDict::iterator it = m_sqClassReg.find(name);
+
+	if (it != m_sqClassReg.end())
+		Errorf("Class already registered");
+
+	SqClass * sqclass = new SqClass(name);
+	m_sqClassReg[name] = sqclass;
+}
+
 void ScriptSystem::linkMetaInfoToClassInfo(MetaInfo *mi)
 {
 	ClassInfoDict::iterator it = m_classInfoReg.begin();
@@ -1154,14 +1169,14 @@ extern int ScriptMetacall(HSQUIRRELVM vm);
 ScriptValue ScriptSystem::createMetaClosure(Member *method)
 {
 	int top = 0;
-	sq_pushuserpointer(SquirrelVM::VM, method);
-	sq_newclosure(SquirrelVM::VM, ScriptMetacall, 1);
-	sq_setparamscheck(SquirrelVM::VM, 0, 0);
-	sq_setnativeclosurename(SquirrelVM::VM, -1, method->getName());
+	sq_pushuserpointer(VM, method);
+	sq_newclosure(VM, ScriptMetacall, 1);
+	sq_setparamscheck(VM, 0, 0);
+	sq_setnativeclosurename(VM, -1, method->getName());
 
 	SquirrelObject sobj;
-	sobj.attachToStackObject(-1);
-	sq_settop(SquirrelVM::VM, top);
+	sobj.attachToStackObject(VM, -1);
+	sq_settop(VM, top);
 
 	return sobj;
 }

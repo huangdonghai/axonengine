@@ -70,22 +70,21 @@ static SQInteger dofile(HSQUIRRELVM v)
 
 static SQInteger registerClass(HSQUIRRELVM v)
 {
-	SquirrelObject so; so.attachToStackObject(2);
+	StackHandler sa(v);
+	const char *name = sa.getString(2);
 
-	so.setValue("_get", SquirrelVM::ms_getClosure);
-	so.setValue("_set", SquirrelVM::ms_setClosure);
+	g_scriptSystem->registerSqClass(name);
 
 	return SQ_OK;
 }
 
-HSQUIRRELVM SquirrelVM::VM = 0;
 SquirrelObject SquirrelVM::ms_getClosure;
 SquirrelObject SquirrelVM::ms_setClosure;
 
 static SQRegFunction ax_funcs[] = {
 	{ "loadfile", &loadfile, -2, _SC(".sb") },
 	{ "dofile", &dofile, -2, _SC(".sb") },
-	{ "AX_REGISTER_CLASS", &registerClass, -2, _SC(".y") },
+	{ "AX_REGISTER_CLASS", &registerClass, -2, _SC(".s") },
 	{ 0, 0 }
 };
 
@@ -168,7 +167,7 @@ SquirrelObject SquirrelVM::compileFile(const SQChar *filename)
 {
 	if (SQ_SUCCEEDED(_loadfile(m_vm, filename, 1))) {
 		SquirrelObject ret;
-		ret.attachToStackObject(-1);
+		ret.attachToStackObject(m_vm, -1);
 		sq_pop(m_vm, 1);
 		return ret;
 	}
@@ -179,7 +178,7 @@ SquirrelObject SquirrelVM::compileBuffer(const SQChar *s, const SQChar *debugInf
 {
 	SquirrelObject ret;
 	if (SQ_SUCCEEDED(sq_compilebuffer(m_vm, s, (int)scstrlen(s)*sizeof(SQChar), debugInfo, 1))) {
-		ret.attachToStackObject(-1);
+		ret.attachToStackObject(m_vm, -1);
 		sq_pop(m_vm, 1);
 		return ret;
 	}
@@ -196,7 +195,7 @@ SquirrelObject SquirrelVM::runBytecode(const SquirrelObject &bytecode, SquirrelO
 		sq_pushroottable(m_vm);
 	}
 	if (SQ_SUCCEEDED(sq_call(m_vm, 1, SQTrue, SQTrue))) {
-		ret.attachToStackObject(-1);
+		ret.attachToStackObject(m_vm, -1);
 		sq_pop(m_vm, 2);
 		return ret;
 	}
@@ -223,11 +222,71 @@ SquirrelObject SquirrelVM::createClosure(const SQChar *name, SQFUNCTION f, SQInt
 	sq_setnativeclosurename(VM, -1, name);
 
 	SquirrelObject sobj;
-	sobj.attachToStackObject(-1);
+	sobj.attachToStackObject(VM, -1);
 	sq_pop(VM, 1);
 	return sobj;
 }
 
+SquirrelObject SquirrelVM::getScoped(const char *name)
+{
+	sq_pushroottable(m_vm);
+	SquirrelObject so;
+	so.attachToStackObject(m_vm, -1);
+
+	return getScoped(so, name);
+}
+
+SquirrelObject SquirrelVM::getScoped(const SquirrelObject &obj, const char *name)
+{
+	ScopedStack scopedStack(m_vm);
+
+	char buf[64];
+	int num = 0;
+	SquirrelObject result;
+
+	if (!name || !name[0]) {
+		return result;
+	}
+
+	sq_pushobject(m_vm, obj);
+
+	while (1) {
+		int c = *name++;
+
+		if (isalpha(c) || c == '_' || (isdigit(c) && num != 0)) {
+			buf[num++] = c;
+			AX_ASSERT(num < s2i(ArraySize(buf)));
+			continue;
+		}
+
+		if (c == '.' || c == 0) {
+			if (num) {
+				buf[num] = 0;
+				sq_pushstring(m_vm, buf, num);
+				if (SQ_SUCCEEDED(sq_get(m_vm, -1))) {
+					sq_remove(m_vm, -2);
+				} else {
+					return result;
+				}
+			} else {
+				return result;
+			}
+
+			if (c == 0) {
+				break;
+			}
+
+			num = 0;
+			continue;
+		}
+
+		// not known char, error
+		return result;
+	}
+
+	result.attachToStackObject(m_vm, -1);
+	return result;
+}
 
 SquirrelObject::SquirrelObject(void)
 {
@@ -242,19 +301,19 @@ SquirrelObject::~SquirrelObject()
 SquirrelObject::SquirrelObject(const SquirrelObject &o)
 {
 	_o = o._o;
-	sq_addref(SquirrelVM::VM,&_o);
+	sq_addref(VM,&_o);
 }
 
 SquirrelObject::SquirrelObject(HSQOBJECT o)
 {
 	_o = o;
-	sq_addref(SquirrelVM::VM,&_o);
+	sq_addref(VM,&_o);
 }
 
 void SquirrelObject::reset(void)
 {
-	if (SquirrelVM::VM)
-		sq_release(SquirrelVM::VM,&_o);
+	if (VM)
+		sq_release(VM,&_o);
 	else if ( _o._type!=OT_NULL && _o._unVal.pRefCounted )
 		printf( "SquirrelObject::~SquirrelObject - Cannot release\n" ); 
 
@@ -265,61 +324,20 @@ SquirrelObject SquirrelObject::clone()
 {
 	SquirrelObject ret;
 	if (getType() == OT_TABLE || getType() == OT_ARRAY) {
-		sq_pushobject(SquirrelVM::VM, _o);
-		sq_clone(SquirrelVM::VM,-1);
-		ret.attachToStackObject(-1);
-		sq_pop(SquirrelVM::VM, 2);
+		sq_pushobject(VM, _o);
+		sq_clone(VM, -1);
+		ret.attachToStackObject(VM, -1);
+		sq_pop(VM, 2);
 	}
 
 	return ret;
 }
 
-SquirrelObject & SquirrelObject::operator =(const SquirrelObject &o)
-{
-	//HSQOBJECT t;
-	//t = o._o;
-	//sq_addref(SquirrelVM::VM,&t);
-	sq_addref(SquirrelVM::VM, (HSQOBJECT*)&o._o);
-	sq_release(SquirrelVM::VM, &_o);
-	//_o = t;
-	_o = o._o;
-	return *this;
-}
-
-SquirrelObject & SquirrelObject::operator =(HSQOBJECT ho)
-{
-	sq_addref(SquirrelVM::VM, &ho);
-	sq_release(SquirrelVM::VM, &_o);
-	_o = ho;
-	return *this;
-}
-
-SquirrelObject & SquirrelObject::operator =(int n)
-{
-	sq_pushinteger(SquirrelVM::VM, n);
-	attachToStackObject(-1);
-	sq_pop(SquirrelVM::VM, 1);
-	return *this;
-}
-
-SquirrelObject & SquirrelObject::operator =(HSQUIRRELVM v)
-{
-#if 0
-	if ( v && SquirrelVM::m_rootVM ){
-		SquirrelVM::m_rootVM->Push(v);
-		AttachToStackObject(-1);
-		sq_poptop(SquirrelVM::m_rootVM);
-	}
-	else Reset();
-#endif
-	// TODO
-	return *this;
-}
 
 bool SquirrelObject::operator == (const SquirrelObject &o)
 {
 	bool cmp = false;
-	HSQUIRRELVM v = SquirrelVM::VM;
+	HSQUIRRELVM v = VM;
 	int oldtop = sq_gettop(v);
 
 	sq_pushobject(v, getObjectHandle());
@@ -343,19 +361,19 @@ bool SquirrelObject::compareUserPointer( const SquirrelObject &o )
 void SquirrelObject::arrayAppend(const SquirrelObject &o)
 {
 	if (sq_isarray(_o)) {
-		sq_pushobject(SquirrelVM::VM, _o);
-		sq_pushobject(SquirrelVM::VM, o._o);
-		sq_arrayappend(SquirrelVM::VM, -2);
-		sq_pop(SquirrelVM::VM, 1);
+		sq_pushobject(VM, _o);
+		sq_pushobject(VM, o._o);
+		sq_arrayappend(VM, -2);
+		sq_pop(VM, 1);
 	}
 }
 
-void SquirrelObject::attachToStackObject(int idx)
+void SquirrelObject::attachToStackObject(HSQUIRRELVM vm, int idx)
 {
 	HSQOBJECT t;
-	sq_getstackobj(SquirrelVM::VM, idx, &t);
-	sq_addref(SquirrelVM::VM, &t);
-	sq_release(SquirrelVM::VM, &_o);
+	sq_getstackobj(vm, idx, &t);
+	sq_addref(vm, &t);
+	sq_release(vm, &_o);
 	_o = t;
 }
 
@@ -365,13 +383,13 @@ bool SquirrelObject::setDelegate(SquirrelObject &obj)
 			switch(_o._type) {
 			case OT_USERDATA:
 			case OT_TABLE:
-				sq_pushobject(SquirrelVM::VM, _o);
-				sq_pushobject(SquirrelVM::VM, obj._o);
-				if (SQ_SUCCEEDED(sq_setdelegate(SquirrelVM::VM,-2))) {
-					sq_pop(SquirrelVM::VM, 1);
+				sq_pushobject(VM, _o);
+				sq_pushobject(VM, obj._o);
+				if (SQ_SUCCEEDED(sq_setdelegate(VM,-2))) {
+					sq_pop(VM, 1);
 					return true;
 				}
-				sq_pop(SquirrelVM::VM, 1);
+				sq_pop(VM, 1);
 				break;
 			}
 	}
@@ -383,12 +401,12 @@ SquirrelObject SquirrelObject::getDelegate()
 	SquirrelObject ret;
 	if (_o._type == OT_TABLE || _o._type == OT_USERDATA)
 	{
-		int top = sq_gettop(SquirrelVM::VM);
-		sq_pushobject(SquirrelVM::VM, _o);
-		sq_getdelegate(SquirrelVM::VM,-1);
-		ret.attachToStackObject(-1);
-		sq_settop(SquirrelVM::VM, top);
-		//		sq_pop(SquirrelVM::VM, 2);
+		int top = sq_gettop(VM);
+		sq_pushobject(VM, _o);
+		sq_getdelegate(VM, -1);
+		ret.attachToStackObject(VM, -1);
+		sq_settop(VM, top);
+		//		sq_pop(VM, 2);
 	}
 	return ret;
 }
@@ -407,120 +425,120 @@ int SquirrelObject::len() const
 {
 	int ret = 0;
 	if (sq_isarray(_o) || sq_istable(_o) || sq_isstring(_o)) {
-		sq_pushobject(SquirrelVM::VM, _o);
-		ret = sq_getsize(SquirrelVM::VM,-1);
-		sq_pop(SquirrelVM::VM, 1);
+		sq_pushobject(VM, _o);
+		ret = sq_getsize(VM,-1);
+		sq_pop(VM, 1);
 	}
 	return ret;
 }
 
 #define _SETVALUE_INT_BEGIN \
 	bool ret = false; \
-	int top = sq_gettop(SquirrelVM::VM); \
-	sq_pushobject(SquirrelVM::VM, _o); \
-	sq_pushinteger(SquirrelVM::VM, key);
+	int top = sq_gettop(VM); \
+	sq_pushobject(VM, _o); \
+	sq_pushinteger(VM, key);
 
 #define _SETVALUE_INT_END \
-	if (SQ_SUCCEEDED(sq_rawset(SquirrelVM::VM,-3))) { \
+	if (SQ_SUCCEEDED(sq_rawset(VM,-3))) { \
 	ret = true; \
 	} \
-	sq_settop(SquirrelVM::VM, top); \
+	sq_settop(VM, top); \
 	return ret;
 
 bool SquirrelObject::setValue(int key, const SquirrelObject &val)
 {
 	_SETVALUE_INT_BEGIN
-		sq_pushobject(SquirrelVM::VM, val._o);
+		sq_pushobject(VM, val._o);
 	_SETVALUE_INT_END
 }
 
 bool SquirrelObject::setValue(int key, int n)
 {
 	_SETVALUE_INT_BEGIN
-		sq_pushinteger(SquirrelVM::VM, n);
+		sq_pushinteger(VM, n);
 	_SETVALUE_INT_END
 }
 
 bool SquirrelObject::setValue(int key, float f)
 {
 	_SETVALUE_INT_BEGIN
-		sq_pushfloat(SquirrelVM::VM, f);
+		sq_pushfloat(VM, f);
 	_SETVALUE_INT_END
 }
 
 bool SquirrelObject::setValue(int key, const SQChar *s)
 {
 	_SETVALUE_INT_BEGIN
-		sq_pushstring(SquirrelVM::VM, s,-1);
+		sq_pushstring(VM, s,-1);
 	_SETVALUE_INT_END
 }
 
 bool SquirrelObject::setValue(int key, bool b)
 {
 	_SETVALUE_INT_BEGIN
-		sq_pushbool(SquirrelVM::VM, b);
+		sq_pushbool(VM, b);
 	_SETVALUE_INT_END
 }
 
 bool SquirrelObject::setValue(const SquirrelObject &key, const SquirrelObject &val)
 {
 	bool ret = false;
-	int top = sq_gettop(SquirrelVM::VM);
-	sq_pushobject(SquirrelVM::VM, _o);
-	sq_pushobject(SquirrelVM::VM, key._o);
-	sq_pushobject(SquirrelVM::VM, val._o);
-	if (SQ_SUCCEEDED(sq_rawset(SquirrelVM::VM,-3))) {
+	int top = sq_gettop(VM);
+	sq_pushobject(VM, _o);
+	sq_pushobject(VM, key._o);
+	sq_pushobject(VM, val._o);
+	if (SQ_SUCCEEDED(sq_rawset(VM,-3))) {
 		ret = true;
 	}
-	sq_settop(SquirrelVM::VM, top);
+	sq_settop(VM, top);
 	return ret;
 }
 
 #define _SETVALUE_STR_BEGIN \
 	bool ret = false; \
-	int top = sq_gettop(SquirrelVM::VM); \
-	sq_pushobject(SquirrelVM::VM, _o); \
-	sq_pushstring(SquirrelVM::VM, key,-1);
+	int top = sq_gettop(VM); \
+	sq_pushobject(VM, _o); \
+	sq_pushstring(VM, key,-1);
 
 #define _SETVALUE_STR_END \
-	if (SQ_SUCCEEDED(sq_rawset(SquirrelVM::VM,-3))) { \
+	if (SQ_SUCCEEDED(sq_rawset(VM,-3))) { \
 	ret = true; \
 	} \
-	sq_settop(SquirrelVM::VM, top); \
+	sq_settop(VM, top); \
 	return ret;
 
 bool SquirrelObject::setValue(const SQChar *key, const SquirrelObject &val)
 {
 	_SETVALUE_STR_BEGIN
-	sq_pushobject(SquirrelVM::VM, val._o);
+	sq_pushobject(VM, val._o);
 	_SETVALUE_STR_END
 }
 
 bool SquirrelObject::setValue(const SQChar *key, int n)
 {
 	_SETVALUE_STR_BEGIN
-	sq_pushinteger(SquirrelVM::VM, n);
+	sq_pushinteger(VM, n);
 	_SETVALUE_STR_END
 }
 
 bool SquirrelObject::setValue(const SQChar *key, float f)
 {
 	_SETVALUE_STR_BEGIN
-	sq_pushfloat(SquirrelVM::VM, f);
+	sq_pushfloat(VM, f);
 	_SETVALUE_STR_END
 }
 
 bool SquirrelObject::setValue(const SQChar *key, const SQChar *s)
 {
 	_SETVALUE_STR_BEGIN
-	sq_pushstring(SquirrelVM::VM, s,-1);
+	sq_pushstring(VM, s,-1);
 	_SETVALUE_STR_END
 }
 
 bool SquirrelObject::setValue(const SQChar *key, bool b)
 {
 	_SETVALUE_STR_BEGIN
-	sq_pushbool(SquirrelVM::VM, b);
+	sq_pushbool(VM, b);
 	_SETVALUE_STR_END
 }
 
@@ -529,7 +547,7 @@ bool SquirrelObject::setValue(const SQChar *key, bool b)
 bool SquirrelObject::setUserPointer(const SQChar * key, SQUserPointer up)
 {
 	_SETVALUE_STR_BEGIN
-	sq_pushuserpointer(SquirrelVM::VM, up);
+	sq_pushuserpointer(VM, up);
 	_SETVALUE_STR_END
 }
 
@@ -537,17 +555,17 @@ SQUserPointer SquirrelObject::getUserPointer(const SQChar * key)
 {
 	SQUserPointer ret = NULL;
 	if (getSlot(key)) {
-		sq_getuserpointer(SquirrelVM::VM,-1,&ret);
-		sq_pop(SquirrelVM::VM, 1);
+		sq_getuserpointer(VM,-1,&ret);
+		sq_pop(VM, 1);
 	} // if
-	sq_pop(SquirrelVM::VM, 1);
+	sq_pop(VM, 1);
 	return ret;
 }
 
 bool SquirrelObject::setUserPointer(int key, SQUserPointer up)
 {
 	_SETVALUE_INT_BEGIN
-		sq_pushuserpointer(SquirrelVM::VM, up);
+		sq_pushuserpointer(VM, up);
 	_SETVALUE_INT_END
 }
 
@@ -555,10 +573,10 @@ SQUserPointer SquirrelObject::getUserPointer(int key)
 {
 	SQUserPointer ret = NULL;
 	if (getSlot(key)) {
-		sq_getuserpointer(SquirrelVM::VM,-1,&ret);
-		sq_pop(SquirrelVM::VM, 1);
+		sq_getuserpointer(VM,-1,&ret);
+		sq_pop(VM, 1);
 	} // if
-	sq_pop(SquirrelVM::VM, 1);
+	sq_pop(VM, 1);
 	return ret;
 }
 
@@ -567,9 +585,9 @@ SQUserPointer SquirrelObject::getUserPointer(int key)
 bool SquirrelObject::newUserData(const SQChar * key, int size, SQUserPointer * typetag)
 {
 	_SETVALUE_STR_BEGIN
-		sq_newuserdata(SquirrelVM::VM, size);
+		sq_newuserdata(VM, size);
 	if (typetag) {
-		sq_settypetag(SquirrelVM::VM,-1, typetag);
+		sq_settypetag(VM,-1, typetag);
 	} // if
 	_SETVALUE_STR_END
 }
@@ -578,11 +596,11 @@ bool SquirrelObject::getUserData(const SQChar * key, SQUserPointer * data, SQUse
 {
 	bool ret = false;
 	if (getSlot(key)) {
-		sq_getuserdata(SquirrelVM::VM,-1, data, typetag);
-		sq_pop(SquirrelVM::VM, 1);
+		sq_getuserdata(VM,-1, data, typetag);
+		sq_pop(VM, 1);
 		ret = true;
 	} // if
-	sq_pop(SquirrelVM::VM, 1);
+	sq_pop(VM, 1);
 	return ret;
 }
 
@@ -590,11 +608,11 @@ bool SquirrelObject::rawGetUserData(const SQChar * key, SQUserPointer * data, SQ
 {
 	bool ret = false;
 	if (rawGetSlot(key)) {
-		sq_getuserdata(SquirrelVM::VM,-1, data, typetag);
-		sq_pop(SquirrelVM::VM, 1);
+		sq_getuserdata(VM,-1, data, typetag);
+		sq_pop(VM, 1);
 		ret = true;
 	} // if
-	sq_pop(SquirrelVM::VM, 1);
+	sq_pop(VM, 1);
 	return ret;
 }
 
@@ -604,11 +622,11 @@ bool SquirrelObject::rawGetUserData(const SQChar * key, SQUserPointer * data, SQ
 
 bool SquirrelObject::arrayResize(int newSize)
 {
-	//  int top = sq_gettop(SquirrelVM::VM);
-	sq_pushobject(SquirrelVM::VM, getObjectHandle());
-	bool res = sq_arrayresize(SquirrelVM::VM,-1, newSize) == SQ_OK;
-	sq_pop(SquirrelVM::VM, 1);
-	//  sq_settop(SquirrelVM::VM, top);
+	//  int top = sq_gettop(VM);
+	sq_pushobject(VM, getObjectHandle());
+	bool res = sq_arrayresize(VM,-1, newSize) == SQ_OK;
+	sq_pop(VM, 1);
+	//  sq_settop(VM, top);
 	return res;
 }
 
@@ -620,25 +638,25 @@ bool SquirrelObject::arrayExtend(int amount)
 
 bool SquirrelObject::arrayReverse(void)
 {
-	sq_pushobject(SquirrelVM::VM, getObjectHandle());
-	bool res = sq_arrayreverse(SquirrelVM::VM,-1) == SQ_OK;
-	sq_pop(SquirrelVM::VM, 1);
+	sq_pushobject(VM, getObjectHandle());
+	bool res = sq_arrayreverse(VM,-1) == SQ_OK;
+	sq_pop(VM, 1);
 	return res;
 }
 
 SquirrelObject SquirrelObject::arrayPop(SQBool returnPoppedVal)
 {
 	SquirrelObject ret;
-	int top = sq_gettop(SquirrelVM::VM);
-	sq_pushobject(SquirrelVM::VM, getObjectHandle());
+	int top = sq_gettop(VM);
+	sq_pushobject(VM, getObjectHandle());
 
-	if (sq_arraypop(SquirrelVM::VM,-1, returnPoppedVal) == SQ_OK) {
+	if (sq_arraypop(VM,-1, returnPoppedVal) == SQ_OK) {
 		if (returnPoppedVal) {
-			ret.attachToStackObject(-1);
+			ret.attachToStackObject(VM, -1);
 		} // if
 	} // if
 
-	sq_settop(SquirrelVM::VM, top);
+	sq_settop(VM, top);
 	return ret;
 }
 
@@ -651,10 +669,10 @@ SQObjectType SquirrelObject::getType()
 
 bool SquirrelObject::getSlot(int key) const
 {
-	sq_pushobject(SquirrelVM::VM, _o);
-	sq_pushinteger(SquirrelVM::VM, key);
+	sq_pushobject(VM, _o);
+	sq_pushinteger(VM, key);
 
-	if (SQ_SUCCEEDED(sq_get(SquirrelVM::VM,-2))) {
+	if (SQ_SUCCEEDED(sq_get(VM,-2))) {
 		return true;
 	}
 
@@ -667,11 +685,11 @@ SquirrelObject SquirrelObject::getValue(int key)const
 	SquirrelObject ret;
 
 	if (getSlot(key)) {
-		ret.attachToStackObject(-1);
-		sq_pop(SquirrelVM::VM, 1);
+		ret.attachToStackObject(VM, -1);
+		sq_pop(VM, 1);
 	}
 
-	sq_pop(SquirrelVM::VM, 1);
+	sq_pop(VM, 1);
 	return ret;
 }
 
@@ -680,11 +698,11 @@ float SquirrelObject::getFloat(int key) const
 	float ret = 0.0f;
 
 	if (getSlot(key)) {
-		sq_getfloat(SquirrelVM::VM,-1,&ret);
-		sq_pop(SquirrelVM::VM, 1);
+		sq_getfloat(VM,-1,&ret);
+		sq_pop(VM, 1);
 	}
 
-	sq_pop(SquirrelVM::VM, 1);
+	sq_pop(VM, 1);
 	return ret;
 }
 
@@ -693,11 +711,11 @@ int SquirrelObject::getInt(int key) const
 	int ret = 0;
 
 	if (getSlot(key)) {
-		sq_getinteger(SquirrelVM::VM,-1,&ret);
-		sq_pop(SquirrelVM::VM, 1);
+		sq_getinteger(VM,-1,&ret);
+		sq_pop(VM, 1);
 	}
 
-	sq_pop(SquirrelVM::VM, 1);
+	sq_pop(VM, 1);
 	return ret;
 }
 
@@ -706,11 +724,11 @@ const SQChar *SquirrelObject::getString(int key) const
 	const SQChar *ret = NULL;
 
 	if (getSlot(key)) {
-		sq_getstring(SquirrelVM::VM,-1,&ret);
-		sq_pop(SquirrelVM::VM, 1);
+		sq_getstring(VM,-1,&ret);
+		sq_pop(VM, 1);
 	}
 
-	sq_pop(SquirrelVM::VM, 1);
+	sq_pop(VM, 1);
 	return ret;
 }
 
@@ -719,21 +737,21 @@ bool SquirrelObject::getBool(int key) const
 	SQBool ret = false;
 
 	if (getSlot(key)) {
-		sq_getbool(SquirrelVM::VM,-1,&ret);
-		sq_pop(SquirrelVM::VM, 1);
+		sq_getbool(VM,-1,&ret);
+		sq_pop(VM, 1);
 	}
 
-	sq_pop(SquirrelVM::VM, 1);
+	sq_pop(VM, 1);
 	return ret ? true : false;
 }
 
 bool SquirrelObject::exists(const SQChar *key) const
 {
 	if (getSlot(key)) {
-		sq_pop(SquirrelVM::VM, 2);
+		sq_pop(VM, 2);
 		return true;
 	} else {
-		sq_pop(SquirrelVM::VM, 1);
+		sq_pop(VM, 1);
 		return false;
 	}
 }
@@ -742,9 +760,9 @@ bool SquirrelObject::exists(const SQChar *key) const
 
 bool SquirrelObject::getSlot(const SQChar *name) const
 {
-	sq_pushobject(SquirrelVM::VM, _o);
-	sq_pushstring(SquirrelVM::VM, name,-1);
-	if (SQ_SUCCEEDED(sq_get(SquirrelVM::VM,-2))) {
+	sq_pushobject(VM, _o);
+	sq_pushstring(VM, name,-1);
+	if (SQ_SUCCEEDED(sq_get(VM,-2))) {
 		return true;
 	}
 
@@ -752,9 +770,9 @@ bool SquirrelObject::getSlot(const SQChar *name) const
 }
 
 bool SquirrelObject::rawGetSlot(const SQChar *name) const {
-	sq_pushobject(SquirrelVM::VM, _o);
-	sq_pushstring(SquirrelVM::VM, name,-1);
-	if (SQ_SUCCEEDED(sq_rawget(SquirrelVM::VM,-2))) {
+	sq_pushobject(VM, _o);
+	sq_pushstring(VM, name,-1);
+	if (SQ_SUCCEEDED(sq_rawget(VM,-2))) {
 		return true;
 	}
 	return false;
@@ -764,10 +782,10 @@ SquirrelObject SquirrelObject::getValue(const SQChar *key)const
 {
 	SquirrelObject ret;
 	if (getSlot(key)) {
-		ret.attachToStackObject(-1);
-		sq_pop(SquirrelVM::VM, 1);
+		ret.attachToStackObject(VM, -1);
+		sq_pop(VM, 1);
 	}
-	sq_pop(SquirrelVM::VM, 1);
+	sq_pop(VM, 1);
 	return ret;
 }
 
@@ -775,10 +793,10 @@ float SquirrelObject::getFloat(const SQChar *key) const
 {
 	float ret = 0.0f;
 	if (getSlot(key)) {
-		sq_getfloat(SquirrelVM::VM,-1,&ret);
-		sq_pop(SquirrelVM::VM, 1);
+		sq_getfloat(VM,-1,&ret);
+		sq_pop(VM, 1);
 	}
-	sq_pop(SquirrelVM::VM, 1);
+	sq_pop(VM, 1);
 	return ret;
 }
 
@@ -786,10 +804,10 @@ int SquirrelObject::getInt(const SQChar *key) const
 {
 	int ret = 0;
 	if (getSlot(key)) {
-		sq_getinteger(SquirrelVM::VM,-1,&ret);
-		sq_pop(SquirrelVM::VM, 1);
+		sq_getinteger(VM,-1,&ret);
+		sq_pop(VM, 1);
 	}
-	sq_pop(SquirrelVM::VM, 1);
+	sq_pop(VM, 1);
 	return ret;
 }
 
@@ -798,11 +816,11 @@ const SQChar *SquirrelObject::getString(const SQChar *key) const
 	const SQChar *ret = NULL;
 
 	if (getSlot(key)) {
-		sq_getstring(SquirrelVM::VM,-1,&ret);
-		sq_pop(SquirrelVM::VM, 1);
+		sq_getstring(VM,-1,&ret);
+		sq_pop(VM, 1);
 	}
 
-	sq_pop(SquirrelVM::VM, 1);
+	sq_pop(VM, 1);
 	return ret;
 }
 
@@ -811,25 +829,25 @@ bool SquirrelObject::getBool(const SQChar *key) const
 	SQBool ret = false;
 
 	if (getSlot(key)) {
-		sq_getbool(SquirrelVM::VM,-1,&ret);
-		sq_pop(SquirrelVM::VM, 1);
+		sq_getbool(VM,-1,&ret);
+		sq_pop(VM, 1);
 	}
 
-	sq_pop(SquirrelVM::VM, 1);
+	sq_pop(VM, 1);
 	return ret?true:false;
 }
 
 SQUserPointer SquirrelObject::getInstanceUP(SQUserPointer tag) const
 {
 	SQUserPointer up;
-	sq_pushobject(SquirrelVM::VM, _o);
+	sq_pushobject(VM, _o);
 
-	if (SQ_FAILED(sq_getinstanceup(SquirrelVM::VM,-1,(SQUserPointer*)&up, tag))) {
-		sq_reseterror(SquirrelVM::VM);
+	if (SQ_FAILED(sq_getinstanceup(VM,-1,(SQUserPointer*)&up, tag))) {
+		sq_reseterror(VM);
 		up = NULL;
 	}
 
-	sq_pop(SquirrelVM::VM, 1);
+	sq_pop(VM, 1);
 	return up;
 }
 
@@ -838,28 +856,28 @@ bool SquirrelObject::setInstanceUP(SQUserPointer up)
 	if (!sq_isinstance(_o))
 		return false;
 
-	sq_pushobject(SquirrelVM::VM, _o);
-	sq_setinstanceup(SquirrelVM::VM,-1, up);
-	sq_pop(SquirrelVM::VM, 1);
+	sq_pushobject(VM, _o);
+	sq_setinstanceup(VM,-1, up);
+	sq_pop(VM, 1);
 	return true;
 }
 
 SquirrelObject SquirrelObject::getAttributes(const SQChar *key)
 {
 	SquirrelObject ret;
-	int top = sq_gettop(SquirrelVM::VM);
-	sq_pushobject(SquirrelVM::VM, _o);
+	int top = sq_gettop(VM);
+	sq_pushobject(VM, _o);
 
 	if (key)
-		sq_pushstring(SquirrelVM::VM, key,-1);
+		sq_pushstring(VM, key,-1);
 	else
-		sq_pushnull(SquirrelVM::VM);
+		sq_pushnull(VM);
 
-	if (SQ_SUCCEEDED(sq_getattributes(SquirrelVM::VM,-2))) {
-		ret.attachToStackObject(-1);
+	if (SQ_SUCCEEDED(sq_getattributes(VM,-2))) {
+		ret.attachToStackObject(VM, -1);
 	}
 
-	sq_settop(SquirrelVM::VM, top);
+	sq_settop(VM, top);
 	return ret;
 }
 
@@ -868,17 +886,17 @@ bool SquirrelObject::beginIteration()
 	if (!sq_istable(_o) && !sq_isarray(_o) && !sq_isclass(_o))
 		return false;
 
-	sq_pushobject(SquirrelVM::VM, _o);
-	sq_pushnull(SquirrelVM::VM);
+	sq_pushobject(VM, _o);
+	sq_pushnull(VM);
 	return true;
 }
 
 bool SquirrelObject::next(SquirrelObject &key, SquirrelObject &val)
 {
-	if (SQ_SUCCEEDED(sq_next(SquirrelVM::VM,-2))) {
-		key.attachToStackObject(-2);
-		val.attachToStackObject(-1);
-		sq_pop(SquirrelVM::VM, 2);
+	if (SQ_SUCCEEDED(sq_next(VM, -2))) {
+		key.attachToStackObject(VM, -2);
+		val.attachToStackObject(VM, -1);
+		sq_pop(VM, 2);
 		return true;
 	}
 
@@ -938,10 +956,10 @@ const SQChar * SquirrelObject::getTypeName(void)
 SquirrelObject SquirrelObject::getBase(void)
 {
 	SquirrelObject ret;
-	sq_pushobject(SquirrelVM::VM, _o);
-	sq_getbase(SquirrelVM::VM,-1);
-	ret.attachToStackObject(-1);
-	sq_pop(SquirrelVM::VM, 2);
+	sq_pushobject(VM, _o);
+	sq_getbase(VM, -1);
+	ret.attachToStackObject(VM, -1);
+	sq_pop(VM, 2);
 
 	return ret;
 }
@@ -969,7 +987,7 @@ bool SquirrelObject::toBool()
 
 void SquirrelObject::endIteration()
 {
-	sq_pop(SquirrelVM::VM, 2);
+	sq_pop(VM, 2);
 }
 
 void StackHandler::getRawData( int idx, Variant &result)
@@ -978,7 +996,7 @@ void StackHandler::getRawData( int idx, Variant &result)
 	AX_ASSERT(result.getTypeId() == Variant::kVoid);
 
 	HSQOBJECT t;
-	sq_getstackobj(SquirrelVM::VM, idx, &t);
+	sq_getstackobj(VM, idx, &t);
 
 	switch (t._type) {
 	case OT_NULL:

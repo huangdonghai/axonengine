@@ -67,7 +67,6 @@ public:
 	bool invokeLuaMethod(const char *methodName, VariantSeq &stack, int nResult);
 	bool invokeLuaMethod(const char *method, Variant &arg1);
 	bool invokeLuaScoped(const char *text,VariantSeq &stack, int nResult);
-	String generateLuaString(const String &text);
 
 	Object *createObject(const char *classname);
 	Object *cloneObject(const Object *obj);
@@ -81,6 +80,7 @@ public:
 
 	void registerType(MetaInfo *metainfo);
 	void registerClass(const String &self, const String &base);
+	void registerSqClass(const String &name);
 
 	void getClassList(const char *prefix, bool sort, StringSeq &result) const;
 
@@ -107,6 +107,9 @@ protected:
 	void linkMetaInfoToClassInfo(MetaInfo *ti);
 
 private:
+	typedef Dict<String, SqClass*> SqClassDict;
+	SqClassDict m_sqClassReg;
+
 	typedef Dict<String,ClassInfo*>	ClassInfoDict;
 	ClassInfoDict m_classInfoReg;
 

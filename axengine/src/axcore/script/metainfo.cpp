@@ -447,4 +447,17 @@ Variant ScriptProp::getProperty(const Object *obj)
 	return result;
 }
 
+
+SqClass::SqClass(const String &name)
+{
+	HSQUIRRELVM vm = VM;
+
+	SquirrelObject so; so.attachToStackObject(vm, 2);
+
+	so.setValue("_get", SquirrelVM::ms_getClosure);
+	so.setValue("_set", SquirrelVM::ms_setClosure);
+
+
+}
+
 AX_END_NAMESPACE

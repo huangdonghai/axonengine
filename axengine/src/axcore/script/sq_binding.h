@@ -79,7 +79,7 @@ struct SquirrelClassDecl __##classname##_decl = {  \
 	int __##classname##_##name(HSQUIRRELVM v)
 
 #define _INIT_STATIC_NAMESPACE(classname) CreateStaticNamespace(SquirrelVM::getVM(),&__##classname##_decl);
-#define _INIT_CLASS(classname) CreateClass(SquirrelVM::VM,&__##classname##_decl);
+#define _INIT_CLASS(classname) CreateClass(VM,&__##classname##_decl);
 
 #define _DECL_STATIC_NAMESPACE(xnamespace) extern struct ScriptNamespaceDecl __##xnamespace##_decl;
 #define _DECL_CLASS(classname) extern struct SquirrelClassDecl __##classname##_decl;
@@ -131,7 +131,7 @@ SquirrelObject new_##classname(HSQUIRRELVM v, const cppclass &quat) \
 { \
 	SquirrelObject ret; \
 	if (push_##classname(v, quat)) { \
-		ret.attachToStackObject(-1); \
+		ret.attachToStackObject(v, -1); \
 		sq_pop(v, 1); \
 	} \
 	return ret; \

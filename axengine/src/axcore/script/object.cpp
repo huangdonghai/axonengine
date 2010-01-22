@@ -34,11 +34,11 @@ Object::Object()
 	lua_pop(L, 1);
 
 	// create squirrel object
-	sq_pushregistrytable(SquirrelVM::VM);
-	sq_pushuserpointer(SquirrelVM::VM, this);
-	CreateNativeClassInstance(SquirrelVM::VM, "Object_c", this);
-	sq_rawset(SquirrelVM::VM, -3);
-	sq_pop(SquirrelVM::VM, 1);
+	sq_pushregistrytable(VM);
+	sq_pushuserpointer(VM, this);
+	CreateNativeClassInstance(VM, "Object_c", this);
+	sq_rawset(VM, -3);
+	sq_pop(VM, 1);
 }
 
 Object::~Object()
@@ -317,14 +317,14 @@ void Object::setObjectName(const String &name, bool force)
 
 	m_objectName = name;
 	{
-		int top = sq_gettop(SquirrelVM::VM);
-		sq_pushroottable(SquirrelVM::VM);
-		sq_pushregistrytable(SquirrelVM::VM);
-		sq_pushstring(SquirrelVM::VM, name.c_str(), name.size());
-		sq_pushuserpointer(SquirrelVM::VM, this);
-		sq_rawget(SquirrelVM::VM, -3);
-		sq_rawset(SquirrelVM::VM, -4);
-		sq_settop(SquirrelVM::VM, top);
+		int top = sq_gettop(VM);
+		sq_pushroottable(VM);
+		sq_pushregistrytable(VM);
+		sq_pushstring(VM, name.c_str(), name.size());
+		sq_pushuserpointer(VM, this);
+		sq_rawget(VM, -3);
+		sq_rawset(VM, -4);
+		sq_settop(VM, top);
 	}
 	m_objectNamespace = getNamespace();
 

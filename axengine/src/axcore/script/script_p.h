@@ -45,5 +45,6 @@ bool xSetScoped(lua_State *L, const char *name, const Variant &val);
 bool xGetScoped(lua_State *L, const char *name);
 
 extern SquirrelVM *g_mainVM;
+extern HSQUIRRELVM VM;
 
 AX_END_NAMESPACE

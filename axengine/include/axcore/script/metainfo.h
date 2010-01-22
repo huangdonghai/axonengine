@@ -967,6 +967,48 @@ public:
 	ScriptPropDict m_scriptProps;
 };
 
+//--------------------------------------------------------------------------
+class SqProperty;
+class SqPropGroup;
+class SqClass;
+
+class AX_API SqProperty : public Member
+{
+public:
+	SqProperty(SqClass *sqclass, const String &name);
+
+private:
+	String m_name;
+	Variant m_default;
+	SqProperty *m_group;
+};
+
+typedef Sequence<SqProperty*> SqProperties;
+typedef Dict<String,SqProperty*> SqPropertyDict;
+
+//--------------------------------------------------------------------------
+class SqPropGroup {
+	String m_name;
+	SqProperties m_properties;
+};
+typedef Sequence<SqPropGroup> SqPropGroups;
+
+//--------------------------------------------------------------------------
+class AX_API SqClass
+{
+public:
+	SqClass(const String &name);
+
+private:
+	String m_name;
+	String m_baseName;
+	MetaInfo *m_metaInfo;
+
+	SqProperties m_properties;
+	SqPropGroups m_groups;
+	SqPropertyDict m_propDict;
+};
+
 AX_END_NAMESPACE
 
 #endif // AX_METAINFO_H
