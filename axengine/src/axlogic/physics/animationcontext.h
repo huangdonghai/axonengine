@@ -84,7 +84,7 @@ public:
 
 protected:
 	// init
-	void initChannel(const LuaTable &table);
+//	void initChannel(const LuaTable &table);
 	void initBoneChannelMap();
 	void initAnimations();
 

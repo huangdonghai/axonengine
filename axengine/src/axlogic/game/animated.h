@@ -17,7 +17,7 @@ AX_BEGIN_NAMESPACE
 class Animated : public GameActor
 {
 	AX_DECLARE_CLASS(Animated, GameActor);
-		AX_METHOD(loadAsset)
+//		AX_METHOD(loadAsset)
 	AX_END_CLASS()
 
 public:
@@ -30,7 +30,7 @@ public:
 protected:
 	void clear();
 	// script method
-	void loadAsset(const LuaTable &t);
+//	void loadAsset(const LuaTable &t);
 
 
 protected:

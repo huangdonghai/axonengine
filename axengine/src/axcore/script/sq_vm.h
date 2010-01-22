@@ -24,6 +24,7 @@ public:
 	static sqObject createClosure(const SQChar *name, SQFUNCTION f, 	SQInteger nparamscheck, const SQChar *typemask);
 
 protected:
+	void reportError();
 	static void createObjectClosure();
 
 	// replace print

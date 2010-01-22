@@ -21,16 +21,15 @@ public:
 	virtual MetaInfo *getMetaInfo() const;
 	virtual String getNamespace() const { return String(); }
 	static MetaInfo *registerMetaInfo();
-	static MetaInfo *m_metaInfo;
-
+#if 0
 	const ClassInfo *getClassInfo() const { return m_classInfo; }
-
+#else
+	const SqClass *getScriptClass() const { return m_sqClass; }
+#endif
 	Member *findMember(const char *name) const;
-	Variant getProperty(const char *name) const;
+	bool getProperty(const char *name, Variant &ret) const;
 	bool setProperty(const char *name, const Variant &value);
 	bool setProperty(const char *name, const char *value);
-	void invokeMethod(const char *name, const Variant &arg1);
-	void invokeMethod(const char *name, const Variant &arg1, const Variant &arg2);
 
 	// properties
 	void set_objectName(const String &name);
@@ -50,6 +49,34 @@ public:
 
 	void doPropertyChanged();
 
+	bool invokeMethod(const char *methodName, const Ref &ret, const ConstRef &arg0, const ConstRef &arg1, const ConstRef &arg2, const ConstRef &arg3, const ConstRef &arg4);
+
+	// invoke helper
+	bool invokeMethod_(const char *methodName);
+	template <class A0>
+	bool invokeMethod_(const char *methodName, const A0 &a0);
+	template <class A0, class A1>
+	bool invokeMethod_(const char *methodName, const A0 &a0, const A1 &a1);
+	template <class A0, class A1, class A2>
+	bool invokeMethod_(const char *methodName, const A0 &a0, const A1 &a1, const A2 &a2);
+	template <class A0, class A1, class A2, class A3>
+	bool invokeMethod_(const char *methodName, const A0 &a0, const A1 &a1, const A2 &a2, const A3 &a3);
+	template <class A0, class A1, class A2, class A3, class A4>
+	bool invokeMethod_(const char *methodName, const A0 &a0, const A1 &a1, const A2 &a2, const A3 &a3, const A4 &a4);
+
+	template <class Rt>
+	bool invokeMethodRt_(const char *methodName, Rt &ret);
+	template <class Rt, class A0>
+	bool invokeMethodRt_(const char *methodName, Rt &ret, const A0 &a0);
+	template <class Rt, class A0, class A1>
+	bool invokeMethodRt_(const char *methodName, Rt &ret, const A0 &a0, const A1 &a1);
+	template <class Rt, class A0, class A1, class A2>
+	bool invokeMethodRt_(const char *methodName, Rt &ret, const A0 &a0, const A1 &a1, const A2 &a2);
+	template <class Rt, class A0, class A1, class A2, class A3>
+	bool invokeMethodRt_(const char *methodName, Rt &ret, const A0 &a0, const A1 &a1, const A2 &a2, const A3 &a3);
+	template <class Rt, class A0, class A1, class A2, class A3, class A4>
+	bool invokeMethodRt_(const char *methodName, Rt &ret, const A0 &a0, const A1 &a1, const A2 &a2, const A3 &a3, const A4 &a4);
+
 protected:
 	virtual void onPropertyChanged();
 
@@ -64,14 +91,94 @@ protected:
 	void resetObjectName();
 
 	void raiseSignal(const String &signal, const Variant &param);
-
+#if 0
 	void initClassInfo(const ClassInfo *ci);
+#else
+	void initScriptClass(const SqClass *sqclass);
+#endif
 
 private:
+#if 0
 	const ClassInfo *m_classInfo;
+#else
+	const SqClass *m_sqClass;
+#endif
 	String m_objectNamespace;
 	String m_objectName;
 };
+
+inline bool Object::invokeMethod_(const char *methodName)
+{
+	return invokeMethod(methodName, Ref(), ConstRef(), ConstRef(), ConstRef(), ConstRef(), ConstRef());
+}
+
+template <class A0>
+bool Object::invokeMethod_(const char *methodName, const A0 &a0)
+{
+	return invokeMethod(methodName, Ref(), AX_ARG(a0), ConstRef(), ConstRef(), ConstRef(), ConstRef());
+}
+
+template <class A0, class A1>
+bool Object::invokeMethod_(const char *methodName, const A0 &a0, const A1 &a1)
+{
+	return invokeMethod(methodName, Ref(), AX_ARG(a0), AX_ARG(a1), ConstRef(), ConstRef(), ConstRef());
+}
+
+template <class A0, class A1, class A2>
+bool Object::invokeMethod_(const char *methodName, const A0 &a0, const A1 &a1, const A2 &a2)
+{
+	return invokeMethod(methodName, Ref(), AX_ARG(a0), AX_ARG(a1), AX_ARG(a2), ConstRef(), ConstRef());
+}
+
+template <class A0, class A1, class A2, class A3>
+bool Object::invokeMethod_(const char *methodName, const A0 &a0, const A1 &a1, const A2 &a2, const A3 &a3)
+{
+	return invokeMethod(methodName, Ref(), AX_ARG(a0), AX_ARG(a1), AX_ARG(a2), AX_ARG(a3), ConstRef());
+}
+
+template <class A0, class A1, class A2, class A3, class A4>
+bool Object::invokeMethod_(const char *methodName, const A0 &a0, const A1 &a1, const A2 &a2, const A3 &a3, const A4 &a4)
+{
+	return invokeMethod(methodName, Ref(), AX_ARG(a0), AX_ARG(a1), AX_ARG(a2), AX_ARG(a3), AX_ARG(a4));
+}
+
+template <class Rt>
+bool Object::invokeMethodRt_(const char *methodName, Rt &ret)
+{
+	return invokeMethod(methodName, AX_RETURN_ARG(ret), ConstRef(), ConstRef(), ConstRef(), ConstRef(), ConstRef());
+}
+
+template <class Rt, class A0>
+bool Object::invokeMethodRt_(const char *methodName, Rt &ret, const A0 &a0)
+{
+	return invokeMethod(methodName, AX_RETURN_ARG(ret), AX_ARG(a0), ConstRef(), ConstRef(), ConstRef(), ConstRef());
+}
+
+template <class Rt, class A0, class A1>
+bool Object::invokeMethodRt_(const char *methodName, Rt &ret, const A0 &a0, const A1 &a1)
+{
+	return invokeMethod(methodName, AX_RETURN_ARG(ret), AX_ARG(a0), AX_ARG(a1), ConstRef(), ConstRef(), ConstRef());
+}
+
+template <class Rt, class A0, class A1, class A2>
+bool Object::invokeMethodRt_(const char *methodName, Rt &ret, const A0 &a0, const A1 &a1, const A2 &a2)
+{
+	return invokeMethod(methodName, AX_RETURN_ARG(ret), AX_ARG(a0), AX_ARG(a1), AX_ARG(a2), ConstRef(), ConstRef());
+}
+
+template <class Rt, class A0, class A1, class A2, class A3>
+bool Object::invokeMethodRt_(const char *methodName, Rt &ret, const A0 &a0, const A1 &a1, const A2 &a2, const A3 &a3)
+{
+	return invokeMethod(methodName, AX_RETURN_ARG(ret), AX_ARG(a0), AX_ARG(a1), AX_ARG(a2), AX_ARG(a3), ConstRef());
+}
+
+template <class Rt, class A0, class A1, class A2, class A3, class A4>
+bool Object::invokeMethodRt_(const char *methodName, Rt &ret, const A0 &a0, const A1 &a1, const A2 &a2, const A3 &a3, const A4 &a4)
+{
+	return invokeMethod(methodName, AX_RETURN_ARG(ret), AX_ARG(a0), AX_ARG(a1), AX_ARG(a2), AX_ARG(a3), AX_ARG(a4));
+}
+
+
 
 AX_END_NAMESPACE
 

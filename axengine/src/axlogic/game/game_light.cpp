@@ -57,6 +57,7 @@ void GameLight::doThink()
 	GameActor::doThink();
 }
 
+#if 0
 void GameLight::loadLight(const LuaTable &table)
 {
 	clear();
@@ -77,6 +78,7 @@ void GameLight::loadLight(const LuaTable &table)
 
 	setRenderEntity(m_renderLight);
 }
+#endif
 
 void GameLight::activeLight(bool isActive)
 {

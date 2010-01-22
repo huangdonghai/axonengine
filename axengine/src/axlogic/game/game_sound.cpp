@@ -39,6 +39,7 @@ void GameSound::doThink()
 
 }
 
+#if 0
 void GameSound::loadSound(const LuaTable &table)
 {
 	clear();
@@ -56,6 +57,7 @@ void GameSound::loadSound(const LuaTable &table)
 
 	m_sfx << g_soundSystem->createSfx(name);
 }
+#endif
 
 void GameSound::activeSound( bool isActive )
 {

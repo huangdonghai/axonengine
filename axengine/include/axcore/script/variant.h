@@ -12,6 +12,7 @@ AX_BEGIN_NAMESPACE
 class Object;
 class Variant;
 
+#if 0
 //--------------------------------------------------------------------------
 // class LuaTable
 //--------------------------------------------------------------------------
@@ -56,6 +57,7 @@ public:
 	mutable bool m_isIteratoring;
 	mutable int m_stackTop;
 };
+#endif
 
 class Variant;
 class ConstRef;
@@ -78,7 +80,7 @@ class AX_API Variant
 
 public:
 	enum TypeId {
-		kVoid, kBool, kInt, kFloat, kString, kObject, kVector3, kColor3, kPoint, kRect, kMatrix, kTable, kScriptValue, kMaxType
+		kVoid, kBool, kInt, kFloat, kString, kObject, kVector3, kColor3, kPoint, kRect, kMatrix/*, kTable*/, kScriptValue, kMaxType
 	};
 
 	enum InitMode {
@@ -114,7 +116,9 @@ public:
 	Variant(const Rect &v);
 	Variant(const Color3 &v);
 	Variant(const Variant &v);
+#if 0
 	Variant(const LuaTable &table);
+#endif
 	Variant(const Matrix &matrix);
 	explicit Variant(TypeId typeId);
 	explicit Variant(TypeId typeId, void * data, InitMode initMode=InitCopy);
@@ -134,8 +138,10 @@ public:
 	operator Point() const;
 	operator Rect() const;
 	operator Color3() const;
+#if 0
 	operator LuaTable() const;
-	Variant &operator=(const Variant &v);
+#endif
+	Variant& operator=(const Variant &v);
 	operator Matrix() const;
 
 	String toString() const;
@@ -381,10 +387,12 @@ inline Variant::TypeId GetVariantType_<Matrix>() {
 	return Variant::kMatrix;
 }
 
+#if 0
 template<>
 inline Variant::TypeId GetVariantType_<LuaTable>() {
 	return Variant::kTable;
 }
+#endif
 
 class ScriptValue;
 template<>

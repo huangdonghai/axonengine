@@ -699,11 +699,23 @@
 						>
 					</File>
 					<File
+						RelativePath=".\scripts\game\Physics\animated.nut"
+						>
+					</File>
+					<File
 						RelativePath=".\scripts\game\Physics\Articulated.lua"
 						>
 					</File>
 					<File
+						RelativePath=".\scripts\game\Physics\articulated.nut"
+						>
+					</File>
+					<File
 						RelativePath=".\scripts\game\Physics\RigidBody.lua"
+						>
+					</File>
+					<File
+						RelativePath=".\scripts\game\Physics\rigidbody.nut"
 						>
 					</File>
 				</Filter>

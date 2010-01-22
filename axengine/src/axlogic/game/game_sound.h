@@ -17,7 +17,7 @@ AX_BEGIN_NAMESPACE
 class GameSound : public GameActor
 {
 	AX_DECLARE_CLASS(GameSound, GameActor)
-		AX_METHOD(loadSound)
+//		AX_METHOD(loadSound)
 		AX_METHOD(activeSound)
 	AX_END_CLASS()
 
@@ -34,7 +34,7 @@ public:
 	virtual void doThink();
 
 	// method
-	void loadSound(const LuaTable &v);
+//	void loadSound(const LuaTable &v);
 	void activeSound(bool isActive);
 
 private:

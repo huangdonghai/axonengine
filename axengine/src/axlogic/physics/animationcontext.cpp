@@ -82,8 +82,9 @@ bool AnimationChannel::isAnimDone(float timeleft)
 void AnimationChannel::step(int msec)
 {
 	String update = m_context->m_lua + '.' + m_channelName + '.' + m_state + '.' + "update";
+#if 0
 	g_scriptSystem->invokeLuaMethod(update.c_str(), Variant(m_context));
-
+#endif
 	m_animator->step(msec);
 	m_animator->renderToPose(m_pose);
 }
@@ -99,7 +100,9 @@ void AnimationChannel::switchState(const String &state, float easein)
 
 	// enterstate
 	String enterstate = m_context->m_lua + '.' + m_channelName + '.' + m_state + '.' + "enterState";
+#if 0
 	g_scriptSystem->invokeLuaMethod(enterstate.c_str(), Variant(m_context));
+#endif
 }
 
 //--------------------------------------------------------------------------
@@ -123,6 +126,7 @@ void AnimationContext::initFromLua(const String &luaobj)
 {
 	m_lua = luaobj;
 
+#if 0
 	g_scriptSystem->beginRead();
 
 	LuaTable table = g_scriptSystem->readField(luaobj.c_str());
@@ -187,7 +191,7 @@ void AnimationContext::initFromLua(const String &luaobj)
 	table.endRead();
 
 	g_scriptSystem->endRead();
-
+#endif
 	// start
 	for (int i = 0; i < m_numChannels; i++) {
 		m_currentChannel = i;
@@ -247,6 +251,7 @@ void AnimationContext::step(int msec)
 	m_currentChannel = -1;
 }
 
+#if 0
 void AnimationContext::initChannel(const LuaTable &table)
 {
 	// read from lua first
@@ -274,6 +279,7 @@ void AnimationContext::initChannel(const LuaTable &table)
 
 	m_channels[index] = new AnimationChannel(this, index, name, boneseq);
 }
+#endif
 
 void AnimationContext::initBoneChannelMap()
 {

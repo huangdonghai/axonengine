@@ -2,68 +2,7 @@
 
 AX_BEGIN_NAMESPACE
 
-bool MetaInfo::invokeMethod(Object *obj, const char *methodName, const Ref &ret,
-							const ConstRef &arg0, const ConstRef &arg1, const ConstRef &arg2,
-							const ConstRef &arg3, const ConstRef &arg4)
-{
-	Member *member = findMember(methodName);
-
-	if (!member)
-		return false;
-
-	if (member->getType() != Member::kMethodType)
-		return false;
-
-	// check types
-	Variant::TypeId needReturnType = member->getReturnType();
-	Variant realRet(ret.getTypeId(), ret.getPointer(), Variant::InitRef);
-	bool castRet = false;
-
-	if (ret.getTypeId() != needReturnType) {
-		if (needReturnType != Variant::kVoid && ret.getTypeId() != Variant::kVoid) {
-			if (!Variant::canCast(needReturnType, ret.getTypeId())) {
-				return false;
-			} else {
-				AX_INIT_STACK_VARIANT(realRet, needReturnType);
-				castRet = true;
-			}
-		}
-	}
-
-	ConstRef args[] = { arg0, arg1, arg2, arg3, arg4 };
-
-	Variant realArg[Member::MaxArgs];
-	const Variant::TypeId *needTypeIds = member->getArgsType();
-	for (int i = 0; i <member->argc(); i++) {
-		if (args[i].getTypeId() == needTypeIds[i])
-			continue;
-
-		if (!Variant::canCast(args[i].getTypeId(), needTypeIds[i]))
-			return false;
-
-		AX_INIT_STACK_VARIANT(realArg[i], needTypeIds[i]);
-
-		bool casted = args[i].castTo(realArg[i]);
-		if (!casted)
-			return false;
-
-		args[i].set(realArg[i].getTypeId(), realArg[i].getPointer());
-	}
-
-	const void *argDatas[] = {
-		args[0].getPointer(), args[1].getPointer(), args[2].getPointer(), args[3].getPointer(), args[4].getPointer()
-	};
-
-	// really call
-	int numResult = member->invoke(obj, realRet.getPointer(), argDatas);
-
-	if (numResult && castRet) {
-		return realRet.castTo(ret);
-	}
-
-	return true;
-}
-
+#if 0
 bool MetaInfo::getProperty( Object *obj, const char *propname, const Ref &ret )
 {
 	Member *member = findMember(propname);
@@ -125,7 +64,6 @@ bool MetaInfo::setProperty( Object *obj, const char *propname, const ConstRef &a
 
 	return member->setProperty(obj, argData);
 }
-
 
 bool lesser(const ScriptProp *a, const ScriptProp *b)
 {
@@ -446,7 +384,7 @@ Variant ScriptProp::getProperty(const Object *obj)
 	lua_pop(L,1);
 	return result;
 }
-
+#endif
 bool sqlesser(const SqProperty *a, const SqProperty *b)
 {
 	String gan = a->getGroupName();
@@ -456,7 +394,9 @@ bool sqlesser(const SqProperty *a, const SqProperty *b)
 	return gan < gbn;
 }
 
-SqProperty::SqProperty(const sqObject &key, const sqObject &val, const sqObject &attr ) : Member(0, Member::kPropertyType)
+SqProperty::SqProperty(const sqObject &key, const sqObject &val, const sqObject &attr )
+	: Member(0, Member::kPropertyType)
+	, m_group(0)
 {
 	m_realName = key.toString();
 	m_name = m_realName.c_str();
@@ -469,7 +409,9 @@ SqProperty::SqProperty(const sqObject &key, const sqObject &val, const sqObject 
 	AX_ASSERT(m_propKind != Variant::kVoid);
 }
 
-SqProperty::SqProperty(const char *name, Kind kind) : Member(0, Member::kPropertyType)
+SqProperty::SqProperty(const char *name, Kind kind)
+	: Member(0, Member::kPropertyType)
+	, m_group(0)
 {
 	m_realName = name;
 	m_name = m_realName.c_str();
@@ -482,13 +424,24 @@ SqClass::SqClass(const String &name)
 
 	sqObject so = g_mainVM->getScoped(name.c_str());
 
-	if (so.getType() != OT_CLASS)
+	if (!so.isClass())
 		Errorf("wrong type. can't register class");
 
 	so.setValue("_get", sqVM::ms_getClosure);
 	so.setValue("_set", sqVM::ms_setClosure);
 
 	sqObject key, val, attr;
+
+	// get cppname
+	attr = so.getAttributes();
+	const char *cppClass = attr.getString("cppClass");
+	while (!cppClass) {
+		sqObject base = so.getBase();
+		if (!base.isClass())
+			Errorf("Base isn't a class");
+
+		cppClass = base.getAttributes().getString("cppClass");
+	}
 
 	so.beginIteration();
 

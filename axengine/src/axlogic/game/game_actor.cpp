@@ -64,8 +64,8 @@ void GameActor::autoGenerateName()
 {
 	String objname = "entity";
 
-	if (getClassInfo())
-		objname = getClassInfo()->m_className;
+	if (getScriptClass())
+		objname = getScriptClass()->getName();
 
 	StringUtil::strlwr(&objname[0]);
 	objname = g_scriptSystem->generateObjectName(objname);
@@ -116,6 +116,7 @@ void GameRigit::doThink() {
 	m_world->getRenderWorld()->addEntity(m_model);
 }
 
+#if 0
 void GameRigit::loadAsset(const LuaTable &t)
 {
 	clear();
@@ -152,6 +153,7 @@ void GameRigit::loadAsset(const LuaTable &t)
 	setRenderEntity(m_model);
 	setPhysicsEntity(m_rigid);
 }
+#endif
 
 void GameRigit::clear()
 {

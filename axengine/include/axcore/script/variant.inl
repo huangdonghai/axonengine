@@ -42,9 +42,10 @@ inline Variant::Variant(const Matrix &v)
 inline Variant::Variant(const Variant &v)
 { _init(v.m_type, v.getPointer()); }
 
+#if 0
 inline Variant::Variant(const LuaTable &rhs)
 { _init(kTable, &rhs); }
-
+#endif
 
 inline Variant::Variant( TypeId typeId )
 { _init(typeId, 0); }
@@ -91,11 +92,12 @@ inline Variant::operator Color3() const
 {
 	return castHelper<Color3>();
 }
-
+#if 0
 inline Variant::operator LuaTable() const
 {
 	return castHelper<LuaTable>();
 }
+#endif
 
 inline Variant::operator Object*() const
 {

@@ -262,6 +262,7 @@ void PropertyEditor::initFromObject(Object *obj) {
 	PropertyCollection *collection = new PropertyCollection(QLatin1String("<root>"));
 
 	MetaInfo *typeinfo = obj->getMetaInfo();
+	Variant prop;
 
 	for (; typeinfo; typeinfo = typeinfo->getBase()) {
 		IProperty *p;
@@ -283,22 +284,22 @@ void PropertyEditor::initFromObject(Object *obj) {
 			Variant::TypeId type = m->getPropType();
 			switch (type) {
 			case Variant::kBool:
-				p = new BoolProperty(m->getProperty(obj), m->getName());
+				p = new BoolProperty(m->getPropertyNoCheck(obj), m->getName());
 				break;
 			case Variant::kInt:
-				p = new IntProperty(m->getProperty(obj), m->getName());
+				p = new IntProperty(m->getPropertyNoCheck(obj), m->getName());
 				break;
 			case Variant::kFloat:
-				p = new DoubleProperty(m->getProperty(obj), m->getName());
+				p = new DoubleProperty(m->getPropertyNoCheck(obj), m->getName());
 				break;
 			case Variant::kString:
-				p = new StringProperty(u2q(m->getProperty(obj)), m->getName());
+				p = new StringProperty(u2q(m->getPropertyNoCheck(obj)), m->getName());
 				break;
 			case Variant::kVector3:
-				p = new VectorProperty(m->getProperty(obj), m->getName());
+				p = new VectorProperty(m->getPropertyNoCheck(obj), m->getName());
 				break;
 			case Variant::kColor3:
-				p = new ColorProperty(x2q(m->getProperty(obj)), m->getName());
+				p = new ColorProperty(x2q(m->getPropertyNoCheck(obj)), m->getName());
 				break;
 			}
 
@@ -375,17 +376,17 @@ void PropertyEditor::setData(const QString &propName, QVariant value){
 }
 
 bool PropertyEditor::initScriptProp(Object *obj) {
-	if (!obj || !obj->getClassInfo()) {
+	if (!obj || !obj->getScriptClass()) {
 		setInitialInput(nullptr);
 		return false;
 	}
 
-	const ClassInfo *ci = obj->getClassInfo();
+	const SqClass *ci = obj->getScriptClass();
 
-	const ScriptPropSeq &props = ci->m_scriptPropSeq;
+	const SqProperties &props = ci->getMembers();
 
 	PropertyCollection *collection = new PropertyCollection(QLatin1String("<root>"));
-	AX_FOREACH(ScriptProp *m, props) {
+	AX_FOREACH(SqProperty *m, props) {
 		IProperty *p = 0;
 		IProperty *group = 0;
 
@@ -393,52 +394,51 @@ bool PropertyEditor::initScriptProp(Object *obj) {
 		case Variant::kVoid:
 			break;
 		case Variant::kBool:
-			p = new BoolProperty(m->getProperty(obj), m->getName());
+			p = new BoolProperty(m->getPropertyNoCheck(obj), m->getName());
 			break;
 		case Variant::kInt:
-			p = new IntProperty(m->getProperty(obj), m->getName());
+			p = new IntProperty(m->getPropertyNoCheck(obj), m->getName());
 			break;
 		case Variant::kFloat:
-			p = new DoubleProperty(m->getProperty(obj), m->getName());
+			p = new DoubleProperty(m->getPropertyNoCheck(obj), m->getName());
 			break;
 		case Variant::kString:
-			p = new StringProperty(u2q(m->getProperty(obj)), m->getName());
+			p = new StringProperty(u2q(m->getPropertyNoCheck(obj)), m->getName());
 			break;
 		case Variant::kObject:
-		case Variant::kTable:
 			break;
 		case Variant::kVector3:
-			p = new VectorProperty(m->getProperty(obj), m->getName());
+			p = new VectorProperty(m->getPropertyNoCheck(obj), m->getName());
 			break;
 		case Variant::kColor3:
-			p = new ColorProperty(x2q(m->getProperty(obj)), m->getName());
+			p = new ColorProperty(x2q(m->getPropertyNoCheck(obj)), m->getName());
 			break;
 		case Variant::kPoint:
 		case Variant::kRect:
 			break;
 		case Member::kEnum:
-			p = new EnumProperty(m->getEnumItems(), m->getProperty(obj), m->getName());
+			p = new EnumProperty(m->getEnumItems(), m->getPropertyNoCheck(obj), m->getName());
 			break;
 		case Member::kFlag:
-			p = new FlagsProperty(m->getEnumItems(), m->getProperty(obj), m->getName());
+			p = new FlagsProperty(m->getEnumItems(), m->getPropertyNoCheck(obj), m->getName());
 			break;
 		case Member::kTexture:
-			p = new FileProperty(u2q(m->getProperty(obj)), m->getName(), "/textures", "*.dds");
+			p = new FileProperty(u2q(m->getPropertyNoCheck(obj)), m->getName(), "/textures", "*.dds");
 			break;
 		case Member::kSound:
-			p = new FileProperty(u2q(m->getProperty(obj)), m->getName(), "/sounds", "*.ogg");
+			p = new FileProperty(u2q(m->getPropertyNoCheck(obj)), m->getName(), "/sounds", "*.ogg");
 			break;
 		case Member::kModel:
-			p = new FileProperty(u2q(m->getProperty(obj)), m->getName(), "/models", "*.mesh");
+			p = new FileProperty(u2q(m->getPropertyNoCheck(obj)), m->getName(), "/models", "*.mesh");
 			break;
 		case Member::kAnimation:
-			p = new FileProperty(u2q(m->getProperty(obj)), m->getName(), "/models", "*.anim");
+			p = new FileProperty(u2q(m->getPropertyNoCheck(obj)), m->getName(), "/models", "*.anim");
 			break;
 		case Member::kSpeedTree:
-			p = new FileProperty(u2q(m->getProperty(obj)), m->getName(), "/speedtrees", "*.spt");
+			p = new FileProperty(u2q(m->getPropertyNoCheck(obj)), m->getName(), "/speedtrees", "*.spt");
 			break;
 		case Member::kMaterial:
-			p = new FileProperty(u2q(m->getProperty(obj)), m->getName(), "/materials", "*.mtr");
+			p = new FileProperty(u2q(m->getPropertyNoCheck(obj)), m->getName(), "/materials", "*.mtr");
 			break;
 		case Member::kGroup:
 			p = new SeparatorProperty("", m->getName());

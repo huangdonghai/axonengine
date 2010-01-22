@@ -17,7 +17,7 @@ AX_BEGIN_NAMESPACE
 
 using namespace boost;
 
-typedef mpl::vector<void,bool,int,float,String,Object *,Vector3,Color3,Point,Rect,Matrix, LuaTable> VariantTL;
+typedef mpl::vector<void,bool,int,float,String,Object *,Vector3,Color3,Point,Rect,Matrix> VariantTL;
 
 typedef bool (*castFunc)(const void *from, void *to);
 
@@ -87,7 +87,6 @@ public:
 		CANCAST(8);
 		CANCAST(9);
 		CANCAST(10);
-		CANCAST(11);
 
 		CASTFUNC(0);
 		CASTFUNC(1);
@@ -100,7 +99,6 @@ public:
 		CASTFUNC(8);
 		CASTFUNC(9);
 		CASTFUNC(10);
-		CASTFUNC(11);
 	}
 
 	void construct(void *ptr, const void *copyfrom)
@@ -135,10 +133,9 @@ static Variant::TypeHandler *s_typeHandlers[Variant::kMaxType] = {
 	NEW_TH(8),
 	NEW_TH(9),
 	NEW_TH(10),
-	NEW_TH(11),
 	ScriptValue::getTypeHandler()
 };
-AX_STATIC_ASSERT(13==Variant::kMaxType);
+AX_STATIC_ASSERT(12==Variant::kMaxType);
 #undef NEW_TH
 
 String Variant::toString() const
@@ -159,8 +156,6 @@ String Variant::toString() const
 	case kString:
 		return ref<String>();
 	case kObject:
-		break;
-	case kTable:
 		break;
 	case kVector3:
 		{
@@ -208,8 +203,6 @@ void Variant::fromString(TypeId t, const char *str)
 		*this = (str);
 		break;
 	case kObject:
-		break;
-	case kTable:
 		break;
 	case kVector3:
 		{
@@ -368,7 +361,7 @@ void Variant::init( TypeId typeId, void *data, InitMode initMode /*= InitCopy*/ 
 	_init(typeId, data, initMode);
 }
 
-
+#if 0
 //--------------------------------------------------------------------------
 // class LuaTable
 //--------------------------------------------------------------------------
@@ -532,5 +525,6 @@ LuaTable & LuaTable::operator=( const LuaTable &rhs )
 	const_cast<int&>(m_index) = rhs.m_index;
 	return *this;
 }
+#endif
 
 AX_END_NAMESPACE

@@ -52,11 +52,12 @@ bool CmdSystem::isCmd(const String &name) {
 void CmdSystem::executeString(const String &text, ExecType cet) {
 	// check if is script command first
 	if (text.size() > 1) {
+#if 0
 		if (text[0] == '/') {
 			g_scriptSystem->executeString(text.c_str() + 1);
 			return;
 		}
-
+#endif
 		if (text[0] == '\\') {
 			g_scriptSystem->executeLine(text.c_str() + 1);
 			return;
@@ -177,7 +178,7 @@ void CmdSystem::debug_f(const CmdArgs &param) {
 }
 
 void CmdSystem::script_f(const CmdArgs &param) {
-	g_scriptSystem->executeString(param.rawParam);
+	g_scriptSystem->executeLine(param.rawParam.c_str());
 }
 
 void CmdSystem::runFile_f(const CmdArgs &param) {
@@ -187,7 +188,7 @@ void CmdSystem::runFile_f(const CmdArgs &param) {
 //	SCOPE_CONVERT;
 
 #if 1
-	g_scriptSystem->executeFile(param.tokened[1]);
+//	g_mainVM->runFile(param.tokened[1]);
 #else
 	size_t filesize;
 	char *filebuf;

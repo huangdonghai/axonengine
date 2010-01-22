@@ -113,12 +113,14 @@ MapAgent::Type MapAgent::stringToType(const char *str) {
 	return kNone;
 }
 
-Axon::Variant MapAgent::getProperty( const String &propname )
+Variant MapAgent::getProperty( const String &propname )
 {
-	if (m_gameObj)
-		return m_gameObj->getProperty(propname.c_str());
+	Variant result;
 
-	return Variant();
+	if (m_gameObj)
+		m_gameObj->getProperty(propname.c_str(), result);
+
+	return result;
 }
 
 void MapAgent::setProperty(const String &name, const Variant &value)

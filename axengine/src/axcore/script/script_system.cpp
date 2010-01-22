@@ -10,16 +10,18 @@ read the license and understand and accept it fully.
 */
 
 
-
+#if 0
 #define OBJECT_MT "__object_mt"
 #define OBJECT_NAME "__object"
+#endif
 
 AX_BEGIN_NAMESPACE
 
-lua_State *L;
 sqVM *g_mainVM;
 HSQUIRRELVM VM;
 
+#if 0
+lua_State *L;
 static void l_message(const char *pname, const char *msg)
 {
 	if (pname) Axon::Debugf("%s: ", pname);
@@ -584,7 +586,7 @@ int xPcall(lua_State *L, int numarg, int numresult)
 	int s = lua_pcall(L, numarg, numresult, 0);
 	return xReport(L, s, 0);
 }
-
+#endif
 
 //--------------------------------------------------------------------------
 // class ScriptSystem
@@ -609,7 +611,7 @@ ScriptSystem::~ScriptSystem()
 void ScriptSystem::initialize()
 {
 	Printf(_("Initializing ScriptSystem...\n"));
-
+#if 0
 	L = lua_open();
 
 	if (!L) {
@@ -658,7 +660,7 @@ void ScriptSystem::initialize()
 	executeFile("Start.lua");
 
 	Printf(_("..created userdata object for engine object\n"));
-
+#endif
 	g_mainVM = new sqVM();
 	_INIT_CLASS(Vector3);
 	_INIT_CLASS(Color3);
@@ -675,10 +677,12 @@ void ScriptSystem::initialize()
 void ScriptSystem::finalize()
 {
 	SafeDelete(g_mainVM);
-
+#if 0
 	lua_close(L);
+#endif
 }
 
+#if 0
 void ScriptSystem::executeString(const String &text)
 {
 	int s = luaL_loadbuffer(L, text.c_str(), text.size(), 0);
@@ -698,7 +702,7 @@ void ScriptSystem::executeString(const char *text)
 	}
 	xReport(L, s, 0);
 }
-
+#endif
 
 void ScriptSystem::executeLine( const char *text )
 {
@@ -706,7 +710,7 @@ void ScriptSystem::executeLine( const char *text )
 	g_mainVM->runBytecode(bytecode);
 }
 
-
+#if 0
 void ScriptSystem::executeFile(const String &filename)
 {
 	size_t filesize;
@@ -807,7 +811,6 @@ bool ScriptSystem::invokeLuaScoped(const char *text, Axon::VariantSeq &stack, in
 	return true;
 }
 
-#if 0
 String ScriptSystem::generateLuaString(const String &text)
 {
 	String result = text;
@@ -968,17 +971,17 @@ void ScriptSystem::registerType(MetaInfo *metainfo)
 
 Object *ScriptSystem::createObject(const char *classname)
 {
-	ClassInfoDict::const_iterator cit = m_classInfoReg.find(classname);
-	if (cit != m_classInfoReg.end()) {
-		ClassInfo *ci = cit->second;
+	SqClassDict::const_iterator cit = m_sqClassReg.find(classname);
+	if (cit != m_sqClassReg.end()) {
+		SqClass *ci = cit->second;
 
-		if (!ci->m_typeInfo) {
+		if (!ci->m_metaInfo) {
 			Errorf("can't find type info");
 		}
 
 		// create object
-		Object *obj = ci->m_typeInfo->createObject();
-		obj->initClassInfo(ci);
+		Object *obj = ci->m_metaInfo->createObject();
+		obj->initScriptClass(ci);
 
 		obj->invoke_onInit();
 
@@ -1000,8 +1003,8 @@ Object *ScriptSystem::cloneObject(const Object *obj)
 {
 	Object *result = 0;
 	
-	if (obj->getClassInfo())
-		result = createObject(obj->getClassInfo()->m_className.c_str());
+	if (obj->getScriptClass())
+		result = createObject(obj->getScriptClass()->m_name.c_str());
 
 	if (!result)
 		result = obj->getMetaInfo()->createObject();
@@ -1015,6 +1018,7 @@ Object *ScriptSystem::cloneObject(const Object *obj)
 	return result;
 }
 
+#if 0
 Object *ScriptSystem::findObject(const String &objectname)
 {
 	xPushString(L, objectname);
@@ -1111,6 +1115,7 @@ void ScriptSystem::registerClass(const String &self, const String &base)
 
 	classInfo->initScriptProps();
 }
+#endif
 
 
 void ScriptSystem::registerSqClass( const String &name )
@@ -1126,36 +1131,36 @@ void ScriptSystem::registerSqClass( const String &name )
 
 void ScriptSystem::linkMetaInfoToClassInfo(MetaInfo *mi)
 {
-	ClassInfoDict::iterator it = m_classInfoReg.begin();
+	SqClassDict::iterator it = m_sqClassReg.begin();
 
-	for (; it != m_classInfoReg.end(); ++it) {
-		ClassInfo *ci = it->second;
-		if (ci->m_metaName == mi->m_name) {
-			ci->m_typeInfo = mi;
-			mi->m_classInfo = ci;
+	for (; it != m_sqClassReg.end(); ++it) {
+		SqClass *ci = it->second;
+		if (ci->m_cppName == mi->m_name) {
+			ci->m_metaInfo = mi;
+			mi->m_sqClass = ci;
 		}
 	}
 }
 
 void ScriptSystem::getClassList(const char *prefix, bool sort, StringSeq &result) const
 {
-	ClassInfoDict::const_iterator it = m_classInfoReg.begin();
+	SqClassDict::const_iterator it = m_sqClassReg.begin();
 	size_t prefixlen = 0;
 	
 	if (prefix) {
 		prefixlen = strlen(prefix);
 	}
 
-	for (; it != m_classInfoReg.end(); ++it) {
-		ClassInfo *ci = it->second;
+	for (; it != m_sqClassReg.end(); ++it) {
+		SqClass *ci = it->second;
 		if (prefixlen) {
-			if (strncmp(prefix, ci->m_className.c_str(), prefixlen) != 0) {
+			if (strncmp(prefix, ci->m_name.c_str(), prefixlen) != 0) {
 				continue;
 			}
 
-			result.push_back(ci->m_className.c_str() + prefixlen);
+			result.push_back(ci->m_name.c_str() + prefixlen);
 		} else {
-			result.push_back(ci->m_className);
+			result.push_back(ci->m_name);
 		}
 	}
 

@@ -25,16 +25,21 @@ public:
 	sqObject(const sqObject &o);
 	sqObject(HSQOBJECT o);
 
+	sqObject& operator=(const sqObject &o);
+
 	SQObjectType getType() const;
 	bool isClosure() const { return sq_isclosure(m_obj); }
 	bool isNativeClosure() const { return sq_isnativeclosure(m_obj); }
+	bool isClass() const { return sq_isclass(m_obj); }
+	bool isNull() const { return sq_isnull(m_obj); }
+	bool isNumeric() const { return sq_isnumeric(m_obj); }
 
-	operator HSQOBJECT& () const { return m_obj; } 
-	bool operator == (const sqObject& o);
+	operator HSQOBJECT&() const { return m_obj; } 
+	bool operator==(const sqObject& o);
 	bool compareUserPointer(const sqObject& o);
 
 	void attachToStackObject(HSQUIRRELVM vm, int idx);
-	void reset(void); // Release (any) reference and reset m_obj.
+	void reset(); // Release (any) reference and reset m_obj.
 	sqObject clone();
 	bool setValue(const sqObject &key, const sqObject &val);
 
@@ -62,7 +67,7 @@ public:
 	// === BEGIN Arrays ===
 	bool arrayResize(int newSize);
 	bool arrayExtend(int amount);
-	bool arrayReverse(void);
+	bool arrayReverse();
 	sqObject arrayPop(SQBool returnPoppedVal=SQTrue);
 
 	void arrayAppend(const sqObject &o);
@@ -72,8 +77,6 @@ public:
 	// === END Arrays ===
 
 	bool setInstanceUP(SQUserPointer up);
-	bool isNull() const;
-	bool isNumeric() const;
 	int len() const;
 	bool setDelegate(sqObject &obj);
 	sqObject getDelegate();
@@ -106,7 +109,7 @@ public:
 	// === get the type name of item/object through int key in a table or class. Returns NULL if the type name is not set (not an SqPlus registered type).
 	const SQChar * getTypeName(int key);
 	// === get the type name of this object, else return NULL if not an SqPlus registered type.
-	const SQChar * getTypeName(void);
+	const SQChar * getTypeName();
 
 	// === Return base class of object using sq_getbase() === 
 	sqObject getBase();

@@ -1,4 +1,5 @@
 
-class Object {}
+class Object </cppClass="Object"/>
+{}
 
-AX_REGISTER_CLASS(Object);
+AX_REGISTER_CLASS("Object");

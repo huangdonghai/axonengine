@@ -181,7 +181,7 @@ inline int GameActorPtr<type>::getEntityNum( void ) const {
 class AX_API GameRigit : public GameActor
 {
 	AX_DECLARE_CLASS(GameRigit, GameActor)
-		AX_METHOD(loadAsset)
+//		AX_METHOD(loadAsset)
 	AX_END_CLASS()
 
 public:
@@ -194,7 +194,7 @@ public:
 	// properties
 
 protected:
-	void loadAsset(const LuaTable &t);
+//	void loadAsset(const LuaTable &t);
 	void clear();
 
 protected:

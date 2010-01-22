@@ -2,8 +2,9 @@ enum LightType {
 	None, SunLight, PointLight, SpotLight
 }
 
-class Game.Effect.Light extends GameLight </ cppClass = "GameLight" group = "Game.Effect" />
+class Game.Effect.Light </ cppClass = "GameLight" />
 {
+	// properties
 	</ editable = true />
 	active = true;
 	</ editable = true />
@@ -24,7 +25,7 @@ class Game.Effect.Light extends GameLight </ cppClass = "GameLight" group = "Gam
 	spotAngle = 60.0;
 
 	</ editable = true, gourp = "Color" />
-	color = Rgb(1,1,1);
+	color = Color3(1,1,1);
 	</ editable = true, gourp = "Color" />
 	intensity = 1.0;
 	</ editable = true, gourp = "Color" />
@@ -34,8 +35,9 @@ class Game.Effect.Light extends GameLight </ cppClass = "GameLight" group = "Gam
 
 	</ editable = true, gourp = "Option" />
 	oneAreaOnly = true;
-	</ editable = true, gourp = "Option", kind = MemberKind.kModel />
+	</ editable = true, gourp = "Option", kind = PropKind.kModel />
 	model = "";
-	</ editable = true, gourp = "Option", kind = MemberKind.kTexture />
+	</ editable = true, gourp = "Option", kind = PropKind.kTexture />
 	texture = "";
 }
+AX_REGISTER_CLASS("Game.Effect.Light");

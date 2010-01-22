@@ -41,18 +41,23 @@ public:
 	Variant::TypeId getReturnType() const { return m_returnType; }
 	ScriptValue &getScriptClousure() { return m_scriptClosure; }
 
+	Variant getPropertyNoCheck(const Object *obj)
+	{
+		AX_ASSERT(isProperty());
+		Variant ret;
+		bool v = getProperty(obj, ret);
+		AX_ASSERT(v);
+		return ret;
+	}
+
 	// method
-	virtual int invoke(Object *obj, VariantSeq &stack) { AX_ASSERT(0); return 0;}
 	virtual int invoke(Object *obj, void *ret, const void **argv) { return 0; }
 
 	// property
-	virtual void setProperty(Object *obj, const Variant &val) { AX_ASSERT(0); }
-	virtual Variant getProperty(const Object *obj) { AX_ASSERT(0); return Variant(); }
-	virtual void *getPropertyPointer(const Object *obj) { AX_ASSERT(0); return 0; }
 	virtual bool isConst() const { return false; }
 	virtual bool isAnimatable() const { return false; }
-	virtual bool getProperty(Object *obj, void *argv) { return false; }
-	virtual bool setProperty(Object *obj, const void *argv) { return false; }
+	virtual bool getProperty(const Object *obj, Variant &ret) { return false; }
+	virtual bool setProperty(Object *obj, const ConstRef &arg) { return false; }
 	virtual bool resetProperty(Object *obj) { return false; }
 
 	static Variant::TypeId kindToType(int k)
@@ -95,66 +100,35 @@ class SimpleProp_ : public Member {
 public:
 	typedef M (T::*DataType);
 
-	SimpleProp_(const char *name, DataType d);
+	SimpleProp_(const char *name, DataType d)
+		: Member(name, Member::kPropertyType)
+	{
+		m_d = d;
+		m_propType = GetVariantType_<M>();
+	}
 
-	virtual void setProperty(Object *obj, const Variant &val);
-	virtual Variant getProperty(const Object *obj);
-	virtual void *getPropertyPointer(const Object *obj);
-	virtual bool isConst() const { return false; }
-	virtual bool isAnimatable() const { return true; }
-	virtual bool getProperty(Object *obj, void *argv);
-	virtual bool setProperty(Object *obj, const void *argv);
+	virtual bool isConst() const
+	{ return false; }
+
+	virtual bool isAnimatable() const
+	{ return true; }
+
+	virtual bool getProperty(const Object *obj, Variant &ret)
+	{
+		T *t = (T*)obj;
+		ret.init(m_propType, &(t->*m_d), Variant::InitRef);
+		return true;
+	}
+
+	virtual bool setProperty(Object *obj, const ConstRef &arg)
+	{
+		T *t = (T*)obj;
+		return arg.castTo(m_propType, &(t->*m_d));
+	}
 
 private:
 	DataType m_d;
 };
-
-template <class T, class M>
-SimpleProp_<T,M>::SimpleProp_(const char *name, DataType d) : Member(name, Member::kPropertyType) {
-	m_d = d;
-	m_propType = GetVariantType_<M>();
-}
-
-template <class T, class M>
-void SimpleProp_<T,M>::setProperty(Object *obj, const Variant &val) {
-	T *t = (T*)obj;
-	t->*m_d = val;
-}
-
-template <class T, class M>
-Variant SimpleProp_<T,M>::getProperty(const Object *obj) {
-	T *t = (T*)obj;
-	return t->*m_d;
-}
-
-template <class T, class M>
-void *SimpleProp_<T,M>::getPropertyPointer(const Object *obj) {
-	T *t = (T*)obj;
-	return &(t->*m_d);
-}
-
-template <class T, class M>
-bool SimpleProp_<T,M>::getProperty(Object *obj, void *argv)
-{
-	if (!argv)
-		return false;
-
-	T *t = (T*)obj;
-	*reinterpret_cast<M*>(argv) = t->*m_d;
-
-	return true;
-}
-
-template <class T, class M>
-bool SimpleProp_<T,M>::setProperty(Object *obj, const void *argv)
-{
-	if (!argv)
-		return false;
-
-	T *t = (T*)obj;
-	t->*m_d = *reinterpret_cast<const M*>(argv);
-	return true;
-}
 
 //--------------------------------------------------------------------------
 // template Property_
@@ -166,28 +140,51 @@ public:
 	typedef GetType (T::*GetFunc)() const;
 	typedef void (T::*SetFunc)(SetType);
 
-	Property_(const char *name, GetFunc getfunc, SetFunc setfunc);
-	Property_(const char *name, GetFunc getfunc);
-
-	virtual void setProperty(Object *obj, const Variant &val);
-	virtual Variant getProperty(const Object *obj);
-	virtual bool isConst() const { return m_setFunc == nullptr; }
-	virtual bool getProperty(Object *obj, void *argv)
+	Property_(const char *name, GetFunc getfunc, SetFunc setfunc)
+		: Member(name, Member::kPropertyType)
+		, m_getFunc(getfunc)
+		, m_setFunc(setfunc)
 	{
-		if (!argv)
-			return false;
+		Variant::TypeId getTypeId = GetVariantType_<remove_const_reference<GetType>::type>();
+		Variant::TypeId setTypeId = GetVariantType_<remove_const_reference<SetType>::type>();
+		AX_ASSERT(getTypeId == setTypeId);
+		m_propType = getTypeId;
+	}
 
+	Property_(const char *name, GetFunc getfunc)
+		: Member(name, Member::kPropertyType)
+		, m_getFunc(getfunc)
+		, m_setFunc(nullptr)
+	{
+		m_propType = GetVariantType_<GetType>();
+	}
+
+	virtual bool isConst() const
+	{ return m_setFunc == nullptr; }
+
+	virtual bool getProperty(const Object *obj, Variant &ret)
+	{
 		T *t = (T*)obj;
-		*(reinterpret_cast<GetType*>(argv)) = (t->*m_getFunc)();
+		ret = (t->*m_getFunc)();
 		return true;
 	}
-	virtual bool setProperty(Object *obj, const void *argv)
+
+	virtual bool setProperty(Object *obj, const ConstRef& arg)
 	{
-		if (!argv || !m_setFunc)
+		if (!m_setFunc)
 			return false;
 
 		T *t = (T*)obj;
-		(t->*m_setFunc)(*reinterpret_cast<const GetType*>(argv));
+		if (arg.getTypeId() == m_propType) {
+			(t->*m_setFunc)(*reinterpret_cast<const GetType*>(arg.getPointer()));
+			return true;
+		}
+
+		AX_DECL_STACK_VARIANT(casted, m_propType);
+		bool v = arg.castTo(casted);
+		if (!v) return false;
+
+		(t->*m_setFunc)(*reinterpret_cast<const GetType*>(casted.getPointer()));
 		return true;
 	}
 
@@ -196,40 +193,7 @@ private:
 	SetFunc m_setFunc;
 };
 
-template<typename T, typename GetType, typename SetType>
-Property_<T,GetType,SetType>::Property_(const char *name, GetFunc getfunc, SetFunc setfunc)
-	: Member(name, Member::kPropertyType)
-	, m_getFunc(getfunc)
-	, m_setFunc(setfunc)
-{
-	Variant::TypeId getTypeId = GetVariantType_<remove_const_reference<GetType>::type>();
-	Variant::TypeId setTypeId = GetVariantType_<remove_const_reference<SetType>::type>();
-	AX_ASSERT(getTypeId == setTypeId);
-	m_propType = getTypeId;
-}
-
-template< typename T, typename GetType, typename SetType >
-Property_<T,GetType,SetType>::Property_(const char *name, GetFunc getfunc)
-	: Member(name, Member::kPropertyType)
-	, m_getFunc(getfunc)
-	, m_setFunc(nullptr)
-{
-	m_propType = GetVariantType_<GetType>();
-}
-
-template< typename T, typename GetType, typename SetType >
-void Property_<T,GetType,SetType>::setProperty(Object *obj, const Variant &val) {
-	if (!m_setFunc) return;
-	T *t = (T*)obj;
-	(t->*m_setFunc)(val);
-}
-
-template< typename T, typename GetType, typename SetType >
-Variant Property_<T,GetType,SetType>::getProperty(const Object *obj) {
-	T *t = (T*)obj;
-	return (t->*m_getFunc)();
-}
-
+	
 
 //--------------------------------------------------------------------------
 // template ReturnSpecialization
@@ -312,54 +276,6 @@ struct ReturnSpecialization {
 			return 0;
 		}
 	}
-
-	template< typename T >
-	static int call(T *object, Rt (T::*func)(), VariantSeq &stack) {
-		Rt ret = (object->*func)();
-		Variant val(ret);
-		stack.push_back(val);
-		return 1;
-	}
-
-	template< typename T, typename P0 >
-	static int call(T *object, Rt (T::*func)(P0), VariantSeq &stack) {
-		Rt ret = (object->*func)(P(0));
-		Variant val(ret);
-		stack.push_back(val);
-		return 1;
-	}
-
-	template< typename T, typename P0, typename P1 >
-	static int call(T *object, Rt (T::*func)(P0,P1), VariantSeq &stack) {
-		Rt ret = (object->*func)(P(0),P(1));
-		Variant val(ret);
-		stack.push_back(val);
-		return 1;
-	}
-
-	template< typename T, typename P0, typename P1, typename P2 >
-	static int call(T *object, Rt (T::*func)(P0,P1,P2), VariantSeq &stack) {
-		Rt ret = (object->*func)(P(0),P(1),P(2));
-		Variant val(ret);
-		stack.push_back(val);
-		return 1;
-	}
-
-	template< typename T, typename P0, typename P1, typename P2, typename P3 >
-	static int call(T *object, Rt (T::*func)(P0,P1,P2,P3), VariantSeq &stack) {
-		Rt ret = (object->*func)(stack(0),stack(1),stack(2),stack(3));
-		Variant val(ret);
-		stack.push_back(val);
-		return 1;
-	}
-
-	template< typename T, typename P0, typename P1, typename P2, typename P3, typename P4 >
-	static int call(T *object, Rt (T::*func)(P0,P1,P2,P3,P4), VariantSeq &stack) {
-		Rt ret = (object->*func)(P(0),P(1),P(2),P(3),P(4));
-		Variant val(ret);
-		stack.push_back(val);
-		return 1;
-	}
 };
 
 template <>
@@ -405,43 +321,6 @@ struct ReturnSpecialization<void> {
 		(object->*func)(ARG(0), ARG(1), ARG(2), ARG(3), ARG(4));
 		return 0;
 	}
-
-	template< typename T >
-	static int call(T *object, void (T::*func)(), VariantSeq &stack) {
-		(object->*func)();
-		return 0;
-	}
-
-	template< typename T, typename P0 >
-	static int call(T *object, void (T::*func)(P0), VariantSeq &stack) {
-		(object->*func)(P(0));
-		return 0;
-	}
-
-	template< typename T, typename P0, typename P1 >
-	static int call(T *object, void (T::*func)(P0,P1), VariantSeq &stack) {
-		(object->*func)(P(0),P(1));
-		return 0;
-	}
-
-	template< typename T, typename P0, typename P1, typename P2 >
-	static int call(T *object, void (T::*func)(P0,P1,P2), VariantSeq &stack) {
-		(object->*func)(P(0),P(1),P(2));
-		return 0;
-	}
-
-	template< typename T, typename P0, typename P1, typename P2, typename P3 >
-	static int call(T *object, void (T::*func)(P0,P1,P2,P3), VariantSeq &stack) {
-		(object->*func)(P(0),P(1),P(2),P(3));
-		return 0;
-	}
-
-	template< typename T, typename P0, typename P1, typename P2, typename P3, typename P4 >
-	static int call(T *object, void (T::*func)(P0,P1,P2,P3,P4), VariantSeq &stack) {
-		(object->*func)(P(0),P(1),P(2),P(3),P(4));
-		return 0;
-	}
-
 };
 #undef P
 #undef ARG
@@ -469,14 +348,6 @@ public:
 		m_argc = 0;
 		m_returnType = GetVariantType_<Rt>();
 		m_scriptClosure = ScriptSystem::createMetaClosure(this);
-	}
-
-	virtual int invoke(Object *obj, VariantSeq &stack)
-	{
-		AX_ASSERT(stack.size() == argc());
-		T *realobj = dynamic_cast<T*>(obj);
-		AX_ASSERT(realobj);
-		return ReturnSpecialization<Rt>::call(realobj, m_m, stack);
 	}
 
 	virtual int invoke(Object *obj, void *ret, const void **argv)
@@ -507,13 +378,6 @@ public:
 		m_scriptClosure = ScriptSystem::createMetaClosure(this);
 	}
 
-	virtual int invoke(Object *obj, VariantSeq &stack) {
-		AX_ASSERT(stack.size() == argc());
-		T *realobj = dynamic_cast<T*>(obj);
-		AX_ASSERT(realobj);
-		return ReturnSpecialization<Rt>::call(realobj, m_m, stack);
-	}
-
 	virtual int invoke(Object *obj, void *ret, const void **argv)
 	{
 		T *realobj = dynamic_cast<T*>(obj);
@@ -541,13 +405,6 @@ public:
 		m_argsType[0] = GetVariantType_<remove_const_reference<Arg0>::type>();
 		m_argsType[1] = GetVariantType_<remove_const_reference<Arg1>::type>();
 		m_scriptClosure = ScriptSystem::createMetaClosure(this);
-	}
-
-	virtual int invoke(Object *obj, VariantSeq &stack) {
-		AX_ASSERT(stack.size() == argc());
-		T *realobj = dynamic_cast<T*>(obj);
-		AX_ASSERT(realobj);
-		return ReturnSpecialization<Rt>::call(realobj, m_m, stack);
 	}
 
 	virtual int invoke(Object *obj, void *ret, const void **argv)
@@ -580,13 +437,6 @@ public:
 		m_scriptClosure = ScriptSystem::createMetaClosure(this);
 	}
 
-	virtual int invoke(Object *obj, VariantSeq &stack) {
-		AX_ASSERT(stack.size() == argc());
-		T *realobj = dynamic_cast<T*>(obj);
-		AX_ASSERT(realobj);
-		return ReturnSpecialization<Rt>::call(realobj, m_m, stack);
-	}
-
 	virtual int invoke(Object *obj, void *ret, const void **argv)
 	{
 		T *realobj = dynamic_cast<T*>(obj);
@@ -616,13 +466,6 @@ public:
 		m_argsType[2] = GetVariantType_<remove_const_reference<Arg2>::type>();
 		m_argsType[3] = GetVariantType_<remove_const_reference<Arg3>::type>();
 		m_scriptClosure = ScriptSystem::createMetaClosure(this);
-	}
-
-	virtual int invoke(Object *obj, VariantSeq &stack) {
-		AX_ASSERT(stack.size() == argc());
-		T *realobj = dynamic_cast<T*>(obj);
-		AX_ASSERT(realobj);
-		return ReturnSpecialization<Rt>::call(realobj, m_m, stack);
 	}
 
 	virtual int invoke(Object *obj, void *ret, const void **argv)
@@ -657,13 +500,6 @@ public:
 		m_scriptClosure = ScriptSystem::createMetaClosure(this);
 	}
 
-	virtual int invoke(Object *obj, VariantSeq &stack) {
-		AX_ASSERT(stack.size() == argc());
-		T *realobj = dynamic_cast<T*>(obj);
-		AX_ASSERT(realobj);
-		return ReturnSpecialization<Rt>::call(realobj, m_m, stack);
-	}
-
 	virtual int invoke(Object *obj, void *ret, const void **argv)
 	{
 		T *realobj = dynamic_cast<T*>(obj);
@@ -681,7 +517,11 @@ private:
 //--------------------------------------------------------------------------
 // class MetaInfo
 //--------------------------------------------------------------------------
+#if 0
 class ClassInfo;
+#else
+class SqClass;
+#endif
 class AX_API MetaInfo
 {
 	friend class ScriptSystem;
@@ -708,41 +548,6 @@ public:
 	const char *getName() const;
 	const MemberSeq &getMembers() const;
 
-	bool invokeMethod(Object *obj, const char *methodName, const Ref &ret, const ConstRef &arg0, const ConstRef &arg1, const ConstRef &arg2, const ConstRef &arg3, const ConstRef &arg4);
-	bool getProperty(Object *obj, const char *propname, const Ref & ret);
-	bool setProperty(Object *obj, const char *propname, const ConstRef & arg);
-
-	template <class Rt>
-	bool getProperty_(Object *obj, const char *propname, Rt &ret);
-	template <class Arg>
-	bool setProperty_(Object *obj, const char *propname, const Arg &arg);
-
-	// invoke helper
-	bool invokeMethodWithoutReturn_(Object *obj, const char *methodName);
-	template <class A0>
-	bool invokeMethodWithoutReturn_(Object *obj, const char *methodName, const A0 &a0);
-	template <class A0, class A1>
-	bool invokeMethodWithoutReturn_(Object *obj, const char *methodName, const A0 &a0, const A1 &a1);
-	template <class A0, class A1, class A2>
-	bool invokeMethodWithoutReturn_(Object *obj, const char *methodName, const A0 &a0, const A1 &a1, const A2 &a2);
-	template <class A0, class A1, class A2, class A3>
-	bool invokeMethodWithoutReturn_(Object *obj, const char *methodName, const A0 &a0, const A1 &a1, const A2 &a2, const A3 &a3);
-	template <class A0, class A1, class A2, class A3, class A4>
-	bool invokeMethodWithoutReturn_(Object *obj, const char *methodName, const A0 &a0, const A1 &a1, const A2 &a2, const A3 &a3, const A4 &a4);
-
-	template <class Rt>
-	bool invokeMethod_(Object *obj, const char *methodName, Rt &ret);
-	template <class Rt, class A0>
-	bool invokeMethod_(Object *obj, const char *methodName, Rt &ret, const A0 &a0);
-	template <class Rt, class A0, class A1>
-	bool invokeMethod_(Object *obj, const char *methodName, Rt &ret, const A0 &a0, const A1 &a1);
-	template <class Rt, class A0, class A1, class A2>
-	bool invokeMethod_(Object *obj, const char *methodName, Rt &ret, const A0 &a0, const A1 &a1, const A2 &a2);
-	template <class Rt, class A0, class A1, class A2, class A3>
-	bool invokeMethod_(Object *obj, const char *methodName, Rt &ret, const A0 &a0, const A1 &a1, const A2 &a2, const A3 &a3);
-	template <class Rt, class A0, class A1, class A2, class A3, class A4>
-	bool invokeMethod_(Object *obj, const char *methodName, Rt &ret, const A0 &a0, const A1 &a1, const A2 &a2, const A3 &a3, const A4 &a4);
-
 	virtual Object *createObject() = 0;
 
 protected:
@@ -751,7 +556,11 @@ protected:
 private:
 	const char *m_name;
 	MetaInfo *m_base;
+#if 0
 	ClassInfo *m_classInfo;
+#else
+	SqClass *m_sqClass;
+#endif
 	MemberSeq m_members;
 	MemberDict m_memberDict;
 };
@@ -759,7 +568,11 @@ private:
 inline MetaInfo::MetaInfo(const char *classname, MetaInfo *base)
 	: m_name(classname)
 	, m_base(base)
+#if 0
 	, m_classInfo(nullptr)
+#else
+	, m_sqClass(0)
+#endif
 {}
 
 inline MetaInfo::~MetaInfo() {}
@@ -818,90 +631,6 @@ inline const MemberSeq &MetaInfo::getMembers() const {
 	return m_members;
 }
 
-template <class Arg>
-bool MetaInfo::setProperty_( Object *obj, const char *propname, const Arg &arg )
-{
-	return setProperty(obj, propname, AX_REG(arg));
-}
-
-template <class Rt>
-bool MetaInfo::getProperty_( Object *obj, const char *propname, Rt &ret )
-{
-	return getProperty(obj, propname, AX_RETURN_ARG(ret));
-}
-
-
-inline bool MetaInfo::invokeMethodWithoutReturn_(Object *obj, const char *methodName)
-{
-	return invokeMethod(obj, methodName, Ref(), ConstRef(), ConstRef(), ConstRef(), ConstRef(), ConstRef());
-}
-
-template <class A0>
-bool MetaInfo::invokeMethodWithoutReturn_(Object *obj, const char *methodName, const A0 &a0)
-{
-	return invokeMethod(obj, methodName, Ref(), AX_ARG(a0), ConstRef(), ConstRef(), ConstRef(), ConstRef());
-}
-
-template <class A0, class A1>
-bool MetaInfo::invokeMethodWithoutReturn_(Object *obj, const char *methodName, const A0 &a0, const A1 &a1)
-{
-	return invokeMethod(obj, methodName, Ref(), AX_ARG(a0), AX_ARG(a1), ConstRef(), ConstRef(), ConstRef());
-}
-
-template <class A0, class A1, class A2>
-bool MetaInfo::invokeMethodWithoutReturn_(Object *obj, const char *methodName, const A0 &a0, const A1 &a1, const A2 &a2)
-{
-	return invokeMethod(obj, methodName, Ref(), AX_ARG(a0), AX_ARG(a1), AX_ARG(a2), ConstRef(), ConstRef());
-}
-
-template <class A0, class A1, class A2, class A3>
-bool MetaInfo::invokeMethodWithoutReturn_(Object *obj, const char *methodName, const A0 &a0, const A1 &a1, const A2 &a2, const A3 &a3)
-{
-	return invokeMethod(obj, methodName, Ref(), AX_ARG(a0), AX_ARG(a1), AX_ARG(a2), AX_ARG(a3), ConstRef());
-}
-
-template <class A0, class A1, class A2, class A3, class A4>
-bool MetaInfo::invokeMethodWithoutReturn_(Object *obj, const char *methodName, const A0 &a0, const A1 &a1, const A2 &a2, const A3 &a3, const A4 &a4)
-{
-	return invokeMethod(obj, methodName, Ref(), AX_ARG(a0), AX_ARG(a1), AX_ARG(a2), AX_ARG(a3), AX_ARG(a4));
-}
-
-template <class Rt>
-bool MetaInfo::invokeMethod_(Object *obj, const char *methodName, Rt &ret)
-{
-	return invokeMethod(obj, methodName, AX_RETURN_ARG(ret), ConstRef(), ConstRef(), ConstRef(), ConstRef(), ConstRef());
-}
-
-template <class Rt, class A0>
-bool MetaInfo::invokeMethod_(Object *obj, const char *methodName, Rt &ret, const A0 &a0)
-{
-	return invokeMethod(obj, methodName, AX_RETURN_ARG(ret), AX_ARG(a0), ConstRef(), ConstRef(), ConstRef(), ConstRef());
-}
-
-template <class Rt, class A0, class A1>
-bool MetaInfo::invokeMethod_(Object *obj, const char *methodName, Rt &ret, const A0 &a0, const A1 &a1)
-{
-	return invokeMethod(obj, methodName, AX_RETURN_ARG(ret), AX_ARG(a0), AX_ARG(a1), ConstRef(), ConstRef(), ConstRef());
-}
-
-template <class Rt, class A0, class A1, class A2>
-bool MetaInfo::invokeMethod_(Object *obj, const char *methodName, Rt &ret, const A0 &a0, const A1 &a1, const A2 &a2)
-{
-	return invokeMethod(obj, methodName, AX_RETURN_ARG(ret), AX_ARG(a0), AX_ARG(a1), AX_ARG(a2), ConstRef(), ConstRef());
-}
-
-template <class Rt, class A0, class A1, class A2, class A3>
-bool MetaInfo::invokeMethod_(Object *obj, const char *methodName, Rt &ret, const A0 &a0, const A1 &a1, const A2 &a2, const A3 &a3)
-{
-	return invokeMethod(obj, methodName, AX_RETURN_ARG(ret), AX_ARG(a0), AX_ARG(a1), AX_ARG(a2), AX_ARG(a3), ConstRef());
-}
-
-template <class Rt, class A0, class A1, class A2, class A3, class A4>
-bool MetaInfo::invokeMethod_(Object *obj, const char *methodName, Rt &ret, const A0 &a0, const A1 &a1, const A2 &a2, const A3 &a3, const A4 &a4)
-{
-	return invokeMethod(obj, methodName, AX_RETURN_ARG(ret), AX_ARG(a0), AX_ARG(a1), AX_ARG(a2), AX_ARG(a3), AX_ARG(a4));
-}
-
 
 //--------------------------------------------------------------------------
 // class MetaInfo_
@@ -919,6 +648,7 @@ public:
 	}
 };
 
+#if 0
 //--------------------------------------------------------------------------
 // class ScriptProp
 //--------------------------------------------------------------------------
@@ -966,6 +696,7 @@ public:
 	ScriptPropSeq m_scriptPropSeq;
 	ScriptPropDict m_scriptProps;
 };
+#endif
 
 //--------------------------------------------------------------------------
 class SqProperty;
@@ -1002,15 +733,29 @@ typedef Sequence<SqPropGroup> SqPropGroups;
 //--------------------------------------------------------------------------
 class AX_API SqClass
 {
+	friend class ScriptSystem;
+
 public:
 	SqClass(const String &name);
+
+	String getName() const { return m_name; }
+	Member *findMember(const char *name) const {
+		SqPropertyDict::const_iterator it = m_propDict.find(name);
+
+		if (it != m_propDict.end())
+			return it->second;
+
+		return 0;
+	}
+
+	const SqProperties& getMembers() const { return m_properties; }
 
 protected:
 	void addProperty(const sqObject &key, const sqObject &val, const sqObject &attr);
 
 private:
 	String m_name;
-	String m_baseName;
+	String m_cppName;
 	MetaInfo *m_metaInfo;
 
 	SqProperties m_properties;

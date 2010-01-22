@@ -40,6 +40,7 @@ void Animated::doThink()
 
 }
 
+#if 0
 void Animated::loadAsset(const LuaTable &t)
 {
 	clear();
@@ -69,6 +70,7 @@ void Animated::loadAsset(const LuaTable &t)
 	}
 	setRenderEntity(m_model);
 }
+#endif
 
 void Animated::clear()
 {

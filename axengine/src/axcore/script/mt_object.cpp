@@ -61,14 +61,13 @@ _MEMBER_FUNCTION_IMPL(Object_c, _get)
 	if (!member) return SQ_ERROR;
 
 	if (member->isProperty()) {
-		Variant::TypeId propType = member->getPropType();
-		Variant arg(propType);
+		Variant prop;
 
-		bool success = member->getProperty(self, arg.getPointer());
+		bool success = member->getProperty(self, prop);
 		if (!success)
 			return SQ_ERROR;
 
-		return sa.retRawData(ConstRef(arg.getTypeId(), arg.getPointer()));
+		return sa.retRawData(ConstRef(prop.getTypeId(), prop.getPointer()));
 	}
 
 	return sa.Return(member->getScriptClousure().getSquirrelObject());
@@ -93,7 +92,7 @@ _MEMBER_FUNCTION_IMPL(Object_c, _set)
 	if (!value.castSelf(propType))
 		return SQ_ERROR;
 
-	bool success = member->setProperty(self, value.getPointer());
+	bool success = member->setProperty(self, ConstRef(value.getTypeId(), value.getPointer()));
 
 	return success ? 0 : SQ_ERROR;
 }

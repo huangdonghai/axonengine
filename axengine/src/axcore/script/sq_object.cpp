@@ -1,6 +1,7 @@
 #include "script_p.h"
 
 AX_BEGIN_NAMESPACE
+
 SquirrelError::SquirrelError(sqVM *vm) 
 {
 	const SQChar *s;
@@ -15,14 +16,9 @@ SquirrelError::SquirrelError(sqVM *vm)
 
 
 
-sqObject::sqObject(void)
+sqObject::sqObject()
 {
 	sq_resetobject(&m_obj);
-}
-
-sqObject::~sqObject()
-{
-	reset();
 }
 
 sqObject::sqObject(const sqObject &o)
@@ -37,10 +33,15 @@ sqObject::sqObject(HSQOBJECT o)
 	sq_addref(VM,&m_obj);
 }
 
+sqObject::~sqObject()
+{
+	reset();
+}
+
 void sqObject::reset(void)
 {
 	if (VM)
-		sq_release(VM,&m_obj);
+		sq_release(VM, &m_obj);
 	else if ( m_obj._type!=OT_NULL && m_obj._unVal.pRefCounted )
 		printf( "sqObject::~sqObject - Cannot release\n" ); 
 
@@ -76,7 +77,7 @@ bool sqObject::operator == (const sqObject &o)
 	return cmp;
 }
 
-bool sqObject::compareUserPointer( const sqObject &o )
+bool sqObject::compareUserPointer(const sqObject &o)
 {
 	if ( m_obj._type == o.getObjectHandle()._type )
 		if ( m_obj._unVal.pUserPointer == o.getObjectHandle()._unVal.pUserPointer )
@@ -136,16 +137,6 @@ sqObject sqObject::getDelegate()
 		//		sq_pop(VM, 2);
 	}
 	return ret;
-}
-
-bool sqObject::isNull() const
-{
-	return sq_isnull(m_obj);
-}
-
-bool sqObject::isNumeric() const
-{
-	return sq_isnumeric(m_obj);
 }
 
 int sqObject::len() const
@@ -778,6 +769,14 @@ void sqObject::getVariant(Variant &result) const
 	return;
 }
 
+sqObject& sqObject::operator=(const sqObject &o)
+{
+	sq_addref(VM, (HSQOBJECT*)&o.m_obj);
+	sq_release(VM, &m_obj);
+	m_obj = o.m_obj;
+	return *this;
+}
+
 void StackHandler::getRawData(int idx, Variant &result)
 {
 	sqObject obj;
@@ -888,8 +887,6 @@ int StackHandler::retRawData(const ConstRef &arg)
 	case Variant::kMatrix:
 		push_Matrix(v, arg.ref<Matrix>());
 		return 1;
-	case Variant::kTable:
-		return 0;
 	case Variant::kScriptValue:
 		sq_pushobject(v, arg.ref<ScriptValue>().getSquirrelObject());
 		return 1;

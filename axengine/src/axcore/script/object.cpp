@@ -6,10 +6,9 @@ AX_BEGIN_NAMESPACE
 // class Object
 //--------------------------------------------------------------------------
 
-MetaInfo *Object::m_metaInfo = nullptr;
-
 Object::Object()
 {
+#if 0
 	m_classInfo = 0;
 
 	int top = lua_gettop(L);
@@ -39,11 +38,12 @@ Object::Object()
 	CreateNativeClassInstance(VM, "Object_c", this);
 	sq_rawset(VM, -3);
 	sq_pop(VM, 1);
+#endif
 }
 
 Object::~Object()
 {
-#if 1
+#if 0
 	invoke_onFinalize();
 
 	resetObjectName();
@@ -65,6 +65,7 @@ Member *Object::findMember(const char *name) const
 		typeinfo = typeinfo->getBase();
 	}
 
+#if 0
 	if (!m_classInfo) {
 		return nullptr;
 	}
@@ -73,29 +74,31 @@ Member *Object::findMember(const char *name) const
 	if (it == m_classInfo->m_scriptProps.end()) {
 		return nullptr;
 	}
-
 	return it->second;
+#else
+	if (!m_sqClass)
+		return 0;
+
+	return m_sqClass->findMember(name);
+#endif
 }
 
 MetaInfo *Object::getMetaInfo() const
 {
-	if (!m_metaInfo) {
-		Object::registerMetaInfo();
-		AX_ASSERT(m_metaInfo);
-	}
-
-	return m_metaInfo;
+	return Object::registerMetaInfo();
 }
 
 MetaInfo *Object::registerMetaInfo()
 {
-	if (!m_metaInfo) {
-		m_metaInfo = new MetaInfo_<Object>("Object", nullptr);
-		m_metaInfo->addProperty("objectName", &Object::get_objectName, &Object::set_objectName);
+	static MetaInfo *ms_metaInfo = 0;
 
-		g_scriptSystem->registerType(m_metaInfo);
+	if (!ms_metaInfo) {
+		ms_metaInfo = new MetaInfo_<Object>("Object", nullptr);
+		ms_metaInfo->addProperty("objectName", &Object::get_objectName, &Object::set_objectName);
+
+		g_scriptSystem->registerType(ms_metaInfo);
 	}
-	return m_metaInfo;
+	return ms_metaInfo;
 }
 
 
@@ -123,14 +126,14 @@ bool Object::inherits(const char *cls) const
 	return false;
 }
 
-Variant Object::getProperty(const char *name) const
+bool Object::getProperty(const char *name, Variant &ret) const
 {
 	Member *m = findMember(name);
 	if (!m || !m->isProperty()) {
-		return Variant();
+		return false;
 	}
 
-	return m->getProperty(this);
+	return m->getProperty(this, ret);
 }
 
 bool Object::setProperty(const char *name, const Variant &value)
@@ -140,7 +143,7 @@ bool Object::setProperty(const char *name, const Variant &value)
 		return false;
 	}
 
-	m->setProperty(this, value);
+	m->setProperty(this, ConstRef(value.getTypeId(), value.getPointer()));
 
 	return true;
 }
@@ -163,7 +166,7 @@ bool Object::setProperty(const char *name, const char *value)
 
 	Variant var;
 	var.fromString(member->getPropType(), value);
-	member->setProperty(this, var);
+	member->setProperty(this, ConstRef(var.getTypeId(), var.getPointer()));
 
 	return true;
 }
@@ -176,35 +179,36 @@ void Object::writeProperties(File *f, int indent) const
 	// write properties
 	MetaInfo *typeinfo = getMetaInfo();
 
+	Variant prop;
 	while (typeinfo) {
 		const MemberSeq &members = typeinfo->getMembers();
 
 		AX_FOREACH(Member *m, members) {
-			if (!m->isProperty()) {
-				continue;
-			}
+			if (!m->isProperty()) continue;
 
-			if (m->isConst()) {
-				continue;
-			}
+			if (m->isConst()) continue;
 
-			INDENT; f->printf("  %s=\"%s\"\n", m->getName(), getProperty(m->getName()).toString().c_str());
+			if (!m->getProperty(this, prop)) continue;
+
+			INDENT; f->printf("  %s=\"%s\"\n", m->getName(), prop.toString().c_str());
 		}
 
 		typeinfo = typeinfo->getBase();
 	}
 
 	// write script properties
-	const ClassInfo *classinfo = getClassInfo();
+	const SqClass *classinfo = getScriptClass();
 	if (!classinfo) return;
 
-	const ScriptPropSeq &props = classinfo->m_scriptPropSeq;
+	const SqProperties &props = classinfo->getMembers();
 
-	AX_FOREACH(ScriptProp *m, props) {
-		if (m->getPropKind() == ScriptProp::kGroup)
+	AX_FOREACH(SqProperty *m, props) {
+		if (m->getPropKind() == Member::kGroup)
 			continue;
 
-		INDENT; f->printf("  %s=\"%s\"\n", m->getName(), m->getProperty(this).toString().c_str());
+		if (!m->getProperty(this, prop)) continue;
+
+		INDENT; f->printf("  %s=\"%s\"\n", m->getName(), prop.toString().c_str());
 	}
 
 #undef INDENT
@@ -223,10 +227,11 @@ void Object::copyPropertiesFrom(const Object *rhs)
 {
 	// write properties
 	MetaInfo *typeinfo = rhs->getMetaInfo();
+	Variant prop;
 
 	while (typeinfo) {
 		// don't copy objectname
-		if (typeinfo == Object::m_metaInfo)
+		if (typeinfo == Object::registerMetaInfo())
 			break;
 
 		const MemberSeq &members = typeinfo->getMembers();
@@ -240,27 +245,31 @@ void Object::copyPropertiesFrom(const Object *rhs)
 				continue;
 			}
 
-			setProperty(m->getName(), m->getProperty(rhs));
+			if (!m->getProperty(rhs, prop)) continue;
+
+			setProperty(m->getName(), prop);
 		}
 
 		typeinfo = typeinfo->getBase();
 	}
 
 	// write script properties
-	const ClassInfo *classinfo = getClassInfo();
+	const SqClass *classinfo = getScriptClass();
 	if (!classinfo) return;
 
-	const ScriptPropSeq &props = classinfo->m_scriptPropSeq;
+	const SqProperties &props = classinfo->getMembers();
 
-	AX_FOREACH(ScriptProp *m, props) {
-		if (m->getPropKind() == ScriptProp::kGroup)
+	AX_FOREACH(SqProperty *m, props) {
+		if (m->getPropKind() == Member::kGroup)
 			continue;
 
-		setProperty(m->getName(), m->getProperty(rhs));
+		if (!m->getProperty(rhs, prop)) continue;
+
+		setProperty(m->getName(), prop);
 	}
 }
 
-
+#if 0
 void Object::initClassInfo(const ClassInfo *ci)
 {
 	int top = lua_gettop(L);
@@ -306,6 +315,7 @@ void Object::initClassInfo(const ClassInfo *ci)
 
 	// TODO: rebind to object name
 }
+#endif
 
 void Object::setObjectName(const String &name, bool force)
 {
@@ -331,6 +341,7 @@ void Object::setObjectName(const String &name, bool force)
 	if (m_objectName.empty())
 		return;
 
+#if 0
 	int top = lua_gettop(L);
 
 	bool v = xGetGlobalScoped(L, m_objectNamespace.c_str());
@@ -360,6 +371,7 @@ void Object::setObjectName(const String &name, bool force)
 
 	// balance stack
 	lua_settop(L, top);
+#endif
 }
 
 void Object::resetObjectName()
@@ -367,6 +379,7 @@ void Object::resetObjectName()
 	if (m_objectName.empty())
 		return;
 
+#if 0
 	int top = lua_gettop(L);
 
 	bool v = xGetGlobalScoped(L, m_objectNamespace.c_str());
@@ -393,6 +406,7 @@ void Object::resetObjectName()
 	}
 
 	lua_settop(L, top);
+#endif
 }
 
 void Object::doPropertyChanged()
@@ -423,6 +437,7 @@ void Object::invoke_onPropertyChanged()
 
 void Object::invokeCallback(const String &callback)
 {
+#if 0
 	int top = lua_gettop(L);
 
 	lua_pushlightuserdata(L, this);
@@ -443,10 +458,12 @@ void Object::invokeCallback(const String &callback)
 
 	lua_settop(L, top);
 	return;
+#endif
 }
 
 void Object::invokeCallback(const String &callback, const Variant &param)
 {
+#if 0
 	int top = lua_gettop(L);
 
 	lua_pushlightuserdata(L, this);
@@ -470,8 +487,10 @@ void Object::invokeCallback(const String &callback, const Variant &param)
 
 	lua_settop(L, top);
 	return;
+#endif
 }
 
+#if 0
 void Object::invokeMethod(const char *name, const Variant &arg1)
 {
 	Member *member = findMember(name);
@@ -498,18 +517,23 @@ void Object::invokeMethod(const char *name, const Variant &arg1, const Variant &
 	vs.push_back(arg2);
 	member->invoke(this, vs);
 }
-
+#endif
 bool Object::isClass(const char *classname) const
 {
+#if 0
 	if (!m_classInfo) {
 		return false;
 	}
 
 	return m_classInfo->m_className == classname;
+#else
+	return false;
+#endif
 }
 
 void Object::setRuntime(const char *name, const Variant &val)
 {
+#if 0
 	int top = lua_gettop(L);
 
 	lua_pushlightuserdata(L, this);
@@ -522,10 +546,12 @@ void Object::setRuntime(const char *name, const Variant &val)
 	lua_settop(L, top);
 
 	return;
+#endif
 }
 
 Variant Object::getRuntime(const char *name)
 {
+#if 0
 	int top = lua_gettop(L);
 
 	lua_pushlightuserdata(L, this);
@@ -541,6 +567,81 @@ Variant Object::getRuntime(const char *name)
 	lua_settop(L, top);
 
 	return result;
+#else
+	return Variant();
+#endif
 }
+
+void Object::initScriptClass(const SqClass *sqclass)
+{
+
+}
+
+bool Object::invokeMethod(const char *methodName, const Ref &ret,
+							const ConstRef &arg0, const ConstRef &arg1, const ConstRef &arg2,
+							const ConstRef &arg3, const ConstRef &arg4)
+{
+	MetaInfo *mi = getMetaInfo();
+	if (!mi) return false;
+
+	Member *member = mi->findMember(methodName);
+
+	if (!member)
+		return false;
+
+	if (member->getType() != Member::kMethodType)
+		return false;
+
+	// check types
+	Variant::TypeId needReturnType = member->getReturnType();
+	Variant realRet(ret.getTypeId(), ret.getPointer(), Variant::InitRef);
+	bool castRet = false;
+
+	if (ret.getTypeId() != needReturnType) {
+		if (needReturnType != Variant::kVoid && ret.getTypeId() != Variant::kVoid) {
+			if (!Variant::canCast(needReturnType, ret.getTypeId())) {
+				return false;
+			} else {
+				AX_INIT_STACK_VARIANT(realRet, needReturnType);
+				castRet = true;
+			}
+		}
+	}
+
+	ConstRef args[] = { arg0, arg1, arg2, arg3, arg4 };
+
+	Variant realArg[Member::MaxArgs];
+	const Variant::TypeId *needTypeIds = member->getArgsType();
+	for (int i = 0; i <member->argc(); i++) {
+		if (args[i].getTypeId() == needTypeIds[i])
+			continue;
+
+		if (!Variant::canCast(args[i].getTypeId(), needTypeIds[i]))
+			return false;
+
+		AX_INIT_STACK_VARIANT(realArg[i], needTypeIds[i]);
+
+		bool casted = args[i].castTo(realArg[i]);
+		if (!casted)
+			return false;
+
+		args[i].set(realArg[i].getTypeId(), realArg[i].getPointer());
+	}
+
+	const void *argDatas[] = {
+		args[0].getPointer(), args[1].getPointer(), args[2].getPointer(), args[3].getPointer(), args[4].getPointer()
+	};
+
+	// really call
+	int numResult = member->invoke(this, realRet.getPointer(), argDatas);
+
+	if (numResult && castRet) {
+		return realRet.castTo(ret);
+	}
+
+	return true;
+}
+
+
 
 AX_END_NAMESPACE

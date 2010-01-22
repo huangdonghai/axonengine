@@ -17,7 +17,7 @@ AX_BEGIN_NAMESPACE
 class GameLight : public GameActor
 {
 	AX_DECLARE_CLASS(GameLight, GameActor)
-		AX_METHOD(loadLight)
+//		AX_METHOD(loadLight)
 		AX_METHOD(activeLight)
 	AX_END_CLASS()
 
@@ -33,7 +33,7 @@ public:
 	virtual void doThink();
 
 	// method
-	void loadLight(const LuaTable &v);
+//	void loadLight(const LuaTable &v);
 	void activeLight(bool isActive);
 
 protected:

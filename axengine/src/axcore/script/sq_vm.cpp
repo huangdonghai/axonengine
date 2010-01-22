@@ -153,13 +153,15 @@ void sqVM::printFunc(HSQUIRRELVM v, const SQChar* s, ...)
 
 sqObject sqVM::compileFile(const SQChar *filename)
 {
+	sqObject ret;
 	if (SQ_SUCCEEDED(_loadfile(m_vm, filename, 1))) {
-		sqObject ret;
 		ret.attachToStackObject(m_vm, -1);
 		sq_pop(m_vm, 1);
 		return ret;
 	}
-	throw SquirrelError(this);
+	reportError();
+	return ret;
+//	throw SquirrelError(this);
 }
 
 sqObject sqVM::compileBuffer(const SQChar *s, const SQChar *debugInfo/*=_SC("console_buffer")*/)
@@ -170,7 +172,10 @@ sqObject sqVM::compileBuffer(const SQChar *s, const SQChar *debugInfo/*=_SC("con
 		sq_pop(m_vm, 1);
 		return ret;
 	}
-	throw SquirrelError(this);
+
+	reportError();
+	return ret;
+//	throw SquirrelError(this);
 }
 
 sqObject sqVM::runBytecode(const sqObject &bytecode, sqObject *_this /*= NULL*/)
@@ -188,7 +193,10 @@ sqObject sqVM::runBytecode(const sqObject &bytecode, sqObject *_this /*= NULL*/)
 		return ret;
 	}
 	sq_pop(m_vm, 1);
-	throw SquirrelError(this);
+
+	reportError();
+	return ret;
+//	throw SquirrelError(this);
 }
 
 sqObject sqVM::runFile(const SQChar *s, sqObject *_this /*= NULL*/)
@@ -220,6 +228,7 @@ sqObject sqVM::getScoped(const char *name)
 	sq_pushroottable(m_vm);
 	sqObject so;
 	so.attachToStackObject(m_vm, -1);
+	sq_pop(m_vm, 1);
 
 	return getScoped(so, name);
 }
@@ -251,7 +260,7 @@ sqObject sqVM::getScoped(const sqObject &obj, const char *name)
 			if (num) {
 				buf[num] = 0;
 				sq_pushstring(m_vm, buf, num);
-				if (SQ_SUCCEEDED(sq_get(m_vm, -1))) {
+				if (SQ_SUCCEEDED(sq_get(m_vm, -2))) {
 					sq_remove(m_vm, -2);
 				} else {
 					return result;
@@ -274,6 +283,22 @@ sqObject sqVM::getScoped(const sqObject &obj, const char *name)
 
 	result.attachToStackObject(m_vm, -1);
 	return result;
+}
+
+void sqVM::reportError()
+{
+	const SQChar *s = 0;
+	const SQChar *desc = 0;
+	sq_getlasterror(m_vm);
+	sq_getstring(m_vm, -1, &s);
+	if (s) {
+		desc = s;
+	} else {
+		desc = _SC("unknown error");
+	}
+	sq_reseterror(m_vm);
+
+	Errorf("script error: %s", desc);
 }
 
 AX_END_NAMESPACE

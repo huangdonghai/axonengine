@@ -22,8 +22,9 @@ MapActor::MapActor(const String &type) {
 	m_gameEntity = gameworld->createActor(type.c_str());
 	m_gameObj = m_gameEntity;
 
-//		addToContext();
+//	addToContext();
 
+#if 0
 	const ClassInfo *ci = m_gameEntity->getClassInfo();
 	if (!ci) {
 		return;
@@ -45,6 +46,7 @@ MapActor::MapActor(const String &type) {
 	mat->setTexture(SamplerType::Diffuse, tex.get());
 
 	m_iconPrim = MeshPrim::createScreenQuad(MeshPrim::HintDynamic, Rect(-1,-1,2,2), Rgba::White, mat.get());
+#endif
 }
 
 MapActor::~MapActor() {
@@ -70,7 +72,7 @@ MapAgent *MapActor::clone() const
 {
 	// create entity
 	GameWorld *gameworld = getMapContext()->getGameWorld();
-	MapActor *newent = new MapActor(m_gameEntity->getClassInfo()->m_className);
+	MapActor *newent = new MapActor(m_gameEntity->getScriptClass()->getName());
 
 	newent->m_gameEntity->copyPropertiesFrom(this->m_gameEntity);
 	newent->m_gameEntity->autoGenerateName();

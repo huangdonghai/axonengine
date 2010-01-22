@@ -60,18 +60,23 @@ public:
 	void initialize();
 	void finalize();
 
+#if 0
 	void executeString(const String &text);
 	void executeString(const char *text);
-	void executeLine(const char *text);
 	void executeFile(const String &filename);
+#endif
+	void executeLine(const char *text);
+
+#if 0
 	bool invokeLuaMethod(const char *methodName, VariantSeq &stack, int nResult);
 	bool invokeLuaMethod(const char *method, Variant &arg1);
 	bool invokeLuaScoped(const char *text,VariantSeq &stack, int nResult);
-
+#endif
 	Object *createObject(const char *classname);
 	Object *cloneObject(const Object *obj);
+#if 0
 	Object *findObject(const String &objectname);
-
+#endif
 	// for automatic name gen
 	int getNameIndex(const String &str) const;
 	void updateNameIndex(const String &str);
@@ -79,11 +84,14 @@ public:
 	String generateObjectName(const String &str);
 
 	void registerType(MetaInfo *metainfo);
+#if 0
 	void registerClass(const String &self, const String &base);
+#endif
 	void registerSqClass(const String &name);
 
 	void getClassList(const char *prefix, bool sort, StringSeq &result) const;
 
+#if 0
 	//
 	// read from lua state
 	//
@@ -91,14 +99,15 @@ public:
 	Variant readField(const char *objname, const char *fieldname);
 	Variant readField(const char *objname);
 	void endRead();
-
+#endif
 	// connect signal and slot
 	bool connect(Object *sender, const String &sig, Object *recevier, const String &slot);
 	bool disconnect(Object *sender, const String &sig, Object *recevier, const String &slot);
 
+#if 0
 	// immediately read
 	Variant readFieldImmediately(const char *objname, const char *fieldname);
-
+#endif
 	const String &getPackagePath() { return m_packagePath; }
 
 	static ScriptValue createMetaClosure(Member *method);
@@ -110,8 +119,10 @@ private:
 	typedef Dict<String, SqClass*> SqClassDict;
 	SqClassDict m_sqClassReg;
 
+#if 0
 	typedef Dict<String,ClassInfo*>	ClassInfoDict;
 	ClassInfoDict m_classInfoReg;
+#endif
 
 	typedef Dict<const char*, MetaInfo*, hash_cstr, equal_cstr> MetaInfoDict;
 	MetaInfoDict m_typeInfoReg;
