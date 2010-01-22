@@ -974,11 +974,17 @@ class SqClass;
 
 class AX_API SqProperty : public Member
 {
+	friend class SqClass;
+
 public:
-	SqProperty(SqClass *sqclass, const String &name);
+	SqProperty(const sqObject &key, const sqObject &val, const sqObject &attr);
+	SqProperty(const char *name, Kind kind);
+
+	const String &getRealName() const { return m_realName; }
+	String getGroupName() const { if (m_group) return m_group->getRealName(); else return String(); }
 
 private:
-	String m_name;
+	String m_realName;
 	Variant m_default;
 	SqProperty *m_group;
 };
@@ -998,6 +1004,9 @@ class AX_API SqClass
 {
 public:
 	SqClass(const String &name);
+
+protected:
+	void addProperty(const sqObject &key, const sqObject &val, const sqObject &attr);
 
 private:
 	String m_name;

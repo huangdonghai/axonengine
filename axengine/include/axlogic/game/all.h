@@ -11,20 +11,6 @@ read the license and understand and accept it fully.
 #ifndef AX_GAME_PUBLIC_H
 #define AX_GAME_PUBLIC_H
 
-#if 0
-#ifdef _LIB
-#	undef AX_LOGIC_API
-#	define AX_LOGIC_API
-#else
-#	ifndef AX_LOGIC_API
-#		define AX_DLL_IMPORT
-#	endif
-#endif
-#endif
-
-AX_BEGIN_NAMESPACE
-AX_END_NAMESPACE
-
 #include "game_object.h"
 #include "game_actor.h"
 #include "landscape.h"

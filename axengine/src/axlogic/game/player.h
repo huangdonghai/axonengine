@@ -14,35 +14,35 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-	class Player : public GameActor
-	{
-		AX_DECLARE_CLASS(Player, GameActor)
-		AX_END_CLASS()
+class Player : public GameActor
+{
+	AX_DECLARE_CLASS(Player, GameActor)
+	AX_END_CLASS()
 
-	public:
-		Player();
-		virtual ~Player();
+public:
+	Player();
+	virtual ~Player();
 
-		// implement GameActor
-		virtual void doThink();
-		virtual bool isPlayer() const { return true; }
+	// implement GameActor
+	virtual void doThink();
+	virtual bool isPlayer() const { return true; }
 
-		void setMatrix(const Matrix &matrix);
-		Matrix getMatrix() const;
-		Matrix getThirdPersonMatrix() const;
+	void setMatrix(const Matrix &matrix);
+	Matrix getMatrix() const;
+	Matrix getThirdPersonMatrix() const;
 
-	protected:
-		virtual void reload();
-		virtual void clear();
-		virtual void onMatrixChanged();
-		virtual void onPropertyChanged();
+protected:
+	virtual void reload();
+	virtual void clear();
+	virtual void onMatrixChanged();
+	virtual void onPropertyChanged();
 
 
-	private:
-		HavokModel *m_body;
-		PhysicsPlayer *m_physicsPlayer;
-		int m_health;
-	};
+private:
+	HavokModel *m_body;
+	PhysicsPlayer *m_physicsPlayer;
+	int m_health;
+};
 
 AX_END_NAMESPACE
 

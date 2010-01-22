@@ -38,9 +38,6 @@ public:
 
 protected:
 	virtual void clear();
-#if 0
-	virtual void onMatrixChanged();
-#endif
 	void setupHelper();
 	void setupPointPrim();
 	void setupSpotPrim();

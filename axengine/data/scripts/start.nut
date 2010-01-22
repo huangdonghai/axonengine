@@ -2,6 +2,13 @@
 
 _C <- getconsttable();
 
+// declare namespace
+
+Game <- {}
+Physics <- {}
+Ui <- {}
+Gfx <- {}
+
 ::print("I'm start\n");
 
 ::dofile("object.nut");

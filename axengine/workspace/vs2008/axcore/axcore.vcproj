@@ -875,11 +875,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axcore\script\sq_helper.cpp"
+				RelativePath="..\..\..\src\axcore\script\sq_object.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axcore\script\sq_helper.h"
+				RelativePath="..\..\..\src\axcore\script\sq_object.h"
 				>
 			</File>
 			<File

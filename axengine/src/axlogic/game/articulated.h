@@ -14,25 +14,25 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-	class Articulated : public Animated
-	{
-		AX_DECLARE_CLASS(Articulated, Animated);
-		AX_END_CLASS()
+class Articulated : public Animated
+{
+	AX_DECLARE_CLASS(Articulated, Animated);
+	AX_END_CLASS()
 
-	public:
-		Articulated();
-		virtual ~Articulated();
+public:
+	Articulated();
+	virtual ~Articulated();
 
-		// implement Entity
-		virtual void doThink();
+	// implement Entity
+	virtual void doThink();
 
-	protected:
-		// properties
-		String m_ragdollName;
+protected:
+	// properties
+	String m_ragdollName;
 
-	protected:
-		PhysicsRagdoll *m_ragdoll;
-	};
+protected:
+	PhysicsRagdoll *m_ragdoll;
+};
 
 AX_END_NAMESPACE
 

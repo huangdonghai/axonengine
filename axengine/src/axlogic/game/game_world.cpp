@@ -13,7 +13,8 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-GameWorld::GameWorld() {
+GameWorld::GameWorld()
+{
 	m_onlyClient = false;
 	m_onlyServer = false;
 	m_multiPlayer = false;
@@ -44,7 +45,8 @@ GameWorld::GameWorld() {
 	g_gameSystem->setGameWorld(this);
 }
 
-GameWorld::~GameWorld() {
+GameWorld::~GameWorld()
+{
 	g_gameSystem->setGameWorld(0);
 
 	m_physicsWorld->detachObserver(this);
@@ -103,7 +105,8 @@ void GameWorld::drawScene(const RenderCamera &camera)
 	g_renderSystem->endScene();
 }
 
-void GameWorld::addActor(GameActor *entity) {
+void GameWorld::addActor(GameActor *entity)
+{
 	int start = m_firstFreeEntity;
 	int end = ActorNum::MAX_NORMAL;
 
@@ -138,7 +141,8 @@ void GameWorld::addActor(GameActor *entity) {
 	}
 }
 
-void GameWorld::removeActor(GameActor *entity) {
+void GameWorld::removeActor(GameActor *entity)
+{
 	int num = entity->m_entityNum;
 	if (num < 0) {
 		Errorf("not a valid entity number");
@@ -155,7 +159,8 @@ void GameWorld::removeActor(GameActor *entity) {
 	m_firstFreeEntity = num;
 }
 
-GameActor *GameWorld::createActor(const char *clsname) {
+GameActor *GameWorld::createActor(const char *clsname)
+{
 	Object *obj = g_scriptSystem->createObject(clsname);
 
 	if (!obj) {
@@ -178,19 +183,22 @@ GameActor *GameWorld::createActor(const char *clsname) {
 	return ent;
 }
 
-void GameWorld::addFixed(Fixed *fixed) {
+void GameWorld::addFixed(Fixed *fixed)
+{
 	getLandscape()->addFixed(fixed);
 }
 
-void GameWorld::removeFixed(Fixed *fixed) {
+void GameWorld::removeFixed(Fixed *fixed)
+{
 	getLandscape()->removeFixed(fixed);
 }
 
-void GameWorld::doNotify(IObservable *subject, int arg) {
-
+void GameWorld::doNotify(IObservable *subject, int arg)
+{
 }
 
-void GameWorld::updateEnvdef() {
+void GameWorld::updateEnvdef()
+{
 	m_outdoorEnv->setHaveFarSky(m_mapEnvDef->m_haveSkyBox);
 	m_outdoorEnv->setHaveOcean(m_mapEnvDef->m_haveOcean);
 	m_outdoorEnv->setFog(m_mapEnvDef->m_fogColor.toVector3(), m_mapEnvDef->m_fogDensity);

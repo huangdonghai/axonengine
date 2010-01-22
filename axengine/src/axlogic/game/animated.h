@@ -14,32 +14,32 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-	class Animated : public GameActor
-	{
-		AX_DECLARE_CLASS(Animated, GameActor);
-			AX_METHOD(loadAsset)
-		AX_END_CLASS()
+class Animated : public GameActor
+{
+	AX_DECLARE_CLASS(Animated, GameActor);
+		AX_METHOD(loadAsset)
+	AX_END_CLASS()
 
-	public:
-		Animated();
-		virtual ~Animated();
+public:
+	Animated();
+	virtual ~Animated();
 
-		// implement GameActor
-		virtual void doThink();
+	// implement GameActor
+	virtual void doThink();
 
-	protected:
-		void clear();
-		// script method
-		void loadAsset(const LuaTable &t);
+protected:
+	void clear();
+	// script method
+	void loadAsset(const LuaTable &t);
 
 
-	protected:
-		HavokRig *m_rig;
-		HavokPose *m_pose;
-		HavokModel *m_model;
-		HavokAnimation *m_animation;
-		HavokAnimator *m_animator;
-	};
+protected:
+	HavokRig *m_rig;
+	HavokPose *m_pose;
+	HavokModel *m_model;
+	HavokAnimation *m_animation;
+	HavokAnimator *m_animator;
+};
 
 AX_END_NAMESPACE
 

@@ -1,47 +1,50 @@
-#ifndef AX_SQHELPER_H
-#define AX_SQHELPER_H
+#ifndef AX_SQUIRRELOBJECT_H
+#define AX_SQUIRRELOBJECT_H
 
 AX_BEGIN_NAMESPACE
 
-class SquirrelObject;
-class SquirrelVM;
+class sqObject;
+class sqVM;
 
 class SquirrelError
 {
 public:
-	SquirrelError(SquirrelVM *vm);
+	SquirrelError(sqVM *vm);
 	SquirrelError(const SQChar* s):desc(s){}
 	const SQChar *desc;
 };
 
 
-class SquirrelObject
+class sqObject
 {
-	friend class SquirrelVM;
+	friend class sqVM;
 
 public:
-	SquirrelObject();
-	~SquirrelObject();
-	SquirrelObject(const SquirrelObject &o);
-	SquirrelObject(HSQOBJECT o);
+	sqObject();
+	~sqObject();
+	sqObject(const sqObject &o);
+	sqObject(HSQOBJECT o);
 
-	SQObjectType getType();
-	operator HSQOBJECT& () const { return _o; } 
-	bool operator == (const SquirrelObject& o);
-	bool compareUserPointer(const SquirrelObject& o);
+	SQObjectType getType() const;
+	bool isClosure() const { return sq_isclosure(m_obj); }
+	bool isNativeClosure() const { return sq_isnativeclosure(m_obj); }
+
+	operator HSQOBJECT& () const { return m_obj; } 
+	bool operator == (const sqObject& o);
+	bool compareUserPointer(const sqObject& o);
 
 	void attachToStackObject(HSQUIRRELVM vm, int idx);
-	void reset(void); // Release (any) reference and reset _o.
-	SquirrelObject clone();
-	bool setValue(const SquirrelObject &key, const SquirrelObject &val);
+	void reset(void); // Release (any) reference and reset m_obj.
+	sqObject clone();
+	bool setValue(const sqObject &key, const sqObject &val);
 
-	bool setValue(SQInteger key, const SquirrelObject &val);
+	bool setValue(SQInteger key, const sqObject &val);
 	bool setValue(int key, bool b); // Compiler treats SQBool as int.
 	bool setValue(int key, int n);
 	bool setValue(int key, float f);
 	bool setValue(int key, const SQChar *s);
 
-	bool setValue(const SQChar *key, const SquirrelObject &val);
+	bool setValue(const SQChar *key, const sqObject &val);
 	bool setValue(const SQChar *key, bool b);
 	bool setValue(const SQChar *key, int n);
 	bool setValue(const SQChar *key, float f);
@@ -60,9 +63,9 @@ public:
 	bool arrayResize(int newSize);
 	bool arrayExtend(int amount);
 	bool arrayReverse(void);
-	SquirrelObject arrayPop(SQBool returnPoppedVal=SQTrue);
+	sqObject arrayPop(SQBool returnPoppedVal=SQTrue);
 
-	void arrayAppend(const SquirrelObject &o);
+	void arrayAppend(const sqObject &o);
 
 	template<typename T>
 	bool arrayAppend(T item);
@@ -72,28 +75,28 @@ public:
 	bool isNull() const;
 	bool isNumeric() const;
 	int len() const;
-	bool setDelegate(SquirrelObject &obj);
-	SquirrelObject getDelegate();
-	const SQChar* toString();
-	bool toBool();
-	SQInteger toInteger();
-	SQFloat toFloat();
+	bool setDelegate(sqObject &obj);
+	sqObject getDelegate();
+	const SQChar* toString() const;
+	bool toBool() const;
+	SQInteger toInteger() const;
+	SQFloat toFloat() const;
 	SQUserPointer getInstanceUP(SQUserPointer tag) const;
-	SquirrelObject getValue(const SQChar *key) const;
+	sqObject getValue(const SQChar *key) const;
 	bool exists(const SQChar *key) const;
 	float getFloat(const SQChar *key) const;
 	int getInt(const SQChar *key) const;
 	const SQChar *getString(const SQChar *key) const;
 	bool getBool(const SQChar *key) const;
-	SquirrelObject getValue(int key) const;
+	sqObject getValue(int key) const;
 	float getFloat(int key) const;
 	int getInt(int key) const;
 	const SQChar *getString(int key) const;
 	bool getBool(int key) const;
-	SquirrelObject getAttributes(const SQChar *key = NULL);
-	HSQOBJECT & getObjectHandle() const {return *(HSQOBJECT*)&_o;}
+	sqObject getAttributes(const SQChar *key = NULL);
+	HSQOBJECT & getObjectHandle() const {return *(HSQOBJECT*)&m_obj;}
 	bool beginIteration();
-	bool next(SquirrelObject &key, SquirrelObject &value);
+	bool next(sqObject &key, sqObject &value);
 	void endIteration();
 
 	bool getTypeTag(SQUserPointer * typeTag);
@@ -106,30 +109,32 @@ public:
 	const SQChar * getTypeName(void);
 
 	// === Return base class of object using sq_getbase() === 
-	SquirrelObject getBase();
+	sqObject getBase();
 
 #if 0
 	// === BEGIN code suggestion from the Wiki ===
-	// get any bound type from this SquirrelObject. Note that Squirrel's handling of references and pointers still holds here.
+	// get any bound type from this sqObject. Note that Squirrel's handling of references and pointers still holds here.
 	template<typename _ty>
 	_ty get(void);
 
-	// set any bound type to this SquirrelObject. Note that Squirrel's handling of references and pointers still holds here.
+	// set any bound type to this sqObject. Note that Squirrel's handling of references and pointers still holds here.
 	template<typename _ty>
-	SquirrelObject setByValue(_ty val); // classes/structs should be passed by ref (below) to avoid an extra copy.
+	sqObject setByValue(_ty val); // classes/structs should be passed by ref (below) to avoid an extra copy.
 
-	// set any bound type to this SquirrelObject. Note that Squirrel's handling of references and pointers still holds here.
+	// set any bound type to this sqObject. Note that Squirrel's handling of references and pointers still holds here.
 	template<typename _ty>
-	SquirrelObject &set(_ty & val);
+	sqObject &set(_ty & val);
 #endif
 	// === END code suggestion from the Wiki ===
-	Ref tryToReturnArgument();
+	void getVariant(Variant &val) const;
 
-private:
+protected:
 	bool getSlot(const SQChar *name) const;
 	bool rawGetSlot(const SQChar *name) const;
 	bool getSlot(int key) const;
-	mutable HSQOBJECT _o;
+
+private:
+	mutable HSQOBJECT m_obj;
 };
 
 struct ScopedStack
@@ -279,7 +284,7 @@ struct StackHandler
 		return 1;
 	}
 
-	int Return(SquirrelObject &o)
+	int Return(sqObject &o)
 	{
 		sq_pushobject(v, o.getObjectHandle());
 		return 1;
@@ -300,4 +305,4 @@ private:
 
 AX_END_NAMESPACE
 
-#endif // AX_SQHELPER_H
+#endif // AX_SQUIRRELOBJECT_H

@@ -726,6 +726,10 @@
 						RelativePath=".\scripts\game\Effect\Sound.lua"
 						>
 					</File>
+					<File
+						RelativePath=".\scripts\game\Effect\sound.nut"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="$weapons"

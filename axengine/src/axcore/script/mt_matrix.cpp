@@ -20,12 +20,12 @@ _MEMBER_FUNCTION_IMPL(Matrix, constructor)
 				else
 					return sa.throwError(_SC("Matrix() invalid instance type"));
 			} else {
-				SquirrelObject arr = sa.getObjectHandle(2);
+				sqObject arr = sa.getObjectHandle(2);
 				if (arr.len() != Matrix::NumFloat) {
 					return sa.throwError(_SC("Matrix(array) need a 12 elements array"));
 				}
 				float *fp = self->w_ptr();
-				SquirrelObject idx, val;
+				sqObject idx, val;
 				if(arr.beginIteration()) {
 					while(arr.next(idx,val)) {
 						fp[idx.toInteger()] = val.toFloat();
@@ -69,7 +69,7 @@ _MEMBER_FUNCTION_IMPL(Matrix,_add)
 	_CHECK_SELF(AffineMat,Matrix);
 	_CHECK_INST_PARAM(mat,2,AffineMat,Matrix);
 	AffineMat tm = (*self)+(*mat);
-	SquirrelObject so = new_Matrix(tm);
+	sqObject so = new_Matrix(tm);
 	return sa.Return(so);
 }
 
@@ -79,7 +79,7 @@ _MEMBER_FUNCTION_IMPL(Matrix,_sub)
 	_CHECK_SELF(AffineMat,Matrix);
 	_CHECK_INST_PARAM(mat,2,AffineMat,Matrix);
 	AffineMat tm = (*self)-(*mat);
-	SquirrelObject so = new_Matrix(tm);
+	sqObject so = new_Matrix(tm);
 	return sa.Return(so);
 }
 #endif
@@ -92,12 +92,12 @@ _MEMBER_FUNCTION_IMPL(Matrix,_mul)
 	if (t == OT_INSTANCE) {
 		_CHECK_INST_PARAM(mat,2,Matrix,Matrix);
 		Matrix tm = (*self)*(*mat);
-        SquirrelObject so = new_Matrix(v, tm);
+        sqObject so = new_Matrix(v, tm);
         return sa.Return(so);
 	}
 #if 0
 	AffineMat tm = (*self)*sa.GetFloat(2);
-    SquirrelObject so = new_Matrix(tm);
+    sqObject so = new_Matrix(tm);
     return sa.Return(so);
 #else
 	return SQ_ERROR;
@@ -110,7 +110,7 @@ _MEMBER_FUNCTION_IMPL(Matrix,_div)
 	StackHandler sa(v);
 	_CHECK_SELF(AffineMat,Matrix);
 	AffineMat tm = (*self)/sa.GetFloat(2);
-    SquirrelObject so = new_Matrix(tm);
+    sqObject so = new_Matrix(tm);
     return sa.Return(so);
 }
 #endif
@@ -219,7 +219,7 @@ _MEMBER_FUNCTION_IMPL(Matrix,GetInverse)
 	_CHECK_SELF(AffineMat,Matrix);
 	AffineMat temp;
 	AffineMatInverse(&temp,NULL,self);
-	SquirrelObject so = new_Matrix(temp);
+	sqObject so = new_Matrix(temp);
 	return sa.Return(so);
 }
 
@@ -229,7 +229,7 @@ _MEMBER_FUNCTION_IMPL(Matrix,GetTransposed)
 	_CHECK_SELF(AffineMat,Matrix);
 	AffineMat temp;
 	AffineMatTranspose(&temp,self);
-	SquirrelObject so = new_Matrix(temp);
+	sqObject so = new_Matrix(temp);
 	return sa.Return(so);
 }
 
@@ -240,7 +240,7 @@ _MEMBER_FUNCTION_IMPL(Matrix,GetInverseTransposed)
 	AffineMat temp;
 	AffineMatInverse(&temp,NULL,self);
 	AffineMatTranspose(&temp,&temp);
-	SquirrelObject so = new_Matrix(temp);
+	sqObject so = new_Matrix(temp);
 	return sa.Return(so);
 }
 
@@ -258,7 +258,7 @@ _MEMBER_FUNCTION_IMPL(Matrix,TransformCoord)
 	_CHECK_INST_PARAM(vec,2,D3DXVECTOR3,Vector3);
 	D3DXVECTOR3 ret;
 	D3DXVec3TransformCoord(&ret,vec,self);
-	SquirrelObject so = new_Vector3(ret);
+	sqObject so = new_Vector3(ret);
 	return sa.Return(so);
 }
 
@@ -269,7 +269,7 @@ _MEMBER_FUNCTION_IMPL(Matrix,TransformNormal)
 	_CHECK_INST_PARAM(vec,2,D3DXVECTOR3,Vector3);
 	D3DXVECTOR3 ret;
 	D3DXVec3TransformNormal(&ret,vec,self);
-	SquirrelObject so = new_Vector3(ret);
+	sqObject so = new_Vector3(ret);
 	return sa.Return(so);
 }
 #endif

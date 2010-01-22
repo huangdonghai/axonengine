@@ -20,13 +20,15 @@ void test() {
 	int t2 = GetVariantType_<remove_const_reference<const String&>::type>();
 }
 
-GameLight::GameLight() {
+GameLight::GameLight()
+{
 	m_renderLight = 0;
 	m_pointPrim = 0;
 	m_spotPrim = 0;
 }
 
-GameLight::~GameLight() {
+GameLight::~GameLight()
+{
 	SafeDelete(m_renderLight);
 	SafeDelete(m_pointPrim);
 	SafeDelete(m_spotPrim);
@@ -50,11 +52,13 @@ void GameLight::doDebugRender() const
 	}
 }
 
-void GameLight::doThink() {
+void GameLight::doThink()
+{
 	GameActor::doThink();
 }
 
-void GameLight::loadLight(const LuaTable &table) {
+void GameLight::loadLight(const LuaTable &table)
+{
 	clear();
 
 	table.beginRead();
@@ -74,7 +78,8 @@ void GameLight::loadLight(const LuaTable &table) {
 	setRenderEntity(m_renderLight);
 }
 
-void GameLight::activeLight(bool isActive) {
+void GameLight::activeLight(bool isActive)
+{
 	if (isActive) {
 		m_world->getRenderWorld()->addEntity(m_renderLight);
 	} else {

@@ -13,74 +13,74 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-	Player::Player()
-	{
-		m_body = 0;
-		m_physicsPlayer = 0;
-	}
+Player::Player()
+{
+	m_body = 0;
+	m_physicsPlayer = 0;
+}
 
-	Player::~Player()
-	{
-		clear();
-	}
+Player::~Player()
+{
+	clear();
+}
 
-	void Player::doThink()
-	{
-		const UserInput *userinput = g_gameSystem->getUserInput(m_entityNum);
-		m_physicsPlayer->runFrame(*userinput, m_world->getFrameTime());
+void Player::doThink()
+{
+	const UserInput *userinput = g_gameSystem->getUserInput(m_entityNum);
+	m_physicsPlayer->runFrame(*userinput, m_world->getFrameTime());
 
-		m_body->setMatrix(m_physicsPlayer->getMatrix());
-		HavokPose *pose = m_physicsPlayer->getPose();
-		m_body->setPose(pose);
-		m_body->refresh();
-	}
+	m_body->setMatrix(m_physicsPlayer->getMatrix());
+	HavokPose *pose = m_physicsPlayer->getPose();
+	m_body->setPose(pose);
+	m_body->refresh();
+}
 
-	void Player::setMatrix(const Matrix &matrix)
-	{
-		m_physicsPlayer->setMatrix(matrix);
-	}
+void Player::setMatrix(const Matrix &matrix)
+{
+	m_physicsPlayer->setMatrix(matrix);
+}
 
-	Matrix Player::getMatrix() const
-	{
-		return m_physicsPlayer->getMatrix();
-	}
+Matrix Player::getMatrix() const
+{
+	return m_physicsPlayer->getMatrix();
+}
 
-	void Player::reload()
-	{
-		clear();
+void Player::reload()
+{
+	clear();
 
-		m_physicsPlayer = new PhysicsPlayer();
-		setPhysicsEntity(m_physicsPlayer);
+	m_physicsPlayer = new PhysicsPlayer();
+	setPhysicsEntity(m_physicsPlayer);
 
-		m_body = new HavokModel("models/characters/_male/fullmale.mesh");
+	m_body = new HavokModel("models/characters/_male/fullmale.mesh");
 
-		m_world->getPhysicsWorld()->addEntity(m_physicsPlayer);
-		m_world->getRenderWorld()->addEntity(m_body);
-	}
+	m_world->getPhysicsWorld()->addEntity(m_physicsPlayer);
+	m_world->getRenderWorld()->addEntity(m_body);
+}
 
-	void Player::clear()
-	{
-		setRenderEntity(0);
-		setPhysicsEntity(0);
+void Player::clear()
+{
+	setRenderEntity(0);
+	setPhysicsEntity(0);
 
-		SafeDelete(m_body);
-		SafeDelete(m_physicsPlayer);
-	}
+	SafeDelete(m_body);
+	SafeDelete(m_physicsPlayer);
+}
 
-	void Player::onMatrixChanged()
-	{
+void Player::onMatrixChanged()
+{
 
-	}
+}
 
-	void Player::onPropertyChanged()
-	{
-		m_physicsPlayer->setLinearVelocity(Vector3(0,0,0));
-	}
+void Player::onPropertyChanged()
+{
+	m_physicsPlayer->setLinearVelocity(Vector3(0,0,0));
+}
 
-	Matrix Player::getThirdPersonMatrix() const
-	{
-		return m_physicsPlayer->getThirdPerson();
-	}
+Matrix Player::getThirdPersonMatrix() const
+{
+	return m_physicsPlayer->getThirdPerson();
+}
 
 AX_END_NAMESPACE
 

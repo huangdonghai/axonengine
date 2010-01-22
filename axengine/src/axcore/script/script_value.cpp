@@ -41,13 +41,13 @@ namespace {
 	Handler s_scriptValueHandler;
 }
 
-ScriptValue::ScriptValue() : m_d(new SquirrelObject())
+ScriptValue::ScriptValue() : m_d(new sqObject())
 {}
 
-ScriptValue::ScriptValue(const SquirrelObject &sobj) : m_d(new SquirrelObject(sobj))
+ScriptValue::ScriptValue(const sqObject &sobj) : m_d(new sqObject(sobj))
 {}
 
-ScriptValue::ScriptValue(const ScriptValue &rhs) : m_d(new SquirrelObject(*rhs.m_d))
+ScriptValue::ScriptValue(const ScriptValue &rhs) : m_d(new sqObject(*rhs.m_d))
 {}
 
 ScriptValue::~ScriptValue()

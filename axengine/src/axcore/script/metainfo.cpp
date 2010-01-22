@@ -447,17 +447,90 @@ Variant ScriptProp::getProperty(const Object *obj)
 	return result;
 }
 
+bool sqlesser(const SqProperty *a, const SqProperty *b)
+{
+	String gan = a->getGroupName();
+	String gbn = b->getGroupName();
+
+	if (gan == gbn) return a->getRealName() < b->getRealName();
+	return gan < gbn;
+}
+
+SqProperty::SqProperty(const sqObject &key, const sqObject &val, const sqObject &attr ) : Member(0, Member::kPropertyType)
+{
+	m_realName = key.toString();
+	m_name = m_realName.c_str();
+
+	SQObjectType valType = val.getType();
+	val.getVariant(m_default);
+
+	m_propType = m_default.getTypeId();
+	m_propKind = m_propType;
+	AX_ASSERT(m_propKind != Variant::kVoid);
+}
+
+SqProperty::SqProperty(const char *name, Kind kind) : Member(0, Member::kPropertyType)
+{
+	m_realName = name;
+	m_name = m_realName.c_str();
+	m_propKind = kind;
+}
 
 SqClass::SqClass(const String &name)
 {
 	HSQUIRRELVM vm = VM;
 
-	SquirrelObject so = g_mainVM->getScoped(name.c_str());
+	sqObject so = g_mainVM->getScoped(name.c_str());
 
-	so.setValue("_get", SquirrelVM::ms_getClosure);
-	so.setValue("_set", SquirrelVM::ms_setClosure);
+	if (so.getType() != OT_CLASS)
+		Errorf("wrong type. can't register class");
 
+	so.setValue("_get", sqVM::ms_getClosure);
+	so.setValue("_set", sqVM::ms_setClosure);
 
+	sqObject key, val, attr;
+
+	so.beginIteration();
+
+	while (so.next(key, val)) {
+		if (so.isClosure() || so.isNativeClosure())
+			continue;
+
+		attr = so.getAttributes(key.toString());
+
+		addProperty(key, val, attr);
+	}
+
+	so.endIteration();
+
+	std::sort(m_properties.begin(), m_properties.end(), sqlesser);
+}
+
+void SqClass::addProperty(const sqObject &key, const sqObject &val, const sqObject &attr)
+{
+	if (!attr.getBool("editable"))
+		return;
+
+	SqProperty *prop = new SqProperty(key, val, attr);
+
+	m_properties.push_back(prop);
+	m_propDict[prop->getName()] = prop;
+
+	const char *groupName = attr.getString("group");
+
+	if (!groupName) return;
+
+	SqProperty *group = 0;
+	SqPropertyDict::iterator it = m_propDict.find(groupName);
+
+	if (it == m_propDict.end()) {
+		group = new SqProperty(groupName, Member::kGroup);
+		m_propDict[groupName] = group;
+	} else {
+		group = it->second;
+	}
+
+	prop->m_group = group;
 }
 
 AX_END_NAMESPACE

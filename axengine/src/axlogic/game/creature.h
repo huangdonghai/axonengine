@@ -14,10 +14,10 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-	class Creature : public Articulated {
-	public:
-	private:
-	};
+class Creature : public Articulated {
+public:
+private:
+};
 
 AX_END_NAMESPACE
 

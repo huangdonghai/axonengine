@@ -109,7 +109,7 @@ _MEMBER_FUNCTION_IMPL(Vector3,_add)
 	_CHECK_SELF(Vector3,Vector3);
 	_CHECK_INST_PARAM(vec,2,Vector3,Vector3);
 	Vector3 tv = (*self)+(*vec);
-	SquirrelObject so = new_Vector3(v, tv);
+	sqObject so = new_Vector3(v, tv);
 	return sa.Return(so);
 }
 
@@ -119,7 +119,7 @@ _MEMBER_FUNCTION_IMPL(Vector3,_sub)
 	_CHECK_SELF(Vector3,Vector3);
 	_CHECK_INST_PARAM(vec,2,Vector3,Vector3);
 	Vector3 tv = (*self)-(*vec);
-	SquirrelObject so = new_Vector3(v, tv);
+	sqObject so = new_Vector3(v, tv);
 	return sa.Return(so);
 }
 
@@ -128,7 +128,7 @@ _MEMBER_FUNCTION_IMPL(Vector3,_mul)
 	StackHandler sa(v);
 	_CHECK_SELF(Vector3,Vector3);
 	Vector3 tv = (*self)*sa.getFloat(2);
-	SquirrelObject so = new_Vector3(v, tv);
+	sqObject so = new_Vector3(v, tv);
 	return sa.Return(so);
 }
 
@@ -137,7 +137,7 @@ _MEMBER_FUNCTION_IMPL(Vector3,_div)
 	StackHandler sa(v);
 	_CHECK_SELF(Vector3,Vector3);
 	Vector3 tv = (*self)/sa.getFloat(2);
-	SquirrelObject so = new_Vector3(v, tv);
+	sqObject so = new_Vector3(v, tv);
 	return sa.Return(so);
 }
 
@@ -156,7 +156,7 @@ _MEMBER_FUNCTION_IMPL(Vector3,CrossProduct)
 	_CHECK_INST_PARAM(vec,2,Vector3,Vector3);
 	Vector3 ret;
 	ret = *self ^ *vec;
-	SquirrelObject so = new_Vector3(v, ret);
+	sqObject so = new_Vector3(v, ret);
 	return sa.Return(so);
 }
 
@@ -204,7 +204,7 @@ _MEMBER_FUNCTION_IMPL(Vector3,GetNormalized)
 	StackHandler sa(v);
 	_CHECK_SELF(Vector3,Vector3);
 	Vector3 tmp = self->getNormalized();
-	SquirrelObject so = new_Vector3(v, tmp);
+	sqObject so = new_Vector3(v, tmp);
 	return sa.Return(so);
 }
 

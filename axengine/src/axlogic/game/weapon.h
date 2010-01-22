@@ -14,14 +14,14 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-	class Weapon : public GameActor {
-	public:
-		Weapon();
-		virtual ~Weapon();
+class Weapon : public GameActor {
+public:
+	Weapon();
+	virtual ~Weapon();
 
-	protected:
-	private:
-	};
+protected:
+private:
+};
 
 AX_END_NAMESPACE
 

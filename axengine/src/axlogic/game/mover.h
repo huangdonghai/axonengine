@@ -14,16 +14,16 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-	// key framed physics mover
+// key framed physics mover
 
-	class Mover : public GameActor {
-	public:
-		Mover();
-		virtual ~Mover();
+class Mover : public GameActor {
+public:
+	Mover();
+	virtual ~Mover();
 
-	private:
+private:
 
-	};
+};
 
 AX_END_NAMESPACE
 

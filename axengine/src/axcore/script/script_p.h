@@ -19,7 +19,7 @@ extern "C" {
 
 #include "sq_vm.h"
 #include "sq_binding.h"
-#include "sq_helper.h"
+#include "sq_object.h"
 
 AX_BEGIN_NAMESPACE
 
@@ -45,7 +45,7 @@ int xPcall(lua_State *L, int numarg, int numresult);
 bool xSetScoped(lua_State *L, const char *name, const Variant &val);
 bool xGetScoped(lua_State *L, const char *name);
 
-extern SquirrelVM *g_mainVM;
+extern sqVM *g_mainVM;
 extern HSQUIRRELVM VM;
 
 AX_END_NAMESPACE

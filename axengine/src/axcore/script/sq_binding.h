@@ -78,7 +78,7 @@ struct SquirrelClassDecl __##classname##_decl = {  \
 #define _MEMBER_FUNCTION_IMPL(classname, name) \
 	int __##classname##_##name(HSQUIRRELVM v)
 
-#define _INIT_STATIC_NAMESPACE(classname) CreateStaticNamespace(SquirrelVM::getVM(),&__##classname##_decl);
+#define _INIT_STATIC_NAMESPACE(classname) CreateStaticNamespace(sqVM::getVM(),&__##classname##_decl);
 #define _INIT_CLASS(classname) CreateClass(VM,&__##classname##_decl);
 
 #define _DECL_STATIC_NAMESPACE(xnamespace) extern struct ScriptNamespaceDecl __##xnamespace##_decl;
@@ -113,7 +113,7 @@ struct SquirrelClassDecl __##classname##_decl = {  \
 
 #define _DECL_NATIVE_CONSTRUCTION(classname, cppclass) \
 	bool push_##classname(HSQUIRRELVM v, const cppclass &quat); \
-	SquirrelObject new_##classname(HSQUIRRELVM v, const cppclass &quat);
+	sqObject new_##classname(HSQUIRRELVM v, const cppclass &quat);
 
 #define _IMPL_NATIVE_CONSTRUCTION(classname, cppclass) \
 static Variant::TypeId classname##_getId() \
@@ -127,9 +127,9 @@ bool push_##classname(HSQUIRRELVM v, const cppclass &quat) \
 	} \
 	return TRUE; \
 } \
-SquirrelObject new_##classname(HSQUIRRELVM v, const cppclass &quat) \
+sqObject new_##classname(HSQUIRRELVM v, const cppclass &quat) \
 { \
-	SquirrelObject ret; \
+	sqObject ret; \
 	if (push_##classname(v, quat)) { \
 		ret.attachToStackObject(v, -1); \
 		sq_pop(v, 1); \

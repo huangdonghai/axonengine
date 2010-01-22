@@ -17,7 +17,7 @@ read the license and understand and accept it fully.
 AX_BEGIN_NAMESPACE
 
 lua_State *L;
-SquirrelVM *g_mainVM;
+sqVM *g_mainVM;
 HSQUIRRELVM VM;
 
 static void l_message(const char *pname, const char *msg)
@@ -659,7 +659,7 @@ void ScriptSystem::initialize()
 
 	Printf(_("..created userdata object for engine object\n"));
 
-	g_mainVM = new SquirrelVM();
+	g_mainVM = new sqVM();
 	_INIT_CLASS(Vector3);
 	_INIT_CLASS(Color3);
 	_INIT_CLASS(Point);
@@ -702,7 +702,7 @@ void ScriptSystem::executeString(const char *text)
 
 void ScriptSystem::executeLine( const char *text )
 {
-	SquirrelObject bytecode = g_mainVM->compileBuffer(text);
+	sqObject bytecode = g_mainVM->compileBuffer(text);
 	g_mainVM->runBytecode(bytecode);
 }
 
@@ -1174,7 +1174,7 @@ ScriptValue ScriptSystem::createMetaClosure(Member *method)
 	sq_setparamscheck(VM, 0, 0);
 	sq_setnativeclosurename(VM, -1, method->getName());
 
-	SquirrelObject sobj;
+	sqObject sobj;
 	sobj.attachToStackObject(VM, -1);
 	sq_settop(VM, top);
 

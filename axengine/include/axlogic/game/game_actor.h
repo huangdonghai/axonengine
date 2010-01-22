@@ -49,9 +49,9 @@ enum SndChannelId {
 };
 
 class GameActor;
-typedef List<GameActor*> EntityList;
-typedef EntityList::iterator EntityIterator;
-typedef Dict<String,GameActor*> EntityHash;
+typedef List<GameActor*> ActorList;
+typedef ActorList::iterator EntityIterator;
+typedef Dict<String,GameActor*> ActorHash;
 
 class AX_API GameActor : public GameObject, public IObserver
 {
@@ -104,7 +104,7 @@ private:
 // class GameActorPtr
 //--------------------------------------------------------------------------
 
-template< class type >
+template <class type>
 class GameActorPtr {
 public:
 	GameActorPtr();
@@ -125,12 +125,12 @@ private:
 	int m_spawnId;
 };
 
-template< class type >
+template <class type>
 inline GameActorPtr<type>::GameActorPtr() {
 	m_spawnId = 0;
 }
 
-template< class type >
+template <class type>
 inline GameActorPtr<type> &GameActorPtr<type>::operator=( type *ent ) {
 	if ( ent == NULL ) {
 		m_spawnId = 0;
@@ -140,7 +140,7 @@ inline GameActorPtr<type> &GameActorPtr<type>::operator=( type *ent ) {
 	return *this;
 }
 
-template< class type >
+template <class type>
 inline bool GameActorPtr<type>::setSpawnId( int id ) {
 	// the reason for this first check is unclear:
 	// the function returning false may mean the spawnId is already set right, or the entity is missing
@@ -154,12 +154,12 @@ inline bool GameActorPtr<type>::setSpawnId( int id ) {
 	return false;
 }
 
-template< class type >
+template <class type>
 inline bool GameActorPtr<type>::isValid( void ) const {
 	return ( m_world->m_spawnIds[m_spawnId & ActorNum::MAX_ACTORS_MASK] == ( m_spawnId >> ActorNum::MAX_ACTORS_BITS ) );
 }
 
-template< class type >
+template <class type>
 inline type *GameActorPtr<type>::getEntity( void ) const {
 	int entityNum = m_spawnId & ActorNum::MAX_ACTORS_MASK;
 	if ( ( m_world->m_spawnIds[entityNum] == ( m_spawnId >> ActorNum::MAX_ACTORS_BITS ) ) ) {
@@ -168,7 +168,7 @@ inline type *GameActorPtr<type>::getEntity( void ) const {
 	return NULL;
 }
 
-template< class type >
+template <class type>
 inline int GameActorPtr<type>::getEntityNum( void ) const {
 	return m_spawnId & ActorNum::MAX_ACTORS_MASK;
 }

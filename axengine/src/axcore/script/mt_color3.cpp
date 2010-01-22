@@ -110,7 +110,7 @@ _MEMBER_FUNCTION_IMPL(Color3,_add)
 	_CHECK_SELF(Color3,Color3);
 	_CHECK_INST_PARAM(vec,2,Color3,Color3);
 	Color3 tv = (*self)+(*vec);
-	SquirrelObject so = new_Color3(v, tv);
+	sqObject so = new_Color3(v, tv);
 	return sa.Return(so);
 }
 
@@ -120,7 +120,7 @@ _MEMBER_FUNCTION_IMPL(Color3,_sub)
 	_CHECK_SELF(Color3,Color3);
 	_CHECK_INST_PARAM(vec,2,Color3,Color3);
 	Color3 tv = (*self)-(*vec);
-	SquirrelObject so = new_Color3(v, tv);
+	sqObject so = new_Color3(v, tv);
 	return sa.Return(so);
 }
 
@@ -129,7 +129,7 @@ _MEMBER_FUNCTION_IMPL(Color3,_mul)
 	StackHandler sa(v);
 	_CHECK_SELF(Color3,Color3);
 	Color3 tv = (*self)*sa.getFloat(2);
-	SquirrelObject so = new_Color3(v, tv);
+	sqObject so = new_Color3(v, tv);
 	return sa.Return(so);
 }
 
@@ -138,7 +138,7 @@ _MEMBER_FUNCTION_IMPL(Color3,_div)
 	StackHandler sa(v);
 	_CHECK_SELF(Color3,Color3);
 	Color3 tv = (*self)/sa.getFloat(2);
-	SquirrelObject so = new_Color3(v, tv);
+	sqObject so = new_Color3(v, tv);
 	return sa.Return(so);
 }
 
