@@ -16,10 +16,17 @@ public:
 
 	ScriptValue& operator=(const ScriptValue &rhs);
 
-//	sqObject& getSquirrelObject() { return *m_d; }
-	sqObject& getSquirrelObject() const { return *m_d; }
+	bool isNull() const;
+	bool isArray() const;
+	bool isTable() const;
+	bool isInstance() const;
+
+	sqObject& getSqObject() { return *m_d; }
+	const sqObject& getSqObject() const { return *m_d; }
 
 	bool rawCast(Variant::TypeId toType, void *toData) const;
+
+	// internal use
 	static Variant::TypeHandler *getTypeHandler();
 
 private:

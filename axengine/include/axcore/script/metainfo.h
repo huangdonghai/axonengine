@@ -515,35 +515,35 @@ private:
 #undef ARG
 
 //--------------------------------------------------------------------------
-// class MetaInfo
+// class CppClass
 //--------------------------------------------------------------------------
 #if 0
 class ClassInfo;
 #else
-class SqClass;
+class ScriptClass;
 #endif
-class AX_API MetaInfo
+class AX_API CppClass
 {
 	friend class ScriptSystem;
 
 public:
-	MetaInfo(const char *classname, MetaInfo *base);
-	virtual ~MetaInfo();
+	CppClass(const char *classname, CppClass *base);
+	virtual ~CppClass();
 
 	template< typename T, typename GetType, typename SetType >
-	MetaInfo &addProperty(const char *name, GetType (T::*get)() const, void (T::*set)(SetType));
+	CppClass &addProperty(const char *name, GetType (T::*get)() const, void (T::*set)(SetType));
 
 	template< typename T, typename GetType >
-	MetaInfo &addProperty(const char *name, GetType (T::*get)() const);
+	CppClass &addProperty(const char *name, GetType (T::*get)() const);
 
 	template< typename T, typename M >
-	MetaInfo &addProperty(const char *name, M (T::*d));
+	CppClass &addProperty(const char *name, M (T::*d));
 
 	template< typename Signature >
-	MetaInfo &addMethod(const char *name, Signature m);
+	CppClass &addMethod(const char *name, Signature m);
 
 	Member *findMember(const char *name) const;
-	MetaInfo *getBase() const;
+	CppClass *getBase() const;
 
 	const char *getName() const;
 	const MemberSeq &getMembers() const;
@@ -555,17 +555,17 @@ protected:
 
 private:
 	const char *m_name;
-	MetaInfo *m_base;
+	CppClass *m_base;
 #if 0
 	ClassInfo *m_classInfo;
 #else
-	SqClass *m_sqClass;
+	ScriptClass *m_sqClass;
 #endif
 	MemberSeq m_members;
 	MemberDict m_memberDict;
 };
 
-inline MetaInfo::MetaInfo(const char *classname, MetaInfo *base)
+inline CppClass::CppClass(const char *classname, CppClass *base)
 	: m_name(classname)
 	, m_base(base)
 #if 0
@@ -575,24 +575,24 @@ inline MetaInfo::MetaInfo(const char *classname, MetaInfo *base)
 #endif
 {}
 
-inline MetaInfo::~MetaInfo() {}
+inline CppClass::~CppClass() {}
 
 template< typename T, typename GetType, typename SetType >
-MetaInfo &MetaInfo::addProperty(const char *name, GetType (T::*get)() const, void (T::*set)(SetType)) {
+CppClass &CppClass::addProperty(const char *name, GetType (T::*get)() const, void (T::*set)(SetType)) {
 	Member *member = new Property_<T,GetType,SetType>(name, get, set);
 	addMember(member);
 	return *this;
 }
 
 template< typename T, typename GetType >
-MetaInfo &MetaInfo::addProperty(const char *name, GetType (T::*get)() const) {
+CppClass &CppClass::addProperty(const char *name, GetType (T::*get)() const) {
 	Member *member = new Property_<T,GetType,GetType>(name, get);
 	addMember(member);
 	return *this;
 }
 
 template< typename T, typename M >
-MetaInfo &MetaInfo::addProperty(const char *name, M (T::*d)) {
+CppClass &CppClass::addProperty(const char *name, M (T::*d)) {
 	Member *member = new SimpleProp_<T,M>(name, d);
 	addMember(member);
 	return *this;
@@ -600,18 +600,18 @@ MetaInfo &MetaInfo::addProperty(const char *name, M (T::*d)) {
 
 
 template< typename Signature >
-MetaInfo &MetaInfo::addMethod(const char *name, Signature m) {
+CppClass &CppClass::addMethod(const char *name, Signature m) {
 	Member *member = new Method_<Signature>(name, m);
 	addMember(member);
 	return *this;
 }
 
-inline void MetaInfo::addMember(Member *member) {
+inline void CppClass::addMember(Member *member) {
 	m_members.push_back(member);
 	m_memberDict[member->getName()] = member;
 }
 
-inline Member *MetaInfo::findMember(const char *name) const {
+inline Member *CppClass::findMember(const char *name) const {
 	MemberDict::const_iterator it = m_memberDict.find(name);
 
 	if (it != m_memberDict.end())
@@ -619,15 +619,15 @@ inline Member *MetaInfo::findMember(const char *name) const {
 	return nullptr;
 }
 
-inline MetaInfo *MetaInfo::getBase() const {
+inline CppClass *CppClass::getBase() const {
 	return m_base;
 }
 
-inline const char *MetaInfo::getName() const {
+inline const char *CppClass::getName() const {
 	return m_name;
 }
 
-inline const MemberSeq &MetaInfo::getMembers() const {
+inline const MemberSeq &CppClass::getMembers() const {
 	return m_members;
 }
 
@@ -636,10 +636,10 @@ inline const MemberSeq &MetaInfo::getMembers() const {
 // class MetaInfo_
 //--------------------------------------------------------------------------
 template< class T >
-class MetaInfo_ : public MetaInfo {
+class MetaInfo_ : public CppClass {
 public:
-	MetaInfo_(const char *classname, MetaInfo *base)
-		: MetaInfo(classname, base)
+	MetaInfo_(const char *classname, CppClass *base)
+		: CppClass(classname, base)
 	{}
 	virtual ~MetaInfo_() {}
 
@@ -700,19 +700,37 @@ public:
 
 //--------------------------------------------------------------------------
 class SqProperty;
-class SqPropGroup;
-class SqClass;
+class ScriptClass;
 
 class AX_API SqProperty : public Member
 {
-	friend class SqClass;
+	friend class ScriptClass;
 
 public:
 	SqProperty(const sqObject &key, const sqObject &val, const sqObject &attr);
 	SqProperty(const char *name, Kind kind);
 
-	const String &getRealName() const { return m_realName; }
-	String getGroupName() const { if (m_group) return m_group->getRealName(); else return String(); }
+	// implement Member
+	virtual bool isConst() const
+	{ return false; }
+
+	virtual bool isAnimatable() const
+	{ return false; }
+
+	virtual bool getProperty(const Object *obj, Variant &ret)
+	{ return false; }
+
+	virtual bool setProperty(Object *obj, const ConstRef &arg)
+	{ return false; }
+
+	virtual bool resetProperty(Object *obj)
+	{ return false; }
+
+	const String &getRealName() const
+	{ return m_realName; }
+
+	String getGroupName() const
+	{ if (m_group) return m_group->getRealName(); else return String(); }
 
 private:
 	String m_realName;
@@ -724,22 +742,18 @@ typedef Sequence<SqProperty*> SqProperties;
 typedef Dict<String,SqProperty*> SqPropertyDict;
 
 //--------------------------------------------------------------------------
-class SqPropGroup {
-	String m_name;
-	SqProperties m_properties;
-};
-typedef Sequence<SqPropGroup> SqPropGroups;
-
-//--------------------------------------------------------------------------
-class AX_API SqClass
+class AX_API ScriptClass
 {
 	friend class ScriptSystem;
 
 public:
-	SqClass(const String &name);
+	ScriptClass(const String &name);
 
-	String getName() const { return m_name; }
-	Member *findMember(const char *name) const {
+	String getName() const
+	{ return m_name; }
+
+	Member *findMember(const char *name) const
+	{
 		SqPropertyDict::const_iterator it = m_propDict.find(name);
 
 		if (it != m_propDict.end())
@@ -748,7 +762,11 @@ public:
 		return 0;
 	}
 
-	const SqProperties& getMembers() const { return m_properties; }
+	const SqProperties& getMembers() const
+	{ return m_properties; }
+
+	const ScriptValue& getScriptValue() const
+	{ return m_sqObject; }
 
 protected:
 	void addProperty(const sqObject &key, const sqObject &val, const sqObject &attr);
@@ -756,11 +774,12 @@ protected:
 private:
 	String m_name;
 	String m_cppName;
-	MetaInfo *m_metaInfo;
+	CppClass *m_cppClass;
 
 	SqProperties m_properties;
-	SqPropGroups m_groups;
 	SqPropertyDict m_propDict;
+
+	ScriptValue m_sqObject;
 };
 
 AX_END_NAMESPACE

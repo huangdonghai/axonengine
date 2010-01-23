@@ -261,7 +261,7 @@ void PropertyEditor::initFromObject(Object *obj) {
 
 	PropertyCollection *collection = new PropertyCollection(QLatin1String("<root>"));
 
-	MetaInfo *typeinfo = obj->getMetaInfo();
+	CppClass *typeinfo = obj->getMetaInfo();
 	Variant prop;
 
 	for (; typeinfo; typeinfo = typeinfo->getBase()) {
@@ -381,7 +381,7 @@ bool PropertyEditor::initScriptProp(Object *obj) {
 		return false;
 	}
 
-	const SqClass *ci = obj->getScriptClass();
+	const ScriptClass *ci = obj->getScriptClass();
 
 	const SqProperties &props = ci->getMembers();
 

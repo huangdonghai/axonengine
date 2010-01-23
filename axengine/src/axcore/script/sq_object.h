@@ -33,6 +33,7 @@ public:
 	bool isClass() const { return sq_isclass(m_obj); }
 	bool isNull() const { return sq_isnull(m_obj); }
 	bool isNumeric() const { return sq_isnumeric(m_obj); }
+	bool isInstance() const { return sq_isinstance(m_obj); }
 
 	operator HSQOBJECT&() const { return m_obj; } 
 	bool operator==(const sqObject& o);
@@ -103,6 +104,7 @@ public:
 	void endIteration();
 
 	bool getTypeTag(SQUserPointer * typeTag);
+	bool setTypeTag(SQUserPointer typeTag);
 
 	// === get the type name of item/object through string key in a table or class. Returns NULL if the type name is not set (not an SqPlus registered type).
 	const SQChar * getTypeName(const SQChar * key);

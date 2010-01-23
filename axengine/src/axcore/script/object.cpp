@@ -6,58 +6,17 @@ AX_BEGIN_NAMESPACE
 // class Object
 //--------------------------------------------------------------------------
 
-Object::Object()
-{
-#if 0
-	m_classInfo = 0;
-
-	int top = lua_gettop(L);
-	lua_pushlightuserdata(L, this);
-	lua_newtable(L);
-	lua_rawset(L, LUA_REGISTRYINDEX);		// stack poped
-
-	// get table just created
-	lua_pushlightuserdata(L, this);
-	lua_rawget(L, LUA_REGISTRYINDEX);
-
-	// set metatable
-	luaL_getmetatable(L, OBJECT_MT);
-	lua_setmetatable(L, -2);
-
-	// set __object
-	lua_pushliteral(L, "__object");
-	lua_pushlightuserdata(L, this);
-	lua_rawset(L, -3);
-
-	// balance stack
-	lua_pop(L, 1);
-
-	// create squirrel object
-	sq_pushregistrytable(VM);
-	sq_pushuserpointer(VM, this);
-	CreateNativeClassInstance(VM, "Object_c", this);
-	sq_rawset(VM, -3);
-	sq_pop(VM, 1);
-#endif
-}
+Object::Object() : m_scriptClass(0)
+{}
 
 Object::~Object()
 {
-#if 0
-	invoke_onFinalize();
-
 	resetObjectName();
-
-	lua_pushlightuserdata(L, this);
-	lua_pushnil(L);
-	lua_rawset(L, LUA_REGISTRYINDEX);
-#endif
-	//		gScriptSystem->removeObject(this);
 }
 
 Member *Object::findMember(const char *name) const
 {
-	MetaInfo *typeinfo = getMetaInfo();
+	CppClass *typeinfo = getMetaInfo();
 
 	while (typeinfo) {
 		Member *member = typeinfo->findMember(name);
@@ -65,32 +24,20 @@ Member *Object::findMember(const char *name) const
 		typeinfo = typeinfo->getBase();
 	}
 
-#if 0
-	if (!m_classInfo) {
-		return nullptr;
-	}
-
-	ScriptPropDict::const_iterator it = m_classInfo->m_scriptProps.find(name);
-	if (it == m_classInfo->m_scriptProps.end()) {
-		return nullptr;
-	}
-	return it->second;
-#else
-	if (!m_sqClass)
+	if (!m_scriptClass)
 		return 0;
 
-	return m_sqClass->findMember(name);
-#endif
+	return m_scriptClass->findMember(name);
 }
 
-MetaInfo *Object::getMetaInfo() const
+CppClass *Object::getMetaInfo() const
 {
 	return Object::registerMetaInfo();
 }
 
-MetaInfo *Object::registerMetaInfo()
+CppClass *Object::registerMetaInfo()
 {
-	static MetaInfo *ms_metaInfo = 0;
+	static CppClass *ms_metaInfo = 0;
 
 	if (!ms_metaInfo) {
 		ms_metaInfo = new MetaInfo_<Object>("Object", nullptr);
@@ -104,7 +51,7 @@ MetaInfo *Object::registerMetaInfo()
 
 void Object::set_objectName(const String &name)
 {
-	setObjectName(name, false);
+	setObjectName(name);
 }
 
 String Object::get_objectName() const
@@ -115,7 +62,7 @@ String Object::get_objectName() const
 
 bool Object::inherits(const char *cls) const
 {
-	MetaInfo *typeinfo = getMetaInfo();
+	CppClass *typeinfo = getMetaInfo();
 
 	for (; typeinfo; typeinfo=typeinfo->getBase()) {
 		if (Strequ(cls, typeinfo->getName())) {
@@ -177,7 +124,7 @@ void Object::writeProperties(File *f, int indent) const
 #define INDENT if (indent) f->printf("%s", indstr.c_str());
 
 	// write properties
-	MetaInfo *typeinfo = getMetaInfo();
+	CppClass *typeinfo = getMetaInfo();
 
 	Variant prop;
 	while (typeinfo) {
@@ -197,7 +144,7 @@ void Object::writeProperties(File *f, int indent) const
 	}
 
 	// write script properties
-	const SqClass *classinfo = getScriptClass();
+	const ScriptClass *classinfo = getScriptClass();
 	if (!classinfo) return;
 
 	const SqProperties &props = classinfo->getMembers();
@@ -226,7 +173,7 @@ void Object::readProperties(const TiXmlElement *node)
 void Object::copyPropertiesFrom(const Object *rhs)
 {
 	// write properties
-	MetaInfo *typeinfo = rhs->getMetaInfo();
+	CppClass *typeinfo = rhs->getMetaInfo();
 	Variant prop;
 
 	while (typeinfo) {
@@ -254,7 +201,7 @@ void Object::copyPropertiesFrom(const Object *rhs)
 	}
 
 	// write script properties
-	const SqClass *classinfo = getScriptClass();
+	const ScriptClass *classinfo = getScriptClass();
 	if (!classinfo) return;
 
 	const SqProperties &props = classinfo->getMembers();
@@ -269,109 +216,25 @@ void Object::copyPropertiesFrom(const Object *rhs)
 	}
 }
 
-#if 0
-void Object::initClassInfo(const ClassInfo *ci)
+void Object::setObjectName(const String &name)
 {
-	int top = lua_gettop(L);
-
-	lua_pushlightuserdata(L, this);
-
-	lua_pushliteral(L, "AX_CREATE_OBJECT");
-	lua_rawget(L, LUA_GLOBALSINDEX);
-	AX_ASSERT(lua_isfunction(L, -1));
-	if (!xGetGlobalScoped(L, ci->m_className.c_str())) {
-		Errorf("can't find script class '%s'", ci->m_className.c_str());
-	}
-	AX_ASSERT(lua_istable(L, -1));
-	int status = lua_pcall(L, 1, 1, 0);
-	if (status != 0) {
-		xReport(L, status, 0);
-		lua_settop(L,top);
-		return;
-	}
-	AX_ASSERT(lua_istable(L, -1));
-
-	lua_rawset(L, LUA_REGISTRYINDEX);		// stack poped
-
-	// get table just created
-	lua_pushlightuserdata(L, this);
-	lua_rawget(L, LUA_REGISTRYINDEX);
-
-	// set metatable
-	luaL_getmetatable(L, OBJECT_MT);
-	lua_setmetatable(L, -2);
-
-	// set __object
-	lua_pushliteral(L, "__object");
-	lua_pushlightuserdata(L, this);
-	lua_rawset(L, -3);
-
-	// balance stack
-	lua_pop(L, 1);
-
-	AX_ASSERT(lua_gettop(L) == 0);
-
-	m_classInfo = ci;
-
-	// TODO: rebind to object name
-}
-#endif
-
-void Object::setObjectName(const String &name, bool force)
-{
-	if (m_objectName == name && !force) {
+	if (m_objectName == name) {
 		return;
 	}
 
 	resetObjectName();
 
 	m_objectName = name;
-	{
-		int top = sq_gettop(VM);
-		sq_pushroottable(VM);
-		sq_pushregistrytable(VM);
-		sq_pushstring(VM, name.c_str(), name.size());
-		sq_pushuserpointer(VM, this);
-		sq_rawget(VM, -3);
-		sq_rawset(VM, -4);
-		sq_settop(VM, top);
-	}
 	m_objectNamespace = getNamespace();
 
 	if (m_objectName.empty())
 		return;
 
-#if 0
-	int top = lua_gettop(L);
+	if (m_scriptInstance.isNull())
+		initScriptClass(nullptr);
 
-	bool v = xGetGlobalScoped(L, m_objectNamespace.c_str());
-	if (!v) {
-		Errorf("Invalid object namespace");
-	}
-	int ns = lua_gettop(L);
-
-	if (!lua_istable(L, ns)) {
-		Errorf("Object::setObjectName: can't find object namespace '%s'", getNamespace().c_str());
-	}
-
-	// get from registry first
-	lua_getfield(L, ns, m_objectName.c_str());
-	if (!lua_isnil(L, -1)) {
-		Errorf("Object::set_objectName: object already exist");
-	}
-	lua_pop(L, 1);
-
-	// set new name
-	lua_pushlightuserdata(L, this);
-	lua_rawget(L, LUA_REGISTRYINDEX);
-
-	AX_ASSERT(lua_istable(L, -1));
-
-	lua_setfield(L, ns, m_objectName.c_str());
-
-	// balance stack
-	lua_settop(L, top);
-#endif
+	sqObject ns = g_mainVM->getScoped(m_objectNamespace.c_str());
+	ns.setValue(m_objectName.c_str(), m_scriptInstance.getSqObject());
 }
 
 void Object::resetObjectName()
@@ -379,34 +242,8 @@ void Object::resetObjectName()
 	if (m_objectName.empty())
 		return;
 
-#if 0
-	int top = lua_gettop(L);
-
-	bool v = xGetGlobalScoped(L, m_objectNamespace.c_str());
-	if (!v) {
-		Errorf("Invalid object namespace");
-	}
-	int ns = lua_gettop(L);
-
-	if (!lua_istable(L, ns)) {
-		Errorf("Object::setObjectName: can't find object namespace '%s'", getNamespace().c_str());
-	}
-
-	if (!m_objectName.empty()) {
-		// free old link
-		lua_pushnil(L);
-		lua_setfield(L, ns, m_objectName.c_str());
-
-		// FIXME: check
-		lua_getfield(L, ns, m_objectName.c_str());
-		if (!lua_isnil(L, -1)) {
-			Errorf("Object::set_objectName: object already exist");
-		}
-		lua_pop(L, 1);
-	}
-
-	lua_settop(L, top);
-#endif
+	sqObject ns = g_mainVM->getScoped(m_objectNamespace.c_str());
+	ns.setValue(m_objectName.c_str(), sqObject());
 }
 
 void Object::doPropertyChanged()
@@ -437,151 +274,49 @@ void Object::invoke_onPropertyChanged()
 
 void Object::invokeCallback(const String &callback)
 {
-#if 0
-	int top = lua_gettop(L);
-
-	lua_pushlightuserdata(L, this);
-	lua_rawget(L, LUA_REGISTRYINDEX);
-
-	xPushString(L, callback);
-	lua_gettable(L, -2);
-
-	if (!lua_isfunction(L, -1)) {
-		lua_settop(L, top);
-		return;
-	}
-
-	// push self
-	lua_pushvalue(L, -2);
-
-	xPcall(L, 1, 0);
-
-	lua_settop(L, top);
-	return;
-#endif
 }
 
 void Object::invokeCallback(const String &callback, const Variant &param)
 {
-#if 0
-	int top = lua_gettop(L);
-
-	lua_pushlightuserdata(L, this);
-	lua_rawget(L, LUA_REGISTRYINDEX);
-
-	xPushString(L, callback);
-	lua_gettable(L, -2);
-
-	if (!lua_isfunction(L, -1)) {
-		lua_settop(L, top);
-		return;
-	}
-
-	// push self
-	lua_pushvalue(L, -2);
-
-	// push param
-	xPushStack(L, param);
-
-	xPcall(L, 2, 0);
-
-	lua_settop(L, top);
-	return;
-#endif
-}
-
-#if 0
-void Object::invokeMethod(const char *name, const Variant &arg1)
-{
-	Member *member = findMember(name);
-
-	if (!member || !member->isMethod()) {
-		return;
-	}
-
-	VariantSeq vs;
-	vs.push_back(arg1);
-	member->invoke(this, vs);
-}
-
-void Object::invokeMethod(const char *name, const Variant &arg1, const Variant &arg2)
-{
-	Member *member = findMember(name);
-
-	if (!member || !member->isMethod()) {
-		return;
-	}
-
-	VariantSeq vs;
-	vs.push_back(arg1);
-	vs.push_back(arg2);
-	member->invoke(this, vs);
-}
-#endif
-bool Object::isClass(const char *classname) const
-{
-#if 0
-	if (!m_classInfo) {
-		return false;
-	}
-
-	return m_classInfo->m_className == classname;
-#else
-	return false;
-#endif
 }
 
 void Object::setRuntime(const char *name, const Variant &val)
 {
-#if 0
-	int top = lua_gettop(L);
-
-	lua_pushlightuserdata(L, this);
-	lua_rawget(L, LUA_REGISTRYINDEX);
-
-	xPushStack(L, val);
-
-	lua_setfield(L, -2, name);
-
-	lua_settop(L, top);
-
-	return;
-#endif
 }
 
 Variant Object::getRuntime(const char *name)
 {
-#if 0
-	int top = lua_gettop(L);
-
-	lua_pushlightuserdata(L, this);
-	lua_rawget(L, LUA_REGISTRYINDEX);
-
-	lua_getfield(L, -2, name);
-	Variant result = xReadStack(L,-1);
-
-	if (result.getTypeId() == Variant::kTable) {
-		Errorf("cann't get Lua table in getRuntime");
-	}
-
-	lua_settop(L, top);
-
-	return result;
-#else
 	return Variant();
-#endif
 }
 
-void Object::initScriptClass(const SqClass *sqclass)
+void Object::initScriptClass(const ScriptClass *sqclass)
 {
+	if (!m_scriptInstance.isNull())
+		Errorf("object script already initialized");
 
+	if (!sqclass)
+		sqclass = g_scriptSystem->findScriptClass("Object");
+
+	AX_ASSERT(sqclass);
+
+	sq_pushobject(VM, sqclass->getScriptValue().getSqObject());
+	SQRESULT sqresult = sq_createinstance(VM, -1);	// TODO: check
+	AX_ASSURE(SQ_SUCCEEDED(sqresult));
+
+	m_scriptInstance.getSqObject().attachToStackObject(VM, -1);
+	sq_pop(VM, 1);
+
+	AX_ASSURE(m_scriptInstance.isInstance());
+	m_scriptInstance.getSqObject().setInstanceUP(this);
+
+	m_scriptClass = sqclass;
 }
 
 bool Object::invokeMethod(const char *methodName, const Ref &ret,
 							const ConstRef &arg0, const ConstRef &arg1, const ConstRef &arg2,
 							const ConstRef &arg3, const ConstRef &arg4)
 {
-	MetaInfo *mi = getMetaInfo();
+	CppClass *mi = getMetaInfo();
 	if (!mi) return false;
 
 	Member *member = mi->findMember(methodName);

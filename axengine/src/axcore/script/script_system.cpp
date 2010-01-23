@@ -962,25 +962,25 @@ String ScriptSystem::generateObjectName(const String &str)
 	return result;
 }
 
-void ScriptSystem::registerType(MetaInfo *metainfo)
+void ScriptSystem::registerType(CppClass *metainfo)
 {
 	m_typeInfoReg[metainfo->getName()] = metainfo;
 
-	linkMetaInfoToClassInfo(metainfo);
+	linkCppToScript(metainfo);
 }
 
 Object *ScriptSystem::createObject(const char *classname)
 {
 	SqClassDict::const_iterator cit = m_sqClassReg.find(classname);
 	if (cit != m_sqClassReg.end()) {
-		SqClass *ci = cit->second;
+		ScriptClass *ci = cit->second;
 
-		if (!ci->m_metaInfo) {
+		if (!ci->m_cppClass) {
 			Errorf("can't find type info");
 		}
 
 		// create object
-		Object *obj = ci->m_metaInfo->createObject();
+		Object *obj = ci->m_cppClass->createObject();
 		obj->initScriptClass(ci);
 
 		obj->invoke_onInit();
@@ -1125,18 +1125,18 @@ void ScriptSystem::registerSqClass( const String &name )
 	if (it != m_sqClassReg.end())
 		Errorf("Class already registered");
 
-	SqClass * sqclass = new SqClass(name);
+	ScriptClass * sqclass = new ScriptClass(name);
 	m_sqClassReg[name] = sqclass;
 }
 
-void ScriptSystem::linkMetaInfoToClassInfo(MetaInfo *mi)
+void ScriptSystem::linkCppToScript(CppClass *mi)
 {
 	SqClassDict::iterator it = m_sqClassReg.begin();
 
 	for (; it != m_sqClassReg.end(); ++it) {
-		SqClass *ci = it->second;
+		ScriptClass *ci = it->second;
 		if (ci->m_cppName == mi->m_name) {
-			ci->m_metaInfo = mi;
+			ci->m_cppClass = mi;
 			mi->m_sqClass = ci;
 		}
 	}
@@ -1152,7 +1152,7 @@ void ScriptSystem::getClassList(const char *prefix, bool sort, StringSeq &result
 	}
 
 	for (; it != m_sqClassReg.end(); ++it) {
-		SqClass *ci = it->second;
+		ScriptClass *ci = it->second;
 		if (prefixlen) {
 			if (strncmp(prefix, ci->m_name.c_str(), prefixlen) != 0) {
 				continue;
@@ -1184,6 +1184,18 @@ ScriptValue ScriptSystem::createMetaClosure(Member *method)
 	sq_settop(VM, top);
 
 	return sobj;
+}
+
+ScriptClass *ScriptSystem::findScriptClass(const char *name) const
+{
+	SqClassDict::const_iterator it = m_sqClassReg.find(name);
+
+	return it->second;
+}
+
+CppClass * ScriptSystem::findMetaInfo(const char *name) const
+{
+	return m_typeInfoReg.find(name)->second;
 }
 
 AX_END_NAMESPACE

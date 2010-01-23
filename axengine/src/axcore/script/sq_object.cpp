@@ -633,7 +633,21 @@ bool sqObject::getTypeTag(SQUserPointer * typeTag)
 	}
 
 	return false;
-} // sqObject::getTypeTag
+}
+
+
+bool sqObject::setTypeTag(SQUserPointer typeTag)
+{
+	if (!isClass()) return false;
+	sq_pushobject(VM, m_obj);
+	SQRESULT sqresult = sq_settypetag(VM, -1, typeTag);
+	sq_pop(VM, 1);
+
+	if (!SQ_SUCCEEDED(sqresult))
+		return false;
+	return true;
+}
+
 
 const SQChar * sqObject::getTypeName(const SQChar * key)
 {
@@ -741,7 +755,7 @@ void sqObject::getVariant(Variant &result) const
 	case OT_WEAKREF:
 		{
 			result.init(Variant::kScriptValue);
-			result.ref<ScriptValue>().getSquirrelObject() = m_obj;
+			result.ref<ScriptValue>().getSqObject() = m_obj;
 		}
 		return;
 	case OT_INSTANCE:
@@ -821,7 +835,7 @@ void StackHandler::getRawData(int idx, Variant &result)
 	case OT_WEAKREF:
 		{
 			result.init(Variant::kScriptValue);
-			result.ref<ScriptValue>().getSquirrelObject() = t;
+			result.ref<ScriptValue>().getSqObject() = t;
 		}
 		return;
 	case OT_INSTANCE:
@@ -888,7 +902,7 @@ int StackHandler::retRawData(const ConstRef &arg)
 		push_Matrix(v, arg.ref<Matrix>());
 		return 1;
 	case Variant::kScriptValue:
-		sq_pushobject(v, arg.ref<ScriptValue>().getSquirrelObject());
+		sq_pushobject(v, arg.ref<ScriptValue>().getSqObject());
 		return 1;
 	}
 

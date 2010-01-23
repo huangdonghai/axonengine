@@ -672,6 +672,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\scripts\game\player.nut"
+					>
+				</File>
+				<File
 					RelativePath=".\scripts\game\StaticFixed.lua"
 					>
 				</File>

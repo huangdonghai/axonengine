@@ -10,34 +10,34 @@ class Game.Effect.Light </ cppClass = "GameLight" />
 	</ editable = true />
 	radius = 10.0;
 
-	</ editable = true, gourp = "Style" />
+	</ editable = true, group = "Style" />
 	glare = 0;
-	</ editable = true, gourp = "Style" />
+	</ editable = true, group = "Style" />
 	glareScale = 1;
-	</ editable = true, gourp = "Style" enums = [ ["PointLight", LightType.PointLight], ["SpotLight", LightType.SpotLight] ]/>
+	</ editable = true, group = "Style" enums = [ ["PointLight", LightType.PointLight], ["SpotLight", LightType.SpotLight] ]/>
 	lightStyle = LightType.PointLight;
-	</ editable = true, gourp = "Style" />
+	</ editable = true, group = "Style" />
 	castShadowMap = false;
 
-	</ editable = true, gourp = "Style" enums = [128, 256, 512, 1024, 2048] />
+	</ editable = true, group = "Style" enums = [128, 256, 512, 1024, 2048] />
 	shadowMapSize = 256;
-	</ editable = true, gourp = "Style" />
+	</ editable = true, group = "Style" />
 	spotAngle = 60.0;
 
-	</ editable = true, gourp = "Color" />
+	</ editable = true, group = "Color" />
 	color = Color3(1,1,1);
-	</ editable = true, gourp = "Color" />
+	</ editable = true, group = "Color" />
 	intensity = 1.0;
-	</ editable = true, gourp = "Color" />
+	</ editable = true, group = "Color" />
 	specularX = 1.0;
-	</ editable = true, gourp = "Color" />
+	</ editable = true, group = "Color" />
 	hdrStops = 0;
 
-	</ editable = true, gourp = "Option" />
+	</ editable = true, group = "Option" />
 	oneAreaOnly = true;
-	</ editable = true, gourp = "Option", kind = PropKind.kModel />
+	</ editable = true, group = "Option", kind = PropKind.kModel />
 	model = "";
-	</ editable = true, gourp = "Option", kind = PropKind.kTexture />
+	</ editable = true, group = "Option", kind = PropKind.kTexture />
 	texture = "";
 }
 AX_REGISTER_CLASS("Game.Effect.Light");

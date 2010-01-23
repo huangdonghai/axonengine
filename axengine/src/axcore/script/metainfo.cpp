@@ -418,17 +418,20 @@ SqProperty::SqProperty(const char *name, Kind kind)
 	m_propKind = kind;
 }
 
-SqClass::SqClass(const String &name)
+ScriptClass::ScriptClass(const String &name)
+	: m_cppClass(0)
 {
 	HSQUIRRELVM vm = VM;
 
 	sqObject so = g_mainVM->getScoped(name.c_str());
+	m_sqObject.getSqObject() = so;
 
 	if (!so.isClass())
 		Errorf("wrong type. can't register class");
 
 	so.setValue("_get", sqVM::ms_getClosure);
 	so.setValue("_set", sqVM::ms_setClosure);
+	so.setTypeTag(&__Object_c_decl);
 
 	sqObject key, val, attr;
 
@@ -442,6 +445,7 @@ SqClass::SqClass(const String &name)
 
 		cppClass = base.getAttributes().getString("cppClass");
 	}
+	m_cppName = cppClass;
 
 	so.beginIteration();
 
@@ -459,7 +463,7 @@ SqClass::SqClass(const String &name)
 	std::sort(m_properties.begin(), m_properties.end(), sqlesser);
 }
 
-void SqClass::addProperty(const sqObject &key, const sqObject &val, const sqObject &attr)
+void ScriptClass::addProperty(const sqObject &key, const sqObject &val, const sqObject &attr)
 {
 	if (!attr.getBool("editable"))
 		return;

@@ -55,7 +55,7 @@ _MEMBER_FUNCTION_IMPL(Object_c, _get)
 	StackHandler sa(v);
 	_CHECK_SELF_OBJ();
 	const SQChar *s = sa.getString(2);
-	MetaInfo *metaInfo = self->getMetaInfo();
+	CppClass *metaInfo = self->getMetaInfo();
 	Member *member = metaInfo->findMember(s);
 
 	if (!member) return SQ_ERROR;
@@ -70,7 +70,7 @@ _MEMBER_FUNCTION_IMPL(Object_c, _get)
 		return sa.retRawData(ConstRef(prop.getTypeId(), prop.getPointer()));
 	}
 
-	return sa.Return(member->getScriptClousure().getSquirrelObject());
+	return sa.Return(member->getScriptClousure().getSqObject());
 	return SQ_ERROR;
 //	return sa.Return(member->m_scriptClosure);
 }
@@ -80,7 +80,7 @@ _MEMBER_FUNCTION_IMPL(Object_c, _set)
 	StackHandler sa(v);
 	_CHECK_SELF_OBJ();
 	const SQChar *s = sa.getString(2);
-	MetaInfo *metaInfo = self->getMetaInfo();
+	CppClass *metaInfo = self->getMetaInfo();
 	Member *member = metaInfo->findMember(s);
 
 	if (!member || !member->isProperty()) return SQ_ERROR;

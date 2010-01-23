@@ -97,4 +97,14 @@ ScriptValue& ScriptValue::operator=(const ScriptValue &rhs)
 	return *this;
 }
 
+bool ScriptValue::isNull() const
+{
+	return m_d->isNull();
+}
+
+bool ScriptValue::isInstance() const
+{
+	return m_d->isInstance();
+}
+
 AX_END_NAMESPACE

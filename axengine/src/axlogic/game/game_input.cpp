@@ -17,8 +17,8 @@ namespace {
 AX_BEGIN_NAMESPACE
 
 AX_BEGIN_COMMAND_MAP(GameInput)
-	AX_COMMAND_ENTRY("bind",	bind_f)
-	AX_COMMAND_ENTRY("bindlist",	bindlist_f)
+	AX_COMMAND_ENTRY("bind", bind_f)
+	AX_COMMAND_ENTRY("bindlist", bindlist_f)
 AX_END_COMMAND_MAP()
 
 GameInput::GameInput()

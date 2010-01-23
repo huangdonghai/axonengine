@@ -21,7 +21,7 @@ public:
 	sqObject getScoped(const char *name);
 	sqObject getScoped(const sqObject &obj, const char *name);
 
-	static sqObject createClosure(const SQChar *name, SQFUNCTION f, 	SQInteger nparamscheck, const SQChar *typemask);
+	static sqObject createClosure(const SQChar *name, SQFUNCTION f, SQInteger nparamscheck, const SQChar *typemask);
 
 protected:
 	void reportError();

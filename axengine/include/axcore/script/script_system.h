@@ -16,11 +16,11 @@ read the license and understand and accept it fully.
 #define AX_DECLARE_CLASS(classname, baseclass) public: \
 	typedef classname ThisClass; \
 	typedef baseclass BaseClass; \
-	virtual ::Axon::MetaInfo *classname::getMetaInfo() const { \
+	virtual ::Axon::CppClass *classname::getMetaInfo() const { \
 		return classname::registerMetaInfo(); \
 	} \
-	static ::Axon::MetaInfo *classname::registerMetaInfo() { \
-		static ::Axon::MetaInfo *typeinfo; \
+	static ::Axon::CppClass *classname::registerMetaInfo() { \
+		static ::Axon::CppClass *typeinfo; \
 		if (!typeinfo) { \
 			typeinfo = new ::Axon::MetaInfo_<classname>(#classname, BaseClass::registerMetaInfo());
 
@@ -83,7 +83,7 @@ public:
 	int nextNameIndex(const String &str);
 	String generateObjectName(const String &str);
 
-	void registerType(MetaInfo *metainfo);
+	void registerType(CppClass *metainfo);
 #if 0
 	void registerClass(const String &self, const String &base);
 #endif
@@ -110,13 +110,16 @@ public:
 #endif
 	const String &getPackagePath() { return m_packagePath; }
 
+	CppClass *findMetaInfo(const char *name) const;
+	ScriptClass *findScriptClass(const char *name) const;
+
 	static ScriptValue createMetaClosure(Member *method);
 
 protected:
-	void linkMetaInfoToClassInfo(MetaInfo *ti);
+	void linkCppToScript(CppClass *ti);
 
 private:
-	typedef Dict<String, SqClass*> SqClassDict;
+	typedef Dict<String, ScriptClass*> SqClassDict;
 	SqClassDict m_sqClassReg;
 
 #if 0
@@ -124,7 +127,7 @@ private:
 	ClassInfoDict m_classInfoReg;
 #endif
 
-	typedef Dict<const char*, MetaInfo*, hash_cstr, equal_cstr> MetaInfoDict;
+	typedef Dict<const char*, CppClass*, hash_cstr, equal_cstr> MetaInfoDict;
 	MetaInfoDict m_typeInfoReg;
 
 	typedef Dict<String,int> StringIntDict;

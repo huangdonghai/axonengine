@@ -58,7 +58,7 @@ void ActorPanel::doNotify(IObservable *subject, int arg ) {
 		ui.scriptProp->initScriptProp(node );
 		ui.objectName->setText(u2q(node->get_objectName()) );
 		ui.objectColor->setColor(actor->getColor() );
-		const SqClass *ci = actor->getGameObject()->getScriptClass();
+		const ScriptClass *ci = actor->getGameObject()->getScriptClass();
 		if (ci ) {
 			ui.scriptClass->setText(u2q(ci->getName()) );
 			QString filename = u2q("scripts/"+ ci->getName() );

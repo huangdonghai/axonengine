@@ -230,6 +230,10 @@ sqObject sqVM::getScoped(const char *name)
 	so.attachToStackObject(m_vm, -1);
 	sq_pop(m_vm, 1);
 
+	// if not name, return root table
+	if (!name || !name[0])
+		return so;
+
 	return getScoped(so, name);
 }
 

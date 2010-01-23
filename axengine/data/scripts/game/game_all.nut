@@ -6,6 +6,8 @@
 Game.Effect <- {};
 Game.Physics <- {};
 
+::dofile("game/player.nut");
+
 ::dofile("game/effect/light.nut");
 ::dofile("game/effect/sound.nut");
 
