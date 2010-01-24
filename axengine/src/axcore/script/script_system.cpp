@@ -962,17 +962,17 @@ String ScriptSystem::generateObjectName(const String &str)
 	return result;
 }
 
-void ScriptSystem::registerType(CppClass *metainfo)
+void ScriptSystem::registerCppClass(CppClass *metainfo)
 {
-	m_typeInfoReg[metainfo->getName()] = metainfo;
+	m_cppClassReg[metainfo->getName()] = metainfo;
 
 	linkCppToScript(metainfo);
 }
 
 Object *ScriptSystem::createObject(const char *classname)
 {
-	SqClassDict::const_iterator cit = m_sqClassReg.find(classname);
-	if (cit != m_sqClassReg.end()) {
+	ScriptClassDict::const_iterator cit = m_scriptClassReg.find(classname);
+	if (cit != m_scriptClassReg.end()) {
 		ScriptClass *ci = cit->second;
 
 		if (!ci->m_cppClass) {
@@ -988,9 +988,9 @@ Object *ScriptSystem::createObject(const char *classname)
 		return obj;
 	}
 
-	MetaInfoDict::const_iterator it = m_typeInfoReg.find(classname);
+	CppClassDict::const_iterator it = m_cppClassReg.find(classname);
 
-	if (it == m_typeInfoReg.end()) {
+	if (it == m_cppClassReg.end()) {
 		return nullptr;
 	}
 
@@ -1007,7 +1007,7 @@ Object *ScriptSystem::cloneObject(const Object *obj)
 		result = createObject(obj->getScriptClass()->m_name.c_str());
 
 	if (!result)
-		result = obj->getMetaInfo()->createObject();
+		result = obj->getCppClass()->createObject();
 
 	if (!result)
 		Errorf("can't create object");
@@ -1118,22 +1118,22 @@ void ScriptSystem::registerClass(const String &self, const String &base)
 #endif
 
 
-void ScriptSystem::registerSqClass( const String &name )
+void ScriptSystem::registerScriptClass( const String &name )
 {
-	SqClassDict::iterator it = m_sqClassReg.find(name);
+	ScriptClassDict::iterator it = m_scriptClassReg.find(name);
 
-	if (it != m_sqClassReg.end())
+	if (it != m_scriptClassReg.end())
 		Errorf("Class already registered");
 
 	ScriptClass * sqclass = new ScriptClass(name);
-	m_sqClassReg[name] = sqclass;
+	m_scriptClassReg[name] = sqclass;
 }
 
 void ScriptSystem::linkCppToScript(CppClass *mi)
 {
-	SqClassDict::iterator it = m_sqClassReg.begin();
+	ScriptClassDict::iterator it = m_scriptClassReg.begin();
 
-	for (; it != m_sqClassReg.end(); ++it) {
+	for (; it != m_scriptClassReg.end(); ++it) {
 		ScriptClass *ci = it->second;
 		if (ci->m_cppName == mi->m_name) {
 			ci->m_cppClass = mi;
@@ -1144,14 +1144,14 @@ void ScriptSystem::linkCppToScript(CppClass *mi)
 
 void ScriptSystem::getClassList(const char *prefix, bool sort, StringSeq &result) const
 {
-	SqClassDict::const_iterator it = m_sqClassReg.begin();
+	ScriptClassDict::const_iterator it = m_scriptClassReg.begin();
 	size_t prefixlen = 0;
 	
 	if (prefix) {
 		prefixlen = strlen(prefix);
 	}
 
-	for (; it != m_sqClassReg.end(); ++it) {
+	for (; it != m_scriptClassReg.end(); ++it) {
 		ScriptClass *ci = it->second;
 		if (prefixlen) {
 			if (strncmp(prefix, ci->m_name.c_str(), prefixlen) != 0) {
@@ -1188,14 +1188,14 @@ ScriptValue ScriptSystem::createMetaClosure(Member *method)
 
 ScriptClass *ScriptSystem::findScriptClass(const char *name) const
 {
-	SqClassDict::const_iterator it = m_sqClassReg.find(name);
+	ScriptClassDict::const_iterator it = m_scriptClassReg.find(name);
 
 	return it->second;
 }
 
-CppClass * ScriptSystem::findMetaInfo(const char *name) const
+CppClass * ScriptSystem::findCppClass(const char *name) const
 {
-	return m_typeInfoReg.find(name)->second;
+	return m_cppClassReg.find(name)->second;
 }
 
 AX_END_NAMESPACE

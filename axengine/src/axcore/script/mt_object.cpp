@@ -55,7 +55,7 @@ _MEMBER_FUNCTION_IMPL(Object_c, _get)
 	StackHandler sa(v);
 	_CHECK_SELF_OBJ();
 	const SQChar *s = sa.getString(2);
-	CppClass *metaInfo = self->getMetaInfo();
+	CppClass *metaInfo = self->getCppClass();
 	Member *member = metaInfo->findMember(s);
 
 	if (!member) return SQ_ERROR;
@@ -80,7 +80,7 @@ _MEMBER_FUNCTION_IMPL(Object_c, _set)
 	StackHandler sa(v);
 	_CHECK_SELF_OBJ();
 	const SQChar *s = sa.getString(2);
-	CppClass *metaInfo = self->getMetaInfo();
+	CppClass *metaInfo = self->getCppClass();
 	Member *member = metaInfo->findMember(s);
 
 	if (!member || !member->isProperty()) return SQ_ERROR;

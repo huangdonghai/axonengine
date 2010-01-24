@@ -121,7 +121,7 @@ void GameObject::writeXml(File *f, int indent/*=0 */)
 	String indstr(indent*2, ' ');
 #define INDENT if (indent) f->printf("%s", indstr.c_str());
 
-	INDENT; f->printf("<node className=\"%s\"\n", this->getMetaInfo()->getName());
+	INDENT; f->printf("<node className=\"%s\"\n", this->getCppClass()->getName());
 #if 0
 	// write properties
 	TypeInfo *typeinfo = getTypeInfo();

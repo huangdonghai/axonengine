@@ -16,13 +16,13 @@ read the license and understand and accept it fully.
 #define AX_DECLARE_CLASS(classname, baseclass) public: \
 	typedef classname ThisClass; \
 	typedef baseclass BaseClass; \
-	virtual ::Axon::CppClass *classname::getMetaInfo() const { \
-		return classname::registerMetaInfo(); \
+	virtual ::Axon::CppClass *classname::getCppClass() const { \
+		return classname::registerCppClass(); \
 	} \
-	static ::Axon::CppClass *classname::registerMetaInfo() { \
+	static ::Axon::CppClass *classname::registerCppClass() { \
 		static ::Axon::CppClass *typeinfo; \
 		if (!typeinfo) { \
-			typeinfo = new ::Axon::CppClass_<classname>(#classname, BaseClass::registerMetaInfo());
+			typeinfo = new ::Axon::CppClass_<classname>(#classname, BaseClass::registerCppClass());
 
 #define AX_CONSTPROP(name) typeinfo->addProperty(#name, &ThisClass::get_##name);
 #define AX_PROP(name) typeinfo->addProperty(#name, &ThisClass::get_##name, &ThisClass::set_##name);
@@ -31,13 +31,13 @@ read the license and understand and accept it fully.
 #define AX_METHOD(name) typeinfo->addMethod(#name, &ThisClass::name);
 
 #define AX_END_CLASS() \
-				g_scriptSystem->registerType(typeinfo); \
+				g_scriptSystem->registerCppClass(typeinfo); \
 			} \
 		return typeinfo; \
 	}
 
 
-#define AX_REGISTER_CLASS(cppname) cppname::registerMetaInfo();
+#define AX_REGISTER_CLASS(cppname) cppname::registerCppClass();
 
 
 AX_BEGIN_NAMESPACE
@@ -60,57 +60,27 @@ public:
 	void initialize();
 	void finalize();
 
-#if 0
-	void executeString(const String &text);
-	void executeString(const char *text);
-	void executeFile(const String &filename);
-#endif
 	void executeLine(const char *text);
 
-#if 0
-	bool invokeLuaMethod(const char *methodName, VariantSeq &stack, int nResult);
-	bool invokeLuaMethod(const char *method, Variant &arg1);
-	bool invokeLuaScoped(const char *text,VariantSeq &stack, int nResult);
-#endif
 	Object *createObject(const char *classname);
 	Object *cloneObject(const Object *obj);
-#if 0
-	Object *findObject(const String &objectname);
-#endif
+
 	// for automatic name gen
 	int getNameIndex(const String &str) const;
 	void updateNameIndex(const String &str);
 	int nextNameIndex(const String &str);
 	String generateObjectName(const String &str);
 
-	void registerType(CppClass *metainfo);
-#if 0
-	void registerClass(const String &self, const String &base);
-#endif
-	void registerSqClass(const String &name);
+	void registerCppClass(CppClass *metainfo);
+	void registerScriptClass(const String &name);
 
 	void getClassList(const char *prefix, bool sort, StringSeq &result) const;
 
-#if 0
-	//
-	// read from lua state
-	//
-	void beginRead();
-	Variant readField(const char *objname, const char *fieldname);
-	Variant readField(const char *objname);
-	void endRead();
-#endif
 	// connect signal and slot
 	bool connect(Object *sender, const String &sig, Object *recevier, const String &slot);
 	bool disconnect(Object *sender, const String &sig, Object *recevier, const String &slot);
 
-#if 0
-	// immediately read
-	Variant readFieldImmediately(const char *objname, const char *fieldname);
-#endif
-	const String &getPackagePath() { return m_packagePath; }
-
-	CppClass *findMetaInfo(const char *name) const;
+	CppClass *findCppClass(const char *name) const;
 	ScriptClass *findScriptClass(const char *name) const;
 
 	static ScriptValue createMetaClosure(Member *method);
@@ -119,21 +89,14 @@ protected:
 	void linkCppToScript(CppClass *ti);
 
 private:
-	typedef Dict<String, ScriptClass*> SqClassDict;
-	SqClassDict m_sqClassReg;
+	typedef Dict<String, ScriptClass*> ScriptClassDict;
+	ScriptClassDict m_scriptClassReg;
 
-#if 0
-	typedef Dict<String,ClassInfo*>	ClassInfoDict;
-	ClassInfoDict m_classInfoReg;
-#endif
-
-	typedef Dict<const char*, CppClass*, hash_cstr, equal_cstr> MetaInfoDict;
-	MetaInfoDict m_typeInfoReg;
+	typedef Dict<const char*, CppClass*, hash_cstr, equal_cstr> CppClassDict;
+	CppClassDict m_cppClassReg;
 
 	typedef Dict<String,int> StringIntDict;
 	StringIntDict m_objectNameGen;
-
-	String m_packagePath;
 
 	bool m_isReading;
 	int m_readTop;
@@ -142,7 +105,7 @@ private:
 
 template< class T >
 T object_cast(Object *obj) {
-	if (obj->inherits(T(0)->registerMetaInfo()->getName())) {
+	if (obj->inherits(T(0)->registerCppClass()->getName())) {
 		return (T)obj;
 	}
 	return nullptr;

@@ -77,7 +77,8 @@ CreationPanel::CreationPanel(QWidget *parent)
 	g_mapContext->attachObserver(this);
 }
 
-CreationPanel::~CreationPanel() {
+CreationPanel::~CreationPanel()
+{
 	if (m_renderActor) {
 		ui.preview->getRenderWorld()->removeEntity(m_renderActor);
 		delete m_renderActor;
@@ -85,7 +86,8 @@ CreationPanel::~CreationPanel() {
 	g_mapContext->detachObserver(this);
 }
 
-void CreationPanel::doNotify(IObservable *subject, int arg) {
+void CreationPanel::doNotify(IObservable *subject, int arg)
+{
 	if (subject != g_mapContext) {
 		return;
 	}
@@ -227,7 +229,8 @@ void CreationPanel::on_selectTree_itemDoubleClicked(QTreeWidgetItem *item,int)
 #endif // AX_CONFIG_OPTION_USE_SPEEDTREE_40
 }
 
-static QTreeWidgetItem *findOrCreate(QTreeWidgetItem *item, const QString &fullname, const QString &name, bool isdir) {
+static QTreeWidgetItem *findOrCreate(QTreeWidgetItem *item, const QString &fullname, const QString &name, bool isdir)
+{
 	QTreeWidgetItem *found = 0;
 
 	for (int i=0; i<item->childCount(); i++) {
@@ -257,7 +260,8 @@ static QTreeWidgetItem *findOrCreate(QTreeWidgetItem *item, const QString &fulln
 	return found;
 }
 
-void CreationPanel::initEntityList() {
+void CreationPanel::initEntityList()
+{
 	StringSeq entlist;
 	g_scriptSystem->getClassList("Game.", true, entlist);
 

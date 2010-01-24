@@ -385,13 +385,21 @@ Variant ScriptProp::getProperty(const Object *obj)
 	return result;
 }
 #endif
-bool sqlesser(const SqProperty *a, const SqProperty *b)
-{
-	String gan = a->getGroupName();
-	String gbn = b->getGroupName();
 
-	if (gan == gbn) return a->getRealName() < b->getRealName();
-	return gan < gbn;
+static String getsortkey(const SqProperty *prop)
+{
+	if (prop->getGroup())
+		return prop->getGroup()->getRealName() + prop->getRealName();
+	
+	if (prop->getPropKind() == Member::kGroup)
+		return prop->getRealName();
+
+	return String(" ") + prop->getRealName();
+}
+
+static bool sqlesser(const SqProperty *a, const SqProperty *b)
+{
+	return getsortkey(a) < getsortkey(b);
 }
 
 SqProperty::SqProperty(const sqObject &key, const sqObject &val, const sqObject &attr )
@@ -438,6 +446,7 @@ bool SqProperty::setProperty(Object *obj, const ConstRef &arg)
 ScriptClass::ScriptClass(const String &name)
 	: m_cppClass(0)
 {
+	m_name = name;
 	HSQUIRRELVM vm = VM;
 
 	sqObject so = g_mainVM->getScoped(name.c_str());
@@ -500,6 +509,7 @@ void ScriptClass::addProperty(const sqObject &key, const sqObject &val, const sq
 	if (it == m_propDict.end()) {
 		group = new SqProperty(groupName, Member::kGroup);
 		m_propDict[groupName] = group;
+		m_properties.push_back(group);
 	} else {
 		group = it->second;
 	}

@@ -21,9 +21,9 @@ public:
 	Object();
 	virtual ~Object();
 
-	virtual CppClass *getMetaInfo() const;
+	virtual CppClass *getCppClass() const;
 	virtual String getNamespace() const { return String(); }
-	static CppClass *registerMetaInfo();
+	static CppClass *registerCppClass();
 	const ScriptClass *getScriptClass() const { return m_scriptClass; }
 
 	Member *findMember(const char *name) const;

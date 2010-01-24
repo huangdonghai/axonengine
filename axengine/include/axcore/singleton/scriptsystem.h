@@ -16,13 +16,13 @@ read the license and understand and accept it fully.
 #define AX_DECLARE_CLASS(classname, baseclass) public: \
 	typedef classname ThisClass; \
 	typedef baseclass BaseClass; \
-	virtual ::Axon::MetaInfo *classname::getMetaInfo() const { \
-		return classname::registerMetaInfo(); \
+	virtual ::Axon::MetaInfo *classname::getCppClass() const { \
+		return classname::registerCppClass(); \
 	} \
-	static ::Axon::MetaInfo *classname::registerMetaInfo() { \
+	static ::Axon::MetaInfo *classname::registerCppClass() { \
 		static ::Axon::MetaInfo *typeinfo; \
 		if (!typeinfo) { \
-			typeinfo = new ::Axon::MetaInfo_<classname>(#classname, BaseClass::registerMetaInfo());
+			typeinfo = new ::Axon::MetaInfo_<classname>(#classname, BaseClass::registerCppClass());
 
 #define AX_CONSTPROP(name) typeinfo->addProperty(#name, &ThisClass::get_##name);
 #define AX_PROP(name) typeinfo->addProperty(#name, &ThisClass::get_##name, &ThisClass::set_##name);
@@ -31,13 +31,13 @@ read the license and understand and accept it fully.
 #define AX_METHOD(name) typeinfo->addMethod(#name, &ThisClass::name);
 
 #define AX_END_CLASS() \
-				g_scriptSystem->registerType(typeinfo); \
+				g_scriptSystem->registerCppClass(typeinfo); \
 			} \
 		return typeinfo; \
 	}
 
 
-#define AX_REGISTER_CLASS(cppname) cppname::registerMetaInfo();
+#define AX_REGISTER_CLASS(cppname) cppname::registerCppClass();
 
 
 AX_BEGIN_NAMESPACE
@@ -118,7 +118,7 @@ public:
 	int nextNameIndex(const String &str);
 	String generateObjectName(const String &str);
 
-	void registerType(MetaInfo *metainfo);
+	void registerCppClass(MetaInfo *metainfo);
 	void registerClass(const String &self, const String &base);
 
 	void getClassList(const char *prefix, bool sort, StringSeq &result) const;
@@ -147,8 +147,8 @@ private:
 	typedef Dict<String,ClassInfo*>	ClassInfoDict;
 	ClassInfoDict m_classInfoReg;
 
-	typedef Dict<const char*, MetaInfo*, hash_cstr, equal_cstr> MetaInfoDict;
-	MetaInfoDict m_typeInfoReg;
+	typedef Dict<const char*, MetaInfo*, hash_cstr, equal_cstr> CppClassDict;
+	CppClassDict m_cppClassReg;
 
 	typedef Dict<String,int> StringIntDict;
 	StringIntDict m_objectNameGen;

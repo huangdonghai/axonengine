@@ -30,7 +30,7 @@ Object::~Object()
 
 Member *Object::findMember(const char *name) const
 {
-	CppClass *typeinfo = getMetaInfo();
+	CppClass *typeinfo = getCppClass();
 
 	while (typeinfo) {
 		Member *member = typeinfo->findMember(name);
@@ -44,12 +44,12 @@ Member *Object::findMember(const char *name) const
 	return m_scriptClass->findMember(name);
 }
 
-CppClass *Object::getMetaInfo() const
+CppClass *Object::getCppClass() const
 {
-	return Object::registerMetaInfo();
+	return Object::registerCppClass();
 }
 
-CppClass *Object::registerMetaInfo()
+CppClass *Object::registerCppClass()
 {
 	static CppClass *ms_metaInfo = 0;
 
@@ -57,7 +57,7 @@ CppClass *Object::registerMetaInfo()
 		ms_metaInfo = new CppClass_<Object>("Object", nullptr);
 		ms_metaInfo->addProperty("objectName", &Object::get_objectName, &Object::set_objectName);
 
-		g_scriptSystem->registerType(ms_metaInfo);
+		g_scriptSystem->registerCppClass(ms_metaInfo);
 	}
 	return ms_metaInfo;
 }
@@ -76,7 +76,7 @@ String Object::get_objectName() const
 
 bool Object::inherits(const char *cls) const
 {
-	CppClass *typeinfo = getMetaInfo();
+	CppClass *typeinfo = getCppClass();
 
 	for (; typeinfo; typeinfo=typeinfo->getBase()) {
 		if (Strequ(cls, typeinfo->getName())) {
@@ -138,7 +138,7 @@ void Object::writeProperties(File *f, int indent) const
 #define INDENT if (indent) f->printf("%s", indstr.c_str());
 
 	// write properties
-	CppClass *typeinfo = getMetaInfo();
+	CppClass *typeinfo = getCppClass();
 
 	Variant prop;
 	while (typeinfo) {
@@ -187,12 +187,12 @@ void Object::readProperties(const TiXmlElement *node)
 void Object::copyPropertiesFrom(const Object *rhs)
 {
 	// write properties
-	CppClass *typeinfo = rhs->getMetaInfo();
+	CppClass *typeinfo = rhs->getCppClass();
 	Variant prop;
 
 	while (typeinfo) {
 		// don't copy objectname
-		if (typeinfo == Object::registerMetaInfo())
+		if (typeinfo == Object::registerCppClass())
 			break;
 
 		const MemberSeq &members = typeinfo->getMembers();
@@ -330,7 +330,7 @@ bool Object::invokeMethod(const char *methodName, const Ref &ret,
 							const ConstRef &arg0, const ConstRef &arg1, const ConstRef &arg2,
 							const ConstRef &arg3, const ConstRef &arg4)
 {
-	CppClass *mi = getMetaInfo();
+	CppClass *mi = getCppClass();
 	if (!mi) return false;
 
 	Member *member = mi->findMember(methodName);

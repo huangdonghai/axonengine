@@ -73,7 +73,7 @@ static SQInteger registerClass(HSQUIRRELVM v)
 	StackHandler sa(v);
 	const char *name = sa.getString(2);
 
-	g_scriptSystem->registerSqClass(name);
+	g_scriptSystem->registerScriptClass(name);
 
 	return SQ_OK;
 }

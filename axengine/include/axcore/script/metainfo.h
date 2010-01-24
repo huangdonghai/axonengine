@@ -725,8 +725,7 @@ public:
 	const String &getRealName() const
 	{ return m_realName; }
 
-	String getGroupName() const
-	{ if (m_group) return m_group->getRealName(); else return String(); }
+	SqProperty *getGroup() const { return m_group; }
 
 private:
 	String m_realName;

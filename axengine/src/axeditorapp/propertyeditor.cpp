@@ -261,7 +261,7 @@ void PropertyEditor::initFromObject(Object *obj) {
 
 	PropertyCollection *collection = new PropertyCollection(QLatin1String("<root>"));
 
-	CppClass *typeinfo = obj->getMetaInfo();
+	CppClass *typeinfo = obj->getCppClass();
 	Variant prop;
 
 	for (; typeinfo; typeinfo = typeinfo->getBase()) {
