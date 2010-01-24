@@ -26,7 +26,7 @@ Player::~Player()
 
 void Player::doThink()
 {
-	const UserInput *userinput = g_gameSystem->getUserInput(m_entityNum);
+	const UserInput *userinput = g_gameSystem->getUserInput(m_actorNum);
 	m_physicsPlayer->runFrame(*userinput, m_world->getFrameTime());
 
 	m_body->setMatrix(m_physicsPlayer->getMatrix());

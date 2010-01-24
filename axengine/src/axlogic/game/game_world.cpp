@@ -18,7 +18,7 @@ GameWorld::GameWorld()
 	m_onlyClient = false;
 	m_onlyServer = false;
 	m_multiPlayer = false;
-	TypeZeroArray(m_entities);
+	TypeZeroArray(m_actors);
 	TypeZeroArray(m_spawnIds);
 
 	m_numEntities = ActorNum::MAX_CLIENTS;
@@ -26,7 +26,7 @@ GameWorld::GameWorld()
 	m_numClients = 0;
 
 	Landscape *landscape = new Landscape(this);
-	m_entities[ActorNum::LANDSCAPE] = landscape;
+	m_actors[ActorNum::LANDSCAPE] = landscape;
 
 	m_renderWorld = new RenderWorld();
 	m_renderWorld->initialize(2048);
@@ -64,11 +64,11 @@ void GameWorld::runFrame(int what, int frametime)
 	}
 
 	for (int i = 0; i < m_numEntities; i++) {
-		if (!m_entities[i]) {
+		if (!m_actors[i]) {
 			continue;
 		}
 
-		m_entities[i]->doThink();
+		m_actors[i]->doThink();
 	}
 }
 
@@ -76,8 +76,8 @@ void GameWorld::drawFrame()
 {
 	m_lastCamera.setTime(m_lasttime);
 
-	if (m_entities[0]) {
-		Player *player = static_cast<Player*>(m_entities[0]);
+	if (m_actors[0]) {
+		Player *player = static_cast<Player*>(m_actors[0]);
 		Matrix player3rd = player->getThirdPersonMatrix();
 		m_lastCamera.setOrigin(player3rd.origin);
 		m_lastCamera.setViewAxis(player3rd.axis);
@@ -95,8 +95,8 @@ void GameWorld::drawScene(const RenderCamera &camera)
 	m_soundWorld->setListener(Matrix(camera.getViewAxis(), camera.getOrigin()), Vector3(0,0,0));
 	g_soundSystem->setWorld(m_soundWorld);
 
-	if (m_entities[0] && !g_gameSystem->isRunning()) {
-		Player *player = static_cast<Player*>(m_entities[0]);
+	if (m_actors[0] && !g_gameSystem->isRunning()) {
+		Player *player = static_cast<Player*>(m_actors[0]);
 		player->setMatrix(Matrix(camera.getViewAxis(), camera.getOrigin()));
 	}
 
@@ -105,35 +105,35 @@ void GameWorld::drawScene(const RenderCamera &camera)
 	g_renderSystem->endScene();
 }
 
-void GameWorld::addActor(GameActor *entity)
+void GameWorld::addActor(GameActor *actor)
 {
 	int start = m_firstFreeEntity;
 	int end = ActorNum::MAX_NORMAL;
 
-	if (entity->isPlayer()) {
+	if (actor->isPlayer()) {
 		start = m_numClients;
 		end = ActorNum::MAX_CLIENTS;
 	}
 
 	int i = start;
 	while (i < end) {
-		if (!m_entities[i])
+		if (!m_actors[i])
 			break;
 
 		i++;
 	}
 
 	if (i == end) {
-		Errorf("no free entity's slot to add entity");
+		Errorf("no free actor's slot to add actor");
 		return;
 	}
 
-	m_entities[i] = entity;
-	entity->m_entityNum = i;
-	entity->m_world = this;
-	entity->doSpawn();
+	m_actors[i] = actor;
+	actor->m_actorNum = i;
+	actor->m_world = this;
+	actor->doSpawn();
 
-	if (entity->isPlayer()) {
+	if (actor->isPlayer()) {
 		m_numClients = std::max(i+1, m_numClients);
 	} else {
 		m_numEntities = std::max(i+1, m_numEntities);
@@ -141,20 +141,20 @@ void GameWorld::addActor(GameActor *entity)
 	}
 }
 
-void GameWorld::removeActor(GameActor *entity)
+void GameWorld::removeActor(GameActor *actor)
 {
-	int num = entity->m_entityNum;
+	int num = actor->m_actorNum;
 	if (num < 0) {
-		Errorf("not a valid entity number");
+		Errorf("not a valid actor number");
 		return;
 	}
 	AX_ASSERT(num >= 0 && num < ActorNum::MAX_ACTORS);
 
-	entity->doRemove();
+	actor->doRemove();
 
-	m_entities[num] = nullptr;
-	entity->m_entityNum = -1;
-	entity->m_world = nullptr;
+	m_actors[num] = nullptr;
+	actor->m_actorNum = -1;
+	actor->m_world = nullptr;
 
 	m_firstFreeEntity = num;
 }
@@ -232,8 +232,8 @@ void GameWorld::setWindow(RenderTarget *targetWin)
 void GameWorld::restoreActors()
 {
 	for (int i = ActorNum::MAX_CLIENTS; i < m_numEntities; i++) {
-		if (m_entities[i]) {
-			m_entities[i]->doPropertyChanged();
+		if (m_actors[i]) {
+			m_actors[i]->doPropertyChanged();
 		}
 	}
 

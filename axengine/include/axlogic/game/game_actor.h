@@ -93,7 +93,7 @@ protected:
 	void invoke_onThink();
 
 protected:
-	ActorNum m_entityNum;
+	ActorNum m_actorNum;
 	GameWorld *m_world;			// world the entity has added to
 
 private:

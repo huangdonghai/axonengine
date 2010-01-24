@@ -260,6 +260,13 @@ bool sqObject::setValue(const SQChar *key, bool b)
 	_SETVALUE_STR_END
 }
 
+bool sqObject::setValue( const SQChar *key, const ConstRef &ref )
+{
+	_SETVALUE_STR_BEGIN
+		sqVM::pushMeta(VM, ref);
+	_SETVALUE_STR_END
+}
+
 // === BEGIN User Pointer, User Data ===
 
 bool sqObject::setUserPointer(const SQChar * key, SQUserPointer up)
@@ -722,64 +729,10 @@ bool sqObject::toBool() const
 	return m_obj._unVal.nInteger ? true : false;
 }
 
-void sqObject::getVariant(Variant &result) const
+void sqObject::toVariant(Variant &result) const
 {
-	switch (m_obj._type) {
-	case OT_NULL:
-		return;
-	case OT_INTEGER:
-		result.init(Variant::kInt, &m_obj._unVal.nInteger);
-		return;
-	case OT_FLOAT:
-		result.init(Variant::kFloat, &m_obj._unVal.fFloat);
-		return;
-	case OT_BOOL:
-		result.init(Variant::kBool, &m_obj._unVal.nInteger);
-		return;
-	case OT_STRING:
-		{
-			result.init(Variant::kString);
-			result.ref<String>() = sq_objtostring(&m_obj);
-		}
-		return;
-	case OT_TABLE:
-	case OT_ARRAY:
-	case OT_USERDATA:
-	case OT_CLOSURE:
-	case OT_NATIVECLOSURE:
-	case OT_GENERATOR:
-	case OT_USERPOINTER:
-	case OT_THREAD:
-	case OT_FUNCPROTO:
-	case OT_CLASS:
-	case OT_WEAKREF:
-		{
-			result.init(Variant::kScriptValue);
-			result.ref<ScriptValue>().getSqObject() = m_obj;
-		}
-		return;
-	case OT_INSTANCE:
-		{
-			SquirrelClassDecl *typetag = 0;
-			void *userdata = getInstanceUP(0);
-			sq_getobjtypetag(&m_obj, (SQUserPointer *)&typetag);
-
-			if (typetag == &__Vector3_decl) {
-				result.init(Variant::kVector3, userdata, Variant::InitRef);
-			} else if (typetag == &__Color3_decl) {
-				result.init(Variant::kColor3, userdata, Variant::InitRef);
-			} else if (typetag == &__Point_decl) {
-				result.init(Variant::kPoint, userdata, Variant::InitRef);
-			} else if (typetag == &__Rect_decl) {
-				result.init(Variant::kRect, userdata, Variant::InitRef);
-			} else if (typetag == &__Matrix_decl) {
-				result.init(Variant::kMatrix, userdata, Variant::InitRef);
-			} else if (typetag == &__Object_c_decl) {
-				result.init(Variant::kObject, userdata, Variant::InitRef);
-			}
-		}
-		return;
-	}
+	sq_pushobject(VM, m_obj);
+	sqVM::popMeta(VM, result);
 	return;
 }
 
@@ -791,122 +744,16 @@ sqObject& sqObject::operator=(const sqObject &o)
 	return *this;
 }
 
-void StackHandler::getRawData(int idx, Variant &result)
+void StackHandler::getVariant(int idx, Variant &result)
 {
-	sqObject obj;
-	obj.attachToStackObject(v, idx);
-	obj.getVariant(result);
-	return;
-
-	// make sure result is emtpy first
-	AX_ASSERT(result.getTypeId() == Variant::kVoid);
-
-	HSQOBJECT t;
-	sq_getstackobj(VM, idx, &t);
-
-	switch (t._type) {
-	case OT_NULL:
-		return;
-	case OT_INTEGER:
-		result.init(Variant::kInt, &t._unVal.nInteger);
-		return;
-	case OT_FLOAT:
-		result.init(Variant::kFloat, &t._unVal.fFloat);
-		return;
-	case OT_BOOL:
-		result.init(Variant::kBool, &t._unVal.nInteger);
-		return;
-	case OT_STRING:
-		{
-			result.init(Variant::kString);
-			result.ref<String>() = sq_objtostring(&t);
-		}
-		return;
-	case OT_TABLE:
-	case OT_ARRAY:
-	case OT_USERDATA:
-	case OT_CLOSURE:
-	case OT_NATIVECLOSURE:
-	case OT_GENERATOR:
-	case OT_USERPOINTER:
-	case OT_THREAD:
-	case OT_FUNCPROTO:
-	case OT_CLASS:
-	case OT_WEAKREF:
-		{
-			result.init(Variant::kScriptValue);
-			result.ref<ScriptValue>().getSqObject() = t;
-		}
-		return;
-	case OT_INSTANCE:
-		{
-			SquirrelClassDecl *typetag;
-			void *userdata;
-			sq_getobjtypetag(&t, (SQUserPointer *)&typetag);
-			sq_getinstanceup(v, idx, &userdata, typetag);
-
-			if (typetag == &__Vector3_decl) {
-				result.init(Variant::kVector3, userdata, Variant::InitRef);
-			} else if (typetag == &__Color3_decl) {
-				result.init(Variant::kColor3, userdata, Variant::InitRef);
-			} else if (typetag == &__Point_decl) {
-				result.init(Variant::kPoint, userdata, Variant::InitRef);
-			} else if (typetag == &__Rect_decl) {
-				result.init(Variant::kRect, userdata, Variant::InitRef);
-			} else if (typetag == &__Matrix_decl) {
-				result.init(Variant::kMatrix, userdata, Variant::InitRef);
-			} else if (typetag == &__Object_c_decl) {
-				result.init(Variant::kObject, userdata, Variant::InitRef);
-			}
-		}
-		return;
-	}
+	sqVM::getMeta(v, idx, result);
 	return;
 }
 
-int StackHandler::retRawData(const ConstRef &arg)
+int StackHandler::Return(const ConstRef &arg)
 {
-	if (arg.getTypeId() == Variant::kVoid)
-		return 0;
-
-	switch (arg.getTypeId()) {
-	case Variant::kVoid:
-		return 0;
-	case Variant::kBool:
-		sq_pushbool(v, arg.ref<bool>());
-		return 1;
-	case Variant::kInt:
-		sq_pushinteger(v, arg.ref<int>());
-		return 1;
-	case Variant::kFloat:
-		sq_pushfloat(v, arg.ref<float>());
-		return 1;
-	case Variant::kString:
-		sq_pushstring(v, arg.ref<String>().c_str(), arg.ref<String>().size());
-		return 1;
-	case Variant::kObject:
-		return 0;
-	case Variant::kVector3:
-		push_Vector3(v, arg.ref<Vector3>());
-		return 1;
-	case Variant::kColor3:
-		push_Color3(v, arg.ref<Color3>());
-		return 1;
-	case Variant::kPoint:
-		push_Point(v, arg.ref<Point>());
-		return 1;
-	case Variant::kRect:
-		push_Rect(v, arg.ref<Rect>());
-		return 1;
-	case Variant::kMatrix:
-		push_Matrix(v, arg.ref<Matrix>());
-		return 1;
-	case Variant::kScriptValue:
-		sq_pushobject(v, arg.ref<ScriptValue>().getSqObject());
-		return 1;
-	}
-
-	return 0;
+	sqVM::pushMeta(v, arg);
+	return 1;
 }
 
 

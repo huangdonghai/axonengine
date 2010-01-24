@@ -305,4 +305,134 @@ void sqVM::reportError()
 	Errorf("script error: %s", desc);
 }
 
+void sqVM::pushMeta(HSQUIRRELVM v, const ConstRef &arg)
+{
+	switch (arg.getTypeId()) {
+	case Variant::kVoid:
+		sq_pushnull(v);
+		return;
+	case Variant::kBool:
+		sq_pushbool(v, arg.ref<bool>());
+		return;
+	case Variant::kInt:
+		sq_pushinteger(v, arg.ref<int>());
+		return;
+	case Variant::kFloat:
+		sq_pushfloat(v, arg.ref<float>());
+		return;
+	case Variant::kString:
+		sq_pushstring(v, arg.ref<String>().c_str(), arg.ref<String>().size());
+		return;
+	case Variant::kObject:
+		sq_pushobject(v, arg.ref<ObjectStar>()->getScriptInstance().getSqObject());
+		sq_weakref(v, -1);
+		sq_remove(v, -2);
+		return;
+	case Variant::kVector3:
+		push_Vector3(v, arg.ref<Vector3>());
+		return;
+	case Variant::kColor3:
+		push_Color3(v, arg.ref<Color3>());
+		return;
+	case Variant::kPoint:
+		push_Point(v, arg.ref<Point>());
+		return;
+	case Variant::kRect:
+		push_Rect(v, arg.ref<Rect>());
+		return;
+	case Variant::kMatrix:
+		push_Matrix(v, arg.ref<Matrix>());
+		return;
+	case Variant::kScriptValue:
+		sq_pushobject(v, arg.ref<ScriptValue>().getSqObject());
+		return;
+	}
+
+	Errorf("don't support type");
+}
+
+void sqVM::popMeta( HSQUIRRELVM v, Variant &val )
+{
+	getMeta(v, -1, val);
+	sq_pop(v, 1);
+}
+
+void sqVM::getMeta(HSQUIRRELVM v, int idx, Variant &result)
+{
+	// make sure result is emtpy first
+	AX_ASSERT(result.getTypeId() == Variant::kVoid);
+
+	HSQOBJECT t;
+	sq_getstackobj(VM, idx, &t);
+
+	switch (t._type) {
+	case OT_NULL:
+		result.clear();
+		return;
+	case OT_INTEGER:
+		result.init(Variant::kInt, &t._unVal.nInteger);
+		return;
+	case OT_FLOAT:
+		result.init(Variant::kFloat, &t._unVal.fFloat);
+		return;
+	case OT_BOOL:
+		result.init(Variant::kBool, &t._unVal.nInteger);
+		return;
+	case OT_STRING:
+		{
+			result.init(Variant::kString);
+			result.ref<String>() = sq_objtostring(&t);
+		}
+		return;
+	case OT_TABLE:
+	case OT_ARRAY:
+	case OT_USERDATA:
+	case OT_CLOSURE:
+	case OT_NATIVECLOSURE:
+	case OT_GENERATOR:
+	case OT_USERPOINTER:
+	case OT_THREAD:
+	case OT_FUNCPROTO:
+	case OT_CLASS:
+		{
+			result.init(Variant::kScriptValue);
+			result.ref<ScriptValue>().getSqObject() = t;
+		}
+		return;
+	case OT_INSTANCE:
+		{
+			SquirrelClassDecl *typetag;
+			void *userdata;
+			sq_getobjtypetag(&t, (SQUserPointer *)&typetag);
+			sq_getinstanceup(v, idx, &userdata, typetag);
+
+			if (typetag == &__Vector3_decl) {
+				result.init(Variant::kVector3, userdata, Variant::InitRef);
+			} else if (typetag == &__Color3_decl) {
+				result.init(Variant::kColor3, userdata, Variant::InitRef);
+			} else if (typetag == &__Point_decl) {
+				result.init(Variant::kPoint, userdata, Variant::InitRef);
+			} else if (typetag == &__Rect_decl) {
+				result.init(Variant::kRect, userdata, Variant::InitRef);
+			} else if (typetag == &__Matrix_decl) {
+				result.init(Variant::kMatrix, userdata, Variant::InitRef);
+			} else if (typetag == &__Object_c_decl) {
+				result.init(Variant::kObject, &userdata, Variant::InitCopy);
+			} else {
+				// don't know type, return ScriptValue
+				result.init(Variant::kScriptValue);
+				result.ref<ScriptValue>().getSqObject() = t;
+			}
+		}
+		return;
+	case OT_WEAKREF:
+		sq_getweakrefval(v, idx);
+		getMeta(v, -1, result);
+		sq_pop(v, 1);
+		return;
+	}
+
+	Errorf("don't support type");
+}
+
 AX_END_NAMESPACE

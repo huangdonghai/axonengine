@@ -14,8 +14,6 @@ public:
 		MaxArgs = 5
 	};
 
-	typedef int (*ScriptFunc)(void *vm);
-
 	enum Type {
 		kPropertyType, kMethodType
 	};
@@ -633,15 +631,15 @@ inline const MemberSeq &CppClass::getMembers() const {
 
 
 //--------------------------------------------------------------------------
-// class MetaInfo_
+// class CppClass_
 //--------------------------------------------------------------------------
 template< class T >
-class MetaInfo_ : public CppClass {
+class CppClass_ : public CppClass {
 public:
-	MetaInfo_(const char *classname, CppClass *base)
+	CppClass_(const char *classname, CppClass *base)
 		: CppClass(classname, base)
 	{}
-	virtual ~MetaInfo_() {}
+	virtual ~CppClass_() {}
 
 	virtual Object *createObject() {
 		return new T;
@@ -717,11 +715,9 @@ public:
 	virtual bool isAnimatable() const
 	{ return false; }
 
-	virtual bool getProperty(const Object *obj, Variant &ret)
-	{ return false; }
+	virtual bool getProperty(const Object *obj, Variant &ret);
 
-	virtual bool setProperty(Object *obj, const ConstRef &arg)
-	{ return false; }
+	virtual bool setProperty(Object *obj, const ConstRef &arg);
 
 	virtual bool resetProperty(Object *obj)
 	{ return false; }

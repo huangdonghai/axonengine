@@ -402,7 +402,7 @@ SqProperty::SqProperty(const sqObject &key, const sqObject &val, const sqObject 
 	m_name = m_realName.c_str();
 
 	SQObjectType valType = val.getType();
-	val.getVariant(m_default);
+	val.toVariant(m_default);
 
 	m_propType = m_default.getTypeId();
 	m_propKind = m_propType;
@@ -416,6 +416,23 @@ SqProperty::SqProperty(const char *name, Kind kind)
 	m_realName = name;
 	m_name = m_realName.c_str();
 	m_propKind = kind;
+}
+
+bool SqProperty::getProperty(const Object *obj, Variant &ret)
+{
+	if (!obj) return false;
+	if (obj->m_scriptInstance.isNull()) return false;
+	obj->m_scriptInstance.getSqObject().getValue(m_realName.c_str()).toVariant(ret);
+	return true;
+}
+
+bool SqProperty::setProperty(Object *obj, const ConstRef &arg)
+{
+	if (!obj) return false;
+	if (obj->m_scriptInstance.isNull()) return false;
+
+	obj->m_scriptInstance.getSqObject().setValue(m_name, arg);
+	return true;
 }
 
 ScriptClass::ScriptClass(const String &name)
@@ -491,3 +508,4 @@ void ScriptClass::addProperty(const sqObject &key, const sqObject &val, const sq
 }
 
 AX_END_NAMESPACE
+

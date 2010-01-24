@@ -21,7 +21,7 @@ int ScriptMetacall(HSQUIRRELVM v)
 	const void *argv[Member::MaxArgs];
 
 	for (int i = 0; i < argc; i++) {
-		sa.getRawData(i+2, values[i]);
+		sa.getVariant(i+2, values[i]);
 
 		if (values[i].getTypeId() != argTypes[i]) {
 			bool castSuccess = values[i].castSelf(argTypes[i]);
@@ -37,7 +37,7 @@ int ScriptMetacall(HSQUIRRELVM v)
 
 	if (nret = 0) return 0;
 
-	return sa.retRawData(ConstRef(ret.getTypeId(), ret.getPointer()));
+	return sa.Return(ConstRef(ret.getTypeId(), ret.getPointer()));
 }
 
 _IMPL_NATIVE_CONSTRUCTION(Object_c, ObjectStar);
@@ -67,7 +67,7 @@ _MEMBER_FUNCTION_IMPL(Object_c, _get)
 		if (!success)
 			return SQ_ERROR;
 
-		return sa.retRawData(ConstRef(prop.getTypeId(), prop.getPointer()));
+		return sa.Return(ConstRef(prop.getTypeId(), prop.getPointer()));
 	}
 
 	return sa.Return(member->getScriptClousure().getSqObject());
@@ -87,7 +87,7 @@ _MEMBER_FUNCTION_IMPL(Object_c, _set)
 
 	Variant::TypeId propType = member->getPropType();
 	Variant value;
-	sa.getRawData(3, value);
+	sa.getVariant(3, value);
 
 	if (!value.castSelf(propType))
 		return SQ_ERROR;

@@ -22,7 +22,7 @@ read the license and understand and accept it fully.
 	static ::Axon::CppClass *classname::registerMetaInfo() { \
 		static ::Axon::CppClass *typeinfo; \
 		if (!typeinfo) { \
-			typeinfo = new ::Axon::MetaInfo_<classname>(#classname, BaseClass::registerMetaInfo());
+			typeinfo = new ::Axon::CppClass_<classname>(#classname, BaseClass::registerMetaInfo());
 
 #define AX_CONSTPROP(name) typeinfo->addProperty(#name, &ThisClass::get_##name);
 #define AX_PROP(name) typeinfo->addProperty(#name, &ThisClass::get_##name, &ThisClass::set_##name);

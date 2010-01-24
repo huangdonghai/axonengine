@@ -2,6 +2,20 @@
 
 AX_BEGIN_NAMESPACE
 
+struct Connection {
+	Object *sender;
+	Member *signal;
+	Object *receiver;
+	Member *slot;
+
+	IntrusiveLink<Connection> senderLink;
+	IntrusiveLink<Connection> receiverLink;
+};
+
+typedef IntrusiveList<Connection, &Connection::senderLink> SenderList;
+typedef IntrusiveList<Connection, &Connection::receiverLink> ReceiverList;
+
+
 //--------------------------------------------------------------------------
 // class Object
 //--------------------------------------------------------------------------
@@ -40,7 +54,7 @@ CppClass *Object::registerMetaInfo()
 	static CppClass *ms_metaInfo = 0;
 
 	if (!ms_metaInfo) {
-		ms_metaInfo = new MetaInfo_<Object>("Object", nullptr);
+		ms_metaInfo = new CppClass_<Object>("Object", nullptr);
 		ms_metaInfo->addProperty("objectName", &Object::get_objectName, &Object::set_objectName);
 
 		g_scriptSystem->registerType(ms_metaInfo);

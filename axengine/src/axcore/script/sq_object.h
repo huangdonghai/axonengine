@@ -55,6 +55,7 @@ public:
 	bool setValue(const SQChar *key, int n);
 	bool setValue(const SQChar *key, float f);
 	bool setValue(const SQChar *key, const SQChar *s);
+	bool setValue(const SQChar *key, const ConstRef &ref);
 
 	bool setUserPointer(const SQChar * key, SQUserPointer up);
 	SQUserPointer getUserPointer(const SQChar * key);
@@ -78,14 +79,15 @@ public:
 	// === END Arrays ===
 
 	bool setInstanceUP(SQUserPointer up);
+	SQUserPointer getInstanceUP(SQUserPointer tag) const;
 	int len() const;
 	bool setDelegate(sqObject &obj);
 	sqObject getDelegate();
+
 	const SQChar* toString() const;
 	bool toBool() const;
 	SQInteger toInteger() const;
 	SQFloat toFloat() const;
-	SQUserPointer getInstanceUP(SQUserPointer tag) const;
 	sqObject getValue(const SQChar *key) const;
 	bool exists(const SQChar *key) const;
 	float getFloat(const SQChar *key) const;
@@ -116,22 +118,7 @@ public:
 	// === Return base class of object using sq_getbase() === 
 	sqObject getBase();
 
-#if 0
-	// === BEGIN code suggestion from the Wiki ===
-	// get any bound type from this sqObject. Note that Squirrel's handling of references and pointers still holds here.
-	template<typename _ty>
-	_ty get(void);
-
-	// set any bound type to this sqObject. Note that Squirrel's handling of references and pointers still holds here.
-	template<typename _ty>
-	sqObject setByValue(_ty val); // classes/structs should be passed by ref (below) to avoid an extra copy.
-
-	// set any bound type to this sqObject. Note that Squirrel's handling of references and pointers still holds here.
-	template<typename _ty>
-	sqObject &set(_ty & val);
-#endif
-	// === END code suggestion from the Wiki ===
-	void getVariant(Variant &val) const;
+	void toVariant(Variant &val) const;
 
 protected:
 	bool getSlot(const SQChar *name) const;
@@ -256,9 +243,9 @@ struct StackHandler
 		return _top;
 	}
 
-	void getRawData(int idx, Variant &result);
+	void getVariant(int idx, Variant &result);
 
-	int retRawData(const ConstRef &arg);
+	int Return(const ConstRef &arg);
 
 	int Return(const SQChar *s)
 	{

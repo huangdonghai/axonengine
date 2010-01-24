@@ -11,9 +11,12 @@ class File;
 class Object;
 typedef Object *ObjectStar;
 
-class AX_API Object {
-public:
+class AX_API Object
+{
 	friend class ScriptSystem;
+	friend class SqProperty;
+
+public:
 
 	Object();
 	virtual ~Object();
@@ -72,6 +75,8 @@ public:
 	bool invokeMethodRt_(const char *methodName, Rt &ret, const A0 &a0, const A1 &a1, const A2 &a2, const A3 &a3);
 	template <class Rt, class A0, class A1, class A2, class A3, class A4>
 	bool invokeMethodRt_(const char *methodName, Rt &ret, const A0 &a0, const A1 &a1, const A2 &a2, const A3 &a3, const A4 &a4);
+
+	ScriptValue& getScriptInstance() { return m_scriptInstance; }
 
 protected:
 	virtual void onPropertyChanged();

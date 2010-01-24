@@ -79,7 +79,7 @@ private:
 	bool m_onlyClient;
 	bool m_multiPlayer;
 
-	GameActor *m_entities[ActorNum::MAX_ACTORS];
+	GameActor *m_actors[ActorNum::MAX_ACTORS];
 	int m_spawnIds[ActorNum::MAX_ACTORS];// for use in EntityPtr
 	int m_numEntities;
 	int m_firstFreeEntity;
@@ -100,12 +100,12 @@ private:
 inline GameActor *GameWorld::getActor(int num) const
 {
 	AX_ASSERT(num >= 0 && num < ActorNum::MAX_ACTORS);
-	return m_entities[num];
+	return m_actors[num];
 }
 
 inline Landscape *GameWorld::getLandscape() const
 {
-	return static_cast<Landscape*>(m_entities[ActorNum::LANDSCAPE]);
+	return static_cast<Landscape*>(m_actors[ActorNum::LANDSCAPE]);
 }
 
 inline RenderWorld *GameWorld::getRenderWorld() const

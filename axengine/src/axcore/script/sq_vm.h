@@ -23,6 +23,10 @@ public:
 
 	static sqObject createClosure(const SQChar *name, SQFUNCTION f, SQInteger nparamscheck, const SQChar *typemask);
 
+	static void pushMeta(HSQUIRRELVM v, const ConstRef &ref);
+	static void popMeta(HSQUIRRELVM v, Variant &val);
+	static void getMeta(HSQUIRRELVM v, int idx, Variant &val);
+
 protected:
 	void reportError();
 	static void createObjectClosure();

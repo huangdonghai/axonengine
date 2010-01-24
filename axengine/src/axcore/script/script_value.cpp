@@ -57,33 +57,10 @@ ScriptValue::~ScriptValue()
 
 bool ScriptValue::rawCast(Variant::TypeId toType, void *toData) const
 {
-	switch (toType) {
-	case Variant::kVoid:
-		return false;
-	case Variant::kBool:
-		*(reinterpret_cast<bool *>(toData)) = m_d->toBool();
-		return true;
-	case Variant::kInt:
-		*(reinterpret_cast<int *>(toData)) = m_d->toInteger();
-		return true;
-	case Variant::kFloat:
-		*(reinterpret_cast<float *>(toData)) = m_d->toFloat();
-		return true;
-	case Variant::kString:
-		*(reinterpret_cast<String *>(toData)) = m_d->toString();
-		return true;
-	case Variant::kObject:
-	case Variant::kVector3:
-	case Variant::kColor3:
-	case Variant::kPoint:
-	case Variant::kRect:
-	case Variant::kMatrix:
-	case Variant::kScriptValue:
-	default:
-		return false;
-	}
+	Variant val;
+	m_d->toVariant(val);
 
-	return false;
+	return val.castTo(toType, toData);
 }
 
 Variant::TypeHandler * ScriptValue::getTypeHandler()

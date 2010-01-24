@@ -18,7 +18,7 @@ AX_BEGIN_NAMESPACE
 //--------------------------------------------------------------------------
 
 GameActor::GameActor() {
-	m_entityNum = -1;
+	m_actorNum = -1;
 	m_world = nullptr;
 	m_state = Active;
 
