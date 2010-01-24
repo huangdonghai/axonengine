@@ -185,7 +185,6 @@ template< class type >
 void Link<type>::setOwner( type *object ) {
 	m_owner = object;
 }
-#endif
 
 // Copyright 2009 Netease Inc. All Rights Reserved.
 // Author: tangxiliu@corp.netease.com (Tang Xi Liu)
@@ -514,7 +513,184 @@ private:
 	IntrusiveList(const IntrusiveList<T,link_ptr> &x);
 	IntrusiveList<T,link_ptr>& operator=(const IntrusiveList<T,link_ptr> &x);
 };
+#endif
 
+template <class type>
+class IntrusiveLink {
+public:
+	IntrusiveLink() : next(0), prev(0) {}
+	~IntrusiveLink() {}
+
+	bool isLinked() const { return next != 0; }
+	void unlink()
+	{
+		if (!isLinked()) return;
+
+		prev->next = next;
+		next->prev = prev;
+
+		next = 0;
+		prev = 0;
+	}
+
+	IntrusiveLink *next;
+	IntrusiveLink *prev;
+};
+
+template <class T, IntrusiveLink<T> (T::*link_ptr) = &T::m_link>
+class IntrusiveList {
+private:
+	// The structure used for iterating over an IntrusiveList.
+	typedef IntrusiveList<T, link_ptr> ListType;
+
+	template <class Ref, class Ptr>
+	struct Iterator {
+		typedef Iterator<T&, T*> iterator;
+		typedef Iterator<const T&, const T*> const_iterator;
+		typedef Iterator<Ref, Ptr> self;
+
+		typedef std::bidirectional_iterator_tag iterator_category;
+		typedef T value_type;
+		typedef Ptr pointer;
+		typedef const T *const_pointer;
+		typedef Ref reference;
+		typedef const T &const_reference;
+		typedef size_t size_type;
+		typedef ptrdiff_t difference_type;
+
+		Iterator() : obj(0) { }
+		Iterator(pointer x) : obj(x) { }
+		Iterator(const iterator &x) : obj(x.obj) { }
+
+		bool operator==(const const_iterator &x) const { return obj == x.obj; }
+		bool operator!=(const const_iterator &x) const { return obj != x.obj; }
+
+		reference operator*() const { return *obj; }
+		pointer operator->() const { return obj; }
+
+		self& operator++() { obj = ListType::node2obj((obj->*link_ptr).next); return *this; }
+		self  operator++(int) { self tmp = *this; ++*this; return tmp; }
+		self& operator--() { obj = ListType::node2obj((obj->*link_ptr).prev); return *this; }
+		self  operator--(int) { self tmp = *this; --*this; return tmp; }
+
+		pointer obj;
+	};
+
+	IntrusiveLink<T>* end_node() const {
+		return &m_link;
+	}
+
+	T* end_obj() const {
+		return node2obj(&m_link);
+	}
+
+	static T* node2obj(const IntrusiveLink<T> *node) {
+		const ptrdiff_t link_offset = reinterpret_cast<ptrdiff_t>(&(reinterpret_cast<const T*>(0)->*link_ptr));
+
+		return reinterpret_cast<T*>(const_cast<char*>(reinterpret_cast<const char*>(node) - link_offset));
+	}
+
+	static IntrusiveLink<T>* obj2node(T *obj) {
+		return &(obj->*link_ptr);
+	}
+
+public:
+	typedef T value_type;
+	typedef value_type *pointer;
+	typedef const value_type *const_pointer;
+	typedef value_type &reference;
+	typedef const value_type &const_reference;
+	typedef size_t size_type;
+	typedef ptrdiff_t difference_type;
+
+	typedef typename Iterator<T&, T*> iterator;
+	typedef Iterator<const T&, const T*> const_iterator;
+	typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
+	typedef std::reverse_iterator<iterator> reverse_iterator;
+
+public:
+	// Constructor.
+	IntrusiveList()
+	{
+		m_link.next = m_link.prev = &m_link;
+		m_maxUsed = 0;
+	}
+
+	// Iterator routines.
+	iterator begin() { return iterator(node2obj(m_link.next)); }
+	const_iterator begin() const { return const_iterator(node2obj(m_link.next)); }
+	iterator end() { return iterator(end_obj()); }
+	const_iterator end() const { return const_iterator(end_obj()); }
+	reverse_iterator rbegin() { return reverse_iterator(end()); }
+	const_reverse_iterator rbegin() const { return const_reverse_iterator(end()); }
+	reverse_iterator rend() { return reverse_iterator(begin()); }
+	const_reverse_iterator rend() const { return const_reverse_iterator(begin()); }
+
+	// Size routines.
+	bool empty() const { return (m_link.next == end_node()); }
+	size_type size() const { m_maxUsed = std::distance(begin(), end()); return m_maxUsed; }
+	size_type max_size() const { return size_type(-1); }
+	size_type max_used() const { return m_maxUsed; }
+
+	// Front and back accessors.
+	pointer front() { return node2obj(m_link.next); }
+	const_pointer front() const { return node2obj(m_link.next); }
+	pointer back() { return node2obj(m_link.prev); }
+	const_pointer back() const { return node2obj(m_link.prev); }
+
+	// Insertion routines.
+	iterator insert(T *position, T *obj)
+	{
+		IntrusiveLink<T> *objLink = obj2node(obj);
+		IntrusiveLink<T> *posLink = obj2node(position);
+		objLink->unlink();
+		objLink->next = posLink;
+		objLink->prev = posLink->prev;
+		posLink->prev = objLink;
+		objLink->prev->next = objLink;
+		m_maxUsed++;
+		return iterator(obj);
+	}
+
+	iterator insert(iterator position, T *obj)
+	{
+		return insert(position.obj, obj);
+	}
+
+	void push_front(T *obj) { insert(front(), obj); }
+	void push_back(T *obj) { insert(end_obj(), obj); }
+
+	// Removal routines.
+	iterator erase(T *obj) {
+		IntrusiveLink<T> *link = &(obj->*link_ptr);
+		IntrusiveLink<T> *next = link->next;
+		link->prev->next = link->next;
+		link->next->prev = link->prev;
+		link->prev = link->next = 0;
+		m_maxUsed--;
+		return iterator(node2obj(next));
+	}
+	iterator erase(iterator position) { return erase(position.obj); }
+	void pop_front() { erase(front()); }
+	void pop_back() { erase(back()); }
+
+	// Utility routines.
+	void clear() {
+		iterator it = begin();
+		while (it != end())
+			it = erase(it);
+		m_maxUsed = 0;
+	}
+
+private:
+	IntrusiveLink<T> m_link;
+	mutable size_type m_maxUsed;
+
+private:
+	// Disabled copy constructor and assignment operator.
+	IntrusiveList(const IntrusiveList<T,link_ptr> &x);
+	IntrusiveList<T,link_ptr>& operator=(const IntrusiveList<T,link_ptr> &x);
+};
 
 AX_END_NAMESPACE
 

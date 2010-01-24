@@ -313,12 +313,12 @@ void Object::initScriptClass(const ScriptClass *sqclass)
 
 	AX_ASSERT(sqclass);
 
-	sq_pushobject(VM, sqclass->getScriptValue().getSqObject());
-	SQRESULT sqresult = sq_createinstance(VM, -1);	// TODO: check
+	sq_pushobject(VM, sqclass->getScriptValue().getSqObject()); // +1
+	SQRESULT sqresult = sq_createinstance(VM, -1);	// +2
 	AX_ASSURE(SQ_SUCCEEDED(sqresult));
 
 	m_scriptInstance.getSqObject().attachToStackObject(VM, -1);
-	sq_pop(VM, 1);
+	sq_pop(VM, 2); // -2
 
 	AX_ASSURE(m_scriptInstance.isInstance());
 	m_scriptInstance.getSqObject().setInstanceUP(this);
