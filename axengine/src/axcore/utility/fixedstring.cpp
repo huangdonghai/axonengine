@@ -12,70 +12,72 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-	FixedStringManager::FixedStringManager()
-	{
-		// add empty string in index 0
-		findString(String());
+FixedStringManager::FixedStringManager()
+{
+	// add empty string in index 0
+	findString(String());
+}
+
+FixedStringManager::~FixedStringManager()
+{}
+
+const String &FixedStringManager::getString(int handle) const
+{
+	SCOPE_LOCK;
+
+	if (handle >= s2i(m_strings.size()) || handle < 0) {
+		Errorf("invalid handle");
 	}
 
-	FixedStringManager::~FixedStringManager()
-	{}
-
-	const String &FixedStringManager::getString( int handle ) const
-	{
-		SCOPE_LOCK;
-
-		if (handle >= s2i(m_strings.size()) || handle < 0) {
-			Errorf("invalid handle");
-		}
-
-		const String *refstring = m_strings[handle];
-		if (!refstring) {
-			Errorf("not found");
-		}
-
-		return *refstring;
+	const String *refstring = m_strings[handle];
+	if (!refstring) {
+		Errorf("not found");
 	}
 
-	int FixedStringManager::findString( const String &str )
-	{
-		SCOPE_LOCK;
+	return *refstring;
+}
 
-		Dict<const char*, int, hash_cstr, equal_cstr>::const_iterator it = m_dict.find(str.c_str());
+int FixedStringManager::findString(const String &str)
+{
+	SCOPE_LOCK;
 
-		if (it == m_dict.end()) {
-			const String *newsz = new String(str);
-			m_strings.push_back(newsz);
-			int handle = m_strings.size() - 1;
-			m_dict[newsz->c_str()] = handle;
-			return handle;
-		} else {
-			return it->second;
-		}
+	Dict<const char*, int, hash_cstr, equal_cstr>::const_iterator it = m_dict.find(str.c_str());
+
+	if (it == m_dict.end()) {
+		const String *newsz = new String(str);
+		m_strings.push_back(newsz);
+		int handle = m_strings.size() - 1;
+		m_dict[newsz->c_str()] = handle;
+		return handle;
+	} else {
+		return it->second;
 	}
+}
 
-	int FixedStringManager::findString( const char *lpcz )
-	{
-		if (!lpcz || !lpcz[0])
-			return 0;
+int FixedStringManager::findString(const char *lpcz)
+{
+	if (!lpcz || !lpcz[0])
+		return 0;
 
-		Dict<const char*, int, hash_cstr, equal_cstr>::const_iterator it = m_dict.find(lpcz);
+	SCOPE_LOCK;
 
-		if (it == m_dict.end()) {
-			const String *newsz = new String(lpcz);
-			m_strings.push_back(newsz);
-			int handle = m_strings.size() - 1;
-			m_dict[newsz->c_str()] = handle;
-			return handle;
-		} else {
-			return it->second;
-		}
+	Dict<const char*, int, hash_cstr, equal_cstr>::const_iterator it = m_dict.find(lpcz);
+
+	if (it == m_dict.end()) {
+		const String *newsz = new String(lpcz);
+		m_strings.push_back(newsz);
+		int handle = m_strings.size() - 1;
+		m_dict[newsz->c_str()] = handle;
+		return handle;
+	} else {
+		return it->second;
 	}
+}
 
-	FixedStringManager &FixedStringManager::get()
-	{
-		static FixedStringManager instance;
-		return instance;
-	}
+FixedStringManager &FixedStringManager::get()
+{
+	static FixedStringManager instance;
+	return instance;
+}
 
 AX_END_NAMESPACE
