@@ -1,8 +1,4 @@
 #include "script_p.h"
-#include <boost/mpl/vector.hpp>
-#include <boost/mpl/at.hpp>
-#include <boost/mpl/if.hpp>
-#include <boost/mpl/int.hpp>
 
 /*
 	STORE		DESTRUCTION	NEEDFREE	POINTER
@@ -15,9 +11,11 @@
 
 AX_BEGIN_NAMESPACE
 
+#if 0
 using namespace boost;
 
 typedef mpl::vector<void,bool,int,float,String,Object *,Vector3,Color3,Point,Rect,Matrix> VariantTL;
+#endif
 
 typedef bool (*castFunc)(const void *from, void *to);
 
@@ -35,7 +33,7 @@ struct CastHelper_ {
 };
 
 template <class T, class Q>
-struct CastHelper_<T, Q, mpl::int_<0>> {
+struct CastHelper_<T, Q, Int_<0>> {
 	static bool CastFunc(const void *from, void *to)
 	{
 		return false;
@@ -61,10 +59,9 @@ protected:
 	castFunc m_castFuncs[Variant::kMaxType];
 };
 
-#define VT(x) mpl::at<VariantTL, mpl::int_<x>>::type
-#define VTI(x) GetVariantType_<VT(x)>()
-#define CANCAST(x) m_canCasts[VTI(x)] = std::tr1::is_convertible<T, VT(x)>::value
-#define CASTFUNC(x) m_castFuncs[VTI(x)] = &CastHelper_<T, VT(x), mpl::int_<std::tr1::is_convertible<T, VT(x)>::value>>::CastFunc
+#define VTI(x) GetVariantType_<x>()
+#define CANCAST(x) m_canCasts[VTI(x)] = std::tr1::is_convertible<T, x>::value; \
+	m_castFuncs[VTI(x)] = &CastHelper_<T, x, Int_<std::tr1::is_convertible<T, x>::value>>::CastFunc
 
 template <class T>
 class TypeHandler_ : public TypeHandler_Generic
@@ -76,18 +73,18 @@ public:
 		TypeZeroArray(m_canCasts);
 		TypeZeroArray(m_castFuncs);
 
-		CANCAST(0);
-		CANCAST(1);
-		CANCAST(2);
-		CANCAST(3);
-		CANCAST(4);
-		CANCAST(5);
-		CANCAST(6);
-		CANCAST(7);
-		CANCAST(8);
-		CANCAST(9);
-		CANCAST(10);
-
+		CANCAST(void);
+		CANCAST(bool);
+		CANCAST(int);
+		CANCAST(float);
+		CANCAST(String);
+		CANCAST(ObjectStar);
+		CANCAST(Vector3);
+		CANCAST(Color3);
+		CANCAST(Point);
+		CANCAST(Rect);
+		CANCAST(Matrix);
+#if 0
 		CASTFUNC(0);
 		CASTFUNC(1);
 		CASTFUNC(2);
@@ -99,6 +96,7 @@ public:
 		CASTFUNC(8);
 		CASTFUNC(9);
 		CASTFUNC(10);
+#endif
 	}
 
 	void construct(void *ptr, const void *copyfrom)
@@ -120,19 +118,20 @@ public:
 #undef CANCAST
 #undef CASTFUNC
 
-#define NEW_TH(x) new TypeHandler_<mpl::at<VariantTL, mpl::int_<x> >::type>
+#define NEW_TH(x) new TypeHandler_<x>
 static Variant::TypeHandler *s_typeHandlers[Variant::kMaxType] = {
 	0,
-	NEW_TH(1),
-	NEW_TH(2),
-	NEW_TH(3),
-	NEW_TH(4),
-	NEW_TH(5),
-	NEW_TH(6),
-	NEW_TH(7),
-	NEW_TH(8),
-	NEW_TH(9),
-	NEW_TH(10),
+//	CANCAST(void);
+	NEW_TH(bool),
+	NEW_TH(int),
+	NEW_TH(float),
+	NEW_TH(String),
+	NEW_TH(ObjectStar),
+	NEW_TH(Vector3),
+	NEW_TH(Color3),
+	NEW_TH(Point),
+	NEW_TH(Rect),
+	NEW_TH(Matrix),
 	ScriptValue::getTypeHandler()
 };
 AX_STATIC_ASSERT(12==Variant::kMaxType);

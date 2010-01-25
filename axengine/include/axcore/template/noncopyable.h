@@ -13,6 +13,10 @@ private:  // emphasize the following members are private
 	const Noncopyable& operator=(const Noncopyable&);
 };
 
+
+template <int v>
+class Int_ {};
+
 AX_END_NAMESPACE
 
 #endif // AX_NONCOPYABLE_H
