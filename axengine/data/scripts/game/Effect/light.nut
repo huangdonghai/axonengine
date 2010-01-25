@@ -14,7 +14,7 @@ class Game.Effect.Light </ cppClass = "GameLight" />
 	glare = 0;
 	</ editable = true, group = "Style" />
 	glareScale = 1;
-	</ editable = true, group = "Style" enums = [ ["PointLight", LightType.PointLight], ["SpotLight", LightType.SpotLight] ]/>
+	</ editable = true, group = "Style" enums = {PointLight=LightType.PointLight, SpotLight=LightType.SpotLight} />
 	lightStyle = LightType.PointLight;
 	</ editable = true, group = "Style" />
 	castShadowMap = false;
@@ -39,5 +39,6 @@ class Game.Effect.Light </ cppClass = "GameLight" />
 	model = "";
 	</ editable = true, group = "Option", kind = PropKind.kTexture />
 	texture = "";
+	// end properties
 }
 AX_REGISTER_CLASS("Game.Effect.Light");

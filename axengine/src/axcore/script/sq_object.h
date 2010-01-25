@@ -34,6 +34,8 @@ public:
 	bool isNull() const { return sq_isnull(m_obj); }
 	bool isNumeric() const { return sq_isnumeric(m_obj); }
 	bool isInstance() const { return sq_isinstance(m_obj); }
+	bool isArray() const { return sq_isarray(m_obj); }
+	bool isTable() const { return sq_istable(m_obj); }
 
 	operator HSQOBJECT&() const { return m_obj; } 
 	bool operator==(const sqObject& o);
@@ -71,11 +73,7 @@ public:
 	bool arrayExtend(int amount);
 	bool arrayReverse();
 	sqObject arrayPop(SQBool returnPoppedVal=SQTrue);
-
 	void arrayAppend(const sqObject &o);
-
-	template<typename T>
-	bool arrayAppend(T item);
 	// === END Arrays ===
 
 	bool setInstanceUP(SQUserPointer up);

@@ -72,6 +72,7 @@ AX_BEGIN_NAMESPACE
 		static StringList tokenize(const char *text, char split = ' ');
 		static StringSeq tokenizeSeq(const char *text, char split = ' ');
 		static bool filterString(const char *filter, const char *fname, bool casesensitive);
+		static String CDECL format(const char *fmt, ...);
 	};
 
 	inline int StringUtil::vsnprintf(char *buffer, size_t count, const char *format, va_list argptr) {
@@ -101,6 +102,19 @@ AX_BEGIN_NAMESPACE
 		str = tmp;
 
 		return len;
+	}
+
+	inline String CDECL StringUtil::format(const char *fmt, ...)
+	{
+		char tmp[1024];
+		va_list argptr;
+		int len;
+
+		va_start(argptr, fmt);
+		len = ::vsnprintf_s(tmp, ArraySize(tmp), _TRUNCATE, fmt, argptr);
+		va_end(argptr);
+
+		return String(tmp, len);
 	}
 
 	inline int StringUtil::stricmp(const char *string1, const char *string2) {

@@ -402,7 +402,7 @@ static bool sqlesser(const SqProperty *a, const SqProperty *b)
 	return getsortkey(a) < getsortkey(b);
 }
 
-SqProperty::SqProperty(const sqObject &key, const sqObject &val, const sqObject &attr )
+SqProperty::SqProperty(const sqObject &key, const sqObject &val, const sqObject &attr)
 	: Member(0, Member::kPropertyType)
 	, m_group(0)
 {
@@ -415,6 +415,36 @@ SqProperty::SqProperty(const sqObject &key, const sqObject &val, const sqObject 
 	m_propType = m_default.getTypeId();
 	m_propKind = m_propType;
 	AX_ASSERT(m_propKind != Variant::kVoid);
+
+	// enumitems
+	sqObject enums = attr.getValue("enums");
+	if (enums.isArray()) {
+		int len = enums.len();
+		for (int i = 0; i < len; i++) {
+			int v = enums.getInt(i);
+			String k = StringUtil::format("%d", v);
+			m_enumItems.push_back(std::make_pair(k,v));
+		}
+	} else if (enums.isTable()) {
+		sqObject ekey, eval;
+		enums.beginIteration();
+		while (enums.next(ekey, eval)) {
+			m_enumItems.push_back(std::make_pair(ekey.toString(), eval.toInteger()));
+		}
+		enums.endIteration();
+	}
+
+	if (m_enumItems.size() && m_propType == Variant::kInt) {
+		m_propKind = kEnum;
+		return;
+	}
+
+	int defineKind = attr.getInt("kind");
+	if (!defineKind) return;
+	Variant::TypeId defineType = kindToType(defineKind);
+
+	if (defineType != m_propType) return;
+	m_propKind = defineKind;
 }
 
 SqProperty::SqProperty(const char *name, Kind kind)
