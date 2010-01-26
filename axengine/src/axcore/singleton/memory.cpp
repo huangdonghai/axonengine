@@ -27,13 +27,13 @@ MemoryHeap *xGetHeap() {
 	return &heap;
 }
 
-struct MemoryHeap::Page {								// allocation page
-	void *data;					// data pointer to allocated memory
-	uint_t dataSize;				// number of bytes of memory 'data' points to
-	Page *next;					// next free page in same page manager
-	Page *prev;					// used only when allocated
-	uint_t largestFree;			// this data used by the medium-size heap manager
-	void *firstFree;				// pointer to first free entry
+struct MemoryHeap::Page { // allocation page
+	void *data; // data pointer to allocated memory
+	uint_t dataSize; // number of bytes of memory 'data' points to
+	Page *next; // next free page in same page manager
+	Page *prev; // used only when allocated
+	uint_t largestFree; // this data used by the medium-size heap manager
+	void *firstFree; // pointer to first free entry
 };
 
 //------------------------------------------------------------------------------
@@ -44,8 +44,8 @@ struct MemoryHeap::Page {								// allocation page
 #define MEDIUM_HEADER_SIZE ((uint_t) (sizeof(MediumHeapEntry) + sizeof(byte_t)))
 #define LARGE_HEADER_SIZE ((uint_t) (sizeof(uint_t*) + sizeof(byte_t)))
 
-#define ALIGN_SIZE(bytes)		(((bytes) + ALIGN - 1) & ~(ALIGN - 1))
-#define SMALL_ALIGN(bytes)	(ALIGN_SIZE((bytes) + SMALL_HEADER_SIZE) - SMALL_HEADER_SIZE)
+#define ALIGN_SIZE(bytes) (((bytes) + ALIGN - 1) & ~(ALIGN - 1))
+#define SMALL_ALIGN(bytes) (ALIGN_SIZE((bytes) + SMALL_HEADER_SIZE) - SMALL_HEADER_SIZE)
 #define MEDIUM_SMALLEST_SIZE (ALIGN_SIZE(256) + ALIGN_SIZE(MEDIUM_HEADER_SIZE))
 
 enum {
@@ -75,10 +75,12 @@ MemoryHeap::MemoryHeap()
 	: m_initialized(false)
 {
 }
-MemoryHeap::~MemoryHeap() {
+MemoryHeap::~MemoryHeap()
+{
 }
 
-void MemoryHeap::initialize() {
+void MemoryHeap::initialize()
+{
 	SCOPE_LOCK;
 
 	if (m_initialized)
@@ -104,7 +106,8 @@ void MemoryHeap::initialize() {
 	m_initialized = true;
 }
 
-void MemoryHeap::finalize() {
+void MemoryHeap::finalize()
+{
 	SCOPE_LOCK;
 
 	return;
@@ -147,7 +150,8 @@ void MemoryHeap::finalize() {
 	AX_ASSERT(m_pagesAllocated == 0);
 }
 
-void *MemoryHeap::alloc(uint_t size) {
+void *MemoryHeap::alloc(uint_t size)
+{
 	SCOPE_LOCK;
 
 	if (!m_initialized)
@@ -171,7 +175,8 @@ void *MemoryHeap::alloc(uint_t size) {
 #endif
 }
 
-void MemoryHeap::free(void *p) {
+void MemoryHeap::free(void *p)
+{
 	SCOPE_LOCK;
 
 	if (!p) {
@@ -199,7 +204,8 @@ void MemoryHeap::free(void *p) {
 #endif
 }
 
-void *MemoryHeap::alloc16(uint_t size) {
+void *MemoryHeap::alloc16(uint_t size)
+{
 	SCOPE_LOCK;
 
 	byte_t *ptr, *alignedPtr;
@@ -213,13 +219,15 @@ void *MemoryHeap::alloc16(uint_t size) {
 	return (void *) alignedPtr;
 }
 
-void MemoryHeap::free16(void *p) {
+void MemoryHeap::free16(void *p)
+{
 	SCOPE_LOCK;
 
 	Free((void *) *((size_t *) (((byte_t *) p) - 4)));
 }
 
-MemoryHeap::Page *MemoryHeap::allocatePage(uint_t bytes) {
+MemoryHeap::Page *MemoryHeap::allocatePage(uint_t bytes)
+{
 	SCOPE_LOCK;
 
 	MemoryHeap::Page *p;
@@ -253,7 +261,8 @@ MemoryHeap::Page *MemoryHeap::allocatePage(uint_t bytes) {
 	return p;
 }
 
-void MemoryHeap::freePage(MemoryHeap::Page *p) {
+void MemoryHeap::freePage(MemoryHeap::Page *p)
+{
 	SCOPE_LOCK;
 
 	AX_ASSERT(p);
@@ -267,7 +276,8 @@ void MemoryHeap::freePage(MemoryHeap::Page *p) {
 	m_pagesAllocated--;
 }
 
-void *MemoryHeap::smallAllocate(uint_t bytes) {
+void *MemoryHeap::smallAllocate(uint_t bytes)
+{
 	// we need the at least sizeof(uint_t) bytes for the free list
 	if (bytes < sizeof(uint_t)) {
 		bytes = sizeof(uint_t);
@@ -300,13 +310,14 @@ void *MemoryHeap::smallAllocate(uint_t bytes) {
 	}
 
 	smallBlock = ((byte_t *)m_smallCurPage->data) + m_smallCurPageOffset;
-	smallBlock[0]		= (byte_t)(bytes / ALIGN);		// write # of bytes/ALIGN
-	smallBlock[1]		= SMALL_ALLOC;					// allocation identifier
-	m_smallCurPageOffset  += bytes + SMALL_HEADER_SIZE;	// increase the offset on the current page
+	smallBlock[0] = (byte_t)(bytes / ALIGN);		// write # of bytes/ALIGN
+	smallBlock[1] = SMALL_ALLOC;					// allocation identifier
+	m_smallCurPageOffset += bytes + SMALL_HEADER_SIZE;	// increase the offset on the current page
 	return (smallBlock + SMALL_HEADER_SIZE);			// skip the first two bytes
 }
 
-void MemoryHeap::smallFree(void *ptr) {
+void MemoryHeap::smallFree(void *ptr)
+{
 	((byte_t *)(ptr))[-1] = INVALID_ALLOC;
 
 	byte_t *d = ((byte_t *)ptr) - SMALL_HEADER_SIZE;
@@ -325,7 +336,8 @@ void MemoryHeap::smallFree(void *ptr) {
 	m_smallFirstFree[ix] = (void *)d;		// link
 }
 
-void *MemoryHeap::mediumAllocateFromPage(MemoryHeap::Page *p, uint_t sizeNeeded) {
+void *MemoryHeap::mediumAllocateFromPage(MemoryHeap::Page *p, uint_t sizeNeeded)
+{
 	MediumHeapEntry *best, *nw = NULL;
 	byte_t *ret;
 
@@ -384,7 +396,8 @@ void *MemoryHeap::mediumAllocateFromPage(MemoryHeap::Page *p, uint_t sizeNeeded)
 
 }
 
-void *MemoryHeap::mediumAllocate(uint_t bytes) {
+void *MemoryHeap::mediumAllocate(uint_t bytes)
+{
 	MemoryHeap::Page *p;
 	void *data;
 
@@ -481,7 +494,8 @@ void *MemoryHeap::mediumAllocate(uint_t bytes) {
 
 }
 
-void MemoryHeap::mediumFree(void *ptr) {
+void MemoryHeap::mediumFree(void *ptr)
+{
 	((byte_t *)(ptr))[-1] = INVALID_ALLOC;
 
 	MediumHeapEntry *e = (MediumHeapEntry *)((byte_t *)ptr - ALIGN_SIZE(MEDIUM_HEADER_SIZE));
@@ -595,7 +609,8 @@ void MemoryHeap::mediumFree(void *ptr) {
 	} 
 }
 
-void *MemoryHeap::largeAllocate(uint_t bytes) {
+void *MemoryHeap::largeAllocate(uint_t bytes)
+{
 	MemoryHeap::Page *p = allocatePage(bytes + ALIGN_SIZE(LARGE_HEADER_SIZE));
 
 	gMemoryInfo.allocLarge(p->dataSize);
@@ -622,7 +637,8 @@ void *MemoryHeap::largeAllocate(uint_t bytes) {
 	return (void *)(d);
 
 }
-void MemoryHeap::largeFree(void *ptr) {
+void MemoryHeap::largeFree(void *ptr)
+{
 	MemoryHeap::Page *pg;
 
 	((byte_t *)(ptr))[-1] = INVALID_ALLOC;
@@ -648,14 +664,16 @@ void MemoryHeap::largeFree(void *ptr) {
 
 }
 
-void MemoryHeap::releaseSwappedPages(void) {
+void MemoryHeap::releaseSwappedPages(void)
+{
 	if (m_swapPage) {
 		freePageReal(m_swapPage);
 	}
 	m_swapPage = NULL;
 
 }
-void MemoryHeap::freePageReal(MemoryHeap::Page *p) {
+void MemoryHeap::freePageReal(MemoryHeap::Page *p)
+{
 	AX_ASSERT(p);
 	::free(p);
 }
@@ -686,20 +704,24 @@ MemoryStack::MemoryStack()
 	, m_curPagePos(0)
 {}
 
-MemoryStack::~MemoryStack() {
+MemoryStack::~MemoryStack()
+{
 	finalize();
 }
 
-void MemoryStack::initialize() {
+void MemoryStack::initialize()
+{
 	clear();
 	m_initialized = true;
 }
 
-void MemoryStack::finalize() {
+void MemoryStack::finalize()
+{
 	clear();
 }
 
-size_t MemoryStack::setMark() {
+size_t MemoryStack::setMark()
+{
 	MemoryStack::Mark *mark = (MemoryStack::Mark*) Malloc(sizeof(MemoryStack::Mark));
 
 	// record info
@@ -714,7 +736,8 @@ size_t MemoryStack::setMark() {
 	return m_markStack->pos;
 }
 
-void *MemoryStack::alloc(uint_t size) {
+void *MemoryStack::alloc(uint_t size)
+{
 	size = ALIGN_SIZE(size);
 
 	if (!m_curPage) {
@@ -739,7 +762,8 @@ void *MemoryStack::alloc(uint_t size) {
 	return data;
 }
 
-void *MemoryStack::alloc16(uint_t size) {
+void *MemoryStack::alloc16(uint_t size)
+{
 	byte_t *ptr, *alignedPtr;
 
 	ptr = (byte_t *) alloc(size + 15);
@@ -747,7 +771,8 @@ void *MemoryStack::alloc16(uint_t size) {
 	return (void *) alignedPtr;
 }
 
-void MemoryStack::popMark(size_t pos) {
+void MemoryStack::popMark(size_t pos)
+{
 	if (!m_markStack)
 		Errorf(_("MemoryStack::PopMark: no mark stack to pop"));
 
@@ -768,7 +793,8 @@ void MemoryStack::popMark(size_t pos) {
 	clearUnusedPages();
 }
 
-void MemoryStack::clearUnusedPages() {
+void MemoryStack::clearUnusedPages()
+{
 	MemoryHeap::Page *p = m_curPage->next;
 	m_curPage->next = NULL;
 	while (p) {
@@ -778,7 +804,8 @@ void MemoryStack::clearUnusedPages() {
 	}
 }
 
-void MemoryStack::clear() {
+void MemoryStack::clear()
+{
 	MemoryHeap::Page *p = m_curPage;
 	while (p) {
 		MemoryHeap::Page *next = p->next;
@@ -794,7 +821,8 @@ void MemoryStack::clear() {
 // global function
 //------------------------------------------------------------------------------
 
-void *Malloc(size_t size) {
+void *Malloc(size_t size)
+{
 #if 0
 	if (xGetHeap() == NULL) {
 		xGetHeap() = new MemoryHeap;
@@ -808,14 +836,16 @@ void *Malloc(size_t size) {
 	return mem;
 
 }
-void Free(void *ptr) {
+void Free(void *ptr)
+{
 	if (!ptr) {
 		return;
 	}
 	xGetHeap()->free(ptr);
 }
 
-void *Malloc16(size_t size) {
+void *Malloc16(size_t size)
+{
 	if (!size) {
 		return NULL;
 	}
@@ -825,7 +855,8 @@ void *Malloc16(size_t size) {
 	return mem;
 }
 
-void Free16(void *ptr) {
+void Free16(void *ptr)
+{
 	if (!ptr) {
 		return;
 	}
