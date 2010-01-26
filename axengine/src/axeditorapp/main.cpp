@@ -14,11 +14,28 @@ read the license and understand and accept it fully.
 
 void testArgs()
 {
+	SyncMutex mutex;
+	CRITICAL_SECTION cs;
+	InitializeCriticalSection(&cs);
+
+	ulonglong_t start = OsUtil::microseconds();
+	double d = 0;
+	for (int i = 0; i < 10000000; i++) {
+		d += i;
+	}
+	ulonglong_t end = OsUtil::microseconds();
+
+	DeleteCriticalSection(&cs);
+
+	Printf("\n%d, %d\n", end - start, d);
 	Variant v1(1);
 	v1 = 3;
 	v1 = Vector3(0,1,2);
 	int result;
-	bool v = g_renderSystem->invokeMethodRt_("testArgs", result, 1.0f, true, Vector3(0,1,2), Color3(1,1,1), Rect(0,0,640,480));
+	bool v = g_renderSystem->invokeMethodRt("testArgs", result, 1.0f, true, Vector3(0,1,2), Color3(1,1,1), Rect(0,0,640,480));
+
+	g_renderSystem->switchState("Idle");
+	g_renderSystem->invokeScriptRt("onTouch", result, 1.0f);
 }
 
 /**

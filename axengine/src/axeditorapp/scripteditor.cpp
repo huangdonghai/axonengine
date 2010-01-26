@@ -30,7 +30,7 @@ ScriptEditor::ScriptEditor(QWidget *parent)
 	ui.setupUi(this);
 
 	ui.fileTree->setRoot("/scripts");
-	ui.fileTree->setFilter("*.lua");
+	ui.fileTree->setFilter("*.nut");
 	ui.fileTree->refresh();
 
 	lexer = new QsciLexerLua();
@@ -49,9 +49,10 @@ void ScriptEditor::openFile(const QString &filename) {
 		return;
 	}
 
-	QFont f("Courier",10);;
-	f.setStyleHint(QFont::Courier, QFont::PreferBitmap);
-
+#if 0
+	QFont f("Fixedsys",10);;
+	f.setStyleStrategy(QFont::PreferBitmap);
+#endif
 	FileOpened fo;
 	fo.filename = filename;
 	fo.textEditor = new QsciScintilla;
@@ -63,13 +64,14 @@ void ScriptEditor::openFile(const QString &filename) {
 	fo.textEditor->setMarginWidth(1, QString("12345"));
 	fo.textEditor->setLexer(lexer);
 	fo.textEditor->setText(buf);
+#if 0
 	fo.textEditor->setFont(f);
+#endif
 	fo.textEditor->setFolding(QsciScintilla::BoxedTreeFoldStyle);
 	fo.textEditor->setCaretLineVisible(true);
 	fo.textEditor->setEdgeColumn(80);
 	fo.textEditor->setEdgeMode(QsciScintilla::EdgeLine);
 	fo.textEditor->setIndentationGuides(true);
-
 
 	ui.tabWidget->insertTab(0, fo.textEditor, filename);
 }

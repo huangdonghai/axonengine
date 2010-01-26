@@ -969,7 +969,7 @@ void ScriptSystem::registerCppClass(CppClass *metainfo)
 	linkCppToScript(metainfo);
 }
 
-Object *ScriptSystem::createObject(const char *classname)
+Object *ScriptSystem::createObject(const FixedString &classname)
 {
 	ScriptClassDict::const_iterator cit = m_scriptClassReg.find(classname);
 	if (cit != m_scriptClassReg.end()) {
@@ -1137,7 +1137,7 @@ void ScriptSystem::linkCppToScript(CppClass *mi)
 		ScriptClass *ci = it->second;
 		if (ci->m_cppName == mi->m_name) {
 			ci->m_cppClass = mi;
-			mi->m_sqClass = ci;
+			mi->m_scriptClass = ci;
 		}
 	}
 }
@@ -1177,7 +1177,7 @@ ScriptValue ScriptSystem::createMetaClosure(Member *method)
 	sq_pushuserpointer(VM, method);
 	sq_newclosure(VM, ScriptMetacall, 1);
 	sq_setparamscheck(VM, 0, 0);
-	sq_setnativeclosurename(VM, -1, method->getName());
+	sq_setnativeclosurename(VM, -1, method->getName().c_str());
 
 	sqObject sobj;
 	sobj.attachToStackObject(VM, -1);

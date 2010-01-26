@@ -18,7 +18,11 @@ AX_BEGIN_NAMESPACE
 class AX_API FixedStringManager : public ThreadSafe
 {
 public:
-	enum { EMPTY_HANDLE = 0 };
+	enum {
+		EMPTY_HANDLE = 0,
+		MAX_HANDLES = 65536
+	};
+
 	FixedStringManager();
 	~FixedStringManager();
 
@@ -26,7 +30,7 @@ public:
 	int findString(const String &str);
 	int findString(const char *lpcz);
 
-	static FixedStringManager &get();
+	static FixedStringManager &instance();
 
 private:
 	Dict<const char*,int,hash_cstr, equal_cstr> m_dict;
@@ -46,27 +50,27 @@ public:
 
 	FixedString(const String &str)
 	{
-		m_handle = FixedStringManager::get().findString(str.c_str());
+		m_handle = FixedStringManager::instance().findString(str.c_str());
 	}
 
 	FixedString(const char *lpcz)
 	{
-		m_handle = FixedStringManager::get().findString(lpcz);
+		m_handle = FixedStringManager::instance().findString(lpcz);
 	}
 
 	~FixedString()
 	{}
 
 	const String &toString() const {
-		return FixedStringManager::get().getString(m_handle);
+		return FixedStringManager::instance().getString(m_handle);
 	}
-
+#if 1
 	operator const String&() const {
-		return FixedStringManager::get().getString(m_handle);
+		return FixedStringManager::instance().getString(m_handle);
 	}
-
+#endif
 	const char *c_str() const {
-		return FixedStringManager::get().getString(m_handle).c_str();
+		return FixedStringManager::instance().getString(m_handle).c_str();
 	}
 
 	FixedString &operator=(const FixedString &rhs) {
@@ -75,12 +79,12 @@ public:
 	}
 
 	FixedString &operator=(const String &rhs) {
-		m_handle = FixedStringManager::get().findString(rhs);
+		m_handle = FixedStringManager::instance().findString(rhs);
 		return *this;
 	}
 
 	FixedString &operator=(const char *lpcz) {
-		m_handle = FixedStringManager::get().findString(lpcz);
+		m_handle = FixedStringManager::instance().findString(lpcz);
 		return *this;
 	}
 

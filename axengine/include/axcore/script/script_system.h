@@ -62,7 +62,7 @@ public:
 
 	void executeLine(const char *text);
 
-	Object *createObject(const char *classname);
+	Object *createObject(const FixedString &classname);
 	Object *cloneObject(const Object *obj);
 
 	// for automatic name gen
@@ -89,10 +89,10 @@ protected:
 	void linkCppToScript(CppClass *ti);
 
 private:
-	typedef Dict<String, ScriptClass*> ScriptClassDict;
+	typedef Dict<FixedString, ScriptClass*> ScriptClassDict;
 	ScriptClassDict m_scriptClassReg;
 
-	typedef Dict<const char*, CppClass*, hash_cstr, equal_cstr> CppClassDict;
+	typedef Dict<FixedString, CppClass*> CppClassDict;
 	CppClassDict m_cppClassReg;
 
 	typedef Dict<String,int> StringIntDict;

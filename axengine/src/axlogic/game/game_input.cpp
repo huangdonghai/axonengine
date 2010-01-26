@@ -96,8 +96,8 @@ void GameInput::runFrame(int msec)
 					continue;
 				}
 
-				this->invokeMethod_(it->second.c_str(), (int)e->key, true);
-				this->invokeMethod_(it->second.c_str(), (int)e->key, false);
+				this->invokeMethod(it->second.c_str(), (int)e->key, true);
+				this->invokeMethod(it->second.c_str(), (int)e->key, false);
 				continue;
 			}
 		case InputEvent::XboxAxis:
@@ -109,7 +109,7 @@ void GameInput::runFrame(int msec)
 			continue;
 		}
 
-		this->invokeMethod_(it->second.c_str(), (int)e->key, isdown);
+		this->invokeMethod(it->second.c_str(), (int)e->key, isdown);
 	}
 }
 

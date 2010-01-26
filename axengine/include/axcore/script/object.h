@@ -26,16 +26,16 @@ public:
 	static CppClass *registerCppClass();
 	const ScriptClass *getScriptClass() const { return m_scriptClass; }
 
-	Member *findMember(const char *name) const;
-	bool getProperty(const char *name, Variant &ret) const;
-	bool setProperty(const char *name, const Variant &value);
-	bool setProperty(const char *name, const char *value);
+	Member *findMember(const FixedString &name) const;
+	bool getProperty(const FixedString &name, Variant &ret) const;
+	bool setProperty(const FixedString &name, const Variant &value);
+	bool setProperty(const FixedString &name, const char *value);
 
 	// properties
 	void set_objectName(const String &name);
 	String get_objectName() const;
 
-	bool inherits(const char *cls) const;
+	bool inherits(const FixedString &cls) const;
 
 	// read and write properties
 	void writeProperties(File *f, int indent=0) const;
@@ -43,38 +43,21 @@ public:
 	void copyPropertiesFrom(const Object *rhs);
 
 	// runtime
-	void setRuntime(const char *name, const Variant &val);
-	Variant getRuntime(const char *name);
+	void setRuntime(const FixedString &name, const Variant &val);
+	Variant getRuntime(const FixedString &name);
 
 	void doPropertyChanged();
 
-	bool invokeMethod(const char *methodName, const Ref &ret=Ref(), const ConstRef &arg0=ConstRef(), const ConstRef &arg1=ConstRef(), const ConstRef &arg2=ConstRef(), const ConstRef &arg3=ConstRef(), const ConstRef &arg4=ConstRef());
+	// scriptable method
+	void sleep(float seconds);
+	void gotoState(const ScriptValue &state);
+	void switchState(const ScriptValue &state);
+	void switchState(const FixedString &name);
 
-	// invoke helper
-	bool invokeMethod_(const char *methodName);
-	template <class A0>
-	bool invokeMethod_(const char *methodName, const A0 &a0);
-	template <class A0, class A1>
-	bool invokeMethod_(const char *methodName, const A0 &a0, const A1 &a1);
-	template <class A0, class A1, class A2>
-	bool invokeMethod_(const char *methodName, const A0 &a0, const A1 &a1, const A2 &a2);
-	template <class A0, class A1, class A2, class A3>
-	bool invokeMethod_(const char *methodName, const A0 &a0, const A1 &a1, const A2 &a2, const A3 &a3);
-	template <class A0, class A1, class A2, class A3, class A4>
-	bool invokeMethod_(const char *methodName, const A0 &a0, const A1 &a1, const A2 &a2, const A3 &a3, const A4 &a4);
-
-	template <class Rt>
-	bool invokeMethodRt_(const char *methodName, Rt &ret);
-	template <class Rt, class A0>
-	bool invokeMethodRt_(const char *methodName, Rt &ret, const A0 &a0);
-	template <class Rt, class A0, class A1>
-	bool invokeMethodRt_(const char *methodName, Rt &ret, const A0 &a0, const A1 &a1);
-	template <class Rt, class A0, class A1, class A2>
-	bool invokeMethodRt_(const char *methodName, Rt &ret, const A0 &a0, const A1 &a1, const A2 &a2);
-	template <class Rt, class A0, class A1, class A2, class A3>
-	bool invokeMethodRt_(const char *methodName, Rt &ret, const A0 &a0, const A1 &a1, const A2 &a2, const A3 &a3);
-	template <class Rt, class A0, class A1, class A2, class A3, class A4>
-	bool invokeMethodRt_(const char *methodName, Rt &ret, const A0 &a0, const A1 &a1, const A2 &a2, const A3 &a3, const A4 &a4);
+	bool invokeMethodRt(const FixedString &methodName, const Ref &ret=Ref(), const ConstRef &arg0=ConstRef(), const ConstRef &arg1=ConstRef(), const ConstRef &arg2=ConstRef(), const ConstRef &arg3=ConstRef(), const ConstRef &arg4=ConstRef());
+	bool invokeMethod(const FixedString &methodName, const ConstRef &arg0=ConstRef(), const ConstRef &arg1=ConstRef(), const ConstRef &arg2=ConstRef(), const ConstRef &arg3=ConstRef(), const ConstRef &arg4=ConstRef());
+	bool invokeScriptRt(const FixedString &methodName, const Ref &ret=Ref(), const ConstRef &arg0=ConstRef(), const ConstRef &arg1=ConstRef(), const ConstRef &arg2=ConstRef(), const ConstRef &arg3=ConstRef(), const ConstRef &arg4=ConstRef());
+	bool invokeScript(const FixedString &methodName, const ConstRef &arg0=ConstRef(), const ConstRef &arg1=ConstRef(), const ConstRef &arg2=ConstRef(), const ConstRef &arg3=ConstRef(), const ConstRef &arg4=ConstRef());
 
 	ScriptValue& getScriptInstance() { return m_scriptInstance; }
 
@@ -101,80 +84,9 @@ private:
 	String m_objectName;
 
 	ScriptValue m_scriptInstance;
+	ScriptValue m_currentState;
+	ScriptValue m_penddingState;
 };
-
-inline bool Object::invokeMethod_(const char *methodName)
-{
-	return invokeMethod(methodName);
-}
-
-template <class A0>
-bool Object::invokeMethod_(const char *methodName, const A0 &a0)
-{
-	return invokeMethod(methodName, Ref(), AX_ARG(a0));
-}
-
-template <class A0, class A1>
-bool Object::invokeMethod_(const char *methodName, const A0 &a0, const A1 &a1)
-{
-	return invokeMethod(methodName, Ref(), AX_ARG(a0), AX_ARG(a1));
-}
-
-template <class A0, class A1, class A2>
-bool Object::invokeMethod_(const char *methodName, const A0 &a0, const A1 &a1, const A2 &a2)
-{
-	return invokeMethod(methodName, Ref(), AX_ARG(a0), AX_ARG(a1), AX_ARG(a2));
-}
-
-template <class A0, class A1, class A2, class A3>
-bool Object::invokeMethod_(const char *methodName, const A0 &a0, const A1 &a1, const A2 &a2, const A3 &a3)
-{
-	return invokeMethod(methodName, Ref(), AX_ARG(a0), AX_ARG(a1), AX_ARG(a2), AX_ARG(a3));
-}
-
-template <class A0, class A1, class A2, class A3, class A4>
-bool Object::invokeMethod_(const char *methodName, const A0 &a0, const A1 &a1, const A2 &a2, const A3 &a3, const A4 &a4)
-{
-	return invokeMethod(methodName, Ref(), AX_ARG(a0), AX_ARG(a1), AX_ARG(a2), AX_ARG(a3), AX_ARG(a4));
-}
-
-template <class Rt>
-bool Object::invokeMethodRt_(const char *methodName, Rt &ret)
-{
-	return invokeMethod(methodName, AX_RETURN_ARG(ret));
-}
-
-template <class Rt, class A0>
-bool Object::invokeMethodRt_(const char *methodName, Rt &ret, const A0 &a0)
-{
-	return invokeMethod(methodName, AX_RETURN_ARG(ret), AX_ARG(a0));
-}
-
-template <class Rt, class A0, class A1>
-bool Object::invokeMethodRt_(const char *methodName, Rt &ret, const A0 &a0, const A1 &a1)
-{
-	return invokeMethod(methodName, AX_RETURN_ARG(ret), AX_ARG(a0), AX_ARG(a1));
-}
-
-template <class Rt, class A0, class A1, class A2>
-bool Object::invokeMethodRt_(const char *methodName, Rt &ret, const A0 &a0, const A1 &a1, const A2 &a2)
-{
-	return invokeMethod(methodName, AX_RETURN_ARG(ret), AX_ARG(a0), AX_ARG(a1), AX_ARG(a2));
-}
-
-template <class Rt, class A0, class A1, class A2, class A3>
-bool Object::invokeMethodRt_(const char *methodName, Rt &ret, const A0 &a0, const A1 &a1, const A2 &a2, const A3 &a3)
-{
-	return invokeMethod(methodName, AX_RETURN_ARG(ret), AX_ARG(a0), AX_ARG(a1), AX_ARG(a2), AX_ARG(a3));
-}
-
-template <class Rt, class A0, class A1, class A2, class A3, class A4>
-bool Object::invokeMethodRt_(const char *methodName, Rt &ret, const A0 &a0, const A1 &a1, const A2 &a2, const A3 &a3, const A4 &a4)
-{
-	return invokeMethod(methodName, AX_RETURN_ARG(ret), AX_ARG(a0), AX_ARG(a1), AX_ARG(a2), AX_ARG(a3), AX_ARG(a4));
-}
-
-
 
 AX_END_NAMESPACE
 

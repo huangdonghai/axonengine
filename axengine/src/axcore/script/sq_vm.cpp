@@ -147,7 +147,7 @@ void sqVM::printFunc(HSQUIRRELVM v, const SQChar* s, ...)
 	va_list vl;
 	va_start(vl, s);
 	StringUtil::vsnprintf(temp, ArraySize(temp), s, vl);
-	Printf("%s\n", temp);
+	Printf("%s", temp);
 	va_end(vl);
 }
 
@@ -325,8 +325,10 @@ void sqVM::pushMeta(HSQUIRRELVM v, const ConstRef &arg)
 		return;
 	case Variant::kObject:
 		sq_pushobject(v, arg.ref<ObjectStar>()->getScriptInstance().getSqObject());
+#if 0
 		sq_weakref(v, -1);
 		sq_remove(v, -2);
+#endif
 		return;
 	case Variant::kVector3:
 		push_Vector3(v, arg.ref<Vector3>());

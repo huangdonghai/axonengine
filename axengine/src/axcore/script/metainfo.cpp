@@ -389,12 +389,12 @@ Variant ScriptProp::getProperty(const Object *obj)
 static String getsortkey(const SqProperty *prop)
 {
 	if (prop->getGroup())
-		return prop->getGroup()->getRealName() + prop->getRealName();
+		return prop->getGroup()->getRealName().toString() + prop->getRealName().toString();
 	
 	if (prop->getPropKind() == Member::kGroup)
-		return prop->getRealName();
+		return prop->getRealName().toString();
 
-	return String(" ") + prop->getRealName();
+	return String(" ") + prop->getRealName().toString();
 }
 
 static bool sqlesser(const SqProperty *a, const SqProperty *b)
@@ -447,12 +447,11 @@ SqProperty::SqProperty(const sqObject &key, const sqObject &val, const sqObject 
 	m_propKind = defineKind;
 }
 
-SqProperty::SqProperty(const char *name, Kind kind)
-	: Member(0, Member::kPropertyType)
+SqProperty::SqProperty(const FixedString &name, Kind kind)
+	: Member(name, Member::kPropertyType)
 	, m_group(0)
 {
 	m_realName = name;
-	m_name = m_realName.c_str();
 	m_propKind = kind;
 }
 
@@ -469,11 +468,11 @@ bool SqProperty::setProperty(Object *obj, const ConstRef &arg)
 	if (!obj) return false;
 	if (obj->m_scriptInstance.isNull()) return false;
 
-	obj->m_scriptInstance.getSqObject().setValue(m_name, arg);
+	obj->m_scriptInstance.getSqObject().setValue(m_name.c_str(), arg);
 	return true;
 }
 
-ScriptClass::ScriptClass(const String &name)
+ScriptClass::ScriptClass(const FixedString &name)
 	: m_cppClass(0)
 {
 	m_name = name;

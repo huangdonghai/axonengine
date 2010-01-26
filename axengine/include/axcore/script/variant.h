@@ -11,55 +11,6 @@ AX_BEGIN_NAMESPACE
 
 class Object;
 class Variant;
-
-#if 0
-//--------------------------------------------------------------------------
-// class LuaTable
-//--------------------------------------------------------------------------
-
-struct AX_API LuaTable
-{
-public:
-	LuaTable();
-	LuaTable(const LuaTable &rhs);
-	explicit LuaTable(int index);
-
-	void beginRead() const;
-	Variant get(const String &n) const;
-	void set(const String &n, const Variant &v);
-	int getLength() const;
-	// n is start from 0
-	Variant get(int n) const;
-	void endRead() const;
-
-	void beginIterator() const;
-	bool nextIterator(Variant &k, Variant &v) const;
-	void endIterator() const;
-
-	Vector3 toVector3() const;
-	Color3 toColor() const;
-	Point toPoint() const;
-	Rect toRect() const;
-	Object *toObject() const;
-
-	// type conversion
-	operator Vector3() const { return toVector3(); }
-	operator Color3() const { return toColor(); }
-	operator Point() const { return toPoint(); }
-	operator Rect() const { return toRect(); }
-	operator Object *() const { return toObject(); }
-
-	LuaTable &operator=(const LuaTable &rhs);
-
-public:
-	const int m_index;
-	mutable bool m_isReading;
-	mutable bool m_isIteratoring;
-	mutable int m_stackTop;
-};
-#endif
-
-class Variant;
 class ConstRef;
 class Ref;
 
@@ -215,7 +166,7 @@ private:
 class ConstRef
 {
 public:
-	ConstRef(Variant::TypeId t = Variant::kVoid, const void *d = 0) : m_typeId(t), m_voidstar(d) {}
+	explicit ConstRef(Variant::TypeId t = Variant::kVoid, const void *d = 0) : m_typeId(t), m_voidstar(d) {}
 
 	Variant::TypeId getTypeId() const { return m_typeId; }
 	const void *getPointer() const { return m_voidstar; }
@@ -224,6 +175,10 @@ public:
 	template <class Q>
 	static ConstRef make(const Q &aData) {
 		return ConstRef(GetVariantType_<Q>(), static_cast<const void *>(&aData));
+	}
+
+	template <class Q>
+	ConstRef(const Q &aData) : m_typeId(GetVariantType_<Q>()), m_voidstar(static_cast<const void *>(&aData)) {
 	}
 
 	template <class Q>
@@ -257,6 +212,10 @@ public:
 	template <class Q>
 	static Ref make(Q &aData) {
 		return Ref(GetVariantType_<Q>(), static_cast<void *>(&aData));
+	}
+
+	template <class Q>
+	Ref(Q &aData) : m_typeId(GetVariantType_<Q>()), m_voidstar(static_cast<void *>(&aData)) {
 	}
 
 	template <class Q>

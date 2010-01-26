@@ -30,6 +30,7 @@ public:
 	SQObjectType getType() const;
 	bool isClosure() const { return sq_isclosure(m_obj); }
 	bool isNativeClosure() const { return sq_isnativeclosure(m_obj); }
+	bool isCallable() const { return isClosure() || isNativeClosure(); }
 	bool isClass() const { return sq_isclass(m_obj); }
 	bool isNull() const { return sq_isnull(m_obj); }
 	bool isNumeric() const { return sq_isnumeric(m_obj); }

@@ -25,12 +25,12 @@ public:
 	typedef std::pair<String,int> EnumItem;
 	typedef Sequence<EnumItem> EnumItems;
 
-	Member(const char *name, Type t) : m_name(name), m_type(t), m_propKind(Variant::kVoid) {}
+	Member(const FixedString &name, Type t) : m_name(name), m_type(t), m_propKind(Variant::kVoid) {}
 
 	bool isProperty() const { return m_type == kPropertyType; }
 	bool isMethod() const { return m_type == kMethodType; }
 	Type getType() const { return m_type; }
-	const char *getName() const { return m_name; }
+	const FixedString& getName() const { return m_name; }
 	int argc() const { return m_argc; }
 	Variant::TypeId getPropType() const { return m_propType; }
 	int getPropKind() const { return m_propKind; }
@@ -71,7 +71,7 @@ public:
 	}
 
 protected:
-	const char *m_name;
+	FixedString m_name;
 	Type m_type;
 
 	// for method
@@ -87,7 +87,7 @@ protected:
 };
 
 typedef Sequence<Member*> MemberSeq;
-typedef Dict<const char*, Member*, hash_cstr, equal_cstr> MemberDict;
+typedef Dict<FixedString, Member*> MemberDict;
 
 //--------------------------------------------------------------------------
 // template SimpleProp_
@@ -98,7 +98,7 @@ class SimpleProp_ : public Member {
 public:
 	typedef M (T::*DataType);
 
-	SimpleProp_(const char *name, DataType d)
+	SimpleProp_(const FixedString &name, DataType d)
 		: Member(name, Member::kPropertyType)
 	{
 		m_d = d;
@@ -138,7 +138,7 @@ public:
 	typedef GetType (T::*GetFunc)() const;
 	typedef void (T::*SetFunc)(SetType);
 
-	Property_(const char *name, GetFunc getfunc, SetFunc setfunc)
+	Property_(const FixedString &name, GetFunc getfunc, SetFunc setfunc)
 		: Member(name, Member::kPropertyType)
 		, m_getFunc(getfunc)
 		, m_setFunc(setfunc)
@@ -149,7 +149,7 @@ public:
 		m_propType = getTypeId;
 	}
 
-	Property_(const char *name, GetFunc getfunc)
+	Property_(const FixedString &name, GetFunc getfunc)
 		: Member(name, Member::kPropertyType)
 		, m_getFunc(getfunc)
 		, m_setFunc(nullptr)
@@ -339,7 +339,7 @@ class Method_<Rt (T::*)()> : public Member {
 public:
 	typedef Rt (T::*FunctionType)();
 
-	Method_(const char *name, FunctionType m)
+	Method_(const FixedString &name, FunctionType m)
 		: Member(name, Member::kMethodType)
 		, m_m(m)
 	{
@@ -357,7 +357,6 @@ public:
 	}
 
 private:
-	String m_name;
 	FunctionType m_m;
 };
 
@@ -366,7 +365,7 @@ class Method_<Rt (T::*)(Arg0)> : public Member {
 public:
 	typedef Rt (T::*FunctionType)(Arg0);
 
-	Method_(const char *name, FunctionType m)
+	Method_(const FixedString &name, FunctionType m)
 		: Member(name, Member::kMethodType)
 		, m_m(m)
 	{
@@ -385,7 +384,6 @@ public:
 	}
 
 private:
-	String m_name;
 	FunctionType m_m;
 };
 
@@ -394,7 +392,7 @@ class Method_<Rt (T::*)(Arg0,Arg1)> : public Member {
 public:
 	typedef Rt (T::*FunctionType)(Arg0,Arg1);
 
-	Method_(const char *name, FunctionType m)
+	Method_(const FixedString &name, FunctionType m)
 		: Member(name, Member::kMethodType)
 		, m_m(m)
 	{
@@ -414,7 +412,6 @@ public:
 	}
 
 private:
-	String m_name;
 	FunctionType m_m;
 };
 
@@ -423,7 +420,7 @@ class Method_<Rt (T::*)(Arg0,Arg1,Arg2)> : public Member {
 public:
 	typedef Rt (T::*FunctionType)(Arg0,Arg1,Arg2);
 
-	Method_(const char *name, FunctionType m)
+	Method_(const FixedString &name, FunctionType m)
 		: Member(name, Member::kMethodType)
 		, m_m(m)
 	{
@@ -444,7 +441,6 @@ public:
 	}
 
 private:
-	String m_name;
 	FunctionType m_m;
 };
 
@@ -453,7 +449,7 @@ class Method_<Rt (T::*)(Arg0,Arg1,Arg2,Arg3)> : public Member {
 public:
 	typedef Rt (T::*FunctionType)(Arg0,Arg1,Arg2,Arg3);
 
-	Method_(const char *name, FunctionType m)
+	Method_(const FixedString &name, FunctionType m)
 		: Member(name, Member::kMethodType)
 		, m_m(m)
 	{
@@ -475,7 +471,6 @@ public:
 	}
 
 private:
-	String m_name;
 	FunctionType m_m;
 };
 
@@ -484,7 +479,7 @@ class Method_<Rt (T::*)(Arg0,Arg1,Arg2,Arg3,Arg4)> : public Member {
 public:
 	typedef Rt (T::*FunctionType)(Arg0,Arg1,Arg2,Arg3,Arg4);
 
-	Method_(const char *name, FunctionType m)
+	Method_(const FixedString &name, FunctionType m)
 		: Member(name, Member::kMethodType)
 		, m_m(m)
 	{
@@ -507,7 +502,6 @@ public:
 	}
 
 private:
-	String m_name;
 	FunctionType m_m;
 };
 #undef ARG
@@ -515,36 +509,33 @@ private:
 //--------------------------------------------------------------------------
 // class CppClass
 //--------------------------------------------------------------------------
-#if 0
-class ClassInfo;
-#else
 class ScriptClass;
-#endif
+
 class AX_API CppClass
 {
 	friend class ScriptSystem;
 
 public:
-	CppClass(const char *classname, CppClass *base);
+	CppClass(const FixedString &classname, CppClass *base);
 	virtual ~CppClass();
 
 	template< typename T, typename GetType, typename SetType >
-	CppClass &addProperty(const char *name, GetType (T::*get)() const, void (T::*set)(SetType));
+	CppClass &addProperty(const FixedString &name, GetType (T::*get)() const, void (T::*set)(SetType));
 
 	template< typename T, typename GetType >
-	CppClass &addProperty(const char *name, GetType (T::*get)() const);
+	CppClass &addProperty(const FixedString &name, GetType (T::*get)() const);
 
 	template< typename T, typename M >
-	CppClass &addProperty(const char *name, M (T::*d));
+	CppClass &addProperty(const FixedString &name, M (T::*d));
 
 	template< typename Signature >
-	CppClass &addMethod(const char *name, Signature m);
+	CppClass &addMethod(const FixedString &name, Signature m);
 
-	Member *findMember(const char *name) const;
+	Member *findMember(const FixedString &name) const;
 	CppClass *getBase() const;
 
-	const char *getName() const;
-	const MemberSeq &getMembers() const;
+	const FixedString& getName() const;
+	const MemberSeq& getMembers() const;
 
 	virtual Object *createObject() = 0;
 
@@ -552,45 +543,37 @@ protected:
 	void addMember(Member *member);
 
 private:
-	const char *m_name;
+	FixedString m_name;
 	CppClass *m_base;
-#if 0
-	ClassInfo *m_classInfo;
-#else
-	ScriptClass *m_sqClass;
-#endif
+	ScriptClass *m_scriptClass;
 	MemberSeq m_members;
 	MemberDict m_memberDict;
 };
 
-inline CppClass::CppClass(const char *classname, CppClass *base)
+inline CppClass::CppClass(const FixedString &classname, CppClass *base)
 	: m_name(classname)
 	, m_base(base)
-#if 0
-	, m_classInfo(nullptr)
-#else
-	, m_sqClass(0)
-#endif
+	, m_scriptClass(0)
 {}
 
 inline CppClass::~CppClass() {}
 
 template< typename T, typename GetType, typename SetType >
-CppClass &CppClass::addProperty(const char *name, GetType (T::*get)() const, void (T::*set)(SetType)) {
+CppClass &CppClass::addProperty(const FixedString &name, GetType (T::*get)() const, void (T::*set)(SetType)) {
 	Member *member = new Property_<T,GetType,SetType>(name, get, set);
 	addMember(member);
 	return *this;
 }
 
 template< typename T, typename GetType >
-CppClass &CppClass::addProperty(const char *name, GetType (T::*get)() const) {
+CppClass &CppClass::addProperty(const FixedString &name, GetType (T::*get)() const) {
 	Member *member = new Property_<T,GetType,GetType>(name, get);
 	addMember(member);
 	return *this;
 }
 
 template< typename T, typename M >
-CppClass &CppClass::addProperty(const char *name, M (T::*d)) {
+CppClass &CppClass::addProperty(const FixedString &name, M (T::*d)) {
 	Member *member = new SimpleProp_<T,M>(name, d);
 	addMember(member);
 	return *this;
@@ -598,7 +581,7 @@ CppClass &CppClass::addProperty(const char *name, M (T::*d)) {
 
 
 template< typename Signature >
-CppClass &CppClass::addMethod(const char *name, Signature m) {
+CppClass &CppClass::addMethod(const FixedString &name, Signature m) {
 	Member *member = new Method_<Signature>(name, m);
 	addMember(member);
 	return *this;
@@ -609,7 +592,7 @@ inline void CppClass::addMember(Member *member) {
 	m_memberDict[member->getName()] = member;
 }
 
-inline Member *CppClass::findMember(const char *name) const {
+inline Member *CppClass::findMember(const FixedString &name) const {
 	MemberDict::const_iterator it = m_memberDict.find(name);
 
 	if (it != m_memberDict.end())
@@ -621,11 +604,11 @@ inline CppClass *CppClass::getBase() const {
 	return m_base;
 }
 
-inline const char *CppClass::getName() const {
+inline const FixedString& CppClass::getName() const {
 	return m_name;
 }
 
-inline const MemberSeq &CppClass::getMembers() const {
+inline const MemberSeq& CppClass::getMembers() const {
 	return m_members;
 }
 
@@ -636,7 +619,7 @@ inline const MemberSeq &CppClass::getMembers() const {
 template< class T >
 class CppClass_ : public CppClass {
 public:
-	CppClass_(const char *classname, CppClass *base)
+	CppClass_(const FixedString &classname, CppClass *base)
 		: CppClass(classname, base)
 	{}
 	virtual ~CppClass_() {}
@@ -706,7 +689,7 @@ class AX_API SqProperty : public Member
 
 public:
 	SqProperty(const sqObject &key, const sqObject &val, const sqObject &attr);
-	SqProperty(const char *name, Kind kind);
+	SqProperty(const FixedString &name, Kind kind);
 
 	// implement Member
 	virtual bool isConst() const
@@ -722,19 +705,19 @@ public:
 	virtual bool resetProperty(Object *obj)
 	{ return false; }
 
-	const String &getRealName() const
+	const FixedString &getRealName() const
 	{ return m_realName; }
 
 	SqProperty *getGroup() const { return m_group; }
 
 private:
-	String m_realName;
+	FixedString m_realName;
 	Variant m_default;
 	SqProperty *m_group;
 };
 
 typedef Sequence<SqProperty*> SqProperties;
-typedef Dict<String,SqProperty*> SqPropertyDict;
+typedef Dict<FixedString,SqProperty*> SqPropertyDict;
 
 //--------------------------------------------------------------------------
 class AX_API ScriptClass
@@ -742,12 +725,12 @@ class AX_API ScriptClass
 	friend class ScriptSystem;
 
 public:
-	ScriptClass(const String &name);
+	ScriptClass(const FixedString &name);
 
-	String getName() const
+	FixedString getName() const
 	{ return m_name; }
 
-	Member *findMember(const char *name) const
+	Member *findMember(const FixedString &name) const
 	{
 		SqPropertyDict::const_iterator it = m_propDict.find(name);
 
@@ -767,8 +750,9 @@ protected:
 	void addProperty(const sqObject &key, const sqObject &val, const sqObject &attr);
 
 private:
-	String m_name;
-	String m_cppName;
+	FixedString m_name;
+
+	FixedString m_cppName;
 	CppClass *m_cppClass;
 
 	SqProperties m_properties;

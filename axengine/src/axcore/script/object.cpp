@@ -28,7 +28,7 @@ Object::~Object()
 	resetObjectName();
 }
 
-Member *Object::findMember(const char *name) const
+Member *Object::findMember(const FixedString &name) const
 {
 	CppClass *typeinfo = getCppClass();
 
@@ -74,12 +74,12 @@ String Object::get_objectName() const
 }
 
 
-bool Object::inherits(const char *cls) const
+bool Object::inherits(const FixedString &cls) const
 {
 	CppClass *typeinfo = getCppClass();
 
 	for (; typeinfo; typeinfo=typeinfo->getBase()) {
-		if (Strequ(cls, typeinfo->getName())) {
+		if (cls == typeinfo->getName()) {
 			return true;
 		}
 	}
@@ -87,7 +87,7 @@ bool Object::inherits(const char *cls) const
 	return false;
 }
 
-bool Object::getProperty(const char *name, Variant &ret) const
+bool Object::getProperty(const FixedString &name, Variant &ret) const
 {
 	Member *m = findMember(name);
 	if (!m || !m->isProperty()) {
@@ -97,7 +97,7 @@ bool Object::getProperty(const char *name, Variant &ret) const
 	return m->getProperty(this, ret);
 }
 
-bool Object::setProperty(const char *name, const Variant &value)
+bool Object::setProperty(const FixedString &name, const Variant &value)
 {
 	Member *m = findMember(name);
 	if (!m || !m->isProperty() || m->isConst()) {
@@ -109,7 +109,7 @@ bool Object::setProperty(const char *name, const Variant &value)
 	return true;
 }
 
-bool Object::setProperty(const char *name, const char *value)
+bool Object::setProperty(const FixedString &name, const char *value)
 {
 	Member *member = findMember(name);
 
@@ -294,11 +294,11 @@ void Object::invokeCallback(const String &callback, const Variant &param)
 {
 }
 
-void Object::setRuntime(const char *name, const Variant &val)
+void Object::setRuntime(const FixedString &name, const Variant &val)
 {
 }
 
-Variant Object::getRuntime(const char *name)
+Variant Object::getRuntime(const FixedString &name)
 {
 	return Variant();
 }
@@ -326,7 +326,7 @@ void Object::initScriptClass(const ScriptClass *sqclass)
 	m_scriptClass = sqclass;
 }
 
-bool Object::invokeMethod(const char *methodName, const Ref &ret,
+bool Object::invokeMethodRt(const FixedString &methodName, const Ref &ret,
 							const ConstRef &arg0, const ConstRef &arg1, const ConstRef &arg2,
 							const ConstRef &arg3, const ConstRef &arg4)
 {
@@ -391,6 +391,50 @@ bool Object::invokeMethod(const char *methodName, const Ref &ret,
 	return true;
 }
 
+bool Object::invokeMethod(const FixedString &methodName, const ConstRef &arg0/*=ConstRef()*/, const ConstRef &arg1/*=ConstRef()*/, const ConstRef &arg2/*=ConstRef()*/, const ConstRef &arg3/*=ConstRef()*/, const ConstRef &arg4/*=ConstRef()*/)
+{
+	return invokeMethodRt(methodName, Ref(), arg0, arg1, arg2, arg3, arg4);
+}
 
+bool Object::invokeScriptRt(const FixedString &methodName, const Ref &ret, const ConstRef &arg0, const ConstRef &arg1, const ConstRef &arg2, const ConstRef &arg3, const ConstRef &arg4)
+{
+	if (m_scriptInstance.isNull())
+		return false;
+
+
+	sqObject func = m_scriptInstance.getSqObject().getValue(methodName.c_str());
+
+	if (func.isNull()) {
+		if (!m_currentState.isNull())
+			func = m_currentState.getSqObject().getValue(methodName.c_str());
+	}
+
+	if (func.isNull() || !func.isCallable())
+		return false;
+
+	// push this
+	ScopedStack ss(VM);
+
+	sq_pushobject(VM, func);
+	sqVM::pushMeta(VM, AX_ARG(this));
+	SQRESULT sqr = sq_call(VM, 1, 0, true);
+
+	if (SQ_SUCCEEDED(sqr)) return true;
+
+	return false;
+}
+
+bool Object::invokeScript(const FixedString &methodName, const ConstRef &arg0/*=ConstRef()*/, const ConstRef &arg1/*=ConstRef()*/, const ConstRef &arg2/*=ConstRef()*/, const ConstRef &arg3/*=ConstRef()*/, const ConstRef &arg4/*=ConstRef()*/)
+{
+	return invokeScriptRt(methodName, Ref(), arg0, arg1, arg2, arg3, arg4);
+}
+
+void Object::switchState(const FixedString &name)
+{
+	if (m_scriptInstance.isNull())
+		return;
+
+	m_currentState = m_scriptInstance.getSqObject().getValue(name.c_str());
+}
 
 AX_END_NAMESPACE

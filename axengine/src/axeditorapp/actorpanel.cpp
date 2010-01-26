@@ -42,17 +42,17 @@ void ActorPanel::doNotify(IObservable *subject, int arg ) {
 		return;
 	}
 
-	const AgentList &actorlist = g_mapContext->getSelection();
+	const AgentList &agentlist = g_mapContext->getSelection();
 
-	if (!actorlist.containsOne() ) {
-		ui.objectName->setText(QString("%1 objects").arg(actorlist.size()));
+	if (!agentlist.containsOne() ) {
+		ui.objectName->setText(QString("%1 objects").arg(agentlist.size()));
 		ui.propEditor->initFromObject(nullptr );
 		ui.scriptProp->initScriptProp(nullptr );
 		ui.scriptClass->setText("");
 		ui.cppType->setText("");
 		ui.scriptFile->setText("");
 	} else {
-		MapActor *actor = static_cast<MapActor*>(actorlist.back());
+		MapActor *actor = static_cast<MapActor*>(agentlist.back());
 		GameObject *node = actor->getGameObject();
 		ui.propEditor->initFromObject(node );
 		ui.scriptProp->initScriptProp(node );
@@ -61,19 +61,19 @@ void ActorPanel::doNotify(IObservable *subject, int arg ) {
 		const ScriptClass *ci = actor->getGameObject()->getScriptClass();
 		if (ci ) {
 			ui.scriptClass->setText(u2q(ci->getName()) );
-			QString filename = u2q("scripts/"+ ci->getName() );
+			QString filename = u2q(String("scripts/") + ci->getName().toString());
 
 			for (int i = 0; i < filename.size(); i++ ) {
 				if (filename[i] == '.' ) {
 					filename[i] = '/';
 				}
 			}
-			ui.scriptFile->setText(filename + ".lua" );
+			ui.scriptFile->setText(filename + ".nut" );
 		}
-		ui.cppType->setText(u2q(actor->getGameObject()->getCppClass()->getName()) );
+		ui.cppType->setText(u2q(actor->getGameObject()->getCppClass()->getName()));
 	}
 
-	if (actorlist.empty() ) {
+	if (agentlist.empty() ) {
 		showbasic = false;
 	} else {
 		showbasic = true;
