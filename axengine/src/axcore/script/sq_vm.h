@@ -44,9 +44,6 @@ public:
 	static Sequence<sqObject> ms_threadPool;
 	static List<int> ms_freeThreads;
 
-	typedef IntrusiveList<Object, &Object::m_threadLink> ObjectThreadList;
-	static ObjectThreadList ms_objThreadList;
-
 	HSQUIRRELVM m_vm;
 };
 

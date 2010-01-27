@@ -13,7 +13,8 @@ read the license and understand and accept it fully.
 AX_BEGIN_NAMESPACE
 
 template< class T >
-class MapToolFactory_ : public ToolFactory {
+class MapToolFactory_ : public ToolFactory
+{
 	virtual Tool *create(Context *context) {
 		return new T(static_cast<MapContext*>(context));
 	}
@@ -23,7 +24,8 @@ class MapToolFactory_ : public ToolFactory {
 // class MapContext
 //--------------------------------------------------------------------------
 
-MapContext::MapContext() {
+MapContext::MapContext()
+{
 	m_mapState = new MapState();
 	setState(m_mapState);
 
@@ -69,7 +71,8 @@ MapContext::MapContext() {
 	m_gameWorld = new GameWorld();
 }
 
-MapContext::~MapContext() {
+MapContext::~MapContext()
+{
 	reset();
 
 	SafeDelete(m_gameWorld);
@@ -79,7 +82,8 @@ MapContext::~MapContext() {
 	SafeDelete(m_mapState);
 }
 
-void MapContext::reset() {
+void MapContext::reset()
+{
 	SafeDelete(m_tool);
 	m_selections.clear();
 	m_historyManager.clear();
@@ -109,12 +113,14 @@ void MapContext::reset() {
 	notify(EverythingChanged);
 }
 
-bool MapContext::createNew() {
+bool MapContext::createNew()
+{
 	reset();
 	return true;
 }
 
-bool MapContext::load(const String &filename) {
+bool MapContext::load(const String &filename)
+{
 	m_isLoading = true;
 
 	reset();
@@ -206,7 +212,8 @@ bool MapContext::load(const String &filename) {
 	return true;
 }
 
-bool MapContext::save() {
+bool MapContext::save()
+{
 	std::auto_ptr<File> file(g_fileSystem->openFileWrite(m_filename));
 	if (!file.get())
 		return false;
@@ -218,7 +225,8 @@ bool MapContext::save() {
 	return true;
 }
 
-bool MapContext::saveAs(const String &filename) {
+bool MapContext::saveAs(const String &filename)
+{
 	std::auto_ptr<File> file(g_fileSystem->openFileWrite(filename));
 	if (!file.get())
 		return false;
@@ -232,7 +240,8 @@ bool MapContext::saveAs(const String &filename) {
 	return true;
 }
 
-void MapContext::writeToFile(File *f) {
+void MapContext::writeToFile(File *f)
+{
 	int numActors = s2i(m_agentDict.size());
 
 	f->printf("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n");
@@ -267,17 +276,13 @@ void MapContext::writeToFile(File *f) {
 	m_isDirty = false;
 }
 
-#if 0
-bool MapContext::isDirty() {
-	return m_isDirty;
-}
-#endif
-
-Vector3 MapContext::getViewPos() {
+Vector3 MapContext::getViewPos()
+{
 	return m_perspectiveView->getEyeMatrix().origin;
 }
 
-MapTerrain *MapContext::createTerrain(int tiles, int tilemeters) {
+MapTerrain *MapContext::createTerrain(int tiles, int tilemeters)
+{
 	if (m_terrain) {
 		Errorf("%s: map already has a terrain object");
 		return nullptr;
@@ -305,7 +310,8 @@ void MapContext::setTerrainMaterialDef(MapMaterialDef *matdef)
 	}
 }
 
-void MapContext::doRender(const RenderCamera &camera, bool world) {
+void MapContext::doRender(const RenderCamera &camera, bool world)
+{
 	if (world) {
 		m_gameWorld->drawScene(camera);
 	}
@@ -329,7 +335,8 @@ void MapContext::doRender(const RenderCamera &camera, bool world) {
 	g_renderSystem->endScene();
 }
 
-void MapContext::doHitTest(const RenderCamera &camera, int part) {
+void MapContext::doHitTest(const RenderCamera &camera, int part)
+{
 	// select terrain
 	if (part & SelectPart::kTerrain) {
 		if (m_terrain)
@@ -349,7 +356,8 @@ void MapContext::doHitTest(const RenderCamera &camera, int part) {
 	}
 }
 
-void MapContext::runGame() {
+void MapContext::runGame()
+{
 	g_gameSystem->startRunning();
 }
 
@@ -383,7 +391,8 @@ void MapContext::stopGaming() {
 }
 #endif
 
-void MapContext::readActor(const TiXmlElement *node) {
+void MapContext::readActor(const TiXmlElement *node)
+{
 	const char *typestr = node->Attribute("type");
 	if (!typestr) {
 		return;

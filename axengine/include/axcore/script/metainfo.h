@@ -727,7 +727,7 @@ class AX_API ScriptClass
 public:
 	ScriptClass(const FixedString &name);
 
-	FixedString getName() const
+	const FixedString& getName() const
 	{ return m_name; }
 
 	Member *findMember(const FixedString &name) const

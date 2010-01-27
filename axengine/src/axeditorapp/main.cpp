@@ -33,9 +33,6 @@ void testArgs()
 	v1 = Vector3(0,1,2);
 	int result;
 	bool v = g_renderSystem->invokeMethodRt("testArgs", result, 1.0f, true, Vector3(0,1,2), Color3(1,1,1), Rect(0,0,640,480));
-
-	g_renderSystem->switchState("Idle");
-	g_renderSystem->invokeScriptRt("onTouch", result, 1.0f);
 }
 
 /**

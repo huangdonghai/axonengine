@@ -20,7 +20,7 @@ typedef IntrusiveList<Connection, &Connection::receiverLink> ReceiverList;
 // class Object
 //--------------------------------------------------------------------------
 
-Object::Object() : m_scriptClass(0), m_threadId(-1), m_latentId(Latent_Continue)
+Object::Object() : m_scriptClass(0)
 {}
 
 Object::~Object()
@@ -165,7 +165,7 @@ void Object::writeProperties(File *f, int indent) const
 
 			if (!m->getProperty(this, prop)) continue;
 
-			INDENT; f->printf("  %s=\"%s\"\n", m->getName(), prop.toString().c_str());
+			INDENT; f->printf("  %s=\"%s\"\n", m->getName().c_str(), prop.toString().c_str());
 		}
 
 		typeinfo = typeinfo->getBase();
@@ -183,7 +183,7 @@ void Object::writeProperties(File *f, int indent) const
 
 		if (!m->getProperty(this, prop)) continue;
 
-		INDENT; f->printf("  %s=\"%s\"\n", m->getName(), prop.toString().c_str());
+		INDENT; f->printf("  %s=\"%s\"\n", m->getName().c_str(), prop.toString().c_str());
 	}
 
 #undef INDENT
@@ -416,27 +416,6 @@ bool Object::invokeScriptRt(const FixedString &methodName, const Ref &ret, const
 bool Object::invokeScript(const FixedString &methodName, const ConstRef &arg0/*=ConstRef()*/, const ConstRef &arg1/*=ConstRef()*/, const ConstRef &arg2/*=ConstRef()*/, const ConstRef &arg3/*=ConstRef()*/, const ConstRef &arg4/*=ConstRef()*/)
 {
 	return invokeScriptRt(methodName, Ref(), arg0, arg1, arg2, arg3, arg4);
-}
-
-void Object::switchState(const String &name)
-{
-	if (m_scriptInstance.isNull())
-		return;
-
-	m_currentState = m_scriptInstance.getSqObject().getValue(name.c_str());
-
-	if (!m_currentState.isTable()) {
-		m_currentState.getSqObject().reset();
-		Errorf("Invalid state name");
-	}
-
-	sqVM::ms_objThreadList.push_back(this);
-}
-
-void Object::sleep(float seconds)
-{
-	m_latentId = Latent_Sleep;
-	m_latentParam0 = seconds;
 }
 
 AX_END_NAMESPACE

@@ -13,23 +13,23 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-	PhysicsSystem *g_physicsSystem;
-	HavokPackageManager *g_havokPackageManager;
+PhysicsSystem *g_physicsSystem;
+HavokPackageManager *g_havokPackageManager;
 
 
-	void axPhysInit() {
-		g_physicsSystem = new PhysicsSystem;
-		g_physicsSystem->initialize();
+void axPhysInit() {
+	g_physicsSystem = new PhysicsSystem;
+	g_physicsSystem->initialize();
 
-		g_havokPackageManager = new HavokPackageManager;
-	}
+	g_havokPackageManager = new HavokPackageManager;
+}
 
-	void axPhysQuit() {
-		SafeDelete(g_havokPackageManager);
+void axPhysQuit() {
+	SafeDelete(g_havokPackageManager);
 
-		g_physicsSystem->finalize();
-		SafeDelete(g_physicsSystem);
-	}
+	g_physicsSystem->finalize();
+	SafeDelete(g_physicsSystem);
+}
 
 AX_END_NAMESPACE
 

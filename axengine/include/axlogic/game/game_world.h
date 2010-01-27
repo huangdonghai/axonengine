@@ -95,6 +95,9 @@ private:
 	int m_frametime;
 	RenderCamera m_lastCamera;
 	RenderTarget *m_targetWindow;
+
+	typedef IntrusiveList<GameActor, &GameActor::m_threadLink> ObjectThreadList;
+	ObjectThreadList ms_objThreadList;
 };
 
 inline GameActor *GameWorld::getActor(int num) const

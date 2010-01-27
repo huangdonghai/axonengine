@@ -10,8 +10,83 @@ read the license and understand and accept it fully.
 
 #include "../private.h"
 
-
 AX_BEGIN_NAMESPACE
+
+
+
+//--------------------------------------------------------------------------
+// class GameRigit
+//--------------------------------------------------------------------------
+
+GameRigit::GameRigit() {
+	m_model = nullptr;
+	m_rigid = nullptr;
+}
+
+GameRigit::~GameRigit() {
+	onReset();
+}
+
+void GameRigit::doThink() {
+	m_model->setMatrix(m_rigid->getMatrix());
+	m_world->getRenderWorld()->addEntity(m_model);
+}
+
+#if 0
+void GameRigit::loadAsset(const LuaTable &t)
+{
+	clear();
+
+	if (!m_spawned)
+		return;
+
+	t.beginRead();
+	String modelName = t.get("model");
+	String rigidName = t.get("rigid");
+	t.endRead();
+
+	if (modelName.empty()) {
+		modelName = "models/box.mesh";
+	}
+
+	m_model = new HavokModel(modelName);
+	m_model->setMatrix(m_matrix_p);
+	m_model->setInstanceColor(m_instanceColor_p);
+	m_world->getRenderWorld()->addEntity(m_model);
+
+	if (rigidName.empty()) {
+		rigidName = modelName;
+	}
+
+	if (!rigidName.empty()) {
+		m_rigid = new PhysicsRigid(rigidName);
+		//			setPhysics(m_rigid);
+		m_rigid->setMatrix(m_matrix_p);
+		m_rigid->setMotionType(PhysicsEntity::Motion_Dynamic);
+		m_world->getPhysicsWorld()->addEntity(m_rigid);
+	}
+
+	setRenderEntity(m_model);
+	setPhysicsEntity(m_rigid);
+}
+#endif
+
+void GameRigit::onReload()
+{
+	onReset();
+
+
+}
+
+void GameRigit::onReset()
+{
+	setRenderEntity(0);
+	setPhysicsEntity(0);
+
+	SafeDelete(m_model);
+	SafeDelete(m_rigid);
+}
+
 
 Animated::Animated()
 {

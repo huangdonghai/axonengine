@@ -14,6 +14,36 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
+//--------------------------------------------------------------------------
+// class GameRigit
+//--------------------------------------------------------------------------
+
+class GameRigit : public GameActor
+{
+	AX_DECLARE_CLASS(GameRigit, GameActor)
+//		AX_METHOD(loadAsset)
+	AX_END_CLASS()
+
+public:
+	GameRigit();
+	virtual ~GameRigit();
+
+	// implement GameActor
+	virtual void doThink();
+
+	// properties
+
+protected:
+//	void loadAsset(const LuaTable &t);
+	void onReload();
+	void onReset();
+
+protected:
+	HavokModel *m_model;
+	PhysicsRigid *m_rigid;
+};
+
+
 class Animated : public GameActor
 {
 	AX_DECLARE_CLASS(Animated, GameActor);

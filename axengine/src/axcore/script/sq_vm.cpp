@@ -82,7 +82,6 @@ sqObject sqVM::ms_getClosure;
 sqObject sqVM::ms_setClosure;
 Sequence<sqObject> sqVM::ms_threadPool;
 List<int> sqVM::ms_freeThreads;
-sqVM::ObjectThreadList sqVM::ms_objThreadList;
 
 static SQRegFunction ax_funcs[] = {
 	{ "loadfile", &loadfile, -2, _SC(".sb") },
@@ -374,9 +373,6 @@ void sqVM::popMeta( HSQUIRRELVM v, Variant &val )
 
 void sqVM::getMeta(HSQUIRRELVM v, int idx, Variant &result)
 {
-	// make sure result is emtpy first
-	AX_ASSERT(result.getTypeId() == Variant::kVoid);
-
 	HSQOBJECT t;
 	sq_getstackobj(VM, idx, &t);
 

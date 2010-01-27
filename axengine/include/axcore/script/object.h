@@ -18,13 +18,6 @@ class AX_API Object
 
 public:
 
-	enum LatentId {
-		Latent_Continue, // start run next code
-		Latent_Sleep, // sleep seconds
-		Latent_Wait, // wait latentId is reset to continue
-		Latent_Callback, // provide a callback function for frame tick
-	};
-
 	Object();
 	virtual ~Object();
 
@@ -32,6 +25,13 @@ public:
 	virtual String getNamespace() const { return String(); }
 	static CppClass *registerCppClass();
 	const ScriptClass *getScriptClass() const { return m_scriptClass; }
+
+	// if have scriptclass, return script class name; otherwise rethrn cppclass name
+	const FixedString & getClassName() const
+	{
+		if (m_scriptClass) return m_scriptClass->getName();
+		return getCppClass()->getName();
+	}
 
 	Member *findMember(const FixedString &name) const;
 	bool getProperty(const FixedString &name, Variant &ret) const;
@@ -56,17 +56,12 @@ public:
 
 	void doPropertyChanged();
 
-	// scriptable method
-	void sleep(float seconds);
-	void gotoState(const ScriptValue &state);
-	void switchState(const String &name);
-	// end scriptable method
-
 	bool invokeMethodRt(const FixedString &methodName, const Ref &ret=Ref(), const ConstRef &arg0=ConstRef(), const ConstRef &arg1=ConstRef(), const ConstRef &arg2=ConstRef(), const ConstRef &arg3=ConstRef(), const ConstRef &arg4=ConstRef());
 	bool invokeMethod(const FixedString &methodName, const ConstRef &arg0=ConstRef(), const ConstRef &arg1=ConstRef(), const ConstRef &arg2=ConstRef(), const ConstRef &arg3=ConstRef(), const ConstRef &arg4=ConstRef());
 	bool invokeScriptRt(const FixedString &methodName, const Ref &ret=Ref(), const ConstRef &arg0=ConstRef(), const ConstRef &arg1=ConstRef(), const ConstRef &arg2=ConstRef(), const ConstRef &arg3=ConstRef(), const ConstRef &arg4=ConstRef());
 	bool invokeScript(const FixedString &methodName, const ConstRef &arg0=ConstRef(), const ConstRef &arg1=ConstRef(), const ConstRef &arg2=ConstRef(), const ConstRef &arg3=ConstRef(), const ConstRef &arg4=ConstRef());
 
+	bool isScriptInstanced() const { return !m_scriptInstance.isNull(); }
 	ScriptValue& getScriptInstance() { return m_scriptInstance; }
 
 protected:
@@ -87,14 +82,6 @@ private:
 	ScriptValue m_scriptInstance;
 	ScriptValue m_currentState;
 	ScriptValue m_runningState; // current thread running
-
-	int m_threadId;
-	LatentId m_latentId;
-	Variant m_latentParam0;
-	Variant m_latentParam1;
-
-	friend class sqVM;
-	IntrusiveLink<Object> m_threadLink;
 };
 
 AX_END_NAMESPACE

@@ -57,14 +57,16 @@ class AX_API GameActor : public GameObject, public IObserver
 {
 	AX_DECLARE_CLASS(GameActor, GameObject)
 	AX_END_CLASS()
+
+	enum LatentId {
+		Latent_Continue, // start run next code
+		Latent_Sleep, // sleep seconds
+		Latent_Wait, // wait latentId is reset to continue
+		Latent_Callback, // provide a callback function for frame tick
+	};
+
 public:
 	friend class GameWorld;
-
-	enum State {
-		Hide,
-		Inactive,
-		Active,
-	};
 
 	GameActor();
 	virtual ~GameActor();
@@ -74,9 +76,6 @@ public:
 
 	// implement IObserver
 	virtual void doNotify(IObservable *subject, int arg);
-
-	virtual void setState(State state);
-	inline State getState() { return m_state; }
 
 	void autoGenerateName();
 
@@ -90,12 +89,24 @@ protected:
 	virtual void onPhysicsActived();
 	virtual void onPhysicsDeactived();
 
+	// scriptable method
+	void sleep(float seconds);
+	void gotoState(const ScriptValue &state);
+	void switchState(const String &name);
+	// end scriptable method
+
+
 protected:
 	ActorNum m_actorNum;
 	GameWorld *m_world;			// world the entity has added to
 
 private:
-	State m_state;
+	int m_threadId;
+	LatentId m_latentId;
+	Variant m_latentParam0;
+	Variant m_latentParam1;
+
+	IntrusiveLink<GameActor> m_threadLink;
 };
 
 //--------------------------------------------------------------------------
@@ -171,35 +182,6 @@ inline int GameActorPtr<type>::getEntityNum( void ) const {
 	return m_spawnId & ActorNum::MAX_ACTORS_MASK;
 }
 
-
-//--------------------------------------------------------------------------
-// class GameRigit
-//--------------------------------------------------------------------------
-
-class AX_API GameRigit : public GameActor
-{
-	AX_DECLARE_CLASS(GameRigit, GameActor)
-//		AX_METHOD(loadAsset)
-	AX_END_CLASS()
-
-public:
-	GameRigit();
-	virtual ~GameRigit();
-
-	// implement GameActor
-	virtual void doThink();
-
-	// properties
-
-protected:
-//	void loadAsset(const LuaTable &t);
-	void onReload();
-	void onReset();
-
-protected:
-	HavokModel *m_model;
-	PhysicsRigid *m_rigid;
-};
 
 AX_END_NAMESPACE
 

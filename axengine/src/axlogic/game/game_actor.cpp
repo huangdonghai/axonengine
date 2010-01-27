@@ -17,36 +17,36 @@ AX_BEGIN_NAMESPACE
 // class GameActor
 //--------------------------------------------------------------------------
 
-GameActor::GameActor() {
+GameActor::GameActor()
+{
 	m_actorNum = -1;
 	m_world = nullptr;
-	m_state = Active;
 
 	setSoundEntity(new SoundEntity());
 }
 
-GameActor::~GameActor() {
+GameActor::~GameActor()
+{
 	onReset();
 	delete getSoundEntity();
 	setSoundEntity(0);
 }
 
-void GameActor::doThink() {
-}
-
-void GameActor::setState(State state)
+void GameActor::doThink()
 {
-	m_state = state;
 }
 
-void GameActor::doNotify(IObservable *subject, int arg) {
+void GameActor::doNotify(IObservable *subject, int arg)
+{
 }
 
-void GameActor::onPhysicsActived() {
+void GameActor::onPhysicsActived()
+{
 	m_updateFlags.set(ReadPhysics);
 }
 
-void GameActor::onPhysicsDeactived() {
+void GameActor::onPhysicsDeactived()
+{
 	m_updateFlags.unset(ReadPhysics);
 }
 
@@ -92,77 +92,27 @@ void GameActor::doRemove()
 	m_spawned = false;
 }
 
-//--------------------------------------------------------------------------
-// class GameRigit
-//--------------------------------------------------------------------------
-
-GameRigit::GameRigit() {
-	m_model = nullptr;
-	m_rigid = nullptr;
-}
-
-GameRigit::~GameRigit() {
-	onReset();
-}
-
-void GameRigit::doThink() {
-	m_model->setMatrix(m_rigid->getMatrix());
-	m_world->getRenderWorld()->addEntity(m_model);
-}
-
-#if 0
-void GameRigit::loadAsset(const LuaTable &t)
+void GameActor::switchState(const String &name)
 {
-	clear();
-
-	if (!m_spawned)
+#if 0
+	if (!isScriptInstanced())
 		return;
 
-	t.beginRead();
-	String modelName = t.get("model");
-	String rigidName = t.get("rigid");
-	t.endRead();
+	m_currentState = m_scriptInstance.getSqObject().getValue(name.c_str());
 
-	if (modelName.empty()) {
-		modelName = "models/box.mesh";
+	if (!m_currentState.isTable()) {
+		m_currentState.getSqObject().reset();
+		Errorf("Invalid state name");
 	}
 
-	m_model = new HavokModel(modelName);
-	m_model->setMatrix(m_matrix_p);
-	m_model->setInstanceColor(m_instanceColor_p);
-	m_world->getRenderWorld()->addEntity(m_model);
-
-	if (rigidName.empty()) {
-		rigidName = modelName;
-	}
-
-	if (!rigidName.empty()) {
-		m_rigid = new PhysicsRigid(rigidName);
-//			setPhysics(m_rigid);
-		m_rigid->setMatrix(m_matrix_p);
-		m_rigid->setMotionType(PhysicsEntity::Motion_Dynamic);
-		m_world->getPhysicsWorld()->addEntity(m_rigid);
-	}
-
-	setRenderEntity(m_model);
-	setPhysicsEntity(m_rigid);
-}
+	sqVM::ms_objThreadList.push_back(this);
 #endif
-
-void GameRigit::onReload()
-{
-	onReset();
-
-
 }
 
-void GameRigit::onReset()
+void GameActor::sleep(float seconds)
 {
-	setRenderEntity(0);
-	setPhysicsEntity(0);
-
-	SafeDelete(m_model);
-	SafeDelete(m_rigid);
+	m_latentId = Latent_Sleep;
+	m_latentParam0 = seconds;
 }
 
 AX_END_NAMESPACE

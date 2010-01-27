@@ -121,31 +121,8 @@ void GameObject::writeXml(File *f, int indent/*=0 */)
 	String indstr(indent*2, ' ');
 #define INDENT if (indent) f->printf("%s", indstr.c_str());
 
-	INDENT; f->printf("<node className=\"%s\"\n", this->getCppClass()->getName());
-#if 0
-	// write properties
-	TypeInfo *typeinfo = getTypeInfo();
-
-	while (typeinfo) {
-		const MemberSeq &members = typeinfo->getMembers();
-
-		AX_FOREACH(Member *m, members) {
-			if (!m->isProperty()) {
-				continue;
-			}
-
-			if (m->isConst()) {
-				continue;
-			}
-
-			INDENT; f->printf("  %s=\"%s\"\n", m->getName(), getProperty(m->getName()).toString().c_str());
-		}
-
-		typeinfo = typeinfo->getBaseTypeInfo();
-	}
-#else
+	INDENT; f->printf("<node className=\"%s\"\n", this->getClassName().c_str());
 	writeProperties(f, indent);
-#endif
 	INDENT; f->printf("/>\n");
 
 #undef INDENT
