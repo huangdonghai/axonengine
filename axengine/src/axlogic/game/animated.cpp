@@ -23,7 +23,7 @@ Animated::Animated()
 
 Animated::~Animated()
 {
-	clear();
+	onReset();
 }
 
 void Animated::doThink()
@@ -72,7 +72,7 @@ void Animated::loadAsset(const LuaTable &t)
 }
 #endif
 
-void Animated::clear()
+void Animated::onReset()
 {
 	setRenderEntity(0);
 	SafeDelete(m_animator);

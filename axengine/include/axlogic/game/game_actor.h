@@ -82,15 +82,13 @@ public:
 
 protected:
 	// implement GameObject
-	virtual void reload();
+	virtual void onReload();
 	virtual void doSpawn();
 	virtual void doRemove();
 
 	// called by subclass
 	virtual void onPhysicsActived();
 	virtual void onPhysicsDeactived();
-
-	void invoke_onThink();
 
 protected:
 	ActorNum m_actorNum;
@@ -195,7 +193,8 @@ public:
 
 protected:
 //	void loadAsset(const LuaTable &t);
-	void clear();
+	void onReload();
+	void onReset();
 
 protected:
 	HavokModel *m_model;

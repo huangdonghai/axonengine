@@ -26,6 +26,7 @@ public:
 	sqObject(HSQOBJECT o);
 
 	sqObject& operator=(const sqObject &o);
+	void reset();
 
 	SQObjectType getType() const;
 	bool isClosure() const { return sq_isclosure(m_obj); }
@@ -43,7 +44,6 @@ public:
 	bool compareUserPointer(const sqObject& o);
 
 	void attachToStackObject(HSQUIRRELVM vm, int idx);
-	void reset(); // Release (any) reference and reset m_obj.
 	sqObject clone();
 	bool setValue(const sqObject &key, const sqObject &val);
 
@@ -106,13 +106,6 @@ public:
 
 	bool getTypeTag(SQUserPointer * typeTag);
 	bool setTypeTag(SQUserPointer typeTag);
-
-	// === get the type name of item/object through string key in a table or class. Returns NULL if the type name is not set (not an SqPlus registered type).
-	const SQChar * getTypeName(const SQChar * key);
-	// === get the type name of item/object through int key in a table or class. Returns NULL if the type name is not set (not an SqPlus registered type).
-	const SQChar * getTypeName(int key);
-	// === get the type name of this object, else return NULL if not an SqPlus registered type.
-	const SQChar * getTypeName();
 
 	// === Return base class of object using sq_getbase() === 
 	sqObject getBase();

@@ -26,13 +26,12 @@ GameActor::GameActor() {
 }
 
 GameActor::~GameActor() {
-	clear();
+	onReset();
 	delete getSoundEntity();
 	setSoundEntity(0);
 }
 
 void GameActor::doThink() {
-	invoke_onThink();
 }
 
 void GameActor::setState(State state)
@@ -51,13 +50,8 @@ void GameActor::onPhysicsDeactived() {
 	m_updateFlags.unset(ReadPhysics);
 }
 
-void GameActor::invoke_onThink() {
-	invokeCallback("onThink", m_world->getFrameTime());
-}
-
-void GameActor::reload()
+void GameActor::onReload()
 {
-	invokeCallback("onReset");
 }
 
 void GameActor::autoGenerateName()
@@ -82,7 +76,7 @@ void GameActor::doSpawn()
 	m_spawned = true;
 
 	m_world->getSoundWorld()->addEntity(getSoundEntity());
-	reload();
+	onReload();
 }
 
 void GameActor::doRemove()
@@ -94,7 +88,7 @@ void GameActor::doRemove()
 		Errorf("not even spawned");
 	}
 
-	clear();
+	onReset();
 	m_spawned = false;
 }
 
@@ -108,7 +102,7 @@ GameRigit::GameRigit() {
 }
 
 GameRigit::~GameRigit() {
-	clear();
+	onReset();
 }
 
 void GameRigit::doThink() {
@@ -155,7 +149,14 @@ void GameRigit::loadAsset(const LuaTable &t)
 }
 #endif
 
-void GameRigit::clear()
+void GameRigit::onReload()
+{
+	onReset();
+
+
+}
+
+void GameRigit::onReset()
 {
 	setRenderEntity(0);
 	setPhysicsEntity(0);

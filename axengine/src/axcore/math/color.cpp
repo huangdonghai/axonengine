@@ -99,6 +99,13 @@ String Color3::toString() const {
 bool Color3::fromString(const char *str) {
 	int v = sscanf(str, "%f %f %f", &r, &g, &b);
 	AX_ASSERT(v == 3);
+
+	// FIXME: hack
+	if (r > 16 || g > 16 || b > 16) {
+		r /= 255.0f;
+		g /= 255.0f;
+		b /= 255.0f;
+	}
 	return v == 3;
 }
 

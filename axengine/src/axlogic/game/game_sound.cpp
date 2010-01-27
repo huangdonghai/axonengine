@@ -70,7 +70,7 @@ void GameSound::activeSound( bool isActive )
 	}
 }
 
-void GameSound::clear()
+void GameSound::onReset()
 {
 	m_sfx.clear();
 }

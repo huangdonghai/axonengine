@@ -37,7 +37,9 @@ public:
 	void activeLight(bool isActive);
 
 protected:
-	virtual void clear();
+	virtual void onReload();
+	virtual void onReset();
+
 	void setupHelper();
 	void setupPointPrim();
 	void setupSpotPrim();

@@ -97,8 +97,8 @@ protected:
 
 	virtual void onMatrixChanged();
 	virtual void onPropertyChanged();
-	virtual void reload() {};
-	virtual void clear() {};
+	virtual void onReload() {};
+	virtual void onReset() {};
 
 protected:
 	Matrix m_matrix_p;

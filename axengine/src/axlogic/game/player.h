@@ -32,8 +32,8 @@ public:
 	Matrix getThirdPersonMatrix() const;
 
 protected:
-	virtual void reload();
-	virtual void clear();
+	virtual void onReload();
+	virtual void onReset();
 	virtual void onMatrixChanged();
 	virtual void onPropertyChanged();
 

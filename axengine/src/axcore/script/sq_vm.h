@@ -27,6 +27,9 @@ public:
 	static void popMeta(HSQUIRRELVM v, Variant &val);
 	static void getMeta(HSQUIRRELVM v, int idx, Variant &val);
 
+	static int allocThread();
+	static void freeThread(int threadId);
+
 protected:
 	void reportError();
 	static void createObjectClosure();
@@ -35,8 +38,15 @@ protected:
 	static void printFunc(HSQUIRRELVM v, const SQChar* s,...);
 
 public:
+	enum { INIT_THREADPOOL_SIZE = 256 };
 	static sqObject ms_getClosure;
 	static sqObject ms_setClosure;
+	static Sequence<sqObject> ms_threadPool;
+	static List<int> ms_freeThreads;
+
+	typedef IntrusiveList<Object, &Object::m_threadLink> ObjectThreadList;
+	static ObjectThreadList ms_objThreadList;
+
 	HSQUIRRELVM m_vm;
 };
 

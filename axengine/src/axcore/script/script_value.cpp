@@ -60,7 +60,13 @@ bool ScriptValue::rawCast(Variant::TypeId toType, void *toData) const
 	Variant val;
 	m_d->toVariant(val);
 
-	return val.castTo(toType, toData);
+	// check recursive
+	if (val.getTypeId() != Variant::kScriptValue) {
+		return val.castTo(toType, toData);
+	}
+
+	// can't cast
+	return false;
 }
 
 Variant::TypeHandler * ScriptValue::getTypeHandler()
@@ -82,6 +88,11 @@ bool ScriptValue::isNull() const
 bool ScriptValue::isInstance() const
 {
 	return m_d->isInstance();
+}
+
+bool ScriptValue::isTable() const
+{
+	return m_d->isTable();
 }
 
 AX_END_NAMESPACE

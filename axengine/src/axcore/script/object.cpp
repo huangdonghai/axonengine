@@ -20,7 +20,7 @@ typedef IntrusiveList<Connection, &Connection::receiverLink> ReceiverList;
 // class Object
 //--------------------------------------------------------------------------
 
-Object::Object() : m_scriptClass(0)
+Object::Object() : m_scriptClass(0), m_threadId(-1), m_latentId(Latent_Continue)
 {}
 
 Object::~Object()
@@ -97,7 +97,21 @@ bool Object::getProperty(const FixedString &name, Variant &ret) const
 	return m->getProperty(this, ret);
 }
 
-bool Object::setProperty(const FixedString &name, const Variant &value)
+bool Object::getProperty(const FixedString &name, const Ref &ref) const
+{
+	Member *m = findMember(name);
+	if (!m || !m->isProperty()) {
+		return false;
+	}
+
+	Variant ret;
+	bool v = m->getProperty(this, ret);
+	if (!v) return false;
+
+	return ret.castTo(ref);	
+}
+
+bool Object::setProperty(const FixedString &name, const ConstRef &value)
 {
 	Member *m = findMember(name);
 	if (!m || !m->isProperty() || m->isConst()) {
@@ -267,31 +281,6 @@ void Object::doPropertyChanged()
 
 void Object::onPropertyChanged()
 {
-	invoke_onPropertyChanged();
-}
-
-
-void Object::invoke_onInit()
-{
-	invokeCallback("onInit");
-}
-
-void Object::invoke_onFinalize()
-{
-	invokeCallback("onFinalize");
-}
-
-void Object::invoke_onPropertyChanged()
-{
-	invokeCallback("onPropertyChanged");
-}
-
-void Object::invokeCallback(const String &callback)
-{
-}
-
-void Object::invokeCallback(const String &callback, const Variant &param)
-{
 }
 
 void Object::setRuntime(const FixedString &name, const Variant &val)
@@ -429,12 +418,25 @@ bool Object::invokeScript(const FixedString &methodName, const ConstRef &arg0/*=
 	return invokeScriptRt(methodName, Ref(), arg0, arg1, arg2, arg3, arg4);
 }
 
-void Object::switchState(const FixedString &name)
+void Object::switchState(const String &name)
 {
 	if (m_scriptInstance.isNull())
 		return;
 
 	m_currentState = m_scriptInstance.getSqObject().getValue(name.c_str());
+
+	if (!m_currentState.isTable()) {
+		m_currentState.getSqObject().reset();
+		Errorf("Invalid state name");
+	}
+
+	sqVM::ms_objThreadList.push_back(this);
+}
+
+void Object::sleep(float seconds)
+{
+	m_latentId = Latent_Sleep;
+	m_latentParam0 = seconds;
 }
 
 AX_END_NAMESPACE

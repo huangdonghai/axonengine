@@ -214,7 +214,49 @@ void GameLight::setupSpotPrim()
 	m_renderLight->addHelperPrim(m_spotPrim);
 }
 
-void GameLight::clear()
+#define GP(type, name, init) type name = init; getProperty(#name, name);
+
+void GameLight::onReload()
+{
+	onReset();
+
+	m_renderLight = new RenderLight();
+#if 0
+	float spotangle = 60;
+	int lightType = RenderLight::kPoint;
+	Color3 lightColor(1,1,1);
+	float intensity = 1;
+	float specularX = 1;
+	float radius = 10;
+	bool castShadowMap = false;
+	int shadowMapSize = 256;
+#endif
+	GP(bool, active, false);
+	GP(float, spotAngle, 60.0f);
+	GP(int, lightStyle, RenderLight::kPoint);
+	GP(Color3, color, Color3(1.0f,1.0f,1.0f));
+	GP(float, intensity, 1.0f);
+	GP(float, specularX, 1.0f);
+	GP(float, radius, 10.0f);
+	GP(bool, castShadowMap, false);
+	GP(int, shadowMapSize, 256);
+
+	m_renderLight->setLightType(RenderLight::Type(lightStyle));
+	m_renderLight->setSpotAngle(spotAngle);
+	m_renderLight->setLightColor(color, intensity, specularX);
+	m_renderLight->setRadius(radius);
+	m_renderLight->setCastShadowMap(castShadowMap);
+	m_renderLight->setMatrix(m_matrix_p);
+	m_renderLight->setShadowMapSize(shadowMapSize);
+
+	setupHelper();
+
+	setRenderEntity(m_renderLight);
+
+	activeLight(active);
+}
+
+void GameLight::onReset()
 {
 	setRenderEntity(0);
 	SafeDelete(m_renderLight);

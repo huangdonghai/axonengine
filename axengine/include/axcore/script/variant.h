@@ -14,11 +14,9 @@ class Variant;
 class ConstRef;
 class Ref;
 
-
 //--------------------------------------------------------------------------
 // class Variant
 //--------------------------------------------------------------------------
-
 class AX_API Variant
 {
 	enum {
@@ -67,9 +65,6 @@ public:
 	Variant(const Rect &v);
 	Variant(const Color3 &v);
 	Variant(const Variant &v);
-#if 0
-	Variant(const LuaTable &table);
-#endif
 	Variant(const Matrix &matrix);
 	explicit Variant(TypeId typeId);
 	explicit Variant(TypeId typeId, void * data, InitMode initMode=InitCopy);
@@ -89,9 +84,6 @@ public:
 	operator Point() const;
 	operator Rect() const;
 	operator Color3() const;
-#if 0
-	operator LuaTable() const;
-#endif
 	Variant& operator=(const Variant &v);
 	operator Matrix() const;
 
@@ -166,6 +158,8 @@ private:
 class ConstRef
 {
 public:
+	ConstRef(const Variant &rhs) : m_typeId(rhs.getTypeId()), m_voidstar(rhs.getPointer()) {}
+
 	explicit ConstRef(Variant::TypeId t = Variant::kVoid, const void *d = 0) : m_typeId(t), m_voidstar(d) {}
 
 	Variant::TypeId getTypeId() const { return m_typeId; }

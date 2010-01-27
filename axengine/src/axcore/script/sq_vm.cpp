@@ -80,6 +80,9 @@ static SQInteger registerClass(HSQUIRRELVM v)
 
 sqObject sqVM::ms_getClosure;
 sqObject sqVM::ms_setClosure;
+Sequence<sqObject> sqVM::ms_threadPool;
+List<int> sqVM::ms_freeThreads;
+sqVM::ObjectThreadList sqVM::ms_objThreadList;
 
 static SQRegFunction ax_funcs[] = {
 	{ "loadfile", &loadfile, -2, _SC(".sb") },
@@ -127,6 +130,16 @@ sqVM::sqVM()
 	sq_settop(VM, top);
 
 	createObjectClosure();
+
+	// create thread pool
+	ms_threadPool.resize(INIT_THREADPOOL_SIZE);
+	for (int i = 0; i < INIT_THREADPOOL_SIZE; i++) {
+		HSQUIRRELVM vm = sq_newthread(VM, 1024);
+		AX_ASSERT(VM);
+		ms_threadPool[i].attachToStackObject(VM, -1);
+		sq_pop(VM, 1);
+		ms_freeThreads.push_back(i);
+	}
 
 	m_vm = VM;
 }
@@ -435,6 +448,18 @@ void sqVM::getMeta(HSQUIRRELVM v, int idx, Variant &result)
 	}
 
 	Errorf("don't support type");
+}
+
+int sqVM::allocThread()
+{
+	int result = ms_freeThreads.front();
+	ms_freeThreads.pop_front();
+	return result;
+}
+
+void sqVM::freeThread(int threadId)
+{
+	ms_freeThreads.push_front(threadId);
 }
 
 AX_END_NAMESPACE

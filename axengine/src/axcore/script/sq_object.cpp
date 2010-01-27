@@ -46,7 +46,7 @@ void sqObject::reset(void)
 		printf( "sqObject::~sqObject - Cannot release\n" ); 
 
 	sq_resetobject(&m_obj);
-} // sqObject::reset
+}
 
 sqObject sqObject::clone()
 {
@@ -642,7 +642,6 @@ bool sqObject::getTypeTag(SQUserPointer * typeTag)
 	return false;
 }
 
-
 bool sqObject::setTypeTag(SQUserPointer typeTag)
 {
 	if (!isClass()) return false;
@@ -654,48 +653,6 @@ bool sqObject::setTypeTag(SQUserPointer typeTag)
 		return false;
 	return true;
 }
-
-
-const SQChar * sqObject::getTypeName(const SQChar * key)
-{
-#if 0
-	// This version will work even if SQ_SUPPORT_INSTANCE_TYPE_INFO is not enabled.
-	SqPlus::ScriptStringVar256 varNameTag;
-	SqPlus::getVarNameTag(varNameTag, sizeof(varNameTag), key);
-	SQUserPointer data=0;
-	if (!RawGetUserData(varNameTag,&data)) {
-		return NULL;
-	} // if
-	SqPlus::VarRefPtr vr = (SqPlus::VarRefPtr)data;
-	return vr->varType->GetTypeName();
-#else // This version will only work if SQ_SUPPORT_INSTANCE_TYPE_INFO is enabled.
-	sqObject so = getValue(key);
-	if (so.isNull()) return NULL;
-	return so.getTypeName();
-#endif
-} // sqObject::getTypeName
-
-const SQChar * sqObject::getTypeName(int key)
-{
-	sqObject so = getValue(key);
-	if (so.isNull()) return NULL;
-	return so.getTypeName();
-} // sqObject::getTypeName
-
-const SQChar * sqObject::getTypeName(void)
-{
-#if 0 // TODO
-	SQUserPointer typeTag=NULL;
-	if (SQ_SUCCEEDED(sq_getobjtypetag(&_o,&typeTag))) {
-		sqObject typeTable = SquirrelVM::GetRootTable().GetValue(SQ_PLUS_TYPE_TABLE);
-		if (typeTable.IsNull()) {
-			return NULL; // Not compiled with SQ_SUPPORT_INSTANCE_TYPE_INFO enabled.
-		} // if
-		return typeTable.GetString(int((size_t)typeTag));
-	} // if
-#endif
-	return NULL;
-} // sqObject::getTypeName
 
 sqObject sqObject::getBase(void)
 {

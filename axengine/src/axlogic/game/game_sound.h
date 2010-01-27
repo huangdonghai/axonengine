@@ -28,7 +28,7 @@ public:
 	// implement Node
 	virtual void doHitTest() const;
 	virtual void doDebugRender() const;
-	virtual void clear();
+	virtual void onReset();
 
 	// implement GameActor
 	virtual void doThink();

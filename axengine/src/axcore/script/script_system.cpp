@@ -983,8 +983,6 @@ Object *ScriptSystem::createObject(const FixedString &classname)
 		Object *obj = ci->m_cppClass->createObject();
 		obj->initScriptClass(ci);
 
-		obj->invoke_onInit();
-
 		return obj;
 	}
 
@@ -995,7 +993,6 @@ Object *ScriptSystem::createObject(const FixedString &classname)
 	}
 
 	Object *obj = it->second->createObject();
-	obj->invoke_onInit();
 	return obj;
 }
 

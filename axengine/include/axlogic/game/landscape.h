@@ -61,8 +61,8 @@ public:
 
 protected:
 	// implement GameObject
-	virtual void reload();
-	virtual void clear();
+	virtual void onReload();
+	virtual void onReset();
 
 protected:
 	String m_modelName;
@@ -85,8 +85,8 @@ public:
 	virtual ~TerrainFixed();
 
 	// implement Fixed
-	virtual void reload();
-	virtual void clear();
+	virtual void onReload();
+	virtual void onReset();
 
 	// implement IObserver
 	virtual void doNotify(IObservable *subject, int arg);
@@ -112,8 +112,8 @@ public:
 	virtual ~TreeFixed();
 
 	// implement GameObject
-	virtual void reload();
-	virtual void clear();
+	virtual void onReload();
+	virtual void onReset();
 
 	String get_tree() const { return m_treeName; }
 	void set_tree(const String &val);

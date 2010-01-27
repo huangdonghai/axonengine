@@ -168,7 +168,7 @@ void GameObject::doSpawn()
 
 	m_spawned = true;
 
-	reload();
+	onReload();
 }
 
 void GameObject::doRemove()
@@ -177,7 +177,7 @@ void GameObject::doRemove()
 		Errorf("not even spawned");
 	}
 
-	clear();
+	onReset();
 	m_spawned = false;
 }
 
@@ -186,7 +186,7 @@ void GameObject::onPropertyChanged()
 	if (!m_spawned)
 		return;
 
-	reload();
+	onReload();
 }
 
 void GameObject::onMatrixChanged()

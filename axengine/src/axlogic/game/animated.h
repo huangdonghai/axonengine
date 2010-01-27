@@ -28,7 +28,7 @@ public:
 	virtual void doThink();
 
 protected:
-	void clear();
+	void onReset();
 	// script method
 //	void loadAsset(const LuaTable &t);
 

@@ -21,7 +21,7 @@ Player::Player()
 
 Player::~Player()
 {
-	clear();
+	onReset();
 }
 
 void Player::doThink()
@@ -45,9 +45,9 @@ Matrix Player::getMatrix() const
 	return m_physicsPlayer->getMatrix();
 }
 
-void Player::reload()
+void Player::onReload()
 {
-	clear();
+	onReset();
 
 	m_physicsPlayer = new PhysicsPlayer();
 	setPhysicsEntity(m_physicsPlayer);
@@ -58,7 +58,7 @@ void Player::reload()
 	m_world->getRenderWorld()->addEntity(m_body);
 }
 
-void Player::clear()
+void Player::onReset()
 {
 	setRenderEntity(0);
 	setPhysicsEntity(0);

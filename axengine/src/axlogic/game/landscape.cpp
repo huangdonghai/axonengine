@@ -35,7 +35,7 @@ StaticFixed::StaticFixed()
 
 StaticFixed::~StaticFixed()
 {
-	clear();
+	onReset();
 }
 
 void StaticFixed::set_model(const String &val)
@@ -43,9 +43,9 @@ void StaticFixed::set_model(const String &val)
 	m_modelName = val;
 }
 
-void StaticFixed::reload()
+void StaticFixed::onReload()
 {
-	clear();
+	onReset();
 
 	if (m_modelName.empty())
 		return;
@@ -65,7 +65,7 @@ void StaticFixed::reload()
 	setPhysicsEntity(m_rigid);
 }
 
-void StaticFixed::clear()
+void StaticFixed::onReset()
 {
 	setRenderEntity(0);
 	setPhysicsEntity(0);
@@ -89,10 +89,10 @@ TerrainFixed::TerrainFixed(RenderTerrain *terr)
 TerrainFixed::~TerrainFixed()
 {
 	m_renderTerrain->detachObserver(this);
-	clear();
+	onReset();
 }
 
-void TerrainFixed::reload()
+void TerrainFixed::onReload()
 {
 	if (!m_landscape || !m_renderTerrain) return;
 	m_landscape->getGameWorld()->getRenderWorld()->addEntity(m_renderTerrain);
@@ -100,7 +100,7 @@ void TerrainFixed::reload()
 	m_landscape->getGameWorld()->getPhysicsWorld()->addEntity(m_physicsTerrain);
 }
 
-void TerrainFixed::clear()
+void TerrainFixed::onReset()
 {
 	if (!m_landscape || !m_renderTerrain) return;
 	m_landscape->getGameWorld()->getRenderWorld()->removeEntity(m_renderTerrain);
@@ -149,12 +149,12 @@ TreeFixed::TreeFixed()
 
 TreeFixed::~TreeFixed()
 {
-	clear();
+	onReset();
 }
 
-void TreeFixed::reload()
+void TreeFixed::onReload()
 {
-	clear();
+	onReset();
 
 	if (m_treeName.empty())
 		return;
@@ -166,7 +166,7 @@ void TreeFixed::reload()
 	setRenderEntity(m_renderTree);
 }
 
-void TreeFixed::clear()
+void TreeFixed::onReset()
 {
 	setRenderEntity(0);
 	SafeDelete(m_renderTree);
