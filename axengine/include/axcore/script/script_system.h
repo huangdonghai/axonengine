@@ -83,6 +83,8 @@ public:
 	CppClass *findCppClass(const char *name) const;
 	ScriptClass *findScriptClass(const char *name) const;
 
+	void allocThread(ScriptThread &thread);
+
 	static ScriptValue createMetaClosure(Member *method);
 
 protected:

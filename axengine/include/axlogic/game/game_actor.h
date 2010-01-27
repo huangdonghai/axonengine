@@ -101,7 +101,10 @@ protected:
 	GameWorld *m_world;			// world the entity has added to
 
 private:
-	int m_threadId;
+	ScriptValue m_currentState;
+	ScriptValue m_runningState; // current thread running
+
+	ScriptThread m_thread;
 	LatentId m_latentId;
 	Variant m_latentParam0;
 	Variant m_latentParam1;

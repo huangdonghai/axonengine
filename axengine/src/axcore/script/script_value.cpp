@@ -95,4 +95,22 @@ bool ScriptValue::isTable() const
 	return m_d->isTable();
 }
 
+ScriptValue ScriptValue::getValue( const String &name ) const
+{
+	return m_d->getValue(name);
+}
+
+void ScriptValue::reset() const
+{
+	m_d->reset();
+}
+
+
+void ScriptThread::reset()
+{
+	sqVM::freeThread(m_id);
+	ScriptValue::reset();
+	m_id = -1;
+}
+
 AX_END_NAMESPACE

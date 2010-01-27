@@ -94,18 +94,19 @@ void GameActor::doRemove()
 
 void GameActor::switchState(const String &name)
 {
-#if 0
+#if 1
 	if (!isScriptInstanced())
 		return;
 
-	m_currentState = m_scriptInstance.getSqObject().getValue(name.c_str());
+	ScriptValue &sv = getScriptInstance();
+
+	m_currentState = sv.getValue(name);
 
 	if (!m_currentState.isTable()) {
-		m_currentState.getSqObject().reset();
+		m_currentState.reset();
 		Errorf("Invalid state name");
 	}
 
-	sqVM::ms_objThreadList.push_back(this);
 #endif
 }
 

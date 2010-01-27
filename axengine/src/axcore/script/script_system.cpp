@@ -1195,5 +1195,12 @@ CppClass * ScriptSystem::findCppClass(const char *name) const
 	return m_cppClassReg.find(name)->second;
 }
 
+void ScriptSystem::allocThread(ScriptThread &thread)
+{
+	int id = sqVM::allocThread();
+	thread = ScriptThread(sqVM::ms_threadPool[id], id);
+}
+
+
 AX_END_NAMESPACE
 

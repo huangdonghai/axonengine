@@ -63,6 +63,8 @@ void GameWorld::runFrame(int what, int frametime)
 		m_physicsWorld->step(m_frametime);
 	}
 
+	// tick script thread
+
 	for (int i = 0; i < m_numEntities; i++) {
 		if (!m_actors[i]) {
 			continue;

@@ -53,21 +53,21 @@ public:
 	bool setValue(int key, float f);
 	bool setValue(int key, const SQChar *s);
 
-	bool setValue(const SQChar *key, const sqObject &val);
-	bool setValue(const SQChar *key, bool b);
-	bool setValue(const SQChar *key, int n);
-	bool setValue(const SQChar *key, float f);
-	bool setValue(const SQChar *key, const SQChar *s);
-	bool setValue(const SQChar *key, const ConstRef &ref);
+	bool setValue(const String &key, const sqObject &val);
+	bool setValue(const String &key, bool b);
+	bool setValue(const String &key, int n);
+	bool setValue(const String &key, float f);
+	bool setValue(const String &key, const SQChar *s);
+	bool setValue(const String &key, const ConstRef &ref);
 
-	bool setUserPointer(const SQChar * key, SQUserPointer up);
-	SQUserPointer getUserPointer(const SQChar * key);
+	bool setUserPointer(const String &key, SQUserPointer up);
+	SQUserPointer getUserPointer(const String &key);
 	bool setUserPointer(int key, SQUserPointer up);
 	SQUserPointer getUserPointer(int key);
 
-	bool newUserData(const SQChar * key, int size, SQUserPointer * typetag=0);
-	bool getUserData(const SQChar * key, SQUserPointer * data, SQUserPointer * typetag=0);
-	bool rawGetUserData(const SQChar * key, SQUserPointer * data, SQUserPointer * typetag=0);
+	bool newUserData(const String &key, int size, SQUserPointer * typetag=0);
+	bool getUserData(const String &key, SQUserPointer * data, SQUserPointer * typetag=0);
+	bool rawGetUserData(const String &key, SQUserPointer * data, SQUserPointer * typetag=0);
 
 	// === BEGIN Arrays ===
 	bool arrayResize(int newSize);
@@ -87,18 +87,18 @@ public:
 	bool toBool() const;
 	SQInteger toInteger() const;
 	SQFloat toFloat() const;
-	sqObject getValue(const SQChar *key) const;
-	bool exists(const SQChar *key) const;
-	float getFloat(const SQChar *key) const;
-	int getInt(const SQChar *key) const;
-	const SQChar *getString(const SQChar *key) const;
-	bool getBool(const SQChar *key) const;
+	sqObject getValue(const String &key) const;
+	bool exists(const String &key) const;
+	float getFloat(const String &key) const;
+	int getInt(const String &key) const;
+	const SQChar *getString(const String &key) const;
+	bool getBool(const String &key) const;
 	sqObject getValue(int key) const;
 	float getFloat(int key) const;
 	int getInt(int key) const;
 	const SQChar *getString(int key) const;
 	bool getBool(int key) const;
-	sqObject getAttributes(const SQChar *key = NULL);
+	sqObject getAttributes(const String &key = NULL);
 	HSQOBJECT & getObjectHandle() const {return *(HSQOBJECT*)&m_obj;}
 	bool beginIteration();
 	bool next(sqObject &key, sqObject &value);
@@ -113,8 +113,10 @@ public:
 	void toVariant(Variant &val) const;
 
 protected:
-	bool getSlot(const SQChar *name) const;
-	bool rawGetSlot(const SQChar *name) const;
+	bool getSlot(const String &key) const { return getSlot(key.c_str(), key.size()); }
+	bool getSlot(const SQChar *name, int size = -1) const;
+	bool rawGetSlot(const String &key) const { return rawGetSlot(key.c_str(), key.size()); }
+	bool rawGetSlot(const SQChar *name, int size = -1) const;
 	bool getSlot(int key) const;
 
 private:

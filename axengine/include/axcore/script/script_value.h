@@ -14,12 +14,16 @@ public:
 	ScriptValue(const sqObject &sobj);
 	~ScriptValue();
 
+	void reset() const;
+
 	ScriptValue& operator=(const ScriptValue &rhs);
 
 	bool isNull() const;
 	bool isArray() const;
 	bool isTable() const;
 	bool isInstance() const;
+
+	ScriptValue getValue(const String &name) const;
 
 	sqObject& getSqObject() { return *m_d; }
 	const sqObject& getSqObject() const { return *m_d; }
@@ -31,6 +35,31 @@ public:
 
 private:
 	sqObject *m_d;
+};
+
+class ScriptThread : public ScriptValue
+{
+public:
+	enum ThreadState {
+		TS_Idle, TS_Running, TS_Suspended
+	};
+
+	ScriptThread() : ScriptValue(), m_id(-1) {}
+	ScriptThread(const ScriptValue &sv, int id) : ScriptValue(sv), m_id(id) {}
+	ScriptThread(const ScriptThread &rhs) : ScriptValue(rhs), m_id(rhs.m_id) {}
+	~ScriptThread() { reset(); }
+
+	void reset();
+
+	// thread
+	ThreadState callThread(const ScriptValue &closure, Object *this_) const;
+	ThreadState resumeThread();
+	bool isSuspended() const;
+	bool isRunning() const;
+	bool isIdle() const;
+
+private:
+	int m_id;
 };
 
 AX_END_NAMESPACE

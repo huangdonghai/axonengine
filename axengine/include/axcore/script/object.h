@@ -80,8 +80,6 @@ private:
 	String m_objectName;
 
 	ScriptValue m_scriptInstance;
-	ScriptValue m_currentState;
-	ScriptValue m_runningState; // current thread running
 };
 
 AX_END_NAMESPACE
