@@ -21,19 +21,22 @@ MapTool::MapTool(MapContext *ctx) : Tool(ctx)
 // class TerrainRaiseTool
 //------------------------------------------------------------------------------
 
-TerrainRaiseTool::TerrainRaiseTool(MapContext *context) : MapTool(context) {
+TerrainRaiseTool::TerrainRaiseTool(MapContext *context) : MapTool(context)
+{
 	m_cursor = nullptr;
 	m_isValid = false;
 	m_brushMat = Material::load("terrainbrush");
 	m_brushPrims = nullptr;
 }
 
-TerrainRaiseTool::~TerrainRaiseTool() {
+TerrainRaiseTool::~TerrainRaiseTool()
+{
 	SafeDelete(m_cursor);
 	SafeDelete(m_brushPrims);
 }
 
-void TerrainRaiseTool::doBindView(View *view) {
+void TerrainRaiseTool::doBindView(View *view)
+{
 	m_view = dynamic_cast<PerspectiveView*>(view);
 	m_terrain = m_context->getTerrain();
 
@@ -41,7 +44,8 @@ void TerrainRaiseTool::doBindView(View *view) {
 		m_isValid = true;
 }
 
-void TerrainRaiseTool::doPress(int x, int y, int flags, float pressure) {
+void TerrainRaiseTool::doPress(int x, int y, int flags, float pressure)
+{
 	if (!m_isValid)
 		return;
 
@@ -57,7 +61,8 @@ void TerrainRaiseTool::doPress(int x, int y, int flags, float pressure) {
 	doDrag(x, y, flags, pressure);
 }
 
-void TerrainRaiseTool::doDrag(int x, int y, int flags, float pressure) {
+void TerrainRaiseTool::doDrag(int x, int y, int flags, float pressure)
+{
 	if (!m_isValid)
 		return;
 
@@ -91,7 +96,8 @@ void TerrainRaiseTool::doDrag(int x, int y, int flags, float pressure) {
 	m_terrain->doHeightChanged(rect);
 }
 
-void TerrainRaiseTool::doMove(int x, int y) {
+void TerrainRaiseTool::doMove(int x, int y)
+{
 	if (!m_isValid)
 		return;
 
@@ -103,7 +109,8 @@ void TerrainRaiseTool::doMove(int x, int y) {
 	updatePrim(from);
 }
 
-void TerrainRaiseTool::doRelease(int x, int y) {
+void TerrainRaiseTool::doRelease(int x, int y)
+{
 	if (!m_isValid)
 		return;
 
@@ -119,7 +126,8 @@ void TerrainRaiseTool::doRelease(int x, int y) {
 	m_view->getContext()->addHistory(action);
 }
 
-void TerrainRaiseTool::doRender(const RenderCamera &camera) {
+void TerrainRaiseTool::doRender(const RenderCamera &camera)
+{
 	if (!m_isValid)
 		return;
 
@@ -130,7 +138,8 @@ void TerrainRaiseTool::doRender(const RenderCamera &camera) {
 		g_renderSystem->addToScene(m_brushPrims);
 }
 
-float TerrainRaiseTool::getWeight(float x, float y) const {
+float TerrainRaiseTool::getWeight(float x, float y) const
+{
 	Vector2 pos(x, y);
 	float dist = (pos - m_center).getLength();
 
@@ -143,7 +152,8 @@ float TerrainRaiseTool::getWeight(float x, float y) const {
 	return dist;
 }
 
-void TerrainRaiseTool::updatePrim(const Vector3 &from) {
+void TerrainRaiseTool::updatePrim(const Vector3 &from)
+{
 	if (from.x == m_center.x && from.y == m_center.y)
 		return;
 
@@ -187,9 +197,11 @@ void TerrainRaiseTool::updatePrim(const Vector3 &from) {
 TerrainLowerTool::TerrainLowerTool(MapContext *context) : TerrainRaiseTool(context)
 {}
 
-TerrainLowerTool::~TerrainLowerTool() {}
+TerrainLowerTool::~TerrainLowerTool()
+{}
 
-float TerrainLowerTool::getWeight(float x, float y) const {
+float TerrainLowerTool::getWeight(float x, float y) const
+{
 	return -TerrainRaiseTool::getWeight(x, y);
 }
 
@@ -200,16 +212,19 @@ float TerrainLowerTool::getWeight(float x, float y) const {
 TerrainFlatTool::TerrainFlatTool(MapContext *context) : TerrainRaiseTool(context)
 {}
 
-TerrainFlatTool::~TerrainFlatTool() {}
+TerrainFlatTool::~TerrainFlatTool()
+{}
 
 
-void TerrainFlatTool::doPress(int x, int y, int flags, float pressure) {
+void TerrainFlatTool::doPress(int x, int y, int flags, float pressure)
+{
 	m_isJustPressed = true;
 
 	return TerrainRaiseTool::doPress(x, y, flags, pressure);
 }
 
-void TerrainFlatTool::doDrag(int x, int y, int flags, float pressure) {
+void TerrainFlatTool::doDrag(int x, int y, int flags, float pressure)
+{
 	Vector3 from;
 
 	if (!m_view->selectRegion(Rect(x, y, 1, 1), SelectPart::kTerrain, from)) {
@@ -247,7 +262,8 @@ void TerrainFlatTool::doDrag(int x, int y, int flags, float pressure) {
 	m_terrain->doHeightChanged(rect);
 }
 
-float TerrainFlatTool::getWeight(float x, float y) const {
+float TerrainFlatTool::getWeight(float x, float y) const
+{
 	Vector2 pos(x, y);
 	float dist = (pos - m_center).getLength();
 
@@ -271,9 +287,11 @@ float TerrainFlatTool::getWeight(float x, float y) const {
 TerrainSmoothTool::TerrainSmoothTool(MapContext *context) : TerrainRaiseTool(context)
 {}
 
-TerrainSmoothTool::~TerrainSmoothTool() {}
+TerrainSmoothTool::~TerrainSmoothTool()
+{}
 
-void TerrainSmoothTool::doDrag(int x, int y, int flags, float pressure) {
+void TerrainSmoothTool::doDrag(int x, int y, int flags, float pressure)
+{
 	if (!m_isValid)
 		return;
 
@@ -319,20 +337,24 @@ void TerrainSmoothTool::doDrag(int x, int y, int flags, float pressure) {
 // class TerrainGrabTool, terrain level tool
 //------------------------------------------------------------------------------
 
-TerrainGrabTool::TerrainGrabTool(MapContext *context) : TerrainRaiseTool(context) {
+TerrainGrabTool::TerrainGrabTool(MapContext *context) : TerrainRaiseTool(context)
+{
 	m_isJustPressed = false;
 	m_baseHeight = nullptr;
 }
 
-TerrainGrabTool::~TerrainGrabTool() {}
+TerrainGrabTool::~TerrainGrabTool()
+{}
 
-void TerrainGrabTool::doPress(int x, int y, int flags, float pressure) {
+void TerrainGrabTool::doPress(int x, int y, int flags, float pressure)
+{
 	m_isJustPressed = true;
 
 	return TerrainRaiseTool::doPress(x, y, flags, pressure);
 }
 
-void TerrainGrabTool::doDrag(int x, int y, int flags, float pressure) {
+void TerrainGrabTool::doDrag(int x, int y, int flags, float pressure)
+{
 	if (!m_isValid)
 		return;
 
@@ -382,13 +404,16 @@ void TerrainGrabTool::doDrag(int x, int y, int flags, float pressure) {
 // class TerrainPaintTool, terrain paint tool
 //--------------------------------------------------------------------------
 
-TerrainPaintTool::TerrainPaintTool(MapContext *context) : TerrainRaiseTool(context) {
+TerrainPaintTool::TerrainPaintTool(MapContext *context) : TerrainRaiseTool(context)
+{
 	m_oldPixel = nullptr;
 }
 
-TerrainPaintTool::~TerrainPaintTool() {}
+TerrainPaintTool::~TerrainPaintTool()
+{}
 
-void TerrainPaintTool::doPress(int x, int y, int flags, float pressure) {
+void TerrainPaintTool::doPress(int x, int y, int flags, float pressure)
+{
 	if (!m_isValid)
 		return;
 
@@ -407,7 +432,8 @@ void TerrainPaintTool::doPress(int x, int y, int flags, float pressure) {
 	doDrag(x, y, flags, pressure);
 }
 
-void TerrainPaintTool::doDrag(int x, int y, int flags, float pressure) {
+void TerrainPaintTool::doDrag(int x, int y, int flags, float pressure)
+{
 	if (!m_isValid || ! m_layerGen)
 		return;
 
@@ -454,7 +480,8 @@ void TerrainPaintTool::doDrag(int x, int y, int flags, float pressure) {
 	m_terrain->doLayerPainted(rect);
 }
 
-void TerrainPaintTool::doRelease(int x, int y) {
+void TerrainPaintTool::doRelease(int x, int y)
+{
 	if (!m_isValid || ! m_layerGen)
 		return;
 
@@ -511,14 +538,17 @@ void TerrainEraseTool::doRelease( int x, int y )
 // class CreateStaticTool
 //--------------------------------------------------------------------------
 
-CreateStaticTool::CreateStaticTool(MapContext *context) : MapTool(context) {
+CreateStaticTool::CreateStaticTool(MapContext *context) : MapTool(context)
+{
 	m_agent = nullptr;
 }
 
-CreateStaticTool::~CreateStaticTool() {
+CreateStaticTool::~CreateStaticTool()
+{
 }
 
-void CreateStaticTool::doPress(int x, int y, int flags, float pressure) {
+void CreateStaticTool::doPress(int x, int y, int flags, float pressure)
+{
 	Vector3 from;
 
 	if (!m_view->traceWorld(x, y, from, SelectPart::All)) {
@@ -553,7 +583,8 @@ void CreateStaticTool::doPress(int x, int y, int flags, float pressure) {
 	doDrag(x, y, flags, pressure);
 }
 
-void CreateStaticTool::doDrag(int x, int y, int flags, float pressure) {
+void CreateStaticTool::doDrag(int x, int y, int flags, float pressure)
+{
 	if (!m_agent) {
 		return;
 	}
@@ -571,7 +602,8 @@ void CreateStaticTool::doDrag(int x, int y, int flags, float pressure) {
 	m_agent->setOrigin(from);
 }
 
-void CreateStaticTool::doRelease(int x, int y) {
+void CreateStaticTool::doRelease(int x, int y)
+{
 	if (!m_agent) {
 		return;
 	}
@@ -583,13 +615,15 @@ void CreateStaticTool::doRelease(int x, int y) {
 // class CreateEntityTool
 //--------------------------------------------------------------------------
 
-CreateEntityTool::CreateEntityTool(MapContext *context) : MapTool(context) {
+CreateEntityTool::CreateEntityTool(MapContext *context) : MapTool(context)
+{
 	m_agent = nullptr;
 }
 
 CreateEntityTool::~CreateEntityTool() {}
 
-void CreateEntityTool::doPress(int x, int y, int flags, float pressure) {
+void CreateEntityTool::doPress(int x, int y, int flags, float pressure)
+{
 	Vector3 from;
 
 	if (!m_view->traceWorld(x, y, from, SelectPart::All)) {
@@ -621,7 +655,8 @@ void CreateEntityTool::doPress(int x, int y, int flags, float pressure) {
 	m_context->addHistory(grouphis);
 }
 
-void CreateEntityTool::doDrag(int x, int y, int flags, float pressure) {
+void CreateEntityTool::doDrag(int x, int y, int flags, float pressure)
+{
 	if (!m_agent) {
 		return;
 	}
@@ -639,7 +674,8 @@ void CreateEntityTool::doDrag(int x, int y, int flags, float pressure) {
 	m_agent->setOrigin(from);
 }
 
-void CreateEntityTool::doRelease(int x, int y) {
+void CreateEntityTool::doRelease(int x, int y)
+{
 	if (!m_agent) {
 		return;
 	}
@@ -647,7 +683,8 @@ void CreateEntityTool::doRelease(int x, int y) {
 	m_agent = nullptr;
 }
 
-void CreateEntityTool::doRender(const RenderCamera &camera) {
+void CreateEntityTool::doRender(const RenderCamera &camera)
+{
 
 }
 
@@ -656,14 +693,17 @@ void CreateEntityTool::doRender(const RenderCamera &camera) {
 //--------------------------------------------------------------------------
 
 #ifdef AX_CONFIG_OPTION_USE_SPEEDTREE_40
-CreateTreeTool::CreateTreeTool(MapContext *context) : MapTool(context) {
+CreateTreeTool::CreateTreeTool(MapContext *context) : MapTool(context)
+{
 	m_agent = nullptr;
 }
 
-CreateTreeTool::~CreateTreeTool() {
+CreateTreeTool::~CreateTreeTool()
+{
 }
 
-void CreateTreeTool::doPress(int x, int y, int flags, float pressure) {
+void CreateTreeTool::doPress(int x, int y, int flags, float pressure)
+{
 	Vector3 from;
 
 	if (!m_view->traceWorld(x, y, from, SelectPart::All)) {
@@ -697,7 +737,8 @@ void CreateTreeTool::doPress(int x, int y, int flags, float pressure) {
 	doDrag(x, y, flags, pressure);
 }
 
-void CreateTreeTool::doDrag(int x, int y, int flags, float pressure) {
+void CreateTreeTool::doDrag(int x, int y, int flags, float pressure)
+{
 	if (!m_agent) {
 		return;
 	}
@@ -715,7 +756,8 @@ void CreateTreeTool::doDrag(int x, int y, int flags, float pressure) {
 	m_agent->setOrigin(from);
 }
 
-void CreateTreeTool::doRelease(int x, int y) {
+void CreateTreeTool::doRelease(int x, int y)
+{
 	if (!m_agent) {
 		return;
 	}

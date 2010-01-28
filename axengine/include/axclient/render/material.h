@@ -134,7 +134,6 @@ private:
 public:
 	// delete link
 	IntrusiveLink<Material> m_needDeleteLink;
-
 };
 
 inline void splitVectorToColor(const Vector3 &v, float &multiply, Rgb &color) {
