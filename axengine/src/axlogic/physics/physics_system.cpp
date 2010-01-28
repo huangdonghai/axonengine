@@ -11,9 +11,9 @@ read the license and understand and accept it fully.
 
 #include "../private.h"
 
-namespace {
+AX_BEGIN_NAMESPACE
 
-using namespace Axon;
+namespace {
 
 // given an unaligned pointer, round it up to align and
 // store the offset just before the returned pointer.
@@ -83,7 +83,7 @@ public:
 // Stub function to print any error report functionality to stdout
 // std::puts(...) could be used here alternatively
 void errorReportFunction(const char *str, void *errorOutputObject) {
-	Axon::Debugf("%s", str);
+	Debugf("%s", str);
 }
 
 hkMemory *newMemoryManager(int argc, const char** argv, bool &debug,hkMemoryBlockServer*& server) {
@@ -112,7 +112,7 @@ hkMemoryBlockServer *server = HK_NULL;
 class MyStremReader : public hkMemoryStreamReader {
 public:
 	MyStremReader(const void *mem, int memSize) : hkMemoryStreamReader(mem, memSize, MEMORY_INPLACE) {}
-	virtual ~MyStremReader() { Axon::g_fileSystem->freeFile(m_buf); }
+	virtual ~MyStremReader() { g_fileSystem->freeFile(m_buf); }
 };
 
 
@@ -120,7 +120,7 @@ class MyFilesystem : public hkFileSystem {
 public:
 	virtual hkStreamReader *openReader(const char *name) {
 		void *buf;
-		size_t size = Axon::g_fileSystem->readFile(name, &buf);
+		size_t size = g_fileSystem->readFile(name, &buf);
 
 		return new MyStremReader(buf, s2i(size));
 	}
@@ -135,8 +135,6 @@ private:
 
 MyFilesystem *myFileSystem;
 }
-
-AX_BEGIN_NAMESPACE
 
 
 PhysicsSystem::PhysicsSystem()

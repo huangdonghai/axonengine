@@ -340,7 +340,7 @@ bool ShaderMacro::operator==(const ShaderMacro &rhs) const
 	return true;
 }
 
-Axon::String ShaderMacro::toString() const
+String ShaderMacro::toString() const
 {
 	String result;
 	StringUtil::sprintf(result, "%x %x %x %x", m_data[0], m_data[1], m_data[2], m_data[3]);

@@ -11,7 +11,7 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-Axon::String Rect::toString() const {
+String Rect::toString() const {
 	String result;
 	StringUtil::sprintf(result, "%d %d %d %d", x, y, width, height);
 	return result;

@@ -73,13 +73,15 @@ protected:
 	void raiseSignal(const String &signal, const Variant &param);
 	void initScriptClass(const ScriptClass *sqclass);
 
-private:
+protected:
 	const ScriptClass *m_scriptClass;
 
 	String m_objectNamespace;
 	String m_objectName;
 
 	ScriptValue m_scriptInstance;
+
+	ScriptValue m_currentState;
 };
 
 AX_END_NAMESPACE

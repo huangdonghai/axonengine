@@ -14,9 +14,9 @@ read the license and understand and accept it fully.
 #define AX_CONFIG_OPTION_USE_SPEEDTREE_40 1
 #ifdef AX_CONFIG_OPTION_USE_SPEEDTREE_40
 
-#include "treeactor.h"
-#include "treeasset.h"
-#include "treemanager.h"
+#include "tree_entity.h"
+#include "tree_asset.h"
+#include "tree_manager.h"
 
 AX_BEGIN_NAMESPACE
 	typedef TreeEntity RenderTree;

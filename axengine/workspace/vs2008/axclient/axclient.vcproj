@@ -172,7 +172,7 @@
 				>
 			</File>
 			<Filter
-				Name="include"
+				Name="public"
 				>
 				<File
 					RelativePath="..\..\..\include\axclient\cvardecls.h"
@@ -362,6 +362,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\axclient\render\primitive_p.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\axclient\direct3d9\query.cpp"
 				>
 			</File>
@@ -374,11 +378,19 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\axclient\render\render_p.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\axclient\render\render_system.cpp"
 				>
 			</File>
 			<File
 				RelativePath="..\..\..\src\axclient\render\render_world.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\axclient\render\sampler.cpp"
 				>
 			</File>
 			<File
@@ -416,10 +428,6 @@
 			<Filter
 				Name="public"
 				>
-				<File
-					RelativePath="..\..\..\include\axclient\render\all.h"
-					>
-				</File>
 				<File
 					RelativePath="..\..\..\include\axclient\render\camera.h"
 					>
@@ -473,6 +481,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\include\axclient\render\render.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\include\axclient\render\render_entity.h"
 					>
 				</File>
@@ -482,6 +494,10 @@
 				</File>
 				<File
 					RelativePath="..\..\..\include\axclient\render\render_world.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\include\axclient\render\sampler.h"
 					>
 				</File>
 				<File
@@ -566,34 +582,34 @@
 			Name="speedtree"
 			>
 			<File
-				RelativePath="..\..\..\src\axclient\speedtree\treeactor.cpp"
+				RelativePath="..\..\..\src\axclient\speedtree\tree_asset.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axclient\speedtree\treeasset.cpp"
+				RelativePath="..\..\..\src\axclient\speedtree\tree_entity.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axclient\speedtree\treemanager.cpp"
+				RelativePath="..\..\..\src\axclient\speedtree\tree_manager.cpp"
 				>
 			</File>
 			<Filter
 				Name="public"
 				>
 				<File
-					RelativePath="..\..\..\include\axclient\speedtree\all.h"
+					RelativePath="..\..\..\include\axclient\speedtree\tree.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\include\axclient\speedtree\treeactor.h"
+					RelativePath="..\..\..\include\axclient\speedtree\tree_asset.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\include\axclient\speedtree\treeasset.h"
+					RelativePath="..\..\..\include\axclient\speedtree\tree_entity.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\include\axclient\speedtree\treemanager.h"
+					RelativePath="..\..\..\include\axclient\speedtree\tree_manager.h"
 					>
 				</File>
 			</Filter>
@@ -780,10 +796,6 @@
 				</File>
 			</Filter>
 		</Filter>
-		<File
-			RelativePath=".\ClassDiagram1.cd"
-			>
-		</File>
 	</Files>
 	<Globals>
 	</Globals>

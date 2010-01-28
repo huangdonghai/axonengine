@@ -197,7 +197,6 @@ private:
 // template ReturnSpecialization
 //--------------------------------------------------------------------------
 
-#define P(x) stack[x].cast<remove_const_reference<P##x>::type>()
 #define ARG(x) *reinterpret_cast<std::tr1::add_pointer<std::tr1::add_const<remove_const_reference<Arg##x>::type>::type>::type>(argv[x])
 #define RET *reinterpret_cast<std::tr1::add_pointer<Rt>::type>(ret)
 
@@ -320,7 +319,6 @@ struct ReturnSpecialization<void> {
 		return 0;
 	}
 };
-#undef P
 #undef ARG
 #undef RET
 

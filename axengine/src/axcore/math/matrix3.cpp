@@ -77,6 +77,10 @@ String Matrix3::toString() const {
 	return result;
 }
 
-void Matrix3::fromString(const char *str) {}
-
+void Matrix3::fromString(const char *str)
+{
+	// TODO
+	AX_ASSERT(0);
 }
+
+AX_END_NAMESPACE

@@ -29,9 +29,6 @@ read the license and understand and accept it fully.
 #include <Cg/cg.h>     /* Cg Core API: Can't include this?  Is Cg Toolkit installed! */
 #include <Cg/cgGL.h>   /* Cg OpenGL API (part of Cg Toolkit) */
 
-
-using namespace Axon;
-
 #include "gltexture.h"
 #include "glshader.h"
 #include "glframebuffer.h"
@@ -46,28 +43,28 @@ using namespace Axon;
 
 AX_BEGIN_NAMESPACE
 
-	enum VertexAttribBindLocation {
-		VABL_tangent	= 1,
-		VABL_binormal	= 4,
-		VABL_lightmapTc	= 7,
-	};
+enum VertexAttribBindLocation {
+	VABL_tangent	= 1,
+	VABL_binormal	= 4,
+	VABL_lightmapTc	= 7,
+};
 
-	// some global object
-	extern GLwindow *glInternalWindow;
-	extern HGLRC					glContext;
-	extern GLdriver *glDriver;
-	extern IRenderDriver::Info *glDriverInfo;
-	extern GLthread *glThread;
-	extern CGcontext				glCgContext;
-	extern GLprimitivemanager *glPrimitiveManager;
-	extern GLframebuffermanager *glFramebufferManager;
-	extern GLshadermanager *glShaderManager;
-	extern GLpostprocess *glPostprocess;
+// some global object
+extern GLwindow *glInternalWindow;
+extern HGLRC glContext;
+extern GLdriver *glDriver;
+extern IRenderDriver::Info *glDriverInfo;
+extern GLthread *glThread;
+extern CGcontext glCgContext;
+extern GLprimitivemanager *glPrimitiveManager;
+extern GLframebuffermanager *glFramebufferManager;
+extern GLshadermanager *glShaderManager;
+extern GLpostprocess *glPostprocess;
 
-	extern Material *glNullMat;
-	extern Interaction *gCurInteraction;
+extern Material *glNullMat;
+extern Interaction *gCurInteraction;
 
-	extern GLfontrender *glFontRender;
+extern GLfontrender *glFontRender;
 
 AX_END_NAMESPACE
 

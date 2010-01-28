@@ -98,7 +98,7 @@ public:
 	int getInt(int key) const;
 	const SQChar *getString(int key) const;
 	bool getBool(int key) const;
-	sqObject getAttributes(const String &key = NULL);
+	sqObject getAttributes(const String &key = String());
 	HSQOBJECT & getObjectHandle() const {return *(HSQOBJECT*)&m_obj;}
 	bool beginIteration();
 	bool next(sqObject &key, sqObject &value);

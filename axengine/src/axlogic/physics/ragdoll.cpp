@@ -163,7 +163,7 @@ void PhysicsRagdoll::setMatrix(const Matrix &matrix) {
 	m_matrix = matrix;
 }
 
-Axon::Matrix PhysicsRagdoll::getMatrix() const {
+Matrix PhysicsRagdoll::getMatrix() const {
 	return m_matrix;
 }
 

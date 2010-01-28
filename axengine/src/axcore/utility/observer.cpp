@@ -12,31 +12,31 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-	IObservable::~IObservable() {}
+IObservable::~IObservable() {}
 
-	void IObservable::attachObserver(IObserver *observer) {
-		m_observers.push_back(observer);
-	}
+void IObservable::attachObserver(IObserver *observer) {
+	m_observers.push_back(observer);
+}
 
-	void IObservable::detachObserver(IObserver *observer) {
-		List<IObserver*>::iterator it = m_observers.begin();
+void IObservable::detachObserver(IObserver *observer) {
+	List<IObserver*>::iterator it = m_observers.begin();
 
-		for (; it != m_observers.end(); ++it) {
-			if (*it == observer) {
-				m_observers.erase(it);
-				return;
-			}
-		}
-
-		Errorf("Observable::detachObserver: cann't find observer to detach");
-	}
-
-	void IObservable::notify(int arg) {
-		List<IObserver*>::iterator it = m_observers.begin();
-
-		for (; it != m_observers.end(); ++it) {
-			(*it)->doNotify(this, arg);
+	for (; it != m_observers.end(); ++it) {
+		if (*it == observer) {
+			m_observers.erase(it);
+			return;
 		}
 	}
+
+	Errorf("Observable::detachObserver: cann't find observer to detach");
+}
+
+void IObservable::notify(int arg) {
+	List<IObserver*>::iterator it = m_observers.begin();
+
+	for (; it != m_observers.end(); ++it) {
+		(*it)->doNotify(this, arg);
+	}
+}
 
 AX_END_NAMESPACE

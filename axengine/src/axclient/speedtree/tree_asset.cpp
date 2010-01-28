@@ -16,7 +16,8 @@ const int NUM_LEAF_ANGLES = 8;
 
 AX_BEGIN_NAMESPACE
 
-TreeAsset::TreeAsset(TreeManager *forest) {
+TreeAsset::TreeAsset(TreeManager *forest)
+{
 	m_manager = forest;
 	m_treeRt = new CSpeedTreeRT();
 
@@ -34,7 +35,8 @@ TreeAsset::TreeAsset(TreeManager *forest) {
 	TypeZeroArray(m_leafPrims);
 }
 
-TreeAsset::~TreeAsset() {
+TreeAsset::~TreeAsset()
+{
 	for (int i = 0; i < MAX_LODS; i++) {
 		SafeDelete(m_branchPrims[i]);
 		SafeDelete(m_frondPrims[i]);
@@ -45,7 +47,8 @@ TreeAsset::~TreeAsset() {
 	m_manager->removeAsset(this);
 }
 
-bool TreeAsset::load(const String &filename, int seed) {
+bool TreeAsset::load(const String &filename, int seed)
+{
 	m_treeRt->SetNumWindMatrices(NUM_WIND_MATRIX);
 
 	unsigned char *fbuf;
@@ -103,17 +106,20 @@ bool TreeAsset::load(const String &filename, int seed) {
 	return true;
 }
 
-String TreeAsset::getKey() const {
+String TreeAsset::getKey() const
+{
 	return m_key;
 }
 
-BoundingBox TreeAsset::getBoundingBox() const {
+BoundingBox TreeAsset::getBoundingBox() const
+{
 	BoundingBox bbox;
 	m_treeRt->GetBoundingBox((float*)&bbox);
 	return bbox;
 }
 
-Primitives TreeAsset::getAllPrimitives(float lod) const {
+Primitives TreeAsset::getAllPrimitives(float lod) const
+{
 	Primitives result;
 
 	CSpeedTreeRT::SLodValues lv;
@@ -137,7 +143,8 @@ Primitives TreeAsset::getAllPrimitives(float lod) const {
 
 
 
-static inline void setMaterialColor(Material *mat, const float *f, float scaler, float ambientscaler) {
+static inline void setMaterialColor(Material *mat, const float *f, float scaler, float ambientscaler)
+{
 	Vector3 diffuse(f[0], f[1], f[2]);
 	Vector3 ambient(f[3], f[4], f[5]);
 	Vector3 specular(f[6], f[7], f[8]);
@@ -149,7 +156,8 @@ static inline void setMaterialColor(Material *mat, const float *f, float scaler,
 	mat->setShiness(shiness);
 }
 
-void TreeAsset::loadMaterials() {
+void TreeAsset::loadMaterials()
+{
 	CSpeedTreeRT::SMapBank sMapBank;
 	CSpeedTreeRT::SLightShaderParams sShaderParams;
 
@@ -180,14 +188,16 @@ void TreeAsset::loadMaterials() {
 	setMaterialColor(m_leafMeshMat.get(), m_treeRt->GetLeafMaterial(), sShaderParams.m_fGlobalLightScalar * sShaderParams.m_fLeafLightScalar, sShaderParams.m_fAmbientScalar);
 }
 
-void TreeAsset::buildPrimitives() {
+void TreeAsset::buildPrimitives()
+{
 	buildBranch();
 	buildFrond();
 	buildLeafCard();
 	buildLeafMesh();
 }
 
-void TreeAsset::buildBranch() {
+void TreeAsset::buildBranch()
+{
 	// query vertex attribute data
 	CSpeedTreeRT::SGeometry geometry;
 	m_treeRt->GetGeometry(geometry, SpeedTree_BranchGeometry);
@@ -275,7 +285,8 @@ void TreeAsset::buildBranch() {
 	}
 }
 
-void TreeAsset::buildFrond() {
+void TreeAsset::buildFrond()
+{
 	CSpeedTreeRT::SGeometry sGeometry;
 	m_treeRt->GetGeometry(sGeometry, SpeedTree_FrondGeometry);
 	const CSpeedTreeRT::SGeometry::SIndexed &b = sGeometry.m_sFronds;
@@ -363,7 +374,8 @@ void TreeAsset::buildFrond() {
 	}
 }
 
-void TreeAsset::buildLeafCard() {
+void TreeAsset::buildLeafCard()
+{
 	const int numLods = m_treeRt->GetNumLeafLodLevels();
 	m_numLeafLods = numLods;
 
@@ -449,7 +461,8 @@ void TreeAsset::buildLeafCard() {
 	}
 }
 
-void TreeAsset::buildLeafMesh() {
+void TreeAsset::buildLeafMesh()
+{
 	const int numLods = m_treeRt->GetNumLeafLodLevels();
 	m_numLeafLods = numLods;
 
@@ -551,7 +564,8 @@ void TreeAsset::buildLeafMesh() {
 	}
 }
 
-void TreeAsset::issueToQueue(TreeEntity *actor, QueuedScene *qscene) {
+void TreeAsset::issueToQueue(TreeEntity *actor, QueuedScene *qscene)
+{
 #if 0
 	if (r_geoInstancing->getInteger() != 0) {
 		return;
@@ -583,7 +597,8 @@ void TreeAsset::issueToQueue(TreeEntity *actor, QueuedScene *qscene) {
 #endif
 }
 
-static inline void addInstance(QueuedScene *qscene, InstancePrim *gi) {
+static inline void addInstance(QueuedScene *qscene, InstancePrim *gi)
+{
 	InstancePrim *cloned = new InstancePrim(Primitive::HintFrame);
 	cloned->setInstanced(gi->getInstanced());
 	cloned->setInstances(gi->getAllInstances());

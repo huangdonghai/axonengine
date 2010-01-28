@@ -16,13 +16,13 @@ read the license and understand and accept it fully.
 #define AX_DECLARE_CLASS(classname, baseclass) public: \
 	typedef classname ThisClass; \
 	typedef baseclass BaseClass; \
-	virtual ::Axon::CppClass *classname::getCppClass() const { \
+	virtual CppClass *classname::getCppClass() const { \
 		return classname::registerCppClass(); \
 	} \
-	static ::Axon::CppClass *classname::registerCppClass() { \
-		static ::Axon::CppClass *typeinfo; \
+	static CppClass *classname::registerCppClass() { \
+		static CppClass *typeinfo; \
 		if (!typeinfo) { \
-			typeinfo = new ::Axon::CppClass_<classname>(#classname, BaseClass::registerCppClass());
+			typeinfo = new CppClass_<classname>(#classname, BaseClass::registerCppClass());
 
 #define AX_CONSTPROP(name) typeinfo->addProperty(#name, &ThisClass::get_##name);
 #define AX_PROP(name) typeinfo->addProperty(#name, &ThisClass::get_##name, &ThisClass::set_##name);

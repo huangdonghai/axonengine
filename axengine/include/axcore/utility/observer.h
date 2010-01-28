@@ -15,24 +15,24 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-	class IObservable;
+class IObservable;
 
-	class IObserver {
-	public:
-		virtual void doNotify(IObservable *subject, int arg) = 0;
-	};
+class IObserver {
+public:
+	virtual void doNotify(IObservable *subject, int arg) = 0;
+};
 
-	class AX_API IObservable {
-	public:
-		virtual ~IObservable();
+class AX_API IObservable {
+public:
+	virtual ~IObservable();
 
-		void attachObserver(IObserver *observer);
-		void detachObserver(IObserver *observer);
-		void notify(int arg);
+	void attachObserver(IObserver *observer);
+	void detachObserver(IObserver *observer);
+	void notify(int arg);
 
-	private:
-		List<IObserver*>	m_observers;
-	};
+private:
+	List<IObserver*>	m_observers;
+};
 
 AX_END_NAMESPACE
 

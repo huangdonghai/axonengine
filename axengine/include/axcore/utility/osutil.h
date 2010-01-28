@@ -13,76 +13,76 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-	struct FileInfo;
-	typedef Sequence<FileInfo> FileInfoSeq;
+struct FileInfo;
+typedef Sequence<FileInfo> FileInfoSeq;
 
-	AX_API void CDECL Errorf(const char *fmt, ...);
-	AX_API void CDECL Debugf(const char *fmt, ...);
-	AX_API void CDECL Printf(const char *fmt, ...);
+AX_API void CDECL Errorf(const char *fmt, ...);
+AX_API void CDECL Debugf(const char *fmt, ...);
+AX_API void CDECL Printf(const char *fmt, ...);
 
-	struct FilterInfo;
-	class Filter {
-		std::vector<FilterInfo*>	mfilters;
-	public:
-		Filter(const String &filterStr);
-		~Filter();
+struct FilterInfo;
+class Filter {
+	std::vector<FilterInfo*>	mfilters;
+public:
+	Filter(const String &filterStr);
+	~Filter();
 
-		bool In(const String &name) const;
-	};
-
-
-	// for unstandardized C API wrapping
-	#define Strequ(s1, s2)	(strcmp(s1, s2) == 0)
-	#define Striequ(s1, s2)	(StringUtil::stricmp(s1, s2) == 0)
-	#define Strnequ(s1, s2, n)	(strncmp(s1, s2, n) == 0)
+	bool In(const String &name) const;
+};
 
 
-	struct AX_API OsUtil {
-		static uint_t milliseconds();
-		static ulonglong_t microseconds();
-		static String getClipboardString();
-		// DLL
-		static handle_t loadDll(const String &name);
-		static handle_t loadSysDll(const String &name);
-		static void *getProcEntry(handle_t handle, const String &name);
-		static bool freeDll(handle_t handle);
+// for unstandardized C API wrapping
+#define Strequ(s1, s2)	(strcmp(s1, s2) == 0)
+#define Striequ(s1, s2)	(StringUtil::stricmp(s1, s2) == 0)
+#define Strnequ(s1, s2, n)	(strncmp(s1, s2, n) == 0)
 
-		// Network address or host name
-		// get primary adapter's mac address(physics address)
-		static bool getMacAddress(byte_t address[6]);
-		static String getHostName();
 
-		static bool mkdir(const char *dirname);
-		static String getworkpath();
+struct AX_API OsUtil {
+	static uint_t milliseconds();
+	static ulonglong_t microseconds();
+	static String getClipboardString();
+	// DLL
+	static handle_t loadDll(const String &name);
+	static handle_t loadSysDll(const String &name);
+	static void *getProcEntry(handle_t handle, const String &name);
+	static bool freeDll(handle_t handle);
 
-		static int getCpuUsage();
-		static int getMemoryUsage();
+	// Network address or host name
+	// get primary adapter's mac address(physics address)
+	static bool getMacAddress(byte_t address[6]);
+	static String getHostName();
 
-		static void sleep(int ms);
-		static int getScreenWidth();
-		static int getScreenHeight();
+	static bool mkdir(const char *dirname);
+	static String getworkpath();
 
-		static int atomicIncrement(int &i32Value)
-		{
-			return InterlockedIncrement((LONG*)&i32Value);
-		}
+	static int getCpuUsage();
+	static int getMemoryUsage();
 
-		static int atomicDecrement(int &i32Value)
-		{
-			return InterlockedDecrement((LONG*)&i32Value);
-		}
+	static void sleep(int ms);
+	static int getScreenWidth();
+	static int getScreenHeight();
 
-		static uint_t atomicIncrement(uint_t &ui32Value)
-		{
-			return InterlockedIncrement((LONG*)&ui32Value);
-		}
+	static int atomicIncrement(int &i32Value)
+	{
+		return InterlockedIncrement((LONG*)&i32Value);
+	}
 
-		static uint_t atomicDecrement(uint_t &ui32Value)
-		{
-			AX_ASSERT(ui32Value > 0);
-			return InterlockedDecrement((LONG*)&ui32Value);
-		}
-	};
+	static int atomicDecrement(int &i32Value)
+	{
+		return InterlockedDecrement((LONG*)&i32Value);
+	}
+
+	static uint_t atomicIncrement(uint_t &ui32Value)
+	{
+		return InterlockedIncrement((LONG*)&ui32Value);
+	}
+
+	static uint_t atomicDecrement(uint_t &ui32Value)
+	{
+		AX_ASSERT(ui32Value > 0);
+		return InterlockedDecrement((LONG*)&ui32Value);
+	}
+};
 
 AX_END_NAMESPACE
 

@@ -13,12 +13,12 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-	class Material;
-	class Font;
+class Material;
+class Font;
 
-	enum Spec {
-		VeryLow, Low, Middle, High, VeryHigh
-	};
+enum Spec {
+	VeryLow, Low, Middle, High, VeryHigh
+};
 
 AX_END_NAMESPACE
 

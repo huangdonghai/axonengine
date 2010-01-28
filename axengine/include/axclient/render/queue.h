@@ -22,11 +22,6 @@ struct RenderScene {
 	Primitives overlays;
 };
 
-struct BBoxQuery {
-	int queryId;
-	BoundingBox bbox;
-};
-
 typedef shared_ptr<RenderScene> ScenePtr;
 typedef Sequence<ScenePtr> SceneSeq;
 
@@ -48,15 +43,15 @@ struct AX_API QueuedScene
 
 	int worldFrameId;
 
-	QueuedLight *sourceLight;			// if is shadowGen scene, this is light cast this shadow
-	int splitIndex;				// if is csm split, this is order index
+	QueuedLight *sourceLight; // if is shadowGen scene, this is light cast this shadow
+	int splitIndex; // if is csm split, this is order index
 	bool rendered;
 
 	// some global shader uniform parameters
 	Matrix4 windMatrices[RenderWind::NUM_WIND_MATRIXES];
 	Vector4 leafAngles[RenderWind::NUM_LEAF_ANGLES];
 
-	int m_histogramIndex;		// which histogram need to query
+	int m_histogramIndex; // which histogram need to query
 	int m_histogramQueryId;
 
 	float exposure;
@@ -66,7 +61,7 @@ struct AX_API QueuedScene
 
 	RenderScene *source;
 	RenderCamera camera;
-	RenderTarget *target;		// main scene maybe have a render target
+	RenderTarget *target; // main scene maybe have a render target
 
 	int numLights;
 	QueuedLight *lights[MAX_LIGHTS];
@@ -74,7 +69,7 @@ struct AX_API QueuedScene
 
 	QueuedFog *globalFog;
 	QueuedFog *waterFog;
-	Vector4 clearColor;				// clear color
+	Vector4 clearColor; // clear color
 	bool isEyeInWater;
 
 	int numEntities;

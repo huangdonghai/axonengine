@@ -21,7 +21,7 @@ public:
 	virtual void deleteThis();
 
 	// must be success
-	bool doInit(const String &name, intptr_t arg);
+	bool init(const String &name);
 
 	const String &getShaderName() const;
 	Shader *getShaderTemplate() const;

@@ -130,7 +130,7 @@ AX_BEGIN_NAMESPACE
 
 		// init device info
 		Info *glDriverInfo = new Info();
-		Axon::glDriverInfo = glDriverInfo;
+		glDriverInfo = glDriverInfo;
 		glDriverInfo->driverType = Info::OpenGL;
 		glDriverInfo->highestQualitySupport = ShaderQuality::Low;
 		glDriverInfo->vendor = (const char*)glGetString(GL_VENDOR);

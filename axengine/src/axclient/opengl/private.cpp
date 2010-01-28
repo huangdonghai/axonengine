@@ -11,25 +11,25 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-	AX_BEGIN_CLASS_MAP(axopengl)
-		AX_CLASS_ENTRY("driver", GLdriver)
-	AX_END_CLASS_MAP()
+AX_BEGIN_CLASS_MAP(axopengl)
+	AX_CLASS_ENTRY("driver", GLdriver)
+AX_END_CLASS_MAP()
 
-	GLwindow *glInternalWindow;
-	HGLRC glContext;
-	GLdriver *glDriver;
-	IRenderDriver::Info *glDriverInfo;
-	GLthread *glThread;
-	GLprimitivemanager *glPrimitiveManager;
-	GLframebuffermanager *glFramebufferManager;
-	GLshadermanager *glShaderManager;
-	CGcontext glCgContext;
-	Material *glNullMat;
-	GLpostprocess *glPostprocess;
+GLwindow *glInternalWindow;
+HGLRC glContext;
+GLdriver *glDriver;
+IRenderDriver::Info *glDriverInfo;
+GLthread *glThread;
+GLprimitivemanager *glPrimitiveManager;
+GLframebuffermanager *glFramebufferManager;
+GLshadermanager *glShaderManager;
+CGcontext glCgContext;
+Material *glNullMat;
+GLpostprocess *glPostprocess;
 
-	Interaction *gCurInteraction;
+Interaction *gCurInteraction;
 
-	GLfontrender *glFontRender;
+GLfontrender *glFontRender;
 
 
 AX_END_NAMESPACE

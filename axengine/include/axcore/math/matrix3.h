@@ -155,14 +155,14 @@ inline Matrix3 Matrix3::operator*(const Matrix3 &im) const
 	return result;
 }
 
-inline bool Matrix3::operator==(const Axon::Matrix3 &other) const
+inline bool Matrix3::operator==(const Matrix3 &other) const
 {
 	return m[0] == other.m[0]
 		&& m[1] == other.m[1]
 		&& m[2] == other.m[2];
 }
 
-inline bool Matrix3::operator!=(const Axon::Matrix3 &other) const
+inline bool Matrix3::operator!=(const Matrix3 &other) const
 {
 	return !this->operator==(other);
 }

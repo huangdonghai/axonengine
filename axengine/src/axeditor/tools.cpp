@@ -972,7 +972,7 @@ void RotateTool::doUpdateMode() {
 			Matrix3 axis = actorlist.getBackAxis();
 			axis.removeShear();
 
-			Axon::Rotate rotate;
+			AX_NAMESPACE::Rotate rotate;
 			rotate.fromAxis(axis);
 			state = rotate;
 

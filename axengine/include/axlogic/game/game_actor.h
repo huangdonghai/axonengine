@@ -101,7 +101,6 @@ protected:
 	GameWorld *m_world;			// world the entity has added to
 
 private:
-	ScriptValue m_currentState;
 	ScriptValue m_runningState; // current thread running
 
 	ScriptThread m_thread;

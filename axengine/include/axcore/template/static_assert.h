@@ -26,8 +26,8 @@ template<int x> struct static_assert_test{};
 AX_END_NAMESPACE
 
 #define AX_STATIC_ASSERT(B) \
-	typedef ::Axon::static_assert_test<\
-	sizeof(::Axon::STATIC_ASSERTION_FAILURE< (bool)(B) >)>\
+	typedef AX_NAMESPACE::static_assert_test<\
+	sizeof(AX_NAMESPACE::STATIC_ASSERTION_FAILURE< (bool)(B) >)>\
 	AX_JOINT(ax_static_assert_typedef_, __LINE__)
 
 #endif // JTL_STATICASSERT_HPP

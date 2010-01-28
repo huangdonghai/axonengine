@@ -13,56 +13,56 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-	Uuid::Uuid()
-	{
-		AX_STATIC_ASSERT(sizeof(Uuid)==sizeof(UUID));
+Uuid::Uuid()
+{
+	AX_STATIC_ASSERT(sizeof(Uuid)==sizeof(UUID));
 
-		UuidCreate((UUID*)this);
-	}
+	UuidCreate((UUID*)this);
+}
 
-	Uuid &Uuid::fromString( const String &str )
-	{
-		UuidFromStringA((RPC_CSTR)str.c_str(), (UUID*)this);
-		return *this;
-	}
+Uuid &Uuid::fromString( const String &str )
+{
+	UuidFromStringA((RPC_CSTR)str.c_str(), (UUID*)this);
+	return *this;
+}
 
-	String Uuid::toString()
-	{
-		RPC_CSTR str;
+String Uuid::toString()
+{
+	RPC_CSTR str;
 
-		UuidToStringA((UUID*)this, &str);
+	UuidToStringA((UUID*)this, &str);
 
-		String result = reinterpret_cast<char*>(str);
+	String result = reinterpret_cast<char*>(str);
 
-		RpcStringFreeA(&str);
-		return result;
-	}
+	RpcStringFreeA(&str);
+	return result;
+}
 
-	size_t Uuid::hash() const
-	{
-		const size_t *rep = reinterpret_cast<const size_t*>(this);
-		size_t result = rep[0];
+size_t Uuid::hash() const
+{
+	const size_t *rep = reinterpret_cast<const size_t*>(this);
+	size_t result = rep[0];
 
-		hash_combine(result, rep[1]);
-		hash_combine(result, rep[2]);
-		hash_combine(result, rep[3]);
+	hash_combine(result, rep[1]);
+	hash_combine(result, rep[2]);
+	hash_combine(result, rep[3]);
 
-		return result;
-	}
+	return result;
+}
 
-	String Uuid::generateUuid() {
-		UUID uuid;
-		UuidCreate(&uuid);
+String Uuid::generateUuid() {
+	UUID uuid;
+	UuidCreate(&uuid);
 
-		RPC_CSTR str;
+	RPC_CSTR str;
 
-		UuidToStringA(&uuid, &str);
+	UuidToStringA(&uuid, &str);
 
-		String result = reinterpret_cast<char*>(str);
+	String result = reinterpret_cast<char*>(str);
 
-		RpcStringFreeA(&str);
-		return result;
-	}
+	RpcStringFreeA(&str);
+	return result;
+}
 
 
 AX_END_NAMESPACE

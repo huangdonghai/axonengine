@@ -13,13 +13,7 @@ read the license and understand and accept it fully.
 #include <windows.h>
 #include "BugTrap.h"
 
-template< typename SignatureT >
-class tclass {};
-
-template< typename T, typename Rt >
-class tclass< Rt (T::*)() > {};
-
-using namespace Axon;
+AX_BEGIN_NAMESPACE
 
 static void SetupExceptionHandler() {
 	// required since VS 2005 SP1
@@ -27,12 +21,12 @@ static void SetupExceptionHandler() {
 
 	// Setup exception handler
 	BT_SetAppName("Axon Engine");
-//		BT_SetSupportEMail(L"bugs@axonengine.com");
+	//		BT_SetSupportEMail(L"bugs@axonengine.com");
 	BT_SetFlags(BTF_DETAILEDMODE/*BTF_EDITMAIL| | BTF_ATTACHREPORT | BTF_SCREENCAPTURE*/);
 	BT_SetSupportURL("http://www.axonengine.com");
 
 	// = BugTrapServer ===========================================
-//		BT_SetSupportServer(L"axon.ddns.info", 9999);
+	//		BT_SetSupportServer(L"axon.ddns.info", 9999);
 #if 0
 	// Add custom log file using default name
 	g_bugTraceLog = BT_OpenLogFile(NULL, BTLF_TEXT);
@@ -46,7 +40,6 @@ static void SetupExceptionHandler() {
 #endif
 }
 
-AX_BEGIN_NAMESPACE
 
 FileSystem *g_fileSystem;
 CmdSystem *g_cmdSystem;

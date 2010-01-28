@@ -2,9 +2,7 @@
 #define __AX_CORE_Spline_H__
 
 
-namespace Axon 
-{
-
+AX_BEGIN_NAMESPACE
 #if 0
 
 // ÇúÏß
@@ -147,6 +145,6 @@ protected:
 	bool m_dirty;
 };
 
-}
+AX_END_NAMESPACE
 
 #endif

@@ -351,11 +351,11 @@ public:
 	}
 
 	void deallocate(pointer _Ptr, size_type) {	// deallocate object at _Ptr, ignore size
-		Axon::Free(_Ptr);
+		Free(_Ptr);
 	}
 
 	pointer allocate(size_type _Count) {	// allocate array of _Count elements
-		return (pointer)(Axon::Malloc(_Count*sizeof(T)));
+		return (pointer)(Malloc(_Count*sizeof(T)));
 	}
 
 	pointer allocate(size_type _Count, const void  *) {	// allocate array of _Count elements, ignore hint
@@ -500,19 +500,19 @@ AX_END_NAMESPACE
 // memory stack don't need delete
 //------------------------------------------------------------------------------
 
-inline void *operator new(size_t count, Axon::MemoryStack *stack) {
-	return stack->alloc((Axon::uint_t)count);
+inline void *operator new(size_t count, AX_NAMESPACE::MemoryStack *stack) {
+	return stack->alloc((AX_NAMESPACE::uint_t)count);
 }
 
-inline void *operator new[](size_t count, Axon::MemoryStack *stack) {
-	return stack->alloc((Axon::uint_t)count);
+inline void *operator new[](size_t count, AX_NAMESPACE::MemoryStack *stack) {
+	return stack->alloc((AX_NAMESPACE::uint_t)count);
 }
 
-inline void operator delete(void *p, Axon::MemoryStack *stack) {
+inline void operator delete(void *p, AX_NAMESPACE::MemoryStack *stack) {
 	// do nothing
 }
 
-inline void operator delete[](void *p, Axon::MemoryStack *stack) {
+inline void operator delete[](void *p, AX_NAMESPACE::MemoryStack *stack) {
 	// do nothing
 }
 
@@ -526,19 +526,19 @@ void operator delete[](void *p);
 #else
 
 inline void *operator new(size_t count) {
-	return Axon::Malloc(count);
+	return AX_NAMESPACE::Malloc(count);
 }
 
 inline void *operator new[](size_t count) {
-	return Axon::Malloc(count);
+	return AX_NAMESPACE::Malloc(count);
 }
 
 inline void operator delete(void *p) {
-	return Axon::Free(p);
+	return AX_NAMESPACE::Free(p);
 }
 
 inline void operator delete[](void *p) {
-	return Axon::Free(p);
+	return AX_NAMESPACE::Free(p);
 }
 
 #endif

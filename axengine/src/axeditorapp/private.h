@@ -17,7 +17,7 @@ read the license and understand and accept it fully.
 #include <axlogic/public.h>
 #include <axeditor/public.h>
 
-using namespace Axon;
+AX_USE_NAMESPACE;
 
 Q_DECLARE_METATYPE (Vector3);
 Q_DECLARE_METATYPE (Point);

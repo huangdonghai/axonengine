@@ -81,9 +81,18 @@ support CPU(architecture) macro: some Compilers can produce code for more than o
 #	define OUT
 #endif
 
-#define AX_BEGIN_NAMESPACE namespace Axon {
+#define AX_NAMESPACE AXON
+
+#ifdef AX_NAMESPACE
+#define AX_BEGIN_NAMESPACE namespace AX_NAMESPACE {
 #define AX_END_NAMESPACE }
-#define AX_USE_NAMESPACE using namespace Axon;
+#define AX_USE_NAMESPACE using namespace AX_NAMESPACE;
+#else
+#	define AX_NAMESPACE
+#	define AX_BEGIN_NAMESPACE
+#	define AX_END_NAMESPACE
+#	define AX_USE_NAMESPACE
+#endif
 
 #if defined(_MSC_VER)
 #   include "cc_msvc.h"

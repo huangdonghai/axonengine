@@ -17,9 +17,6 @@ read the license and understand and accept it fully.
 AX_BEGIN_NAMESPACE
 
 namespace {
-
-	using namespace Axon;
-
 	/// default game path
 	const char *const DEFAULT_DATA_PATH = "data";
 
@@ -65,7 +62,6 @@ namespace {
 
 		return fullpath;
 	}
-
 }
 
 //------------------------------------------------------------------------------

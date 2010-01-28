@@ -20,9 +20,9 @@ read the license and understand and accept it fully.
 #	endif
 #endif
 
-#include "render/all.h"
+#include "render/render.h"
 #include "input/all.h"
-#include "speedtree/all.h"
+#include "speedtree/tree.h"
 #include "sound/all.h"
 
 AX_BEGIN_NAMESPACE

@@ -71,6 +71,7 @@ struct Matrix;
 struct Rgb;
 struct Rgba;
 struct Color3;
+struct Color4;
 
 #if 0
 struct Bgr;

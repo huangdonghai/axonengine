@@ -12,7 +12,7 @@ read the license and understand and accept it fully.
 AX_BEGIN_NAMESPACE
 
 
-Axon::String Point::toString() const {
+String Point::toString() const {
 	String result;
 	StringUtil::sprintf(result, "%d %d", x, y);
 	return result;

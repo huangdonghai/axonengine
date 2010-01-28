@@ -17,6 +17,7 @@ IntrusiveList<Material, &Material::m_needDeleteLink> ms_needDeleteLinkHead;
 
 Material::Material()
 {
+	size_t s = sizeof(Material);
 	m_baseTcAnim = false;
 	m_shaderMacroNeedRegen = true;
 	m_diffuse = Vector3::One;
@@ -31,9 +32,6 @@ Material::Material()
 
 	TypeZeroArray(m_features);
 	TypeZeroArray(m_literals);
-#if 0
-	m_needDeleteLink.setOwner(this);
-#endif
 }
 
 Material::~Material()
@@ -44,7 +42,7 @@ Material::~Material()
 //		FreeAsset_(m_shaderTemplate);
 }
 
-bool Material::doInit(const String &name, intptr_t arg)
+bool Material::init(const String &name)
 {
 	if (!PathUtil::haveDir(name))
 		m_key = "materials/" + name;
@@ -282,7 +280,7 @@ MaterialRp Material::load(const String &name)
 	}
 
 	Material *result = new Material();
-	result->doInit(key, 0);
+	result->init(key);
 	result->setKey(key);
 	ms_materialDict[key] = result;
 
@@ -297,7 +295,7 @@ MaterialRp Material::loadUnique(const String &name)
 	FixedString uniqueKey = normalizeKey(ss.str());
 
 	Material *result = new Material();
-	result->doInit(key, 0);
+	result->init(key);
 	result->setKey(uniqueKey);
 	ms_materialDict[uniqueKey] = result;
 	return result;
@@ -358,7 +356,7 @@ void Material::deleteThis()
 	_deleteMaterial(this);
 }
 
-void Material::matlist_f( const CmdArgs &args )
+void Material::matlist_f(const CmdArgs &args)
 {
 	Printf("List material(s):\n");
 

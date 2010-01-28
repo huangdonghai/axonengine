@@ -14,97 +14,97 @@ read the license and understand and accept it fully.
 AX_BEGIN_NAMESPACE
 
 
-	#define AX_INFINITE 0xFFFFFFFF
+#define AX_INFINITE 0xFFFFFFFF
 
 
-	//------------------------------------------------------------------------------
-	// class SyncObject
-	//------------------------------------------------------------------------------
-	struct AX_API SyncObject {
-		virtual ~SyncObject() {}
+//------------------------------------------------------------------------------
+// class SyncObject
+//------------------------------------------------------------------------------
+struct AX_API SyncObject {
+	virtual ~SyncObject() {}
 
-		virtual bool lock(uint_t timeout = AX_INFINITE) = 0;
-		virtual bool unlock() = 0;
-	};
-
-
-	//------------------------------------------------------------------------------
-	// class SyncMutex
-	//------------------------------------------------------------------------------
-	class AX_API SyncMutex {
-	public:
-		SyncMutex();
-		virtual ~SyncMutex();
-
-		virtual bool lock(uint_t timeout = AX_INFINITE);
-		virtual bool unlock();
-
-	private:
-		mutable void *m_object;
-	};
-
-	//------------------------------------------------------------------------------
-	// class auto lock
-	//------------------------------------------------------------------------------
-	#define SCOPE_LOCK ScopeLock __scopeLocker(m_mutex);
+	virtual bool lock(uint_t timeout = AX_INFINITE) = 0;
+	virtual bool unlock() = 0;
+};
 
 
-	class AX_API ThreadSafe {
-	public:
-		mutable SyncMutex m_mutex;
-	};
+//------------------------------------------------------------------------------
+// class SyncMutex
+//------------------------------------------------------------------------------
+class AX_API SyncMutex {
+public:
+	SyncMutex();
+	virtual ~SyncMutex();
 
-	class ScopeLock {
-	public:
-		ScopeLock(SyncMutex &syncobject) : m_mutex(syncobject) { m_mutex.lock(); }
-		~ScopeLock() { m_mutex.unlock(); }
-	private:
-		SyncMutex &m_mutex;
-	};
+	virtual bool lock(uint_t timeout = AX_INFINITE);
+	virtual bool unlock();
+
+private:
+	mutable void *m_object;
+};
+
+//------------------------------------------------------------------------------
+// class auto lock
+//------------------------------------------------------------------------------
+#define SCOPE_LOCK ScopeLock __scopeLocker(m_mutex);
 
 
+class AX_API ThreadSafe {
+public:
+	mutable SyncMutex m_mutex;
+};
 
-	//------------------------------------------------------------------------------
-	// class SyncEvent
-	//------------------------------------------------------------------------------
-	class AX_API SyncEvent {
-	public:
-		SyncEvent();
-		virtual ~SyncEvent();
-
-		virtual bool lock(uint_t timeout = AX_INFINITE);
-		virtual bool unlock();
-
-		bool setEvent();
-		bool pulseEvent();
-		bool resetEvent();
-
-	private:
-		void *m_object;
-	};
+class ScopeLock {
+public:
+	ScopeLock(SyncMutex &syncobject) : m_mutex(syncobject) { m_mutex.lock(); }
+	~ScopeLock() { m_mutex.unlock(); }
+private:
+	SyncMutex &m_mutex;
+};
 
 
 
-	//------------------------------------------------------------------------------
-	// class Thread
-	//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+// class SyncEvent
+//------------------------------------------------------------------------------
+class AX_API SyncEvent {
+public:
+	SyncEvent();
+	virtual ~SyncEvent();
 
-	class AX_API Thread {
-	public:
-		Thread();
-		virtual ~Thread();
+	virtual bool lock(uint_t timeout = AX_INFINITE);
+	virtual bool unlock();
 
-		void startThread();
-		void endThread();
-		bool isCurrentThread() const;
+	bool setEvent();
+	bool pulseEvent();
+	bool resetEvent();
 
-		virtual void doRun() = 0;		// work entry
+private:
+	void *m_object;
+};
 
-	private:
-		handle_t m_handle;
-		SyncEvent *m_exitEvent;
-		ulong_t m_id;
-	};
+
+
+//------------------------------------------------------------------------------
+// class Thread
+//------------------------------------------------------------------------------
+
+class AX_API Thread {
+public:
+	Thread();
+	virtual ~Thread();
+
+	void startThread();
+	void endThread();
+	bool isCurrentThread() const;
+
+	virtual void doRun() = 0;		// work entry
+
+private:
+	handle_t m_handle;
+	SyncEvent *m_exitEvent;
+	ulong_t m_id;
+};
 
 
 

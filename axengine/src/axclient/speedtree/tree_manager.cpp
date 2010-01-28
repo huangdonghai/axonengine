@@ -13,15 +13,17 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-TreeManager::TreeManager() {
+TreeManager::TreeManager()
+{
 	m_defaulted = nullptr;
 }
 
-TreeManager::~TreeManager() {
-
+TreeManager::~TreeManager()
+{
 }
 
-TreeAsset *TreeManager::findAsset(const String &name, int seed) {
+TreeAsset *TreeManager::findAsset(const String &name, int seed)
+{
 	String key = TreeAsset::genKey(name, seed);
 	TreeAssetDict::iterator it = m_treeAssetDict.find(key);
 
@@ -43,23 +45,28 @@ TreeAsset *TreeManager::findAsset(const String &name, int seed) {
 	return result;
 }
 
-void TreeManager::addAsset(TreeAsset *wrapper) {
+void TreeManager::addAsset(TreeAsset *wrapper)
+{
 	m_treeAssetDict[wrapper->getKey()] = wrapper;
 }
 
-void TreeManager::removeAsset(TreeAsset *wrapper) {
+void TreeManager::removeAsset(TreeAsset *wrapper)
+{
 	m_treeAssetDict.erase(wrapper->getKey());
 }
 
-void TreeManager::addTree(TreeEntity *tree) {
+void TreeManager::addTree(TreeEntity *tree)
+{
 	m_treeDict.insert(tree);
 }
 
-void TreeManager::removeTree(TreeEntity *tree) {
+void TreeManager::removeTree(TreeEntity *tree)
+{
 	m_treeDict.erase(tree);
 }
 
-bool TreeManager::isSupportExt(const String &ext) const {
+bool TreeManager::isSupportExt(const String &ext) const
+{
 	if (ext == "spt") {
 		return true;
 	}
@@ -71,15 +78,18 @@ bool TreeManager::isSupportExt(const String &ext) const {
 	return false;
 }
 
-RenderEntity *TreeManager::create(const String &name, intptr_t arg) {
+RenderEntity *TreeManager::create(const String &name, intptr_t arg)
+{
 	return new TreeEntity(name, arg);
 }
 
-void TreeManager::updateForFrame(QueuedScene *qscene ) {
+void TreeManager::updateForFrame(QueuedScene *qscene)
+{
 	// do nothing
 }
 
-void TreeManager::issueToQueue(QueuedScene *qscene) {
+void TreeManager::issueToQueue(QueuedScene *qscene)
+{
 #if 0
 	if (!r_geoInstancing->getInteger()) {
 		return;

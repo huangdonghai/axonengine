@@ -83,20 +83,23 @@ String Rgba::toString() const {
 	return result;
 }
 
-void Rgba::fromString(const char *str) {
+void Rgba::fromString(const char *str)
+{
 	int _r, _g, _b, _a;
 	int v = sscanf(str, "%d %d %d %d", &_r, &_g, &_b, &_a);
 	AX_STRICT_ASSERT(v = 4);
 	r = _r; g = _g; b = _b; a = _a;
 }
 
-String Color3::toString() const {
+String Color3::toString() const
+{
 	String result;
 	StringUtil::sprintf(result, "%f %f %f", r, g, b);
 	return result;
 }
 
-bool Color3::fromString(const char *str) {
+bool Color3::fromString(const char *str)
+{
 	int v = sscanf(str, "%f %f %f", &r, &g, &b);
 	AX_ASSERT(v == 3);
 
@@ -107,6 +110,29 @@ bool Color3::fromString(const char *str) {
 		b /= 255.0f;
 	}
 	return v == 3;
+}
+
+
+String Color4::toString() const
+{
+	String result;
+	StringUtil::sprintf(result, "%f %f %f %f", r, g, b, a);
+	return result;
+}
+
+bool Color4::fromString( const char *str )
+{
+	int v = sscanf(str, "%f %f %f %f", &r, &g, &b, &a);
+	AX_ASSERT(v == 4);
+
+	// FIXME: hack
+	if (r > 16 || g > 16 || b > 16 || a > 16) {
+		r /= 255.0f;
+		g /= 255.0f;
+		b /= 255.0f;
+		a /= 255.0f;
+	}
+	return v == 4;
 }
 
 AX_END_NAMESPACE

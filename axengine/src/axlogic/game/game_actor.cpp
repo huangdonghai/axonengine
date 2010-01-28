@@ -106,7 +106,6 @@ void GameActor::switchState(const String &name)
 		m_currentState.reset();
 		Errorf("Invalid state name");
 	}
-
 #endif
 }
 

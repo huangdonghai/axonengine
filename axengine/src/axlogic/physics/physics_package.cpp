@@ -326,34 +326,34 @@ namespace { namespace Internal {
 				SamplerType samplertype = SamplerType::NUMBER_ALL;
 				if (stage->m_tcoordChannel == 0) {
 					switch (stage->m_usageHint) {
-	case hkxMaterial::TEX_UNKNOWN:
-	case hkxMaterial::TEX_SPECULARANDGLOSS:
-	case hkxMaterial::TEX_OPACITY:
-	case hkxMaterial::TEX_GLOSS:
-	case hkxMaterial::TEX_REFRACTION:
-	case hkxMaterial::TEX_NOTEXPORTED:
-	default:
-		samplertype = guessTypeFromName(filename);
-		break;
-	case hkxMaterial::TEX_DIFFUSE:
-		samplertype = SamplerType::Diffuse;
-		break;
-	case hkxMaterial::TEX_REFLECTION:
-		samplertype = SamplerType::Envmap;
-		break;
-	case hkxMaterial::TEX_BUMP:
-	case hkxMaterial::TEX_NORMAL:
-		samplertype = SamplerType::Normal;
-		break;
-	case hkxMaterial::TEX_DISPLACEMENT:
-		samplertype = SamplerType::Displacement;
-		break;
-	case hkxMaterial::TEX_SPECULAR:
-		samplertype = SamplerType::Specular;
-		break;
-	case hkxMaterial::TEX_EMISSIVE:
-		samplertype = SamplerType::Emission;
-		break;
+					case hkxMaterial::TEX_UNKNOWN:
+					case hkxMaterial::TEX_SPECULARANDGLOSS:
+					case hkxMaterial::TEX_OPACITY:
+					case hkxMaterial::TEX_GLOSS:
+					case hkxMaterial::TEX_REFRACTION:
+					case hkxMaterial::TEX_NOTEXPORTED:
+					default:
+						samplertype = guessTypeFromName(filename);
+						break;
+					case hkxMaterial::TEX_DIFFUSE:
+						samplertype = SamplerType::Diffuse;
+						break;
+					case hkxMaterial::TEX_REFLECTION:
+						samplertype = SamplerType::Envmap;
+						break;
+					case hkxMaterial::TEX_BUMP:
+					case hkxMaterial::TEX_NORMAL:
+						samplertype = SamplerType::Normal;
+						break;
+					case hkxMaterial::TEX_DISPLACEMENT:
+						samplertype = SamplerType::Displacement;
+						break;
+					case hkxMaterial::TEX_SPECULAR:
+						samplertype = SamplerType::Specular;
+						break;
+					case hkxMaterial::TEX_EMISSIVE:
+						samplertype = SamplerType::Emission;
+						break;
 					}
 
 				} else if (stage->m_tcoordChannel == 1) {
@@ -557,7 +557,6 @@ namespace { namespace Internal {
 }} // namespace anynomus::Internal
 
 using namespace Internal;
-using Internal::IStream;
 
 //--------------------------------------------------------------------------
 // class HavokAnimator

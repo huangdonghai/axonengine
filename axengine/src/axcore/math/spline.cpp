@@ -9,8 +9,8 @@ read the license and understand and accept it fully.
 
 #include "../private.h"
 
-namespace Axon 
-{
+AX_BEGIN_NAMESPACE
+
 Spline::Spline()
 	: m_width(0.0f)
 	, m_intervalLength(2.0f)

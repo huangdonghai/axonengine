@@ -20,8 +20,6 @@ read the license and understand and accept it fully.
 #include <d3dx9.h>
 #include <dxerr.h>
 
-using namespace Axon;
-
 #if 1 || defined(DEBUG) || defined(_DEBUG)
 #ifndef V
 #define V(x)           { hr = (x); if (FAILED(hr)) { Errorf("%s(%d): %s", __FILE__, __LINE__, #x); } }

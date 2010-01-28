@@ -20,7 +20,7 @@ read the license and understand and accept it fully.
 #include <axcore/public.h>
 #include <axclient/public.h>
 
-#include "render/selection.h"
+#include "render/render_p.h"
 
 AX_BEGIN_NAMESPACE
 
