@@ -21,7 +21,7 @@ class UniformItem
 {
 public:
 	enum ValueType {
-		vt_empty, vt_float, vt_Vector2, vt_Vector3, vt_Matrix3, vt_Vector4, vt_AffineMat, vt_Matrix4, vt_Texture
+		vt_empty, vt_float, vt_Vector2, vt_Vector3, vt_Matrix3, vt_Vector4, vt_Matrix, vt_Matrix4, vt_Texture
 	};
 
 	UniformItem();

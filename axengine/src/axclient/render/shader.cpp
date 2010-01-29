@@ -49,7 +49,7 @@ int UniformItem::calcValueSize(ValueType vt)
 		case vt_Vector3: return sizeof(Vector3);
 		case vt_Vector4: return sizeof(Vector4);
 		case vt_Matrix3: return sizeof(Matrix3);
-		case vt_AffineMat: return sizeof(Matrix);
+		case vt_Matrix: return sizeof(Matrix);
 		case vt_Matrix4: return sizeof(Matrix4);
 		case vt_Texture: return sizeof(Texture*);
 	}
@@ -81,7 +81,7 @@ static inline int calcNumRegister( UniformItem::ValueType vt )
 			return 1;
 		case UniformItem::vt_Matrix3:
 			return 3;
-		case UniformItem::vt_AffineMat:
+		case UniformItem::vt_Matrix:
 			return 3;
 		case UniformItem::vt_Matrix4:
 			return 4;

@@ -186,7 +186,7 @@ void D3D9uniform::setUniform( UniformItem &item, const void *q )
 			}
 		}
 		break;
-	case UniformItem::vt_AffineMat:
+	case UniformItem::vt_Matrix:
 		if (item.m_arraySize == 1) {
 			Matrix &am = *(Matrix*)q;
 			Matrix4 matrix = am.toMatrix4().getTranspose();

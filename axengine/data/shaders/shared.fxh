@@ -164,7 +164,7 @@ AX_SHADERCONST(SHADERMACRO_VERSION, 2)
 	AX_UNIFORM(float4,		Vector4,	g_waterFogParams,			4, 4)		\
 	\
 	/* vs use */ \
-	AX_UNIFORM(float3x4,	AffineMat,	g_modelMatrix,				8, 0)		\
+	AX_UNIFORM(float3x4,	Matrix,		g_modelMatrix,				8, 0)		\
 	AX_UNIFORM(float4,		Vector4,	g_instanceParam,			11, 0)		\
 	AX_UNIFORM(float4x4,	Matrix4,	g_viewProjMatrix,			12, 0)		\
 	AX_UNIFORM(float4x4,	Matrix4,	g_viewProjNoTranslate,		16, 0)		\

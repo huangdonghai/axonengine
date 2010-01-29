@@ -354,7 +354,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axclient\render\materialdata.h"
+				RelativePath="..\..\..\src\axclient\render\material_d.h"
 				>
 			</File>
 			<File
