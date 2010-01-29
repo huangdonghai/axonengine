@@ -402,6 +402,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\axclient\render\sampler_d.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\axclient\render\selection.cpp"
 				>
 			</File>

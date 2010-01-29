@@ -3,6 +3,8 @@
 
 AX_BEGIN_NAMESPACE
 
+class SamplerData;
+
 class Sampler
 {
 public:
@@ -13,7 +15,6 @@ public:
 		CM_ClampToBorder // only used in engine internal
 	};
 
-
 	enum FilterMode {
 		FM_Nearest,
 		FM_Linear,
@@ -21,14 +22,15 @@ public:
 		FM_Trilinear
 	};
 
+	Sampler();
 	Sampler(const String &name, ClampMode clampMode, FilterMode filterMode);
+	~Sampler();
 
+	bool isNull() const { return !m_d; }
 
 private:
-	ClampMode m_clampMode;
-	FilterMode m_filterMode;
-	Color4 m_boardColor;
-	TexturePtr m_texture;
+
+	SamplerData *m_d;
 };
 
 AX_END_NAMESPACE

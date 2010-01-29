@@ -36,6 +36,66 @@ public:
 	{}
 };
 
+template <class T>
+class ScopedPtr : public Noncopyable
+{
+	friend T *GetPointer_(ScopedPtr<T> const &);
+
+public:
+	explicit ScopedPtr(T *_p) : p(_p) {}
+	~ScopedPtr() { if (p) delete p; }
+
+	T * operator->() const { return p; }
+	T & operator*() const { return *p; }
+	operator bool() const { return p != 0; }
+
+	void swap(ScopedPtr &rhs) { std::swap(p, rhs->p); }
+private:
+	T *p;
+};
+
+template<class T> inline void swap(ScopedPtr<T> & a, ScopedPtr<T> & b) // never throws
+{
+	a.swap(b);
+}
+
+template<class T> inline T * GetPointer_(ScopedPtr<T> const & p)
+{
+	return p.p;
+}
+
+template <class T>
+class HolderPtr : public Noncopyable
+{
+	friend T *GetPointer_(HolderPtr<T> const &);
+
+public:
+	HolderPtr() : p(0) {}
+	HolderPtr(T *_p) : p(_p) {}
+	~HolderPtr() { reset(); }
+
+	T * operator->() const { return p; }
+	T & operator*() const { return *p; }
+	T & operator=(T *rhs) { reset(); p=rhs; return *this; }
+	operator bool() const { return p != 0; }
+
+	void swap(HolderPtr &rhs) { std::swap(p, rhs->p); }
+
+private:
+	void reset() { if (p) delete p; p = 0; }
+	T *p;
+};
+
+template<class T> inline void swap(HolderPtr<T> &a, HolderPtr<T> &b) // never throws
+{
+	a.swap(b);
+}
+
+template<class T> inline T * GetPointer_(HolderPtr<T> const &p)
+{
+	return p.p;
+}
+
 #if 0
 // smart pointer
 class SharedCount {

@@ -219,6 +219,20 @@ inline void Material::setTexture(int sampler, Texture *tex) {
 	m_textures[sampler] = tex;
 }
 
+class MaterialData;
+
+class NewMaterial
+{
+public:
+	NewMaterial();
+	NewMaterial(const String &name);
+	~NewMaterial();
+
+	bool isNull() const { return !m_d; }
+
+private:
+	MaterialData *m_d;
+};
 AX_END_NAMESPACE
 
 #endif // AX_MATERIAL_H
