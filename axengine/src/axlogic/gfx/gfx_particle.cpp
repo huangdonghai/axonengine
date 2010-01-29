@@ -183,7 +183,7 @@ void ParticleEmitter::frameUpdate(QueuedScene *qscene)
 	m_objToWorld = m_entity->getMatrix() * m_tm;
 
 	// spawn new particles
-	float dt = qscene->camera.getFrameTime() * 0.001f;
+	float dt = qscene->camera.getFrameTime();
 	dt = 0.02f;
 
 	float ftospawn = (dt * m_EmissionRate / m_Lifespan) + m_remain;

@@ -281,7 +281,7 @@ void D3D9text::update() {
 	D3D9primitive::update();
 }
 
-#define BLINK_DIVISOR 75
+#define BLINK_DIVISOR 0.075
 
 void D3D9text::draw(Technique tech) {
 	if (!r_font->getBool()) {

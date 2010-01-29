@@ -73,15 +73,15 @@ void GameSystem::tick()
 		return;
 	}
 
-	int lasttime = m_gameWorld->m_lasttime;
-	int curtime = OsUtil::milliseconds();
+	double lasttime = m_gameWorld->m_lasttime;
+	double curtime = OsUtil::getTime();
 
-	int frametime = 1000 / g_fps->getInteger();
+	float frametime = 1.0f / g_fps->getInteger();
 
 	while (curtime - lasttime < frametime) {
-		int sleeptime = frametime - (curtime - lasttime);
+		float sleeptime = frametime - (curtime - lasttime);
 		OsUtil::sleep(sleeptime);
-		int c = OsUtil::milliseconds();
+		double c = OsUtil::getTime();
 //			Printf("sleep time: %d\n", c-curtime);
 		curtime = c;
 	}
@@ -113,7 +113,7 @@ void GameSystem::startRunning()
 	g_inputSystem->startCapture(InputSystem::Exclusive);
 	g_inputSystem->setMouseMode(InputSystem::FPS_Mode);
 
-	m_gameWorld->m_lasttime = OsUtil::milliseconds();
+	m_gameWorld->m_lasttime = OsUtil::getTime();
 }
 
 void GameSystem::stopRunning()

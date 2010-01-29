@@ -87,8 +87,8 @@ protected:
 	String m_title;
 	RenderCamera m_camera;
 	int m_frameNumCur;
-	unsigned int m_frameOldTime;
-	uint_t m_frameTime;
+	double m_frameOldTime;
+	float m_frameTime;
 	float m_fps;
 	Vector3 m_cursorPos;
 	Matrix m_eyeMatrix;

@@ -413,16 +413,16 @@ Primitives OutdoorEnv::getAllPrimitives()
 void OutdoorEnv::frameUpdate(QueuedScene *qscene)
 {
 	if (!m_dateTimeInited) {
-		m_dateTime.initSystemTime(qscene->camera.getTime());
+		m_dateTime.initSystemTime(qscene->camera.getTime() * 1000);
 		m_dateTimeInited = true;
 	} else {
-		m_dateTime.update(qscene->camera.getTime());
+		m_dateTime.update(qscene->camera.getTime() * 1000);
 	}
 
 	DateTime::Data data = m_dateTime.getData();
 
 	Vector3 viewdir = qscene->camera.getViewAxis()[0];
-	m_wind.advance(qscene->camera.getTime() * 0.001f, true, false, viewdir.x, viewdir.y, viewdir.z);
+	m_wind.advance(qscene->camera.getTime(), true, false, viewdir.x, viewdir.y, viewdir.z);
 
 	m_wind.getWindMatrix(qscene->windMatrices);
 	m_wind.getLeafAngles(qscene->leafAngles);

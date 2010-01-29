@@ -54,7 +54,7 @@ protected:
 	Vector3 m_viewOrg;
 	Angles m_viewAngles;
 	bool m_updateStoped;
-	int m_frameOldTime;
+	double m_frameOldTime;
 	uint_t m_frameNumCur;
 	float m_fps;
 	float m_mouseDelicacy;

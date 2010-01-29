@@ -15,7 +15,7 @@ AX_BEGIN_NAMESPACE
 
 class AX_API Statistic {
 public:
-	typedef Sequence<int>		IndexSeq;
+	typedef Sequence<int> IndexSeq;
 	enum Group {
 		NoneGroup,
 		EngineGroup,
@@ -50,8 +50,8 @@ public:
 private:
 	enum { MAX_PERFORMERS = 4096 };
 
-	typedef std::map<String, int>		PerfItems;
-	typedef std::map<Group, PerfItems>	PerfGroups;
+	typedef std::map<String, int> PerfItems;
+	typedef std::map<Group, PerfItems> PerfGroups;
 
 	int m_values[MAX_PERFORMERS];
 	bool m_autoResets[MAX_PERFORMERS];

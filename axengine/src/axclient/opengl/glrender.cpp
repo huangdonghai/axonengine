@@ -98,13 +98,13 @@ AX_BEGIN_NAMESPACE
 		AX_SU(g_matSpecular, mat->getMatSpecular());
 		AX_SU(g_matShiness, mat->getMatShiness());
 
-		ulonglong_t begin = OsUtil::microseconds();
+		double begin = OsUtil::getTime();
 #if 0
 		GLshader *shader = (GLshader*)FindAsset_<Shader>(mat->getShaderName(), (intptr_t)&macro);
 #else
 		GLshader *shader = glShaderManager->findShaderGL(mat->getShaderName(), macro);
 #endif
-		ulonglong_t end = OsUtil::microseconds();
+		double end = OsUtil::getTime();
 		g_statistic->addValue(stat_findShaderTime, end-begin);
 
 		if (!shader->haveTechnique(tech)) {
@@ -360,8 +360,8 @@ AX_BEGIN_NAMESPACE
 			glClientActiveTexture(GL_TEXTURE7);
 			glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 		}
-		ulonglong_t begin = OsUtil::microseconds();
-		ulonglong_t end = OsUtil::microseconds();
+		double begin = OsUtil::getTime();
+		double end = OsUtil::getTime();
 		g_statistic->addValue(stat_findShaderTime, end-begin);
 	}
 

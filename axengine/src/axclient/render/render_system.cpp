@@ -186,7 +186,7 @@ void RenderSystem::endScene()
 
 void RenderSystem::endFrame()
 {
-	uint_t frontEndStart = OsUtil::milliseconds();
+	double frontEndStart = OsUtil::getTime();
 
 	int shaderdebug = r_shaderDebug->getInteger();
 	g_shaderMacro.setMacro(ShaderMacro::G_DEBUG, shaderdebug);
@@ -303,9 +303,9 @@ void RenderSystem::endFrame()
 		g_renderQueue->addScene(queued);
 	}
 
-	uint_t frontEndTime = OsUtil::milliseconds() - frontEndStart;
+	float frontEndTime = OsUtil::getTime() - frontEndStart;
 
-	g_statistic->setValue(stat_frontendTime, frontEndTime);
+	g_statistic->setValue(stat_frontendTime, frontEndTime * 1000);
 
 	if (m_isMTrendering) {
 		g_renderQueue->endProviding();

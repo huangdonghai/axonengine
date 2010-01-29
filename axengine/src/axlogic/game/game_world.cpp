@@ -39,7 +39,7 @@ GameWorld::GameWorld()
 
 	m_mapEnvDef = new MapEnvDef();
 
-	m_lasttime = OsUtil::milliseconds();
+	m_lasttime = OsUtil::getTime();
 	m_frametime = 0;
 
 	g_gameSystem->setGameWorld(this);

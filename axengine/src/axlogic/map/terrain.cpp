@@ -2172,7 +2172,7 @@ RenderPrims Terrain::getViewedPrimitives()
 
 void MapTerrain::issueToQueue(QueuedScene *qscene)
 {
-	ulonglong_t start = OsUtil::microseconds();
+	double start = OsUtil::getTime();
 	MapEvent e;
 	e.rect = m_tilerect;
 	e.camera = &qscene->camera;
@@ -2180,8 +2180,8 @@ void MapTerrain::issueToQueue(QueuedScene *qscene)
 
 	doEvent(&e);
 
-	ulonglong_t end = OsUtil::microseconds();
-	g_statistic->addValue(stat_terrainGenPrimsTime, end - start);
+	double end = OsUtil::getTime();
+	g_statistic->addValue(stat_terrainGenPrimsTime, (end - start) * 1000);
 
 	for (size_t i = 0; i < e.primSeq.size(); i++) {
 		qscene->addInteraction(0, e.primSeq[i]);

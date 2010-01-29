@@ -112,12 +112,12 @@ float RenderCamera::getFovX() const {
 }
 
 
-void RenderCamera::setTime(uint_t time) {
+void RenderCamera::setTime(double time) {
 	m_frameTime = time - m_time;
 	m_time = time;
 }
 
-uint_t RenderCamera::getTime() const {
+double RenderCamera::getTime() const {
 	return m_time;
 }
 

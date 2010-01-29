@@ -38,8 +38,11 @@ public:
 
 
 struct AX_API OsUtil {
+#if 0
 	static uint_t milliseconds();
 	static ulonglong_t microseconds();
+#endif
+	static double getTime();
 	static String getClipboardString();
 	// DLL
 	static handle_t loadDll(const String &name);
@@ -58,7 +61,7 @@ struct AX_API OsUtil {
 	static int getCpuUsage();
 	static int getMemoryUsage();
 
-	static void sleep(int ms);
+	static void sleep(float seconds);
 	static int getScreenWidth();
 	static int getScreenHeight();
 

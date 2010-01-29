@@ -116,14 +116,14 @@ AX_BEGIN_NAMESPACE
 			gFrameWindow->bind();
 		}
 
-		uint_t cachestart = OsUtil::milliseconds();
+		double cachestart = OsUtil::getTime();
 
 		cacheResource();
 
-		uint_t cacheend = OsUtil::milliseconds();
+		double cacheend = OsUtil::getTime();
 
 		int view_count = g_renderQueue->getSceneCount();
-		int frametime = g_renderQueue->getScene(0)->camera.getFrameTime();
+		float frametime = g_renderQueue->getScene(0)->camera.getFrameTime();
 
 		Clearer clearer;
 		clearer.clearDepth(true);
@@ -142,7 +142,7 @@ AX_BEGIN_NAMESPACE
 
 		endFrame();
 
-		uint_t end = OsUtil::milliseconds();
+		double end = OsUtil::getTime();
 
 		if (frametime <= 0) {
 			frametime = 1;
@@ -261,7 +261,7 @@ AX_BEGIN_NAMESPACE
 		glViewport(viewport.x, viewport.y, viewport.z, viewport.w);
 		glScissor(viewport.x, viewport.y, viewport.z, viewport.w);
 
-		AX_SU(g_time, camera->getTime() * 0.001f);
+		AX_SU(g_time, camera->getTime());
 		AX_SU(g_cameraPos, camera->getOrigin());
 
 		Angles angles = camera->getViewAxis().toAngles();
@@ -852,7 +852,7 @@ AX_BEGIN_NAMESPACE
 
 	void GLthread::drawScene_world(QueuedScene *scene, const Clearer &clearer) {
 
-		longlong_t start = OsUtil::microseconds();
+		double start = OsUtil::getTime();
 
 		s_technique = Technique::Main;
 		gWorldScene = scene;
@@ -959,7 +959,7 @@ AX_BEGIN_NAMESPACE
 		// check if need draw overlay primitives
 		drawPass_overlay(scene);
 
-		longlong_t end = OsUtil::microseconds();
+		double end = OsUtil::getTime();
 //		Printf("FRAMETIME: %d", end - start);
 	}
 

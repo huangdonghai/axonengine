@@ -31,7 +31,7 @@ View::View(Context *context)
 	m_eyeMatrix.setOrigin(0, 0, 20);
 #endif
 	m_camera.setClearColor(Rgba::MdGrey);
-	m_frameOldTime = OsUtil::milliseconds();
+	m_frameOldTime = OsUtil::getTime();
 	m_frameTime = 0;
 
 	m_autoUpdate = false;
@@ -57,11 +57,11 @@ void View::doUpdate()
 		return;
 	}
 
-	uint_t now = OsUtil::milliseconds();
+	double now = OsUtil::getTime();
 	m_frameTime = now - m_frameOldTime;
 	m_frameOldTime = now;
 
-	if (m_frameTime > 2000) {
+	if (m_frameTime > 2) {
 //			Printf("DEBUG");
 	}
 
@@ -138,14 +138,14 @@ void View::drawFrameNum()
 	String text;
 
 #if 1
-	const int AccTimeInterval = 1000; // per second calc
-	static int OneSecondTimeAcc = 0;
-	static int OneSecondFrameAcc = 0;
+	const float AccTimeInterval = 1; // per second calc
+	static float OneSecondTimeAcc = 0;
+	static float OneSecondFrameAcc = 0;
 	++OneSecondFrameAcc;
 	if (m_frameTime > 0) {
 		OneSecondTimeAcc += m_frameTime;
 		if (OneSecondTimeAcc >= AccTimeInterval) {
-			m_fps = (float)OneSecondFrameAcc / (float)OneSecondTimeAcc * 1000.0f;
+			m_fps = (float)OneSecondFrameAcc / (float)OneSecondTimeAcc;
 			OneSecondTimeAcc = 0;
 			OneSecondFrameAcc = 0;
 		}
@@ -157,7 +157,7 @@ void View::drawFrameNum()
 #endif
 
 	m_frameNumCur++;
-	StringUtil::sprintf(text, "FPS:%3.1f FT:%3d FE:%d BE:%d", m_fps, m_frameTime, g_statistic->getValue(stat_frontendTime), g_statistic->getValue(stat_backendTime));
+	StringUtil::sprintf(text, "FPS:%3.1f FT:%3.1f FE:%d BE:%d", m_fps, m_frameTime*1000, g_statistic->getValue(stat_frontendTime), g_statistic->getValue(stat_backendTime));
 
 	rect.x = 10;
 	rect.y = m_camera.getViewRect().height - 24;

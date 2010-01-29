@@ -18,16 +18,16 @@ void testArgs()
 	CRITICAL_SECTION cs;
 	InitializeCriticalSection(&cs);
 
-	ulonglong_t start = OsUtil::microseconds();
+	double start = OsUtil::getTime();
 	double d = 0;
 	for (int i = 0; i < 10000000; i++) {
 		d += i;
 	}
-	ulonglong_t end = OsUtil::microseconds();
+	double end = OsUtil::getTime();
 
 	DeleteCriticalSection(&cs);
 
-	Printf("\n%d, %d\n", end - start, d);
+	Printf("\n%f, %f\n", end - start, d);
 	Variant v1(1);
 	v1 = 3;
 	v1 = Vector3(0,1,2);

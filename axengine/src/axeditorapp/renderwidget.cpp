@@ -58,7 +58,7 @@ void RenderWidget::paintEvent(QPaintEvent *pe)
 	m_renderCamera.setOrigin(m_viewOrg);
 	m_renderCamera.setViewAngles(m_viewAngles);
 	m_renderCamera.setFov(90);
-	m_renderCamera.setTime(OsUtil::milliseconds());
+	m_renderCamera.setTime(OsUtil::getTime());
 	m_renderCamera.setClearColor(Rgba::MdGrey);
 
 	/*if (m_renderCameraAdded == false)
@@ -180,11 +180,11 @@ void RenderWidget::drawFrameNum()
 	Rect rect;
 	String text;
 
-	uint_t now = OsUtil::milliseconds();
-	int frame_time = now - m_frameOldTime;
+	double now = OsUtil::getTime();
+	float frame_time = now - m_frameOldTime;
 
 	if (frame_time > 0) {
-		m_fps = 1000.0f / frame_time;
+		m_fps = 1.0f / frame_time;
 		m_frameOldTime = now;
 	}
 

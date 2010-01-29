@@ -420,13 +420,6 @@ AX_BEGIN_NAMESPACE
 	{
 		UINT dwSize;
 
-		static int oldtime = 0;
-
-		int curtime = OsUtil::milliseconds();
-		int msgtime = curtime - oldtime;
-		oldtime = curtime;
-		Printf("%d\n", msgtime);
-
 		GetRawInputData((HRAWINPUT)msg->lParam, RID_INPUT, NULL, &dwSize, sizeof(RAWINPUTHEADER));
 		LPBYTE lpb = new BYTE[dwSize];
 		if (lpb == NULL) {

@@ -69,7 +69,7 @@ private:
 	static RenderCamera m_selectionCamera;
 	Matrix4 m_selectModelViewMatrix;
 
-	int m_selectTime;
+	double m_selectTime;
 
 	bool m_isSelectMode;
 	HitRecords m_selectRecSeq;

@@ -33,13 +33,13 @@ AX_BEGIN_NAMESPACE
 		PhysicsWorld(float worldsize = 2048, bool enableVisualDebug = true, bool enableMultithread = true);
 		~PhysicsWorld();
 
-		void step(int frametime);
+		void step(float frametime);
 
 		void addEntity(PhysicsEntity *entity);
 		void removeEntity(PhysicsEntity *entity);
 
 	protected:
-		void stepMt(int frametime);
+		void stepMt(float frametime);
 
 	public:
 		hkpWorld *m_havokWorld;

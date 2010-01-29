@@ -384,7 +384,7 @@ AX_BEGIN_NAMESPACE
 		GLprimitive::update();
 	}
 
-	#define BLINK_DIVISOR 75
+	#define BLINK_DIVISOR 0.075
 
 	void GLtext::draw(Technique tech) {
 		g_statistic->incValue(stat_numTextDrawElements);

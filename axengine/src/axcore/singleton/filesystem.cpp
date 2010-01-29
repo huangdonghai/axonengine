@@ -856,8 +856,6 @@ void FileSystem::writeFile(const String &filename, const void *buffer, size_t si
 
 int FileSystem::compareFileModifyTime(const String &srcfile, const String &destfile)
 {
-	longlong_t start = OsUtil::microseconds();
-
 	SCOPE_LOCK;
 
 	longlong_t srcTime, dstTime;
@@ -869,10 +867,6 @@ int FileSystem::compareFileModifyTime(const String &srcfile, const String &destf
 	if (!getFileModifyTime(destfile, &dstTime)) {
 		return 2;
 	}
-
-	int comptime = OsUtil::microseconds() - start;
-
-	Debugf("compare file modify time: %d\n", comptime);
 
 	return srcTime < dstTime ? -1 : srcTime > dstTime ? 1 : 0;
 }

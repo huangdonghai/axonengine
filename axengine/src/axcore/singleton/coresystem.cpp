@@ -40,7 +40,7 @@ void System::initialize() {
 	printCpuInfo();
 
 	// init engine time and random seed
-	OsUtil::milliseconds();
+	OsUtil::getTime();
 
 	::setlocale(LC_ALL, ".ACP");
 	Printf(_("..set locale to system default\n"));

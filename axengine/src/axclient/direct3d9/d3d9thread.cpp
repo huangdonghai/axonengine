@@ -94,7 +94,7 @@ D3D9thread::~D3D9thread()
 
 void D3D9thread::runFrame(bool isInThread)
 {
-	uint_t startTime = OsUtil::milliseconds();
+	double startTime = OsUtil::getTime();
 
 	d3d9Queue = g_queues[m_frameId%2];
 	m_frameId++;
@@ -115,14 +115,14 @@ void D3D9thread::runFrame(bool isInThread)
 		d3d9FrameWnd->bind();
 	}
 
-	ulonglong_t cachestart = OsUtil::microseconds();
+	double cachestart = OsUtil::getTime();
 
 	syncFrame();
 
-	ulonglong_t cacheend = OsUtil::microseconds();
+	double cacheend = OsUtil::getTime();
 
 	int view_count = d3d9Queue->getSceneCount();
-	int frametime = d3d9Queue->getScene(0)->camera.getFrameTime();
+	float frametime = d3d9Queue->getScene(0)->camera.getFrameTime();
 
 	D3D9clearer clearer;
 	clearer.clearDepth(true);
@@ -133,38 +133,38 @@ void D3D9thread::runFrame(bool isInThread)
 	}
 
 
-	uint_t scenetime[16];
+	float scenetime[16];
 	m_isStatistic = false;
 
 	for (int i = 0; i < view_count; i++) {
 		if (i == view_count - 1) m_isStatistic = true;
 
-		uint_t s = OsUtil::milliseconds();
+		double s = OsUtil::getTime();
 		QueuedScene *queued = d3d9Queue->getScene(i);
 
 		drawScene(queued, clearer);
 		clearer.clearColor(false);
 		clearer.clearDepth(false);
 
-		scenetime[i] = OsUtil::milliseconds() - s;
+		scenetime[i] = OsUtil::getTime() - s;
 	}
 
 
 	d3d9Device->EndScene();
 	endFrame();
 
-	uint_t end = OsUtil::milliseconds();
+	double end = OsUtil::getTime();
 
 	if (frametime <= 0) {
 		frametime = 1;
 	}
 
-	int backendtime = end - startTime;
+	float backendtime = end - startTime;
 
-	g_statistic->setValue(stat_fps, 1000 / frametime);
-	g_statistic->setValue(stat_frameTime, frametime);
-	g_statistic->setValue(stat_cacheTime, cacheend-cachestart);
-	g_statistic->setValue(stat_backendTime, backendtime);
+	g_statistic->setValue(stat_fps, 1.0f / frametime);
+	g_statistic->setValue(stat_frameTime, frametime * 1000);
+	g_statistic->setValue(stat_cacheTime, (cacheend-cachestart)*1000);
+	g_statistic->setValue(stat_backendTime, backendtime*1000);
 
 	if (isInThread) {
 		d3d9Mutex.unlock();
@@ -234,7 +234,7 @@ void D3D9thread::setupScene(QueuedScene *scene, const D3D9clearer *clearer, Rend
 	d3d9Device->SetViewport(&d3dviewport);
 	d3d9Device->SetScissorRect(&d3dRect);
 
-	AX_SU(g_time, camera->getTime() * 0.001f);
+	AX_SU(g_time, (float)camera->getTime());
 
 	Vector4 campos = camera->getOrigin();
 	if (camera->isOrthoProjection()) {
@@ -842,18 +842,18 @@ void D3D9thread::drawScene_noworld(QueuedScene *scene, const D3D9clearer &cleare
 		drawInteraction(scene->debugInteractions[i]);
 	}
 
-	int start = OsUtil::milliseconds();
+	double start = OsUtil::getTime();
 	for (int i = 0; i < scene->numPrimitives; i++) {
 		drawPrimitive(scene->primIds[i]);
 	}
-	int end = OsUtil::milliseconds();
+	double end = OsUtil::getTime();
 
 	unsetScene(scene, nullptr, scene->target);
 
 	drawPass_overlay(scene);
 
 	if (m_isStatistic)
-		g_statistic->setValue(stat_staticsTime, end - start);
+		g_statistic->setValue(stat_staticsTime, (end - start) * 1000);
 
 	END_PIX();
 }

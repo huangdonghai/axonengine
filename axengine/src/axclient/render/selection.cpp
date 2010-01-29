@@ -80,14 +80,13 @@ Selection::~Selection(void)
 
 void Selection::beginSelect(const RenderCamera &view)
 {
-	m_selectTime = OsUtil::milliseconds();
+	m_selectTime = OsUtil::getTime();
 
 	m_selectionCamera = view;
 
 	zFar = view.getZfar();
 	zNear = view.getZnear();
 
-	m_selectTime = OsUtil::milliseconds();
 	m_isSelectMode = true;
 
 	m_selectRecSeq.clear();
@@ -200,9 +199,9 @@ HitRecords Selection::endSelect()
 	}
 	
 	// 显示拾取花费的时间
-	m_selectTime = OsUtil::milliseconds() - m_selectTime;
+	m_selectTime = OsUtil::getTime() - m_selectTime;
 
-	Printf("select time: %d\n", m_selectTime);
+	Printf("select time: %f\n", m_selectTime);
 
 	return m_selectRecSeq;
 }

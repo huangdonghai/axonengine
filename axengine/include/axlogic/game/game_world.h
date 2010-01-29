@@ -91,8 +91,8 @@ private:
 	OutdoorEnv *m_outdoorEnv;
 	MapEnvDef *m_mapEnvDef;
 
-	uint_t m_lasttime;
-	int m_frametime;
+	double m_lasttime;
+	float m_frametime;
 	RenderCamera m_lastCamera;
 	RenderTarget *m_targetWindow;
 

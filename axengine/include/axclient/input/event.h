@@ -172,7 +172,7 @@ struct AX_API InputEvent {
 	InputEvent::Type type : 7;
 	bool accepted : 1;
 	int flags : 24;
-	unsigned int time;
+	double time;
 	InputKey key;
 	Point pos;
 	int charCode;

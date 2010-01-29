@@ -15,7 +15,7 @@ AX_STATDECL(stat_frameTime , "Frame Time"					, false);
 AX_STATDECL(stat_cacheTime , "Cache Time"					, false);
 AX_STATDECL(stat_frontendTime , "Frame Frontend Time"			, false);
 AX_STATDECL(stat_backendTime , "Frame Backend Time"			, false);
-AX_STATDECL(stat_staticsTime , "Static Draw Time"			, false);
+AX_STATDECL(stat_staticsTime , "Statics Draw Time"			, false);
 AX_STATDECL(stat_terrainGenPrimsTime , "Terrain Generate Prims Time"	, true);
 AX_STATDECL(stat_findShaderTime , "Frame Find Shader Time"		, true);
 AX_STATDECL(stat_shaderParamUpdated , "Shader Param Updated"		, true);

@@ -61,7 +61,8 @@ inline bool Convex::cullBox(const BoundingBox &bbox) const {
 
 class RenderTarget;
 
-class AX_API RenderCamera {
+class AX_API RenderCamera
+{
 public:
 	enum Flag {
 		ClearColor = 1
@@ -95,9 +96,9 @@ public:
 	float getZnear() const;
 	float getZfar() const;
 
-	void setTime(uint_t time);
-	uint_t getTime() const;
-	int getFrameTime() const { return m_frameTime; }
+	void setTime(double time);
+	double getTime() const;
+	float getFrameTime() const { return m_frameTime; }
 
 	void setOrtho(float width, float height, float depth);
 	void setOrtho(float left, float right, float bottom, float top, float zNear, float zFar);
@@ -186,8 +187,9 @@ private:
 	bool m_isOrthoProjection;
 
 	// time in milliseconds for material effects and other time dependent rendering issues
-	uint_t m_time;
-	int m_frameTime;
+	double m_time;
+	float m_frameTime;
+
 	int m_flags;				// RVF_ortho ...
 	float m_znear;
 	float m_zfar;				// z far clip

@@ -261,7 +261,7 @@ DateTime::~DateTime() {
 }
 
 void DateTime::initSystemTime() {
-	initSystemTime(OsUtil::milliseconds());
+	initSystemTime(OsUtil::getTime() * 1000);
 }
 
 void DateTime::initSystemTime(uint_t start_time) {
@@ -308,7 +308,7 @@ void DateTime::init(ushort_t year, ushort_t month, ushort_t day, ushort_t hour, 
 }
 
 void DateTime::init(ushort_t year, ushort_t month, ushort_t day, ushort_t hour, ushort_t minute, ushort_t second) {
-	init(year, month, day, hour, minute, second, OsUtil::milliseconds());
+	init(year, month, day, hour, minute, second, OsUtil::getTime()*1000);
 }
 
 void DateTime::init(ushort_t hour, ushort_t minute, ushort_t second, uint_t startTime) {
@@ -325,7 +325,7 @@ void DateTime::init(ushort_t hour, ushort_t minute, ushort_t second, uint_t star
 }
 
 void DateTime::init(ushort_t hour, ushort_t minute, ushort_t second) {
-	init(hour, minute, second, OsUtil::milliseconds());
+	init(hour, minute, second, OsUtil::getTime()*1000);
 }
 
 DateTime::Data DateTime::getData() {

@@ -96,24 +96,24 @@ PhysicsWorld::~PhysicsWorld() {
 	m_havokWorld->removeReference();
 }
 
-void PhysicsWorld::step(int frametime) {
+void PhysicsWorld::step(float frametime) {
 	if (m_multithreadingUtil) {
 		stepMt(frametime);
 	}
 
-	uint_t start = OsUtil::milliseconds();
+	double start = OsUtil::getTime();
 
-	m_havokWorld->stepDeltaTime(frametime * 0.001f);
+	m_havokWorld->stepDeltaTime(frametime);
 	notify(Synchronize);
 
 	if (m_vdb) {
 		m_vdb->step(frametime);
 	}
 
-	int physicstime = OsUtil::milliseconds() - start;
+	float physicstime = OsUtil::getTime() - start;
 }
 
-void PhysicsWorld::stepMt(int frametime) {
+void PhysicsWorld::stepMt(float frametime) {
 #if 0
 	uint_t start = Milliseconds();
 	m_multithreadingUtil->waitForStepWorldFinished();

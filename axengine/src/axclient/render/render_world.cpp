@@ -681,7 +681,7 @@ void RenderWorld::updateExposure(QueuedScene *qscene) {
 	}
 
 	float frametime = qscene->camera.getFrameTime();
-	float delta = fabs(disired - m_lastExposure) * frametime / 1000;
+	float delta = fabs(disired - m_lastExposure) * frametime;
 	float exposure = Math::clamp(disired, m_lastExposure * (1-delta), m_lastExposure * (1+delta));
 	qscene->exposure = exposure;
 	m_lastExposure = qscene->exposure;
