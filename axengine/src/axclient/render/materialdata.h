@@ -20,7 +20,7 @@ private:
 
 	const ShaderInfo *m_shaderInfo;
 	FixedString m_shaderName;
-	TexturePtr m_textures[SamplerType::NUMBER_ALL];
+	Sampler m_samplers[SamplerType::NUMBER_ALL];
 	TexGen m_texgens[SamplerType::NUMBER_ALL];
 	ShaderParams m_shaderParams;
 

@@ -10,7 +10,6 @@ read the license and understand and accept it fully.
 
 #include "d3d9private.h"
 
-
 AX_BEGIN_NAMESPACE
 
 static ID3DXEffectPool *s_effectPool = NULL;   // Effect pool for sharing parameters
@@ -39,7 +38,8 @@ static struct SamplerParam {
 };
 
 
-class EffectHelper {
+class EffectHelper
+{
 public:
 	EffectHelper(ID3DXEffect *obj) : m_object(obj) {}
 
@@ -80,7 +80,8 @@ private:
 	ID3DXEffect *m_object;
 };
 
-class D3D9include : public ID3DXInclude {
+class D3D9include : public ID3DXInclude
+{
 public:
 	STDMETHOD(Open)(THIS_ D3DXINCLUDE_TYPE IncludeType, LPCSTR pFileName, LPCVOID pParentData, LPCVOID *ppData, UINT *pBytes) {
 		String filename = "shaders/";
@@ -112,7 +113,6 @@ D3D9uniform::D3D9uniform(UniformItem &item, D3DXHANDLE param)
 
 D3D9uniform::~D3D9uniform()
 {
-
 }
 
 bool D3D9uniform::isCached() const
@@ -1134,7 +1134,7 @@ void D3D9pass::setParameter( const ParamDesc &param, const float *value, bool is
 	} else {
 		d3d9Device->SetVertexShaderConstantF(param.d3dDesc.RegisterIndex, realvalue, param.d3dDesc.RegisterCount);
 	}
-
 }
+
 AX_END_NAMESPACE
 

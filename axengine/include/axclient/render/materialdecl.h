@@ -33,7 +33,7 @@ struct SurfaceType {
 #define AX_ENUM(x) x,
 	AX_DECL_SURFACETYPE
 #undef AX_ENUM
-//			Dust, Metal, Sand, Wood, Grass, Snow, Glass, Water
+// Dust, Metal, Sand, Wood, Grass, Snow, Glass, Water
 	} t;
 	AX_DECLARE_ENUM(SurfaceType);
 
