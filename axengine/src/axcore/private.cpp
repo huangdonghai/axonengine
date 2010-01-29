@@ -116,15 +116,16 @@ name = g_cvarSystem->createCvar(#name, defaultstring, flags);
 #include <axcore/cvardecls.h>
 #undef AX_CVARDECL
 
-
+#if 0
 	MaterialDecl::initManager();
-
+#endif
 	_isInitialized = true;
 }
 
 void axCoreQuit() {
+#if 0
 	MaterialDecl::finalizeManager();
-
+#endif
 	g_classFactory->finalize();
 	SafeDelete(g_classFactory);
 

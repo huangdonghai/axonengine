@@ -10,16 +10,15 @@ private:
 	FixedString m_key;
 	MaterialDecl *m_decl;
 
-	bool m_shaderMacroNeedRegen;
-	ShaderMacro m_shaderMacro;
+	bool m_isDirty;
 
-	Vector3 m_diffuse;
-	Vector3 m_specular;
+	Color3 m_diffuse;
+	Color3 m_specular;
 	float m_shiness;
 	float m_detailScale;
 	bool m_haveDetail;
 
-	Shader *m_shaderTemplate;
+	const ShaderInfo *m_shaderInfo;
 	FixedString m_shaderName;
 	TexturePtr m_textures[SamplerType::NUMBER_ALL];
 	TexGen m_texgens[SamplerType::NUMBER_ALL];

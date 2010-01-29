@@ -44,7 +44,6 @@ read the license and understand and accept it fully.
 #include "./singleton/statistic.h"
 #include "./singleton/assetmanager.h"
 #include "./singleton/coresystem.h"
-#include "./inputoutput/materialfile.h"
 
 AX_BEGIN_NAMESPACE
 

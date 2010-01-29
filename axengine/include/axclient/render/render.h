@@ -25,6 +25,7 @@ AX_END_NAMESPACE
 #include "query.h"
 #include "texture.h"
 #include "textureatlas.h"
+#include "materialdecl.h"
 #include "shader.h"
 #include "material.h"
 #include "camera.h"

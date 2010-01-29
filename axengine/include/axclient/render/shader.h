@@ -17,7 +17,8 @@ AX_BEGIN_NAMESPACE
 // class UniformItem
 //--------------------------------------------------------------------------
 
-class UniformItem {
+class UniformItem
+{
 public:
 	enum ValueType {
 		vt_empty, vt_float, vt_Vector2, vt_Vector3, vt_Matrix3, vt_Vector4, vt_AffineMat, vt_Matrix4, vt_Texture
@@ -283,6 +284,7 @@ public:
 	bool m_needClearDepth;
 	bool m_needHdr;
 };
+typedef Sequence<SamplerAnno> SamplerAnnos;
 
 class ParameterAnno {
 public:
@@ -302,6 +304,29 @@ public:
 
 	// for color
 	Vector3 m_defaultColor;
+};
+typedef Sequence<ParameterAnno> ParameterAnnos;
+
+class ShaderInfo
+{
+public:
+	enum {
+		MAX_FEATURES = 8,
+		MAX_LITERALS = 8
+	};
+
+	enum SortHint {
+		SortHint_opacit = SHADER::SortHint_opacit,
+		SortHint_decal = SHADER::SortHint_decal,
+		SortHint_underWater = SHADER::SortHint_underWater,
+		SortHint_water = SHADER::SortHint_water,
+		SortHint_aboveWater = SHADER::SortHint_aboveWater
+	};
+
+	SortHint m_sortHint;
+	bool m_haveTextureTarget;
+	SamplerAnnos m_samplerAnnos;
+	ParameterAnnos m_parameterAnnos;
 };
 
 //--------------------------------------------------------------------------
@@ -350,11 +375,10 @@ public:
 AX_END_NAMESPACE
 
 namespace std { namespace tr1 {
-
-template<>
-struct hash<AX_NAMESPACE::ShaderMacro> {
-	size_t operator()(const AX_NAMESPACE::ShaderMacro &sm) const { return sm.hash(); }
-};
+	template<>
+	struct hash<AX_NAMESPACE::ShaderMacro> {
+		size_t operator()(const AX_NAMESPACE::ShaderMacro &sm) const { return sm.hash(); }
+	};
 }}
 
 #endif // end guardian

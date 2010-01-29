@@ -83,6 +83,7 @@ name = g_statistic->getIndex(Statistic::RenderDrvGroup, desc, autoreset);
 	g_fontFactory = new Manager;
 	g_fontFactory->initialize();
 #else
+	MaterialDecl::initManager();
 	Material::initManager();
 	Font::initManager();
 #endif
@@ -130,6 +131,7 @@ void axClientQuit() {
 #else
 	Font::finalizeManager();
 	Material::finalizeManager();
+	MaterialDecl::finalizeManager();
 #endif
 	g_renderSystem->finalize();
 	SafeDelete(g_renderSystem);

@@ -240,10 +240,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axcore\inputoutput\materialfile.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\src\axcore\inputoutput\xml.cpp"
 				>
 			</File>
@@ -252,10 +248,6 @@
 				>
 				<File
 					RelativePath="..\..\..\include\axcore\inputoutput\image.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\include\axcore\inputoutput\materialfile.h"
 					>
 				</File>
 				<File

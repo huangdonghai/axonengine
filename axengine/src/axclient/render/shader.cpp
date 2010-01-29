@@ -154,7 +154,8 @@ void Uniforms::findRegisters()
 // class ShaderMacro
 //--------------------------------------------------------------------------
 
-class ShaderMacro::ShaderMacroDefs {
+class ShaderMacro::ShaderMacroDefs
+{
 public:
 	typedef ShaderMacro::Flag Flag;
 	struct Item {
@@ -358,17 +359,17 @@ ShaderMacro::ShaderMacroDefs::ShaderMacroDefs()
 	int intoffset = 0;
 	int bitoffset = 0;
 
-#define AX_DECL_MACRO(m, s)		\
-if (bitoffset + s > 32) {	\
-	intoffset++;			\
-	bitoffset = 0;			\
-}							\
-							\
-m_items[ShaderMacro::m].intoffset = intoffset;	\
-m_items[ShaderMacro::m].offset = bitoffset;		\
-m_items[ShaderMacro::m].numbits = s;			\
-m_items[ShaderMacro::m].mask = ~(((1LL<<(bitoffset+s)) - 1) - ((1LL<<bitoffset)-1));	\
-bitoffset += s;						
+#define AX_DECL_MACRO(m, s) \
+	if (bitoffset + s > 32) { \
+		intoffset++; \
+		bitoffset = 0; \
+	} \
+\
+	m_items[ShaderMacro::m].intoffset = intoffset; \
+	m_items[ShaderMacro::m].offset = bitoffset; \
+	m_items[ShaderMacro::m].numbits = s; \
+	m_items[ShaderMacro::m].mask = ~(((1LL<<(bitoffset+s)) - 1) - ((1LL<<bitoffset)-1)); \
+	bitoffset += s;						
 
 	AX_SHADERMACRO_DEFS
 #undef AX_DECL_MACRO

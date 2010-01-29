@@ -358,6 +358,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\axclient\render\materialdecl.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\axclient\render\outdoorenv.cpp"
 				>
 			</File>
@@ -458,6 +462,10 @@
 				</File>
 				<File
 					RelativePath="..\..\..\include\axclient\render\material.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\include\axclient\render\materialdecl.h"
 					>
 				</File>
 				<File
