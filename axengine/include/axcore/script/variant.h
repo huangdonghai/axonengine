@@ -97,14 +97,14 @@ public:
 	}
 
 	template<class Q>
-	Q& ref()
+	Q& as()
 	{
 		AX_ASSERT(GetVariantType_<Q>() == m_type);
 		return *(Q *)getPointer();
 	}
 
 	template<class Q>
-	const Q& ref() const {
+	const Q& as() const {
 		AX_ASSERT(GetVariantType_<Q>() == m_type);
 		return *(const Q *)getPointer();
 	}
@@ -135,7 +135,7 @@ private:
 		TypeId toType = GetVariantType_<Q>();
 
 		if (m_type == toType)
-			return ref<Q>();
+			return as<Q>();
 
 		Q result;
 		if (handler && handler->canCast(toType)) {
@@ -176,7 +176,7 @@ public:
 	}
 
 	template <class Q>
-	const Q &ref() const
+	const Q &as() const
 	{
 		AX_ASSERT(GetVariantType_<Q>() == m_typeId);
 		return *reinterpret_cast<const Q *>(m_voidstar);
@@ -213,7 +213,7 @@ public:
 	}
 
 	template <class Q>
-	Q &ref() const
+	Q &as() const
 	{
 		AX_ASSERT(GetVariantType_<Q>() == m_typeId);
 		return *reinterpret_cast<Q *>(m_voidstar);

@@ -374,12 +374,7 @@ public:
 
 AX_END_NAMESPACE
 
-namespace std { namespace tr1 {
-	template<>
-	struct hash<AX_NAMESPACE::ShaderMacro> {
-		size_t operator()(const AX_NAMESPACE::ShaderMacro &sm) const { return sm.hash(); }
-	};
-}}
+AX_DECLARE_HASH_FUNCTION(ShaderMacro);
 
 #endif // end guardian
 

@@ -103,13 +103,6 @@ private:
 
 AX_END_NAMESPACE
 
-namespace std { namespace tr1 {
-
-	template<>
-	struct hash<AX_NAMESPACE::FixedString> {
-		size_t operator()(const AX_NAMESPACE::FixedString &sm) const { return sm.hash(); }
-	};
-
-}}
+AX_DECLARE_HASH_FUNCTION(FixedString);
 
 #endif

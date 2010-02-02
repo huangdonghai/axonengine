@@ -324,41 +324,41 @@ void sqVM::pushMeta(HSQUIRRELVM v, const ConstRef &arg)
 		sq_pushnull(v);
 		return;
 	case Variant::kBool:
-		sq_pushbool(v, arg.ref<bool>());
+		sq_pushbool(v, arg.as<bool>());
 		return;
 	case Variant::kInt:
-		sq_pushinteger(v, arg.ref<int>());
+		sq_pushinteger(v, arg.as<int>());
 		return;
 	case Variant::kFloat:
-		sq_pushfloat(v, arg.ref<float>());
+		sq_pushfloat(v, arg.as<float>());
 		return;
 	case Variant::kString:
-		sq_pushstring(v, arg.ref<String>().c_str(), arg.ref<String>().size());
+		sq_pushstring(v, arg.as<String>().c_str(), arg.as<String>().size());
 		return;
 	case Variant::kObject:
-		sq_pushobject(v, arg.ref<ObjectStar>()->getScriptInstance().getSqObject());
+		sq_pushobject(v, arg.as<ObjectStar>()->getScriptInstance().getSqObject());
 #if 0
 		sq_weakref(v, -1);
 		sq_remove(v, -2);
 #endif
 		return;
 	case Variant::kVector3:
-		push_Vector3(v, arg.ref<Vector3>());
+		push_Vector3(v, arg.as<Vector3>());
 		return;
 	case Variant::kColor3:
-		push_Color3(v, arg.ref<Color3>());
+		push_Color3(v, arg.as<Color3>());
 		return;
 	case Variant::kPoint:
-		push_Point(v, arg.ref<Point>());
+		push_Point(v, arg.as<Point>());
 		return;
 	case Variant::kRect:
-		push_Rect(v, arg.ref<Rect>());
+		push_Rect(v, arg.as<Rect>());
 		return;
 	case Variant::kMatrix:
-		push_Matrix(v, arg.ref<Matrix>());
+		push_Matrix(v, arg.as<Matrix>());
 		return;
 	case Variant::kScriptValue:
-		sq_pushobject(v, arg.ref<ScriptValue>().getSqObject());
+		sq_pushobject(v, arg.as<ScriptValue>().getSqObject());
 		return;
 	}
 
@@ -392,7 +392,7 @@ void sqVM::getMeta(HSQUIRRELVM v, int idx, Variant &result)
 	case OT_STRING:
 		{
 			result.init(Variant::kString);
-			result.ref<String>() = sq_objtostring(&t);
+			result.as<String>() = sq_objtostring(&t);
 		}
 		return;
 	case OT_TABLE:
@@ -407,7 +407,7 @@ void sqVM::getMeta(HSQUIRRELVM v, int idx, Variant &result)
 	case OT_CLASS:
 		{
 			result.init(Variant::kScriptValue);
-			result.ref<ScriptValue>().getSqObject() = t;
+			result.as<ScriptValue>().getSqObject() = t;
 		}
 		return;
 	case OT_INSTANCE:
@@ -432,7 +432,7 @@ void sqVM::getMeta(HSQUIRRELVM v, int idx, Variant &result)
 			} else {
 				// don't know type, return ScriptValue
 				result.init(Variant::kScriptValue);
-				result.ref<ScriptValue>().getSqObject() = t;
+				result.as<ScriptValue>().getSqObject() = t;
 			}
 		}
 		return;

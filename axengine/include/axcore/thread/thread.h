@@ -7,6 +7,7 @@ By continuing to use, modify, or distribute this file you indicate that you have
 read the license and understand and accept it fully.
 */
 
+#include "atomicint.h"
 
 #ifndef AX_THREAD_H 
 #define AX_THREAD_H

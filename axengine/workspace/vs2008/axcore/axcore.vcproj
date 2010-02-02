@@ -547,6 +547,10 @@
 				Name="public"
 				>
 				<File
+					RelativePath="..\..\..\include\axcore\thread\atomicint.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\include\axcore\thread\thread.h"
 					>
 				</File>

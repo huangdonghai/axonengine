@@ -14,6 +14,18 @@ read the license and understand and accept it fully.
 
 void testArgs()
 {
+	Uuid uuid;
+	Uuid uuid1 = Uuid::generateUuid();
+	Uuid uuid2 = Uuid::generateUuid();
+
+	FixedUuid fu = uuid1;
+	FixedUuid fu2 = uuid2;
+
+	Uuid u1 = fu;
+	Uuid u2 = fu2;
+
+	fu = Uuid::generateUuid();
+
 	SyncMutex mutex;
 	CRITICAL_SECTION cs;
 	InitializeCriticalSection(&cs);

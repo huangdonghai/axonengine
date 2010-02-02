@@ -17,12 +17,13 @@ Uuid::Uuid()
 {
 	AX_STATIC_ASSERT(sizeof(Uuid)==sizeof(UUID));
 
-	UuidCreate((UUID*)this);
+	RPC_STATUS status = UuidCreateNil((UUID*)this);
 }
 
-Uuid &Uuid::fromString( const String &str )
+Uuid &Uuid::fromString(const String &str)
 {
-	UuidFromStringA((RPC_CSTR)str.c_str(), (UUID*)this);
+	RPC_STATUS status = UuidFromStringA((RPC_CSTR)str.c_str(), (UUID*)this);
+	AX_ASSERT(status == RPC_S_OK);
 	return *this;
 }
 
@@ -40,7 +41,7 @@ String Uuid::toString()
 
 size_t Uuid::hash() const
 {
-	const size_t *rep = reinterpret_cast<const size_t*>(this);
+	const uint_t *rep = reinterpret_cast<const uint_t*>(this);
 	size_t result = rep[0];
 
 	hash_combine(result, rep[1]);
@@ -50,20 +51,142 @@ size_t Uuid::hash() const
 	return result;
 }
 
-String Uuid::generateUuid() {
-	UUID uuid;
-	UuidCreate(&uuid);
+Uuid Uuid::generateUuid()
+{
+	Uuid result;
+	RPC_STATUS status = UuidCreate((UUID*)&result);
 
-	RPC_CSTR str;
+	AX_ASSERT(status == RPC_S_OK);
 
-	UuidToStringA(&uuid, &str);
-
-	String result = reinterpret_cast<char*>(str);
-
-	RpcStringFreeA(&str);
 	return result;
 }
 
+struct UuidItem {
+	int ref;
+	Uuid uuid;
+};
+
+template <class T>
+class FixedCache : ThreadSafe
+{
+	typedef const T * KeyType;
+
+	struct hashPtr {
+		size_t operator()(const KeyType &p) const
+		{
+			return std::tr1::hash<T>()(*p);
+		}
+	};
+	struct equalPtr{
+		bool operator()(const KeyType &a, const KeyType &b) const
+		{
+			return *a == *b;
+		}
+	};
+
+	class Item {
+	public:
+		AtomicInt ref;
+		T value;
+	};
+
+public:
+	FixedCache()
+	{
+		m_nullHandle = find(T());
+	}
+
+	~FixedCache()
+	{
+		// TODO
+	}
+
+	// ref added
+	handle_t find(const T &t)
+	{
+		SCOPE_LOCK;
+
+		const T *ptr = &t;
+		DataType::iterator it = m_data.find(ptr);
+		if (it != m_data.end()) {
+			Item *handle = it->second;
+			handle->ref.incref();
+			return handle;
+		}
+
+		Item *item = new Item();
+		item->ref.incref();
+		item->value = t;
+		m_data[&item->value] = item;
+
+		return item;
+	}
+
+	void incref(handle_t h)
+	{
+		Item *item = reinterpret_cast<Item *>(h);
+		item->ref.incref();
+	}
+
+	void decref(handle_t h)
+	{
+		Item *item = reinterpret_cast<Item *>(h);
+
+		if (item->ref.decref() == 0) {
+			SCOPE_LOCK;
+			m_data.erase(&item->value);
+			delete item;
+		}
+	}
+
+	const T &getValue(handle_t h)
+	{
+		Item *item = reinterpret_cast<Item *>(h);
+		return item->value;
+	}
+
+public:
+	handle_t m_nullHandle;
+	typedef Dict<KeyType, Item*, hashPtr, equalPtr> DataType;
+	DataType m_data;
+};
+
+FixedCache<Uuid> s_uuidCache;
+
+
+FixedUuid::FixedUuid()
+{
+	m_handle = s_uuidCache.m_nullHandle;
+}
+
+FixedUuid::FixedUuid( const Uuid &rhs )
+{
+	m_handle = s_uuidCache.find(rhs);
+}
+
+FixedUuid::FixedUuid(const FixedUuid &rhs)
+{
+	s_uuidCache.incref(rhs.m_handle);
+	m_handle = rhs.m_handle;
+}
+
+FixedUuid::~FixedUuid()
+{
+	s_uuidCache.decref(m_handle);
+}
+
+FixedUuid & FixedUuid::operator=( const FixedUuid &rhs )
+{
+	s_uuidCache.decref(m_handle);
+	s_uuidCache.incref(rhs.m_handle);
+	m_handle = rhs.m_handle;
+	return *this;
+}
+
+const Uuid & FixedUuid::toUuid() const
+{
+	return s_uuidCache.getValue(m_handle);
+}
 
 AX_END_NAMESPACE
 

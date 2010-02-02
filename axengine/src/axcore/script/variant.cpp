@@ -153,28 +153,28 @@ String Variant::toString() const
 		StringUtil::sprintf(result, "%f", float(*this));
 		break;
 	case kString:
-		return ref<String>();
+		return as<String>();
 	case kObject:
 		break;
 	case kVector3:
 		{
-			return ref<Vector3>().toString();
+			return as<Vector3>().toString();
 		}
 	case kColor3:
 		{
-			return ref<Color3>().toString();
+			return as<Color3>().toString();
 		}
 	case kPoint:
 		{
-			return ref<Point>().toString();
+			return as<Point>().toString();
 		}
 	case kRect:
 		{
-			return ref<Rect>().toString();
+			return as<Rect>().toString();
 		}
 	case kMatrix:
 		{
-			return ref<Matrix>().toString();
+			return as<Matrix>().toString();
 		}
 	default:
 		AX_NO_DEFAULT;
