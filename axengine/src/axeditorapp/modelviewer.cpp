@@ -20,7 +20,7 @@ ModelViewer::ModelViewer(QWidget *parent)
 
 	ui.mainToolBar->insertWidget(ui.actionRefresh, ui.modelType);
 
-	ui.treeWidget->setRoot("/models");
+	ui.treeWidget->setRoot("models/");
 	ui.treeWidget->setFilter("*.mesh;*.ase;*.hkm");
 	ui.treeWidget->refresh();
 	

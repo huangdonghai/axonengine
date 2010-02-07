@@ -811,6 +811,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\include\axcore\template\graph.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\include\axcore\template\hash.h"
 				>
 			</File>

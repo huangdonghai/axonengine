@@ -397,6 +397,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\shaders\nodedef.xml"
+				>
+			</File>
+			<File
 				RelativePath=".\shaders\ocean.fx"
 				>
 			</File>

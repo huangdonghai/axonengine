@@ -29,7 +29,7 @@ ScriptEditor::ScriptEditor(QWidget *parent)
 {
 	ui.setupUi(this);
 
-	ui.fileTree->setRoot("/scripts");
+	ui.fileTree->setRoot("scripts/");
 	ui.fileTree->setFilter("*.nut");
 	ui.fileTree->refresh();
 

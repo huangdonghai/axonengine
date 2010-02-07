@@ -17,9 +17,9 @@ read the license and understand and accept it fully.
 AX_BEGIN_NAMESPACE
 
 
-struct FileInfo;
+class FileInfo;
 struct PakedFile;
-struct PakFile;
+struct FilePackage;
 
 struct SearchDir {
 	SearchDir(const String &dir, bool extractSrc = false) : dir(dir), extractSrc(extractSrc) {}
@@ -52,8 +52,8 @@ public:
 	};
 
 	enum Type {
-		Stdio,
-		Zipped
+		kStdio,
+		kPacked
 	};
 
 	enum SeekMode {
@@ -124,7 +124,11 @@ private:
 
 typedef List<File*>			FileList;
 
-struct FileInfo {
+class FileInfo {
+public:
+	bool operator<(const FileInfo &rhs) const { return fullpath < rhs.fullpath; }
+	bool operator==(const FileInfo &rhs) const { return fullpath == rhs.fullpath; }
+
 	String fullpath;
 	uint_t filetime;
 	size_t filesize;
@@ -141,11 +145,11 @@ struct FileInfo {
 typedef Sequence<FileInfo>	FileInfoSeq;
 
 struct PakedFile {
-	PakFile *packfile;
+	FilePackage *packfile;
 	int offset;
 };
 
-struct PakFile {
+struct FilePackage {
 	String fullpath;
 	String filename;
 	handle_t unzfile;
@@ -166,15 +170,14 @@ public:
 
 	void addPath(const String &fullpath);
 	void addFile(const String &fullpath, PakedFile *info);
-	PakedFile *getFile(const String &fullpath);
 	void getFileInfos(const String &path, const String &exts, int flags, OUT FileInfoSeq &fis);
 
 protected:
 	PakedFolder *getPath(const String &path, bool bAddPath = true);
 
 private:
-	typedef Dict<String,PakedFile*>	PackedFileDict;
-	typedef List<PakedFolder*>				PackedFolderList;
+	typedef Dict<String,PakedFile*> PackedFileDict;
+	typedef List<PakedFolder*> PackedFolderList;
 	String m_fullName;
 	String m_name;
 	PackedFileDict m_packedFileDict;
@@ -239,7 +242,7 @@ public:
 protected:
 	void attachFileObject(File *cf);
 	void detachFileObject(File *cf);
-	PakFile *loadPakFile(const String &fullpath, const String &filename);
+	FilePackage *loadPakFile(const String &fullpath, const String &filename);
 	void addPakedFileInfo(const FileInfo *fi);
 
 	void checkGamePath();
@@ -258,8 +261,8 @@ private:
 	int m_hashSeed;
 
 	typedef Dict<String, PakedFile*, hash_pathname, equal_pathname> EntryDict;
-	typedef Sequence<const PakFile*> PakFiles;	
-	PakFiles m_pakFiles;
+	typedef Sequence<const FilePackage*> FilePackages;	
+	FilePackages m_pakFiles;
 	EntryDict m_pakedFileDict;
 	PakedFolder m_pakedFolders;
 };

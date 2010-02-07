@@ -2338,6 +2338,10 @@
 			<File
 				RelativePath="..\..\..\src\axeditorapp\resources\images\gizmo_rel.png"
 				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\axeditorapp\resources\images\gizmo_rel.png"
+				>
 				<FileConfiguration
 					Name="Debug|Win32"
 					ExcludedFromBuild="true"
@@ -2354,10 +2358,6 @@
 						Name="VCCustomBuildTool"
 					/>
 				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\..\..\src\axeditorapp\resources\images\gizmo_rel.png"
-				>
 			</File>
 			<File
 				RelativePath="..\..\..\src\axeditorapp\resources\images\gizmo_selection_center.png"
@@ -3640,7 +3640,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axeditorapp\resources\materialeditor\save.png"
+				RelativePath="..\..\..\src\axeditorapp\resources\images\save.png"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -3660,7 +3660,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axeditorapp\resources\images\save.png"
+				RelativePath="..\..\..\src\axeditorapp\resources\materialeditor\save.png"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -4440,7 +4440,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axeditorapp\resources\images\up.png"
+				RelativePath="..\..\..\src\axeditorapp\resources\materialeditor\up.png"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -4460,7 +4460,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axeditorapp\resources\materialeditor\up.png"
+				RelativePath="..\..\..\src\axeditorapp\resources\images\up.png"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -4660,26 +4660,6 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axeditorapp\resources\images\view_pan.png"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
 				RelativePath="..\..\..\src\axeditorapp\resources\cursors\view_pan.png"
 				>
 				<FileConfiguration
@@ -4700,7 +4680,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axeditorapp\resources\images\view_rotate.png"
+				RelativePath="..\..\..\src\axeditorapp\resources\images\view_pan.png"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -4721,6 +4701,26 @@
 			</File>
 			<File
 				RelativePath="..\..\..\src\axeditorapp\resources\cursors\view_rotate.png"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\..\..\src\axeditorapp\resources\images\view_rotate.png"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -4780,7 +4780,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axeditorapp\resources\cursors\view_zoom.png"
+				RelativePath="..\..\..\src\axeditorapp\resources\images\view_zoom.png"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -4800,7 +4800,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axeditorapp\resources\images\view_zoom.png"
+				RelativePath="..\..\..\src\axeditorapp\resources\cursors\view_zoom.png"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -5047,18 +5047,6 @@
 			SourceControlFiles="false"
 			>
 			<File
-				RelativePath=".\GeneratedFiles\Debug\moc_actorpanel.cpp"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
 				RelativePath=".\GeneratedFiles\Release\moc_actorpanel.cpp"
 				>
 				<FileConfiguration
@@ -5071,7 +5059,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\GeneratedFiles\Debug\moc_application.cpp"
+				RelativePath=".\GeneratedFiles\Debug\moc_actorpanel.cpp"
 				>
 				<FileConfiguration
 					Name="Release|Win32"
@@ -5095,7 +5083,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\GeneratedFiles\Debug\moc_camerasetting.cpp"
+				RelativePath=".\GeneratedFiles\Debug\moc_application.cpp"
 				>
 				<FileConfiguration
 					Name="Release|Win32"
@@ -5119,7 +5107,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\GeneratedFiles\Debug\moc_consoledlg.cpp"
+				RelativePath=".\GeneratedFiles\Debug\moc_camerasetting.cpp"
 				>
 				<FileConfiguration
 					Name="Release|Win32"
@@ -5135,6 +5123,18 @@
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\GeneratedFiles\Debug\moc_consoledlg.cpp"
+				>
+				<FileConfiguration
+					Name="Release|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -5167,18 +5167,6 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\GeneratedFiles\Debug\moc_customlabel.cpp"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
 				RelativePath=".\GeneratedFiles\Release\moc_customlabel.cpp"
 				>
 				<FileConfiguration
@@ -5191,7 +5179,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\GeneratedFiles\Debug\moc_dirtree.cpp"
+				RelativePath=".\GeneratedFiles\Debug\moc_customlabel.cpp"
 				>
 				<FileConfiguration
 					Name="Release|Win32"
@@ -5215,7 +5203,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\GeneratedFiles\Debug\moc_displaysettingpanel.cpp"
+				RelativePath=".\GeneratedFiles\Debug\moc_dirtree.cpp"
 				>
 				<FileConfiguration
 					Name="Release|Win32"
@@ -5239,15 +5227,20 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\GeneratedFiles\Debug\moc_editorframe.cpp"
+				RelativePath=".\GeneratedFiles\Debug\moc_displaysettingpanel.cpp"
 				>
 				<FileConfiguration
-					Name="Debug|Win32"
+					Name="Release|Win32"
+					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
 					/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\GeneratedFiles\Debug\moc_editorframe.cpp"
+				>
 				<FileConfiguration
 					Name="Release|Win32"
 					ExcludedFromBuild="true"
@@ -5268,25 +5261,6 @@
 						Name="VCCLCompilerTool"
 					/>
 				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\GeneratedFiles\Debug\moc_filedialog.cpp"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\GeneratedFiles\Release\moc_filedialog.cpp"
@@ -5301,7 +5275,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\GeneratedFiles\Debug\moc_flagbox.cpp"
+				RelativePath=".\GeneratedFiles\Debug\moc_filedialog.cpp"
 				>
 				<FileConfiguration
 					Name="Release|Win32"
@@ -5325,7 +5299,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\GeneratedFiles\Debug\moc_frame.cpp"
+				RelativePath=".\GeneratedFiles\Debug\moc_flagbox.cpp"
 				>
 				<FileConfiguration
 					Name="Release|Win32"
@@ -5341,6 +5315,18 @@
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\GeneratedFiles\Debug\moc_frame.cpp"
+				>
+				<FileConfiguration
+					Name="Release|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -5373,18 +5359,6 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\GeneratedFiles\Debug\moc_gfxeditor.cpp"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
 				RelativePath=".\GeneratedFiles\Release\moc_gfxeditor.cpp"
 				>
 				<FileConfiguration
@@ -5397,7 +5371,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\GeneratedFiles\Debug\moc_gfxtrackedit.cpp"
+				RelativePath=".\GeneratedFiles\Debug\moc_gfxeditor.cpp"
 				>
 				<FileConfiguration
 					Name="Release|Win32"
@@ -5421,7 +5395,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\GeneratedFiles\Debug\moc_gfxviewc.cpp"
+				RelativePath=".\GeneratedFiles\Debug\moc_gfxtrackedit.cpp"
 				>
 				<FileConfiguration
 					Name="Release|Win32"
@@ -5445,11 +5419,49 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\GeneratedFiles\Debug\moc_materialeditor.cpp"
+				RelativePath=".\GeneratedFiles\Debug\moc_gfxviewc.cpp"
 				>
 				<FileConfiguration
 					Name="Release|Win32"
 					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\GeneratedFiles\Debug\moc_grapheditor.cpp"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\GeneratedFiles\Release\moc_grapheditor.cpp"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -5469,7 +5481,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\GeneratedFiles\Debug\moc_modelviewer.cpp"
+				RelativePath=".\GeneratedFiles\Debug\moc_materialeditor.cpp"
 				>
 				<FileConfiguration
 					Name="Release|Win32"
@@ -5493,7 +5505,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\GeneratedFiles\Debug\moc_newmapdlg.cpp"
+				RelativePath=".\GeneratedFiles\Debug\moc_modelviewer.cpp"
 				>
 				<FileConfiguration
 					Name="Release|Win32"
@@ -5517,7 +5529,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\GeneratedFiles\Debug\moc_propertyeditor.cpp"
+				RelativePath=".\GeneratedFiles\Debug\moc_newmapdlg.cpp"
 				>
 				<FileConfiguration
 					Name="Release|Win32"
@@ -5541,7 +5553,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\GeneratedFiles\Debug\moc_propertyeditor_delegate.cpp"
+				RelativePath=".\GeneratedFiles\Debug\moc_propertyeditor.cpp"
 				>
 				<FileConfiguration
 					Name="Release|Win32"
@@ -5565,7 +5577,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\GeneratedFiles\Debug\moc_propertyeditor_items.cpp"
+				RelativePath=".\GeneratedFiles\Debug\moc_propertyeditor_delegate.cpp"
 				>
 				<FileConfiguration
 					Name="Release|Win32"
@@ -5581,6 +5593,18 @@
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\GeneratedFiles\Debug\moc_propertyeditor_items.cpp"
+				>
+				<FileConfiguration
+					Name="Release|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -5637,18 +5661,6 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\GeneratedFiles\Debug\moc_quickstatusinfopanel.cpp"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
 				RelativePath=".\GeneratedFiles\Release\moc_quickstatusinfopanel.cpp"
 				>
 				<FileConfiguration
@@ -5661,15 +5673,8 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\GeneratedFiles\Debug\moc_renderwidget.cpp"
+				RelativePath=".\GeneratedFiles\Debug\moc_quickstatusinfopanel.cpp"
 				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|Win32"
 					ExcludedFromBuild="true"
@@ -5690,16 +5695,9 @@
 						Name="VCCLCompilerTool"
 					/>
 				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\GeneratedFiles\Debug\moc_rollup.cpp"
+				RelativePath=".\GeneratedFiles\Debug\moc_renderwidget.cpp"
 				>
 				<FileConfiguration
 					Name="Release|Win32"
@@ -5723,7 +5721,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\GeneratedFiles\Debug\moc_scripteditor.cpp"
+				RelativePath=".\GeneratedFiles\Debug\moc_rollup.cpp"
 				>
 				<FileConfiguration
 					Name="Release|Win32"
@@ -5747,7 +5745,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\GeneratedFiles\Debug\moc_selectbynamedlg.cpp"
+				RelativePath=".\GeneratedFiles\Debug\moc_scripteditor.cpp"
 				>
 				<FileConfiguration
 					Name="Release|Win32"
@@ -5763,6 +5761,18 @@
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\GeneratedFiles\Debug\moc_selectbynamedlg.cpp"
+				>
+				<FileConfiguration
+					Name="Release|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -5795,10 +5805,10 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\GeneratedFiles\Debug\moc_terraingen.cpp"
+				RelativePath=".\GeneratedFiles\Release\moc_terraingen.cpp"
 				>
 				<FileConfiguration
-					Name="Release|Win32"
+					Name="Debug|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -5807,10 +5817,10 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\GeneratedFiles\Release\moc_terraingen.cpp"
+				RelativePath=".\GeneratedFiles\Debug\moc_terraingen.cpp"
 				>
 				<FileConfiguration
-					Name="Debug|Win32"
+					Name="Release|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -5843,18 +5853,6 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\GeneratedFiles\Debug\moc_terrainpanel.cpp"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
 				RelativePath=".\GeneratedFiles\Release\moc_terrainpanel.cpp"
 				>
 				<FileConfiguration
@@ -5867,7 +5865,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\GeneratedFiles\Debug\moc_timeline.cpp"
+				RelativePath=".\GeneratedFiles\Debug\moc_terrainpanel.cpp"
 				>
 				<FileConfiguration
 					Name="Release|Win32"
@@ -5883,6 +5881,18 @@
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\GeneratedFiles\Debug\moc_timeline.cpp"
+				>
+				<FileConfiguration
+					Name="Release|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -5915,18 +5925,6 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\GeneratedFiles\Debug\moc_widgetlib.cpp"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
 				RelativePath=".\GeneratedFiles\Release\moc_widgetlib.cpp"
 				>
 				<FileConfiguration
@@ -5939,7 +5937,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\GeneratedFiles\Debug\moc_workbench.cpp"
+				RelativePath=".\GeneratedFiles\Debug\moc_widgetlib.cpp"
 				>
 				<FileConfiguration
 					Name="Release|Win32"
@@ -5963,7 +5961,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\GeneratedFiles\Debug\moc_workspace.cpp"
+				RelativePath=".\GeneratedFiles\Debug\moc_workbench.cpp"
 				>
 				<FileConfiguration
 					Name="Release|Win32"
@@ -5979,6 +5977,18 @@
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\GeneratedFiles\Debug\moc_workspace.cpp"
+				>
+				<FileConfiguration
+					Name="Release|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -6343,6 +6353,36 @@
 						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\flagbox.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_flagbox.cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\flagbox.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\flagbox.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_flagbox.cpp&quot;"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\..\..\src\axeditorapp\grapheditor.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\axeditorapp\grapheditor.h"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Moc&apos;ing grapheditor.h..."
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\grapheditor.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_grapheditor.cpp&quot;&#x0D;&#x0A;"
+						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\grapheditor.h"
+						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_grapheditor.cpp&quot;"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Moc&apos;ing grapheditor.h..."
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\grapheditor.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_grapheditor.cpp&quot;&#x0D;&#x0A;"
+						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\grapheditor.h"
+						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_grapheditor.cpp&quot;"
 					/>
 				</FileConfiguration>
 			</File>

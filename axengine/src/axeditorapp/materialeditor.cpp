@@ -11,6 +11,47 @@ read the license and understand and accept it fully.
 #include "materialeditor.h"
 #include "filedialog.h"
 
+class GraphNode;
+
+class MtrNode : public GraphNode
+{
+public:
+	enum NodeType
+	{
+		kConst, kUniform, kVarying, kOperator, kSampler, kFunction, kEndNode
+	};
+
+private:
+	NodeType m_nodeType;
+};
+
+class ShaderValue
+{
+	enum Type {
+		kFloat, kVector2, kVector3, kVector4, kMatrix3, kMatrix, kMatrix4, kSampler
+	};
+};
+
+class MtrSocketDef
+{
+private:
+	FixedString m_name;
+	ShaderValue::Type m_dataType;
+};
+
+class MtrNodeDef
+{
+private:
+	FixedString m_name;
+	Sequence<MtrSocketDef> m_inSockets;
+	Sequence<MtrSocketDef> m_outSockets;
+	String m_template;
+};
+
+
+
+
+
 static const char *gnRoot = "root";
 static const char *gnTexAnim = "texAnim";
 static const char *gnVertexDeform = "vtDeform";
@@ -29,7 +70,7 @@ MaterialEditor::MaterialEditor(QWidget *parent)
 //	ui.rollup->setGroupVisible("root", false);
 
 	ui.matTree->header()->setHidden(true);
-	ui.matTree->setRoot("/");
+	ui.matTree->setRoot("");
 	ui.matTree->setFilter("*.mtr");
 	ui.matTree->refresh();
 

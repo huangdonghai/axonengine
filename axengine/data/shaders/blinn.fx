@@ -16,13 +16,12 @@ read the license and understand and accept it fully.
 #define S_ALPHATEST G_FEATURE1
 #define S_TWOSIDES G_FEATURE2
 
-
 float Script : STANDARDSGLOBAL <
 	// sort hint
 #if S_DECAL
-	int		SortHint = SortHint_decal;
+	int SortHint = SortHint_decal;
 #else
-	int		SortHint = SortHint_opacit;
+	int SortHint = SortHint_opacit;
 #endif
 
 	// technique

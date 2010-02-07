@@ -34,16 +34,16 @@ CreationPanel::CreationPanel(QWidget *parent)
 
 	g_mapContext->getMapState()->staticModelName = q2u(m_filename[ET_Model]);
 
-	ui.selectModel->setRoot("/models");
+	ui.selectModel->setRoot("models/");
 	ui.selectModel->setFilter("*.mesh");
 	ui.selectModel->refresh();
 
-	ui.selectTree->setRoot("/speedtrees");
+	ui.selectTree->setRoot("speedtrees/");
 	ui.selectTree->setFilter("*.spt");
 	ui.selectTree->refresh();
 
 #if 0
-	ui.selectEntity->setRoot("/scripts/entities");
+	ui.selectEntity->setRoot("scripts/entities/");
 	ui.selectEntity->setFilter("*.lua");
 	ui.selectEntity->setShowExt(false);
 	ui.selectEntity->refresh();

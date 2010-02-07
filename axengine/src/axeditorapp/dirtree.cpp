@@ -21,7 +21,8 @@ DirTree::~DirTree()
 {
 }
 
-void DirTree::refresh() {
+void DirTree::refresh()
+{
 	FileInfoSeq infos = g_fileSystem->getFileInfos(q2u(m_root), q2u(m_filter), File::List_sort);
 
 	clear();
@@ -39,7 +40,8 @@ void DirTree::refresh() {
 	}
 }
 
-void DirTree::browseSub_r(const String &path, QTreeWidgetItem *parentItem) {
+void DirTree::browseSub_r(const String &path, QTreeWidgetItem *parentItem)
+{
 	FileInfoSeq infos = g_fileSystem->getFileInfos(path, q2u(m_filter), File::List_sort);
 	for (size_t i = 0; i < infos.size(); i++) {
 		FileItem *child = new FileItem(parentItem, infos[i], m_showExt);
@@ -50,7 +52,8 @@ void DirTree::browseSub_r(const String &path, QTreeWidgetItem *parentItem) {
 	}
 }
 
-static inline bool RemoveEmpty_r(FileItem *item) {
+static inline bool RemoveEmpty_r(FileItem *item)
+{
 	bool notempty = false;
 	for (int i = item->childCount() - 1; i >= 0; i--) {
 		FileItem *child = (FileItem*)item->child(i);
@@ -69,7 +72,8 @@ static inline bool RemoveEmpty_r(FileItem *item) {
 	return notempty;
 }
 
-void DirTree::removeEmpty() {
+void DirTree::removeEmpty()
+{
 	for (int i = topLevelItemCount()-1; i >= 0 ; i--) {
 		FileItem *item = (FileItem*)topLevelItem(i);
 
@@ -85,7 +89,8 @@ void DirTree::removeEmpty() {
 	}
 }
 
-static inline void RemoveFile_r(FileItem *item) {
+static inline void RemoveFile_r(FileItem *item)
+{
 	for (int i = item->childCount() - 1; i >= 0; i--) {
 		FileItem *child = (FileItem*)item->child(i);
 		if (child->isDirectory()) {

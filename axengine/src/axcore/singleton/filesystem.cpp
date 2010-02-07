@@ -70,9 +70,7 @@ namespace {
 
 
 PakedFolder::PakedFolder()
-	: m_fullName("/")
-	, m_name("/")
-	, m_parent(NULL)
+	: m_parent(0)
 {}
 
 PakedFolder::~PakedFolder()
@@ -94,19 +92,9 @@ void PakedFolder::addFile(const String &fullpath, PakedFile *info)
 	pf->m_packedFileDict[fullpath] = info;
 }
 
-PakedFile *PakedFolder::getFile(const String &fullpath)
-{
-	return NULL;
-}
-
 void PakedFolder::getFileInfos(const String &path, const String &exts, int flags, OUT FileInfoSeq &fis)
 {
-	String new_path;
-	if (!PathUtil::isDirectoryLetter(path[0])) {
-		new_path = "/" + path;
-	} else {
-		new_path = path;
-	}
+	String new_path = path;
 
 	if (!PathUtil::isDirectoryLetter(*new_path.rbegin())) {
 		new_path += '/';
@@ -154,7 +142,7 @@ void PakedFolder::getFileInfos(const String &path, const String &exts, int flags
 			continue;
 
 		info.filesize = file_info.uncompressed_size;
-		info.filetype = File::Stdio;
+		info.filetype = File::kStdio;
 		info.localtime.tm_year = file_info.tmu_date.tm_year - 1900;
 		info.localtime.tm_mon = file_info.tmu_date.tm_mon;
 		info.localtime.tm_mday = file_info.tmu_date.tm_mday;
@@ -255,7 +243,7 @@ size_t File::read(void *buffer, size_t len)
 {
 	SCOPE_LOCK;
 
-	if (m_type == Stdio) {
+	if (m_type == kStdio) {
 		len = fread(buffer, 1, len, m_handle);
 
 		AX_ASSERT(len != size_t(-1));
@@ -271,7 +259,7 @@ char *File::readLine(char *buffer, int n)
 {
 	SCOPE_LOCK;
 
-	if (m_type == Stdio) {
+	if (m_type == kStdio) {
 		return fgets(buffer, n, m_handle);
 	} else {
 		// TODO
@@ -338,7 +326,7 @@ int File::seek(int offset, File::SeekMode origin)
 
 	int whence;
 
-	if (m_type == Zipped) {
+	if (m_type == kPacked) {
 		if (offset == 0 && origin == SeekSet) {
 			unzSetOffset(m_unzFile, m_offset);
 			return unzOpenCurrentFile(m_unzFile);
@@ -368,7 +356,7 @@ int File::fTell()
 {
 	SCOPE_LOCK;
 
-	if (m_type == Zipped) {
+	if (m_type == kPacked) {
 		return unztell(m_unzFile);
 	} else {
 		return ftell(m_handle);
@@ -397,7 +385,7 @@ int File::close()
 	SCOPE_LOCK;
 
 	int ret = 0;
-	if (m_type == File::Zipped) {
+	if (m_type == File::kPacked) {
 		if (m_unzFile) {
 			ret = unzCloseCurrentFile(m_unzFile);
 			ret|= unzClose(m_unzFile);
@@ -501,7 +489,7 @@ void FileSystem::addGameDirectory(const String &dir, bool extractSrc)
 	for (; it != strvec.end(); ++it) {
 		String fullpath = fullPath(dir, *it);
 
-		PakFile *packfile = loadPakFile(fullpath, *it);
+		FilePackage *packfile = loadPakFile(fullpath, *it);
 
 		m_pakFiles.push_back(packfile);
 	}
@@ -607,7 +595,10 @@ FileInfoSeq FileSystem::getFileInfos(const String &path, const String &exts, int
 
 		fis.insert(fis.end(), temp.begin(), temp.end());
 	}
-
+#if 1
+	std::sort(fis.begin(), fis.end());
+	fis.erase(std::unique(fis.begin(), fis.end()), fis.end());
+#endif
 	return fis;
 }
 
@@ -668,7 +659,7 @@ File *FileSystem::openFileRead(const String &filename)
 
 		/* got normal file */
 		file = new File;
-		file->m_type = File::Stdio;
+		file->m_type = File::kStdio;
 		file->m_handle = fp;
 		file->m_name = filename;
 		file->m_mode = File::ReadMode;
@@ -698,17 +689,12 @@ File *FileSystem::openFileRead(const String &filename)
 	/// not found, try packed file
 	String fn = filename;
 
-	if (!PathUtil::isDirectoryLetter(filename[0])) {
-		fn = AX_PATH_SEP_STR;
-		fn += filename;
-	}
-
 	EntryDict::iterator it = m_pakedFileDict.find(fn);
 	if (it != m_pakedFileDict.end()) {
 		PakedFile *packedfile = it->second;
 
 		file = new File;
-		file->m_type = File::Zipped;
+		file->m_type = File::kPacked;
 		file->m_unzFile = unzReOpen(u2l(packedfile->packfile->fullpath).c_str(), packedfile->packfile->unzfile);
 		file->m_name = filename;
 		file->m_mode = File::ReadMode;
@@ -751,7 +737,7 @@ File *FileSystem::openFileWrite(const String &filename)
 
 	File *cf(new File);
 
-	cf->m_type = File::Stdio;
+	cf->m_type = File::kStdio;
 	cf->m_handle = fp;
 	cf->m_forceFlush = false;
 	cf->m_name = filename;
@@ -778,7 +764,7 @@ File *FileSystem::openFileAppend(const String &filename)
 
 	File *cf(new File);
 
-	cf->m_type = File::Stdio;
+	cf->m_type = File::kStdio;
 	cf->m_handle = fp;
 	cf->m_forceFlush = false;
 	cf->m_name = filename;
@@ -892,13 +878,13 @@ void FileSystem::detachFileObject(File *cf)
 	}
 }
 
-PakFile *FileSystem::loadPakFile(const String &fullpath, const String &filename)
+FilePackage *FileSystem::loadPakFile(const String &fullpath, const String &filename)
 {
 	unzFile unzfile;
 	unz_global_info global_info;
 	unz_file_info file_info;
 	char entryName[260];
-	PakFile *packfile;
+	FilePackage *packfile;
 
 	uint_t i;
 	size_t len;
@@ -910,7 +896,7 @@ PakFile *FileSystem::loadPakFile(const String &fullpath, const String &filename)
 
 	m_numFilesInPack += global_info.number_entry;
 
-	packfile = new PakFile;
+	packfile = new FilePackage;
 
 	packfile->fullpath = fullpath;
 	packfile->filename = filename;
@@ -928,8 +914,7 @@ PakFile *FileSystem::loadPakFile(const String &fullpath, const String &filename)
 		if (unzGetCurrentFileInfo(unzfile, &file_info, entryName, sizeof(entryName), NULL, 0, NULL, 0) != UNZ_OK)
 			break;
 
-		String packedname = AX_PATH_SEP_STR;
-		packedname += entryName;
+		String packedname = entryName;
 
 		if (packedname[packedname.size()-1] == AX_PATH_SEP) {
 			m_pakedFolders.addPath(packedname);
@@ -963,11 +948,6 @@ bool FileSystem::getFileModifyTime(const String &filename, longlong_t *time) con
 
 	/// not found, try packed file
 	String fn = filename;
-
-	if (!PathUtil::isDirectoryLetter(filename[0])) {
-		fn = AX_PATH_SEP_STR;
-		fn += filename;
-	}
 
 	EntryDict::const_iterator it = m_pakedFileDict.find(fn);
 	if (it != m_pakedFileDict.end()) {
