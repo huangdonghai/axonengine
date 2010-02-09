@@ -11,46 +11,6 @@ read the license and understand and accept it fully.
 #include "materialeditor.h"
 #include "filedialog.h"
 
-class GraphNode;
-
-class MtrNode : public GraphNode
-{
-public:
-	enum NodeType
-	{
-		kConst, kUniform, kVarying, kOperator, kSampler, kFunction, kEndNode
-	};
-
-private:
-	NodeType m_nodeType;
-};
-
-class ShaderValue
-{
-	enum Type {
-		kFloat, kVector2, kVector3, kVector4, kMatrix3, kMatrix, kMatrix4, kSampler
-	};
-};
-
-class MtrSocketDef
-{
-private:
-	FixedString m_name;
-	ShaderValue::Type m_dataType;
-};
-
-class MtrNodeDef
-{
-private:
-	FixedString m_name;
-	Sequence<MtrSocketDef> m_inSockets;
-	Sequence<MtrSocketDef> m_outSockets;
-	String m_template;
-};
-
-
-
-
 
 static const char *gnRoot = "root";
 static const char *gnTexAnim = "texAnim";
@@ -62,6 +22,7 @@ static const char *gnAlphaAnim = "alphaAnim";
 
 MaterialEditor::MaterialEditor(QWidget *parent)
 	: QMainWindow(parent)
+	, m_sysNodeDefs(MtlNodeDef::getNodeDefs())
 {
 	ui.setupUi(this);
 
@@ -82,7 +43,8 @@ MaterialEditor::~MaterialEditor()
 
 }
 
-void MaterialEditor::initWidgets() {
+void MaterialEditor::initWidgets()
+{
 	// fill shader widget
 	StringSeq ss = g_fileSystem->fileListByExts("shaders/", ".fx", File::List_nodirectory|File::List_sort);
 	ui.shaderName->clear();
@@ -103,7 +65,8 @@ void MaterialEditor::initWidgets() {
 	}
 }
 
-void MaterialEditor::on_matTree_itemActivated(QTreeWidgetItem *item,int) {
+void MaterialEditor::on_matTree_itemActivated(QTreeWidgetItem *item,int)
+{
 	FileItem *fitem = (FileItem*)item;
 
 	g_globalData->curMaterial = u2q(fitem->getFileInfo().fullpath);
@@ -111,11 +74,13 @@ void MaterialEditor::on_matTree_itemActivated(QTreeWidgetItem *item,int) {
 	initFromMaterial(fitem->getFileInfo().fullpath);
 }
 
-void MaterialEditor::on_actionRefresh_triggered() {
+void MaterialEditor::on_actionRefresh_triggered()
+{
 
 }
 
-void MaterialEditor::initFromMaterial(const String &name) {
+void MaterialEditor::initFromMaterial(const String &name)
+{
 	MaterialPtr mat = Material::load(name);
 
 #if 0

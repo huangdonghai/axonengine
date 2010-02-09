@@ -33,6 +33,7 @@ read the license and understand and accept it fully.
 
 #include "map/all.h"
 #include "gfxedit/all.h"
+#include "mtl/mtl_all.h"
 
 // map editing
 

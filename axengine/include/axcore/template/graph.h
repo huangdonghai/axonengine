@@ -4,25 +4,19 @@
 AX_BEGIN_NAMESPACE
 
 // forward declaration
-template <class NodeT>
 class GraphEdge;
-
-template <class T>
 class GraphNode;
-
-template <class NodeT>
 class Graph;
 
-template <class NodeT>
 class GraphEdge
 {
 public:
 
-private:
-	friend typename NodeT;
-	NodeT *m_from;
+protected:
+	friend class GraphNode;
+	GraphNode *m_srcNode;
 	int m_fromSocket;
-	NodeT *m_to;
+	GraphNode *m_dstNode;
 	int m_toSocket;
 
 	IntrusiveLink<GraphEdge> m_srcLink;
@@ -30,34 +24,57 @@ private:
 };
 
 
-template <class T>
 class GraphNode
 {
 public:
-	typedef GraphEdge<GraphNode> EdgeType;
+	friend class Graph;
 
-	friend class Graph<GraphNode<T>>;
-
-private:
+protected:
 	IntrusiveLink<GraphNode> m_link;
 
 	// geometry, for editor
 	Vector2 m_pos;
 
-	IntrusiveList<EdgeType, &EdgeType::m_srcLink> m_linkOutList;
-	IntrusiveList<EdgeType, &EdgeType::m_dstLink> m_linkInList;
+	IntrusiveList<GraphEdge, &GraphEdge::m_srcLink> m_linkOutList;
+	IntrusiveList<GraphEdge, &GraphEdge::m_dstLink> m_linkInList;
 };
 
 
-template <class NodeT>
 class Graph
 {
 public:
-	typedef NodeT NodeType;
-	typedef typename NodeType::EdgeType EdgeType;
+
+protected:
+	IntrusiveList<GraphNode> m_nodeList;
+};
+
+template <class GraphT, class NodeT, class EdgeT>
+class GraphEdge_ : public GraphEdge
+{
+public:
+	typedef typename NodeT NodeType;
+
+	NodeType *getSrcNode() const { return m_srcNode; }
+	NodeType *getDstNode() const { return m_dstNode;}
 
 private:
-	IntrusiveList<NodeT> m_nodeList;
+};
+
+template <class GraphT, class NodeT, class EdgeT>
+class GraphNode_ : public GraphNode
+{
+public:
+	typedef EdgeT EdgeType;
+};
+
+template <class GraphT, class NodeT, class EdgeT>
+class Graph_ : public Graph
+{
+public:
+	typedef NodeT NodeType;
+	typedef EdgeT EdgeType;
+
+
 };
 
 AX_END_NAMESPACE

@@ -14,17 +14,17 @@ read the license and understand and accept it fully.
 AX_BEGIN_NAMESPACE
 
 namespace {
-int getMapType(const char *name) {
-	if (Strequ(name, "diffuse")) {
-		return SamplerType::Diffuse;
-	} else if (Strequ(name, "specular")) {
-		return SamplerType::Specular;
-	} else if (Strequ(name, "normal")) {
-		return SamplerType::Normal;
-	}
+	int getMapType(const char *name) {
+		if (Strequ(name, "diffuse")) {
+			return SamplerType::Diffuse;
+		} else if (Strequ(name, "specular")) {
+			return SamplerType::Specular;
+		} else if (Strequ(name, "normal")) {
+			return SamplerType::Normal;
+		}
 
-	return -1;
-}
+		return -1;
+	}
 }
 
 // static member
@@ -74,7 +74,7 @@ bool MaterialDecl::tryLoad(const String &name)
 	size = g_fileSystem->readFile(filename, (void**)&buffer);
 
 	if (!size || !buffer) {
-//			Debugf("%s: cann't open material file %s\n", __func__, filename.c_str());
+//		Debugf("%s: cann't open material file %s\n", __func__, filename.c_str());
 		return false;
 	}
 

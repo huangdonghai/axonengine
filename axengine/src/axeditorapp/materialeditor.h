@@ -35,6 +35,7 @@ private slots:
 
 private:
 	Sequence<Material*> m_openedMat;
+	const Sequence<MtlNodeDef> &m_sysNodeDefs;
 	Material *m_curMat;
 };
 

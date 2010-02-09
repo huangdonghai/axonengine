@@ -468,6 +468,30 @@
 				</File>
 			</Filter>
 		</Filter>
+		<Filter
+			Name="mtl"
+			>
+			<File
+				RelativePath="..\..\..\src\axeditor\mtl\mtl_local.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\axeditor\mtl\mtl_nodedef.cpp"
+				>
+			</File>
+			<Filter
+				Name="public"
+				>
+				<File
+					RelativePath="..\..\..\include\axeditor\mtl\mtl_all.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\include\axeditor\mtl\mtl_nodedef.h"
+					>
+				</File>
+			</Filter>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>

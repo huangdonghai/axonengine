@@ -1,24 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
 <nodeDefs>
-  <node name="Time" type="uniform" datatype="float"/>
-  <node name="TexCoord0" type="varying" datatype="float2"></node>
-  <node name="TexCoord1" type="varying" datatype="float2"></node>
-  <node name="WorldPos" type="varying" datatype="float3"></node>
-  <node name="WorldNormal" type="varying" datatype="float3"></node>
-  <node name="Add" type="operator" operator="+"/>
-  <node name="Sub" type="operator" operator="-"/>
-  <node name="Mul" type="operator" operator="*"/>
-  <node name="Div" type="operator" operator="/"/>
-  <node name="DotProduct" type="function" template="dot(%1, %2)"/>
-  <node name="CrossProduct" type="function" template="cross(%1, %2)"/>
-  <node name="Lerp" type="function" template="lerp(%1, %2, %3)"/>
-  <node name="Standard" type="root">
-    <socket name="diffuse" datatype="float3"/>
-    <socket name="specular" datatype="float3"/>
-    <socket name="normal" datatype="float3"/>
-    <socket name="opacity" datatype="float"/>
-    <socket name="emission" datatype="float3"/>
-    <socket name="reflection" datatype="float3"/>
-    <socket name="refraction" datatype="float3"/>
+  <node name="Time" kind="uniform">
+    <output name="Value" datatype="float"/>
+  </node>
+  <node name="TexCoord0" kind="varying">
+    <output name="Value" datatype="float2"/>
+  </node>
+  <node name="TexCoord1" kind="varying" datatype="float2">
+    <output name="Value" datatype="float2"/>
+  </node>
+  <node name="WorldPos" kind="varying" datatype="float3">
+    <output name="Value" datatype="float3"/>
+  </node>
+  <node name="WorldNormal" kind="varying" datatype="float3">
+    <output name="Value" datatype="float3"/>
+  </node>
+  <node name="Add" kind="operator" operator="+">
+    <input name="A" datatype="any"/>
+    <input name="B" datatype="input0"/>
+    <output name="Output" datatype="input0"/>
+  </node>
+  <node name="Sub" kind="operator" operator="-">
+    <input name="A" datatype="any"/>
+    <input name="B" datatype="input0"/>
+    <output name="Output" datatype="input0"/>
+  </node>
+  <node name="Mul" kind="operator" operator="*">
+    <input name="A" datatype="any"/>
+    <input name="B" datatype="input0"/>
+    <output name="Output" datatype="input0"/>
+  </node>
+  <node name="Div" kind="operator" operator="/">
+    <input name="A" datatype="any"/>
+    <input name="B" datatype="input0"/>
+    <output name="Output" datatype="input0"/>
+  </node>
+  <node name="DotProduct" kind="function" template="dot(%1, %2)">
+    <input name="A" datatype="any"/>
+    <input name="B" datatype="input0"/>
+    <output name="Output" datatype="input0"/>
+  </node>
+  <node name="CrossProduct" kind="function" template="cross(%1, %2)">
+    <input name="A" datatype="any"/>
+    <input name="B" datatype="input0"/>
+    <output name="Output" datatype="input0"/>
+  </node>
+  <node name="Lerp" kind="function" template="lerp(%1, %2, %3)">
+    <input name="A" datatype="any"/>
+    <input name="B" datatype="input0"/>
+    <input name="Fraction" datatype="input0"/>
+    <output name="Output" datatype="input0"/>
+  </node>
+  <node name="Standard" kind="root">
+    <input name="Diffuse" datatype="float3"/>
+    <input name="Specular" datatype="float3"/>
+    <input name="Normal" datatype="float3"/>
+    <input name="Opacity" datatype="float"/>
+    <input name="Emission" datatype="float3"/>
+    <input name="Reflection" datatype="float3"/>
+    <input name="Refraction" datatype="float3"/>
   </node>
 </nodeDefs>

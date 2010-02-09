@@ -46,14 +46,6 @@ private:
 };
 #endif
 
-class MtrNode : public GraphNode<MtrNode>
-{
-
-};
-
-class MtrGraph : public Graph<MtrNode>
-{
-};
 
 class GraphEdgeItem : public QGraphicsItem
 {
