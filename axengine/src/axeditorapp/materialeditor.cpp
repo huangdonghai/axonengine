@@ -11,7 +11,6 @@ read the license and understand and accept it fully.
 #include "materialeditor.h"
 #include "filedialog.h"
 
-
 static const char *gnRoot = "root";
 static const char *gnTexAnim = "texAnim";
 static const char *gnVertexDeform = "vtDeform";

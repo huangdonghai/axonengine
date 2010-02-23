@@ -15,9 +15,9 @@ public:
 protected:
 	friend class GraphNode;
 	GraphNode *m_srcNode;
-	int m_fromSocket;
+	int m_srcSocket;
 	GraphNode *m_dstNode;
-	int m_toSocket;
+	int m_dstSocket;
 
 	IntrusiveLink<GraphEdge> m_srcLink;
 	IntrusiveLink<GraphEdge> m_dstLink;
@@ -73,8 +73,6 @@ class Graph_ : public Graph
 public:
 	typedef NodeT NodeType;
 	typedef EdgeT EdgeType;
-
-
 };
 
 AX_END_NAMESPACE
