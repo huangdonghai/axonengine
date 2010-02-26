@@ -70,6 +70,7 @@ public:
 	~GraphEditor();
 
 private:
+	Graph *m_graph;
 	float m_scale;
 	QPointF m_offset;
 };
