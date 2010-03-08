@@ -154,8 +154,11 @@ public:
 			if (!subscene)
 				break;
 
+#if 0
 			g_statistic->incValue(stat_shadowPoolUpdate);
-
+#else
+			stat_shadowPoolUpdate.inc();
+#endif
 			subscene->sceneType = QueuedScene::ShadowGen;
 
 			subscene->camera = si->m_camera;
@@ -195,7 +198,8 @@ public:
 			return;
 		}
 
-		g_statistic->incValue(stat_shadowPoolUpdate);
+		//g_statistic->incValue(stat_shadowPoolUpdate);
+		stat_shadowPoolUpdate.inc();
 
 		subscene->sceneType = QueuedScene::ShadowGen;
 
@@ -373,6 +377,7 @@ public:
 		// calculate split dist
 		m_numCsmSplits = updateSplitDist(f, neard, fard);
 
+#if 0
 		int statindexes[4] = {
 			stat_csmSplit0Dist, stat_csmSplit1Dist, stat_csmSplit2Dist, stat_csmSplit3Dist,
 		};
@@ -380,7 +385,15 @@ public:
 		for (int i = 0; i < m_numCsmSplits; i++) {
 			g_statistic->setValue(statindexes[i], f[i+1]);
 		}
+#else
+		Stat *statindexes[4] = {
+			&stat_csmSplit0Dist, &stat_csmSplit1Dist, &stat_csmSplit2Dist, &stat_csmSplit3Dist,
+		};
 
+		for (int i = 0; i < m_numCsmSplits; i++) {
+			statindexes[i]->setInt(f[i+1]);
+		}
+#endif
 		checkCsmTarget();
 
 		bool allupdate = true;

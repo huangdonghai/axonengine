@@ -261,7 +261,8 @@ AX_BEGIN_NAMESPACE
 		AX_ASSERT(maptype >= 0 && maptype < SamplerType::NUMBER_ALL);
 
 		if (m_sysSamplers[maptype] == 0) {
-			g_statistic->incValue(stat_shaderParamNotused);
+			//g_statistic->incValue(stat_shaderParamNotused);
+			stat_shaderParamNotused.inc();
 			return;
 		}
 
@@ -271,11 +272,13 @@ AX_BEGIN_NAMESPACE
 		GLuint obj = tex->getObject();
 
 		if (m_samplerBound[maptype] == obj) {
-			g_statistic->incValue(stat_shaderParamCached);
+			//g_statistic->incValue(stat_shaderParamCached);
+			stat_shaderParamCached.inc();
 			return;
 		}
 
-		g_statistic->incValue(stat_shaderParamUpdated);
+		//g_statistic->incValue(stat_shaderParamUpdated);
+		stat_shaderParamUpdated.inc();
 
 		cgGLSetTextureParameter(m_sysSamplers[maptype], obj);
 		m_samplerBound[maptype] = obj;
@@ -680,13 +683,15 @@ AX_BEGIN_NAMESPACE
 			GLuniform *uc = m_uniformCaches[i];
 
 			if (uc->isCached()) {
-				g_statistic->incValue(stat_shaderParamCached);
+				//g_statistic->incValue(stat_shaderParamCached);
+				stat_shaderParamCached.inc();
 				continue;
 			}
 
 			setUniformCache(uc);
 
-			g_statistic->incValue(stat_shaderParamUpdated);
+			//g_statistic->incValue(stat_shaderParamUpdated);
+			stat_shaderParamUpdated.inc();
 			uc->cache();
 		}
 	}

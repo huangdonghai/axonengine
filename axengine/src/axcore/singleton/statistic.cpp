@@ -12,10 +12,22 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
+Stat *Stat::ms_linkEnd = 0;
+
 Statistic::Statistic()
-	: m_numValues(0)
 {
+#if 0
+	m_numValues = 0;
 	memset(m_values, 0, sizeof(m_values));
+#endif
+
+	Stat *staticHead = Stat::ms_linkEnd;
+
+	while (staticHead) {
+		registerStat(staticHead);
+		staticHead = staticHead->m_staticLink;
+	}
+	Stat::ms_linkEnd = reinterpret_cast<Stat*>(-1);
 }
 
 Statistic::~Statistic()
@@ -29,6 +41,7 @@ void Statistic::finalize()
 {
 }
 
+#if 0
 int Statistic::getIndex(Group group, const String &name, bool autoreset)
 {
 	if (group <= NoneGroup || group >= MaxGroup) {
@@ -85,6 +98,23 @@ const String &Statistic::getValueName(int index) const
 	}
 
 	return m_valueNames[index];
+}
+#endif
+
+void Statistic::registerStat(Stat *stat)
+{
+	m_statGroup[stat->getGroup()].push_back(stat);
+}
+
+const Sequence<Stat *> & Statistic::getGroup(const char *groupname) const
+{
+	static Sequence<Stat *> s_empty;
+
+	StatGroup::const_iterator it = m_statGroup.find(groupname);
+	if (it != m_statGroup.end())
+		return it->second;
+
+	return s_empty;
 }
 
 AX_END_NAMESPACE

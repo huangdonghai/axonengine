@@ -229,7 +229,8 @@ void QueuedScene::findInstance()
 		addInteraction(0, geoins, false);
 	}
 
-	g_statistic->addValue(stat_instancedIA, numInstancedIA);
+	//g_statistic->addValue(stat_instancedIA, numInstancedIA);
+	stat_instancedIA.add(numInstancedIA);
 }
 
 void QueuedScene::sortInteractions()
@@ -319,9 +320,16 @@ void QueuedScene::checkLights()
 		++it;
 	}
 #endif
+
+#if 0
 	g_statistic->setValue(stat_shadowPoolSize, totalUsed);
 	g_statistic->setValue(stat_shadowPoolUsed, frameUsed);
 	g_statistic->setValue(stat_shadowPoolFreed, frameFreed);
+#else
+	stat_shadowPoolSize.setInt(totalUsed);
+	stat_shadowPoolUsed.setInt(frameUsed);
+	stat_shadowPoolFreed.setInt(frameFreed);
+#endif
 }
 
 QueuedScene *QueuedScene::addSubScene()

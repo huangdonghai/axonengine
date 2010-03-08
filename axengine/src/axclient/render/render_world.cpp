@@ -201,10 +201,17 @@ void RenderWorld::renderTo(QueuedScene *qscene) {
 		return;
 	}
 
+#if 0
 	g_statistic->setValue(stat_worldGlobalLights, qscene->globalLight ? 1 : 0);
 	g_statistic->setValue(stat_worldLights, qscene->numLights);
 	g_statistic->setValue(stat_worldActors, qscene->numEntities);
 	g_statistic->setValue(stat_worldInteractions, qscene->numInteractions);
+#else
+	stat_worldGlobalLights.setInt(qscene->globalLight ? 1 : 0);
+	stat_worldLights.setInt(qscene->numLights);
+	stat_worldActors.setInt(qscene->numEntities);
+	stat_worldInteractions.setInt(qscene->numInteractions);
+#endif
 
 	// check interactions, if need subscene
 	for (int i = 0; i < qscene->numInteractions; i++) {
@@ -395,10 +402,15 @@ void RenderWorld::markVisible_r(QueuedScene *qscene, QuadNode *node, Plane::Side
 		RenderEntity *entity = &*it;
 		if (qscene->sceneType == QueuedScene::ShadowGen && qscene->sourceLight->type == RenderLight::kGlobal) {
 			if (entity->isCsmCulled()) {
+#if 0
 				g_statistic->incValue(stat_csmCulled);
+#else
+				stat_csmCulled.inc();
+#endif
 				continue;
 			} else {
-				g_statistic->incValue(stat_csmPassed);
+				// g_statistic->incValue(stat_csmPassed);
+				stat_csmPassed.inc();
 			}
 		}
 

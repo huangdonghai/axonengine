@@ -34,7 +34,7 @@ AX_BEGIN_NAMESPACE
 
 
 #define AX_STATDECL(name, desc, autoreset) \
-	AX_API extern int name;
+	AX_API extern Stat name;
 #include "statdecls.h"
 #undef AX_STATDECL
 

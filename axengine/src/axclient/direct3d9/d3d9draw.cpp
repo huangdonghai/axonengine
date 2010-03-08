@@ -100,9 +100,11 @@ void D3D9draw::draw(Material *mat, Technique tech, D3D9geometry *prim)
 	}
 
 	shader->setCoupled(mat);
-
+#if 0
 	g_statistic->incValue(stat_numDrawElements);
-
+#else
+	stat_numDrawElements.inc();
+#endif
 	if (mat->isWireframe() & !d3d9ForceWireframe) {
 		d3d9StateManager->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
 	}

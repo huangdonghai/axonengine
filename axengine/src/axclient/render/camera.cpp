@@ -204,17 +204,22 @@ void RenderCamera::setPersOverlay(const Rect &rect, float fov) {
 }
 
 
-Plane::Side RenderCamera::checkBox(const BoundingBox &bbox) const {
-	g_statistic->incValue(stat_frustumCullCall);
+Plane::Side RenderCamera::checkBox(const BoundingBox &bbox) const
+{
+	// g_statistic->incValue(stat_frustumCullCall);
+	stat_frustumCullCall.inc();
 	return m_convex.checkBox(bbox);
 }
 
-bool RenderCamera::cullBox(const BoundingBox &bbox) const {
-	g_statistic->incValue(stat_frustumCullCall);
+bool RenderCamera::cullBox(const BoundingBox &bbox) const
+{
+	//g_statistic->incValue(stat_frustumCullCall);
+	stat_frustumCullCall.inc();
 	return m_convex.cullBox(bbox);
 }
 
-Vector3 RenderCamera::worldToScreen(const Vector3 &in) const {
+Vector3 RenderCamera::worldToScreen(const Vector3 &in) const
+{
 	Vector4 out(in);
 
 	out = m_vp * out;
@@ -232,7 +237,8 @@ Vector3 RenderCamera::worldToScreen(const Vector3 &in) const {
 	return out.xyz();
 }
 
-Vector3 RenderCamera::screenToWorld(const Vector3 &in) const {
+Vector3 RenderCamera::screenToWorld(const Vector3 &in) const
+{
 	Vector4 vert(in);
 
 	vert.y = m_clientSize.y - vert.y;
@@ -252,7 +258,8 @@ Vector3 RenderCamera::screenToWorld(const Vector3 &in) const {
 }
 
 
-RenderCamera RenderCamera::createSelectionCamera(const Rect &region) const {
+RenderCamera RenderCamera::createSelectionCamera(const Rect &region) const
+{
 	RenderCamera ret = *this;
 
 	// calculate projec matrix

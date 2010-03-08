@@ -386,8 +386,11 @@ AX_BEGIN_NAMESPACE
 
 	#define BLINK_DIVISOR 0.075
 
-	void GLtext::draw(Technique tech) {
-		g_statistic->incValue(stat_numTextDrawElements);
+	void GLtext::draw(Technique tech)
+	{
+		//g_statistic->incValue(stat_numTextDrawElements);
+		stat_numTextDrawElements.inc();
+
 		if (tech != Technique::Main)
 			return;
 
@@ -560,7 +563,8 @@ AX_BEGIN_NAMESPACE
 	}
 
 	void GLterrain::draw(Technique tech) {
-		g_statistic->incValue(stat_numTerrainDrawElements);
+		//g_statistic->incValue(stat_numTerrainDrawElements);
+		stat_numTerrainDrawElements.inc();
 
 		if (m_overloadMaterial) {
 			GLgeometry::draw(tech);
@@ -617,7 +621,8 @@ AX_BEGIN_NAMESPACE
 
 		// draw layer
 		for (int i = 0; i < m_numLayers; i++) {
-			g_statistic->incValue(stat_numTerrainLayeredDrawElements);
+			//g_statistic->incValue(stat_numTerrainLayeredDrawElements);
+			stat_numTerrainLayeredDrawElements.inc();
 
 			ChunkPrim::Layer &l = m_layers[i];
 			l.detailMat->setTexture(SamplerType::TerrainColor, m_colorTexture);
@@ -817,7 +822,8 @@ AX_BEGIN_NAMESPACE
 	}
 
 	int GLprimitivemanager::cachePrimitive(Primitive *prim) {
-		g_statistic->incValue(stat_numElements);
+		//g_statistic->incValue(stat_numElements);
+		stat_numElements.inc();
 
 		int f = prim->getCachedFrame();
 		int h = prim->getCachedId();
@@ -856,11 +862,13 @@ AX_BEGIN_NAMESPACE
 
 			prim->setCachedId(new_id);
 
-			g_statistic->setValue(stat_framePrims, m_numFramePrims);
+			//g_statistic->setValue(stat_framePrims, m_numFramePrims);
+			stat_framePrims.setInt(m_numFramePrims);
 		}
 
 		prim->setCachedFrame(m_framenum);
-		g_statistic->incValue(stat_changedPrims);
+		//g_statistic->incValue(stat_changedPrims);
+		stat_changedPrims.inc();
 
 		if (prim->getHint() == Primitive::HintFrame)
 			delete prim;
@@ -883,7 +891,8 @@ AX_BEGIN_NAMESPACE
 			Errorf("GLprimitivemanager::uncachePrimitive: overflowed");
 
 		m_waitForDelete[m_numWaitForDelete++] = uint_t(id)-1;
-		g_statistic->decValue(stat_staticPrims);
+		//g_statistic->decValue(stat_staticPrims);
+		stat_staticPrims.dec();
 	}
 
 	void GLprimitivemanager::endFrame() {
@@ -931,7 +940,8 @@ AX_BEGIN_NAMESPACE
 
 		handle = int((ptr - m_staticPrims) + 1);
 
-		g_statistic->incValue(stat_staticPrims);
+		//g_statistic->incValue(stat_staticPrims);
+		stat_staticPrims.inc();
 	}
 
 	void GLprimitivemanager::linkId(int id, GLprimitive *glprim) {

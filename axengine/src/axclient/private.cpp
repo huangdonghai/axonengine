@@ -16,13 +16,13 @@ AX_DECLARE_MODULE(axdirect3d9);
 
 // console variable
 #define AX_CVARDECL(name, defaultstring, flags) \
-Cvar *name;
-#include <axclient/cvardecls.h>
+	Cvar *name;
+	#include <axclient/cvardecls.h>
 #undef AX_CVARDECL
 
 // statistic
-#define AX_STATDECL(name, desc, autoreset)  int name;
-#include "axclient/statdecls.h"
+#define AX_STATDECL(name, desc, autoreset)  Stat name("Client", desc, autoreset, desc);
+	#include "axclient/statdecls.h"
 #undef AX_STATDECL
 
 // public object
@@ -47,27 +47,24 @@ FontPtr g_consoleFont;
 FontPtr g_miniFont;
 
 #ifdef AX_CONFIG_OPTION_USE_SPEEDTREE_40
-TreeManager *g_treeManager;
+	TreeManager *g_treeManager;
 #endif // AX_CONFIG_OPTION_USE_SPEEDTREE_40
 
-// xinput
-//	Xinput *gXinput;
-
-void axClientInit() {
-
+void axClientInit()
+{
 	// init cvar
 #define AX_CVARDECL(name, defaultstring, flags) \
-name = g_cvarSystem->createCvar(#name, defaultstring, flags);
-#include <axclient/cvardecls.h>
+	name = g_cvarSystem->createCvar(#name, defaultstring, flags);
+	#include <axclient/cvardecls.h>
 #undef AX_CVARDECL
 
+#if 0
 	// init statistic
-
 #define AX_STATDECL(name, desc, autoreset) \
-name = g_statistic->getIndex(Statistic::RenderDrvGroup, desc, autoreset);
-#include "axclient/statdecls.h"
+	name = g_statistic->getIndex(Statistic::RenderDrvGroup, desc, autoreset);
+	#include "axclient/statdecls.h"
 #undef AX_STATDECL
-
+#endif
 
 #if 1 // _LIB
 	AX_REGISTER_MODULE(axopengl);
@@ -106,8 +103,9 @@ name = g_statistic->getIndex(Statistic::RenderDrvGroup, desc, autoreset);
 //		g_shaderManager->applyShaderCache();
 }
 
-void axClientQuit() {
-//		g_shaderManager->saveShaderCache();
+void axClientQuit()
+{
+//	g_shaderManager->saveShaderCache();
 
 	SafeDelete(g_soundSystem);
 

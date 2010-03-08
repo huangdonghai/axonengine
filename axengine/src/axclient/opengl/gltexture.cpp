@@ -258,14 +258,20 @@ AX_BEGIN_NAMESPACE
 	}
 
 
-	GLtexture::~GLtexture() {
+	GLtexture::~GLtexture()
+	{
 		if (!m_object)
 			return;
 
 		glDeleteTextures(1, &m_object);
 
+#if 0
 		g_statistic->decValue(stat_numTextures);
 		g_statistic->subValue(stat_textureMemory, m_videoMemoryUsed);
+#else
+		stat_numTextures.dec();
+		stat_textureMemory.sub(m_videoMemoryUsed);
+#endif
 	}
 
 	bool GLtexture::doInit(const String &name, intptr_t arg) {
@@ -363,10 +369,13 @@ AX_BEGIN_NAMESPACE
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
 		GLrender::checkErrors();
-
+#if 0
 		g_statistic->addValue(stat_textureMemory, m_videoMemoryUsed);
 		g_statistic->incValue(stat_numTextures);
-
+#else
+		stat_textureMemory.add(m_videoMemoryUsed);
+		stat_numTextures.inc();
+#endif
 		return true;
 	}
 
@@ -541,10 +550,13 @@ AX_BEGIN_NAMESPACE
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
+#if 0
 		g_statistic->addValue(stat_textureMemory, m_videoMemoryUsed);
 		g_statistic->incValue(stat_numTextures);
-
+#else
+		stat_textureMemory.add(m_videoMemoryUsed);
+		stat_numTextures.inc();
+#endif
 		GLrender::checkErrors();
 	}
 

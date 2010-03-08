@@ -150,11 +150,19 @@ AX_BEGIN_NAMESPACE
 
 		int backendtime = end - cachestart;
 
+#if 0
 		g_statistic->setValue(stat_fps, 1000 / frametime);
 		g_statistic->setValue(stat_frameTime, frametime);
 		g_statistic->setValue(stat_cacheTime, cacheend-cachestart);
 		g_statistic->setValue(stat_frontendTime, frametime - backendtime);
 		g_statistic->setValue(stat_backendTime, backendtime);
+#else
+		stat_fps.setInt(1000 / frametime);
+		stat_frameTime.setInt(frametime);
+		stat_cacheTime.setInt(cacheend-cachestart);
+		stat_frontendTime.setInt(frametime - backendtime);
+		stat_backendTime.setInt(backendtime);
+#endif
 	}
 
 	void GLthread::doRun() {
@@ -898,7 +906,8 @@ AX_BEGIN_NAMESPACE
 			g_shaderMacro.setMacro(ShaderMacro::G_HDR);
 		}
 
-		g_statistic->setValue(stat_exposure, exposure * 100);
+		//g_statistic->setValue(stat_exposure, exposure * 100);
+		stat_exposure.setInt(exposure * 100);
 		AX_SU(g_exposure, Vector4(1.0f/exposure, exposure,0,0));
 
 		// set global light parameter

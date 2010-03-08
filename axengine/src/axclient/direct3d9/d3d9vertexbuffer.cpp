@@ -130,8 +130,13 @@ void D3D9vertexobject::setData(const void *p, int count, Primitive::Hint primhin
 	resetData();
 
 	V(d3d9Device->CreateVertexBuffer(size, D3DUSAGE_WRITEONLY, 0, D3DPOOL_DEFAULT, &m_object, NULL));
+#if 0
 	g_statistic->incValue(stat_numVertexBuffers);
 	g_statistic->addValue(stat_vertexBufferMemory, size);
+#else
+	stat_numVertexBuffers.inc();
+	stat_vertexBufferMemory.add(size);
+#endif
 
 	void *dst;
 	V(m_object->Lock(0, size, &dst, 0));
@@ -150,9 +155,13 @@ void D3D9vertexobject::resetData() {
 		return;
 	}
 
+#if 0
 	g_statistic->decValue(stat_numVertexBuffers);
 	g_statistic->subValue(stat_vertexBufferMemory, m_dataSize);
-
+#else
+	stat_numVertexBuffers.dec();
+	stat_vertexBufferMemory.sub(m_dataSize);
+#endif
 	SAFE_RELEASE(m_object);
 	m_object = 0;
 	m_dataSize = 0;
@@ -273,9 +282,13 @@ void D3D9indexobject::setData(const ushort_t *p, int count, Primitive::Hint hint
 	HRESULT hr;
 
 	V(d3d9Device->CreateIndexBuffer(m_dataSize, D3DUSAGE_WRITEONLY, D3DFMT_INDEX16, D3DPOOL_DEFAULT, &m_object, NULL));
+#if 0
 	g_statistic->incValue(stat_numIndexBuffers);
 	g_statistic->addValue(stat_indexBufferMemory, m_dataSize);
-
+#else
+	stat_numIndexBuffers.inc();
+	stat_indexBufferMemory.add(m_dataSize);
+#endif
 	void *dst;
 	V(m_object->Lock(0, m_dataSize, &dst, 0));
 
@@ -289,8 +302,13 @@ void D3D9indexobject::resetData() {
 
 	m_object->Release();
 
+#if 0
 	g_statistic->decValue(stat_numIndexBuffers);
 	g_statistic->subValue(stat_indexBufferMemory, m_dataSize);
+#else
+	stat_numIndexBuffers.dec();
+	stat_indexBufferMemory.sub(m_dataSize);
+#endif
 
 	m_object = 0;
 	m_dataSize = 0;
@@ -533,12 +551,21 @@ void D3D9vertexbuffermanager::endAppendIb()
 
 void D3D9vertexbuffermanager::reportStatices() const
 {
+#if 0
 	g_statistic->setValue(stat_dynamicVBsize, m_vertexBufferChain.getSize());
 	g_statistic->setValue(stat_usedVBsize, m_vertexBufferChain.getUsed());
 	g_statistic->setValue(stat_instanceBufSize, m_instanceBufferChain.getSize());
 	g_statistic->setValue(stat_usedInstanceBufSize, m_instanceBufferChain.getUsed());
 	g_statistic->setValue(stat_dynamicIBsize, m_indexBufferChain.getSize());
 	g_statistic->setValue(stat_usedIBsize, m_indexBufferChain.getUsed());
+#else
+	stat_dynamicVBsize.setInt(m_vertexBufferChain.getSize());
+	stat_usedVBsize.setInt(m_vertexBufferChain.getUsed());
+	stat_instanceBufSize.setInt(m_instanceBufferChain.getSize());
+	stat_usedInstanceBufSize.setInt(m_instanceBufferChain.getUsed());
+	stat_dynamicIBsize.setInt(m_indexBufferChain.getSize());
+	stat_usedIBsize.setInt(m_indexBufferChain.getUsed());
+#endif
 }
 
 

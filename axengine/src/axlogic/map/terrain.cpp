@@ -704,7 +704,8 @@ void MapChunk::updatePrimitive()
 	if (!m_heightChanged && (m_lod == m_lastLod) && (m_neighborLod.i == m_lastNeighborLod.i))
 		return;
 
-	g_statistic->incValue(stat_chunkUpdated);
+	//g_statistic->incValue(stat_chunkUpdated);
+	stat_chunkUpdated.inc();
 
 	m_lastLod = m_lod;
 	m_lastNeighborLod.i = m_neighborLod.i;
@@ -727,8 +728,13 @@ void MapChunk::updatePrimitive()
 	}
 
 	int c = m_prim->getNumIndexes() / 3;
+#if 0
 	g_statistic->addValue(stat_terrainTris, num_tris - c);
 	g_statistic->addValue(stat_terrainVerts, num_verts - m_prim->getNumVertexes());
+#else
+	stat_terrainTris.add(num_tris - c);
+	stat_terrainVerts.add(num_verts - m_prim->getNumVertexes());
+#endif
 	m_prim->init(num_verts, num_tris * 3);
 	m_prim->setMaterial(m_material.get());
 	m_prim->setTerrainRect(m_terrain->getTerrainRect());
@@ -2181,7 +2187,8 @@ void MapTerrain::issueToQueue(QueuedScene *qscene)
 	doEvent(&e);
 
 	double end = OsUtil::getTime();
-	g_statistic->addValue(stat_terrainGenPrimsTime, (end - start) * 1000);
+	//g_statistic->addValue(stat_terrainGenPrimsTime, (end - start) * 1000);
+	stat_terrainGenPrimsTime.add((end - start) * 1000);
 
 	for (size_t i = 0; i < e.primSeq.size(); i++) {
 		qscene->addInteraction(0, e.primSeq[i]);

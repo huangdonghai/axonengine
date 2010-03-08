@@ -25,7 +25,7 @@ MaterialEditor::MaterialEditor(QWidget *parent)
 {
 	ui.setupUi(this);
 
-	ui.rollup->initialize();
+//	ui.rollup->initialize();
 
 //	ui.rollup->setGroupVisible("root", false);
 
@@ -46,7 +46,7 @@ void MaterialEditor::initWidgets()
 {
 	// fill shader widget
 	StringSeq ss = g_fileSystem->fileListByExts("shaders/", ".fx", File::List_nodirectory|File::List_sort);
-	ui.shaderName->clear();
+//	ui.shaderName->clear();
 
 	AX_FOREACH(const String &s, ss) {
 		QString qs = u2q(PathUtil::getName(s));
@@ -54,13 +54,13 @@ void MaterialEditor::initWidgets()
 		if (!qs[0].isLetter()) {
 			continue;
 		}
-		ui.shaderName->addItem(qs);
+//		ui.shaderName->addItem(qs);
 	}
 
 	// fill surface type widget
-	ui.surfaceType->clear();
+//	ui.surfaceType->clear();
 	for (int i = 0; i < SurfaceType::NUMBER_ALL; i++) {
-		ui.surfaceType->addItem(SurfaceType(i).toString());
+//		ui.surfaceType->addItem(SurfaceType(i).toString());
 	}
 }
 

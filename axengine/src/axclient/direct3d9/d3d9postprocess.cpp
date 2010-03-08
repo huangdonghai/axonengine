@@ -736,7 +736,11 @@ void D3D9postprocess::issueQueryList( const List<D3D9querymanager::ActiveQuery*>
 	m_shaderQuery->end();
 
 	d3d9StateManager->SetRenderState(D3DRS_COLORWRITEENABLE, 0xf);
+#if 0
 	g_statistic->setValue(stat_numVisQuery, count);
+#else
+	stat_numVisQuery.setInt(count);
+#endif
 }
 
 AX_END_NAMESPACE

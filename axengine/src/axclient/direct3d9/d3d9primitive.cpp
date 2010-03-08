@@ -16,7 +16,8 @@ AX_BEGIN_NAMESPACE
 // class D3D9primitive
 //------------------------------------------------------------------------------
 
-D3D9primitive::D3D9primitive() {
+D3D9primitive::D3D9primitive()
+{
 	m_src = nullptr;
 	m_material = nullptr;
 
@@ -28,18 +29,22 @@ D3D9primitive::D3D9primitive() {
 	m_activeIndexes = 0;
 }
 
-D3D9primitive::~D3D9primitive() {}
+D3D9primitive::~D3D9primitive()
+{}
 
-void D3D9primitive::initialize(Primitive *src) {
+void D3D9primitive::initialize(Primitive *src)
+{
 	m_src = src;
 	m_hint = src->getHint();
 
 	D3D9primitive::update();
 }
 
-void D3D9primitive::finalize() {}
+void D3D9primitive::finalize()
+{}
 
-void D3D9primitive::update() {
+void D3D9primitive::update()
+{
 	m_material = m_src->getMaterial();
 	m_lightmap = m_src->getLightMap();
 	m_isMatrixSet = m_src->isMatrixSet();
@@ -57,12 +62,14 @@ D3D9geometry::D3D9geometry()
 {
 }
 
-D3D9geometry::~D3D9geometry() {
+D3D9geometry::~D3D9geometry()
+{
 	finalize();
 }
 
 
-void D3D9geometry::initialize(Primitive *src) {
+void D3D9geometry::initialize(Primitive *src)
+{
 	D3D9primitive::initialize(src);
 
 	switch (m_src->getType()) {
@@ -83,11 +90,13 @@ void D3D9geometry::initialize(Primitive *src) {
 	}
 }
 
-void D3D9geometry::finalize() {
+void D3D9geometry::finalize()
+{
 	D3D9primitive::finalize();
 }
 
-void D3D9geometry::update() {
+void D3D9geometry::update()
+{
 	if (!m_src->isDirty() && m_hint == Primitive::HintStatic)
 		return;
 
@@ -110,7 +119,8 @@ void D3D9geometry::update() {
 	m_src->clearDirty();
 }
 
-void D3D9geometry::draw(Technique tech) {
+void D3D9geometry::draw(Technique tech)
+{
 	bindVertexBuffer();
 
 	if (m_instanceBuffer) {
@@ -129,7 +139,8 @@ void D3D9geometry::draw(Technique tech) {
 	unbindVertexBuffer();
 }
 
-void D3D9geometry::bindVertexBuffer() {
+void D3D9geometry::bindVertexBuffer()
+{
 	if (!m_instanceBuffer) {
 		m_vertexObject.bind();
 	} else {
@@ -146,7 +157,8 @@ void D3D9geometry::unbindVertexBuffer()
 	}
 }
 
-void D3D9geometry::drawElements() {
+void D3D9geometry::drawElements()
+{
 	D3D9indexobject *ib = &m_indexObject;
 
 	if (m_overloadedIndexObj) {
@@ -156,21 +168,24 @@ void D3D9geometry::drawElements() {
 	ib->drawElements(m_d3dPrimitiveType, m_vertexObject.getNumVerts());
 }
 
-void D3D9geometry::initPoint() {
+void D3D9geometry::initPoint()
+{
 	m_vertexType = D3D9vertexobject::VertexDebug;
 	m_d3dPrimitiveType = D3DPT_POINTLIST;
 
 	updatePoint();
 }
 
-void D3D9geometry::initLine() {
+void D3D9geometry::initLine()
+{
 	m_vertexType = D3D9vertexobject::VertexDebug;
 	m_d3dPrimitiveType = D3DPT_LINELIST;
 
 	updateLine();
 }
 
-void D3D9geometry::initMesh() {
+void D3D9geometry::initMesh()
+{
 	m_vertexType = D3D9vertexobject::VertexGeneric;
 
 	MeshPrim *src = (MeshPrim*)m_src;
@@ -185,7 +200,8 @@ void D3D9geometry::initMesh() {
 }
 
 
-void D3D9geometry::updatePoint() {
+void D3D9geometry::updatePoint()
+{
 	PointPrim *Point = static_cast<PointPrim*>(m_src);
 	AX_ASSERT(Point);
 
@@ -206,7 +222,8 @@ void D3D9geometry::updatePoint() {
 	//		m_indexBuffer.setData(Point->getPointsPointer(), m_indexCount, m_hint, m_indexDataType);
 }
 
-void D3D9geometry::updateLine() {
+void D3D9geometry::updateLine()
+{
 	LinePrim *line = static_cast<LinePrim*>(m_src);
 	AX_ASSERT(line);
 
@@ -222,7 +239,8 @@ void D3D9geometry::updateLine() {
 }
 
 
-void D3D9geometry::updateMesh() {
+void D3D9geometry::updateMesh()
+{
 	MeshPrim *mesh = static_cast<MeshPrim*>(m_src);
 	AX_ASSERT(mesh);
 
@@ -239,14 +257,17 @@ void D3D9geometry::updateMesh() {
 //------------------------------------------------------------------------------
 
 //	Material *D3D9text::m_fontMtr;
-D3D9text::D3D9text() {
+D3D9text::D3D9text()
+{
 }
 
-D3D9text::~D3D9text() {
+D3D9text::~D3D9text()
+{
 }
 
 
-void D3D9text::initialize(Primitive *src) {
+void D3D9text::initialize(Primitive *src)
+{
 	D3D9primitive::initialize(src);
 
 	TextPrim *text = static_cast<TextPrim*>(m_src);
@@ -273,21 +294,28 @@ void D3D9text::initialize(Primitive *src) {
 	int numchars = s2i(m_text.size());
 }
 
-void D3D9text::finalize() {
+void D3D9text::finalize()
+{
 	D3D9primitive::finalize();
 }
 
-void D3D9text::update() {
+void D3D9text::update()
+{
 	D3D9primitive::update();
 }
 
 #define BLINK_DIVISOR 0.075
 
-void D3D9text::draw(Technique tech) {
+void D3D9text::draw(Technique tech)
+{
 	if (!r_font->getBool()) {
 		return;
 	}
+#if 0
 	g_statistic->incValue(stat_numTextDrawElements);
+#else
+	stat_numTextDrawElements.inc();
+#endif
 	if (tech != Technique::Main)
 		return;
 
@@ -395,10 +423,12 @@ next:
 // class D3D9terrain
 //------------------------------------------------------------------------------
 
-D3D9terrain::D3D9terrain() {
+D3D9terrain::D3D9terrain()
+{
 }
 
-D3D9terrain::~D3D9terrain() {
+D3D9terrain::~D3D9terrain()
+{
 }
 
 // implement D3D9primitive
@@ -411,11 +441,13 @@ void D3D9terrain::initialize(Primitive *src) {
 	update();
 }
 
-void D3D9terrain::finalize() {
+void D3D9terrain::finalize()
+{
 	D3D9primitive::finalize();
 }
 
-void D3D9terrain::update() {
+void D3D9terrain::update()
+{
 	if (!m_src->isDirty() && m_hint == Primitive::HintStatic)
 		return;
 
@@ -469,8 +501,13 @@ void D3D9terrain::update() {
 	m_src->clearDirty();
 }
 
-void D3D9terrain::draw(Technique tech) {
+void D3D9terrain::draw(Technique tech)
+{
+#if 0
 	g_statistic->incValue(stat_numTerrainDrawElements);
+#else
+	stat_numTerrainDrawElements.inc();
+#endif
 
 	if (m_overloadMaterial) {
 		D3D9geometry::draw(tech);
@@ -516,8 +553,11 @@ void D3D9terrain::draw(Technique tech) {
 
 	// draw layer
 	for (int i = 0; i < m_numLayers; i++) {
+#if 0
 		g_statistic->incValue(stat_numTerrainLayeredDrawElements);
-
+#else
+		stat_numTerrainLayeredDrawElements.inc();
+#endif
 		ChunkPrim::Layer &l = m_layers[i];
 		l.detailMat->setTexture(SamplerType::TerrainColor, m_colorTexture);
 		l.detailMat->setTexture(SamplerType::TerrainNormal, m_normalTexture);
@@ -536,13 +576,16 @@ void D3D9terrain::draw(Technique tech) {
 // class D3D9group
 //------------------------------------------------------------------------------
 
-D3D9group::D3D9group() {
+D3D9group::D3D9group()
+{
 }
 
-D3D9group::~D3D9group() {
+D3D9group::~D3D9group()
+{
 }
 
-void D3D9group::initialize(Primitive *src) {
+void D3D9group::initialize(Primitive *src)
+{
 	D3D9primitive::initialize(src);
 
 	GroupPrim *rpgroup = static_cast<GroupPrim*>(src);
@@ -557,16 +600,19 @@ void D3D9group::initialize(Primitive *src) {
 	}
 }
 
-void D3D9group::finalize() {
+void D3D9group::finalize()
+{
 	m_primitives.clear();
 	D3D9primitive::finalize();
 }
 
-void D3D9group::update() {
+void D3D9group::update()
+{
 	D3D9primitive::update();
 }
 
-void D3D9group::draw(Technique tech) {
+void D3D9group::draw(Technique tech)
+{
 	for (size_t i = 0; i < m_primitives.size(); i++) {
 		D3D9primitive *prim = d3d9PrimitiveManager->getPrimitive(m_primitives[i]);
 		prim->draw(tech);
@@ -577,10 +623,14 @@ void D3D9group::draw(Technique tech) {
 // class D3D9ref
 //------------------------------------------------------------------------------
 
-D3D9ref::D3D9ref() {}
-D3D9ref::~D3D9ref() {}
+D3D9ref::D3D9ref()
+{}
 
-void D3D9ref::initialize(Primitive *src) {
+D3D9ref::~D3D9ref()
+{}
+
+void D3D9ref::initialize(Primitive *src)
+{
 	D3D9primitive::initialize(src);
 
 	RefPrim *ref = static_cast<RefPrim*>(src);
@@ -597,15 +647,18 @@ void D3D9ref::initialize(Primitive *src) {
 	m_indexObject.setData(ref->getIndexesPointer(), indexcount, ref->getHint(), m_activeIndexes);
 }
 
-void D3D9ref::finalize() {
+void D3D9ref::finalize()
+{
 	D3D9primitive::finalize();
 }
 
-void D3D9ref::update() {
+void D3D9ref::update()
+{
 	D3D9primitive::update();
 }
 
-void D3D9ref::draw(Technique tech) {
+void D3D9ref::draw(Technique tech)
+{
 	D3D9primitive *prim = d3d9PrimitiveManager->getPrimitive(m_refed);
 	if (m_material) {
 		prim->setOverloadMaterial(m_material);
@@ -636,18 +689,24 @@ void D3D9ref::draw(Technique tech) {
 // class D3D9instance
 //--------------------------------------------------------------------------
 
-D3D9instance::D3D9instance() {}
-D3D9instance::~D3D9instance() {}
+D3D9instance::D3D9instance()
+{}
 
-void D3D9instance::initialize(Primitive *src) {
+D3D9instance::~D3D9instance()
+{}
+
+void D3D9instance::initialize(Primitive *src)
+{
 	D3D9primitive::initialize(src);
 
 	update();
 }
 
-void D3D9instance::finalize() {}
+void D3D9instance::finalize()
+{}
 
-void D3D9instance::update() {
+void D3D9instance::update()
+{
 	D3D9primitive::update();
 	InstancePrim *gi = static_cast<InstancePrim*>(m_src);
 	AX_ASSERT(gi);
@@ -657,7 +716,8 @@ void D3D9instance::update() {
 	m_src->clearDirty();
 }
 
-void D3D9instance::draw(Technique tech) {
+void D3D9instance::draw(Technique tech)
+{
 	D3D9primitive *prim = d3d9PrimitiveManager->getPrimitive(m_instanced);
 
 	prim->m_instanceBuffer = &m_buffer;
@@ -690,11 +750,17 @@ D3D9primitivemanager::D3D9primitivemanager()
 	m_staticPrims[MAX_PRIMITIVES-1] = NULL;
 }
 
-D3D9primitivemanager::~D3D9primitivemanager() {
+D3D9primitivemanager::~D3D9primitivemanager()
+{
 }
 
-int D3D9primitivemanager::cachePrimitive(Primitive *prim) {
+int D3D9primitivemanager::cachePrimitive(Primitive *prim)
+{
+#if 0
 	g_statistic->incValue(stat_numElements);
+#else
+	stat_numElements.inc();
+#endif
 
 	int f = prim->getCachedFrame();
 	int h = prim->getCachedId();
@@ -733,19 +799,27 @@ int D3D9primitivemanager::cachePrimitive(Primitive *prim) {
 
 		prim->setCachedId(new_id);
 
+#if 0
 		g_statistic->setValue(stat_framePrims, m_numFramePrims);
+#else
+		stat_framePrims.setInt(m_numFramePrims);
+#endif
 	}
 
 	prim->setCachedFrame(m_frameId);
+#if 0
 	g_statistic->incValue(stat_changedPrims);
-
+#else
+	stat_changedPrims.inc();
+#endif
 	if (prim->getHint() == Primitive::HintFrame)
 		delete(prim);
 
 	return new_id;
 }
 
-void D3D9primitivemanager::uncachePrimitive(Primitive *prim) {
+void D3D9primitivemanager::uncachePrimitive(Primitive *prim)
+{
 	int id = prim->getCachedId();
 
 	if (!id)
@@ -760,10 +834,15 @@ void D3D9primitivemanager::uncachePrimitive(Primitive *prim) {
 	}
 
 	m_waitForDelete[m_numWaitForDelete++] = uint_t(id)-1;
+#if 0
 	g_statistic->decValue(stat_staticPrims);
+#else
+	stat_staticPrims.dec();
+#endif
 }
 
-void D3D9primitivemanager::syncFrame() {
+void D3D9primitivemanager::syncFrame()
+{
 	// clear frame primitive
 	for (int i = 0; i < m_numFramePrims; i++) {
 		freePrim(m_framePrims[i]);
@@ -795,7 +874,8 @@ void D3D9primitivemanager::syncFrame() {
 	m_frameId++;
 }
 
-void D3D9primitivemanager::findStaticFreeSlot(int &handle) {
+void D3D9primitivemanager::findStaticFreeSlot(int &handle)
+{
 	if (m_freePrimLink == NULL) {
 		Errorf("no free primitive slot");
 		return;
@@ -807,11 +887,15 @@ void D3D9primitivemanager::findStaticFreeSlot(int &handle) {
 	m_freePrimLink = (void*)(*link);
 
 	handle = int((ptr - m_staticPrims) + 1);
-
+#if 0
 	g_statistic->incValue(stat_staticPrims);
+#else
+	stat_staticPrims.inc();
+#endif
 }
 
-void D3D9primitivemanager::linkId(int id, D3D9primitive *glprim) {
+void D3D9primitivemanager::linkId(int id, D3D9primitive *glprim)
+{
 	if (id == 0)
 		Errorf("D3D9primitivemanager::linkId: error id");
 
@@ -825,7 +909,8 @@ void D3D9primitivemanager::linkId(int id, D3D9primitive *glprim) {
 	}
 }
 
-D3D9primitive *D3D9primitivemanager::createPrim(Primitive *prim) {
+D3D9primitive *D3D9primitivemanager::createPrim(Primitive *prim)
+{
 	D3D9primitive *glprim;
 
 	Primitive::Type primType = prim->getType();

@@ -105,7 +105,8 @@ AX_BEGIN_NAMESPACE
 		GLshader *shader = glShaderManager->findShaderGL(mat->getShaderName(), macro);
 #endif
 		double end = OsUtil::getTime();
-		g_statistic->addValue(stat_findShaderTime, end-begin);
+		//g_statistic->addValue(stat_findShaderTime, end-begin);
+		stat_findShaderTime.add(end - begin);
 
 		if (!shader->haveTechnique(tech)) {
 			return;
@@ -122,7 +123,8 @@ AX_BEGIN_NAMESPACE
 		shader->setInteractionMap();
 		shader->setInteractionParameter(mat->getParameters());
 
-		g_statistic->incValue(stat_numDrawElements);
+		//g_statistic->incValue(stat_numDrawElements);
+		stat_numDrawElements.inc();
 
 		if (mat->isPixelToTexelEnabled()) {
 			int width = mat->getPixelToTexelWidth();
@@ -362,7 +364,8 @@ AX_BEGIN_NAMESPACE
 		}
 		double begin = OsUtil::getTime();
 		double end = OsUtil::getTime();
-		g_statistic->addValue(stat_findShaderTime, end-begin);
+		//g_statistic->addValue(stat_findShaderTime, end-begin);
+		stat_findShaderTime.add(end - begin);
 	}
 
 	static VertexDef sGeneric[] = {

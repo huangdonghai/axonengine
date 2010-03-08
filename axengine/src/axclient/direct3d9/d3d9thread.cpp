@@ -161,11 +161,17 @@ void D3D9thread::runFrame(bool isInThread)
 
 	float backendtime = end - startTime;
 
+#if 0
 	g_statistic->setValue(stat_fps, 1.0f / frametime);
 	g_statistic->setValue(stat_frameTime, frametime * 1000);
 	g_statistic->setValue(stat_cacheTime, (cacheend-cachestart)*1000);
 	g_statistic->setValue(stat_backendTime, backendtime*1000);
-
+#else
+	stat_fps.setInt(1.0f / frametime);
+	stat_frameTime.setInt(frametime * 1000);
+	stat_cacheTime.setInt((cacheend-cachestart)*1000);
+	stat_backendTime.setInt(backendtime*1000);
+#endif
 	if (isInThread) {
 		d3d9Mutex.unlock();
 		d3d9Queue->endConsuming();
@@ -729,7 +735,11 @@ void D3D9thread::drawScene_world(QueuedScene *scene, const D3D9clearer &clearer)
 		g_shaderMacro.setMacro(ShaderMacro::G_HDR);
 	}
 
+#if 0
 	g_statistic->setValue(stat_exposure, exposure * 100);
+#else
+	stat_exposure.setInt(exposure * 100);
+#endif
 	AX_SU(g_exposure, Vector4(1.0f/exposure, exposure,0,0));
 
 	// set global light parameter
@@ -853,8 +863,11 @@ void D3D9thread::drawScene_noworld(QueuedScene *scene, const D3D9clearer &cleare
 	drawPass_overlay(scene);
 
 	if (m_isStatistic)
+#if 0
 		g_statistic->setValue(stat_staticsTime, (end - start) * 1000);
-
+#else
+		stat_staticsTime.setInt((end - start) * 1000);
+#endif
 	END_PIX();
 }
 
@@ -899,7 +912,11 @@ void D3D9thread::issueShadowQuery()
 		active->issued = true;
 	}
 	d3d9StateManager->SetRenderState(D3DRS_COLORWRITEENABLE, 0xf);
+#if 0
 	g_statistic->setValue(stat_numShadowQuery, count);
+#else
+	stat_numShadowQuery.setInt(count);
+#endif
 }
 
 void D3D9thread::doRun()

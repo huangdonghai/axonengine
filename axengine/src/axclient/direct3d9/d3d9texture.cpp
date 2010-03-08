@@ -168,7 +168,11 @@ D3D9texture::D3D9texture()
 
 	m_videoMemoryUsed = 0;
 
+#if 0
 	g_statistic->incValue(stat_numTextures);
+#else
+	stat_numTextures.inc();
+#endif
 }
 
 D3D9texture::~D3D9texture()
@@ -177,8 +181,13 @@ D3D9texture::~D3D9texture()
 
 	SAFE_RELEASE(m_object);
 
+#if 0
 	g_statistic->decValue(stat_numTextures);
 	g_statistic->subValue(stat_textureMemory, m_videoMemoryUsed);
+#else
+	stat_numTextures.dec();
+	stat_textureMemory.sub(m_videoMemoryUsed);
+#endif
 }
 
 bool D3D9texture::doInit(const String &name, intptr_t arg)
@@ -239,7 +248,11 @@ void D3D9texture::initialize(TexFormat format, int width, int height, InitFlags 
 
 	V(d3d9Device->CreateTexture(m_width, m_height, 1, d3dusage, d3dformat, d3dpool, &m_object, 0));
 
+#if 0
 	g_statistic->addValue(stat_textureMemory, m_videoMemoryUsed);
+#else
+	stat_textureMemory.add(m_videoMemoryUsed);
+#endif
 
 	setPrivateData();
 }
@@ -542,8 +555,11 @@ bool D3D9texture::loadFile2D(const String &filename)
 
 	setPrivateData();
 
+#if 0
 	g_statistic->addValue(stat_textureMemory, m_videoMemoryUsed);
-
+#else
+	stat_textureMemory.add(m_videoMemoryUsed);
+#endif
 	return true;
 }
 

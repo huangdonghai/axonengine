@@ -46,10 +46,13 @@ AX_BEGIN_NAMESPACE
 		if (m_object == 0) {
 			glGenBuffers(1, &m_object);
 			AX_ASSERT(m_object);
-
+#if 0
 			g_statistic->incValue(stat_numVertexBuffers);
 			g_statistic->addValue(stat_vertexBufferMemory, size);
-
+#else
+			stat_numVertexBuffers.inc();
+			stat_vertexBufferMemory.add(size);
+#endif
 			glBindBuffer(GL_ARRAY_BUFFER, m_object);
 			glBufferData(GL_ARRAY_BUFFER, size, p, m_hint);
 		} else {
@@ -65,9 +68,13 @@ AX_BEGIN_NAMESPACE
 			return;
 
 		glDeleteBuffers(1, &m_object);
+#if 0
 		g_statistic->decValue(stat_numVertexBuffers);
 		g_statistic->subValue(stat_vertexBufferMemory, m_dataSize);
-
+#else
+		stat_numVertexBuffers.dec();
+		stat_vertexBufferMemory.sub(m_dataSize);
+#endif
 		m_object = 0;
 		m_dataSize = 0;
 	}
@@ -117,10 +124,13 @@ AX_BEGIN_NAMESPACE
 		if (m_object == 0) {
 			glGenBuffers(1, &m_object);
 			AX_ASSERT(m_object);
-
+#if 0
 			g_statistic->incValue(stat_numIndexBuffers);
 			g_statistic->addValue(stat_indexBufferMemory, size);
-
+#else
+			stat_numIndexBuffers.inc();
+			stat_indexBufferMemory.add(size);
+#endif
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_object);
 			glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, p, m_hint);
 		} else {
@@ -135,10 +145,13 @@ AX_BEGIN_NAMESPACE
 			return;
 
 		glDeleteBuffers(1, &m_object);
-
+#if 0
 		g_statistic->decValue(stat_numIndexBuffers);
 		g_statistic->subValue(stat_indexBufferMemory, m_dataSize);
-
+#else
+		stat_numIndexBuffers.dec();
+		stat_indexBufferMemory.sub(m_dataSize);
+#endif
 		m_object = 0;
 		m_dataSize = 0;
 	}

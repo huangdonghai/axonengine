@@ -48,61 +48,69 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-	inline int s2i(size_t size) {
+inline int s2i(size_t size)
+{
 #ifdef _DEBUG
-		if (size >= (size_t)std::numeric_limits<int>::max())
-			Errorf("%s: overflowed", __func__);
+	if (size >= (size_t)std::numeric_limits<int>::max())
+		Errorf("%s: overflowed", __func__);
 #endif
-		return (int)size;
+	return (int)size;
+}
+
+template < class T >
+void DeletePointerArray(std::vector<T*>& array)
+{
+	for (size_t i=0; i<array.size(); i++) {
+		SafeDelete(array[i]);
 	}
+}
 
-	template < class T >
-	void DeletePointerArray(std::vector<T*>& array) {
-		for (size_t i=0; i<array.size(); i++) {
-			SafeDelete(array[i]);
-		}
+
+template <typename T>
+size_t add_unique(std::vector < T >& array, const T &add)
+{
+	size_t i;
+	for (i=0; i<array.size(); i++) {
+		if (array[i] == add)
+			return i;
 	}
+	array.push_back(add);
+	return i;
+}
+
+// remove_const
+template< class T >
+struct remove_const
+{
+	typedef T type;
+};
+
+template< class T >
+struct remove_const<const T>
+{
+	typedef T type;
+};
+
+// remove_reference
+template< class T >
+struct remove_reference
+{
+	typedef T type;
+};
+
+template< class T >
+struct remove_reference<T&>
+{
+	typedef T type;
+};
 
 
-	template <typename T>
-	size_t add_unique(std::vector < T >& array, const T &add) {
-		size_t i;
-		for (i=0; i<array.size(); i++) {
-			if (array[i] == add)
-				return i;
-		}
-		array.push_back(add);
-		return i;
-	}
-
-	// remove_const
-	template< class T >
-	struct remove_const {
-		typedef T type;
-	};
-
-	template< class T >
-	struct remove_const<const T> {
-		typedef T type;
-	};
-
-	// remove_reference
-	template< class T >
-	struct remove_reference {
-		typedef T type;
-	};
-
-	template< class T >
-	struct remove_reference<T&> {
-		typedef T type;
-	};
-
-
-	// remove_const_referance
-	template< class T >
-	struct remove_const_reference {
-		typedef typename remove_const<typename remove_reference<T>::type>::type type;
-	};
+// remove_const_referance
+template< class T >
+struct remove_const_reference
+{
+	typedef typename remove_const<typename remove_reference<T>::type>::type type;
+};
 
 
 AX_END_NAMESPACE

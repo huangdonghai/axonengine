@@ -206,17 +206,17 @@ void RenderSystem::endFrame()
 		const int line_height = 12;
 
 		if (show_performer) {
-			const Statistic::IndexSeq &indexs = g_statistic->getIndexsForGroup(static_cast<Statistic::Group>(show_performer));
+			const Sequence<Stat *> &stats = g_statistic->getGroup("Client");
 
 			Rect rect(0,0,120,12);
 
-			Statistic::IndexSeq::const_iterator it = indexs.begin();
+			Sequence<Stat *>::const_iterator it = stats.begin();
 
 			String msg;
-			for (; it != indexs.end(); ++it) {
-				int index = *it;
-				const String &name = g_statistic->getValueName(index);
-				int value = g_statistic->getValue(index);
+			for (; it != stats.end(); ++it) {
+				Stat *index = *it;
+				const String &name = index->getName();
+				int value = index->getInt();
 
 				StringUtil::sprintf(msg, "%32s: %d", name.c_str(), value);
 
@@ -305,7 +305,8 @@ void RenderSystem::endFrame()
 
 	float frontEndTime = OsUtil::getTime() - frontEndStart;
 
-	g_statistic->setValue(stat_frontendTime, frontEndTime * 1000);
+	//g_statistic->setValue(stat_frontendTime, frontEndTime * 1000);
+	stat_frontendTime.setInt(frontEndTime * 1000);
 
 	if (m_isMTrendering) {
 		g_renderQueue->endProviding();

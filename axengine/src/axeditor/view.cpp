@@ -157,7 +157,7 @@ void View::drawFrameNum()
 #endif
 
 	m_frameNumCur++;
-	StringUtil::sprintf(text, "FPS:%3.1f FT:%3.1f FE:%d BE:%d", m_fps, m_frameTime*1000, g_statistic->getValue(stat_frontendTime), g_statistic->getValue(stat_backendTime));
+	StringUtil::sprintf(text, "FPS:%3.1f FT:%3.1f FE:%d BE:%d", m_fps, m_frameTime*1000, stat_frontendTime.getInt(), stat_backendTime.getInt());
 
 	rect.x = 10;
 	rect.y = m_camera.getViewRect().height - 24;
