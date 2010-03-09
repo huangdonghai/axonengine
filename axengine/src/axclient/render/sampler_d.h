@@ -6,8 +6,11 @@ AX_BEGIN_NAMESPACE
 class SamplerData
 {
 public:
+	SamplerData();
+	~SamplerData();
+
 private:
-	int m_ref;
+	AtomicInt m_ref;
 	Sampler::ClampMode m_clampMode;
 	Sampler::FilterMode m_filterMode;
 	Color4 m_boardColor;

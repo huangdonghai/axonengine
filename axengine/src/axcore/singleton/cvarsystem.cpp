@@ -341,11 +341,11 @@ void CvarSystem::list_f(const CmdArgs &param)
 		}
 
 		flags[0] = it->second->m_flags & Cvar::Archive ? 'A' : ' ';
-		flags[1] = it->second->m_flags & Cvar::Init ? 'I' : ' ';
-		flags[2] = it->second->m_flags & Cvar::Latch ? 'L' : ' ';
+		flags[1] = it->second->m_flags & Cvar::Init    ? 'I' : ' ';
+		flags[2] = it->second->m_flags & Cvar::Latch   ? 'L' : ' ';
 		flags[3] = it->second->m_flags & Cvar::Readonly ? 'R' : ' ';
-		flags[4] = it->second->m_flags & Cvar::Temp ? 'T' : ' ';
-		flags[5] = it->second->m_flags & Cvar::Cheat ? 'C' : ' ';
+		flags[4] = it->second->m_flags & Cvar::Temp    ? 'T' : ' ';
+		flags[5] = it->second->m_flags & Cvar::Cheat   ? 'C' : ' ';
 		flags[6] = 0;
 
 		Printf("%s %s \"%s\"\n", flags, it->second->m_name.c_str(), it->second->m_stringValue.c_str());

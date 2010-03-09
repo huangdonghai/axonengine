@@ -57,8 +57,7 @@ half4 FP_GetDiffuse(VertexOut vo) {
 #if !G_HAVE_DIFFUSE
 	return 1;
 #else
-	float4 tc = FP_texgen(G_MAIN_TEXGEN, g_diffuseTcMatrix, vo);
-	return tex2D(g_diffuseMap, tc.xy);
+	return tex2D(g_diffuseMap, vo.streamTc.xy);
 #endif
 }
 

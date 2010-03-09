@@ -69,81 +69,6 @@ struct SamplerType {
 	AX_DECLARE_ENUM(SamplerType);
 };
 
-struct WaveFunc {
-	enum Type {
-		None, Sine, Square, Triangle, Sawtooth, Inversesawtooth, Noise
-	};
-
-	Type type;
-	float rate, phase, amplitude, center;
-};
-
-struct TexMod {
-	enum Type {
-		None, Transform, Turbulence, Scroll, Scale, Stretch, Rotate, Oscillator
-	};
-
-	Type type;
-	WaveFunc wave;
-	Matrix4 transformParms;
-	Vector2 scaleParms;
-	Vector2 scrollParms;
-	float rotateParm;
-};
-
-struct TexGen {
-	int type;		// TexGen_baseTc...
-	bool transform;
-	Matrix4 matrix;		// transform matrix
-};
-
-struct TcSlot {
-	enum Type{
-		Diffuse = SHADER::TcSlot_diffuse,
-		Bump = SHADER::TcSlot_bump,
-		Specular= SHADER::TcSlot_specular,
-		Env = SHADER::TcSlot_env,
-		Number = SHADER::TcSlot_number
-	};
-	enum { MAX_TEXMODS = 3 };
-
-	TexGen texgen;
-	int numTexMod;
-	TexMod texmods[MAX_TEXMODS];
-};
-
-struct RgbGen {
-	enum Type {
-		None, Identity, Entity, OneMinusEntity, Vertex, OneMinusVertex, Wave,
-		Const, Light, Flare 
-	};
-
-	Type type;
-	WaveFunc wavefunc;
-};
-
-struct AlphaGen {
-	enum Type {
-		None, Identity, Entity, OneMinusEntity, Vertex, OneMinusVertex, Wave,
-		Const,
-	};
-
-	Type type;
-	WaveFunc wavefunc;
-};
-
-struct VertexDeform {
-	enum Type {
-		None, Wave, Normal, Bulge, Move, AutoSprite, AutoSprite2, Flare,
-	};
-
-	Type type;
-	float moveParms[3];
-	float bulgeParms[3];
-	WaveFunc wavefunc;
-	float div;
-};
-
 class TextureDef {
 public:
 	TextureDef();
@@ -156,10 +81,10 @@ public:
 inline TextureDef::TextureDef() : clamp(false), clampToEdge(false), filter(true) {}
 
 typedef Sequence<float> FloatSeq;
-typedef Dict<String,FloatSeq> ShaderParams;
-typedef Dict<String, int> ShaderGens;
+typedef Dict<String, FloatSeq> ShaderParams;
 
-class MaterialDecl {
+class MaterialDecl
+{
 public:
 	enum {
 		MAX_FEATURES = 8,
@@ -229,12 +154,6 @@ private:
 	float m_specExp, m_specLevel;
 	float m_opacity;
 	float m_detailScale;
-
-	// TODO: texgen, deform, etc...
-	TcSlot m_tcSlots[TcSlot::Number];
-	RgbGen m_rgbGen;
-	AlphaGen m_alphaGen;
-	VertexDeform m_deform;
 
 	// features and literals
 	bool m_features[MAX_FEATURES];

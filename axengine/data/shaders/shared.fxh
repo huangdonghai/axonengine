@@ -123,12 +123,6 @@ AX_SHADERCONST(SHADERMACRO_VERSION, 2)
 	\
 	AX_DECL_MACRO(G_HAVE_LAYERALPHA			, 1) \
 	AX_DECL_MACRO(G_HAVE_LIGHTMAP			, 1) \
-				/* vertex deform */		\
-	AX_DECL_MACRO(G_VERTEX_DEFORM			, 4) \
-	\
-	AX_DECL_MACRO(G_MAIN_TEXGEN				, 4) \
-	AX_DECL_MACRO(G_EMISSION_TEXGEN			, 4) \
-	AX_DECL_MACRO(G_ENV_TEXGEN				, 4) \
 	\
 				/* enable flags */ \
 	AX_DECL_MACRO(G_DISABLE_SPECULAR		, 1) \
@@ -187,7 +181,6 @@ AX_SHADERCONST(SHADERMACRO_VERSION, 2)
 	AX_UNIFORM(float4,		Vector4,	g_skyColor,					0, 11)		\
 	AX_UNIFORM(float4,		Vector4,	g_exposure,					0, 12)		\
 	AX_UNIFORM(float2,		Vector2,	g_layerScale,				0, 13)		\
-	AX_UNIFORM(float4x4,	Matrix4,	g_diffuseTcMatrix,			0, 14)		\
 	/*shadow parameter*/ \
 	AX_UNIFORM(float4x4,	Matrix4,	g_shadowMatrix,				0, 18)		\
 	AX_UNIFORM(float4x4,	Matrix4,	g_csmOffsetScales,			0, 22)		\

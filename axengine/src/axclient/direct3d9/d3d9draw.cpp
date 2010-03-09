@@ -28,12 +28,6 @@ static void setMaterialUniforms(Material *mat) {
 		}
 	}
 
-	const TexGen &tg = mat->getTexGen(SamplerType::Diffuse);
-
-	if (tg.transform) {
-		AX_SU(g_diffuseTcMatrix, tg.matrix);
-	}
-
 	// set material parameter
 	AX_SU(g_matDiffuse, mat->getMatDiffuse());
 	AX_SU(g_matSpecular, mat->getMatSpecular());

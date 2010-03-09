@@ -24,7 +24,8 @@ AX_BEGIN_NAMESPACE
 		cgGLSetTextureParameter(param, tex->getObject());
 	}
 
-	void GLrender::setMaterialParameter(Material *mat) {
+	void GLrender::setMaterialParameter(Material *mat)
+	{
 		// set texgen parameters
 		if (mat->isBaseTcAnim()) {
 			const Matrix4 *matrix = mat->getBaseTcMatrix();
@@ -32,17 +33,10 @@ AX_BEGIN_NAMESPACE
 				AX_SU(g_baseTcMatrix, *matrix);
 			}
 		}
-
-		const TexGen &tg = mat->getTexGen(SamplerType::Diffuse);
-
-		if (tg.transform) {
-			AX_SU(g_diffuseTcMatrix, tg.matrix);
-		}
 	}
 
-
-
-	void GLrender::draw(Material *mat, Technique tech, GLgeometry *prim) {
+	void GLrender::draw(Material *mat, Technique tech, GLgeometry *prim)
+	{
 		if (!mat) {
 			if (!nullmaterial) {
 				nullmaterial = Material::load("null");

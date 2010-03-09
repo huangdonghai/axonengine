@@ -68,9 +68,6 @@ public:
 	bool isBaseTcAnim() const { return m_baseTcAnim; }
 	const Matrix4 *getBaseTcMatrix() const { return &m_baseTcMatrix; }
 
-	void setTexGen(SamplerType st, const TexGen &texgen);
-	const TexGen &getTexGen(SamplerType st) const;
-
 	// pixel to texel
 	void setPixelToTexel(int width, int height);
 	bool isPixelToTexelEnabled() const { return m_p2tEnabled; }
@@ -106,15 +103,11 @@ private:
 	Shader *m_shaderTemplate;
 	FixedString m_shaderNameId;
 	TexturePtr m_textures[SamplerType::NUMBER_ALL];
-	TexGen m_texgens[SamplerType::NUMBER_ALL];
 	ShaderParams m_shaderParams;
 
 	// texgen etc...
 	bool m_baseTcAnim;
 	Matrix4 m_baseTcMatrix;
-	RgbGen m_rgbGen;
-	AlphaGen m_alphaGen;
-	VertexDeform m_deform;
 
 	bool m_features[Shader::MAX_FEATURES];
 	int m_literals[Shader::MAX_LITERALS];
@@ -233,6 +226,7 @@ public:
 private:
 	MaterialData *m_d;
 };
+
 AX_END_NAMESPACE
 
 #endif // AX_MATERIAL_H

@@ -13,7 +13,8 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-namespace {
+namespace
+{
 	int getMapType(const char *name) {
 		if (Strequ(name, "diffuse")) {
 			return SamplerType::Diffuse;

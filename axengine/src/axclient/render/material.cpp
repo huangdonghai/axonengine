@@ -50,7 +50,6 @@ bool Material::init(const String &name)
 		m_key = name;
 
 	TypeZeroArray(m_textures);
-	TypeZeroArray(m_texgens);
 
 	m_decl = MaterialDecl::load(m_key);
 
@@ -184,9 +183,9 @@ const ShaderMacro &Material::getShaderMacro()
 			m_shaderMacro.setMacro(ShaderMacro::G_BASETC_ANIM);
 		}
 
-		m_shaderMacro.setMacro(ShaderMacro::G_MAIN_TEXGEN, m_texgens[SamplerType::Diffuse].type);
-//			m_shaderMacro.setMacro(ShaderMacro::G_SPECULAR_TEXGEN, m_texgens[SamplerType::Specular].type);
-//			m_shaderMacro.setMacro(ShaderMacro::G_NORMAL_TEXGEN, m_texgens[SamplerType::Normal].type);
+//		m_shaderMacro.setMacro(ShaderMacro::G_MAIN_TEXGEN, m_texgens[SamplerType::Diffuse].type);
+//		m_shaderMacro.setMacro(ShaderMacro::G_SPECULAR_TEXGEN, m_texgens[SamplerType::Specular].type);
+//		m_shaderMacro.setMacro(ShaderMacro::G_NORMAL_TEXGEN, m_texgens[SamplerType::Normal].type);
 
 		for (int i = 0; i < Shader::MAX_FEATURES; i++) {
 			if (m_features[i]) {
@@ -210,17 +209,6 @@ void Material::setBaseTcMatrix(const Matrix4 &matrix)
 	m_shaderMacroNeedRegen = true;
 	m_baseTcAnim = true;
 	m_baseTcMatrix = matrix;
-}
-
-void Material::setTexGen(SamplerType st, const TexGen &texgen)
-{
-	m_shaderMacroNeedRegen = true;
-	m_texgens[st] = texgen;
-}
-
-const TexGen &Material::getTexGen(SamplerType st) const
-{
-	return m_texgens[st];
 }
 
 bool Material::isWireframe() const

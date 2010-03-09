@@ -29,7 +29,6 @@ public:
 	bool isNull() const { return !m_d; }
 
 private:
-
 	SamplerData *m_d;
 };
 

@@ -113,7 +113,6 @@ inline void Cvar::clearModifiedFlag()
 // class CvarSystem
 //------------------------------------------------------------------------------
 
-
 class AX_API CvarSystem : public ICmdHandler
 {
 	AX_DECLARE_COMMAND_HANDLER(CvarSystem);
@@ -152,8 +151,6 @@ private:
 
 	Dict<String, String> m_penddingSets;
 };
-
-
 
 AX_END_NAMESPACE
 
