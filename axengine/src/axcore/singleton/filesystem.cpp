@@ -640,7 +640,7 @@ File *FileSystem::openFileRead(const String &filename)
 
 	bool doExtract = false;
 
-	if (g_cvarSystem && fs_extract->getBool())
+	if (g_cvarSystem && fs_extract.getBool())
 		doExtract = true;
 
 	SearchDirs::iterator sp = m_searchDirs.begin();
@@ -668,7 +668,7 @@ File *FileSystem::openFileRead(const String &filename)
 		attachFileObject(file);
 
 		if (sp->extractSrc && doExtract) {
-			String extractDir = m_gamePath + '/' + fs_extractDir->getString() + '/' + filename;
+			String extractDir = m_gamePath + '/' + fs_extractDir.getString() + '/' + filename;
 
 			PathUtil::createDir(extractDir);
 

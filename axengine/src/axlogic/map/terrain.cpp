@@ -631,7 +631,7 @@ void MapChunk::onHeightChanged() {
 
 void MapChunk::onCalculateLOD(MapEvent *e)
 {
-	if (r_lockLOD->getBool())
+	if (r_lockLOD.getBool())
 		return;
 
 #if 1
@@ -641,7 +641,7 @@ void MapChunk::onCalculateLOD(MapEvent *e)
 		AX_ASSERT(eyechunk);
 	}
 #endif
-	float ref = r_terrainLOD->getFloat();
+	float ref = r_terrainLOD.getFloat();
 	ref = fabs(ref);
 //		const renderCamera &camera = gRenderSystem->getActiveCamera();
 	const RenderCamera &camera = *e->camera;
@@ -662,7 +662,7 @@ void MapChunk::onCalculateLOD(MapEvent *e)
 	else
 		m_lod = Math::clamp<sbyte_t>(i, 0, Map::NumChunkLod);
 
-	if (dist > r_terrainDetailDist->getFloat()) {
+	if (dist > r_terrainDetailDist.getFloat()) {
 		m_needDrawLayer = false;
 		m_lod = std::max(m_lod, m_zone->m_zonePrimLod);
 	} else {
@@ -672,7 +672,7 @@ void MapChunk::onCalculateLOD(MapEvent *e)
 	m_prim->setLayerVisible(m_needDrawLayer);
 
 	if (!m_needDrawLayer && m_zone->m_zonePrimLod <= m_lod) {
-		if (r_terrainUseZonePrim->getBool()) {
+		if (r_terrainUseZonePrim.getBool()) {
 			m_useZonePrim = true;
 		} else {
 			m_useZonePrim = false;
@@ -970,7 +970,7 @@ void MapChunk::onGetViewedPrims(MapEvent *e)
 	}
 #else
 	if (!m_useZonePrim) {
-		if (r_frustumCull->getBool() && camera.cullBox(m_bbox))
+		if (r_frustumCull.getBool() && camera.cullBox(m_bbox))
 			return;
 		e->primSeq.push_back(m_prim);
 	}
@@ -1280,7 +1280,7 @@ void MapZone::onCalculateLOD(MapEvent *e)
 void MapZone::onGetPrimitive(MapEvent *e)
 {
 	const RenderCamera &camera = *e->camera;
-	if (r_frustumCull->getBool() && camera.cullBox(m_bbox))
+	if (r_frustumCull.getBool() && camera.cullBox(m_bbox))
 		return;
 #if 0
 	renderPrim *curprim = nullptr;

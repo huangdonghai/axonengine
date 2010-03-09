@@ -573,9 +573,9 @@ AX_BEGIN_NAMESPACE
 
 		bindVertexBuffer();
 
-		bool combine = r_terrainLayerCombine->getBool();
+		bool combine = r_terrainLayerCombine.getBool();
 		bool drawlayer = true;
-		if (!r_detail->getBool() || !m_layerVisible) {
+		if (!r_detail.getBool() || !m_layerVisible) {
 			drawlayer = false;
 		}
 

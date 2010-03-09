@@ -190,8 +190,9 @@ void System::removeProgress(IProgressHandler *progress) {
 }
 
 // implement IProgressHandler
-void System::beginProgress(const String &title) {
-	sys_noSleep->set(true);
+void System::beginProgress(const String &title)
+{
+	sys_noSleep.setBool(true);
 
 	Sequence<IProgressHandler*>::iterator it;
 	for (it=m_progressSeq.begin(); it!=m_progressSeq.end(); ++it) {
@@ -217,7 +218,7 @@ void System::endProgress() {
 		(*it)->endProgress();
 	}
 
-	sys_noSleep->set(false);
+	sys_noSleep.setBool(false);
 }
 
 void System::printCpuInfo() {
@@ -268,7 +269,7 @@ void System::forceTick(int mssleep)
 		}
 	}
 
-	if (mssleep && !sys_noSleep->getBool())
+	if (mssleep && !sys_noSleep.getBool())
 		OsUtil::sleep(mssleep);
 }
 

@@ -149,7 +149,7 @@ const ShaderParams &Material::getParameters() const
 
 const ShaderMacro &Material::getShaderMacro()
 {
-	if (m_shaderMacroNeedRegen  || r_forceUpdateMaterialMacro->getBool()) {
+	if (m_shaderMacroNeedRegen  || r_forceUpdateMaterialMacro.getBool()) {
 		m_shaderMacroNeedRegen = false;
 		m_haveDetail = false;
 

@@ -488,7 +488,7 @@ TexFormat D3D9targetmanager::getSuggestFormat(RenderTarget::SuggestFormat sf)
 		return TexFormat::RGBA16F;
 	case RenderTarget::SHADOW_MAP:
 		return TexFormat::D16;
-		if (r_shadowFormat->getInteger() == 0) {
+		if (r_shadowFormat.getInteger() == 0) {
 			if (m_formatSupports[TexFormat::DF16]) {
 				return TexFormat::DF16;
 			}

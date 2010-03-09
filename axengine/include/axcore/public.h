@@ -60,7 +60,7 @@ AX_API extern Simd *g_simd;
 
 // global cvar
 #define AX_CVARDECL(name, defaultstring, flags) \
-extern Cvar *name;
+extern Cvar name;
 #include "cvardecls.h"
 #undef AX_CVARDECL
 

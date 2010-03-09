@@ -814,7 +814,7 @@ AX_BEGIN_NAMESPACE
 		case RenderTarget::HDR_COLOR:
 			return TexFormat::RGBA16F;
 		case RenderTarget::SHADOW_MAP:
-			if (r_shadowFormat->getInteger() == 0) {
+			if (r_shadowFormat.getInteger() == 0) {
 				return TexFormat::D16;
 			}
 			return TexFormat::D24;

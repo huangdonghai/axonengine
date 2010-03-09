@@ -216,9 +216,9 @@ public:
 	// in camera eye space - that is, at what distance does a slice start and end
 	int updateSplitDist(float f[RenderLight::MAX_CSM_SPLITS+1], float nd, float fd)
 	{
-		float lambda = r_csmLambda->getFloat();
+		float lambda = r_csmLambda.getFloat();
 		float ratio = fd/nd;
-		int numsplits = r_csmSplits->getInteger();
+		int numsplits = r_csmSplits.getInteger();
 
 		numsplits = Math::clamp<int>(numsplits, 1, RenderLight::MAX_CSM_SPLITS);
 
@@ -361,7 +361,7 @@ public:
 
 	void updateGlobal(QueuedScene *scene)
 	{
-		if (!r_shadowGen->getBool()) {
+		if (!r_shadowGen.getBool()) {
 			issueQueuedShadow(scene);
 			return;
 		}
@@ -370,7 +370,7 @@ public:
 
 		float neard = scene->camera.getZnear();
 		neard = std::max(neard, 1.0f);
-		float fard = r_csmRange->getFloat();
+		float fard = r_csmRange.getFloat();
 
 		float f[RenderLight::MAX_CSM_SPLITS+1];
 
@@ -474,7 +474,7 @@ public:
 	{
 		int maxsize = g_renderDriver->getDriverInfo()->maxTextureSize;
 
-		int desiredSize = r_shadowMapSize->getInteger();
+		int desiredSize = r_shadowMapSize.getInteger();
 		if (desiredSize > maxsize / 2) {
 			desiredSize = maxsize / 2;
 		}
@@ -899,7 +899,7 @@ void RenderLight::initShadowInfo()
 	if (!m_castShadowMap)
 		return;
 
-	int csmSize = r_shadowMapSize->getInteger();
+	int csmSize = r_shadowMapSize.getInteger();
 	csmSize = Math::nearestPowerOfTwo(csmSize);
 
 	int localShadowSize = Math::nearestPowerOfTwo(m_preferShadowMapSize);

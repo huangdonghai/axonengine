@@ -76,7 +76,7 @@ void GameSystem::tick()
 	double lasttime = m_gameWorld->m_lasttime;
 	double curtime = OsUtil::getTime();
 
-	float frametime = 1.0f / g_fps->getInteger();
+	float frametime = 1.0f / g_fps.getInteger();
 
 	while (curtime - lasttime < frametime) {
 		float sleeptime = frametime - (curtime - lasttime);

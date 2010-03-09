@@ -20,81 +20,91 @@ class CvarSystem;
 // class Cvar
 //------------------------------------------------------------------------------
 
-class AX_API Cvar {
+class AX_API Cvar
+{
 public:
 	friend class CvarSystem;
 
 	enum Flag {
-		Archive = 1,		// save to config file
-		Init = 2,		// don't allow change from console, but can be set from the command line
-		Latch = 4,		// changed after restart
-		Readonly = 8,		// read only
-		Temp = 0x10,		// temp created, not save to config file
-		Cheat = 0x20,		// for debug only, only cheat mode can modify this
+		Archive = 1, // save to config file
+		Init = 2, // don't allow change from console, but can be set from the command line
+		Latch = 4, // changed after restart
+		Readonly = 8, // read only
+		Temp = 0x10, // temp created, not save to config file
+		Cheat = 0x20, // for debug only, only cheat mode can modify this
 	};
 
-	String getName() const;
+	Cvar(const String &name, const String &default_string, int flags);
+	~Cvar();
+
+	const String &getName() const;
 	int getFlags() const;
 
-	String getString() const;
+	const String &getString() const;
 	float getFloat() const;
 	int getInteger() const;
 	bool getBool() const { return getInteger() ? true : false; }
 
+	void setString(const String &sz_value);
+	void setFloat(float float_value);
+	void setInt(int int_value);
+	void setBool(bool b);
+
 	bool isModified() const;
 	void clearModifiedFlag();
+
 	void forceSet(const String &sz_value);
 	void forceSet(float float_value);
 	void forceSet(int int_value);
-	void set(const String &sz, bool force);
-	void set(const String &sz_value);
-	void set(float float_value);
-	void set(int int_value);
-
-	// static helper function
-	static Cvar *create(const String &name, const String &default_string, uint_t flags);
+	void setString(const String &sz, bool force);
 
 private:
-	Cvar();
-	Cvar(const String &name, const String &default_string, int flags);
-	~Cvar();
-
 	String m_name;
-	String m_defaultString;		// cvar_restart will reset to this value
-	String m_latchedString;		// for CVF_latch vars
+	String m_defaultString; // cvar_restart will reset to this value
+	String m_latchedString; // for CVF_latch vars
 	String m_stringValue;
 	int m_flags;
-	bool m_modified;			// set each time the cvar is changed
-	uint_t m_modifiedCount;		// incremented each time the cvar is changed
-	float m_floatValue;		// atof(m_stringValue)
-	int m_integerValue;		// atoi(m_stringValue)
+	bool m_modified; // set each time the cvar is changed
+	uint_t m_modifiedCount; // incremented each time the cvar is changed
+	float m_floatValue; // atof(m_stringValue)
+	int m_integerValue; // atoi(m_stringValue)
+
+	Cvar *m_staticNext;
+	static Cvar *ms_staticLink;
 };
 
-inline String Cvar::getName() const {
+inline const String & Cvar::getName() const
+{
 	return m_name;
 }
 
-inline String Cvar::getString() const {
+inline const String & Cvar::getString() const
+{
 	return m_stringValue;
 }
 
-inline int Cvar::getFlags() const {
+inline int Cvar::getFlags() const
+{
 	return m_flags;
 }
 
-inline float Cvar::getFloat() const {
+inline float Cvar::getFloat() const
+{
 	return m_floatValue;
 }
 
-inline int Cvar::getInteger() const {
+inline int Cvar::getInteger() const
+{
 	return m_integerValue;
 }
 
-inline bool Cvar::isModified() const {
+inline bool Cvar::isModified() const
+{
 	return m_modified;
 }
 
-inline void Cvar::clearModifiedFlag() {
+inline void Cvar::clearModifiedFlag()
+{
 	m_modified = false;
 }
 
@@ -116,14 +126,19 @@ public:
 
 	void initialize();
 	void finalize();
-	Cvar *createCvar(const String &name, const String &defaultString, uint_t flags);
-	Cvar *createCvar(const String &name, const String &defaultString);
 	bool executeCommand(const CmdArgs &params);
 
 protected:
+#if 0
+	Cvar *createCvar(const String &name, const String &defaultString, uint_t flags);
+	Cvar *createCvar(const String &name, const String &defaultString);
+#endif
+	void registerCvar(Cvar *cvar);
 	void removeCvar(const String &name);
 
 private:
+	void set(const String &name, const String& value);
+
 	// console command
 	void set_f(const CmdArgs &param);
 	void list_f(const CmdArgs &param);
@@ -131,10 +146,11 @@ private:
 
 private:
 	// member data
-	typedef Dict<String, Cvar*, hash_istr, equal_istr> CvarDict;
+	typedef Dict<String, Cvar*> CvarDict;
 	CvarDict m_cvarDict;
 	uint_t m_dirtyFlags;
 
+	Dict<String, String> m_penddingSets;
 };
 
 

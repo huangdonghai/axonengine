@@ -258,7 +258,7 @@ AX_BEGIN_NAMESPACE
 	void GLpostprocess::maskShadow(Vector3 volume[8], const Matrix4 &matrix, GLtexture *tex, bool front) {
 		MeshPrim::setupHexahedron(m_boxVolume, volume);
 
-		float range = r_csmRange->getFloat();
+		float range = r_csmRange.getFloat();
 		Vector2 zrange(range * 0.5f, range);
 
 		int width, height;
@@ -284,7 +284,7 @@ AX_BEGIN_NAMESPACE
 	{
 		MeshPrim::setupHexahedron(m_boxVolume, volume);
 
-		float range = r_csmRange->getFloat();
+		float range = r_csmRange.getFloat();
 		Vector2 zrange(range * 0.5f, range);
 
 		int width, height;

@@ -467,7 +467,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 	bool GLdriver::isHDRRendering() {
-		return r_hdr->getInteger() && glDriverInfo->caps & Info::HDR;
+		return r_hdr.getInteger() && glDriverInfo->caps & Info::HDR;
 	}
 
 	RenderTarget *GLdriver::createWindowTarget(handle_t wndId, const String &name) {

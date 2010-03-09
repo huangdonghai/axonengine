@@ -129,7 +129,7 @@ AX_BEGIN_NAMESPACE
 		clearer.clearDepth(true);
 		clearer.clearColor(true);
 
-		if (r_nulldraw->getBool()) {
+		if (r_nulldraw.getBool()) {
 //			goto endframe;
 		}
 
@@ -182,7 +182,7 @@ AX_BEGIN_NAMESPACE
 	void GLthread::beginFrame() {
 		glPrimitiveManager->beginFrame();
 
-		if (!r_specular->getBool()) {
+		if (!r_specular.getBool()) {
 			g_shaderMacro.setMacro(ShaderMacro::G_DISABLE_SPECULAR);
 		} else {
 			g_shaderMacro.resetMacro(ShaderMacro::G_DISABLE_SPECULAR);
@@ -418,14 +418,14 @@ AX_BEGIN_NAMESPACE
 
 //		scene->camera = s_view->camera;
 
-		float tangentlen = r_showTangents->getFloat();
-		float normallen = r_showNormal->getFloat();
+		float tangentlen = r_showTangents.getFloat();
+		float normallen = r_showNormal.getFloat();
 
 		for (int j = 0; j < scene->numInteractions; j++) {
 			Primitive *prim = scene->interactions[j]->primitive;
 
 			if (prim->getType() == Primitive::MeshType) {
-				if (r_ignorMesh->getBool()) {
+				if (r_ignorMesh.getBool()) {
 					scene->interactions[j]->resource = -1;
 					continue;
 				}
@@ -438,7 +438,7 @@ AX_BEGIN_NAMESPACE
 
 			if (normallen > 0.00001f) {
 				if (prim->getType() == Primitive::MeshType) {
-					if (r_ignorMesh->getBool()) {
+					if (r_ignorMesh.getBool()) {
 						scene->interactions[j]->resource = -1;
 					}
 					MeshPrim *mesh = dynamic_cast<MeshPrim*>(prim);
@@ -461,7 +461,7 @@ AX_BEGIN_NAMESPACE
 				continue;
 
 			if (prim->getType() == Primitive::MeshType) {
-				if (r_ignorMesh->getBool()) {
+				if (r_ignorMesh.getBool()) {
 					scene->interactions[j]->resource = -1;
 				}
 				MeshPrim *mesh = dynamic_cast<MeshPrim*>(prim);
@@ -544,7 +544,7 @@ AX_BEGIN_NAMESPACE
 
 	void GLthread::drawPass_composite(QueuedScene *scene) {
 
-		if (r_wireframe->getBool()) {
+		if (r_wireframe.getBool()) {
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		} else {
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -585,11 +585,11 @@ AX_BEGIN_NAMESPACE
 		QueuedShadow *qshadow = qlight->shadowInfo;
 
 		GLtexture *tex = (GLtexture*)scene->camera.getTarget()->getTexture();
-		if (r_shadowGen->getBool()) {
+		if (r_shadowGen.getBool()) {
 			// offset the geometry slightly to prevent z-fighting
 			// note that this introduces some light-leakage artifacts
-			float factor = gl_shadowOffsetFactor->getFloat();
-			float units = gl_shadowOffsetUnits->getFloat();
+			float factor = gl_shadowOffsetFactor.getFloat();
+			float units = gl_shadowOffsetUnits.getFloat();
 
 			if (tex->getFormat().getDepthBits() == 24) {
 				units *= 256;
@@ -792,7 +792,7 @@ AX_BEGIN_NAMESPACE
 		GLtarget *downscale = 0;
 		GLtarget *downscale2 = 0;
 
-		if (r_bloom->getBool()) {
+		if (r_bloom.getBool()) {
 			const Rect &r = scene->camera.getViewRect();
 			int width = r.width / 4;
 			int height = r.height / 4;
@@ -810,8 +810,8 @@ AX_BEGIN_NAMESPACE
 
 		GLtexture *tex = (GLtexture*)gWorldTarget->getTexture();
 
-		if (r_showShadowMap->getInteger()) {
-			int id = r_showShadowMap->getInteger() - 1;
+		if (r_showShadowMap.getInteger()) {
+			int id = r_showShadowMap.getInteger() - 1;
 			if (id >= 0 && id < s_numShadowMap) {
 				tex = s_shadowMap[id];
 				tex->setHardwareShadowMap(false);
@@ -828,7 +828,7 @@ AX_BEGIN_NAMESPACE
 			endQuery();
 		}
 
-		if (r_bloom->getBool()) {
+		if (r_bloom.getBool()) {
 			downscale->getTextureGL()->setFilterMode(Texture::FM_Linear);
 			glPostprocess->genericPP("_combine2", gWorldTarget->getTextureGL(), downscale->getTextureGL());
 //			glPostprocess->drawQuad(downscale->getTextureGL());
@@ -872,7 +872,7 @@ AX_BEGIN_NAMESPACE
 
 		gWorldFramebuffer = glFramebufferManager->getFramebuffer(viewport.z, viewport.w);
 
-		if (r_framebuffer->getBool()) {
+		if (r_framebuffer.getBool()) {
 			GLtarget *colortarget = gWorldFramebuffer->allocTarget(RenderTarget::PermanentAlloc, sColorFormat);
 			GLtarget *depth = gWorldFramebuffer->allocTarget(RenderTarget::PermanentAlloc, sDepthFormat);
 			GLtarget *gbuffer = gWorldFramebuffer->allocTarget(RenderTarget::PermanentAlloc, TexFormat::RGBA16F);
@@ -918,14 +918,14 @@ AX_BEGIN_NAMESPACE
 		}
 
 		// set global fog
-		if (scene->globalFog && r_fog->getBool()) {
+		if (scene->globalFog && r_fog.getBool()) {
 			g_shaderMacro.setMacro(ShaderMacro::G_FOG);
 			AX_SU(g_fogParams, scene->globalFog->m_fogParams);
 		} else {
 			g_shaderMacro.resetMacro(ShaderMacro::G_FOG);
 		}
 
-		if (scene->waterFog && r_fog->getBool()) {
+		if (scene->waterFog && r_fog.getBool()) {
 			AX_SU(g_waterFogParams, scene->waterFog->m_fogParams);
 		}
 
@@ -961,7 +961,7 @@ AX_BEGIN_NAMESPACE
 		drawPass_composite(scene);
 
 		// post process and render back to backbuffer
-		if (r_framebuffer->getBool()) {
+		if (r_framebuffer.getBool()) {
 			drawPass_postprocess(scene);
 		}
 

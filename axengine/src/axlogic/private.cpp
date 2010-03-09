@@ -16,7 +16,7 @@ read the license and understand and accept it fully.
 AX_BEGIN_NAMESPACE
 
 #define AX_CVARDECL(name, defaultstring, flags) \
-	Cvar *name;
+	Cvar name(#name, defaultstring, flags);
 #include <axlogic/logiccvars.h>
 #undef AX_CVARDECL
 
@@ -25,13 +25,15 @@ AX_BEGIN_NAMESPACE
 
 	GameSystem *g_gameSystem;
 
-	void axLogicInit() {
+	void axLogicInit()
+	{
+#if 0
 		// init cvar
 #define AX_CVARDECL(name, defaultstring, flags) \
 	name = g_cvarSystem->createCvar(#name, defaultstring, flags);
 #include <axlogic/logiccvars.h>
 #undef AX_CVARDECL
-
+#endif
 		axPhysInit();
 
 		g_gameSystem = new GameSystem();
@@ -45,7 +47,8 @@ AX_BEGIN_NAMESPACE
 		AX_REGISTER_CLASS(Player);
 	}
 
-	void axLogicQuit() {
+	void axLogicQuit()
+	{
 		SafeDelete(g_gameSystem);
 
 		axPhysQuit();

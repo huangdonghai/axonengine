@@ -16,7 +16,7 @@ AX_DECLARE_MODULE(axdirect3d9);
 
 // console variable
 #define AX_CVARDECL(name, defaultstring, flags) \
-	Cvar *name;
+	Cvar name(#name, defaultstring, flags);
 	#include <axclient/cvardecls.h>
 #undef AX_CVARDECL
 
@@ -52,13 +52,13 @@ FontPtr g_miniFont;
 
 void axClientInit()
 {
+#if 0
 	// init cvar
 #define AX_CVARDECL(name, defaultstring, flags) \
 	name = g_cvarSystem->createCvar(#name, defaultstring, flags);
 	#include <axclient/cvardecls.h>
 #undef AX_CVARDECL
 
-#if 0
 	// init statistic
 #define AX_STATDECL(name, desc, autoreset) \
 	name = g_statistic->getIndex(Statistic::RenderDrvGroup, desc, autoreset);

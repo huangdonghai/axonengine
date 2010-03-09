@@ -121,7 +121,7 @@ void D3D9driver::initialize() {
 	D3D9texture::initManager();
 #endif
 	d3d9Thread = new D3D9thread();
-	if (r_multiThread->getInteger()) {
+	if (r_multiThread.getInteger()) {
 		d3d9Thread->startThread();
 	}
 

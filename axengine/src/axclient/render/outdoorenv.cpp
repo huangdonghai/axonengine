@@ -458,9 +458,9 @@ void OutdoorEnv::issueToQueue(QueuedScene *qscene)
 	}
 	qscene->clearColor = m_oceanFog->getFogColor() / exposure;
 
-	bool havesky = m_haveSky && r_sky->getBool();
-	bool haveocean = m_haveOcean && r_water->getBool();
-	bool nishitaSky = havesky && r_sky->getInteger() > 1;
+	bool havesky = m_haveSky && r_sky.getBool();
+	bool haveocean = m_haveOcean && r_water.getBool();
+	bool nishitaSky = havesky && r_sky.getInteger() > 1;
 
 	if (havesky) {
 		if (0 && nishitaSky) {

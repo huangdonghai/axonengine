@@ -53,7 +53,7 @@ Primitives TreeEntity::getHitTestPrims()
 
 void TreeEntity::issueToQueue(QueuedScene *qscene)
 {
-	if (!r_speedtree->getBool()) {
+	if (!r_speedtree.getBool()) {
 		return;
 	}
 

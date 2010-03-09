@@ -56,9 +56,9 @@ private:
 	const char *m_desc;
 	int m_flags;
 	mutable double m_value;
-	Stat *m_staticLink;
+	Stat *m_staticNext;
 
-	static Stat *ms_linkEnd;
+	static Stat *ms_staticLink;
 };
 
 class AX_API Statistic
@@ -98,7 +98,7 @@ public:
 	const IndexSeq &getIndexsForGroup(Group group) const;
 	const String &getValueName(int index) const;
 #endif
-	const Sequence<Stat *> &getGroup(const char *groupname) const;
+	const List<Stat *> &getGroup(const char *groupname) const;
 
 protected:
 	void registerStat(Stat *stat);
@@ -119,7 +119,7 @@ private:
 	int m_numValues;
 #endif
 	// new api
-	typedef Sequence<Stat *> Stats;
+	typedef List<Stat *> Stats;
 	typedef Dict<const char *, Stats, hash_cstr, equal_cstr> StatGroup;
 
 	StatGroup m_statGroup;
@@ -132,9 +132,9 @@ inline Stat::Stat(const char* group, const char *name, int flags, const char *de
 	, m_flags(flags)
 	, m_value(0)
 {
-	if (ms_linkEnd != reinterpret_cast<Stat*>(-1)) {
-		m_staticLink = ms_linkEnd;
-		ms_linkEnd = this;
+	if (ms_staticLink != reinterpret_cast<Stat*>(-1)) {
+		m_staticNext = ms_staticLink;
+		ms_staticLink = this;
 	} else {
 		g_statistic->registerStat(this);
 	}

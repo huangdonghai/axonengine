@@ -11,42 +11,42 @@ read the license and understand and accept it fully.
 #ifndef AX_CCMDSYSTEM_H
 #define AX_CCMDSYSTEM_H
 
-#define AX_DECLARE_COMMAND_HANDLER(cls)						\
-public:														\
-	typedef cls _selfclass;									\
-	typedef void (cls::*CmdFunc_t)(const CmdArgs &params);	\
-	struct MyCmdEntry {										\
-		const char *name;									\
-		CmdFunc_t fn;										\
-	};														\
-	virtual void HandleCmd(const CmdArgs &params);			\
+#define AX_DECLARE_COMMAND_HANDLER(cls) \
+public: \
+	typedef cls _selfclass; \
+	typedef void (cls::*CmdFunc_t)(const CmdArgs &params); \
+	struct MyCmdEntry { \
+		const char *name; \
+		CmdFunc_t fn; \
+	}; \
+	virtual void HandleCmd(const CmdArgs &params); \
 	virtual CmdEntry *GetCmdEntries(uint_t *datasize);
 
 // begin command mapping
-#define AX_BEGIN_COMMAND_MAP(cls)													\
-	void cls::HandleCmd(const CmdArgs &params) {									\
-		const MyCmdEntry *entry;													\
-																					\
-		AX_ASSERT(!params.tokened[0].empty());										\
-		const char *name = params.tokened[0].c_str(); uint_t datasize;				\
-		for (entry = (MyCmdEntry*)GetCmdEntries(&datasize); entry->name; entry++) {	\
-			if (!StringUtil::stricmp(entry->name, name)) {							\
-				(this->*(entry->fn))(params);										\
-			}																		\
-		}																			\
-	}																				\
-	CmdEntry *cls::GetCmdEntries(uint_t *datasize) {								\
+#define AX_BEGIN_COMMAND_MAP(cls) \
+	void cls::HandleCmd(const CmdArgs &params) { \
+		const MyCmdEntry *entry; \
+\
+		AX_ASSERT(!params.tokened[0].empty()); \
+		const char *name = params.tokened[0].c_str(); uint_t datasize; \
+		for (entry = (MyCmdEntry*)GetCmdEntries(&datasize); entry->name; entry++) { \
+			if (!StringUtil::stricmp(entry->name, name)) { \
+				(this->*(entry->fn))(params); \
+			} \
+		} \
+	} \
+	CmdEntry *cls::GetCmdEntries(uint_t *datasize) { \
 		static MyCmdEntry entries[] = {
 
 
 // command entry
-#define AX_COMMAND_ENTRY(name, func)												\
+#define AX_COMMAND_ENTRY(name, func) \
 		{ name, &_selfclass::func },
 
 
 // end command mapping
-#define AX_END_COMMAND_MAP()														\
-		{ NULL, NULL } };															\
+#define AX_END_COMMAND_MAP() \
+		{ NULL, NULL } }; \
 		*datasize = sizeof(MyCmdEntry); return (CmdEntry *)&entries[0]; }
 
 

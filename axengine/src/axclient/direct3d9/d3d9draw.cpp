@@ -74,19 +74,19 @@ void D3D9draw::draw(Material *mat, Technique tech, D3D9geometry *prim)
 	const ShaderMacro &matmacro = mat->getShaderMacro();
 
 	macro.mergeFrom(&matmacro);
-	if (!r_detail->getBool() && mat->haveDetail()) {
+	if (!r_detail.getBool() && mat->haveDetail()) {
 		macro.resetMacro(ShaderMacro::G_HAVE_DETAIL);
 		macro.resetMacro(ShaderMacro::G_HAVE_DETAIL_NORMAL);
 	}
 
-	if (!r_bumpmap->getBool()) {
+	if (!r_bumpmap.getBool()) {
 		g_shaderMacro.resetMacro(ShaderMacro::G_HAVE_NORMAL);
 	}
 
 
 #if 1
 	AX_SU(g_lightMap,  prim->m_lightmap);
-	if (prim->m_lightmap && r_lightmap->getBool()) {
+	if (prim->m_lightmap && r_lightmap.getBool()) {
 		macro.setMacro(ShaderMacro::G_HAVE_LIGHTMAP);
 	} else {
 		macro.resetMacro(ShaderMacro::G_HAVE_LIGHTMAP);
@@ -118,7 +118,7 @@ void D3D9draw::draw(Material *mat, Technique tech, D3D9geometry *prim)
 
 void D3D9draw::draw(D3D9shader *shader, Technique tech, D3D9geometry *prim)
 {
-	if (r_nulldraw->getBool()) {
+	if (r_nulldraw.getBool()) {
 		return;
 	}
 

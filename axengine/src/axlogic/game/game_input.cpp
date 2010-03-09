@@ -165,7 +165,7 @@ void GameInput::genMouseMove(UserInput &userInput)
 	float rate;
 
 	// allow mouse smoothing
-	if (mouse_smooth->getBool()) {
+	if (mouse_smooth.getBool()) {
 		mx = (m_mouseDelta[0].x + m_mouseDelta[1].x) * 0.5f;
 		my = (m_mouseDelta[0].y + m_mouseDelta[1].y) * 0.5f;
 	} else {
@@ -176,7 +176,7 @@ void GameInput::genMouseMove(UserInput &userInput)
 	m_mouseDelta[m_mouseIndex].set(0, 0);
 
 	rate = sqrt(mx*mx + my*my) / (float)m_frameMsec;
-	accelSensitivity = mouse_sensitivity->getFloat() * MOUSE_SENSITIVITY_ADJUST + rate * mouse_accel->getFloat();
+	accelSensitivity = mouse_sensitivity.getFloat() * MOUSE_SENSITIVITY_ADJUST + rate * mouse_accel.getFloat();
 
 	mx *= accelSensitivity;
 	my *= accelSensitivity;
@@ -186,8 +186,8 @@ void GameInput::genMouseMove(UserInput &userInput)
 	}
 
 	// add mouse X/Y movement to cmd
-	userInput.angles[Angles::Yaw] -= mouse_yaw->getFloat() * mx;
-	userInput.angles[Angles::Pitch] += mouse_pitch->getFloat() * my * (mouse_invert->getBool() ? -1 : 1);
+	userInput.angles[Angles::Yaw] -= mouse_yaw.getFloat() * mx;
+	userInput.angles[Angles::Pitch] += mouse_pitch.getFloat() * my * (mouse_invert.getBool() ? -1 : 1);
 }
 
 void GameInput::genButtons(UserInput &userInput)

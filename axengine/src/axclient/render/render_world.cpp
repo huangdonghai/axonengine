@@ -113,7 +113,7 @@ void RenderWorld::renderTo(QueuedScene *qscene) {
 	m_updateShadowVis = qscene->isLastCsmSplits();
 
 	if (qscene->sceneType == QueuedScene::Reflection) {
-		int ref = r_reflection->getInteger();
+		int ref = r_reflection.getInteger();
 
 		s_drawTerrain = false;
 		s_drawActor = false;
@@ -125,7 +125,7 @@ void RenderWorld::renderTo(QueuedScene *qscene) {
 				s_drawTerrain = true;
 		}
 	} else if (qscene->sceneType == QueuedScene::ShadowGen) {
-		if (r_terrainShadow->getBool()) {
+		if (r_terrainShadow.getBool()) {
 			s_drawTerrain = true;
 		} else {
 			s_drawTerrain = false;
@@ -134,7 +134,7 @@ void RenderWorld::renderTo(QueuedScene *qscene) {
 		m_visFrameId++;
 	}
 
-	if (!r_actor->getBool()) {
+	if (!r_actor.getBool()) {
 		s_drawActor = false;
 	}
 
@@ -159,7 +159,7 @@ void RenderWorld::renderTo(QueuedScene *qscene) {
 	}
 
 	// terrain
-	if (m_terrain && r_terrain->getBool() && s_drawTerrain) {
+	if (m_terrain && r_terrain.getBool() && s_drawTerrain) {
 		if (qscene->sceneType == QueuedScene::WorldMain) {
 			m_terrain->update(qscene, Plane::Cross);
 		}
@@ -174,7 +174,7 @@ void RenderWorld::renderTo(QueuedScene *qscene) {
 #endif
 	}
 
-	bool frustumCull = r_frustumCull->getBool();
+	bool frustumCull = r_frustumCull.getBool();
 
 	Plane::Side side;
 	if (frustumCull) {
@@ -293,7 +293,7 @@ void RenderWorld::renderTo( QueuedScene *qscene, QuadNode *node )
 	m_updateShadowVis = qscene->isLastCsmSplits();
 
 	if (qscene->sceneType == QueuedScene::Reflection) {
-		int ref = r_reflection->getInteger();
+		int ref = r_reflection.getInteger();
 
 		s_drawTerrain = false;
 		s_drawActor = false;
@@ -305,7 +305,7 @@ void RenderWorld::renderTo( QueuedScene *qscene, QuadNode *node )
 				s_drawTerrain = true;
 		}
 	} else if (qscene->sceneType == QueuedScene::ShadowGen) {
-		if (r_terrainShadow->getBool()) {
+		if (r_terrainShadow.getBool()) {
 			s_drawTerrain = true;
 		} else {
 			s_drawTerrain = false;
@@ -314,7 +314,7 @@ void RenderWorld::renderTo( QueuedScene *qscene, QuadNode *node )
 		m_visFrameId++;
 	}
 
-	if (!r_actor->getBool()) {
+	if (!r_actor.getBool()) {
 		s_drawActor = false;
 	}
 
@@ -339,7 +339,7 @@ void RenderWorld::renderTo( QueuedScene *qscene, QuadNode *node )
 	}
 
 	// terrain
-	if (m_terrain && r_terrain->getBool() && s_drawTerrain) {
+	if (m_terrain && r_terrain.getBool() && s_drawTerrain) {
 		if (qscene->sceneType == QueuedScene::WorldMain) {
 			m_terrain->update(qscene, Plane::Cross);
 		}
@@ -354,7 +354,7 @@ void RenderWorld::renderTo( QueuedScene *qscene, QuadNode *node )
 #endif
 	}
 
-	bool frustumCull = r_frustumCull->getBool();
+	bool frustumCull = r_frustumCull.getBool();
 
 	Plane::Side side;
 	if (frustumCull) {
@@ -417,7 +417,7 @@ void RenderWorld::markVisible_r(QueuedScene *qscene, QuadNode *node, Plane::Side
 		const BoundingBox &bbox = entity->m_linkedBbox;
 		// if node is cross frustum, we check entity's bbox
 		Plane::Side actorSide = side;
-		if (side == Plane::Cross && r_cullActor->getBool()) {
+		if (side == Plane::Cross && r_cullActor.getBool()) {
 			actorSide = cam.checkBox(bbox);
 			if ( actorSide == Plane::Back) {
 				continue;
@@ -465,7 +465,7 @@ void RenderWorld::markVisible_r(QueuedScene *qscene, QuadNode *node, Plane::Side
 	} else {
 	}
 
-	if (!r_showNode->getBool())
+	if (!r_showNode.getBool())
 		return;
 
 	Rgba color = Rgba::Green;
@@ -598,7 +598,7 @@ void RenderWorld::unlinkEntity(RenderEntity *la) {
 }
 
 void RenderWorld::updateExposure(QueuedScene *qscene) {
-	if (1 || !r_hdr->getBool()) {
+	if (1 || !r_hdr.getBool()) {
 		qscene->m_histogramIndex = -1;
 		qscene->m_histogramQueryId = 0;
 		return;
@@ -688,8 +688,8 @@ void RenderWorld::updateExposure(QueuedScene *qscene) {
 
 	disired = Math::clamp(disired, 0.25f, 4.0f);
 
-	if (r_exposure->getFloat()) {
-		disired = r_exposure->getFloat();
+	if (r_exposure.getFloat()) {
+		disired = r_exposure.getFloat();
 	}
 
 	float frametime = qscene->camera.getFrameTime();

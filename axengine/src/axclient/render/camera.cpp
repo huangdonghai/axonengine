@@ -89,7 +89,7 @@ const Matrix3 &RenderCamera::getViewAxis() const {
 void RenderCamera::setFov(float fov_x, float fov_y) {
 	m_fovX = fov_x;
 	m_fovY = fov_y;
-	m_znear = r_znearMin->getFloat();
+	m_znear = r_znearMin.getFloat();
 	m_zfar = 8192;
 	m_isOrthoProjection = false;
 	calcProjectionMatrix();
@@ -626,7 +626,7 @@ void Convex::initFromCamera( const RenderCamera &shadowCamera, const RenderCamer
 	initFromCamera(shadowCamera);
 	return;
 
-	if (!r_csmClipCamera->getBool())
+	if (!r_csmClipCamera.getBool())
 		return;
 
 	if (shadowCamera.isOrthoProjection()) {

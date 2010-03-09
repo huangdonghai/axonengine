@@ -254,7 +254,7 @@ AX_BEGIN_NAMESPACE
 
 
 	void GLshader::setSystemMap(SamplerType maptype, GLtexture *tex) {
-		if (r_nulldraw->getBool()) {
+		if (r_nulldraw.getBool()) {
 			return;
 		}
 
@@ -285,7 +285,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 	void GLshader::setInteractionMap() {
-		if (r_nulldraw->getBool()) {
+		if (r_nulldraw.getBool()) {
 			return;
 		}
 

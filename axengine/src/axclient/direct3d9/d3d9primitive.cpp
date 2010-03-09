@@ -308,7 +308,7 @@ void D3D9text::update()
 
 void D3D9text::draw(Technique tech)
 {
-	if (!r_font->getBool()) {
+	if (!r_font.getBool()) {
 		return;
 	}
 #if 0
@@ -516,10 +516,10 @@ void D3D9terrain::draw(Technique tech)
 
 	bindVertexBuffer();
 
-	bool combine = r_terrainLayerCombine->getBool();
+	bool combine = r_terrainLayerCombine.getBool();
 	bool drawlayer = true;
 
-	if (!r_detail->getBool() || !m_layerVisible) {
+	if (!r_detail.getBool() || !m_layerVisible) {
 		drawlayer = false;
 	}
 

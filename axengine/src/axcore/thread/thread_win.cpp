@@ -14,7 +14,7 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-Stat stat_lockTimes("Core", "LockTimes", Stat::F_Int|Stat::F_AutoReset, "how many times synclock called");
+Stat stat_lockTimes("Client", "LockTimes", Stat::F_Int|Stat::F_AutoReset, "how many times synclock called");
 
 //--------------------------------------------------------------------------
 // class SyncMutex

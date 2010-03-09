@@ -55,8 +55,8 @@ FILE *g_logFile;
 
 // global cvar
 #define AX_CVARDECL(name, defaultstring, flags) \
-Cvar *name;
-#include <axcore/cvardecls.h>
+	Cvar name(#name, defaultstring, flags);
+	#include <axcore/cvardecls.h>
 #undef AX_CVARDECL
 
 void terminateHandler() {
@@ -111,10 +111,12 @@ void axCoreInit(int argc, char *argv[]) {
 	g_classFactory = new ClassFactory();
 	g_classFactory->initialize();
 
+#if 0
 #define AX_CVARDECL(name, defaultstring, flags) \
 name = g_cvarSystem->createCvar(#name, defaultstring, flags);
 #include <axcore/cvardecls.h>
 #undef AX_CVARDECL
+#endif
 
 #if 0
 	MaterialDecl::initManager();

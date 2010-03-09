@@ -87,7 +87,7 @@ AX_BEGIN_NAMESPACE
 
 #if 1
 		AX_SU(g_lightMap,  prim->m_lightmap);
-		if (prim->m_lightmap && r_lightmap->getBool()) {
+		if (prim->m_lightmap && r_lightmap.getBool()) {
 			macro.setMacro(ShaderMacro::G_HAVE_LIGHTMAP);
 		} else {
 			macro.resetMacro(ShaderMacro::G_HAVE_LIGHTMAP);
@@ -136,7 +136,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 	void GLrender::draw(GLshader *shader, Technique tech, GLgeometry *prim) {
-		if (r_nulldraw->getBool()) {
+		if (r_nulldraw.getBool()) {
 			return;
 		}
 
@@ -619,7 +619,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 	void GLfontrender::draw(int count) {
-		if (r_nulldraw->getBool()) {
+		if (r_nulldraw.getBool()) {
 			return;
 		}
 

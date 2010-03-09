@@ -18,7 +18,7 @@ void QueuedScene::addLight(RenderLight *light)
 		light->fillQueued(nullptr);
 	}
 
-	if (light->getLightType() != RenderLight::kGlobal && !r_lightBuf->getBool()) {
+	if (light->getLightType() != RenderLight::kGlobal && !r_lightBuf.getBool()) {
 		light->fillQueued(nullptr);
 //			return 0;
 	}
@@ -105,7 +105,7 @@ bool QueuedScene::addInteraction(Interaction *ia)
 		return true;
 	}
 
-	if (!r_showPhysics->getBool() && mat->isPhysicsHelper()) {
+	if (!r_showPhysics.getBool() && mat->isPhysicsHelper()) {
 		numInteractions--;
 		return false;
 	}
@@ -138,7 +138,7 @@ bool QueuedScene::addInteraction(Interaction *ia)
 
 void QueuedScene::addHelperPrims(RenderEntity *entity)
 {
-	if (!r_helper->getBool())
+	if (!r_helper.getBool())
 		return;
 
 	const Primitives &prims = entity->getHelperPrims();
@@ -186,7 +186,7 @@ void QueuedScene::finalProcess()
 
 void QueuedScene::findInstance()
 {
-	if (r_geoInstancing->getInteger() < 2)
+	if (r_geoInstancing.getInteger() < 2)
 		return;
 
 	int oldNumInteractions = numInteractions;
@@ -244,7 +244,7 @@ void QueuedScene::checkLights()
 	if (sceneType != WorldMain)
 		return;
 
-	if (!r_shadow->getInteger())
+	if (!r_shadow.getInteger())
 		return;
 
 	if (!numLights)
@@ -285,7 +285,7 @@ void QueuedScene::checkLights()
 	int frameUsed = 0;
 	int frameFreed = 0;
 
-	int desired = r_shadowPoolSize->getInteger();
+	int desired = r_shadowPoolSize.getInteger();
 	desired = Math::clamp(desired, 8, 128) * 1024 * 1024;
 
 #if 0

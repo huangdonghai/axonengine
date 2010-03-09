@@ -51,7 +51,7 @@ void RenderSystem::initialize()
 #if 0
 	gRenderDriver = (IDriver*)(gClassFactory->createInstanceByAlias(ClassName_RenderDriver));
 #else
-	String rd = r_driver->getString();
+	String rd = r_driver.getString();
 	String drivername = d3d9name;
 
 	if (rd == "gl") {
@@ -68,7 +68,7 @@ void RenderSystem::initialize()
 
 	set_objectName("gRenderSystem");
 
-	m_isMTrendering = r_multiThread->getBool();
+	m_isMTrendering = r_multiThread.getBool();
 
 	m_selection = new Selection();
 
@@ -83,9 +83,9 @@ void RenderSystem::finalize()
 
 ShaderQuality RenderSystem::getShaderQuality()
 {
-	if (r_shaderQuality->isModified()) {
-		m_shaderQuality = std::min<int>(r_shaderQuality->getInteger(), g_renderDriver->getDriverInfo()->highestQualitySupport);
-		r_shaderQuality->clearModifiedFlag();
+	if (r_shaderQuality.isModified()) {
+		m_shaderQuality = std::min<int>(r_shaderQuality.getInteger(), g_renderDriver->getDriverInfo()->highestQualitySupport);
+		r_shaderQuality.clearModifiedFlag();
 	}
 	return m_shaderQuality;
 }
@@ -188,11 +188,11 @@ void RenderSystem::endFrame()
 {
 	double frontEndStart = OsUtil::getTime();
 
-	int shaderdebug = r_shaderDebug->getInteger();
+	int shaderdebug = r_shaderDebug.getInteger();
 	g_shaderMacro.setMacro(ShaderMacro::G_DEBUG, shaderdebug);
 
-	int show_performer = r_showStat->getInteger();
-	bool show_memoryinfo = r_showMemoryInfo->getBool();
+	int show_performer = r_showStat.getInteger();
+	bool show_memoryinfo = r_showMemoryInfo.getBool();
 
 	if (show_performer || show_memoryinfo) {
 		RenderCamera camera;
@@ -206,11 +206,11 @@ void RenderSystem::endFrame()
 		const int line_height = 12;
 
 		if (show_performer) {
-			const Sequence<Stat *> &stats = g_statistic->getGroup("Client");
+			const List<Stat *> &stats = g_statistic->getGroup("Client");
 
 			Rect rect(0,0,120,12);
 
-			Sequence<Stat *>::const_iterator it = stats.begin();
+			List<Stat *>::const_iterator it = stats.begin();
 
 			String msg;
 			for (; it != stats.end(); ++it) {

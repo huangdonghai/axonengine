@@ -12,7 +12,7 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-Stat *Stat::ms_linkEnd = 0;
+Stat *Stat::ms_staticLink = 0;
 
 Statistic::Statistic()
 {
@@ -21,13 +21,13 @@ Statistic::Statistic()
 	memset(m_values, 0, sizeof(m_values));
 #endif
 
-	Stat *staticHead = Stat::ms_linkEnd;
+	Stat *staticHead = Stat::ms_staticLink;
 
 	while (staticHead) {
 		registerStat(staticHead);
-		staticHead = staticHead->m_staticLink;
+		staticHead = staticHead->m_staticNext;
 	}
-	Stat::ms_linkEnd = reinterpret_cast<Stat*>(-1);
+	Stat::ms_staticLink = reinterpret_cast<Stat*>(-1);
 }
 
 Statistic::~Statistic()
@@ -103,12 +103,12 @@ const String &Statistic::getValueName(int index) const
 
 void Statistic::registerStat(Stat *stat)
 {
-	m_statGroup[stat->getGroup()].push_back(stat);
+	m_statGroup[stat->getGroup()].push_front(stat);
 }
 
-const Sequence<Stat *> & Statistic::getGroup(const char *groupname) const
+const List<Stat *> & Statistic::getGroup(const char *groupname) const
 {
-	static Sequence<Stat *> s_empty;
+	static List<Stat *> s_empty;
 
 	StatGroup::const_iterator it = m_statGroup.find(groupname);
 	if (it != m_statGroup.end())

@@ -166,14 +166,14 @@ void RenderEntity::calculateLod(QueuedScene *qscene)
 		return;
 	}
 	
-	float n = r_nearLod->getFloat();
-	float f = r_farLod->getFloat();
+	float n = r_nearLod.getFloat();
+	float f = r_farLod.getFloat();
 
 	m_lod = 1.0f - (m_distance-n) / (f - n);
 	m_lod *= m_lodRatio;
 	m_lod = Math::saturate(m_lod);
 
-	float forcelod = r_forceLod->getFloat();
+	float forcelod = r_forceLod.getFloat();
 	if (forcelod >= 0.0f && forcelod <= 1.0f) {
 		m_lod = forcelod;
 	}
@@ -181,12 +181,12 @@ void RenderEntity::calculateLod(QueuedScene *qscene)
 	float extands = m_linkedExtends;
 	float ratio = extands / m_distance / qscene->camera.getFovX() * 90 * 1024;
 
-	if (ratio < r_viewDistCull->getFloat())
+	if (ratio < r_viewDistCull.getFloat())
 		m_viewDistCulled = true;
 	else
 		m_viewDistCulled = false;
 
-	int hardwareQuery = r_hardwareQuery->getInteger();
+	int hardwareQuery = r_hardwareQuery.getInteger();
 
 	if (hardwareQuery == 1) {
 		return;
@@ -238,7 +238,7 @@ bool RenderEntity::isVisable() const
 
 void RenderEntity::updateCsm(QueuedScene *qscene, Plane::Side side)
 {
-	if (!r_csmCull->getBool())
+	if (!r_csmCull.getBool())
 		return;
 
 	if (m_shadowQuery->m_resultFrame == m_world->getShadowFrameId()) {
@@ -253,7 +253,7 @@ void RenderEntity::updateCsm(QueuedScene *qscene, Plane::Side side)
 
 bool RenderEntity::isCsmCulled() const
 {
-	if (!r_csmCull->getBool())
+	if (!r_csmCull.getBool())
 		return false;
 
 	if (m_shadowQuery->m_resultFrame < 0)

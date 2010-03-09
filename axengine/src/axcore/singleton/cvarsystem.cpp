@@ -23,14 +23,7 @@ AX_END_COMMAND_MAP()
 // class Cvar
 //------------------------------------------------------------------------------
 
-Cvar::Cvar()
-	: m_flags(0)
-	, m_modified(false)
-	, m_modifiedCount(0)
-	, m_floatValue(0.0f)
-	, m_integerValue(0)
-{
-}
+Cvar *Cvar::ms_staticLink = 0;
 
 Cvar::Cvar(const String &name, const String &default_string, int flags)
 	: m_name(name)
@@ -43,13 +36,23 @@ Cvar::Cvar(const String &name, const String &default_string, int flags)
 	m_modifiedCount = 1;
 	m_floatValue = (float)atof(default_string.c_str());
 	m_integerValue = atoi(default_string.c_str());
+
+	if (ms_staticLink != reinterpret_cast<Cvar*>(-1)) {
+		m_staticNext = ms_staticLink;
+		ms_staticLink = this;
+		return;
+	}
+
+	g_cvarSystem->registerCvar(this);
 }
 
-Cvar::~Cvar() {
+Cvar::~Cvar()
+{
 	g_cvarSystem->removeCvar(m_name);
 }
 
-void Cvar::set(const String &sz, bool force) {
+void Cvar::setString(const String &sz, bool force)
+{
 	String value;
 
 	if (sz.empty()) {
@@ -100,11 +103,13 @@ void Cvar::set(const String &sz, bool force) {
 	m_integerValue = atoi(m_stringValue.c_str());
 }
 
-void Cvar::forceSet(const String &sz_value) {
-	set(sz_value, true);
+void Cvar::forceSet(const String &sz_value)
+{
+	setString(sz_value, true);
 }
 
-void Cvar::forceSet(float f) {
+void Cvar::forceSet(float f)
+{
 	char buf[32];
 
 	if (f == (int) f) {
@@ -113,22 +118,25 @@ void Cvar::forceSet(float f) {
 		StringUtil::snprintf(buf, ArraySize(buf), "%f", f);
 	}
 
-	set(buf, true);
+	setString(buf, true);
 }
 
-void Cvar::forceSet(int i) {
+void Cvar::forceSet(int i)
+{
 	char buf[32];
 
 	StringUtil::snprintf(buf, ArraySize(buf), "%i", i);
 
-	set(buf, true);
+	setString(buf, true);
 }
 
-void Cvar::set(const String &sz_value) {
-	set(sz_value, false);
+void Cvar::setString(const String &sz_value)
+{
+	setString(sz_value, false);
 }
 
-void Cvar::set(float f) {
+void Cvar::setFloat(float f)
+{
 	char buf[32];
 
 	if (f == (int) f) {
@@ -137,17 +145,24 @@ void Cvar::set(float f) {
 		StringUtil::snprintf(buf, ArraySize(buf), "%f", f);
 	}
 
-	set(buf, false);
+	setString(buf, false);
 }
 
-void Cvar::set(int i) {
+void Cvar::setInt(int i)
+{
 	char buf[32];
 
 	StringUtil::snprintf(buf, ArraySize(buf), "%i", i);
 
-	set(buf, false);
+	setString(buf, false);
 }
 
+void Cvar::setBool(bool b)
+{
+	setInt(b);
+}
+
+#if 0
 Cvar *Cvar::create(const String &name, const String &default_string, uint_t flags) {
 	Cvar *cvar = new Cvar;
 
@@ -162,7 +177,7 @@ Cvar *Cvar::create(const String &name, const String &default_string, uint_t flag
 
 	return cvar;
 }
-
+#endif
 
 
 
@@ -179,7 +194,8 @@ CvarSystem::~CvarSystem() {
 }
 
 
-void CvarSystem::removeCvar(const String &name) {
+void CvarSystem::removeCvar(const String &name)
+{
 	return;
 #if 0
 	if (m_cvarDict.exist(name)) {
@@ -190,17 +206,30 @@ void CvarSystem::removeCvar(const String &name) {
 #endif
 }
 
-void CvarSystem::initialize() {
+void CvarSystem::initialize()
+{
 	Printf(_("Initializing CvarSystem...\n"));
 
 	// register console command handler
 	g_cmdSystem->registerHandler(this);
 
+	// register static cvars
+	Cvar *cvar = Cvar::ms_staticLink;
+	while (cvar) {
+		registerCvar(cvar);
+		cvar = cvar->m_staticNext;
+	}
+	Cvar::ms_staticLink = reinterpret_cast<Cvar*>(-1);
+
 	// read cvars from configure file
 	StringPairSeq spv = g_systemConfig->getItems("CvarSystem");
 	StringPairSeq::const_iterator it;
 	for (it = spv.begin(); it != spv.end(); ++it) {
+#if 0
 		createCvar(it->first, it->second, Cvar::Temp);
+#else
+		set(it->first, it->second);
+#endif
 	}
 
 	Printf(_("Initialized CvarSystem\n"));
@@ -208,7 +237,8 @@ void CvarSystem::initialize() {
 	return;
 }
 
-void CvarSystem::finalize() {
+void CvarSystem::finalize()
+{
 	Printf(_("Finalizing CvarSystem...\n"));
 
 	// write cvars to configure file
@@ -234,7 +264,9 @@ void CvarSystem::finalize() {
 	Printf(_("Finalized CvarSystem\n"));
 }
 
-Cvar *CvarSystem::createCvar(const String &name, const String &defaultString, uint_t flags) {
+#if 0
+Cvar *CvarSystem::createCvar(const String &name, const String &defaultString, uint_t flags)
+{
 	Cvar *cvar = nullptr;
 
 	if (name.empty() /*|| defaultString.empty()*/) {
@@ -262,11 +294,14 @@ Cvar *CvarSystem::createCvar(const String &name, const String &defaultString, ui
 	return cvar;
 }
 
-Cvar *CvarSystem::createCvar(const String &name, const String &defaultString) {
+Cvar *CvarSystem::createCvar(const String &name, const String &defaultString)
+{
 	return createCvar(name, defaultString, Cvar::Archive);
 }
+#endif
 
-bool CvarSystem::executeCommand(const CmdArgs &params) {
+bool CvarSystem::executeCommand(const CmdArgs &params)
+{
 	CvarDict::iterator it = m_cvarDict.find(params.tokened[0]);
 	if (it == m_cvarDict.end())
 		return false;
@@ -280,14 +315,15 @@ bool CvarSystem::executeCommand(const CmdArgs &params) {
 		return true;
 	}
 
-	cvar->set(params.tokened[1].c_str());
+	cvar->setString(params.tokened[1].c_str());
 
 	return true;
 }
 
 
 // console command
-void CvarSystem::list_f(const CmdArgs &param) {
+void CvarSystem::list_f(const CmdArgs &param)
+{
 	CvarDict::iterator it = m_cvarDict.begin();
 	int count = 0;
 	const char *arg;
@@ -320,18 +356,53 @@ void CvarSystem::list_f(const CmdArgs &param) {
 	Printf(_("%i total console variables\n"), count);
 }
 
-void CvarSystem::toggleCvar_f(const CmdArgs &param) {
+void CvarSystem::toggleCvar_f(const CmdArgs &param)
+{
 }
 
-void CvarSystem::set_f(const CmdArgs &params) {
+void CvarSystem::set_f(const CmdArgs &params)
+{
 	if (params.tokened.size() < 3) {
 		return;
 	}
 
+#if 0
 	Cvar*& cvar = m_cvarDict[ params.tokened[1] ];
 
 	cvar = createCvar(params.tokened[1], params.tokened[2], 0);
 	cvar->set(params.tokened[2], true);
+#else
+	set(params.tokened[1], params.tokened[2]);
+#endif
+}
+
+void CvarSystem::set(const String &name, const String& value)
+{
+	CvarDict::iterator it = m_cvarDict.find(name);
+
+	if (it == m_cvarDict.end()) {
+		m_penddingSets[name] = value;
+		return;
+	}
+
+	it->second->setString(value, true);
+}
+
+void CvarSystem::registerCvar(Cvar *cvar)
+{
+	const String &name = cvar->getName();
+
+	if (m_cvarDict.find(name) != m_cvarDict.end()) {
+		Errorf("Cvar '%s' already registered", name.c_str());
+	}
+
+	m_cvarDict[name] = cvar;
+
+	Dict<String, String>::iterator it = m_penddingSets.find(name);
+	if (it != m_penddingSets.end()) {
+		cvar->setString(it->second, true);
+		m_penddingSets.erase(it);
+	}
 }
 
 AX_END_NAMESPACE

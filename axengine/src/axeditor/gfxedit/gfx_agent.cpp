@@ -42,7 +42,7 @@ void GfxAgent::deleteFlagChanged(bool del)
 
 void GfxAgent::drawHelper()
 {
-	if (!r_helper->getBool()) {
+	if (!r_helper.getBool()) {
 		return;
 	}
 

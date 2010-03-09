@@ -147,7 +147,7 @@ void D3D9window::checkSwapChain()
 
 	DWORD flags = D3DPRESENT_INTERVAL_IMMEDIATE;
 
-	if (r_vsync->getBool())
+	if (r_vsync.getBool())
 		flags = D3DPRESENT_INTERVAL_DEFAULT;
 
 

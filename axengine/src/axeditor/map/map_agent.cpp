@@ -38,7 +38,7 @@ void MapAgent::setMatrix(const Matrix &matrix) {
 }
 
 void MapAgent::drawHelper() {
-	if (!r_helper->getBool()) {
+	if (!r_helper.getBool()) {
 		return;
 	}
 

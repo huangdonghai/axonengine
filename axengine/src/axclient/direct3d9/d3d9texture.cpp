@@ -467,7 +467,7 @@ bool D3D9texture::loadFile2D(const String &filename)
 
 	DWORD d3dusage = 0;
 
-	int mipdown = image_mip->getInteger();
+	int mipdown = image_mip.getInteger();
 	if (m_initFlags.isSet(IF_NoMipmap) || imagefile->getNumMipmapLevels() <= 1) {
 		m_isMipmaped = false;
 		mipdown = 0;

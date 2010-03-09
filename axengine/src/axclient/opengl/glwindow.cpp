@@ -221,11 +221,11 @@ AX_BEGIN_NAMESPACE
 	}
 
 	void GLwindow::swapBuffers() {
-		if (r_vsync->isModified()) {
-			r_vsync->clearModifiedFlag();
+		if (r_vsync.isModified()) {
+			r_vsync.clearModifiedFlag();
 
 			if (SUPPORT_WGL_EXT_swap_control) {
-				wglSwapIntervalEXT(r_vsync->getBool());
+				wglSwapIntervalEXT(r_vsync.getBool());
 			}
 		}
 

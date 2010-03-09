@@ -128,7 +128,7 @@ void D3D9thread::runFrame(bool isInThread)
 	clearer.clearDepth(true);
 	clearer.clearColor(true);
 
-	if (r_nulldraw->getBool()) {
+	if (r_nulldraw.getBool()) {
 //			goto endframe;
 	}
 
@@ -180,7 +180,7 @@ void D3D9thread::runFrame(bool isInThread)
 
 void D3D9thread::beginFrame()
 {
-	if (!r_specular->getBool()) {
+	if (!r_specular.getBool()) {
 		g_shaderMacro.setMacro(ShaderMacro::G_DISABLE_SPECULAR);
 	} else {
 		g_shaderMacro.resetMacro(ShaderMacro::G_DISABLE_SPECULAR);
@@ -404,14 +404,14 @@ void D3D9thread::cacheSceneRes(QueuedScene *scene)
 
 	//		scene->camera = s_view->camera;
 
-	float tangentlen = r_showTangents->getFloat();
-	float normallen = r_showNormal->getFloat();
+	float tangentlen = r_showTangents.getFloat();
+	float normallen = r_showNormal.getFloat();
 
 	for (int j = 0; j < scene->numInteractions; j++) {
 		Primitive *prim = scene->interactions[j]->primitive;
 
 		if (prim->getType() == Primitive::MeshType) {
-			if (r_ignorMesh->getBool()) {
+			if (r_ignorMesh.getBool()) {
 				scene->interactions[j]->resource = -1;
 				continue;
 			}
@@ -427,7 +427,7 @@ void D3D9thread::cacheSceneRes(QueuedScene *scene)
 
 		if (normallen > 0.00001f) {
 			if (prim->getType() == Primitive::MeshType) {
-				if (r_ignorMesh->getBool()) {
+				if (r_ignorMesh.getBool()) {
 					scene->interactions[j]->resource = -1;
 				}
 				MeshPrim *mesh = dynamic_cast<MeshPrim*>(prim);
@@ -450,7 +450,7 @@ void D3D9thread::cacheSceneRes(QueuedScene *scene)
 			continue;
 
 		if (prim->getType() == Primitive::MeshType) {
-			if (r_ignorMesh->getBool()) {
+			if (r_ignorMesh.getBool()) {
 				scene->interactions[j]->resource = -1;
 			}
 			MeshPrim *mesh = dynamic_cast<MeshPrim*>(prim);
@@ -516,7 +516,7 @@ void D3D9thread::drawPass_zfill(QueuedScene *scene)
 void D3D9thread::drawPass_composite(QueuedScene *scene)
 {
 
-	if (r_wireframe->getBool()) {
+	if (r_wireframe.getBool()) {
 		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		d3d9StateManager->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
 		d3d9ForceWireframe = true;
@@ -533,7 +533,7 @@ void D3D9thread::drawPass_composite(QueuedScene *scene)
 	issueVisQuery();
 
 #if 1
-	if (!r_showLightBuf->getBool()) {
+	if (!r_showLightBuf.getBool()) {
 		D3D9clearer clearer;
 		clearer.clearDepth(false);
 		clearer.clearColor(true, scene->clearColor);
@@ -578,12 +578,12 @@ void D3D9thread::drawPass_shadowGen(QueuedScene *scene)
 	QueuedLight *qlight = scene->sourceLight;
 	QueuedShadow *qshadow = qlight->shadowInfo;
 
-	if (r_shadowGen->getBool()) {
+	if (r_shadowGen.getBool()) {
 		BEGIN_PIX("ShadowGen");
 		// offset the geometry slightly to prevent z-fighting
 		// note that this introduces some light-leakage artifacts
-		float factor = gl_shadowOffsetFactor->getFloat();
-		float units = gl_shadowOffsetUnits->getFloat() / 0x10000;
+		float factor = gl_shadowOffsetFactor.getFloat();
+		float units = gl_shadowOffsetUnits.getFloat() / 0x10000;
 
 		d3d9StateManager->SetRenderState(D3DRS_DEPTHBIAS, F2DW(units));
 		d3d9StateManager->SetRenderState(D3DRS_SLOPESCALEDEPTHBIAS, F2DW(factor));
@@ -630,7 +630,7 @@ void D3D9thread::drawPass_lights(QueuedScene *scene)
 
 	clearer.clearColor(true, Rgba::Zero);
 
-	if (r_showLightBuf->getBool()) {
+	if (r_showLightBuf.getBool()) {
 		s_lbuffer = 0;
 	}
 
@@ -750,14 +750,14 @@ void D3D9thread::drawScene_world(QueuedScene *scene, const D3D9clearer &clearer)
 	}
 
 	// set global fog
-	if (scene->globalFog && r_fog->getBool()) {
+	if (scene->globalFog && r_fog.getBool()) {
 		g_shaderMacro.setMacro(ShaderMacro::G_FOG);
 		AX_SU(g_fogParams, scene->globalFog->m_fogParams);
 	} else {
 		g_shaderMacro.resetMacro(ShaderMacro::G_FOG);
 	}
 
-	if (scene->waterFog && r_fog->getBool()) {
+	if (scene->waterFog && r_fog.getBool()) {
 		AX_SU(g_waterFogParams, scene->waterFog->m_fogParams);
 	}
 
@@ -797,7 +797,7 @@ void D3D9thread::drawScene_world(QueuedScene *scene, const D3D9clearer &clearer)
 	END_PIX();
 
 	// post process and render back to backbuffer
-	if (r_framebuffer->getBool()) {
+	if (r_framebuffer.getBool()) {
 		BEGIN_PIX("PostProcess");
 		drawPass_postprocess(scene);
 		END_PIX();
