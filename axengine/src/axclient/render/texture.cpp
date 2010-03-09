@@ -27,7 +27,7 @@ Texture::Texture()
 Texture::~Texture()
 {}
 
-void Texture::uploadSubTexture( const Rect &rect, const void *pixels, TexFormat format /*= TexFormat::AUTO*/ )
+void Texture::uploadSubTexture(const Rect &rect, const void *pixels, TexFormat format /*= TexFormat::AUTO*/)
 {
 	if (g_renderDriver->isInRenderingThread()) {
 		uploadSubTextureIm(rect, pixels, format);
@@ -110,7 +110,7 @@ TextureManager::~TextureManager()
 	s_textureManager = 0;
 }
 
-TextureRp TextureManager::loadTexture( const String &texname, Texture::InitFlags flags/*=0*/ )
+TextureRp TextureManager::loadTexture(const String &texname, Texture::InitFlags flags/*=0*/)
 {
 	FixedString key = Texture::normalizeKey(texname);
 
@@ -156,7 +156,7 @@ TextureRp TextureManager::loadTexture( const String &texname, Texture::InitFlags
 	return tex;
 }
 
-TextureRp TextureManager::createTexture( const String &debugname, TexFormat format, int width, int height, Texture::InitFlags flags /*= 0*/ )
+TextureRp TextureManager::createTexture(const String &debugname, TexFormat format, int width, int height, Texture::InitFlags flags /*= 0*/)
 {
 	std::stringstream ss;
 	ss << "_" << debugname << "$" << g_system->generateId();
@@ -201,7 +201,7 @@ bool TextureManager::isExist(const FixedString &key)
 	return result;
 }
 
-void TextureManager::uploadSubTexture( Texture *tex, const Rect &rect, const void *pixels, TexFormat format /*= TexFormat::AUTO*/ )
+void TextureManager::uploadSubTexture(Texture *tex, const Rect &rect, const void *pixels, TexFormat format /*= TexFormat::AUTO*/)
 {
 	// calculate pixel size
 	if (format == TexFormat::AUTO) {
@@ -247,7 +247,7 @@ void TextureManager::freeTexture(Texture *tex)
 #endif
 }
 
-void TextureManager::texlist_f( const CmdArgs &args )
+void TextureManager::texlist_f(const CmdArgs &args)
 {
 	Printf("List texture(s):\n");
 

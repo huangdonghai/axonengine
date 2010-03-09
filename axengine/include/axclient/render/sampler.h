@@ -8,6 +8,10 @@ class SamplerData;
 class Sampler
 {
 public:
+	enum ShareMode {
+		SM_Share, SM_Unique
+	};
+
 	enum ClampMode {
 		CM_Repeat,
 		CM_Clamp,
@@ -23,7 +27,7 @@ public:
 	};
 
 	Sampler();
-	Sampler(const String &name, ClampMode clampMode, FilterMode filterMode);
+	Sampler(const String &name, ClampMode clampMode, FilterMode filterMode, ShareMode = SM_Share);
 	~Sampler();
 
 	bool isNull() const { return !m_d; }

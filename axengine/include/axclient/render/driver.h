@@ -14,84 +14,69 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-	struct HitRecord {
-		int name;
-		float minz;
-		float maxz;
-	};
-	typedef Sequence<HitRecord> HitRecords;
+struct HitRecord {
+	int name;
+	float minz;
+	float maxz;
+};
+typedef Sequence<HitRecord> HitRecords;
 
-	struct VideoMode {
-		uint_t width;
-		uint_t height;
-		float pixelAspect;
-	};
-
-
-	struct ModelView {
-		Vector3 vieworg;
-		Matrix4 viewmatrix;
-	};
-
-	struct Projection {
-		ModelView modelview;
-		Matrix4 proj_matrix;
-	};
-
-	struct IRenderDriver {
-		struct Info {
-			enum DriverType {
-				OpenGL,
-				D3D,
-				UNKNOWN
-			};
-
-			enum DriverCaps {
-				DXT = 1,		// supports DXT compressed texture
-				HDR = 2,		// supports HDR rendering
-			};
-
-			DriverType driverType;	// opengl, d3d etc...
-
-			// some caps
-			int caps;					// DriverCaps
-			ShaderQuality highestQualitySupport;
-
-			// for opengl
-			String vendor;
-			String renderer;
-			String version;
-			String extension;
-
-			int maxTextureSize;
-			int max3DTextureSize;
-			int maxCubeMapTextureSize;	// queried from GL
-
-			int maxTextureUnits;		// arb_multitexture
-			int maxTextureCoords;		// arb_fragment_program
-			int maxTextureImageUnits;	// arb_fragment_program
+class IRenderDriver
+{
+public:
+	struct Info {
+		enum DriverType {
+			OpenGL,
+			D3D,
+			UNKNOWN
 		};
 
-		// device
-		virtual ~IRenderDriver() {}
-		virtual void initialize() = 0;
-		virtual void finalize() = 0;
-		virtual void postInit() = 0;			// after render system is initilized, call this
+		enum DriverCaps {
+			DXT = 1,		// supports DXT compressed texture
+			HDR = 2,		// supports HDR rendering
+		};
 
-		// some status
-		virtual bool isHDRRendering() = 0;
-		virtual bool isInRenderingThread() = 0;
+		DriverType driverType;	// opengl, d3d etc...
 
-		// resource management
-		virtual RenderTarget *createWindowTarget(handle_t wndId, const String &name) = 0;
+		// some caps
+		int caps;					// DriverCaps
+		ShaderQuality highestQualitySupport;
 
-		// caps
-		virtual const Info *getDriverInfo() = 0;
-		virtual uint_t getBackendCaps() = 0;
+		// for opengl
+		String vendor;
+		String renderer;
+		String version;
+		String extension;
 
-		// if not multi threads rendering, use this call render a frame
-		virtual void runFrame() = 0;
+		int maxTextureSize;
+		int max3DTextureSize;
+		int maxCubeMapTextureSize;	// queried from GL
+
+		int maxTextureUnits;		// arb_multitexture
+		int maxTextureCoords;		// arb_fragment_program
+		int maxTextureImageUnits;	// arb_fragment_program
 	};
+
+	// device
+	virtual ~IRenderDriver() {}
+	virtual void initialize() = 0;
+	virtual void finalize() = 0;
+	virtual void postInit() = 0;			// after render system is initilized, call this
+
+	// some status
+	virtual bool isHDRRendering() = 0;
+	virtual bool isInRenderingThread() = 0;
+
+	// resource management
+	virtual RenderTarget *createWindowTarget(handle_t wndId, const String &name) = 0;
+
+	// caps
+	virtual const Info *getDriverInfo() = 0;
+	virtual uint_t getBackendCaps() = 0;
+
+	// if not multi threads rendering, use this call render a frame
+	virtual void runFrame() = 0;
+};
 
 AX_END_NAMESPACE
 
