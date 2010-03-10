@@ -13,7 +13,7 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-class D3D9query : public Query {
+class D3D9Query : public Query {
 public:
 	enum {
 		NUMBER = 2
@@ -21,8 +21,8 @@ public:
 
 	friend class D3D9querymanager;
 
-	D3D9query();
-	virtual ~D3D9query();
+	D3D9Query();
+	virtual ~D3D9Query();
 
 	bool canQuery() const;
 	bool beginQuery();
@@ -42,7 +42,7 @@ class D3D9querymanager : public QueryManager {
 public:
 	struct ActiveQuery {
 		RenderTarget *frameTarget;
-		D3D9query *query;
+		D3D9Query *query;
 		int frameId;
 		BoundingBox bbox;
 		bool issued;
@@ -66,7 +66,7 @@ public:
 	const List<ActiveQuery*>& getActiveQuery(Query::QueryType type) const;
 
 private:
-	Sequence<D3D9query*> m_queries;
+	Sequence<D3D9Query*> m_queries;
 	List<int> m_freeQueries;
 
 	BlockAlloc<ActiveQuery> m_issuedQueryAlloc;

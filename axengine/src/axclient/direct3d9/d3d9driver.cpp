@@ -13,19 +13,19 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-AX_IMPLEMENT_FACTORY(D3D9driver)
+AX_IMPLEMENT_FACTORY(D3D9Driver)
 
 // console command
-AX_BEGIN_COMMAND_MAP(D3D9driver)
+AX_BEGIN_COMMAND_MAP(D3D9Driver)
 AX_END_COMMAND_MAP()
 
-D3D9driver::D3D9driver() {
+D3D9Driver::D3D9Driver() {
 	m_initialized = false;
 }
 
-D3D9driver::~D3D9driver() {}
+D3D9Driver::~D3D9Driver() {}
 
-void D3D9driver::initialize() {
+void D3D9Driver::initialize() {
 	if (m_initialized) {
 		return;
 	}
@@ -33,9 +33,9 @@ void D3D9driver::initialize() {
 	g_renderDriver = this;
 	d3d9Driver = this;
 
-	Printf("..Initializing D3D9driver...\n");
+	Printf("..Initializing D3D9Driver...\n");
 
-	d3d9InternalWindow = new D3D9window("d3d9window");
+	d3d9InternalWindow = new D3D9Window("d3d9window");
 	d3d9DriverInfo = new Info;
 	d3d9DriverInfo->driverType = Info::D3D;
 	d3d9DriverInfo->highestQualitySupport = ShaderQuality::Low;
@@ -48,7 +48,7 @@ void D3D9driver::initialize() {
 	d3d9Api = Direct3DCreate9(D3D_SDK_VERSION);
 
 	if (!d3d9Api) {
-		Errorf("D3D9driver::initialize: Direct3DCreate9 error\nMaybe you should install DirectX 9 or later version runtime");
+		Errorf("D3D9Driver::initialize: Direct3DCreate9 error\nMaybe you should install DirectX 9 or later version runtime");
 		return;
 	}
 
@@ -56,7 +56,7 @@ void D3D9driver::initialize() {
 
 	HRESULT hr = d3d9Api->GetDeviceCaps(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, &caps);
 	if (FAILED(hr)) {
-		Errorf("D3D9driver::initialize: GetDeviceCaps failed %s", D3DErrorString(hr));
+		Errorf("D3D9Driver::initialize: GetDeviceCaps failed %s", D3DErrorString(hr));
 	}
 
 	d3d9DriverInfo->maxTextureUnits = caps.MaxTextureBlendStages;
@@ -94,7 +94,7 @@ void D3D9driver::initialize() {
 		Errorf("CreateDevice failed %s", D3DErrorString(hr));
 	}
 
-	d3d9StateManager = new D3D9statemanager();
+	d3d9StateManager = new D3D9StateManager();
 	d3d9StateManager->DirtyCachedValues();
 
 	V(d3d9StateManager->SetRenderState(D3DRS_ZFUNC, D3DCMP_LESSEQUAL));
@@ -102,12 +102,12 @@ void D3D9driver::initialize() {
 	d3d9QueryManager = new D3D9querymanager();
 	g_queryManager = d3d9QueryManager;
 
-	d3d9VertexBufferManager = new D3D9vertexbuffermanager();
+	d3d9VertexBufferManager = new D3D9VertexBufferManager();
 
 	d3d9PrimitiveManager = new D3D9primitivemanager();
 	g_primitiveManager = d3d9PrimitiveManager;
 
-	d3d9TargetManager = new D3D9targetmanager();
+	d3d9TargetManager = new D3D9TargetManager();
 	g_targetManager = d3d9TargetManager;
 
 	g_shaderMacro.setMacro(ShaderMacro::G_D3D);
@@ -118,39 +118,39 @@ void D3D9driver::initialize() {
 	d3d9TextureManager = new D3D9texturemanager();
 	g_textureManager = d3d9TextureManager;
 #else
-	D3D9texture::initManager();
+	D3D9Texture::initManager();
 #endif
-	d3d9Thread = new D3D9thread();
+	d3d9Thread = new D3D9Thread();
 	if (r_multiThread.getInteger()) {
 		d3d9Thread->startThread();
 	}
 
-	d3d9Draw = new D3D9draw();
+	d3d9Draw = new D3D9Draw();
 
 	d3d9InternalWindow->bind();
 
 	Printf("ok\n");
 }
 
-void D3D9driver::finalize() {}
+void D3D9Driver::finalize() {}
 
-void D3D9driver::postInit() {
-	d3d9Postprocess = new D3D9postprocess();
+void D3D9Driver::postInit() {
+	d3d9Postprocess = new D3D9Postprocess();
 }
 
-bool D3D9driver::isHDRRendering() { return false; }
+bool D3D9Driver::isHDRRendering() { return false; }
 
-RenderTarget *D3D9driver::createWindowTarget(handle_t wndId, const String &name) {
-	D3D9window *state = new D3D9window(wndId, name);
+RenderTarget *D3D9Driver::createWindowTarget(handle_t wndId, const String &name) {
+	D3D9Window *state = new D3D9Window(wndId, name);
 	AX_ASSERT(state);
 	return state;
 }
 
-const IRenderDriver::Info *D3D9driver::getDriverInfo() {
+const IRenderDriver::Info *D3D9Driver::getDriverInfo() {
 	return d3d9DriverInfo;
 }
 
-uint_t D3D9driver::getBackendCaps() {
+uint_t D3D9Driver::getBackendCaps() {
 	return 0;
 }
 #if 0
@@ -170,27 +170,27 @@ SelectRecordSeq D3D9driver::endSelect() {
 	return SelectRecordSeq();
 }
 #endif
-void D3D9driver::reset( int width, int height, bool fullscreen )
+void D3D9Driver::reset( int width, int height, bool fullscreen )
 {
 	onDeviceLost();
 	onReset();
 }
 
-void D3D9driver::onReset()
+void D3D9Driver::onReset()
 {
 	d3d9PrimitiveManager->onReset();
 
 	d3d9TargetManager->onReset();
 }
 
-void D3D9driver::onDeviceLost()
+void D3D9Driver::onDeviceLost()
 {
 	d3d9TargetManager->onDeviceLost();
 
 	d3d9PrimitiveManager->onDeviceLost();
 }
 
-bool D3D9driver::isInRenderingThread()
+bool D3D9Driver::isInRenderingThread()
 {
 	return d3d9Thread->isCurrentThread();
 }

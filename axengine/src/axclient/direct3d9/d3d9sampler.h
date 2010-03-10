@@ -1,0 +1,10 @@
+#ifndef AX_D3D9SAMPLER_H
+#define AX_D3D9SAMPLER_H
+
+AX_BEGIN_NAMESPACE
+
+class D3D9Sampler {};
+
+AX_END_NAMESPACE
+
+#endif // AX_D3D9SAMPLER_H

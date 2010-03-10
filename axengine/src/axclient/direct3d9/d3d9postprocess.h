@@ -29,7 +29,7 @@ struct PostMesh {
 	ushort_t *m_indices;
 };
 
-class D3D9postprocess {
+class D3D9Postprocess {
 public:
 	enum Type {
 		DrawQuad, Blur, Glow, ToneMapping
@@ -39,12 +39,12 @@ public:
 		MAX_VERTICES = 16,
 		MAX_INDICES = 6 * 2 * 3
 	};
-	D3D9postprocess();
-	~D3D9postprocess();
+	D3D9Postprocess();
+	~D3D9Postprocess();
 
-	void process(Type type, D3D9texture *texture);
+	void process(Type type, D3D9Texture *texture);
 
-	void drawQuad(D3D9texture *texture);
+	void drawQuad(D3D9Texture *texture);
 	void maskVolume(Vector3 volume[8]);
 	void maskVolumeTwoSides(Vector3 volume[8]);
 #if 0
@@ -60,16 +60,16 @@ public:
 	void drawLightShadowed(Vector3 volume[8], QueuedLight *light, const RenderCamera &shadowCamera);
 	void drawGlobalLight(Vector3 volume[8], QueuedLight *light);
 
-	void measureHistogram(D3D9texture *tex, int index);
-	void downscale4x4(D3D9texture *tex, const Rect &rect);
+	void measureHistogram(D3D9Texture *tex, int index);
+	void downscale4x4(D3D9Texture *tex, const Rect &rect);
 
-	void genericPP(const String &shadername, D3D9texture *src);
-	void genericPP(const String &shadername, RenderTarget *target, D3D9texture *src);
-	void genericPP(const String &shadername, D3D9texture *src1, D3D9texture *src2);
-	void genericPP(const String &shadername, RenderTarget *target, D3D9texture *src1, D3D9texture *src2);
+	void genericPP(const String &shadername, D3D9Texture *src);
+	void genericPP(const String &shadername, RenderTarget *target, D3D9Texture *src);
+	void genericPP(const String &shadername, D3D9Texture *src1, D3D9Texture *src2);
+	void genericPP(const String &shadername, RenderTarget *target, D3D9Texture *src1, D3D9Texture *src2);
 
 protected:
-	D3D9shader *getShader(const String &name);
+	D3D9Shader *getShader(const String &name);
 
 private:
 	PostMesh *m_screenQuad;
@@ -81,12 +81,12 @@ private:
 	MaterialPtr m_mtrPointLight;
 	MaterialPtr m_mtrGlobalLight;
 
-	D3D9shader *m_shaderDrawQuad;
-	D3D9shader *m_shaderHistogram;
-	D3D9shader *m_shaderDownscale4x4;
-	D3D9shader *m_shaderQuery;
+	D3D9Shader *m_shaderDrawQuad;
+	D3D9Shader *m_shaderHistogram;
+	D3D9Shader *m_shaderDownscale4x4;
+	D3D9Shader *m_shaderQuery;
 
-	Dict<String, D3D9shader*>	m_genericShaders;
+	Dict<String, D3D9Shader*>	m_genericShaders;
 };
 
 AX_END_NAMESPACE

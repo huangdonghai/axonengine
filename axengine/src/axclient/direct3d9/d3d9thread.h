@@ -40,13 +40,13 @@ struct D3D9clearer {
 	void doClear() const;
 };
 
-class D3D9thread : public Thread {
+class D3D9Thread : public Thread {
 public:
 
-	friend class D3D9postprocess;
+	friend class D3D9Postprocess;
 
-	D3D9thread();
-	~D3D9thread();
+	D3D9Thread();
+	~D3D9Thread();
 	void runFrame(bool isInThread);
 
 	// implement thread run

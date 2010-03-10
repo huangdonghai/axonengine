@@ -14,10 +14,11 @@ read the license and understand and accept it fully.
 AX_BEGIN_NAMESPACE
 
 //--------------------------------------------------------------------------
-// class D3D9primitive
+// class D3D9Primitive
 //--------------------------------------------------------------------------
 
-class D3D9primitive {
+class D3D9Primitive
+{
 public:
 	enum Type {
 		kAbstract,
@@ -30,8 +31,8 @@ public:
 		
 		kNumber
 	};
-	D3D9primitive();
-	virtual ~D3D9primitive();
+	D3D9Primitive();
+	virtual ~D3D9Primitive();
 
 	virtual void initialize(Primitive *source_primitive) = 0;
 	virtual void finalize() = 0;
@@ -57,8 +58,8 @@ protected:
 
 public:
 	Material *m_overloadMaterial;
-	D3D9instancedbuffer *m_instanceBuffer;
-	D3D9indexobject *m_overloadedIndexObj;
+	D3D9InstancedBuffer *m_instanceBuffer;
+	D3D9IndexObject *m_overloadedIndexObj;
 	int m_activeIndexes;
 
 	bool m_isMatrixSet;
@@ -71,9 +72,10 @@ public:
 // class D3D9geometry
 //--------------------------------------------------------------------------
 
-class D3D9geometry : public D3D9primitive {
+class D3D9geometry : public D3D9Primitive
+{
 public:
-	typedef D3D9vertexobject::VertexType VertexType;
+	typedef D3D9VertexObject::VertexType VertexType;
 
 	D3D9geometry();
 	virtual ~D3D9geometry();
@@ -100,10 +102,10 @@ protected:
 protected:
 	// vertex info
 	VertexType m_vertexType;
-	D3D9vertexobject m_vertexObject;
+	D3D9VertexObject m_vertexObject;
 
 	// index info
-	D3D9indexobject m_indexObject;
+	D3D9IndexObject m_indexObject;
 	D3DPRIMITIVETYPE m_d3dPrimitiveType;
 
 	float m_geometrySize;		// point size or line width
@@ -113,7 +115,8 @@ protected:
 // class D3D9text
 //--------------------------------------------------------------------------
 
-class D3D9text : public D3D9primitive {
+class D3D9text : public D3D9Primitive
+{
 public:
 	D3D9text();
 	virtual ~D3D9text();
@@ -141,12 +144,13 @@ private:
 // class D3D9terrain
 //--------------------------------------------------------------------------
 
-class D3D9terrain : public D3D9geometry {
+class D3D9terrain : public D3D9geometry
+{
 public:
 	D3D9terrain();
 	virtual ~D3D9terrain();
 
-	// implement D3D9primitive
+	// implement D3D9Primitive
 	virtual void initialize(Primitive *source_primitive);
 	virtual void finalize();
 	virtual void update();
@@ -174,7 +178,8 @@ private:
 // class D3D9group
 //--------------------------------------------------------------------------
 
-class D3D9group : public D3D9primitive {
+class D3D9group : public D3D9Primitive
+{
 public:
 	D3D9group();
 	virtual ~D3D9group();
@@ -193,7 +198,8 @@ private:
 // class D3D9ref
 //--------------------------------------------------------------------------
 
-class D3D9ref : public D3D9primitive {
+class D3D9ref : public D3D9Primitive
+{
 public:
 	D3D9ref();
 	virtual ~D3D9ref();
@@ -206,14 +212,15 @@ public:
 
 private:
 	int m_refed;
-	D3D9indexobject m_indexObject;
+	D3D9IndexObject m_indexObject;
 };
 
 //--------------------------------------------------------------------------
 // class D3D9instance
 //--------------------------------------------------------------------------
 
-class D3D9instance : public D3D9primitive {
+class D3D9instance : public D3D9Primitive
+{
 public:
 	D3D9instance();
 	virtual ~D3D9instance();
@@ -226,10 +233,11 @@ public:
 
 private:
 	int m_instanced;
-	D3D9instancedbuffer m_buffer;
+	D3D9InstancedBuffer m_buffer;
 };
 
-class D3D9primitivemanager : public PrimitiveManager {
+class D3D9primitivemanager : public PrimitiveManager
+{
 public:
 	D3D9primitivemanager();
 	~D3D9primitivemanager();
@@ -238,16 +246,16 @@ public:
 
 	int cachePrimitive(Primitive *prim);
 	void uncachePrimitive(Primitive *prim);
-	D3D9primitive *getPrimitive(int handle);
+	D3D9Primitive *getPrimitive(int handle);
 
 	void onDeviceLost();
 	void onReset();
 
 protected:
 	void findStaticFreeSlot(int &handle);
-	void linkId(int id, D3D9primitive *glprim);
-	D3D9primitive *createPrim(Primitive *prim);
-	void freePrim(D3D9primitive *prim);
+	void linkId(int id, D3D9Primitive *glprim);
+	D3D9Primitive *createPrim(Primitive *prim);
+	void freePrim(D3D9Primitive *prim);
 
 private:
 	enum {
@@ -257,10 +265,10 @@ private:
 	int m_frameId;
 
 	int m_numStaticPrims;
-	D3D9primitive *m_staticPrims[MAX_PRIMITIVES];
+	D3D9Primitive *m_staticPrims[MAX_PRIMITIVES];
 
 	int m_numFramePrims;
-	D3D9primitive *m_framePrims[MAX_PRIMITIVES];
+	D3D9Primitive *m_framePrims[MAX_PRIMITIVES];
 
 	void *m_freePrimLink;
 
@@ -275,7 +283,8 @@ private:
 	BlockAlloc<D3D9instance>	m_instanceAlloc;
 };
 
-inline D3D9primitive *D3D9primitivemanager::getPrimitive(int handle) {
+inline D3D9Primitive *D3D9primitivemanager::getPrimitive(int handle)
+{
 	if (handle == -1) {
 		return nullptr;
 	}

@@ -33,9 +33,7 @@ public:
 	void setTextureSet(const String &texname);
 
 	void setDiffuse(const Vector3 &v);
-	void setDiffuse(Rgb rgb, float intensity = 1.0f) { m_diffuse = rgb.toVector() * intensity; }
 	void setSpecular(const Vector3 &v);
-	void setSpecular(Rgb rgb, float intensity = 1.0f) { m_specular = rgb.toVector() * intensity; }
 	void setShiness(float shiness) { m_shiness = shiness; }
 	void setDetailScale(float scale) { m_detailScale = scale; }
 	float getDetailScale() const { return m_detailScale; }

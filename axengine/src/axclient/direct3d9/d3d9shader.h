@@ -15,7 +15,7 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-class D3D9shader;
+class D3D9Shader;
 
 //--------------------------------------------------------------------------
 // class UniformCache
@@ -80,14 +80,14 @@ typedef Sequence<D3D9pixel2texel>	D3D9pixel2texels;
 
 class D3D9pass {
 public:
-	friend class D3D9shader;
+	friend class D3D9Shader;
 	
 	struct ParamDesc {
 		D3DXCONSTANT_DESC d3dDesc;
 		const D3D9pixel2texel *p2t;
 	};
 
-	D3D9pass(D3D9shader *shader, D3DXHANDLE d3dxhandle);
+	D3D9pass(D3D9Shader *shader, D3DXHANDLE d3dxhandle);
 	~D3D9pass();
 
 	void begin();
@@ -103,7 +103,7 @@ protected:
 	void setParameter(const ParamDesc &param, const float *value, bool isPixelShader);
 
 private:
-	D3D9shader *m_shader;
+	D3D9Shader *m_shader;
 	D3DXHANDLE m_d3dxhandle;
 
 	// shader
@@ -134,14 +134,14 @@ private:
 
 class D3D9technique {
 public:
-	friend class D3D9shader;
+	friend class D3D9Shader;
 
-	D3D9technique(D3D9shader *shader, D3DXHANDLE d3dxhandle);
+	D3D9technique(D3D9Shader *shader, D3DXHANDLE d3dxhandle);
 	~D3D9technique();
 
 private:
 	enum {MAX_PASSES = 8};
-	D3D9shader *m_shader;
+	D3D9Shader *m_shader;
 	D3DXHANDLE m_d3dxhandle;
 
 	int m_numPasses;
@@ -149,17 +149,17 @@ private:
 };
 
 //--------------------------------------------------------------------------
-// class D3D9shader
+// class D3D9Shader
 //--------------------------------------------------------------------------
 
 
-class D3D9shader : public Shader {
+class D3D9Shader : public Shader {
 public:
 	friend class D3D9pass;
 	friend class D3D9technique;
 
-	D3D9shader();
-	virtual ~D3D9shader();
+	D3D9Shader();
+	virtual ~D3D9Shader();
 
 	// implement Shader
 	virtual bool doInit(const String &name, const ShaderMacro &macro = g_shaderMacro);
@@ -172,7 +172,7 @@ public:
 	virtual SortHint getSortHint() const;
 	virtual bool haveTechnique(Technique tech) const;
 
-	void setSystemMap(SamplerType maptype, D3D9texture *tex);
+	void setSystemMap(SamplerType maptype, D3D9Texture *tex);
 	// set pixel to texel conversion paramter
 	void setPixelToTexel(int width, int height);
 
@@ -207,7 +207,7 @@ private:
 	SortHint m_sortHint;
 
 	D3DXHANDLE m_d3dxTechniques[Technique::Number];
-	D3D9texture *m_samplerBound[SamplerType::NUMBER_ALL];
+	D3D9Texture *m_samplerBound[SamplerType::NUMBER_ALL];
 	D3DXHANDLE m_curTechnique;
 
 	bool m_haveTextureTarget;
@@ -237,12 +237,12 @@ public:
 	virtual void saveShaderCache(const String &name);
 	virtual void applyShaderCache(const String &name);
 
-	D3D9shader *findShaderDX(const String &name, const ShaderMacro &macro = g_shaderMacro);
+	D3D9Shader *findShaderDX(const String &name, const ShaderMacro &macro = g_shaderMacro);
 
 private:
-	typedef Dict<FixedString,Dict<ShaderMacro,D3D9shader*> > ShaderPool;
+	typedef Dict<FixedString,Dict<ShaderMacro,D3D9Shader*> > ShaderPool;
 	ShaderPool m_shaderPool;
-	D3D9shader *m_defaulted;
+	D3D9Shader *m_defaulted;
 };
 
 

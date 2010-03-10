@@ -13,10 +13,10 @@ read the license and understand and accept it fully.
 AX_BEGIN_NAMESPACE
 
 //------------------------------------------------------------------------------
-// class D3D9primitive
+// class D3D9Primitive
 //------------------------------------------------------------------------------
 
-D3D9primitive::D3D9primitive()
+D3D9Primitive::D3D9Primitive()
 {
 	m_src = nullptr;
 	m_material = nullptr;
@@ -29,21 +29,21 @@ D3D9primitive::D3D9primitive()
 	m_activeIndexes = 0;
 }
 
-D3D9primitive::~D3D9primitive()
+D3D9Primitive::~D3D9Primitive()
 {}
 
-void D3D9primitive::initialize(Primitive *src)
+void D3D9Primitive::initialize(Primitive *src)
 {
 	m_src = src;
 	m_hint = src->getHint();
 
-	D3D9primitive::update();
+	D3D9Primitive::update();
 }
 
-void D3D9primitive::finalize()
+void D3D9Primitive::finalize()
 {}
 
-void D3D9primitive::update()
+void D3D9Primitive::update()
 {
 	m_material = m_src->getMaterial();
 	m_lightmap = m_src->getLightMap();
@@ -70,7 +70,7 @@ D3D9geometry::~D3D9geometry()
 
 void D3D9geometry::initialize(Primitive *src)
 {
-	D3D9primitive::initialize(src);
+	D3D9Primitive::initialize(src);
 
 	switch (m_src->getType()) {
 	case Primitive::PointType:
@@ -92,7 +92,7 @@ void D3D9geometry::initialize(Primitive *src)
 
 void D3D9geometry::finalize()
 {
-	D3D9primitive::finalize();
+	D3D9Primitive::finalize();
 }
 
 void D3D9geometry::update()
@@ -100,7 +100,7 @@ void D3D9geometry::update()
 	if (!m_src->isDirty() && m_hint == Primitive::HintStatic)
 		return;
 
-	D3D9primitive::update();
+	D3D9Primitive::update();
 
 	switch (m_src->getType()) {
 	case Primitive::PointType:
@@ -128,9 +128,9 @@ void D3D9geometry::draw(Technique tech)
 	}
 
 	if (m_overloadMaterial)
-		D3D9draw::draw(m_overloadMaterial, tech, this);
+		D3D9Draw::draw(m_overloadMaterial, tech, this);
 	else
-		D3D9draw::draw(m_material, tech, this);
+		D3D9Draw::draw(m_material, tech, this);
 
 	if (m_instanceBuffer) {
 		g_shaderMacro.resetMacro(ShaderMacro::G_GEOMETRY_INSTANCING);
@@ -159,7 +159,7 @@ void D3D9geometry::unbindVertexBuffer()
 
 void D3D9geometry::drawElements()
 {
-	D3D9indexobject *ib = &m_indexObject;
+	D3D9IndexObject *ib = &m_indexObject;
 
 	if (m_overloadedIndexObj) {
 		ib = m_overloadedIndexObj;
@@ -170,7 +170,7 @@ void D3D9geometry::drawElements()
 
 void D3D9geometry::initPoint()
 {
-	m_vertexType = D3D9vertexobject::VertexDebug;
+	m_vertexType = D3D9VertexObject::VertexDebug;
 	m_d3dPrimitiveType = D3DPT_POINTLIST;
 
 	updatePoint();
@@ -178,7 +178,7 @@ void D3D9geometry::initPoint()
 
 void D3D9geometry::initLine()
 {
-	m_vertexType = D3D9vertexobject::VertexDebug;
+	m_vertexType = D3D9VertexObject::VertexDebug;
 	m_d3dPrimitiveType = D3DPT_LINELIST;
 
 	updateLine();
@@ -186,7 +186,7 @@ void D3D9geometry::initLine()
 
 void D3D9geometry::initMesh()
 {
-	m_vertexType = D3D9vertexobject::VertexGeneric;
+	m_vertexType = D3D9VertexObject::VertexGeneric;
 
 	MeshPrim *src = (MeshPrim*)m_src;
 
@@ -268,7 +268,7 @@ D3D9text::~D3D9text()
 
 void D3D9text::initialize(Primitive *src)
 {
-	D3D9primitive::initialize(src);
+	D3D9Primitive::initialize(src);
 
 	TextPrim *text = static_cast<TextPrim*>(m_src);
 	AX_ASSERT(text);
@@ -296,12 +296,12 @@ void D3D9text::initialize(Primitive *src)
 
 void D3D9text::finalize()
 {
-	D3D9primitive::finalize();
+	D3D9Primitive::finalize();
 }
 
 void D3D9text::update()
 {
-	D3D9primitive::update();
+	D3D9Primitive::update();
 }
 
 #define BLINK_DIVISOR 0.075
@@ -431,11 +431,12 @@ D3D9terrain::~D3D9terrain()
 {
 }
 
-// implement D3D9primitive
-void D3D9terrain::initialize(Primitive *src) {
-	D3D9primitive::initialize(src);
+// implement D3D9Primitive
+void D3D9terrain::initialize(Primitive *src)
+{
+	D3D9Primitive::initialize(src);
 
-	m_vertexType = D3D9vertexobject::VertexChunk;
+	m_vertexType = D3D9VertexObject::VertexChunk;
 	m_d3dPrimitiveType = D3DPT_TRIANGLELIST;
 
 	update();
@@ -443,7 +444,7 @@ void D3D9terrain::initialize(Primitive *src) {
 
 void D3D9terrain::finalize()
 {
-	D3D9primitive::finalize();
+	D3D9Primitive::finalize();
 }
 
 void D3D9terrain::update()
@@ -451,7 +452,7 @@ void D3D9terrain::update()
 	if (!m_src->isDirty() && m_hint == Primitive::HintStatic)
 		return;
 
-	D3D9primitive::update();
+	D3D9Primitive::update();
 
 	ChunkPrim *chunk = static_cast<ChunkPrim*>(m_src);
 	AX_ASSERT(chunk);
@@ -544,7 +545,7 @@ void D3D9terrain::draw(Technique tech)
 
 	if (!drawlayer || !combine) {
 		//D3D9geometry::draw(tech);
-		D3D9draw::draw(m_material, tech, this);
+		D3D9Draw::draw(m_material, tech, this);
 
 		if (!drawlayer) {
 			return;
@@ -567,7 +568,7 @@ void D3D9terrain::draw(Technique tech)
 		l.detailMat->setFeature(1, combine && (i == 0)); // if is first layer, set first layer flag
 
 		AX_SU(g_layerScale, l.scale);
-		D3D9draw::draw(l.detailMat.get(), Technique::Layer, this);
+		D3D9Draw::draw(l.detailMat.get(), Technique::Layer, this);
 	}
 }
 
@@ -586,7 +587,7 @@ D3D9group::~D3D9group()
 
 void D3D9group::initialize(Primitive *src)
 {
-	D3D9primitive::initialize(src);
+	D3D9Primitive::initialize(src);
 
 	GroupPrim *rpgroup = static_cast<GroupPrim*>(src);
 	AX_ASSERT(rpgroup);
@@ -603,18 +604,18 @@ void D3D9group::initialize(Primitive *src)
 void D3D9group::finalize()
 {
 	m_primitives.clear();
-	D3D9primitive::finalize();
+	D3D9Primitive::finalize();
 }
 
 void D3D9group::update()
 {
-	D3D9primitive::update();
+	D3D9Primitive::update();
 }
 
 void D3D9group::draw(Technique tech)
 {
 	for (size_t i = 0; i < m_primitives.size(); i++) {
-		D3D9primitive *prim = d3d9PrimitiveManager->getPrimitive(m_primitives[i]);
+		D3D9Primitive *prim = d3d9PrimitiveManager->getPrimitive(m_primitives[i]);
 		prim->draw(tech);
 	}
 }
@@ -631,7 +632,7 @@ D3D9ref::~D3D9ref()
 
 void D3D9ref::initialize(Primitive *src)
 {
-	D3D9primitive::initialize(src);
+	D3D9Primitive::initialize(src);
 
 	RefPrim *ref = static_cast<RefPrim*>(src);
 	AX_ASSERT(ref);
@@ -649,17 +650,17 @@ void D3D9ref::initialize(Primitive *src)
 
 void D3D9ref::finalize()
 {
-	D3D9primitive::finalize();
+	D3D9Primitive::finalize();
 }
 
 void D3D9ref::update()
 {
-	D3D9primitive::update();
+	D3D9Primitive::update();
 }
 
 void D3D9ref::draw(Technique tech)
 {
-	D3D9primitive *prim = d3d9PrimitiveManager->getPrimitive(m_refed);
+	D3D9Primitive *prim = d3d9PrimitiveManager->getPrimitive(m_refed);
 	if (m_material) {
 		prim->setOverloadMaterial(m_material);
 	}
@@ -697,7 +698,7 @@ D3D9instance::~D3D9instance()
 
 void D3D9instance::initialize(Primitive *src)
 {
-	D3D9primitive::initialize(src);
+	D3D9Primitive::initialize(src);
 
 	update();
 }
@@ -707,7 +708,7 @@ void D3D9instance::finalize()
 
 void D3D9instance::update()
 {
-	D3D9primitive::update();
+	D3D9Primitive::update();
 	InstancePrim *gi = static_cast<InstancePrim*>(m_src);
 	AX_ASSERT(gi);
 
@@ -718,7 +719,7 @@ void D3D9instance::update()
 
 void D3D9instance::draw(Technique tech)
 {
-	D3D9primitive *prim = d3d9PrimitiveManager->getPrimitive(m_instanced);
+	D3D9Primitive *prim = d3d9PrimitiveManager->getPrimitive(m_instanced);
 
 	prim->m_instanceBuffer = &m_buffer;
 	prim->draw(tech);
@@ -773,7 +774,7 @@ int D3D9primitivemanager::cachePrimitive(Primitive *prim)
 	if (prim->getHint() != Primitive::HintFrame) {
 		if (h == 0) {
 			// init
-			D3D9primitive *glprim = createPrim(prim);
+			D3D9Primitive *glprim = createPrim(prim);
 
 			findStaticFreeSlot(new_id);
 			linkId(new_id, glprim);
@@ -781,7 +782,7 @@ int D3D9primitivemanager::cachePrimitive(Primitive *prim)
 			prim->setCachedId(new_id);
 		} else {
 			// update
-			D3D9primitive *glprim = getPrimitive(h);
+			D3D9Primitive *glprim = getPrimitive(h);
 			glprim->update();
 
 			new_id = h;
@@ -791,7 +792,7 @@ int D3D9primitivemanager::cachePrimitive(Primitive *prim)
 		if (isStatic(h))
 			uncachePrimitive(prim);
 
-		D3D9primitive *glprim = createPrim(prim);
+		D3D9Primitive *glprim = createPrim(prim);
 
 		new_id = (int)((m_numFramePrims+1) | FRAME_FLAG);
 		m_numFramePrims++;
@@ -882,7 +883,7 @@ void D3D9primitivemanager::findStaticFreeSlot(int &handle)
 	}
 
 	// pop a free slot
-	D3D9primitive** ptr = (D3D9primitive**)m_freePrimLink;
+	D3D9Primitive** ptr = (D3D9Primitive**)m_freePrimLink;
 	intptr_t *link = (intptr_t*)m_freePrimLink;
 	m_freePrimLink = (void*)(*link);
 
@@ -894,7 +895,7 @@ void D3D9primitivemanager::findStaticFreeSlot(int &handle)
 #endif
 }
 
-void D3D9primitivemanager::linkId(int id, D3D9primitive *glprim)
+void D3D9primitivemanager::linkId(int id, D3D9Primitive *glprim)
 {
 	if (id == 0)
 		Errorf("D3D9primitivemanager::linkId: error id");
@@ -909,9 +910,9 @@ void D3D9primitivemanager::linkId(int id, D3D9primitive *glprim)
 	}
 }
 
-D3D9primitive *D3D9primitivemanager::createPrim(Primitive *prim)
+D3D9Primitive *D3D9primitivemanager::createPrim(Primitive *prim)
 {
-	D3D9primitive *glprim;
+	D3D9Primitive *glprim;
 
 	Primitive::Type primType = prim->getType();
 	if (primType == Primitive::TextType)
@@ -932,22 +933,22 @@ D3D9primitive *D3D9primitivemanager::createPrim(Primitive *prim)
 	return glprim;
 }
 
-void D3D9primitivemanager::freePrim( D3D9primitive *prim )
+void D3D9primitivemanager::freePrim(D3D9Primitive *prim)
 {
-	D3D9primitive::Type type = prim->getType();
+	D3D9Primitive::Type type = prim->getType();
 
 	switch (type) {
-	case D3D9primitive::kGeometry:
+	case D3D9Primitive::kGeometry:
 		return m_geometryAlloc.free((D3D9geometry*)prim);
-	case D3D9primitive::kText:
+	case D3D9Primitive::kText:
 		return m_textAlloc.free((D3D9text*)prim);
-	case D3D9primitive::kTerrain:
+	case D3D9Primitive::kTerrain:
 		return m_terrainAlloc.free((D3D9terrain*)prim);
-	case D3D9primitive::kGroup:
+	case D3D9Primitive::kGroup:
 		return m_groupAlloc.free((D3D9group*)prim);
-	case D3D9primitive::kRef:
+	case D3D9Primitive::kRef:
 		return m_refAlloc.free((D3D9ref*)prim);
-	case D3D9primitive::kInstance:
+	case D3D9Primitive::kInstance:
 		return m_instanceAlloc.free((D3D9instance*)prim);
 	default:
 		return;
@@ -956,12 +957,10 @@ void D3D9primitivemanager::freePrim( D3D9primitive *prim )
 
 void D3D9primitivemanager::onDeviceLost()
 {
-
 }
 
 void D3D9primitivemanager::onReset()
 {
-
 }
 
 AX_END_NAMESPACE

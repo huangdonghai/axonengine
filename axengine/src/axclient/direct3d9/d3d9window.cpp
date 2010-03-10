@@ -27,7 +27,7 @@ static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
 }
 
 
-D3D9window::D3D9window(const String &name) {
+D3D9Window::D3D9Window(const String &name) {
 	m_swapChain = 0;
 	m_backbuffer = 0;
 	m_swapChainWnd = 0;
@@ -70,7 +70,7 @@ D3D9window::D3D9window(const String &name) {
 	m_lightBuffer = 0;
 }
 
-D3D9window::D3D9window(handle_t wndId, const String &name) : m_name(name) {
+D3D9Window::D3D9Window(handle_t wndId, const String &name) : m_name(name) {
 	m_swapChain = 0;
 	m_backbuffer = 0;
 	m_swapChainWnd = 0;
@@ -81,17 +81,17 @@ D3D9window::D3D9window(handle_t wndId, const String &name) : m_name(name) {
 	m_wndId = (HWND)wndId;
 }
 
-D3D9window::~D3D9window() {
+D3D9Window::~D3D9Window() {
 	SAFE_RELEASE(m_backbuffer);
 	SAFE_RELEASE(m_swapChain);
 }
 
 // implement ITarget
-Rect D3D9window::getRect() {
+Rect D3D9Window::getRect() {
 	return Rect(0, 0, m_swapChainSize.x, m_swapChainSize.y);
 }
 
-void D3D9window::bind() {
+void D3D9Window::bind() {
 	checkSwapChain();
 
 	IDirect3DSurface9 *ds = d3d9TargetManager->getDepthStencil(m_swapChainSize.x, m_swapChainSize.y);
@@ -104,10 +104,10 @@ void D3D9window::bind() {
 //		D3D9target *m_depthStencil = d3d9TargetManager->allocTargetDX(RenderTarget::PermanentAlloc, m_swapChainSize.x, m_swapChainSize.y, TexFormat::D24S8);
 }
 
-void D3D9window::unbind() {
+void D3D9Window::unbind() {
 }
 
-void D3D9window::present()
+void D3D9Window::present()
 {
 	HRESULT hr = m_swapChain->Present(0, 0, 0, 0, D3DPRESENT_DONOTWAIT);
 
@@ -135,7 +135,7 @@ void D3D9window::present()
 	}
 }
 
-void D3D9window::checkSwapChain()
+void D3D9Window::checkSwapChain()
 {
 	RECT r;
 	BOOL v = ::GetClientRect(m_wndId, &r);

@@ -17,22 +17,22 @@ class D3D9geometry;
 
 struct PostMesh;
 
-class D3D9draw {
+class D3D9Draw {
 public:
 	enum {
 		NUM_CHARS_PER_BATCH = 64
 	};
 
-	D3D9draw();
-	~D3D9draw();
+	D3D9Draw();
+	~D3D9Draw();
 
-	static D3D9shader *findShader(Material *mat, Technique tech = Technique::Main);
+	static D3D9Shader *findShader(Material *mat, Technique tech = Technique::Main);
 	static void draw(Material *mat, Technique tech, D3D9geometry *prim);
-	static void draw(D3D9shader *shader, Technique tech, D3D9geometry *prim);
+	static void draw(D3D9Shader *shader, Technique tech, D3D9geometry *prim);
 
 	void drawPrimitiveUP(Material *mat, Technique tech, void *vertices, int numverts);
 	void drawPostUP(Material *mat, PostMesh *mesh);
-	void drawPostUP(D3D9shader *shader, PostMesh *mesh);
+	void drawPostUP(D3D9Shader *shader, PostMesh *mesh);
 
 	Vector2 drawString(Font *font, Rgba color, const TextQuad &tq, const Vector2 &xy, const wchar_t *str, size_t len, const Vector2 &scale, bool italic = false);
 
@@ -41,11 +41,11 @@ protected:
 
 private:
 	BlendVertex m_fontVerts[NUM_CHARS_PER_BATCH*6];
-	D3D9shader *m_fontShader;
-	D3D9vertdecl *m_vertDecl;
+	D3D9Shader *m_fontShader;
+	D3D9VertDecl *m_vertDecl;
 	float m_posOffset;
 public:
-	D3D9vertdecl *m_postVertDecl;
+	D3D9VertDecl *m_postVertDecl;
 };
 
 AX_END_NAMESPACE

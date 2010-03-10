@@ -65,15 +65,15 @@ public:
 	}
 };
 
-class D3D9statemanager : public ID3DXEffectStateManager
+class D3D9StateManager : public ID3DXEffectStateManager
 {
 public:
 	enum {
 		MAX_STAGES = 32
 	};
-	D3D9statemanager();
+	D3D9StateManager();
 
-	virtual ~D3D9statemanager()
+	virtual ~D3D9StateManager()
 	{
 	};       // virtual destructor, for cleanup purposes
 
@@ -172,7 +172,7 @@ public:
 			return;
 		}
 
-		D3D9texture *d3d9tex = (D3D9texture*)tex;
+		D3D9Texture *d3d9tex = (D3D9Texture*)tex;
 		SetTexture(stage, d3d9tex->getObject());
 	}
 

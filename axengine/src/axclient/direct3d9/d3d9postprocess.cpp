@@ -219,7 +219,7 @@ static int getSamplerOffsets_Gauss1D(int texwidth, int texheight, int len, Vecto
 }
 
 
-D3D9postprocess::D3D9postprocess() {
+D3D9Postprocess::D3D9Postprocess() {
 	m_mtrDrawQuad = Material::load("drawquad");
 	m_mtrMaskVolume = Material::load("maskvolume");
 
@@ -235,13 +235,13 @@ D3D9postprocess::D3D9postprocess() {
 	m_hexahedron = nullptr;
 }
 
-D3D9postprocess::~D3D9postprocess() {
+D3D9Postprocess::~D3D9Postprocess() {
 }
 
-void D3D9postprocess::process(Type type, D3D9texture *texture) {
+void D3D9Postprocess::process(Type type, D3D9Texture *texture) {
 }
 
-void D3D9postprocess::drawQuad(D3D9texture *texture) {
+void D3D9Postprocess::drawQuad(D3D9Texture *texture) {
 #if 0
 	texture->setFilterMode(Texture::Nearest);
 
@@ -264,7 +264,7 @@ void D3D9postprocess::drawQuad(D3D9texture *texture) {
 #endif
 }
 
-void D3D9postprocess::measureHistogram(D3D9texture *tex, int index) {
+void D3D9Postprocess::measureHistogram(D3D9Texture *tex, int index) {
 	tex->setFilterMode(Texture::FM_Nearest);
 
 	float w = 1.0f / RenderWorld::HISTOGRAM_WIDTH;
@@ -284,7 +284,7 @@ void D3D9postprocess::measureHistogram(D3D9texture *tex, int index) {
 	PostMesh::setupScreenQuad(m_screenQuad, r);
 }
 
-void D3D9postprocess::maskVolume(Vector3 volume[8]) {
+void D3D9Postprocess::maskVolume(Vector3 volume[8]) {
 	d3d9StateManager->SetRenderState(D3DRS_STENCILWRITEMASK, 255);
 	d3d9StateManager->SetRenderState(D3DRS_COLORWRITEENABLE, 0);
 	d3d9StateManager->SetRenderState(D3DRS_STENCILFUNC,D3DCMP_ALWAYS);
@@ -303,7 +303,7 @@ void D3D9postprocess::maskVolume(Vector3 volume[8]) {
 	d3d9StateManager->SetRenderState(D3DRS_COLORWRITEENABLE, 0xf);
 }
 
-void D3D9postprocess::maskVolumeTwoSides(Vector3 volume[8])
+void D3D9Postprocess::maskVolumeTwoSides(Vector3 volume[8])
 {
 	D3D9clearer clearer;
 	clearer.clearStencil(true,127);
@@ -354,7 +354,7 @@ void D3D9postprocess::maskShadow(Vector3 volume[8], const Matrix4 &matrix, D3D9t
 	d3d9Draw->drawPostUP(m_mtrShadowMask, m_hexahedron);
 }
 
-void D3D9postprocess::maskShadow(Vector3 volume[8], const Matrix4 &matrix, D3D9texture *tex, const Vector4 &minrange, const Vector4 &maxrange, const Matrix4 &scaleoffset, bool front /*= false */)
+void D3D9Postprocess::maskShadow(Vector3 volume[8], const Matrix4 &matrix, D3D9Texture *tex, const Vector4 &minrange, const Vector4 &maxrange, const Matrix4 &scaleoffset, bool front /*= false */)
 {
 	PostMesh::setupHexahedron(m_hexahedron, volume);
 
@@ -397,7 +397,7 @@ void D3D9postprocess::maskShadow(Vector3 volume[8], const Matrix4 &matrix, D3D9t
 	d3d9Draw->drawPostUP(m_mtrShadowMask, m_hexahedron);
 }
 
-void D3D9postprocess::shadowBlur(D3D9texture *texture, bool is_du) {
+void D3D9Postprocess::shadowBlur(D3D9Texture *texture, bool is_du) {
 	//		cgGLSetTextureParameter(g_shadowMask, texture->getObject());
 
 	const Vector4 &viewport = d3d9Camera->getViewPort();
@@ -412,7 +412,7 @@ void D3D9postprocess::shadowBlur(D3D9texture *texture, bool is_du) {
 }
 #endif
 
-void D3D9postprocess::downscale4x4(D3D9texture *tex, const Rect &rect) {
+void D3D9Postprocess::downscale4x4(D3D9Texture *tex, const Rect &rect) {
 	tex->setFilterMode(Texture::FM_Linear);
 	tex->setClampMode(Texture::CM_ClampToEdge);
 
@@ -437,8 +437,8 @@ void D3D9postprocess::downscale4x4(D3D9texture *tex, const Rect &rect) {
 	PostMesh::setupScreenQuad(m_screenQuad, r);
 }
 
-D3D9shader *D3D9postprocess::getShader(const String &name) {
-	Dict<String, D3D9shader*>::iterator it = m_genericShaders.find(name);
+D3D9Shader *D3D9Postprocess::getShader(const String &name) {
+	Dict<String, D3D9Shader*>::iterator it = m_genericShaders.find(name);
 
 	if (it != m_genericShaders.end()) {
 		return it->second;
@@ -447,14 +447,14 @@ D3D9shader *D3D9postprocess::getShader(const String &name) {
 #if 0
 	D3D9shader *shader = FindAsset_<D3D9shader>(name);
 #else
-	D3D9shader *shader = d3d9ShaderManager->findShaderDX(name);
+	D3D9Shader *shader = d3d9ShaderManager->findShaderDX(name);
 #endif
 	m_genericShaders[name] = shader;
 	return shader;
 }
 
-void D3D9postprocess::genericPP(const String &shadername, D3D9texture *src) {
-	D3D9shader *shader = getShader(shadername);
+void D3D9Postprocess::genericPP(const String &shadername, D3D9Texture *src) {
+	D3D9Shader *shader = getShader(shadername);
 
 	src->setFilterMode(Texture::FM_Nearest);
 	src->setClampMode(Texture::CM_ClampToEdge);
@@ -471,8 +471,8 @@ void D3D9postprocess::genericPP(const String &shadername, D3D9texture *src) {
 	PostMesh::setupScreenQuad(m_screenQuad, r);
 }
 
-void D3D9postprocess::genericPP(const String &shadername, RenderTarget *target, D3D9texture *src) {
-	D3D9shader *shader = getShader(shadername);
+void D3D9Postprocess::genericPP(const String &shadername, RenderTarget *target, D3D9Texture *src) {
+	D3D9Shader *shader = getShader(shadername);
 	RenderCamera camera;
 	camera.setTarget(target);
 	camera.setOverlay(target->getRect());
@@ -497,12 +497,12 @@ void D3D9postprocess::genericPP(const String &shadername, RenderTarget *target, 
 	d3d9Thread->unsetScene(0, 0, 0, &camera);
 }
 
-void D3D9postprocess::genericPP(const String &shadername, D3D9texture *src1, D3D9texture *src2) {
+void D3D9Postprocess::genericPP(const String &shadername, D3D9Texture *src1, D3D9Texture *src2) {
 	genericPP(shadername, nullptr, src1, src2);
 }
 
-void D3D9postprocess::genericPP(const String &shadername, RenderTarget *target, D3D9texture *src1, D3D9texture *src2) {
-	D3D9shader *shader = getShader(shadername);
+void D3D9Postprocess::genericPP(const String &shadername, RenderTarget *target, D3D9Texture *src1, D3D9Texture *src2) {
+	D3D9Shader *shader = getShader(shadername);
 
 	RenderCamera camera;
 	if (target) {
@@ -546,7 +546,7 @@ void D3D9postprocess::genericPP(const String &shadername, RenderTarget *target, 
 #define F_SPOTLIGHT 4
 #define F_BOXFALLOFF 5
 
-void D3D9postprocess::drawLight(Vector3 volume[8], QueuedLight *light)
+void D3D9Postprocess::drawLight(Vector3 volume[8], QueuedLight *light)
 {
 	PostMesh::setupHexahedron(m_hexahedron, volume);
 
@@ -566,7 +566,7 @@ void D3D9postprocess::drawLight(Vector3 volume[8], QueuedLight *light)
 	d3d9Draw->drawPostUP(m_mtrPointLight, m_hexahedron);
 }
 
-void D3D9postprocess::drawLightShadowed(Vector3 volume[8], QueuedLight *light, const RenderCamera &shadowCamera)
+void D3D9Postprocess::drawLightShadowed(Vector3 volume[8], QueuedLight *light, const RenderCamera &shadowCamera)
 {
 	PostMesh::setupHexahedron(m_hexahedron, volume);
 
@@ -574,7 +574,7 @@ void D3D9postprocess::drawLightShadowed(Vector3 volume[8], QueuedLight *light, c
 	lightpos.w = 1.0f / light->radius;
 
 	Matrix4 matrix = shadowCamera.getViewProjMatrix();
-	D3D9texture *tex = (D3D9texture*)shadowCamera.getTarget()->getTexture();
+	D3D9Texture *tex = (D3D9Texture*)shadowCamera.getTarget()->getTexture();
 	int width, height;
 	tex->getSize(width, height);
 	matrix.scale(0.5f, -0.5f, 0.5f);
@@ -613,12 +613,12 @@ void D3D9postprocess::drawLightShadowed(Vector3 volume[8], QueuedLight *light, c
 #define F_DIRECTION_LIGHT 1
 #define F_SKY_LIGHT 2
 #define F_ENV_LIGHT 3
-void D3D9postprocess::drawGlobalLight( Vector3 volume[8], QueuedLight *light )
+void D3D9Postprocess::drawGlobalLight( Vector3 volume[8], QueuedLight *light )
 {
 	QueuedShadow *qshadow = light->shadowInfo;
 
 	if (qshadow) {
-		D3D9texture *tex = (D3D9texture*)qshadow->splitCameras[0].getTarget()->getTexture();
+		D3D9Texture *tex = (D3D9Texture*)qshadow->splitCameras[0].getTarget()->getTexture();
 		Matrix4 matrix = qshadow->splitCameras[0].getViewProjMatrix();
 		matrix.scale(0.5f, -0.5f, 0.5f);
 		matrix.translate(0.5f, 0.5f, 0.5f);
@@ -691,13 +691,13 @@ void D3D9postprocess::drawGlobalLight( Vector3 volume[8], QueuedLight *light )
 #undef F_SKY_LIGHT
 #undef F_ENV_LIGHT
 
-void D3D9postprocess::issueBboxQuery( const BoundingBox &bbox )
+void D3D9Postprocess::issueBboxQuery( const BoundingBox &bbox )
 {
 	PostMesh::setupBoundingBox(m_hexahedron, bbox);
 	d3d9Draw->drawPostUP(m_shaderQuery, m_hexahedron);
 }
 
-void D3D9postprocess::issueQueryList( const List<D3D9querymanager::ActiveQuery*>& querylist )
+void D3D9Postprocess::issueQueryList( const List<D3D9querymanager::ActiveQuery*>& querylist )
 {
 	d3d9StateManager->SetRenderState(D3DRS_COLORWRITEENABLE, 0);
 	d3d9StateManager->setVertexDeclaration(d3d9Draw->m_postVertDecl->getObject());
@@ -720,7 +720,7 @@ void D3D9postprocess::issueQueryList( const List<D3D9querymanager::ActiveQuery*>
 
 			count++;
 
-			D3D9query *query = active->query;
+			D3D9Query *query = active->query;
 			if (!query->beginQuery())
 				continue;
 

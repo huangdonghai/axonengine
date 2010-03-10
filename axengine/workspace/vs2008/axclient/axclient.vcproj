@@ -334,6 +334,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\axclient\render\commandbuf.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\axclient\render\fog.cpp"
 				>
 			</File>
@@ -650,6 +654,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\axclient\direct3d9\d3d9material.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\axclient\direct3d9\d3d9material.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\axclient\direct3d9\d3d9postprocess.cpp"
 				>
 			</File>
@@ -705,6 +717,14 @@
 			</File>
 			<File
 				RelativePath="..\..\..\src\axclient\direct3d9\d3d9rendertarget.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\axclient\direct3d9\d3d9sampler.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\axclient\direct3d9\d3d9sampler.h"
 				>
 			</File>
 			<File

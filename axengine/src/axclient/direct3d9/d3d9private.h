@@ -98,8 +98,8 @@ inline const char *D3DErrorString(HRESULT hr) {
 #undef D3DERR
 }
 
-extern D3D9window *d3d9InternalWindow;
-extern D3D9driver *d3d9Driver;
+extern D3D9Window *d3d9InternalWindow;
+extern D3D9Driver *d3d9Driver;
 extern IRenderDriver::Info *d3d9DriverInfo;
 extern RenderQueue *d3d9Queue;
 extern SyncMutex d3d9Mutex;
@@ -109,14 +109,14 @@ extern IDirect3D9 *d3d9Api;
 extern IDirect3DDevice9 *d3d9Device;
 
 extern D3D9shadermanager *d3d9ShaderManager;
-extern D3D9targetmanager *d3d9TargetManager;
+extern D3D9TargetManager *d3d9TargetManager;
 extern D3D9querymanager *d3d9QueryManager;
 extern D3D9primitivemanager *d3d9PrimitiveManager;
-extern D3D9thread *d3d9Thread;
-extern D3D9vertexbuffermanager *d3d9VertexBufferManager;
-extern D3D9postprocess *d3d9Postprocess;
-extern D3D9statemanager *d3d9StateManager;
-extern D3D9draw *d3d9Draw;
+extern D3D9Thread *d3d9Thread;
+extern D3D9VertexBufferManager *d3d9VertexBufferManager;
+extern D3D9Postprocess *d3d9Postprocess;
+extern D3D9StateManager *d3d9StateManager;
+extern D3D9Draw *d3d9Draw;
 extern const GUID d3d9ResGuid;
 
 // vonder specified FOURCC caps
@@ -128,12 +128,12 @@ extern RenderCamera *d3d9Camera;
 // thread state
 extern QueuedScene *d3d9Scene;
 
-extern D3D9window *d3d9FrameWnd;
+extern D3D9Window *d3d9FrameWnd;
 extern bool d3d9IsReflecting;
 extern bool d3d9ForceWireframe;
 
 extern QueuedScene *d3d9WorldScene;
-extern D3D9target *d3d9WorldTarget;
+extern D3D9Target *d3d9WorldTarget;
 #if 0
 extern D3D9target *d3d9ShadowMaskTarget;
 #endif

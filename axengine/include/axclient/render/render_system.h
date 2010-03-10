@@ -10,7 +10,6 @@ read the license and understand and accept it fully.
 #ifndef AX_RENDER_SYSTEM_H
 #define AX_RENDER_SYSTEM_H
 
-
 AX_BEGIN_NAMESPACE
 
 class Selection;
@@ -96,13 +95,13 @@ private:
 	Selection *m_selection;
 
 	// actor manager registry
-	Sequence<IEntityManager*>	m_entityManagers;
+	Sequence<IEntityManager*> m_entityManagers;
 };
 
-inline int RenderSystem::getFrameNum() const {
+inline int RenderSystem::getFrameNum() const
+{
 	return m_frameNum;
 }
-
 
 AX_END_NAMESPACE
 

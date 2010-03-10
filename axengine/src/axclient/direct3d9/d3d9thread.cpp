@@ -13,20 +13,20 @@ AX_BEGIN_NAMESPACE
 
 QueuedScene *d3d9Scene;
 
-D3D9window *d3d9FrameWnd;
+D3D9Window *d3d9FrameWnd;
 bool d3d9IsReflecting;
 bool d3d9ForceWireframe = false;
 
 QueuedScene *d3d9WorldScene;
-D3D9target *d3d9WorldTarget;
+D3D9Target *d3d9WorldTarget;
 const QueuedEntity *d3d9Actor;
 Interaction *d3d9Interaction;
 
 RenderTarget *d3d9BoundTarget = 0;
 
 
-static D3D9target *s_gbuffer;
-static D3D9target *s_lbuffer;	// light buffer
+static D3D9Target *s_gbuffer;
+static D3D9Target *s_lbuffer;	// light buffer
 
 
 static Technique s_technique;
@@ -84,15 +84,15 @@ void D3D9clearer::doClear() const
 }
 
 
-D3D9thread::D3D9thread()
+D3D9Thread::D3D9Thread()
 {
 	m_frameId = 0;
 }
 
-D3D9thread::~D3D9thread()
+D3D9Thread::~D3D9Thread()
 {}
 
-void D3D9thread::runFrame(bool isInThread)
+void D3D9Thread::runFrame(bool isInThread)
 {
 	double startTime = OsUtil::getTime();
 
@@ -109,7 +109,7 @@ void D3D9thread::runFrame(bool isInThread)
 	beginFrame();
 	d3d9Device->BeginScene();
 
-	D3D9window *window = dynamic_cast<D3D9window*>(d3d9Queue->getTarget());
+	D3D9Window *window = dynamic_cast<D3D9Window*>(d3d9Queue->getTarget());
 	if (window != d3d9FrameWnd) {
 		d3d9FrameWnd = window;
 		d3d9FrameWnd->bind();
@@ -178,7 +178,7 @@ void D3D9thread::runFrame(bool isInThread)
 	}
 }
 
-void D3D9thread::beginFrame()
+void D3D9Thread::beginFrame()
 {
 	if (!r_specular.getBool()) {
 		g_shaderMacro.setMacro(ShaderMacro::G_DISABLE_SPECULAR);
@@ -187,22 +187,22 @@ void D3D9thread::beginFrame()
 	}
 }
 
-void D3D9thread::drawScene(QueuedScene *scene, const D3D9clearer &clearer)
+void D3D9Thread::drawScene(QueuedScene *scene, const D3D9clearer &clearer)
 {
 	if (scene->sceneType == QueuedScene::WorldMain) {
 		drawScene_world(scene, clearer);
 	} else if (scene->sceneType == QueuedScene::Default) {
 		drawScene_noworld(scene, clearer);
 	} else {
-		Errorf("D3D9thread::drawScene: error scene");
+		Errorf("D3D9Thread::drawScene: error scene");
 	}
 }
 
-void D3D9thread::setupScene(QueuedScene *scene, const D3D9clearer *clearer, RenderTarget *target, RenderCamera *camera)
+void D3D9Thread::setupScene(QueuedScene *scene, const D3D9clearer *clearer, RenderTarget *target, RenderCamera *camera)
 {
 	//		AX_ASSERT(scene);
 	if (!scene && !camera) {
-		Errorf("D3D9thread::setupScene: parameter error");
+		Errorf("D3D9Thread::setupScene: parameter error");
 		return;
 	}
 
@@ -279,10 +279,10 @@ void D3D9thread::setupScene(QueuedScene *scene, const D3D9clearer *clearer, Rend
 	}
 }
 
-void D3D9thread::unsetScene(QueuedScene *scene, const D3D9clearer *clearer, RenderTarget *target, RenderCamera *camera)
+void D3D9Thread::unsetScene(QueuedScene *scene, const D3D9clearer *clearer, RenderTarget *target, RenderCamera *camera)
 {
 	if (!scene && !camera) {
-		Errorf("D3D9thread::unsetScene: parameter error");
+		Errorf("D3D9Thread::unsetScene: parameter error");
 		return;
 	}
 
@@ -295,11 +295,11 @@ void D3D9thread::unsetScene(QueuedScene *scene, const D3D9clearer *clearer, Rend
 	}
 }
 
-void D3D9thread::drawPrimitive(int prim_id)
+void D3D9Thread::drawPrimitive(int prim_id)
 {
 	d3d9Interaction = nullptr;
 
-	D3D9primitive *prim = d3d9PrimitiveManager->getPrimitive(prim_id);
+	D3D9Primitive *prim = d3d9PrimitiveManager->getPrimitive(prim_id);
 
 	if (!prim) {
 		return;
@@ -313,12 +313,12 @@ void D3D9thread::drawPrimitive(int prim_id)
 	prim->draw(Technique::Main);
 }
 
-void D3D9thread::drawInteraction(Interaction *ia)
+void D3D9Thread::drawInteraction(Interaction *ia)
 {
 	static bool primMatrixSet = false;
 	d3d9Interaction = ia;
 
-	D3D9primitive *prim = d3d9PrimitiveManager->getPrimitive(ia->resource);
+	D3D9Primitive *prim = d3d9PrimitiveManager->getPrimitive(ia->resource);
 
 	if (!prim) {
 		return;
@@ -359,18 +359,18 @@ void D3D9thread::drawInteraction(Interaction *ia)
 }
 
 
-void D3D9thread::endFrame()
+void D3D9Thread::endFrame()
 {
 	d3d9FrameWnd->present();
 
 	d3d9Queue->clear();
 }
 
-void D3D9thread::syncFrame()
+void D3D9Thread::syncFrame()
 {
 	BEGIN_PIX("SyncFrame");
 	Material::syncFrame();
-	D3D9texture::syncFrame();
+	D3D9Texture::syncFrame();
 	d3d9TargetManager->syncFrame();
 	d3d9QueryManager->syncFrame();
 	d3d9PrimitiveManager->syncFrame();
@@ -398,7 +398,7 @@ void D3D9thread::syncFrame()
 	END_PIX();
 }
 
-void D3D9thread::cacheSceneRes(QueuedScene *scene)
+void D3D9Thread::cacheSceneRes(QueuedScene *scene)
 {
 	RenderScene *s_view = scene->source;
 
@@ -489,12 +489,12 @@ void D3D9thread::cacheSceneRes(QueuedScene *scene)
 	}
 }
 
-void D3D9driver::runFrame()
+void D3D9Driver::runFrame()
 {
 	d3d9Thread->runFrame(false);
 }
 
-void D3D9thread::drawPass_zfill(QueuedScene *scene)
+void D3D9Thread::drawPass_zfill(QueuedScene *scene)
 {
 	s_technique = Technique::Zpass;
 
@@ -513,7 +513,7 @@ void D3D9thread::drawPass_zfill(QueuedScene *scene)
 //		d3d9StateManager->SetRenderState(D3DRS_COLORWRITEENABLE, 0xf);
 }
 
-void D3D9thread::drawPass_composite(QueuedScene *scene)
+void D3D9Thread::drawPass_composite(QueuedScene *scene)
 {
 
 	if (r_wireframe.getBool()) {
@@ -563,17 +563,17 @@ inline DWORD F2DW(FLOAT f)
 	return *((DWORD*)&f);
 }
 
-void D3D9thread::drawPass_shadowGen(QueuedScene *scene)
+void D3D9Thread::drawPass_shadowGen(QueuedScene *scene)
 {
 	if (!scene->numInteractions) {
 		return;
 	}
 
-	D3D9target *target = (D3D9target*)scene->camera.getTarget();
+	D3D9Target *target = (D3D9Target*)scene->camera.getTarget();
 	if (target->isPooled() && !target->alreadyAllocatedRealTarget() )
 		return;
 
-	D3D9texture *tex = (D3D9texture*)scene->camera.getTarget()->getTexture();
+	D3D9Texture *tex = (D3D9Texture*)scene->camera.getTarget()->getTexture();
 
 	QueuedLight *qlight = scene->sourceLight;
 	QueuedShadow *qshadow = qlight->shadowInfo;
@@ -624,7 +624,7 @@ void D3D9thread::drawPass_shadowGen(QueuedScene *scene)
 	scene->rendered = true;
 }
 
-void D3D9thread::drawPass_lights(QueuedScene *scene)
+void D3D9Thread::drawPass_lights(QueuedScene *scene)
 {
 	D3D9clearer clearer;
 
@@ -650,12 +650,12 @@ void D3D9thread::drawPass_lights(QueuedScene *scene)
 	unsetScene(d3d9WorldScene, nullptr, s_lbuffer);
 }
 
-void D3D9thread::drawGlobalLight( QueuedScene *scene, QueuedLight *light )
+void D3D9Thread::drawGlobalLight( QueuedScene *scene, QueuedLight *light )
 {
 	d3d9Postprocess->drawGlobalLight(light->lightVolume, light);
 }
 
-void D3D9thread::drawLocalLight(QueuedScene *scene, QueuedLight *light)
+void D3D9Thread::drawLocalLight(QueuedScene *scene, QueuedLight *light)
 {
 	QueuedShadow *qshadow = light->shadowInfo;
 
@@ -682,10 +682,10 @@ void D3D9thread::drawLocalLight(QueuedScene *scene, QueuedLight *light)
 	}
 }
 
-void D3D9thread::drawPass_postprocess(QueuedScene *scene)
+void D3D9Thread::drawPass_postprocess(QueuedScene *scene)
 {}
 
-void D3D9thread::drawPass_overlay(QueuedScene *scene)
+void D3D9Thread::drawPass_overlay(QueuedScene *scene)
 {
 	if (!scene->numOverlayPrimitives) {
 		return;
@@ -704,7 +704,7 @@ void D3D9thread::drawPass_overlay(QueuedScene *scene)
 	unsetScene(scene, nullptr, nullptr, &camera);
 }
 
-void D3D9thread::drawScene_world(QueuedScene *scene, const D3D9clearer &clearer)
+void D3D9Thread::drawScene_world(QueuedScene *scene, const D3D9clearer &clearer)
 {
 	BEGIN_PIX("DrawWorld");
 
@@ -811,7 +811,7 @@ void D3D9thread::drawScene_world(QueuedScene *scene, const D3D9clearer &clearer)
 	END_PIX();
 }
 
-void D3D9thread::drawScene_worldSub(QueuedScene *scene)
+void D3D9Thread::drawScene_worldSub(QueuedScene *scene)
 {
 	s_technique = Technique::Main;
 
@@ -837,7 +837,7 @@ void D3D9thread::drawScene_worldSub(QueuedScene *scene)
 	unsetScene(scene, &clear);
 }
 
-void D3D9thread::drawScene_noworld(QueuedScene *scene, const D3D9clearer &clearer)
+void D3D9Thread::drawScene_noworld(QueuedScene *scene, const D3D9clearer &clearer)
 {
 	BEGIN_PIX("DrawNoworld");
 	s_technique = Technique::Main;
@@ -871,7 +871,7 @@ void D3D9thread::drawScene_noworld(QueuedScene *scene, const D3D9clearer &cleare
 	END_PIX();
 }
 
-void D3D9thread::bindTarget(RenderTarget *target)
+void D3D9Thread::bindTarget(RenderTarget *target)
 {
 	if (d3d9BoundTarget != target || target->isWindow()) {
 		if (d3d9BoundTarget) {
@@ -882,12 +882,12 @@ void D3D9thread::bindTarget(RenderTarget *target)
 	}
 }
 
-void D3D9thread::issueVisQuery()
+void D3D9Thread::issueVisQuery()
 {
 	d3d9Postprocess->issueQueryList(d3d9QueryManager->getActiveQuery(Query::QueryType_Vis));
 }
 
-void D3D9thread::issueShadowQuery()
+void D3D9Thread::issueShadowQuery()
 {
 	const List<D3D9querymanager::ActiveQuery*>& querylist = d3d9QueryManager->getActiveQuery(Query::QueryType_Shadow);
 	int count = 0;
@@ -902,7 +902,7 @@ void D3D9thread::issueShadowQuery()
 			continue;
 
 		count++;
-		D3D9query *query = active->query;
+		D3D9Query *query = active->query;
 		if (!query->beginQuery())
 			continue;
 
@@ -919,7 +919,7 @@ void D3D9thread::issueShadowQuery()
 #endif
 }
 
-void D3D9thread::doRun()
+void D3D9Thread::doRun()
 {
 	while (1) {
 //			d3d9Queue->beginConsuming();

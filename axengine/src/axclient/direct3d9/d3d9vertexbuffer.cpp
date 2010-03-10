@@ -89,10 +89,10 @@ IDirect3DIndexBuffer9 *CreateIndexBufferPage(int pagesize) {
 
 
 //--------------------------------------------------------------------------
-// class D3D9vertexobject
+// class D3D9VertexObject
 //--------------------------------------------------------------------------
 
-D3D9vertexobject::D3D9vertexobject() {
+D3D9VertexObject::D3D9VertexObject() {
 	m_object = nullptr;
 	m_dataSize = 0;
 	m_declaration = nullptr;
@@ -101,11 +101,11 @@ D3D9vertexobject::D3D9vertexobject() {
 	m_inStack = false;
 }
 
-D3D9vertexobject::~D3D9vertexobject() {
+D3D9VertexObject::~D3D9VertexObject() {
 	resetData();
 }
 
-void D3D9vertexobject::setData(const void *p, int count, Primitive::Hint primhint, VertexType vt) {
+void D3D9VertexObject::setData(const void *p, int count, Primitive::Hint primhint, VertexType vt) {
 	HRESULT hr;
 
 	m_count = count;
@@ -150,7 +150,7 @@ void D3D9vertexobject::setData(const void *p, int count, Primitive::Hint primhin
 	}
 }
 
-void D3D9vertexobject::resetData() {
+void D3D9VertexObject::resetData() {
 	if (!m_object || m_inStack) {
 		return;
 	}
@@ -167,7 +167,7 @@ void D3D9vertexobject::resetData() {
 	m_dataSize = 0;
 }
 
-void D3D9vertexobject::bind() {
+void D3D9VertexObject::bind() {
 	HRESULT hr;
 
 	V(d3d9Device->SetStreamSource(0, m_object, m_offset, s_strides[m_vt]));
@@ -175,7 +175,7 @@ void D3D9vertexobject::bind() {
 }
 
 
-void D3D9vertexobject::bindInstanced(D3D9instancedbuffer *instancedBuffer)
+void D3D9VertexObject::bindInstanced(D3D9InstancedBuffer *instancedBuffer)
 {
 	HRESULT hr;
 
@@ -187,35 +187,35 @@ void D3D9vertexobject::bindInstanced(D3D9instancedbuffer *instancedBuffer)
 	d3d9StateManager->setVertexDeclaration(m_declaration->getObjectInstanced());
 }
 
-void D3D9vertexobject::unbindInstanced()
+void D3D9VertexObject::unbindInstanced()
 {
 	HRESULT hr;
 	V(d3d9Device->SetStreamSourceFreq(0, 1));
 	V(d3d9Device->SetStreamSourceFreq(1, 1));
 }
 
-void D3D9vertexobject::createDeclaration()
+void D3D9VertexObject::createDeclaration()
 {
 	m_declaration = d3d9VertexBufferManager->getVertDecl(m_vt);
 }
 
 //--------------------------------------------------------------------------
-// class D3D9instancedbuffer
+// class D3D9InstancedBuffer
 //--------------------------------------------------------------------------
 
-D3D9instancedbuffer::D3D9instancedbuffer()
+D3D9InstancedBuffer::D3D9InstancedBuffer()
 {
 	m_object = 0;
 	m_offset = 0;
 	m_count = 0;
 }
 
-D3D9instancedbuffer::~D3D9instancedbuffer()
+D3D9InstancedBuffer::~D3D9InstancedBuffer()
 {
 
 }
 
-void D3D9instancedbuffer::setData( const InstancePrim::ParamSeq &params )
+void D3D9InstancedBuffer::setData( const InstancePrim::ParamSeq &params )
 {
 	m_count = (int)params.size();
 
@@ -235,21 +235,21 @@ void D3D9instancedbuffer::setData( const InstancePrim::ParamSeq &params )
 }
 
 //--------------------------------------------------------------------------
-// class D3D9indexobject
+// class D3D9IndexObject
 //--------------------------------------------------------------------------
 
-D3D9indexobject::D3D9indexobject() {
+D3D9IndexObject::D3D9IndexObject() {
 	m_object = 0;
 	m_dataSize = 0;
 	m_activeCount = 0;
 	m_inStack = false;
 }
 
-D3D9indexobject::~D3D9indexobject() {
+D3D9IndexObject::~D3D9IndexObject() {
 	resetData();
 }
 
-void D3D9indexobject::setData(const ushort_t *p, int count, Primitive::Hint hint, int activeCount) {
+void D3D9IndexObject::setData(const ushort_t *p, int count, Primitive::Hint hint, int activeCount) {
 	if (hint != Primitive::HintStatic) {
 		m_count = count;
 		m_activeCount = activeCount;
@@ -296,7 +296,7 @@ void D3D9indexobject::setData(const ushort_t *p, int count, Primitive::Hint hint
 	V(m_object->Unlock());
 }
 
-void D3D9indexobject::resetData() {
+void D3D9IndexObject::resetData() {
 	if (m_object == 0 || m_inStack)
 		return;
 
@@ -314,29 +314,29 @@ void D3D9indexobject::resetData() {
 	m_dataSize = 0;
 }
 
-void D3D9indexobject::bind() {
+void D3D9IndexObject::bind() {
 	d3d9Device->SetIndices(m_object);
 }
 
-bool D3D9indexobject::haveData() const {
+bool D3D9IndexObject::haveData() const {
 	return m_dataSize > 0;
 }
 
-int D3D9indexobject::getActiveCount() const {
+int D3D9IndexObject::getActiveCount() const {
 	return m_activeCount;
 }
 
-void D3D9indexobject::setActiveCount(int val) {
+void D3D9IndexObject::setActiveCount(int val) {
 	m_activeCount = val;
 }
 
-void D3D9indexobject::drawElements(D3DPRIMITIVETYPE mode, int numverts) {
+void D3D9IndexObject::drawElements(D3DPRIMITIVETYPE mode, int numverts) {
 	HRESULT hr;
 	V(d3d9Device->SetIndices(m_object));
 	V(d3d9Device->DrawIndexedPrimitive(mode, 0, 0, numverts, m_offset, calcNumElements(mode, m_activeCount)));
 }
 
-int D3D9indexobject::calcNumElements(D3DPRIMITIVETYPE mode, int numindexes)
+int D3D9IndexObject::calcNumElements(D3DPRIMITIVETYPE mode, int numindexes)
 {
 	switch (mode) {
 	case D3DPT_POINTLIST: return numindexes;
@@ -352,10 +352,10 @@ int D3D9indexobject::calcNumElements(D3DPRIMITIVETYPE mode, int numindexes)
 }
 
 //--------------------------------------------------------------------------
-// class D3D9vertdecl
+// class D3D9VertDecl
 //--------------------------------------------------------------------------
 
-D3D9vertdecl::D3D9vertdecl(D3D9vertexbuffermanager *manager, D3D9vertexobject::VertexType vt, int offset)
+D3D9VertDecl::D3D9VertDecl(D3D9VertexBufferManager *manager, D3D9VertexObject::VertexType vt, int offset)
 {
 	m_manager = manager;
 	m_vt = vt;
@@ -382,17 +382,17 @@ D3D9vertdecl::D3D9vertdecl(D3D9vertexbuffermanager *manager, D3D9vertexobject::V
 	V(d3d9Device->CreateVertexDeclaration(&veiseq[0], &m_d3dObjectInstanced));
 }
 
-D3D9vertdecl::~D3D9vertdecl()
+D3D9VertDecl::~D3D9VertDecl()
 {
 	SAFE_RELEASE(d3d9Device);
 	m_manager->removeVertDecl(this);
 }
 
 //--------------------------------------------------------------------------
-// class D3D9vertexbuffermanager
+// class D3D9VertexBufferManager
 //--------------------------------------------------------------------------
 
-D3D9vertexbuffermanager::D3D9vertexbuffermanager()
+D3D9VertexBufferManager::D3D9VertexBufferManager()
 {
 #if 0
 	m_vbIndex = 0;
@@ -407,27 +407,27 @@ D3D9vertexbuffermanager::D3D9vertexbuffermanager()
 	init();
 }
 
-D3D9vertexbuffermanager::~D3D9vertexbuffermanager()
+D3D9VertexBufferManager::~D3D9VertexBufferManager()
 {
 	shutdown();
 }
 
-void D3D9vertexbuffermanager::onDeviceLost()
+void D3D9VertexBufferManager::onDeviceLost()
 {
 
 }
 
-void D3D9vertexbuffermanager::onReset()
+void D3D9VertexBufferManager::onReset()
 {
 
 }
 
-void D3D9vertexbuffermanager::nextFrame()
+void D3D9VertexBufferManager::nextFrame()
 {
 
 }
 
-void D3D9vertexbuffermanager::beginAlloc()
+void D3D9VertexBufferManager::beginAlloc()
 {
 //		HRESULT hr;
 //		V(d3d9Device->SetStreamSourceFreq(1, D3DSTREAMSOURCE_INSTANCEDATA | 1ul));
@@ -436,7 +436,7 @@ void D3D9vertexbuffermanager::beginAlloc()
 	m_indexBufferChain.beginFrame();
 }
 
-DynVb D3D9vertexbuffermanager::allocVb(int datasize)
+DynVb D3D9VertexBufferManager::allocVb(int datasize)
 {
 	VertexBufferChain::Result ret = m_vertexBufferChain.frameAlloc(datasize);
 	DynVb result;
@@ -446,7 +446,7 @@ DynVb D3D9vertexbuffermanager::allocVb(int datasize)
 	return result;
 }
 
-DynVb D3D9vertexbuffermanager::allocInstance( int datasize )
+DynVb D3D9VertexBufferManager::allocInstance( int datasize )
 {
 	VertexBufferChain::Result ret = m_vertexBufferChain.frameAlloc(datasize);
 	DynVb result;
@@ -456,7 +456,7 @@ DynVb D3D9vertexbuffermanager::allocInstance( int datasize )
 	return result;
 }
 
-DynIb D3D9vertexbuffermanager::allocIb(int datasize)
+DynIb D3D9VertexBufferManager::allocIb(int datasize)
 {
 	IndexBufferChain::Result ret = m_indexBufferChain.frameAlloc(datasize);
 	DynIb result;
@@ -466,45 +466,45 @@ DynIb D3D9vertexbuffermanager::allocIb(int datasize)
 	return result;
 }
 
-void D3D9vertexbuffermanager::endAlloc()
+void D3D9VertexBufferManager::endAlloc()
 {
 	m_vertexBufferChain.endFrame();
 //		m_instanceBufferChain.endFrame();
 	m_indexBufferChain.endFrame();
 }
 
-void D3D9vertexbuffermanager::init()
+void D3D9VertexBufferManager::init()
 {
-	for (int i = 0; i < D3D9vertexobject::VERTEXTYPE_NUMBER; i++) {
-		vertDecls[i] = allocVertDecl((D3D9vertexobject::VertexType)i, 0);
+	for (int i = 0; i < D3D9VertexObject::VERTEXTYPE_NUMBER; i++) {
+		vertDecls[i] = allocVertDecl((D3D9VertexObject::VertexType)i, 0);
 	}
 }
 
-void D3D9vertexbuffermanager::shutdown()
+void D3D9VertexBufferManager::shutdown()
 {
 	// TODO: free all buffers
 }
 
-D3D9vertdecl *D3D9vertexbuffermanager::allocVertDecl(D3D9vertexobject::VertexType vt, int offset)
+D3D9VertDecl *D3D9VertexBufferManager::allocVertDecl(D3D9VertexObject::VertexType vt, int offset)
 {
-	D3D9vertdecl*& result = m_vertDeclPool[vt][offset];
+	D3D9VertDecl*& result = m_vertDeclPool[vt][offset];
 
 	if (result) {
 		result->addref();
 		return result;
 	}
 
-	result = new D3D9vertdecl(this,vt,offset);
+	result = new D3D9VertDecl(this,vt,offset);
 	return result;
 }
 
-void D3D9vertexbuffermanager::removeVertDecl(D3D9vertdecl *vd)
+void D3D9VertexBufferManager::removeVertDecl(D3D9VertDecl *vd)
 {
 	VertDeclPool &decls = m_vertDeclPool[vd->m_vt];
 	decls.erase(vd->m_offset);
 }
 
-DynVb D3D9vertexbuffermanager::appendVb( int datasize )
+DynVb D3D9VertexBufferManager::appendVb( int datasize )
 {
 	VertexBufferChain::Result ret = m_vertexBufferChain.appendAlloc(datasize);
 	DynVb result;
@@ -514,7 +514,7 @@ DynVb D3D9vertexbuffermanager::appendVb( int datasize )
 	return result;
 }
 
-DynVb D3D9vertexbuffermanager::appendInstance( int datasize )
+DynVb D3D9VertexBufferManager::appendInstance( int datasize )
 {
 	VertexBufferChain::Result ret = m_vertexBufferChain.appendAlloc(datasize);
 	DynVb result;
@@ -524,7 +524,7 @@ DynVb D3D9vertexbuffermanager::appendInstance( int datasize )
 	return result;
 }
 
-DynIb D3D9vertexbuffermanager::appendIb( int datasize )
+DynIb D3D9VertexBufferManager::appendIb( int datasize )
 {
 	IndexBufferChain::Result ret = m_indexBufferChain.appendAlloc(datasize);
 	DynIb result;
@@ -534,22 +534,22 @@ DynIb D3D9vertexbuffermanager::appendIb( int datasize )
 	return result;
 }
 
-void D3D9vertexbuffermanager::endAppendVb()
+void D3D9VertexBufferManager::endAppendVb()
 {
 	m_vertexBufferChain.endAppend();
 }
 
-void D3D9vertexbuffermanager::endAppendInstance()
+void D3D9VertexBufferManager::endAppendInstance()
 {
 	m_vertexBufferChain.endAppend();
 }
 
-void D3D9vertexbuffermanager::endAppendIb()
+void D3D9VertexBufferManager::endAppendIb()
 {
 	m_indexBufferChain.endAppend();
 }
 
-void D3D9vertexbuffermanager::reportStatices() const
+void D3D9VertexBufferManager::reportStatices() const
 {
 #if 0
 	g_statistic->setValue(stat_dynamicVBsize, m_vertexBufferChain.getSize());

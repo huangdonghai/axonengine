@@ -13,16 +13,16 @@ read the license and understand and accept it fully.
 AX_BEGIN_NAMESPACE
 
 //--------------------------------------------------------------------------
-// class D3D9target
+// class D3D9Target
 //--------------------------------------------------------------------------
 
-class D3D9target : public RenderTarget
+class D3D9Target : public RenderTarget
 {
 public:
-	friend class D3D9targetmanager;
+	friend class D3D9TargetManager;
 
-	D3D9target(int width, int height, TexFormat format, bool pooled = false);
-	virtual ~D3D9target();
+	D3D9Target(int width, int height, TexFormat format, bool pooled = false);
+	virtual ~D3D9Target();
 
 	// implement ITarget
 	virtual Rect getRect();
@@ -44,7 +44,7 @@ public:
 	virtual RenderTarget *getColorAttached(int index) const;
 
 	TexFormat getFormat() const { return m_format; }
-	D3D9texture *getTextureDX();
+	D3D9Texture *getTextureDX();
 
 	void setHint(AllocHint hint, int frame);
 	AllocHint getHint() const { return m_storeHint; }
@@ -63,32 +63,32 @@ protected:
 private:
 	AllocHint m_storeHint;
 	TexFormat m_format;
-	D3D9texture *m_texture;
+	D3D9Texture *m_texture;
 	IDirect3DSurface9 *m_surface;
 	int m_width, m_height;
 
 	int m_boundIndex;
 	int m_lastFrameUsed;
 
-	D3D9target *m_depthTarget;
-	D3D9target *m_colorAttached[MAX_COLOR_ATTACHMENT];
+	D3D9Target *m_depthTarget;
+	D3D9Target *m_colorAttached[MAX_COLOR_ATTACHMENT];
 
 	bool m_isNullColor;
-	D3D9target *m_nullColor;
+	D3D9Target *m_nullColor;
 
 	bool m_isPooled;
-	D3D9target *m_realTarget;	// for pooled target
+	D3D9Target *m_realTarget;	// for pooled target
 };
 
 
 //--------------------------------------------------------------------------
-// class D3D9targetmanager
+// class D3D9TargetManager
 //--------------------------------------------------------------------------
 
-class D3D9targetmanager : public TargetManager {
+class D3D9TargetManager : public TargetManager {
 public:
-	D3D9targetmanager();
-	virtual ~D3D9targetmanager();
+	D3D9TargetManager();
+	virtual ~D3D9TargetManager();
 
 	// implement TargetManager
 	virtual RenderTarget *allocTarget(RenderTarget::AllocHint hint, int width, int height, TexFormat texformat);
@@ -99,7 +99,7 @@ public:
 	// for internal use
 	TexFormat getNullTargetFormat();
 	void syncFrame();
-	D3D9target *allocTargetDX(RenderTarget::AllocHint hint, int width, int height, TexFormat texformat);
+	D3D9Target *allocTargetDX(RenderTarget::AllocHint hint, int width, int height, TexFormat texformat);
 
 	IDirect3DSurface9 *getDepthStencil(int width, int height);
 
@@ -110,7 +110,7 @@ protected:
 	void checkFormats();
 
 private:
-	typedef Sequence<D3D9target*>	D3D9targetseq;
+	typedef Sequence<D3D9Target*>	D3D9targetseq;
 	typedef Dict<int,Dict<int,D3D9targetseq> > D3D9targetpool;
 	D3D9targetpool m_targetPool;
 	int m_curFrame;

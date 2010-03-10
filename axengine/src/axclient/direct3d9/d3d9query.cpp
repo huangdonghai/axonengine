@@ -12,7 +12,7 @@ read the license and understand and accept it fully.
 AX_BEGIN_NAMESPACE
 
 
-D3D9query::D3D9query()
+D3D9Query::D3D9Query()
 {
 	m_queryPos = 0;
 	m_readPos = 0;
@@ -24,7 +24,7 @@ D3D9query::D3D9query()
 	}
 }
 
-D3D9query::~D3D9query()
+D3D9Query::~D3D9Query()
 {
 	D3D9_SCOPELOCK;
 
@@ -33,7 +33,7 @@ D3D9query::~D3D9query()
 	}
 }
 
-bool D3D9query::canQuery() const
+bool D3D9Query::canQuery() const
 {
 	if (m_queryPos - m_readPos > NUMBER - 1)
 		return false;
@@ -41,7 +41,7 @@ bool D3D9query::canQuery() const
 		return true;
 }
 
-bool D3D9query::beginQuery()
+bool D3D9Query::beginQuery()
 {
 	AX_ASSERT(!m_quering);
 
@@ -54,7 +54,7 @@ bool D3D9query::beginQuery()
 	return true;
 }
 
-void D3D9query::endQuery()
+void D3D9Query::endQuery()
 {
 	AX_ASSERT(m_quering);
 	IDirect3DQuery9 *object = m_queries[m_queryPos%NUMBER];
@@ -64,7 +64,7 @@ void D3D9query::endQuery()
 	m_queryPos++;
 }
 
-int D3D9query::getResult()
+int D3D9Query::getResult()
 {
 	if (m_readPos >= m_queryPos)
 		return -1;
@@ -81,7 +81,7 @@ int D3D9query::getResult()
 	return -1;
 }
 
-void D3D9query::reset()
+void D3D9Query::reset()
 {
 	m_queryPos = 0;
 	m_readPos = 0;
@@ -104,7 +104,7 @@ Query *D3D9querymanager::allocQuery()
 	D3D9_SCOPELOCK;
 
 	if (m_freeQueries.empty()) {
-		D3D9query *query = new D3D9query();
+		D3D9Query *query = new D3D9Query();
 		m_queries.push_back(query);
 		int handle = (int)m_queries.size() - 1;
 		query->m_id = handle;
@@ -121,13 +121,13 @@ void D3D9querymanager::freeQuery( Query*& query )
 {
 	D3D9_SCOPELOCK;
 
-	D3D9query *d3d9query = (D3D9query*)query;
+	D3D9Query *d3d9query = (D3D9Query*)query;
 	m_freeQueries.push_back(d3d9query->m_id);
 }
 
 void D3D9querymanager::issueQuery( Query *query, int frameId, const BoundingBox &bbox )
 {
-	D3D9query *d3d9query = static_cast<D3D9query*>(query);
+	D3D9Query *d3d9query = static_cast<D3D9Query*>(query);
 	if (!d3d9query->canQuery())
 		return;
 
@@ -149,7 +149,7 @@ void D3D9querymanager::syncFrame()
 
 		while (it != m_activeQuery[i].end()) {
 			ActiveQuery *issued = *it;
-			D3D9query *query = static_cast<D3D9query*>(issued->query);
+			D3D9Query *query = static_cast<D3D9Query*>(issued->query);
 
 			int result = query->getResult();
 

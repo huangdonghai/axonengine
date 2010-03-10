@@ -16,6 +16,10 @@ public:
 		return InterlockedDecrement(&m_value);
 	}
 
+	bool operator==(int rhs) const { return m_value == rhs; }
+	bool operator!=(int rhs) const { return m_value != rhs; }
+	bool operator!() const { return m_value == 0; }
+
 private:
 	volatile long m_value;
 };

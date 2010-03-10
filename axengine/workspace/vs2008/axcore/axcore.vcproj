@@ -655,6 +655,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\include\axcore\utility\shareddata.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\include\axcore\utility\string.h"
 					>
 				</File>

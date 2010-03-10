@@ -13,11 +13,11 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-class D3D9window : public RenderTarget {
+class D3D9Window : public RenderTarget {
 public:
-	D3D9window(const String &name);
-	D3D9window(handle_t wndId, const String &name);
-	virtual ~D3D9window();
+	D3D9Window(const String &name);
+	D3D9Window(handle_t wndId, const String &name);
+	virtual ~D3D9Window();
 
 	// implement RenderTarget
 	virtual Rect getRect();
@@ -48,8 +48,8 @@ private:
 	DWORD m_presentInterval;
 
 public:
-	D3D9target *m_gbuffer;
-	D3D9target *m_lightBuffer;
+	D3D9Target *m_gbuffer;
+	D3D9Target *m_lightBuffer;
 };
 
 AX_END_NAMESPACE

@@ -26,14 +26,24 @@ public:
 		FM_Trilinear
 	};
 
+	enum BorderColor {
+		BC_Zero, BC_One
+	};
+
 	Sampler();
 	Sampler(const String &name, ClampMode clampMode, FilterMode filterMode, ShareMode = SM_Share);
 	~Sampler();
 
 	bool isNull() const { return !m_d; }
 
+	// texture parameters
+	void setClampMode(ClampMode clampmwode);
+	void setFilterMode(FilterMode filtermode);
+	void setBorderColor(BorderColor borderColor);
+	void setHardwareShadowMap(bool enable);
+
 private:
-	SamplerData *m_d;
+	SharedDataPointer<SamplerData> m_d;
 };
 
 AX_END_NAMESPACE

@@ -13,12 +13,12 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-class D3D9texture : public Texture {
+class D3D9Texture : public Texture {
 public:
 	friend class D3D9texturemanager;
 
-	D3D9texture();
-	virtual ~D3D9texture();
+	D3D9Texture();
+	virtual ~D3D9Texture();
 
 	// implement Asset
 	virtual bool doInit(const String &name, intptr_t arg);
@@ -50,7 +50,7 @@ public:
 	// manager
 	static void initManager();
 	static void finalizeManager();
-	static D3D9texture *getAppTexture(LPDIRECT3DBASETEXTURE9 d3dtex);
+	static D3D9Texture *getAppTexture(LPDIRECT3DBASETEXTURE9 d3dtex);
 	static void syncFrame();
 	// end manager
 
@@ -90,9 +90,9 @@ public:
 	D3D9texturemanager();
 	virtual ~D3D9texturemanager();
 
-	void addToDict(LPDIRECT3DBASETEXTURE9 d3dtex, D3D9texture *tex);
+	void addToDict(LPDIRECT3DBASETEXTURE9 d3dtex, D3D9Texture *tex);
 	void removeFromDict(LPDIRECT3DBASETEXTURE9 d3dtex);
-	D3D9texture *getTex(LPDIRECT3DBASETEXTURE9 d3dtex) const;
+	D3D9Texture *getTex(LPDIRECT3DBASETEXTURE9 d3dtex) const;
 
 	void syncFrame();
 
@@ -104,17 +104,17 @@ protected:
 	void dumpTex_f(const CmdArgs &param);
 
 private:
-	Dict<LPDIRECT3DBASETEXTURE9, D3D9texture*> m_texDict;
+	Dict<LPDIRECT3DBASETEXTURE9, D3D9Texture*> m_texDict;
 };
 
-inline void D3D9texturemanager::addToDict( LPDIRECT3DBASETEXTURE9 d3dtex, D3D9texture *tex )
+inline void D3D9texturemanager::addToDict( LPDIRECT3DBASETEXTURE9 d3dtex, D3D9Texture *tex )
 {
 	m_texDict[d3dtex] = tex;
 }
 
-inline D3D9texture *D3D9texturemanager::getTex( LPDIRECT3DBASETEXTURE9 d3dtex ) const
+inline D3D9Texture *D3D9texturemanager::getTex( LPDIRECT3DBASETEXTURE9 d3dtex ) const
 {
-	Dict<LPDIRECT3DBASETEXTURE9, D3D9texture*>::const_iterator it = m_texDict.find(d3dtex);
+	Dict<LPDIRECT3DBASETEXTURE9, D3D9Texture*>::const_iterator it = m_texDict.find(d3dtex);
 
 	if (it == m_texDict.end())
 		return 0;
@@ -124,7 +124,7 @@ inline D3D9texture *D3D9texturemanager::getTex( LPDIRECT3DBASETEXTURE9 d3dtex ) 
 
 inline void D3D9texturemanager::removeFromDict( LPDIRECT3DBASETEXTURE9 d3dtex )
 {
-	Dict<LPDIRECT3DBASETEXTURE9, D3D9texture*>::const_iterator it = m_texDict.find(d3dtex);
+	Dict<LPDIRECT3DBASETEXTURE9, D3D9Texture*>::const_iterator it = m_texDict.find(d3dtex);
 
 	if (it == m_texDict.end())
 		return;

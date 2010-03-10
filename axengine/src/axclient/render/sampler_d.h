@@ -9,12 +9,20 @@ public:
 	SamplerData();
 	~SamplerData();
 
+	// texture parameters
+	void setClampMode(Sampler::ClampMode clampmwode);
+	void setFilterMode(Sampler::FilterMode filtermode);
+	void setBorderColor(Sampler::BorderColor borderColor);
+	void setHardwareShadowMap(bool enable);
+
 private:
+	friend class SharedDataPointer<SamplerData>;
+
 	AtomicInt m_ref;
 	Sampler::ClampMode m_clampMode;
 	Sampler::FilterMode m_filterMode;
-	Color4 m_boardColor;
-	TexturePtr m_texture;
+	Sampler::BorderColor m_boardColor;
+	int m_textureId;
 };
 
 AX_END_NAMESPACE

@@ -13,13 +13,13 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-class D3D9driver : public IRenderDriver, public ICmdHandler {
+class D3D9Driver : public IRenderDriver, public ICmdHandler {
 public:
 	AX_DECLARE_FACTORY();
-	AX_DECLARE_COMMAND_HANDLER(D3D9driver);
+	AX_DECLARE_COMMAND_HANDLER(D3D9Driver);
 
-	D3D9driver();
-	~D3D9driver();
+	D3D9Driver();
+	~D3D9Driver();
 
 	// implement IRenderDriver
 	virtual void initialize();
@@ -33,31 +33,13 @@ public:
 	// resource management
 	virtual RenderTarget *createWindowTarget(handle_t wndId, const String &name);
 
-#if 0
-	// primitive
-	virtual int cachePrimitive(Primitive *prim);
-	virtual void uncachePrimitive(Primitive *prim);
-#endif
-
 	// caps
 	virtual const Info *getDriverInfo();
 	virtual uint_t getBackendCaps();
 
-#if 0
-	// before runFrame, do some pre frame things
-	virtual void preFrame();
-#endif
 	// if not multi threads rendering, use this call render a frame
 	virtual void runFrame();
 
-#if 0
-	// new selection
-	virtual void beginSelect(const RenderCamera &view);
-	virtual void loadSelectId(int id);
-	virtual void testActor(Actor *re);
-	virtual void testPrimitive(Primitive *prim);
-	virtual SelectRecordSeq endSelect();
-#endif
 	void reset(int width, int height, bool fullscreen);
 	void onReset();
 	void onDeviceLost();

@@ -233,10 +233,10 @@ void D3D9uniform::setUniform( UniformItem &item, const void *q )
 	}
 }
 //--------------------------------------------------------------------------
-// class D3D9shader
+// class D3D9Shader
 //--------------------------------------------------------------------------
 
-D3D9shader::D3D9shader()
+D3D9Shader::D3D9Shader()
 {
 	m_p2tWidth = 0;
 	m_p2tHeight = 0;
@@ -247,10 +247,10 @@ D3D9shader::D3D9shader()
 	m_coupled = 0;
 }
 
-D3D9shader::~D3D9shader()
+D3D9Shader::~D3D9Shader()
 {}
 
-bool D3D9shader::doInit(const String &name, const ShaderMacro &macro)
+bool D3D9Shader::doInit(const String &name, const ShaderMacro &macro)
 {
 	m_keyString = name;
 	String fullname = "shaders/" + name + ".fx";
@@ -324,50 +324,50 @@ bool D3D9shader::doInit(const String &name, const ShaderMacro &macro)
 	return true;
 }
 
-bool D3D9shader::isDepthWrite() const {
+bool D3D9Shader::isDepthWrite() const {
 	return true;
 }
 
-bool D3D9shader::haveTextureTarget() const {
+bool D3D9Shader::haveTextureTarget() const {
 	return m_haveTextureTarget;
 }
 
-int D3D9shader::getNumSampler() const {
+int D3D9Shader::getNumSampler() const {
 	return s2i(m_samplerannSeq.size());
 }
 
-SamplerAnno *D3D9shader::getSamplerAnno(int index) const {
+SamplerAnno *D3D9Shader::getSamplerAnno(int index) const {
 	return m_samplerannSeq[index];
 }
 
-int D3D9shader::getNumTweakable() const {
+int D3D9Shader::getNumTweakable() const {
 	return 0;
 }
 
-ParameterAnno *D3D9shader::getTweakableDef(int index) {
+ParameterAnno *D3D9Shader::getTweakableDef(int index) {
 	return 0;
 }
 
 
-Shader::SortHint D3D9shader::getSortHint() const {
+Shader::SortHint D3D9Shader::getSortHint() const {
 	return m_sortHint;
 }
 
-bool D3D9shader::haveTechnique(Technique tech) const {
+bool D3D9Shader::haveTechnique(Technique tech) const {
 	return m_techniques[tech] != 0;
 }
 
-void D3D9shader::initTechniques() {
+void D3D9Shader::initTechniques() {
 	for (int i = 0; i < Technique::Number; i++) {
 		m_d3dxTechniques[i] = findTechnique(i);
 	}
 }
 
-void D3D9shader::initFeatures() {
+void D3D9Shader::initFeatures() {
 
 }
 
-void D3D9shader::initSortHint() {
+void D3D9Shader::initSortHint() {
 	D3DXHANDLE script = m_object->GetParameterByName(0, "Script");
 
 	if (!script) return;
@@ -379,7 +379,7 @@ void D3D9shader::initSortHint() {
 	m_sortHint = (SortHint)EffectHelper(m_object).getInt(anno);
 }
 
-void D3D9shader::initAnnotation() {
+void D3D9Shader::initAnnotation() {
 	D3DXEFFECT_DESC effectDesc;
 	HRESULT hr;
 
@@ -402,7 +402,7 @@ void D3D9shader::initAnnotation() {
 	}
 }
 
-void D3D9shader::initSamplerAnn(D3DXHANDLE param) {
+void D3D9Shader::initSamplerAnn(D3DXHANDLE param) {
 	EffectHelper helper(m_object);
 
 	D3DXPARAMETER_DESC paramDesc;
@@ -473,11 +473,11 @@ void D3D9shader::initSamplerAnn(D3DXHANDLE param) {
 	}
 }
 
-void D3D9shader::initParameterAnn(D3DXHANDLE param) {
+void D3D9Shader::initParameterAnn(D3DXHANDLE param) {
 	initPixelToTexel(param);
 }
 
-D3DXHANDLE D3D9shader::findTechnique(Technique tech)
+D3DXHANDLE D3D9Shader::findTechnique(Technique tech)
 {
 	EffectHelper helper(m_object);
 
@@ -510,7 +510,7 @@ D3DXHANDLE D3D9shader::findTechnique(Technique tech)
 	return d3dtech;
 }
 
-D3DXHANDLE D3D9shader::getUsedParameter(const char *name)
+D3DXHANDLE D3D9Shader::getUsedParameter(const char *name)
 {
 	D3DXHANDLE param = m_object->GetParameterByName(0, name);
 
@@ -536,14 +536,14 @@ D3DXHANDLE D3D9shader::getUsedParameter(const char *name)
 	}
 }
 
-void D3D9shader::setSystemMap(SamplerType maptype, D3D9texture *tex)
+void D3D9Shader::setSystemMap(SamplerType maptype, D3D9Texture *tex)
 {
 	AX_ASSERT(maptype >= 0 && maptype < SamplerType::NUMBER_ALL);
 
 	m_samplerBound[maptype] = tex;
 }
 
-void D3D9shader::initPixelToTexel(D3DXHANDLE param)
+void D3D9Shader::initPixelToTexel(D3DXHANDLE param)
 {
 	if (!isParameterUsed(param)) {
 		return;
@@ -576,7 +576,7 @@ void D3D9shader::initPixelToTexel(D3DXHANDLE param)
 	pixel2Texels.push_back(p2t);
 }
 
-void D3D9shader::setPixelToTexel(int width, int height)
+void D3D9Shader::setPixelToTexel(int width, int height)
 {
 	if (width == m_p2tWidth && height == m_p2tHeight) {
 		return;
@@ -602,7 +602,7 @@ void D3D9shader::setPixelToTexel(int width, int height)
 	m_p2tHeight = height;
 }
 
-bool D3D9shader::isParameterUsed(D3DXHANDLE param)
+bool D3D9Shader::isParameterUsed(D3DXHANDLE param)
 {
 	if (!param) {
 		return false;
@@ -626,7 +626,7 @@ bool D3D9shader::isParameterUsed(D3DXHANDLE param)
 	}
 }
 
-void D3D9shader::initAxonObject()
+void D3D9Shader::initAxonObject()
 {
 	for (int i = 0; i < Technique::Number; i++) {
 		if (!m_d3dxTechniques[i]) {
@@ -640,12 +640,12 @@ void D3D9shader::initAxonObject()
 
 }
 
-void D3D9shader::setCoupled( Material *mtr )
+void D3D9Shader::setCoupled( Material *mtr )
 {
 	m_coupled = mtr;
 }
 
-UINT D3D9shader::begin( Technique tech )
+UINT D3D9Shader::begin( Technique tech )
 {
 	if (!m_techniques[tech])
 		return 0;
@@ -654,17 +654,17 @@ UINT D3D9shader::begin( Technique tech )
 	return m_curTech->m_numPasses;
 }
 
-void D3D9shader::beginPass( UINT pass )
+void D3D9Shader::beginPass( UINT pass )
 {
 	m_curTech->m_passes[pass]->begin();
 }
 
-void D3D9shader::endPass()
+void D3D9Shader::endPass()
 {
 
 }
 
-void D3D9shader::end()
+void D3D9Shader::end()
 {
 
 }
@@ -677,7 +677,7 @@ D3D9shadermanager::D3D9shadermanager()
 {
 	HRESULT hr;
 	V(D3DXCreateEffectPool( &s_effectPool ));
-	m_defaulted = new D3D9shader();
+	m_defaulted = new D3D9Shader();
 	bool v = m_defaulted->doInit("blend");
 	AX_ASSERT(v);
 }
@@ -696,10 +696,10 @@ Shader *D3D9shadermanager::findShader( const FixedString &nameId, const ShaderMa
 {
 	D3D9_SCOPELOCK;
 
-	D3D9shader*& shader = m_shaderPool[nameId][macro];
+	D3D9Shader*& shader = m_shaderPool[nameId][macro];
 
 	if (!shader) {
-		shader = new D3D9shader();
+		shader = new D3D9Shader();
 		bool v = shader->doInit(nameId, macro);
 		if (!v) {
 			delete shader;
@@ -711,11 +711,11 @@ Shader *D3D9shadermanager::findShader( const FixedString &nameId, const ShaderMa
 	return shader;
 }
 
-D3D9shader *D3D9shadermanager::findShaderDX(const String &name, const ShaderMacro &macro)
+D3D9Shader *D3D9shadermanager::findShaderDX(const String &name, const ShaderMacro &macro)
 {
 	D3D9_SCOPELOCK;
 
-	return (D3D9shader*)findShader(name, macro);
+	return (D3D9Shader*)findShader(name, macro);
 }
 
 void D3D9shadermanager::saveShaderCache( const String &name )
@@ -740,8 +740,8 @@ void D3D9shadermanager::saveShaderCache( const String &name )
 	ShaderPool::const_iterator it = m_shaderPool.begin();
 
 	for (; it != m_shaderPool.end(); ++it) {
-		const Dict<ShaderMacro,D3D9shader*>& shaders = it->second;
-		Dict<ShaderMacro,D3D9shader*>::const_iterator it2 = shaders.begin();
+		const Dict<ShaderMacro,D3D9Shader*>& shaders = it->second;
+		Dict<ShaderMacro,D3D9Shader*>::const_iterator it2 = shaders.begin();
 
 		for (; it2 != shaders.end(); ++it2) {
 			TiXmlElement *item = new TiXmlElement("cacheItem");
@@ -785,7 +785,7 @@ void D3D9shadermanager::applyShaderCache( const String &name )
 	}
 }
 
-D3D9technique::D3D9technique( D3D9shader *shader, D3DXHANDLE d3dxhandle )
+D3D9technique::D3D9technique( D3D9Shader *shader, D3DXHANDLE d3dxhandle )
 {
 	m_shader = shader;
 	m_d3dxhandle = d3dxhandle;
@@ -813,7 +813,7 @@ D3D9technique::~D3D9technique()
 
 }
 
-D3D9pass::D3D9pass( D3D9shader *shader, D3DXHANDLE d3dxhandle )
+D3D9pass::D3D9pass( D3D9Shader *shader, D3DXHANDLE d3dxhandle )
 {
 	m_shader = shader;
 	m_d3dxhandle = d3dxhandle;
@@ -1057,16 +1057,16 @@ void D3D9pass::begin()
 			Interaction *ia = d3d9Interaction;
 
 			RenderTarget *target = ia->targets[count];
-			D3D9target *textarget = (D3D9target*)target;
-			D3D9texture *tex = textarget->getTextureDX();
+			D3D9Target *textarget = (D3D9Target*)target;
+			D3D9Texture *tex = textarget->getTextureDX();
 			tex->setClampMode(Texture::CM_ClampToEdge);
 
 			d3d9StateManager->setTexture(sa->m_register, tex);
 		} else if (sa->m_renderType == SamplerAnno::SceneColor) {
 			Rect r = d3d9BoundTarget->getRect();
 
-			D3D9target *target = d3d9TargetManager->allocTargetDX(RenderTarget::TemporalAlloc, r.width, r.height, TexFormat::BGRA8);
-			D3D9texture *tex = target->getTextureDX();
+			D3D9Target *target = d3d9TargetManager->allocTargetDX(RenderTarget::TemporalAlloc, r.width, r.height, TexFormat::BGRA8);
+			D3D9Texture *tex = target->getTextureDX();
 			tex->setClampMode(Texture::CM_ClampToEdge);
 			target->copyFramebuffer(r);
 			d3d9StateManager->setTexture(sa->m_register, tex);

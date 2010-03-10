@@ -153,7 +153,7 @@ inline bool trTexFormat(TexFormat texformat, D3DFORMAT &d3dformat) {
 	return true;
 }
 
-D3D9texture::D3D9texture()
+D3D9Texture::D3D9Texture()
 {
 	m_initialized = false;
 	m_initFlags = 0;
@@ -175,7 +175,7 @@ D3D9texture::D3D9texture()
 #endif
 }
 
-D3D9texture::~D3D9texture()
+D3D9Texture::~D3D9Texture()
 {
 	D3D9_SCOPELOCK;
 
@@ -190,7 +190,7 @@ D3D9texture::~D3D9texture()
 #endif
 }
 
-bool D3D9texture::doInit(const String &name, intptr_t arg)
+bool D3D9Texture::doInit(const String &name, intptr_t arg)
 {
 	AX_ASSERT(!m_initialized);
 
@@ -201,7 +201,7 @@ bool D3D9texture::doInit(const String &name, intptr_t arg)
 	return loadFile2D(name);
 }
 
-void D3D9texture::initialize(TexFormat format, int width, int height, InitFlags flags /*= 0 */)
+void D3D9Texture::initialize(TexFormat format, int width, int height, InitFlags flags /*= 0 */)
 {
 	D3D9_SCOPELOCK;
 
@@ -257,25 +257,25 @@ void D3D9texture::initialize(TexFormat format, int width, int height, InitFlags 
 	setPrivateData();
 }
 
-void D3D9texture::initialize( const FixedString &name, InitFlags flags )
+void D3D9Texture::initialize( const FixedString &name, InitFlags flags )
 {
 	doInit(name, flags);
 }
 
-void D3D9texture::getSize(int &width, int &height, int &depth)
+void D3D9Texture::getSize(int &width, int &height, int &depth)
 {
 	width = m_width;
 	height = m_height;
 	depth = m_depth;
 }
 
-void D3D9texture::getSize(int &width, int &height)
+void D3D9Texture::getSize(int &width, int &height)
 {
 	width = m_width;
 	height = m_height;
 }
 
-void D3D9texture::uploadSubTextureIm(const Rect &rect, const void *pixels, TexFormat format /*= TexFormat::AUTO */)
+void D3D9Texture::uploadSubTextureIm(const Rect &rect, const void *pixels, TexFormat format /*= TexFormat::AUTO */)
 {
 	D3D9_SCOPELOCK;
 
@@ -312,7 +312,7 @@ void D3D9texture::uploadSubTextureIm(const Rect &rect, const void *pixels, TexFo
 	SAFE_RELEASE(surface);
 }
 
-void D3D9texture::uploadSubTextureIm(int level, const Rect &rect, const void *pixels, TexFormat format /*= TexFormat::AUTO */)
+void D3D9Texture::uploadSubTextureIm(int level, const Rect &rect, const void *pixels, TexFormat format /*= TexFormat::AUTO */)
 {
 	D3D9_SCOPELOCK;
 
@@ -349,34 +349,34 @@ void D3D9texture::uploadSubTextureIm(int level, const Rect &rect, const void *pi
 	SAFE_RELEASE(surface);
 }
 
-void D3D9texture::setClampMode(ClampMode clampmode)
+void D3D9Texture::setClampMode(ClampMode clampmode)
 {
 	m_clampMode = clampmode;
 }
 
-void D3D9texture::setFilterMode(FilterMode filtermode)
+void D3D9Texture::setFilterMode(FilterMode filtermode)
 {
 	m_filterMode = filtermode;
 }
 
-void D3D9texture::setBorderColor(const Rgba &color)
+void D3D9Texture::setBorderColor(const Rgba &color)
 {
 	m_borderColor = D3DCOLOR_RGBA(color.r, color.g, color.b, color.a);
 }
 
-void D3D9texture::setHardwareShadowMap(bool enable)
+void D3D9Texture::setHardwareShadowMap(bool enable)
 {
 	m_hardwareShadowMap = enable;
 }
 
-void D3D9texture::saveToFile(const String &filename)
+void D3D9Texture::saveToFile(const String &filename)
 {
 	String ospath = g_fileSystem->modPathToOsPath(filename);
 	HRESULT hr;
 	V(D3DXSaveTextureToFileW(u2w(ospath).c_str(), D3DXIFF_DDS, m_object, 0));
 }
 
-void D3D9texture::generateMipmapIm()
+void D3D9Texture::generateMipmapIm()
 {
 	D3D9_SCOPELOCK;
 
@@ -395,7 +395,7 @@ void D3D9texture::generateMipmapIm()
 	V(m_object->LockRect(0, &lockedRect, 0, 0));
 	V(m_object->UnlockRect(0));
 
-	D3D9texture *dummy = new D3D9texture();
+	D3D9Texture *dummy = new D3D9Texture();
 	dummy->initialize(TexFormat::BGRA8, m_width, m_height, Texture::IF_AutoGenMipmap);
 	dummy->uploadSubTextureIm(Rect(0,0,m_width,m_height), lockedRect.pBits, m_format);
 //		dummy->saveToFile("test.dds");
@@ -425,12 +425,12 @@ void D3D9texture::generateMipmapIm()
 	delete dummy;
 }
 
-TexFormat D3D9texture::getFormat()
+TexFormat D3D9Texture::getFormat()
 {
 	return m_format;
 }
 
-bool D3D9texture::loadFile2D(const String &filename)
+bool D3D9Texture::loadFile2D(const String &filename)
 {
 	D3D9_SCOPELOCK;
 
@@ -445,7 +445,7 @@ bool D3D9texture::loadFile2D(const String &filename)
 
 	std::auto_ptr<Image> imagefile(new Image);
 	if (!imagefile->loadFile(filename, flags)) {
-//			Debugf("D3D9texture::loadFile2D: can't find image file for %s\n", filename.c_str());
+//			Debugf("D3D9Texture::loadFile2D: can't find image file for %s\n", filename.c_str());
 		return false;
 	}
 
@@ -563,7 +563,7 @@ bool D3D9texture::loadFile2D(const String &filename)
 	return true;
 }
 
-void D3D9texture::setPrivateData()
+void D3D9Texture::setPrivateData()
 {
 #if 0
 	void *data = this;
@@ -573,12 +573,12 @@ void D3D9texture::setPrivateData()
 #endif
 }
 
-void D3D9texture::copyFramebuffer(const Rect &r)
+void D3D9Texture::copyFramebuffer(const Rect &r)
 {
 
 }
 
-void D3D9texture::issueSamplerState(DWORD dwStage)
+void D3D9Texture::issueSamplerState(DWORD dwStage)
 {
 	if (m_format == TexFormat::RGBA16F) {
 //			Printf("justfortest");
@@ -587,7 +587,7 @@ void D3D9texture::issueSamplerState(DWORD dwStage)
 	d3d9StateManager->setSamplerStateBlock(dwStage, m_clampMode, m_filterMode);
 }
 
-bool D3D9texture::checkIfSupportHardwareMipmapGeneration(D3DFORMAT d3dformat, DWORD d3dusage)
+bool D3D9Texture::checkIfSupportHardwareMipmapGeneration(D3DFORMAT d3dformat, DWORD d3dusage)
 {
 	if (d3d9Api->CheckDeviceFormat(
 		D3DADAPTER_DEFAULT,
@@ -603,22 +603,22 @@ bool D3D9texture::checkIfSupportHardwareMipmapGeneration(D3DFORMAT d3dformat, DW
 	return false;
 }
 
-void D3D9texture::initManager()
+void D3D9Texture::initManager()
 {
 	s_manager = new D3D9texturemanager();
 }
 
-void D3D9texture::finalizeManager()
+void D3D9Texture::finalizeManager()
 {
 	SafeDelete(s_manager);
 }
 
-D3D9texture *D3D9texture::getAppTexture( LPDIRECT3DBASETEXTURE9 d3dtex )
+D3D9Texture *D3D9Texture::getAppTexture( LPDIRECT3DBASETEXTURE9 d3dtex )
 {
 	return s_manager->getTex(d3dtex);
 }
 
-void D3D9texture::syncFrame()
+void D3D9Texture::syncFrame()
 {
 	s_manager->syncFrame();
 }
@@ -680,7 +680,7 @@ void D3D9texturemanager::dumpTex_f(const CmdArgs &params)
 
 TextureRp D3D9texturemanager::createObject()
 {
-	TextureRp result = new D3D9texture();
+	TextureRp result = new D3D9Texture();
 	return result;
 }
 
@@ -731,7 +731,7 @@ void D3D9texturemanager::syncFrame()
 		// check need free
 		NeedfreeList::iterator it = m_needFreeHead.begin();
 		while (it != m_needFreeHead.end()) {
-			D3D9texture *owner = (D3D9texture *)&*it;
+			D3D9Texture *owner = (D3D9Texture *)&*it;
 			NeedfreeList::iterator next = ++it;
 			m_needFreeHead.erase(owner);
 			m_textureDict.erase(owner->getKey());

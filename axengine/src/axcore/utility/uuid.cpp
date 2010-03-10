@@ -86,8 +86,8 @@ class FixedCache : ThreadSafe
 
 	class Item {
 	public:
-		AtomicInt ref;
-		T value;
+		AtomicInt m_ref;
+		T m_value;
 	};
 
 public:
@@ -101,7 +101,7 @@ public:
 		// TODO
 	}
 
-	// ref added
+	// m_ref added
 	handle_t find(const T &t)
 	{
 		SCOPE_LOCK;
@@ -110,14 +110,14 @@ public:
 		DataType::iterator it = m_data.find(ptr);
 		if (it != m_data.end()) {
 			Item *handle = it->second;
-			handle->ref.incref();
+			handle->m_ref.incref();
 			return handle;
 		}
 
 		Item *item = new Item();
-		item->ref.incref();
-		item->value = t;
-		m_data[&item->value] = item;
+		item->m_ref.incref();
+		item->m_value = t;
+		m_data[&item->m_value] = item;
 
 		return item;
 	}
@@ -125,16 +125,16 @@ public:
 	void incref(handle_t h)
 	{
 		Item *item = reinterpret_cast<Item *>(h);
-		item->ref.incref();
+		item->m_ref.incref();
 	}
 
 	void decref(handle_t h)
 	{
 		Item *item = reinterpret_cast<Item *>(h);
 
-		if (item->ref.decref() == 0) {
+		if (item->m_ref.decref() == 0) {
 			SCOPE_LOCK;
-			m_data.erase(&item->value);
+			m_data.erase(&item->m_value);
 			delete item;
 		}
 	}
@@ -142,7 +142,7 @@ public:
 	const T &getValue(handle_t h)
 	{
 		Item *item = reinterpret_cast<Item *>(h);
-		return item->value;
+		return item->m_value;
 	}
 
 public:
