@@ -280,13 +280,10 @@ void RenderSystem::endFrame()
 	}
 
 	g_renderQueue->beginProviding();
-#if 0
-	gRenderDriver->preFrame();
-#endif
 	g_renderQueue->setTarget(m_curTarget);
 
 	// add to render queue
-//		gQueryManager->runFrame();
+	// gQueryManager->runFrame();
 	for (size_t i = 0; i < m_sceneSeq.size(); i++) {
 		RenderScene *s_view = m_sceneSeq[i].get();
 
