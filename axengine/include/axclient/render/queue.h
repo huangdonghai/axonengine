@@ -177,7 +177,7 @@ public:
 	int *allocPrimitives(int num);
 	void endProviding();
 
-	template< class T >
+	template <class T>
 	T *allocType(int num = 1);
 
 	// for consuming thread
@@ -198,8 +198,9 @@ private:
 	SyncEvent *m_cacheEndEvent;
 };
 
-template< class T >
-T *RenderQueue::allocType(int num) {
+template <class T>
+T *RenderQueue::allocType(int num)
+{
 	if (num == 1) {
 		return new(m_stack) T;
 	} else {
@@ -207,7 +208,8 @@ T *RenderQueue::allocType(int num) {
 	}
 }
 
-inline RenderTarget *RenderQueue::getTarget() {
+inline RenderTarget *RenderQueue::getTarget()
+{
 	return m_target;
 }
 

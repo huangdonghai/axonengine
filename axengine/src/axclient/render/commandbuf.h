@@ -7,43 +7,25 @@ class RenderResource
 {
 public:
 	RenderResource();
-	~RenderResource();
+	virtual ~RenderResource();
 
-	virtual void deleteThis();
+	virtual void deleteThis()
+	{
+	}
 
 private:
 	AtomicInt m_ref;
 };
 
+class RenderCommand
+{
+public:
+	virtual ~RenderCommand() {}
+	virtual void exec() = 0;
+};
+
 struct CommandBuf
 {
-	enum CommandId {
-		DELETE_TEX,
-		CREATE_TEX,
-		UPLOAD_SUBTEX,
-	};
-
-	struct Command {
-		short commandId;
-		short commandSize;
-	};
-
-	struct DeleteTexCmd : public Command {
-		SamplerData *sampler;
-	};
-
-	struct CreateTextureCmd : public Command {
-		SamplerData *sampler;
-	};
-
-	struct UploadSubTexCmd : public Command {
-		SamplerData *sampler;
-		Rect rect;
-		const void *pixel;
-		TexFormat format;
-		Rgba color; // if pixel is null, then use this color
-	};
-
 	enum {
 		MaxBufSize = 64 * 1024
 	};
@@ -52,15 +34,25 @@ struct CommandBuf
 	byte_t buf[MaxBufSize];
 };
 
-template <class A1, class A2, class A3>
-void QueueRenderCommand(A1 a1, A2 a2, A3 a3)
-{
-}
+#define AX_QUEUE_RENDER_COMMAND_0(tag, code)
+class tag : public RenderCommand \
+{ \
+public: \
+	tag() {} \
+	~tag() {} \
+	virtual void exec() \
 
-#define QUEUE_RENDER_COMMAND(tag, code)
-#define QUEUE_RENDER_COMMAND_1(tag, a1, code)
-#define QUEUE_RENDER_COMMAND_2(tag, a1, code)
-#define QUEUE_RENDER_COMMAND_3(tag, a1, code)
+#define AX_QUEUE_RENDER_COMMAND_1(tag, t1, a1, v1, code)
+class tag :public RenderCommand
+{
+	t1 a1;
+public:
+	tag(t1 _##a1) : a1(_##a1) {} \
+	~tag() {} \
+	virtual void exec()
+
+#define AX_QUEUE_RENDER_COMMAND_2(tag, t1, a1, v1, t2, a2, v2, code)
+#define AX_QUEUE_RENDER_COMMAND_3(tag, t1, a1, v1, t2, a2, v2, t3, a3, v3, code)
 
 
 AX_END_NAMESPACE
