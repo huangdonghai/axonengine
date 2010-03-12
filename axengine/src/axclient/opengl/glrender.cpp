@@ -92,13 +92,13 @@ AX_BEGIN_NAMESPACE
 		AX_SU(g_matSpecular, mat->getMatSpecular());
 		AX_SU(g_matShiness, mat->getMatShiness());
 
-		double begin = OsUtil::getTime();
+		double begin = OsUtil::seconds();
 #if 0
 		GLshader *shader = (GLshader*)FindAsset_<Shader>(mat->getShaderName(), (intptr_t)&macro);
 #else
 		GLshader *shader = glShaderManager->findShaderGL(mat->getShaderName(), macro);
 #endif
-		double end = OsUtil::getTime();
+		double end = OsUtil::seconds();
 		//g_statistic->addValue(stat_findShaderTime, end-begin);
 		stat_findShaderTime.add(end - begin);
 
@@ -356,8 +356,8 @@ AX_BEGIN_NAMESPACE
 			glClientActiveTexture(GL_TEXTURE7);
 			glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 		}
-		double begin = OsUtil::getTime();
-		double end = OsUtil::getTime();
+		double begin = OsUtil::seconds();
+		double end = OsUtil::seconds();
 		//g_statistic->addValue(stat_findShaderTime, end-begin);
 		stat_findShaderTime.add(end - begin);
 	}

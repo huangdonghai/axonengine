@@ -310,7 +310,7 @@ AX_BEGIN_NAMESPACE
 	static double select_time;
 	static Matrix4 select_viewmatrix;
 	void GLdriver::beginSelect(const RenderCamera &view) {
-		select_time = OsUtil::getTime();
+		select_time = OsUtil::seconds();
 
 		loadMatrix(GL_PROJECTION, view.getProjMatrix());
 		loadMatrix(GL_MODELVIEW, view.getViewMatrix());
@@ -459,7 +459,7 @@ AX_BEGIN_NAMESPACE
 
 		GLrender::checkErrors();
 
-		select_time = OsUtil::getTime() - select_time;
+		select_time = OsUtil::seconds() - select_time;
 
 		Printf("select time: %f\n", select_time);
 

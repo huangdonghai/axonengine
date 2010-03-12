@@ -127,15 +127,6 @@ public:
 	IntrusiveLink<Material> m_needDeleteLink;
 };
 
-inline void splitVectorToColor(const Vector3 &v, float &multiply, Rgb &color) {
-	multiply = v.getMax();
-	if (multiply < 1e-6) {
-		color.fromVector(Vector3(0,0,0));
-	} else {
-		color.fromVector(v / multiply);
-	}
-}
-
 inline void Material::setDiffuse(const Vector3 &v) {
 	m_diffuse = v;
 }

@@ -37,13 +37,17 @@ public:
 #define Strnequ(s1, s2, n)	(strncmp(s1, s2, n) == 0)
 
 
-struct AX_API OsUtil {
-#if 0
-	static uint_t milliseconds();
-	static ulonglong_t microseconds();
-#endif
-	static double getTime();
+struct AX_API OsUtil
+{
+	// cpu cycle time in seconds
+	static double cycleSeconds();
+	// now cpu cycles
+	static longlong_t cycles();
+	// now time, in seconds
+	static double seconds();
+
 	static String getClipboardString();
+
 	// DLL
 	static handle_t loadDll(const String &name);
 	static handle_t loadSysDll(const String &name);

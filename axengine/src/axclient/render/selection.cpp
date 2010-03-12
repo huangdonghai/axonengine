@@ -80,7 +80,7 @@ Selection::~Selection(void)
 
 void Selection::beginSelect(const RenderCamera &view)
 {
-	m_selectTime = OsUtil::getTime();
+	m_selectTime = OsUtil::seconds();
 
 	m_selectionCamera = view;
 
@@ -199,7 +199,7 @@ HitRecords Selection::endSelect()
 	}
 	
 	// 显示拾取花费的时间
-	m_selectTime = OsUtil::getTime() - m_selectTime;
+	m_selectTime = OsUtil::seconds() - m_selectTime;
 
 	Printf("select time: %f\n", m_selectTime);
 

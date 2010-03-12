@@ -3,6 +3,18 @@
 
 AX_BEGIN_NAMESPACE
 
+class RenderResource
+{
+public:
+	RenderResource();
+	~RenderResource();
+
+	virtual void deleteThis();
+
+private:
+	AtomicInt m_ref;
+};
+
 struct CommandBuf
 {
 	enum CommandId {

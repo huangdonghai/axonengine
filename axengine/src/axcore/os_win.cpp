@@ -62,14 +62,17 @@ int OsUtil::getScreenHeight()
 	return ::GetSystemMetrics(SM_CYSCREEN);
 }
 
-double OsUtil::getTime()
+static longlong_t s_starttime = 0;
+static longlong_t s_freq = 0;
+static double s_invFreq = 0;
+
+inline void checkTimeStart()
 {
 	// on multiprocessor, this may be have bugs for QPC..... fix me
-	static LARGE_INTEGER starttime;
-	static LARGE_INTEGER freq;
-	static double freqF;
+	LARGE_INTEGER starttime;
+	LARGE_INTEGER freq;
 
-	if (!starttime.QuadPart) {
+	if (!s_starttime) {
 		QueryPerformanceFrequency(&freq);
 
 		// if don't support high frequency timer, fire error
@@ -77,17 +80,41 @@ double OsUtil::getTime()
 			Errorf("Milliseconds: system doesn't support high-resolution performance counter\n");
 		}
 
-		freqF = freq.QuadPart;
 		QueryPerformanceCounter(&starttime);
 		srand(starttime.LowPart);
 
-		return 0;
+		s_starttime = starttime.QuadPart;
+		s_freq = freq.QuadPart;
+		s_invFreq = 1.0 / freq.QuadPart;
 	}
+}
+
+double OsUtil::cycleSeconds()
+{
+	checkTimeStart();
+
+	return s_invFreq;
+}
+
+longlong_t OsUtil::cycles()
+{
+	checkTimeStart();
 
 	LARGE_INTEGER now;
 	QueryPerformanceCounter(&now);
 
-	return (now.QuadPart - starttime.QuadPart) / freqF;
+	return (now.QuadPart - s_starttime);
+}
+
+
+double OsUtil::seconds()
+{
+	checkTimeStart();
+
+	LARGE_INTEGER now;
+	QueryPerformanceCounter(&now);
+
+	return (now.QuadPart - s_starttime) * s_invFreq;
 }
 
 
@@ -185,7 +212,7 @@ bool OsUtil::getMacAddress(byte_t address[6])
 		Debugf("getMacAddress: can't find network adapter\n");
 
 		// trigger srand
-		getTime();
+		seconds();
 
 		// rand
 		int rand1 = rand();

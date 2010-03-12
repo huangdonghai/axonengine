@@ -30,12 +30,12 @@ void testArgs()
 	CRITICAL_SECTION cs;
 	InitializeCriticalSection(&cs);
 
-	double start = OsUtil::getTime();
+	double start = OsUtil::seconds();
 	double d = 0;
 	for (int i = 0; i < 10000000; i++) {
 		d += i;
 	}
-	double end = OsUtil::getTime();
+	double end = OsUtil::seconds();
 
 	DeleteCriticalSection(&cs);
 

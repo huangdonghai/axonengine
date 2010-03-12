@@ -101,7 +101,7 @@ void PhysicsWorld::step(float frametime) {
 		stepMt(frametime);
 	}
 
-	double start = OsUtil::getTime();
+	double start = OsUtil::seconds();
 
 	m_havokWorld->stepDeltaTime(frametime);
 	notify(Synchronize);
@@ -110,7 +110,7 @@ void PhysicsWorld::step(float frametime) {
 		m_vdb->step(frametime);
 	}
 
-	float physicstime = OsUtil::getTime() - start;
+	float physicstime = OsUtil::seconds() - start;
 }
 
 void PhysicsWorld::stepMt(float frametime) {

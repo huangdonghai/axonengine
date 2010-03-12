@@ -94,7 +94,7 @@ D3D9Thread::~D3D9Thread()
 
 void D3D9Thread::runFrame(bool isInThread)
 {
-	double startTime = OsUtil::getTime();
+	double startTime = OsUtil::seconds();
 
 	d3d9Queue = g_queues[m_frameId%2];
 	m_frameId++;
@@ -115,11 +115,11 @@ void D3D9Thread::runFrame(bool isInThread)
 		d3d9FrameWnd->bind();
 	}
 
-	double cachestart = OsUtil::getTime();
+	double cachestart = OsUtil::seconds();
 
 	syncFrame();
 
-	double cacheend = OsUtil::getTime();
+	double cacheend = OsUtil::seconds();
 
 	int view_count = d3d9Queue->getSceneCount();
 	float frametime = d3d9Queue->getScene(0)->camera.getFrameTime();
@@ -139,21 +139,21 @@ void D3D9Thread::runFrame(bool isInThread)
 	for (int i = 0; i < view_count; i++) {
 		if (i == view_count - 1) m_isStatistic = true;
 
-		double s = OsUtil::getTime();
+		double s = OsUtil::seconds();
 		QueuedScene *queued = d3d9Queue->getScene(i);
 
 		drawScene(queued, clearer);
 		clearer.clearColor(false);
 		clearer.clearDepth(false);
 
-		scenetime[i] = OsUtil::getTime() - s;
+		scenetime[i] = OsUtil::seconds() - s;
 	}
 
 
 	d3d9Device->EndScene();
 	endFrame();
 
-	double end = OsUtil::getTime();
+	double end = OsUtil::seconds();
 
 	if (frametime <= 0) {
 		frametime = 1;
@@ -852,11 +852,11 @@ void D3D9Thread::drawScene_noworld(QueuedScene *scene, const D3D9clearer &cleare
 		drawInteraction(scene->debugInteractions[i]);
 	}
 
-	double start = OsUtil::getTime();
+	double start = OsUtil::seconds();
 	for (int i = 0; i < scene->numPrimitives; i++) {
 		drawPrimitive(scene->primIds[i]);
 	}
-	double end = OsUtil::getTime();
+	double end = OsUtil::seconds();
 
 	unsetScene(scene, nullptr, scene->target);
 

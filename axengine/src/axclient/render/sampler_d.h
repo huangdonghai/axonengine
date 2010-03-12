@@ -3,7 +3,7 @@
 
 AX_BEGIN_NAMESPACE
 
-class SamplerData
+class SamplerData : public RenderResource
 {
 public:
 	SamplerData();
@@ -18,7 +18,6 @@ public:
 private:
 	friend class SharedDataPointer<SamplerData>;
 
-	AtomicInt m_ref;
 	Sampler::ClampMode m_clampMode;
 	Sampler::FilterMode m_filterMode;
 	Sampler::BorderColor m_boardColor;

@@ -17,7 +17,8 @@ AX_BEGIN_NAMESPACE
 //--------------------------------------------------------------------------
 
 // virtual base, can't create an instance for this
-class AX_API Primitive {
+class AX_API Primitive
+{
 public:
 	enum Type {
 		NoneType = 0,		// for error checks
@@ -95,7 +96,8 @@ protected:
 	Interaction *m_headInteraction;
 };
 
-inline void Primitive::interactionChain(Interaction *last, int chainId) {
+inline void Primitive::interactionChain(Interaction *last, int chainId)
+{
 	if (m_chainId != chainId) {
 		m_headInteraction = last;
 		m_chainId = chainId;
@@ -106,19 +108,23 @@ inline void Primitive::interactionChain(Interaction *last, int chainId) {
 	m_headInteraction = last;
 }
 
-inline Material *Primitive::getMaterial() const {
+inline Material *Primitive::getMaterial() const
+{
 	return m_material.get();
 }
 
-inline void Primitive::setMaterial(Material *material) {
+inline void Primitive::setMaterial(Material *material)
+{
 	m_material = material;
 }
 
-inline void Primitive::setLightMap(Texture *lm) {
+inline void Primitive::setLightMap(Texture *lm)
+{
 	m_lightMap = lm;
 }
 
-inline Texture *Primitive::getLightMap() const {
+inline Texture *Primitive::getLightMap() const
+{
 	return m_lightMap.get();
 }
 
@@ -129,7 +135,8 @@ typedef Sequence<Primitive*>	Primitives;
 // class PointPrim
 //--------------------------------------------------------------------------
 
-class AX_API PointPrim : public Primitive {
+class AX_API PointPrim : public Primitive
+{
 public:
 	typedef DebugVertex VertexType;
 
@@ -165,7 +172,8 @@ private:
 // class LinePrim
 //--------------------------------------------------------------------------
 
-class AX_API LinePrim : public Primitive {
+class AX_API LinePrim : public Primitive
+{
 public:
 	typedef DebugVertex VertexType;
 
@@ -226,7 +234,8 @@ private:
 // class MeshPrim 
 //--------------------------------------------------------------------------
 
-class AX_API MeshPrim : public Primitive {
+class AX_API MeshPrim : public Primitive
+{
 public:
 	typedef MeshVertex VertexType;
 
@@ -283,7 +292,8 @@ private:
 // class TextPrim
 //--------------------------------------------------------------------------
 
-class AX_API TextPrim : public Primitive {
+class AX_API TextPrim : public Primitive
+{
 public:
 	enum Format {
 		// style flags
@@ -347,7 +357,8 @@ private:
 // class ChunkPrim
 //--------------------------------------------------------------------------
 
-class AX_API ChunkPrim : public Primitive {
+class AX_API ChunkPrim : public Primitive
+{
 public:
 	enum {
 		MAX_LAYERS = 4
@@ -424,10 +435,12 @@ private:
 	bool m_isZonePrim;
 };
 
-inline void ChunkPrim::setZoneRect(const Vector4 &rect) {
+inline void ChunkPrim::setZoneRect(const Vector4 &rect)
+{
 	m_zoneRect = rect;
 }
-inline Vector4 ChunkPrim::getZoneRect() const {
+inline Vector4 ChunkPrim::getZoneRect() const
+{
 	return m_zoneRect;
 }
 
@@ -437,7 +450,8 @@ inline Vector4 ChunkPrim::getZoneRect() const {
 // this prim will not free grouped primitives
 //--------------------------------------------------------------------------
 
-class AX_API GroupPrim : public Primitive {
+class AX_API GroupPrim : public Primitive
+{
 public:
 	GroupPrim(Hint hint);
 	virtual ~GroupPrim();
@@ -459,7 +473,8 @@ private:
 // this prim will not free refered primitive
 //--------------------------------------------------------------------------
 
-class AX_API RefPrim : public Primitive {
+class AX_API RefPrim : public Primitive
+{
 public:
 	RefPrim(Hint hint);
 	virtual ~RefPrim();
@@ -488,7 +503,8 @@ private:
 // geometry instance primitive. this primitive will not free instanced primitive
 //--------------------------------------------------------------------------
 
-class AX_API InstancePrim : public Primitive {
+class AX_API InstancePrim : public Primitive
+{
 public:
 	// per instance parameter
 	struct Param {
@@ -522,7 +538,8 @@ private:
 // class PrimitiveManager
 //--------------------------------------------------------------------------
 
-class AX_API PrimitiveManager {
+class AX_API PrimitiveManager
+{
 public:
 	PrimitiveManager();
 	virtual ~PrimitiveManager();

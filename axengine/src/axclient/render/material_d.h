@@ -3,12 +3,10 @@
 
 AX_BEGIN_NAMESPACE
 
-class MaterialData
+class MaterialData : public RenderResource
 {
 public:
 private:
-	int m_ref;
-
 	FixedString m_key;
 	MaterialDecl *m_decl;
 

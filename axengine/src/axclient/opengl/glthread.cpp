@@ -116,11 +116,11 @@ AX_BEGIN_NAMESPACE
 			gFrameWindow->bind();
 		}
 
-		double cachestart = OsUtil::getTime();
+		double cachestart = OsUtil::seconds();
 
 		cacheResource();
 
-		double cacheend = OsUtil::getTime();
+		double cacheend = OsUtil::seconds();
 
 		int view_count = g_renderQueue->getSceneCount();
 		float frametime = g_renderQueue->getScene(0)->camera.getFrameTime();
@@ -142,7 +142,7 @@ AX_BEGIN_NAMESPACE
 
 		endFrame();
 
-		double end = OsUtil::getTime();
+		double end = OsUtil::seconds();
 
 		if (frametime <= 0) {
 			frametime = 1;
@@ -860,7 +860,7 @@ AX_BEGIN_NAMESPACE
 
 	void GLthread::drawScene_world(QueuedScene *scene, const Clearer &clearer) {
 
-		double start = OsUtil::getTime();
+		double start = OsUtil::seconds();
 
 		s_technique = Technique::Main;
 		gWorldScene = scene;
@@ -968,7 +968,7 @@ AX_BEGIN_NAMESPACE
 		// check if need draw overlay primitives
 		drawPass_overlay(scene);
 
-		double end = OsUtil::getTime();
+		double end = OsUtil::seconds();
 //		Printf("FRAMETIME: %d", end - start);
 	}
 

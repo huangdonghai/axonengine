@@ -31,7 +31,7 @@ View::View(Context *context)
 	m_eyeMatrix.setOrigin(0, 0, 20);
 #endif
 	m_camera.setClearColor(Rgba::MdGrey);
-	m_frameOldTime = OsUtil::getTime();
+	m_frameOldTime = OsUtil::seconds();
 	m_frameTime = 0;
 
 	m_autoUpdate = false;
@@ -57,7 +57,7 @@ void View::doUpdate()
 		return;
 	}
 
-	double now = OsUtil::getTime();
+	double now = OsUtil::seconds();
 	m_frameTime = now - m_frameOldTime;
 	m_frameOldTime = now;
 

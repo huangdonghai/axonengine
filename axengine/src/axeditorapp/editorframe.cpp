@@ -368,7 +368,7 @@ void EditorFrame::translateMouseEvent(QMouseEvent *e, InputEvent *xe) {
 	if (mod & Qt::ControlModifier)
 		xe->flags |= InputEvent::ControlModifier;
 
-	xe->time = OsUtil::getTime();
+	xe->time = OsUtil::seconds();
 
 	issueEvent(e, *xe);
 }
@@ -425,7 +425,7 @@ void EditorFrame::wheelEvent(QWheelEvent *e) {
 	else
 		xe.key = InputKey::MouseWheelDown;
 
-	xe.time = OsUtil::getTime();
+	xe.time = OsUtil::seconds();
 
 	Qt::KeyboardModifiers mod = e->modifiers();
 	if (mod & Qt::ShiftModifier)
@@ -582,7 +582,7 @@ void EditorFrame::keyPressEvent(QKeyEvent *e) {
 	if (mod & Qt::ControlModifier)
 		xe.flags |= InputEvent::ControlModifier;
 
-	xe.time = OsUtil::getTime();
+	xe.time = OsUtil::seconds();
 
 	issueEvent(e, xe);
 }
@@ -611,7 +611,7 @@ void EditorFrame::keyReleaseEvent(QKeyEvent *e) {
 	if (mod & Qt::ControlModifier)
 		xe.flags |= InputEvent::ControlModifier;
 
-	xe.time = OsUtil::getTime();
+	xe.time = OsUtil::seconds();
 
 	issueEvent(e, xe);
 }
