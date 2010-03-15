@@ -567,7 +567,7 @@ void D3D9Shader::initPixelToTexel(D3DXHANDLE param)
 	m_object->GetParameterDesc(param, &texelDesc);
 	m_object->GetParameterDesc(pixel_param, &pixelDesc);
 
-	D3D9pixel2texel p2t;
+	D3D9Pixel2Texel p2t;
 	p2t.m_name = texelDesc.Name;
 	p2t.m_param = param;
 	p2t.m_pixelValue.resize(pixelDesc.Bytes / sizeof(float));
@@ -586,7 +586,7 @@ void D3D9Shader::setPixelToTexel(int width, int height)
 	float invheight = 1.0f / height;
 
 	for (size_t i = 0; i < pixel2Texels.size(); i++) {
-		D3D9pixel2texel &p2t = pixel2Texels[i]; 
+		D3D9Pixel2Texel &p2t = pixel2Texels[i]; 
 		FloatSeq &data = p2t.m_scaledValue = p2t.m_pixelValue;
 
 		int numvalue = s2i(data.size()) / 2;
@@ -635,7 +635,7 @@ void D3D9Shader::initAxonObject()
 		}
 
 		m_object->SetTechnique(m_d3dxTechniques[i]);
-		m_techniques[i] = new D3D9technique(this, m_d3dxTechniques[i]);
+		m_techniques[i] = new D3D9Technique(this, m_d3dxTechniques[i]);
 	}
 
 }
@@ -785,7 +785,7 @@ void D3D9shadermanager::applyShaderCache( const String &name )
 	}
 }
 
-D3D9technique::D3D9technique( D3D9Shader *shader, D3DXHANDLE d3dxhandle )
+D3D9Technique::D3D9Technique( D3D9Shader *shader, D3DXHANDLE d3dxhandle )
 {
 	m_shader = shader;
 	m_d3dxhandle = d3dxhandle;
@@ -808,7 +808,7 @@ D3D9technique::D3D9technique( D3D9Shader *shader, D3DXHANDLE d3dxhandle )
 	shader->m_object->End();
 }
 
-D3D9technique::~D3D9technique()
+D3D9Technique::~D3D9Technique()
 {
 
 }
@@ -914,9 +914,9 @@ void D3D9pass::initPs()
 }
 
 
-const D3D9pixel2texel*  D3D9pass::findPixel2Texel( const String &name )
+const D3D9Pixel2Texel*  D3D9pass::findPixel2Texel( const String &name )
 {
-	D3D9pixel2texels::const_iterator it = m_shader->pixel2Texels.begin();
+	D3D9Pixel2Texels::const_iterator it = m_shader->pixel2Texels.begin();
 
 	for (; it != m_shader->pixel2Texels.end(); ++it) {
 		if (it->m_name == name)
@@ -988,7 +988,7 @@ void D3D9pass::initSampler( const D3DXCONSTANT_DESC &desc )
 	}
 
 	// local sampler
-//		m_psParameters[desc.Name] = desc;
+//	m_psParameters[desc.Name] = desc;
 }
 
 void D3D9pass::begin()

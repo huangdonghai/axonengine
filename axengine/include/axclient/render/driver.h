@@ -76,12 +76,6 @@ public:
 
 	// if not multi threads rendering, use this call render a frame
 	virtual void runFrame() = 0;
-
-	// new interface
-	handle_t (*createTexture2D)();
-	handle_t (*createVertexBuffer)(size_t datasize);
-	handle_t (*createIndexBuffer)(size_t datasize);
-
 };
 
 AX_END_NAMESPACE

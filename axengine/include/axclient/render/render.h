@@ -82,7 +82,7 @@ private:
 	MaterialFr *m_fr;
 };
 
-class ElementFr;
+class PrimitiveBackend;
 
 class Element
 {
@@ -107,7 +107,7 @@ public:
 	};
 
 private:
-	ElementFr *m_fr;
+	PrimitiveBackend *m_fr;
 };
 
 

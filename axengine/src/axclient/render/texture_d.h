@@ -11,13 +11,13 @@ private:
 };
 AX_DECLARE_REFPTR(HardwareTexture);
 
-class TextureBr : public RenderBackendResource
+class TextureBackend : public RenderBackendResource
 {
 public:
-	TextureBr();
-	~TextureBr();
+	TextureBackend();
+	~TextureBackend();
 
-	void cache(Texture *src);
+	void sync(Texture *src);
 
 private:
 	SamplerState m_samplerState;

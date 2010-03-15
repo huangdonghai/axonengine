@@ -13,7 +13,8 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-class AX_API RenderTarget {
+class AX_API RenderTarget
+{
 public:
 	enum Type {
 		kWindow, kTexture

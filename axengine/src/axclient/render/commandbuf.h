@@ -6,7 +6,38 @@ AX_BEGIN_NAMESPACE
 class RenderInterface
 {
 public:
-	handle_t (*createTexture2D)()
+	enum TextureCreationFlag {
+		TCF_NoMipmap = 1,
+		TCF_NoDownsample = 2,
+		TCF_RenderTarget = 4
+	};
+
+	enum Hint {
+		Hint_Static, Hint_Dynamic
+	};
+
+	// new interface
+	virtual handle_t createTexture2D(TexFormat format, int width, int height, int flags = 0);
+	virtual void uploadTexture(handle_t htex, int level, void *pixels, TexFormat format = TexFormat::AUTO);
+	virtual void uploadSubTexture(handle_t htex, const Rect &rect, const void *pixels, TexFormat format = TexFormat::AUTO);
+	virtual void generateMipmap(handle_t htex);
+	virtual void deleteTexture2D(handle_t htex);
+
+	virtual handle_t createVertexBuffer(size_t datasize, Hint hint);
+	virtual void *lockVertexBuffer(handle_t hvb);
+	virtual void unlockVertexBuffer(handle_t hvb);
+	virtual void deleteVertexBuffer(handle_t hvb);
+	virtual handle_t createIndexBuffer(size_t datasize, Hint hint);
+	virtual void *lockIndexBuffer(handle_t hib);
+	virtual void unlockIndexBuffer(handle_t hib);
+	virtual void deleteIndexBuffer(handle_t hib);
+
+	virtual handle_t createShader(const String &name);
+	//	virtual int setCurrentTechnique(handle_t shader, Technique tech, MaterialBr *mtr);
+	virtual void setCurrentPass(int pass);
+
+	virtual void drawIndexedPrimitive();
+	virtual void drawIndexedPrimitiveUP();
 };
 
 class RenderBackendResource
@@ -35,47 +66,6 @@ private:
 	AtomicInt m_ref;
 };
 
-
-class MaterialBr : public RenderBackendResource
-{};
-
-class MaterialFr : public RenderFrontendResource
-{
-public:
-private:
-	MaterialBr *m_br;
-};
-
-
-class ElementBr : public RenderBackendResource
-{};
-
-class ElementFr : public RenderFrontendResource
-{
-public:
-private:
-	ElementBr *m_br;
-
-	bool m_isDirty;		// dirty
-	bool m_isVertexBufferDirty;
-	bool m_isIndexBufferDirty;
-	bool m_isWorldSpace; // primitive already in world space, so don't need model transform
-
-	int m_cachedId;		// used by render driver
-	int m_cachedFrame;
-
-	Element::ElementType m_type;
-	NewMaterial m_material;
-	NewTexture m_lightMap;
-
-	bool m_isMatrixSet;
-	Matrix4 m_matrix;
-
-	int m_activedIndexes;
-
-	int m_chainId;
-	Interaction *m_headInteraction;
-};
 
 
 class RenderCommand

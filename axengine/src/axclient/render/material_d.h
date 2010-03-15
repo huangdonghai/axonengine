@@ -3,9 +3,12 @@
 
 AX_BEGIN_NAMESPACE
 
-class MaterialData : public RenderBackendResource
+class MaterialBackend : public RenderBackendResource
 {
 public:
+
+	void sync(NewMaterial *mtl);
+
 private:
 	FixedString m_key;
 	MaterialDecl *m_decl;

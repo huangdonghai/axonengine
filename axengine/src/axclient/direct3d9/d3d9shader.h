@@ -69,14 +69,14 @@ typedef Sequence<D3D9samplerann*>	D3D9sampleranns;
 // class D3D9pixeltotexel
 //--------------------------------------------------------------------------
 
-class D3D9pixel2texel {
+class D3D9Pixel2Texel {
 public:
 	String m_name;
 	D3DXHANDLE m_param;
 	FloatSeq m_pixelValue;
 	FloatSeq m_scaledValue;
 };
-typedef Sequence<D3D9pixel2texel>	D3D9pixel2texels;
+typedef Sequence<D3D9Pixel2Texel>	D3D9Pixel2Texels;
 
 class D3D9pass {
 public:
@@ -84,7 +84,7 @@ public:
 	
 	struct ParamDesc {
 		D3DXCONSTANT_DESC d3dDesc;
-		const D3D9pixel2texel *p2t;
+		const D3D9Pixel2Texel *p2t;
 	};
 
 	D3D9pass(D3D9Shader *shader, D3DXHANDLE d3dxhandle);
@@ -98,7 +98,7 @@ protected:
 	void initState();
 	void initSampler(const D3DXCONSTANT_DESC &desc);
 
-	const D3D9pixel2texel *findPixel2Texel(const String &name);
+	const D3D9Pixel2Texel *findPixel2Texel(const String &name);
 	void setParameters();
 	void setParameter(const ParamDesc &param, const float *value, bool isPixelShader);
 
@@ -132,12 +132,13 @@ private:
 	Dict<String,ParamDesc> m_psParameters;
 };
 
-class D3D9technique {
+class D3D9Technique
+{
 public:
 	friend class D3D9Shader;
 
-	D3D9technique(D3D9Shader *shader, D3DXHANDLE d3dxhandle);
-	~D3D9technique();
+	D3D9Technique(D3D9Shader *shader, D3DXHANDLE d3dxhandle);
+	~D3D9Technique();
 
 private:
 	enum {MAX_PASSES = 8};
@@ -152,11 +153,11 @@ private:
 // class D3D9Shader
 //--------------------------------------------------------------------------
 
-
-class D3D9Shader : public Shader {
+class D3D9Shader : public Shader
+{
 public:
 	friend class D3D9pass;
-	friend class D3D9technique;
+	friend class D3D9Technique;
 
 	D3D9Shader();
 	virtual ~D3D9Shader();
@@ -215,11 +216,11 @@ private:
 	D3D9sampleranns m_samplerannSeq;
 
 	// pixel2texel
-	D3D9pixel2texels pixel2Texels;
+	D3D9Pixel2Texels pixel2Texels;
 	int m_p2tWidth, m_p2tHeight;
 
-	D3D9technique *m_techniques[Technique::Number];
-	D3D9technique *m_curTech;
+	D3D9Technique *m_techniques[Technique::Number];
+	D3D9Technique *m_curTech;
 	Material *m_coupled;
 };
 
@@ -227,7 +228,8 @@ private:
 // class D3D9shadermanager
 //--------------------------------------------------------------------------
 
-class D3D9shadermanager : public ShaderManager {
+class D3D9shadermanager : public ShaderManager
+{
 public:
 	D3D9shadermanager();
 	virtual ~D3D9shadermanager();
