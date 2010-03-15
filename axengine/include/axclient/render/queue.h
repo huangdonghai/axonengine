@@ -93,10 +93,6 @@ struct AX_API QueuedScene
 	Interaction *addInteraction(RenderEntity *qentity, Primitive *prim, bool chain = true);
 	void addHelperInteraction(RenderEntity *qentity, Primitive *prim);
 
-#if 0
-	bool addLight(QueuedLight *light);
-	bool addEntity(QueuedEntity *entity);
-#endif
 	void finalProcess();
 
 	bool isLastCsmSplits() const;
@@ -109,26 +105,6 @@ protected:
 	void findInstance();
 	void sortInteractions();
 };
-
-#if 0
-inline bool QueuedScene::addLight(QueuedLight *light) {
-	if (numLights >= MAX_LIGHTS) {
-		return false;
-	}
-
-	lights[numLights++] = light;
-	return true;
-}
-
-inline bool QueuedScene::addEntity(QueuedEntity *actor) {
-	if (numEntities >= MAX_ENTITIES) {
-		return false;
-	}
-
-	queuedEntities[numEntities++] = actor;
-	return true;
-}
-#endif
 
 inline bool QueuedScene::isLastCsmSplits() const
 {

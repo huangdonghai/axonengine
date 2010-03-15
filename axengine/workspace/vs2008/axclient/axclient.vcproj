@@ -334,6 +334,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\axclient\render\commandbuf.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\axclient\render\commandbuf.h"
 				>
 			</File>
@@ -427,6 +431,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\src\axclient\render\texture.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\axclient\render\texture_d.h"
 				>
 			</File>
 			<File

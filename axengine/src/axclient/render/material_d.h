@@ -3,7 +3,7 @@
 
 AX_BEGIN_NAMESPACE
 
-class MaterialData : public RenderResource
+class MaterialData : public RenderBackendResource
 {
 public:
 private:

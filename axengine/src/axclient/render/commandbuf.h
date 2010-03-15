@@ -3,11 +3,17 @@
 
 AX_BEGIN_NAMESPACE
 
-class RenderResource
+class RenderInterface
 {
 public:
-	RenderResource();
-	virtual ~RenderResource();
+	handle_t (*createTexture2D)()
+};
+
+class RenderBackendResource
+{
+public:
+	RenderBackendResource();
+	virtual ~RenderBackendResource();
 
 	virtual void deleteThis()
 	{
@@ -16,6 +22,61 @@ public:
 private:
 	AtomicInt m_ref;
 };
+
+class RenderFrontendResource
+{
+public:
+	RenderFrontendResource();
+	virtual ~RenderFrontendResource();
+
+	virtual void deleteThis() {}
+	
+private:
+	AtomicInt m_ref;
+};
+
+
+class MaterialBr : public RenderBackendResource
+{};
+
+class MaterialFr : public RenderFrontendResource
+{
+public:
+private:
+	MaterialBr *m_br;
+};
+
+
+class ElementBr : public RenderBackendResource
+{};
+
+class ElementFr : public RenderFrontendResource
+{
+public:
+private:
+	ElementBr *m_br;
+
+	bool m_isDirty;		// dirty
+	bool m_isVertexBufferDirty;
+	bool m_isIndexBufferDirty;
+	bool m_isWorldSpace; // primitive already in world space, so don't need model transform
+
+	int m_cachedId;		// used by render driver
+	int m_cachedFrame;
+
+	Element::ElementType m_type;
+	NewMaterial m_material;
+	NewTexture m_lightMap;
+
+	bool m_isMatrixSet;
+	Matrix4 m_matrix;
+
+	int m_activedIndexes;
+
+	int m_chainId;
+	Interaction *m_headInteraction;
+};
+
 
 class RenderCommand
 {
@@ -35,22 +96,7 @@ struct CommandBuf
 };
 
 #define AX_QUEUE_RENDER_COMMAND_0(tag, code)
-class tag : public RenderCommand \
-{ \
-public: \
-	tag() {} \
-	~tag() {} \
-	virtual void exec() \
-
 #define AX_QUEUE_RENDER_COMMAND_1(tag, t1, a1, v1, code)
-class tag :public RenderCommand
-{
-	t1 a1;
-public:
-	tag(t1 _##a1) : a1(_##a1) {} \
-	~tag() {} \
-	virtual void exec()
-
 #define AX_QUEUE_RENDER_COMMAND_2(tag, t1, a1, v1, t2, a2, v2, code)
 #define AX_QUEUE_RENDER_COMMAND_3(tag, t1, a1, v1, t2, a2, v2, t3, a3, v3, code)
 
