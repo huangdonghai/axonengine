@@ -124,7 +124,7 @@ TextureRp TextureManager::loadTexture(const String &texname, Texture::InitFlags 
 		if (result->m_needFreeLink.isLinked())
 			m_needFreeHead.erase(result);
 #endif
-		result->addref();
+		result->incref();
 		return result;
 	}
 

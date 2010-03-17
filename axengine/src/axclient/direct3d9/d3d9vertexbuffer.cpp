@@ -490,7 +490,7 @@ D3D9VertDecl *D3D9VertexBufferManager::allocVertDecl(D3D9VertexObject::VertexTyp
 	D3D9VertDecl*& result = m_vertDeclPool[vt][offset];
 
 	if (result) {
-		result->addref();
+		result->incref();
 		return result;
 	}
 

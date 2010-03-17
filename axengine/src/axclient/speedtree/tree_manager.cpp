@@ -28,7 +28,7 @@ TreeAsset *TreeManager::findAsset(const String &name, int seed)
 	TreeAssetDict::iterator it = m_treeAssetDict.find(key);
 
 	if (it != m_treeAssetDict.end()) {
-		it->second->addref();
+		it->second->incref();
 		return it->second;
 	}
 
@@ -37,7 +37,7 @@ TreeAsset *TreeManager::findAsset(const String &name, int seed)
 
 	if (!v) {
 		delete result;
-		m_defaulted->addref();
+		m_defaulted->incref();
 		return m_defaulted;
 	}
 

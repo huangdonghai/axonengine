@@ -30,7 +30,7 @@ AX_BEGIN_NAMESPACE
 	public:
 		HavokPackable() { m_package = nullptr; }
 		HavokPackable(HavokPackage *package) : m_package(package) {}
-		virtual ~HavokPackable() { SafeRelease(m_package); }
+		virtual ~HavokPackable() { SafeDecRef(m_package); }
 
 	protected:
 		HavokPackage *m_package;

@@ -725,7 +725,7 @@ int HavokRig::getBoneCount()
 HavokRig::HavokRig(HavokPackage *package) : HavokPackable(package), m_havokSkeleton(0)
 {
 	if (m_package) m_havokSkeleton = m_package->getSkeleton();
-	SafeAddRef(m_package);
+	SafeIncRef(m_package);
 }
 
 HavokRig::HavokRig(const String &name)
@@ -1322,7 +1322,7 @@ HavokPackage *HavokPackageManager::findPackage(const String &name) {
 	PackageDict::iterator it = m_packageDict.find(name);
 	if (it != m_packageDict.end()) {
 		HavokPackage *package = it->second;
-		package->addref();
+		package->incref();
 		return package;
 	}
 
@@ -1353,7 +1353,7 @@ HavokModel::HavokModel(HavokPackage *package) : RenderEntity(kModel) {
 	m_package = package;
 	m_pose = nullptr;
 	m_isMeshDataInited = false;
-	SafeAddRef(m_package);
+	SafeIncRef(m_package);
 }
 
 HavokModel::HavokModel(const String &name) : RenderEntity(kModel)
@@ -1367,7 +1367,7 @@ HavokModel::~HavokModel() {
 	if (m_package)
 		m_package->clearDynamicMeshes(m_mestDataList);
 
-	SafeRelease(m_package);
+	SafeDecRef(m_package);
 }
 
 BoundingBox HavokModel::getLocalBoundingBox() {

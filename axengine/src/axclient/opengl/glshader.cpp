@@ -872,7 +872,7 @@ AX_BEGIN_NAMESPACE
 			if (!v) {
 				delete shader;
 				shader = m_defaulted;
-				shader->addref();
+				shader->incref();
 			}
 		}
 		return shader;

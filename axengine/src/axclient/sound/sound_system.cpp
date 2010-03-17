@@ -130,7 +130,7 @@ SoundFx *SoundSystem::createSfx( const String &name )
 
 	if (it != m_sfxDict.end()) {
 		SoundFx *result = it->second;
-		result->addref();
+		result->incref();
 		return result;
 	}
 

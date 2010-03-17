@@ -263,7 +263,7 @@ MaterialRp Material::load(const String &name)
 		Material *mat = it->second;
 		if (mat->m_needDeleteLink.isLinked())
 			ms_needDeleteLinkHead.erase(mat);
-		mat->addref();
+		mat->incref();
 		return mat;
 	}
 

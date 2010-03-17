@@ -58,7 +58,7 @@ D3D9Target::D3D9Target(int width, int height, TexFormat format, bool pooled)
 D3D9Target::~D3D9Target()
 {
 	SAFE_RELEASE(m_surface);
-	SafeRelease(m_texture);
+	SafeDecRef(m_texture);
 }
 
 Rect D3D9Target::getRect()

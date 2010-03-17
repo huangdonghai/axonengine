@@ -58,7 +58,7 @@ PhysicsRigid::~PhysicsRigid() {
 		m_havokRigid->removeReference();
 	}
 	if (m_package) {
-		m_package->release();
+		m_package->decref();
 	}
 }
 

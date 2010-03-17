@@ -19,10 +19,10 @@ AX_BEGIN_NAMESPACE
 
 class AX_API RefObject {
 public:
-	void addref();
-	void release();
+	void incref();
+	void decref();
 
-	inline int getRefCount() const { return m_refcount; }
+	inline int getRefCount() const { return m_ref.getref(); }
 	inline FixedString getKey() const { return m_key; }
 	inline void setKey(const FixedString &newkey) { m_key = newkey; }
 
@@ -32,22 +32,22 @@ protected:
 	RefObject();
 	virtual ~RefObject();
 
-	int m_refcount;
+	AtomicInt m_ref;
 	FixedString m_key;
 };
 
-inline RefObject::RefObject() : m_refcount(1)
+inline RefObject::RefObject() : m_ref(1)
 {}
 
 inline RefObject::~RefObject()
 {}
 
-inline void RefObject::addref()
-{ OsUtil::atomicIncrement(m_refcount); }
+inline void RefObject::incref()
+{ m_ref.incref(); }
 
-inline void RefObject::release()
+inline void RefObject::decref()
 {
-	if (OsUtil::atomicDecrement(m_refcount) == 0) {
+	if (m_ref.decref() == 0) {
 		deleteThis();
 	}
 }
@@ -58,8 +58,8 @@ inline void RefObject::release()
 // we need this to indicate the object's refcount already incremented, so if
 // assign to RefPtr, no need add reference count again.
 //
-// this pointer doesn't call addref, and when it be destructed, doesn't call
-// release
+// this pointer doesn't call incref, and when it be destructed, doesn't call
+// decref
 //--------------------------------------------------------------------------
 template <class Ty>
 class ResultPtr {
@@ -96,7 +96,7 @@ public:
 
 	// assignment
 	RefPtr &operator=(const RefPtr &ptr);
-	RefPtr &operator=(const ResultPtr<T>& ptr) { if (m_object) m_object->release(); m_object = ptr.m_object; return *this; }
+	RefPtr &operator=(const ResultPtr<T>& ptr) { if (m_object) m_object->decref(); m_object = ptr.m_object; return *this; }
 	RefPtr &operator=(T *pObject);
 
 	// comparisons
@@ -110,7 +110,7 @@ public:
 	operator bool() const { return m_object != 0; }
 
 	// attach an object, don't increment ref-count
-	RefPtr &attach(T *obj) { if (m_object) m_object->release(); m_object = obj; return *this; }
+	RefPtr &attach(T *obj) { if (m_object) m_object->decref(); m_object = obj; return *this; }
 
 	// another style of detach and attach
 	RefPtr &operator<<(T *obj) { return attach(obj); }
@@ -138,7 +138,7 @@ inline RefPtr<T>::RefPtr(T *pObject)
 {
 	m_object = pObject;
 	if (m_object)
-		m_object->addref();
+		m_object->incref();
 }
 //---------------------------------------------------------------------------
 template <class T>
@@ -146,14 +146,14 @@ inline RefPtr<T>::RefPtr(const RefPtr &ptr)
 {
 	m_object = ptr.m_object;
 	if (m_object)
-		m_object->addref();
+		m_object->incref();
 }
 //---------------------------------------------------------------------------
 template <class T>
 inline RefPtr<T>::~RefPtr()
 {
 	if (m_object)
-		m_object->release();
+		m_object->decref();
 }
 #if 1
 //---------------------------------------------------------------------------
@@ -181,10 +181,10 @@ inline RefPtr<T>& RefPtr<T>::operator=(const RefPtr &ptr)
 {
 	if (m_object != ptr.m_object) {
 		if (m_object)
-			m_object->release();
+			m_object->decref();
 		m_object = ptr.m_object;
 		if (m_object)
-			m_object->addref();
+			m_object->incref();
 	}
 	return *this;
 }
@@ -194,10 +194,10 @@ inline RefPtr<T>& RefPtr<T>::operator=(T *pObject)
 {
 	if (m_object != pObject) {
 		if (m_object)
-			m_object->release();
+			m_object->decref();
 		m_object = pObject;
 		if (m_object)
-			m_object->addref();
+			m_object->incref();
 	}
 	return *this;
 }

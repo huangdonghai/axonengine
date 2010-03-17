@@ -50,7 +50,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 	GLtarget::~GLtarget() {
-		SafeRelease(m_texture);
+		SafeDecRef(m_texture);
 	}
 
 	Rect GLtarget::getRect() {

@@ -704,7 +704,7 @@ Shader *D3D9shadermanager::findShader( const FixedString &nameId, const ShaderMa
 		if (!v) {
 			delete shader;
 			shader = m_defaulted;
-			shader->addref();
+			shader->incref();
 		}
 	}
 

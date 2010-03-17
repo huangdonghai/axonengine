@@ -219,6 +219,21 @@ AX_BEGIN_NAMESPACE
 	}
 
 	template<typename T>
+	void SafeDecRef(T*& p) {
+		if (p) {
+			p->decref();
+			p = NULL;
+		}
+	}
+
+	template<typename T>
+	void SafeIncRef(T*& p) {
+		if (p) {
+			p->incref();
+		}
+	}
+
+	template<typename T>
 	void SafeRelease(T*& p) {
 		if (p) {
 			p->release();
@@ -227,7 +242,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 	template<typename T>
-	void SafeAddRef(T*& p) {
+	void SafeAddref(T*& p) {
 		if (p) {
 			p->addref();
 		}

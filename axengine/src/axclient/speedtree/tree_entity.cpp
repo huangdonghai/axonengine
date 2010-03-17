@@ -27,7 +27,7 @@ TreeEntity::TreeEntity(const String &filename, int seed)
 TreeEntity::~TreeEntity()
 {
 	m_treeAsset->removeActor(this);
-	SafeRelease(m_treeAsset);
+	SafeDecRef(m_treeAsset);
 }
 
 BoundingBox TreeEntity::getLocalBoundingBox()

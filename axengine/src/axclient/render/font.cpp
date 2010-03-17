@@ -119,7 +119,7 @@ namespace {
 
 		FontDict::const_iterator it = m_fontDict.find(key);
 		if (it != m_fontDict.end()) {
-			it->second->addref();
+			it->second->incref();
 			return it->second;
 		}
 

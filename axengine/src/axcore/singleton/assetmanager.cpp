@@ -217,7 +217,7 @@ AX_BEGIN_NAMESPACE
 		}
 
 		d->factory->destroy(a);
-		SafeAddRef(d->defaulted);
+		SafeIncRef(d->defaulted);
 		return d->defaulted;
 	}
 
