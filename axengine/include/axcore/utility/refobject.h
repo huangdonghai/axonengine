@@ -232,6 +232,184 @@ inline RefPtr<To> refptr_cast(const RefPtr<From> ptr) {
 	return RefPtr<To>((To*) (void*) (ptr.get()));
 }
 
+
+template <class T>
+class CopyOnWritePointer
+{
+public:
+	typedef T Type;
+	typedef T *pointer;
+
+	inline void detach() { if (d && d->m_ref != 1) detach_helper(); }
+	inline T &operator*() { detach(); return *d; }
+	inline const T &operator*() const { return *d; }
+	inline T *operator->() { detach(); return d; }
+	inline const T *operator->() const { return d; }
+	inline operator T *() { detach(); return d; }
+	inline operator const T *() const { return d; }
+	inline T *data() { detach(); return d; }
+	inline const T *data() const { return d; }
+	inline const T *constData() const { return d; }
+
+	inline bool operator==(const CopyOnWritePointer<T> &other) const { return d == other.d; }
+	inline bool operator!=(const CopyOnWritePointer<T> &other) const { return d != other.d; }
+
+	inline CopyOnWritePointer() { d = 0; }
+	inline ~CopyOnWritePointer() { if (d && !d->m_ref.decref()) delete d; }
+
+	explicit CopyOnWritePointer(T *data);
+	inline CopyOnWritePointer(const CopyOnWritePointer<T> &o) : d(o.d) { if (d) d->m_ref.incref(); }
+	inline CopyOnWritePointer<T> & operator=(const CopyOnWritePointer<T> &o) {
+		if (o.d != d) {
+			if (o.d)
+				o.d->m_ref.incref();
+			if (d && !d->m_ref.decref())
+				delete d;
+			d = o.d;
+		}
+		return *this;
+	}
+	inline CopyOnWritePointer &operator=(T *o) {
+		if (o != d) {
+			if (o)
+				o->m_ref.incref();
+			if (d && !d->m_ref.decref())
+				delete d;
+			d = o;
+		}
+		return *this;
+	}
+
+	inline bool operator!() const { return !d; }
+
+	inline void swap(CopyOnWritePointer &other)
+	{ std::swap(d, other.d); }
+
+protected:
+	T *clone();
+
+private:
+	void detach_helper();
+
+	T *d;
+};
+
+template <class T> class ExplicitlyCopyOnWritePointer
+{
+public:
+	typedef T Type;
+	typedef T *pointer;
+
+	inline T &operator*() const { return *d; }
+	inline T *operator->() { return d; }
+	inline T *operator->() const { return d; }
+	inline T *data() const { return d; }
+	inline const T *constData() const { return d; }
+
+	inline void detach() { if (d && d->m_ref != 1) detach_helper(); }
+
+	inline void reset()
+	{
+		if(d) d->decref();
+		d = 0;
+	}
+
+	inline operator bool () const { return d != 0; }
+
+	inline bool operator==(const ExplicitlyCopyOnWritePointer<T> &other) const { return d == other.d; }
+	inline bool operator!=(const ExplicitlyCopyOnWritePointer<T> &other) const { return d != other.d; }
+	inline bool operator==(const T *ptr) const { return d == ptr; }
+	inline bool operator!=(const T *ptr) const { return d != ptr; }
+
+	inline ExplicitlyCopyOnWritePointer() { d = 0; }
+	inline ~ExplicitlyCopyOnWritePointer() { if (d && !d->m_ref.decref()) delete d; }
+
+	explicit ExplicitlyCopyOnWritePointer(T *data);
+	inline ExplicitlyCopyOnWritePointer(const ExplicitlyCopyOnWritePointer<T> &o) : d(o.d) { if (d) d->m_ref.incref(); }
+
+	template<class X>
+	inline ExplicitlyCopyOnWritePointer(const ExplicitlyCopyOnWritePointer<X> &o) : d(static_cast<T *>(o.data()))
+	{
+		if(d)
+			d->m_ref.incref();
+	}
+
+	inline ExplicitlyCopyOnWritePointer<T> & operator=(const ExplicitlyCopyOnWritePointer<T> &o) {
+		if (o.d != d) {
+			if (o.d)
+				o.d->m_ref.incref();
+			if (d && !d->m_ref.decref())
+				delete d;
+			d = o.d;
+		}
+		return *this;
+	}
+	inline ExplicitlyCopyOnWritePointer &operator=(T *o) {
+		if (o != d) {
+			if (o)
+				o->m_ref.incref();
+			if (d && !d->m_ref.decref())
+				delete d;
+			d = o;
+		}
+		return *this;
+	}
+
+	inline bool operator!() const { return !d; }
+
+	inline void swap(ExplicitlyCopyOnWritePointer &other)
+	{ std::swap(d, other.d); }
+
+protected:
+	T *clone();
+
+private:
+	void detach_helper();
+
+	T *d;
+};
+
+template <class T>
+inline CopyOnWritePointer<T>::CopyOnWritePointer(T *adata) : d(adata)
+{ if (d) d->m_ref.incref(); }
+
+template <class T>
+inline T *CopyOnWritePointer<T>::clone()
+{
+	return new T(*d);
+}
+
+template <class T>
+inline void CopyOnWritePointer<T>::detach_helper()
+{
+	T *x = clone();
+	x->m_ref.incref();
+	if (!d->m_ref.decref())
+		delete d;
+	d = x;
+}
+
+template <class T>
+inline T *ExplicitlyCopyOnWritePointer<T>::clone()
+{
+	return new T(*d);
+}
+
+template <class T>
+inline void ExplicitlyCopyOnWritePointer<T>::detach_helper()
+{
+	T *x = clone();
+	x->m_ref.incref();
+	if (!d->m_ref.decref())
+		delete d;
+	d = x;
+}
+
+template <class T>
+inline ExplicitlyCopyOnWritePointer<T>::ExplicitlyCopyOnWritePointer(T *adata) : d(adata)
+{ if (d) d->m_ref.incref(); }
+
+
 AX_END_NAMESPACE
 
 #endif

@@ -193,8 +193,65 @@ protected:
 	TextureDict m_textureDict;
 };
 
-AX_END_NAMESPACE
+class TextureFrontend;
 
+class NewTexture
+{
+public:
+	enum InitFlag {
+		IF_NoMipmap = 1,
+		IF_NoDownsample = 2,
+		IF_AutoGenMipmap = 4,
+		IF_RenderTarget = 8
+	};
+
+	typedef Flags_<InitFlag> InitFlags;
+
+	enum TexType {
+		TT_2D,
+		TT_3D,
+		TT_CUBE,
+	};
+
+	enum ClampMode {
+		CM_Repeat,
+		CM_Clamp,
+		CM_ClampToEdge,	// only used in engine internal
+		CM_ClampToBorder // only used in engine internal
+	};
+
+	enum FilterMode {
+		FM_Nearest,
+		FM_Linear,
+		FM_Bilinear,
+		FM_Trilinear
+	};
+
+	enum BorderColor {
+		BC_Zero, BC_One
+	};
+
+	NewTexture();
+	NewTexture(const String &name);
+	NewTexture(const String &debugname, TexFormat format, int width, int height);
+	~NewTexture();
+
+	bool isNull() const { return m_fr == 0; }
+
+	void uploadSubTexture(const Rect &rect, const void *pixels, TexFormat format = TexFormat::AUTO);
+	void generateMipmap();
+
+	// texture parameters
+	void setClampMode(ClampMode clampmwode);
+	void setFilterMode(FilterMode filtermode);
+	void setBorderColor(BorderColor bordercolor);
+
+private:
+	CopyOnWritePointer<TextureFrontend> m_fr;
+};
+
+
+AX_END_NAMESPACE
 
 #endif // AX_RENDER_TEXTURE_H
 

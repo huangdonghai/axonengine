@@ -36,10 +36,6 @@ Material::Material()
 
 Material::~Material()
 {
-	// TODO: free texture
-
-//		FreeAsset_(m_matfile);
-//		FreeAsset_(m_shaderTemplate);
 }
 
 bool Material::init(const String &name)

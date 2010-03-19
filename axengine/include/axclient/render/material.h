@@ -201,6 +201,54 @@ inline void Material::setTexture(int sampler, Texture *tex) {
 	m_textures[sampler] = tex;
 }
 
+class MaterialFrontend;
+
+class NewMaterial
+{
+public:
+	NewMaterial();
+	NewMaterial(const String &name);
+	~NewMaterial();
+
+private:
+	CopyOnWritePointer<MaterialFrontend> m_frontend;
+};
+
+class ElementBackend;
+
+class ElementFrontend;
+
+class Element
+{
+public:
+	enum ElementType {
+		NoneType = 0,		// for error checks
+		PointType,
+		LineType,
+		MeshType,			// raw mesh
+		TextType,
+		ChunkType,
+		GroupType,			// grouped primitive, maybe for gui system
+		ReferenceType,		// a reference to another primitive, but can use different entity and material etc...
+		InstancingType		// geometry instancing type, instancing a primitive many time with different parameter
+	};
+
+	enum Hint {
+		HintStatic,				// will alloc in video memory, never change
+		HintDynamic,			// 
+		HintFrame,				// only draw in one frame, will auto deleted when render driver cached it
+	};
+
+private:
+	CopyOnWritePointer<ElementFrontend> m_fr;
+};
+
+class MeshElement : public Element
+{
+public:
+};
+
+
 AX_END_NAMESPACE
 
 #endif // AX_MATERIAL_H
