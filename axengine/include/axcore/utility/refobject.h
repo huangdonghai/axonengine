@@ -240,7 +240,7 @@ public:
 	typedef T Type;
 	typedef T *pointer;
 
-	inline void detach() { if (d && d->m_ref != 1) detach_helper(); }
+	inline void detach() { if (d && d->getref() != 1) detach_helper(); }
 	inline T &operator*() { detach(); return *d; }
 	inline const T &operator*() const { return *d; }
 	inline T *operator->() { detach(); return d; }
@@ -255,26 +255,22 @@ public:
 	inline bool operator!=(const CopyOnWritePointer<T> &other) const { return d != other.d; }
 
 	inline CopyOnWritePointer() { d = 0; }
-	inline ~CopyOnWritePointer() { if (d && !d->m_ref.decref()) delete d; }
+	inline ~CopyOnWritePointer() { if (d) d->decref(); }
 
 	explicit CopyOnWritePointer(T *data);
 	inline CopyOnWritePointer(const CopyOnWritePointer<T> &o) : d(o.d) { if (d) d->m_ref.incref(); }
 	inline CopyOnWritePointer<T> & operator=(const CopyOnWritePointer<T> &o) {
 		if (o.d != d) {
-			if (o.d)
-				o.d->m_ref.incref();
-			if (d && !d->m_ref.decref())
-				delete d;
+			SafeIncRef(o);
+			SafeDecRef(d);
 			d = o.d;
 		}
 		return *this;
 	}
 	inline CopyOnWritePointer &operator=(T *o) {
 		if (o != d) {
-			if (o)
-				o->m_ref.incref();
-			if (d && !d->m_ref.decref())
-				delete d;
+			SafeIncRef(o);
+			SafeDecRef(d);
 			d = o;
 		}
 		return *this;
@@ -383,9 +379,8 @@ template <class T>
 inline void CopyOnWritePointer<T>::detach_helper()
 {
 	T *x = clone();
-	x->m_ref.incref();
-	if (!d->m_ref.decref())
-		delete d;
+	x->incref();
+	SafeDecRef(d);
 	d = x;
 }
 

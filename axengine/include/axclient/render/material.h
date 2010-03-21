@@ -201,52 +201,64 @@ inline void Material::setTexture(int sampler, Texture *tex) {
 	m_textures[sampler] = tex;
 }
 
-class MaterialFrontend;
+class MaterialData;
 
-class NewMaterial
+class Material2
 {
 public:
-	NewMaterial();
-	NewMaterial(const String &name);
-	~NewMaterial();
+	Material2();
+	Material2(const String &name);
+	Material2(const String &name, const String &baseName);
+	Material2(const Material2 &rhs);
+	~Material2();
+
+	bool isNull() const { return !m_data; }
+
+	const String &getShaderName() const;
+	bool isWireframe() const;
+	bool isPhysicsHelper() const;
+
+	void setDiffuse(const Color3 &v);
+	void setSpecular(const Color3 &v);
+	void setShiness(float shiness);
+	void setDetailScale(float scale);
+	float getDetailScale() const;
+	bool haveDetail() const;
+
+	Color3 getMatDiffuse() const;
+	Color3 getMatSpecular() const;
+	float getMatShiness() const;
+
+	// features and shader parameter
+	void setFeature(int index, bool enabled);
+	bool isFeatureEnabled(int index) const;
+	void setLiteral(int index, int value);
+	int getLiteral(int index) const;
+	void clearFeatures();
+	void clearLiterals();
+
+	// texture setting and getting
+	const Texture2 &getTexture(int sample) const;
+	void setTexture(int sampler, const Texture2 &tex);
+
+	// parameter setting and getting
+	void setParameter(const String &name, int num, const float *ptr);
+	const ShaderParams &getParameters() const;
+
+	void setBaseTcMatrix(const Matrix4 &matrix);
+	bool isBaseTcAnim() const;
+	const Matrix4 &getBaseTcMatrix() const;
+
+	// pixel to texel
+	void setPixelToTexel(int width, int height);
+	bool isPixelToTexelEnabled() const;
+	int getPixelToTexelWidth() const;
+	int getPixelToTexelHeight() const;
 
 private:
-	CopyOnWritePointer<MaterialFrontend> m_frontend;
+	CopyOnWritePointer<MaterialData> m_data;
 };
 
-class ElementBackend;
-
-class ElementFrontend;
-
-class Element
-{
-public:
-	enum ElementType {
-		NoneType = 0,		// for error checks
-		PointType,
-		LineType,
-		MeshType,			// raw mesh
-		TextType,
-		ChunkType,
-		GroupType,			// grouped primitive, maybe for gui system
-		ReferenceType,		// a reference to another primitive, but can use different entity and material etc...
-		InstancingType		// geometry instancing type, instancing a primitive many time with different parameter
-	};
-
-	enum Hint {
-		HintStatic,				// will alloc in video memory, never change
-		HintDynamic,			// 
-		HintFrame,				// only draw in one frame, will auto deleted when render driver cached it
-	};
-
-private:
-	CopyOnWritePointer<ElementFrontend> m_fr;
-};
-
-class MeshElement : public Element
-{
-public:
-};
 
 
 AX_END_NAMESPACE

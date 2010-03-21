@@ -446,7 +446,7 @@ void RenderQueue::beginConsuming()
 	m_consumingEvent->lock();
 }
 
-void RenderQueue::setCacheEnd()
+void RenderQueue::endSync()
 {
 	m_cacheEndEvent->setEvent();
 }

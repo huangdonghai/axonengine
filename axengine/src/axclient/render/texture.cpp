@@ -268,5 +268,52 @@ void TextureManager::texlist_f(const CmdArgs &args)
 	Printf("total %d texture(s)\n", count);
 }
 
+
+Texture2::Texture2()
+{}
+
+Texture2::Texture2(const String &name)
+{
+	m_data = new TextureData(name);
+}
+
+Texture2::Texture2(const String &debugname, TexFormat format, int width, int height)
+{
+	m_data = new TextureData(debugname, format, width, height);
+}
+
+Texture2::~Texture2()
+{}
+
+void Texture2::uploadSubTexture(const Rect &rect, const void *pixels, TexFormat format /*= TexFormat::AUTO*/)
+{
+	if (!m_data) return;
+	m_data->uploadSubTexture(rect, pixels, format);
+}
+
+void Texture2::generateMipmap()
+{
+	if (!m_data) return;
+	m_data->generateMipmap();
+}
+
+void Texture2::setClampMode(SamplerState::ClampMode clampmode)
+{
+	if (!m_data) return;
+	m_data->setClampMode(clampmode);
+}
+
+void Texture2::setFilterMode(SamplerState::FilterMode filtermode)
+{
+	if (!m_data) return;
+	m_data->setFilterMode(filtermode);
+}
+
+void Texture2::setBorderColor(SamplerState::BorderColor bordercolor)
+{
+	if (!m_data) return;
+	m_data->setBorderColor(bordercolor);
+}
+
 AX_END_NAMESPACE
 

@@ -3,11 +3,12 @@
 
 AX_BEGIN_NAMESPACE
 
-class MaterialBackend : public RenderBackendResource
+class MaterialData;
+class MaterialBackend : public RenderResource
 {
 public:
 
-	void sync(NewMaterial *src);
+	void sync(MaterialData *src);
 
 private:
 	FixedString m_key;
@@ -28,9 +29,53 @@ private:
 	Matrix4 m_texgenMatrix;
 };
 
-class MaterialFrontend : public RenderFrontendResource
+class MaterialData : public RenderData
 {
 public:
+	MaterialData(const String &name);
+	~MaterialData();
+
+	const String &getShaderName() const;
+	bool isWireframe() const;
+	bool isPhysicsHelper() const;
+
+	void setDiffuse(const Color3 &v);
+	void setSpecular(const Color3 &v);
+	void setShiness(float shiness);
+	void setDetailScale(float scale);
+	float getDetailScale() const;
+	bool haveDetail() const;
+
+	Color3 getMatDiffuse() const;
+	Color3 getMatSpecular() const;
+	float getMatShiness() const;
+
+	// features and shader parameter
+	void setFeature(int index, bool enabled);
+	bool isFeatureEnabled(int index) const;
+	void setLiteral(int index, int value);
+	int getLiteral(int index) const;
+	void clearFeatures();
+	void clearLiterals();
+
+	// texture setting and getting
+	const Texture2 &getTexture(int sample) const;
+	void setTexture(int sampler, const Texture2 &tex);
+
+	// parameter setting and getting
+	void setParameter(const String &name, int num, const float *ptr);
+	const ShaderParams &getParameters() const;
+
+	void setBaseTcMatrix(const Matrix4 &matrix);
+	bool isBaseTcAnim() const;
+	const Matrix4 &getBaseTcMatrix() const;
+
+	// pixel to texel
+	void setPixelToTexel(int width, int height);
+	bool isPixelToTexelEnabled() const;
+	int getPixelToTexelWidth() const;
+	int getPixelToTexelHeight() const;
+
 private:
 	const MaterialDecl *m_decl;
 
@@ -42,7 +87,7 @@ private:
 	bool m_haveDetail;
 
 	FixedString m_shaderName;
-	NewTexture m_textures[SamplerType::NUMBER_ALL];
+	Texture2 m_textures[SamplerType::NUMBER_ALL];
 	ShaderParams m_shaderParams;
 
 	// texgen etc...

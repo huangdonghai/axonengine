@@ -392,7 +392,7 @@ void D3D9Thread::syncFrame()
 	}
 
 	if (1)
-		d3d9Queue->setCacheEnd();
+		d3d9Queue->endSync();
 
 	d3d9VertexBufferManager->endAlloc();
 	END_PIX();

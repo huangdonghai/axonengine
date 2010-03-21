@@ -185,6 +185,12 @@ private:
 	PackedFolderList m_childrenList;
 };
 
+struct AsioRead {
+	String filename;
+	size_t filesize;
+	void *filedata;
+	AtomicInt syncCounter; // if count == 0, data is ready
+};
 
 //------------------------------------------------------------------------------
 // class FileSystem
@@ -224,6 +230,9 @@ public:
 
 	bool getFileModifyTime(const String &filename, longlong_t *time) const;
 	bool isFileExist(const String &filename) const;
+
+	void queAsioRead(AsioRead *entry);
+	void flushAsio();
 
 	/*
 	 * Compare file modify time

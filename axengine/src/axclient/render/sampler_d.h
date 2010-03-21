@@ -3,7 +3,7 @@
 
 AX_BEGIN_NAMESPACE
 
-class SamplerData : public RenderBackendResource
+class SamplerData : public RenderResource
 {
 public:
 	SamplerData();

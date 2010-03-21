@@ -62,12 +62,69 @@ namespace {
 
 		return fullpath;
 	}
-}
+
+	class AsioThread : public Thread, public ThreadSafe
+	{
+	public:
+		void flush()
+		{
+			SCOPE_LOCK;
+
+			while (!m_readEntries.empty()) {
+				OsUtil::sleep(0);
+			}
+		}
+
+		virtual void doRun()
+		{
+			while (1) {
+				AsioRead *request = getFirstRequest();
+
+				if (!request) {
+					OsUtil::sleep(0);
+					continue;
+				}
+
+				// do read
+				request->filesize = g_fileSystem->readFile(request->filename, &request->filedata);
+				request->syncCounter.decref();
+
+				removeFirstRequest();
+			}
+		}
+
+		void queRequest(AsioRead *request)
+		{
+			SCOPE_LOCK;
+			m_readEntries.push_back(request);
+		}
+
+	protected:
+		AsioRead *getFirstRequest()
+		{
+			SCOPE_LOCK;
+			if (m_readEntries.empty())
+				return 0;
+			return m_readEntries.front();
+		}
+
+		void removeFirstRequest()
+		{
+			SCOPE_LOCK;
+			m_readEntries.pop_front();
+		}
+
+	private:
+		List<AsioRead*> m_readEntries;
+	};
+
+	AsioThread *s_asioThread = 0;
+
+} // anonymous namespace
 
 //------------------------------------------------------------------------------
 // class PakedFolder
 //------------------------------------------------------------------------------
-
 
 PakedFolder::PakedFolder()
 	: m_parent(0)
@@ -421,7 +478,8 @@ size_t CDECL File::printf(const char *format, ...)
 FileSystem::FileSystem()
 	: m_numFilesInPack(0)
 {
-	//Initialize();
+	s_asioThread = new AsioThread;
+	s_asioThread->startThread();
 }
 
 FileSystem::~FileSystem()

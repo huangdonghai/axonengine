@@ -30,13 +30,13 @@ struct SamplerState {
 		FM_Trilinear
 	};
 
-	enum BorderMode {
+	enum BorderColor {
 		BM_Zero, BM_One
 	};
 
 	ClampMode clampMode;
 	FilterMode filterMode;
-	BorderMode borderMode;
+	BorderColor borderMode;
 };
 
 //--------------------------------------------------------------------------
@@ -193,9 +193,9 @@ protected:
 	TextureDict m_textureDict;
 };
 
-class TextureFrontend;
+class TextureData;
 
-class NewTexture
+class Texture2
 {
 public:
 	enum InitFlag {
@@ -213,41 +213,23 @@ public:
 		TT_CUBE,
 	};
 
-	enum ClampMode {
-		CM_Repeat,
-		CM_Clamp,
-		CM_ClampToEdge,	// only used in engine internal
-		CM_ClampToBorder // only used in engine internal
-	};
+	Texture2();
+	Texture2(const String &name);
+	Texture2(const String &debugname, TexFormat format, int width, int height);
+	~Texture2();
 
-	enum FilterMode {
-		FM_Nearest,
-		FM_Linear,
-		FM_Bilinear,
-		FM_Trilinear
-	};
-
-	enum BorderColor {
-		BC_Zero, BC_One
-	};
-
-	NewTexture();
-	NewTexture(const String &name);
-	NewTexture(const String &debugname, TexFormat format, int width, int height);
-	~NewTexture();
-
-	bool isNull() const { return m_fr == 0; }
+	bool isNull() const { return m_data == 0; }
 
 	void uploadSubTexture(const Rect &rect, const void *pixels, TexFormat format = TexFormat::AUTO);
 	void generateMipmap();
 
 	// texture parameters
-	void setClampMode(ClampMode clampmwode);
-	void setFilterMode(FilterMode filtermode);
-	void setBorderColor(BorderColor bordercolor);
+	void setClampMode(SamplerState::ClampMode clampmwode);
+	void setFilterMode(SamplerState::FilterMode filtermode);
+	void setBorderColor(SamplerState::BorderColor bordercolor);
 
 private:
-	CopyOnWritePointer<TextureFrontend> m_fr;
+	CopyOnWritePointer<TextureData> m_data;
 };
 
 

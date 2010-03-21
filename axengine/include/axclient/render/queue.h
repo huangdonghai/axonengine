@@ -123,6 +123,7 @@ inline bool QueuedScene::isLastCsmSplits() const
 	return true;
 }
 
+class RenderData;
 
 class AX_API RenderQueue
 {
@@ -151,6 +152,7 @@ public:
 	QueuedLight *allocQueuedLight();
 	QueuedEntity *allocQueuedActor(int num = 1);
 	int *allocPrimitives(int num);
+	void addDeferredDeleteResource(RenderData *rfr) { m_deferredDeleteResources.push_back(rfr); }
 	void endProviding();
 
 	template <class T>
@@ -158,7 +160,7 @@ public:
 
 	// for consuming thread
 	void beginConsuming();
-	void setCacheEnd();
+	void endSync();
 	int getSceneCount() { return m_sceneCount; }
 	QueuedScene *getScene(int index);
 	void clear();
@@ -172,6 +174,8 @@ private:
 	SyncEvent *m_providingEvent;
 	SyncEvent *m_consumingEvent;
 	SyncEvent *m_cacheEndEvent;
+
+	List<RenderData*> m_deferredDeleteResources;
 };
 
 template <class T>

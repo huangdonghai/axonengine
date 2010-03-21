@@ -40,27 +40,33 @@ public:
 	virtual void drawIndexedPrimitiveUP();
 };
 
-class RenderBackendResource
+class RenderResource
 {
 public:
-	RenderBackendResource();
-	virtual ~RenderBackendResource();
-
-	virtual void deleteThis()
-	{
-	}
+	RenderResource();
+	virtual ~RenderResource();
 
 private:
-	AtomicInt m_ref;
 };
 
-class RenderFrontendResource
+class RenderData
 {
 public:
-	RenderFrontendResource();
-	virtual ~RenderFrontendResource();
+	RenderData();
+	virtual ~RenderData();
 
-	virtual void deleteThis() {}
+	int incref() { return m_ref.incref(); }
+	int decref()
+	{
+		int result = m_ref.decref();
+		if (result == 0) {
+			g_renderQueue->addDeferredDeleteResource(this);
+		}
+		return result;
+	}
+	int getref() { return m_ref.getref(); }
+
+	virtual void deleteThis() { delete this; }
 	
 private:
 	AtomicInt m_ref;

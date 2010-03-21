@@ -410,7 +410,7 @@ AX_BEGIN_NAMESPACE
 		}
 
 		if (m_threadRendering)
-			g_renderQueue->setCacheEnd();
+			g_renderQueue->endSync();
 	}
 
 	void GLthread::cacheSceneRes(QueuedScene *scene) {

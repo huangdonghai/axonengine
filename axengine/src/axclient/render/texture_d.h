@@ -5,8 +5,8 @@ AX_BEGIN_NAMESPACE
 
 class HardwareTexture;
 class TextureBackend;
-class TextureFrontend;
-class NewTexture;
+class TextureData;
+class Texture2;
 
 class HardwareTexture : public RefObject
 {
@@ -29,22 +29,35 @@ private:
 	Dict<FixedString, HardwareTexture*> TexDict;
 };
 
-class TextureBackend : public RenderBackendResource
+class TextureBackend : public RenderResource
 {
 public:
 	TextureBackend();
 	~TextureBackend();
 
-	void sync(TextureFrontend *src);
+	void sync(TextureData *src);
 
 private:
 	SamplerState m_samplerState;
 	HardwareTexturePtr m_hardwareRes;
 };
 
-class TextureFrontend : public RenderFrontendResource
+class TextureData : public RenderData
 {
 public:
+	TextureData();
+	TextureData(const String &name);
+	TextureData(const String &debugname, TexFormat format, int width, int height);
+	virtual ~TextureData();
+
+	void uploadSubTexture(const Rect &rect, const void *pixels, TexFormat format = TexFormat::AUTO);
+	void generateMipmap();
+
+	// texture parameters
+	void setClampMode(SamplerState::ClampMode clampmwode);
+	void setFilterMode(SamplerState::FilterMode filtermode);
+	void setBorderColor(SamplerState::BorderColor bordercolor);
+
 private:
 	SamplerState m_samplerState;
 
