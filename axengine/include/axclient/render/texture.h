@@ -107,8 +107,8 @@ public:
 	virtual void generateMipmapIm() = 0;
 
 	// management
-	static TextureRp load(const String &name, InitFlags flags=0);
-	static TextureRp create(const String &debugname, TexFormat format, int width, int height, InitFlags flags = 0);
+	static TexturePtr load(const String &name, InitFlags flags=0);
+	static TexturePtr create(const String &debugname, TexFormat format, int width, int height, InitFlags flags = 0);
 	static bool isExist(const String &name);
 	static void initManager();
 	static void finalizeManager();
@@ -134,12 +134,12 @@ public:
 	virtual ~TextureManager();
 
 	// called in main thread
-	TextureRp loadTexture(const String &texname, Texture::InitFlags flags=0);
-	TextureRp createTexture(const String &debugname, TexFormat format, int width, int height, Texture::InitFlags flags = 0);
+	TexturePtr loadTexture(const String &texname, Texture::InitFlags flags=0);
+	TexturePtr createTexture(const String &debugname, TexFormat format, int width, int height, Texture::InitFlags flags = 0);
 	bool isExist(const FixedString &key);
 
 	// called in draw thread
-	virtual TextureRp createObject() = 0;
+	virtual TexturePtr createObject() = 0;
 
 private:
 	friend class Texture;

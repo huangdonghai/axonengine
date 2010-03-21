@@ -97,7 +97,7 @@ public:
 	void syncFrame();
 
 	// implement TextureManager
-	virtual TextureRp createObject();
+	virtual TexturePtr createObject();
 
 protected:
 	// console command

@@ -36,7 +36,7 @@ protected:
 	FixedString m_key;
 };
 
-inline RefObject::RefObject() : m_ref(1)
+inline RefObject::RefObject() : m_ref(0)
 {}
 
 inline RefObject::~RefObject()
@@ -53,29 +53,6 @@ inline void RefObject::decref()
 }
 
 //--------------------------------------------------------------------------
-// class ResultPtr
-//
-// we need this to indicate the object's refcount already incremented, so if
-// assign to RefPtr, no need add reference count again.
-//
-// this pointer doesn't call incref, and when it be destructed, doesn't call
-// decref
-//--------------------------------------------------------------------------
-template <class Ty>
-class ResultPtr {
-public:
-	ResultPtr(Ty *obj = 0) : m_object(obj) {}
-	ResultPtr(const ResultPtr &ptr) : m_object(ptr.m_object) {}
-	
-	operator Ty*() const { return m_object; }
-	Ty &operator*() const { return *m_object; }
-	Ty *operator->() const { return m_object; }
-	Ty *get() const { return m_object; }
-public:
-	Ty *m_object;
-};
-
-//--------------------------------------------------------------------------
 // class RefPtr
 //--------------------------------------------------------------------------
 
@@ -85,7 +62,6 @@ public:
 	// construction and destruction
 	RefPtr(T *pObject = nullptr);
 	RefPtr(const RefPtr &ptr);
-	RefPtr(const ResultPtr<T>& ptr) { m_object = ptr.m_object; }
 	~RefPtr();
 
 	// implicit conversions
@@ -96,7 +72,6 @@ public:
 
 	// assignment
 	RefPtr &operator=(const RefPtr &ptr);
-	RefPtr &operator=(const ResultPtr<T>& ptr) { if (m_object) m_object->decref(); m_object = ptr.m_object; return *this; }
 	RefPtr &operator=(T *pObject);
 
 	// comparisons
@@ -126,7 +101,6 @@ protected:
 #define AX_DECLARE_REFPTR(classname) \
 class classname; \
 typedef RefPtr<classname> classname##Ptr; \
-typedef ResultPtr<classname> classname##Rp
 
 // Use for casting a smart pointer of one type to a pointer or smart pointer
 // of another type.

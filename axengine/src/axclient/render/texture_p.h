@@ -22,8 +22,8 @@ public:
 	HardwareTextureManager();
 	~HardwareTextureManager();
 
-	HardwareTextureRp findTexture(const String &name);
-	HardwareTextureRp createTexture();
+	HardwareTexturePtr findTexture(const String &name);
+	HardwareTexturePtr createTexture();
 
 private:
 	Dict<FixedString, HardwareTexture*> TexDict;
@@ -45,10 +45,10 @@ private:
 class TextureData : public RenderData
 {
 public:
-	TextureData();
+//	TextureData();
 	TextureData(const String &name);
 	TextureData(const String &debugname, TexFormat format, int width, int height);
-	virtual ~TextureData();
+//	virtual ~TextureData();
 
 	void uploadSubTexture(const Rect &rect, const void *pixels, TexFormat format = TexFormat::AUTO);
 	void generateMipmap();

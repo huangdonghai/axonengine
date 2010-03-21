@@ -51,12 +51,12 @@ void Texture::deleteThis()
 	s_textureManager->freeTexture(this);
 }
 
-TextureRp Texture::load(const String &name, InitFlags flags/*=0*/)
+TexturePtr Texture::load(const String &name, InitFlags flags/*=0*/)
 {
 	return s_textureManager->loadTexture(name, flags);
 }
 
-TextureRp Texture::create( const String &debugname, TexFormat format, int width, int height, InitFlags flags /*= 0*/ )
+TexturePtr Texture::create( const String &debugname, TexFormat format, int width, int height, InitFlags flags /*= 0*/ )
 {
 	return s_textureManager->createTexture(debugname, format, width, height, flags);
 }
@@ -110,7 +110,7 @@ TextureManager::~TextureManager()
 	s_textureManager = 0;
 }
 
-TextureRp TextureManager::loadTexture(const String &texname, Texture::InitFlags flags/*=0*/)
+TexturePtr TextureManager::loadTexture(const String &texname, Texture::InitFlags flags/*=0*/)
 {
 	FixedString key = Texture::normalizeKey(texname);
 
@@ -132,7 +132,7 @@ TextureRp TextureManager::loadTexture(const String &texname, Texture::InitFlags 
 		return 0;
 
 	// create a new texture object
-	TextureRp tex = createObject();
+	TexturePtr tex = createObject();
 
 	if (g_renderDriver->isInRenderingThread()) {
 		tex->initialize(key, flags);
@@ -156,7 +156,7 @@ TextureRp TextureManager::loadTexture(const String &texname, Texture::InitFlags 
 	return tex;
 }
 
-TextureRp TextureManager::createTexture(const String &debugname, TexFormat format, int width, int height, Texture::InitFlags flags /*= 0*/)
+TexturePtr TextureManager::createTexture(const String &debugname, TexFormat format, int width, int height, Texture::InitFlags flags /*= 0*/)
 {
 	std::stringstream ss;
 	ss << "_" << debugname << "$" << g_system->generateId();
@@ -164,7 +164,7 @@ TextureRp TextureManager::createTexture(const String &debugname, TexFormat forma
 	FixedString key = Texture::normalizeKey(ss.str());
 
 	// create object
-	TextureRp tex = createObject();
+	TexturePtr tex = createObject();
 
 	if (g_renderDriver->isInRenderingThread()) {
 		// init immedially
@@ -266,6 +266,51 @@ void TextureManager::texlist_f(const CmdArgs &args)
 	}
 
 	Printf("total %d texture(s)\n", count);
+}
+
+//TextureData::TextureData()
+//{
+//
+//}
+
+TextureData::TextureData(const String &name)
+{
+
+}
+
+TextureData::TextureData(const String &debugname, TexFormat format, int width, int height)
+{
+
+}
+
+//TextureData::~TextureData()
+//{
+//
+//}
+
+void TextureData::uploadSubTexture(const Rect &rect, const void *pixels, TexFormat format /*= TexFormat::AUTO*/)
+{
+
+}
+
+void TextureData::generateMipmap()
+{
+
+}
+
+void TextureData::setClampMode(SamplerState::ClampMode clampmwode)
+{
+
+}
+
+void TextureData::setFilterMode(SamplerState::FilterMode filtermode)
+{
+
+}
+
+void TextureData::setBorderColor(SamplerState::BorderColor bordercolor)
+{
+
 }
 
 

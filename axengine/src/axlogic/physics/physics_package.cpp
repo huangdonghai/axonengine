@@ -18,7 +18,8 @@ AX_BEGIN_NAMESPACE
 namespace { namespace Internal {
 
 	// return -1 if not found
-	int getLodFromName(const char *name) {
+	int getLodFromName(const char *name)
+	{
 		if (!name) {
 			return -1;
 		}
@@ -57,7 +58,8 @@ namespace { namespace Internal {
 
 	class VertexBufferReader {
 	public:
-		VertexBufferReader(hkxVertexBuffer *real) {
+		VertexBufferReader(hkxVertexBuffer *real)
+		{
 			m_real = real;
 			m_stride = m_real->getVertexDesc()->m_stride;
 			m_posDecl = m_real->getVertexDesc()->getElementDecl(hkxVertexDescription::HKX_DU_POSITION, 0);
@@ -73,19 +75,23 @@ namespace { namespace Internal {
 			m_vertexColorDecl = real->getVertexDesc()->getElementDecl(hkxVertexDescription::HKX_DU_COLOR, 0);
 		}
 
-		bool haveNormal() {
+		bool haveNormal()
+		{
 			return m_normalDecl != 0;
 		}
 
-		bool haveTangents() {
+		bool haveTangents()
+		{
 			return m_normalDecl && m_tangentDecl && m_binormalDecl;
 		}
 
-		int getCount() const {
+		int getCount() const
+		{
 			return m_real->getNumVertices();
 		}
 
-		const Vector3 &getPostion(int index) {
+		const Vector3 &getPostion(int index)
+		{
 			AX_ASSERT(index < getCount());
 			AX_ASSERT(m_posDecl);
 
@@ -94,7 +100,8 @@ namespace { namespace Internal {
 			return *(Vector3*)pdata;
 		}
 
-		const Vector3 &getNormal(int index) {
+		const Vector3 &getNormal(int index)
+		{
 			AX_ASSERT(index < getCount());
 			AX_ASSERT(m_normalDecl);
 
@@ -103,7 +110,8 @@ namespace { namespace Internal {
 			return *(Vector3*)pdata;
 		}
 
-		const Vector3 &getTangent(int index) {
+		const Vector3 &getTangent(int index)
+		{
 			AX_ASSERT(index < getCount());
 			AX_ASSERT(m_tangentDecl );
 
@@ -112,7 +120,8 @@ namespace { namespace Internal {
 			return *(Vector3*)pdata;
 		}
 
-		const Vector3 &getBinormal(int index) {
+		const Vector3 &getBinormal(int index)
+		{
 			AX_ASSERT(index < getCount());
 			AX_ASSERT(m_binormalDecl );
 
@@ -121,7 +130,8 @@ namespace { namespace Internal {
 			return *(Vector3*)pdata;
 		}
 
-		Vector2 getTexcoord(int index) {
+		Vector2 getTexcoord(int index)
+		{
 			AX_ASSERT(index < getCount());
 
 			Vector2 result;
@@ -143,7 +153,8 @@ namespace { namespace Internal {
 			}
 		}
 
-		Vector2 getLightmapTexcoord(int index) {
+		Vector2 getLightmapTexcoord(int index)
+		{
 			AX_ASSERT(index < getCount());
 
 			Vector2 result(0,0);
@@ -170,7 +181,8 @@ namespace { namespace Internal {
 			}
 		}
 
-		Rgba getVertexColor(int index) {
+		Rgba getVertexColor(int index)
+		{
 			AX_ASSERT(index < getCount());
 
 			Rgba result = Rgba::White;
@@ -187,11 +199,13 @@ namespace { namespace Internal {
 			return result;
 		}
 
-		const float *getPositionPointer() {
+		const float *getPositionPointer()
+		{
 			return (const float*)(m_real->getVertexData() + m_posDecl->m_byteOffset);
 		}
 
-		const hkUint8 *getBlendWeightPointer() {
+		const hkUint8 *getBlendWeightPointer()
+		{
 			if (!m_weightDecl) {
 				return 0;
 			}
@@ -199,7 +213,8 @@ namespace { namespace Internal {
 			return (const hkUint8*)(m_real->getVertexData() + m_weightDecl->m_byteOffset);
 		}
 
-		const hkUint8 *getBlendIndicesPointer() {
+		const hkUint8 *getBlendIndicesPointer()
+		{
 			if (!m_blendIdxDecl) {
 				return 0;
 			}
@@ -207,7 +222,8 @@ namespace { namespace Internal {
 			return (const hkUint8*)(m_real->getVertexData() + m_blendIdxDecl->m_byteOffset);
 		}
 
-		hkUint8 getBonesPerVertex() {
+		hkUint8 getBonesPerVertex()
+		{
 			return 4;
 		}
 
@@ -224,11 +240,14 @@ namespace { namespace Internal {
 		const hkxVertexDescription::ElementDecl *m_vertexColorDecl;
 	};
 
-	class MaterialReader {
+	class MaterialReader
+	{
 	public:
-		MaterialReader(const hkxMaterial *hkmat) : m_hkmat(hkmat) {}
+		MaterialReader(const hkxMaterial *hkmat) : m_hkmat(hkmat)
+		{}
 
-		Texture *getLightmap() {
+		Texture *getLightmap()
+		{
 			if (!m_hkmat) {
 				return nullptr;
 			}
@@ -260,7 +279,8 @@ namespace { namespace Internal {
 			return nullptr;
 		}
 
-		void parseMaterialName(const char *hkname, String &axname, StringPairSeq &keyvalues ) {
+		void parseMaterialName(const char *hkname, String &axname, StringPairSeq &keyvalues)
+		{
 			StringSeq t1 = StringUtil::tokenizeSeq(hkname, '?');
 
 			if (t1.size()) {
@@ -288,7 +308,8 @@ namespace { namespace Internal {
 			}
 		}
 
-		SamplerType guessTypeFromName(const String &texname) {
+		SamplerType guessTypeFromName(const String &texname)
+		{
 			SamplerType samplertype = SamplerType::NUMBER_ALL;
 
 			String filename = PathUtil::getName(texname);
@@ -402,7 +423,8 @@ namespace { namespace Internal {
 			}
 		}
 
-		MaterialPtr getMaterial() {
+		MaterialPtr getMaterial()
+		{
 			if (!m_hkmat) {
 				return Material::load("default");
 			}
@@ -471,7 +493,8 @@ namespace { namespace Internal {
 		}
 
 	private:
-		String findStageFilename(hkxMaterial::TextureType textype, int channel) {
+		String findStageFilename(hkxMaterial::TextureType textype, int channel)
+		{
 			String result;
 
 			hkxMaterial::TextureStage *stage = findStage(textype, channel);
@@ -483,7 +506,8 @@ namespace { namespace Internal {
 			return getTextureFilename(stage);
 		}
 
-		hkxMaterial::TextureStage *findStage(hkxMaterial::TextureType textype, int channel) {
+		hkxMaterial::TextureStage *findStage(hkxMaterial::TextureType textype, int channel)
+		{
 			for (int i = 0; i < m_hkmat->m_numStages; i++) {
 				hkxMaterial::TextureStage *stage = &m_hkmat->m_stages[i];
 				if (stage->m_tcoordChannel != channel) {
@@ -500,7 +524,8 @@ namespace { namespace Internal {
 			return nullptr;
 		}
 
-		String getTextureFilename(hkxMaterial::TextureStage *stage) {
+		String getTextureFilename(hkxMaterial::TextureStage *stage)
+		{
 			String result;
 
 			if (stage->m_texture.m_class != &hkxTextureFileClass) {
@@ -518,7 +543,8 @@ namespace { namespace Internal {
 			return result;
 		}
 
-		Texture *convert(hkxMaterial::TextureStage *stage) {
+		Texture *convert(hkxMaterial::TextureStage *stage)
+		{
 			String fn = getTextureFilename(stage);
 
 			Texture *tex = Texture::load(fn);
@@ -531,7 +557,8 @@ namespace { namespace Internal {
 
 	class IStream {
 	public:
-		IStream(const String &filename) {
+		IStream(const String &filename)
+		{
 			m_hkstream = 0;
 
 			m_size = g_fileSystem->readFile(filename, &m_buf);
@@ -543,7 +570,8 @@ namespace { namespace Internal {
 			m_hkstream = new hkIstream(m_buf, m_size);
 		}
 
-		~IStream() {
+		~IStream()
+		{
 			if (m_buf) {
 				g_fileSystem->freeFile(m_buf);
 			}
@@ -562,7 +590,8 @@ using namespace Internal;
 // class HavokAnimator
 //--------------------------------------------------------------------------
 
-HavokAnimator::HavokAnimator(HavokRig *rig) {
+HavokAnimator::HavokAnimator(HavokRig *rig)
+{
 	m_rig = rig;
 	m_animator = new hkaAnimatedSkeleton(m_rig->m_havokSkeleton);
 	m_animator->setReferencePoseWeightThreshold(0.001f);
@@ -572,7 +601,8 @@ HavokAnimator::~HavokAnimator() {
 	SafeDelete(m_animator);
 }
 
-void HavokAnimator::addAnimation(HavokAnimation *anim) {
+void HavokAnimator::addAnimation(HavokAnimation *anim)
+{
 	if (!anim->isValid())
 		return;
 
@@ -580,7 +610,8 @@ void HavokAnimator::addAnimation(HavokAnimation *anim) {
 	m_animations.push_back(anim);
 }
 
-void HavokAnimator::removeAnimation(HavokAnimation *anim) {
+void HavokAnimator::removeAnimation(HavokAnimation *anim)
+{
 	if (!anim->isValid())
 		return;
 
@@ -592,7 +623,8 @@ void HavokAnimator::removeAllAnimation()
 {
 }
 
-void HavokAnimator::renderToPose(HavokPose *pose) {
+void HavokAnimator::renderToPose(HavokPose *pose)
+{
 	if (!pose->isValid())
 		return;
 
@@ -676,7 +708,8 @@ bool HavokAnimation::isAnimDone(float timeleft)
 // class HavokRig
 //--------------------------------------------------------------------------
 
-HavokPose *HavokRig::createPose() {
+HavokPose *HavokRig::createPose()
+{
 	return new HavokPose(this);
 }
 
@@ -725,7 +758,6 @@ int HavokRig::getBoneCount()
 HavokRig::HavokRig(HavokPackage *package) : HavokPackable(package), m_havokSkeleton(0)
 {
 	if (m_package) m_havokSkeleton = m_package->getSkeleton();
-	SafeIncRef(m_package);
 }
 
 HavokRig::HavokRig(const String &name)
@@ -761,7 +793,8 @@ bool HavokPose::isValid() const
 // class HavokPackage::MeshData
 //--------------------------------------------------------------------------
 
-class HavokPackage::MeshData {
+class HavokPackage::MeshData
+{
 public:
 	HavokPackage *m_package;
 	const char *m_name;
@@ -775,7 +808,8 @@ public:
 	bool m_haveLocalTransform;
 	Matrix m_localTransform;
 
-	MeshData(HavokPackage *package) {
+	MeshData(HavokPackage *package)
+	{
 		m_package = package;
 		m_name = nullptr;
 		m_havokMesh = nullptr;
@@ -788,13 +822,15 @@ public:
 		m_haveLocalTransform = false;
 	}
 
-	~MeshData() {
+	~MeshData()
+	{
 		if (m_needFreeRenderMesh) {
 			SafeDelete(m_renderMesh);
 		}
 	}
 
-	void generateStaticMesh(Primitive::Hint hint) {
+	void generateStaticMesh(Primitive::Hint hint)
+	{
 		if (m_renderMesh) {
 			return;
 		}
@@ -865,7 +901,8 @@ public:
 	}
 };
 
-HavokPackage::HavokPackage(const String &filename) {
+HavokPackage::HavokPackage(const String &filename)
+{
 	m_loader = nullptr;
 	m_root = nullptr;
 	m_physicsData = nullptr;
@@ -923,7 +960,8 @@ errexit:
 	}
 }
 
-HavokPackage::~HavokPackage() {
+HavokPackage::~HavokPackage()
+{
 	delete m_loader;
 	delete m_dataWorld;
 
@@ -932,7 +970,8 @@ HavokPackage::~HavokPackage() {
 	SafeClearContainer(m_materialMaps);
 }
 
-PhysicsRigid *HavokPackage::getRigidBody() {
+PhysicsRigid *HavokPackage::getRigidBody()
+{
 	if (!m_physicsData) {
 		return nullptr;
 	}
@@ -951,7 +990,8 @@ PhysicsRigid *HavokPackage::getRigidBody() {
 	return new PhysicsRigid(this, rigid);
 }
 
-const BoundingBox &HavokPackage::getBoundingBox() {
+const BoundingBox &HavokPackage::getBoundingBox()
+{
 	if (m_isBboxGenerated) {
 		return m_staticBbox;
 	}
@@ -987,7 +1027,8 @@ const BoundingBox &HavokPackage::getBoundingBox() {
 	return m_staticBbox;
 }
 
-void HavokPackage::generateMeshData() {
+void HavokPackage::generateMeshData()
+{
 	if (m_isMeshDataGenerated) {
 		return;
 	}
@@ -1057,7 +1098,8 @@ void HavokPackage::generateMeshData() {
 	m_isMeshDataGenerated = true;
 }
 
-void HavokPackage::initDynamicMeshes(MeshDataList &result) {
+void HavokPackage::initDynamicMeshes(MeshDataList &result)
+{
 	generateMeshData();
 
 	if (!result.empty()) {
@@ -1085,7 +1127,8 @@ void HavokPackage::clearDynamicMeshes( MeshDataList &result )
 	SafeClearContainer(result);
 }
 
-void HavokPackage::generateStaticMesh() {
+void HavokPackage::generateStaticMesh()
+{
 	if (m_isStaticMeshGenerated) {
 		return;
 	}
@@ -1100,7 +1143,8 @@ void HavokPackage::generateStaticMesh() {
 	m_isStaticMeshGenerated = true;
 }
 
-inline const char *findMesh_r(hkxNode *node, hkxMesh *mesh) {
+inline const char *findMesh_r(hkxNode *node, hkxMesh *mesh)
+{
 	if (!node) {
 		return nullptr;
 	}
@@ -1119,7 +1163,8 @@ inline const char *findMesh_r(hkxNode *node, hkxMesh *mesh) {
 	return nullptr;
 }
 
-const char *HavokPackage::getMeshName(hkxMesh *mesh) {
+const char *HavokPackage::getMeshName(hkxMesh *mesh)
+{
 	if (!m_sceneData) {
 		return nullptr;
 	}
@@ -1127,7 +1172,8 @@ const char *HavokPackage::getMeshName(hkxMesh *mesh) {
 	return findMesh_r(m_sceneData->m_rootNode, mesh);
 }
 
-hkaMeshBinding *HavokPackage::findBinding(hkxMesh *mesh) {
+hkaMeshBinding *HavokPackage::findBinding(hkxMesh *mesh)
+{
 	if (!m_animationContainer) {
 		return nullptr;
 	}
@@ -1141,7 +1187,8 @@ hkaMeshBinding *HavokPackage::findBinding(hkxMesh *mesh) {
 	return nullptr;
 }
 
-Primitives HavokPackage::getPrimitives() {
+Primitives HavokPackage::getPrimitives()
+{
 	generateStaticMesh();
 
 	Primitives result;
@@ -1187,7 +1234,8 @@ int HavokPackage::getAnimationCount()
 	return m_animationContainer->m_numBindings;
 }
 
-hkaAnimationBinding *HavokPackage::getAnimation(int Index) {
+hkaAnimationBinding *HavokPackage::getAnimation(int Index)
+{
 	if (!m_animationContainer) {
 		return nullptr;
 	}
@@ -1199,11 +1247,13 @@ hkaAnimationBinding *HavokPackage::getAnimation(int Index) {
 	return m_animationContainer->m_bindings[Index];
 }
 
-hkaRagdollInstance *HavokPackage::getRagdoll() const {
+hkaRagdollInstance *HavokPackage::getRagdoll() const
+{
 	return m_ragdoll;
 }
 
-hkaSkeletonMapper *HavokPackage::getMapper(hkaSkeletonMapper *current) const {
+hkaSkeletonMapper *HavokPackage::getMapper(hkaSkeletonMapper *current) const
+{
 	if (!m_root) {
 		return nullptr;
 	}
@@ -1212,7 +1262,8 @@ hkaSkeletonMapper *HavokPackage::getMapper(hkaSkeletonMapper *current) const {
 	return reinterpret_cast<hkaSkeletonMapper*> (objectFound);
 }
 
-const HavokPackage::MaterialMap *HavokPackage::findMaterialMap(hkxMaterial *hkmat) {
+const HavokPackage::MaterialMap *HavokPackage::findMaterialMap(hkxMaterial *hkmat)
+{
 	AX_FOREACH(const MaterialMap *mm, m_materialMaps) {
 		if (mm->m_hkMat == hkmat) {
 			return mm;
@@ -1315,10 +1366,12 @@ void HavokPackage::setMeshTransform( hkxMesh *mesh, const hkMatrix4 &localTransf
 HavokPackageManager::HavokPackageManager()
 {}
 
-HavokPackageManager::~HavokPackageManager() {
+HavokPackageManager::~HavokPackageManager()
+{
 }
 
-HavokPackage *HavokPackageManager::findPackage(const String &name) {
+HavokPackagePtr HavokPackageManager::findPackage(const String &name)
+{
 	PackageDict::iterator it = m_packageDict.find(name);
 	if (it != m_packageDict.end()) {
 		HavokPackage *package = it->second;
@@ -1334,7 +1387,8 @@ HavokPackage *HavokPackageManager::findPackage(const String &name) {
 	return package;
 }
 
-void HavokPackageManager::removePackage(const String &name) {
+void HavokPackageManager::removePackage(const String &name)
+{
 	PackageDict::iterator it = m_packageDict.find(name);
 
 	if (it == m_packageDict.end()) {
@@ -1349,7 +1403,8 @@ void HavokPackageManager::removePackage(const String &name) {
 // class HavokModel
 //--------------------------------------------------------------------------
 
-HavokModel::HavokModel(HavokPackage *package) : RenderEntity(kModel) {
+HavokModel::HavokModel(HavokPackage *package) : RenderEntity(kModel)
+{
 	m_package = package;
 	m_pose = nullptr;
 	m_isMeshDataInited = false;
@@ -1363,14 +1418,16 @@ HavokModel::HavokModel(const String &name) : RenderEntity(kModel)
 	m_isMeshDataInited = false;
 }
 
-HavokModel::~HavokModel() {
+HavokModel::~HavokModel()
+{
 	if (m_package)
 		m_package->clearDynamicMeshes(m_mestDataList);
 
 	SafeDecRef(m_package);
 }
 
-BoundingBox HavokModel::getLocalBoundingBox() {
+BoundingBox HavokModel::getLocalBoundingBox()
+{
 	if (m_pose) {
 		if (m_pose->m_havokPose) {
 			hkAabb aabb;
@@ -1390,7 +1447,8 @@ BoundingBox HavokModel::getBoundingBox()
 	return getLocalBoundingBox().getTransformed(m_affineMat);
 }
 
-Primitives HavokModel::getHitTestPrims() {
+Primitives HavokModel::getHitTestPrims()
+{
 	if (!m_package)
 		return Primitives();
 
@@ -1435,21 +1493,24 @@ void HavokModel::issueToQueue(QueuedScene *qscene)
 		applyPose();
 	}
 
-	AX_FOREACH (HavokPackage::MeshData *data, m_mestDataList) {
+	AX_FOREACH(HavokPackage::MeshData *data, m_mestDataList) {
 		qscene->addInteraction(this, data->m_renderMesh);
 	}
 }
 
-HavokRig *HavokModel::findRig() const {
+HavokRig *HavokModel::findRig() const
+{
 	return new HavokRig(m_package);
 }
 
-void HavokModel::setPose(const HavokPose *pose, int linkBoneIndex) {
+void HavokModel::setPose(const HavokPose *pose, int linkBoneIndex)
+{
 	m_pose = (HavokPose*)pose;
 	m_poseDirty = true;
 }
 
-void HavokModel::applyPose() {
+void HavokModel::applyPose()
+{
 	const int boneCount = m_pose->m_havokPose->getSkeleton()->m_numBones;
 
 	// Construct the composite world transform

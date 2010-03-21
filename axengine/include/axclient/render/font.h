@@ -126,7 +126,7 @@ AX_BEGIN_NAMESPACE
 		const GlyphInfo &getGlyphInfo(wchar_t c);
 
 		// management
-		static FontRp load(const String &name, int w, int h);
+		static FontPtr load(const String &name, int w, int h);
 		static void initManager();
 		static void finalizeManager();
 		static FixedString normalizeKey(const String &name, int w, int h);

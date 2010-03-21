@@ -250,7 +250,7 @@ FixedString Material::normalizeKey( const String &name )
 		return name;
 }
 
-MaterialRp Material::load(const String &name)
+MaterialPtr Material::load(const String &name)
 {
 	FixedString key = normalizeKey(name);
 	MaterialDict::const_iterator it = ms_materialDict.find(key);
@@ -271,7 +271,7 @@ MaterialRp Material::load(const String &name)
 	return result;
 }
 
-MaterialRp Material::loadUnique(const String &name)
+MaterialPtr Material::loadUnique(const String &name)
 {
 	std::stringstream ss;
 	ss << name << "$" << g_system->generateId();

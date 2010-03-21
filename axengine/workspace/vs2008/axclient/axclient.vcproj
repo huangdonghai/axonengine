@@ -362,7 +362,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axclient\render\material_d.h"
+				RelativePath="..\..\..\src\axclient\render\material_p.h"
 				>
 			</File>
 			<File
@@ -410,7 +410,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axclient\render\sampler_d.h"
+				RelativePath="..\..\..\src\axclient\render\sampler_p.h"
 				>
 			</File>
 			<File
@@ -434,7 +434,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axclient\render\texture_d.h"
+				RelativePath="..\..\..\src\axclient\render\texture_p.h"
 				>
 			</File>
 			<File

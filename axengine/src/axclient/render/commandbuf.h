@@ -52,8 +52,8 @@ private:
 class RenderData
 {
 public:
-	RenderData();
-	virtual ~RenderData();
+	RenderData() {}
+	virtual ~RenderData() {}
 
 	int incref() { return m_ref.incref(); }
 	int decref()

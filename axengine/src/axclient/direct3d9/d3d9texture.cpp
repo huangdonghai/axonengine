@@ -678,10 +678,9 @@ void D3D9texturemanager::dumpTex_f(const CmdArgs &params)
 	tex->saveToFile(filename);
 }
 
-TextureRp D3D9texturemanager::createObject()
+TexturePtr D3D9texturemanager::createObject()
 {
-	TextureRp result = new D3D9Texture();
-	return result;
+	return new D3D9Texture();
 }
 
 void D3D9texturemanager::syncFrame()

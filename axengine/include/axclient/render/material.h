@@ -73,8 +73,8 @@ public:
 	int getPixelToTexelHeight() const { return m_p2tHeight; }
 
 	// management
-	static MaterialRp load(const String &name);
-	static MaterialRp loadUnique(const String &name);
+	static MaterialPtr load(const String &name);
+	static MaterialPtr loadUnique(const String &name);
 	static void initManager();
 	static void finalizeManager();
 	static FixedString normalizeKey(const String &name);

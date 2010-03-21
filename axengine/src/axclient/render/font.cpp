@@ -43,7 +43,7 @@ namespace {
 		void finalize();
 		BufInfo getFontFileBuf(const String filename);
 
-		FontRp load(const String &name, int w, int h);
+		FontPtr load(const String &name, int w, int h);
 		void deleteFont(Font *font);
 
 	private:
@@ -113,7 +113,7 @@ namespace {
 		return buf_info;
 	}
 
-	FontRp Manager::load( const String &name, int w, int h )
+	FontPtr Manager::load( const String &name, int w, int h )
 	{
 		FixedString key = Font::normalizeKey(name, w, h);
 
@@ -532,7 +532,7 @@ void Font::newFrame()
 	m_texAtlas->newFrame();
 }
 
-FontRp Font::load( const String &name, int w, int h )
+FontPtr Font::load( const String &name, int w, int h )
 {
 	return s_fontManager->load(name, w, h);
 }
