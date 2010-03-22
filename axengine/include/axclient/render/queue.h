@@ -123,6 +123,7 @@ inline bool QueuedScene::isLastCsmSplits() const
 	return true;
 }
 
+class SyncMethod;
 class RenderData;
 
 class AX_API RenderQueue
@@ -153,6 +154,7 @@ public:
 	QueuedEntity *allocQueuedActor(int num = 1);
 	int *allocPrimitives(int num);
 	void addDeferredDeleteResource(RenderData *rfr) { m_deferredDeleteResources.push_back(rfr); }
+	void addDeferredCommand(SyncMethod *cmd) { m_deferredCommand.push_back(cmd); }
 	void endProviding();
 
 	template <class T>
@@ -175,17 +177,22 @@ private:
 	SyncEvent *m_consumingEvent;
 	SyncEvent *m_cacheEndEvent;
 
+	List<SyncMethod*> m_deferredCommand;
 	List<RenderData*> m_deferredDeleteResources;
 };
 
 template <class T>
 T *RenderQueue::allocType(int num)
 {
+#if 0
 	if (num == 1) {
 		return new(m_stack) T;
 	} else {
 		return new(m_stack) T[num];
 	}
+#else // don't call constructor
+	return (T *)m_stack->alloc(sizeof(T) * num);
+#endif
 }
 
 inline RenderTarget *RenderQueue::getTarget()

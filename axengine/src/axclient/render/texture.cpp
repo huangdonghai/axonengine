@@ -277,14 +277,14 @@ TextureData::TextureData(const String &name)
 {
 	m_backend = new TextureBackend();
 
-	queCommand1(&TextureBackend::init).push(m_backend);
+	queueCmd1(&TextureBackend::init).call(m_backend, name);
 }
 
 TextureData::TextureData(const String &debugname, TexFormat format, int width, int height)
 {
 	m_backend = new TextureBackend();
 
-//	queCommand4(m_backend, &TextureBackend::initUnique, debugname, format);
+	queueCmd4(&TextureBackend::initUnique).call(m_backend, debugname, format, width, height);
 }
 
 TextureData::~TextureData()

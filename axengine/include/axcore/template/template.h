@@ -57,7 +57,7 @@ inline int s2i(size_t size)
 	return (int)size;
 }
 
-template < class T >
+template <class T>
 void DeletePointerArray(std::vector<T*>& array)
 {
 	for (size_t i=0; i<array.size(); i++) {
@@ -79,7 +79,7 @@ size_t add_unique(std::vector < T >& array, const T &add)
 }
 
 // remove_const
-template< class T >
+template <class T>
 struct remove_const
 {
 	typedef T type;
@@ -92,13 +92,13 @@ struct remove_const<const T>
 };
 
 // remove_reference
-template< class T >
+template <class T>
 struct remove_reference
 {
 	typedef T type;
 };
 
-template< class T >
+template <class T>
 struct remove_reference<T&>
 {
 	typedef T type;
@@ -106,12 +106,17 @@ struct remove_reference<T&>
 
 
 // remove_const_referance
-template< class T >
+template <class T>
 struct remove_const_reference
 {
 	typedef typename remove_const<typename remove_reference<T>::type>::type type;
 };
 
+template <class T>
+struct add_const_reference
+{
+	typedef typename std::tr1::add_const<typename std::tr1::add_reference<T>::type>::type type;
+};
 
 AX_END_NAMESPACE
 
