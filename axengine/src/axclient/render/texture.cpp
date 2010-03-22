@@ -268,25 +268,29 @@ void TextureManager::texlist_f(const CmdArgs &args)
 	Printf("total %d texture(s)\n", count);
 }
 
-//TextureData::TextureData()
-//{
-//
-//}
+TextureData::TextureData()
+{
+
+}
 
 TextureData::TextureData(const String &name)
 {
+	m_backend = new TextureBackend();
 
+	queCommand1(&TextureBackend::init).push(m_backend);
 }
 
 TextureData::TextureData(const String &debugname, TexFormat format, int width, int height)
 {
+	m_backend = new TextureBackend();
 
+//	queCommand4(m_backend, &TextureBackend::initUnique, debugname, format);
 }
 
-//TextureData::~TextureData()
-//{
-//
-//}
+TextureData::~TextureData()
+{
+
+}
 
 void TextureData::uploadSubTexture(const Rect &rect, const void *pixels, TexFormat format /*= TexFormat::AUTO*/)
 {

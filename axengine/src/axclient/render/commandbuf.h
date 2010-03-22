@@ -49,6 +49,70 @@ public:
 private:
 };
 
+class SyncMethod
+{
+public:
+	virtual ~SyncMethod();
+	virtual void exec() = 0;
+};
+
+template <typename Signature>
+class SyncMethod_ : public SyncMethod {
+public:
+	AX_STATIC_ASSERT(0);
+};
+
+template <typename Rt, typename T>
+class SyncMethod_<Rt (T::*)()> : public SyncMethod {
+public:
+	typedef Rt (T::*FunctionType)();
+
+	SyncMethod_(FunctionType m)
+		: m_obj(0)
+		, m_m(m)
+	{}
+
+	void push(T *obj)
+	{
+		m_obj = obj;
+	}
+
+	virtual void exec()
+	{
+		m_obj->*m_m();
+	}
+
+private:
+	T *m_obj;
+	FunctionType m_m;
+};
+
+template <typename Rt, typename T, typename Arg0>
+class SyncMethod_<Rt (T::*)(Arg0)> : public SyncMethod {
+public:
+	typedef Rt (T::*FunctionType)();
+
+	SyncMethod_(FunctionType m)
+		: m_obj(0)
+		, m_m(m)
+	{}
+
+	void push(T *obj)
+	{
+		m_obj = obj;
+	}
+
+	virtual void exec()
+	{
+		m_obj->*m_m();
+	}
+
+private:
+	T *m_obj;
+	FunctionType m_m;
+};
+
+
 class RenderData
 {
 public:
@@ -67,7 +131,28 @@ public:
 	int getref() { return m_ref.getref(); }
 
 	virtual void deleteThis() { delete this; }
-	
+
+	//template <class Signature>
+	//void queCommand(Signature m)
+	//{
+	//	SyncMethod *sm = SyncMethod_(m);
+	//}
+
+	template <typename Rt, typename T>
+	SyncMethod_<Rt (T::*)()> &queCommand(Rt (T::*method)())
+	{
+	}
+
+	template <typename Rt, typename T, typename Arg0>
+	SyncMethod_<Rt (T::*)(Arg0)> &queCommand1(Rt (T::*method)(Arg0))
+	{
+	}
+
+	template <typename Rt, typename T, typename Arg0, typename Arg1>
+	void queCommand4(T *obj, Rt (T::*method)(const Arg0 &, const Arg1 &), const Arg0 &arg0, const Arg1 &arg1)
+	{
+	}
+
 private:
 	AtomicInt m_ref;
 };

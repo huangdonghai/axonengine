@@ -517,23 +517,23 @@ public:
 	CppClass(const FixedString &classname, CppClass *base);
 	virtual ~CppClass();
 
-	template< typename T, typename GetType, typename SetType >
+	template <typename T, typename GetType, typename SetType>
 	CppClass &addProperty(const FixedString &name, GetType (T::*get)() const, void (T::*set)(SetType));
 
-	template< typename T, typename GetType >
+	template <typename T, typename GetType>
 	CppClass &addProperty(const FixedString &name, GetType (T::*get)() const);
 
-	template< typename T, typename M >
+	template <typename T, typename M>
 	CppClass &addProperty(const FixedString &name, M (T::*d));
 
-	template< typename Signature >
+	template <typename Signature>
 	CppClass &addMethod(const FixedString &name, Signature m);
 
 	Member *findMember(const FixedString &name) const;
 	CppClass *getBase() const;
 
-	const FixedString& getName() const;
-	const MemberSeq& getMembers() const;
+	const FixedString &getName() const;
+	const MemberSeq &getMembers() const;
 
 	virtual Object *createObject() = 0;
 

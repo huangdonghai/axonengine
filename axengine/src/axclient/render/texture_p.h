@@ -35,6 +35,8 @@ public:
 	TextureBackend();
 	~TextureBackend();
 
+	void init(const String &name);
+	void initUnique(const String &debugname, TexFormat format, int width, int height);
 	void sync(TextureData *src);
 
 private:
@@ -45,10 +47,10 @@ private:
 class TextureData : public RenderData
 {
 public:
-//	TextureData();
+	TextureData();
 	TextureData(const String &name);
 	TextureData(const String &debugname, TexFormat format, int width, int height);
-//	virtual ~TextureData();
+	virtual ~TextureData();
 
 	void uploadSubTexture(const Rect &rect, const void *pixels, TexFormat format = TexFormat::AUTO);
 	void generateMipmap();
@@ -60,7 +62,6 @@ public:
 
 private:
 	SamplerState m_samplerState;
-
 	TextureBackend *m_backend;
 };
 
