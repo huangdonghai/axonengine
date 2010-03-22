@@ -294,7 +294,7 @@ TextureData::~TextureData()
 
 void TextureData::uploadSubTexture(const Rect &rect, const void *pixels, TexFormat format /*= TexFormat::AUTO*/)
 {
-
+	if (!m_backend) return;
 }
 
 void TextureData::generateMipmap()
