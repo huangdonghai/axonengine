@@ -458,6 +458,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\axclient\render\vertexbuffer.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\axclient\render\vertexbuffer.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\axclient\render\wind.cpp"
 				>
 			</File>

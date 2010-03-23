@@ -21,31 +21,9 @@ struct Joint {
 
 struct VertexType {
 	enum Type {
-		kVertex, kDebug, kBlend, kChunk
+		kMesh, kDebug, kBlend, kChunk, kNumber
 	} t;
 	AX_DECLARE_ENUM(VertexType);
-};
-
-class VertexDecl {
-public:
-	enum ElementDecl {
-		Postion,
-		StreamTc,
-		StreamTc2,
-		Color,
-		Normal,
-		Tangent,
-		Binormal,
-		BoneIndices,
-		BoneWeights
-	};
-	VertexDecl(const Sequence<ElementDecl>& decls);
-
-	int getStride() const;
-	int getElementOffset() const;
-
-private:
-	Sequence<ElementDecl> m_elemDecls;
 };
 
 struct MeshVertex {

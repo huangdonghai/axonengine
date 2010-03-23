@@ -419,7 +419,7 @@ D3D9Target *D3D9TargetManager::allocTargetDX(RenderTarget::AllocHint hint, int w
 	D3D9_SCOPELOCK;
 
 	if (!isFormatSupport(texformat)) {
-		Errorf("can't support format %s", texformat.getStringName());
+		Errorf("can't support format %s", texformat.toString());
 		return nullptr;
 	}
 

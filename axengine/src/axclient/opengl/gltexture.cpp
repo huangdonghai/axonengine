@@ -320,7 +320,7 @@ AX_BEGIN_NAMESPACE
 		trTexFormat(imagefile->getFormat(), format, datatype, internalformat);
 
 		if (!format) {
-			Errorf("OpenGL don't support texture format '%s'", m_format.getStringName());
+			Errorf("OpenGL don't support texture format '%s'", m_format.toString());
 		}
 
 		glBindTexture(GL_TEXTURE_2D, m_object);
@@ -528,7 +528,7 @@ AX_BEGIN_NAMESPACE
 
 		trTexFormat(format, glformat, datatype, internalformat);
 		if (!format) {
-			Errorf("OpenGL don't support texture format '%s'", m_format.getStringName());
+			Errorf("OpenGL don't support texture format '%s'", m_format.toString());
 		}
 
 		glActiveTexture(GL_TEXTURE0);
@@ -593,7 +593,7 @@ AX_BEGIN_NAMESPACE
 
 		trTexFormat(fmt, format, datatype, internalformat);
 		if (!format) {
-			Errorf("OpenGL don't support texture format '%s'", m_format.getStringName());
+			Errorf("OpenGL don't support texture format '%s'", m_format.toString());
 		}
 
 //		if (m_format.isDXTC()) {

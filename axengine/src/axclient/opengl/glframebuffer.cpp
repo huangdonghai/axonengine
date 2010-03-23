@@ -414,7 +414,7 @@ AX_BEGIN_NAMESPACE
 
 	GLtarget *GLframebuffer::allocTarget(RenderTarget::AllocHint hint, TexFormat texformat) {
 		if (!glFramebufferManager->isFormatSupport(texformat)) {
-			Errorf("GLframebuffer::allocTarget: can't support format %s", texformat.getStringName());
+			Errorf("GLframebuffer::allocTarget: can't support format %s", texformat.toString());
 			return nullptr;
 		}
 
@@ -762,7 +762,7 @@ AX_BEGIN_NAMESPACE
 
 		if (glGetError() != GL_NO_ERROR) {
 			glDeleteRenderbuffersEXT(1, &rbuf);
-			Printf("FBO DON'T SUPPORT %s\n", format.getStringName());
+			Printf("FBO DON'T SUPPORT %s\n", format.toString());
 
 			return false;
 		}
@@ -792,9 +792,9 @@ AX_BEGIN_NAMESPACE
 		GLenum status = glCheckFramebufferStatusEXT(GL_DRAW_FRAMEBUFFER_EXT);
 
 		if (status == GL_NO_ERROR || status == GL_FRAMEBUFFER_COMPLETE_EXT) {
-			Printf("FBO SUPPORT %s, R%dG%dB%dA%dD%dS%d\n", format.getStringName(), r, g, b, a, d, s);
+			Printf("FBO SUPPORT %s, R%dG%dB%dA%dD%dS%d\n", format.toString(), r, g, b, a, d, s);
 		} else {
-			Printf("FBO DON'T SUPPORT %s\n", format.getStringName());
+			Printf("FBO DON'T SUPPORT %s\n", format.toString());
 		}
 
 		glDeleteRenderbuffersEXT(1, &rbuf);

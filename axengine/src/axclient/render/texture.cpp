@@ -261,7 +261,7 @@ void TextureManager::texlist_f(const CmdArgs &args)
 
 		int width, height, depth;
 		tex->getSize(width, height, depth);
-		Printf("%4d %4d %4d %8s %s\n",tex->getref(), width, height, tex->getFormat().getStringName(), tex->m_key.c_str());
+		Printf("%4d %4d %4d %8s %s\n",tex->getref(), width, height, tex->getFormat().toString(), tex->m_key.c_str());
 		count++;
 	}
 

@@ -64,7 +64,7 @@ public:
 
 	// since qt maybe change window id, so we need this function
 	virtual void setWindowHandle(handle_t newId) {}
-	virtual handle_t getWindowHandle() { return nullptr; }
+	virtual handle_t getWindowHandle() { return 0; }
 
 	// for pooled target
 	void allocReal();

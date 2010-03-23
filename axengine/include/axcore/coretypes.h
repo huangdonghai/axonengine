@@ -187,13 +187,23 @@ AX_BEGIN_NAMESPACE
 	typedef long long longlong_t;
 	typedef unsigned long long ulonglong_t;
 #endif
-	typedef void *handle_t;
-#if 0
-	typedef float Float;
-	typedef double Double;
-	typedef bool Bool;
-#endif
 
+#if 0
+	typedef void *handle_t;
+#else
+	struct handle_t {
+		void *data;
+
+		handle_t(void *d) : data(d) {}
+
+		template <class T>
+		operator T*() const { return reinterpret_cast<T*>(data); }
+
+		operator uintptr_t() const { return reinterpret_cast<uintptr_t>(data); }
+
+		bool operator==(const handle_t &rhs) const { return data == rhs.data; }
+	};
+#endif
 	template<typename T>
 	void SafeDelete(T*& p) {
 		if (p) {

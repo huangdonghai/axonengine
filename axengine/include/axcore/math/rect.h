@@ -141,7 +141,7 @@ inline int Rect::yMin() const { return y; } // bottom
 inline int Rect::xMax() const { return x + width; }
 inline int Rect::yMax() const { return y + height; }
 
-template< class Q >
+template <class Q>
 Rect &Rect::operator/=(Q scale) {
 	x /= scale;
 	y /= scale;
@@ -151,12 +151,12 @@ Rect &Rect::operator/=(Q scale) {
 	return *this;
 }
 
-template< class Q >
+template <class Q>
 Rect Rect::operator/(Q scale) const {
 	return Rect(x/scale, y/scale, width/scale, height/scale);
 }
 
-template< class Q >
+template <class Q>
 Rect &Rect::operator*=(Q scale) {
 	x *= scale;
 	y *= scale;
@@ -166,7 +166,7 @@ Rect &Rect::operator*=(Q scale) {
 	return *this;
 }
 
-template< class Q >
+template <class Q>
 Rect Rect::operator*(Q scale) const {
 	return Rect(x*scale, y*scale, width*scale, height*scale);
 }

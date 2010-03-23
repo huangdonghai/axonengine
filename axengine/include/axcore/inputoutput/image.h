@@ -66,7 +66,7 @@ struct TexFormat {
 	int getBlockSize() const;
 	int getBlockDataSize() const;
 	int getDepthBits() const;
-	const char *getStringName() const;
+	const char *toString() const;
 
 	Type t;
 };
@@ -253,7 +253,7 @@ inline int TexFormat::getDepthBits() const {
 	}
 }
 
-inline const char *TexFormat::getStringName() const {
+inline const char *TexFormat::toString() const {
 	switch (t) {
 	case NULLTARGET:
 		return "NULL";
@@ -325,7 +325,7 @@ inline const char *TexFormat::getStringName() const {
 		return "INTZ";
 
 	default:
-		Errorf(_("getStringName: unknown type"));
+		Errorf(_("toString: unknown type"));
 		return "NONAME";
 	};
 }

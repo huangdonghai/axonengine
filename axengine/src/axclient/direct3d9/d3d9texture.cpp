@@ -219,7 +219,7 @@ void D3D9Texture::initialize(TexFormat format, int width, int height, InitFlags 
 	trTexFormat(m_format, d3dformat);
 
 	if (d3dformat == D3DFMT_UNKNOWN) {
-		Errorf("Direct3D don't support texture format '%s'", format.getStringName());
+		Errorf("Direct3D don't support texture format '%s'", format.toString());
 	}
 
 	D3DPOOL d3dpool = D3DPOOL_MANAGED;
@@ -451,12 +451,12 @@ bool D3D9Texture::loadFile2D(const String &filename)
 
 	m_width = imagefile->getWidth();
 	m_height = imagefile->getHeight();
-	//		mDesc.format = imagefile->getFormat();
+//		mDesc.format = imagefile->getFormat();
 	if (!Math::isPowerOfTwo(m_width) || !Math::isPowerOfTwo(m_height)) {
-		//			if (!(mDesc.flags & TexFlag_allowNPOT))
+//		if (!(mDesc.flags & TexFlag_allowNPOT))
 		Errorf("GLtexture::loadFile2D: texture %s size isn't power of two", filename.c_str());
-		//			else
-		//				Debugf("GLtexture::loadFile2D: texture %s size isn't power of two\n", mDesc.name.c_str());
+//	else
+//		Debugf("GLtexture::loadFile2D: texture %s size isn't power of two\n", mDesc.name.c_str());
 	}
 
 	m_format = imagefile->getFormat();
@@ -482,7 +482,7 @@ bool D3D9Texture::loadFile2D(const String &filename)
 	}
 
 
-//		m_initFlags = 0;
+//	m_initFlags = 0;
 
 	if (m_initFlags.isSet(Texture::IF_RenderTarget)) {
 		Errorf("Can't load render target from a file");
@@ -537,7 +537,7 @@ bool D3D9Texture::loadFile2D(const String &filename)
 		if (height < 1) height = 1;
 
 		if (m_initFlags.isSet(Texture::IF_AutoGenMipmap)) {
-//				break;
+//			break;
 		}
 	}
 
