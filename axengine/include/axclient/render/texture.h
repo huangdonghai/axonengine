@@ -45,7 +45,7 @@ struct SamplerState {
 
 AX_DECLARE_REFPTR(Texture);
 
-class Texture : public RefObject {
+class Texture : public KeyedObject {
 public:
 	friend class TextureManager;
 

@@ -8,38 +8,52 @@ class TextureBackend;
 class TextureData;
 class Texture2;
 
-class HardwareTexture : public RefObject
-{
-public:
-private:
-	handle_t m_handle;
-};
 AX_DECLARE_REFPTR(HardwareTexture);
 
-class HardwareTextureManager
+class HardwareTexture : public KeyedObject
 {
 public:
-	HardwareTextureManager();
-	~HardwareTextureManager();
+	enum Status {
+		Constructed,
+		Loading,
+		Loaded,
+		Missed
+	};
 
-	HardwareTexturePtr findTexture(const String &name);
-	HardwareTexturePtr createTexture();
+	HardwareTexture(const FixedString &key);
+	HardwareTexture(const FixedString &key, TexFormat format, int width, int height);
+	virtual ~HardwareTexture();
+
+	void uploadSubTexture(const Rect &rect, const void *pixels, TexFormat format);
+	void generateMipmap();
+
+	static FixedString normalizeKey(const String &name);
+	static HardwareTexturePtr findTexture(const FixedString &name);
+	static HardwareTexturePtr createTexture(const String &debugname, TexFormat format, int width, int height);
 
 private:
-	Dict<FixedString, HardwareTexture*> TexDict;
+	handle_t m_handle;
+	AsioRead m_asioRead;
+
+	static Dict<FixedString, HardwareTexture*> ms_texDict;
+	static List<HardwareTexture*> ms_asioList;
 };
 
 class TextureBackend : public RenderResource
 {
 public:
-	TextureBackend();
-	~TextureBackend();
+	TextureBackend(TextureData *data);
+	virtual ~TextureBackend();
+
+	virtual void sync();
 
 	void init(const String &name);
 	void initUnique(const String &debugname, TexFormat format, int width, int height);
-	void sync(TextureData *src);
+	void uploadSubTexture(const Rect &rect, const void *pixels, TexFormat format);
+	void generateMipmap();
 
 private:
+	TextureData *m_data;
 	SamplerState m_samplerState;
 	HardwareTexturePtr m_hardwareRes;
 };
@@ -47,12 +61,14 @@ private:
 class TextureData : public RenderData
 {
 public:
+	friend class TextureBackend;
+
 	TextureData();
 	TextureData(const String &name);
 	TextureData(const String &debugname, TexFormat format, int width, int height);
 	virtual ~TextureData();
 
-	void uploadSubTexture(const Rect &rect, const void *pixels, TexFormat format = TexFormat::AUTO);
+	void uploadSubTexture(const Rect &rect, const void *pixels, TexFormat format);
 	void generateMipmap();
 
 	// texture parameters

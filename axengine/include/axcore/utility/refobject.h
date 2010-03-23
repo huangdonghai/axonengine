@@ -19,38 +19,28 @@ AX_BEGIN_NAMESPACE
 
 class AX_API RefObject {
 public:
-	void incref();
-	void decref();
-
-	inline int getRefCount() const { return m_ref.getref(); }
-	inline FixedString getKey() const { return m_key; }
-	inline void setKey(const FixedString &newkey) { m_key = newkey; }
+	void incref() { m_ref.incref(); }
+	void decref() { if (!m_ref.decref()) deleteThis(); }
+	int getref() const { return m_ref.getref(); }
 
 	virtual void deleteThis() { delete this; }
 
 protected:
-	RefObject();
-	virtual ~RefObject();
+	RefObject() {}
+	virtual ~RefObject() {}
 
 	AtomicInt m_ref;
-	FixedString m_key;
 };
 
-inline RefObject::RefObject() : m_ref(0)
-{}
-
-inline RefObject::~RefObject()
-{}
-
-inline void RefObject::incref()
-{ m_ref.incref(); }
-
-inline void RefObject::decref()
+class AX_API KeyedObject : public RefObject
 {
-	if (m_ref.decref() == 0) {
-		deleteThis();
-	}
-}
+public:
+	void setKey(const FixedString &key) { m_key = key; }
+	const FixedString &getKey() const { return m_key; }
+
+protected:
+	FixedString m_key;
+};
 
 //--------------------------------------------------------------------------
 // class RefPtr

@@ -64,6 +64,7 @@ read the license and understand and accept it fully.
 #include "d3d9postprocess.h"
 #include "d3d9statemanager.h"
 #include "d3d9thread.h"
+#include "d3d9api.h"
 
 AX_BEGIN_NAMESPACE
 

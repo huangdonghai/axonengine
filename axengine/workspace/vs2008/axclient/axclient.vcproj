@@ -394,11 +394,23 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\axclient\render\render_interface.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\axclient\render\render_p.h"
 				>
 			</File>
 			<File
 				RelativePath="..\..\..\src\axclient\render\render_system.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\axclient\render\render_thread.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\axclient\render\render_thread.h"
 				>
 			</File>
 			<File
@@ -645,6 +657,14 @@
 		<Filter
 			Name="direct3d9"
 			>
+			<File
+				RelativePath="..\..\..\src\axclient\direct3d9\d3d9api.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\axclient\direct3d9\d3d9api.h"
+				>
+			</File>
 			<File
 				RelativePath="..\..\..\src\axclient\direct3d9\d3d9draw.cpp"
 				>

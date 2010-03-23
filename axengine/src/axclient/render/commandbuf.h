@@ -3,50 +3,21 @@
 
 AX_BEGIN_NAMESPACE
 
-class RenderInterface
-{
-public:
-	enum TextureCreationFlag {
-		TCF_NoMipmap = 1,
-		TCF_NoDownsample = 2,
-		TCF_RenderTarget = 4
-	};
+class RenderInterface;
+class RenderResource;
+class RenderData;
 
-	enum Hint {
-		Hint_Static, Hint_Dynamic
-	};
-
-	// new interface
-	virtual handle_t createTexture2D(TexFormat format, int width, int height, int flags = 0);
-	virtual void uploadTexture(handle_t htex, int level, void *pixels, TexFormat format = TexFormat::AUTO);
-	virtual void uploadSubTexture(handle_t htex, const Rect &rect, const void *pixels, TexFormat format = TexFormat::AUTO);
-	virtual void generateMipmap(handle_t htex);
-	virtual void deleteTexture2D(handle_t htex);
-
-	virtual handle_t createVertexBuffer(size_t datasize, Hint hint);
-	virtual void *lockVertexBuffer(handle_t hvb);
-	virtual void unlockVertexBuffer(handle_t hvb);
-	virtual void deleteVertexBuffer(handle_t hvb);
-	virtual handle_t createIndexBuffer(size_t datasize, Hint hint);
-	virtual void *lockIndexBuffer(handle_t hib);
-	virtual void unlockIndexBuffer(handle_t hib);
-	virtual void deleteIndexBuffer(handle_t hib);
-
-	virtual handle_t createShader(const String &name);
-	//	virtual int setCurrentTechnique(handle_t shader, Technique tech, MaterialBr *mtr);
-	virtual void setCurrentPass(int pass);
-
-	virtual void drawIndexedPrimitive();
-	virtual void drawIndexedPrimitiveUP();
-};
 
 class RenderResource
 {
 public:
-	RenderResource();
-	virtual ~RenderResource();
+	RenderResource(RenderData *data) : m_data(data) {}
+	virtual ~RenderResource() { SafeDelete(m_data); }
+
+	virtual void sync() {}
 
 private:
+	RenderData *m_data;
 };
 
 class SyncMethod
@@ -68,19 +39,18 @@ class SyncMethod_<Rt (T::*)()> : public SyncMethod {
 public:
 	typedef Rt (T::*FunctionType)();
 
-	SyncMethod_(FunctionType m)
-		: m_obj(0)
+	SyncMethod_(T *obj, FunctionType m)
+		: m_obj(obj)
 		, m_m(m)
 	{}
 
-	void push(T *obj)
+	void call()
 	{
-		m_obj = obj;
 	}
 
 	virtual void exec()
 	{
-		m_obj->*m_m();
+		(m_obj->*m_m)();
 	}
 
 private:
@@ -93,14 +63,13 @@ class SyncMethod_<Rt (T::*)(Arg0)> : public SyncMethod {
 public:
 	typedef Rt (T::*FunctionType)(Arg0);
 
-	SyncMethod_(FunctionType m)
-		: m_obj(0)
+	SyncMethod_(T *obj, FunctionType m)
+		: m_obj(obj)
 		, m_m(m)
 	{}
 
-	void call(T *obj, typename add_const_reference<Arg0>::type arg0)
+	void call(Arg0 arg0)
 	{
-		m_obj = obj;
 		m_arg0 = arg0;
 	}
 
@@ -120,15 +89,13 @@ class SyncMethod_<Rt (T::*)(Arg0,Arg1)> : public SyncMethod {
 public:
 	typedef Rt (T::*FunctionType)(Arg0,Arg1);
 
-	SyncMethod_(FunctionType m)
-		: m_obj(0)
+	SyncMethod_(T *obj, FunctionType m)
+		: m_obj(obj)
 		, m_m(m)
 	{}
 
-	void call(T *obj, typename add_const_reference<Arg0>::type arg0,
-		typename add_const_reference<Arg1>::type arg1)
+	void call(Arg0 arg0, Arg1 arg1)
 	{
-		m_obj = obj;
 		m_arg0 = arg0;
 		m_arg1 = arg1;
 	}
@@ -150,16 +117,13 @@ class SyncMethod_<Rt (T::*)(Arg0,Arg1,Arg2)> : public SyncMethod {
 public:
 	typedef Rt (T::*FunctionType)(Arg0,Arg1,Arg2);
 
-	SyncMethod_(FunctionType m)
-		: m_obj(0)
+	SyncMethod_(T *obj, FunctionType m)
+		: m_obj(obj)
 		, m_m(m)
 	{}
 
-	void call(T *obj, typename add_const_reference<Arg0>::type arg0,
-		typename add_const_reference<Arg1>::type arg1,
-		typename add_const_reference<Arg2>::type arg2)
+	void call(Arg0 arg0, Arg1 arg1, Arg2 arg2)
 	{
-		m_obj = obj;
 		m_arg0 = arg0;
 		m_arg1 = arg1;
 		m_arg2 = arg2;
@@ -183,17 +147,13 @@ class SyncMethod_<Rt (T::*)(Arg0,Arg1,Arg2,Arg3)> : public SyncMethod {
 public:
 	typedef Rt (T::*FunctionType)(Arg0,Arg1,Arg2,Arg3);
 
-	SyncMethod_(FunctionType m)
-		: m_obj(0)
+	SyncMethod_(T *obj, FunctionType m)
+		: m_obj(obj)
 		, m_m(m)
 	{}
 
-	void call(T *obj, typename add_const_reference<Arg0>::type arg0,
-		typename add_const_reference<Arg1>::type arg1,
-		typename add_const_reference<Arg2>::type arg2,
-		typename add_const_reference<Arg3>::type arg3)
+	void call(Arg0 arg0, Arg1 arg1, Arg2 arg2, Arg3 arg3)
 	{
-		m_obj = obj;
 		m_arg0 = arg0;
 		m_arg1 = arg1;
 		m_arg2 = arg2;
@@ -220,18 +180,13 @@ class SyncMethod_<Rt (T::*)(Arg0,Arg1,Arg2,Arg3,Arg4)> : public SyncMethod {
 public:
 	typedef Rt (T::*FunctionType)(Arg0,Arg1,Arg2,Arg3,Arg4);
 
-	SyncMethod_(FunctionType m)
-		: m_obj(0)
+	SyncMethod_(T *obj, FunctionType m)
+		: m_obj(obj)
 		, m_m(m)
 	{}
 
-	void call(T *obj, typename add_const_reference<Arg0>::type arg0,
-		typename add_const_reference<Arg1>::type arg1,
-		typename add_const_reference<Arg2>::type arg2,
-		typename add_const_reference<Arg3>::type arg3,
-		typename add_const_reference<Arg4>::type arg4)
+	void call(Arg0 arg0, Arg1 arg1, Arg2 arg2, Arg3 arg3, Arg4 arg4)
 	{
-		m_obj = obj;
 		m_arg0 = arg0;
 		m_arg1 = arg1;
 		m_arg2 = arg2;
@@ -258,7 +213,7 @@ private:
 class RenderData
 {
 public:
-	RenderData() {}
+	RenderData() : m_ref(), m_syncFrame(-1) {}
 	virtual ~RenderData() {}
 
 	int incref() { return m_ref.incref(); }
@@ -266,13 +221,27 @@ public:
 	{
 		int result = m_ref.decref();
 		if (result == 0) {
-			g_renderQueue->addDeferredDeleteResource(this);
+			deleteThis();
 		}
 		return result;
 	}
 	int getref() { return m_ref.getref(); }
 
-	virtual void deleteThis() { delete this; }
+	virtual void deleteThis()
+	{
+		g_renderQueue->addDeferredDeleteResource(this);
+	}
+
+	virtual void reallyDelete() { delete this; }
+
+	void checkedSync()
+	{
+		if (m_syncFrame == g_renderSystem->getFrameNum())
+			return;
+
+		queueCmd0(m_resource, &RenderResource::sync).call();
+		m_syncFrame = g_renderSystem->getFrameNum();
+	}
 
 	//template <class Signature>
 	//void queCommand(Signature m)
@@ -281,61 +250,63 @@ public:
 	//}
 
 	template <typename Rt, typename T>
-	static SyncMethod_<Rt (T::*)()> &queueCmd0(Rt (T::*method)())
+	static SyncMethod_<Rt (T::*)()> &queueCmd0(T *obj, Rt (T::*method)())
 	{
 		typedef SyncMethod_<Rt (T::*)()> ResultType;
 		ResultType *result = g_renderQueue->allocType<ResultType>(1);
-		new (result) ResultType(method);
+		new (result) ResultType(obj, method);
 		return *result;
 	}
 
 	template <typename Rt, typename T, typename Arg0>
-	static SyncMethod_<Rt (T::*)(Arg0)> &queueCmd1(Rt (T::*method)(Arg0))
+	static SyncMethod_<Rt (T::*)(Arg0)> &queueCmd1(T *obj, Rt (T::*method)(Arg0))
 	{
 		typedef SyncMethod_<Rt (T::*)(Arg0)> ResultType;
 		ResultType *result = g_renderQueue->allocType<ResultType>(1);
-		new (result) ResultType(method);
+		new (result) ResultType(obj, method);
 		return *result;
 	}
 
 	template <typename Rt, typename T, typename Arg0, typename Arg1>
-	static SyncMethod_<Rt (T::*)(Arg0,Arg1)> &queueCmd2(Rt (T::*method)(Arg0,Arg1))
+	static SyncMethod_<Rt (T::*)(Arg0,Arg1)> &queueCmd2(T *obj, Rt (T::*method)(Arg0,Arg1))
 	{
 		typedef SyncMethod_<Rt (T::*)(Arg0,Arg1)> ResultType;
 		ResultType *result = g_renderQueue->allocType<ResultType>(1);
-		new (result) ResultType(method);
+		new (result) ResultType(obj, method);
 		return *result;
 	}
 
 	template <typename Rt, typename T, typename Arg0, typename Arg1, typename Arg2>
-	static SyncMethod_<Rt (T::*)(Arg0,Arg1,Arg2)> &queueCmd3(Rt (T::*method)(Arg0,Arg1,Arg2))
+	static SyncMethod_<Rt (T::*)(Arg0,Arg1,Arg2)> &queueCmd3(T *obj, Rt (T::*method)(Arg0,Arg1,Arg2))
 	{
 		typedef SyncMethod_<Rt (T::*)(Arg0,Arg1,Arg2)> ResultType;
 		ResultType *result = g_renderQueue->allocType<ResultType>(1);
-		new (result) ResultType(method);
+		new (result) ResultType(obj, method);
 		return *result;
 	}
 
 	template <typename Rt, typename T, typename Arg0, typename Arg1, typename Arg2, typename Arg3>
-	static SyncMethod_<Rt (T::*)(Arg0,Arg1,Arg2,Arg3)> &queueCmd4(Rt (T::*method)(Arg0,Arg1,Arg2,Arg3))
+	static SyncMethod_<Rt (T::*)(Arg0,Arg1,Arg2,Arg3)> &queueCmd4(T *obj, Rt (T::*method)(Arg0,Arg1,Arg2,Arg3))
 	{
 		typedef SyncMethod_<Rt (T::*)(Arg0,Arg1,Arg2,Arg3)> ResultType;
 		ResultType *result = g_renderQueue->allocType<ResultType>(1);
-		new (result) ResultType(method);
+		new (result) ResultType(obj, method);
 		return *result;
 	}
 
 	template <typename Rt, typename T, typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4>
-	static SyncMethod_<Rt (T::*)(Arg0,Arg1,Arg2,Arg3,Arg4)> &queueCmd5(Rt (T::*method)(Arg0,Arg1,Arg2,Arg3,Arg4))
+	static SyncMethod_<Rt (T::*)(Arg0,Arg1,Arg2,Arg3,Arg4)> &queueCmd5(T *obj, Rt (T::*method)(Arg0,Arg1,Arg2,Arg3,Arg4))
 	{
 		typedef SyncMethod_<Rt (T::*)(Arg0,Arg1,Arg2,Arg3,Arg4)> ResultType;
 		ResultType *result = g_renderQueue->allocType<ResultType>(1);
-		new (result) ResultType(method);
+		new (result) ResultType(obj, method);
 		return *result;
 	}
 
 private:
 	AtomicInt m_ref;
+	int m_syncFrame;
+	RenderResource *m_resource;
 };
 
 
@@ -356,12 +327,6 @@ struct CommandBuf
 	int bufSize;
 	byte_t buf[MaxBufSize];
 };
-
-#define AX_QUEUE_RENDER_COMMAND_0(tag, code)
-#define AX_QUEUE_RENDER_COMMAND_1(tag, t1, a1, v1, code)
-#define AX_QUEUE_RENDER_COMMAND_2(tag, t1, a1, v1, t2, a2, v2, code)
-#define AX_QUEUE_RENDER_COMMAND_3(tag, t1, a1, v1, t2, a2, v2, t3, a3, v3, code)
-
 
 AX_END_NAMESPACE
 

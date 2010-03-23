@@ -152,7 +152,8 @@ struct DdsReadParams {
 	uint_t outbpd;		// byte per page(depth)
 };
 
-static void Color565To888(ushort_t c565, Rgba *out) {
+static void Color565To888(ushort_t c565, Rgba *out)
+{
 	out->b = c565 & 0x1f;
 	out->g = (c565 & 0x7E0) >> 5;
 	out->r = (c565 & 0xF800) >> 11;
@@ -166,7 +167,8 @@ static void Color565To888(ushort_t c565, Rgba *out) {
 	out->b |= out->b >> 5;
 }
 
-static bool DecompressDXT1(DdsReadParams *pParams) {
+static bool DecompressDXT1(DdsReadParams *pParams)
+{
 	Rgba colours[4];
 	byte_t *pInData = pParams->inData;
 	colours[0].a = 0xFF;
@@ -226,7 +228,8 @@ static bool DecompressDXT1(DdsReadParams *pParams) {
 	return true;
 }
 
-static bool DecompressDXT3(DdsReadParams *pParams) {
+static bool DecompressDXT3(DdsReadParams *pParams)
+{
 	Rgba colours[4];
 	byte_t *pInData = pParams->inData;
 
@@ -283,7 +286,8 @@ static bool DecompressDXT3(DdsReadParams *pParams) {
 	return true;
 }
 
-static bool DecompressDXT5(DdsReadParams *pParams) {
+static bool DecompressDXT5(DdsReadParams *pParams)
+{
 	Rgba colours[4];
 	byte_t 		alphas[8];
 	byte_t *pInData = pParams->inData;
@@ -363,7 +367,8 @@ static bool DecompressDXT5(DdsReadParams *pParams) {
 	return true;
 }
 
-static void ChangeHeaderIntOrder(DdsHeader *pHeader){
+static void ChangeHeaderIntOrder(DdsHeader *pHeader)
+{
 	pHeader->Size1 = LittleInt(pHeader->Size1);
 	pHeader->Size2 = LittleInt(pHeader->Size2);
 	pHeader->Flags1 = LittleInt(pHeader->Flags1);
@@ -386,7 +391,8 @@ static void ChangeHeaderIntOrder(DdsHeader *pHeader){
 	pHeader->TextureStage = LittleInt(pHeader->TextureStage);
 }
 
-static bool CheckHeaderIsValid(DdsHeader *pHeader){
+static bool CheckHeaderIsValid(DdsHeader *pHeader)
+{
 	if (*(uint_t*)pHeader->Signature != AX_MAKEFOURCC('D', 'D', 'S', ' '))
 		return false;
 	//if (Strnicmp((const char*)pHeader->Signature, "DDS ", 4))
@@ -404,7 +410,8 @@ static bool CheckHeaderIsValid(DdsHeader *pHeader){
 	return true;
 }
 
-static bool GetFormatAndBlockSize(DdsHeader *pHeader, DdsReadParams *pParams) {
+static bool GetFormatAndBlockSize(DdsHeader *pHeader, DdsReadParams *pParams)
+{
 	if (pHeader->Flags2 & DDS_FOURCC) {
 		uint_t size1 = ((pHeader->Width + 3)/4) * ((pHeader->Height + 3)/4) * pHeader->Depth;
 		uint_t size2 = pHeader->Width * pHeader->Height * pHeader->Depth;
@@ -480,7 +487,8 @@ static bool GetFormatAndBlockSize(DdsHeader *pHeader, DdsReadParams *pParams) {
 	return true;
 }
 
-static uint_t GetBytePerPixel(DdsPixFormat format, uint_t bitCount) {
+static uint_t GetBytePerPixel(DdsPixFormat format, uint_t bitCount)
+{
 	switch (format) {
 		case PF_LUMINANCE:
 		case PF_LUMINANCE_ALPHA:
@@ -501,7 +509,8 @@ static uint_t GetBytePerPixel(DdsPixFormat format, uint_t bitCount) {
 	}
 }
 
-static uint_t GetCompFactor(DdsPixFormat format) {
+static uint_t GetCompFactor(DdsPixFormat format)
+{
 	//This doesn't work for images which first mipmap (= the image itself) has width or height < 4
 	//if (header.Flags1 & DDS_LINEARSIZE) {
 	//	CompFactor = (Width * Height * Depth * Bpp) / header.LinearSize;
@@ -521,7 +530,8 @@ static uint_t GetCompFactor(DdsPixFormat format) {
 	}
 }
 
-static void RepairLinearSize(DdsHeader *pHeader, DdsReadParams *pParams) {
+static void RepairLinearSize(DdsHeader *pHeader, DdsReadParams *pParams)
+{
 	if (!(pHeader->ddsCaps2 & DDS_VOLUME))
 		pParams->depth = 1;
 
@@ -563,7 +573,8 @@ static void RepairLinearSize(DdsHeader *pHeader, DdsReadParams *pParams) {
 	pParams->linearSize *= pParams->depth;
 }
 
-static uint_t GetMipmapLinearSize(DdsHeader *pHeader, DdsReadParams *pParams, uint_t factor) {
+static uint_t GetMipmapLinearSize(DdsHeader *pHeader, DdsReadParams *pParams, uint_t factor)
+{
 
 	if (!(pHeader->Flags1 & DDS_LINEARSIZE))
 		return pParams->linearSize >> 1;
@@ -584,7 +595,8 @@ static uint_t GetMipmapLinearSize(DdsHeader *pHeader, DdsReadParams *pParams, ui
 	return pParams->width * pParams->height * pParams->depth * (pHeader->RGBBitCount / 8);
 }
 
-static void GetBitsFromMask(uint_t mask, byte_t *shiftLeft, byte_t *shiftRight) {
+static void GetBitsFromMask(uint_t mask, byte_t *shiftLeft, byte_t *shiftRight)
+{
 	if (mask == 0) {
 		*shiftLeft = *shiftRight = 0;
 		return;
@@ -610,7 +622,8 @@ static void GetBitsFromMask(uint_t mask, byte_t *shiftLeft, byte_t *shiftRight) 
 	}
 }
 
-static bool DecompressARGB(DdsHeader *pHeader, DdsReadParams *pParams) {
+static bool DecompressARGB(DdsHeader *pHeader, DdsReadParams *pParams)
+{
 	byte_t RedL,RedR,GreenL,GreenR,BlueL,BlueR,AlphaL,AlphaR;
 	GetBitsFromMask(pHeader->RBitMask, &RedL, &RedR);
 	GetBitsFromMask(pHeader->GBitMask, &GreenL, &GreenR);
@@ -681,7 +694,8 @@ static bool DecompressARGB(DdsHeader *pHeader, DdsReadParams *pParams) {
 	return true;
 }
 
-static bool DecompressDdsData(DdsHeader *pHeader, DdsReadParams *pParams) {
+static bool DecompressDdsData(DdsHeader *pHeader, DdsReadParams *pParams)
+{
 	switch (pParams->format){
 	case PF_ARGB:
 	case PF_RGB:
@@ -741,8 +755,9 @@ static bool DecompressDdsData(DdsHeader *pHeader, DdsReadParams *pParams) {
 	return true;
 }
 
-static void GetOutFormat(DdsReadParams *pParams){
-	switch (pParams->formatType){
+static void GetOutFormat(DdsReadParams *pParams)
+{
+	switch (pParams->formatType) {
 	case DDS_TYPE_ARGB:
 		switch (pParams->format) {
 		case PF_ARGB:
@@ -812,7 +827,8 @@ static void GetOutFormat(DdsReadParams *pParams){
 	}
 }
 
-static bool AllocImage(DdsHeader *pHeader, DdsReadParams *pParams){
+static bool AllocImage(DdsHeader *pHeader, DdsReadParams *pParams)
+{
 	if (pParams->loadFlag & Image::NoCompressed || pParams->outFormat.isByte()) {
 		pParams->outbpl = pParams->outbpp * pParams->width;
 		pParams->outbpd = pParams->outbpl * pParams->height;
@@ -856,7 +872,8 @@ static void CheckRGBOrder(DdsReadParams *pParams){
 }
 #endif
 
-static bool Load_dds_data(DdsHeader *pHeader, DdsReadParams *pParams, Image::DataBufferSeq &dataBufs){
+static bool Load_dds_data(DdsHeader *pHeader, DdsReadParams *pParams, Image::DataBufferSeq &dataBufs)
+{
 	if (!AllocImage(pHeader, pParams))
 		return false;
 
@@ -895,7 +912,8 @@ static bool Load_dds_data(DdsHeader *pHeader, DdsReadParams *pParams, Image::Dat
 	return true;
 }
 
-bool Image::loadFile_dds(const String &filename){
+bool Image::loadFile_dds(const String &filename)
+{
 	// clear first
 	clear();
 
@@ -1020,7 +1038,8 @@ struct DdsWriteParams {
 };
 
 
-static uint_t GetMipmapCount(uint_t length){
+static uint_t GetMipmapCount(uint_t length)
+{
 	AX_ASSERT(length > 0);
 	int count = 0;
 	while (length > 0) {
@@ -1030,7 +1049,8 @@ static uint_t GetMipmapCount(uint_t length){
 	return count;
 }
 
-static bool FillHeader(DdsHeader *pHeader, DdsWriteParams *pParams, uint_t width, uint_t height, uint_t depth, uint_t dataCount, TexFormat format){
+static bool FillHeader(DdsHeader *pHeader, DdsWriteParams *pParams, uint_t width, uint_t height, uint_t depth, uint_t dataCount, TexFormat format)
+{
 	memset(pParams, 0, sizeof(DdsWriteParams));
 	memset(pHeader, 0, sizeof(DdsHeader));
 	pHeader->Flags1 = DDS_LINEARSIZE | DDS_MIPMAPCOUNT | DDS_WIDTH | DDS_HEIGHT | DDS_CAPS | DDS_PIXELFORMAT;
@@ -1053,25 +1073,19 @@ static bool FillHeader(DdsHeader *pHeader, DdsWriteParams *pParams, uint_t width
 
 	DdsPixFormat outFormat;
 	switch (format) {
-	case TexFormat::DXT1:		pHeader->FourCC = AX_MAKEFOURCC('D','X','T','1');		outFormat = PF_DXT1; break;
-	case TexFormat::DXT3:		pHeader->FourCC = AX_MAKEFOURCC('D','X','T','3');		outFormat = PF_DXT3; break;
-	case TexFormat::DXT5:		pHeader->FourCC = AX_MAKEFOURCC('D','X','T','5');		outFormat = PF_DXT5; break;
+	case TexFormat::DXT1: pHeader->FourCC = AX_MAKEFOURCC('D','X','T','1'); outFormat = PF_DXT1; break;
+	case TexFormat::DXT3: pHeader->FourCC = AX_MAKEFOURCC('D','X','T','3'); outFormat = PF_DXT3; break;
+	case TexFormat::DXT5: pHeader->FourCC = AX_MAKEFOURCC('D','X','T','5'); outFormat = PF_DXT5; break;
+	case TexFormat::BGR8: pHeader->FourCC = AX_MAKEFOURCC('D','X','T','1'); outFormat = PF_DXT1; pParams->needCompress = true; break;
+	case TexFormat::BGRA8: pHeader->FourCC = AX_MAKEFOURCC('D','X','T','5'); outFormat = PF_DXT5; pParams->needCompress = true; break;
+	case TexFormat::BGRX8: pHeader->FourCC = AX_MAKEFOURCC('D','X','T','1'); outFormat = PF_DXT1; pParams->needCompress = true; break;
 
-#if 0
-	case TexFormat::RGB8:		pHeader->FourCC = AX_MAKEFOURCC('D','X','T','1');		outFormat = PF_DXT1;	pParams->needCompress = true; break;
-	case TexFormat::RGBA8:		pHeader->FourCC = AX_MAKEFOURCC('D','X','T','5');		outFormat = PF_DXT5;	pParams->needCompress = true; break;
-	case TexFormat::RGBX8:		pHeader->FourCC = AX_MAKEFOURCC('D','X','T','1');		outFormat = PF_DXT1;	pParams->needCompress = true; break;
-#endif
-	case TexFormat::BGR8:		pHeader->FourCC = AX_MAKEFOURCC('D','X','T','1');		outFormat = PF_DXT1;	pParams->needCompress = true; break;
-	case TexFormat::BGRA8:		pHeader->FourCC = AX_MAKEFOURCC('D','X','T','5');		outFormat = PF_DXT5;	pParams->needCompress = true; break;
-	case TexFormat::BGRX8:		pHeader->FourCC = AX_MAKEFOURCC('D','X','T','1');		outFormat = PF_DXT1;	pParams->needCompress = true; break;
-
-	case TexFormat::R16F:		pHeader->FourCC = AX_MAKEFOURCC('o', '\0', '\0', '\0');	outFormat = PF_R16F; break;
-	case TexFormat::RG16F:		pHeader->FourCC = AX_MAKEFOURCC('p', '\0', '\0', '\0');	outFormat = PF_G16R16F; break;
-	case TexFormat::RGBA16F:	pHeader->FourCC = AX_MAKEFOURCC('q', '\0', '\0', '\0');	outFormat = PF_A16B16G16R16F; break;
-	case TexFormat::R32F:		pHeader->FourCC = AX_MAKEFOURCC('r', '\0', '\0', '\0');	outFormat = PF_R32F; break;
-	case TexFormat::RG32F:		pHeader->FourCC = AX_MAKEFOURCC('s', '\0', '\0', '\0');	outFormat = PF_G32R32F; break;
-	case TexFormat::RGBA32F:	pHeader->FourCC = AX_MAKEFOURCC('t', '\0', '\0', '\0');	outFormat = PF_A32B32G32R32F; break;
+	case TexFormat::R16F: pHeader->FourCC = AX_MAKEFOURCC('o', '\0', '\0', '\0'); outFormat = PF_R16F; break;
+	case TexFormat::RG16F: pHeader->FourCC = AX_MAKEFOURCC('p', '\0', '\0', '\0'); outFormat = PF_G16R16F; break;
+	case TexFormat::RGBA16F: pHeader->FourCC = AX_MAKEFOURCC('q', '\0', '\0', '\0'); outFormat = PF_A16B16G16R16F; break;
+	case TexFormat::R32F: pHeader->FourCC = AX_MAKEFOURCC('r', '\0', '\0', '\0'); outFormat = PF_R32F; break;
+	case TexFormat::RG32F: pHeader->FourCC = AX_MAKEFOURCC('s', '\0', '\0', '\0'); outFormat = PF_G32R32F; break;
+	case TexFormat::RGBA32F: pHeader->FourCC = AX_MAKEFOURCC('t', '\0', '\0', '\0'); outFormat = PF_A32B32G32R32F; break;
 
 	case TexFormat::LA8:
 		pHeader->Flags2 |= DDS_ALPHAPIXELS;	
@@ -1094,17 +1108,52 @@ static bool FillHeader(DdsHeader *pHeader, DdsWriteParams *pParams, uint_t width
 	}
 
 	switch (outFormat) {
-	case PF_DXT1:		pHeader->LinearSize = (((pHeader->Width + 3)/4) * ((pHeader->Height + 3)/4)) * 8 * pHeader->Depth;	pHeader->RGBBitCount = 4; pParams->formatType = DDS_TYPE_DXT; break;
+	case PF_DXT1:
+		pHeader->LinearSize = (((pHeader->Width + 3)/4) * ((pHeader->Height + 3)/4)) * 8 * pHeader->Depth;	pHeader->RGBBitCount = 4;
+		pParams->formatType = DDS_TYPE_DXT;
+		break;
 	case PF_DXT3:
-	case PF_DXT5:		pHeader->LinearSize = (((pHeader->Width + 3)/4) * ((pHeader->Height + 3)/4)) * 16 * pHeader->Depth; pHeader->RGBBitCount = 8; pParams->formatType = DDS_TYPE_DXT; break;
-	case PF_R16F:			pHeader->LinearSize = pHeader->Width * pHeader->Height * pHeader->Depth * 2; pHeader->RGBBitCount = 16; pParams->formatType = DDS_TYPE_FLOAT; break;
-	case PF_G16R16F:		pHeader->LinearSize = pHeader->Width * pHeader->Height * pHeader->Depth * 4; pHeader->RGBBitCount = 32; pParams->formatType = DDS_TYPE_FLOAT; break;
-	case PF_A16B16G16R16F:	pHeader->LinearSize = pHeader->Width * pHeader->Height * pHeader->Depth * 8; pHeader->RGBBitCount = 64; pParams->formatType = DDS_TYPE_FLOAT; break;
-	case PF_R32F:			pHeader->LinearSize = pHeader->Width * pHeader->Height * pHeader->Depth * 4; pHeader->RGBBitCount = 32; pParams->formatType = DDS_TYPE_FLOAT; break;
-	case PF_G32R32F:		pHeader->LinearSize = pHeader->Width * pHeader->Height * pHeader->Depth * 8; pHeader->RGBBitCount = 64; pParams->formatType = DDS_TYPE_FLOAT; break;
-	case PF_A32B32G32R32F:	pHeader->LinearSize = pHeader->Width * pHeader->Height * pHeader->Depth * 16; pHeader->RGBBitCount = 128; pParams->formatType = DDS_TYPE_FLOAT; break;
-	case PF_LUMINANCE_ALPHA:pHeader->LinearSize = pHeader->Width * pHeader->Height * pHeader->Depth * 2; pHeader->RGBBitCount = 16; pParams->formatType = DDS_TYPE_ARGB; break;
-	case PF_LUMINANCE:		pHeader->LinearSize = pHeader->Width * pHeader->Height * pHeader->Depth * 1; pHeader->RGBBitCount = 8; pParams->formatType = DDS_TYPE_ARGB; break;
+	case PF_DXT5:
+		pHeader->LinearSize = (((pHeader->Width + 3)/4) * ((pHeader->Height + 3)/4)) * 16 * pHeader->Depth; pHeader->RGBBitCount = 8;
+		pParams->formatType = DDS_TYPE_DXT;
+		break;
+	case PF_R16F:
+		pHeader->LinearSize = pHeader->Width * pHeader->Height * pHeader->Depth * 2;
+		pHeader->RGBBitCount = 16;
+		pParams->formatType = DDS_TYPE_FLOAT;
+		break;
+	case PF_G16R16F:
+		pHeader->LinearSize = pHeader->Width * pHeader->Height * pHeader->Depth * 4; pHeader->RGBBitCount = 32;
+		pParams->formatType = DDS_TYPE_FLOAT;
+		break;
+	case PF_A16B16G16R16F:
+		pHeader->LinearSize = pHeader->Width * pHeader->Height * pHeader->Depth * 8;
+		pHeader->RGBBitCount = 64; pParams->formatType = DDS_TYPE_FLOAT;
+		break;
+	case PF_R32F:
+		pHeader->LinearSize = pHeader->Width * pHeader->Height * pHeader->Depth * 4;
+		pHeader->RGBBitCount = 32; pParams->formatType = DDS_TYPE_FLOAT;
+		break;
+	case PF_G32R32F:
+		pHeader->LinearSize = pHeader->Width * pHeader->Height * pHeader->Depth * 8;
+		pHeader->RGBBitCount = 64;
+		pParams->formatType = DDS_TYPE_FLOAT;
+		break;
+	case PF_A32B32G32R32F:
+		pHeader->LinearSize = pHeader->Width * pHeader->Height * pHeader->Depth * 16;
+		pHeader->RGBBitCount = 128;
+		pParams->formatType = DDS_TYPE_FLOAT;
+		break;
+	case PF_LUMINANCE_ALPHA:
+		pHeader->LinearSize = pHeader->Width * pHeader->Height * pHeader->Depth * 2;
+		pHeader->RGBBitCount = 16;
+		pParams->formatType = DDS_TYPE_ARGB;
+		break;
+	case PF_LUMINANCE:
+		pHeader->LinearSize = pHeader->Width * pHeader->Height * pHeader->Depth * 1;
+		pHeader->RGBBitCount = 8;
+		pParams->formatType = DDS_TYPE_ARGB;
+		break;
 	default: break;
 	}
 	pParams->orgFormat = format;
@@ -1127,14 +1176,14 @@ static bool FillHeader(DdsHeader *pHeader, DdsWriteParams *pParams, uint_t width
 				pHeader->MipMapCount = abstractMipmapCount;
 				pHeader->ddsCaps1 |= DDS_MIPMAP;
 			}
-		}else if (dataCount == abstractMipmapCount) {
+		} else if (dataCount == abstractMipmapCount) {
 			pHeader->MipMapCount = abstractMipmapCount;
 			pHeader->ddsCaps1 |= DDS_MIPMAP;
-		}else if (dataCount == abstractMipmapCount * 6){
+		} else if (dataCount == abstractMipmapCount * 6) {
 			pHeader->MipMapCount = abstractMipmapCount;
 			pHeader->ddsCaps1 |= DDS_MIPMAP;
 			pHeader->ddsCaps2 |= DDS_CUBEMAP_ALL;			
-		}else{
+		} else {
 			// 错误！如果使用Mipmap或者Cubemap，必须使用全部的Mipmap或者Cubemap，不全的暂时不支持
 			return false;
 		}
@@ -1142,39 +1191,16 @@ static bool FillHeader(DdsHeader *pHeader, DdsWriteParams *pParams, uint_t width
 	return true;
 }
 
-static void ChangeFormatToNormal(DdsWriteParams *pParams, byte_t** ppNewMem){
+static void ChangeFormatToNormal(DdsWriteParams *pParams, byte_t** ppNewMem)
+{
 	uint_t pixelCount = pParams->width * pParams->height * pParams->depth;
 	pParams->inDataSize = pixelCount * sizeof(Rgba);
 
-#if 0
-	if (pParams->orgFormat == TexFormat::RGBA8) {
-		return;
-	}
-#endif
 	Rgba *pBuffer = new Rgba[pixelCount];
 	*ppNewMem = (byte_t*)pBuffer;
 
 	switch (pParams->orgFormat)
 	{
-#if 0
-	case TexFormat::RGB8:	
-		for (uint_t i=0; i<pixelCount; i++) {
-			pBuffer[i].r = pParams->inData[i * 3];
-			pBuffer[i].g = pParams->inData[i * 3 + 1];
-			pBuffer[i].b = pParams->inData[i * 3 + 2];
-			pBuffer[i].a = 255;
-		}
-		break;
-	//case Image::RGBA8:	break;
-	case TexFormat::RGBX8:
-		for (uint_t i=0; i<pixelCount; i++) {
-			pBuffer[i].r = pParams->inData[i * 4];
-			pBuffer[i].g = pParams->inData[i * 4 + 1];
-			pBuffer[i].b = pParams->inData[i * 4 + 2];
-			pBuffer[i].a = 255;
-		}
-		break;
-#endif
 	case TexFormat::BGR8:
 		for (uint_t i=0; i<pixelCount; i++) {
 			pBuffer[i].r = pParams->inData[i * 3 + 2];
@@ -1205,7 +1231,8 @@ static void ChangeFormatToNormal(DdsWriteParams *pParams, byte_t** ppNewMem){
 	pParams->inData = *ppNewMem;
 }
 
-static void GetBlock(Rgba *block, DdsWriteParams *pParams, const byte_t *data) {
+static void GetBlock(Rgba *block, DdsWriteParams *pParams, const byte_t *data)
+{
 	uint_t i = 0;
 	Rgba fill = *(Rgba*)data;
 	for (uint_t y=0; y < 4; y++) {
@@ -1219,14 +1246,16 @@ static void GetBlock(Rgba *block, DdsWriteParams *pParams, const byte_t *data) {
 	}
 }
 
-static uint_t Distance(Rgba *c1, Rgba *c2) {
+static uint_t Distance(Rgba *c1, Rgba *c2)
+{
 	int dr = c1->r - c2->r;
 	int dg = c1->g - c2->g;
 	int db = c1->b - c2->b;
 	return (dr * dr + dg * dg + db * db);
 }
 
-static ushort_t ColorRGBAto565(Rgba *c) {
+static ushort_t ColorRGBAto565(Rgba *c)
+{
 	return ((c->r >> 3) << 11) | ((c->g >> 2) << 5) | (c->b >> 3);
 }
 
@@ -1236,8 +1265,9 @@ static const byte_t add5 = 2;
 static const byte_t add6 = 1;
 static const int INSET_SHIFT = 4; // inset the bounding box with (range >> shift)
 
-template< int C_SHIFT, int C_DELTA, int C_MASK >
-void GetMinMax(byte_t *pMin, byte_t *pMax) {
+template <int C_SHIFT, int C_DELTA, int C_MASK>
+void GetMinMax(byte_t *pMin, byte_t *pMax)
+{
 	if (*pMin > *pMax) {
 		std::swap(pMin, pMax);
 	}
@@ -1257,38 +1287,9 @@ void GetMinMax(byte_t *pMin, byte_t *pMax) {
 		*pMax = max2;
 	}
 }
-#if 0
-static void ChooseEndpoints2(ColorRGBA *block, ColorRGBA *minColor, ColorRGBA *maxColor) {
-	minColor->r = minColor->g = minColor->b = 255;
-	maxColor->r = maxColor->g = maxColor->b = 0;
 
-	for (int i = 0; i < 16; i++) {
-		if (block[i].r < minColor->r) { minColor->r = block[i].r; }
-		if (block[i].g < minColor->g) { minColor->g = block[i].g; }
-		if (block[i].b < minColor->b) { minColor->b = block[i].b; }
-		if (block[i].r > maxColor->r) { maxColor->r = block[i].r; }
-		if (block[i].g > maxColor->g) { maxColor->g = block[i].g; }
-		if (block[i].b > maxColor->b) { maxColor->b = block[i].b; }
-	}
-
-	Uint8 inset[3];
-	inset[0] = (maxColor->r - minColor->r) >> INSET_SHIFT;
-	inset[1] = (maxColor->g - minColor->g) >> INSET_SHIFT;
-	inset[2] = (maxColor->b - minColor->b) >> INSET_SHIFT;
-
-	minColor->r = (minColor->r + inset[0] <= 255) ? minColor->r + inset[0] : 255;
-	minColor->g = (minColor->g + inset[1] <= 255) ? minColor->g + inset[1] : 255;
-	minColor->b = (minColor->b + inset[2] <= 255) ? minColor->b + inset[2] : 255;
-	maxColor->r = (maxColor->r >= inset[0]) ? maxColor->r - inset[0] : 0;
-	maxColor->g = (maxColor->g >= inset[1]) ? maxColor->g - inset[1] : 0;
-	maxColor->b = (maxColor->b >= inset[2]) ? maxColor->b - inset[2] : 0;
-
-	GetMinMax< 5, add5, mask5 >(&minColor->r, &maxColor->r);
-	GetMinMax< 6, add6, mask6 >(&minColor->g, &maxColor->g);
-	GetMinMax< 5, add5, mask5 >(&minColor->b, &maxColor->b);
-}
-#endif
-static void ChooseEndpoints(Rgba *block, Rgba *rgba1, Rgba *rgba2) {
+static void ChooseEndpoints(Rgba *block, Rgba *rgba1, Rgba *rgba2)
+{
 	uint_t farthest = 0;
 	int pos1 = 0, pos2 = 0;
 
@@ -1310,7 +1311,8 @@ static void ChooseEndpoints(Rgba *block, Rgba *rgba1, Rgba *rgba2) {
 	GetMinMax< 5, add5, mask5 >(&rgba1->b, &rgba2->b);
 }
 
-static uint_t GenBitMask(Rgba *c1, Rgba *c2, int numCols, Rgba *block) {
+static uint_t GenBitMask(Rgba *c1, Rgba *c2, int numCols, Rgba *block)
+{
 	byte_t mask[16];
 	Rgba colours[4];
 
@@ -1356,7 +1358,8 @@ static uint_t GenBitMask(Rgba *c1, Rgba *c2, int numCols, Rgba *block) {
 	return bitMask;
 }
 
-void ChooseAlphaEndpoints(Rgba *block, byte_t *high, byte_t *low) {
+void ChooseAlphaEndpoints(Rgba *block, byte_t *high, byte_t *low)
+{
 	*high = block[0].a;
 	*low = block[0].a;
 
@@ -1378,7 +1381,8 @@ void ChooseAlphaEndpoints(Rgba *block, byte_t *high, byte_t *low) {
 	}
 }
 
-void GenAlphaBitMask(byte_t a0, byte_t a1, Rgba *block, byte_t *outMask) {
+void GenAlphaBitMask(byte_t a0, byte_t a1, Rgba *block, byte_t *outMask)
+{
 	byte_t alphas[8];
 	byte_t mask[16];
 
@@ -1395,8 +1399,7 @@ void GenAlphaBitMask(byte_t a0, byte_t a1, Rgba *block, byte_t *outMask) {
 		alphas[5] = (3 * alphas[0] + 4 * alphas[1] + 3) / 7;	// bit code 101
 		alphas[6] = (2 * alphas[0] + 5 * alphas[1] + 3) / 7;	// bit code 110
 		alphas[7] = (1 * alphas[0] + 6 * alphas[1] + 3) / 7;	// bit code 111
-	}
-	else {
+	} else {
 		// 6-alpha block.
 		// Bit code 000 = alpha_0, 001 = alpha_1, others are interpolated.
 		alphas[2] = (4 * alphas[0] + 1 * alphas[1] + 2) / 5;	// Bit code 010
@@ -1432,7 +1435,8 @@ void GenAlphaBitMask(byte_t a0, byte_t a1, Rgba *block, byte_t *outMask) {
 	outMask[5] = ((mask[13] & 0x06) >> 1) | (mask[14] << 2) | (mask[15] << 5);
 }
 
-void DXT1CheckOrder(Rgba *block, Rgba *c1, Rgba *c2, bool *pHasAlpha){
+void DXT1CheckOrder(Rgba *block, Rgba *c1, Rgba *c2, bool *pHasAlpha)
+{
 	// check & change order
 	bool hasAlpha = false;
 	for (uint_t i=0 ; i < DDS_DXT_BLOCK_SIZE; i++) {
@@ -1449,49 +1453,8 @@ void DXT1CheckOrder(Rgba *block, Rgba *c1, Rgba *c2, bool *pHasAlpha){
 		std::swap(*c1, *c2);
 }
 
-//NV_ERROR_CODE nvDXTReadCallback(void *buffer, size_t count, void * userData)
-//{
-//	std::istream *s = static_cast<std::istream*>(userData);
-//	s->read(static_cast<char*>(buffer), (std::streamsize)count);
-//	return s->good() ? NV_OK : NV_READ_FAILED;
-//}
-#if 0
-NV_ERROR_CODE nvDXTWriteCallback(const void *buffer, size_t count, const MIPMapData * mipMapData, void * userData) {
-	if (mipMapData)
-	{
-		// means a MIP map
-		DdsWriteParams *pParams = static_cast<DdsWriteParams*>(userData);
-		pParams->outfp->Write(static_cast<const char*>(buffer), count);
-	}
-	else
-	{
-		// otherwise file header data
-	}
-
-	return NV_OK;
-}
-
-
-void NvDxtCompress(DdsWriteParams *pParams) {
-	nvCompressionOptions options;
-	//options.SetQuality(kQualityFastest, 200);
-	options.UseExisitingMIPMaps();
-	options.user_data = pParams;
-
-	NV_ERROR_CODE ret = nvDDS::nvDXTcompress(	pParams->inData,
-												pParams->width,
-												pParams->height,
-												pParams->width * sizeof(ColorRGBA),
-												nvRGBA,
-												&options,
-												nvDXTWriteCallback,
-												0 );
-
-	AX_ASSERT(ret == NV_OK);
-}
-#endif
-
-void MyDxt1Compress(DdsWriteParams *pParams) {
+void MyDxt1Compress(DdsWriteParams *pParams)
+{
 	Rgba block[DDS_DXT_BLOCK_SIZE];
 	byte_t *pWriteBuf = pParams->outData;
 	const byte_t *pReadBuf = pParams->inData;
@@ -1520,7 +1483,8 @@ void MyDxt1Compress(DdsWriteParams *pParams) {
 	}
 }
 
-void MyDxt3Compress(DdsWriteParams *pParams) {
+void MyDxt3Compress(DdsWriteParams *pParams)
+{
 	Rgba block[DDS_DXT_BLOCK_SIZE];
 	byte_t *pWriteBuf = pParams->outData;
 	const byte_t *pReadBuf = pParams->inData;
@@ -1556,7 +1520,8 @@ void MyDxt3Compress(DdsWriteParams *pParams) {
 	}
 }
 
-void MyDxt5Compress(DdsWriteParams *pParams) {
+void MyDxt5Compress(DdsWriteParams *pParams)
+{
 	Rgba block[DDS_DXT_BLOCK_SIZE];
 	byte_t *pWriteBuf = pParams->outData;
 	const byte_t *pReadBuf = pParams->inData;
@@ -1600,7 +1565,8 @@ void MyDxt5Compress(DdsWriteParams *pParams) {
 	}
 }
 
-void Compress(DdsWriteParams *pParams) {
+void Compress(DdsWriteParams *pParams)
+{
 	byte_t *pNewMem = NULL;
 	ChangeFormatToNormal(pParams, &pNewMem);
 
@@ -1630,7 +1596,8 @@ void Compress(DdsWriteParams *pParams) {
 	}
 }
 
-void CopyData(DdsWriteParams *pParams){
+void CopyData(DdsWriteParams *pParams)
+{
 	switch (pParams->outFormat)
 	{
 	case PF_DXT1:
@@ -1673,7 +1640,8 @@ void CopyData(DdsWriteParams *pParams){
 	pParams->outfp->write(pParams->outData, pParams->linearSize);
 }
 
-void Image::saveFile_dds(const String &filename, bool bFast) {
+void Image::saveFile_dds(const String &filename, bool bFast)
+{
 	File *fp = g_fileSystem->openFileWrite(filename);
 
 	DdsHeader header;

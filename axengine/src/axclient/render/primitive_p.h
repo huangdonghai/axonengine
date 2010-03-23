@@ -39,7 +39,7 @@ public:
 	PrimitiveData();
 	virtual ~PrimitiveData();
 
-	virtual void deleteThis()
+	virtual void reallyDelete()
 	{
 		if (m_hint == Primitive2::HintFrame) {
 			this->~PrimitiveData();

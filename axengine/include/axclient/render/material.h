@@ -14,14 +14,14 @@ AX_BEGIN_NAMESPACE
 
 AX_DECLARE_REFPTR(Material);
 
-class AX_API Material : public RefObject
+class AX_API Material : public KeyedObject
 {
 public:
 	// implement RefObject
 	virtual void deleteThis();
 
 	// must be success
-	bool init(const String &name);
+	bool init(const FixedString &name);
 
 	const String &getShaderName() const;
 	Shader *getShaderTemplate() const;
@@ -86,7 +86,6 @@ private:
 	Material();
 	~Material();
 
-	String m_key;
 	MaterialDecl *m_decl;
 
 	bool m_shaderMacroNeedRegen;

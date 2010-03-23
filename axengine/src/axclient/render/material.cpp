@@ -38,12 +38,9 @@ Material::~Material()
 {
 }
 
-bool Material::init(const String &name)
+bool Material::init(const FixedString &key)
 {
-	if (!PathUtil::haveDir(name))
-		m_key = "materials/" + name;
-	else
-		m_key = name;
+	m_key = key;
 
 	TypeZeroArray(m_textures);
 
@@ -242,7 +239,7 @@ void Material::setTextureSet( const String &texname )
 	m_shaderMacroNeedRegen = true;
 }
 
-FixedString Material::normalizeKey( const String &name )
+FixedString Material::normalizeKey(const String &name)
 {
 	if (!PathUtil::haveDir(name))
 		return "materials/" + name;
@@ -265,7 +262,6 @@ MaterialPtr Material::load(const String &name)
 
 	Material *result = new Material();
 	result->init(key);
-	result->setKey(key);
 	ms_materialDict[key] = result;
 
 	return result;
@@ -280,7 +276,7 @@ MaterialPtr Material::loadUnique(const String &name)
 
 	Material *result = new Material();
 	result->init(key);
-	result->setKey(uniqueKey);
+	result->m_key = uniqueKey;
 	ms_materialDict[uniqueKey] = result;
 	return result;
 }
@@ -328,7 +324,7 @@ void Material::syncFrame()
 		IntrusiveList<Material, &Material::m_needDeleteLink>::iterator oldIt = it;
 		++it;
 		Material *mat = &*oldIt;
-		ms_materialDict.erase(mat->getKey());
+		ms_materialDict.erase(mat->m_key);
 		ms_needDeleteLinkHead.erase(oldIt);
 		delete mat;
 	}
@@ -352,7 +348,7 @@ void Material::matlist_f(const CmdArgs &args)
 			continue;
 		}
 
-		Printf("%4d %s\n",mtr->getRefCount(), mtr->m_key.c_str());
+		Printf("%4d %s\n",mtr->getref(), mtr->m_key.c_str());
 		count++;
 	}
 
