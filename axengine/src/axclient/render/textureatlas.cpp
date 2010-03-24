@@ -163,7 +163,7 @@ void TextureAtlas::getChunkInfo(int id, Texture*& tex, Vector4 &tc) {
 	Rect rect;
 	getChunkInfoByIndex(m_atlasHash[id], tex_num, rect);
 
-	tex = m_textures[tex_num];
+	tex = m_textures[tex_num].get();
 	float tc_scale = 1.f / m_textureSize;
 	tc[0] =(rect.x) * tc_scale;
 	tc[1] =(rect.y) * tc_scale;

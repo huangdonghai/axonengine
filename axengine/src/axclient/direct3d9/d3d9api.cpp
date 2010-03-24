@@ -23,16 +23,20 @@ static bool CheckIfSupportHardwareMipmapGeneration(D3DFORMAT d3dformat, DWORD d3
 handle_t D3D9_Api::createTexture2D(TexFormat format, int width, int height, int flags /*= 0*/)
 {
 	D3DFORMAT d3dformat;
+	D3DPOOL d3dpool = D3DPOOL_MANAGED;
+	DWORD d3dusage = 0;
+	UINT d3dlevels = 0;
+
 	trTexFormat(format, d3dformat);
 
 	if (d3dformat == D3DFMT_UNKNOWN) {
 		Errorf("Direct3D don't support texture format '%s'", format.toString());
 	}
 
-	D3DPOOL d3dpool = D3DPOOL_MANAGED;
-	DWORD d3dusage = 0;
+	if (flags & Texture2::IF_NoMipmap)
+		d3dlevels = 1;
 
-	if (flags & Texture::IF_RenderTarget) {
+	if (flags & Texture2::IF_RenderTarget) {
 		d3dpool = D3DPOOL_DEFAULT;
 		if (format.isDepth()) {
 			d3dusage = D3DUSAGE_DEPTHSTENCIL;
@@ -41,7 +45,7 @@ handle_t D3D9_Api::createTexture2D(TexFormat format, int width, int height, int 
 		}
 	}
 
-	if (flags & Texture::IF_AutoGenMipmap) {
+	if (flags & Texture2::IF_AutoGenMipmap) {
 		d3dusage |= D3DUSAGE_AUTOGENMIPMAP;
 
 		bool hardwareGenMipmap = CheckIfSupportHardwareMipmapGeneration(d3dformat, d3dusage);
@@ -54,7 +58,7 @@ handle_t D3D9_Api::createTexture2D(TexFormat format, int width, int height, int 
 	LPDIRECT3DTEXTURE9 result;
 
 	HRESULT hr;
-	V(d3d9Device->CreateTexture(width, height, !m_isMipmaped, d3dusage, d3dformat, d3dpool, &result, 0));
+	V(d3d9Device->CreateTexture(width, height, d3dlevels, d3dusage, d3dformat, d3dpool, &result, 0));
 	return result;
 }
 

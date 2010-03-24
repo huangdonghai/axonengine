@@ -80,7 +80,7 @@ public:
 	D3D9InstancedBuffer();
 	~D3D9InstancedBuffer();
 
-	void setData(const InstancePrim::ParamSeq &params);
+	void setData(int numInstances, const InstancePrim::Param* params);
 
 private:
 	IDirect3DVertexBuffer9 *m_object;
@@ -150,8 +150,8 @@ private:
 //--------------------------------------------------------------------------
 // class D3D9VertexBufferManager
 //--------------------------------------------------------------------------
-template<class BufType, int PageSize, BufType (*CreatePage)(int)>
-class ChainedBuffer {
+template <class BufType, int PageSize, BufType (*CreatePage)(int)>
+class D3D9_ChainedBuffer {
 public:
 	enum {
 		lockNewFrame = D3DLOCK_DISCARD/* | D3DLOCK_NOOVERWRITE*/,
@@ -165,11 +165,11 @@ public:
 		void *writePtr;
 	};
 
-	ChainedBuffer() {
+	D3D9_ChainedBuffer() {
 		m_curIndex = -1;
 	}
 
-	virtual ~ChainedBuffer() {}
+	virtual ~D3D9_ChainedBuffer() {}
 
 	int getSize() const { return m_pages.size() * PageSize; }
 	int getUsed() const { if (m_curIndex < 0) return 0; else return m_curIndex * PageSize + m_curOffset; }
@@ -274,9 +274,9 @@ IDirect3DVertexBuffer9 *CreateVertexBufferPage(int pagesize);
 
 IDirect3DIndexBuffer9 *CreateIndexBufferPage(int pagesize);
 
-typedef ChainedBuffer<IDirect3DVertexBuffer9*, 1024*1024, CreateVertexBufferPage> VertexBufferChain;
-typedef ChainedBuffer<IDirect3DVertexBuffer9*, 256*1024, CreateVertexBufferPage> InstanceBufferChain;
-typedef ChainedBuffer<IDirect3DIndexBuffer9*, 512*1024, CreateIndexBufferPage> IndexBufferChain;
+typedef D3D9_ChainedBuffer<IDirect3DVertexBuffer9*, 1024*1024, CreateVertexBufferPage> VertexBufferChain;
+typedef D3D9_ChainedBuffer<IDirect3DVertexBuffer9*, 256*1024, CreateVertexBufferPage> InstanceBufferChain;
+typedef D3D9_ChainedBuffer<IDirect3DIndexBuffer9*, 512*1024, CreateIndexBufferPage> IndexBufferChain;
 
 class D3D9VertexBufferManager {
 public:

@@ -607,14 +607,6 @@
 				RelativePath="..\..\..\src\axcore\utility\uuid.cpp"
 				>
 				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						RuntimeLibrary="1"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
 					Name="Release|Win32"
 					>
 					<Tool

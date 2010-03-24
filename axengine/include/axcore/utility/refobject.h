@@ -55,7 +55,9 @@ public:
 	~RefPtr();
 
 	// implicit conversions
+#if 0
 	operator T*() const;
+#endif
 	T &operator*() const;
 	T *operator->() const;
 	T *get() const { return m_object; }
@@ -119,7 +121,7 @@ inline RefPtr<T>::~RefPtr()
 	if (m_object)
 		m_object->decref();
 }
-#if 1
+#if 0
 //---------------------------------------------------------------------------
 template <class T>
 inline RefPtr<T>::operator T*() const

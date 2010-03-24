@@ -41,7 +41,7 @@ AX_BEGIN_NAMESPACE
 			if (!nullmaterial) {
 				nullmaterial = Material::load("null");
 			}
-			mat = nullmaterial;
+			mat = nullmaterial.get();
 			AX_ASSERT(mat);
 		}
 

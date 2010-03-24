@@ -12,33 +12,9 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-namespace {
-	AX_USE_NAMESPACE;
-
-	inline void xSetupAxis(LinePrim*& line, const Vector3 &p0, const Vector3 &p1, const Rgba &color) {
-		if (!line) {
-			line = new LinePrim(Primitive::HintDynamic);
-			line->init(2, 2);
-			line->lock();
-			line->setIndex(0, 0);
-			line->setIndex(1, 1);
-			line->unlock();
-		}
-
-		line->lock();
-		LinePrim::VertexType &v0 = line->getVertexRef(0);
-		LinePrim::VertexType &v1 = line->getVertexRef(1);
-		v0.xyz = p0;
-		v0.rgba = color;
-		v1.xyz = p1;
-		v1.rgba = color;
-		line->unlock();
-	}
-
-	enum {
-		GIZMO_SIZE = 100
-	};
-}
+enum {
+	GIZMO_SIZE = 100
+};
 
 //--------------------------------------------------------------------------
 // class MoveGizmo, editor manipulator

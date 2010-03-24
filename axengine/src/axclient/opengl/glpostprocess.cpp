@@ -247,7 +247,7 @@ AX_BEGIN_NAMESPACE
 
 	void GLpostprocess::maskVolume(Vector3 volume[8]) {
 		MeshPrim::setupHexahedron(m_boxVolume, volume);
-		m_boxVolume->setMaterial(m_matMaskVolume);
+		m_boxVolume->setMaterial(m_matMaskVolume.get());
 		glPrimitiveManager->cachePrimitive(m_boxVolume);
 		GLprimitive *glprim = glPrimitiveManager->getPrimitive(m_boxVolume->getCachedId());
 		glprim->update();
@@ -272,7 +272,7 @@ AX_BEGIN_NAMESPACE
 		m_matShadowMask->setFeature(0, front);
 		m_matShadowMask->setFeature(1, false);
 
-		m_boxVolume->setMaterial(m_matShadowMask);
+		m_boxVolume->setMaterial(m_matShadowMask.get());
 		glPrimitiveManager->cachePrimitive(m_boxVolume);
 		GLprimitive *glprim = glPrimitiveManager->getPrimitive(m_boxVolume->getCachedId());
 		glprim->update();
@@ -302,7 +302,7 @@ AX_BEGIN_NAMESPACE
 		m_matShadowMask->setFeature(0, front);
 		m_matShadowMask->setFeature(1, true);
 
-		m_boxVolume->setMaterial(m_matShadowMask);
+		m_boxVolume->setMaterial(m_matShadowMask.get());
 		glPrimitiveManager->cachePrimitive(m_boxVolume);
 		GLprimitive *glprim = glPrimitiveManager->getPrimitive(m_boxVolume->getCachedId());
 		glprim->update();
@@ -320,7 +320,7 @@ AX_BEGIN_NAMESPACE
 		m_matShadowBlur->setParameter("g_sampleOffsets", 32 * 2, sSampleOffsets[0].c_ptr());
 		m_matShadowBlur->setParameter("g_sampleWeights", 32, sSampleWeights);
 
-		m_screenQuad->setMaterial(m_matShadowBlur);
+		m_screenQuad->setMaterial(m_matShadowBlur.get());
 
 		const Rect &r = gCamera->getViewRect();
 		updateScreenQuad(r);

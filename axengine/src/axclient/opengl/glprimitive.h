@@ -45,7 +45,7 @@ AX_BEGIN_NAMESPACE
 
 	public:
 		Material *m_overloadMaterial;
-		const InstancePrim::ParamSeq *m_instanceParams;
+		const InstancePrim::Param *m_instanceParams;
 		GLindexbuffer *m_overloadedIndexbuffer;
 		int m_activeIndexes;
 
@@ -235,7 +235,7 @@ AX_BEGIN_NAMESPACE
 
 	private:
 		int m_instanced;
-		InstancePrim::ParamSeq m_params;
+		const InstancePrim::Param *m_params;
 	};
 
 	//--------------------------------------------------------------------------

@@ -7,6 +7,7 @@
 #include "sampler_p.h"
 #include "texture_p.h"
 #include "material_p.h"
+#include "vertexbuffer.h"
 #include "primitive_p.h"
 
 AX_BEGIN_NAMESPACE

@@ -1150,9 +1150,9 @@ void TextPrim::initSimple(const Vector3 &xyz, Rgba color, const String &text, bo
 	m_aspect = 1.0f;
 
 	if (fixedWidth)
-		m_font = g_consoleFont;
+		m_font = g_consoleFont.get();
 	else
-		m_font = g_defaultFont;
+		m_font = g_defaultFont.get();
 }
 
 void TextPrim::clear()
@@ -1288,7 +1288,7 @@ void  ChunkPrim::setColorTexture(Texture *color_texture)
 
 Texture *ChunkPrim::getColorTexture()
 {
-	return m_colorTexture;
+	return m_colorTexture.get();
 }
 
 void ChunkPrim::setNormalTexture(Texture *dsdt)
@@ -1298,7 +1298,7 @@ void ChunkPrim::setNormalTexture(Texture *dsdt)
 
 Texture *ChunkPrim::getNormalTexture()
 {
-	return m_normalTexture;
+	return m_normalTexture.get();
 }
 
 void ChunkPrim::setChunkRect(const Vector4 &rect)
@@ -1483,12 +1483,14 @@ void RefPrim::unlockIndexes()
 InstancePrim::InstancePrim(Hint hint) : Primitive(hint)
 {
 	m_type = InstancingType;
-	m_instanced = nullptr;
-	m_params.reserve(16);
+	m_instanced = 0;
+	m_numInstances = 0;
+	m_params = 0;
 }
 
 InstancePrim::~InstancePrim()
 {
+	SafeDeleteArray(m_params);
 }
 
 Primitive *InstancePrim::getInstanced() const
@@ -1496,30 +1498,34 @@ Primitive *InstancePrim::getInstanced() const
 	return m_instanced;
 }
 
-void InstancePrim::setInstanced(Primitive *instanced)
+void InstancePrim::init(Primitive *instanced, int numInstances)
 {
 	m_instanced = instanced;
 	m_isDirty = true;
 	setMaterial(instanced->getMaterial());
+
+	m_numInstances = numInstances;
+	m_params = new Param[numInstances];
 }
 
-void InstancePrim::addInstance(const Param &param)
+void InstancePrim::setInstance(int index, const Param &param)
 {
-	m_params.push_back(param);
+	AX_ASSERT(index >= 0 && index < m_numInstances);
+	m_params[index] = (param);
 	m_isDirty = true;
 }
 
-void InstancePrim::addInstance(const Matrix &mtx, const Vector4 &user)
+void InstancePrim::setInstance(int index, const Matrix &mtx, const Vector4 &user)
 {
 	Param param;
 	param.worldMatrix = mtx;
 	param.userDefined = user;
-	addInstance(param);
+	setInstance(index, param);
 }
 
 int InstancePrim::getNumInstance() const
 {
-	return s2i(m_params.size());
+	return m_numInstances;
 }
 
 const InstancePrim::Param &InstancePrim::getInstance(int index) const
@@ -1528,22 +1534,10 @@ const InstancePrim::Param &InstancePrim::getInstance(int index) const
 	return m_params[index];
 }
 
-const InstancePrim::ParamSeq &InstancePrim::getAllInstances() const
+const InstancePrim::Param *InstancePrim::getAllInstances() const
 {
 	return m_params;
 }
-
-void InstancePrim::clearAllInstances()
-{
-	m_params.clear();
-}
-
-void InstancePrim::setInstances(const ParamSeq &params)
-{
-	m_params = params;
-}
-
-
 
 //--------------------------------------------------------------------------
 // class PrimitiveManager

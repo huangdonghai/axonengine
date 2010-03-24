@@ -246,10 +246,10 @@ namespace { namespace Internal {
 		MaterialReader(const hkxMaterial *hkmat) : m_hkmat(hkmat)
 		{}
 
-		Texture *getLightmap()
+		TexturePtr getLightmap()
 		{
 			if (!m_hkmat) {
-				return nullptr;
+				return TexturePtr();
 			}
 
 			// find lightmap
@@ -267,7 +267,7 @@ namespace { namespace Internal {
 					continue;
 				}
 
-				Texture *tex = convert(stage);
+				TexturePtr tex = convert(stage);
 
 				if (!tex) {
 					continue;
@@ -276,7 +276,7 @@ namespace { namespace Internal {
 				return tex;
 			}
 
-			return nullptr;
+			return TexturePtr();
 		}
 
 		void parseMaterialName(const char *hkname, String &axname, StringPairSeq &keyvalues)
@@ -543,12 +543,11 @@ namespace { namespace Internal {
 			return result;
 		}
 
-		Texture *convert(hkxMaterial::TextureStage *stage)
+		TexturePtr convert(hkxMaterial::TextureStage *stage)
 		{
 			String fn = getTextureFilename(stage);
 
-			Texture *tex = Texture::load(fn);
-			return tex;
+			return Texture::load(fn);
 		}
 
 	private:
@@ -755,7 +754,7 @@ int HavokRig::getBoneCount()
 	return m_havokSkeleton->m_numBones;
 }
 
-HavokRig::HavokRig(HavokPackage *package) : HavokPackable(package), m_havokSkeleton(0)
+HavokRig::HavokRig(const HavokPackagePtr &package) : HavokPackable(package), m_havokSkeleton(0)
 {
 	if (m_package) m_havokSkeleton = m_package->getSkeleton();
 }
@@ -893,7 +892,7 @@ public:
 		const HavokPackage::MaterialMap *mm = m_package->findMaterialMap(m_section->m_material);
 #endif
 		m_renderMesh->setMaterial(mm->m_axMat.get());
-		m_renderMesh->setLightMap(mm->m_lightMap);
+		m_renderMesh->setLightMap(mm->m_lightMap.get());
 
 		if (!haveTangents) {
 			m_renderMesh->computeTangentSpaceSlow();
@@ -1408,7 +1407,6 @@ HavokModel::HavokModel(HavokPackage *package) : RenderEntity(kModel)
 	m_package = package;
 	m_pose = nullptr;
 	m_isMeshDataInited = false;
-	SafeIncRef(m_package);
 }
 
 HavokModel::HavokModel(const String &name) : RenderEntity(kModel)
@@ -1422,8 +1420,6 @@ HavokModel::~HavokModel()
 {
 	if (m_package)
 		m_package->clearDynamicMeshes(m_mestDataList);
-
-	SafeDecRef(m_package);
 }
 
 BoundingBox HavokModel::getLocalBoundingBox()

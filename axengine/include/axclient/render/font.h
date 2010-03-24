@@ -149,6 +149,8 @@ private:
 	int m_width, m_height;
 };
 
+class Font2 {};
+
 AX_END_NAMESPACE
 
 #endif // AX_RENDER_FONT_H

@@ -43,7 +43,7 @@ AX_BEGIN_NAMESPACE
 		virtual void unbind(PhysicsWorld *world);
 
 	protected:
-		HavokPackage *m_package;
+		HavokPackagePtr m_package;
 		hkpRigidBody *m_havokRigid;
 		Matrix m_matrix;
 		MotionType m_motionType;

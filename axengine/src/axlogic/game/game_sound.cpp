@@ -66,7 +66,7 @@ void GameSound::activeSound( bool isActive )
 		if (m_looping) {
 			looping = Looping_Forever;
 		}
-		getSoundEntity()->playSound(SndChannelId_Ambient, m_sfx, looping, m_minDist, m_maxDist);
+		getSoundEntity()->playSound(SndChannelId_Ambient, m_sfx.get(), looping, m_minDist, m_maxDist);
 	}
 }
 

@@ -19,7 +19,7 @@ read the license and understand and accept it fully.
 #include "tree_manager.h"
 
 AX_BEGIN_NAMESPACE
-	typedef TreeEntity RenderTree;
+typedef TreeEntity RenderTree;
 AX_END_NAMESPACE
 
 #endif // AX_CONFIG_OPTION_USE_SPEEDTREE_40

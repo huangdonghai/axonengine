@@ -165,9 +165,9 @@ void OutdoorEnv::setSkyBoxTexture(const String &matname)
 		}
 		TexturePtr tex = Texture::load(matname + "_34");
 		AX_ASSERT(tex);
-		skymat->setTexture(SamplerType::Diffuse, tex);
+		skymat->setTexture(SamplerType::Diffuse, tex.get());
 
-		m_skybox34->setMaterial(skymat);
+		m_skybox34->setMaterial(skymat.get());
 	}
 	{
 		MaterialPtr skymat = m_skybox5->getMaterial();
@@ -176,9 +176,9 @@ void OutdoorEnv::setSkyBoxTexture(const String &matname)
 		}
 		TexturePtr tex = Texture::load(matname + "_5");
 		AX_ASSERT(tex);
-		skymat->setTexture(SamplerType::Diffuse, tex);
+		skymat->setTexture(SamplerType::Diffuse, tex.get());
 
-		m_skybox5->setMaterial(skymat);
+		m_skybox5->setMaterial(skymat.get());
 	}
 }
 
@@ -276,7 +276,7 @@ void OutdoorEnv::createSkyDome()
 	m_skyNishitaMat->setTexture(SamplerType::Specular, miert->getTexture());
 	m_skyNishitaGenMat = 0; //Material::loadUnique("_skyNishitaGen");
 
-	m_skydome->setMaterial(m_skyNishitaMat);
+	m_skydome->setMaterial(m_skyNishitaMat.get());
 }
 
 void OutdoorEnv::createOceanMesh()
@@ -370,7 +370,7 @@ void OutdoorEnv::createOceanMesh()
 	AX_ASSERT(idxes - oldidxes == numidxes);
 
 	MaterialPtr mat = Material::load("ocean");
-	m_oceanMesh->setMaterial(mat);
+	m_oceanMesh->setMaterial(mat.get());
 }
 
 void OutdoorEnv::createOceanGrid()
@@ -503,7 +503,7 @@ void OutdoorEnv::genNishitaUpdateScene(QueuedScene *qscene)
 	scene->camera.setTarget(m_skyNishitaRt);
 	scene->camera.setOverlay(0, 0, 128, 64);
 
-	MeshPrim *quad = MeshPrim::createScreenQuad(Primitive::HintFrame, Rect(0,0,128,64), Rgba::White, m_skyNishitaGenMat);
+	MeshPrim *quad = MeshPrim::createScreenQuad(Primitive::HintFrame, Rect(0,0,128,64), Rgba::White, m_skyNishitaGenMat.get());
 	scene->addInteraction(nullptr, quad);
 }
 

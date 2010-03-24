@@ -124,13 +124,13 @@ public:
 
 	void incref(handle_t h)
 	{
-		Item *item = reinterpret_cast<Item *>(h);
+		Item *item = h;
 		item->m_ref.incref();
 	}
 
 	void decref(handle_t h)
 	{
-		Item *item = reinterpret_cast<Item *>(h);
+		Item *item = h;
 
 		if (item->m_ref.decref() == 0) {
 			SCOPE_LOCK;
@@ -141,7 +141,7 @@ public:
 
 	const T &getValue(handle_t h)
 	{
-		Item *item = reinterpret_cast<Item *>(h);
+		Item *item = h;
 		return item->m_value;
 	}
 

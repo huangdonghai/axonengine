@@ -31,7 +31,7 @@ class PhysicsRagdoll;
 class HavokPackable {
 public:
 	HavokPackable() {}
-	HavokPackable(HavokPackage *package) : m_package(package) {}
+	HavokPackable(const HavokPackagePtr &package) : m_package(package) {}
 	virtual ~HavokPackable() {}
 
 protected:
@@ -91,7 +91,7 @@ public:
 class HavokRig : public HavokPackable {
 public:
 	HavokRig(const String &name);
-	HavokRig(HavokPackage *package);
+	HavokRig(const HavokPackagePtr &package);
 	virtual ~HavokRig() {}
 
 	int findBoneIndexByName(const char *BoneName);
@@ -134,7 +134,7 @@ public:
 	struct MaterialMap {
 		hkxMaterial *m_hkMat;
 		MaterialPtr m_axMat;
-		Texture *m_lightMap;
+		TexturePtr m_lightMap;
 	};
 	typedef Sequence<MaterialMap*>	MaterialMaps;
 
@@ -227,7 +227,7 @@ protected:
 	void applyPose();
 
 private:
-	HavokPackage *m_package;
+	HavokPackagePtr m_package;
 	HavokPose *m_pose;
 	bool m_poseDirty;
 	mutable BoundingBox m_poseBbox;

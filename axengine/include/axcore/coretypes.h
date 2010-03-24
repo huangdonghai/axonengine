@@ -194,6 +194,7 @@ AX_BEGIN_NAMESPACE
 	struct handle_t {
 		void *data;
 
+		handle_t() {}
 		handle_t(void *d) : data(d) {}
 
 		template <class T>

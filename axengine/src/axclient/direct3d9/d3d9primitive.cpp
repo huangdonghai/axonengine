@@ -713,7 +713,7 @@ void D3D9instance::update()
 	AX_ASSERT(gi);
 
 	m_instanced = d3d9PrimitiveManager->cachePrimitive(gi->getInstanced());
-	m_buffer.setData(gi->getAllInstances());
+	m_buffer.setData(gi->getNumInstance(), gi->getAllInstances());
 	m_src->clearDirty();
 }
 

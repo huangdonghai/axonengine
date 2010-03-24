@@ -358,7 +358,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 	static inline void testMesh(MeshPrim *mesh) {
-		GLrender::bindVertexBuffer(VertexType::kVertex, 0, (uintptr_t)mesh->getVertexesPointer());
+		GLrender::bindVertexBuffer(VertexType::kMesh, 0, (uintptr_t)mesh->getVertexesPointer());
 		GLrender::checkErrors();
 
 		int count = mesh->getActivedIndexes();

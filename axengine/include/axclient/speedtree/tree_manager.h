@@ -18,7 +18,7 @@ public:
 	TreeManager();
 	~TreeManager();
 
-	TreeAsset *findAsset(const String &name, int seed);
+	TreeAssetPtr findAsset(const String &name, int seed);
 
 	void addAsset(TreeAsset *wrapper);
 	void removeAsset(TreeAsset *wrapper);

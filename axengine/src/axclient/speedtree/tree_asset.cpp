@@ -597,16 +597,16 @@ void TreeAsset::issueToQueue(TreeEntity *actor, QueuedScene *qscene)
 #endif
 }
 
+#if 0
 static inline void addInstance(QueuedScene *qscene, InstancePrim *gi)
 {
 	InstancePrim *cloned = new InstancePrim(Primitive::HintFrame);
-	cloned->setInstanced(gi->getInstanced());
+	cloned->init(gi->getInstanced());
 	cloned->setInstances(gi->getAllInstances());
 
 	qscene->addInteraction(nullptr, cloned);
 }
 
-#if 0
 void TreeAsset::issueToQueueInstancing(QueuedScene *qscene) {
 	if (!r_speedtree->getBool()) {
 		return;

@@ -198,7 +198,7 @@ void RenderWidget::drawFrameNum()
 	rect.y = rv.getViewRect().height - 24;
 	rect.width = 120;
 	rect.height = g_consoleFont->getHeight();
-	TextPrim *prim = TextPrim::createText(Primitive::HintFrame, rect, g_consoleFont, text, Rgba::Green);
+	TextPrim *prim = TextPrim::createText(Primitive::HintFrame, rect, g_consoleFont.get(), text, Rgba::Green);
 
 	g_renderSystem->beginScene(rv);
 	g_renderSystem->addToScene(prim);

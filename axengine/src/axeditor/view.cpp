@@ -23,7 +23,7 @@ View::View(Context *context)
 	, m_cursorPos(0.0f, 0.0f, 0.0f)
 	, m_title("untitled")
 {
-	m_font = g_miniFont;
+	m_font = g_miniFont.get();
 #if 0
 	m_eyeAxis.setIdentity();
 #else

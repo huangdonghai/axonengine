@@ -205,8 +205,9 @@ void QueuedScene::findInstance()
 
 		Primitive *prim = ia->primitive;
 		Interaction *head = prim->getHeadInteraction();
+		int numChained = prim->getNumChainedInteractions();
 
-		if (!head->primNext) {
+		if (numChained < 2) {
 			interactions[numInteractions++] = ia;
 			continue;
 		}
@@ -214,15 +215,20 @@ void QueuedScene::findInstance()
 		numInstancedIA++;
 
 		InstancePrim *geoins = new InstancePrim(Primitive::HintFrame);
-		geoins->setInstanced(head->primitive);
+		geoins->init(head->primitive, numChained);
 
-		for ( ia = head; ia; ia = ia->primNext) {
+		int index = 0;
+		for (ia = head; ia; ia = ia->primNext, index++) {
 			if (!ia->queuedEntity) {
+#if 0
 				interactions[numInteractions++] = ia;
+#else
+				geoins->setInstance(index, Matrix::getIdentity(), Vector4::One);
+#endif
 				continue;
 			}
 
-			geoins->addInstance(ia->queuedEntity->matrix, ia->queuedEntity->instanceParam);
+			geoins->setInstance(index, ia->queuedEntity->matrix, ia->queuedEntity->instanceParam);
 			ia->instanced = true;
 		}
 

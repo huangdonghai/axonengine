@@ -294,7 +294,7 @@ void D3D9Postprocess::maskVolume(Vector3 volume[8]) {
 
 	PostMesh::setupHexahedron(m_hexahedron, volume);
 	m_mtrMaskVolume->setFeature(0, false);
-	d3d9Draw->drawPostUP(m_mtrMaskVolume, m_hexahedron);
+	d3d9Draw->drawPostUP(m_mtrMaskVolume.get(), m_hexahedron);
 
 	d3d9StateManager->SetRenderState(D3DRS_STENCILZFAIL, D3DSTENCILOP_KEEP);
 	d3d9StateManager->SetRenderState(D3DRS_STENCILPASS, D3DSTENCILOP_KEEP);
@@ -318,7 +318,7 @@ void D3D9Postprocess::maskVolumeTwoSides(Vector3 volume[8])
 
 	m_mtrMaskVolume->setFeature(0, true);
 	PostMesh::setupHexahedron(m_hexahedron, volume);
-	d3d9Draw->drawPostUP(m_mtrMaskVolume, m_hexahedron);
+	d3d9Draw->drawPostUP(m_mtrMaskVolume.get(), m_hexahedron);
 
 	d3d9StateManager->SetRenderState(D3DRS_TWOSIDEDSTENCILMODE, FALSE);
 	d3d9StateManager->SetRenderState(D3DRS_STENCILZFAIL, D3DSTENCILOP_KEEP);
@@ -563,7 +563,7 @@ void D3D9Postprocess::drawLight(Vector3 volume[8], QueuedLight *light)
 	m_mtrPointLight->setParameter("s_lightPos", 4, lightpos.c_ptr());
 	m_mtrPointLight->setParameter("s_lightMatrix", 16, light->projMatrix.getTranspose().c_ptr());
 
-	d3d9Draw->drawPostUP(m_mtrPointLight, m_hexahedron);
+	d3d9Draw->drawPostUP(m_mtrPointLight.get(), m_hexahedron);
 }
 
 void D3D9Postprocess::drawLightShadowed(Vector3 volume[8], QueuedLight *light, const RenderCamera &shadowCamera)
@@ -600,7 +600,7 @@ void D3D9Postprocess::drawLightShadowed(Vector3 volume[8], QueuedLight *light, c
 #endif
 	m_mtrPointLight->setPixelToTexel(width, height);
 
-	d3d9Draw->drawPostUP(m_mtrPointLight, m_hexahedron);
+	d3d9Draw->drawPostUP(m_mtrPointLight.get(), m_hexahedron);
 }
 #undef F_MASKFRONT
 #undef F_SPECULAR
@@ -684,7 +684,7 @@ void D3D9Postprocess::drawGlobalLight( Vector3 volume[8], QueuedLight *light )
 	m_mtrGlobalLight->setParameter("s_envColor", 3, light->envColor.c_ptr());
 	m_mtrGlobalLight->setParameter("s_lightPos", 4, lightpos.c_ptr());
 
-	d3d9Draw->drawPostUP(m_mtrGlobalLight, m_hexahedron);
+	d3d9Draw->drawPostUP(m_mtrGlobalLight.get(), m_hexahedron);
 }
 #undef F_SHADOWED
 #undef F_DIRECTION_LIGHT

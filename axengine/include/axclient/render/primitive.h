@@ -72,6 +72,7 @@ public:
 
 	void interactionChain(Interaction *last, int chainId);
 	Interaction *getHeadInteraction() const { return m_headInteraction; }
+	int getNumChainedInteractions() const { return m_numChainedInteractions; }
 
 protected:
 	const Hint m_hint;
@@ -94,6 +95,7 @@ protected:
 
 	int m_chainId;
 	Interaction *m_headInteraction;
+	int m_numChainedInteractions;
 };
 
 inline void Primitive::interactionChain(Interaction *last, int chainId)
@@ -101,11 +103,13 @@ inline void Primitive::interactionChain(Interaction *last, int chainId)
 	if (m_chainId != chainId) {
 		m_headInteraction = last;
 		m_chainId = chainId;
+		m_numChainedInteractions = 1;
 		return;
 	}
 
 	last->primNext = m_headInteraction;
 	m_headInteraction = last;
+	m_numChainedInteractions++;
 }
 
 inline Material *Primitive::getMaterial() const
@@ -512,25 +516,22 @@ public:
 		Vector4 userDefined;		// user defined param
 	};
 
-	typedef Sequence<Param>	ParamSeq;
-
 	InstancePrim(Hint hint);
 	virtual ~InstancePrim();
 
 	Primitive *getInstanced() const;
-	void setInstanced(Primitive *instanced);
+	void init(Primitive *instanced, int numInstances);
 
-	void clearAllInstances();
-	void addInstance(const Param &param);
-	void addInstance(const Matrix &mtx, const Vector4 &user);
-	void setInstances(const ParamSeq &params);
+	void setInstance(int index, const Param &param);
+	void setInstance(int index, const Matrix &mtx, const Vector4 &user);
 	int getNumInstance() const;
 	const Param &getInstance(int index) const;
-	const ParamSeq &getAllInstances() const;
+	const Param *getAllInstances() const;
 
 private:
+	int m_numInstances;
 	Primitive *m_instanced;
-	ParamSeq m_params;
+	Param* m_params;
 };
 
 
@@ -586,10 +587,153 @@ private:
 	CopyOnWritePointer<PrimitiveData> m_data;
 };
 
+class LinePrimitive : public Primitive2
+{
+public:
+	LinePrimitive(Hint hint);
+	~LinePrimitive();
+
+	void init(int numverts, int numidxes);
+	void clear();
+
+	DebugVertex *lockVertexes();
+	void unlockVertexes();
+
+	ushort_t *lockIndexes();
+	void unlockIndexes();
+
+	void setLineWidth(float line_width);
+};
+
 class MeshPrimitive : public Primitive2
 {
 public:
+	MeshPrimitive(Hint hint);
+	virtual ~MeshPrimitive();
+
+	void init(int numverts, int numidxes);
+	void clear();
+
+	MeshVertex *lockVertexes();
+	void unlockVertexes();
+
+	ushort_t *lockIndexes();
+	void unlockIndexes();
+
+	LinePrimitive genDebugTangent(float len) const;
+	LinePrimitive genDebugNormal(float len) const;
+
+	void computeTangentSpace();
+	void computeTangentSpaceSlow();
+
+	bool isStriped() const;
+	void setStriped(bool val);
 };
+
+class ChunkPrimitive : public Primitive2
+{
+public:
+	enum {
+		MAX_LAYERS = 4
+	};
+	typedef ChunkVertex VertexType;
+
+	struct Layer {
+		Texture2 alphaTex;
+		Material2 detailMat;
+		Vector2 scale;
+		bool isVerticalProjection;
+	};
+
+	ChunkPrimitive(Hint hint);
+	virtual ~ChunkPrimitive();
+
+	void init(int numverts, int numindexes);
+	void clear();
+
+	ChunkVertex *lockVertexes();
+	void unlockVertexes();
+
+	ushort_t *lockIndexes();
+	void unlockIndexes();
+
+	// terrain properties
+	void setTerrainRect(const Vector4 &rect);
+
+	// zone properties
+	void setZoneRect(const Vector4 &rect);
+	void setColorTexture(const Texture2 &color_texture);
+	void setNormalTexture(const Texture2 &normal);
+
+	// chunk properties
+	void setChunkRect(const Vector4 &rect);
+	void setNumLayers(int n);
+	void setLayers(int index, const Texture2 &alpha, const Material2 &detail, const Vector2 &scale, bool isVerticalProjection = false);
+	void setLayerVisible(bool visible);
+	void setIsZonePrim(bool val);
+};
+
+class TextPrimitive : public Primitive2
+{
+public:
+	enum Format {
+		// style flags
+		Bold = 1,
+		Underline = 2,
+		Italic = 4,
+		DropShadow = 8,
+		Blink = 0x10,
+		ScaleByHorizon = 0x20,		// stretch to full target rect, so don't need align
+		ScaleByVertical = 0x40,
+	};
+
+	// horizon align
+	enum HorizonAlign {
+		Center, Left, Right
+	};
+
+	// vertical align
+	enum VerticalAlign {
+		VCenter, Top, Bottom
+	};
+
+	TextPrimitive(Hint hint);
+	virtual ~TextPrimitive();
+
+//	void init(const Rect &rect, Rgba color, float aspect, int format, const Font2 &font, const String &text);
+	void initSimple(const Vector3 &xyz, Rgba color, const String &text, bool fixedWidth = true);
+	void clear();
+
+	void setHorizonAlign(HorizonAlign align);
+	void setVerticalAlign(VerticalAlign align);
+};
+
+class GroupPrimitive : public Primitive2
+{
+public:
+	GroupPrimitive(Hint hint);
+	virtual ~GroupPrimitive();
+
+	void addPrimitive(Primitive2 *prim, bool needfree = true);
+	void clear();
+};
+
+class RefPrimitive : public Primitive2
+{
+public:
+	RefPrimitive(Hint hint);
+	virtual ~RefPrimitive();
+
+	Primitive *getRefered() const;
+	void setRefered(Primitive *refered);
+
+	void init(Primitive *refered, int numindexes = 0);
+
+	ushort_t *lockIndexes();
+	void unlockIndexes();
+};
+
+class InstancePrimitive : public Primitive2 {};
 
 AX_END_NAMESPACE
 

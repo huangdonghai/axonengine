@@ -13,7 +13,8 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-class D3D9Texture : public Texture {
+class D3D9Texture : public Texture
+{
 public:
 	friend class D3D9texturemanager;
 

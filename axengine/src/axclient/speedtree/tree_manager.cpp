@@ -22,13 +22,12 @@ TreeManager::~TreeManager()
 {
 }
 
-TreeAsset *TreeManager::findAsset(const String &name, int seed)
+TreeAssetPtr TreeManager::findAsset(const String &name, int seed)
 {
 	String key = TreeAsset::genKey(name, seed);
 	TreeAssetDict::iterator it = m_treeAssetDict.find(key);
 
 	if (it != m_treeAssetDict.end()) {
-		it->second->incref();
 		return it->second;
 	}
 
@@ -37,7 +36,6 @@ TreeAsset *TreeManager::findAsset(const String &name, int seed)
 
 	if (!v) {
 		delete result;
-		m_defaulted->incref();
 		return m_defaulted;
 	}
 

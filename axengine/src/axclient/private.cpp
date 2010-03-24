@@ -32,6 +32,7 @@ RenderQueue *g_queues[2];
 ShaderMacro g_shaderMacro;
 Uniforms g_uniforms;
 IRenderDriver *g_renderDriver;
+RenderApi *g_renderApi;
 
 TargetManager *g_targetManager;
 ShaderManager *g_shaderManager;

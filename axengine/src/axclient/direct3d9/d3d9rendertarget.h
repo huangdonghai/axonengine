@@ -31,9 +31,9 @@ public:
 	virtual void unbind();
 	virtual Texture *getTexture();
 	virtual bool isTexture() { return true;}
-	virtual bool isColorFormat() { return m_texture->getFormat().isColor(); }
-	virtual bool isDepthFormat() { return m_texture->getFormat().isDepth(); }
-	virtual bool isStencilFormat() { return m_texture->getFormat().isStencil(); }
+	virtual bool isColorFormat() { return m_d3d9texture->getFormat().isColor(); }
+	virtual bool isDepthFormat() { return m_d3d9texture->getFormat().isDepth(); }
+	virtual bool isStencilFormat() { return m_d3d9texture->getFormat().isStencil(); }
 
 	virtual void attachDepth(RenderTarget *depth);
 	virtual RenderTarget *getDepthAttached() const { return m_depthTarget; }
@@ -63,7 +63,8 @@ protected:
 private:
 	AllocHint m_storeHint;
 	TexFormat m_format;
-	D3D9Texture *m_texture;
+	TexturePtr m_texture;
+	D3D9Texture *m_d3d9texture;
 	IDirect3DSurface9 *m_surface;
 	int m_width, m_height;
 

@@ -1161,5 +1161,14 @@ void FileSystem::checkGamePath()
 	fclose(f);
 }
 
+void FileSystem::queAsioRead( AsioRead *entry )
+{
+
+}
+
+void FileSystem::flushAsio()
+{
+
+}
 AX_END_NAMESPACE
 

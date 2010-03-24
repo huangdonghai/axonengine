@@ -25,7 +25,8 @@ D3D9Target::D3D9Target(int width, int height, TexFormat format, bool pooled)
 
 	m_storeHint = RenderTarget::Free;
 
-	m_texture = nullptr;
+	m_texture = 0;
+	m_d3d9texture = 0;
 	m_lastFrameUsed = 0;
 
 	m_width = width;
@@ -45,7 +46,8 @@ D3D9Target::D3D9Target(int width, int height, TexFormat format, bool pooled)
 		m_texture->initialize(format, width, height, Texture::IF_RenderTarget);
 		g_assetManager->addAsset(Asset::kTexture, texname, m_texture);
 #else
-		m_texture = static_cast<D3D9Texture*>(&*Texture::create(texname, format, m_width, m_height, Texture::IF_RenderTarget));
+		m_texture = Texture::create(texname, format, m_width, m_height, Texture::IF_RenderTarget);
+		m_d3d9texture = static_cast<D3D9Texture*>(m_texture.get());
 #endif
 	} else {
 		m_texture = 0;
@@ -58,7 +60,6 @@ D3D9Target::D3D9Target(int width, int height, TexFormat format, bool pooled)
 D3D9Target::~D3D9Target()
 {
 	SAFE_RELEASE(m_surface);
-	SafeDecRef(m_texture);
 }
 
 Rect D3D9Target::getRect()
@@ -206,7 +207,7 @@ IDirect3DSurface9 *D3D9Target::getSurface()
 	if (!m_isPooled) {
 		if (!m_surface) {
 			HRESULT hr;
-			V(m_texture->getObject()->GetSurfaceLevel(0, &m_surface));
+			V(m_d3d9texture->getObject()->GetSurfaceLevel(0, &m_surface));
 		}
 		return m_surface;
 	}
@@ -222,7 +223,7 @@ IDirect3DSurface9 *D3D9Target::getSurface()
 Texture *D3D9Target::getTexture()
 {
 	if (!m_isPooled)
-		return m_texture;
+		return m_d3d9texture;
 
 	if (!m_realTarget) {
 		Errorf("need alloc a real target for pooled target");

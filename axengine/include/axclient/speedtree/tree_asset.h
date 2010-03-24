@@ -81,6 +81,8 @@ private:
 	TreeDict m_treeActors;
 };
 
+AX_DECLARE_REFPTR(TreeAsset);
+
 inline String TreeAsset::genKey(const String &filename, int seed) {
 	String result;
 	StringUtil::sprintf(result, "%s_%d", filename.c_str(), seed);

@@ -171,6 +171,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 	void GLgeometry::drawElementsInstanced() {
+#if 0
 		GLindexbuffer *ib = &m_indexBuffer;
 
 		if (m_overloadedIndexbuffer) {
@@ -179,7 +180,7 @@ AX_BEGIN_NAMESPACE
 
 		ib->bind();
 
-		const InstancePrim::ParamSeq &params = *m_instanceParams;
+		const InstancePrim::Param *params = m_instanceParams;
 
 		for (size_t i = 0; i < params.size(); i++) {
 			const InstancePrim::Param &param = params[i];
@@ -191,6 +192,7 @@ AX_BEGIN_NAMESPACE
 
 			ib->drawElementsWithoutBind(m_elementType);
 		}
+#endif
 	}
 
 
@@ -627,13 +629,13 @@ AX_BEGIN_NAMESPACE
 			ChunkPrim::Layer &l = m_layers[i];
 			l.detailMat->setTexture(SamplerType::TerrainColor, m_colorTexture);
 			l.detailMat->setTexture(SamplerType::TerrainNormal, m_normalTexture);
-			l.detailMat->setTexture(SamplerType::LayerAlpha, l.alphaTex);
+			l.detailMat->setTexture(SamplerType::LayerAlpha, l.alphaTex.get());
 
 			l.detailMat->setFeature(0, l.isVerticalProjection);
 			l.detailMat->setFeature(1, combine && (i == 0)); // if is first layer, set first layer flag
 
 			AX_SU(g_layerScale, l.scale);
-			GLrender::draw(l.detailMat, Technique::Layer, this);
+			GLrender::draw(l.detailMat.get(), Technique::Layer, this);
 		}
 	}
 
@@ -776,7 +778,7 @@ AX_BEGIN_NAMESPACE
 	void GLinstance::draw(Technique tech) {
 		GLprimitive *prim = glPrimitiveManager->getPrimitive(m_instanced);
 
-		prim->m_instanceParams = &m_params;
+		prim->m_instanceParams = m_params;
 		prim->draw(tech);
 		prim->m_instanceParams = 0;
 	}

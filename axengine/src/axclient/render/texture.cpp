@@ -139,7 +139,7 @@ TexturePtr TextureManager::loadTexture(const String &texname, Texture::InitFlags
 	} else {
 		// pending to render thread
 		LoadCmd cmd;
-		cmd.texture = tex;
+		cmd.texture = tex.get();
 		cmd.texName = key;
 		cmd.initFlags = flags;
 		cmd.format = 0;
@@ -150,7 +150,7 @@ TexturePtr TextureManager::loadTexture(const String &texname, Texture::InitFlags
 	}
 
 	// add to hash table
-	m_textureDict[key] = tex;
+	m_textureDict[key] = tex.get();
 	tex->m_key = key;
 
 	return tex;
@@ -172,7 +172,7 @@ TexturePtr TextureManager::createTexture(const String &debugname, TexFormat form
 	} else {
 		// pending to render thread
 		LoadCmd cmd;
-		cmd.texture = tex;
+		cmd.texture = tex.get();
 		cmd.initFlags = flags;
 		cmd.format = format;
 		cmd.width = width;
@@ -181,7 +181,7 @@ TexturePtr TextureManager::createTexture(const String &debugname, TexFormat form
 		m_loadCmdList.push_back(cmd);
 	}
 
-	m_textureDict[key] = tex;
+	m_textureDict[key] = tex.get();
 	tex->m_key = key;
 
 	return tex;

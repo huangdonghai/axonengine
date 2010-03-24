@@ -43,7 +43,7 @@ public:
 
 
 private:
-	TreeAsset *m_treeAsset;
+	RefPtr<TreeAsset> m_treeAsset;
 	Vector4 m_instanceParam;
 };
 

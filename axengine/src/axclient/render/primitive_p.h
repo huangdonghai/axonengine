@@ -84,7 +84,7 @@ public:
 	}
 
 	template <class T>
-	static T *allocType<T>(Primitive2::Hint hint, int num = 1)
+	static T *allocType(Primitive2::Hint hint, int num = 1)
 	{
 		if (hint == Primitive2::HintFrame) {
 			return g_renderQueue->allocType<T>(num);
@@ -120,7 +120,7 @@ protected:
 	int m_activedIndexes;
 };
 
-class LinePF : public PrimitiveData
+class LineData : public PrimitiveData
 {
 public:
 
@@ -132,8 +132,99 @@ private:
 	float m_lineWidth;
 };
 
-class MeshPF : public PrimitiveData
-{};
+class MeshData : public PrimitiveData
+{
+public:
+private:
+	int m_numVertexes;
+	MeshVertex *m_vertexes;
+	int m_numIndexes;
+	ushort_t *m_indexes;
+	bool m_isStriped;
+};
+
+class TextData : public PrimitiveData
+{
+public:
+private:
+	Rect m_rect;				// draw on this rect
+	Vector3 m_position;			// for simple text
+	bool m_isSimpleText;
+	Rgba m_color;				// text color
+	float m_aspect;
+	int m_format;				// format flags
+	Font *m_font;				// font used
+	String m_text;				// string to draw
+//	HorizonAlign m_horizonAlign;
+//	VerticalAlign m_verticalAlign;
+};
+
+class ChunkData : public PrimitiveData
+{
+public:
+	enum {
+		MAX_LAYERS = 4
+	};
+
+	struct Layer {
+		Texture2 alphaTex;
+		Material2 detailMat;
+		Vector2 scale;
+		bool isVerticalProjection;
+	};
+
+private:
+	int m_numVertexes;
+	ChunkVertex *m_vertexes;
+	int m_numIndexes;
+	ushort_t *m_indexes;
+
+	Vector4 m_terrainRect;
+
+	Vector4 m_zoneRect;
+	TexturePtr m_colorTexture;
+	TexturePtr m_normalTexture;
+
+	Vector4 m_chunkRect;
+	int m_numLayers;
+	Layer m_layers[MAX_LAYERS];
+	bool m_layerVisible;
+	bool m_isZonePrim;
+};
+
+class GroupData : public PrimitiveData
+{
+public:
+private:
+	Sequence<Primitive2*> m_primitives;
+};
+
+class RefData : public PrimitiveData
+{
+public:
+private:
+	Primitive2 *m_refered;
+
+	// override refered primitive's indexes
+	int m_numIndexes;
+	ushort_t *m_indexes;
+};
+
+class InstanceData : public PrimitiveData
+{
+public:
+	// per instance parameter
+	struct Param {
+		Matrix worldMatrix;
+		Vector4 userDefined;		// user defined param
+	};
+
+private:
+	Primitive2 *m_instanced;
+
+	int numInstance;
+	Param* m_params;
+};
 
 AX_END_NAMESPACE
 

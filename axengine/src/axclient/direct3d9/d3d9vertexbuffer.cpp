@@ -215,9 +215,9 @@ D3D9InstancedBuffer::~D3D9InstancedBuffer()
 
 }
 
-void D3D9InstancedBuffer::setData( const InstancePrim::ParamSeq &params )
+void D3D9InstancedBuffer::setData(int numInstances, const InstancePrim::Param* params)
 {
-	m_count = (int)params.size();
+	m_count = numInstances;
 
 	DynVb dynvb = d3d9VertexBufferManager->allocInstance(m_count*64);
 	Vector4 *pdata = (Vector4*)dynvb.writePtr;

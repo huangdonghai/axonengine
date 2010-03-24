@@ -7,6 +7,8 @@ class RenderInterface;
 class RenderResource;
 class RenderData;
 
+#define AX_DECLARE_RENDERDATA
+#define AX_DECLARE_RENDERRESOURCE
 
 class RenderResource
 {
@@ -24,7 +26,7 @@ class SyncMethod
 {
 public:
 	SyncMethod() { g_renderQueue->addDeferredCommand(this); }
-	virtual ~SyncMethod();
+	virtual ~SyncMethod() {}
 	virtual void exec() = 0;
 };
 
