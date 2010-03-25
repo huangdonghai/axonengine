@@ -14,6 +14,17 @@ read the license and understand and accept it fully.
 AX_BEGIN_NAMESPACE
 AX_END_NAMESPACE
 
+template <typename T> static inline T *GetPtrHelper(T *ptr) { return ptr; }
+template <typename Wrapper> static inline typename Wrapper::const_pointer GetPtrHelper(const Wrapper &p) { return p.get(); }
+template <typename Wrapper> static inline typename Wrapper::pointer GetPtrHelper(Wrapper &p) { return p.get(); }
+
+#define AX_DECLARE_RENDERDATA(Class) \
+	Class *d_func() { return reinterpret_cast<Class *>( GetPtrHelper(m_data)); } \
+	const Class *d_func() const { return reinterpret_cast<const Class *>( GetPtrHelper(m_data)); }
+
+#define AX_DECLARE_RENDERRESOURCE
+
+
 #include "query.h"
 #include "texture.h"
 #include "sampler.h"

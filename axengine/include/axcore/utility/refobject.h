@@ -205,6 +205,7 @@ class CopyOnWritePointer
 public:
 	typedef T Type;
 	typedef T *pointer;
+	typedef const T *const_pointer;
 
 	inline void detach() { if (d && d->getref() != 1) detach_helper(); }
 	inline T &operator*() { detach(); return *d; }
@@ -217,6 +218,9 @@ public:
 	inline const T *data() const { return d; }
 	inline const T *constData() const { return d; }
 
+	inline T *get() { return operator->(); }
+	inline const T *get() const { return operator->(); }
+
 	inline bool operator==(const CopyOnWritePointer<T> &other) const { return d == other.d; }
 	inline bool operator!=(const CopyOnWritePointer<T> &other) const { return d != other.d; }
 
@@ -224,7 +228,7 @@ public:
 	inline ~CopyOnWritePointer() { if (d) d->decref(); }
 
 	explicit CopyOnWritePointer(T *data);
-	inline CopyOnWritePointer(const CopyOnWritePointer<T> &o) : d(o.d) { if (d) d->m_ref.incref(); }
+	inline CopyOnWritePointer(const CopyOnWritePointer<T> &o) : d(o.d) { if (d) d->incref(); }
 	inline CopyOnWritePointer<T> & operator=(const CopyOnWritePointer<T> &o) {
 		if (o.d != d) {
 			SafeIncRef(o);
@@ -246,6 +250,28 @@ public:
 
 	inline void swap(CopyOnWritePointer &other)
 	{ std::swap(d, other.d); }
+
+	template <class Q>
+	CopyOnWritePointer<Q> &as() {
+#ifdef _DEBUG
+		if (d) {
+			Q *castTo = dynamic_cast<Q*>(d);
+			AX_ASSERT(castTo);
+		}
+#endif
+		return *this;
+	}
+
+	template <class Q>
+	const CopyOnWritePointer<Q> &as() const {
+#ifdef _DEBUG
+		if (d) {
+			Q *castTo = dynamic_cast<Q*>(d);
+			AX_ASSERT(castTo);
+		}
+#endif
+		return *this;
+	}
 
 protected:
 	T *clone();
@@ -333,7 +359,7 @@ private:
 
 template <class T>
 inline CopyOnWritePointer<T>::CopyOnWritePointer(T *adata) : d(adata)
-{ if (d) d->m_ref.incref(); }
+{ if (d) d->incref(); }
 
 template <class T>
 inline T *CopyOnWritePointer<T>::clone()

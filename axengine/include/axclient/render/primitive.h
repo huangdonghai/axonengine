@@ -564,6 +564,8 @@ class PrimitiveData;
 
 class Primitive2
 {
+	AX_DECLARE_RENDERDATA(PrimitiveData);
+
 public:
 	enum Type {
 		NoneType = 0,		// for error checks
@@ -583,12 +585,17 @@ public:
 		HintFrame,				// only draw in one frame, will auto deleted when render driver cached it
 	};
 
-private:
+	Primitive2() {}
+
+protected:
 	CopyOnWritePointer<PrimitiveData> m_data;
 };
 
+class LineData;
 class LinePrimitive : public Primitive2
 {
+	AX_DECLARE_RENDERDATA(LineData);
+
 public:
 	LinePrimitive(Hint hint);
 	~LinePrimitive();
@@ -605,8 +612,11 @@ public:
 	void setLineWidth(float line_width);
 };
 
+class MeshData;
 class MeshPrimitive : public Primitive2
 {
+	AX_DECLARE_RENDERDATA(MeshData);
+
 public:
 	MeshPrimitive(Hint hint);
 	virtual ~MeshPrimitive();
@@ -630,8 +640,11 @@ public:
 	void setStriped(bool val);
 };
 
+class ChunkData;
 class ChunkPrimitive : public Primitive2
 {
+	AX_DECLARE_RENDERDATA(ChunkData);
+
 public:
 	enum {
 		MAX_LAYERS = 4

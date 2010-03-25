@@ -123,6 +123,7 @@ protected:
 class LineData : public PrimitiveData
 {
 public:
+	LineData(Primitive2::Hint);
 
 private:
 	int m_numVertexes;

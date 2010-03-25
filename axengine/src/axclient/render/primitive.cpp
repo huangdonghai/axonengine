@@ -11,6 +11,7 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
+
 //------------------------------------------------------------------------------
 // class Primitive
 //------------------------------------------------------------------------------
@@ -1562,6 +1563,12 @@ void PrimitiveManager::hintUncache(Primitive *prim)
 		return;
 
 	m_waitUncache.push_back(id-1);
+}
+
+
+LinePrimitive::LinePrimitive(Hint hint)
+{
+	m_data = PrimitiveData::createPrimitive_<LineData>(hint);
 }
 
 AX_END_NAMESPACE

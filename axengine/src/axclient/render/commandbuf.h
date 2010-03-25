@@ -7,9 +7,6 @@ class RenderInterface;
 class RenderResource;
 class RenderData;
 
-#define AX_DECLARE_RENDERDATA
-#define AX_DECLARE_RENDERRESOURCE
-
 class RenderResource
 {
 public:
