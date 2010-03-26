@@ -230,7 +230,7 @@ public:
 
 private:
 	CopyOnWritePointer<TextureData> m_data;
-	AX_DECLARE_RENDERDATA(TextureData);
+	AX_DECLARE_DATA(TextureData);
 };
 
 

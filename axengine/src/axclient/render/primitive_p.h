@@ -125,6 +125,8 @@ class LineData : public PrimitiveData
 public:
 	LineData(Primitive2::Hint);
 
+	DebugVertex *lockVertexBuffer();
+
 private:
 	int m_numVertexes;
 	DebugVertex *m_vertexes;

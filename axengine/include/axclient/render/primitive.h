@@ -564,7 +564,7 @@ class PrimitiveData;
 
 class Primitive2
 {
-	AX_DECLARE_RENDERDATA(PrimitiveData);
+	AX_DECLARE_DATA(PrimitiveData);
 
 public:
 	enum Type {
@@ -587,6 +587,18 @@ public:
 
 	Primitive2() {}
 
+	Type getType() const;
+
+	void setWorldSpace(bool val);
+
+	void setMatrix(const Matrix4 &matrix);
+	void disableMatrix();
+
+	void setMaterial(const Material2 &material);
+	void setLightMap(const Texture2 &lm);
+
+	void setActivedIndexes(int val);
+
 protected:
 	CopyOnWritePointer<PrimitiveData> m_data;
 };
@@ -594,7 +606,7 @@ protected:
 class LineData;
 class LinePrimitive : public Primitive2
 {
-	AX_DECLARE_RENDERDATA(LineData);
+	AX_DECLARE_DATA(LineData);
 
 public:
 	LinePrimitive(Hint hint);
@@ -615,7 +627,7 @@ public:
 class MeshData;
 class MeshPrimitive : public Primitive2
 {
-	AX_DECLARE_RENDERDATA(MeshData);
+	AX_DECLARE_DATA(MeshData);
 
 public:
 	MeshPrimitive(Hint hint);
@@ -643,7 +655,7 @@ public:
 class ChunkData;
 class ChunkPrimitive : public Primitive2
 {
-	AX_DECLARE_RENDERDATA(ChunkData);
+	AX_DECLARE_DATA(ChunkData);
 
 public:
 	enum {

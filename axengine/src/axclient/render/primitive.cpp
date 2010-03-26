@@ -1569,6 +1569,9 @@ void PrimitiveManager::hintUncache(Primitive *prim)
 LinePrimitive::LinePrimitive(Hint hint)
 {
 	m_data = PrimitiveData::createPrimitive_<LineData>(hint);
+
+	AX_DATA;
+	d->lockVertexBuffer();
 }
 
 AX_END_NAMESPACE

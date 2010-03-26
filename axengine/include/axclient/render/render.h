@@ -18,11 +18,18 @@ template <typename T> static inline T *GetPtrHelper(T *ptr) { return ptr; }
 template <typename Wrapper> static inline typename Wrapper::const_pointer GetPtrHelper(const Wrapper &p) { return p.get(); }
 template <typename Wrapper> static inline typename Wrapper::pointer GetPtrHelper(Wrapper &p) { return p.get(); }
 
-#define AX_DECLARE_RENDERDATA(Class) \
+#define AX_DECLARE_DATA(Class) \
+	typedef Class DataClass; \
 	Class *d_func() { return reinterpret_cast<Class *>( GetPtrHelper(m_data)); } \
 	const Class *d_func() const { return reinterpret_cast<const Class *>( GetPtrHelper(m_data)); }
 
 #define AX_DECLARE_RENDERRESOURCE
+
+#define AX_DATA \
+	DataClass *d = d_func();
+
+#define AX_CONSTDATA \
+	const DataClass *d = d_func();
 
 
 #include "query.h"
