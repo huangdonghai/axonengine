@@ -204,6 +204,8 @@ class MaterialData;
 
 class Material2
 {
+	AX_DECLARE_DATA(MaterialData);
+
 public:
 	Material2();
 	Material2(const String &name);

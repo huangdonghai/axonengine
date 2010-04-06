@@ -5,7 +5,9 @@ AX_BEGIN_NAMESPACE
 
 class PrimitiveBackend : public RenderResource
 {
+	AX_DECLARE_DATA(PrimitiveData);
 public:
+
 	PrimitiveBackend();
 	virtual ~PrimitiveBackend();
 
@@ -57,6 +59,8 @@ class InstancePB : public PrimitiveBackend {};
 
 class PrimitiveData : public RenderData
 {
+	AX_DECLARE_BACKEND(PrimitiveBackend);
+
 public:
 	PrimitiveData();
 	virtual ~PrimitiveData();
@@ -102,8 +106,6 @@ public:
 	}
 
 protected:
-	PrimitiveBackend *m_backend;
-
 	const Primitive2::Hint m_hint;
 	bool m_isDirty;		// dirty
 	bool m_isVertexBufferDirty;

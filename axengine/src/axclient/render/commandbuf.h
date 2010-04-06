@@ -15,7 +15,7 @@ public:
 
 	virtual void sync() {}
 
-private:
+protected:
 	RenderData *m_data;
 };
 
@@ -238,7 +238,7 @@ public:
 		if (m_syncFrame == g_renderSystem->getFrameNum())
 			return;
 
-		queueCmd0(m_resource, &RenderResource::sync).call();
+		queueCmd0(m_backend, &RenderResource::sync).call();
 		m_syncFrame = g_renderSystem->getFrameNum();
 	}
 
@@ -302,10 +302,10 @@ public:
 		return *result;
 	}
 
-private:
+protected:
 	AtomicInt m_ref;
 	int m_syncFrame;
-	RenderResource *m_resource;
+	RenderResource *m_backend;
 };
 
 
