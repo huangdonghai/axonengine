@@ -65,6 +65,18 @@ public:
 	PrimitiveData();
 	virtual ~PrimitiveData();
 
+	Type getType() const;
+
+	void setWorldSpace(bool val);
+
+	void setMatrix(const Matrix4 &matrix);
+	void disableMatrix();
+
+	void setMaterial(const Material2 &material);
+	void setLightMap(const Texture2 &lm);
+
+	void setActivedIndexes(int val);
+
 	virtual void reallyDelete()
 	{
 		if (m_hint == Primitive2::HintFrame) {

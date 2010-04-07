@@ -585,7 +585,7 @@ public:
 		HintFrame,				// only draw in one frame, will auto deleted when render driver cached it
 	};
 
-	Primitive2() {}
+	Primitive2();
 
 	Type getType() const;
 

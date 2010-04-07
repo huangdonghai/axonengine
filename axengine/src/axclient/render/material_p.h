@@ -35,7 +35,6 @@ public:
 	MaterialData(const String &name);
 	~MaterialData();
 
-	const String &getShaderName() const;
 	bool isWireframe() const;
 	bool isPhysicsHelper() const;
 
