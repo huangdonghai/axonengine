@@ -354,7 +354,7 @@ HardwareTexturePtr HardwareTexture::createTexture(const String &debugname, TexFo
 	return result;
 }
 
-TextureBackend::TextureBackend(TextureData *data) : RenderResource(data), m_data(data)
+TextureBackend::TextureBackend(TextureData *data) : RenderBackend(data), m_data(data)
 {}
 
 TextureBackend::~TextureBackend()

@@ -39,7 +39,7 @@ private:
 	static List<HardwareTexture*> ms_asioList;
 };
 
-class TextureBackend : public RenderResource
+class TextureBackend : public RenderBackend
 {
 public:
 	TextureBackend(TextureData *data);

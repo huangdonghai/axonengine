@@ -4,7 +4,7 @@
 AX_BEGIN_NAMESPACE
 
 class MaterialData;
-class MaterialBackend : public RenderResource
+class MaterialBackend : public RenderBackend
 {
 public:
 

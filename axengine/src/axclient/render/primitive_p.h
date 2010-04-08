@@ -3,7 +3,7 @@
 
 AX_BEGIN_NAMESPACE
 
-class PrimitiveBackend : public RenderResource
+class PrimitiveBackend : public RenderBackend
 {
 	AX_DECLARE_DATA(PrimitiveData);
 public:
