@@ -43,6 +43,14 @@ public:
 	virtual void dipUp() = 0;
 };
 
+class ApiWrapper
+{
+public:
+private:
+	byte_t m_hunk[];
+	byte_t m_cmds[];
+};
+
 AX_END_NAMESPACE
 
 #endif // AX_RENDERINTERFACE_H
