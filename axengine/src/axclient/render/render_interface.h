@@ -46,9 +46,61 @@ public:
 class ApiWrapper
 {
 public:
+	// new interface
+	void createTexture2D(handle_t &result, TexFormat format, int width, int height, int flags = 0);
+	void uploadTexture(handle_t h, int level, void *pixels, TexFormat format = TexFormat::AUTO);
+	void uploadSubTexture(handle_t h, const Rect &rect, const void *pixels, TexFormat format = TexFormat::AUTO);
+	void generateMipmap(handle_t h);
+	void deleteTexture2D(handle_t h);
+
+	void createVertexBuffer(handle_t &result, int datasize, Primitive2::Hint hint);
+	void *lockVertexBuffer(handle_t h);
+	void unlockVertexBuffer(handle_t h);
+	void deleteVertexBuffer(handle_t h);
+
+	void createInstanceBuffer(handle_t &result, int datasize, Primitive2::Hint hint);
+	void *lockInstanceBuffer(handle_t h);
+	void unlockInstanceBuffer(handle_t h);
+	void deleteInstanceBuffer(handle_t h);
+
+	void createIndexBuffer(handle_t &result, int datasize, Primitive2::Hint hint);
+	void *lockIndexBuffer(handle_t hib);
+	void unlockIndexBuffer(handle_t hib);
+	void deleteIndexBuffer(handle_t hib);
+
+	void setShader(MaterialBackend *mtl, GeometryPB *prim);
+	int setShader(handle_t shader, Technique tech);
+	void setPass(int pass);
+
+	void setVertices(handle_t vb, VertexType vt, int vertcount);
+	void setInstanceVertices(handle_t vb, VertexType vt, int vertcount, handle_t inb, int incount);
+	void setIndices(handle_t ib);
+
+	//	virtual void dip(ElementType et, int offset, int vertcount, int indicescount) = 0;
+	void dipUp();
+
+	//
+	// high level
+	//
+	void drawPrimitive();
+
+protected:
+	void *allocHunk(int size);
+
 private:
-	byte_t m_hunk[];
-	byte_t m_cmds[];
+	class Command
+	{
+	public:
+		int hunkMark;
+	};
+
+private:
+	enum { HUNK_SIZE = 4 * 1024 * 1024, MAX_COMMANDS = 64 * 1024 };
+	byte_t m_hunk[HUNK_SIZE];
+	Command *m_cmds[MAX_COMMANDS];
+
+	volatile int m_hunkPos;
+	volatile int m_readPos, m_writePos;
 };
 
 AX_END_NAMESPACE
