@@ -14,6 +14,7 @@ AX_BEGIN_NAMESPACE
 
 extern IRenderDriver *g_renderDriver;
 extern RenderApi *g_renderApi;
+extern ApiWrapper *g_apiWrapper;
 
 #ifdef AX_CONFIG_OPTION_USE_SPEEDTREE_40
 extern TreeManager *g_treeManager;

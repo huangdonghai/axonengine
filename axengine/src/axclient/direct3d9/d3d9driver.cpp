@@ -140,7 +140,7 @@ void D3D9Driver::postInit() {
 
 bool D3D9Driver::isHDRRendering() { return false; }
 
-RenderTarget *D3D9Driver::createWindowTarget(handle_t wndId, const String &name) {
+RenderTarget *D3D9Driver::createWindowTarget(Handle wndId, const String &name) {
 	D3D9Window *state = new D3D9Window(wndId, name);
 	AX_ASSERT(state);
 	return state;

@@ -560,12 +560,8 @@ protected:
 };
 
 
-class PrimitiveData;
-
 class Primitive2
 {
-	AX_DECLARE_DATA(PrimitiveData);
-
 public:
 	enum Type {
 		NoneType = 0,		// for error checks
@@ -585,7 +581,7 @@ public:
 		HintFrame,				// only draw in one frame, will auto deleted when render driver cached it
 	};
 
-	Primitive2();
+	Primitive2() {}
 
 	Type getType() const;
 
@@ -600,14 +596,11 @@ public:
 	void setActivedIndexes(int val);
 
 protected:
-	CopyOnWritePointer<PrimitiveData> m_data;
 };
 
 class LineData;
 class LinePrimitive : public Primitive2
 {
-	AX_DECLARE_DATA(LineData);
-
 public:
 	LinePrimitive(Hint hint);
 	~LinePrimitive();
@@ -627,8 +620,6 @@ public:
 class MeshData;
 class MeshPrimitive : public Primitive2
 {
-	AX_DECLARE_DATA(MeshData);
-
 public:
 	MeshPrimitive(Hint hint);
 	virtual ~MeshPrimitive();
@@ -655,8 +646,6 @@ public:
 class ChunkData;
 class ChunkPrimitive : public Primitive2
 {
-	AX_DECLARE_DATA(ChunkData);
-
 public:
 	enum {
 		MAX_LAYERS = 4

@@ -49,7 +49,7 @@ AX_BEGIN_NAMESPACE
 		virtual bool isInRenderingThread() { return false; }
 
 		// resource management
-		virtual RenderTarget *createWindowTarget(handle_t wndId, const String &name);
+		virtual RenderTarget *createWindowTarget(Handle wndId, const String &name);
 #if 0
 		virtual Target *getColorTarget(int width, int height);
 		virtual Target *getDepthTarget(int width, int height);
@@ -81,7 +81,7 @@ AX_BEGIN_NAMESPACE
 		virtual int getQueryResult( int id ){ return 0; }
 
 	public:
-		static handle_t createGLWindow(const String &wnd_name);
+		static Handle createGLWindow(const String &wnd_name);
 		
 	protected:
 		// console command
@@ -90,7 +90,7 @@ AX_BEGIN_NAMESPACE
 	private:
 		bool m_initialized;
 		bool m_foundExts;
-		handle_t m_glLibHandle;
+		Handle m_glLibHandle;
 		uint_t m_time;				// in millisecond
 		Vector3 m_viewOrg;
 		Matrix3 m_axisInverse;

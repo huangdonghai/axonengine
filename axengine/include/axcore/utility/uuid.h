@@ -64,11 +64,11 @@ public:
 
 	size_t hash() const
 	{
-		return std::tr1::hash<handle_t>()(m_handle);
+		return m_handle.toInt();
 	}
 
 private:
-	handle_t m_handle;
+	Handle m_handle;
 };
 
 AX_END_NAMESPACE

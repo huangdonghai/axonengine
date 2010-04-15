@@ -287,21 +287,21 @@ HardwareTexture::HardwareTexture(const FixedString &key)
 }
 
 
-HardwareTexture::HardwareTexture( const FixedString &key, TexFormat format, int width, int height )
+HardwareTexture::HardwareTexture(const FixedString &key, TexFormat format, int width, int height)
 {
 	setKey(key);
 
 	ms_texDict[key] = this;
 
-	m_handle = g_renderApi->createTexture2D(format, width, height, Texture2::IF_NoMipmap);
+//	g_apiWrapper->createTexture2D(m_handle, format, width, height, Texture2::IF_NoMipmap);
 }
 
 HardwareTexture::~HardwareTexture()
 {
 	ms_texDict.erase(getKey());
 
-	if (m_handle)
-		g_renderApi->deleteTexture2D(m_handle);
+	if (m_handle);
+//		g_renderApi->deleteTexture2D(m_handle);
 }
 
 void HardwareTexture::uploadSubTexture(const Rect &rect, const void *pixels, TexFormat format)
@@ -457,12 +457,10 @@ Texture2::Texture2()
 
 Texture2::Texture2(const String &name)
 {
-	m_data = new TextureData(name);
 }
 
 Texture2::Texture2(const String &debugname, TexFormat format, int width, int height)
 {
-	m_data = new TextureData(debugname, format, width, height);
 }
 
 Texture2::~Texture2()
@@ -470,32 +468,22 @@ Texture2::~Texture2()
 
 void Texture2::uploadSubTexture(const Rect &rect, const void *pixels, TexFormat format /*= TexFormat::AUTO*/)
 {
-	if (!m_data) return;
-	m_data->uploadSubTexture(rect, pixels, format);
 }
 
 void Texture2::generateMipmap()
 {
-	if (!m_data) return;
-	m_data->generateMipmap();
 }
 
 void Texture2::setClampMode(SamplerState::ClampMode clampmode)
 {
-	if (!m_data) return;
-	m_data->setClampMode(clampmode);
 }
 
 void Texture2::setFilterMode(SamplerState::FilterMode filtermode)
 {
-	if (!m_data) return;
-	m_data->setFilterMode(filtermode);
 }
 
 void Texture2::setBorderColor(SamplerState::BorderColor bordercolor)
 {
-	if (!m_data) return;
-	m_data->setBorderColor(bordercolor);
 }
 
 AX_END_NAMESPACE

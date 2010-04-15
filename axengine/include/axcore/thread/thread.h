@@ -102,7 +102,7 @@ public:
 	virtual void doRun() = 0;		// work entry
 
 private:
-	handle_t m_handle;
+	Handle m_handle;
 	SyncEvent *m_exitEvent;
 	ulong_t m_id;
 };

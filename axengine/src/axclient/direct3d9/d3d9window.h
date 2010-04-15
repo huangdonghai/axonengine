@@ -16,7 +16,7 @@ AX_BEGIN_NAMESPACE
 class D3D9Window : public RenderTarget {
 public:
 	D3D9Window(const String &name);
-	D3D9Window(handle_t wndId, const String &name);
+	D3D9Window(Handle wndId, const String &name);
 	virtual ~D3D9Window();
 
 	// implement RenderTarget
@@ -26,8 +26,8 @@ public:
 	virtual void unbind();
 	virtual bool isWindow() { return true;}
 
-	virtual void setWindowHandle(handle_t newId) { m_wndId = (HWND)newId; }
-	virtual handle_t getWindowHandle() { return m_wndId; }
+	virtual void setWindowHandle(Handle newId) { m_wndId = (HWND)newId.toVoidStar(); }
+	virtual Handle getWindowHandle() { return Handle(m_wndId); }
 
 
 	HWND getHandle() const { return m_wndId; }

@@ -32,7 +32,7 @@ public:
 	static HardwareTexturePtr createTexture(const String &debugname, TexFormat format, int width, int height);
 
 private:
-	handle_t m_handle;
+	Handle m_handle;
 	AsioRead m_asioRead;
 
 	static Dict<FixedString, HardwareTexture*> ms_texDict;

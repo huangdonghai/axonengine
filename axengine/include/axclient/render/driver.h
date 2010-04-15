@@ -68,7 +68,7 @@ public:
 	virtual bool isInRenderingThread() = 0;
 
 	// resource management
-	virtual RenderTarget *createWindowTarget(handle_t wndId, const String &name) = 0;
+	virtual RenderTarget *createWindowTarget(Handle wndId, const String &name) = 0;
 
 	// caps
 	virtual const Info *getDriverInfo() = 0;

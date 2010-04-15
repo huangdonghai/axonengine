@@ -6,29 +6,29 @@ AX_BEGIN_NAMESPACE
 class D3D9_Api : public RenderApi
 {
 public:
-	virtual handle_t createTexture2D(TexFormat format, int width, int height, int flags = 0);
-	virtual void uploadTexture(handle_t htex, int level, void *pixels, TexFormat format = TexFormat::AUTO);
-	virtual void uploadSubTexture(handle_t htex, const Rect &rect, const void *pixels, TexFormat format = TexFormat::AUTO);
-	virtual void generateMipmap(handle_t htex);
-	virtual void deleteTexture2D(handle_t htex);
+	virtual Handle createTexture2D(TexFormat format, int width, int height, int flags = 0);
+	virtual void uploadTexture(Handle htex, int level, void *pixels, TexFormat format = TexFormat::AUTO);
+	virtual void uploadSubTexture(Handle htex, const Rect &rect, const void *pixels, TexFormat format = TexFormat::AUTO);
+	virtual void generateMipmap(Handle htex);
+	virtual void deleteTexture2D(Handle htex);
 
-	virtual handle_t createVertexBuffer(int datasize, Primitive2::Hint hint);
-	virtual void *lockVertexBuffer(handle_t hvb);
-	virtual void unlockVertexBuffer(handle_t hvb);
-	virtual void deleteVertexBuffer(handle_t hvb);
+	virtual Handle createVertexBuffer(int datasize, Primitive2::Hint hint);
+	virtual void *lockVertexBuffer(Handle hvb);
+	virtual void unlockVertexBuffer(Handle hvb);
+	virtual void deleteVertexBuffer(Handle hvb);
 
-	virtual handle_t createInstanceBuffer(int datasize, Primitive2::Hint hint);
-	virtual void *lockInstanceBuffer(handle_t hbuf);
-	virtual void unlockInstanceBuffer(handle_t hbuf);
-	virtual void deleteInstanceBuffer(handle_t hbuf);
+	virtual Handle createInstanceBuffer(int datasize, Primitive2::Hint hint);
+	virtual void *lockInstanceBuffer(Handle hbuf);
+	virtual void unlockInstanceBuffer(Handle hbuf);
+	virtual void deleteInstanceBuffer(Handle hbuf);
 
-	virtual handle_t createIndexBuffer(int datasize, Primitive2::Hint hint);
-	virtual void *lockIndexBuffer(handle_t hib);
-	virtual void unlockIndexBuffer(handle_t hib);
-	virtual void deleteIndexBuffer(handle_t hib);
+	virtual Handle createIndexBuffer(int datasize, Primitive2::Hint hint);
+	virtual void *lockIndexBuffer(Handle hib);
+	virtual void unlockIndexBuffer(Handle hib);
+	virtual void deleteIndexBuffer(Handle hib);
 
-	virtual handle_t findShader(MaterialBackend *mtl, GeometryPB *prim);
-	virtual int setCurrentTechnique(handle_t shader, Technique tech);
+	virtual Handle findShader(MaterialBackend *mtl, GeometryPB *prim);
+	virtual int setCurrentTechnique(Handle shader, Technique tech);
 	virtual void setCurrentPass(int pass);
 
 	virtual void drawIndexedPrimitive();

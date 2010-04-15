@@ -48,7 +48,7 @@ void RenderWidget::paintEvent(QPaintEvent *pe)
 		return;
 
 	if (m_renderTarget == nullptr)
-		m_renderTarget = g_renderSystem->createWindowTarget(winId(), "RenderWidget");
+		m_renderTarget = g_renderSystem->createWindowTarget(Handle(winId()), "RenderWidget");
 
 	QSize s = size();
 	Rect rect(0, 0, s.width(), s.height());

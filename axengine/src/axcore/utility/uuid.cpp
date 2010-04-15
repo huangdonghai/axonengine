@@ -102,7 +102,7 @@ public:
 	}
 
 	// m_ref added
-	handle_t find(const T &t)
+	Handle find(const T &t)
 	{
 		SCOPE_LOCK;
 
@@ -111,7 +111,7 @@ public:
 		if (it != m_data.end()) {
 			Item *handle = it->second;
 			handle->m_ref.incref();
-			return handle;
+			return Handle(handle);
 		}
 
 		Item *item = new Item();
@@ -119,18 +119,18 @@ public:
 		item->m_value = t;
 		m_data[&item->m_value] = item;
 
-		return item;
+		return Handle(item);
 	}
 
-	void incref(handle_t h)
+	void incref(Handle h)
 	{
-		Item *item = h;
+		Item *item = h.to<Item *>();
 		item->m_ref.incref();
 	}
 
-	void decref(handle_t h)
+	void decref(Handle h)
 	{
-		Item *item = h;
+		Item *item = h.to<Item *>();
 
 		if (item->m_ref.decref() == 0) {
 			SCOPE_LOCK;
@@ -139,14 +139,14 @@ public:
 		}
 	}
 
-	const T &getValue(handle_t h)
+	const T &getValue(Handle h)
 	{
-		Item *item = h;
+		Item *item = h.to<Item *>();
 		return item->m_value;
 	}
 
 public:
-	handle_t m_nullHandle;
+	Handle m_nullHandle;
 	typedef Dict<KeyType, Item*, hashPtr, equalPtr> DataType;
 	DataType m_data;
 };

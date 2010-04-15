@@ -23,13 +23,13 @@ AX_BEGIN_NAMESPACE
 		, m_name(name)
 	{
 		// create context
-		m_wndId = (HWND)GLdriver::createGLWindow(m_name);
+		m_wndId = GLdriver::createGLWindow(m_name).to<HWND>();
 #if 0
 		initGLRC();
 #endif
 	}
 
-	GLwindow::GLwindow(handle_t wndId, const String &name) : m_wndId((HWND)wndId), m_name(name) {
+	GLwindow::GLwindow(Handle wndId, const String &name) : m_wndId(wndId.to<HWND>()), m_name(name) {
 #if 0
 		initGLRC();
 		initialize();

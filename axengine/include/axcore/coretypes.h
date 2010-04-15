@@ -191,18 +191,25 @@ AX_BEGIN_NAMESPACE
 #if 0
 	typedef void *handle_t;
 #else
-	struct handle_t {
-		void *data;
-
-		handle_t() {}
-		handle_t(void *d) : data(d) {}
+	class Handle
+	{
+	public:
+		Handle() {}
+		explicit Handle(void *d) : data(d) {}
 
 		template <class T>
-		operator T*() const { return reinterpret_cast<T*>(data); }
+		T to() const { return reinterpret_cast<T>(data); }
 
-		operator uintptr_t() const { return reinterpret_cast<uintptr_t>(data); }
+		void *toVoidStar() const { return data; }
 
-		bool operator==(const handle_t &rhs) const { return data == rhs.data; }
+		uintptr_t toInt() const { return reinterpret_cast<uintptr_t>(data); }
+
+		bool operator==(const Handle &rhs) const { return data == rhs.data; }
+		bool operator!() const { return !data; }
+		operator bool() const { return bool(data); }
+
+	private:
+		void *data;
 	};
 #endif
 	template<typename T>

@@ -113,7 +113,7 @@ private:
 	Type m_type;
 	AccessMode m_mode;
 	FILE *m_handle;
-	handle_t m_unzFile;
+	void *m_unzFile;
 	bool m_forceFlush;
 	int m_pos;
 	int m_size;
@@ -152,7 +152,7 @@ struct PakedFile {
 struct FilePackage {
 	String fullpath;
 	String filename;
-	handle_t unzfile;
+	void *unzfile;
 	int checksum;
 	int checksumkey;
 	int numEntries;

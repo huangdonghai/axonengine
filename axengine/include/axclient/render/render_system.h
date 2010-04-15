@@ -61,7 +61,7 @@ public:
 	int testArgs(int arg0, float arg1, const Vector3 &arg2, const Color3 &arg3, const Rect &arg4);
 
 	// textures for subscene's render target
-	RenderTarget *createWindowTarget(handle_t wndId, const String &name);
+	RenderTarget *createWindowTarget(Handle wndId, const String &name);
 
 	// actor manager register
 	void addEntityManager(IEntityManager *manager);

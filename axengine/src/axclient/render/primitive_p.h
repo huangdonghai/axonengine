@@ -5,7 +5,6 @@ AX_BEGIN_NAMESPACE
 
 class PrimitiveBackend : public RenderBackend
 {
-	AX_DECLARE_DATA(PrimitiveData);
 public:
 
 	PrimitiveBackend();
@@ -65,7 +64,7 @@ public:
 	PrimitiveData();
 	virtual ~PrimitiveData();
 
-	Type getType() const;
+	Primitive2::Type getType() const;
 
 	void setWorldSpace(bool val);
 

@@ -15,33 +15,33 @@ extern RenderApi *g_renderApi;
 class VertexBufferTraits
 {
 public:
-	static handle_t create(int size) { g_renderApi->createVertexBuffer(size, Primitive2::HintDynamic); }
-	static void *lock(handle_t h) { g_renderApi->lockVertexBuffer(h); }
-	static void unlock(handle_t h) { g_renderApi->unlockVertexBuffer(h); }
-	static void free(handle_t h) { g_renderApi->deleteVertexBuffer(h); }
+	static Handle create(int size) { g_renderApi->createVertexBuffer(size, Primitive2::HintDynamic); }
+	static void *lock(Handle h) { g_renderApi->lockVertexBuffer(h); }
+	static void unlock(Handle h) { g_renderApi->unlockVertexBuffer(h); }
+	static void free(Handle h) { g_renderApi->deleteVertexBuffer(h); }
 };
 
 class IndexBufferTraits
 {
 public:
-	static handle_t create(int size) { g_renderApi->createIndexBuffer(size, Primitive2::HintDynamic); }
-	static void *lock(handle_t h) { g_renderApi->lockIndexBuffer(h); }
-	static void unlock(handle_t h) { g_renderApi->unlockIndexBuffer(h); }
-	static void free(handle_t h) { g_renderApi->deleteIndexBuffer(h); }
+	static Handle create(int size) { g_renderApi->createIndexBuffer(size, Primitive2::HintDynamic); }
+	static void *lock(Handle h) { g_renderApi->lockIndexBuffer(h); }
+	static void unlock(Handle h) { g_renderApi->unlockIndexBuffer(h); }
+	static void free(Handle h) { g_renderApi->deleteIndexBuffer(h); }
 };
 
 class InstanceBufferTraits
 {
 public:
-	static handle_t create(int size) { g_renderApi->createInstanceBuffer(size, Primitive2::HintDynamic); }
-	static void *lock(handle_t h) { g_renderApi->lockInstanceBuffer(h); }
-	static void unlock(handle_t h) { g_renderApi->unlockInstanceBuffer(h); }
-	static void free(handle_t h) { g_renderApi->deleteInstanceBuffer(h); }
+	static Handle create(int size) { g_renderApi->createInstanceBuffer(size, Primitive2::HintDynamic); }
+	static void *lock(Handle h) { g_renderApi->lockInstanceBuffer(h); }
+	static void unlock(Handle h) { g_renderApi->unlockInstanceBuffer(h); }
+	static void free(Handle h) { g_renderApi->deleteInstanceBuffer(h); }
 };
 
 
 struct DynamicBuf {
-	handle_t buffer;
+	Handle buffer;
 	int offset;
 	void *writePtr;
 };
@@ -157,7 +157,7 @@ protected:
 	}
 
 public:
-	Sequence<handle_t> m_pages;
+	Sequence<Handle> m_pages;
 	int m_curIndex;
 	int m_curOffset;
 	void *m_curPointer;

@@ -10,71 +10,73 @@ class RenderApi
 {
 public:
 	// new interface
-	virtual handle_t createTexture2D(TexFormat format, int width, int height, int flags = 0) = 0;
-	virtual void uploadTexture(handle_t htex, int level, void *pixels, TexFormat format = TexFormat::AUTO) = 0;
-	virtual void uploadSubTexture(handle_t htex, const Rect &rect, const void *pixels, TexFormat format = TexFormat::AUTO) = 0;
-	virtual void generateMipmap(handle_t htex) = 0;
-	virtual void deleteTexture2D(handle_t htex) = 0;
+	virtual Handle createTexture2D(TexFormat format, int width, int height, int flags = 0) = 0;
+	virtual void uploadTexture(Handle htex, int level, void *pixels, TexFormat format = TexFormat::AUTO) = 0;
+	virtual void uploadSubTexture(Handle htex, const Rect &rect, const void *pixels, TexFormat format = TexFormat::AUTO) = 0;
+	virtual void generateMipmap(Handle htex) = 0;
+	virtual void deleteTexture2D(Handle htex) = 0;
 
-	virtual handle_t createVertexBuffer(int datasize, Primitive2::Hint hint) = 0;
-	virtual void *lockVertexBuffer(handle_t hvb) = 0;
-	virtual void unlockVertexBuffer(handle_t hvb) = 0;
-	virtual void deleteVertexBuffer(handle_t hvb) = 0;
+	virtual Handle createVertexBuffer(int datasize, Primitive2::Hint hint) = 0;
+	virtual void *lockVertexBuffer(Handle hvb) = 0;
+	virtual void unlockVertexBuffer(Handle hvb) = 0;
+	virtual void deleteVertexBuffer(Handle hvb) = 0;
 
-	virtual handle_t createInstanceBuffer(int datasize, Primitive2::Hint hint) = 0;
-	virtual void *lockInstanceBuffer(handle_t hbuf) = 0;
-	virtual void unlockInstanceBuffer(handle_t hbuf) = 0;
-	virtual void deleteInstanceBuffer(handle_t hbuf) = 0;
+	virtual Handle createInstanceBuffer(int datasize, Primitive2::Hint hint) = 0;
+	virtual void *lockInstanceBuffer(Handle hbuf) = 0;
+	virtual void unlockInstanceBuffer(Handle hbuf) = 0;
+	virtual void deleteInstanceBuffer(Handle hbuf) = 0;
 
-	virtual handle_t createIndexBuffer(int datasize, Primitive2::Hint hint) = 0;
-	virtual void *lockIndexBuffer(handle_t hib) = 0;
-	virtual void unlockIndexBuffer(handle_t hib) = 0;
-	virtual void deleteIndexBuffer(handle_t hib) = 0;
+	virtual Handle createIndexBuffer(int datasize, Primitive2::Hint hint) = 0;
+	virtual void *lockIndexBuffer(Handle hib) = 0;
+	virtual void unlockIndexBuffer(Handle hib) = 0;
+	virtual void deleteIndexBuffer(Handle hib) = 0;
 
-	virtual handle_t findShader(MaterialBackend *mtl, GeometryPB *prim) = 0;
-	virtual int setShader(handle_t shader, Technique tech) = 0;
+	virtual Handle findShader(MaterialBackend *mtl, GeometryPB *prim) = 0;
+	virtual int setShader(Handle shader, Technique tech) = 0;
 	virtual void setPass(int pass) = 0;
 
-	virtual void setVertices(handle_t vb, VertexType vt, int vertcount) = 0;
-	virtual void setInstanceVertices(handle_t vb, VertexType vt, int vertcount, handle_t inb, int incount) = 0;
-	virtual void setIndices(handle_t ib) = 0;
+	virtual void setVertices(Handle vb, VertexType vt, int vertcount) = 0;
+	virtual void setInstanceVertices(Handle vb, VertexType vt, int vertcount, Handle inb, int incount) = 0;
+	virtual void setIndices(Handle ib) = 0;
 
 //	virtual void dip(ElementType et, int offset, int vertcount, int indicescount) = 0;
 	virtual void dipUp() = 0;
 };
 
+typedef Handle * hptr_t;
+typedef const Handle * hcptr_t;
 class ApiWrapper
 {
 public:
 	// new interface
-	void createTexture2D(handle_t &result, TexFormat format, int width, int height, int flags = 0);
-	void uploadTexture(handle_t h, int level, void *pixels, TexFormat format = TexFormat::AUTO);
-	void uploadSubTexture(handle_t h, const Rect &rect, const void *pixels, TexFormat format = TexFormat::AUTO);
-	void generateMipmap(handle_t h);
-	void deleteTexture2D(handle_t h);
+	void createTexture2D(hptr_t result, TexFormat format, int width, int height, int flags = 0);
+	void uploadTexture(hcptr_t h, int level, void *pixels, TexFormat format = TexFormat::AUTO);
+	void uploadSubTexture(hcptr_t h, const Rect &rect, const void *pixels, TexFormat format = TexFormat::AUTO);
+	void generateMipmap(hcptr_t h);
+	void deleteTexture2D(hcptr_t h);
 
-	void createVertexBuffer(handle_t &result, int datasize, Primitive2::Hint hint);
-	void *lockVertexBuffer(handle_t h);
-	void unlockVertexBuffer(handle_t h);
-	void deleteVertexBuffer(handle_t h);
+	void createVertexBuffer(hcptr_t &result, int datasize, Primitive2::Hint hint);
+	void *lockVertexBuffer(hcptr_t h);
+	void unlockVertexBuffer(hcptr_t h);
+	void deleteVertexBuffer(hcptr_t h);
 
-	void createInstanceBuffer(handle_t &result, int datasize, Primitive2::Hint hint);
-	void *lockInstanceBuffer(handle_t h);
-	void unlockInstanceBuffer(handle_t h);
-	void deleteInstanceBuffer(handle_t h);
+	void createInstanceBuffer(Handle &result, int datasize, Primitive2::Hint hint);
+	void *lockInstanceBuffer(hcptr_t h);
+	void unlockInstanceBuffer(hcptr_t h);
+	void deleteInstanceBuffer(hcptr_t h);
 
-	void createIndexBuffer(handle_t &result, int datasize, Primitive2::Hint hint);
-	void *lockIndexBuffer(handle_t hib);
-	void unlockIndexBuffer(handle_t hib);
-	void deleteIndexBuffer(handle_t hib);
+	void createIndexBuffer(Handle &result, int datasize, Primitive2::Hint hint);
+	void *lockIndexBuffer(hcptr_t hib);
+	void unlockIndexBuffer(hcptr_t hib);
+	void deleteIndexBuffer(hcptr_t hib);
 
 	void setShader(MaterialBackend *mtl, GeometryPB *prim);
-	int setShader(handle_t shader, Technique tech);
+	int setShader(Handle shader, Technique tech);
 	void setPass(int pass);
 
-	void setVertices(handle_t vb, VertexType vt, int vertcount);
-	void setInstanceVertices(handle_t vb, VertexType vt, int vertcount, handle_t inb, int incount);
-	void setIndices(handle_t ib);
+	void setVertices(Handle vb, VertexType vt, int vertcount);
+	void setInstanceVertices(Handle vb, VertexType vt, int vertcount, Handle inb, int incount);
+	void setIndices(Handle ib);
 
 	//	virtual void dip(ElementType et, int offset, int vertcount, int indicescount) = 0;
 	void dipUp();

@@ -352,7 +352,7 @@ HitRecords RenderSystem::endHitTest()
 	return m_selection->endSelect();
 }
 
-RenderTarget *RenderSystem::createWindowTarget(handle_t wndId, const String &name)
+RenderTarget *RenderSystem::createWindowTarget(Handle wndId, const String &name)
 {
 	return g_renderDriver->createWindowTarget(wndId, name);
 }

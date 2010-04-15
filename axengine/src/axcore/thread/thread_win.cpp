@@ -107,13 +107,13 @@ DWORD WINAPI ThreadProc(LPVOID lpParameter)
 Thread::Thread()
 {
 	m_exitEvent = new SyncEvent();
-	m_handle = ::CreateThread(NULL, 0, ThreadProc, this, CREATE_SUSPENDED, &m_id);
+	m_handle = Handle(::CreateThread(NULL, 0, ThreadProc, this, CREATE_SUSPENDED, &m_id));
 	AX_ASSERT(m_handle);
 }
 
 void Thread::startThread()
 {
-	::ResumeThread(m_handle);
+	::ResumeThread(m_handle.to<HANDLE>());
 }
 
 void Thread::endThread()
@@ -124,7 +124,7 @@ void Thread::endThread()
 
 Thread::~Thread()
 {
-	::CloseHandle(m_handle);
+	::CloseHandle(m_handle.to<HANDLE>());
 	delete(m_exitEvent);
 }
 

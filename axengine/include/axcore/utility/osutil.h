@@ -49,10 +49,10 @@ struct AX_API OsUtil
 	static String getClipboardString();
 
 	// DLL
-	static handle_t loadDll(const String &name);
-	static handle_t loadSysDll(const String &name);
-	static void *getProcEntry(handle_t handle, const String &name);
-	static bool freeDll(handle_t handle);
+	static Handle loadDll(const String &name);
+	static Handle loadSysDll(const String &name);
+	static void *getProcEntry(Handle handle, const String &name);
+	static bool freeDll(Handle handle);
 
 	// Network address or host name
 	// get primary adapter's mac address(physics address)

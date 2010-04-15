@@ -17,7 +17,7 @@ AX_BEGIN_NAMESPACE
 	class GLwindow : public RenderTarget {
 	public:
 		GLwindow(const String &name);
-		GLwindow(handle_t wndId, const String &name);
+		GLwindow(Handle wndId, const String &name);
 		virtual ~GLwindow();
 
 		// implement ITarget

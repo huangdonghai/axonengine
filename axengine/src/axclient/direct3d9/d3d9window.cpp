@@ -70,7 +70,8 @@ D3D9Window::D3D9Window(const String &name) {
 	m_lightBuffer = 0;
 }
 
-D3D9Window::D3D9Window(handle_t wndId, const String &name) : m_name(name) {
+D3D9Window::D3D9Window(Handle wndId, const String &name) : m_name(name)
+{
 	m_swapChain = 0;
 	m_backbuffer = 0;
 	m_swapChainWnd = 0;
@@ -78,7 +79,7 @@ D3D9Window::D3D9Window(handle_t wndId, const String &name) : m_name(name) {
 	m_gbuffer = 0;
 	m_lightBuffer = 0;
 
-	m_wndId = (HWND)wndId;
+	m_wndId = (HWND)wndId.toVoidStar();
 }
 
 D3D9Window::~D3D9Window() {

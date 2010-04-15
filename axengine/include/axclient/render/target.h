@@ -63,8 +63,8 @@ public:
 	virtual Texture *getTexture() { return nullptr; }
 
 	// since qt maybe change window id, so we need this function
-	virtual void setWindowHandle(handle_t newId) {}
-	virtual handle_t getWindowHandle() { return 0; }
+	virtual void setWindowHandle(Handle newId) {}
+	virtual Handle getWindowHandle() { return Handle(0); }
 
 	// for pooled target
 	void allocReal();

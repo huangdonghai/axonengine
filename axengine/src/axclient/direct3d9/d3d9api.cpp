@@ -20,7 +20,7 @@ static bool CheckIfSupportHardwareMipmapGeneration(D3DFORMAT d3dformat, DWORD d3
 	return false;
 }
 
-handle_t D3D9_Api::createTexture2D(TexFormat format, int width, int height, int flags /*= 0*/)
+Handle D3D9_Api::createTexture2D(TexFormat format, int width, int height, int flags /*= 0*/)
 {
 	D3DFORMAT d3dformat;
 	D3DPOOL d3dpool = D3DPOOL_MANAGED;
@@ -59,27 +59,27 @@ handle_t D3D9_Api::createTexture2D(TexFormat format, int width, int height, int 
 
 	HRESULT hr;
 	V(d3d9Device->CreateTexture(width, height, d3dlevels, d3dusage, d3dformat, d3dpool, &result, 0));
-	return result;
+	return Handle(result);
 }
 
-void D3D9_Api::uploadTexture(handle_t htex, int level, void *pixels, TexFormat format /*= TexFormat::AUTO*/)
+void D3D9_Api::uploadTexture(Handle htex, int level, void *pixels, TexFormat format /*= TexFormat::AUTO*/)
 {
-	LPDIRECT3DTEXTURE9 tex = htex;
+	LPDIRECT3DTEXTURE9 tex = htex.to<LPDIRECT3DTEXTURE9>();
 }
 
-void D3D9_Api::uploadSubTexture(handle_t htex, const Rect &rect, const void *pixels, TexFormat format /*= TexFormat::AUTO*/)
-{
-
-}
-
-void D3D9_Api::generateMipmap(handle_t htex)
+void D3D9_Api::uploadSubTexture(Handle htex, const Rect &rect, const void *pixels, TexFormat format /*= TexFormat::AUTO*/)
 {
 
 }
 
-void D3D9_Api::deleteTexture2D(handle_t htex)
+void D3D9_Api::generateMipmap(Handle htex)
 {
-	LPDIRECT3DTEXTURE9 tex = htex;
+
+}
+
+void D3D9_Api::deleteTexture2D(Handle htex)
+{
+	LPDIRECT3DTEXTURE9 tex = htex.to<LPDIRECT3DTEXTURE9>();
 	SAFE_RELEASE(tex);
 }
 

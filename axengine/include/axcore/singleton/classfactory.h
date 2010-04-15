@@ -52,7 +52,7 @@ public:
 
 private:
 	String m_name;
-	handle_t m_handle;
+	Handle m_handle;
 	const ClassEntry *m_classEntries;
 };
 

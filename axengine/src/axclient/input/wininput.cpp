@@ -410,7 +410,7 @@ AX_BEGIN_NAMESPACE
 	void WinInput::setWindow(RenderTarget *gamewnd)
 	{
 		if (gamewnd) {
-			m_hwnd = (HWND)gamewnd->getWindowHandle();
+			m_hwnd = gamewnd->getWindowHandle().to<HWND>();
 		} else {
 			m_hwnd = 0;
 		}

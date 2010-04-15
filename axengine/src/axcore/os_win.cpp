@@ -137,18 +137,18 @@ String OsUtil::getClipboardString()
 	return out;
 }
 
-handle_t OsUtil::loadSysDll(const String &name)
+Handle OsUtil::loadSysDll(const String &name)
 {
 	String libname = name + ".dll";
 
-	handle_t hDll = (handle_t)::LoadLibraryW(u2w(libname).c_str());
-	if (NULL == hDll) {
+	Handle hDll = (Handle)::LoadLibraryW(u2w(libname).c_str());
+	if (!hDll) {
 		Errorf("LoadSysDll: can't load dll [%s]\n", libname.c_str());
 	}
 	return hDll;
 }
 
-handle_t OsUtil::loadDll(const String &name)
+Handle OsUtil::loadDll(const String &name)
 {
 #if 0
 	String libname = name + "D";
@@ -158,14 +158,14 @@ handle_t OsUtil::loadDll(const String &name)
 #endif
 }
 
-void *OsUtil::getProcEntry(handle_t handle, const String &name)
+void *OsUtil::getProcEntry(Handle handle, const String &name)
 {
-	return (void *)::GetProcAddress((HMODULE)handle, name.c_str());
+	return (void *)::GetProcAddress(handle.to<HMODULE>(), name.c_str());
 }
 
-bool OsUtil::freeDll(handle_t handle)
+bool OsUtil::freeDll(Handle handle)
 {
-	return ::FreeLibrary((HMODULE)handle) ? true : false;
+	return ::FreeLibrary(handle.to<HMODULE>()) ? true : false;
 }
 
 #include "Iphlpapi.h"

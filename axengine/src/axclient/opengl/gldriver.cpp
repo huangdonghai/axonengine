@@ -470,7 +470,7 @@ AX_BEGIN_NAMESPACE
 		return r_hdr.getInteger() && glDriverInfo->caps & Info::HDR;
 	}
 
-	RenderTarget *GLdriver::createWindowTarget(handle_t wndId, const String &name) {
+	RenderTarget *GLdriver::createWindowTarget(Handle wndId, const String &name) {
 		GLwindow *state = new GLwindow(wndId, name);
 		AX_ASSERT(state);
 		return state;

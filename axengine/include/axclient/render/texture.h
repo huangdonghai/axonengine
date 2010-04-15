@@ -193,7 +193,7 @@ protected:
 	TextureDict m_textureDict;
 };
 
-class TextureData;
+// class TextureData;
 
 class Texture2
 {
@@ -218,7 +218,7 @@ public:
 	Texture2(const String &debugname, TexFormat format, int width, int height);
 	~Texture2();
 
-	bool isNull() const { return m_data == 0; }
+	bool isNull() const;
 
 	void uploadSubTexture(const Rect &rect, const void *pixels, TexFormat format = TexFormat::AUTO);
 	void generateMipmap();
@@ -229,8 +229,8 @@ public:
 	void setBorderColor(SamplerState::BorderColor bordercolor);
 
 private:
-	CopyOnWritePointer<TextureData> m_data;
-	AX_DECLARE_DATA(TextureData);
+//	CopyOnWritePointer<TextureData> m_data;
+//	AX_DECLARE_DATA(TextureData);
 };
 
 

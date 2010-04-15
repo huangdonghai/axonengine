@@ -25,7 +25,7 @@ AX_BEGIN_NAMESPACE
 		virtual void stopCapture();
 
 	private:
-		handle_t m_hwnd;
+		Handle m_hwnd;
 	};
 
 	class XenonEventSource : public IInputSource {};

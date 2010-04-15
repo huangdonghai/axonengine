@@ -160,7 +160,7 @@ public:
 	CycleType getCycleType() const { return m_cycleType; }
 	void setCycleType(CycleType val) { m_cycleType = val; }
 
-	Control *findControl(Object *obj, handle_t handle) const;
+	Control *findControl(Object *obj, Handle handle) const;
 	Control *findControl(Object *obj, const char *name) const;
 	Control *findControl(Object *obj, Member *member) const;
 

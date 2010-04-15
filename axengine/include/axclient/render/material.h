@@ -200,12 +200,10 @@ inline void Material::setTexture(int sampler, Texture *tex) {
 	m_textures[sampler] = tex;
 }
 
-class MaterialData;
+//class MaterialData;
 
 class Material2
 {
-	AX_DECLARE_DATA(MaterialData);
-
 public:
 	Material2();
 	Material2(const String &name);
@@ -213,7 +211,7 @@ public:
 	Material2(const Material2 &rhs);
 	~Material2();
 
-	bool isNull() const { return !m_data; }
+	bool isNull();
 
 	const String &getShaderName() const;
 	bool isWireframe() const;
@@ -257,7 +255,7 @@ public:
 	int getPixelToTexelHeight() const;
 
 private:
-	CopyOnWritePointer<MaterialData> m_data;
+//	CopyOnWritePointer<MaterialData> m_data;
 };
 
 
