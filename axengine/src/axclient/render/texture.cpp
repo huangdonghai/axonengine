@@ -293,7 +293,7 @@ HardwareTexture::HardwareTexture(const FixedString &key, TexFormat format, int w
 
 	ms_texDict[key] = this;
 
-//	g_apiWrapper->createTexture2D(m_handle, format, width, height, Texture2::IF_NoMipmap);
+	g_apiWrapper->createTexture2D(&m_handle, format, width, height, Texture2::IF_NoMipmap);
 }
 
 HardwareTexture::~HardwareTexture()
@@ -301,21 +301,21 @@ HardwareTexture::~HardwareTexture()
 	ms_texDict.erase(getKey());
 
 	if (m_handle);
-//		g_renderApi->deleteTexture2D(m_handle);
+		g_apiWrapper->deleteTexture2D(&m_handle);
 }
 
 void HardwareTexture::uploadSubTexture(const Rect &rect, const void *pixels, TexFormat format)
 {
 	if (!m_handle) return;
 
-	g_renderApi->uploadSubTexture(m_handle, rect, pixels, format);
+	g_apiWrapper->uploadSubTexture(&m_handle, rect, pixels, format);
 }
 
 void HardwareTexture::generateMipmap()
 {
 	if (!m_handle) return;
 
-	g_renderApi->generateMipmap(m_handle);
+	g_apiWrapper->generateMipmap(&m_handle);
 }
 
 FixedString HardwareTexture::normalizeKey( const String &name )
@@ -354,36 +354,6 @@ HardwareTexturePtr HardwareTexture::createTexture(const String &debugname, TexFo
 	return result;
 }
 
-TextureBackend::TextureBackend(TextureData *data) : RenderBackend(data), m_data(data)
-{}
-
-TextureBackend::~TextureBackend()
-{}
-
-void TextureBackend::sync()
-{
-	m_samplerState = m_data->m_samplerState;
-}
-
-void TextureBackend::init(const String &name)
-{
-	m_hardwareRes = HardwareTexture::findTexture(name);
-}
-
-void TextureBackend::initUnique(const String &debugname, TexFormat format, int width, int height)
-{
-	m_hardwareRes = HardwareTexture::createTexture(debugname, format, width, height);
-}
-
-void TextureBackend::uploadSubTexture(const Rect &rect, const void *pixels, TexFormat format)
-{
-	m_hardwareRes->uploadSubTexture(rect, pixels, format);
-}
-
-void TextureBackend::generateMipmap()
-{
-	m_hardwareRes->generateMipmap();
-}
 
 TextureData::TextureData()
 {
@@ -391,16 +361,10 @@ TextureData::TextureData()
 
 TextureData::TextureData(const String &name)
 {
-	m_backend = new TextureBackend(this);
-
-	queueCmd1(m_backend, &TextureBackend::init).call(name);
 }
 
 TextureData::TextureData(const String &debugname, TexFormat format, int width, int height)
 {
-	m_backend = new TextureBackend(this);
-
-	queueCmd4(m_backend, &TextureBackend::initUnique).call(debugname, format, width, height);
 }
 
 TextureData::~TextureData()
@@ -410,45 +374,22 @@ TextureData::~TextureData()
 
 void TextureData::uploadSubTexture(const Rect &rect, const void *pixels, TexFormat format /*= TexFormat::AUTO*/)
 {
-	if (!m_backend) return;
-
-	if (rect.isEmpty())
-		return;
-
-	if (format == TexFormat::AUTO) {
-		Errorf("unknown texture format");
-		return;
-	}
-
-	size_t size = format.calculateDataSize(rect.width, rect.height);
-	// clone pixel
-	void *clonedPixels = g_renderQueue->allocType<byte_t>(size);
-	memcpy(clonedPixels, pixels, size);
-
-	queueCmd3(m_backend, &TextureBackend::uploadSubTexture).call(rect, clonedPixels, format);
 }
 
 void TextureData::generateMipmap()
 {
-	queueCmd0(m_backend, &TextureBackend::generateMipmap).call();
 }
 
 void TextureData::setClampMode(SamplerState::ClampMode clampmode)
 {
-	m_samplerState.clampMode = clampmode;
-	checkedSync();
 }
 
 void TextureData::setFilterMode(SamplerState::FilterMode filtermode)
 {
-	m_samplerState.filterMode = filtermode;
-	checkedSync();
 }
 
 void TextureData::setBorderColor(SamplerState::BorderColor bordercolor)
 {
-	m_samplerState.borderMode = bordercolor;
-	checkedSync();
 }
 
 

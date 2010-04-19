@@ -398,6 +398,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\axclient\render\render_interface.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\axclient\render\render_interface.h"
 				>
 			</File>

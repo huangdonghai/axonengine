@@ -3,63 +3,8 @@
 
 AX_BEGIN_NAMESPACE
 
-class PrimitiveBackend : public RenderBackend
-{
-public:
-
-	PrimitiveBackend();
-	virtual ~PrimitiveBackend();
-
-private:
-	bool m_isDirty;		// dirty
-	bool m_isVertexBufferDirty;
-	bool m_isIndexBufferDirty;
-	bool m_isWorldSpace; // primitive already in world space, so don't need model transform
-
-	MaterialBackend *m_material;
-	TextureBackend *m_lightMap;
-
-	bool m_isMatrixSet;
-	Matrix4 m_matrix;
-
-	int m_activedIndexes;
-
-	int m_chainId;
-	Interaction *m_headInteraction;
-};
-
-class GeometryPB : public PrimitiveBackend
-{
-public:
-private:
-	// vertex info
-	VertexType m_vertexType;
-	VertexBuffer m_vertexObject;
-
-	// index info
-	IndexBuffer m_indexObject;
-	ElementType m_elementType;
-
-	float m_geometrySize;		// point size or line width
-};
-
-class TextPB : public PrimitiveBackend
-{
-
-};
-
-class ChunkPB : public PrimitiveBackend {};
-
-class GroupPB : public PrimitiveBackend {};
-
-class RefPB : public PrimitiveBackend {};
-
-class InstancePB : public PrimitiveBackend {};
-
 class PrimitiveData : public RenderData
 {
-	AX_DECLARE_BACKEND(PrimitiveBackend);
-
 public:
 	PrimitiveData();
 	virtual ~PrimitiveData();

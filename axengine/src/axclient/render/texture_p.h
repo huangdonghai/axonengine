@@ -4,7 +4,6 @@
 AX_BEGIN_NAMESPACE
 
 class HardwareTexture;
-class TextureBackend;
 class TextureData;
 class Texture2;
 
@@ -20,6 +19,7 @@ public:
 		Missed
 	};
 
+	HardwareTexture() {}
 	HardwareTexture(const FixedString &key);
 	HardwareTexture(const FixedString &key, TexFormat format, int width, int height);
 	virtual ~HardwareTexture();
@@ -39,30 +39,9 @@ private:
 	static List<HardwareTexture*> ms_asioList;
 };
 
-class TextureBackend : public RenderBackend
-{
-public:
-	TextureBackend(TextureData *data);
-	virtual ~TextureBackend();
-
-	virtual void sync();
-
-	void init(const String &name);
-	void initUnique(const String &debugname, TexFormat format, int width, int height);
-	void uploadSubTexture(const Rect &rect, const void *pixels, TexFormat format);
-	void generateMipmap();
-
-private:
-	TextureData *m_data;
-	SamplerState m_samplerState;
-	HardwareTexturePtr m_hardwareRes;
-};
-
 class TextureData : public RenderData
 {
 public:
-	friend class TextureBackend;
-
 	TextureData();
 	TextureData(const String &name);
 	TextureData(const String &debugname, TexFormat format, int width, int height);
@@ -78,7 +57,7 @@ public:
 
 private:
 	SamplerState m_samplerState;
-	TextureBackend *m_backend;
+	HardwareTexture m_backend;
 };
 
 AX_END_NAMESPACE

@@ -3,20 +3,7 @@
 
 AX_BEGIN_NAMESPACE
 
-class RenderBackend;
 class RenderData;
-
-class RenderBackend
-{
-public:
-	RenderBackend(RenderData *data) : m_data(data) {}
-	virtual ~RenderBackend() { SafeDelete(m_data); }
-
-	virtual void sync() {}
-
-protected:
-	RenderData *m_data;
-};
 
 class SyncMethod
 {
@@ -237,7 +224,7 @@ public:
 		if (m_syncFrame == g_renderSystem->getFrameNum())
 			return;
 
-		queueCmd0(m_backend, &RenderBackend::sync).call();
+//		queueCmd0(m_backend, &RenderBackend::sync).call();
 		m_syncFrame = g_renderSystem->getFrameNum();
 	}
 
@@ -304,7 +291,6 @@ public:
 protected:
 	AtomicInt m_ref;
 	int m_syncFrame;
-	RenderBackend *m_backend;
 };
 
 

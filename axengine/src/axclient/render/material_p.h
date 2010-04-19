@@ -4,31 +4,6 @@
 AX_BEGIN_NAMESPACE
 
 class MaterialData;
-class MaterialBackend : public RenderBackend
-{
-public:
-
-	void sync(MaterialData *src);
-
-private:
-	FixedString m_key;
-	MaterialDecl *m_decl;
-
-	bool m_isDirty;
-
-	Color3 m_diffuse;
-	float m_opicity;
-	Color3 m_specular;
-	float m_shiness;
-
-	const ShaderInfo *m_shaderInfo;
-	FixedString m_shaderName;
-
-	// texgen
-	bool m_texgen;
-	Matrix4 m_texgenMatrix;
-};
-
 class MaterialData : public RenderData
 {
 public:
@@ -76,8 +51,6 @@ public:
 	int getPixelToTexelHeight() const;
 
 private:
-	const MaterialDecl *m_decl;
-
 	Color3 m_diffuse;
 	float m_opicity;
 	Color3 m_specular;
