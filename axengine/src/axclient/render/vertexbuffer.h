@@ -10,33 +10,33 @@ enum ElementType {
 	ElementType_TriStrip
 };
 
-extern RenderApi *g_renderApi;
+extern RenderApi *g_apiWrapper;
 
 class VertexBufferTraits
 {
 public:
-	static Handle create(int size) { g_renderApi->createVertexBuffer(size, Primitive2::HintDynamic); }
-	static void *lock(Handle h) { g_renderApi->lockVertexBuffer(h); }
-	static void unlock(Handle h) { g_renderApi->unlockVertexBuffer(h); }
-	static void free(Handle h) { g_renderApi->deleteVertexBuffer(h); }
+	static Handle create(int size) { return Handle(0); /*g_apiWrapper->createVertexBuffer(size, Primitive2::HintDynamic);*/ }
+	static void *lock(Handle h) { g_apiWrapper->lockVertexBuffer(h); }
+	static void unlock(Handle h) { g_apiWrapper->unlockVertexBuffer(h); }
+	static void free(Handle h) { g_apiWrapper->deleteVertexBuffer(h); }
 };
 
 class IndexBufferTraits
 {
 public:
-	static Handle create(int size) { g_renderApi->createIndexBuffer(size, Primitive2::HintDynamic); }
-	static void *lock(Handle h) { g_renderApi->lockIndexBuffer(h); }
-	static void unlock(Handle h) { g_renderApi->unlockIndexBuffer(h); }
-	static void free(Handle h) { g_renderApi->deleteIndexBuffer(h); }
+	static Handle create(int size) { return Handle(0)/*g_renderApi->createIndexBuffer(size, Primitive2::HintDynamic);*/ }
+	static void *lock(Handle h) { g_apiWrapper->lockIndexBuffer(h); }
+	static void unlock(Handle h) { g_apiWrapper->unlockIndexBuffer(h); }
+	static void free(Handle h) { g_apiWrapper->deleteIndexBuffer(h); }
 };
 
 class InstanceBufferTraits
 {
 public:
-	static Handle create(int size) { g_renderApi->createInstanceBuffer(size, Primitive2::HintDynamic); }
-	static void *lock(Handle h) { g_renderApi->lockInstanceBuffer(h); }
-	static void unlock(Handle h) { g_renderApi->unlockInstanceBuffer(h); }
-	static void free(Handle h) { g_renderApi->deleteInstanceBuffer(h); }
+	static Handle create(int size) { return Handle(0)/*g_apiWrapper->createInstanceBuffer(size, Primitive2::HintDynamic);*/ }
+	static void *lock(Handle h) { g_apiWrapper->lockInstanceBuffer(h); }
+	static void unlock(Handle h) { g_apiWrapper->unlockInstanceBuffer(h); }
+	static void free(Handle h) { g_apiWrapper->deleteInstanceBuffer(h); }
 };
 
 
