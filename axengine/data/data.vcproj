@@ -367,6 +367,15 @@
 			<File
 				RelativePath=".\shaders\_test.fx"
 				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="build-axon-fx"
+						VSPROFILE="vs_4_0"
+						PSPROFILE="ps_4_0"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\shaders\activeArea.fx"

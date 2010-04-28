@@ -14,25 +14,18 @@ class RenderApi
 public:
 	// new interface
 	static void (*createTexture2D)(HandlePtr h, TexFormat format, int width, int height, int flags);
-	static void (*uploadTexture)(HandleCptr htex, int level, void *pixels, TexFormat format);
-	static void (*uploadSubTexture)(HandleCptr htex, const Rect &rect, const void *pixels, TexFormat format);
-	static void (*generateMipmap)(HandleCptr htex);
-	static void (*deleteTexture2D)(HandleCptr htex);
+	static void (*uploadTexture)(HandleCptr h, int level, void *pixels, TexFormat format);
+	static void (*uploadSubTexture)(HandleCptr h, const Rect &rect, const void *pixels, TexFormat format);
+	static void (*generateMipmap)(HandleCptr h);
+	static void (*deleteTexture2D)(HandleCptr h);
 
 	static void (*createVertexBuffer)(HandlePtr h, int datasize, Primitive2::Hint hint);
-	static void *(*lockVertexBuffer)(HandleCptr hvb);
-	static void (*unlockVertexBuffer)(HandleCptr hvb);
-	static void (*deleteVertexBuffer)(HandleCptr hvb);
-
-	static void (*createInstanceBuffer)(HandleCptr h, int datasize, Primitive2::Hint hint);
-	static void *(*lockInstanceBuffer)(HandleCptr hbuf);
-	static void (*unlockInstanceBuffer)(HandleCptr hbuf);
-	static void (*deleteInstanceBuffer)(HandleCptr hbuf);
+	static void (*uploadVertexBuffer)(HandleCptr h, int datasize, void *p);
+	static void (*deleteVertexBuffer)(HandleCptr h);
 
 	static void (*createIndexBuffer)(HandlePtr h, int datasize, Primitive2::Hint hint);
-	static void *(*lockIndexBuffer)(HandleCptr hib);
-	static void (*unlockIndexBuffer)(HandleCptr hib);
-	static void (*deleteIndexBuffer)(HandleCptr hib);
+	static void (*uploadIndexBuffer)(HandleCptr h, int datasize, void *p);
+	static void (*deleteIndexBuffer)(HandleCptr h);
 
 	static void (*findShader)(HandlePtr h, MaterialBackend *mtl, GeometryPB *prim);
 	static void (*setShader)(HandleCptr shader, Technique tech);
@@ -69,11 +62,6 @@ public:
 	void *lockVertexBuffer(HandleCptr h);
 	void unlockVertexBuffer(HandleCptr h);
 	void deleteVertexBuffer(HandleCptr h);
-
-	void createInstanceBuffer(HandlePtr result, int datasize, Primitive2::Hint hint);
-	void *lockInstanceBuffer(HandleCptr h);
-	void unlockInstanceBuffer(HandleCptr h);
-	void deleteInstanceBuffer(HandleCptr h);
 
 	void createIndexBuffer(HandlePtr result, int datasize, Primitive2::Hint hint);
 	void *lockIndexBuffer(HandleCptr hib);

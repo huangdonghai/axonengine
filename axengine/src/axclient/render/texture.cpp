@@ -361,10 +361,13 @@ TextureData::TextureData()
 
 TextureData::TextureData(const String &name)
 {
+	FixedString key = HardwareTexture::normalizeKey(name);
+	m_backend = HardwareTexture::findTexture(key);
 }
 
 TextureData::TextureData(const String &debugname, TexFormat format, int width, int height)
 {
+	m_backend = HardwareTexture::createTexture(debugname, format, width, height);
 }
 
 TextureData::~TextureData()

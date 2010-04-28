@@ -57,7 +57,7 @@ public:
 
 private:
 	SamplerState m_samplerState;
-	HardwareTexture m_backend;
+	HardwareTexturePtr m_backend;
 };
 
 AX_END_NAMESPACE

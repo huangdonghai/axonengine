@@ -27,19 +27,15 @@ float4 s_boxrange[4];
 
 /*********** Generic Vertex Shader ******/
 
+cbuffer batch {
+	float4x4 worldMatrix;
+	float4 color;
+};
+
 VertexOut VP_main(VertexIn IN) {
     VertexOut OUT = (VertexOut)0;
 
-#if !G_D3D
-	OUT.color = IN.color.bgra;
-#else
-	OUT.color = IN.color;
-#endif
-
-	OUT.worldPos = VP_modelToWorld(IN, IN.xyz);
-	OUT.hpos = VP_worldToClip(OUT.worldPos);
-
-//	VP_final(IN, OUT);
+	OUT.hpos = color;
 
     return OUT;
 }
