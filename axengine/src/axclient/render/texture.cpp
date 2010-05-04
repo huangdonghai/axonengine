@@ -270,10 +270,10 @@ void TextureManager::texlist_f(const CmdArgs &args)
 
 //---------------------------------------------------------------------------
 
-Dict<FixedString, HardwareTexture*> HardwareTexture::ms_texDict;
-List<HardwareTexture*> HardwareTexture::ms_asioList;
+Dict<FixedString, TextureWrap*> TextureWrap::ms_texDict;
+List<TextureWrap*> TextureWrap::ms_asioList;
 
-HardwareTexture::HardwareTexture(const FixedString &key)
+TextureWrap::TextureWrap(const FixedString &key)
 {
 	setKey(key);
 
@@ -287,7 +287,7 @@ HardwareTexture::HardwareTexture(const FixedString &key)
 }
 
 
-HardwareTexture::HardwareTexture(const FixedString &key, TexFormat format, int width, int height)
+TextureWrap::TextureWrap(const FixedString &key, TexFormat format, int width, int height)
 {
 	setKey(key);
 
@@ -296,7 +296,7 @@ HardwareTexture::HardwareTexture(const FixedString &key, TexFormat format, int w
 	g_apiWrapper->createTexture2D(&m_handle, format, width, height, Texture2::IF_NoMipmap);
 }
 
-HardwareTexture::~HardwareTexture()
+TextureWrap::~TextureWrap()
 {
 	ms_texDict.erase(getKey());
 
@@ -304,21 +304,21 @@ HardwareTexture::~HardwareTexture()
 		g_apiWrapper->deleteTexture2D(&m_handle);
 }
 
-void HardwareTexture::uploadSubTexture(const Rect &rect, const void *pixels, TexFormat format)
+void TextureWrap::uploadSubTexture(const Rect &rect, const void *pixels, TexFormat format)
 {
 	if (!m_handle) return;
 
 	g_apiWrapper->uploadSubTexture(&m_handle, rect, pixels, format);
 }
 
-void HardwareTexture::generateMipmap()
+void TextureWrap::generateMipmap()
 {
 	if (!m_handle) return;
 
 	g_apiWrapper->generateMipmap(&m_handle);
 }
 
-FixedString HardwareTexture::normalizeKey( const String &name )
+FixedString TextureWrap::normalizeKey( const String &name )
 {
 	String key;
 
@@ -332,9 +332,9 @@ FixedString HardwareTexture::normalizeKey( const String &name )
 	return key;
 }
 
-HardwareTexturePtr HardwareTexture::findTexture(const FixedString &key)
+HardwareTexturePtr TextureWrap::findTexture(const FixedString &key)
 {
-	Dict<FixedString, HardwareTexture*>::const_iterator it = ms_texDict.find(key);
+	Dict<FixedString, TextureWrap*>::const_iterator it = ms_texDict.find(key);
 
 	if (it != ms_texDict.end())
 		return it->second;
@@ -342,92 +342,16 @@ HardwareTexturePtr HardwareTexture::findTexture(const FixedString &key)
 	return 0;
 }
 
-HardwareTexturePtr HardwareTexture::createTexture(const String &debugname, TexFormat format, int width, int height)
+HardwareTexturePtr TextureWrap::createTexture(const String &debugname, TexFormat format, int width, int height)
 {
 	std::stringstream ss;
 	ss << "_" << debugname << "$" << g_system->generateId();
 
 	FixedString key = ss.str();
 
-	HardwareTexture *result = new HardwareTexture(key, format, width, height);
+	TextureWrap *result = new TextureWrap(key, format, width, height);
 
 	return result;
-}
-
-
-TextureData::TextureData()
-{
-}
-
-TextureData::TextureData(const String &name)
-{
-	FixedString key = HardwareTexture::normalizeKey(name);
-	m_backend = HardwareTexture::findTexture(key);
-}
-
-TextureData::TextureData(const String &debugname, TexFormat format, int width, int height)
-{
-	m_backend = HardwareTexture::createTexture(debugname, format, width, height);
-}
-
-TextureData::~TextureData()
-{
-
-}
-
-void TextureData::uploadSubTexture(const Rect &rect, const void *pixels, TexFormat format /*= TexFormat::AUTO*/)
-{
-}
-
-void TextureData::generateMipmap()
-{
-}
-
-void TextureData::setClampMode(SamplerState::ClampMode clampmode)
-{
-}
-
-void TextureData::setFilterMode(SamplerState::FilterMode filtermode)
-{
-}
-
-void TextureData::setBorderColor(SamplerState::BorderColor bordercolor)
-{
-}
-
-
-Texture2::Texture2()
-{}
-
-Texture2::Texture2(const String &name)
-{
-}
-
-Texture2::Texture2(const String &debugname, TexFormat format, int width, int height)
-{
-}
-
-Texture2::~Texture2()
-{}
-
-void Texture2::uploadSubTexture(const Rect &rect, const void *pixels, TexFormat format /*= TexFormat::AUTO*/)
-{
-}
-
-void Texture2::generateMipmap()
-{
-}
-
-void Texture2::setClampMode(SamplerState::ClampMode clampmode)
-{
-}
-
-void Texture2::setFilterMode(SamplerState::FilterMode filtermode)
-{
-}
-
-void Texture2::setBorderColor(SamplerState::BorderColor bordercolor)
-{
 }
 
 AX_END_NAMESPACE

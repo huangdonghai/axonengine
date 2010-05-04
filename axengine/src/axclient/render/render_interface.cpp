@@ -60,7 +60,7 @@ private:
 template <typename Arg0, typename Arg1>
 class ApiCommand_<void (*)(Arg0,Arg1)> : public ApiWrapper::Command {
 public:
-	typedef Rt (*FunctionType)(Arg0,Arg1);
+	typedef void (*FunctionType)(Arg0,Arg1);
 
 	ApiCommand_(FunctionType m)
 		: m_m(m)
@@ -230,14 +230,14 @@ static ApiCommand_<void (*)(Arg0,Arg1,Arg2,Arg3,Arg4)> &AddCommand5(void (*metho
 	return *result;
 }
 
-void ApiWrapper::createTexture2D( HandlePtr result, TexFormat format, int width, int height, int flags /*= 0*/ )
+void ApiWrapper::createTexture2D(HandlePtr result, TexFormat format, int width, int height, int flags /*= 0*/)
 {
-	AddCommand5(RenderApi::createTexture2D).argsRt(result, format, width, height, flags);
+	AddCommand5(RenderApi::createTexture2D).args(result, format, width, height, flags);
 }
 
 void ApiWrapper::uploadTexture( HandleCptr h, int level, void *pixels, TexFormat format )
 {
-	AddCommand3(RenderApi::uploadTexture).args(h, level, pixels, format);
+	AddCommand4(RenderApi::uploadTexture).args(h, level, pixels, format);
 }
 
 AX_END_NAMESPACE
