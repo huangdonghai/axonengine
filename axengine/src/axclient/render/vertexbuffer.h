@@ -10,63 +10,74 @@ enum ElementType {
 	ElementType_TriStrip
 };
 
-class VertexBufferWrap
+class BufferWrap
 {
 public:
-	VertexBufferWrap();
+	BufferWrap();
+	virtual ~BufferWrap();
 
-private:
+protected:
 	Primitive::Hint m_hint;
 	Handle m_h;
 	int m_dataSize;
 };
 
-class IndexBufferWrap
+class VertexBufferWrap : public BufferWrap
 {
 public:
-	IndexBufferWrap();
+	VertexBufferWrap(Primitive::Hint hint, int size);
+	virtual ~VertexBufferWrap();
 
 private:
-	Handle m_h;
+	int m_dataSize;
+};
+
+class IndexBufferWrap : public BufferWrap
+{
+public:
+	IndexBufferWrap(Primitive::Hint hint, int count);
+	virtual ~IndexBufferWrap();
+
+private:
+};
+
+class VertexObject
+{
+public:
+private:
+	VertexBufferWrap *m_buffer;
+	int m_offset;		// byte offset
+	int m_dataSize;
+	int m_count;
+	VertexType m_vt;
+	bool m_inStack;
+};
+
+class InstanceObject
+{
+public:
+private:
+	VertexBufferWrap *m_buffer;
+	int m_offset;
+	int m_count;
+};
+
+class IndexObject
+{
+public:
+private:
+	IndexBufferWrap *m_buffer;
 	int m_dataSize;
 	int m_count;
 	int m_activeCount;
 	int m_offset;		// index offset, not byte offset
+	bool m_inStack;
 };
 
-
-extern ApiWrapper *g_apiWrapper;
-
-class VertexBufferTraits
-{
-public:
-	static Handle create(int size) { return Handle(0); /*g_apiWrapper->createVertexBuffer(size, Primitive2::HintDynamic);*/ }
-//	static void *lock(Handle h) { g_apiWrapper->lockVertexBuffer(h); }
-//	static void unlock(Handle h) { g_apiWrapper->unlockVertexBuffer(h); }
-//	static void free(Handle h) { g_apiWrapper->deleteVertexBuffer(h); }
-};
-
-class IndexBufferTraits
-{
-public:
-	static Handle create(int size) { return Handle(0); /*g_renderApi->createIndexBuffer(size, Primitive2::HintDynamic);*/ }
-//	static void *lock(Handle h) { g_apiWrapper->lockIndexBuffer(h); }
-//	static void unlock(Handle h) { g_apiWrapper->unlockIndexBuffer(h); }
-//	static void free(Handle h) { g_apiWrapper->deleteIndexBuffer(h); }
-};
-
-class InstanceBufferTraits
-{
-public:
-	static Handle create(int size) { return Handle(0);/*g_apiWrapper->createInstanceBuffer(size, Primitive2::HintDynamic);*/ }
-//	static void *lock(Handle h) { g_apiWrapper->lockInstanceBuffer(h); }
-//	static void unlock(Handle h) { g_apiWrapper->unlockInstanceBuffer(h); }
-//	static void free(Handle h) { g_apiWrapper->deleteInstanceBuffer(h); }
-};
-
+extern ApiWrap *g_apiWrap;
 
 struct DynamicBuf {
-	Handle buffer;
+	BufferWrap *buffer;
 	int offset;
 	void *writePtr;
 };
@@ -195,9 +206,9 @@ class InstanceBuffer
 class BufferManager
 {
 public:
-	typedef ChainedBuffer<1024*1024, VertexBufferTraits> VertexBufferChain;
-	typedef ChainedBuffer<256*1024, InstanceBufferTraits> InstanceBufferChain;
-	typedef ChainedBuffer<512*1024, IndexBufferTraits> IndexBufferChain;
+	typedef ChainedBuffer<1024*1024, VertexBufferWrap> VertexBufferChain;
+	typedef ChainedBuffer<256*1024, VertexBufferWrap> InstanceBufferChain;
+	typedef ChainedBuffer<512*1024, IndexBufferWrap> IndexBufferChain;
 
 	void beginAlloc();
 	DynamicBuf allocVb(int datasize);

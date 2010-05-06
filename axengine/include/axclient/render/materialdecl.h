@@ -81,7 +81,7 @@ public:
 inline TextureDef::TextureDef() : clamp(false), clampToEdge(false), filter(true) {}
 
 typedef Sequence<float> FloatSeq;
-typedef Dict<String, FloatSeq> ShaderParams;
+typedef Dict<FixedString, FloatSeq> ShaderParams;
 
 class MaterialDecl
 {

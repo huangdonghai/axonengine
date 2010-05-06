@@ -3,43 +3,54 @@
 
 AX_BEGIN_NAMESPACE
 
-class MaterialBackend;
-class GeometryPB;
+typedef Handle *phandle_t;
 
-typedef Handle * HandlePtr;
-typedef const Handle * HandleCptr;
+/*
+class WrapHandle {
+public:
+	WrapHandle() : m_realHandle(0) {}
+	WrapHandle(const Handle &h) : m_realHandle(&h) {}
+	WrapHandle(const WrapHandle &rhs) { m_realHandle = rhs.m_realHandle; }
+	~WrapHandle() {}
+
+private:
+	Handle *m_realHandle;
+};
+*/
 
 class RenderApi
 {
 public:
 	// new interface
-	static void (*createTexture2D)(HandlePtr h, TexFormat format, int width, int height, int flags);
-	static void (*uploadTexture)(HandleCptr h, int level, void *pixels, TexFormat format);
-	static void (*uploadSubTexture)(HandleCptr h, const Rect &rect, const void *pixels, TexFormat format);
-	static void (*generateMipmap)(HandleCptr h);
-	static void (*deleteTexture2D)(HandleCptr h);
+	static void (*createTexture2D)(phandle_t h, TexFormat format, int width, int height, int flags);
+	static void (*uploadTexture)(phandle_t h, int level, void *pixels, TexFormat format);
+	static void (*uploadSubTexture)(phandle_t h, const Rect &rect, const void *pixels, TexFormat format);
+	static void (*generateMipmap)(phandle_t h);
+	static void (*deleteTexture2D)(phandle_t h);
 
-	static void (*createVertexBuffer)(HandlePtr h, int datasize, Primitive2::Hint hint);
-	static void (*uploadVertexBuffer)(HandleCptr h, int datasize, void *p);
-	static void (*deleteVertexBuffer)(HandleCptr h);
+	static void (*createVertexBuffer)(phandle_t h, int datasize, Primitive::Hint hint);
+	static void (*uploadVertexBuffer)(phandle_t h, int datasize, void *p);
+	static void (*deleteVertexBuffer)(phandle_t h);
 
-	static void (*createIndexBuffer)(HandlePtr h, int datasize, Primitive2::Hint hint);
-	static void (*uploadIndexBuffer)(HandleCptr h, int datasize, void *p);
-	static void (*deleteIndexBuffer)(HandleCptr h);
+	static void (*createIndexBuffer)(phandle_t h, int datasize, Primitive::Hint hint);
+	static void (*uploadIndexBuffer)(phandle_t h, int datasize, void *p);
+	static void (*deleteIndexBuffer)(phandle_t h);
 
-	static void (*findShader)(HandlePtr h, MaterialBackend *mtl, GeometryPB *prim);
-	static void (*setShader)(HandleCptr shader, Technique tech);
+	static void (*findShader)(phandle_t h, const FixedString & name, const ShaderMacro &sm);
+	static void (*setShader)(phandle_t shader, Technique tech);
+	static void (*setVsConst)(const FixedString &name, int count, float *value);
+	static void (*setPsConst)(const FixedString &name, int count, float *value);
 	static void (*setPass)(int pass);
 
-	static void (*setVertices)(HandlePtr vb, VertexType vt, int vertcount);
-	static void (*setInstanceVertices)(HandlePtr vb, VertexType vt, int vertcount, Handle inb, int incount);
-	static void (*setIndices)(HandlePtr ib);
+	static void (*setVertices)(phandle_t vb, VertexType vt, int vertcount);
+	static void (*setInstanceVertices)(phandle_t vb, VertexType vt, int vertcount, Handle inb, int incount);
+	static void (*setIndices)(phandle_t ib);
 
 //	static void dip(ElementType et, int offset, int vertcount, int indicescount) = 0;
 	static void (*dipUp)();
 };
 
-class ApiWrapper
+class ApiWrap
 {
 public:
 	class Command
@@ -52,29 +63,28 @@ public:
 	};
 
 	// new interface
-	void createTexture2D(HandlePtr result, TexFormat format, int width, int height, int flags = 0);
-	void uploadTexture(HandleCptr h, int level, void *pixels, TexFormat format);
-	void uploadSubTexture(HandleCptr h, const Rect &rect, const void *pixels, TexFormat format);
-	void generateMipmap(HandleCptr h);
-	void deleteTexture2D(HandleCptr h);
+	void createTexture2D(phandle_t result, TexFormat format, int width, int height, int flags = 0);
+	void uploadTexture(phandle_t h, int level, void *pixels, TexFormat format);
+	void uploadSubTexture(phandle_t h, const Rect &rect, const void *pixels, TexFormat format);
+	void generateMipmap(phandle_t h);
+	void deleteTexture2D(phandle_t h);
 
-	void createVertexBuffer(HandleCptr result, int datasize, Primitive2::Hint hint);
-	void *lockVertexBuffer(HandleCptr h);
-	void unlockVertexBuffer(HandleCptr h);
-	void deleteVertexBuffer(HandleCptr h);
+	void createVertexBuffer(phandle_t result, int datasize, Primitive::Hint hint);
+	void *lockVertexBuffer(phandle_t h);
+	void unlockVertexBuffer(phandle_t h);
+	void deleteVertexBuffer(phandle_t h);
 
-	void createIndexBuffer(HandlePtr result, int datasize, Primitive2::Hint hint);
-	void *lockIndexBuffer(HandleCptr hib);
-	void unlockIndexBuffer(HandleCptr hib);
-	void deleteIndexBuffer(HandleCptr hib);
+	void createIndexBuffer(phandle_t result, int datasize, Primitive::Hint hint);
+	void *lockIndexBuffer(phandle_t hib);
+	void unlockIndexBuffer(phandle_t hib);
+	void deleteIndexBuffer(phandle_t hib);
 
-	void setShader(MaterialBackend *mtl, GeometryPB *prim);
 	int setShader(Handle shader, Technique tech);
 	void setPass(int pass);
 
-	void setVertices(HandleCptr vb, VertexType vt, int vertcount);
-	void setInstanceVertices(HandleCptr vb, VertexType vt, int vertcount, Handle inb, int incount);
-	void setIndices(HandleCptr ib);
+	void setVertices(phandle_t vb, VertexType vt, int vertcount);
+	void setInstanceVertices(phandle_t vb, VertexType vt, int vertcount, Handle inb, int incount);
+	void setIndices(phandle_t ib);
 
 	//	virtual void dip(ElementType et, int offset, int vertcount, int indicescount) = 0;
 	void dipUp();
@@ -85,12 +95,8 @@ public:
 	void drawPrimitive();
 
 protected:
-
-
-protected:
 	void *allocHunk(int size);
 
-private:
 private:
 	enum { HUNK_SIZE = 4 * 1024 * 1024, MAX_COMMANDS = 64 * 1024 };
 	byte_t m_hunk[HUNK_SIZE];

@@ -293,7 +293,7 @@ TextureWrap::TextureWrap(const FixedString &key, TexFormat format, int width, in
 
 	ms_texDict[key] = this;
 
-	g_apiWrapper->createTexture2D(&m_handle, format, width, height, Texture2::IF_NoMipmap);
+	g_apiWrap->createTexture2D(&m_handle, format, width, height, Texture2::IF_NoMipmap);
 }
 
 TextureWrap::~TextureWrap()
@@ -301,21 +301,21 @@ TextureWrap::~TextureWrap()
 	ms_texDict.erase(getKey());
 
 	if (m_handle);
-		g_apiWrapper->deleteTexture2D(&m_handle);
+		g_apiWrap->deleteTexture2D(&m_handle);
 }
 
 void TextureWrap::uploadSubTexture(const Rect &rect, const void *pixels, TexFormat format)
 {
 	if (!m_handle) return;
 
-	g_apiWrapper->uploadSubTexture(&m_handle, rect, pixels, format);
+	g_apiWrap->uploadSubTexture(&m_handle, rect, pixels, format);
 }
 
 void TextureWrap::generateMipmap()
 {
 	if (!m_handle) return;
 
-	g_apiWrapper->generateMipmap(&m_handle);
+	g_apiWrap->generateMipmap(&m_handle);
 }
 
 FixedString TextureWrap::normalizeKey( const String &name )
@@ -332,7 +332,7 @@ FixedString TextureWrap::normalizeKey( const String &name )
 	return key;
 }
 
-HardwareTexturePtr TextureWrap::findTexture(const FixedString &key)
+TextureWrapPtr TextureWrap::findTexture(const FixedString &key)
 {
 	Dict<FixedString, TextureWrap*>::const_iterator it = ms_texDict.find(key);
 
@@ -342,7 +342,7 @@ HardwareTexturePtr TextureWrap::findTexture(const FixedString &key)
 	return 0;
 }
 
-HardwareTexturePtr TextureWrap::createTexture(const String &debugname, TexFormat format, int width, int height)
+TextureWrapPtr TextureWrap::createTexture(const String &debugname, TexFormat format, int width, int height)
 {
 	std::stringstream ss;
 	ss << "_" << debugname << "$" << g_system->generateId();

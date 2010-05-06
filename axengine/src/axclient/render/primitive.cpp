@@ -1565,9 +1565,4 @@ void PrimitiveManager::hintUncache(Primitive *prim)
 	m_waitUncache.push_back(id-1);
 }
 
-
-LinePrimitive::LinePrimitive(Hint hint)
-{
-}
-
 AX_END_NAMESPACE

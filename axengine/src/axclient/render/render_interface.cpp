@@ -2,15 +2,39 @@
 
 AX_BEGIN_NAMESPACE
 
+void (*RenderApi::createTexture2D)(phandle_t h, TexFormat format, int width, int height, int flags) = 0;
+void (*RenderApi::uploadTexture)(phandle_t h, int level, void *pixels, TexFormat format);
+void (*RenderApi::uploadSubTexture)(phandle_t h, const Rect &rect, const void *pixels, TexFormat format);
+void (*RenderApi::generateMipmap)(phandle_t h);
+void (*RenderApi::deleteTexture2D)(phandle_t h);
+	  
+void (*RenderApi::createVertexBuffer)(phandle_t h, int datasize, Primitive::Hint hint);
+void (*RenderApi::uploadVertexBuffer)(phandle_t h, int datasize, void *p);
+void (*RenderApi::deleteVertexBuffer)(phandle_t h);
+	  
+void (*RenderApi::createIndexBuffer)(phandle_t h, int datasize, Primitive::Hint hint);
+void (*RenderApi::uploadIndexBuffer)(phandle_t h, int datasize, void *p);
+void (*RenderApi::deleteIndexBuffer)(phandle_t h);
+	  
+void (*RenderApi::findShader)(phandle_t h, const FixedString & name, const ShaderMacro &sm);
+void (*RenderApi::setShader)(phandle_t shader, Technique tech);
+void (*RenderApi::setVsConst)(const FixedString &name, int count, float *value);
+void (*RenderApi::setPsConst)(const FixedString &name, int count, float *value);
+void (*RenderApi::setPass)(int pass);
+	  
+void (*RenderApi::setVertices)(phandle_t vb, VertexType vt, int vertcount);
+void (*RenderApi::setInstanceVertices)(phandle_t vb, VertexType vt, int vertcount, Handle inb, int incount);
+void (*RenderApi::setIndices)(phandle_t ib);
+
 template <typename Signature>
-class ApiCommand_ : public ApiWrapper::Command
+class ApiCommand_ : public ApiWrap::Command
 {
 public:
 	AX_STATIC_ASSERT(0);
 };
 
 template <>
-class ApiCommand_<void (*)()> : public ApiWrapper::Command
+class ApiCommand_<void (*)()> : public ApiWrap::Command
 {
 public:
 	typedef void (*FunctionType)();
@@ -33,7 +57,7 @@ private:
 };
 
 template <typename Arg0>
-class ApiCommand_<void (*)(Arg0)> : public ApiWrapper::Command
+class ApiCommand_<void (*)(Arg0)> : public ApiWrap::Command
 {
 public:
 	typedef void (*FunctionType)(Arg0);
@@ -58,7 +82,7 @@ private:
 };
 
 template <typename Arg0, typename Arg1>
-class ApiCommand_<void (*)(Arg0,Arg1)> : public ApiWrapper::Command {
+class ApiCommand_<void (*)(Arg0,Arg1)> : public ApiWrap::Command {
 public:
 	typedef void (*FunctionType)(Arg0,Arg1);
 
@@ -84,7 +108,7 @@ private:
 };
 
 template <typename Arg0, typename Arg1, typename Arg2>
-class ApiCommand_<void (*)(Arg0,Arg1,Arg2)> : public ApiWrapper::Command {
+class ApiCommand_<void (*)(Arg0,Arg1,Arg2)> : public ApiWrap::Command {
 public:
 	typedef void (*FunctionType)(Arg0,Arg1,Arg2);
 
@@ -115,7 +139,7 @@ private:
 };
 
 template <typename Arg0, typename Arg1, typename Arg2, typename Arg3>
-class ApiCommand_<void (*)(Arg0,Arg1,Arg2,Arg3)> : public ApiWrapper::Command {
+class ApiCommand_<void (*)(Arg0,Arg1,Arg2,Arg3)> : public ApiWrap::Command {
 public:
 	typedef void (*FunctionType)(Arg0,Arg1,Arg2,Arg3);
 
@@ -146,7 +170,7 @@ private:
 
 
 template <typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4>
-class ApiCommand_<void (*)(Arg0,Arg1,Arg2,Arg3,Arg4)> : public ApiWrapper::Command {
+class ApiCommand_<void (*)(Arg0,Arg1,Arg2,Arg3,Arg4)> : public ApiWrap::Command {
 public:
 	typedef void (*FunctionType)(Arg0,Arg1,Arg2,Arg3,Arg4);
 
@@ -230,12 +254,12 @@ static ApiCommand_<void (*)(Arg0,Arg1,Arg2,Arg3,Arg4)> &AddCommand5(void (*metho
 	return *result;
 }
 
-void ApiWrapper::createTexture2D(HandlePtr result, TexFormat format, int width, int height, int flags /*= 0*/)
+void ApiWrap::createTexture2D(phandle_t result, TexFormat format, int width, int height, int flags /*= 0*/)
 {
 	AddCommand5(RenderApi::createTexture2D).args(result, format, width, height, flags);
 }
 
-void ApiWrapper::uploadTexture( HandleCptr h, int level, void *pixels, TexFormat format )
+void ApiWrap::uploadTexture( phandle_t h, int level, void *pixels, TexFormat format )
 {
 	AddCommand4(RenderApi::uploadTexture).args(h, level, pixels, format);
 }
