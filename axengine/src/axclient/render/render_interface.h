@@ -46,7 +46,7 @@ public:
 	static void (*setInstanceVertices)(phandle_t vb, VertexType vt, int vertcount, Handle inb, int incount);
 	static void (*setIndices)(phandle_t ib);
 
-//	static void dip(ElementType et, int offset, int vertcount, int indicescount) = 0;
+//	static void dip(ElementType et, int offset, int vertcount, int indices_count) = 0;
 	static void (*dipUp)();
 };
 
@@ -70,14 +70,12 @@ public:
 	void deleteTexture2D(phandle_t h);
 
 	void createVertexBuffer(phandle_t result, int datasize, Primitive::Hint hint);
-	void *lockVertexBuffer(phandle_t h);
-	void unlockVertexBuffer(phandle_t h);
+	void uploadVertexBuffer(phandle_t h, int datasize, void *p);
 	void deleteVertexBuffer(phandle_t h);
 
 	void createIndexBuffer(phandle_t result, int datasize, Primitive::Hint hint);
-	void *lockIndexBuffer(phandle_t hib);
-	void unlockIndexBuffer(phandle_t hib);
-	void deleteIndexBuffer(phandle_t hib);
+	void uploadIndexBuffer(phandle_t h, int datasize, void *p);
+	void deleteIndexBuffer(phandle_t h);
 
 	int setShader(Handle shader, Technique tech);
 	void setPass(int pass);

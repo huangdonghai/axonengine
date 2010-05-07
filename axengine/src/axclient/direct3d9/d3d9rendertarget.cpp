@@ -379,8 +379,6 @@ void D3D9TargetManager::syncFrame()
 	}
 }
 
-extern bool trTexFormat(TexFormat texformat, D3DFORMAT &d3dformat);
-
 void D3D9TargetManager::checkFormats()
 {
 	TypeZeroArray(m_formatSupports);

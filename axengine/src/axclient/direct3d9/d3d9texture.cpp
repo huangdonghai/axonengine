@@ -14,7 +14,8 @@ AX_BEGIN_NAMESPACE
 
 static D3D9texturemanager *s_manager;
 
-inline bool trTexFormat(TexFormat texformat, D3DFORMAT &d3dformat) {
+inline bool trTexFormat(TexFormat texformat, D3DFORMAT &d3dformat)
+{
 	d3dformat = D3DFMT_UNKNOWN;
 
 	switch (texformat) {
