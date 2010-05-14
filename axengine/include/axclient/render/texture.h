@@ -193,47 +193,6 @@ protected:
 	TextureDict m_textureDict;
 };
 
-// class TextureData;
-
-class Texture2
-{
-public:
-	enum InitFlag {
-		IF_NoMipmap = 1,
-		IF_NoDownsample = 2,
-		IF_AutoGenMipmap = 4,
-		IF_RenderTarget = 8
-	};
-
-	typedef Flags_<InitFlag> InitFlags;
-
-	enum TexType {
-		TT_2D,
-		TT_3D,
-		TT_CUBE,
-	};
-
-	Texture2();
-	Texture2(const String &name);
-	Texture2(const String &debugname, TexFormat format, int width, int height);
-	~Texture2();
-
-	bool isNull() const;
-
-	void uploadSubTexture(const Rect &rect, const void *pixels, TexFormat format = TexFormat::AUTO);
-	void generateMipmap();
-
-	// texture parameters
-	void setClampMode(SamplerState::ClampMode clampmwode);
-	void setFilterMode(SamplerState::FilterMode filtermode);
-	void setBorderColor(SamplerState::BorderColor bordercolor);
-
-private:
-//	CopyOnWritePointer<TextureData> m_data;
-//	AX_DECLARE_DATA(TextureData);
-};
-
-
 AX_END_NAMESPACE
 
 #endif // AX_RENDER_TEXTURE_H

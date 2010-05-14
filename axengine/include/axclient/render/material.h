@@ -200,65 +200,6 @@ inline void Material::setTexture(int sampler, Texture *tex) {
 	m_textures[sampler] = tex;
 }
 
-//class MaterialData;
-
-class Material2
-{
-public:
-	Material2();
-	Material2(const String &name);
-	Material2(const String &name, const String &baseName);
-	Material2(const Material2 &rhs);
-	~Material2();
-
-	bool isNull();
-
-	const String &getShaderName() const;
-	bool isWireframe() const;
-	bool isPhysicsHelper() const;
-
-	void setDiffuse(const Color3 &v);
-	void setSpecular(const Color3 &v);
-	void setShiness(float shiness);
-	void setDetailScale(float scale);
-	float getDetailScale() const;
-	bool haveDetail() const;
-
-	Color3 getMatDiffuse() const;
-	Color3 getMatSpecular() const;
-	float getMatShiness() const;
-
-	// features and shader parameter
-	void setFeature(int index, bool enabled);
-	bool isFeatureEnabled(int index) const;
-	void setLiteral(int index, int value);
-	int getLiteral(int index) const;
-	void clearFeatures();
-	void clearLiterals();
-
-	// texture setting and getting
-	const Texture2 &getTexture(int sample) const;
-	void setTexture(int sampler, const Texture2 &tex);
-
-	// parameter setting and getting
-	void setParameter(const String &name, int num, const float *ptr);
-	const ShaderParams &getParameters() const;
-
-	void setBaseTcMatrix(const Matrix4 &matrix);
-	bool isBaseTcAnim() const;
-	const Matrix4 &getBaseTcMatrix() const;
-
-	// pixel to texel
-	void setPixelToTexel(int width, int height);
-	bool isPixelToTexelEnabled() const;
-	int getPixelToTexelWidth() const;
-	int getPixelToTexelHeight() const;
-
-private:
-//	CopyOnWritePointer<MaterialData> m_data;
-};
-
-
 
 AX_END_NAMESPACE
 

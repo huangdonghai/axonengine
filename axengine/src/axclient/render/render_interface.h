@@ -56,7 +56,7 @@ public:
 	class Command
 	{
 	public:
-		Command();
+		Command() {}
 		virtual ~Command() {}
 		virtual void exec() = 0;
 		int hunkMark;

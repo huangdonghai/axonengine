@@ -50,6 +50,9 @@ FontPtr g_miniFont;
 	TreeManager *g_treeManager;
 #endif // AX_CONFIG_OPTION_USE_SPEEDTREE_40
 
+// module object
+ApiWrap *g_apiWrap = 0;
+
 void axClientInit()
 {
 #if 0

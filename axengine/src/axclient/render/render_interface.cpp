@@ -125,10 +125,7 @@ public:
 
 	virtual void exec()
 	{
-		if (m_rt)
-			(*m_rt) = (m_m)(m_arg0, m_arg1, m_arg2);
-		else
-			(m_m)(m_arg0, m_arg1, m_arg2);
+		(m_m)(m_arg0, m_arg1, m_arg2);
 	}
 
 private:
@@ -262,6 +259,51 @@ void ApiWrap::createTexture2D(phandle_t result, TexFormat format, int width, int
 void ApiWrap::uploadTexture( phandle_t h, int level, void *pixels, TexFormat format )
 {
 	AddCommand4(RenderApi::uploadTexture).args(h, level, pixels, format);
+}
+
+void ApiWrap::uploadSubTexture(phandle_t h, const Rect &rect, const void *pixels, TexFormat format)
+{
+	AddCommand4(RenderApi::uploadSubTexture).args(h, rect, pixels, format);
+}
+
+void ApiWrap::generateMipmap(phandle_t h)
+{
+	AddCommand1(RenderApi::generateMipmap).args(h);
+}
+
+void ApiWrap::deleteTexture2D(phandle_t h)
+{
+	AddCommand1(RenderApi::deleteTexture2D).args(h);
+}
+
+void ApiWrap::createVertexBuffer(phandle_t result, int datasize, Primitive::Hint hint)
+{
+	AddCommand3(RenderApi::createVertexBuffer).args(result, datasize, hint);
+}
+
+void ApiWrap::uploadVertexBuffer(phandle_t h, int datasize, void *p)
+{
+	AddCommand3(RenderApi::uploadVertexBuffer).args(h, datasize, p);
+}
+
+void ApiWrap::deleteVertexBuffer(phandle_t h)
+{
+	AddCommand1(RenderApi::deleteVertexBuffer).args(h);
+}
+
+void ApiWrap::createIndexBuffer(phandle_t result, int datasize, Primitive::Hint hint)
+{
+	AddCommand3(RenderApi::createIndexBuffer).args(result, datasize, hint);
+}
+
+void ApiWrap::uploadIndexBuffer(phandle_t h, int datasize, void *p)
+{
+	AddCommand3(RenderApi::uploadIndexBuffer).args(h, datasize, p);
+}
+
+void ApiWrap::deleteIndexBuffer(phandle_t h)
+{
+	AddCommand1(RenderApi::deleteIndexBuffer).args(h);
 }
 
 AX_END_NAMESPACE

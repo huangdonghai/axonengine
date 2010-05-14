@@ -52,8 +52,6 @@ read the license and understand and accept it fully.
 #define BEGIN_PIX(x) D3DPERF_BeginEvent(D3DCOLOR_RGBA(0,0,0,255), L##x)
 #define END_PIX() D3DPERF_EndEvent()
 
-extern bool trTexFormat(TexFormat texformat, D3DFORMAT &d3dformat);
-
 #include "d3d9texture.h"
 #include "d3d9shader.h"
 #include "d3d9rendertarget.h"
@@ -69,6 +67,8 @@ extern bool trTexFormat(TexFormat texformat, D3DFORMAT &d3dformat);
 #include "d3d9api.h"
 
 AX_BEGIN_NAMESPACE
+
+extern bool trTexFormat(TexFormat texformat, D3DFORMAT &d3dformat);
 
 inline const char *D3DErrorString(HRESULT hr)
 {

@@ -293,7 +293,7 @@ TextureWrap::TextureWrap(const FixedString &key, TexFormat format, int width, in
 
 	ms_texDict[key] = this;
 
-	g_apiWrap->createTexture2D(&m_handle, format, width, height, Texture2::IF_NoMipmap);
+	g_apiWrap->createTexture2D(&m_handle, format, width, height, Texture::IF_NoMipmap);
 }
 
 TextureWrap::~TextureWrap()
