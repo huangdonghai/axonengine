@@ -2,7 +2,6 @@
 
 AX_BEGIN_NAMESPACE
 
-
 bool CheckIfSupportHardwareMipmapGeneration(D3DFORMAT d3dformat, DWORD d3dusage)
 {
 	if (d3d9Api->CheckDeviceFormat(
@@ -21,8 +20,6 @@ bool CheckIfSupportHardwareMipmapGeneration(D3DFORMAT d3dformat, DWORD d3dusage)
 
 void dx9CreateTexture2D(phandle_t h, TexFormat format, int width, int height, int flags)
 {
-	HRESULT hr;
-
 	bool mipmap = false;
 	D3DFORMAT d3dformat;
 	trTexFormat(format, d3dformat);
@@ -62,7 +59,6 @@ void dx9CreateTexture2D(phandle_t h, TexFormat format, int width, int height, in
 
 void dx9UploadTexture(phandle_t h, int level, void *pixels, TexFormat format)
 {
-	HRESULT hr;
 	LPDIRECT3DTEXTURE9 obj = h->to<LPDIRECT3DTEXTURE9>();
 	LPDIRECT3DSURFACE9 surface;
 
@@ -104,7 +100,6 @@ void dx9UploadSubTexture(phandle_t h, const Rect &rect, const void *pixels, TexF
 	}
 
 	LPDIRECT3DSURFACE9 surface;
-	HRESULT hr;
 	LPDIRECT3DTEXTURE9 obj = h->to<LPDIRECT3DTEXTURE9>();
 	V(obj->GetSurfaceLevel(0, &surface));
 
@@ -124,7 +119,6 @@ void dx9UploadSubTexture(phandle_t h, const Rect &rect, const void *pixels, TexF
 
 void dx9GenerateMipmap(phandle_t h)
 {
-	HRESULT hr;
 	LPDIRECT3DTEXTURE9 obj = h->to<LPDIRECT3DTEXTURE9>();
 	LPDIRECT3DSURFACE9 surface;
 
@@ -183,7 +177,6 @@ void dx9GenerateMipmap(phandle_t h)
 
 void dx9DeleteTexture2D(phandle_t h)
 {
-	HRESULT hr;
 	LPDIRECT3DTEXTURE9 obj = h->to<LPDIRECT3DTEXTURE9>();
 
 	SAFE_RELEASE(obj);
@@ -198,7 +191,6 @@ void dx9CreateVertexBuffer(phandle_t h, int datasize, Primitive::Hint hint)
 		d3dusage = D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY;
 	}
 
-	HRESULT hr;
 	V(d3d9Device->CreateVertexBuffer(datasize, d3dusage, 0, d3dpool, (IDirect3DVertexBuffer9 **)h, 0));
 
 	stat_numVertexBuffers.inc();
@@ -209,7 +201,6 @@ void dx9UploadVertexBuffer(phandle_t h, int datasize, void *p)
 {
 	IDirect3DVertexBuffer9 *obj = h->to<IDirect3DVertexBuffer9 *>();
 
-	HRESULT hr;
 	void *dst = 0;
 	V(obj->Lock(0, datasize, &dst, D3DLOCK_DISCARD));
 	memcpy(dst, p, datasize);
@@ -232,7 +223,6 @@ void dx9CreateIndexBuffer(phandle_t h, int datasize, Primitive::Hint hint)
 		d3dusage = D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY;
 	}
 
-	HRESULT hr;
 	V(d3d9Device->CreateIndexBuffer(datasize, d3dusage, D3DFMT_INDEX16, d3dpool, (IDirect3DIndexBuffer9 **)h, 0));
 
 	stat_numIndexBuffers.inc();
@@ -243,7 +233,6 @@ void dx9UploadIndexBuffer(phandle_t h, int datasize, void *p)
 {
 	IDirect3DIndexBuffer9 *obj = h->to<IDirect3DIndexBuffer9 *>();
 
-	HRESULT hr;
 	void *dst = 0;
 	V(obj->Lock(0, datasize, &dst, D3DLOCK_DISCARD));
 	memcpy(dst, p, datasize);

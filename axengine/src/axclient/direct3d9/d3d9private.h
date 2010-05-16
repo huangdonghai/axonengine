@@ -22,7 +22,7 @@ read the license and understand and accept it fully.
 
 #if 1 || defined(DEBUG) || defined(_DEBUG)
 #ifndef V
-#define V(x)           { hr = (x); if (FAILED(hr)) { Errorf("%s(%d): %s", __FILE__, __LINE__, #x); } }
+#define V(x)           { HRESULT hr = (x); if (FAILED(hr)) { Errorf("%s(%d): %s", __FILE__, __LINE__, #x); } }
 //#define V(x)           { hr = (x); if (FAILED(hr)) { DXTrace(__FILE__, __LINE__, hr, L#x, true); } }
 #endif
 #ifndef V_RETURN
