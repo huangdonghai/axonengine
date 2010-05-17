@@ -162,7 +162,7 @@ void PakedFolder::getFileInfos(const String &path, const String &exts, int flags
 	if (!pf)
 		return;
 
-	if (!(flags & File::List_nodirectory)) {
+	if (!(flags & File::List_Nodirectory)) {
 		PackedFolderList::const_iterator it = pf->m_childrenList.begin();
 		for (; it != pf->m_childrenList.end(); ++it) {
 			FileInfo info;
@@ -178,7 +178,7 @@ void PakedFolder::getFileInfos(const String &path, const String &exts, int flags
 		}
 	}
 
-	if (flags & File::List_nofile)
+	if (flags & File::List_Nofile)
 		return;
 
 	PackedFileDict::iterator it;
@@ -212,7 +212,7 @@ void PakedFolder::getFileInfos(const String &path, const String &exts, int flags
 		PathUtil::splitPath(info.fullpath, info.filepath, info.filename, info.fileext);
 		info.filename = PathUtil::removeDir(info.fullpath);
 
-		if (!(flags & File::List_nofilterfile)) {
+		if (!(flags & File::List_DnotFilterFile)) {
 			if (!filter.In(info.filename))
 				continue;
 		}

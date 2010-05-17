@@ -215,6 +215,7 @@ enum CompareFunc {
 	CompareFunc_greaterEqual= 7,
 	CompareFunc_always = 8
 };
+
 enum CullMode {
 	CullMode_front,
 	CullMode_back,
@@ -240,7 +241,8 @@ struct Technique {
 	String toString();
 };
 
-inline String Technique::toString() {
+inline String Technique::toString()
+{
 	String result("Technique");
 
 #define ENUMDECL(t) case t: result += #t; break;
@@ -254,12 +256,9 @@ inline String Technique::toString() {
 	return result;
 }
 
-class ShaderAnno {
-public:
-};
-
 // render to texture annotations
-class SamplerAnno {
+class SamplerAnno
+{
 public:
 	enum RenderType {
 		None,
@@ -268,7 +267,8 @@ public:
 	};
 
 	// default c-tor
-	SamplerAnno() {
+	SamplerAnno()
+	{
 		m_renderType = None;
 		m_width = 512;
 		m_height = 512;
@@ -277,7 +277,7 @@ public:
 	}
 
 	RenderType m_renderType;
-	String m_texName;
+	FixedString m_texName;
 	int m_width, m_height;
 
 	bool m_needClearColor;
@@ -286,7 +286,8 @@ public:
 };
 typedef Sequence<SamplerAnno> SamplerAnnos;
 
-class ParameterAnno {
+class ParameterAnno
+{
 public:
 	enum WidgetType {
 		kNone, kSlider, kNumeric, kColor
@@ -329,11 +330,14 @@ public:
 	ParameterAnnos m_parameterAnnos;
 };
 
+typedef Dict<FixedString, ShaderInfo*> ShaderInfoDict;
+
 //--------------------------------------------------------------------------
 // class Shader
 //--------------------------------------------------------------------------
 
-class Shader : public RefObject {
+class Shader : public RefObject
+{
 public:
 	enum {
 		MAX_FEATURES = 8,
@@ -358,13 +362,15 @@ public:
 	virtual ParameterAnno *getTweakableDef(int index) = 0;
 	virtual SortHint getSortHint() const = 0;
 	virtual bool haveTechnique(Technique tech) const = 0;
+	virtual const ShaderInfo *getShaderInfo() const = 0;
 };
 
 //--------------------------------------------------------------------------
 // class ShaderManager
 //--------------------------------------------------------------------------
 
-class ShaderManager {
+class ShaderManager
+{
 public:
 	virtual Shader *findShader(const String &name, const ShaderMacro &macro) = 0;
 	virtual Shader *findShader(const FixedString &nameId, const ShaderMacro &macro) = 0;

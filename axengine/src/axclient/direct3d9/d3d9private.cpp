@@ -25,7 +25,7 @@ SyncMutex d3d9Mutex;
 IDirect3D9 *d3d9Api;
 IDirect3DDevice9 *d3d9Device;
 
-D3D9shadermanager *d3d9ShaderManager;
+D3D9ShaderManager *d3d9ShaderManager;
 D3D9TargetManager *d3d9TargetManager;
 D3D9querymanager *d3d9QueryManager;
 D3D9primitivemanager *d3d9PrimitiveManager;

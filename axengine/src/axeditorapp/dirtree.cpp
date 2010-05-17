@@ -23,7 +23,7 @@ DirTree::~DirTree()
 
 void DirTree::refresh()
 {
-	FileInfoSeq infos = g_fileSystem->getFileInfos(q2u(m_root), q2u(m_filter), File::List_sort);
+	FileInfoSeq infos = g_fileSystem->getFileInfos(q2u(m_root), q2u(m_filter), File::List_Sorted);
 
 	clear();
 	for (size_t i = 0; i < infos.size(); i++) {
@@ -42,7 +42,7 @@ void DirTree::refresh()
 
 void DirTree::browseSub_r(const String &path, QTreeWidgetItem *parentItem)
 {
-	FileInfoSeq infos = g_fileSystem->getFileInfos(path, q2u(m_filter), File::List_sort);
+	FileInfoSeq infos = g_fileSystem->getFileInfos(path, q2u(m_filter), File::List_Sorted);
 	for (size_t i = 0; i < infos.size(); i++) {
 		FileItem *child = new FileItem(parentItem, infos[i], m_showExt);
 

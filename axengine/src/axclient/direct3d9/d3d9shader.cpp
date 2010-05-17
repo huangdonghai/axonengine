@@ -460,7 +460,7 @@ void D3D9Shader::initSamplerAnn(D3DXHANDLE param) {
 			return;
 		}
 
-		D3D9samplerann *san = new D3D9samplerann;
+		D3D9SamplerAnn *san = new D3D9SamplerAnn;
 
 		san->m_param = texparam;
 		san->m_renderType = rendertype;
@@ -673,26 +673,27 @@ void D3D9Shader::end()
 // class D3D9shadermanager
 //--------------------------------------------------------------------------
 
-D3D9shadermanager::D3D9shadermanager()
+D3D9ShaderManager::D3D9ShaderManager()
 {
-	HRESULT hr;
 	V(D3DXCreateEffectPool( &s_effectPool ));
 	m_defaulted = new D3D9Shader();
 	bool v = m_defaulted->doInit("blend");
 	AX_ASSERT(v);
+
+	_initialize();
 }
 
-D3D9shadermanager::~D3D9shadermanager()
+D3D9ShaderManager::~D3D9ShaderManager()
 {
 
 }
 
-Shader *D3D9shadermanager::findShader(const String &name, const ShaderMacro &macro)
+Shader *D3D9ShaderManager::findShader(const String &name, const ShaderMacro &macro)
 {
 	return findShader(FixedString(name), macro);
 }
 
-Shader *D3D9shadermanager::findShader( const FixedString &nameId, const ShaderMacro &macro )
+Shader *D3D9ShaderManager::findShader( const FixedString &nameId, const ShaderMacro &macro )
 {
 	D3D9_SCOPELOCK;
 
@@ -711,14 +712,14 @@ Shader *D3D9shadermanager::findShader( const FixedString &nameId, const ShaderMa
 	return shader;
 }
 
-D3D9Shader *D3D9shadermanager::findShaderDX(const String &name, const ShaderMacro &macro)
+D3D9Shader *D3D9ShaderManager::findShaderDX(const String &name, const ShaderMacro &macro)
 {
 	D3D9_SCOPELOCK;
 
 	return (D3D9Shader*)findShader(name, macro);
 }
 
-void D3D9shadermanager::saveShaderCache( const String &name )
+void D3D9ShaderManager::saveShaderCache( const String &name )
 {
 	String filename;
 	if (filename.empty())
@@ -754,7 +755,7 @@ void D3D9shadermanager::saveShaderCache( const String &name )
 	doc.SaveFile(filename);
 }
 
-void D3D9shadermanager::applyShaderCache( const String &name )
+void D3D9ShaderManager::applyShaderCache( const String &name )
 {
 	String filename;
 	if (filename.empty())
@@ -785,7 +786,17 @@ void D3D9shadermanager::applyShaderCache( const String &name )
 	}
 }
 
-D3D9Technique::D3D9Technique( D3D9Shader *shader, D3DXHANDLE d3dxhandle )
+void D3D9ShaderManager::_initialize()
+{
+	StringSeq ss = g_fileSystem->fileListByExts("shaders/", ".fx", File::List_Nodirectory|File::List_Sorted);
+
+	AX_FOREACH(const String &s, ss) {
+		String n = PathUtil::getName(s);
+
+	}
+}
+
+D3D9Technique::D3D9Technique(D3D9Shader *shader, D3DXHANDLE d3dxhandle)
 {
 	m_shader = shader;
 	m_d3dxhandle = d3dxhandle;
@@ -802,7 +813,7 @@ D3D9Technique::D3D9Technique( D3D9Shader *shader, D3DXHANDLE d3dxhandle )
 	AX_ASSURE(checkpass == m_numPasses);
 	for (int i = 0; i < m_numPasses; i++) {
 		shader->m_object->BeginPass(i);
-		m_passes[i] = new D3D9pass(shader, shader->m_object->GetPass(d3dxhandle, i));
+		m_passes[i] = new D3D9Pass(shader, shader->m_object->GetPass(d3dxhandle, i));
 		shader->m_object->EndPass();
 	}
 	shader->m_object->End();
@@ -813,7 +824,7 @@ D3D9Technique::~D3D9Technique()
 
 }
 
-D3D9pass::D3D9pass( D3D9Shader *shader, D3DXHANDLE d3dxhandle )
+D3D9Pass::D3D9Pass(D3D9Shader *shader, D3DXHANDLE d3dxhandle)
 {
 	m_shader = shader;
 	m_d3dxhandle = d3dxhandle;
@@ -825,12 +836,12 @@ D3D9pass::D3D9pass( D3D9Shader *shader, D3DXHANDLE d3dxhandle )
 	initPs();
 }
 
-D3D9pass::~D3D9pass()
+D3D9Pass::~D3D9Pass()
 {
 
 }
 
-void D3D9pass::initVs()
+void D3D9Pass::initVs()
 {
 	HRESULT hr;
 
@@ -867,7 +878,7 @@ void D3D9pass::initVs()
 	}
 }
 
-void D3D9pass::initPs()
+void D3D9Pass::initPs()
 {
 	HRESULT hr;
 
@@ -914,7 +925,7 @@ void D3D9pass::initPs()
 }
 
 
-const D3D9Pixel2Texel*  D3D9pass::findPixel2Texel( const String &name )
+const D3D9Pixel2Texel*  D3D9Pass::findPixel2Texel(const String &name)
 {
 	D3D9Pixel2Texels::const_iterator it = m_shader->pixel2Texels.begin();
 
@@ -927,7 +938,7 @@ const D3D9Pixel2Texel*  D3D9pass::findPixel2Texel( const String &name )
 }
 
 
-void D3D9pass::initState()
+void D3D9Pass::initState()
 {
 #if 0
 	HRESULT hr;
@@ -952,7 +963,7 @@ void D3D9pass::initState()
 #endif
 }
 
-void D3D9pass::initSampler( const D3DXCONSTANT_DESC &desc )
+void D3D9Pass::initSampler(const D3DXCONSTANT_DESC &desc)
 {
 	// check material sampler
 	for (UINT i = 0; i < ArraySize(samplername); i++) {
@@ -977,9 +988,9 @@ void D3D9pass::initSampler( const D3DXCONSTANT_DESC &desc )
 
 	// check batch sampler
 	for (int i = 0; i < s2i(m_shader->m_samplerannSeq.size()); i++) {
-		D3D9samplerann *bs = m_shader->m_samplerannSeq[i];
+		D3D9SamplerAnn *bs = m_shader->m_samplerannSeq[i];
 		if (bs->m_paramName == desc.Name) {
-			D3D9samplerann *newbs = new D3D9samplerann();
+			D3D9SamplerAnn *newbs = new D3D9SamplerAnn();
 			*newbs = *bs;
 			newbs->m_register = desc.RegisterIndex;
 			m_batchSamplers.push_back(newbs);
@@ -991,7 +1002,7 @@ void D3D9pass::initSampler( const D3DXCONSTANT_DESC &desc )
 //	m_psParameters[desc.Name] = desc;
 }
 
-void D3D9pass::begin()
+void D3D9Pass::begin()
 {
 	Material *mtr = m_shader->m_coupled;
 
@@ -1044,7 +1055,7 @@ void D3D9pass::begin()
 	// set batch sampler
 	int count = 0;
 	for (size_t i = 0; i < m_batchSamplers.size(); i++) {
-		D3D9samplerann *sa = m_batchSamplers[i];
+		D3D9SamplerAnn *sa = m_batchSamplers[i];
 		if (sa->m_renderType == SamplerAnno::Reflection) {
 			if (!d3d9Interaction) {
 				continue;
@@ -1074,7 +1085,7 @@ void D3D9pass::begin()
 	}
 }
 
-void D3D9pass::setParameters()
+void D3D9Pass::setParameters()
 {
 	const ShaderParams *mtrparams = 0;
 	if (m_shader->m_coupled) {
@@ -1114,7 +1125,7 @@ void D3D9pass::setParameters()
 	}
 }
 
-void D3D9pass::setParameter( const ParamDesc &param, const float *value, bool isPixelShader )
+void D3D9Pass::setParameter(const ParamDesc &param, const float *value, bool isPixelShader)
 {
 	const float *realvalue = (const float*)param.d3dDesc.DefaultValue;
 

@@ -36,11 +36,9 @@ public:
 	static void (*uploadIndexBuffer)(phandle_t h, int datasize, void *p);
 	static void (*deleteIndexBuffer)(phandle_t h);
 
-	static void (*findShader)(phandle_t h, const FixedString & name, const ShaderMacro &sm);
-	static void (*setShader)(phandle_t shader, Technique tech);
+	static void (*setShader)(const FixedString & name, const ShaderMacro &sm, Technique tech);
 	static void (*setVsConst)(const FixedString &name, int count, float *value);
 	static void (*setPsConst)(const FixedString &name, int count, float *value);
-	static void (*setPass)(int pass);
 
 	static void (*setVertices)(phandle_t vb, VertexType vt, int vertcount);
 	static void (*setInstanceVertices)(phandle_t vb, VertexType vt, int vertcount, Handle inb, int incount);

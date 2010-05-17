@@ -41,7 +41,8 @@ extern const char *const DEFAULT_CACHES_PATH;
 // class File
 //------------------------------------------------------------------------------
 
-class AX_API File : public ThreadSafe {
+class AX_API File : public ThreadSafe
+{
 public:
 	friend class FileSystem;
 	
@@ -63,12 +64,12 @@ public:
 	};
 
 	enum ListFlag {
-		List_nodirectory = 1,	// don't return directory
-		List_nofile = 2,	// don't return file
-		List_sort = 8,	// sort result
-		List_needCVS = 0x10,	// need CVS directory, don't ignore it. default don't return CVS directory
-		List_nofilterfile = 0x20,	// don't filter file by filters, default filter file
-		List_filterDirectory = 0x40,	// filter directory by filters, default don't filter directory
+		List_Nodirectory = 1,	// don't return directory
+		List_Nofile = 2,	// don't return file
+		List_Sorted = 8,	// sort result
+		List_NeedCVS = 0x10,	// need CVS directory, don't ignore it. default don't return CVS directory
+		List_DnotFilterFile = 0x20,	// don't filter file by filters, default filter file
+		List_FilterDirectory = 0x40,	// filter directory by filters, default don't filter directory
 	};
 
 	File();
@@ -124,7 +125,8 @@ private:
 
 typedef List<File*>			FileList;
 
-class FileInfo {
+class FileInfo
+{
 public:
 	bool operator<(const FileInfo &rhs) const { return fullpath < rhs.fullpath; }
 	bool operator==(const FileInfo &rhs) const { return fullpath == rhs.fullpath; }
@@ -163,7 +165,8 @@ struct FilePackage {
 // class PakedFolder
 //------------------------------------------------------------------------------
 
-class AX_API PakedFolder {
+class AX_API PakedFolder
+{
 public:
 	PakedFolder();
 	~PakedFolder();

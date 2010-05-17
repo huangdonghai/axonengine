@@ -156,7 +156,7 @@ void FileDialog::browseDir(const QString &dir, bool addHistory)
 
 	m_curDir = dir;
 	QString &filter = ui.filterComboBox->currentText();
-	m_fileInfos = g_fileSystem->getFileInfos(q2u(dir), q2u(filter), File::List_sort);
+	m_fileInfos = g_fileSystem->getFileInfos(q2u(dir), q2u(filter), File::List_Sorted);
 
 	// add folder first
 	size_t i;
@@ -192,7 +192,7 @@ void FileDialog::setRootDir(const QString &dir)
 	if (!PathUtil::isDirectoryLetter(m_rootDir[m_rootDir.length()-1].toAscii()))
 		m_rootDir += '/';
 
-	m_rootInfos = g_fileSystem->getFileInfos(q2u(m_rootDir), "", File::List_sort);
+	m_rootInfos = g_fileSystem->getFileInfos(q2u(m_rootDir), "", File::List_Sorted);
 
 	// add folder first
 	size_t i;

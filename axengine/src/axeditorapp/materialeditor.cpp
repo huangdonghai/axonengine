@@ -45,7 +45,7 @@ MaterialEditor::~MaterialEditor()
 void MaterialEditor::initWidgets()
 {
 	// fill shader widget
-	StringSeq ss = g_fileSystem->fileListByExts("shaders/", ".fx", File::List_nodirectory|File::List_sort);
+	StringSeq ss = g_fileSystem->fileListByExts("shaders/", ".fx", File::List_Nodirectory|File::List_Sorted);
 //	ui.shaderName->clear();
 
 	AX_FOREACH(const String &s, ss) {

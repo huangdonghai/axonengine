@@ -266,9 +266,9 @@ StringSeq PathUtil::findFiles(const String &dir, const String &filter, bool diro
 {
 	uint_t flags = 0;
 	if (dironly) {
-		flags |= File::List_nofile;
+		flags |= File::List_Nofile;
 	} else {
-		flags |= File::List_nodirectory;
+		flags |= File::List_Nodirectory;
 	}
 
 	return listFileByExts(dir + '/', dir, filter, flags);
@@ -327,28 +327,28 @@ FileInfoSeq PathUtil::getFileInfos(const String &base, const String &path, const
 				continue;
 			}
 
-			if (!(flags & File::List_needCVS)) {
+			if (!(flags & File::List_NeedCVS)) {
 				if (!wcscmp(finddata.name, L"CVS")) {
 					continue;
 				}
 			}
 
-			if (flags & File::List_nodirectory) {
+			if (flags & File::List_Nodirectory) {
 				continue;
 			}
 
-			if (flags & File::List_filterDirectory) {
+			if (flags & File::List_FilterDirectory) {
 				if (!filter.In(w2u(finddata.name)))
 					continue;
 			}
 
 			info.isDir = true;
 		} else {
-			if (flags & File::List_nofile) {
+			if (flags & File::List_Nofile) {
 				continue;
 			}
 
-			if (!(flags & File::List_nofilterfile)) {
+			if (!(flags & File::List_DnotFilterFile)) {
 				if (!filter.In(w2u(finddata.name)))
 					continue;
 			}
@@ -374,7 +374,7 @@ FileInfoSeq PathUtil::getFileInfos(const String &base, const String &path, const
 
 	_findclose(handle);
 
-	if (flags & File::List_sort) {
+	if (flags & File::List_Sorted) {
 		std::sort(fileinfos.begin(), fileinfos.end(), CmpFileInfoNameLess);
 	}
 

@@ -112,7 +112,7 @@ extern SyncMutex d3d9Mutex;
 extern IDirect3D9 *d3d9Api;
 extern IDirect3DDevice9 *d3d9Device;
 
-extern D3D9shadermanager *d3d9ShaderManager;
+extern D3D9ShaderManager *d3d9ShaderManager;
 extern D3D9TargetManager *d3d9TargetManager;
 extern D3D9querymanager *d3d9QueryManager;
 extern D3D9primitivemanager *d3d9PrimitiveManager;
