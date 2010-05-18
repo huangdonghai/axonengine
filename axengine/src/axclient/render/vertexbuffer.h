@@ -10,54 +10,23 @@ enum ElementType {
 	ElementType_TriStrip
 };
 
-class BufferWrap
-{
-public:
-	BufferWrap();
-	virtual ~BufferWrap();
-
-protected:
-	Primitive::Hint m_hint;
-	Handle m_h;
-	int m_dataSize;
-};
-
-class VertexBufferWrap : public BufferWrap
-{
-public:
-	VertexBufferWrap(Primitive::Hint hint, int size);
-	virtual ~VertexBufferWrap();
-
-private:
-	int m_dataSize;
-};
-
-class IndexBufferWrap : public BufferWrap
-{
-public:
-	IndexBufferWrap(Primitive::Hint hint, int count);
-	virtual ~IndexBufferWrap();
-
-private:
-};
-
 class VertexObject
 {
 public:
 private:
-	VertexBufferWrap *m_buffer;
+	Handle m_h;
 	int m_offset;		// byte offset
 	int m_dataSize;
 	int m_count;
 	VertexType m_vt;
-	bool m_inStack;
+	bool m_chained;
 };
 
 class InstanceObject
 {
 public:
 private:
-	VertexBufferWrap *m_buffer;
+	Handle m_h;
 	int m_offset;
 	int m_count;
 };
@@ -66,21 +35,22 @@ class IndexObject
 {
 public:
 private:
-	IndexBufferWrap *m_buffer;
+	Handle m_h;
 	int m_dataSize;
 	int m_count;
 	int m_activeCount;
 	int m_offset;		// index offset, not byte offset
-	bool m_inStack;
+	bool m_chained;
 };
 
-extern ApiWrap *g_apiWrap;
-
 struct DynamicBuf {
-	BufferWrap *buffer;
+	Handle m_h;
 	int offset;
 	void *writePtr;
 };
+
+class VertexBufferTraits {};
+class IndexBufferTraits {};
 
 template <int PageSize, class Traits>
 class ChainedBuffer
@@ -198,17 +168,15 @@ public:
 	int m_curOffset;
 	void *m_curPointer;
 	bool m_isFrameAllocating;
+	byte_t m_pageCache[PageSize];
 };
-
-class InstanceBuffer
-{};
 
 class BufferManager
 {
 public:
-	typedef ChainedBuffer<1024*1024, VertexBufferWrap> VertexBufferChain;
-	typedef ChainedBuffer<256*1024, VertexBufferWrap> InstanceBufferChain;
-	typedef ChainedBuffer<512*1024, IndexBufferWrap> IndexBufferChain;
+	typedef ChainedBuffer<1024*1024, VertexBufferTraits> VertexBufferChain;
+	typedef ChainedBuffer<256*1024, VertexBufferTraits> InstanceBufferChain;
+	typedef ChainedBuffer<512*1024, IndexBufferTraits> IndexBufferChain;
 
 	void beginAlloc();
 	DynamicBuf allocVb(int datasize);

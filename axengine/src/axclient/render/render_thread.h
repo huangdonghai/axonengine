@@ -3,38 +3,13 @@
 
 AX_BEGIN_NAMESPACE
 
-struct RenderClearer {
-	Rgba color;
-	float depth;
-	int stencil;
-	bool isClearColor : 1;
-	bool isClearDepth : 1;
-	bool isClearStencil : 1;
-
-	RenderClearer() : color(Rgba::Black), depth(1.0f), stencil(0), isClearColor(false), isClearDepth(false), isClearStencil(false) {}
-
-	void clearDepth(bool enable, float ref = 1.0f) {
-		isClearDepth = enable;
-		depth = ref;
-	}
-
-	void clearColor(bool enable, Rgba ref = Rgba::Zero) {
-		isClearColor = enable;
-		color = ref;
-	}
-
-	void clearStencil(bool enable, int ref) {
-		isClearStencil = enable;
-		stencil = ref;
-	}
-
-	void doClear() const;
-};
-
 
 class RenderThread : public Thread
 {
 public:
+	RenderThread();
+	~RenderThread();
+
 	void runFrame(bool isInThread);
 
 	// implement thread run

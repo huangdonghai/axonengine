@@ -1132,7 +1132,7 @@ void D3D9Pass::setParameter(const ParamDesc &param, const float *value, bool isP
 	if (value)
 		realvalue = value;
 
-	// check pt2 first
+	// check p2t first
 	if (param.p2t && isPixelShader) {
 		realvalue = &param.p2t->m_scaledValue[0];
 	}

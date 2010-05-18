@@ -55,8 +55,8 @@ public:
 protected:
 	void beginFrame();
 	void drawScene(QueuedScene *scene, const D3D9clearer &clearer);
-	void setupScene(QueuedScene *scene, const D3D9clearer *clearer = nullptr, RenderTarget *target = nullptr, RenderCamera *camera = nullptr);
-	void unsetScene(QueuedScene *scene, const D3D9clearer *clearer = nullptr, RenderTarget *target = nullptr, RenderCamera *camera = nullptr);
+	void setupScene(QueuedScene *scene, const D3D9clearer *clearer = 0, RenderTarget *target = 0, RenderCamera *camera = 0);
+	void unsetScene(QueuedScene *scene, const D3D9clearer *clearer = 0, RenderTarget *target = 0, RenderCamera *camera = 0);
 	void drawPrimitive(int prim_id);
 	void drawInteraction(Interaction *ia);
 	void endFrame();

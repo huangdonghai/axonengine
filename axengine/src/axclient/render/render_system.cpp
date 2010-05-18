@@ -357,47 +357,6 @@ RenderTarget *RenderSystem::createWindowTarget(Handle wndId, const String &name)
 	return g_renderDriver->createWindowTarget(wndId, name);
 }
 
-#if 0
-// textures for subscene's render target
-Target *RenderSystem::getColorTarget(int width, int height) {
-	return g_renderDriver->getColorTarget(width, height);
-}
-
-Target *RenderSystem::getDepthTarget(int width, int height) {
-	return gRenderDriver->getDepthTarget(width, height);
-}
-
-
-void RenderSystem::addModelCreator(ModelCreator *creator) {
-	m_modelCreators.push_back(creator);
-}
-
-void RenderSystem::removeModelCreator(ModelCreator *creator) {
-	m_modelCreators.remove(creator);
-}
-
-ModelInstance *RenderSystem::create(const String &name, intptr_t arg) {
-	String ext = PathUtil::getExt(name);
-
-	ModelInstance *result = nullptr;
-	for (List<ModelCreator*>::iterator it = m_modelCreators.begin(); it != m_modelCreators.end(); ++it) {
-		ModelCreator *creator = *it;
-		if (ext != creator->getExtension()) {
-			continue;
-		}
-
-		result = creator->create(name, arg);
-		if (result) {
-			return result;
-		} else {
-			break;
-		}
-	}
-
-	return create("models/box.mesh", 0);
-}
-#endif
-
 void RenderSystem::addEntityManager(IEntityManager *manager)
 {
 	m_entityManagers.push_back(manager);

@@ -129,7 +129,7 @@ void D3D9Thread::runFrame(bool isInThread)
 	clearer.clearColor(true);
 
 	if (r_nulldraw.getBool()) {
-//			goto endframe;
+//		goto endframe;
 	}
 
 

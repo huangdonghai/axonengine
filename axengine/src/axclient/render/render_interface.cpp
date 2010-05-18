@@ -16,11 +16,9 @@ void (*RenderApi::createIndexBuffer)(phandle_t h, int datasize, Primitive::Hint 
 void (*RenderApi::uploadIndexBuffer)(phandle_t h, int datasize, void *p);
 void (*RenderApi::deleteIndexBuffer)(phandle_t h);
 	  
-void (*RenderApi::findShader)(phandle_t h, const FixedString & name, const ShaderMacro &sm);
-void (*RenderApi::setShader)(phandle_t shader, Technique tech);
+void (*RenderApi::setShader)(const FixedString & name, const ShaderMacro &sm, Technique tech);
 void (*RenderApi::setVsConst)(const FixedString &name, int count, float *value);
 void (*RenderApi::setPsConst)(const FixedString &name, int count, float *value);
-void (*RenderApi::setPass)(int pass);
 	  
 void (*RenderApi::setVertices)(phandle_t vb, VertexType vt, int vertcount);
 void (*RenderApi::setInstanceVertices)(phandle_t vb, VertexType vt, int vertcount, Handle inb, int incount);
@@ -304,6 +302,61 @@ void ApiWrap::uploadIndexBuffer(phandle_t h, int datasize, void *p)
 void ApiWrap::deleteIndexBuffer(phandle_t h)
 {
 	AddCommand1(RenderApi::deleteIndexBuffer).args(h);
+}
+
+void ApiWrap::issueQueue( RenderQueue *rq )
+{
+	double startTime = OsUtil::seconds();
+
+	beginFrame();
+
+	RenderTarget *window = rq->getTarget();
+	// TODO: bind target
+
+	int view_count = rq->getSceneCount();
+	float frametime = rq->getScene(0)->camera.getFrameTime();
+
+	RenderClearer clearer;
+	clearer.clearDepth(true);
+	clearer.clearColor(true);
+
+	if (r_nulldraw.getBool()) {
+		//goto endframe;
+	}
+
+
+	float scenetime[16];
+	bool m_isStatistic = false;
+
+	for (int i = 0; i < view_count; i++) {
+		if (i == view_count - 1) m_isStatistic = true;
+
+		double s = OsUtil::seconds();
+		QueuedScene *queued = rq->getScene(i);
+
+		drawScene(queued, clearer);
+		clearer.clearColor(false);
+		clearer.clearDepth(false);
+
+		scenetime[i] = OsUtil::seconds() - s;
+	}
+
+	endFrame();
+}
+
+void ApiWrap::beginFrame()
+{
+
+}
+
+void ApiWrap::endFrame()
+{
+
+}
+
+void ApiWrap::drawScene(QueuedScene *scene, const RenderClearer &clearer)
+{
+
 }
 
 AX_END_NAMESPACE

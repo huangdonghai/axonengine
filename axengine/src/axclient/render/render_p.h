@@ -9,6 +9,7 @@
 #include "material_p.h"
 #include "vertexbuffer.h"
 #include "primitive_p.h"
+#include "render_thread.h"
 
 AX_BEGIN_NAMESPACE
 

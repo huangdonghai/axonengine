@@ -94,6 +94,7 @@ AX_BEGIN_NAMESPACE
 		virtual const StringSeq &getMacroParameters() const;
 		virtual SortHint getSortHint() const { return m_sortHint; }
 		virtual bool haveTechnique(Technique tech) const { return m_techniques[tech] != 0; }
+		virtual const ShaderInfo *getShaderInfo() const { return 0; }
 
 		void setSystemMap(SamplerType maptype, GLtexture *tex);
 		void setInteractionMap();
