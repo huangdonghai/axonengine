@@ -57,7 +57,7 @@ void dx9CreateTexture2D(phandle_t h, TexFormat format, int width, int height, in
 	stat_textureMemory.add(m_videoMemoryUsed);
 }
 
-void dx9UploadTexture(phandle_t h, int level, void *pixels, TexFormat format)
+void dx9UploadTexture(phandle_t h, int level, const void *pixels, TexFormat format)
 {
 	LPDIRECT3DTEXTURE9 obj = h->to<LPDIRECT3DTEXTURE9>();
 	LPDIRECT3DSURFACE9 surface;

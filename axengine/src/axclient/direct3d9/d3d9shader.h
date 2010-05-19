@@ -176,7 +176,7 @@ public:
 	virtual ParameterAnno *getTweakableDef(int index);
 	virtual SortHint getSortHint() const;
 	virtual bool haveTechnique(Technique tech) const;
-	virtual const ShaderInfo *getShaderInfo() const;
+	virtual const ShaderInfo *getShaderInfo() const { return 0; }
 
 	void setSystemMap(SamplerType maptype, D3D9Texture *tex);
 	// set pixel to texel conversion paramter
