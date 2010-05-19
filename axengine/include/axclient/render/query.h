@@ -13,6 +13,13 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
+struct AsioQuery {
+	AtomicInt m_atomic;
+	int m_queryFrame;
+	int m_resultFrame;
+	int m_result;
+};
+
 class AX_API Query {
 public:
 	enum QueryType {

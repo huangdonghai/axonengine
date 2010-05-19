@@ -304,7 +304,7 @@ void ApiWrap::deleteIndexBuffer(phandle_t h)
 	AddCommand1(RenderApi::deleteIndexBuffer).args(h);
 }
 
-void ApiWrap::issueQueue( RenderQueue *rq )
+void ApiWrap::issueQueue(RenderQueue *rq)
 {
 	double startTime = OsUtil::seconds();
 
@@ -319,11 +319,7 @@ void ApiWrap::issueQueue( RenderQueue *rq )
 	RenderClearer clearer;
 	clearer.clearDepth(true);
 	clearer.clearColor(true);
-
-	if (r_nulldraw.getBool()) {
-		//goto endframe;
-	}
-
+	clear(clearer);
 
 	float scenetime[16];
 	bool m_isStatistic = false;
@@ -346,7 +342,11 @@ void ApiWrap::issueQueue( RenderQueue *rq )
 
 void ApiWrap::beginFrame()
 {
-
+	if (!r_specular.getBool()) {
+		g_shaderMacro.setMacro(ShaderMacro::G_DISABLE_SPECULAR);
+	} else {
+		g_shaderMacro.resetMacro(ShaderMacro::G_DISABLE_SPECULAR);
+	}
 }
 
 void ApiWrap::endFrame()
@@ -355,6 +355,127 @@ void ApiWrap::endFrame()
 }
 
 void ApiWrap::drawScene(QueuedScene *scene, const RenderClearer &clearer)
+{
+	if (scene->sceneType == QueuedScene::WorldMain) {
+		drawScene_world(scene, clearer);
+	} else if (scene->sceneType == QueuedScene::Default) {
+		drawScene_noworld(scene, clearer);
+	} else {
+		Errorf("D3D9Thread::drawScene: error scene");
+	}
+}
+
+#define BEGIN_PIX(x)
+#define END_PIX(x)
+#define AX_SU(a,b)
+
+void ApiWrap::drawScene_world( QueuedScene *scene, const RenderClearer &clearer )
+{
+	BEGIN_PIX("DrawWorld");
+
+	s_technique = Technique::Main;
+
+	const Rect &rect = scene->camera.getViewRect();
+	int width = rect.width;
+	int height = rect.height;
+
+	if (1) {
+		s_gbuffer = d3d9FrameWnd->m_gbuffer;
+		AX_SU(g_sceneDepth, s_gbuffer->getTextureDX());
+
+		s_lbuffer = d3d9FrameWnd->m_lightBuffer;
+		AX_SU(g_lightBuffer, s_lbuffer->getTextureDX());
+
+	} else {
+		d3d9WorldTarget = 0;
+	}
+
+	// set exposure
+	float exposure = scene->exposure;
+	if (exposure == 0) {
+		g_shaderMacro.resetMacro(ShaderMacro::G_HDR);
+		exposure = 1;
+	} else {
+		g_shaderMacro.setMacro(ShaderMacro::G_HDR);
+	}
+
+#if 0
+	g_statistic->setValue(stat_exposure, exposure * 100);
+#else
+	stat_exposure.setInt(exposure * 100);
+#endif
+	AX_SU(g_exposure, Vector4(1.0f/exposure, exposure,0,0));
+
+	// set global light parameter
+	if (scene->globalLight) {
+		AX_SU(g_globalLightPos, scene->globalLight->pos);
+		AX_SU(g_globalLightColor, scene->globalLight->color);
+		AX_SU(g_skyColor, scene->globalLight->skyColor);
+	}
+
+	// set global fog
+	if (scene->globalFog && r_fog.getBool()) {
+		g_shaderMacro.setMacro(ShaderMacro::G_FOG);
+		AX_SU(g_fogParams, scene->globalFog->m_fogParams);
+	} else {
+		g_shaderMacro.resetMacro(ShaderMacro::G_FOG);
+	}
+
+	if (scene->waterFog && r_fog.getBool()) {
+		AX_SU(g_waterFogParams, scene->waterFog->m_fogParams);
+	}
+
+	AX_SU(g_windMatrices, scene->windMatrices);
+	AX_SU(g_leafAngles, scene->leafAngles);
+
+	// draw subscene first
+	for (int i = 0; i < scene->numSubScenes; i++) {
+		QueuedScene *sub = scene->subScenes[i];
+
+		if (sub->sceneType == QueuedScene::ShadowGen) {
+			drawPass_shadowGen(sub);
+		} else if (sub->sceneType == QueuedScene::Reflection) {
+			BEGIN_PIX("ReflectionGen");
+			g_shaderMacro.setMacro(ShaderMacro::G_REFLECTION);
+			drawScene_worldSub(sub);
+			g_shaderMacro.resetMacro(ShaderMacro::G_REFLECTION);
+			END_PIX();
+		} else if (sub->sceneType == QueuedScene::RenderToTexture) {
+			BEGIN_PIX("RenderToTexture");
+			drawScene_worldSub(sub);
+			END_PIX();
+		}
+	}
+
+	// fill z first
+	BEGIN_PIX("GfillPass");
+	drawPass_zfill(scene);
+	END_PIX();
+
+	BEGIN_PIX("DrawLights");
+	drawPass_lights(scene);
+	END_PIX();
+
+	BEGIN_PIX("SceneComposite");
+	drawPass_composite(scene);
+	END_PIX();
+
+	// post process and render back to backbuffer
+	if (r_framebuffer.getBool()) {
+		BEGIN_PIX("PostProcess");
+		drawPass_postprocess(scene);
+		END_PIX();
+	}
+
+	// check if need draw overlay primitives
+	BEGIN_PIX("DrawOverlay");
+	drawPass_overlay(scene);
+	END_PIX();
+
+	END_PIX();
+}
+
+void ApiWrap::drawScene_noworld( QueuedScene *scene, const RenderClearer &clearer )
 {
 
 }

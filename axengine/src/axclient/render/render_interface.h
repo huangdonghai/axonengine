@@ -5,49 +5,6 @@ AX_BEGIN_NAMESPACE
 
 typedef Handle *phandle_t;
 
-/*
-class WrapHandle {
-public:
-	WrapHandle() : m_realHandle(0) {}
-	WrapHandle(const Handle &h) : m_realHandle(&h) {}
-	WrapHandle(const WrapHandle &rhs) { m_realHandle = rhs.m_realHandle; }
-	~WrapHandle() {}
-
-private:
-	Handle *m_realHandle;
-};
-*/
-
-class RenderApi
-{
-public:
-	// new interface
-	static void (*createTexture2D)(phandle_t h, TexFormat format, int width, int height, int flags);
-	static void (*uploadTexture)(phandle_t h, int level, void *pixels, TexFormat format);
-	static void (*uploadSubTexture)(phandle_t h, const Rect &rect, const void *pixels, TexFormat format);
-	static void (*generateMipmap)(phandle_t h);
-	static void (*deleteTexture2D)(phandle_t h);
-
-	static void (*createVertexBuffer)(phandle_t h, int datasize, Primitive::Hint hint);
-	static void (*uploadVertexBuffer)(phandle_t h, int datasize, void *p);
-	static void (*deleteVertexBuffer)(phandle_t h);
-
-	static void (*createIndexBuffer)(phandle_t h, int datasize, Primitive::Hint hint);
-	static void (*uploadIndexBuffer)(phandle_t h, int datasize, void *p);
-	static void (*deleteIndexBuffer)(phandle_t h);
-
-	static void (*setShader)(const FixedString & name, const ShaderMacro &sm, Technique tech);
-	static void (*setVsConst)(const FixedString &name, int count, float *value);
-	static void (*setPsConst)(const FixedString &name, int count, float *value);
-
-	static void (*setVertices)(phandle_t vb, VertexType vt, int vertcount);
-	static void (*setInstanceVertices)(phandle_t vb, VertexType vt, int vertcount, Handle inb, int incount);
-	static void (*setIndices)(phandle_t ib);
-
-//	static void dip(ElementType et, int offset, int vertcount, int indices_count) = 0;
-	static void (*dipUp)();
-};
-
 struct RenderClearer {
 	Rgba color;
 	float depth;
@@ -72,8 +29,46 @@ struct RenderClearer {
 		isClearStencil = enable;
 		stencil = ref;
 	}
+};
 
-	void doClear() const;
+
+class RenderApi
+{
+public:
+	// resource management
+	static void (*createTexture2D)(phandle_t h, TexFormat format, int width, int height, int flags);
+	static void (*uploadTexture)(phandle_t h, int level, void *pixels, TexFormat format);
+	static void (*uploadSubTexture)(phandle_t h, const Rect &rect, const void *pixels, TexFormat format);
+	static void (*generateMipmap)(phandle_t h);
+	static void (*deleteTexture2D)(phandle_t h);
+
+	static void (*createVertexBuffer)(phandle_t h, int datasize, Primitive::Hint hint);
+	static void (*uploadVertexBuffer)(phandle_t h, int datasize, void *p);
+	static void (*deleteVertexBuffer)(phandle_t h);
+
+	static void (*createIndexBuffer)(phandle_t h, int datasize, Primitive::Hint hint);
+	static void (*uploadIndexBuffer)(phandle_t h, int datasize, void *p);
+	static void (*deleteIndexBuffer)(phandle_t h);
+
+	static void (*createTarget)(phandle_t h, int width, int height, TexFormat format);
+	static void (*deleteTarget)(phandle_t h);
+
+	static void (*createWindowTarget)(phandle_t h, Handle hwnd);
+	static void (*deleteWindowTarget)(phandle_t h);
+
+	static void (*setShader)(const FixedString & name, const ShaderMacro &sm, Technique tech);
+	static void (*setVsConst)(const FixedString &name, int count, float *value);
+	static void (*setPsConst)(const FixedString &name, int count, float *value);
+
+	static void (*setVertices)(phandle_t vb, VertexType vt, int vertcount);
+	static void (*setInstanceVertices)(phandle_t vb, VertexType vt, int vertcount, Handle inb, int incount);
+	static void (*setIndices)(phandle_t ib);
+
+//	static void dip(ElementType et, int offset, int vertcount, int indices_count) = 0;
+	static void (*dipUp)();
+
+	// actions
+	static void (*clear)(const RenderClearer &clearer);
 };
 
 
@@ -104,14 +99,29 @@ public:
 	void uploadIndexBuffer(phandle_t h, int datasize, void *p);
 	void deleteIndexBuffer(phandle_t h);
 
-	int setShader(Handle shader, Technique tech);
+	void createRenderTarget(phandle_t h, int width, int height, TexFormat format);
+	void deleteRenderTarget(phandle_t h);
+
+	void createWindowTarget(phandle_t h, Handle hwnd);
+	void deleteWindowTarget(phandle_t h);
+
+	void createQuery(phandle_t h);
+	void issueQuery(phandle_t h, AsioQuery *asioQuery);
+	void deleteQuery(phandle_t h);
+
+	void setRenderTarget(int index, phandle_t h);
+	void setDepthStencil(phandle_t h);
+
+	void setShader(Handle shader, Technique tech);
 
 	void setVertices(phandle_t vb, VertexType vt, int vertcount);
 	void setInstanceVertices(phandle_t vb, VertexType vt, int vertcount, Handle inb, int incount);
-	void setIndices(phandle_t ib);
+	void setIndices(phandle_t ib, ElementType et, int offset, int vertcount, int indicescount);
 
 	//	virtual void dip(ElementType et, int offset, int vertcount, int indicescount) = 0;
 	void dipUp();
+
+	void clear(const RenderClearer &clearer);
 
 	//
 	// high level
@@ -155,6 +165,8 @@ private:
 
 	volatile int m_hunkPos;
 	volatile int m_readPos, m_writePos;
+
+	Technique s_technique;
 };
 
 AX_END_NAMESPACE

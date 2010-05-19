@@ -179,7 +179,7 @@ public:
 	virtual const ShaderInfo *getShaderInfo() const { return 0; }
 
 	void setSystemMap(SamplerType maptype, D3D9Texture *tex);
-	// set pixel to texel conversion paramter
+	// set pixel to texel conversion parameter
 	void setPixelToTexel(int width, int height);
 
 	void setCoupled(Material *mtr);
