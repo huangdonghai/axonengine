@@ -5,6 +5,13 @@ AX_BEGIN_NAMESPACE
 
 typedef Handle *phandle_t;
 
+enum ElementType {
+	ElementType_PointList,
+	ElementType_LineList,
+	ElementType_TriList,
+	ElementType_TriStrip
+};
+
 struct RenderClearer {
 	Rgba color;
 	float depth;

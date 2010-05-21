@@ -3,13 +3,6 @@
 
 AX_BEGIN_NAMESPACE
 
-enum ElementType {
-	ElementType_PointList,
-	ElementType_LineList,
-	ElementType_TriList,
-	ElementType_TriStrip
-};
-
 class VertexObject
 {
 public:

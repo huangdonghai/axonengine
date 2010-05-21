@@ -475,7 +475,71 @@ void ApiWrap::drawScene_world( QueuedScene *scene, const RenderClearer &clearer 
 	END_PIX();
 }
 
-void ApiWrap::drawScene_noworld( QueuedScene *scene, const RenderClearer &clearer )
+void ApiWrap::drawScene_noworld(QueuedScene *scene, const RenderClearer &clearer)
+{
+	BEGIN_PIX("DrawNoworld");
+	s_technique = Technique::Main;
+
+	setupScene(scene, &clearer, scene->target);
+
+	for (int i = 0; i < scene->numInteractions; i++) {
+		drawInteraction(scene->interactions[i]);
+	}
+
+	for (int i = 0; i < scene->numDebugInteractions; i++) {
+		drawInteraction(scene->debugInteractions[i]);
+	}
+
+	double start = OsUtil::seconds();
+	for (int i = 0; i < scene->numPrimitives; i++) {
+		drawPrimitive(scene->primIds[i]);
+	}
+	double end = OsUtil::seconds();
+
+	unsetScene(scene, nullptr, scene->target);
+
+	drawPass_overlay(scene);
+
+	if (m_isStatistic)
+#if 0
+		g_statistic->setValue(stat_staticsTime, (end - start) * 1000);
+#else
+		stat_staticsTime.setInt((end - start) * 1000);
+#endif
+	END_PIX();
+}
+
+void ApiWrap::drawPass_zfill(QueuedScene *scene)
+{
+
+}
+
+void ApiWrap::drawPass_overlay(QueuedScene *scene)
+{
+
+}
+
+void ApiWrap::drawPass_composite(QueuedScene *scene)
+{
+
+}
+
+void ApiWrap::drawPass_shadowGen(QueuedScene *scene)
+{
+
+}
+
+void ApiWrap::drawPass_lights(QueuedScene *scene)
+{
+
+}
+
+void ApiWrap::drawPass_postprocess(QueuedScene *scene)
+{
+
+}
+
+void ApiWrap::drawScene_worldSub(QueuedScene *scene)
 {
 
 }

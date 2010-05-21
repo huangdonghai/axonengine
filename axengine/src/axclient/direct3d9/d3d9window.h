@@ -29,7 +29,6 @@ public:
 	virtual void setWindowHandle(Handle newId) { m_wndId = (HWND)newId.toVoidStar(); }
 	virtual Handle getWindowHandle() { return Handle(m_wndId); }
 
-
 	HWND getHandle() const { return m_wndId; }
 	void present();
 
