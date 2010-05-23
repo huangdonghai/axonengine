@@ -5,39 +5,6 @@ AX_BEGIN_NAMESPACE
 
 typedef Handle *phandle_t;
 
-enum ElementType {
-	ElementType_PointList,
-	ElementType_LineList,
-	ElementType_TriList,
-	ElementType_TriStrip
-};
-
-struct RenderClearer {
-	Rgba color;
-	float depth;
-	int stencil;
-	bool isClearColor : 1;
-	bool isClearDepth : 1;
-	bool isClearStencil : 1;
-
-	RenderClearer() : color(Rgba::Black), depth(1.0f), stencil(0), isClearColor(false), isClearDepth(false), isClearStencil(false) {}
-
-	void clearDepth(bool enable, float ref = 1.0f) {
-		isClearDepth = enable;
-		depth = ref;
-	}
-
-	void clearColor(bool enable, Rgba ref = Rgba::Zero) {
-		isClearColor = enable;
-		color = ref;
-	}
-
-	void clearStencil(bool enable, int ref) {
-		isClearStencil = enable;
-		stencil = ref;
-	}
-};
-
 
 class RenderApi
 {
@@ -112,6 +79,18 @@ public:
 	void createWindowTarget(phandle_t h, Handle hwnd);
 	void deleteWindowTarget(phandle_t h);
 
+	void createSamplerState(phandle_t h, const SamplerState &samplerState);
+	void deleteSamplerState(phandle_t h);
+
+	void createBlendState(phandle_t h, const BlendState &src);
+	void deleteBlendState(phandle_t h);
+
+	void createDepthStencilState(phandle_t h, const DepthStencilState &src);
+	void deleteDepthStencilState(phandle_t h);
+
+	void createRasterizerState(phandle_t h, const RasterizerState &src);
+	void deleteRasterizerState(phandle_t h);
+
 	void createQuery(phandle_t h);
 	void issueQuery(phandle_t h, AsioQuery *asioQuery);
 	void deleteQuery(phandle_t h);
@@ -119,7 +98,9 @@ public:
 	void setRenderTarget(int index, phandle_t h);
 	void setDepthStencil(phandle_t h);
 
-	void setShader(Handle shader, Technique tech);
+	void setShader(const FixedString & name, const ShaderMacro &sm, Technique tech);
+	void setVsConst(const FixedString &name, int count, float *value);
+	void setPsConst(const FixedString &name, int count, float *value);
 
 	void setVertices(phandle_t vb, VertexType vt, int vertcount);
 	void setInstanceVertices(phandle_t vb, VertexType vt, int vertcount, Handle inb, int incount);
@@ -149,7 +130,7 @@ protected:
 	void drawGlobalLight(QueuedScene *scene, QueuedLight *light);
 	void drawLocalLight(QueuedScene *scene, QueuedLight *light);
 
-	void drawPass_zfill(QueuedScene *scene);
+	void drawPass_gfill(QueuedScene *scene);
 	void drawPass_overlay(QueuedScene *scene);
 	void drawPass_composite(QueuedScene *scene);
 	void drawPass_shadowGen(QueuedScene *scene);

@@ -502,7 +502,7 @@ void D3D9Thread::drawPass_zfill(QueuedScene *scene)
 	clearer.clearDepth(true);
 	clearer.clearColor(true, Rgba::Zero);
 
-//		d3d9StateManager->SetRenderState(D3DRS_COLORWRITEENABLE, 0);
+//	d3d9StateManager->SetRenderState(D3DRS_COLORWRITEENABLE, 0);
 	setupScene(scene, &clearer, s_gbuffer);
 
 	for (int i = 0; i < scene->numInteractions; i++) {
@@ -510,7 +510,7 @@ void D3D9Thread::drawPass_zfill(QueuedScene *scene)
 	}
 
 	unsetScene(scene, &clearer, s_gbuffer);
-//		d3d9StateManager->SetRenderState(D3DRS_COLORWRITEENABLE, 0xf);
+//	d3d9StateManager->SetRenderState(D3DRS_COLORWRITEENABLE, 0xf);
 }
 
 void D3D9Thread::drawPass_composite(QueuedScene *scene)

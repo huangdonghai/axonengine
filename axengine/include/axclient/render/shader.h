@@ -180,57 +180,6 @@ private:
 };
 
 
-// shadername_shadergenflags_systemflags_vertexdeform_texgen_numlights_lightsflags
-enum BlendFactor {
-	BlendFactor_zero,
-	BlendFactor_one,
-	BlendFactor_srcColor,
-	BlendFactor_oneMinusSrcColor,
-	BlendFactor_dstColor,
-	BlendFactor_oneMinusDstColor,
-	BlendFactor_srcAlpha,
-	BlendFactor_oneMinusSrcAlpha,
-	BlendFactor_srcAlphaSaturate
-};
-
-enum StencilOp {
-	StencilOp_keep = 1,
-	StencilOp_zero = 2,
-	StencilOp_replace = 3,
-	StencilOp_incrementSat = 4,
-	StencilOp_decrementSat = 5,
-	StencilOp_invert = 6,
-	StencilOp_increment = 7,
-	StencilOp_decrement = 8
-};
-
-enum CompareFunc {
-	CompareFunc_disable = 0,	// disabled depth test, alpha test or stencil test
-	CompareFunc_never = 1,
-	CompareFunc_less = 2,
-	CompareFunc_equal = 3,
-	CompareFunc_lessEqual = 4,
-	CompareFunc_greater = 5,
-	CompareFunc_notEqual = 6,
-	CompareFunc_greaterEqual= 7,
-	CompareFunc_always = 8
-};
-
-enum CullMode {
-	CullMode_front,
-	CullMode_back,
-	CullMode_none
-};
-
-enum BlendMode {
-	BlendMode_replace = 0,		// another name for StageBlend_none
-	BlendMode_add,
-	BlendMode_blend,
-	BlendMode_filter,
-	BlendMode_terrain,			// first layer use replace, another pass use
-	// blend_add
-};
-
 struct Technique {
 	enum Type {
 		Zpass, ShadowGen, Main, Layer, Glow, Reflection, Number

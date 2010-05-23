@@ -449,7 +449,7 @@ void ApiWrap::drawScene_world( QueuedScene *scene, const RenderClearer &clearer 
 
 	// fill z first
 	BEGIN_PIX("GfillPass");
-	drawPass_zfill(scene);
+	drawPass_gfill(scene);
 	END_PIX();
 
 	BEGIN_PIX("DrawLights");
@@ -509,9 +509,21 @@ void ApiWrap::drawScene_noworld(QueuedScene *scene, const RenderClearer &clearer
 	END_PIX();
 }
 
-void ApiWrap::drawPass_zfill(QueuedScene *scene)
+void ApiWrap::drawPass_gfill(QueuedScene *scene)
 {
+	s_technique = Technique::Zpass;
 
+	RenderClearer clearer;
+	clearer.clearDepth(true);
+	clearer.clearColor(true, Rgba::Zero);
+
+	setupScene(scene, &clearer, s_gbuffer);
+
+	for (int i = 0; i < scene->numInteractions; i++) {
+		drawInteraction(scene->interactions[i]);
+	}
+
+	unsetScene(scene, &clearer, s_gbuffer);
 }
 
 void ApiWrap::drawPass_overlay(QueuedScene *scene)

@@ -14,31 +14,6 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-struct SamplerState {
-	enum ClampMode {
-		CM_Repeat,
-		CM_Clamp,
-		CM_ClampToEdge,	// only used in engine internal
-		CM_ClampToBorder // only used in engine internal
-	};
-
-
-	enum FilterMode {
-		FM_Nearest,
-		FM_Linear,
-		FM_Bilinear,
-		FM_Trilinear
-	};
-
-	enum BorderColor {
-		BM_Zero, BM_One
-	};
-
-	ClampMode clampMode;
-	FilterMode filterMode;
-	BorderColor borderMode;
-};
-
 //--------------------------------------------------------------------------
 // class Texture
 //--------------------------------------------------------------------------
