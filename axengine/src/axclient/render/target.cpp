@@ -40,7 +40,7 @@ void RenderTarget::freeReal()
 	m_realAllocated = false;
 }
 
-ReflectionTarget::ReflectionTarget(RenderWorld *world, RenderEntity *actor, Primitive *prim, int width, int height)
+ReflectionMap::ReflectionMap(RenderWorld *world, RenderEntity *actor, Primitive *prim, int width, int height)
 {
 	m_world = world;
 	m_actor = actor;
@@ -49,12 +49,12 @@ ReflectionTarget::ReflectionTarget(RenderWorld *world, RenderEntity *actor, Prim
 	m_target = g_targetManager->allocTarget(RenderTarget::PooledAlloc, width, height, TexFormat::BGRA8);
 }
 
-ReflectionTarget::~ReflectionTarget()
+ReflectionMap::~ReflectionMap()
 {
 	g_targetManager->freeTarget(m_target);
 }
 
-void ReflectionTarget::update( QueuedScene *qscene )
+void ReflectionMap::update( QueuedScene *qscene )
 {
 	bool needUpdate = false;
 
@@ -103,13 +103,13 @@ void RenderTargetManager::freeReal(RenderTarget *target)
 	m_freeRealTargets.push_back(target);
 }
 
-ReflectionTarget *RenderTargetManager::findReflection(RenderWorld *world, RenderEntity *actor, Primitive *prim, int width, int height)
+ReflectionMap *RenderTargetManager::findReflection(RenderWorld *world, RenderEntity *actor, Primitive *prim, int width, int height)
 {
-	List<ReflectionTarget*>::iterator it = m_reflectionTargets.begin();
+	List<ReflectionMap*>::iterator it = m_reflectionTargets.begin();
 
-	ReflectionTarget *reflTarget = 0;
+	ReflectionMap *reflTarget = 0;
 	for (; it != m_reflectionTargets.end(); ++it) {
-		ReflectionTarget *curTarget = *it;
+		ReflectionMap *curTarget = *it;
 
 		if (curTarget->m_world == world && curTarget->m_actor == actor && curTarget->m_prim == prim) {
 			reflTarget = curTarget;
@@ -118,7 +118,7 @@ ReflectionTarget *RenderTargetManager::findReflection(RenderWorld *world, Render
 	}
 
 	if (!reflTarget) {
-		reflTarget = new ReflectionTarget(world, actor, prim, width, height);
+		reflTarget = new ReflectionMap(world, actor, prim, width, height);
 		m_reflectionTargets.push_back(reflTarget);
 	}
 

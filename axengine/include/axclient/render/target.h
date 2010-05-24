@@ -99,10 +99,10 @@ class RenderEntity;
 class Primitive;
 struct QueuedScene;
 
-class AX_API ReflectionTarget {
+class AX_API ReflectionMap {
 public:
-	ReflectionTarget(RenderWorld *world, RenderEntity *actor, Primitive *prim, int width, int height);
-	~ReflectionTarget();
+	ReflectionMap(RenderWorld *world, RenderEntity *actor, Primitive *prim, int width, int height);
+	~ReflectionMap();
 
 	void update(QueuedScene *qscene);
 
@@ -141,7 +141,7 @@ public:
 	ShadowMap *allocShadowMap(int width, int height);
 	void freeShadowMap(ShadowMap *target);
 
-	ReflectionTarget *findReflection(RenderWorld *world, RenderEntity *actor, Primitive *prim, int width, int height);
+	ReflectionMap *findReflection(RenderWorld *world, RenderEntity *actor, Primitive *prim, int width, int height);
 
 protected:
 	friend class RenderTarget;
@@ -152,7 +152,7 @@ protected:
 	List<RenderTarget*> m_realAllocTargets;
 	List<RenderTarget*> m_freeRealTargets;
 
-	List<ReflectionTarget*> m_reflectionTargets;
+	List<ReflectionMap*> m_reflectionTargets;
 };
 
 AX_END_NAMESPACE

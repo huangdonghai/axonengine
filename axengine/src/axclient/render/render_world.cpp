@@ -232,7 +232,7 @@ void RenderWorld::renderTo(QueuedScene *qscene) {
 				continue;
 			}
 
-			ReflectionTarget *refl = g_targetManager->findReflection(this, 0, ia->primitive, 512, 512);
+			ReflectionMap *refl = g_targetManager->findReflection(this, 0, ia->primitive, 512, 512);
 			refl->update(qscene);
 
 			if (refl->m_target->m_realAllocated)
