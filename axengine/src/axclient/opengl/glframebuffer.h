@@ -132,7 +132,7 @@ AX_BEGIN_NAMESPACE
 	// class GLframebuffermanager
 	//--------------------------------------------------------------------------
 
-	class GLframebuffermanager : public TargetManager {
+	class GLframebuffermanager : public RenderTargetManager {
 	public:
 		GLframebuffermanager();
 		~GLframebuffermanager();

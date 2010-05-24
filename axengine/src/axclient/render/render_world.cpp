@@ -232,19 +232,8 @@ void RenderWorld::renderTo(QueuedScene *qscene) {
 				continue;
 			}
 
-#if 0
-			QueuedScene *subscene = gRenderQueue->allocQueuedScene();
-			qscene->subScenes[qscene->numSubScenes++] = subscene;
-			subscene->sceneType = QueuedScene::Reflection;
-
-			subscene->camera = cam.createMirrorCamera(Plane(0, 0, 1, 0));
-			Target *target = gTargetManager->allocTarget(Target::FrameAlloc, 512, 512, TexFormat::BGRA8);
-			subscene->camera.setTarget(target);
-			subscene->camera.setViewRect(Rect(0, 0, 512, 512));
-#else
 			ReflectionTarget *refl = g_targetManager->findReflection(this, 0, ia->primitive, 512, 512);
 			refl->update(qscene);
-#endif
 
 			if (refl->m_target->m_realAllocated)
 				ia->targets[ia->numTargets++] = refl->m_target;

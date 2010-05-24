@@ -86,7 +86,7 @@ private:
 // class D3D9TargetManager
 //--------------------------------------------------------------------------
 
-class D3D9TargetManager : public TargetManager {
+class D3D9TargetManager : public RenderTargetManager {
 public:
 	D3D9TargetManager();
 	virtual ~D3D9TargetManager();

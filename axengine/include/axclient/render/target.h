@@ -72,6 +72,26 @@ public:
 
 public:
 	bool m_realAllocated;
+
+	TexFormat m_format;
+	int m_width, m_height;
+
+	TexturePtr m_texture;
+
+	int m_boundIndex;
+
+	RenderTarget *m_depthTarget;
+	RenderTarget *m_colorAttached[MAX_COLOR_ATTACHMENT];
+
+	bool m_isPooled;
+	RenderTarget *m_realTarget;	// for pooled target
+
+	// for window
+	Handle m_wndId;
+	String m_name;
+
+	RenderTarget *m_gbuffer;
+	RenderTarget *m_lightBuffer;
 };
 
 class RenderWorld;
@@ -95,18 +115,31 @@ public:
 	int m_updateFrame;
 };
 
-class AX_API TargetManager {
+class AX_API ShadowMap {
 public:
-	TargetManager();
-	virtual ~TargetManager() = 0;
+	ShadowMap();
+	~ShadowMap();
+
+	void allocReal();
+	void freeReal();
+
+private:
+	int m_width, m_height;
+	RenderTarget *m_renderTarget;
+};
+
+class AX_API RenderTargetManager {
+public:
+	RenderTargetManager();
+	virtual ~RenderTargetManager() = 0;
 
 	virtual RenderTarget *allocTarget(RenderTarget::AllocHint hint, int width, int height, TexFormat texformat) = 0;
 	virtual void freeTarget(RenderTarget *target) = 0;	// only permanent target need be free
 	virtual bool isFormatSupport(TexFormat format) = 0;
 	virtual TexFormat getSuggestFormat(RenderTarget::SuggestFormat sf) = 0;
 
-	RenderTarget *allocShadowMap(int width, int height);
-	void freeShadowMap(RenderTarget *target);
+	ShadowMap *allocShadowMap(int width, int height);
+	void freeShadowMap(ShadowMap *target);
 
 	ReflectionTarget *findReflection(RenderWorld *world, RenderEntity *actor, Primitive *prim, int width, int height);
 

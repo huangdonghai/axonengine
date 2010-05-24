@@ -33,7 +33,7 @@ ShaderMacro g_shaderMacro;
 Uniforms g_uniforms;
 IRenderDriver *g_renderDriver;
 
-TargetManager *g_targetManager;
+RenderTargetManager *g_targetManager;
 ShaderManager *g_shaderManager;
 PrimitiveManager *g_primitiveManager;
 

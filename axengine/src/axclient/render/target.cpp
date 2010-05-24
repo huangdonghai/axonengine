@@ -86,23 +86,24 @@ void ReflectionTarget::update( QueuedScene *qscene )
 	m_updateFrame = m_world->getVisFrameId();
 }
 
-TargetManager::~TargetManager() {}
+RenderTargetManager::~RenderTargetManager()
+{}
 
-TargetManager::TargetManager()
+RenderTargetManager::RenderTargetManager()
 {
 }
 
-void TargetManager::allocReal( RenderTarget *target )
+void RenderTargetManager::allocReal(RenderTarget *target)
 {
 	m_realAllocTargets.push_back(target);
 }
 
-void TargetManager::freeReal( RenderTarget *target )
+void RenderTargetManager::freeReal(RenderTarget *target)
 {
 	m_freeRealTargets.push_back(target);
 }
 
-ReflectionTarget *TargetManager::findReflection( RenderWorld *world, RenderEntity *actor, Primitive *prim, int width, int height )
+ReflectionTarget *RenderTargetManager::findReflection(RenderWorld *world, RenderEntity *actor, Primitive *prim, int width, int height)
 {
 	List<ReflectionTarget*>::iterator it = m_reflectionTargets.begin();
 

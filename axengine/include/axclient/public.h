@@ -52,7 +52,7 @@ AX_API extern InputSystem *g_inputSystem;
 AX_API extern SoundSystem *g_soundSystem;
 
 AX_API extern ShaderManager *g_shaderManager;
-AX_API extern TargetManager *g_targetManager;
+AX_API extern RenderTargetManager *g_targetManager;
 AX_API extern QueryManager *g_queryManager;
 AX_API extern PrimitiveManager *g_primitiveManager;
 

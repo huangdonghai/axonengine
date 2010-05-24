@@ -154,11 +154,7 @@ public:
 			if (!subscene)
 				break;
 
-#if 0
-			g_statistic->incValue(stat_shadowPoolUpdate);
-#else
 			stat_shadowPoolUpdate.inc();
-#endif
 			subscene->sceneType = QueuedScene::ShadowGen;
 
 			subscene->camera = si->m_camera;
