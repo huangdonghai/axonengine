@@ -20,19 +20,9 @@ enum ElementType {
 	ElementType_TriStrip
 };
 
-enum CompareFunc {
-	CompareFunc_Never,
-	CompareFunc_Less,
-	CompareFunc_Equal,
-	CompareFunc_LessEqual,
-	CompareFunc_Greater,
-	CompareFunc_NotEqual,
-	CompareFunc_GreaterEqual,
-	CompareFunc_Always
-};
 
 
-struct SamplerState {
+struct SamplerStateDesc {
 	enum ClampMode {
 		CM_Repeat,
 		CM_Clamp,
@@ -56,7 +46,18 @@ struct SamplerState {
 	BorderColor borderMode;
 };
 
-struct DepthStencilState {
+struct DepthStencilStateDesc {
+	enum CompareFunc {
+		CompareFunc_Never,
+		CompareFunc_Less,
+		CompareFunc_Equal,
+		CompareFunc_LessEqual,
+		CompareFunc_Greater,
+		CompareFunc_NotEqual,
+		CompareFunc_GreaterEqual,
+		CompareFunc_Always
+	};
+
 	enum StencilOp {
 		StencilOp_Keep,
 		StencilOp_Zero,
@@ -86,7 +87,7 @@ struct DepthStencilState {
 	CompareFunc stencilFuncBackface;
 };
 
-struct RasterizerState {
+struct RasterizerStateDesc {
 	enum FillMode {
 		FillMode_Wireframe,
 		FillMode_Solid
@@ -110,7 +111,7 @@ struct RasterizerState {
 	bool antialiasedLineEnable;
 };
 
-struct BlendState {
+struct BlendStateDesc {
 	enum BlendFactor {
 		BlendFactor_Zero,
 		BlendFactor_One,

@@ -30,6 +30,18 @@ public:
 	static void (*createWindowTarget)(phandle_t h, Handle hwnd);
 	static void (*deleteWindowTarget)(phandle_t h);
 
+	static void createSamplerState(phandle_t h, const SamplerStateDesc &samplerState);
+	static void deleteSamplerState(phandle_t h);
+
+	static void createBlendState(phandle_t h, const BlendStateDesc &src);
+	static void deleteBlendState(phandle_t h);
+
+	static void createDepthStencilState(phandle_t h, const DepthStencilStateDesc &src);
+	static void deleteDepthStencilState(phandle_t h);
+
+	static void createRasterizerState(phandle_t h, const RasterizerStateDesc &src);
+	static void deleteRasterizerState(phandle_t h);
+
 	static void (*setShader)(const FixedString & name, const ShaderMacro &sm, Technique tech);
 	static void (*setVsConst)(const FixedString &name, int count, float *value);
 	static void (*setPsConst)(const FixedString &name, int count, float *value);
@@ -39,7 +51,7 @@ public:
 	static void (*setIndices)(phandle_t ib);
 
 //	static void dip(ElementType et, int offset, int vertcount, int indices_count) = 0;
-	static void (*dipUp)();
+	static void (*dp)();
 
 	// actions
 	static void (*clear)(const RenderClearer &clearer);
@@ -79,18 +91,6 @@ public:
 	void createWindowTarget(phandle_t h, Handle hwnd);
 	void deleteWindowTarget(phandle_t h);
 
-	void createSamplerState(phandle_t h, const SamplerState &samplerState);
-	void deleteSamplerState(phandle_t h);
-
-	void createBlendState(phandle_t h, const BlendState &src);
-	void deleteBlendState(phandle_t h);
-
-	void createDepthStencilState(phandle_t h, const DepthStencilState &src);
-	void deleteDepthStencilState(phandle_t h);
-
-	void createRasterizerState(phandle_t h, const RasterizerState &src);
-	void deleteRasterizerState(phandle_t h);
-
 	void createQuery(phandle_t h);
 	void issueQuery(phandle_t h, AsioQuery *asioQuery);
 	void deleteQuery(phandle_t h);
@@ -106,15 +106,34 @@ public:
 	void setInstanceVertices(phandle_t vb, VertexType vt, int vertcount, Handle inb, int incount);
 	void setIndices(phandle_t ib, ElementType et, int offset, int vertcount, int indicescount);
 
-	//	virtual void dip(ElementType et, int offset, int vertcount, int indicescount) = 0;
-	void dipUp();
+	void setVerticesUP(const void *vb, VertexType vt, int vertcount);
+	void setIndicesUP(const void *ib, ElementType et, int offset, int vertcount, int indicescount);
+
+	void dp();
 
 	void clear(const RenderClearer &clearer);
 
-	//
-	// high level
-	//
-	void drawPrimitive();
+
+protected:
+
+	void *allocHunk(int size);
+
+private:
+	enum { HUNK_SIZE = 4 * 1024 * 1024, MAX_COMMANDS = 64 * 1024 };
+	byte_t m_hunk[HUNK_SIZE];
+	Command *m_cmds[MAX_COMMANDS];
+
+	volatile int m_hunkPos;
+	volatile int m_readPos, m_writePos;
+};
+
+class RenderContext
+{
+public:
+	SamplerStatePtr findSamplerState(const SamplerStateDesc &desc);
+	BlendStatePtr findBlendState(const BlendStateDesc &desc);
+	DepthStencilStatePtr findDepthStencilState(const DepthStencilStateDesc &desc);
+	RasterizerStatePtr findRasterizerState(const RasterizerStatePtr &desc);
 
 	void issueQueue(RenderQueue *rq);
 
@@ -122,7 +141,7 @@ protected:
 	void beginFrame();
 	void drawScene(QueuedScene *scene, const RenderClearer &clearer);
 	void setupScene(QueuedScene *scene, const RenderClearer *clearer = 0, RenderTarget *target = 0, RenderCamera *camera = 0);
-	void unsetScene(QueuedScene *scene, const RenderClearer *clearer = 0, RenderTarget *target = 0, RenderCamera *camera = 0);
+//	void unsetScene(QueuedScene *scene, const RenderClearer *clearer = 0, RenderTarget *target = 0, RenderCamera *camera = 0);
 	void drawPrimitive(int prim_id);
 	void drawInteraction(Interaction *ia);
 	void endFrame();
@@ -144,16 +163,12 @@ protected:
 	void issueVisQuery();
 	void issueShadowQuery();
 
-	void *allocHunk(int size);
-
 private:
-	enum { HUNK_SIZE = 4 * 1024 * 1024, MAX_COMMANDS = 64 * 1024 };
-	byte_t m_hunk[HUNK_SIZE];
-	Command *m_cmds[MAX_COMMANDS];
-
-	volatile int m_hunkPos;
-	volatile int m_readPos, m_writePos;
-
+	RenderTarget *d3d9FrameWnd;
+	RenderTarget *s_gbuffer;
+	RenderTarget *s_lbuffer;
+	RenderTarget *d3d9WorldTarget;
+	bool m_isStatistic;
 	Technique s_technique;
 };
 

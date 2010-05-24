@@ -3,47 +3,49 @@
 
 AX_BEGIN_NAMESPACE
 
-class SamplerData;
+AX_DECLARE_REFPTR(SamplerState);
+AX_DECLARE_REFPTR(BlendState);
+AX_DECLARE_REFPTR(DepthStencilState);
+AX_DECLARE_REFPTR(RasterizerState);
 
-class Sampler
+class SamplerState : public RefObject
 {
 public:
-	enum ShareMode {
-		SM_Share, SM_Unique
-	};
-
-	enum ClampMode {
-		CM_Repeat,
-		CM_Clamp,
-		CM_ClampToEdge,	// only used in engine internal
-		CM_ClampToBorder // only used in engine internal
-	};
-
-	enum FilterMode {
-		FM_Nearest,
-		FM_Linear,
-		FM_Bilinear,
-		FM_Trilinear
-	};
-
-	enum BorderColor {
-		BC_Zero, BC_One
-	};
-
-	Sampler();
-	Sampler(const String &name, ClampMode clampMode, FilterMode filterMode, ShareMode = SM_Share);
-	~Sampler();
-
-	bool isNull() const { return !m_d; }
-
-	// texture parameters
-	void setClampMode(ClampMode clampmwode);
-	void setFilterMode(FilterMode filtermode);
-	void setBorderColor(BorderColor borderColor);
-	void setHardwareShadowMap(bool enable);
+	SamplerState();
+	virtual ~SamplerState();
 
 private:
-	SharedDataPointer<SamplerData> m_d;
+	Handle m_h;
+};
+
+class BlendState : public RefObject
+{
+public:
+	BlendState();
+	virtual ~BlendState();
+
+private:
+	Handle m_h;
+};
+
+class DepthStencilState : public RefObject
+{
+public:
+	DepthStencilState();
+	virtual ~DepthStencilState();
+
+private:
+	Handle m_h;
+};
+
+class RasterizerState : public RefObject
+{
+public:
+	RasterizerState();
+	virtual ~RasterizerState();
+
+private:
+	Handle m_h;
 };
 
 AX_END_NAMESPACE

@@ -304,7 +304,12 @@ void ApiWrap::deleteIndexBuffer(phandle_t h)
 	AddCommand1(RenderApi::deleteIndexBuffer).args(h);
 }
 
-void ApiWrap::issueQueue(RenderQueue *rq)
+void ApiWrap::clear( const RenderClearer &clearer )
+{
+
+}
+
+void RenderContext::issueQueue(RenderQueue *rq)
 {
 	double startTime = OsUtil::seconds();
 
@@ -319,7 +324,7 @@ void ApiWrap::issueQueue(RenderQueue *rq)
 	RenderClearer clearer;
 	clearer.clearDepth(true);
 	clearer.clearColor(true);
-	clear(clearer);
+	g_apiWrap->clear(clearer);
 
 	float scenetime[16];
 	bool m_isStatistic = false;
@@ -340,7 +345,7 @@ void ApiWrap::issueQueue(RenderQueue *rq)
 	endFrame();
 }
 
-void ApiWrap::beginFrame()
+void RenderContext::beginFrame()
 {
 	if (!r_specular.getBool()) {
 		g_shaderMacro.setMacro(ShaderMacro::G_DISABLE_SPECULAR);
@@ -349,12 +354,12 @@ void ApiWrap::beginFrame()
 	}
 }
 
-void ApiWrap::endFrame()
+void RenderContext::endFrame()
 {
 
 }
 
-void ApiWrap::drawScene(QueuedScene *scene, const RenderClearer &clearer)
+void RenderContext::drawScene(QueuedScene *scene, const RenderClearer &clearer)
 {
 	if (scene->sceneType == QueuedScene::WorldMain) {
 		drawScene_world(scene, clearer);
@@ -366,10 +371,10 @@ void ApiWrap::drawScene(QueuedScene *scene, const RenderClearer &clearer)
 }
 
 #define BEGIN_PIX(x)
-#define END_PIX(x)
+#define END_PIX()
 #define AX_SU(a,b)
 
-void ApiWrap::drawScene_world( QueuedScene *scene, const RenderClearer &clearer )
+void RenderContext::drawScene_world( QueuedScene *scene, const RenderClearer &clearer )
 {
 	BEGIN_PIX("DrawWorld");
 
@@ -380,11 +385,11 @@ void ApiWrap::drawScene_world( QueuedScene *scene, const RenderClearer &clearer 
 	int height = rect.height;
 
 	if (1) {
-		s_gbuffer = d3d9FrameWnd->m_gbuffer;
-		AX_SU(g_sceneDepth, s_gbuffer->getTextureDX());
+//		s_gbuffer = d3d9FrameWnd->m_gbuffer;
+//		AX_SU(g_sceneDepth, s_gbuffer->getTextureDX());
 
-		s_lbuffer = d3d9FrameWnd->m_lightBuffer;
-		AX_SU(g_lightBuffer, s_lbuffer->getTextureDX());
+//		s_lbuffer = d3d9FrameWnd->m_lightBuffer;
+//		AX_SU(g_lightBuffer, s_lbuffer->getTextureDX());
 
 	} else {
 		d3d9WorldTarget = 0;
@@ -475,7 +480,7 @@ void ApiWrap::drawScene_world( QueuedScene *scene, const RenderClearer &clearer 
 	END_PIX();
 }
 
-void ApiWrap::drawScene_noworld(QueuedScene *scene, const RenderClearer &clearer)
+void RenderContext::drawScene_noworld(QueuedScene *scene, const RenderClearer &clearer)
 {
 	BEGIN_PIX("DrawNoworld");
 	s_technique = Technique::Main;
@@ -496,7 +501,7 @@ void ApiWrap::drawScene_noworld(QueuedScene *scene, const RenderClearer &clearer
 	}
 	double end = OsUtil::seconds();
 
-	unsetScene(scene, nullptr, scene->target);
+//	unsetScene(scene, nullptr, scene->target);
 
 	drawPass_overlay(scene);
 
@@ -509,7 +514,7 @@ void ApiWrap::drawScene_noworld(QueuedScene *scene, const RenderClearer &clearer
 	END_PIX();
 }
 
-void ApiWrap::drawPass_gfill(QueuedScene *scene)
+void RenderContext::drawPass_gfill(QueuedScene *scene)
 {
 	s_technique = Technique::Zpass;
 
@@ -523,35 +528,50 @@ void ApiWrap::drawPass_gfill(QueuedScene *scene)
 		drawInteraction(scene->interactions[i]);
 	}
 
-	unsetScene(scene, &clearer, s_gbuffer);
+//	unsetScene(scene, &clearer, s_gbuffer);
 }
 
-void ApiWrap::drawPass_overlay(QueuedScene *scene)
+void RenderContext::drawPass_overlay(QueuedScene *scene)
 {
 
 }
 
-void ApiWrap::drawPass_composite(QueuedScene *scene)
+void RenderContext::drawPass_composite(QueuedScene *scene)
 {
 
 }
 
-void ApiWrap::drawPass_shadowGen(QueuedScene *scene)
+void RenderContext::drawPass_shadowGen(QueuedScene *scene)
 {
 
 }
 
-void ApiWrap::drawPass_lights(QueuedScene *scene)
+void RenderContext::drawPass_lights(QueuedScene *scene)
 {
 
 }
 
-void ApiWrap::drawPass_postprocess(QueuedScene *scene)
+void RenderContext::drawPass_postprocess(QueuedScene *scene)
 {
 
 }
 
-void ApiWrap::drawScene_worldSub(QueuedScene *scene)
+void RenderContext::drawScene_worldSub(QueuedScene *scene)
+{
+
+}
+
+void RenderContext::drawPrimitive( int prim_id )
+{
+
+}
+
+void RenderContext::drawInteraction( Interaction *ia )
+{
+
+}
+
+void RenderContext::setupScene( QueuedScene *scene, const RenderClearer *clearer /*= 0*/, RenderTarget *target /*= 0*/, RenderCamera *camera /*= 0*/ )
 {
 
 }
