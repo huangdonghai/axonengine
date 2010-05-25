@@ -16,45 +16,14 @@ AX_BEGIN_NAMESPACE
 
 AX_DECLARE_REFPTR(TextureWrap);
 
-class TextureWrap : public KeyedObject
-{
-public:
-	enum Status {
-		Constructed,
-		Loading,
-		Loaded,
-		Missed
-	};
-
-	TextureWrap() {}
-	TextureWrap(const FixedString &key);
-	TextureWrap(const FixedString &key, TexFormat format, int width, int height);
-	virtual ~TextureWrap();
-
-	void uploadSubTexture(const Rect &rect, const void *pixels, TexFormat format);
-	void generateMipmap();
-
-	static FixedString normalizeKey(const String &name);
-	static TextureWrapPtr findTexture(const FixedString &name);
-	static TextureWrapPtr createTexture(const String &debugname, TexFormat format, int width, int height);
-
-	friend class Texture;
-
-private:
-	Handle m_handle;
-	AsioRead m_asioRead;
-
-	static Dict<FixedString, TextureWrap*> ms_texDict;
-	static List<TextureWrap*> ms_asioList;
-};
-
 
 
 //--------------------------------------------------------------------------
 // class Texture
 //--------------------------------------------------------------------------
 
-class Texture {
+class Texture
+{
 public:
 	friend class TextureManager;
 
@@ -81,14 +50,12 @@ public:
 	void uploadSubTexture(const Rect &rect, const void *pixels, TexFormat format = TexFormat::AUTO);
 	void generateMipmap();
 
-	// implement RefObject
-	virtual void deleteThis();
-
 	// get some info
 	void getSize(int &width, int &height, int &depth);
 	TexFormat getFormat();
 
-	void setSamplerState(const SamplerStateDesc &ssd);
+	void setSamplerState(const SamplerStateDesc &desc);
+
 	const SamplerStateDesc &getSamplerState() const;
 
 	void saveToFile(const String &filename);
@@ -124,12 +91,12 @@ public:
 	virtual ~TextureManager();
 
 	// called in main thread
-	TexturePtr loadTexture(const String &texname, Texture::InitFlags flags=0);
-	TexturePtr createTexture(const String &debugname, TexFormat format, int width, int height, Texture::InitFlags flags = 0);
+	Texture *loadTexture(const String &texname, Texture::InitFlags flags=0);
+	Texture *createTexture(const String &debugname, TexFormat format, int width, int height, Texture::InitFlags flags = 0);
 	bool isExist(const FixedString &key);
 
 	// called in draw thread
-	virtual TexturePtr createObject() = 0;
+	virtual Texture *createObject() = 0;
 
 private:
 	friend class Texture;

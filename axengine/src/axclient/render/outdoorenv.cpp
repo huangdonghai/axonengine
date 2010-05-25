@@ -150,35 +150,35 @@ void OutdoorEnv::setSkyBoxTexture(const String &matname)
 	{
 		Material *skymat = m_skybox12->getMaterial();
 		if (!skymat) {
-			skymat = Material::loadUnique("_skybox");
+			skymat = new Material("_skybox");
 		}
-		TexturePtr tex = Texture::load(matname + "_12");
+		Texture *tex = new Texture(matname + "_12");
 		AX_ASSERT(tex);
-		skymat->setTexture(SamplerType::Diffuse, tex.get());
+		skymat->setTexture(SamplerType::Diffuse, tex);
 
-		m_skybox12->setMaterial(skymat.get());
+		m_skybox12->setMaterial(skymat);
 	}
 	{
 		Material *skymat = m_skybox34->getMaterial();
 		if (!skymat) {
-			skymat = Material::loadUnique("_skybox");
+			skymat = new Material("_skybox");
 		}
-		TexturePtr tex = Texture::load(matname + "_34");
+		Texture *tex = new Texture(matname + "_34");
 		AX_ASSERT(tex);
-		skymat->setTexture(SamplerType::Diffuse, tex.get());
+		skymat->setTexture(SamplerType::Diffuse, tex);
 
-		m_skybox34->setMaterial(skymat.get());
+		m_skybox34->setMaterial(skymat);
 	}
 	{
 		Material *skymat = m_skybox5->getMaterial();
 		if (!skymat) {
-			skymat = Material::loadUnique("_skybox");
+			skymat = new Material("_skybox");
 		}
-		TexturePtr tex = Texture::load(matname + "_5");
+		Texture *tex = new Texture(matname + "_5");
 		AX_ASSERT(tex);
-		skymat->setTexture(SamplerType::Diffuse, tex.get());
+		skymat->setTexture(SamplerType::Diffuse, tex);
 
-		m_skybox5->setMaterial(skymat.get());
+		m_skybox5->setMaterial(skymat);
 	}
 }
 
@@ -261,22 +261,25 @@ void OutdoorEnv::createSkyDome()
 	// create nishita render target
 	m_skyNishitaRt = nullptr;
 
-	if (!g_targetManager->isFormatSupport(TexFormat::RGBA16F)) {
+	if (!g_renderSystem->getDriverInfo()->m_textureFormatSupports[TexFormat::RGBA16F]) {
 		return;
 	}
 
-	m_skyNishitaRt = g_targetManager->allocTarget(RenderTarget::PermanentAlloc, 128, 64, TexFormat::RGBA16F);
-	RenderTarget *miert = g_targetManager->allocTarget(RenderTarget::PermanentAlloc, 128, 64, TexFormat::RGBA16F);
-	m_skyNishitaRt->getTexture()->setClampMode(Texture::CM_ClampToEdge);
-	miert->getTexture()->setClampMode(Texture::CM_ClampToEdge);
+	m_skyNishitaRt = new RenderTarget(128, 64, TexFormat::RGBA16F);
+	RenderTarget *miert = new RenderTarget(128, 64, TexFormat::RGBA16F);
+
+	SamplerStateDesc desc;
+	desc.clampMode = SamplerStateDesc::CM_Clamp;
+	m_skyNishitaRt->getTexture()->setSamplerState(desc);
+	miert->getTexture()->setSamplerState(desc);
 	m_skyNishitaRt->attachColor(0, miert);
 
-	m_skyNishitaMat = Material::loadUnique("_skyNishita");
+	m_skyNishitaMat = new Material("_skyNishita");
 	m_skyNishitaMat->setTexture(SamplerType::Diffuse, m_skyNishitaRt->getTexture());
 	m_skyNishitaMat->setTexture(SamplerType::Specular, miert->getTexture());
 	m_skyNishitaGenMat = 0; //Material::loadUnique("_skyNishitaGen");
 
-	m_skydome->setMaterial(m_skyNishitaMat.get());
+	m_skydome->setMaterial(m_skyNishitaMat);
 }
 
 void OutdoorEnv::createOceanMesh()
@@ -369,8 +372,8 @@ void OutdoorEnv::createOceanMesh()
 
 	AX_ASSERT(idxes - oldidxes == numidxes);
 
-	Material *mat = Material::load("ocean");
-	m_oceanMesh->setMaterial(mat.get());
+	Material *mat = new Material("ocean");
+	m_oceanMesh->setMaterial(mat);
 }
 
 void OutdoorEnv::createOceanGrid()
@@ -503,7 +506,7 @@ void OutdoorEnv::genNishitaUpdateScene(QueuedScene *qscene)
 	scene->camera.setTarget(m_skyNishitaRt);
 	scene->camera.setOverlay(0, 0, 128, 64);
 
-	MeshPrim *quad = MeshPrim::createScreenQuad(Primitive::HintFrame, Rect(0,0,128,64), Rgba::White, m_skyNishitaGenMat.get());
+	MeshPrim *quad = MeshPrim::createScreenQuad(Primitive::HintFrame, Rect(0,0,128,64), Rgba::White, m_skyNishitaGenMat);
 	scene->addInteraction(nullptr, quad);
 }
 

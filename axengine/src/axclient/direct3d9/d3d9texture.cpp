@@ -12,6 +12,7 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
+#if 0
 static D3D9texturemanager *s_manager;
 
 inline bool trTexFormat(TexFormat texformat, D3DFORMAT &d3dformat)
@@ -667,7 +668,7 @@ void D3D9texturemanager::dumpTex_f(const CmdArgs &params)
 	}
 	const String &texname = params.tokened[1];
 
-	TexturePtr tex = Texture::load(texname);
+	Texture *tex = Texture::load(texname);
 
 	if (!tex) {
 		Printf("Cann't found texture '%s'\n", texname.c_str());
@@ -679,7 +680,7 @@ void D3D9texturemanager::dumpTex_f(const CmdArgs &params)
 	tex->saveToFile(filename);
 }
 
-TexturePtr D3D9texturemanager::createObject()
+Texture *D3D9texturemanager::createObject()
 {
 	return new D3D9Texture();
 }
@@ -743,5 +744,6 @@ void D3D9texturemanager::syncFrame()
 	}
 }
 
+#endif
 
 AX_END_NAMESPACE

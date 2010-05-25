@@ -15,7 +15,7 @@ AX_BEGIN_NAMESPACE
 Material::MaterialDict Material::ms_materialDict;
 IntrusiveList<Material, &Material::m_needDeleteLink> ms_needDeleteLinkHead;
 
-Material::Material()
+Material::Material(const String &name)
 {
 	size_t s = sizeof(Material);
 	m_baseTcAnim = false;
@@ -55,17 +55,21 @@ bool Material::init(const FixedString &key)
 			if (!texdef)
 				continue;
 
-			m_textures[i] = Texture::load(texdef->file);
+			m_textures[i] = new Texture(texdef->file);
 
 			if (!m_textures[i])
 				continue;
 
-			if (texdef->clamp && m_textures[i]) {
-				m_textures[i]->setClampMode(Texture::CM_Border);
+			SamplerStateDesc desc = m_textures[i]->getSamplerState();
+
+			if (texdef->clampToBorder && m_textures[i]) {
+				desc.clampMode = SamplerStateDesc::CM_Border;
+				m_textures[i]->setSamplerState(desc);
 			}
 
 			if (texdef->clampToEdge && m_textures[i]) {
-				m_textures[i]->setClampMode(Texture::CM_ClampToEdge);
+				desc.clampMode = SamplerStateDesc::CM_Clamp;
+				m_textures[i]->setSamplerState(desc);
 			}
 		}
 	}
@@ -224,10 +228,10 @@ bool Material::isPhysicsHelper() const
 
 void Material::setTextureSet( const String &texname )
 {
-	TexturePtr texture = Texture::load(texname);
+	Texture *texture = new Texture(texname);
 	m_textures[SamplerType::Diffuse] = texture;
 
-	texture = Texture::load(texname + "_n");
+	texture = new Texture(texname + "_n");
 	m_textures[SamplerType::Normal] = texture;
 
 	texture = Texture::load(texname + "_s");

@@ -148,7 +148,7 @@ bool MaterialDecl::tryLoad(const String &name)
 						Errorf("%s: map not set", __func__);
 					m_textures[maptype]->file = attr->Value();
 				} else if (attr->NameTStr() == "clamp") {
-					m_textures[maptype]->clamp = !!attr->IntValue();
+					m_textures[maptype]->clampToBorder = !!attr->IntValue();
 				} else if (attr->NameTStr() == "clampToEdge") {
 					m_textures[maptype]->clampToEdge = !!attr->IntValue();
 				}

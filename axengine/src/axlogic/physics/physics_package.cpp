@@ -246,7 +246,7 @@ namespace { namespace Internal {
 		MaterialReader(const hkxMaterial *hkmat) : m_hkmat(hkmat)
 		{}
 
-		TexturePtr getLightmap()
+		Texture *getLightmap()
 		{
 			if (!m_hkmat) {
 				return TexturePtr();
@@ -267,7 +267,7 @@ namespace { namespace Internal {
 					continue;
 				}
 
-				TexturePtr tex = convert(stage);
+				Texture *tex = convert(stage);
 
 				if (!tex) {
 					continue;
@@ -329,7 +329,7 @@ namespace { namespace Internal {
 			return samplertype;
 		}
 
-		void fillStatges(TexturePtr samplers[SamplerType::NUMBER_ALL], TexturePtr &lightmap)
+		void fillStatges(Texture *samplers[SamplerType::NUMBER_ALL], Texture *&lightmap)
 		{
 			for (int i = 0; i < m_hkmat->m_numStages; i++) {
 				hkxMaterial::TextureStage *stage = &m_hkmat->m_stages[i];
@@ -338,7 +338,7 @@ namespace { namespace Internal {
 				if (filename.empty())
 					continue;
 
-				TexturePtr tex = Texture::load(filename);
+				Texture *tex = Texture::load(filename);
 
 				if (!tex) {
 					continue;
@@ -456,8 +456,8 @@ namespace { namespace Internal {
 				axname = fn;
 			}
 
-			TexturePtr samplers[SamplerType::NUMBER_ALL];
-			TexturePtr lightmap = 0;
+			Texture *samplers[SamplerType::NUMBER_ALL];
+			Texture *lightmap = 0;
 			TypeZeroArray(samplers);
 
 			fillStatges(samplers, lightmap);
@@ -543,7 +543,7 @@ namespace { namespace Internal {
 			return result;
 		}
 
-		TexturePtr convert(hkxMaterial::TextureStage *stage)
+		Texture *convert(hkxMaterial::TextureStage *stage)
 		{
 			String fn = getTextureFilename(stage);
 

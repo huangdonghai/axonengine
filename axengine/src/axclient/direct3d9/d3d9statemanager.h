@@ -109,7 +109,7 @@ public:
 	TexFormat getDepthStencilFormat() const { return m_depthStencilFormat; }
 	void setVertexDeclaration(IDirect3DVertexDeclaration9 *vertdecl);
 
-	void setSamplerStateBlock(DWORD stage, Texture::ClampMode clampmode, Texture::FilterMode filtermode);
+	void setSamplerStateBlock(DWORD stage, SamplerStateDesc::ClampMode clampmode, SamplerStateDesc::FilterMode filtermode);
 
 	void onReset();
 	void onDeviceLost();
@@ -166,14 +166,14 @@ public:
 	}
 	STDMETHOD(SetTexture)(THIS_ DWORD dwStage, LPDIRECT3DBASETEXTURE9 pTexture);
 
-	void setTexture(int stage, Texture *tex) {
+	void setTexture(int stage, IDirect3DTexture9 *tex) {
 		if (!tex) {
 			SetTexture(stage, 0);
 			return;
 		}
 
-		D3D9Texture *d3d9tex = (D3D9Texture*)tex;
-		SetTexture(stage, d3d9tex->getObject());
+		IDirect3DTexture9 *d3d9tex = (IDirect3DTexture9*)tex;
+		SetTexture(stage, d3d9tex);
 	}
 
 	STDMETHOD(SetVertexShader)(THIS_ LPDIRECT3DVERTEXSHADER9 pShader)

@@ -64,7 +64,7 @@ protected:
 private:
 	AllocHint m_storeHint;
 	TexFormat m_format;
-	TexturePtr m_texture;
+	Texture *m_texture;
 	D3D9Texture *m_d3d9texture;
 	IDirect3DSurface9 *m_surface;
 	int m_width, m_height;

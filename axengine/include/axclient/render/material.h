@@ -88,6 +88,7 @@ public:
 	// end management
 
 private:
+	FixedString m_key;
 	MaterialDecl *m_decl;
 
 	bool m_shaderMacroNeedRegen;
@@ -128,28 +129,34 @@ public:
 	IntrusiveLink<Material> m_needDeleteLink;
 };
 
-inline void Material::setDiffuse(const Vector3 &v) {
+inline void Material::setDiffuse(const Vector3 &v)
+{
 	m_diffuse = v;
 }
 
-inline void Material::setSpecular(const Vector3 &v) {
+inline void Material::setSpecular(const Vector3 &v)
+{
 	m_specular = v;
 }
 
 
-inline Vector3 Material::getMatDiffuse() const {
+inline Vector3 Material::getMatDiffuse() const
+{
 	return m_diffuse;
 }
 
-inline Vector3 Material::getMatSpecular() const {
+inline Vector3 Material::getMatSpecular() const
+{
 	return m_specular;
 }
 
-inline float Material::getMatShiness() const {
+inline float Material::getMatShiness() const
+{
 	return m_shiness;
 }
 
-inline void Material::setFeature(int index, bool enabled) {
+inline void Material::setFeature(int index, bool enabled)
+{
 	AX_ASSERT(index >= 0 && index < Shader::MAX_FEATURES);
 	if (m_features[index] != enabled) {
 		m_shaderMacroNeedRegen = true;
@@ -157,46 +164,54 @@ inline void Material::setFeature(int index, bool enabled) {
 	}
 }
 
-inline bool Material::isFeatureEnabled(int index) const {
+inline bool Material::isFeatureEnabled(int index) const
+{
 	AX_ASSERT(index >= 0 && index < Shader::MAX_FEATURES);
 	return m_features[index];
 }
 
-inline void Material::setLiteral(int index, int value) {
+inline void Material::setLiteral(int index, int value)
+{
 	AX_ASSERT(index >= 0 && index < Shader::MAX_LITERALS);
 	if (m_literals[index] != value) {
 		m_literals[index] = value;
 		m_shaderMacroNeedRegen = true;
 	}
 }
-inline int Material::getLiteral(int index) const {
+inline int Material::getLiteral(int index) const
+{
 	AX_ASSERT(index >= 0 && index < Shader::MAX_LITERALS);
 	return m_literals[index];
 }
 
-inline void Material::clearFeatures() {
+inline void Material::clearFeatures()
+{
 	m_shaderMacroNeedRegen = true;
 	TypeZeroArray(m_features);
 }
 
-inline void Material::clearLiterals() {
+inline void Material::clearLiterals()
+{
 	m_shaderMacroNeedRegen = true;
 	TypeZeroArray(m_literals);
 }
 
 
-inline void Material::setPixelToTexel(int width, int height) {
+inline void Material::setPixelToTexel(int width, int height)
+{
 	m_p2tEnabled = true;
 	m_p2tWidth = width;
 	m_p2tHeight = height;
 }
 
-inline Texture *Material::getTexture(int sampler) const {
+inline Texture *Material::getTexture(int sampler) const
+{
 	AX_ASSERT(sampler >= 0 && sampler < SamplerType::NUMBER_ALL);
 	return m_textures[sampler];
 }
 
-inline void Material::setTexture(int sampler, Texture *tex) {
+inline void Material::setTexture(int sampler, Texture *tex)
+{
 	m_shaderMacroNeedRegen = true;
 	AX_ASSERT(sampler >= 0 && sampler < SamplerType::NUMBER_ALL);
 	m_textures[sampler] = tex;

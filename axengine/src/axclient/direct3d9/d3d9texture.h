@@ -13,6 +13,8 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
+#if 0
+
 class D3D9Texture : public Texture
 {
 public:
@@ -98,7 +100,7 @@ public:
 	void syncFrame();
 
 	// implement TextureManager
-	virtual TexturePtr createObject();
+	virtual Texture *createObject();
 
 protected:
 	// console command
@@ -132,6 +134,8 @@ inline void D3D9texturemanager::removeFromDict( LPDIRECT3DBASETEXTURE9 d3dtex )
 
 	m_texDict.erase(it);
 }
+
+#endif
 
 AX_END_NAMESPACE
 

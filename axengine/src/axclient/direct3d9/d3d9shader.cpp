@@ -441,7 +441,7 @@ void DX9_Shader::initSamplerAnn(D3DXHANDLE param) {
 
 		if (filename[0] != '$') {
 #if 0
-			D3D9texture *tex = FindAsset_<D3D9texture>(filename);
+			IDirect3DTexture9 *tex = FindAsset_<IDirect3DTexture9>(filename);
 			if (tex) {
 				m_object->SetTexture(texparam, tex->getObject());
 			}
@@ -536,7 +536,7 @@ D3DXHANDLE DX9_Shader::getUsedParameter(const char *name)
 	}
 }
 
-void DX9_Shader::setSystemMap(SamplerType maptype, D3D9Texture *tex)
+void DX9_Shader::setSystemMap(SamplerType maptype, IDirect3DTexture9 *tex)
 {
 	AX_ASSERT(maptype >= 0 && maptype < SamplerType::NUMBER_ALL);
 
@@ -1004,6 +1004,7 @@ void DX9_Pass::initSampler(const D3DXCONSTANT_DESC &desc)
 
 void DX9_Pass::begin()
 {
+#if 0
 	Material *mtr = m_shader->m_coupled;
 
 	// set shader
@@ -1029,15 +1030,15 @@ void DX9_Pass::begin()
 			if (m_matSamplers[i] == -1)
 				continue;
 
-			Texture *tex = mtr->getTexture(i);
-			d3d9StateManager->setTexture(m_matSamplers[i], tex);
+//			IDirect3DTexture9 *tex = mtr->getTexture(i);
+//			d3d9StateManager->setTexture(m_matSamplers[i], tex);
 		}
 	} else {
 		for (int i = 0; i < SamplerType::NUMBER_ALL; i++) {
 			if (m_matSamplers[i] == -1)
 				continue;
 
-			Texture *tex = m_shader->m_samplerBound[i];
+			IDirect3DTexture9 *tex = m_shader->m_samplerBound[i];
 			d3d9StateManager->setTexture(m_matSamplers[i], tex);
 		}
 	}
@@ -1048,7 +1049,7 @@ void DX9_Pass::begin()
 		int f = it->first;
 		int s = it->second;
 		UniformItem &item = g_uniforms.getItem(f);
-		Texture *tex = *(Texture**)item.m_datap;
+		IDirect3DTexture9 *tex = *(IDirect3DTexture9**)item.m_datap;
 		d3d9StateManager->setTexture(s, tex);
 	}
 
@@ -1069,7 +1070,7 @@ void DX9_Pass::begin()
 
 			RenderTarget *target = ia->targets[count];
 			D3D9Target *textarget = (D3D9Target*)target;
-			D3D9Texture *tex = textarget->getTextureDX();
+			IDirect3DTexture9 *tex = textarget->getTextureDX();
 			tex->setClampMode(Texture::CM_ClampToEdge);
 
 			d3d9StateManager->setTexture(sa->m_register, tex);
@@ -1077,12 +1078,13 @@ void DX9_Pass::begin()
 			Rect r = d3d9BoundTarget->getRect();
 
 			D3D9Target *target = d3d9TargetManager->allocTargetDX(RenderTarget::TemporalAlloc, r.width, r.height, TexFormat::BGRA8);
-			D3D9Texture *tex = target->getTextureDX();
+			IDirect3DTexture9 *tex = target->getTextureDX();
 			tex->setClampMode(Texture::CM_ClampToEdge);
 			target->copyFramebuffer(r);
 			d3d9StateManager->setTexture(sa->m_register, tex);
 		}
 	}
+#endif
 }
 
 void DX9_Pass::setParameters()

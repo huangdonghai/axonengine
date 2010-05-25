@@ -35,7 +35,7 @@ MapActor::MapActor(const String &type) {
 		return;
 	}
 
-	TexturePtr tex = Texture::load("editor/icons/" + icon);
+	Texture *tex = Texture::load("editor/icons/" + icon);
 
 	if (!tex) {
 		return;

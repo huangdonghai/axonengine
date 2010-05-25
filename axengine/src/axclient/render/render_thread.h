@@ -3,7 +3,6 @@
 
 AX_BEGIN_NAMESPACE
 
-
 class RenderThread : public Thread
 {
 public:

@@ -59,7 +59,7 @@ protected:
 
 private:
 	byte_t m_data[Map::ChunkPixels][Map::ChunkPixels];
-	TexturePtr m_texture;
+	Texture *m_texture;
 	bool m_isDirty;
 };
 
@@ -106,7 +106,7 @@ private:
 };
 
 inline Material *MapLayerGen::getDetailMat() const {
-	return m_detailMat.get();
+	return m_detailMat;
 }
 
 //--------------------------------------------------------------------------
@@ -277,8 +277,8 @@ private:
 	sbyte_t m_zonePrimLod;
 	MapChunk *m_chunks[Map::ZoneChunks][Map::ZoneChunks];
 
-	TexturePtr m_normalTexture;
-	TexturePtr m_colorTexture;
+	Texture *m_normalTexture;
+	Texture *m_colorTexture;
 };
 
 inline MapChunk *MapZone::getChunk(const Point &global_index) {
@@ -296,11 +296,11 @@ inline const MapChunk *MapZone::getChunk(const Point &global_index) const {
 }
 
 inline Texture *MapZone::getNormalTexture() const {
-	return m_normalTexture.get();
+	return m_normalTexture;
 }
 
 inline Texture *MapZone::getColorTexture() const {
-	return m_colorTexture.get();
+	return m_colorTexture;
 }
 
 inline void MapZone::setColorTexture(Texture *tex) {
@@ -728,7 +728,7 @@ inline MapLayerGen *MapTerrain::getLayerGenById(int id) const {
 
 inline Material *MapTerrain::getLayerMat(int layer) const {
 	if (layer >= m_numLayerGens)
-		return MaterialPtr();
+		return 0;
 
 	return m_layerGens[layer]->getDetailMat();
 }

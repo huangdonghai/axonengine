@@ -26,30 +26,42 @@ Texture::Texture()
 //	m_needGenMipmapLink.setOwner(this);
 }
 
+Texture::Texture(const String &name, InitFlags flags/*=0*/)
+{
+	m_textureWrap = g_renderSystem->findTexture(name, flags);
+	m_samplerState = g_renderSystem->findSamplerState(0);
+}
+
+Texture::Texture(const String &debugname, TexFormat format, int width, int height, InitFlags flags /*= 0*/)
+{
+	m_textureWrap = g_renderSystem->createTexture(debugname, format, width, height, flags);
+	m_samplerState = g_renderSystem->findSamplerState(0);
+}
+
 Texture::~Texture()
 {}
 
 void Texture::uploadSubTexture(const Rect &rect, const void *pixels, TexFormat format /*= TexFormat::AUTO*/)
 {
-	g_apiWrap->uploadSubTexture(&m_textureWrap->m_handle, rect, pixels, format);
+	m_textureWrap->uploadSubTexture(rect, pixels, format);
 }
 
 void Texture::generateMipmap()
 {
-	g_apiWrap->generateMipmap(&m_textureWrap->m_handle);
+	m_textureWrap->generateMipmap();
 }
 
+#if 0
 void Texture::deleteThis()
 {
 }
 
-#if 0
-TexturePtr Texture::load(const String &name, InitFlags flags/*=0*/)
+Texture *Texture::load(const String &name, InitFlags flags/*=0*/)
 {
 	return s_textureManager->loadTexture(name, flags);
 }
 
-TexturePtr Texture::create( const String &debugname, TexFormat format, int width, int height, InitFlags flags /*= 0*/ )
+Texture *Texture::create( const String &debugname, TexFormat format, int width, int height, InitFlags flags /*= 0*/ )
 {
 	return s_textureManager->createTexture(debugname, format, width, height, flags);
 }
@@ -93,6 +105,18 @@ FixedString Texture::normalizeKey(const String &name)
 	return key;
 }
 
+void Texture::setSamplerState(const SamplerStateDesc &desc)
+{
+	m_samplerState = g_renderSystem->findSamplerState(&desc);
+}
+
+const SamplerStateDesc & Texture::getSamplerState() const
+{
+	return m_samplerState->getDesc();
+}
+
+
+
 #if 0
 void Texture::texlist_f(const CmdArgs &args)
 {
@@ -115,6 +139,8 @@ void Texture::texlist_f(const CmdArgs &args)
 	Printf("total %d texture(s)\n", count);
 }
 
+
+
 //--------------------------------------------------------------------------
 // class TextureManager
 //--------------------------------------------------------------------------
@@ -134,7 +160,7 @@ TextureManager::~TextureManager()
 	s_textureManager = 0;
 }
 
-TexturePtr TextureManager::loadTexture(const String &texname, Texture::InitFlags flags/*=0*/)
+Texture *TextureManager::loadTexture(const String &texname, Texture::InitFlags flags/*=0*/)
 {
 	FixedString key = Texture::normalizeKey(texname);
 
@@ -156,7 +182,7 @@ TexturePtr TextureManager::loadTexture(const String &texname, Texture::InitFlags
 		return 0;
 
 	// create a new texture object
-	TexturePtr tex = createObject();
+	Texture *tex = createObject();
 
 	if (g_renderDriver->isInRenderingThread()) {
 		tex->initialize(key, flags);
@@ -180,7 +206,7 @@ TexturePtr TextureManager::loadTexture(const String &texname, Texture::InitFlags
 	return tex;
 }
 
-TexturePtr TextureManager::createTexture(const String &debugname, TexFormat format, int width, int height, Texture::InitFlags flags /*= 0*/)
+Texture *TextureManager::createTexture(const String &debugname, TexFormat format, int width, int height, Texture::InitFlags flags /*= 0*/)
 {
 	std::stringstream ss;
 	ss << "_" << debugname << "$" << g_system->generateId();
@@ -188,7 +214,7 @@ TexturePtr TextureManager::createTexture(const String &debugname, TexFormat form
 	FixedString key = Texture::normalizeKey(ss.str());
 
 	// create object
-	TexturePtr tex = createObject();
+	Texture *tex = createObject();
 
 	if (g_renderDriver->isInRenderingThread()) {
 		// init immedially

@@ -42,9 +42,9 @@ public:
 	D3D9Postprocess();
 	~D3D9Postprocess();
 
-	void process(Type type, D3D9Texture *texture);
+	void process(Type type, IDirect3DTexture9 *texture);
 
-	void drawQuad(D3D9Texture *texture);
+	void drawQuad(IDirect3DTexture9 *texture);
 	void maskVolume(Vector3 volume[8]);
 	void maskVolumeTwoSides(Vector3 volume[8]);
 #if 0
@@ -60,13 +60,13 @@ public:
 	void drawLightShadowed(Vector3 volume[8], QueuedLight *light, const RenderCamera &shadowCamera);
 	void drawGlobalLight(Vector3 volume[8], QueuedLight *light);
 
-	void measureHistogram(D3D9Texture *tex, int index);
-	void downscale4x4(D3D9Texture *tex, const Rect &rect);
+	void measureHistogram(IDirect3DTexture9 *tex, int index);
+	void downscale4x4(IDirect3DTexture9 *tex, const Rect &rect);
 
-	void genericPP(const String &shadername, D3D9Texture *src);
-	void genericPP(const String &shadername, RenderTarget *target, D3D9Texture *src);
-	void genericPP(const String &shadername, D3D9Texture *src1, D3D9Texture *src2);
-	void genericPP(const String &shadername, RenderTarget *target, D3D9Texture *src1, D3D9Texture *src2);
+	void genericPP(const String &shadername, IDirect3DTexture9 *src);
+	void genericPP(const String &shadername, RenderTarget *target, IDirect3DTexture9 *src);
+	void genericPP(const String &shadername, IDirect3DTexture9 *src1, IDirect3DTexture9 *src2);
+	void genericPP(const String &shadername, RenderTarget *target, IDirect3DTexture9 *src1, IDirect3DTexture9 *src2);
 
 protected:
 	DX9_Shader *getShader(const String &name);

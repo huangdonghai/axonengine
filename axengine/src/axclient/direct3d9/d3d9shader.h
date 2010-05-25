@@ -178,7 +178,7 @@ public:
 	virtual bool haveTechnique(Technique tech) const;
 	virtual const ShaderInfo *getShaderInfo() const { return 0; }
 
-	void setSystemMap(SamplerType maptype, D3D9Texture *tex);
+	void setSystemMap(SamplerType maptype, IDirect3DTexture9 *tex);
 	// set pixel to texel conversion parameter
 	void setPixelToTexel(int width, int height);
 
@@ -213,7 +213,7 @@ private:
 	SortHint m_sortHint;
 
 	D3DXHANDLE m_d3dxTechniques[Technique::Number];
-	D3D9Texture *m_samplerBound[SamplerType::NUMBER_ALL];
+	IDirect3DTexture9 *m_samplerBound[SamplerType::NUMBER_ALL];
 	D3DXHANDLE m_curTechnique;
 
 	bool m_haveTextureTarget;

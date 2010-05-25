@@ -57,7 +57,7 @@ Texture *MapAlphaBlock::getTexture()
 		updateTexture();
 
 	m_isDirty = false;
-	return m_texture.get();
+	return m_texture;
 }
 
 
@@ -189,9 +189,9 @@ void MapLayerGen::update()
 #endif
 		String fn = PathUtil::removeExt(l->detailMat);
 
-		TexturePtr diffuse = Texture::load(fn);
-		TexturePtr normal = Texture::load(fn+"_n");
-		TexturePtr specular = Texture::load(fn+"_s");
+		Texture *diffuse = Texture::load(fn);
+		Texture *normal = Texture::load(fn+"_n");
+		Texture *specular = Texture::load(fn+"_s");
 
 		m_detailMat->setTexture(SamplerType::Diffuse, diffuse.get());
 //			if (!normal->isDefaulted()) {
@@ -1755,9 +1755,9 @@ bool MapTerrain::loadColorTexture(const String &map_name)
 		StringUtil::sprintf(texname, "%s_%d_%d", map_name.c_str(), m_zones[i]->getZoneIndex().x, m_zones[i]->getZoneIndex().y);
 
 #if 0
-		TexturePtr tex = UniqueAsset_<Texture>(texname, Texture::IF_AutoGenMipmap);
+		Texture *tex = UniqueAsset_<Texture>(texname, Texture::IF_AutoGenMipmap);
 #else
-		TexturePtr tex = Texture::load(texname, Texture::IF_AutoGenMipmap);
+		Texture *tex = Texture::load(texname, Texture::IF_AutoGenMipmap);
 #endif
 		if (tex) {
 			z->setColorTexture(tex.get());

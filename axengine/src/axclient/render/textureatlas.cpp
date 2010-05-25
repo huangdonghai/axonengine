@@ -93,28 +93,32 @@ void TextureAtlas::initialize(const String &name, int chunk_width, int chunk_hei
 		m_textures[i]->initialize(format, m_textureSize, m_textureSize);
 		g_assetManager->addAsset(Asset::kTexture, tex_name, m_textures[i]);
 #else
-		m_textures[i] = Texture::create(tex_name, format, m_textureSize, m_textureSize);
+		m_textures[i] = new Texture(tex_name, format, m_textureSize, m_textureSize);
 #endif
 	}
 
 	return;
 }
 
-void TextureAtlas::finalize() {
+void TextureAtlas::finalize()
+{
 	SafeDeleteArray(m_atlasId);
 	SafeDeleteArray(m_atlasFrame);
 }
 
-uint_t TextureAtlas::newFrame() {
+uint_t TextureAtlas::newFrame()
+{
 	return ++m_frameNum;
 }
 
-bool TextureAtlas::isChunkResident(int id) {
+bool TextureAtlas::isChunkResident(int id)
+{
 	return m_atlasHash.find(id) != m_atlasHash.end();
 }
 
 // if texture pool is full, return false
-bool TextureAtlas::updateChunk(int id, byte_t *data, TexFormat format) {
+bool TextureAtlas::updateChunk(int id, byte_t *data, TexFormat format)
+{
 	int index;
 	int i;
 
@@ -155,7 +159,8 @@ bool TextureAtlas::updateChunk(int id, byte_t *data, TexFormat format) {
 	return true;
 }
 
-void TextureAtlas::getChunkInfo(int id, Texture*& tex, Vector4 &tc) {
+void TextureAtlas::getChunkInfo(int id, Texture*& tex, Vector4 &tc)
+{
 	if (m_atlasHash.find(id) == m_atlasHash.end())
 		Errorf("TextureAtlas::getChunkInfo: Chunk %d not resident", id);
 
@@ -163,7 +168,7 @@ void TextureAtlas::getChunkInfo(int id, Texture*& tex, Vector4 &tc) {
 	Rect rect;
 	getChunkInfoByIndex(m_atlasHash[id], tex_num, rect);
 
-	tex = m_textures[tex_num].get();
+	tex = m_textures[tex_num];
 	float tc_scale = 1.f / m_textureSize;
 	tc[0] =(rect.x) * tc_scale;
 	tc[1] =(rect.y) * tc_scale;
@@ -171,7 +176,8 @@ void TextureAtlas::getChunkInfo(int id, Texture*& tex, Vector4 &tc) {
 	tc[3] =(rect.y + rect.height) * tc_scale;
 }
 
-void TextureAtlas::getChunkInfoByIndex(int index, int &tex, Rect &rect) {
+void TextureAtlas::getChunkInfoByIndex(int index, int &tex, Rect &rect)
+{
 	AX_ASSERT(index < m_totalAtlas);
 
 	tex = index / m_atlasPerTexture;
@@ -182,9 +188,12 @@ void TextureAtlas::getChunkInfoByIndex(int index, int &tex, Rect &rect) {
 	rect = Rect(col*m_chunkWidth, row*m_chunkHeight, m_chunkWidth, m_chunkHeight);
 }
 
-void TextureAtlas::setTextureFilterMode(Texture::FilterMode mode) {
+void TextureAtlas::setTextureFilterMode(SamplerStateDesc::FilterMode mode)
+{
 	for (int i = 0; i < m_numTextures; i++) {
-		m_textures[i]->setFilterMode(mode);
+		SamplerStateDesc desc = m_textures[i]->getSamplerState();
+		desc.filterMode = mode;
+		m_textures[i]->setSamplerState(desc);
 	}
 }
 

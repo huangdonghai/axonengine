@@ -165,27 +165,27 @@ void TreeAsset::loadMaterials()
 	m_treeRt->GetLightShaderParams(sShaderParams);
 
 	String texname = m_filepath + PathUtil::getName(sMapBank.m_pBranchMaps[CSpeedTreeRT::TL_DIFFUSE]);
-	TexturePtr tex = Texture::load(texname);
+	Texture *tex = new Texture(texname);
 
-	m_branchMat = Material::loadUnique("_branch");
-	m_branchMat->setTexture(SamplerType::Diffuse, tex.get());
+	m_branchMat = new Material("_branch");
+	m_branchMat->setTexture(SamplerType::Diffuse, tex);
 
-	setMaterialColor(m_branchMat.get(), m_treeRt->GetBranchMaterial(), sShaderParams.m_fGlobalLightScalar * sShaderParams.m_fBranchLightScalar, sShaderParams.m_fAmbientScalar);
+	setMaterialColor(m_branchMat, m_treeRt->GetBranchMaterial(), sShaderParams.m_fGlobalLightScalar * sShaderParams.m_fBranchLightScalar, sShaderParams.m_fAmbientScalar);
 
 	texname = m_filepath + PathUtil::getName(sMapBank.m_pCompositeMaps[CSpeedTreeRT::TL_DIFFUSE]);
-	tex = Texture::load(texname);
-	m_frondMat = Material::loadUnique("_frond");
-	m_frondMat->setTexture(SamplerType::Diffuse, tex.get());
+	tex = new Texture(texname);
+	m_frondMat = new Material("_frond");
+	m_frondMat->setTexture(SamplerType::Diffuse, tex);
 
-	setMaterialColor(m_frondMat.get(), m_treeRt->GetFrondMaterial(), sShaderParams.m_fGlobalLightScalar * sShaderParams.m_fFrondLightScalar, sShaderParams.m_fAmbientScalar);
+	setMaterialColor(m_frondMat, m_treeRt->GetFrondMaterial(), sShaderParams.m_fGlobalLightScalar * sShaderParams.m_fFrondLightScalar, sShaderParams.m_fAmbientScalar);
 
-	m_leafCardMat = Material::loadUnique("_leafcard");
-	m_leafCardMat->setTexture(SamplerType::Diffuse, tex.get());
-	setMaterialColor(m_leafCardMat.get(), m_treeRt->GetLeafMaterial(), sShaderParams.m_fGlobalLightScalar * sShaderParams.m_fLeafLightScalar, sShaderParams.m_fAmbientScalar);
+	m_leafCardMat = new Material("_leafcard");
+	m_leafCardMat->setTexture(SamplerType::Diffuse, tex);
+	setMaterialColor(m_leafCardMat, m_treeRt->GetLeafMaterial(), sShaderParams.m_fGlobalLightScalar * sShaderParams.m_fLeafLightScalar, sShaderParams.m_fAmbientScalar);
 
-	m_leafMeshMat = Material::loadUnique("_leafmesh");
-	m_leafMeshMat->setTexture(SamplerType::Diffuse, tex.get());
-	setMaterialColor(m_leafMeshMat.get(), m_treeRt->GetLeafMaterial(), sShaderParams.m_fGlobalLightScalar * sShaderParams.m_fLeafLightScalar, sShaderParams.m_fAmbientScalar);
+	m_leafMeshMat = new Material("_leafmesh");
+	m_leafMeshMat->setTexture(SamplerType::Diffuse, tex);
+	setMaterialColor(m_leafMeshMat, m_treeRt->GetLeafMaterial(), sShaderParams.m_fGlobalLightScalar * sShaderParams.m_fLeafLightScalar, sShaderParams.m_fAmbientScalar);
 }
 
 void TreeAsset::buildPrimitives()
@@ -227,7 +227,7 @@ void TreeAsset::buildBranch()
 
 	// we use triangle strip for branches
 	lod0->setStriped(true);
-	lod0->setMaterial(m_branchMat.get());
+	lod0->setMaterial(m_branchMat);
 
 	MeshVertex *verts = lod0->lockVertexes();
 
@@ -311,7 +311,7 @@ void TreeAsset::buildFrond()
 
 	// we use triangle strip for branches
 	lod0->setStriped(true);
-	lod0->setMaterial(m_frondMat.get());
+	lod0->setMaterial(m_frondMat);
 
 	// fill vertexes
 	MeshVertex *verts = lod0->lockVertexes();
@@ -386,7 +386,7 @@ void TreeAsset::buildLeafCard()
 		const CSpeedTreeRT::SGeometry::SLeaf &sLeaves = sGeometry.m_pLeaves[i];
 
 		MeshPrim *prim = new MeshPrim(MeshPrim::HintStatic);
-		prim->setMaterial(m_leafCardMat.get());
+		prim->setMaterial(m_leafCardMat);
 		prim->init(sLeaves.m_nNumLeaves * 4, sLeaves.m_nNumLeaves * 6);
 
 		MeshVertex *verts = prim->lockVertexes();
@@ -490,7 +490,7 @@ void TreeAsset::buildLeafMesh()
 		}
 
 		MeshPrim *prim = new MeshPrim(MeshPrim::HintStatic);
-		prim->setMaterial(m_leafMeshMat.get());
+		prim->setMaterial(m_leafMeshMat);
 		prim->init(numverts, numidxes);
 
 		MeshVertex *verts = prim->lockVertexes();

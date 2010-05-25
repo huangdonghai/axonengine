@@ -40,6 +40,8 @@ public:
 	void attachDepth(RenderTarget *depth);
 	RenderTarget *getDepthAttached() const { return m_depthTarget; }
 
+	Texture *getTexture() { if (isTexture()) return m_texture; else return 0; }
+
 	void attachColor(int index, RenderTarget *c);
 	void detachColor(int index);
 	void detachAllColor();
@@ -51,7 +53,8 @@ public:
 
 public:
 	Type m_type;
-	Handle m_h;
+	Handle m_window;
+	Texture *m_texture;
 
 	TexFormat m_format;
 	int m_width, m_height;

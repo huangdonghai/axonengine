@@ -26,7 +26,7 @@ RenderTarget::RenderTarget(int width, int height, TexFormat format)
 	String texname;
 	StringUtil::sprintf(texname, "_render_target_%d_%d_%d", m_width, m_height, g_system->generateId());
 
-	g_apiWrap->createTexture2D(&m_h, format, width, height, Texture::IF_RenderTarget);
+	g_apiWrap->createTexture2D(&m_window, format, width, height, Texture::IF_RenderTarget);
 }
 
 RenderTarget::RenderTarget( Handle hwnd, const String &debugname )
@@ -35,15 +35,15 @@ RenderTarget::RenderTarget( Handle hwnd, const String &debugname )
 	m_wndId = hwnd;
 	m_name = debugname;
 
-	g_apiWrap->createWindowTarget(&m_h, hwnd);
+	g_apiWrap->createWindowTarget(&m_window, hwnd);
 }
 
 RenderTarget::~RenderTarget()
 {
 	if (isTexture())
-		g_apiWrap->deleteTexture2D(&m_h);
+		g_apiWrap->deleteTexture2D(&m_window);
 	else
-		g_apiWrap->deleteWindowTarget(&m_h);
+		g_apiWrap->deleteWindowTarget(&m_window);
 }
 
 Rect RenderTarget::getRect()

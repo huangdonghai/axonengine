@@ -136,13 +136,21 @@ protected:
 	void *allocHunk(int size);
 
 private:
-	enum { HUNK_SIZE = 4 * 1024 * 1024, MAX_COMMANDS = 64 * 1024 };
+	enum {
+		HUNK_SIZE = 4 * 1024 * 1024,
+		MAX_COMMANDS = 64 * 1024,
+		MAX_DELETE_COMMANDS = 8 * 1024
+	};
+
 	byte_t m_hunk[HUNK_SIZE];
 	Command *m_cmds[MAX_COMMANDS];
+	Command *m_deleteCommands[MAX_DELETE_COMMANDS];
 
 	volatile int m_hunkPos;
 	volatile int m_readPos, m_writePos;
 };
+
+class WrapObject;
 
 class RenderContext
 {
@@ -188,6 +196,8 @@ private:
 	bool m_isStatistic;
 	Technique s_technique;
 };
+
+extern RenderContext *g_renderContext;
 
 AX_END_NAMESPACE
 

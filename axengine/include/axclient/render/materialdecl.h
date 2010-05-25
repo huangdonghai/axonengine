@@ -73,12 +73,12 @@ class TextureDef {
 public:
 	TextureDef();
 	String file;
-	bool clamp;
+	bool clampToBorder;
 	bool clampToEdge;
 	bool filter;
 };
 
-inline TextureDef::TextureDef() : clamp(false), clampToEdge(false), filter(true) {}
+inline TextureDef::TextureDef() : clampToBorder(false), clampToEdge(false), filter(true) {}
 
 typedef Sequence<float> FloatSeq;
 typedef Dict<FixedString, FloatSeq> ShaderParams;
