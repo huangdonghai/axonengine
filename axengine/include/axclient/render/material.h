@@ -12,11 +12,12 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-AX_DECLARE_REFPTR(Material);
-
-class AX_API Material : public KeyedObject
+class AX_API Material
 {
 public:
+	Material(const String &name);
+	~Material();
+
 	// implement RefObject
 	virtual void deleteThis();
 
@@ -73,19 +74,20 @@ public:
 	int getPixelToTexelHeight() const { return m_p2tHeight; }
 
 	// management
-	static MaterialPtr load(const String &name);
-	static MaterialPtr loadUnique(const String &name);
+#if 0
+	static Material *load(const String &name);
+	static Material *loadUnique(const String &name);
 	static void initManager();
 	static void finalizeManager();
+#endif
 	static FixedString normalizeKey(const String &name);
+#if 0
 	static void syncFrame();
+#endif
 	static void matlist_f(const CmdArgs &args);
 	// end management
 
 private:
-	Material();
-	~Material();
-
 	MaterialDecl *m_decl;
 
 	bool m_shaderMacroNeedRegen;
@@ -99,7 +101,7 @@ private:
 
 	Shader *m_shaderTemplate;
 	FixedString m_shaderNameId;
-	TexturePtr m_textures[SamplerType::NUMBER_ALL];
+	Texture *m_textures[SamplerType::NUMBER_ALL];
 	ShaderParams m_shaderParams;
 
 	// texgen etc...
@@ -191,7 +193,7 @@ inline void Material::setPixelToTexel(int width, int height) {
 
 inline Texture *Material::getTexture(int sampler) const {
 	AX_ASSERT(sampler >= 0 && sampler < SamplerType::NUMBER_ALL);
-	return m_textures[sampler].get();
+	return m_textures[sampler];
 }
 
 inline void Material::setTexture(int sampler, Texture *tex) {

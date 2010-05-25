@@ -16,9 +16,9 @@ AX_BEGIN_CLASS_MAP(axdirect3d9)
 	AX_CLASS_ENTRY("driver", D3D9Driver)
 AX_END_CLASS_MAP()
 
-D3D9Window *d3d9InternalWindow;
+DX9_Window *d3d9InternalWindow;
 D3D9Driver *d3d9Driver;
-IRenderDriver::Info *d3d9DriverInfo;
+IRenderDriver::RenderDriverInfo *d3d9DriverInfo;
 RenderQueue *d3d9Queue;
 SyncMutex d3d9Mutex;
 

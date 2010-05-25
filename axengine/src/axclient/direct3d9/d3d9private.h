@@ -102,9 +102,9 @@ inline const char *D3DErrorString(HRESULT hr)
 #undef D3DERR
 }
 
-extern D3D9Window *d3d9InternalWindow;
+extern DX9_Window *d3d9InternalWindow;
 extern D3D9Driver *d3d9Driver;
-extern IRenderDriver::Info *d3d9DriverInfo;
+extern RenderDriverInfo *d3d9DriverInfo;
 extern RenderQueue *d3d9Queue;
 extern SyncMutex d3d9Mutex;
 
@@ -113,7 +113,7 @@ extern IDirect3D9 *d3d9Api;
 extern IDirect3DDevice9 *d3d9Device;
 
 extern D3D9ShaderManager *d3d9ShaderManager;
-extern D3D9TargetManager *d3d9TargetManager;
+//extern D3D9TargetManager *d3d9TargetManager;
 extern D3D9querymanager *d3d9QueryManager;
 extern D3D9primitivemanager *d3d9PrimitiveManager;
 extern D3D9Thread *d3d9Thread;
@@ -132,12 +132,12 @@ extern RenderCamera *d3d9Camera;
 // thread state
 extern QueuedScene *d3d9Scene;
 
-extern D3D9Window *d3d9FrameWnd;
+extern DX9_Window *d3d9FrameWnd;
 extern bool d3d9IsReflecting;
 extern bool d3d9ForceWireframe;
 
 extern QueuedScene *d3d9WorldScene;
-extern D3D9Target *d3d9WorldTarget;
+//extern D3D9Target *d3d9WorldTarget;
 #if 0
 extern D3D9target *d3d9ShadowMaskTarget;
 #endif

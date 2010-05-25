@@ -148,7 +148,7 @@ void OutdoorEnv::setSkyBoxTexture(const String &matname)
 
 	m_skyBoxMatName = matname;
 	{
-		MaterialPtr skymat = m_skybox12->getMaterial();
+		Material *skymat = m_skybox12->getMaterial();
 		if (!skymat) {
 			skymat = Material::loadUnique("_skybox");
 		}
@@ -159,7 +159,7 @@ void OutdoorEnv::setSkyBoxTexture(const String &matname)
 		m_skybox12->setMaterial(skymat.get());
 	}
 	{
-		MaterialPtr skymat = m_skybox34->getMaterial();
+		Material *skymat = m_skybox34->getMaterial();
 		if (!skymat) {
 			skymat = Material::loadUnique("_skybox");
 		}
@@ -170,7 +170,7 @@ void OutdoorEnv::setSkyBoxTexture(const String &matname)
 		m_skybox34->setMaterial(skymat.get());
 	}
 	{
-		MaterialPtr skymat = m_skybox5->getMaterial();
+		Material *skymat = m_skybox5->getMaterial();
 		if (!skymat) {
 			skymat = Material::loadUnique("_skybox");
 		}
@@ -369,7 +369,7 @@ void OutdoorEnv::createOceanMesh()
 
 	AX_ASSERT(idxes - oldidxes == numidxes);
 
-	MaterialPtr mat = Material::load("ocean");
+	Material *mat = Material::load("ocean");
 	m_oceanMesh->setMaterial(mat.get());
 }
 

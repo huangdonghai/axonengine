@@ -22,7 +22,8 @@ AX_BEGIN_NAMESPACE
 /*-----------------------------------------------------------------------------
 	Nonstandard C API wrapper
 -----------------------------------------------------------------------------*/
-bool OsUtil::mkdir(const char *dirname ) {
+bool OsUtil::mkdir(const char *dirname )
+{
 	WString wdirname = u2w(dirname );
 	int ret = ::_wmkdir(wdirname.c_str() );
 
@@ -44,7 +45,8 @@ bool OsUtil::mkdir(const char *dirname ) {
 	return true;
 }
 
-String OsUtil::getworkpath() {
+String OsUtil::getworkpath()
+{
 	wchar_t buf[260];
 	wchar_t * v = ::_wgetcwd(buf, ArraySize(buf));
 	AX_ASSURE(v);
@@ -337,6 +339,7 @@ void OsUtil::sleep(float seconds)
 {
 	::Sleep(seconds * 1000);
 }
+
 
 
 AX_END_NAMESPACE

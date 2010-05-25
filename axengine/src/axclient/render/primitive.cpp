@@ -1289,7 +1289,7 @@ void  ChunkPrim::setColorTexture(Texture *color_texture)
 
 Texture *ChunkPrim::getColorTexture()
 {
-	return m_colorTexture.get();
+	return m_colorTexture;
 }
 
 void ChunkPrim::setNormalTexture(Texture *dsdt)
@@ -1299,7 +1299,7 @@ void ChunkPrim::setNormalTexture(Texture *dsdt)
 
 Texture *ChunkPrim::getNormalTexture()
 {
-	return m_normalTexture.get();
+	return m_normalTexture;
 }
 
 void ChunkPrim::setChunkRect(const Vector4 &rect)
@@ -1342,7 +1342,7 @@ Texture *ChunkPrim::getLayerAlpha(int index) const
 		return nullptr;
 	}
 
-	return m_layers[index].alphaTex.get();
+	return m_layers[index].alphaTex;
 }
 
 Material *ChunkPrim::getLayerDetail(int index) const
@@ -1351,7 +1351,7 @@ Material *ChunkPrim::getLayerDetail(int index) const
 		return nullptr;
 	}
 
-	return m_layers[index].detailMat.get();
+	return m_layers[index].detailMat;
 }
 
 Vector2 ChunkPrim::getLayerScale(int index) const

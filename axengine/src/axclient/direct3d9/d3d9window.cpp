@@ -15,7 +15,8 @@ static DWORD d3d9MultiSampleQuality = 0;
 
 AX_BEGIN_NAMESPACE
 
-static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
+static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
 	switch (message) {
 	case WM_CLOSE:
 		PostQuitMessage(0);
@@ -27,7 +28,8 @@ static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
 }
 
 
-D3D9Window::D3D9Window(const String &name) {
+DX9_Window::DX9_Window(const String &name)
+{
 	m_swapChain = 0;
 	m_backbuffer = 0;
 	m_swapChainWnd = 0;
@@ -66,49 +68,53 @@ D3D9Window::D3D9Window(const String &name) {
 		, (HINSTANCE)GetModuleHandleW(NULL)
 		, NULL);
 
-	m_gbuffer = 0;
-	m_lightBuffer = 0;
+	m_gbuffer = Handle(0);
+	m_lightBuffer = Handle(0);
 }
 
-D3D9Window::D3D9Window(Handle wndId, const String &name) : m_name(name)
+DX9_Window::DX9_Window(Handle wndId, const String &name) : m_name(name)
 {
 	m_swapChain = 0;
 	m_backbuffer = 0;
 	m_swapChainWnd = 0;
 
-	m_gbuffer = 0;
-	m_lightBuffer = 0;
+	m_gbuffer = Handle(0);
+	m_lightBuffer = Handle(0);
 
 	m_wndId = (HWND)wndId.toVoidStar();
 }
 
-D3D9Window::~D3D9Window() {
+DX9_Window::~DX9_Window()
+{
 	SAFE_RELEASE(m_backbuffer);
 	SAFE_RELEASE(m_swapChain);
 }
 
 // implement ITarget
-Rect D3D9Window::getRect() {
+Rect DX9_Window::getRect()
+{
 	return Rect(0, 0, m_swapChainSize.x, m_swapChainSize.y);
 }
 
-void D3D9Window::bind() {
+void DX9_Window::bind()
+{
 	checkSwapChain();
 
-	IDirect3DSurface9 *ds = d3d9TargetManager->getDepthStencil(m_swapChainSize.x, m_swapChainSize.y);
+	IDirect3DSurface9 *ds = d3d9Driver->getDepthStencil(m_swapChainSize.x, m_swapChainSize.y);
 
 	HRESULT hr;
 	V(d3d9Device->SetRenderTarget(0, m_backbuffer));
 	V(d3d9StateManager->setDepthStencilSurface(ds, TexFormat::D24S8));
 
 	// depth stencil
-//		D3D9target *m_depthStencil = d3d9TargetManager->allocTargetDX(RenderTarget::PermanentAlloc, m_swapChainSize.x, m_swapChainSize.y, TexFormat::D24S8);
+//	D3D9target *m_depthStencil = d3d9TargetManager->allocTargetDX(RenderTarget::PermanentAlloc, m_swapChainSize.x, m_swapChainSize.y, TexFormat::D24S8);
 }
 
-void D3D9Window::unbind() {
+void DX9_Window::unbind()
+{
 }
 
-void D3D9Window::present()
+void DX9_Window::present()
 {
 	HRESULT hr = m_swapChain->Present(0, 0, 0, 0, D3DPRESENT_DONOTWAIT);
 
@@ -136,7 +142,7 @@ void D3D9Window::present()
 	}
 }
 
-void D3D9Window::checkSwapChain()
+void DX9_Window::checkSwapChain()
 {
 	RECT r;
 	BOOL v = ::GetClientRect(m_wndId, &r);
@@ -173,8 +179,6 @@ void D3D9Window::checkSwapChain()
 	presentparams.SwapEffect = D3DSWAPEFFECT_DISCARD;
 	presentparams.PresentationInterval = flags;
 
-	HRESULT hr;
-
 	V(d3d9Device->CreateAdditionalSwapChain(&presentparams, &m_swapChain));
 	V(m_swapChain->GetBackBuffer(0, D3DBACKBUFFER_TYPE_MONO, &m_backbuffer));
 
@@ -184,22 +188,22 @@ void D3D9Window::checkSwapChain()
 	m_presentInterval = flags;
 
 	if (m_gbuffer) {
-		d3d9TargetManager->freeTarget(m_gbuffer);
-		m_gbuffer = 0;
+		dx9DeleteTexture2D(&m_gbuffer);
+		m_gbuffer.clear();
 	}
 
 	if (m_lightBuffer) {
-		d3d9TargetManager->freeTarget(m_lightBuffer);
-		m_lightBuffer = 0;
+		dx9DeleteTexture2D(&m_lightBuffer);
+		m_lightBuffer.clear();
 	}
 
-	m_gbuffer = d3d9TargetManager->allocTargetDX(RenderTarget::PermanentAlloc, r.right, r.bottom, TexFormat::RGBA16F);
-	m_gbuffer->getTexture()->setFilterMode(Texture::FM_Nearest);
-	m_gbuffer->getTexture()->setClampMode(Texture::CM_ClampToEdge);
+	dx9CreateTexture2D(&m_gbuffer, r.right, r.bottom, TexFormat::RGBA16F, Texture::IF_RenderTarget);
+//	m_gbuffer->getTexture()->setFilterMode(Texture::FM_Nearest);
+//	m_gbuffer->getTexture()->setClampMode(Texture::CM_ClampToEdge);
 
-	m_lightBuffer = d3d9TargetManager->allocTargetDX(RenderTarget::PermanentAlloc, r.right, r.bottom, TexFormat::BGRA8);
-	m_lightBuffer->getTexture()->setFilterMode(Texture::FM_Nearest);
-	m_lightBuffer->getTexture()->setClampMode(Texture::CM_ClampToEdge);
+	dx9CreateTexture2D(&m_lightBuffer, r.right, r.bottom, TexFormat::BGRA8, Texture::IF_RenderTarget);
+//	m_lightBuffer->getTexture()->setFilterMode(Texture::FM_Nearest);
+//	m_lightBuffer->getTexture()->setClampMode(Texture::CM_ClampToEdge);
 }
 
 AX_END_NAMESPACE

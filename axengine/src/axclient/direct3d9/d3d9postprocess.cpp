@@ -437,8 +437,8 @@ void D3D9Postprocess::downscale4x4(D3D9Texture *tex, const Rect &rect) {
 	PostMesh::setupScreenQuad(m_screenQuad, r);
 }
 
-D3D9Shader *D3D9Postprocess::getShader(const String &name) {
-	Dict<String, D3D9Shader*>::iterator it = m_genericShaders.find(name);
+DX9_Shader *D3D9Postprocess::getShader(const String &name) {
+	Dict<String, DX9_Shader*>::iterator it = m_genericShaders.find(name);
 
 	if (it != m_genericShaders.end()) {
 		return it->second;
@@ -447,14 +447,14 @@ D3D9Shader *D3D9Postprocess::getShader(const String &name) {
 #if 0
 	D3D9shader *shader = FindAsset_<D3D9shader>(name);
 #else
-	D3D9Shader *shader = d3d9ShaderManager->findShaderDX(name);
+	DX9_Shader *shader = d3d9ShaderManager->findShaderDX(name);
 #endif
 	m_genericShaders[name] = shader;
 	return shader;
 }
 
 void D3D9Postprocess::genericPP(const String &shadername, D3D9Texture *src) {
-	D3D9Shader *shader = getShader(shadername);
+	DX9_Shader *shader = getShader(shadername);
 
 	src->setFilterMode(Texture::FM_Nearest);
 	src->setClampMode(Texture::CM_ClampToEdge);
@@ -472,7 +472,7 @@ void D3D9Postprocess::genericPP(const String &shadername, D3D9Texture *src) {
 }
 
 void D3D9Postprocess::genericPP(const String &shadername, RenderTarget *target, D3D9Texture *src) {
-	D3D9Shader *shader = getShader(shadername);
+	DX9_Shader *shader = getShader(shadername);
 	RenderCamera camera;
 	camera.setTarget(target);
 	camera.setOverlay(target->getRect());
@@ -502,7 +502,7 @@ void D3D9Postprocess::genericPP(const String &shadername, D3D9Texture *src1, D3D
 }
 
 void D3D9Postprocess::genericPP(const String &shadername, RenderTarget *target, D3D9Texture *src1, D3D9Texture *src2) {
-	D3D9Shader *shader = getShader(shadername);
+	DX9_Shader *shader = getShader(shadername);
 
 	RenderCamera camera;
 	if (target) {

@@ -819,6 +819,14 @@
 				RelativePath="..\..\..\src\axclient\direct3d9\d3d9window.h"
 				>
 			</File>
+			<File
+				RelativePath="..\..\..\src\axclient\direct3d9\dx9_state.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\axclient\direct3d9\dx9_state.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="sound"

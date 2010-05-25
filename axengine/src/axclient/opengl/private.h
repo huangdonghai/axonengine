@@ -53,7 +53,7 @@ enum VertexAttribBindLocation {
 extern GLwindow *glInternalWindow;
 extern HGLRC glContext;
 extern GLdriver *glDriver;
-extern IRenderDriver::Info *glDriverInfo;
+extern RenderDriverInfo *glDriverInfo;
 extern GLthread *glThread;
 extern CGcontext glCgContext;
 extern GLprimitivemanager *glPrimitiveManager;

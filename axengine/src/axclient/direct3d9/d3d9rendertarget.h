@@ -12,6 +12,7 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
+#if 0
 //--------------------------------------------------------------------------
 // class D3D9Target
 //--------------------------------------------------------------------------
@@ -122,6 +123,8 @@ private:
 	int m_dsWidth;
 	int m_dsHeight;
 };
+
+#endif
 
 AX_END_NAMESPACE
 

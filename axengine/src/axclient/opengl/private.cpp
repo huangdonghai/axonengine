@@ -18,7 +18,7 @@ AX_END_CLASS_MAP()
 GLwindow *glInternalWindow;
 HGLRC glContext;
 GLdriver *glDriver;
-IRenderDriver::Info *glDriverInfo;
+IRenderDriver::RenderDriverInfo *glDriverInfo;
 GLthread *glThread;
 GLprimitivemanager *glPrimitiveManager;
 GLframebuffermanager *glFramebufferManager;

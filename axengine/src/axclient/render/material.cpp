@@ -61,7 +61,7 @@ bool Material::init(const FixedString &key)
 				continue;
 
 			if (texdef->clamp && m_textures[i]) {
-				m_textures[i]->setClampMode(Texture::CM_ClampToBorder);
+				m_textures[i]->setClampMode(Texture::CM_Border);
 			}
 
 			if (texdef->clampToEdge && m_textures[i]) {
@@ -247,7 +247,7 @@ FixedString Material::normalizeKey(const String &name)
 		return name;
 }
 
-MaterialPtr Material::load(const String &name)
+Material *Material::load(const String &name)
 {
 	FixedString key = normalizeKey(name);
 	MaterialDict::const_iterator it = ms_materialDict.find(key);
@@ -267,7 +267,7 @@ MaterialPtr Material::load(const String &name)
 	return result;
 }
 
-MaterialPtr Material::loadUnique(const String &name)
+Material *Material::loadUnique(const String &name)
 {
 	std::stringstream ss;
 	ss << name << "$" << g_system->generateId();

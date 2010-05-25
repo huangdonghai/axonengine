@@ -10,9 +10,9 @@ read the license and understand and accept it fully.
 
 #include "d3d9private.h"
 
-
 AX_BEGIN_NAMESPACE
 
+#if 0
 //--------------------------------------------------------------------------
 // class D3D9Target
 //--------------------------------------------------------------------------
@@ -167,7 +167,7 @@ void D3D9Target::copyFramebuffer(const Rect &r)
 	IDirect3DSurface9 *surface = 0;
 
 	if (d3d9BoundTarget->isWindow()) {
-		surface = ((D3D9Window*)d3d9BoundTarget)->getSurface();
+		surface = ((DX9_Window*)d3d9BoundTarget)->getSurface();
 	} else {
 		surface = ((D3D9Target*)d3d9BoundTarget)->getSurface();
 	}
@@ -525,5 +525,8 @@ void D3D9TargetManager::onReset()
 {
 
 }
+
+#endif
+
 AX_END_NAMESPACE
 

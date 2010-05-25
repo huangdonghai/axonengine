@@ -91,17 +91,12 @@ ShaderQuality RenderSystem::getShaderQuality()
 }
 
 
-uint_t RenderSystem::getBackendCaps()
-{
-	return 0;
-}
-
 void RenderSystem::screenShot(const String &name, const Rect &rect) {
 }
 
 void RenderSystem::info()
 {
-	const IRenderDriver::Info *info = g_renderDriver->getDriverInfo();
+	const RenderDriverInfo *info = g_renderDriver->getDriverInfo();
 
 	Printf("------- Render Driver Caps -------\n");
 
@@ -384,14 +379,14 @@ IEntityManager *RenderSystem::getEntityManager(int index) const
 	return m_entityManagers[index];
 }
 
-const IRenderDriver::Info *RenderSystem::getDriverInfo()
+const RenderDriverInfo *RenderSystem::getDriverInfo()
 {
 	return g_renderDriver->getDriverInfo();
 }
 
 void RenderSystem::texlist_f( const CmdArgs &args )
 {
-	Texture::texlist_f(args);
+//	Texture::texlist_f(args);
 }
 
 void RenderSystem::matlist_f( const CmdArgs &args )
@@ -403,6 +398,35 @@ int RenderSystem::testArgs( int arg0, float arg1, const Vector3 &arg2, const Col
 {
 	return 1975;
 }
+
+Rect RenderSystem::getWindowRect( Handle hwnd )
+{
+	RECT r;
+	BOOL v = ::GetClientRect(hwnd.to<HWND>(), &r);
+
+	if (!v) {
+		DWORD error = ::GetLastError();
+		Errorf("error wndId");
+	}
+
+	return Rect(0, 0, r.right, r.bottom);
+}
+
+SamplerStatePtr RenderSystem::findSamplerState( const SamplerStateDesc *desc )
+{
+	if (!desc)
+		desc = &m_defaultSamplerStateDesc;
+
+	SamplerStateDict::const_iterator it = m_samplerStateDict.find(*desc);
+	if (it != m_samplerStateDict.end())
+		return it->second;
+
+	SamplerState *result = new SamplerState(*desc);
+	m_samplerStateDict[*desc] = result;
+
+	return result;
+}
+
 
 AX_END_NAMESPACE
 

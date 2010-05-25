@@ -102,7 +102,7 @@ private:
 	int m_pixelIndexOffset;
 	Image *m_colorTemplate;
 	MapAlphaBlock** m_alphaBlocks;
-	MaterialPtr m_detailMat;
+	Material *m_detailMat;
 };
 
 inline Material *MapLayerGen::getDetailMat() const {
@@ -181,7 +181,7 @@ private:
 	BoundingRange m_heightRange;
 	BoundingRange m_slopeRange;
 	bool m_heightChanged;
-	MaterialPtr m_material;
+	Material *m_material;
 
 	// lod
 	float m_maxerror;
@@ -266,7 +266,7 @@ private:
 	Point m_index;
 	Rect m_tilerect;
 	BoundingBox m_bbox;
-	MaterialPtr m_material;
+	Material *m_material;
 	ChunkPrim *m_prim;
 
 	Point m_chunkIndexOffset;
@@ -384,7 +384,7 @@ public:
 	int getNumLayer() const;
 	MapLayerGen *getLayerGen(int layer) const;
 	MapLayerGen *getLayerGenById(int id) const;
-	MaterialPtr getLayerMat(int layer) const;
+	Material *getLayerMat(int layer) const;
 	MapAlphaBlock *getAlphaBlock(int layer, const Point &index) const;
 
 	// implement renderActor
@@ -726,7 +726,7 @@ inline MapLayerGen *MapTerrain::getLayerGenById(int id) const {
 	return nullptr;
 }
 
-inline MaterialPtr MapTerrain::getLayerMat(int layer) const {
+inline Material *MapTerrain::getLayerMat(int layer) const {
 	if (layer >= m_numLayerGens)
 		return MaterialPtr();
 

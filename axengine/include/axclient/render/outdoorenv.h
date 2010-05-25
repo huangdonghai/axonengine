@@ -80,8 +80,8 @@ private:
 	MeshPrim *m_skydome;
 	MeshPrim *m_oceanMesh;
 
-	MaterialPtr m_skyNishitaMat;
-	MaterialPtr m_skyNishitaGenMat;
+	Material *m_skyNishitaMat;
+	Material *m_skyNishitaGenMat;
 	RenderTarget *m_skyNishitaRt;		// render target for nishita sky
 	NishitaParams m_lastNishitaParams;
 

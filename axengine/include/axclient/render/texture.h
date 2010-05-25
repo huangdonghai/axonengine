@@ -14,13 +14,47 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
+AX_DECLARE_REFPTR(TextureWrap);
+
+class TextureWrap : public KeyedObject
+{
+public:
+	enum Status {
+		Constructed,
+		Loading,
+		Loaded,
+		Missed
+	};
+
+	TextureWrap() {}
+	TextureWrap(const FixedString &key);
+	TextureWrap(const FixedString &key, TexFormat format, int width, int height);
+	virtual ~TextureWrap();
+
+	void uploadSubTexture(const Rect &rect, const void *pixels, TexFormat format);
+	void generateMipmap();
+
+	static FixedString normalizeKey(const String &name);
+	static TextureWrapPtr findTexture(const FixedString &name);
+	static TextureWrapPtr createTexture(const String &debugname, TexFormat format, int width, int height);
+
+	friend class Texture;
+
+private:
+	Handle m_handle;
+	AsioRead m_asioRead;
+
+	static Dict<FixedString, TextureWrap*> ms_texDict;
+	static List<TextureWrap*> ms_asioList;
+};
+
+
+
 //--------------------------------------------------------------------------
 // class Texture
 //--------------------------------------------------------------------------
 
-AX_DECLARE_REFPTR(Texture);
-
-class Texture : public KeyedObject {
+class Texture {
 public:
 	friend class TextureManager;
 
@@ -39,20 +73,10 @@ public:
 		TT_CUBE,
 	};
 
-	enum ClampMode {
-		CM_Repeat,
-		CM_Clamp,
-		CM_ClampToEdge,	// only used in engine internal
-		CM_ClampToBorder // only used in engine internal
-	};
-
-
-	enum FilterMode {
-		FM_Nearest,
-		FM_Linear,
-		FM_Bilinear,
-		FM_Trilinear
-	};
+	Texture();
+	Texture(const String &name, InitFlags flags=0);
+	Texture(const String &debugname, TexFormat format, int width, int height, InitFlags flags = 0);
+	~Texture();
 
 	void uploadSubTexture(const Rect &rect, const void *pixels, TexFormat format = TexFormat::AUTO);
 	void generateMipmap();
@@ -60,45 +84,36 @@ public:
 	// implement RefObject
 	virtual void deleteThis();
 
-	// Texture interface, need be implement in render driver
-	virtual void initialize(const FixedString &name, InitFlags flags) = 0;
-	virtual void initialize(TexFormat format, int width, int height, InitFlags flags = 0) = 0;
-
-	// just instanced this class, not even create real hardware texture
-	virtual bool isInitialized() = 0;
-
 	// get some info
-	virtual void getSize(int &width, int &height, int &depth) = 0;
+	void getSize(int &width, int &height, int &depth);
+	TexFormat getFormat();
 
-	// texture parameters
-	virtual void setClampMode(ClampMode clampmwode) = 0;
-	virtual void setFilterMode(FilterMode filtermode) = 0;
-	virtual void setBorderColor(const Rgba &color) = 0;
-	virtual void setHardwareShadowMap(bool enable) = 0;
-	virtual TexFormat getFormat() = 0;
+	void setSamplerState(const SamplerStateDesc &ssd);
+	const SamplerStateDesc &getSamplerState() const;
 
-	virtual void saveToFile(const String &filename) = 0;
-	virtual void uploadSubTextureIm(const Rect &rect, const void *pixels, TexFormat format = TexFormat::AUTO) = 0;
-	virtual void generateMipmapIm() = 0;
+	void saveToFile(const String &filename);
 
 	// management
-	static TexturePtr load(const String &name, InitFlags flags=0);
-	static TexturePtr create(const String &debugname, TexFormat format, int width, int height, InitFlags flags = 0);
 	static bool isExist(const String &name);
-	static void initManager();
-	static void finalizeManager();
 	static FixedString normalizeKey(const String &name);
-	static void texlist_f(const CmdArgs &args);
+#if 0
+	static void Texture::texlist_f(const CmdArgs &args);
+#endif
 
-protected:
-	Texture();
-	virtual ~Texture();
+private:
+	TextureWrapPtr m_textureWrap;
+	SamplerStatePtr m_samplerState;
 
-protected:
-	IntrusiveLink<Texture> m_needFreeLink;
-	IntrusiveLink<Texture> m_needGenMipmapLink;
+	// for dynamic texture
+	int m_width, m_height;
+	TexFormat m_texformat;
+
+	typedef Dict<FixedString,bool> ExistDict;
+
+	static ExistDict m_existDict;
 };
 
+#if 0
 //--------------------------------------------------------------------------
 // class TextureManager
 //--------------------------------------------------------------------------
@@ -167,7 +182,7 @@ protected:
 	ExistDict m_existDict;
 	TextureDict m_textureDict;
 };
-
+#endif
 AX_END_NAMESPACE
 
 #endif // AX_RENDER_TEXTURE_H

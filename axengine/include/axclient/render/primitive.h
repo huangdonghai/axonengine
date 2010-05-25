@@ -85,8 +85,8 @@ protected:
 	int m_cachedFrame;
 
 	Type m_type;
-	MaterialPtr m_material;
-	TexturePtr m_lightMap;
+	Material *m_material;
+	Texture *m_lightMap;
 
 	bool m_isMatrixSet;
 	Matrix4 m_matrix;
@@ -114,7 +114,7 @@ inline void Primitive::interactionChain(Interaction *last, int chainId)
 
 inline Material *Primitive::getMaterial() const
 {
-	return m_material.get();
+	return m_material;
 }
 
 inline void Primitive::setMaterial(Material *material)
@@ -129,11 +129,11 @@ inline void Primitive::setLightMap(Texture *lm)
 
 inline Texture *Primitive::getLightMap() const
 {
-	return m_lightMap.get();
+	return m_lightMap;
 }
 
 
-typedef Sequence<Primitive*>	Primitives;
+typedef Sequence<Primitive*> Primitives;
 
 //--------------------------------------------------------------------------
 // class PointPrim
@@ -370,8 +370,8 @@ public:
 	typedef ChunkVertex VertexType;
 
 	struct Layer {
-		TexturePtr alphaTex;
-		MaterialPtr detailMat;
+		Texture *alphaTex;
+		Material *detailMat;
 		Vector2 scale;
 		bool isVerticalProjection;
 	};
@@ -429,8 +429,8 @@ private:
 	Vector4 m_terrainRect;
 
 	Vector4 m_zoneRect;
-	TexturePtr m_colorTexture;
-	TexturePtr m_normalTexture;
+	Texture *m_colorTexture;
+	Texture *m_normalTexture;
 
 	Vector4 m_chunkRect;
 	int m_numLayers;

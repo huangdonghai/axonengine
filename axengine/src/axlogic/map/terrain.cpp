@@ -1103,7 +1103,7 @@ void MapZone::initialize(MapTerrain *terrain, int x, int y)
 	m_colorTexture = Texture::create(texname, TexFormat::DXT1, Map::ZonePixels, Map::ZonePixels, Texture::IF_AutoGenMipmap);
 #endif
 	m_colorTexture->setClampMode(Texture::CM_ClampToEdge);
-	m_colorTexture->setFilterMode(Texture::FM_Bilinear);
+	m_colorTexture->setFilterMode(Texture::FM_LinearMipmap);
 
 	// init primitive
 	m_prim = new ChunkPrim(Primitive::HintStatic);

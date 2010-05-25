@@ -41,7 +41,7 @@ MapActor::MapActor(const String &type) {
 		return;
 	}
 
-	MaterialPtr mat = Material::loadUnique("_icon");
+	Material *mat = Material::loadUnique("_icon");
 	AX_ASSERT(mat);
 	mat->setTexture(SamplerType::Diffuse, tex.get());
 

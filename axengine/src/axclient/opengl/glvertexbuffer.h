@@ -13,71 +13,71 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-	//--------------------------------------------------------------------------
-	// class GLvertexbuffer
-	//--------------------------------------------------------------------------
+//--------------------------------------------------------------------------
+// class GLvertexbuffer
+//--------------------------------------------------------------------------
 
-	class GLvertexbuffer {
-	public:
-		GLvertexbuffer();
-		~GLvertexbuffer();
+class GLvertexbuffer {
+public:
+	GLvertexbuffer();
+	~GLvertexbuffer();
 
-		void setData(const void *p, int size, Primitive::Hint);
-		void resetData();
-		void bind();
+	void setData(const void *p, int size, Primitive::Hint);
+	void resetData();
+	void bind();
 
-		GLuint getObject() const { return m_object; }
+	GLuint getObject() const { return m_object; }
 
-	private:
-		GLuint m_object;
-		GLenum m_hint;
-		int m_dataSize;
-	};
+private:
+	GLuint m_object;
+	GLenum m_hint;
+	int m_dataSize;
+};
 
-	//--------------------------------------------------------------------------
-	// class GLindexbuffer
-	//--------------------------------------------------------------------------
+//--------------------------------------------------------------------------
+// class GLindexbuffer
+//--------------------------------------------------------------------------
 
-	class GLindexbuffer {
-	public:
-		GLindexbuffer();
-		~GLindexbuffer();
+class GLindexbuffer {
+public:
+	GLindexbuffer();
+	~GLindexbuffer();
 
-		void setData(const ushort_t *p, int count, Primitive::Hint, int activeCount = 0);
-		void resetData();
-		void bind();
-		void *mapBuffer();
-		void unmapBuffer();
-		bool haveData() const;
+	void setData(const ushort_t *p, int count, Primitive::Hint, int activeCount = 0);
+	void resetData();
+	void bind();
+	void *mapBuffer();
+	void unmapBuffer();
+	bool haveData() const;
 
-		GLuint getObject() const { return m_object; }
+	GLuint getObject() const { return m_object; }
 
-		int getActiveCount() const;
-		void setActiveCount(int val);
+	int getActiveCount() const;
+	void setActiveCount(int val);
 
-		void drawElements(GLenum mode);
-		void drawElementsWithoutBind(GLenum mode);
+	void drawElements(GLenum mode);
+	void drawElementsWithoutBind(GLenum mode);
 
-	protected:
-		static int getNumElements(GLenum mode, int numindexes);
+protected:
+	static int getNumElements(GLenum mode, int numindexes);
 
-	private:
-		GLuint m_object;
-		GLenum m_hint;
-		int m_dataSize;
-		int m_count;
-		int m_activeCount;
-	};
+private:
+	GLuint m_object;
+	GLenum m_hint;
+	int m_dataSize;
+	int m_count;
+	int m_activeCount;
+};
 
-	inline int GLindexbuffer::getActiveCount() const {
-		return m_activeCount;
-	}
+inline int GLindexbuffer::getActiveCount() const {
+	return m_activeCount;
+}
 
-	inline void GLindexbuffer::setActiveCount(int val)
-	{
-		AX_ASSERT(m_activeCount <= m_count);
-		m_activeCount = val;
-	}
+inline void GLindexbuffer::setActiveCount(int val)
+{
+	AX_ASSERT(m_activeCount <= m_count);
+	m_activeCount = val;
+}
 
 
 AX_END_NAMESPACE

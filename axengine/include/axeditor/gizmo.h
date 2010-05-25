@@ -57,7 +57,7 @@ protected:
 	LinePrim *m_lines[NumberId];
 	MeshPrim *m_meshs[NumberId];
 	SelectId m_highlit;
-	MaterialPtr m_material;
+	Material *m_material;
 	
 	Vector3 m_pos;
 	Matrix3 m_axis;
@@ -98,7 +98,7 @@ private:
 	LinePrim *m_outerBound;
 	MeshPrim *m_crank;
 	SelectId m_highlit;
-	MaterialPtr m_material;
+	Material *m_material;
 
 	Vector3 m_pos;
 	Matrix3 m_axis;
@@ -134,7 +134,7 @@ private:
 	LinePrim *m_lines[NumberId];
 	MeshPrim *m_meshs[NumberId];
 	SelectId m_highlit;
-	MaterialPtr m_material;
+	Material *m_material;
 
 	Vector3 m_pos;
 	Matrix3 m_axis;

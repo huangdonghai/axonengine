@@ -19,13 +19,16 @@ AX_IMPLEMENT_FACTORY(D3D9Driver)
 AX_BEGIN_COMMAND_MAP(D3D9Driver)
 AX_END_COMMAND_MAP()
 
-D3D9Driver::D3D9Driver() {
+D3D9Driver::D3D9Driver()
+{
 	m_initialized = false;
 }
 
-D3D9Driver::~D3D9Driver() {}
+D3D9Driver::~D3D9Driver()
+{}
 
-void D3D9Driver::initialize() {
+void D3D9Driver::initialize()
+{
 	if (m_initialized) {
 		return;
 	}
@@ -35,9 +38,9 @@ void D3D9Driver::initialize() {
 
 	Printf("..Initializing D3D9Driver...\n");
 
-	d3d9InternalWindow = new D3D9Window("d3d9window");
-	d3d9DriverInfo = new Info;
-	d3d9DriverInfo->driverType = Info::D3D;
+	d3d9InternalWindow = new DX9_Window("d3d9window");
+	d3d9DriverInfo = new RenderDriverInfo;
+	d3d9DriverInfo->driverType = RenderDriverInfo::D3D;
 	d3d9DriverInfo->highestQualitySupport = ShaderQuality::Low;
 	d3d9DriverInfo->vendor = "unknown";
 	d3d9DriverInfo->renderer = "unknown";
@@ -132,21 +135,26 @@ void D3D9Driver::initialize() {
 	Printf("ok\n");
 }
 
-void D3D9Driver::finalize() {}
+void D3D9Driver::finalize()
+{}
 
-void D3D9Driver::postInit() {
+void D3D9Driver::postInit()
+{
 	d3d9Postprocess = new D3D9Postprocess();
 }
 
-bool D3D9Driver::isHDRRendering() { return false; }
+bool D3D9Driver::isHDRRendering()
+{ return false; }
 
-RenderTarget *D3D9Driver::createWindowTarget(Handle wndId, const String &name) {
-	D3D9Window *state = new D3D9Window(wndId, name);
+RenderTarget *D3D9Driver::createWindowTarget(Handle wndId, const String &name)
+{
+	DX9_Window *state = new DX9_Window(wndId, name);
 	AX_ASSERT(state);
 	return state;
 }
 
-const IRenderDriver::Info *D3D9Driver::getDriverInfo() {
+const RenderDriverInfo *D3D9Driver::getDriverInfo()
+{
 	return d3d9DriverInfo;
 }
 

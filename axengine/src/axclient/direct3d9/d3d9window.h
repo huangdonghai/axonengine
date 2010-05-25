@@ -13,21 +13,20 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-class D3D9Window : public RenderTarget {
+class DX9_Window {
 public:
-	D3D9Window(const String &name);
-	D3D9Window(Handle wndId, const String &name);
-	virtual ~D3D9Window();
+	DX9_Window(const String &name);
+	DX9_Window(Handle wndId, const String &name);
+	~DX9_Window();
 
 	// implement RenderTarget
-	virtual Rect getRect();
-	virtual Type getType() { return RenderTarget::kWindow; }
-	virtual void bind();
-	virtual void unbind();
-	virtual bool isWindow() { return true;}
+	Rect getRect();
+	void bind();
+	void unbind();
+	bool isWindow() { return true;}
 
-	virtual void setWindowHandle(Handle newId) { m_wndId = (HWND)newId.toVoidStar(); }
-	virtual Handle getWindowHandle() { return Handle(m_wndId); }
+	void setWindowHandle(Handle newId) { m_wndId = handle_cast<HWND>(newId); }
+	Handle getWindowHandle() { return Handle(m_wndId); }
 
 	HWND getHandle() const { return m_wndId; }
 	void present();
@@ -47,8 +46,8 @@ private:
 	DWORD m_presentInterval;
 
 public:
-	D3D9Target *m_gbuffer;
-	D3D9Target *m_lightBuffer;
+	Handle m_gbuffer;
+	Handle m_lightBuffer;
 };
 
 AX_END_NAMESPACE

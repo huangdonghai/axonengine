@@ -8,11 +8,21 @@ AX_DECLARE_REFPTR(BlendState);
 AX_DECLARE_REFPTR(DepthStencilState);
 AX_DECLARE_REFPTR(RasterizerState);
 
+class WrapObject : public RefObject
+{
+
+};
+
 class SamplerState : public RefObject
 {
 public:
-	SamplerState();
-	virtual ~SamplerState();
+	SamplerState(const SamplerStateDesc &desc)
+	{ g_apiWrap->createSamplerState(&m_h, desc); }
+
+	virtual ~SamplerState()
+	{ g_apiWrap->deleteSamplerState(&m_h); }
+
+	virtual void deleteThis() {}
 
 private:
 	Handle m_h;
@@ -21,7 +31,7 @@ private:
 class BlendState : public RefObject
 {
 public:
-	BlendState();
+	BlendState(const BlendStateDesc &desc);
 	virtual ~BlendState();
 
 private:
@@ -31,7 +41,7 @@ private:
 class DepthStencilState : public RefObject
 {
 public:
-	DepthStencilState();
+	DepthStencilState(const DepthStencilStateDesc &desc);
 	virtual ~DepthStencilState();
 
 private:
@@ -41,7 +51,7 @@ private:
 class RasterizerState : public RefObject
 {
 public:
-	RasterizerState();
+	RasterizerState(const RasterizerStateDesc &desc);
 	virtual ~RasterizerState();
 
 private:

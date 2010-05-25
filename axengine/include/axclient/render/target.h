@@ -20,71 +20,46 @@ public:
 		kWindow, kTexture
 	};
 
-	enum AllocHint {
-		Free,				// internal use, not for user
-		PermanentAlloc,		// permanent allocation, user should free it
-		TemporalAlloc,		// temporal, be freed immediately after used this
-		PooledAlloc,
-	};
-
-	enum SuggestFormat {
-		LDR_COLOR,
-		MDR_COLOR,
-		HDR_COLOR,
-		SHADOW_MAP,
-	};
-
 	enum {
 		MAX_COLOR_ATTACHMENT = 3
 	};
 
-	RenderTarget();
-	virtual ~RenderTarget() = 0;;
+	RenderTarget(int width, int height, TexFormat format);
+	RenderTarget(Handle hwnd, const String &debugname);
+	~RenderTarget();
 
-	virtual Type getType() = 0;
-	virtual Rect getRect() = 0;
-	virtual void bind() = 0;
-	virtual void unbind() = 0;
-	virtual bool isWindow() { return false;}
-	virtual bool isTexture() { return false;}
-	virtual bool isColorFormat() { return false;}
-	virtual bool isDepthFormat() { return false;}
-	virtual bool isStencilFormat() { return false;}
+	Type getType() { return m_type; }
+	Rect getRect();
+	bool isWindow() { return m_type == kWindow; }
+	bool isTexture() { return m_type == kTexture; }
+	bool isColorFormat() { return m_format.isColor(); }
+	bool isDepthFormat() { return m_format.isDepth(); }
+	bool isStencilFormat() { return m_format.isStencil(); }
 
 	// for render texture target
-	virtual void attachDepth(RenderTarget *depth) {}
-	virtual RenderTarget *getDepthAttached() const { return nullptr; }
+	void attachDepth(RenderTarget *depth);
+	RenderTarget *getDepthAttached() const { return m_depthTarget; }
 
-	virtual void attachColor(int index, RenderTarget *c) {}
-	virtual void detachColor(int index) {}
-	virtual void detachAllColor() {}
-	virtual RenderTarget *getColorAttached(int index) const { return 0; }
-
-	virtual Texture *getTexture() { return nullptr; }
+	void attachColor(int index, RenderTarget *c);
+	void detachColor(int index);
+	void detachAllColor();
+	RenderTarget *getColorAttached(int index) const;
 
 	// since qt maybe change window id, so we need this function
-	virtual void setWindowHandle(Handle newId) {}
-	virtual Handle getWindowHandle() { return Handle(0); }
-
-	// for pooled target
-	void allocReal();
-	void freeReal();
+	void setWindowHandle(Handle newId) {}
+	Handle getWindowHandle() { return Handle(0); }
 
 public:
-	bool m_realAllocated;
+	Type m_type;
+	Handle m_h;
 
 	TexFormat m_format;
 	int m_width, m_height;
-
-	TexturePtr m_texture;
 
 	int m_boundIndex;
 
 	RenderTarget *m_depthTarget;
 	RenderTarget *m_colorAttached[MAX_COLOR_ATTACHMENT];
-
-	bool m_isPooled;
-	RenderTarget *m_realTarget;	// for pooled target
 
 	// for window
 	Handle m_wndId;
@@ -128,6 +103,7 @@ private:
 	RenderTarget *m_renderTarget;
 };
 
+#if 0
 class AX_API RenderTargetManager {
 public:
 	RenderTargetManager();
@@ -154,6 +130,7 @@ protected:
 
 	List<ReflectionMap*> m_reflectionTargets;
 };
+#endif
 
 AX_END_NAMESPACE
 

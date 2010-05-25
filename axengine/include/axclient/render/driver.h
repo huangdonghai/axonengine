@@ -21,42 +21,55 @@ struct HitRecord {
 };
 typedef Sequence<HitRecord> HitRecords;
 
+struct RenderDriverInfo {
+	enum DriverType {
+		OpenGL,
+		D3D,
+		UNKNOWN
+	};
+
+	enum SuggestFormat {
+		LDR_COLOR,
+		HDR_COLOR,
+		SHADOW_MAP,
+		SUGGEST_MAX
+	};
+
+	enum DriverCaps {
+		DXT = 1,		// supports DXT compressed texture
+		HDR = 2,		// supports HDR rendering
+	};
+
+	DriverType driverType;	// opengl, d3d etc...
+
+	// some caps
+	int caps;					// DriverCaps
+	ShaderQuality highestQualitySupport;
+
+	// for opengl
+	String vendor;
+	String renderer;
+	String version;
+	String extension;
+
+	int maxTextureSize;
+	int max3DTextureSize;
+	int maxCubeMapTextureSize;	// queried from GL
+
+	int maxTextureUnits;		// arb_multitexture
+	int maxTextureCoords;		// arb_fragment_program
+	int maxTextureImageUnits;	// arb_fragment_program
+
+	bool m_textureFormatSupports[TexFormat::MAX_NUMBER];
+	bool m_renderTargetFormatSupport[TexFormat::MAX_NUMBER];
+	bool m_autogenMipmapSupports[TexFormat::MAX_NUMBER];
+
+	TexFormat suggestFormats[SUGGEST_MAX];
+};
+
 class IRenderDriver
 {
 public:
-	struct Info {
-		enum DriverType {
-			OpenGL,
-			D3D,
-			UNKNOWN
-		};
-
-		enum DriverCaps {
-			DXT = 1,		// supports DXT compressed texture
-			HDR = 2,		// supports HDR rendering
-		};
-
-		DriverType driverType;	// opengl, d3d etc...
-
-		// some caps
-		int caps;					// DriverCaps
-		ShaderQuality highestQualitySupport;
-
-		// for opengl
-		String vendor;
-		String renderer;
-		String version;
-		String extension;
-
-		int maxTextureSize;
-		int max3DTextureSize;
-		int maxCubeMapTextureSize;	// queried from GL
-
-		int maxTextureUnits;		// arb_multitexture
-		int maxTextureCoords;		// arb_fragment_program
-		int maxTextureImageUnits;	// arb_fragment_program
-	};
-
 	// device
 	virtual ~IRenderDriver() {}
 	virtual void initialize() = 0;
@@ -71,8 +84,7 @@ public:
 	virtual RenderTarget *createWindowTarget(Handle wndId, const String &name) = 0;
 
 	// caps
-	virtual const Info *getDriverInfo() = 0;
-	virtual uint_t getBackendCaps() = 0;
+	virtual const RenderDriverInfo *getDriverInfo() = 0;
 
 	// if not multi threads rendering, use this call render a frame
 	virtual void runFrame() = 0;

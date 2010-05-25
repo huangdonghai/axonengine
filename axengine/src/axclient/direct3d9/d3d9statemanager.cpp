@@ -281,7 +281,7 @@ void D3D9StateManager::setSamplerStateBlock( DWORD stage, Texture::ClampMode cla
 		d3d9StateManager->SetSamplerState(stage, D3DSAMP_ADDRESSV, D3DTADDRESS_CLAMP);
 		d3d9StateManager->SetSamplerState(stage, D3DSAMP_ADDRESSW, D3DTADDRESS_CLAMP);
 		break;
-	case Texture::CM_ClampToBorder:
+	case Texture::CM_Border:
 		d3d9StateManager->SetSamplerState(stage, D3DSAMP_ADDRESSU, D3DTADDRESS_BORDER);
 		d3d9StateManager->SetSamplerState(stage, D3DSAMP_ADDRESSV, D3DTADDRESS_BORDER);
 		d3d9StateManager->SetSamplerState(stage, D3DSAMP_ADDRESSW, D3DTADDRESS_BORDER);
@@ -304,7 +304,7 @@ void D3D9StateManager::setSamplerStateBlock( DWORD stage, Texture::ClampMode cla
 		d3d9StateManager->SetSamplerState(stage, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
 		d3d9StateManager->SetSamplerState(stage, D3DSAMP_MIPFILTER, D3DTEXF_NONE);
 		break;
-	case Texture::FM_Bilinear:
+	case Texture::FM_LinearMipmap:
 		d3d9StateManager->SetSamplerState(stage, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
 		d3d9StateManager->SetSamplerState(stage, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
 		d3d9StateManager->SetSamplerState(stage, D3DSAMP_MIPFILTER, D3DTEXF_POINT);

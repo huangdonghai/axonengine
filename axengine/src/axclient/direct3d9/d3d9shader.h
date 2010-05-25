@@ -11,21 +11,21 @@ read the license and understand and accept it fully.
 #ifndef AX_D3D9SHADER_H
 #define AX_D3D9SHADER_H
 
-#define AX_SU(x, y) D3D9uniform::setUniform(Uniforms::x,y);
+#define AX_SU(x, y) DX9_Uniform::setUniform(Uniforms::x,y);
 
 AX_BEGIN_NAMESPACE
 
-class D3D9Shader;
+class DX9_Shader;
 
 //--------------------------------------------------------------------------
 // class UniformCache
 //--------------------------------------------------------------------------
 
-class D3D9uniform : public UniformItem
+class DX9_Uniform : public UniformItem
 {
 public:
-	D3D9uniform(UniformItem &item, D3DXHANDLE param);
-	virtual ~D3D9uniform();
+	DX9_Uniform(UniformItem &item, D3DXHANDLE param);
+	virtual ~DX9_Uniform();
 
 	bool isCached() const;
 	void cache();
@@ -58,20 +58,20 @@ public:
 // class CGsamplerann
 //--------------------------------------------------------------------------
 
-class D3D9SamplerAnn : public SamplerAnno
+class DX9_SamplerInfo : public SamplerInfo
 {
 public:
 	FixedString m_paramName;
 	D3DXHANDLE m_param;
 	int m_register;
 };
-typedef Sequence<D3D9SamplerAnn*>	D3D9SamplerAnns;
+typedef Sequence<DX9_SamplerInfo*>	DX9_SamplerInfos;
 
 //--------------------------------------------------------------------------
 // class D3D9pixeltotexel
 //--------------------------------------------------------------------------
 
-class D3D9Pixel2Texel
+class DX9_Pixel2Texel
 {
 public:
 	String m_name;
@@ -79,20 +79,20 @@ public:
 	FloatSeq m_pixelValue;
 	FloatSeq m_scaledValue;
 };
-typedef Sequence<D3D9Pixel2Texel>	D3D9Pixel2Texels;
+typedef Sequence<DX9_Pixel2Texel>	DX9_Pixel2Texels;
 
-class D3D9Pass
+class DX9_Pass
 {
 public:
-	friend class D3D9Shader;
+	friend class DX9_Shader;
 	
 	struct ParamDesc {
 		D3DXCONSTANT_DESC d3dDesc;
-		const D3D9Pixel2Texel *p2t;
+		const DX9_Pixel2Texel *p2t;
 	};
 
-	D3D9Pass(D3D9Shader *shader, D3DXHANDLE d3dxhandle);
-	~D3D9Pass();
+	DX9_Pass(DX9_Shader *shader, D3DXHANDLE d3dxhandle);
+	~DX9_Pass();
 
 	void begin();
 
@@ -102,12 +102,12 @@ protected:
 	void initState();
 	void initSampler(const D3DXCONSTANT_DESC &desc);
 
-	const D3D9Pixel2Texel *findPixel2Texel(const String &name);
+	const DX9_Pixel2Texel *findPixel2Texel(const String &name);
 	void setParameters();
 	void setParameter(const ParamDesc &param, const float *value, bool isPixelShader);
 
 private:
-	D3D9Shader *m_shader;
+	DX9_Shader *m_shader;
 	D3DXHANDLE m_d3dxhandle;
 
 	// shader
@@ -129,51 +129,51 @@ private:
 	Dict<int,int> m_sysSamplers;
 
 	// batch sampler
-	D3D9SamplerAnns m_batchSamplers;
+	DX9_SamplerInfos m_batchSamplers;
 
 	// local parameter
 	Dict<String,ParamDesc> m_vsParameters;
 	Dict<String,ParamDesc> m_psParameters;
 };
 
-class D3D9Technique
+class DX9_Technique
 {
 public:
-	friend class D3D9Shader;
+	friend class DX9_Shader;
 
-	D3D9Technique(D3D9Shader *shader, D3DXHANDLE d3dxhandle);
-	~D3D9Technique();
+	DX9_Technique(DX9_Shader *shader, D3DXHANDLE d3dxhandle);
+	~DX9_Technique();
 
 private:
 	enum {MAX_PASSES = 8};
-	D3D9Shader *m_shader;
+	DX9_Shader *m_shader;
 	D3DXHANDLE m_d3dxhandle;
 
 	int m_numPasses;
-	D3D9Pass *m_passes[MAX_PASSES];
+	DX9_Pass *m_passes[MAX_PASSES];
 };
 
 //--------------------------------------------------------------------------
 // class D3D9Shader
 //--------------------------------------------------------------------------
 
-class D3D9Shader : public Shader
+class DX9_Shader : public Shader
 {
 public:
-	friend class D3D9Pass;
-	friend class D3D9Technique;
+	friend class DX9_Pass;
+	friend class DX9_Technique;
 
-	D3D9Shader();
-	virtual ~D3D9Shader();
+	DX9_Shader();
+	virtual ~DX9_Shader();
 
 	// implement Shader
 	virtual bool doInit(const String &name, const ShaderMacro &macro = g_shaderMacro);
 	virtual bool isDepthWrite() const;
 	virtual bool haveTextureTarget() const;
 	virtual int getNumSampler() const;
-	virtual SamplerAnno *getSamplerAnno(int index) const;
+	virtual SamplerInfo *getSamplerAnno(int index) const;
 	virtual int getNumTweakable() const;
-	virtual ParameterAnno *getTweakableDef(int index);
+	virtual ParameterInfo *getTweakableDef(int index);
 	virtual SortHint getSortHint() const;
 	virtual bool haveTechnique(Technique tech) const;
 	virtual const ShaderInfo *getShaderInfo() const { return 0; }
@@ -218,14 +218,14 @@ private:
 
 	bool m_haveTextureTarget;
 
-	D3D9SamplerAnns m_samplerannSeq;
+	DX9_SamplerInfos m_samplerannSeq;
 
 	// pixel2texel
-	D3D9Pixel2Texels pixel2Texels;
+	DX9_Pixel2Texels pixel2Texels;
 	int m_p2tWidth, m_p2tHeight;
 
-	D3D9Technique *m_techniques[Technique::Number];
-	D3D9Technique *m_curTech;
+	DX9_Technique *m_techniques[Technique::Number];
+	DX9_Technique *m_curTech;
 	Material *m_coupled;
 
 	// shader info
@@ -247,15 +247,15 @@ public:
 	virtual void saveShaderCache(const String &name);
 	virtual void applyShaderCache(const String &name);
 
-	D3D9Shader *findShaderDX(const String &name, const ShaderMacro &macro = g_shaderMacro);
+	DX9_Shader *findShaderDX(const String &name, const ShaderMacro &macro = g_shaderMacro);
 
 protected:
 	void _initialize();
 
 private:
-	typedef Dict<FixedString,Dict<ShaderMacro,D3D9Shader*> > ShaderPool;
+	typedef Dict<FixedString,Dict<ShaderMacro,DX9_Shader*> > ShaderPool;
 	ShaderPool m_shaderPool;
-	D3D9Shader *m_defaulted;
+	DX9_Shader *m_defaulted;
 	ShaderInfoDict m_shaderInfoDict;
 };
 

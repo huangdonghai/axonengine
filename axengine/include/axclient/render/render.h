@@ -20,30 +20,48 @@ enum ElementType {
 	ElementType_TriStrip
 };
 
-
-
 struct SamplerStateDesc {
 	enum ClampMode {
 		CM_Repeat,
 		CM_Clamp,
-		CM_ClampToEdge,	// only used in engine internal
-		CM_ClampToBorder // only used in engine internal
+		CM_Border // only used in engine internal
 	};
 
 	enum FilterMode {
 		FM_Nearest,
 		FM_Linear,
-		FM_Bilinear,
-		FM_Trilinear
+		FM_LinearMipmap,
+		FM_Trilinear,
+		FM_Anisotropic
 	};
 
 	enum BorderColor {
 		BM_Zero, BM_One
 	};
 
-	ClampMode clampMode;
-	FilterMode filterMode;
-	BorderColor borderMode;
+	SamplerStateDesc() : clampMode(CM_Repeat), filterMode(FM_Trilinear), borderMode(BM_Zero), maxAnisotropy(0) {}
+
+	size_t hash() const
+	{
+		return intValue;
+	}
+
+	operator size_t() const { return hash(); }
+
+	bool operator==(const SamplerStateDesc &rhs) const
+	{
+		return intValue == rhs.intValue;
+	}
+
+	union {
+		struct {
+			ClampMode clampMode : 8;
+			FilterMode filterMode : 8;
+			BorderColor borderMode : 8;
+			int maxAnisotropy : 8;
+		};
+		int intValue;
+	};
 };
 
 struct DepthStencilStateDesc {
@@ -198,8 +216,8 @@ template <typename Wrapper> static inline typename Wrapper::pointer GetPtrHelper
 
 
 #include "query.h"
-#include "texture.h"
 #include "sampler.h"
+#include "texture.h"
 #include "textureatlas.h"
 #include "materialdecl.h"
 #include "shader.h"

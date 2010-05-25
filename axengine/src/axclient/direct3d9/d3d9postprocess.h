@@ -69,24 +69,24 @@ public:
 	void genericPP(const String &shadername, RenderTarget *target, D3D9Texture *src1, D3D9Texture *src2);
 
 protected:
-	D3D9Shader *getShader(const String &name);
+	DX9_Shader *getShader(const String &name);
 
 private:
 	PostMesh *m_screenQuad;
 	PostMesh *m_hexahedron;
 
-	MaterialPtr m_mtrDrawQuad;
-	MaterialPtr m_mtrMaskVolume;
+	Material *m_mtrDrawQuad;
+	Material *m_mtrMaskVolume;
 
-	MaterialPtr m_mtrPointLight;
-	MaterialPtr m_mtrGlobalLight;
+	Material *m_mtrPointLight;
+	Material *m_mtrGlobalLight;
 
-	D3D9Shader *m_shaderDrawQuad;
-	D3D9Shader *m_shaderHistogram;
-	D3D9Shader *m_shaderDownscale4x4;
-	D3D9Shader *m_shaderQuery;
+	DX9_Shader *m_shaderDrawQuad;
+	DX9_Shader *m_shaderHistogram;
+	DX9_Shader *m_shaderDownscale4x4;
+	DX9_Shader *m_shaderQuery;
 
-	Dict<String, D3D9Shader*>	m_genericShaders;
+	Dict<String, DX9_Shader*>	m_genericShaders;
 };
 
 AX_END_NAMESPACE

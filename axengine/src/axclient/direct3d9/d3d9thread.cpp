@@ -13,7 +13,7 @@ AX_BEGIN_NAMESPACE
 
 QueuedScene *d3d9Scene;
 
-D3D9Window *d3d9FrameWnd;
+DX9_Window *d3d9FrameWnd;
 bool d3d9IsReflecting;
 bool d3d9ForceWireframe = false;
 
@@ -109,7 +109,7 @@ void D3D9Thread::runFrame(bool isInThread)
 	beginFrame();
 	d3d9Device->BeginScene();
 
-	D3D9Window *window = dynamic_cast<D3D9Window*>(d3d9Queue->getTarget());
+	DX9_Window *window = dynamic_cast<DX9_Window*>(d3d9Queue->getTarget());
 	if (window != d3d9FrameWnd) {
 		d3d9FrameWnd = window;
 		d3d9FrameWnd->bind();

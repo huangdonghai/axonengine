@@ -12,7 +12,9 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
+#if 0
 static TextureManager *s_textureManager;
+#endif
 
 //--------------------------------------------------------------------------
 // class Texture
@@ -29,28 +31,19 @@ Texture::~Texture()
 
 void Texture::uploadSubTexture(const Rect &rect, const void *pixels, TexFormat format /*= TexFormat::AUTO*/)
 {
-	if (g_renderDriver->isInRenderingThread()) {
-		uploadSubTextureIm(rect, pixels, format);
-		return;
-	}
-
-	s_textureManager->uploadSubTexture(this, rect, pixels, format);
+	g_apiWrap->uploadSubTexture(&m_textureWrap->m_handle, rect, pixels, format);
 }
 
 void Texture::generateMipmap()
 {
-	if (g_renderDriver->isInRenderingThread()) {
-		generateMipmapIm();
-		return;
-	}
-	s_textureManager->generateMipmap(this);
+	g_apiWrap->generateMipmap(&m_textureWrap->m_handle);
 }
 
 void Texture::deleteThis()
 {
-	s_textureManager->freeTexture(this);
 }
 
+#if 0
 TexturePtr Texture::load(const String &name, InitFlags flags/*=0*/)
 {
 	return s_textureManager->loadTexture(name, flags);
@@ -60,17 +53,31 @@ TexturePtr Texture::create( const String &debugname, TexFormat format, int width
 {
 	return s_textureManager->createTexture(debugname, format, width, height, flags);
 }
+#endif
 
 bool Texture::isExist(const String &name)
 {
-	return s_textureManager->isExist(name);
+	FixedString key = normalizeKey(name);
+
+	ExistDict::const_iterator it = m_existDict.find(key);
+	if (it != m_existDict.end())
+		return it->second;
+
+	String filename = key.toString() + ".dds";
+
+	bool result = g_fileSystem->isFileExist(filename);
+	m_existDict[key] = result;
+
+	return result;
 }
 
+#if 0
 void Texture::initManager()
 { /* do nothing */ }
 
 void Texture::finalizeManager()
 { /* do nothing */ }
+#endif
 
 FixedString Texture::normalizeKey(const String &name)
 {
@@ -86,9 +93,26 @@ FixedString Texture::normalizeKey(const String &name)
 	return key;
 }
 
-void Texture::texlist_f( const CmdArgs &args )
+#if 0
+void Texture::texlist_f(const CmdArgs &args)
 {
-	s_textureManager->texlist_f(args);
+	Printf("List texture(s):\n");
+
+	int count = 0;
+	TextureDict::const_iterator it = m_textureDict.begin();
+	for (; it != m_textureDict.end(); ++it) {
+		Texture *tex = it->second;
+		if (!tex) {
+			continue;
+		}
+
+		int width, height, depth;
+		tex->getSize(width, height, depth);
+		Printf("%4d %4d %4d %8s %s\n",tex->getref(), width, height, tex->getFormat().toString(), tex->m_key.c_str());
+		count++;
+	}
+
+	Printf("total %d texture(s)\n", count);
 }
 
 //--------------------------------------------------------------------------
@@ -353,6 +377,7 @@ TextureWrapPtr TextureWrap::createTexture(const String &debugname, TexFormat for
 
 	return result;
 }
+#endif
 
 AX_END_NAMESPACE
 

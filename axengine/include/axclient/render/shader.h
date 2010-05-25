@@ -206,7 +206,7 @@ inline String Technique::toString()
 }
 
 // render to texture annotations
-class SamplerAnno
+class SamplerInfo
 {
 public:
 	enum RenderType {
@@ -216,7 +216,7 @@ public:
 	};
 
 	// default c-tor
-	SamplerAnno()
+	SamplerInfo()
 	{
 		m_renderType = None;
 		m_width = 512;
@@ -233,9 +233,9 @@ public:
 	bool m_needClearDepth;
 	bool m_needHdr;
 };
-typedef Sequence<SamplerAnno> SamplerAnnos;
+typedef Sequence<SamplerInfo> SamplerInfos;
 
-class ParameterAnno
+class ParameterInfo
 {
 public:
 	enum WidgetType {
@@ -255,7 +255,7 @@ public:
 	// for color
 	Vector3 m_defaultColor;
 };
-typedef Sequence<ParameterAnno> ParameterAnnos;
+typedef Sequence<ParameterInfo> ParameterInfos;
 
 class ShaderInfo
 {
@@ -275,8 +275,8 @@ public:
 
 	SortHint m_sortHint;
 	bool m_haveTextureTarget;
-	SamplerAnnos m_samplerAnnos;
-	ParameterAnnos m_parameterAnnos;
+	SamplerInfos m_samplerAnnos;
+	ParameterInfos m_parameterAnnos;
 };
 
 typedef Dict<FixedString, ShaderInfo*> ShaderInfoDict;
@@ -306,9 +306,9 @@ public:
 	virtual bool isDepthWrite() const = 0;
 	virtual bool haveTextureTarget() const = 0;
 	virtual int getNumSampler() const = 0;
-	virtual SamplerAnno *getSamplerAnno(int index) const = 0;
+	virtual SamplerInfo *getSamplerAnno(int index) const = 0;
 	virtual int getNumTweakable() const = 0;
-	virtual ParameterAnno *getTweakableDef(int index) = 0;
+	virtual ParameterInfo *getTweakableDef(int index) = 0;
 	virtual SortHint getSortHint() const = 0;
 	virtual bool haveTechnique(Technique tech) const = 0;
 	virtual const ShaderInfo *getShaderInfo() const = 0;

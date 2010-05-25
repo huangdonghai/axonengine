@@ -33,8 +33,7 @@ public:
 
 	ShaderQuality getShaderQuality();
 
-	const IRenderDriver::Info *getDriverInfo();
-	uint_t getBackendCaps();
+	const RenderDriverInfo *getDriverInfo();
 	int getFrameNum() const;
 
 	// new rendering
@@ -69,6 +68,23 @@ public:
 	int getNumEntityManager() const;
 	IEntityManager *getEntityManager(int index) const;
 
+	// resource management
+	ShadowMap *allocShadowMap(int width, int height);
+	void freeShadowMap(ShadowMap *target);
+
+	ReflectionMap *findReflection(RenderWorld *world, RenderEntity *actor, Primitive *prim, int width, int height);
+
+	SamplerStatePtr findSamplerState(const SamplerStateDesc *desc);
+
+	BlendStatePtr findBlendState(const BlendStateDesc *desc);
+
+	RasterizerStatePtr findRasterizerState(const RasterizerStateDesc *desc);
+
+	DepthStencilStatePtr findDepthStencilState(const DepthStencilStateDesc *desc);
+
+
+	static Rect getWindowRect(Handle hwnd);
+
 protected:
 	// console command
 	void texlist_f(const CmdArgs &args);
@@ -96,6 +112,11 @@ private:
 
 	// actor manager registry
 	Sequence<IEntityManager*> m_entityManagers;
+
+	// samplerstates
+	typedef Dict<SamplerStateDesc, SamplerState*> SamplerStateDict;
+	SamplerStateDict m_samplerStateDict;
+	SamplerStateDesc m_defaultSamplerStateDesc;
 };
 
 inline int RenderSystem::getFrameNum() const

@@ -43,7 +43,7 @@ static void setMaterialUniforms(Material *mat) {
 void D3D9Draw::draw(Material *mat, Technique tech, D3D9geometry *prim)
 {
 	if (!mat) {
-		static D3D9Shader *debugshader = d3d9ShaderManager->findShaderDX("_debug");
+		static DX9_Shader *debugshader = d3d9ShaderManager->findShaderDX("_debug");
 
 		if (tech != Technique::Main) {
 			return;
@@ -87,7 +87,7 @@ void D3D9Draw::draw(Material *mat, Technique tech, D3D9geometry *prim)
 	}
 #endif
 
-	D3D9Shader *shader = (D3D9Shader*)d3d9ShaderManager->findShader(mat->getShaderNameId(), macro);
+	DX9_Shader *shader = (DX9_Shader*)d3d9ShaderManager->findShader(mat->getShaderNameId(), macro);
 
 	if (!shader->haveTechnique(tech)) {
 		return;
@@ -110,7 +110,7 @@ void D3D9Draw::draw(Material *mat, Technique tech, D3D9geometry *prim)
 	}
 }
 
-void D3D9Draw::draw(D3D9Shader *shader, Technique tech, D3D9geometry *prim)
+void D3D9Draw::draw(DX9_Shader *shader, Technique tech, D3D9geometry *prim)
 {
 	if (r_nulldraw.getBool()) {
 		return;
@@ -268,7 +268,7 @@ void D3D9Draw::drawPrimitiveUP(Material *mat, Technique tech, void *vertices, in
 
 void D3D9Draw::drawPostUP(Material *mat, PostMesh *mesh)
 {
-	D3D9Shader *shader = findShader(mat);
+	DX9_Shader *shader = findShader(mat);
 
 	if (!shader) {
 		return;
@@ -277,7 +277,7 @@ void D3D9Draw::drawPostUP(Material *mat, PostMesh *mesh)
 	drawPostUP(shader, mesh);
 }
 
-void D3D9Draw::drawPostUP(D3D9Shader *shader, PostMesh *mesh)
+void D3D9Draw::drawPostUP(DX9_Shader *shader, PostMesh *mesh)
 {
 	d3d9StateManager->setVertexDeclaration(m_postVertDecl->getObject());
 
@@ -290,10 +290,10 @@ void D3D9Draw::drawPostUP(D3D9Shader *shader, PostMesh *mesh)
 	shader->end();
 }
 
-D3D9Shader *D3D9Draw::findShader(Material *mat, Technique tech)
+DX9_Shader *D3D9Draw::findShader(Material *mat, Technique tech)
 {
 	if (!mat) {
-		static D3D9Shader *debugshader = d3d9ShaderManager->findShaderDX("_debug");
+		static DX9_Shader *debugshader = d3d9ShaderManager->findShaderDX("_debug");
 
 		if (tech != Technique::Main) {
 			return 0;
@@ -307,7 +307,7 @@ D3D9Shader *D3D9Draw::findShader(Material *mat, Technique tech)
 	const ShaderMacro &matmacro = mat->getShaderMacro();
 	macro.mergeFrom(&matmacro);
 
-	D3D9Shader *shader = (D3D9Shader*)d3d9ShaderManager->findShader(mat->getShaderNameId(), macro);
+	DX9_Shader *shader = (DX9_Shader*)d3d9ShaderManager->findShader(mat->getShaderNameId(), macro);
 
 	if (!shader->haveTechnique(tech)) {
 		return 0;

@@ -75,7 +75,7 @@ protected:
 	LinePrim *m_cursor;
 	Rect m_editedRect;
 
-	MaterialPtr m_brushMat;
+	Material *m_brushMat;
 	GroupPrim *m_brushPrims;
 };
 

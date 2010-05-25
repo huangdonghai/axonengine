@@ -423,7 +423,7 @@ namespace { namespace Internal {
 			}
 		}
 
-		MaterialPtr getMaterial()
+		Material *getMaterial()
 		{
 			if (!m_hkmat) {
 				return Material::load("default");
@@ -462,7 +462,7 @@ namespace { namespace Internal {
 
 			fillStatges(samplers, lightmap);
 
-			MaterialPtr mat = Material::loadUnique(axname);
+			Material *mat = Material::loadUnique(axname);
 
 			// set samplers to material
 			for (int i = 0; i < SamplerType::NUMBER_ALL; i++) {

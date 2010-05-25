@@ -35,7 +35,7 @@ public:
 	virtual RenderTarget *createWindowTarget(Handle wndId, const String &name);
 
 	// caps
-	virtual const Info *getDriverInfo();
+	virtual const RenderDriverInfo *getDriverInfo();
 	virtual uint_t getBackendCaps();
 
 	// if not multi threads rendering, use this call render a frame
@@ -44,6 +44,8 @@ public:
 	void reset(int width, int height, bool fullscreen);
 	void onReset();
 	void onDeviceLost();
+
+	IDirect3DSurface9 *getDepthStencil(int width, int height);
 
 private:
 	bool m_initialized;

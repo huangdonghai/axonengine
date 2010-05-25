@@ -133,7 +133,7 @@ public:
 
 	struct MaterialMap {
 		hkxMaterial *m_hkMat;
-		MaterialPtr m_axMat;
+		Material *m_axMat;
 		TexturePtr m_lightMap;
 	};
 	typedef Sequence<MaterialMap*>	MaterialMaps;

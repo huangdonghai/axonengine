@@ -12,50 +12,50 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-	class GLprimitive;
+class GLprimitive;
 
-	class GLwindow : public RenderTarget {
-	public:
-		GLwindow(const String &name);
-		GLwindow(Handle wndId, const String &name);
-		virtual ~GLwindow();
+class GLwindow : public RenderTarget {
+public:
+	GLwindow(const String &name);
+	GLwindow(Handle wndId, const String &name);
+	virtual ~GLwindow();
 
-		// implement ITarget
-		virtual Rect getRect();
-		virtual Type getType() { return RenderTarget::kWindow; }
-		virtual void bind();
-		virtual void unbind();
-		virtual bool isWindow() { return true;}
+	// implement ITarget
+	virtual Rect getRect();
+	virtual Type getType() { return RenderTarget::kWindow; }
+	virtual void bind();
+	virtual void unbind();
+	virtual bool isWindow() { return true;}
 
 
-		// wrap OpenGL state function
-		void initialize();
-		void finalize();
-		void shareList(const GLwindow *other);
-		void swapBuffers();
+	// wrap OpenGL state function
+	void initialize();
+	void finalize();
+	void shareList(const GLwindow *other);
+	void swapBuffers();
 #if 0
-		void getSize(Int &width, Int &height);
-		Point getClientSize();
+	void getSize(Int &width, Int &height);
+	Point getClientSize();
 #endif
-		void initGLRC();
+	void initGLRC();
 
-	protected:
+protected:
 
-	protected:
-		// window, dc, gl context
-		String m_name;					// just for easy debug
+protected:
+	// window, dc, gl context
+	String m_name;					// just for easy debug
 
-	#ifdef _WIN32
-		HWND m_wndId;
+#ifdef _WIN32
+	HWND m_wndId;
 #if 0
-		HGLRC m_glContext;
+	HGLRC m_glContext;
 #endif
-		HDC m_hdc;
-		int m_pixelFormat;
-		PIXELFORMATDESCRIPTOR m_pfd;
-	#endif
-		
-	};
+	HDC m_hdc;
+	int m_pixelFormat;
+	PIXELFORMATDESCRIPTOR m_pfd;
+#endif
+	
+};
 
 AX_END_NAMESPACE
 

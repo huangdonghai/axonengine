@@ -72,10 +72,10 @@ private:
 	Primitive *m_leafPrims[MAX_LODS];
 
 	// material
-	MaterialPtr m_branchMat;
-	MaterialPtr m_frondMat;
-	MaterialPtr m_leafCardMat;
-	MaterialPtr m_leafMeshMat;
+	Material *m_branchMat;
+	Material *m_frondMat;
+	Material *m_leafCardMat;
+	Material *m_leafMeshMat;
 	
 	// actors use this asset
 	TreeDict m_treeActors;

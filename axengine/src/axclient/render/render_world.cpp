@@ -227,8 +227,8 @@ void RenderWorld::renderTo(QueuedScene *qscene) {
 		}
 
 		for (int j = 0; j < shader->getNumSampler(); j++) {
-			SamplerAnno *sa = shader->getSamplerAnno(j);
-			if (sa->m_renderType != SamplerAnno::Reflection) {
+			SamplerInfo *sa = shader->getSamplerAnno(j);
+			if (sa->m_renderType != SamplerInfo::Reflection) {
 				continue;
 			}
 
