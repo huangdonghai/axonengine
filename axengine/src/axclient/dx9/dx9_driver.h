@@ -13,14 +13,14 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-class D3D9Driver : public IRenderDriver, public ICmdHandler
+class DX9_Driver : public IRenderDriver, public ICmdHandler
 {
 public:
 	AX_DECLARE_FACTORY();
-	AX_DECLARE_COMMAND_HANDLER(D3D9Driver);
+	AX_DECLARE_COMMAND_HANDLER(DX9_Driver);
 
-	D3D9Driver();
-	~D3D9Driver();
+	DX9_Driver();
+	~DX9_Driver();
 
 	// implement IRenderDriver
 	virtual void initialize();

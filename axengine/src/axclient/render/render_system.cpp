@@ -300,12 +300,16 @@ void RenderSystem::endFrame()
 	//g_statistic->setValue(stat_frontendTime, frontEndTime * 1000);
 	stat_frontendTime.setInt(frontEndTime * 1000);
 
+#if 0
 	if (m_isMTrendering) {
 		g_renderQueue->endProviding();
 	} else {
 //		g_renderDriver->runFrame();
 		g_renderQueue->endConsuming();
 	}
+#else
+	g_renderContext->issueQueue(g_renderQueue);
+#endif
 
 	m_sceneSeq.clear();
 	m_curScene.reset();

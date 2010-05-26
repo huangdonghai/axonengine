@@ -376,20 +376,39 @@ void ApiWrap::addObjectDeletion( delete_func_t func, phandle_t h )
 	m_numObjectDeletions++;
 }
 
-void ApiWrap::createWindowTarget( phandle_t h, Handle hwnd )
+void ApiWrap::createWindowTarget(phandle_t h, Handle hwnd)
 {
 
 }
 
-void ApiWrap::updateWindowTarget( phandle_t h, Handle newWndId )
+void ApiWrap::updateWindowTarget(phandle_t h, Handle newWndId)
 {
 
 }
 
-void ApiWrap::deleteWindowTarget( phandle_t h )
+void ApiWrap::deleteWindowTarget(phandle_t h)
 {
 
 }
+
+void *ApiWrap::allocRingBuf(int size)
+{
+	void *result = 0;
+
+	if (m_writePos + size <= RING_BUFFER_SIZE) {
+		if (m_writePos < m_readPos) {
+			if (m_readPos - m_writePos < size)
+				wait(0);
+			else {
+				result = m_ringBuffer + m_writePos;
+				m_writePos += size;
+			}
+		}
+	} else {
+
+	}
+}
+
 
 void RenderContext::issueQueue(RenderQueue *rq)
 {

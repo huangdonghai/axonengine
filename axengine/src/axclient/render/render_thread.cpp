@@ -12,7 +12,7 @@ RenderThread::~RenderThread()
 
 }
 
-void RenderThread::runFrame( bool isInThread )
+void RenderThread::runFrame(bool isInThread)
 {
 }
 

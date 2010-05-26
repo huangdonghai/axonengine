@@ -13,11 +13,11 @@ read the license and understand and accept it fully.
 AX_BEGIN_NAMESPACE
 
 AX_BEGIN_CLASS_MAP(axdirect3d9)
-	AX_CLASS_ENTRY("driver", D3D9Driver)
+	AX_CLASS_ENTRY("driver", DX9_Driver)
 AX_END_CLASS_MAP()
 
 DX9_Window *d3d9InternalWindow;
-D3D9Driver *d3d9Driver;
+DX9_Driver *d3d9Driver;
 RenderDriverInfo *d3d9DriverInfo;
 IDirect3D9 *d3d9Api;
 IDirect3DDevice9 *d3d9Device;

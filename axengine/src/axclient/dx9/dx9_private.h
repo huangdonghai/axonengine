@@ -95,7 +95,7 @@ inline const char *D3DErrorString(HRESULT hr)
 }
 
 extern DX9_Window *d3d9InternalWindow;
-extern D3D9Driver *d3d9Driver;
+extern DX9_Driver *d3d9Driver;
 extern RenderDriverInfo *d3d9DriverInfo;
 #if 0
 extern RenderQueue *d3d9Queue;

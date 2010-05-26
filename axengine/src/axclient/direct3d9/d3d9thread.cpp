@@ -489,7 +489,7 @@ void D3D9Thread::cacheSceneRes(QueuedScene *scene)
 	}
 }
 
-void D3D9Driver::runFrame()
+void DX9_Driver::runFrame()
 {
 	d3d9Thread->runFrame(false);
 }

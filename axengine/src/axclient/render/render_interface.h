@@ -120,18 +120,18 @@ public:
 
 	void clear(const RenderClearer &clearer);
 
+	void *allocRingBuf(int size);
+	int getWritePos();
 
 protected:
 	typedef void (*delete_func_t)(phandle_t);
-
 	void addObjectDeletion(delete_func_t func, phandle_t h);
-	void *allocHunk(int size);
 
 private:
 	enum {
-		HUNK_SIZE = 4 * 1024 * 1024,
-		MAX_COMMANDS = 64 * 1024,
-		MAX_DELETE_COMMANDS = 8 * 1024
+		RING_BUFFER_SIZE = 4 * 1024 * 1024,
+		MAX_DELETE_COMMANDS = 8 * 1024,
+		MAX_POS = 0x70000000
 	};
 
 	struct ObjectDeletion {
@@ -139,14 +139,12 @@ private:
 		phandle_t handle;
 	};
 
-	byte_t m_hunk[HUNK_SIZE];
-	Command *m_cmds[MAX_COMMANDS];
+	byte_t m_ringBuffer[RING_BUFFER_SIZE];
+
+	volatile int m_readPos, m_writePos;
 
 	int m_numObjectDeletions;
 	ObjectDeletion m_objectDeletions[MAX_DELETE_COMMANDS];
-
-	volatile int m_hunkPos;
-	volatile int m_readPos, m_writePos;
 };
 
 class WrapObject;

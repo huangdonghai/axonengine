@@ -13,21 +13,21 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-AX_IMPLEMENT_FACTORY(D3D9Driver)
+AX_IMPLEMENT_FACTORY(DX9_Driver)
 
 // console command
-AX_BEGIN_COMMAND_MAP(D3D9Driver)
+AX_BEGIN_COMMAND_MAP(DX9_Driver)
 AX_END_COMMAND_MAP()
 
-D3D9Driver::D3D9Driver()
+DX9_Driver::DX9_Driver()
 {
 	m_initialized = false;
 }
 
-D3D9Driver::~D3D9Driver()
+DX9_Driver::~DX9_Driver()
 {}
 
-void D3D9Driver::initialize()
+void DX9_Driver::initialize()
 {
 	if (m_initialized) {
 		return;
@@ -135,7 +135,7 @@ void D3D9Driver::initialize()
 	Printf("ok\n");
 }
 
-void D3D9Driver::finalize()
+void DX9_Driver::finalize()
 {}
 
 #if 0
@@ -157,7 +157,7 @@ RenderTarget *D3D9Driver::createWindowTarget(Handle wndId, const String &name)
 }
 #endif
 
-const RenderDriverInfo *D3D9Driver::getDriverInfo()
+const RenderDriverInfo *DX9_Driver::getDriverInfo()
 {
 	return d3d9DriverInfo;
 }
@@ -182,13 +182,13 @@ SelectRecordSeq D3D9driver::endSelect() {
 	return SelectRecordSeq();
 }
 #endif
-void D3D9Driver::reset( int width, int height, bool fullscreen )
+void DX9_Driver::reset( int width, int height, bool fullscreen )
 {
 	onDeviceLost();
 	onReset();
 }
 
-void D3D9Driver::onReset()
+void DX9_Driver::onReset()
 {
 #if 0
 	d3d9PrimitiveManager->onReset();
@@ -196,7 +196,7 @@ void D3D9Driver::onReset()
 #endif
 }
 
-void D3D9Driver::onDeviceLost()
+void DX9_Driver::onDeviceLost()
 {
 #if 0
 	d3d9TargetManager->onDeviceLost();
@@ -212,7 +212,7 @@ bool D3D9Driver::isInRenderingThread()
 
 #endif
 
-IDirect3DSurface9 * D3D9Driver::getDepthStencil(int width, int height)
+IDirect3DSurface9 * DX9_Driver::getDepthStencil(int width, int height)
 {
 	return 0;
 }
