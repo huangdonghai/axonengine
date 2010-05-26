@@ -25,7 +25,7 @@ TerrainRaiseTool::TerrainRaiseTool(MapContext *context) : MapTool(context)
 {
 	m_cursor = nullptr;
 	m_isValid = false;
-	m_brushMat = Material::load("terrainbrush");
+	m_brushMat = new Material("terrainbrush");
 	m_brushPrims = nullptr;
 }
 
@@ -171,7 +171,7 @@ void TerrainRaiseTool::updatePrim(const Vector3 &from)
 	for (Primitives::iterator it = prims.begin(); it != prims.end(); ++it) {
 		RefPrim *ref = new RefPrim(Primitive::HintDynamic);
 		ref->setRefered(*it);
-		ref->setMaterial(m_brushMat.get());
+		ref->setMaterial(m_brushMat);
 		m_brushPrims->addPrimitive(ref, true);
 	}
 	Matrix4 matrix;

@@ -42,7 +42,7 @@ GLtarget::GLtarget(GLframebuffer *fb, int width, int height, TexFormat format, b
 
 		g_assetManager->addAsset(Asset::kTexture, texname, m_texture);
 #else
-		m_texture = AX_REFPTR_CAST(GLtexture, Texture::create(texname, format, m_width, m_height));
+		m_texture = AX_REFPTR_CAST(GLtexture, new Texture(texname, format, m_width, m_height));
 #endif
 	} else {
 

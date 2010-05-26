@@ -46,7 +46,7 @@ D3D9Target::D3D9Target(int width, int height, TexFormat format, bool pooled)
 		m_texture->initialize(format, width, height, Texture::IF_RenderTarget);
 		g_assetManager->addAsset(Asset::kTexture, texname, m_texture);
 #else
-		m_texture = Texture::create(texname, format, m_width, m_height, Texture::IF_RenderTarget);
+		m_texture = new Texture(texname, format, m_width, m_height, Texture::IF_RenderTarget);
 		m_d3d9texture = static_cast<D3D9Texture*>(m_texture.get());
 #endif
 	} else {
@@ -455,27 +455,6 @@ D3D9Target *D3D9TargetManager::allocTargetDX(RenderTarget::AllocHint hint, int w
 	return result;
 }
 
-IDirect3DSurface9 *D3D9TargetManager::getDepthStencil(int width, int height)
-{
-	if (m_depthStencilSurface && m_dsWidth >= width && m_dsHeight >= height) {
-		return m_depthStencilSurface;
-	}
-
-#if 0
-	static D3D9target *ds = 0;
-	d3d9TargetManager->freeTarget(ds);
-	ds = d3d9TargetManager->allocTargetDX(Target::PermanentAlloc, width, height, TexFormat::D24S8);
-	m_depthStencilSurface = ds->getSurface();
-#endif
-	SAFE_RELEASE(m_depthStencilSurface);
-	HRESULT hr;
-	V(d3d9Device->CreateDepthStencilSurface(width, height, D3DFMT_D24S8, D3DMULTISAMPLE_NONE, 0, FALSE, & m_depthStencilSurface, 0));
-	m_dsWidth = width;
-	m_dsHeight = height;
-
-	return m_depthStencilSurface;
-}
-
 TexFormat D3D9TargetManager::getSuggestFormat(RenderTarget::SuggestFormat sf)
 {
 	switch (sf) {
@@ -525,6 +504,28 @@ void D3D9TargetManager::onReset()
 {
 
 }
+
+IDirect3DSurface9 *D3D9TargetManager::getDepthStencil(int width, int height)
+{
+	if (m_depthStencilSurface && m_dsWidth >= width && m_dsHeight >= height) {
+		return m_depthStencilSurface;
+	}
+
+#if 0
+	static D3D9target *ds = 0;
+	d3d9TargetManager->freeTarget(ds);
+	ds = d3d9TargetManager->allocTargetDX(Target::PermanentAlloc, width, height, TexFormat::D24S8);
+	m_depthStencilSurface = ds->getSurface();
+#endif
+	SAFE_RELEASE(m_depthStencilSurface);
+	HRESULT hr;
+	V(d3d9Device->CreateDepthStencilSurface(width, height, D3DFMT_D24S8, D3DMULTISAMPLE_NONE, 0, FALSE, & m_depthStencilSurface, 0));
+	m_dsWidth = width;
+	m_dsHeight = height;
+
+	return m_depthStencilSurface;
+}
+
 
 #endif
 

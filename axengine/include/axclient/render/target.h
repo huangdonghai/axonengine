@@ -95,13 +95,13 @@ public:
 
 class AX_API ShadowMap {
 public:
-	ShadowMap();
+	ShadowMap(int width, int height);
 	~ShadowMap();
 
 	void allocReal();
 	void freeReal();
 
-private:
+public:
 	int m_width, m_height;
 	RenderTarget *m_renderTarget;
 };

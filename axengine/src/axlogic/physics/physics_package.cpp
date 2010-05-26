@@ -249,7 +249,7 @@ namespace { namespace Internal {
 		Texture *getLightmap()
 		{
 			if (!m_hkmat) {
-				return TexturePtr();
+				return 0;
 			}
 
 			// find lightmap
@@ -276,7 +276,7 @@ namespace { namespace Internal {
 				return tex;
 			}
 
-			return TexturePtr();
+			return 0;
 		}
 
 		void parseMaterialName(const char *hkname, String &axname, StringPairSeq &keyvalues)
@@ -338,7 +338,7 @@ namespace { namespace Internal {
 				if (filename.empty())
 					continue;
 
-				Texture *tex = Texture::load(filename);
+				Texture *tex = new Texture(filename);
 
 				if (!tex) {
 					continue;
@@ -390,7 +390,7 @@ namespace { namespace Internal {
 				if (samplertype == SamplerType::Diffuse) {
 #if 0
 					if (!samplers[SamplerType::Normal]) {
-						tex = Texture::load(filename + "_n");
+						tex = new Texture(filename + "_n");
 						if (tex->isDefaulted()) {
 							tex->release();
 						} else {
@@ -398,7 +398,7 @@ namespace { namespace Internal {
 						}
 					}
 					if (!samplers[SamplerType::Specular]) {
-						tex = Texture::load(filename + "_s");
+						tex = new Texture(filename + "_s");
 						if (tex->isDefaulted()) {
 							tex->release();
 						} else {
@@ -406,7 +406,7 @@ namespace { namespace Internal {
 						}
 					}
 					if (!samplers[SamplerType::Emission]) {
-						tex = Texture::load(filename + "_g");
+						tex = new Texture(filename + "_g");
 						if (tex->isDefaulted()) {
 							tex->release();
 						} else {
@@ -417,7 +417,7 @@ namespace { namespace Internal {
 				}
 
 				if (samplertype == SamplerType::Detail && !samplers[SamplerType::DetailNormal]) {
-					tex = Texture::load(filename + "_n");
+					tex = new Texture(filename + "_n");
 					samplers[SamplerType::DetailNormal] = tex;
 				}
 			}
@@ -426,7 +426,7 @@ namespace { namespace Internal {
 		Material *getMaterial()
 		{
 			if (!m_hkmat) {
-				return Material::load("default");
+				return new Material("default");
 			}
 
 			String fn = findStageFilename(hkxMaterial::TEX_DIFFUSE, 0);
@@ -444,7 +444,7 @@ namespace { namespace Internal {
 				}
 
 				if (fn.empty())
-					return Material::load(name);
+					return new Material(name);
 
 				Render::Material *uniquemat = Material::loadUnique(name);
 				uniquemat->setTextureSet(fn);
@@ -462,12 +462,12 @@ namespace { namespace Internal {
 
 			fillStatges(samplers, lightmap);
 
-			Material *mat = Material::loadUnique(axname);
+			Material *mat = new Material(axname);
 
 			// set samplers to material
 			for (int i = 0; i < SamplerType::NUMBER_ALL; i++) {
 				if (samplers[i]) {
-					mat->setTexture(i, samplers[i].get());
+					mat->setTexture(i, samplers[i]);
 				}
 			}
 
@@ -485,9 +485,9 @@ namespace { namespace Internal {
 
 #if 0
 			if (fn.empty()) {
-				return Material::load("default");
+				return new Material("default");
 			} else {
-				return Material::load(fn);
+				return new Material(fn);
 			}
 #endif
 		}
@@ -547,7 +547,7 @@ namespace { namespace Internal {
 		{
 			String fn = getTextureFilename(stage);
 
-			return Texture::load(fn);
+			return new Texture(fn);
 		}
 
 	private:
@@ -887,12 +887,12 @@ public:
 		m_renderMesh->unlockVertexes();
 
 #if 0
-		Render::Material *mat = Material::load(m_material);
+		Render::Material *mat = new Material(m_material);
 #else
 		const HavokPackage::MaterialMap *mm = m_package->findMaterialMap(m_section->m_material);
 #endif
-		m_renderMesh->setMaterial(mm->m_axMat.get());
-		m_renderMesh->setLightMap(mm->m_lightMap.get());
+		m_renderMesh->setMaterial(mm->m_axMat);
+		m_renderMesh->setLightMap(mm->m_lightMap);
 
 		if (!haveTangents) {
 			m_renderMesh->computeTangentSpaceSlow();

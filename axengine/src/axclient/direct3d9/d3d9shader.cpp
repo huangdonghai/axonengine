@@ -304,7 +304,9 @@ bool DX9_Shader::doInit(const String &name, const ShaderMacro &macro)
 		return false;
 	}
 
+#if 0
 	m_object->SetStateManager(d3d9StateManager);
+#endif
 
 	// init techniques
 	initTechniques();
@@ -695,8 +697,6 @@ Shader *D3D9ShaderManager::findShader(const String &name, const ShaderMacro &mac
 
 Shader *D3D9ShaderManager::findShader( const FixedString &nameId, const ShaderMacro &macro )
 {
-	D3D9_SCOPELOCK;
-
 	DX9_Shader*& shader = m_shaderPool[nameId][macro];
 
 	if (!shader) {
@@ -714,8 +714,6 @@ Shader *D3D9ShaderManager::findShader( const FixedString &nameId, const ShaderMa
 
 DX9_Shader *D3D9ShaderManager::findShaderDX(const String &name, const ShaderMacro &macro)
 {
-	D3D9_SCOPELOCK;
-
 	return (DX9_Shader*)findShader(name, macro);
 }
 
@@ -951,7 +949,7 @@ void DX9_Pass::initState()
 	V(d3d9Device->GetRenderState(D3DRS_ALPHABLENDENABLE, &m_blendEnable));
 	V(d3d9Device->GetRenderState(D3DRS_SRCBLEND, &m_blendSrc));
 	V(d3d9Device->GetRenderState(D3DRS_DESTBLEND, &m_blendDst));
-#else
+//#else
 	m_vs = d3d9StateManager->getVertexShader();
 	m_ps = d3d9StateManager->getPixelShader();
 	m_depthTest = d3d9StateManager->getRenderState(D3DRS_ZENABLE);

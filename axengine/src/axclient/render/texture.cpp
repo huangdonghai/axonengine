@@ -12,9 +12,37 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-#if 0
-static TextureManager *s_textureManager;
-#endif
+Texture::ExistDict Texture::m_existDict;
+
+
+//--------------------------------------------------------------------------
+// class TextureWrap
+//--------------------------------------------------------------------------
+
+TextureWrap::TextureWrap(const FixedString &key)
+{
+
+}
+
+TextureWrap::TextureWrap(const FixedString &key, TexFormat format, int width, int height)
+{
+
+}
+
+TextureWrap::~TextureWrap()
+{
+
+}
+
+void TextureWrap::uploadSubTexture(const Rect &rect, const void *pixels, TexFormat format)
+{
+
+}
+
+void TextureWrap::generateMipmap()
+{
+
+}
 
 //--------------------------------------------------------------------------
 // class Texture
@@ -56,7 +84,7 @@ void Texture::deleteThis()
 {
 }
 
-Texture *Texture::load(const String &name, InitFlags flags/*=0*/)
+Texture *new Texture(const String &name, InitFlags flags/*=0*/)
 {
 	return s_textureManager->loadTexture(name, flags);
 }
@@ -115,6 +143,27 @@ const SamplerStateDesc & Texture::getSamplerState() const
 	return m_samplerState->getDesc();
 }
 
+
+void Texture::setClampMode(SamplerStateDesc::ClampMode clampMode)
+{
+	SamplerStateDesc desc = getSamplerState();
+	desc.clampMode = clampMode;
+	setSamplerState(desc);
+}
+
+
+void Texture::setFilterMode(SamplerStateDesc::FilterMode filterMode)
+{
+	SamplerStateDesc desc = getSamplerState();
+	desc.filterMode = filterMode;
+	setSamplerState(desc);
+}
+
+
+void Texture::saveToFile(const String &filename)
+{
+
+}
 
 
 #if 0

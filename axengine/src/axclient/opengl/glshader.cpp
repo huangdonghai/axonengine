@@ -512,7 +512,7 @@ void GLshader::initSamplerAnn(CGparameter param) {
 	if (filename[0] != '$') {
 		Printf("%s", filename);
 
-		Texture *tex = GLtexture::load(filename);
+		Texture *tex = GLnew Texture(filename);
 		GLtexture *gltex = AX_REFPTR_CAST(GLtexture, tex);
 		if (gltex) {
 			cgGLSetupSampler(param, gltex->getObject());

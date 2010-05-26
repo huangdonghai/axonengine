@@ -13,15 +13,12 @@ public:
 		Missed
 	};
 
-	TextureWrap() {}
 	TextureWrap(const FixedString &key);
 	TextureWrap(const FixedString &key, TexFormat format, int width, int height);
 	virtual ~TextureWrap();
 
 	void uploadSubTexture(const Rect &rect, const void *pixels, TexFormat format);
 	void generateMipmap();
-
-	static FixedString normalizeKey(const String &name);
 
 private:
 	Handle m_handle;

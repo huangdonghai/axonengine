@@ -33,7 +33,9 @@ ShaderMacro g_shaderMacro;
 Uniforms g_uniforms;
 IRenderDriver *g_renderDriver;
 
+#if 0
 RenderTargetManager *g_targetManager;
+#endif
 ShaderManager *g_shaderManager;
 PrimitiveManager *g_primitiveManager;
 
@@ -70,7 +72,7 @@ void axClientInit()
 #endif
 
 #if 1 // _LIB
-	AX_REGISTER_MODULE(axopengl);
+//	AX_REGISTER_MODULE(axopengl);
 	AX_REGISTER_MODULE(axdirect3d9);
 #endif
 
@@ -82,16 +84,18 @@ void axClientInit()
 
 	g_fontFactory = new Manager;
 	g_fontFactory->initialize();
-#else
-	MaterialDecl::initManager();
 	Material::initManager();
+#else
 	Font::initManager();
+	MaterialDecl::initManager();
 #endif
 	g_defaultFont = Font::load("fonts/default", 14,14);
 	g_consoleFont = Font::load("fonts/console", 14,14);
 	g_miniFont = Font::load("fonts/console", 11,11);
 
+#if 0
 	g_renderDriver->postInit();
+#endif
 
 #ifdef AX_CONFIG_OPTION_USE_SPEEDTREE_40
 	g_treeManager = new TreeManager();
@@ -129,9 +133,9 @@ void axClientQuit()
 	SafeDelete(g_fontFactory);
 
 	SafeDelete(gMaterialFactory);
+	Material::finalizeManager();
 #else
 	Font::finalizeManager();
-	Material::finalizeManager();
 	MaterialDecl::finalizeManager();
 #endif
 	g_renderSystem->finalize();

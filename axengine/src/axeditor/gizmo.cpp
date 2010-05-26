@@ -24,7 +24,7 @@ MoveGizmo::MoveGizmo() {
 	TypeZeroArray(m_lines);
 	TypeZeroArray(m_meshs);
 	m_highlit = None;
-	m_material = Material::load("depthhack");
+	m_material = new Material("depthhack");
 }
 
 MoveGizmo::~MoveGizmo() {
@@ -73,11 +73,11 @@ void MoveGizmo::clear() {
 void MoveGizmo::doRender() {
 	for (int i = 0; i < NumberId; i++) {
 		if (m_meshs[i]) {
-			m_meshs[i]->setMaterial(m_material.get());
+			m_meshs[i]->setMaterial(m_material);
 			g_renderSystem->addToScene(m_meshs[i]);
 		}
 		if (m_lines[i]) {
-			m_lines[i]->setMaterial(m_material.get());
+			m_lines[i]->setMaterial(m_material);
 			g_renderSystem->addToScene(m_lines[i]);
 		}
 	}
@@ -368,7 +368,7 @@ RotateGizmo::RotateGizmo() {
 	m_crank = nullptr;
 
 	m_highlit = None;
-	m_material = Material::load("depthhack");
+	m_material = new Material("depthhack");
 
 	m_enabledCrank = false;
 }
@@ -393,24 +393,24 @@ void RotateGizmo::setup(const RenderCamera &camera, const Vector3 &pos, const Ma
 
 	float length = m_length;
 	if (LinePrim::setupAxis(m_centerLine, pos, axis, length * 0.5f, getCenterColor(X), getCenterColor(Y), getCenterColor(Z))) {
-		m_centerLine->setMaterial(m_material.get());
+		m_centerLine->setMaterial(m_material);
 	}
 
 	if (LinePrim::setupCircle(m_circles[0], pos, axis[1] * length, axis[2] * length, getColor(X), CirculSubdivided, plane)) {
-		m_circles[0]->setMaterial(m_material.get());
+		m_circles[0]->setMaterial(m_material);
 	}
 	if (LinePrim::setupCircle(m_circles[1], pos, axis[0] * length, axis[2] * length, getColor(Y), CirculSubdivided, plane)) {
-		m_circles[1]->setMaterial(m_material.get());
+		m_circles[1]->setMaterial(m_material);
 	}
 	if (LinePrim::setupCircle(m_circles[2], pos, axis[0] * length, axis[1] * length, getColor(Z), CirculSubdivided, plane)) {
-		m_circles[2]->setMaterial(m_material.get());
+		m_circles[2]->setMaterial(m_material);
 	}
 
 	if (LinePrim::setupCircle(m_innerBound, pos, camaxis[1] * length, camaxis[2] * length, Rgba::DkGrey, CirculSubdivided)) {
-		m_innerBound->setMaterial(m_material.get());
+		m_innerBound->setMaterial(m_material);
 	}
 	if (LinePrim::setupCircle(m_outerBound, pos, camaxis[1] * length * 1.3f, camaxis[2] * length * 1.3f, getColor(Screen), CirculSubdivided)) {
-		m_outerBound->setMaterial(m_material.get());
+		m_outerBound->setMaterial(m_material);
 	}
 
 	if (!m_enabledCrank)
@@ -511,7 +511,7 @@ void RotateGizmo::setupCrank(const RenderCamera &camera) {
 
 	color.a = 64;
 
-	MeshPrim::setupFan(m_crank, m_pos, left, up, m_crankStart, m_crankEnd, color, CrankSubdivided, m_material.get());
+	MeshPrim::setupFan(m_crank, m_pos, left, up, m_crankStart, m_crankEnd, color, CrankSubdivided, m_material);
 }
 
 Rgba RotateGizmo::getColor(int id) {
@@ -557,7 +557,7 @@ ScaleGizmo::ScaleGizmo() {
 	TypeZeroArray(m_lines);
 	TypeZeroArray(m_meshs);
 	m_highlit = None;
-	m_material = Material::load("depthhack");
+	m_material = new Material("depthhack");
 }
 
 ScaleGizmo::~ScaleGizmo() {
@@ -627,11 +627,11 @@ int ScaleGizmo::doSelect(View *view, int x, int y) {
 void ScaleGizmo::doRender() {
 	for (int i = 0; i < NumberId; i++) {
 		if (m_meshs[i]) {
-			m_meshs[i]->setMaterial(m_material.get());
+			m_meshs[i]->setMaterial(m_material);
 			g_renderSystem->addToScene(m_meshs[i]);
 		}
 		if (m_lines[i]) {
-			m_lines[i]->setMaterial(m_material.get());
+			m_lines[i]->setMaterial(m_material);
 			g_renderSystem->addToScene(m_lines[i]);
 		}
 	}

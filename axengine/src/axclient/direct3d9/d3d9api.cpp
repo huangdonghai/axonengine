@@ -2,6 +2,146 @@
 
 AX_BEGIN_NAMESPACE
 
+inline bool trTexFormat(TexFormat texformat, D3DFORMAT &d3dformat)
+{
+	d3dformat = D3DFMT_UNKNOWN;
+
+	switch (texformat) {
+	case TexFormat::NULLTARGET:
+		d3dformat = (D3DFORMAT)MAKEFOURCC('N','U','L','L');
+		break;
+
+	case TexFormat::R5G6B5:
+		d3dformat = D3DFMT_R5G6B5;
+		break;
+
+	case TexFormat::RGB10A2:
+		d3dformat = D3DFMT_A2R10G10B10;
+		break;
+
+	case TexFormat::RG16:
+		d3dformat = D3DFMT_G16R16;
+		break;
+
+	case TexFormat::L8:
+		d3dformat = D3DFMT_L8;
+		break;
+
+	case TexFormat::LA8:
+		d3dformat = D3DFMT_A8L8;
+		break;
+
+	case TexFormat::A8:
+		d3dformat = D3DFMT_A8;
+		break;
+
+	case TexFormat::BGR8:
+		d3dformat = D3DFMT_R8G8B8;
+		break;
+
+	case TexFormat::BGRA8:
+		d3dformat = D3DFMT_A8R8G8B8;
+		break;
+
+	case TexFormat::BGRX8:
+		d3dformat = D3DFMT_X8R8G8B8;
+		break;
+
+	case TexFormat::DXT1:
+		d3dformat = D3DFMT_DXT1;
+		break;
+
+	case TexFormat::DXT3:
+		d3dformat = D3DFMT_DXT3;
+		break;
+
+	case TexFormat::DXT5:
+		d3dformat = D3DFMT_DXT5;
+		break;
+
+	case TexFormat::L16:
+		d3dformat = D3DFMT_L16;
+		break;
+
+
+		// 16 bits float texture
+	case TexFormat::R16F:
+		d3dformat = D3DFMT_R16F;
+		break;
+
+	case TexFormat::RG16F:
+		d3dformat = D3DFMT_G16R16F;
+		break;
+
+	case TexFormat::RGB16F:
+		//			d3dformat = GL_RGB16F;
+		break;
+
+	case TexFormat::RGBA16F:
+		d3dformat = D3DFMT_A16B16G16R16F;
+		break;
+
+
+		// 32 bits float texture
+	case TexFormat::R32F:
+		d3dformat = D3DFMT_R32F;
+		break;
+
+	case TexFormat::RG32F:
+		d3dformat = D3DFMT_G32R32F;
+		break;
+
+	case TexFormat::RGB32F:
+		//			d3dformat = D3DFMT_A32B32G32R32F;
+		break;
+
+	case TexFormat::RGBA32F:
+		d3dformat = D3DFMT_A32B32G32R32F;
+		break;
+
+	case TexFormat::D16:
+		d3dformat = D3DFMT_D16;
+		break;
+
+	case TexFormat::D24:
+		d3dformat = D3DFMT_D24X8;
+		break;
+
+	case TexFormat::D32:
+		d3dformat = D3DFMT_D32;
+		break;
+
+	case TexFormat::D24S8:
+		d3dformat = D3DFMT_D24S8;
+		break;
+
+	case TexFormat::DF16:
+		d3dformat = (D3DFORMAT)MAKEFOURCC('D','F','1','6');
+		break;
+
+	case TexFormat::DF24:
+		d3dformat = (D3DFORMAT)MAKEFOURCC('D','F','2','4');
+		break;
+
+	case TexFormat::RAWZ:
+		d3dformat = (D3DFORMAT)MAKEFOURCC('R','A','W','Z');
+		break;
+
+	case TexFormat::INTZ:
+		d3dformat = (D3DFORMAT)MAKEFOURCC('I','N','T','Z');
+		break;
+
+	default:
+		Errorf("trTexFormat: bad enum");
+	}
+
+	if (d3dformat == D3DFMT_UNKNOWN) {
+		return false;
+	}
+
+	return true;
+}
+
 bool CheckIfSupportHardwareMipmapGeneration(D3DFORMAT d3dformat, DWORD d3dusage)
 {
 	if (d3d9Api->CheckDeviceFormat(

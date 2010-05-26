@@ -74,6 +74,8 @@ public:
 	virtual ~IRenderDriver() {}
 	virtual void initialize() = 0;
 	virtual void finalize() = 0;
+
+#if 0
 	virtual void postInit() = 0;			// after render system is initilized, call this
 
 	// some status
@@ -82,12 +84,15 @@ public:
 
 	// resource management
 	virtual RenderTarget *createWindowTarget(Handle wndId, const String &name) = 0;
+#endif
 
 	// caps
 	virtual const RenderDriverInfo *getDriverInfo() = 0;
 
+#if 0
 	// if not multi threads rendering, use this call render a frame
 	virtual void runFrame() = 0;
+#endif
 };
 
 AX_END_NAMESPACE

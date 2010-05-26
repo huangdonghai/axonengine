@@ -432,7 +432,7 @@ TexFormat D3D9Texture::getFormat()
 	return m_format;
 }
 
-bool D3D9Texture::loadFile2D(const String &filename)
+bool D3D9new TextureFile2D(const String &filename)
 {
 	D3D9_SCOPELOCK;
 
@@ -447,7 +447,7 @@ bool D3D9Texture::loadFile2D(const String &filename)
 
 	std::auto_ptr<Image> imagefile(new Image);
 	if (!imagefile->loadFile(filename, flags)) {
-//			Debugf("D3D9Texture::loadFile2D: can't find image file for %s\n", filename.c_str());
+//			Debugf("D3D9new TextureFile2D: can't find image file for %s\n", filename.c_str());
 		return false;
 	}
 
@@ -456,9 +456,9 @@ bool D3D9Texture::loadFile2D(const String &filename)
 //		mDesc.format = imagefile->getFormat();
 	if (!Math::isPowerOfTwo(m_width) || !Math::isPowerOfTwo(m_height)) {
 //		if (!(mDesc.flags & TexFlag_allowNPOT))
-		Errorf("GLtexture::loadFile2D: texture %s size isn't power of two", filename.c_str());
+		Errorf("GLnew TextureFile2D: texture %s size isn't power of two", filename.c_str());
 //	else
-//		Debugf("GLtexture::loadFile2D: texture %s size isn't power of two\n", mDesc.name.c_str());
+//		Debugf("GLnew TextureFile2D: texture %s size isn't power of two\n", mDesc.name.c_str());
 	}
 
 	m_format = imagefile->getFormat();
@@ -668,7 +668,7 @@ void D3D9texturemanager::dumpTex_f(const CmdArgs &params)
 	}
 	const String &texname = params.tokened[1];
 
-	Texture *tex = Texture::load(texname);
+	Texture *tex = new Texture(texname);
 
 	if (!tex) {
 		Printf("Cann't found texture '%s'\n", texname.c_str());

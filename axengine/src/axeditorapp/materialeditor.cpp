@@ -80,7 +80,7 @@ void MaterialEditor::on_actionRefresh_triggered()
 
 void MaterialEditor::initFromMaterial(const String &name)
 {
-	Material *mat = Material::load(name);
+	Material *mat = new Material(name);
 
 #if 0
 	if (mat->isDefaulted()) {

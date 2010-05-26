@@ -303,7 +303,7 @@ void RenderSystem::endFrame()
 	if (m_isMTrendering) {
 		g_renderQueue->endProviding();
 	} else {
-		g_renderDriver->runFrame();
+//		g_renderDriver->runFrame();
 		g_renderQueue->endConsuming();
 	}
 
@@ -347,10 +347,12 @@ HitRecords RenderSystem::endHitTest()
 	return m_selection->endSelect();
 }
 
+#if 0
 RenderTarget *RenderSystem::createWindowTarget(Handle wndId, const String &name)
 {
 	return g_renderDriver->createWindowTarget(wndId, name);
 }
+#endif
 
 void RenderSystem::addEntityManager(IEntityManager *manager)
 {
@@ -425,6 +427,36 @@ SamplerStatePtr RenderSystem::findSamplerState( const SamplerStateDesc *desc )
 	m_samplerStateDict[*desc] = result;
 
 	return result;
+}
+
+ReflectionMap * RenderSystem::findReflection(RenderWorld *world, RenderEntity *actor, Primitive *prim, int width, int height)
+{
+	return 0;
+}
+
+TextureWrapPtr RenderSystem::findTexture(const String &name, int flags)
+{
+	return TextureWrapPtr();
+}
+
+TextureWrapPtr RenderSystem::createTexture(const String &debugname, TexFormat format, int width, int height, int flags)
+{
+	return TextureWrapPtr();
+}
+
+BlendStatePtr RenderSystem::findBlendState(const BlendStateDesc *desc)
+{
+	return BlendStatePtr();
+}
+
+RasterizerStatePtr RenderSystem::findRasterizerState(const RasterizerStateDesc *desc)
+{
+	return RasterizerStatePtr();
+}
+
+DepthStencilStatePtr RenderSystem::findDepthStencilState(const DepthStencilStateDesc *desc)
+{
+	return DepthStencilStatePtr();
 }
 
 

@@ -102,10 +102,10 @@ void DX9_Window::bind()
 
 	IDirect3DSurface9 *ds = d3d9Driver->getDepthStencil(m_swapChainSize.x, m_swapChainSize.y);
 
-	HRESULT hr;
 	V(d3d9Device->SetRenderTarget(0, m_backbuffer));
+#if 0
 	V(d3d9StateManager->setDepthStencilSurface(ds, TexFormat::D24S8));
-
+#endif
 	// depth stencil
 //	D3D9target *m_depthStencil = d3d9TargetManager->allocTargetDX(RenderTarget::PermanentAlloc, m_swapChainSize.x, m_swapChainSize.y, TexFormat::D24S8);
 }

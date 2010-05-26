@@ -254,7 +254,7 @@ void OutdoorEnv::createSkyDome()
 	m_skydome->unlockIndexes();
 #if 0
 	Material *mat = Material::loadUnique("null");
-	Texture *tex = Texture::load("textures/testlalo");
+	Texture *tex = new Texture("textures/testlalo");
 	mat->setTexture(SamplerType::Diffuse, tex);
 	m_skydome->setMaterial(mat);
 #endif

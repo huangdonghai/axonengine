@@ -71,9 +71,11 @@ void MapAlphaBlock::updateTexture()
 		m_texture->initialize(TexFormat::A8, Map::ChunkPixels, Map::ChunkPixels);
 		g_assetManager->addAsset(Asset::kTexture, key, m_texture.get());
 #else
-		m_texture = Texture::create(key, AlphaFormat, Map::ChunkPixels, Map::ChunkPixels);
+		m_texture = new Texture(key, AlphaFormat, Map::ChunkPixels, Map::ChunkPixels);
 #endif
-		m_texture->setClampMode(Texture::CM_ClampToEdge);
+		SamplerStateDesc desc;
+		desc.clampMode = SamplerStateDesc::CM_Clamp;
+		m_texture->setClampMode(SamplerStateDesc::CM_Clamp);
 	}
 
 	m_texture->uploadSubTexture(Rect(0,0,Map::ChunkPixels,Map::ChunkPixels), &m_data[0][0], AlphaFormat);
@@ -111,9 +113,9 @@ MapLayerGen::MapLayerGen(MapTerrain *terrain, int layerId)
 
 		String fn = PathUtil::removeExt(l->detailMat);
 
-		Texture *diffuse = Texture::load(fn);
-		Texture *normal = Texture::load(fn+"_n");
-		Texture *specular = Texture::load(fn+"_s");
+		Texture *diffuse = new Texture(fn);
+		Texture *normal = new Texture(fn+"_n");
+		Texture *specular = new Texture(fn+"_s");
 
 		m_detailMat->setTexture(SamplerType::Diffuse, diffuse);
 		if (!normal->isDefaulted()) {
@@ -185,20 +187,20 @@ void MapLayerGen::update()
 #if 0
 		m_detailMat = UniqueAsset_<RenderMaterial>("terrain");
 #else
-		m_detailMat = Material::loadUnique("terrain");
+		m_detailMat = new Material("terrain");
 #endif
 		String fn = PathUtil::removeExt(l->detailMat);
 
-		Texture *diffuse = Texture::load(fn);
-		Texture *normal = Texture::load(fn+"_n");
-		Texture *specular = Texture::load(fn+"_s");
+		Texture *diffuse = new Texture(fn);
+		Texture *normal = new Texture(fn+"_n");
+		Texture *specular = new Texture(fn+"_s");
 
-		m_detailMat->setTexture(SamplerType::Diffuse, diffuse.get());
+		m_detailMat->setTexture(SamplerType::Diffuse, diffuse);
 //			if (!normal->isDefaulted()) {
-			m_detailMat->setTexture(SamplerType::Normal, normal.get());
+			m_detailMat->setTexture(SamplerType::Normal, normal);
 //			}
 //			if (!specular->isDefaulted()) {
-			m_detailMat->setTexture(SamplerType::Specular, specular.get());
+			m_detailMat->setTexture(SamplerType::Specular, specular);
 //			}
 
 #if 0
@@ -547,7 +549,7 @@ void MapChunk::initialize(MapZone *zone, int x, int y)
 	m_tilerect.width = Map::ChunkTiles;
 	m_tilerect.height = Map::ChunkTiles;
 
-	m_material = Material::load("materials/terrain");
+	m_material = new Material("materials/terrain");
 //		AX_ASSERT(!m_material->isDefaulted());
 
 	allocatePrimitive();
@@ -558,7 +560,7 @@ void MapChunk::finalize() {
 	m_neighborLod.i = -1;
 
 	SafeDelete(m_prim);
-	m_material.clear();
+	SafeDelete(m_material);
 }
 
 void MapChunk::onHeightChanged() {
@@ -736,7 +738,7 @@ void MapChunk::updatePrimitive()
 	stat_terrainVerts.add(num_verts - m_prim->getNumVertexes());
 #endif
 	m_prim->init(num_verts, num_tris * 3);
-	m_prim->setMaterial(m_material.get());
+	m_prim->setMaterial(m_material);
 	m_prim->setTerrainRect(m_terrain->getTerrainRect());
 	m_prim->setColorTexture(m_zone->getColorTexture());
 	m_prim->setNormalTexture(m_zone->getNormalTexture());
@@ -881,7 +883,7 @@ void MapChunk::updateLayers()
 	for (int i = 0; i < numlayers; i++ ) {
 		int index = i+start;
 		ChunkPrim::Layer *dl = &detaillayers[index];
-		m_prim->setLayers(i, dl->alphaTex.get(), dl->detailMat.get(), dl->scale, dl->isVerticalProjection );
+		m_prim->setLayers(i, dl->alphaTex, dl->detailMat, dl->scale, dl->isVerticalProjection );
 	}
 
 	m_prim->setNumLayers(numlayers);
@@ -1080,7 +1082,7 @@ void MapZone::initialize(MapTerrain *terrain, int x, int y)
 		}
 	}
 
-	m_material = Material::load("materials/terrain");
+	m_material = new Material("materials/terrain");
 
 	// create normal texture
 	String texname;
@@ -1090,9 +1092,9 @@ void MapZone::initialize(MapTerrain *terrain, int x, int y)
 	m_normalTexture->initialize(TexFormat::BGRA8, Map::ZoneTiles, Map::ZoneTiles, Texture::IF_AutoGenMipmap);
 	g_assetManager->addAsset(Asset::kTexture, texname, m_normalTexture.get());
 #else
-	m_normalTexture = Texture::create(texname, TexFormat::BGRA8, Map::ZoneTiles, Map::ZoneTiles, Texture::IF_AutoGenMipmap);
+	m_normalTexture = new Texture(texname, TexFormat::BGRA8, Map::ZoneTiles, Map::ZoneTiles, Texture::IF_AutoGenMipmap);
 #endif
-	m_normalTexture->setClampMode(Texture::CM_ClampToEdge);
+	m_normalTexture->setClampMode(SamplerStateDesc::CM_Clamp);
 	// create color texture
 	StringUtil::sprintf(texname, "_zone_color_%d_%d_%d", g_renderSystem->getFrameNum(), m_index.x, m_index.y);
 #if 0
@@ -1100,10 +1102,10 @@ void MapZone::initialize(MapTerrain *terrain, int x, int y)
 	m_colorTexture->initialize(TexFormat::DXT1, Map::ZonePixels, Map::ZonePixels, Texture::IF_AutoGenMipmap);
 	g_assetManager->addAsset(Asset::kTexture, texname, m_colorTexture.get());
 #else
-	m_colorTexture = Texture::create(texname, TexFormat::DXT1, Map::ZonePixels, Map::ZonePixels, Texture::IF_AutoGenMipmap);
+	m_colorTexture = new Texture(texname, TexFormat::DXT1, Map::ZonePixels, Map::ZonePixels, Texture::IF_AutoGenMipmap);
 #endif
-	m_colorTexture->setClampMode(Texture::CM_ClampToEdge);
-	m_colorTexture->setFilterMode(Texture::FM_LinearMipmap);
+	m_colorTexture->setClampMode(SamplerStateDesc::CM_Clamp);
+	m_colorTexture->setFilterMode(SamplerStateDesc::FM_LinearMipmap);
 
 	// init primitive
 	m_prim = new ChunkPrim(Primitive::HintStatic);
@@ -1112,7 +1114,7 @@ void MapZone::initialize(MapTerrain *terrain, int x, int y)
 	int primidxes = (Map::ZoneTiles >> m_zonePrimLod);
 	primidxes = primidxes * primidxes * 2 * 3;
 	m_prim->init(primverts, primidxes);
-	m_prim->setMaterial(m_material.get());
+	m_prim->setMaterial(m_material);
 	m_prim->setTerrainRect(m_terrain->getTerrainRect());
 	m_prim->setColorTexture(getColorTexture());
 	m_prim->setNormalTexture(getNormalTexture());
@@ -1757,11 +1759,11 @@ bool MapTerrain::loadColorTexture(const String &map_name)
 #if 0
 		Texture *tex = UniqueAsset_<Texture>(texname, Texture::IF_AutoGenMipmap);
 #else
-		Texture *tex = Texture::load(texname, Texture::IF_AutoGenMipmap);
+		Texture *tex = new Texture(texname, Texture::IF_AutoGenMipmap);
 #endif
 		if (tex) {
-			z->setColorTexture(tex.get());
-			tex->setClampMode(Texture::CM_ClampToEdge);
+			z->setColorTexture(tex);
+			tex->setClampMode(SamplerStateDesc::CM_Clamp);
 		} else {
 			Errorf("can't load color texture");
 		}

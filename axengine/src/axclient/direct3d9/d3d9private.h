@@ -47,28 +47,28 @@ read the license and understand and accept it fully.
 #define SAFE_RELEASE(p)      { if (p) { (p)->Release(); (p)=NULL; } }
 #endif
 
+#if 0
 #define D3D9_SCOPELOCK ScopeLock _autoLocker(d3d9Mutex)
+#endif
 
 #define BEGIN_PIX(x) D3DPERF_BeginEvent(D3DCOLOR_RGBA(0,0,0,255), L##x)
 #define END_PIX() D3DPERF_EndEvent()
 
-#include "d3d9texture.h"
+//#include "d3d9texture.h"
 #include "d3d9shader.h"
-#include "d3d9rendertarget.h"
+//#include "d3d9rendertarget.h"
 #include "d3d9window.h"
-#include "d3d9vertexbuffer.h"
-#include "d3d9draw.h"
-#include "d3d9primitive.h"
-#include "d3d9query.h"
+//#include "d3d9vertexbuffer.h"
+//#include "d3d9draw.h"
+//#include "d3d9primitive.h"
+//#include "d3d9query.h"
 #include "d3d9driver.h"
-#include "d3d9postprocess.h"
-#include "d3d9statemanager.h"
-#include "d3d9thread.h"
+//#include "d3d9postprocess.h"
+//#include "d3d9statemanager.h"
+//#include "d3d9thread.h"
 #include "d3d9api.h"
 
 AX_BEGIN_NAMESPACE
-
-extern bool trTexFormat(TexFormat texformat, D3DFORMAT &d3dformat);
 
 inline const char *D3DErrorString(HRESULT hr)
 {
@@ -105,14 +105,15 @@ inline const char *D3DErrorString(HRESULT hr)
 extern DX9_Window *d3d9InternalWindow;
 extern D3D9Driver *d3d9Driver;
 extern RenderDriverInfo *d3d9DriverInfo;
+#if 0
 extern RenderQueue *d3d9Queue;
 extern SyncMutex d3d9Mutex;
-
-
+#endif
 extern IDirect3D9 *d3d9Api;
 extern IDirect3DDevice9 *d3d9Device;
 
 extern D3D9ShaderManager *d3d9ShaderManager;
+#if 0
 //extern D3D9TargetManager *d3d9TargetManager;
 extern D3D9querymanager *d3d9QueryManager;
 extern D3D9primitivemanager *d3d9PrimitiveManager;
@@ -144,6 +145,7 @@ extern D3D9target *d3d9ShadowMaskTarget;
 extern const QueuedEntity *d3d9Actor;
 extern Interaction *d3d9Interaction;
 extern RenderTarget *d3d9BoundTarget;
+#endif
 
 AX_END_NAMESPACE
 

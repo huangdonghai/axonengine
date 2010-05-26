@@ -48,7 +48,7 @@ void RenderWidget::paintEvent(QPaintEvent *pe)
 		return;
 
 	if (m_renderTarget == nullptr)
-		m_renderTarget = g_renderSystem->createWindowTarget(Handle(winId()), "RenderWidget");
+		m_renderTarget = new RenderTarget(Handle(winId()), "RenderWidget");
 
 	QSize s = size();
 	Rect rect(0, 0, s.width(), s.height());
@@ -545,7 +545,7 @@ ParticlePreviewWidget::ParticlePreviewWidget(QWidget *parent)
 	m_tool = new ParticleTool();
 	m_tool->doBindCamera(&m_renderCamera);
 
-	//m_material = Material::load("_frond");
+	//m_material = new Material("_frond");
 	//m_texQuad->setMaterial(m_material);
 
 	m_texQuad = NULL;

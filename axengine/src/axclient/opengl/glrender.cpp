@@ -39,7 +39,7 @@ void GLrender::draw(Material *mat, Technique tech, GLgeometry *prim)
 {
 	if (!mat) {
 		if (!nullmaterial) {
-			nullmaterial = Material::load("null");
+			nullmaterial = new Material("null");
 		}
 		mat = nullmaterial.get();
 		AX_ASSERT(mat);

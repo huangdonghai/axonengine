@@ -172,5 +172,27 @@ ReflectionMap *RenderTargetManager::findReflection(RenderWorld *world, RenderEnt
 }
 #endif
 
+
+ShadowMap::ShadowMap( int width, int height )
+{
+	m_width = width; m_height = height;
+	m_renderTarget = 0;
+}
+
+ShadowMap::~ShadowMap()
+{
+	freeReal();
+}
+
+void ShadowMap::allocReal()
+{
+	
+}
+
+void ShadowMap::freeReal()
+{
+
+}
+
 AX_END_NAMESPACE
 

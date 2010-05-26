@@ -55,8 +55,9 @@ public:
 	TexFormat getFormat();
 
 	void setSamplerState(const SamplerStateDesc &desc);
-
 	const SamplerStateDesc &getSamplerState() const;
+	void setClampMode(SamplerStateDesc::ClampMode clampMode);
+	void setFilterMode(SamplerStateDesc::FilterMode filterMode);
 
 	void saveToFile(const String &filename);
 

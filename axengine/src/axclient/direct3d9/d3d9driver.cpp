@@ -97,6 +97,7 @@ void D3D9Driver::initialize()
 		Errorf("CreateDevice failed %s", D3DErrorString(hr));
 	}
 
+#if 0
 	d3d9StateManager = new D3D9StateManager();
 	d3d9StateManager->DirtyCachedValues();
 
@@ -109,10 +110,9 @@ void D3D9Driver::initialize()
 
 	d3d9PrimitiveManager = new D3D9primitivemanager();
 	g_primitiveManager = d3d9PrimitiveManager;
-
 	d3d9TargetManager = new D3D9TargetManager();
 	g_targetManager = d3d9TargetManager;
-
+#endif
 	g_shaderMacro.setMacro(ShaderMacro::G_D3D);
 	d3d9ShaderManager = new D3D9ShaderManager;
 	g_shaderManager = d3d9ShaderManager;
@@ -120,15 +120,15 @@ void D3D9Driver::initialize()
 #if 0
 	d3d9TextureManager = new D3D9texturemanager();
 	g_textureManager = d3d9TextureManager;
-#else
+//#else
 	D3D9Texture::initManager();
-#endif
 	d3d9Thread = new D3D9Thread();
 	if (r_multiThread.getInteger()) {
 		d3d9Thread->startThread();
 	}
 
 	d3d9Draw = new D3D9Draw();
+#endif
 
 	d3d9InternalWindow->bind();
 
@@ -138,11 +138,14 @@ void D3D9Driver::initialize()
 void D3D9Driver::finalize()
 {}
 
+#if 0
 void D3D9Driver::postInit()
 {
 	d3d9Postprocess = new D3D9Postprocess();
 }
+#endif
 
+#if 0
 bool D3D9Driver::isHDRRendering()
 { return false; }
 
@@ -152,16 +155,17 @@ RenderTarget *D3D9Driver::createWindowTarget(Handle wndId, const String &name)
 	AX_ASSERT(state);
 	return state;
 }
+#endif
 
 const RenderDriverInfo *D3D9Driver::getDriverInfo()
 {
 	return d3d9DriverInfo;
 }
 
+#if 0
 uint_t D3D9Driver::getBackendCaps() {
 	return 0;
 }
-#if 0
 void D3D9driver::preFrame() {
 	d3d9Thread->preFrame();
 }
@@ -186,21 +190,31 @@ void D3D9Driver::reset( int width, int height, bool fullscreen )
 
 void D3D9Driver::onReset()
 {
+#if 0
 	d3d9PrimitiveManager->onReset();
-
 	d3d9TargetManager->onReset();
+#endif
 }
 
 void D3D9Driver::onDeviceLost()
 {
+#if 0
 	d3d9TargetManager->onDeviceLost();
-
 	d3d9PrimitiveManager->onDeviceLost();
+#endif
 }
 
+#if 0
 bool D3D9Driver::isInRenderingThread()
 {
 	return d3d9Thread->isCurrentThread();
+}
+
+#endif
+
+IDirect3DSurface9 * D3D9Driver::getDepthStencil(int width, int height)
+{
+	return 0;
 }
 
 AX_END_NAMESPACE

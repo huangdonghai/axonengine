@@ -232,10 +232,10 @@ void RenderWorld::renderTo(QueuedScene *qscene) {
 				continue;
 			}
 
-			ReflectionMap *refl = findReflection(this, 0, ia->primitive, 512, 512);
+			ReflectionMap *refl = g_renderSystem->findReflection(this, 0, ia->primitive, 512, 512);
 			refl->update(qscene);
 
-			if (refl->m_target->m_realAllocated)
+			if (refl->m_target)
 				ia->targets[ia->numTargets++] = refl->m_target;
 
 			if (qscene->numSubScenes == QueuedScene::MAX_SUB_SCENES) {

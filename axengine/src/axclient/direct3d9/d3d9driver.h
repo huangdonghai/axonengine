@@ -25,6 +25,7 @@ public:
 	// implement IRenderDriver
 	virtual void initialize();
 	virtual void finalize();
+#if 0
 	virtual void postInit();			// after render system is initilized, call this
 
 	// some status
@@ -33,13 +34,14 @@ public:
 
 	// resource management
 	virtual RenderTarget *createWindowTarget(Handle wndId, const String &name);
-
+#endif
 	// caps
 	virtual const RenderDriverInfo *getDriverInfo();
-	virtual uint_t getBackendCaps();
 
+#if 0
 	// if not multi threads rendering, use this call render a frame
 	virtual void runFrame();
+#endif
 
 	void reset(int width, int height, bool fullscreen);
 	void onReset();

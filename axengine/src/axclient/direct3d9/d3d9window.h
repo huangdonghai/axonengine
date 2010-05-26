@@ -13,11 +13,44 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-class DX9_Window {
+class DX9_Window : public IUnknown
+{
 public:
 	DX9_Window(const String &name);
 	DX9_Window(Handle wndId, const String &name);
 	~DX9_Window();
+
+	// methods inherited from ID3DXEffectStateManager
+	STDMETHOD(QueryInterface)(THIS_ REFIID iid, LPVOID *ppv)
+	{
+		if (iid == IID_IUnknown)
+		{
+			*ppv = this;
+		}
+		else
+		{
+			*ppv = NULL;
+			return E_NOINTERFACE;
+		}
+
+		reinterpret_cast<IUnknown*>(this)->AddRef();
+		return S_OK;
+	}
+	STDMETHOD_(ULONG, AddRef)(THIS)
+	{
+		return(ULONG)InterlockedIncrement(&m_ref);
+	}
+	STDMETHOD_(ULONG, Release)(THIS)
+	{
+		if (0L == InterlockedDecrement(&m_ref))
+		{
+			delete this;
+			return 0L;
+		}
+
+		return m_ref;
+	}
+
 
 	// implement RenderTarget
 	Rect getRect();
@@ -37,6 +70,7 @@ protected:
 	void checkSwapChain();
 
 private:
+	LONG m_ref;
 	HWND m_wndId;
 	String m_name;
 	Point m_swapChainSize;

@@ -18,14 +18,16 @@ AX_END_CLASS_MAP()
 
 DX9_Window *d3d9InternalWindow;
 D3D9Driver *d3d9Driver;
-IRenderDriver::RenderDriverInfo *d3d9DriverInfo;
+RenderDriverInfo *d3d9DriverInfo;
+IDirect3D9 *d3d9Api;
+IDirect3DDevice9 *d3d9Device;
+D3D9ShaderManager *d3d9ShaderManager;
+
+
+#if 0
 RenderQueue *d3d9Queue;
 SyncMutex d3d9Mutex;
 
-IDirect3D9 *d3d9Api;
-IDirect3DDevice9 *d3d9Device;
-
-D3D9ShaderManager *d3d9ShaderManager;
 D3D9TargetManager *d3d9TargetManager;
 D3D9querymanager *d3d9QueryManager;
 D3D9primitivemanager *d3d9PrimitiveManager;
@@ -41,6 +43,7 @@ bool d3d9NULL;
 bool d3d9NVDB;
 
 RenderCamera *d3d9Camera;
+#endif
 
 AX_END_NAMESPACE
 

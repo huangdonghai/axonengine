@@ -24,11 +24,6 @@ public:
 	static void (*uploadIndexBuffer)(phandle_t h, int datasize, void *p);
 	static void (*deleteIndexBuffer)(phandle_t h);
 
-#if 0
-	static void (*createTarget)(phandle_t h, int width, int height, TexFormat format);
-	static void (*deleteTarget)(phandle_t h);
-#endif
-
 	static void (*createWindowTarget)(phandle_t h, Handle hwnd);
 	static void (*deleteWindowTarget)(phandle_t h);
 
@@ -87,11 +82,6 @@ public:
 	void uploadIndexBuffer(phandle_t h, int datasize, void *p);
 	void deleteIndexBuffer(phandle_t h);
 
-#if 0
-	void createRenderTarget(phandle_t h, int width, int height, TexFormat format);
-	void deleteRenderTarget(phandle_t h);
-#endif
-
 	void createWindowTarget(phandle_t h, Handle hwnd);
 	void updateWindowTarget(phandle_t h, Handle newWndId);
 	void deleteWindowTarget(phandle_t h);
@@ -100,16 +90,16 @@ public:
 	void issueQuery(phandle_t h, AsioQuery *asioQuery);
 	void deleteQuery(phandle_t h);
 
-	void createSamplerState(phandle_t h, const SamplerStateDesc &samplerState);
+	void createSamplerState(phandle_t h, const SamplerStateDesc &desc);
 	void deleteSamplerState(phandle_t h);
 
-	void createBlendState(phandle_t h, const BlendStateDesc &src);
+	void createBlendState(phandle_t h, const BlendStateDesc &desc);
 	void deleteBlendState(phandle_t h);
 
-	void createDepthStencilState(phandle_t h, const DepthStencilStateDesc &src);
+	void createDepthStencilState(phandle_t h, const DepthStencilStateDesc &desc);
 	void deleteDepthStencilState(phandle_t h);
 
-	void createRasterizerState(phandle_t h, const RasterizerStateDesc &src);
+	void createRasterizerState(phandle_t h, const RasterizerStateDesc &desc);
 	void deleteRasterizerState(phandle_t h);
 
 	void setRenderTarget(int index, phandle_t h);
@@ -132,7 +122,9 @@ public:
 
 
 protected:
+	typedef void (*delete_func_t)(phandle_t);
 
+	void addObjectDeletion(delete_func_t func, phandle_t h);
 	void *allocHunk(int size);
 
 private:
@@ -142,9 +134,16 @@ private:
 		MAX_DELETE_COMMANDS = 8 * 1024
 	};
 
+	struct ObjectDeletion {
+		delete_func_t func;
+		phandle_t handle;
+	};
+
 	byte_t m_hunk[HUNK_SIZE];
 	Command *m_cmds[MAX_COMMANDS];
-	Command *m_deleteCommands[MAX_DELETE_COMMANDS];
+
+	int m_numObjectDeletions;
+	ObjectDeletion m_objectDeletions[MAX_DELETE_COMMANDS];
 
 	volatile int m_hunkPos;
 	volatile int m_readPos, m_writePos;

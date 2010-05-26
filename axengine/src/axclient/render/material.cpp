@@ -234,10 +234,10 @@ void Material::setTextureSet( const String &texname )
 	texture = new Texture(texname + "_n");
 	m_textures[SamplerType::Normal] = texture;
 
-	texture = Texture::load(texname + "_s");
+	texture = new Texture(texname + "_s");
 	m_textures[SamplerType::Specular] = texture;
 
-	texture = Texture::load(texname + "_g");
+	texture = new Texture(texname + "_g");
 	m_textures[SamplerType::Emission] = texture;
 
 	m_shaderMacroNeedRegen = true;
@@ -251,7 +251,8 @@ FixedString Material::normalizeKey(const String &name)
 		return name;
 }
 
-Material *Material::load(const String &name)
+#if 0
+Material *new Material(const String &name)
 {
 	FixedString key = normalizeKey(name);
 	MaterialDict::const_iterator it = ms_materialDict.find(key);
@@ -294,6 +295,7 @@ void Material::finalizeManager()
 {
 
 }
+#endif
 
 void Material::_deleteMaterial( Material *mat )
 {
@@ -304,6 +306,7 @@ void Material::_deleteMaterial( Material *mat )
 #endif
 }
 
+#if 0
 void Material::syncFrame()
 {
 #if 0
@@ -334,6 +337,7 @@ void Material::syncFrame()
 	}
 #endif
 }
+#endif
 
 void Material::deleteThis()
 {
@@ -352,7 +356,7 @@ void Material::matlist_f(const CmdArgs &args)
 			continue;
 		}
 
-		Printf("%4d %s\n",mtr->getref(), mtr->m_key.c_str());
+		Printf("%s\n", mtr->m_key.c_str());
 		count++;
 	}
 

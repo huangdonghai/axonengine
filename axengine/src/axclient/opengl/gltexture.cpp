@@ -284,7 +284,7 @@ bool GLtexture::doInit(const String &name, intptr_t arg) {
 	return loadFile2D();
 }
 
-bool GLtexture::loadFile2D() {
+bool GLnew TextureFile2D() {
 	GLrender::checkErrors();
 
 	const byte_t *data;
@@ -296,7 +296,7 @@ bool GLtexture::loadFile2D() {
 
 	std::auto_ptr<Image> imagefile(new Image);
 	if (!imagefile->loadFile(m_name, flags)) {
-		Debugf("GLtexture::loadFile2D: cann't find image file for %s\n", m_name.c_str());
+		Debugf("GLnew TextureFile2D: cann't find image file for %s\n", m_name.c_str());
 		return false;
 	}
 
@@ -305,9 +305,9 @@ bool GLtexture::loadFile2D() {
 //		mDesc.format = imagefile->getFormat();
 	if (!Math::isPowerOfTwo(m_width) || !Math::isPowerOfTwo(m_height)) {
 //			if (!(mDesc.flags & TexFlag_allowNPOT))
-			Errorf("GLtexture::loadFile2D: texture %s size isn't power of two", m_name.c_str());
+			Errorf("GLnew TextureFile2D: texture %s size isn't power of two", m_name.c_str());
 //			else
-//				Debugf("GLtexture::loadFile2D: texture %s size isn't power of two\n", mDesc.name.c_str());
+//				Debugf("GLnew TextureFile2D: texture %s size isn't power of two\n", mDesc.name.c_str());
 	}
 
 	if (m_object == 0)
@@ -382,7 +382,7 @@ bool GLtexture::loadFile2D() {
 #if 0
 static char *__cubemapSuffix[] = { "_px", "_nx", "_py", "_ny", "_pz", "_nz" };
 
-void GLTexture::LoadFileCUBE() {
+void GLnew TextureFileCUBE() {
 	if (mResourceId == 0)
 		glGenTextures(1, &mResourceId);
 
@@ -443,9 +443,9 @@ void GLTexture::LoadFileCUBE() {
 
 		if (mWidth != __GetPOT(mWidth) || mHeight != __GetPOT(mHeight)) {
 			if (!(mDesc.flags & TexFlag_allowNPOT))
-				Errorf("GLTexture::LoadFileCUBE: texture %s size isn't power of two", mDesc.name.c_str());
+				Errorf("GLnew TextureFileCUBE: texture %s size isn't power of two", mDesc.name.c_str());
 			else
-				Debugf("GLTexture::LoadFileCUBE: texture %s size isn't power of two\n", mDesc.name.c_str());
+				Debugf("GLnew TextureFileCUBE: texture %s size isn't power of two\n", mDesc.name.c_str());
 		}
 
 		AX_ASSERT(mWidth == mHeight);
@@ -468,7 +468,7 @@ void GLTexture::LoadFileCUBE() {
 	} else {
 		for (i = 0; i < 6; i++) {
 			if (!imagefile.loadFile(mDesc.name + __cubemapSuffix[i])) {
-				Errorf("GLTexture::LoadFileCUBE: cann't find image file for %s\n", mDesc.name.c_str());
+				Errorf("GLnew TextureFileCUBE: cann't find image file for %s\n", mDesc.name.c_str());
 				return;
 			}
 
@@ -479,9 +479,9 @@ void GLTexture::LoadFileCUBE() {
 
 			if (mWidth != __GetPOT(mWidth) || mHeight != __GetPOT(mHeight)) {
 				if (!(mDesc.flags & TexFlag_allowNPOT))
-					Errorf("GLTexture::LoadFileCUBE: texture %s size isn't power of two", mDesc.name.c_str());
+					Errorf("GLnew TextureFileCUBE: texture %s size isn't power of two", mDesc.name.c_str());
 				else
-					Debugf("GLTexture::LoadFileCUBE: texture %s size isn't power of two\n", mDesc.name.c_str());
+					Debugf("GLnew TextureFileCUBE: texture %s size isn't power of two\n", mDesc.name.c_str());
 			}
 
 			__TexFormat(imagefile.getFormat(), format, datatype, internalformat);

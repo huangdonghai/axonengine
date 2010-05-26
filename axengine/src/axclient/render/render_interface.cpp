@@ -15,7 +15,22 @@ void (*RenderApi::deleteVertexBuffer)(phandle_t h);
 void (*RenderApi::createIndexBuffer)(phandle_t h, int datasize, Primitive::Hint hint);
 void (*RenderApi::uploadIndexBuffer)(phandle_t h, int datasize, void *p);
 void (*RenderApi::deleteIndexBuffer)(phandle_t h);
-	  
+
+void (*RenderApi::createWindowTarget)(phandle_t h, Handle hwnd);
+void (*RenderApi::deleteWindowTarget)(phandle_t h);
+
+void (*RenderApi::createSamplerState)(phandle_t h, const SamplerStateDesc &samplerState);
+void (*RenderApi::deleteSamplerState)(phandle_t h);
+
+void (*RenderApi::createBlendState)(phandle_t h, const BlendStateDesc &src);
+void (*RenderApi::deleteBlendState)(phandle_t h);
+
+void (*RenderApi::createDepthStencilState)(phandle_t h, const DepthStencilStateDesc &src);
+void (*RenderApi::deleteDepthStencilState)(phandle_t h);
+
+void (*RenderApi::createRasterizerState)(phandle_t h, const RasterizerStateDesc &src);
+void (*RenderApi::deleteRasterizerState)(phandle_t h);
+
 void (*RenderApi::setShader)(const FixedString & name, const ShaderMacro &sm, Technique tech);
 void (*RenderApi::setVsConst)(const FixedString &name, int count, float *value);
 void (*RenderApi::setPsConst)(const FixedString &name, int count, float *value);
@@ -96,7 +111,7 @@ public:
 
 	virtual void exec()
 	{
-		(m_obj->*m_m)(m_arg0, m_arg1);
+		m_m(m_arg0, m_arg1);
 	}
 
 private:
@@ -271,7 +286,7 @@ void ApiWrap::generateMipmap(phandle_t h)
 
 void ApiWrap::deleteTexture2D(phandle_t h)
 {
-	AddCommand1(RenderApi::deleteTexture2D).args(h);
+	addObjectDeletion(RenderApi::deleteTexture2D, h);
 }
 
 void ApiWrap::createVertexBuffer(phandle_t result, int datasize, Primitive::Hint hint)
@@ -286,7 +301,7 @@ void ApiWrap::uploadVertexBuffer(phandle_t h, int datasize, void *p)
 
 void ApiWrap::deleteVertexBuffer(phandle_t h)
 {
-	AddCommand1(RenderApi::deleteVertexBuffer).args(h);
+	addObjectDeletion(RenderApi::deleteVertexBuffer, h);
 }
 
 void ApiWrap::createIndexBuffer(phandle_t result, int datasize, Primitive::Hint hint)
@@ -301,10 +316,77 @@ void ApiWrap::uploadIndexBuffer(phandle_t h, int datasize, void *p)
 
 void ApiWrap::deleteIndexBuffer(phandle_t h)
 {
-	AddCommand1(RenderApi::deleteIndexBuffer).args(h);
+	addObjectDeletion(RenderApi::deleteVertexBuffer, h);
 }
 
 void ApiWrap::clear( const RenderClearer &clearer )
+{
+
+}
+
+void ApiWrap::createSamplerState(phandle_t h, const SamplerStateDesc &desc)
+{
+	AddCommand2(RenderApi::createSamplerState).args(h, desc);
+}
+
+void ApiWrap::deleteSamplerState(phandle_t h)
+{
+	addObjectDeletion(RenderApi::deleteSamplerState, h);
+}
+
+void ApiWrap::createBlendState(phandle_t h, const BlendStateDesc &desc)
+{
+	AddCommand2(RenderApi::createBlendState).args(h, desc);
+}
+
+void ApiWrap::deleteBlendState(phandle_t h)
+{
+	addObjectDeletion(RenderApi::deleteSamplerState, h);
+}
+
+void ApiWrap::createDepthStencilState(phandle_t h, const DepthStencilStateDesc &desc)
+{
+	AddCommand2(RenderApi::createDepthStencilState).args(h, desc);
+}
+
+void ApiWrap::deleteDepthStencilState(phandle_t h)
+{
+	addObjectDeletion(RenderApi::deleteDepthStencilState, h);
+}
+
+void ApiWrap::createRasterizerState(phandle_t h, const RasterizerStateDesc &desc)
+{
+	AddCommand2(RenderApi::createRasterizerState).args(h, desc);
+}
+
+void ApiWrap::deleteRasterizerState(phandle_t h)
+{
+	addObjectDeletion(RenderApi::deleteRasterizerState, h);
+}
+
+void ApiWrap::addObjectDeletion( delete_func_t func, phandle_t h )
+{
+	if (m_numObjectDeletions >= MAX_DELETE_COMMANDS) {
+		Errorf("overflowed");
+	}
+
+	m_objectDeletions[m_numObjectDeletions].func = func;
+	m_objectDeletions[m_numObjectDeletions].handle = h;
+
+	m_numObjectDeletions++;
+}
+
+void ApiWrap::createWindowTarget( phandle_t h, Handle hwnd )
+{
+
+}
+
+void ApiWrap::updateWindowTarget( phandle_t h, Handle newWndId )
+{
+
+}
+
+void ApiWrap::deleteWindowTarget( phandle_t h )
 {
 
 }

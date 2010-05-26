@@ -195,7 +195,7 @@ RenderTarget *EditorFrame::getRenderTarget() {
 	if (m_renderTarget == nullptr) {
 		WId wid = winId();
 		m_oldWId = wid;
-		m_renderTarget = g_renderSystem->createWindowTarget(Handle(winId()), "EditorFrame");
+		m_renderTarget = new RenderTarget(Handle(winId()), "EditorFrame");
 	}
 
 	WId wid = winId();

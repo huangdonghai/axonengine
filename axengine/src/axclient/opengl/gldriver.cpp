@@ -530,7 +530,7 @@ void GLdriver::dumpTex_f(const CmdArgs &params)
 	}
 	const String &imagename = params.tokened[1];
 
-	Texture *tex = Texture::load(imagename);
+	Texture *tex = new Texture(imagename);
 
 	if (!tex) {
 		Printf("Cann't found texture '%s'\n", imagename.c_str());

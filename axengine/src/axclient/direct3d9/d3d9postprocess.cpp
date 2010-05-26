@@ -220,11 +220,11 @@ static int getSamplerOffsets_Gauss1D(int texwidth, int texheight, int len, Vecto
 
 
 D3D9Postprocess::D3D9Postprocess() {
-	m_mtrDrawQuad = Material::load("drawquad");
-	m_mtrMaskVolume = Material::load("maskvolume");
+	m_mtrDrawQuad = new Material("drawquad");
+	m_mtrMaskVolume = new Material("maskvolume");
 
-	m_mtrPointLight =  Material::load("_pointlight");
-	m_mtrGlobalLight =  Material::load("_globallight");
+	m_mtrPointLight =  new Material("_pointlight");
+	m_mtrGlobalLight =  new Material("_globallight");
 
 	m_shaderDrawQuad = d3d9ShaderManager->findShaderDX("drawquad");
 	m_shaderHistogram = d3d9ShaderManager->findShaderDX("_histogram");

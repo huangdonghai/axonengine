@@ -161,10 +161,10 @@ GLpostprocess::GLpostprocess() {
 
 	m_boxVolume = nullptr;
 
-	m_matDrawQuad = Material::load("drawquad");
-	m_matMaskVolume = Material::load("maskvolume");
-	m_matShadowMask = Material::load("shadowmask");
-	m_matShadowBlur = Material::load("shadowblur");
+	m_matDrawQuad = new Material("drawquad");
+	m_matMaskVolume = new Material("maskvolume");
+	m_matShadowMask = new Material("shadowmask");
+	m_matShadowBlur = new Material("shadowblur");
 
 #if 0
 	m_shaderDrawQuad = FindAsset_<GLshader>("drawquad");
