@@ -23,27 +23,24 @@ public:
 	// methods inherited from ID3DXEffectStateManager
 	STDMETHOD(QueryInterface)(THIS_ REFIID iid, LPVOID *ppv)
 	{
-		if (iid == IID_IUnknown)
-		{
+		if (iid == IID_IUnknown) {
 			*ppv = this;
-		}
-		else
-		{
+		} else {
 			*ppv = NULL;
 			return E_NOINTERFACE;
 		}
 
-		reinterpret_cast<IUnknown*>(this)->AddRef();
+		AddRef();
 		return S_OK;
 	}
 	STDMETHOD_(ULONG, AddRef)(THIS)
 	{
 		return(ULONG)InterlockedIncrement(&m_ref);
 	}
+
 	STDMETHOD_(ULONG, Release)(THIS)
 	{
-		if (0L == InterlockedDecrement(&m_ref))
-		{
+		if (0L == InterlockedDecrement(&m_ref)) {
 			delete this;
 			return 0L;
 		}

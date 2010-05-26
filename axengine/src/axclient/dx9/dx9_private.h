@@ -54,19 +54,10 @@ read the license and understand and accept it fully.
 #define BEGIN_PIX(x) D3DPERF_BeginEvent(D3DCOLOR_RGBA(0,0,0,255), L##x)
 #define END_PIX() D3DPERF_EndEvent()
 
-//#include "d3d9texture.h"
-#include "d3d9shader.h"
-//#include "d3d9rendertarget.h"
-#include "d3d9window.h"
-//#include "d3d9vertexbuffer.h"
-//#include "d3d9draw.h"
-//#include "d3d9primitive.h"
-//#include "d3d9query.h"
-#include "d3d9driver.h"
-//#include "d3d9postprocess.h"
-//#include "d3d9statemanager.h"
-//#include "d3d9thread.h"
-#include "d3d9api.h"
+#include "dx9_shader.h"
+#include "dx9_window.h"
+#include "dx9_driver.h"
+#include "dx9_api.h"
 
 AX_BEGIN_NAMESPACE
 

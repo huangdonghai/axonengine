@@ -8,7 +8,7 @@ read the license and understand and accept it fully.
 */
 
 
-#include "d3d9private.h"
+#include "dx9_private.h"
 
 static D3DMULTISAMPLE_TYPE d3d9MultiSampleType = D3DMULTISAMPLE_4_SAMPLES;
 static DWORD d3d9MultiSampleQuality = 0;

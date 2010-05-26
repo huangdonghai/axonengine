@@ -8,7 +8,7 @@ read the license and understand and accept it fully.
 */
 
 
-#include "d3d9private.h"
+#include "dx9_private.h"
 
 
 AX_BEGIN_NAMESPACE

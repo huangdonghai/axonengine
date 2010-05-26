@@ -1,4 +1,4 @@
-#include "d3d9private.h"
+#include "dx9_private.h"
 
 AX_BEGIN_NAMESPACE
 AX_END_NAMESPACE
