@@ -23,6 +23,21 @@ void dx9CreateIndexBuffer(phandle_t h, int datasize, Primitive::Hint hint);
 void dx9UploadIndexBuffer(phandle_t h, int datasize, const void *p);
 void dx9DeleteIndexBuffer(phandle_t h);
 
+void dx9CreateWindowTarget(phandle_t h, Handle hwnd);
+void dx9DeleteWindowTarget(phandle_t h);
+
+void dx9CreateSamplerState(phandle_t h, const SamplerStateDesc &samplerState);
+void dx9DeleteSamplerState(phandle_t h);
+
+void dx9CreateBlendState(phandle_t h, const BlendStateDesc &src);
+void dx9DeleteBlendState(phandle_t h);
+
+void dx9CreateDepthStencilState(phandle_t h, const DepthStencilStateDesc &src);
+void dx9DeleteDepthStencilState(phandle_t h);
+
+void dx9CreateRasterizerState(phandle_t h, const RasterizerStateDesc &src);
+void dx9DeleteRasterizerState(phandle_t h);
+
 AX_END_NAMESPACE
 
 #endif // AX_D3D9API_H

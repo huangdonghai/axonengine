@@ -41,9 +41,11 @@ static struct SamplerParam {
 class EffectHelper
 {
 public:
-	EffectHelper(ID3DXEffect *obj) : m_object(obj) {}
+	EffectHelper(ID3DXEffect *obj) : m_object(obj)
+	{}
 
-	String getString(D3DXHANDLE h) {
+	String getString(D3DXHANDLE h)
+	{
 		const char *str;
 
 		HRESULT hr = m_object->GetString(h, &str);
@@ -54,7 +56,8 @@ public:
 		return String();
 	}
 
-	int getInt(D3DXHANDLE h) {
+	int getInt(D3DXHANDLE h)
+	{
 		int result = 0;
 
 		HRESULT hr = m_object->GetInt(h, &result);
@@ -65,7 +68,8 @@ public:
 		return 0;
 	}
 
-	String getAnno(D3DXHANDLE param, const char *anno_name) {
+	String getAnno(D3DXHANDLE param, const char *anno_name)
+	{
 		String result;
 		D3DXHANDLE anno = m_object->GetAnnotationByName(param, anno_name);
 
@@ -83,7 +87,8 @@ private:
 class D3D9include : public ID3DXInclude
 {
 public:
-	STDMETHOD(Open)(THIS_ D3DXINCLUDE_TYPE IncludeType, LPCSTR pFileName, LPCVOID pParentData, LPCVOID *ppData, UINT *pBytes) {
+	STDMETHOD(Open)(THIS_ D3DXINCLUDE_TYPE IncludeType, LPCSTR pFileName, LPCVOID pParentData, LPCVOID *ppData, UINT *pBytes)
+	{
 		String filename = "shaders/";
 		filename += pFileName;
 		*pBytes = g_fileSystem->readFile(filename, (void**)ppData);
@@ -94,7 +99,8 @@ public:
 			return S_FALSE;
 	}
 
-	STDMETHOD(Close)(THIS_ LPCVOID pData) {
+	STDMETHOD(Close)(THIS_ LPCVOID pData)
+	{
 		g_fileSystem->freeFile((void**)pData);
 		return S_OK;
 	}
@@ -112,8 +118,7 @@ DX9_Uniform::DX9_Uniform(UniformItem &item, D3DXHANDLE param)
 }
 
 DX9_Uniform::~DX9_Uniform()
-{
-}
+{}
 
 bool DX9_Uniform::isCached() const
 {
@@ -326,50 +331,59 @@ bool DX9_Shader::doInit(const String &name, const ShaderMacro &macro)
 	return true;
 }
 
-bool DX9_Shader::isDepthWrite() const {
+bool DX9_Shader::isDepthWrite() const
+{
 	return true;
 }
 
-bool DX9_Shader::haveTextureTarget() const {
+bool DX9_Shader::haveTextureTarget() const
+{
 	return m_haveTextureTarget;
 }
 
-int DX9_Shader::getNumSampler() const {
+int DX9_Shader::getNumSampler() const
+{
 	return s2i(m_samplerannSeq.size());
 }
 
-SamplerInfo *DX9_Shader::getSamplerAnno(int index) const {
+SamplerInfo *DX9_Shader::getSamplerAnno(int index) const
+{
 	return m_samplerannSeq[index];
 }
 
-int DX9_Shader::getNumTweakable() const {
+int DX9_Shader::getNumTweakable() const
+{
 	return 0;
 }
 
-ParameterInfo *DX9_Shader::getTweakableDef(int index) {
+ParameterInfo *DX9_Shader::getTweakableDef(int index)
+{
 	return 0;
 }
 
 
-Shader::SortHint DX9_Shader::getSortHint() const {
+Shader::SortHint DX9_Shader::getSortHint() const
+{
 	return m_sortHint;
 }
 
-bool DX9_Shader::haveTechnique(Technique tech) const {
+bool DX9_Shader::haveTechnique(Technique tech) const
+{
 	return m_techniques[tech] != 0;
 }
 
-void DX9_Shader::initTechniques() {
+void DX9_Shader::initTechniques()
+{
 	for (int i = 0; i < Technique::Number; i++) {
 		m_d3dxTechniques[i] = findTechnique(i);
 	}
 }
 
-void DX9_Shader::initFeatures() {
+void DX9_Shader::initFeatures()
+{}
 
-}
-
-void DX9_Shader::initSortHint() {
+void DX9_Shader::initSortHint()
+{
 	D3DXHANDLE script = m_object->GetParameterByName(0, "Script");
 
 	if (!script) return;
@@ -381,7 +395,8 @@ void DX9_Shader::initSortHint() {
 	m_sortHint = (SortHint)EffectHelper(m_object).getInt(anno);
 }
 
-void DX9_Shader::initAnnotation() {
+void DX9_Shader::initAnnotation()
+{
 	D3DXEFFECT_DESC effectDesc;
 	HRESULT hr;
 
@@ -404,7 +419,8 @@ void DX9_Shader::initAnnotation() {
 	}
 }
 
-void DX9_Shader::initSamplerAnn(D3DXHANDLE param) {
+void DX9_Shader::initSamplerAnn(D3DXHANDLE param)
+{
 	EffectHelper helper(m_object);
 
 	D3DXPARAMETER_DESC paramDesc;
@@ -475,7 +491,8 @@ void DX9_Shader::initSamplerAnn(D3DXHANDLE param) {
 	}
 }
 
-void DX9_Shader::initParameterAnn(D3DXHANDLE param) {
+void DX9_Shader::initParameterAnn(D3DXHANDLE param)
+{
 	initPixelToTexel(param);
 }
 
@@ -662,14 +679,10 @@ void DX9_Shader::beginPass( UINT pass )
 }
 
 void DX9_Shader::endPass()
-{
-
-}
+{}
 
 void DX9_Shader::end()
-{
-
-}
+{}
 
 //--------------------------------------------------------------------------
 // class D3D9shadermanager
@@ -686,16 +699,14 @@ D3D9ShaderManager::D3D9ShaderManager()
 }
 
 D3D9ShaderManager::~D3D9ShaderManager()
-{
-
-}
+{}
 
 Shader *D3D9ShaderManager::findShader(const String &name, const ShaderMacro &macro)
 {
 	return findShader(FixedString(name), macro);
 }
 
-Shader *D3D9ShaderManager::findShader( const FixedString &nameId, const ShaderMacro &macro )
+Shader *D3D9ShaderManager::findShader(const FixedString &nameId, const ShaderMacro &macro)
 {
 	DX9_Shader*& shader = m_shaderPool[nameId][macro];
 
@@ -818,9 +829,7 @@ DX9_Technique::DX9_Technique(DX9_Shader *shader, D3DXHANDLE d3dxhandle)
 }
 
 DX9_Technique::~DX9_Technique()
-{
-
-}
+{}
 
 DX9_Pass::DX9_Pass(DX9_Shader *shader, D3DXHANDLE d3dxhandle)
 {
@@ -835,9 +844,7 @@ DX9_Pass::DX9_Pass(DX9_Shader *shader, D3DXHANDLE d3dxhandle)
 }
 
 DX9_Pass::~DX9_Pass()
-{
-
-}
+{}
 
 void DX9_Pass::initVs()
 {

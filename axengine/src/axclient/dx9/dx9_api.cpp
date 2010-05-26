@@ -386,4 +386,72 @@ void dx9DeleteIndexBuffer(phandle_t h)
 	SAFE_RELEASE(obj);
 }
 
+void dx9CreateWindowTarget(phandle_t h, Handle hwnd)
+{
+	DX9_Window *window = new DX9_Window(hwnd);
+	*h = window;
+}
+
+void dx9DeleteWindowTarget(phandle_t h)
+{
+	DX9_Window *window = handle_cast<DX9_Window*>(*h);
+	SAFE_RELEASE(window);
+}
+
+void dx9CreateSamplerState( phandle_t h, const SamplerStateDesc &desc )
+{
+	*h = new DX9_SamplerState(desc);
+}
+
+void dx9DeleteSamplerState( phandle_t h )
+{
+	DX9_SamplerState *obj = handle_cast<DX9_SamplerState*>(*h);
+	SAFE_RELEASE(obj);
+}
+
+void dx9CreateBlendState( phandle_t h, const BlendStateDesc &src )
+{
+	IDirect3DStateBlock9 *stateblock;
+	d3d9Device->BeginStateBlock();
+	d3d9Device->EndStateBlock(&stateblock);
+
+	*h = stateblock;
+}
+
+void dx9DeleteBlendState( phandle_t h )
+{
+	IDirect3DStateBlock9 *stateblock = handle_cast<IDirect3DStateBlock9 *>(*h);
+	SAFE_RELEASE(stateblock);
+}
+
+void dx9CreateDepthStencilState( phandle_t h, const DepthStencilStateDesc &src )
+{
+	IDirect3DStateBlock9 *stateblock;
+	d3d9Device->BeginStateBlock();
+	d3d9Device->EndStateBlock(&stateblock);
+
+	*h = stateblock;
+}
+
+void dx9DeleteDepthStencilState( phandle_t h )
+{
+	IDirect3DStateBlock9 *stateblock = handle_cast<IDirect3DStateBlock9 *>(*h);
+	SAFE_RELEASE(stateblock);
+}
+
+void dx9CreateRasterizerState( phandle_t h, const RasterizerStateDesc &src )
+{
+	IDirect3DStateBlock9 *stateblock;
+	d3d9Device->BeginStateBlock();
+	d3d9Device->EndStateBlock(&stateblock);
+
+	*h = stateblock;
+}
+
+void dx9DeleteRasterizerState( phandle_t h )
+{
+	IDirect3DStateBlock9 *stateblock = handle_cast<IDirect3DStateBlock9 *>(*h);
+	SAFE_RELEASE(stateblock);
+}
+
 AX_END_NAMESPACE

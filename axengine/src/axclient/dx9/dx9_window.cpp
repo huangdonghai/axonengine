@@ -28,14 +28,14 @@ static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
 }
 
 
-DX9_Window::DX9_Window(const String &name)
+DX9_Window::DX9_Window()
 {
 	m_swapChain = 0;
 	m_backbuffer = 0;
 	m_swapChainWnd = 0;
 	m_presentInterval = 0;
 
-	WString ws = u2w(name);
+	WString ws = u2w("DX9_Window");
 	WNDCLASSEXW wcex;	
 	wcex.cbSize = sizeof(WNDCLASSEX);
 	wcex.style = 0;
@@ -72,7 +72,7 @@ DX9_Window::DX9_Window(const String &name)
 	m_lightBuffer = Handle(0);
 }
 
-DX9_Window::DX9_Window(Handle wndId, const String &name) : m_name(name)
+DX9_Window::DX9_Window(Handle wndId)
 {
 	m_swapChain = 0;
 	m_backbuffer = 0;

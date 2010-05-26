@@ -16,8 +16,8 @@ AX_BEGIN_NAMESPACE
 class DX9_Window : public IUnknown
 {
 public:
-	DX9_Window(const String &name);
-	DX9_Window(Handle wndId, const String &name);
+	DX9_Window();
+	DX9_Window(Handle wndId);
 	~DX9_Window();
 
 	// methods inherited from ID3DXEffectStateManager
@@ -69,7 +69,6 @@ protected:
 private:
 	LONG m_ref;
 	HWND m_wndId;
-	String m_name;
 	Point m_swapChainSize;
 	IDirect3DSwapChain9 *m_swapChain;
 	IDirect3DSurface9 *m_backbuffer;

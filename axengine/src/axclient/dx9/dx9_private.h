@@ -57,6 +57,7 @@ read the license and understand and accept it fully.
 #include "dx9_shader.h"
 #include "dx9_window.h"
 #include "dx9_driver.h"
+#include "dx9_state.h"
 #include "dx9_api.h"
 
 AX_BEGIN_NAMESPACE

@@ -194,24 +194,24 @@ typedef void *handle_t;
 class Handle
 {
 public:
-	Handle() : data(0) {}
-	explicit Handle(void *d) : data(d) {}
+	Handle() : m_data(0) {}
+	Handle(void *d) : m_data(d) {}
 
 	template <class T>
-	T to() const { return reinterpret_cast<T>(data); }
+	T to() const { return reinterpret_cast<T>(m_data); }
 
-	void *toVoidStar() const { return data; }
+	void *toVoidStar() const { return m_data; }
 
-	uintptr_t toInt() const { return reinterpret_cast<uintptr_t>(data); }
+	uintptr_t toInt() const { return reinterpret_cast<uintptr_t>(m_data); }
 
-	bool operator==(const Handle &rhs) const { return data == rhs.data; }
-	bool operator!() const { return !data; }
-	operator bool() const { return bool(data); }
+	bool operator==(const Handle &rhs) const { return m_data == rhs.m_data; }
+	bool operator!() const { return !m_data; }
+	operator bool() const { return bool(m_data); }
 
-	void clear() { data = 0; }
+	void clear() { m_data = 0; }
 
 private:
-	void *data;
+	void *m_data;
 };
 #endif
 
