@@ -35,9 +35,9 @@ void (*RenderApi::setShader)(const FixedString & name, const ShaderMacro &sm, Te
 void (*RenderApi::setVsConst)(const FixedString &name, int count, float *value);
 void (*RenderApi::setPsConst)(const FixedString &name, int count, float *value);
 	  
-void (*RenderApi::setVertices)(phandle_t vb, VertexType vt, int vertcount);
-void (*RenderApi::setInstanceVertices)(phandle_t vb, VertexType vt, int vertcount, Handle inb, int incount);
-void (*RenderApi::setIndices)(phandle_t ib);
+void (*RenderApi::setVertices)(phandle_t h, VertexType vt, int vertcount);
+void (*RenderApi::setInstanceVertices)(phandle_t h, VertexType vt, int vertcount, Handle inb, int incount);
+void (*RenderApi::setIndices)(phandle_t h);
 
 class ApiCommand
 {

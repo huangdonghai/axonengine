@@ -13,9 +13,64 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-//--------------------------------------------------------------------------
-// class UniformItem
-//--------------------------------------------------------------------------
+class UniformData
+{
+public:
+	enum DataType {
+		kFloat, kInteger, kSampler
+	};
+
+	UniformData()
+	{
+		m_dataType = kFloat;
+		m_count = 0;
+		m_floatValue = 0;
+	}
+
+	~UniformData()
+	{
+		if (m_dataType != kSampler) {
+			SafeDeleteArray(m_floatValue);
+		}
+	}
+
+	void setFloat(int count, float *value)
+	{
+		m_dataType = kFloat;
+		m_floatValue = new float[count];
+		memcpy(m_floatValue, value, count * sizeof(float));
+	}
+
+	void setInteger(int count, int *value)
+	{
+		m_dataType = kInteger;
+		m_intValue = new int[count];
+		memcpy(m_intValue, value, count * sizeof(int));
+	}
+
+	void setTexture(Handle *phandle)
+	{
+		m_dataType = kSampler;
+		m_textureHandle = phandle;
+	}
+
+private:
+	DataType m_dataType;
+
+	union {
+		struct {
+			int m_count;
+			union {
+				float *m_floatValue;
+				int *m_intValue;
+			};
+		};
+
+		Handle *m_textureHandle;
+	};
+};
+
+//-------------------------------------------------------------------------
 
 class UniformItem
 {
@@ -66,11 +121,10 @@ public:
 	const char *m_name;		// ascii name
 };
 
-//--------------------------------------------------------------------------
-// class Uniforms
-//--------------------------------------------------------------------------
+//-------------------------------------------------------------------------
 
-class Uniforms {
+class Uniforms
+{
 public:
 	enum ItemName {
 #define AX_ARRAY_UNIFORM(shadertype, axtype, name, num, start, end) name,
@@ -116,9 +170,7 @@ private:
 	bool m_psIsShared[MAX_REGISTER];
 };
 
-//--------------------------------------------------------------------------
-// struct ShaderQuality
-//--------------------------------------------------------------------------
+//-------------------------------------------------------------------------
 
 struct ShaderQuality {
 	enum Type {
@@ -129,11 +181,10 @@ struct ShaderQuality {
 	AX_DECLARE_ENUM(ShaderQuality);
 };
 
-//--------------------------------------------------------------------------
-// class ShaderMacro
-//--------------------------------------------------------------------------
+//-------------------------------------------------------------------------
 
-class ShaderMacro {
+class ShaderMacro
+{
 public:
 	enum Flag {
 #define AX_DECL_MACRO(m, s) m, 
@@ -179,6 +230,7 @@ private:
 	int m_data[4];
 };
 
+//-------------------------------------------------------------------------
 
 struct Technique {
 	enum Type {
@@ -189,6 +241,8 @@ struct Technique {
 
 	String toString();
 };
+
+//-------------------------------------------------------------------------
 
 inline String Technique::toString()
 {
@@ -204,6 +258,8 @@ inline String Technique::toString()
 #undef ENUMDECL
 	return result;
 }
+
+//-------------------------------------------------------------------------
 
 // render to texture annotations
 class SamplerInfo
@@ -235,6 +291,8 @@ public:
 };
 typedef Sequence<SamplerInfo> SamplerInfos;
 
+//-------------------------------------------------------------------------
+
 class ParameterInfo
 {
 public:
@@ -256,6 +314,8 @@ public:
 	Vector3 m_defaultColor;
 };
 typedef Sequence<ParameterInfo> ParameterInfos;
+
+//-------------------------------------------------------------------------
 
 class ShaderInfo
 {
@@ -281,8 +341,6 @@ public:
 
 typedef Dict<FixedString, ShaderInfo*> ShaderInfoDict;
 
-//--------------------------------------------------------------------------
-// class Shader
 //--------------------------------------------------------------------------
 
 class Shader : public RefObject
@@ -314,8 +372,6 @@ public:
 	virtual const ShaderInfo *getShaderInfo() const = 0;
 };
 
-//--------------------------------------------------------------------------
-// class ShaderManager
 //--------------------------------------------------------------------------
 
 class ShaderManager

@@ -100,8 +100,8 @@ public:
 	void setDepthStencil(phandle_t h);
 
 	void setShader(const FixedString & name, const ShaderMacro &sm, Technique tech);
-	void setVsConst(const FixedString &name, int count, float *value);
-	void setPsConst(const FixedString &name, int count, float *value);
+	void setShaderConst(Uniforms::ItemName name, const UniformData &data);
+	void setShaderConst(const FixedString &name, const UniformData &data);
 
 	void setVertices(phandle_t vb, VertexType vt, int vertcount);
 	void setInstanceVertices(phandle_t vb, VertexType vt, int vertcount, Handle inb, int incount);
