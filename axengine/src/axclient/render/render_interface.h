@@ -39,7 +39,7 @@ public:
 	static void (*createRasterizerState)(phandle_t h, const RasterizerStateDesc &src);
 	static void (*deleteRasterizerState)(phandle_t h);
 
-	static void (*setShader)(const FixedString & name, const ShaderMacro &sm, Technique tech);
+	static void (*setShader)(const FixedString &name, const ShaderMacro &sm, Technique tech);
 	static void (*setVsConst)(const FixedString &name, int count, float *value);
 	static void (*setPsConst)(const FixedString &name, int count, float *value);
 
@@ -58,14 +58,8 @@ public:
 class ApiWrap
 {
 public:
-	class Command
-	{
-	public:
-		Command() {}
-		virtual ~Command() {}
-		virtual void exec() = 0;
-		int hunkMark;
-	};
+	ApiWrap();
+	~ApiWrap();
 
 	// api wrapper interface
 	void createTexture2D(phandle_t result, TexFormat format, int width, int height, int flags = 0);
@@ -120,12 +114,43 @@ public:
 
 	void clear(const RenderClearer &clearer);
 
-	void *allocRingBuf(int size);
-	int getWritePos();
+	byte_t *allocRingBuf(int size);
+	int getWritePos() { return m_writePos; }
+
+	template <class Q>
+	Q *allocType(int n=1)
+	{
+		Q *result = reinterpret_cast<Q *>(allocRingBuf(n * sizeof(Q)));
+		return result;
+	}
+
+	template <class Q>
+	Q *allocCommand()
+	{
+		struct LinkedCmd {
+			int cmdLink;
+			int endPos;
+			Q cmd;
+		};
+		int size = sizeof(LinkedCmd);
+		byte_t *pbuf = allocRingBuf(size);
+		LinkedCmd *ptr = reinterpret_cast<LinkedCmd *>(pbuf);
+
+		ptr->cmdLink = -1;
+		ptr->endPos = m_writePos;
+
+		if (m_lastLinkPos != -1) {
+			*(int *)m_ringBuffer[m_lastLinkPos] = pbuf - m_ringBuffer;
+		}
+		m_lastLinkPos = pbuf - m_ringBuffer;
+		return &ptr->cmd;
+	}
 
 protected:
 	typedef void (*delete_func_t)(phandle_t);
 	void addObjectDeletion(delete_func_t func, phandle_t h);
+
+	void waitToPos(int pos);
 
 private:
 	enum {
@@ -142,6 +167,7 @@ private:
 	byte_t m_ringBuffer[RING_BUFFER_SIZE];
 
 	volatile int m_readPos, m_writePos;
+	volatile int m_lastLinkPos;
 
 	int m_numObjectDeletions;
 	ObjectDeletion m_objectDeletions[MAX_DELETE_COMMANDS];

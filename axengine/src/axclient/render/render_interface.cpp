@@ -39,15 +39,24 @@ void (*RenderApi::setVertices)(phandle_t vb, VertexType vt, int vertcount);
 void (*RenderApi::setInstanceVertices)(phandle_t vb, VertexType vt, int vertcount, Handle inb, int incount);
 void (*RenderApi::setIndices)(phandle_t ib);
 
+class ApiCommand
+{
+public:
+	ApiCommand() {}
+	virtual ~ApiCommand() {}
+	virtual void exec() = 0;
+};
+
+
 template <typename Signature>
-class ApiCommand_ : public ApiWrap::Command
+class ApiCommand_ : public ApiCommand
 {
 public:
 	AX_STATIC_ASSERT(0);
 };
 
 template <>
-class ApiCommand_<void (*)()> : public ApiWrap::Command
+class ApiCommand_<void (*)()> : public ApiCommand
 {
 public:
 	typedef void (*FunctionType)();
@@ -57,8 +66,7 @@ public:
 	{}
 
 	void args()
-	{
-	}
+	{}
 
 	virtual void exec()
 	{
@@ -70,7 +78,7 @@ private:
 };
 
 template <typename Arg0>
-class ApiCommand_<void (*)(Arg0)> : public ApiWrap::Command
+class ApiCommand_<void (*)(Arg0)> : public ApiCommand
 {
 public:
 	typedef void (*FunctionType)(Arg0);
@@ -95,7 +103,7 @@ private:
 };
 
 template <typename Arg0, typename Arg1>
-class ApiCommand_<void (*)(Arg0,Arg1)> : public ApiWrap::Command {
+class ApiCommand_<void (*)(Arg0,Arg1)> : public ApiCommand {
 public:
 	typedef void (*FunctionType)(Arg0,Arg1);
 
@@ -121,7 +129,7 @@ private:
 };
 
 template <typename Arg0, typename Arg1, typename Arg2>
-class ApiCommand_<void (*)(Arg0,Arg1,Arg2)> : public ApiWrap::Command {
+class ApiCommand_<void (*)(Arg0,Arg1,Arg2)> : public ApiCommand {
 public:
 	typedef void (*FunctionType)(Arg0,Arg1,Arg2);
 
@@ -149,7 +157,7 @@ private:
 };
 
 template <typename Arg0, typename Arg1, typename Arg2, typename Arg3>
-class ApiCommand_<void (*)(Arg0,Arg1,Arg2,Arg3)> : public ApiWrap::Command {
+class ApiCommand_<void (*)(Arg0,Arg1,Arg2,Arg3)> : public ApiCommand {
 public:
 	typedef void (*FunctionType)(Arg0,Arg1,Arg2,Arg3);
 
@@ -180,7 +188,7 @@ private:
 
 
 template <typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4>
-class ApiCommand_<void (*)(Arg0,Arg1,Arg2,Arg3,Arg4)> : public ApiWrap::Command {
+class ApiCommand_<void (*)(Arg0,Arg1,Arg2,Arg3,Arg4)> : public ApiCommand {
 public:
 	typedef void (*FunctionType)(Arg0,Arg1,Arg2,Arg3,Arg4);
 
@@ -211,10 +219,12 @@ private:
 	typename remove_const_reference<Arg4>::type m_arg4;
 };
 
+static void BeginCommand() {}
+
 static ApiCommand_<void (*)()> &AddCommand0(void (*method)())
 {
 	typedef ApiCommand_<void (*)()> ResultType;
-	ResultType *result = g_renderQueue->allocType<ResultType>(1);
+	ResultType *result = g_apiWrap->allocCommand<ResultType>();
 	new (result) ResultType(method);
 	return *result;
 }
@@ -223,7 +233,7 @@ template <typename Arg0>
 static ApiCommand_<void (*)(Arg0)> &AddCommand1(void (*method)(Arg0))
 {
 	typedef ApiCommand_<void (*)(Arg0)> ResultType;
-	ResultType *result = g_renderQueue->allocType<ResultType>(1);
+	ResultType *result = g_apiWrap->allocCommand<ResultType>();
 	new (result) ResultType(method);
 	return *result;
 }
@@ -232,7 +242,7 @@ template <typename Arg0, typename Arg1>
 static ApiCommand_<void (*)(Arg0,Arg1)> &AddCommand2(void (*method)(Arg0,Arg1))
 {
 	typedef ApiCommand_<void (*)(Arg0,Arg1)> ResultType;
-	ResultType *result = g_renderQueue->allocType<ResultType>(1);
+	ResultType *result = g_apiWrap->allocCommand<ResultType>();
 	new (result) ResultType(method);
 	return *result;
 }
@@ -241,7 +251,7 @@ template <typename Rt, typename Arg0, typename Arg1, typename Arg2>
 static ApiCommand_<Rt (*)(Arg0,Arg1,Arg2)> &AddCommand3(Rt (*method)(Arg0,Arg1,Arg2))
 {
 	typedef ApiCommand_<Rt (*)(Arg0,Arg1,Arg2)> ResultType;
-	ResultType *result = g_renderQueue->allocType<ResultType>(1);
+	ResultType *result = g_apiWrap->allocCommand<ResultType>();
 	new (result) ResultType(method);
 	return *result;
 }
@@ -250,7 +260,7 @@ template <typename Arg0, typename Arg1, typename Arg2, typename Arg3>
 static ApiCommand_<void (*)(Arg0,Arg1,Arg2,Arg3)> &AddCommand4(void (*method)(Arg0,Arg1,Arg2,Arg3))
 {
 	typedef ApiCommand_<void (*)(Arg0,Arg1,Arg2,Arg3)> ResultType;
-	ResultType *result = g_renderQueue->allocType<ResultType>(1);
+	ResultType *result = g_apiWrap->allocCommand<ResultType>();
 	new (result) ResultType(method);
 	return *result;
 }
@@ -259,10 +269,22 @@ template <typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename A
 static ApiCommand_<void (*)(Arg0,Arg1,Arg2,Arg3,Arg4)> &AddCommand5(void (*method)(Arg0,Arg1,Arg2,Arg3,Arg4))
 {
 	typedef ApiCommand_<void (*)(Arg0,Arg1,Arg2,Arg3,Arg4)> ResultType;
-	ResultType *result = g_renderQueue->allocType<ResultType>(1);
+	ResultType *result = g_apiWrap->allocCommand<ResultType>();
 	new (result) ResultType(method);
 	return *result;
 }
+
+ApiWrap::ApiWrap()
+{
+	m_readPos = m_writePos = 0;
+	m_lastLinkPos = -1;
+
+	m_numObjectDeletions = 0;
+}
+
+ApiWrap::~ApiWrap()
+{}
+
 
 void ApiWrap::createTexture2D(phandle_t result, TexFormat format, int width, int height, int flags /*= 0*/)
 {
@@ -364,7 +386,7 @@ void ApiWrap::deleteRasterizerState(phandle_t h)
 	addObjectDeletion(RenderApi::deleteRasterizerState, h);
 }
 
-void ApiWrap::addObjectDeletion( delete_func_t func, phandle_t h )
+void ApiWrap::addObjectDeletion(delete_func_t func, phandle_t h)
 {
 	if (m_numObjectDeletions >= MAX_DELETE_COMMANDS) {
 		Errorf("overflowed");
@@ -378,7 +400,7 @@ void ApiWrap::addObjectDeletion( delete_func_t func, phandle_t h )
 
 void ApiWrap::createWindowTarget(phandle_t h, Handle hwnd)
 {
-
+	AddCommand2(RenderApi::createWindowTarget).args(h, hwnd);
 }
 
 void ApiWrap::updateWindowTarget(phandle_t h, Handle newWndId)
@@ -388,24 +410,60 @@ void ApiWrap::updateWindowTarget(phandle_t h, Handle newWndId)
 
 void ApiWrap::deleteWindowTarget(phandle_t h)
 {
-
+	addObjectDeletion(RenderApi::deleteWindowTarget, h);
 }
 
-void *ApiWrap::allocRingBuf(int size)
+byte_t *ApiWrap::allocRingBuf(int size)
 {
-	void *result = 0;
+	// 4 bytes align
+	size = (size + 3) & (~3);
+
+	byte_t *result = 0;
 
 	if (m_writePos + size <= RING_BUFFER_SIZE) {
-		if (m_writePos < m_readPos) {
-			if (m_readPos - m_writePos < size)
-				wait(0);
-			else {
-				result = m_ringBuffer + m_writePos;
-				m_writePos += size;
-			}
-		}
-	} else {
+		waitToPos(m_writePos + size);
+		result = m_ringBuffer + m_writePos;
+		m_writePos += size;
 
+		return result;
+	}
+
+	// wrap to begin
+	if (m_writePos > size) {
+		waitToPos(size);
+		result = m_ringBuffer;
+		m_writePos = size;
+
+		return result;
+	}
+
+	// error, don't have enough space for allocate.
+	Errorf("size is too large");
+	return 0;
+}
+
+void ApiWrap::waitToPos(int pos)
+{
+	if (m_writePos >= m_readPos) {
+		if (pos < m_readPos)
+			return;
+
+		if (pos > m_writePos)
+			return;
+
+		// do wait
+		while (m_readPos < pos)
+			OsUtil::sleep(0);
+	} else {
+		if (pos > m_writePos) {
+			if (pos < m_readPos)
+				return;
+			while (m_readPos < pos)
+				OsUtil::sleep(0);
+		} else {
+			while (m_readPos > m_writePos || m_readPos < pos)
+				OsUtil::sleep(0);
+		}
 	}
 }
 
