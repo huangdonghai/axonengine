@@ -130,7 +130,7 @@ void DX9_Uniform::cache()
 	memcpy(m_datap, m_src->m_datap, m_dataSize);
 }
 
-void DX9_Uniform::setUniform( UniformItem &item, const void *q )
+void DX9_Uniform::setUniform(UniformItem &item, const void *q)
 {
 		// direct set
 	HRESULT hr;
@@ -246,7 +246,7 @@ DX9_Shader::DX9_Shader()
 	m_p2tWidth = 0;
 	m_p2tHeight = 0;
 	m_haveTextureTarget = false;
-	m_sortHint = SortHint_opacit;
+	m_sortHint = ShaderInfo::SortHint_Opacit;
 	m_curTechnique = 0;
 
 	m_coupled = 0;
@@ -362,7 +362,7 @@ ParameterInfo *DX9_Shader::getTweakableDef(int index)
 }
 
 
-Shader::SortHint DX9_Shader::getSortHint() const
+ShaderInfo::SortHint DX9_Shader::getSortHint() const
 {
 	return m_sortHint;
 }
@@ -392,7 +392,7 @@ void DX9_Shader::initSortHint()
 
 	if (!anno) return;
 
-	m_sortHint = (SortHint)EffectHelper(m_object).getInt(anno);
+	m_sortHint = (ShaderInfo::SortHint)EffectHelper(m_object).getInt(anno);
 }
 
 void DX9_Shader::initAnnotation()
@@ -701,12 +701,12 @@ D3D9ShaderManager::D3D9ShaderManager()
 D3D9ShaderManager::~D3D9ShaderManager()
 {}
 
-Shader *D3D9ShaderManager::findShader(const String &name, const ShaderMacro &macro)
+DX9_Shader *D3D9ShaderManager::findShader(const String &name, const ShaderMacro &macro)
 {
 	return findShader(FixedString(name), macro);
 }
 
-Shader *D3D9ShaderManager::findShader(const FixedString &nameId, const ShaderMacro &macro)
+DX9_Shader *D3D9ShaderManager::findShader(const FixedString &nameId, const ShaderMacro &macro)
 {
 	DX9_Shader*& shader = m_shaderPool[nameId][macro];
 
@@ -716,7 +716,7 @@ Shader *D3D9ShaderManager::findShader(const FixedString &nameId, const ShaderMac
 		if (!v) {
 			delete shader;
 			shader = m_defaulted;
-			shader->incref();
+			shader->AddRef();
 		}
 	}
 

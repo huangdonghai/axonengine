@@ -32,9 +32,6 @@ struct Interaction {
 	int numTargets;
 	RenderTarget *targets[MAX_TARGETS];
 
-	int resource;		// geometry resource
-	Shader *shader;
-
 	uint_t frameNum;
 
 	bool instanced;

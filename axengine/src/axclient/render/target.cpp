@@ -23,35 +23,45 @@ RenderTarget::RenderTarget(int width, int height, TexFormat format)
 	m_height = height;
 	m_format = format;
 
+	m_gbuffer = 0;
+	m_lightBuffer = 0;
+
 	String texname;
 	StringUtil::sprintf(texname, "_render_target_%d_%d_%d", m_width, m_height, g_system->generateId());
 
 	g_apiWrap->createTexture2D(&m_window, format, width, height, Texture::IF_RenderTarget);
 }
 
-RenderTarget::RenderTarget( Handle hwnd, const String &debugname )
+RenderTarget::RenderTarget(Handle hwnd, const String &debugname)
 {
 	m_type = kWindow;
 	m_wndId = hwnd;
 	m_name = debugname;
 
-	g_apiWrap->createWindowTarget(&m_window, hwnd);
+	m_width = -1;
+	m_height = -1;
+	m_format = TexFormat::AUTO;
+
+	m_gbuffer = 0;
+	m_lightBuffer = 0;
+
+	setWindowHandle(hwnd);
 }
 
 RenderTarget::~RenderTarget()
 {
-	if (isTexture())
+	if (isTexture()) {
 		g_apiWrap->deleteTexture2D(&m_window);
-	else
+	} else {
 		g_apiWrap->deleteWindowTarget(&m_window);
+		SafeDelete(m_gbuffer);
+		SafeDelete(m_lightBuffer);
+	}
 }
 
-Rect RenderTarget::getRect()
+Rect RenderTarget::getRect() const
 {
-	if (isTexture())
-		return Rect(0, 0, m_width, m_height);
-	else
-		return RenderSystem::getWindowRect(m_wndId);
+	return Rect(0, 0, m_width, m_height);
 }
 
 void RenderTarget::attachDepth(RenderTarget *depth)
@@ -82,6 +92,29 @@ RenderTarget *RenderTarget::getColorAttached(int index) const
 {
 	AX_ASSERT(index < MAX_COLOR_ATTACHMENT);
 	return m_colorAttached[index];
+}
+
+void RenderTarget::setWindowHandle(Handle newId)
+{
+	Rect rect = RenderSystem::getWindowRect(newId);
+
+	if (rect.width == m_width || rect.height == m_height || newId == m_wndId)
+		return;
+
+	if (m_width == -1) {
+		g_apiWrap->createWindowTarget(&m_window, newId, rect.width, rect.height);
+	} else {
+		g_apiWrap->updateWindowTarget(&m_window, newId, rect.width, rect.height);
+	}
+
+	SafeDelete(m_gbuffer);
+	SafeDelete(m_lightBuffer);
+	m_gbuffer = new RenderTarget(rect.width, rect.height, TexFormat::RGBA16F);
+	m_lightBuffer = new RenderTarget(rect.width, rect.height, TexFormat::BGRA8);
+
+	m_width = rect.width;
+	m_height = rect.height;
+	m_wndId = newId;
 }
 
 ReflectionMap::ReflectionMap(RenderWorld *world, RenderEntity *actor, Primitive *prim, int width, int height)

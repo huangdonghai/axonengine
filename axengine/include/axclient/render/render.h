@@ -239,5 +239,14 @@ template <typename Wrapper> static inline typename Wrapper::pointer GetPtrHelper
 #include "queue.h"
 #include "render_system.h"
 
+AX_BEGIN_NAMESPACE
+
+extern RenderQueue *g_renderQueue;
+extern ShaderMacro g_shaderMacro;
+extern Uniforms g_uniforms;
+extern IRenderDriver *g_renderDriver;
+
+AX_END_NAMESPACE
+
 #endif // end guardian
 

@@ -6,19 +6,20 @@ AX_BEGIN_NAMESPACE
 class VertexObject
 {
 public:
-private:
+
+public:
 	Handle m_h;
+	VertexType m_vt;
 	int m_offset;		// byte offset
 	int m_dataSize;
 	int m_count;
-	VertexType m_vt;
 	bool m_chained;
 };
 
 class InstanceObject
 {
 public:
-private:
+public:
 	Handle m_h;
 	int m_offset;
 	int m_count;
@@ -27,8 +28,9 @@ private:
 class IndexObject
 {
 public:
-private:
+public:
 	Handle m_h;
+	ElementType m_elementType;
 	int m_dataSize;
 	int m_count;
 	int m_activeCount;

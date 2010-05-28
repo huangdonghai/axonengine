@@ -15,6 +15,43 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
+class Unknown : public IUnknown
+{
+public:
+	Unknown() {}
+	virtual ~Unknown() {}
+
+	// methods inherited from ID3DXEffectStateManager
+	STDMETHOD(QueryInterface)(THIS_ REFIID iid, LPVOID *ppv)
+	{
+		if (iid == IID_IUnknown) {
+			*ppv = this;
+		} else {
+			*ppv = NULL;
+			return E_NOINTERFACE;
+		}
+
+		AddRef();
+		return S_OK;
+	}
+	STDMETHOD_(ULONG, AddRef)(THIS)
+	{
+		return(ULONG)InterlockedIncrement(&m_ref);
+	}
+
+	STDMETHOD_(ULONG, Release)(THIS)
+	{
+		if (0L == InterlockedDecrement(&m_ref)) {
+			delete this;
+			return 0L;
+		}
+
+		return m_ref;
+	}
+private:
+	volatile LONG m_ref;
+};
+
 class DX9_Shader;
 
 //--------------------------------------------------------------------------
@@ -157,7 +194,7 @@ private:
 // class D3D9Shader
 //--------------------------------------------------------------------------
 
-class DX9_Shader : public Shader
+class DX9_Shader : public Unknown
 {
 public:
 	friend class DX9_Pass;
@@ -174,7 +211,7 @@ public:
 	virtual SamplerInfo *getSamplerAnno(int index) const;
 	virtual int getNumTweakable() const;
 	virtual ParameterInfo *getTweakableDef(int index);
-	virtual SortHint getSortHint() const;
+	virtual ShaderInfo::SortHint getSortHint() const;
 	virtual bool haveTechnique(Technique tech) const;
 	virtual const ShaderInfo *getShaderInfo() const { return 0; }
 
@@ -210,7 +247,7 @@ protected:
 private:
 	LPD3DXEFFECT m_object;              // Effect object
 	String m_keyString;
-	SortHint m_sortHint;
+	ShaderInfo::SortHint m_sortHint;
 
 	D3DXHANDLE m_d3dxTechniques[Technique::Number];
 	IDirect3DTexture9 *m_samplerBound[SamplerType::NUMBER_ALL];
@@ -236,14 +273,14 @@ private:
 // class D3D9shadermanager
 //--------------------------------------------------------------------------
 
-class D3D9ShaderManager : public ShaderManager
+class D3D9ShaderManager
 {
 public:
 	D3D9ShaderManager();
 	virtual ~D3D9ShaderManager();
 
-	virtual Shader *findShader(const String &name, const ShaderMacro &macro = g_shaderMacro);
-	virtual Shader *findShader(const FixedString &nameId, const ShaderMacro &macro);
+	virtual DX9_Shader *findShader(const String &name, const ShaderMacro &macro = g_shaderMacro);
+	virtual DX9_Shader *findShader(const FixedString &nameId, const ShaderMacro &macro);
 	virtual void saveShaderCache(const String &name);
 	virtual void applyShaderCache(const String &name);
 

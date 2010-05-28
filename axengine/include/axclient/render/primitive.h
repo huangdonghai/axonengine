@@ -12,8 +12,10 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-//--------------------------------------------------------------------------
-// class Primitive
+class VertexObject;
+class InstanceObject;
+class IndexObject;
+
 //--------------------------------------------------------------------------
 
 // virtual base, can't create an instance for this
@@ -43,8 +45,6 @@ public:
 	virtual ~Primitive() = 0;
 
 	inline Hint getHint() const { return m_hint; }
-	inline int getCachedId() const { return m_cachedId; }
-	inline void setCachedId(int cached_id) { m_cachedId = cached_id; }
 	inline int getCachedFrame() const { return m_cachedFrame; }
 	inline void setCachedFrame(int frame) { m_cachedFrame = frame; }
 	inline Type getType() const { return m_type; }
@@ -74,6 +74,8 @@ public:
 	Interaction *getHeadInteraction() const { return m_headInteraction; }
 	int getNumChainedInteractions() const { return m_numChainedInteractions; }
 
+	virtual void draw(Technique tech) = 0;
+
 protected:
 	const Hint m_hint;
 	bool m_isDirty;		// dirty
@@ -96,6 +98,12 @@ protected:
 	int m_chainId;
 	Interaction *m_headInteraction;
 	int m_numChainedInteractions;
+
+	// overload parameter
+	InstanceObject *m_drawInstanceObject;
+	Material *m_drawMaterial;
+	IndexObject *m_drawIndexObj;
+
 };
 
 inline void Primitive::interactionChain(Interaction *last, int chainId)
@@ -162,7 +170,8 @@ public:
 	void setPointSize(float point_size);
 	float getPointSize() const;
 
-	// static helper function
+	virtual void draw(Technique tech) {}
+
 private:
 	int m_numPoints;
 	DebugVertex *m_points;
@@ -209,6 +218,8 @@ public:
 
 	void setLineWidth(float line_width);
 	float getLineWidth() const;
+
+	virtual void draw(Technique tech) {}
 
 	// helper static create
 	static LinePrim *createAxis(Hint hint, float line_length);
@@ -268,6 +279,8 @@ public:
 	bool isStriped() const { return m_isStriped; }
 	void setStriped(bool val) { m_isStriped = val; }
 
+	virtual void draw(Technique tech);
+
 	// static helper function
 	static MeshPrim *createScreenQuad(Hint hint, const Rect &rect, const Rgba &color, Material *material=nullptr, const Vector4 &st = Vector4(0,0,1,1));
 	static MeshPrim *createQuad(Hint hint, const Vector3 &p0, const Vector3 &p1);
@@ -290,6 +303,9 @@ private:
 	int m_numIndexes;
 	ushort_t *m_indexes;
 	bool m_isStriped;
+
+	VertexObject *m_vertexObject;
+	IndexObject *m_indexObject;
 };
 
 //--------------------------------------------------------------------------
@@ -339,6 +355,8 @@ public:
 	VerticalAlign getVerticalAlign() const { return m_verticalAlign; }
 	void setHorizonAlign(HorizonAlign align) { m_horizonAlign = align; }
 	void setVerticalAlign(VerticalAlign align) { m_verticalAlign = align; }
+
+	virtual void draw(Technique tech) {}
 
 	// static helper function
 	static TextPrim *createSimpleText(Hint hint, const Vector3 &xyz, const Rgba &color, const String &text, bool fixedWidth = true);
@@ -420,6 +438,8 @@ public:
 	bool isZonePrim() const { return m_isZonePrim; }
 	void setIsZonePrim(bool val) { m_isZonePrim = val; }
 
+	virtual void draw(Technique tech) {}
+
 private:
 	int m_numVertexes;
 	ChunkVertex *m_vertexes;
@@ -465,6 +485,8 @@ public:
 	Primitive *getPrimitive(int index);
 	void clear();
 
+	virtual void draw(Technique tech) {}
+
 private:
 	typedef Sequence<bool> BoolSeq;
 	Primitives m_primitives;
@@ -492,6 +514,8 @@ public:
 	const ushort_t *getIndexesPointer() const;
 	ushort_t *lockIndexes();
 	void unlockIndexes();
+
+	virtual void draw(Technique tech) {}
 
 private:
 	Primitive *m_refered;
@@ -528,13 +552,15 @@ public:
 	const Param &getInstance(int index) const;
 	const Param *getAllInstances() const;
 
+	virtual void draw(Technique tech) {}
+
 private:
 	int m_numInstances;
 	Primitive *m_instanced;
 	Param* m_params;
 };
 
-
+#if 0
 //--------------------------------------------------------------------------
 // class PrimitiveManager
 //--------------------------------------------------------------------------
@@ -558,6 +584,7 @@ protected:
 	};
 	List<int> m_waitUncache;
 };
+#endif
 
 AX_END_NAMESPACE
 

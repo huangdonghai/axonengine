@@ -88,7 +88,7 @@ void MaterialEditor::initFromMaterial(const String &name)
 	}
 #endif
 
-	Shader *shader = mat->getShaderTemplate();
+	const ShaderInfo *shader = mat->getShaderInfo();
 	AX_ASSERT(shader);
 
 #if 0

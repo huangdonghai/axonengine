@@ -24,10 +24,8 @@ public:
 	// must be success
 	bool init(const FixedString &name);
 
-	const String &getShaderName() const;
-	Shader *getShaderTemplate() const;
-	const FixedString &getShaderNameId() const { return m_shaderNameId; }
-	Shader *getRealShader() const;
+	const ShaderInfo *getShaderInfo() const;
+	const FixedString &getShaderName() const { return m_shaderName; }
 	bool isWireframe() const;
 	bool isPhysicsHelper() const;
 
@@ -100,8 +98,8 @@ private:
 	float m_detailScale;
 	bool m_haveDetail;
 
-	Shader *m_shaderTemplate;
-	FixedString m_shaderNameId;
+	const ShaderInfo *m_shaderInfo;
+	FixedString m_shaderName;
 	Texture *m_textures[SamplerType::NUMBER_ALL];
 	ShaderParams m_shaderParams;
 
@@ -109,8 +107,8 @@ private:
 	bool m_baseTcAnim;
 	Matrix4 m_baseTcMatrix;
 
-	bool m_features[Shader::MAX_FEATURES];
-	int m_literals[Shader::MAX_LITERALS];
+	bool m_features[ShaderInfo::MAX_FEATURES];
+	int m_literals[ShaderInfo::MAX_LITERALS];
 
 	// pixel to texel conversion
 	bool m_p2tEnabled;
@@ -157,7 +155,7 @@ inline float Material::getMatShiness() const
 
 inline void Material::setFeature(int index, bool enabled)
 {
-	AX_ASSERT(index >= 0 && index < Shader::MAX_FEATURES);
+	AX_ASSERT(index >= 0 && index < ShaderInfo::MAX_FEATURES);
 	if (m_features[index] != enabled) {
 		m_shaderMacroNeedRegen = true;
 		m_features[index] = enabled;
@@ -166,13 +164,13 @@ inline void Material::setFeature(int index, bool enabled)
 
 inline bool Material::isFeatureEnabled(int index) const
 {
-	AX_ASSERT(index >= 0 && index < Shader::MAX_FEATURES);
+	AX_ASSERT(index >= 0 && index < ShaderInfo::MAX_FEATURES);
 	return m_features[index];
 }
 
 inline void Material::setLiteral(int index, int value)
 {
-	AX_ASSERT(index >= 0 && index < Shader::MAX_LITERALS);
+	AX_ASSERT(index >= 0 && index < ShaderInfo::MAX_LITERALS);
 	if (m_literals[index] != value) {
 		m_literals[index] = value;
 		m_shaderMacroNeedRegen = true;
@@ -180,7 +178,7 @@ inline void Material::setLiteral(int index, int value)
 }
 inline int Material::getLiteral(int index) const
 {
-	AX_ASSERT(index >= 0 && index < Shader::MAX_LITERALS);
+	AX_ASSERT(index >= 0 && index < ShaderInfo::MAX_LITERALS);
 	return m_literals[index];
 }
 

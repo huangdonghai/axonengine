@@ -16,6 +16,20 @@ AX_BEGIN_NAMESPACE
 static const char *glname = "axopengl.driver";
 static const char *d3d9name = "axdirect3d9.driver";
 
+FontPtr g_defaultFont;
+FontPtr g_consoleFont;
+FontPtr g_miniFont;
+
+RenderQueue *g_renderQueue;
+ShaderMacro g_shaderMacro;
+Uniforms g_uniforms;
+IRenderDriver *g_renderDriver;
+
+
+// module object
+ApiWrap *g_apiWrap = 0;
+RenderContext *g_renderContext = 0;
+
 AX_BEGIN_COMMAND_MAP(RenderSystem)
 	AX_COMMAND_ENTRY("texlist",	texlist_f)
 	AX_COMMAND_ENTRY("matlist",	matlist_f)
@@ -41,12 +55,7 @@ void RenderSystem::initialize()
 
 	Printf("Initializing RenderSystem...\n");
 
-	g_queues[0] = new RenderQueue;
-	g_queues[0]->initialize();
-	g_queues[1] = new RenderQueue;
-	g_queues[1]->initialize();
-
-	g_renderQueue = g_queues[m_frameNum];
+	g_renderQueue = new RenderQueue();
 
 #if 0
 	gRenderDriver = (IDriver*)(gClassFactory->createInstanceByAlias(ClassName_RenderDriver));
@@ -72,11 +81,41 @@ void RenderSystem::initialize()
 
 	m_selection = new Selection();
 
+#if 0
+	gMaterialFactory = new MaterialManager;
+
+	g_fontFactory = new Manager;
+	g_fontFactory->initialize();
+	Material::initManager();
+#else
+	Font::initManager();
+	MaterialDecl::initManager();
+#endif
+
+	g_defaultFont = Font::load("fonts/default", 14,14);
+	g_consoleFont = Font::load("fonts/console", 14,14);
+	g_miniFont = Font::load("fonts/console", 11,11);
+
 	Printf("Initialized RenderSystem\n");
 }
 
 void RenderSystem::finalize()
 {
+	g_defaultFont.clear();
+	g_consoleFont.clear();
+	g_miniFont.clear();
+
+#if 0
+	g_fontFactory->finalize();
+	SafeDelete(g_fontFactory);
+
+	SafeDelete(gMaterialFactory);
+	Material::finalizeManager();
+#else
+	Font::finalizeManager();
+	MaterialDecl::finalizeManager();
+#endif
+
 	g_renderDriver->finalize();
 	SafeDelete(g_renderDriver);
 }
@@ -315,7 +354,6 @@ void RenderSystem::endFrame()
 	m_curScene.reset();
 
 	m_frameNum++;
-	g_renderQueue = g_queues[m_frameNum%2];
 }
 
 void RenderSystem::beginHitTest(const RenderCamera &view)

@@ -67,9 +67,6 @@ DX9_Window::DX9_Window()
 		, NULL, NULL
 		, (HINSTANCE)GetModuleHandleW(NULL)
 		, NULL);
-
-	m_gbuffer = Handle(0);
-	m_lightBuffer = Handle(0);
 }
 
 DX9_Window::DX9_Window(Handle wndId)
@@ -77,9 +74,6 @@ DX9_Window::DX9_Window(Handle wndId)
 	m_swapChain = 0;
 	m_backbuffer = 0;
 	m_swapChainWnd = 0;
-
-	m_gbuffer = Handle(0);
-	m_lightBuffer = Handle(0);
 
 	m_wndId = (HWND)wndId.toVoidStar();
 }
@@ -187,6 +181,7 @@ void DX9_Window::checkSwapChain()
 	m_swapChainWnd = m_wndId;
 	m_presentInterval = flags;
 
+#if 0
 	if (m_gbuffer) {
 		dx9DeleteTexture2D(&m_gbuffer);
 		m_gbuffer.clear();
@@ -204,6 +199,7 @@ void DX9_Window::checkSwapChain()
 	dx9CreateTexture2D(&m_lightBuffer, r.right, r.bottom, TexFormat::BGRA8, Texture::IF_RenderTarget);
 //	m_lightBuffer->getTexture()->setFilterMode(Texture::FM_Nearest);
 //	m_lightBuffer->getTexture()->setClampMode(Texture::CM_ClampToEdge);
+#endif
 }
 
 AX_END_NAMESPACE

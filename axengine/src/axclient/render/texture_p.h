@@ -20,6 +20,8 @@ public:
 	void uploadSubTexture(const Rect &rect, const void *pixels, TexFormat format);
 	void generateMipmap();
 
+	phandle_t getPHandle() { return &m_handle; }
+
 private:
 	Handle m_handle;
 	AsioRead m_asioRead;

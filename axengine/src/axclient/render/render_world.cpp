@@ -20,11 +20,11 @@ enum {
 
 int RenderWorld::m_frameNum = 0;
 
-RenderWorld::RenderWorld() {
+RenderWorld::RenderWorld()
+{
 	m_outdoorEnv = nullptr;
 	TypeZeroArray(m_histogram);
 	m_curHistogramIndex = 0;
-	m_histogramQuery = g_queryManager->allocQuery();
 	m_lastExposure = 1;
 
 	m_visFrameId = 1;
@@ -32,11 +32,11 @@ RenderWorld::RenderWorld() {
 	m_shadowDir.set(0,0,0);
 }
 
-RenderWorld::~RenderWorld() {
-	g_queryManager->freeQuery(m_histogramQuery);
-}
+RenderWorld::~RenderWorld()
+{}
 
-void RenderWorld::initialize(int worldSize) {
+void RenderWorld::initialize(int worldSize)
+{
 	worldSize = Math::clamp(worldSize, 1024, 8192);
 	worldSize = Math::nextPowerOfTwo(worldSize);
 	m_worldSize = worldSize;
@@ -49,11 +49,13 @@ void RenderWorld::initialize(int worldSize) {
 	generateQuadNode();
 }
 
-void RenderWorld::finalize() {
+void RenderWorld::finalize()
+{
 //		TypeFreeContainer(m_linkedActorSeq);
 }
 
-void RenderWorld::addEntity(RenderEntity *entity) {
+void RenderWorld::addEntity(RenderEntity *entity)
+{
 	if (entity->m_world) {
 		if (entity->m_world == this) {
 			updateEntity(entity);
@@ -77,7 +79,8 @@ void RenderWorld::addEntity(RenderEntity *entity) {
 	linkEntity(entity);
 }
 
-void RenderWorld::updateEntity(RenderEntity *entity) {
+void RenderWorld::updateEntity(RenderEntity *entity)
+{
 	if (entity->getKind() == RenderEntity::kTerrain) {
 		return;
 	}
@@ -86,7 +89,8 @@ void RenderWorld::updateEntity(RenderEntity *entity) {
 	linkEntity(entity);
 }
 
-void RenderWorld::removeEntity(RenderEntity *entity) {
+void RenderWorld::removeEntity(RenderEntity *entity)
+{
 	if (entity->m_world != this) {
 		return;
 	}
@@ -102,7 +106,8 @@ void RenderWorld::removeEntity(RenderEntity *entity) {
 }
 
 
-void RenderWorld::renderTo(QueuedScene *qscene) {
+void RenderWorld::renderTo(QueuedScene *qscene)
+{
 	m_frameNum++;
 
 	qscene->worldFrameId = m_frameNum;
@@ -221,13 +226,13 @@ void RenderWorld::renderTo(QueuedScene *qscene) {
 			continue;
 		}
 
-		Shader *shader = mat->getShaderTemplate();
+		const ShaderInfo *shader = mat->getShaderInfo();
 		if (!shader) {
 			continue;
 		}
 
-		for (int j = 0; j < shader->getNumSampler(); j++) {
-			SamplerInfo *sa = shader->getSamplerAnno(j);
+		for (int j = 0; j < shader->m_samplerAnnos.size(); j++) {
+			const SamplerInfo *sa = &shader->m_samplerAnnos[j];
 			if (sa->m_renderType != SamplerInfo::Reflection) {
 				continue;
 			}
@@ -368,7 +373,8 @@ void RenderWorld::renderTo( QueuedScene *qscene, QuadNode *node )
 }
 
 // mark visible
-void RenderWorld::markVisible_r(QueuedScene *qscene, QuadNode *node, Plane::Side parentSide) {
+void RenderWorld::markVisible_r(QueuedScene *qscene, QuadNode *node, Plane::Side parentSide)
+{
 	if (node == NULL)
 		return;
 
@@ -466,7 +472,8 @@ void RenderWorld::markVisible_r(QueuedScene *qscene, QuadNode *node, Plane::Side
 	qscene->addHelperInteraction(0, line);
 }
 
-void RenderWorld::generateQuadNode() {
+void RenderWorld::generateQuadNode()
+{
 	uint_t size = m_worldSize;
 
 	// setup root
@@ -479,7 +486,8 @@ void RenderWorld::generateQuadNode() {
 	generateChildNode_r(m_rootNode);
 }
 
-void RenderWorld::generateChildNode_r(QuadNode *node) {
+void RenderWorld::generateChildNode_r(QuadNode *node)
+{
 	float size = node->size * 0.5f;
 	float offset = size * 0.5f;
 
@@ -524,7 +532,8 @@ void RenderWorld::generateChildNode_r(QuadNode *node) {
 }
 
 
-void RenderWorld::linkEntity(RenderEntity *entity) {
+void RenderWorld::linkEntity(RenderEntity *entity)
+{
 	entity->m_linkedBbox = entity->getBoundingBox();
 	entity->m_linkedExtends = entity->m_linkedBbox.getExtends().getLength();
 	entity->m_linkedFrame = m_visFrameId;
@@ -573,7 +582,8 @@ void RenderWorld::linkEntity(RenderEntity *entity) {
 		node->frameUpdated(m_visFrameId);
 }
 
-void RenderWorld::unlinkEntity(RenderEntity *la) {
+void RenderWorld::unlinkEntity(RenderEntity *la)
+{
 	QuadNode *node = la->m_linkedNode;
 
 	if (!la->isLight())
@@ -586,7 +596,8 @@ void RenderWorld::unlinkEntity(RenderEntity *la) {
 #endif
 }
 
-void RenderWorld::updateExposure(QueuedScene *qscene) {
+void RenderWorld::updateExposure(QueuedScene *qscene)
+{
 	if (1 || !r_hdr.getBool()) {
 		qscene->m_histogramIndex = -1;
 		qscene->m_histogramQueryId = 0;

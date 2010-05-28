@@ -276,8 +276,8 @@ static ApiCommand_<void (*)(Arg0,Arg1,Arg2,Arg3,Arg4)> &AddCommand5(void (*metho
 
 ApiWrap::ApiWrap()
 {
-	m_readPos = m_writePos = 0;
-	m_lastLinkPos = -1;
+	m_bufReadPos = m_bufWritePos = 0;
+	m_cmdReadPos = m_cmdWritePos = 0;
 
 	m_numObjectDeletions = 0;
 }
@@ -398,12 +398,12 @@ void ApiWrap::addObjectDeletion(delete_func_t func, phandle_t h)
 	m_numObjectDeletions++;
 }
 
-void ApiWrap::createWindowTarget(phandle_t h, Handle hwnd)
+void ApiWrap::createWindowTarget(phandle_t h, Handle hwnd, int width, int height)
 {
 	AddCommand2(RenderApi::createWindowTarget).args(h, hwnd);
 }
 
-void ApiWrap::updateWindowTarget(phandle_t h, Handle newWndId)
+void ApiWrap::updateWindowTarget(phandle_t h, Handle newWndId, int width, int height)
 {
 
 }
@@ -420,19 +420,19 @@ byte_t *ApiWrap::allocRingBuf(int size)
 
 	byte_t *result = 0;
 
-	if (m_writePos + size <= RING_BUFFER_SIZE) {
-		waitToPos(m_writePos + size);
-		result = m_ringBuffer + m_writePos;
-		m_writePos += size;
+	if (m_bufWritePos + size <= RING_BUFFER_SIZE) {
+		waitToPos(m_bufWritePos + size);
+		result = m_ringBuffer + m_bufWritePos;
+		m_bufWritePos += size;
 
 		return result;
 	}
 
 	// wrap to begin
-	if (m_writePos > size) {
+	if (m_bufWritePos > size) {
 		waitToPos(size);
 		result = m_ringBuffer;
-		m_writePos = size;
+		m_bufWritePos = size;
 
 		return result;
 	}
@@ -444,27 +444,32 @@ byte_t *ApiWrap::allocRingBuf(int size)
 
 void ApiWrap::waitToPos(int pos)
 {
-	if (m_writePos >= m_readPos) {
-		if (pos < m_readPos)
+	if (m_bufWritePos >= m_bufReadPos) {
+		if (pos < m_bufReadPos)
 			return;
 
-		if (pos > m_writePos)
+		if (pos > m_bufWritePos)
 			return;
 
 		// do wait
-		while (m_readPos < pos)
+		while (m_bufReadPos < pos)
 			OsUtil::sleep(0);
 	} else {
-		if (pos > m_writePos) {
-			if (pos < m_readPos)
+		if (pos > m_bufWritePos) {
+			if (pos < m_bufReadPos)
 				return;
-			while (m_readPos < pos)
+			while (m_bufReadPos < pos)
 				OsUtil::sleep(0);
 		} else {
-			while (m_readPos > m_writePos || m_readPos < pos)
+			while (m_bufReadPos > m_bufWritePos || m_bufReadPos < pos)
 				OsUtil::sleep(0);
 		}
 	}
+}
+
+void ApiWrap::setShaderConst(Uniforms::ItemName name, int size, const void *p)
+{
+
 }
 
 
@@ -474,7 +479,8 @@ void RenderContext::issueQueue(RenderQueue *rq)
 
 	beginFrame();
 
-	RenderTarget *window = rq->getTarget();
+	m_frameWindow = rq->getTarget();
+	AX_ASSERT(m_frameWindow->isWindow());
 	// TODO: bind target
 
 	int view_count = rq->getSceneCount();
@@ -531,27 +537,27 @@ void RenderContext::drawScene(QueuedScene *scene, const RenderClearer &clearer)
 
 #define BEGIN_PIX(x)
 #define END_PIX()
-#define AX_SU(a,b)
+#define AX_SU(a,b) setUniform(Uniforms::a, b);
 
-void RenderContext::drawScene_world( QueuedScene *scene, const RenderClearer &clearer )
+void RenderContext::drawScene_world(QueuedScene *scene, const RenderClearer &clearer)
 {
 	BEGIN_PIX("DrawWorld");
 
-	s_technique = Technique::Main;
+	m_technique = Technique::Main;
 
 	const Rect &rect = scene->camera.getViewRect();
 	int width = rect.width;
 	int height = rect.height;
 
 	if (1) {
-//		s_gbuffer = d3d9FrameWnd->m_gbuffer;
-//		AX_SU(g_sceneDepth, s_gbuffer->getTextureDX());
+		m_gbuffer = m_frameWindow->getGBuffer();
+		AX_SU(g_sceneDepth, m_gbuffer->getPHandle());
 
-//		s_lbuffer = d3d9FrameWnd->m_lightBuffer;
-//		AX_SU(g_lightBuffer, s_lbuffer->getTextureDX());
+		m_lbuffer = m_frameWindow->getLightBuffer();
+		AX_SU(g_lightBuffer, m_lbuffer->getPHandle());
 
 	} else {
-		d3d9WorldTarget = 0;
+		m_worldRt = 0;
 	}
 
 	// set exposure
@@ -642,7 +648,7 @@ void RenderContext::drawScene_world( QueuedScene *scene, const RenderClearer &cl
 void RenderContext::drawScene_noworld(QueuedScene *scene, const RenderClearer &clearer)
 {
 	BEGIN_PIX("DrawNoworld");
-	s_technique = Technique::Main;
+	m_technique = Technique::Main;
 
 	setupScene(scene, &clearer, scene->target);
 
@@ -665,23 +671,19 @@ void RenderContext::drawScene_noworld(QueuedScene *scene, const RenderClearer &c
 	drawPass_overlay(scene);
 
 	if (m_isStatistic)
-#if 0
-		g_statistic->setValue(stat_staticsTime, (end - start) * 1000);
-#else
 		stat_staticsTime.setInt((end - start) * 1000);
-#endif
 	END_PIX();
 }
 
 void RenderContext::drawPass_gfill(QueuedScene *scene)
 {
-	s_technique = Technique::Zpass;
+	m_technique = Technique::Zpass;
 
 	RenderClearer clearer;
 	clearer.clearDepth(true);
 	clearer.clearColor(true, Rgba::Zero);
 
-	setupScene(scene, &clearer, s_gbuffer);
+	setupScene(scene, &clearer, m_gbuffer);
 
 	for (int i = 0; i < scene->numInteractions; i++) {
 		drawInteraction(scene->interactions[i]);
@@ -692,22 +694,155 @@ void RenderContext::drawPass_gfill(QueuedScene *scene)
 
 void RenderContext::drawPass_overlay(QueuedScene *scene)
 {
+	if (!scene->numOverlayPrimitives) {
+		return;
+	}
 
+	// draw overlay
+	RenderCamera camera = scene->camera;
+	camera.setOverlay(camera.getViewRect());
+
+	setupScene(scene, nullptr, nullptr, &camera);
+
+	for (int i = 0; i < scene->numOverlayPrimitives; i++) {
+		drawPrimitive(scene->overlayPrimIds[i]);
+	}
+
+//	unsetScene(scene, nullptr, nullptr, &camera);
 }
 
 void RenderContext::drawPass_composite(QueuedScene *scene)
 {
+#if 0
+	if (r_wireframe.getBool()) {
+		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		d3d9StateManager->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
+		d3d9ForceWireframe = true;
+	} else {
+		//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		d3d9StateManager->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
+		d3d9ForceWireframe = false;
+	}
+#endif
 
+	m_technique = Technique::Main;
+
+	setupScene(scene, 0, scene->target);
+
+	issueVisQuery();
+
+	if (!r_showLightBuf.getBool()) {
+		RenderClearer clearer;
+		clearer.clearDepth(false);
+		clearer.clearColor(true, scene->clearColor);
+		g_apiWrap->clear(clearer);
+
+		for (int i = 0; i < scene->numInteractions; i++) {
+			drawInteraction(scene->interactions[i]);
+		}
+	}
+
+	for (int i = 0; i < scene->numDebugInteractions; i++) {
+		drawInteraction(scene->debugInteractions[i]);
+	}
+
+	for (int i = 0; i < scene->numPrimitives; i++) {
+		drawPrimitive(scene->primIds[i]);
+	}
+#if 0
+	unsetScene(scene, 0, scene->target);
+
+	d3d9StateManager->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
+	d3d9ForceWireframe = false;
+#endif
 }
 
 void RenderContext::drawPass_shadowGen(QueuedScene *scene)
 {
+	if (!scene->numInteractions)
+		return;
 
+	RenderTarget *target = scene->camera.getTarget();
+
+	Texture *tex = target->getTexture();
+
+	QueuedLight *qlight = scene->sourceLight;
+	QueuedShadow *qshadow = qlight->shadowInfo;
+
+	if (r_shadowGen.getBool()) {
+		BEGIN_PIX("ShadowGen");
+		// offset the geometry slightly to prevent z-fighting
+		// note that this introduces some light-leakage artifacts
+		float factor = gl_shadowOffsetFactor.getFloat();
+		float units = gl_shadowOffsetUnits.getFloat() / 0x10000;
+
+#if 0
+		d3d9StateManager->SetRenderState(D3DRS_DEPTHBIAS, F2DW(units));
+		d3d9StateManager->SetRenderState(D3DRS_SLOPESCALEDEPTHBIAS, F2DW(factor));
+#endif
+		m_technique = Technique::ShadowGen;
+
+		RenderClearer clearer;
+		clearer.clearDepth(true);
+
+		setupScene(scene, 0);
+		g_apiWrap->clear(clearer);
+
+#if 0
+		d3d9StateManager->SetRenderState(D3DRS_COLORWRITEENABLE, 0);
+#endif
+		for (int i = 0; i < scene->numInteractions; i++) {
+			drawInteraction(scene->interactions[i]);
+		}
+#if 0
+		d3d9StateManager->SetRenderState(D3DRS_COLORWRITEENABLE, 0xf);
+#endif
+		if (scene->isLastCsmSplits())
+			issueShadowQuery();
+
+		//unsetScene(scene);
+
+		// disable depth biase
+#if 0
+		d3d9StateManager->SetRenderState(D3DRS_DEPTHBIAS, 0);
+		d3d9StateManager->SetRenderState(D3DRS_SLOPESCALEDEPTHBIAS, 0);
+#endif
+		END_PIX();
+	}
+
+#if 0
+	tex->setHardwareShadowMap(true);
+	tex->setFilterMode(Texture::FM_Linear);
+	tex->setClampMode(Texture::CM_Clamp);
+	tex->setBorderColor(Rgba::White);
+#endif
+
+	scene->rendered = true;
 }
 
 void RenderContext::drawPass_lights(QueuedScene *scene)
 {
+	RenderClearer clearer;
 
+	clearer.clearColor(true, Rgba::Zero);
+
+	if (r_showLightBuf.getBool())
+		m_lbuffer = 0;
+
+	setupScene(m_worldScene, &clearer, m_lbuffer);
+	clearer.clearColor(false);
+
+	for (int i = 0; i < scene->numLights; i++) {
+		QueuedLight *ql = scene->lights[i];
+
+		if (ql->type == RenderLight::kGlobal) {
+			drawGlobalLight(scene, ql);
+		} else {
+			drawLocalLight(scene, ql);
+		}
+	}
+
+	//unsetScene(d3d9WorldScene, nullptr, s_lbuffer);
 }
 
 void RenderContext::drawPass_postprocess(QueuedScene *scene)
@@ -717,22 +852,121 @@ void RenderContext::drawPass_postprocess(QueuedScene *scene)
 
 void RenderContext::drawScene_worldSub(QueuedScene *scene)
 {
+	m_technique = Technique::Main;
 
+	RenderClearer clear;
+	clear.clearDepth(true);
+	clear.clearColor(true, scene->clearColor);
+
+	// no shadow, no light, no fog etc. direct composite
+	setupScene(scene, &clear);
+
+	for (int i = 0; i < scene->numInteractions; i++) {
+		drawInteraction(scene->interactions[i]);
+	}
+
+	for (int i = 0; i < scene->numDebugInteractions; i++) {
+		drawInteraction(scene->debugInteractions[i]);
+	}
+
+	for (int i = 0; i < scene->numPrimitives; i++) {
+		drawPrimitive(scene->primIds[i]);
+	}
+
+//	unsetScene(scene, &clear);
 }
 
-void RenderContext::drawPrimitive( int prim_id )
+void RenderContext::drawPrimitive(int prim_id)
 {
 
 }
 
-void RenderContext::drawInteraction( Interaction *ia )
+void RenderContext::drawInteraction(Interaction *ia)
+{
+	static bool primMatrixSet = false;
+	m_ia = ia;
+
+	Primitive *prim = ia->primitive;
+
+	if (!prim) {
+		return;
+	}
+
+	// check actor
+	const QueuedEntity *re = ia->queuedEntity;
+	if (re != m_entity || prim->isMatrixSet() || primMatrixSet) {
+		m_entity = re;
+
+		if (m_entity) {
+			if (prim->isMatrixSet()) {
+				primMatrixSet = true;
+			} else {
+				primMatrixSet = false;
+			}
+
+			AX_SU(g_modelMatrix, m_entity->matrix);
+			AX_SU(g_instanceParam, m_entity->instanceParam);
+
+			if (prim->isMatrixSet()) {
+				Matrix mat = prim->getMatrix().getAffineMat();
+				mat = m_entity->matrix * mat;
+				AX_SU(g_modelMatrix, m_entity->matrix);
+			}
+
+			if (m_entity->flags & RenderEntity::DepthHack) {
+				//					glDepthRange(0, 0.3f);
+			} else {
+				//					glDepthRange(0, 1);
+			}
+		} else {
+			AX_SU(g_modelMatrix, Matrix::getIdentity());
+			AX_SU(g_instanceParam, Vector4(0,0,0,1));
+		}
+	}
+//	prim->draw(m_technique);
+}
+
+void RenderContext::setupScene(QueuedScene *scene, const RenderClearer *clearer /*= 0*/, RenderTarget *target /*= 0*/, RenderCamera *camera /*= 0*/)
 {
 
 }
 
-void RenderContext::setupScene( QueuedScene *scene, const RenderClearer *clearer /*= 0*/, RenderTarget *target /*= 0*/, RenderCamera *camera /*= 0*/ )
+void RenderContext::issueVisQuery()
 {
 
+}
+
+void RenderContext::issueShadowQuery()
+{
+
+}
+
+void RenderContext::drawGlobalLight(QueuedScene *scene, QueuedLight *light)
+{
+
+}
+
+void RenderContext::drawLocalLight(QueuedScene *scene, QueuedLight *light)
+{
+
+}
+
+void RenderContext::draw(VertexObject *vert, InstanceObject *inst, IndexObject *index, Material *mat, Technique tech)
+{
+	if (!inst) {
+		g_apiWrap->setVertices(&vert->m_h, vert->m_vt, vert->m_offset);
+		g_shaderMacro.resetMacro(ShaderMacro::G_GEOMETRY_INSTANCING);
+	} else {
+		g_apiWrap->setVerticesInstanced(&vert->m_h, vert->m_vt, vert->m_offset, &inst->m_h, inst->m_count);
+		g_shaderMacro.setMacro(ShaderMacro::G_GEOMETRY_INSTANCING);
+	}
+
+	g_apiWrap->setIndices(&index->m_h, index->m_elementType, index->m_offset, vert->m_count, index->m_count);
+
+
+	g_apiWrap->setShader(mat->getShaderName(), mat->getShaderMacro(), tech);
+
+	g_apiWrap->dp();
 }
 
 AX_END_NAMESPACE

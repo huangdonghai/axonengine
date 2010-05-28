@@ -28,16 +28,16 @@ public:
 		QueryType_Number
 	};
 
-	friend class QueryManager;
 	friend class BlockAlloc<Query>;
+
+	Query();
+	virtual ~Query();
 
 	void setType(QueryType type) { m_type = type; }
 	QueryType getType() const { return m_type; }
 	void issueQuery(int frameId, const BoundingBox &bbox);
 
 protected:
-	Query();
-	virtual ~Query();
 	QueryType m_type;
 
 public:
@@ -46,6 +46,7 @@ public:
 	int m_result;
 };
 
+#if 0
 class QueryManager {
 public:
 	virtual ~QueryManager() {}
@@ -54,6 +55,7 @@ public:
 	virtual void freeQuery(Query*& query) = 0;
 	virtual void issueQuery(Query *query, int frameId, const BoundingBox &bbox) = 0;
 };
+#endif
 
 AX_END_NAMESPACE
 #endif

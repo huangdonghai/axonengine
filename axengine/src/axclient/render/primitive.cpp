@@ -29,13 +29,16 @@ Primitive::Primitive(Hint hint)
 	m_matrix.setIdentity();
 
 	m_activedIndexes = 0;
+
+	m_drawInstanceObject = 0;
+	m_drawMaterial = 0;
+	m_drawIndexObj = 0;
 }
 
 Primitive::~Primitive()
 {
-	if (m_hint != HintFrame) {
-		g_primitiveManager->hintUncache(this);
-	}
+	SafeDelete(m_material);
+	SafeDelete(m_lightMap);
 }
 
 //------------------------------------------------------------------------------
@@ -596,10 +599,16 @@ MeshPrim::MeshPrim(Hint hint)
 {
 	m_type = MeshType;
 	m_isStriped = false;
+
+	m_vertexObject = 0;
+	m_indexObject = 0;
 }
 
 MeshPrim::~MeshPrim()
 {
+	SafeDelete(m_indexObject);
+	SafeDelete(m_vertexObject);
+
 	clear();
 }
 
@@ -1106,6 +1115,16 @@ bool MeshPrim::setupHexahedron(MeshPrim*& mesh, Vector3 volumeverts[8])
 	return isinit;
 }
 
+void MeshPrim::draw(Technique tech)
+{
+	VertexObject *vert = m_vertexObject;
+	InstanceObject *inst = m_drawInstanceObject;
+	IndexObject *index = m_drawIndexObj ? m_drawIndexObj : m_indexObject;
+	Material *mat = m_drawMaterial ? m_drawMaterial : m_material;
+
+	g_renderContext->draw(vert, inst, index, mat, tech);
+}
+
 #if 0
 void Mesh::setCurrentIndexNum(int currentIndexNum)
 {
@@ -1540,6 +1559,7 @@ const InstancePrim::Param *InstancePrim::getAllInstances() const
 	return m_params;
 }
 
+#if 0
 //--------------------------------------------------------------------------
 // class PrimitiveManager
 //--------------------------------------------------------------------------
@@ -1564,5 +1584,6 @@ void PrimitiveManager::hintUncache(Primitive *prim)
 
 	m_waitUncache.push_back(id-1);
 }
+#endif
 
 AX_END_NAMESPACE

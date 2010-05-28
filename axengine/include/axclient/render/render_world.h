@@ -111,7 +111,6 @@ private:
 	int m_histogram[HISTOGRAM_WIDTH];
 	int m_histogramAccumed[HISTOGRAM_WIDTH];
 	int m_curHistogramIndex;
-	Query *m_histogramQuery;
 	float m_lastExposure;
 
 	bool m_updateShadowVis;

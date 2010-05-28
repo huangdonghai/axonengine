@@ -27,33 +27,21 @@ AX_DECLARE_MODULE(axdirect3d9);
 
 // public object
 RenderSystem *g_renderSystem;
-RenderQueue *g_renderQueue;
-RenderQueue *g_queues[2];
-ShaderMacro g_shaderMacro;
-Uniforms g_uniforms;
-IRenderDriver *g_renderDriver;
 
 #if 0
 RenderTargetManager *g_targetManager;
-#endif
 ShaderManager *g_shaderManager;
 PrimitiveManager *g_primitiveManager;
-
 QueryManager *g_queryManager;
+#endif
 
 InputSystem *g_inputSystem;
 SoundSystem *g_soundSystem;
-
-FontPtr g_defaultFont;
-FontPtr g_consoleFont;
-FontPtr g_miniFont;
 
 #ifdef AX_CONFIG_OPTION_USE_SPEEDTREE_40
 	TreeManager *g_treeManager;
 #endif // AX_CONFIG_OPTION_USE_SPEEDTREE_40
 
-// module object
-ApiWrap *g_apiWrap = 0;
 
 void axClientInit()
 {
@@ -79,23 +67,6 @@ void axClientInit()
 	g_renderSystem = new RenderSystem;
 	g_renderSystem->initialize();
 
-#if 0
-	gMaterialFactory = new MaterialManager;
-
-	g_fontFactory = new Manager;
-	g_fontFactory->initialize();
-	Material::initManager();
-#else
-	Font::initManager();
-	MaterialDecl::initManager();
-#endif
-	g_defaultFont = Font::load("fonts/default", 14,14);
-	g_consoleFont = Font::load("fonts/console", 14,14);
-	g_miniFont = Font::load("fonts/console", 11,11);
-
-#if 0
-	g_renderDriver->postInit();
-#endif
 
 #ifdef AX_CONFIG_OPTION_USE_SPEEDTREE_40
 	g_treeManager = new TreeManager();
@@ -106,38 +77,21 @@ void axClientInit()
 	g_inputSystem->initialize();
 
 	g_soundSystem = new SoundSystem();
-
-//		g_shaderManager->applyShaderCache();
 }
 
 void axClientQuit()
 {
-//	g_shaderManager->saveShaderCache();
-
 	SafeDelete(g_soundSystem);
 
 	g_inputSystem->finalize();
 	SafeDelete(g_inputSystem);
 
-	g_defaultFont.clear();
-	g_consoleFont.clear();
-	g_miniFont.clear();
 
 #ifdef AX_CONFIG_OPTION_USE_SPEEDTREE_40
 	g_renderSystem->removeEntityManager(g_treeManager);
 	SafeDelete(g_treeManager);
 #endif // AX_CONFIG_OPTION_USE_SPEEDTREE_40
 
-#if 0
-	g_fontFactory->finalize();
-	SafeDelete(g_fontFactory);
-
-	SafeDelete(gMaterialFactory);
-	Material::finalizeManager();
-#else
-	Font::finalizeManager();
-	MaterialDecl::finalizeManager();
-#endif
 	g_renderSystem->finalize();
 	SafeDelete(g_renderSystem);
 

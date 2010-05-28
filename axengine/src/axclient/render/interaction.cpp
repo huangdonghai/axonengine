@@ -9,20 +9,20 @@ read the license and understand and accept it fully.
 
 #include "../private.h"
 
-
 AX_BEGIN_NAMESPACE
 
 static int eyeInWaterSort[] = {
-	Shader::SortHint_opacit,
-	Shader::SortHint_decal,
-	Shader::SortHint_aboveWater,
-	Shader::SortHint_water,
-	Shader::SortHint_underWater,
+	ShaderInfo::SortHint_Opacit,
+	ShaderInfo::SortHint_Decal,
+	ShaderInfo::SortHint_AboveWater,
+	ShaderInfo::SortHint_Water,
+	ShaderInfo::SortHint_UnderWater,
 };
 
 
-void Interaction::calcSort(bool eyeInWater) {
-	sortkey = Shader::SortHint_opacit << 28;
+void Interaction::calcSort(bool eyeInWater)
+{
+	sortkey = ShaderInfo::SortHint_Opacit << 28;
 
 	Material *mat = primitive->getMaterial();
 
@@ -30,13 +30,13 @@ void Interaction::calcSort(bool eyeInWater) {
 		return;
 	}
 
-	Shader *shader = mat->getShaderTemplate();
+	const ShaderInfo *shader = mat->getShaderInfo();
 
 	if (!shader) {
 		return;
 	}
 
-	sortkey = shader->getSortHint();
+	sortkey = shader->m_sortHint;
 
 	Texture *tex = mat->getTexture(SamplerType::Diffuse);
 
@@ -52,7 +52,8 @@ void Interaction::calcSort(bool eyeInWater) {
 	sortkey = (sortkey << 28) + ((uint_t)(distance) &0x0fffffff);
 }
 
-void Interaction::setupShader() {
+void Interaction::setupShader()
+{
 
 }
 

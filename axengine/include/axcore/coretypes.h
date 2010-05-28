@@ -188,9 +188,6 @@ typedef long long longlong_t;
 typedef unsigned long long ulonglong_t;
 #endif
 
-#if 0
-typedef void *handle_t;
-#else
 class Handle
 {
 public:
@@ -213,7 +210,8 @@ public:
 private:
 	void *m_data;
 };
-#endif
+typedef Handle *phandle_t;
+typedef const Handle *cphandle_t;
 
 template <class T>
 T handle_cast(const Handle & h)

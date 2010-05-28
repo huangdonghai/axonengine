@@ -68,6 +68,8 @@ public:
 	static void Texture::texlist_f(const CmdArgs &args);
 #endif
 
+	phandle_t getPHandle() const;
+
 private:
 	TextureWrapPtr m_textureWrap;
 	SamplerStatePtr m_samplerState;

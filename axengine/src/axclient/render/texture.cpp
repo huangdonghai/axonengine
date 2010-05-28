@@ -166,6 +166,11 @@ void Texture::saveToFile(const String &filename)
 }
 
 
+phandle_t Texture::getPHandle() const
+{
+	return m_textureWrap->getPHandle();
+}
+
 #if 0
 void Texture::texlist_f(const CmdArgs &args)
 {

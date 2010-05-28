@@ -58,7 +58,7 @@ void D3D9Draw::draw(Material *mat, Technique tech, D3D9geometry *prim)
 		return;
 	}
 
-	if (!mat->getShaderTemplate()->haveTechnique(tech))
+	if (!mat->getShaderInfo()->haveTechnique(tech))
 		return;
 
 	setMaterialUniforms(mat);

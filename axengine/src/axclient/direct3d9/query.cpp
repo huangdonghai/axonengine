@@ -23,9 +23,10 @@ Query::~Query()
 {
 }
 
-void Query::issueQuery( int frameId, const BoundingBox &bbox )
+void Query::issueQuery(int frameId, const BoundingBox &bbox)
 {
-	g_queryManager->issueQuery(this, frameId, bbox);
+	// TODO
+//	g_queryManager->issueQuery(this, frameId, bbox);
 }
 
 #if 0

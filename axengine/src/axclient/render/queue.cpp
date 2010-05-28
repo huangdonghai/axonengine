@@ -110,20 +110,20 @@ bool QueuedScene::addInteraction(Interaction *ia)
 		return false;
 	}
 
-	Shader *shader = mat->getShaderTemplate();
+	const ShaderInfo *shader = mat->getShaderInfo();
 	if (!shader) {
 		return true;
 	}
 
 	switch (sceneType) {
 	case ShadowGen:
-		if (!shader->haveTechnique(Technique::ShadowGen)) {
+		if (!shader->m_haveTechnique[Technique::ShadowGen]) {
 			numInteractions--;
 			return false;
 		}
 	}
 
-	if (shader->haveTextureTarget() && sceneType != WorldMain) {
+	if (shader->m_haveTextureTarget && sceneType != WorldMain) {
 		numInteractions--;
 		return false;
 	}

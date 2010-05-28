@@ -28,13 +28,13 @@ public:
 	RenderTarget(Handle hwnd, const String &debugname);
 	~RenderTarget();
 
-	Type getType() { return m_type; }
-	Rect getRect();
-	bool isWindow() { return m_type == kWindow; }
-	bool isTexture() { return m_type == kTexture; }
-	bool isColorFormat() { return m_format.isColor(); }
-	bool isDepthFormat() { return m_format.isDepth(); }
-	bool isStencilFormat() { return m_format.isStencil(); }
+	Type getType() const { return m_type; }
+	Rect getRect() const;
+	bool isWindow() const { return m_type == kWindow; }
+	bool isTexture() const { return m_type == kTexture; }
+	bool isColorFormat() const { return m_format.isColor(); }
+	bool isDepthFormat() const { return m_format.isDepth(); }
+	bool isStencilFormat() const { return m_format.isStencil(); }
 
 	// for render texture target
 	void attachDepth(RenderTarget *depth);
@@ -48,10 +48,19 @@ public:
 	RenderTarget *getColorAttached(int index) const;
 
 	// since qt maybe change window id, so we need this function
-	void setWindowHandle(Handle newId) {}
-	Handle getWindowHandle() { return Handle(0); }
+	void setWindowHandle(Handle newId);
+	Handle getWindowHandle() { return m_wndId; }
 
-public:
+	RenderTarget *getGBuffer() const { return m_gbuffer; }
+	RenderTarget *getLightBuffer() const { return m_lightBuffer; }
+
+	phandle_t getPHandle()
+	{
+		if (isTexture()) return m_texture->getPHandle();
+		else return &m_window;
+	}
+
+private:
 	Type m_type;
 	Handle m_window;
 	Texture *m_texture;

@@ -565,9 +565,8 @@ inline DWORD F2DW(FLOAT f)
 
 void D3D9Thread::drawPass_shadowGen(QueuedScene *scene)
 {
-	if (!scene->numInteractions) {
+	if (!scene->numInteractions)
 		return;
-	}
 
 	D3D9Target *target = (D3D9Target*)scene->camera.getTarget();
 	if (target->isPooled() && !target->alreadyAllocatedRealTarget() )

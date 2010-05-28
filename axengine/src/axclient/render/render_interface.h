@@ -54,6 +54,7 @@ public:
 	static void (*clear)(const RenderClearer &clearer);
 };
 
+class ApiCommand;
 
 class ApiWrap
 {
@@ -76,8 +77,8 @@ public:
 	void uploadIndexBuffer(phandle_t h, int datasize, void *p);
 	void deleteIndexBuffer(phandle_t h);
 
-	void createWindowTarget(phandle_t h, Handle hwnd);
-	void updateWindowTarget(phandle_t h, Handle newWndId);
+	void createWindowTarget(phandle_t h, Handle hwnd, int width, int height);
+	void updateWindowTarget(phandle_t h, Handle newWndId, int width, int height);
 	void deleteWindowTarget(phandle_t h);
 
 	void createQuery(phandle_t h);
@@ -100,11 +101,11 @@ public:
 	void setDepthStencil(phandle_t h);
 
 	void setShader(const FixedString & name, const ShaderMacro &sm, Technique tech);
-	void setShaderConst(Uniforms::ItemName name, const UniformData &data);
+	void setShaderConst(Uniforms::ItemName name, int size, const void *p);
 	void setShaderConst(const FixedString &name, const UniformData &data);
 
-	void setVertices(phandle_t vb, VertexType vt, int vertcount);
-	void setInstanceVertices(phandle_t vb, VertexType vt, int vertcount, Handle inb, int incount);
+	void setVertices(phandle_t vb, VertexType vt, int offset);
+	void setVerticesInstanced(phandle_t vb, VertexType vt, int offset, phandle_t inb, int incount);
 	void setIndices(phandle_t ib, ElementType et, int offset, int vertcount, int indicescount);
 
 	void setVerticesUP(const void *vb, VertexType vt, int vertcount);
@@ -115,7 +116,7 @@ public:
 	void clear(const RenderClearer &clearer);
 
 	byte_t *allocRingBuf(int size);
-	int getWritePos() { return m_writePos; }
+	int getWritePos() { return m_bufWritePos; }
 
 	template <class Q>
 	Q *allocType(int n=1)
@@ -127,23 +128,13 @@ public:
 	template <class Q>
 	Q *allocCommand()
 	{
-		struct LinkedCmd {
-			int cmdLink;
-			int endPos;
-			Q cmd;
-		};
-		int size = sizeof(LinkedCmd);
+		int size = sizeof(Q);
 		byte_t *pbuf = allocRingBuf(size);
-		LinkedCmd *ptr = reinterpret_cast<LinkedCmd *>(pbuf);
+		Q *ptr = reinterpret_cast<Q *>(pbuf);
 
-		ptr->cmdLink = -1;
-		ptr->endPos = m_writePos;
+		m_ringCommand[m_cmdWritePos++] = ptr;
 
-		if (m_lastLinkPos != -1) {
-			*(int *)m_ringBuffer[m_lastLinkPos] = pbuf - m_ringBuffer;
-		}
-		m_lastLinkPos = pbuf - m_ringBuffer;
-		return &ptr->cmd;
+		return ptr;
 	}
 
 protected:
@@ -155,6 +146,7 @@ protected:
 private:
 	enum {
 		RING_BUFFER_SIZE = 4 * 1024 * 1024,
+		MAX_COMMANDS = 64 * 1024,
 		MAX_DELETE_COMMANDS = 8 * 1024,
 		MAX_POS = 0x70000000
 	};
@@ -165,15 +157,14 @@ private:
 	};
 
 	byte_t m_ringBuffer[RING_BUFFER_SIZE];
+	ApiCommand *m_ringCommand[MAX_COMMANDS];
 
-	volatile int m_readPos, m_writePos;
-	volatile int m_lastLinkPos;
+	volatile int m_bufReadPos, m_bufWritePos;
+	volatile int m_cmdReadPos, m_cmdWritePos;
 
 	int m_numObjectDeletions;
 	ObjectDeletion m_objectDeletions[MAX_DELETE_COMMANDS];
 };
-
-class WrapObject;
 
 class RenderContext
 {
@@ -184,6 +175,8 @@ public:
 	RasterizerStatePtr findRasterizerState(const RasterizerStatePtr &desc);
 
 	void issueQueue(RenderQueue *rq);
+
+	void draw(VertexObject *vert, InstanceObject *inst, IndexObject *index, Material *mat, Technique tech);
 
 protected:
 	void beginFrame();
@@ -211,13 +204,22 @@ protected:
 	void issueVisQuery();
 	void issueShadowQuery();
 
+	template <class Q>
+	void setUniform(Uniforms::ItemName name, const Q &q)
+	{
+		g_apiWrap->setShaderConst(name, sizeof(Q), &q);
+	}
+
 private:
-	RenderTarget *d3d9FrameWnd;
-	RenderTarget *s_gbuffer;
-	RenderTarget *s_lbuffer;
-	RenderTarget *d3d9WorldTarget;
+	RenderTarget *m_frameWindow;
+	RenderTarget *m_gbuffer;
+	RenderTarget *m_lbuffer;
+	RenderTarget *m_worldRt;
+	QueuedScene *m_worldScene;
+	Interaction *m_ia;
+	const QueuedEntity *m_entity;
 	bool m_isStatistic;
-	Technique s_technique;
+	Technique m_technique;
 };
 
 extern RenderContext *g_renderContext;

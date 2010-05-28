@@ -26,9 +26,9 @@ RenderEntity::RenderEntity(Kind k)
 	m_affineMat.setIdentity();
 	m_instanceParam.set(1,1,1,1);
 
-	m_visQuery = g_queryManager->allocQuery();
+	m_visQuery = new Query();
 	m_visQuery->setType(Query::QueryType_Vis);
-	m_shadowQuery = g_queryManager->allocQuery();
+	m_shadowQuery = new Query();
 	m_shadowQuery->setType(Query::QueryType_Shadow);
 
 	m_viewDistCulled = false;
@@ -40,8 +40,8 @@ RenderEntity::RenderEntity(Kind k)
 
 RenderEntity::~RenderEntity()
 {
-	g_queryManager->freeQuery(m_shadowQuery);
-	g_queryManager->freeQuery(m_visQuery);
+	delete(m_shadowQuery);
+	delete(m_visQuery);
 
 	if (m_world) {
 		m_world->removeEntity(this);

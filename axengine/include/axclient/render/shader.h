@@ -37,6 +37,7 @@ public:
 	void setFloat(int count, float *value)
 	{
 		m_dataType = kFloat;
+		m_count = count;
 		m_floatValue = new float[count];
 		memcpy(m_floatValue, value, count * sizeof(float));
 	}
@@ -44,6 +45,7 @@ public:
 	void setInteger(int count, int *value)
 	{
 		m_dataType = kInteger;
+		m_count = count;
 		m_intValue = new int[count];
 		memcpy(m_intValue, value, count * sizeof(int));
 	}
@@ -51,21 +53,17 @@ public:
 	void setTexture(Handle *phandle)
 	{
 		m_dataType = kSampler;
+		m_count = 1;
 		m_textureHandle = phandle;
 	}
 
 private:
 	DataType m_dataType;
 
+	int m_count;
 	union {
-		struct {
-			int m_count;
-			union {
-				float *m_floatValue;
-				int *m_intValue;
-			};
-		};
-
+		float *m_floatValue;
+		int *m_intValue;
 		Handle *m_textureHandle;
 	};
 };
@@ -326,23 +324,24 @@ public:
 	};
 
 	enum SortHint {
-		SortHint_opacit = SHADER::SortHint_opacit,
-		SortHint_decal = SHADER::SortHint_decal,
-		SortHint_underWater = SHADER::SortHint_underWater,
-		SortHint_water = SHADER::SortHint_water,
-		SortHint_aboveWater = SHADER::SortHint_aboveWater
+		SortHint_Opacit = SHADER::SortHint_opacit,
+		SortHint_Decal = SHADER::SortHint_decal,
+		SortHint_UnderWater = SHADER::SortHint_underWater,
+		SortHint_Water = SHADER::SortHint_water,
+		SortHint_AboveWater = SHADER::SortHint_aboveWater
 	};
 
 	SortHint m_sortHint;
 	bool m_haveTextureTarget;
 	SamplerInfos m_samplerAnnos;
 	ParameterInfos m_parameterAnnos;
+	bool m_haveTechnique[Technique::Number];
 };
 
 typedef Dict<FixedString, ShaderInfo*> ShaderInfoDict;
 
 //--------------------------------------------------------------------------
-
+#if 0
 class Shader : public RefObject
 {
 public:
@@ -371,9 +370,9 @@ public:
 	virtual bool haveTechnique(Technique tech) const = 0;
 	virtual const ShaderInfo *getShaderInfo() const = 0;
 };
-
+#endif
 //--------------------------------------------------------------------------
-
+#if 0
 class ShaderManager
 {
 public:
@@ -382,6 +381,7 @@ public:
 	virtual void saveShaderCache(const String &name = String()) = 0;
 	virtual void applyShaderCache(const String &name = String()) = 0;
 };
+#endif
 
 AX_END_NAMESPACE
 

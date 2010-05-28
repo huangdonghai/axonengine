@@ -13,41 +13,12 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-class DX9_Window : public IUnknown
+class DX9_Window : public Unknown
 {
 public:
 	DX9_Window();
 	DX9_Window(Handle wndId);
 	~DX9_Window();
-
-	// methods inherited from ID3DXEffectStateManager
-	STDMETHOD(QueryInterface)(THIS_ REFIID iid, LPVOID *ppv)
-	{
-		if (iid == IID_IUnknown) {
-			*ppv = this;
-		} else {
-			*ppv = NULL;
-			return E_NOINTERFACE;
-		}
-
-		AddRef();
-		return S_OK;
-	}
-	STDMETHOD_(ULONG, AddRef)(THIS)
-	{
-		return(ULONG)InterlockedIncrement(&m_ref);
-	}
-
-	STDMETHOD_(ULONG, Release)(THIS)
-	{
-		if (0L == InterlockedDecrement(&m_ref)) {
-			delete this;
-			return 0L;
-		}
-
-		return m_ref;
-	}
-
 
 	// implement RenderTarget
 	Rect getRect();
@@ -74,10 +45,6 @@ private:
 	IDirect3DSurface9 *m_backbuffer;
 	HWND m_swapChainWnd;
 	DWORD m_presentInterval;
-
-public:
-	Handle m_gbuffer;
-	Handle m_lightBuffer;
 };
 
 AX_END_NAMESPACE
