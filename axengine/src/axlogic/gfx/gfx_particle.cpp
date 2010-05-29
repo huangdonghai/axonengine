@@ -177,7 +177,7 @@ Primitives ParticleEmitter::getHitTestPrims()
 	return Primitives();
 }
 
-void ParticleEmitter::frameUpdate(QueuedScene *qscene)
+void ParticleEmitter::frameUpdate(RenderScene *qscene)
 {
 	// object to world
 	m_objToWorld = m_entity->getMatrix() * m_tm;
@@ -279,7 +279,7 @@ void ParticleEmitter::frameUpdate(QueuedScene *qscene)
 	m_mesh->unlockVertexes();
 }
 
-void ParticleEmitter::issueToQueue(QueuedScene *qscene)
+void ParticleEmitter::issueToQueue(RenderScene *qscene)
 {
 	if (!m_Enabled)
 		return;

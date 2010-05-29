@@ -109,11 +109,11 @@ bool MaterialDecl::tryLoad(const String &name)
 		} else if (attrname == "shader") {
 			m_shaderName = attr->Value();
 		} else if (attrname == "twosided") {
-			m_flags.set(TwoSided, attr->IntValue() ? true : false);
+			if (attr->IntValue()) m_renderStateId.twoSided = true;
 		} else if (attrname == "wireframed") {
-			m_flags.set(Wireframed, attr->IntValue() ? true : false);
+			if (attr->IntValue()) m_renderStateId.wireframed = true;
 		} else if (attrname == "physicsHelper") {
-			m_flags.set(PhysicsHelper, attr->IntValue() ? true : false);
+			m_flags.set(Flag_PhysicsHelper, attr->IntValue() ? true : false);
 		} else if (attrname == "diffuse") {
 			m_diffuse.fromString(attr->Value());
 		} else if (attrname == "features") {

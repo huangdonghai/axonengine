@@ -3,8 +3,7 @@
 
 AX_BEGIN_NAMESPACE
 
-typedef Handle *phandle_t;
-
+struct RenderState;
 
 class RenderApi
 {
@@ -48,7 +47,7 @@ public:
 	static void (*setIndices)(phandle_t ib);
 
 //	static void dip(ElementType et, int offset, int vertcount, int indices_count) = 0;
-	static void (*dp)();
+	static void (*draw)();
 
 	// actions
 	static void (*clear)(const RenderClearer &clearer);
@@ -102,16 +101,16 @@ public:
 
 	void setShader(const FixedString & name, const ShaderMacro &sm, Technique tech);
 	void setShaderConst(Uniforms::ItemName name, int size, const void *p);
-	void setShaderConst(const FixedString &name, const UniformData &data);
+	void setShaderConst(const FixedString &name, int size, const void *p);
 
 	void setVertices(phandle_t vb, VertexType vt, int offset);
 	void setVerticesInstanced(phandle_t vb, VertexType vt, int offset, phandle_t inb, int incount);
 	void setIndices(phandle_t ib, ElementType et, int offset, int vertcount, int indicescount);
 
-	void setVerticesUP(const void *vb, VertexType vt, int vertcount);
+	void setVerticesUP(const void *vb, VertexType vt, int offset);
 	void setIndicesUP(const void *ib, ElementType et, int offset, int vertcount, int indicescount);
 
-	void dp();
+	void draw();
 
 	void clear(const RenderClearer &clearer);
 
@@ -169,10 +168,8 @@ private:
 class RenderContext
 {
 public:
-	SamplerStatePtr findSamplerState(const SamplerStateDesc &desc);
-	BlendStatePtr findBlendState(const BlendStateDesc &desc);
-	DepthStencilStatePtr findDepthStencilState(const DepthStencilStateDesc &desc);
-	RasterizerStatePtr findRasterizerState(const RasterizerStatePtr &desc);
+	RenderContext();
+	~RenderContext();
 
 	void issueQueue(RenderQueue *rq);
 
@@ -180,29 +177,31 @@ public:
 
 protected:
 	void beginFrame();
-	void drawScene(QueuedScene *scene, const RenderClearer &clearer);
-	void setupScene(QueuedScene *scene, const RenderClearer *clearer = 0, RenderTarget *target = 0, RenderCamera *camera = 0);
+	void drawScene(RenderScene *scene, const RenderClearer &clearer);
+	void setupScene(RenderScene *scene, const RenderClearer *clearer = 0, RenderTarget *target = 0, RenderCamera *camera = 0);
 //	void unsetScene(QueuedScene *scene, const RenderClearer *clearer = 0, RenderTarget *target = 0, RenderCamera *camera = 0);
-	void drawPrimitive(int prim_id);
+	void drawPrimitive(Primitive *prim);
 	void drawInteraction(Interaction *ia);
 	void endFrame();
 
-	void drawGlobalLight(QueuedScene *scene, QueuedLight *light);
-	void drawLocalLight(QueuedScene *scene, QueuedLight *light);
+	void drawGlobalLight(RenderScene *scene, RenderLight *light);
+	void drawLocalLight(RenderScene *scene, RenderLight *light);
 
-	void drawPass_gfill(QueuedScene *scene);
-	void drawPass_overlay(QueuedScene *scene);
-	void drawPass_composite(QueuedScene *scene);
-	void drawPass_shadowGen(QueuedScene *scene);
-	void drawPass_lights(QueuedScene *scene);
-	void drawPass_postprocess(QueuedScene *scene);
+	void drawPass_gfill(RenderScene *scene);
+	void drawPass_overlay(RenderScene *scene);
+	void drawPass_composite(RenderScene *scene);
+	void drawPass_shadowGen(RenderScene *scene);
+	void drawPass_lights(RenderScene *scene);
+	void drawPass_postprocess(RenderScene *scene);
 
-	void drawScene_world(QueuedScene *scene, const RenderClearer &clearer);
-	void drawScene_worldSub(QueuedScene *scene);
-	void drawScene_noworld(QueuedScene *scene, const RenderClearer &clearer);
+	void drawScene_world(RenderScene *scene, const RenderClearer &clearer);
+	void drawScene_worldSub(RenderScene *scene);
+	void drawScene_noworld(RenderScene *scene, const RenderClearer &clearer);
 
 	void issueVisQuery();
 	void issueShadowQuery();
+
+	void setMaterialUniforms(Material *mat);
 
 	template <class Q>
 	void setUniform(Uniforms::ItemName name, const Q &q)
@@ -210,16 +209,31 @@ protected:
 		g_apiWrap->setShaderConst(name, sizeof(Q), &q);
 	}
 
+	void setUniform(Uniforms::ItemName, Texture *texture);
+
+	RenderState *findRenderState(RenderStateId id);
+
 private:
+	// init
+	Material *m_defaultMat;
+
+	// runtime
 	RenderTarget *m_frameWindow;
 	RenderTarget *m_gbuffer;
 	RenderTarget *m_lbuffer;
 	RenderTarget *m_worldRt;
-	QueuedScene *m_worldScene;
+	RenderScene *m_worldScene;
 	Interaction *m_ia;
-	const QueuedEntity *m_entity;
+	const RenderEntity *m_entity;
 	bool m_isStatistic;
 	Technique m_technique;
+
+	ShaderMacro m_shaderMacro;
+	RenderStateId m_renderStateId;
+	bool m_forceWireframe;
+
+	typedef Dict<RenderStateId, RenderState *> RenderStateDict;
+	RenderStateDict m_renderStateDict;
 };
 
 extern RenderContext *g_renderContext;

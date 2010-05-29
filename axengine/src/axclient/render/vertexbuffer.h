@@ -8,38 +8,41 @@ class VertexObject
 public:
 
 public:
-	Handle m_h;
+	phandle_t m_h;
 	VertexType m_vt;
 	int m_offset;		// byte offset
 	int m_dataSize;
 	int m_count;
 	bool m_chained;
+	Handle m_localHandle;
 };
 
 class InstanceObject
 {
 public:
 public:
-	Handle m_h;
+	phandle_t m_h;
 	int m_offset;
 	int m_count;
+	Handle m_localHandle;
 };
 
 class IndexObject
 {
 public:
 public:
-	Handle m_h;
+	phandle_t m_h;
 	ElementType m_elementType;
 	int m_dataSize;
 	int m_count;
 	int m_activeCount;
 	int m_offset;		// index offset, not byte offset
 	bool m_chained;
+	Handle m_localHandle;
 };
 
 struct DynamicBuf {
-	Handle m_h;
+	phandle_t m_h;
 	int offset;
 	void *writePtr;
 };

@@ -12,8 +12,11 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
+#if 0
 struct QueuedLight;
 struct QueuedEntity;
+#endif
+
 class Primitive;
 
 // sortkey is
@@ -26,7 +29,7 @@ struct Interaction {
 
 	uint_t sortkey;
 
-	QueuedEntity *queuedEntity;
+	RenderEntity *entity;
 	Primitive *primitive;
 
 	int numTargets;

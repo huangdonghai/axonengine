@@ -45,7 +45,7 @@ Primitives GfxEntity::getHitTestPrims()
 	return Primitives();
 }
 
-void GfxEntity::frameUpdate(QueuedScene *qscene)
+void GfxEntity::frameUpdate(RenderScene *qscene)
 {
 	List<GfxObject*>::iterator it = m_objects.begin();
 	for (; it != m_objects.end(); ++it) {
@@ -54,7 +54,7 @@ void GfxEntity::frameUpdate(QueuedScene *qscene)
 	}
 }
 
-void GfxEntity::issueToQueue(QueuedScene *qscene)
+void GfxEntity::issueToQueue(RenderScene *qscene)
 {
 	List<GfxObject*>::iterator it = m_objects.begin();
 	for (; it != m_objects.end(); ++it) {

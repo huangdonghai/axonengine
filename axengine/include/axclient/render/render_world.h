@@ -14,7 +14,7 @@ read the license and understand and accept it fully.
 AX_BEGIN_NAMESPACE
 
 struct RenderScene;
-struct QueuedScene;
+struct RenderScene;
 class RenderSystem;
 
 class QuadNode {
@@ -94,13 +94,13 @@ protected:
 	void unlinkEntity(RenderEntity *entity);
 
 	// for internal use
-	void renderTo(QueuedScene *queued);
-	void renderTo(QueuedScene *queued, QuadNode *node);
+	void renderTo(RenderScene *queued);
+	void renderTo(RenderScene *queued, QuadNode *node);
 
 	// mark visible
-	void markVisible_r(QueuedScene *queued, QuadNode *node, Plane::Side parentSide);
+	void markVisible_r(RenderScene *queued, QuadNode *node, Plane::Side parentSide);
 
-	void updateExposure(QueuedScene *qscene);
+	void updateExposure(RenderScene *qscene);
 
 private:
 	float m_worldSize;

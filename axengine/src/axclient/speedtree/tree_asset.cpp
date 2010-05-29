@@ -564,7 +564,7 @@ void TreeAsset::buildLeafMesh()
 	}
 }
 
-void TreeAsset::issueToQueue(TreeEntity *actor, QueuedScene *qscene)
+void TreeAsset::issueToQueue(TreeEntity *actor, RenderScene *qscene)
 {
 #if 0
 	if (r_geoInstancing->getInteger() != 0) {
@@ -576,7 +576,7 @@ void TreeAsset::issueToQueue(TreeEntity *actor, QueuedScene *qscene)
 
 		m_treeRt->GetLodValues(lv, lod);
 
-		if ( 0 && qscene->sceneType != QueuedScene::WorldMain) {
+		if ( 0 && qscene->sceneType != RenderScene::WorldMain) {
 			lv.m_anLeafActiveLods[0] = m_numLeafLods - 1;
 			lv.m_afLeafAlphaTestValues[0] = 127;
 		}

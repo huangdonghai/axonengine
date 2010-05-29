@@ -39,7 +39,7 @@ BoundingBox TreeEntity::getBoundingBox()
 	return getLocalBoundingBox().getTransformed(m_affineMat);
 }
 
-void TreeEntity::frameUpdate(QueuedScene *qscene)
+void TreeEntity::frameUpdate(RenderScene *qscene)
 {
 	m_instanceParam[InstanceScale] = m_affineMat.getScales();
 }
@@ -50,7 +50,7 @@ Primitives TreeEntity::getHitTestPrims()
 	return m_treeAsset->getAllPrimitives(m_lod);
 }
 
-void TreeEntity::issueToQueue(QueuedScene *qscene)
+void TreeEntity::issueToQueue(RenderScene *qscene)
 {
 	if (!r_speedtree.getBool()) {
 		return;

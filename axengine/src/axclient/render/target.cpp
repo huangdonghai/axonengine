@@ -131,7 +131,7 @@ ReflectionMap::~ReflectionMap()
 	delete m_target;
 }
 
-void ReflectionMap::update(QueuedScene *qscene)
+void ReflectionMap::update(RenderScene *qscene)
 {
 	bool needUpdate = false;
 
@@ -152,11 +152,11 @@ void ReflectionMap::update(QueuedScene *qscene)
 	if (!needUpdate)
 		return;
 
-	QueuedScene *subscene = qscene->addSubScene();
+	RenderScene *subscene = qscene->addSubScene();
 	if (!subscene)
 		return;
 
-	subscene->sceneType = QueuedScene::Reflection;
+	subscene->sceneType = RenderScene::Reflection;
 	subscene->camera = qscene->camera.createMirrorCamera(Plane(0, 0, 1, 0));
 	subscene->camera.setTarget(m_target);
 	subscene->camera.setViewRect(Rect(0, 0, 512, 512));

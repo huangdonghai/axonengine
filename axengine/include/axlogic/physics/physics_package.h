@@ -147,7 +147,7 @@ public:
 
 	// meshes
 	Primitives getPrimitives();
-	void issueToQueue(RenderEntity *qactor, QueuedScene *qscene);
+	void issueToQueue(RenderEntity *qactor, RenderScene *qscene);
 
 	void initDynamicMeshes(MeshDataList &result);
 	void clearDynamicMeshes(MeshDataList &result);
@@ -217,7 +217,7 @@ public:
 	virtual BoundingBox getBoundingBox();
 	virtual Primitives getHitTestPrims();
 
-	virtual void issueToQueue(QueuedScene *qscene);
+	virtual void issueToQueue(RenderScene *qscene);
 
 	// SkeletalMesh
 	virtual HavokRig *findRig() const;

@@ -1201,7 +1201,7 @@ Primitives HavokPackage::getPrimitives()
 }
 
 
-void HavokPackage::issueToQueue(RenderEntity *qactor, QueuedScene *qscene )
+void HavokPackage::issueToQueue(RenderEntity *qactor, RenderScene *qscene )
 {
 	generateStaticMesh();
 
@@ -1469,7 +1469,7 @@ Primitives HavokModel::getHitTestPrims()
 	return result;
 }
 
-void HavokModel::issueToQueue(QueuedScene *qscene)
+void HavokModel::issueToQueue(RenderScene *qscene)
 {
 	if (!m_package)
 		return;

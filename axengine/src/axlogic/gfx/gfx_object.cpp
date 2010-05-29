@@ -39,12 +39,12 @@ Primitives GfxObject::getHitTestPrims()
 	return Primitives();
 }
 
-void GfxObject::frameUpdate( QueuedScene *qscene )
+void GfxObject::frameUpdate( RenderScene *qscene )
 {
 
 }
 
-void GfxObject::issueToQueue( QueuedScene *qscene )
+void GfxObject::issueToQueue( RenderScene *qscene )
 {
 
 }

@@ -11,24 +11,32 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-void QueuedScene::addLight(RenderLight *light)
+void RenderScene::addLight(RenderLight *light)
 {
 	if (numLights >= MAX_LIGHTS) {
 		Errorf("MAX_LIGHTS exceeded");
+#if 0
 		light->fillQueued(nullptr);
+#endif
 	}
 
 	if (light->getLightType() != RenderLight::kGlobal && !r_lightBuf.getBool()) {
+#if 0
 		light->fillQueued(nullptr);
 //			return 0;
+#endif
 	}
-
+#if 0
 	QueuedLight *ql = g_renderQueue->allocQueuedLight();
+#else
+	RenderLight *ql = light;
+#endif
 
+#if 0
 	ql->queuedEntity = light->getQueued();
 
 	light->fillQueued(ql);
-
+#endif
 	lights[numLights++] = ql;
 
 	if (light->getLightType() == RenderLight::kGlobal) {
@@ -36,15 +44,18 @@ void QueuedScene::addLight(RenderLight *light)
 	}
 }
 
-void QueuedScene::addEntity(RenderEntity *entity)
+void RenderScene::addEntity(RenderEntity *entity)
 {
 	if (numEntities >= MAX_ENTITIES) {
 		Errorf("MAX_ENTITIES exceeded");
 	}
 
+#if 0
 	QueuedEntity *qe = g_renderQueue->allocQueuedActor();
 	entity->setQueued(qe);
+#endif
 
+	RenderEntity *qe = entity;
 	queuedEntities[numEntities++] = qe;
 
 	addHelperPrims(entity);
@@ -63,7 +74,7 @@ void QueuedScene::addEntity(RenderEntity *entity)
 	}
 }
 
-Interaction *QueuedScene::addInteraction(RenderEntity *entity, Primitive *prim, bool chain)
+Interaction *RenderScene::addInteraction(RenderEntity *entity, Primitive *prim, bool chain)
 {
 	if (numInteractions == MAX_INTERACTIONS) {
 		Errorf("MAX_INTERACTIONS exceeded");
@@ -73,17 +84,17 @@ Interaction *QueuedScene::addInteraction(RenderEntity *entity, Primitive *prim, 
 	Interaction *ia = g_renderQueue->allocInteraction();
 	ia->primitive = prim;
 	if (entity)
-		ia->queuedEntity = entity->getQueued();
+		ia->entity = entity;
 	else
-		ia->queuedEntity = 0;
+		ia->entity = 0;
 
 	if (addInteraction(ia)) {
 		if (chain) {
 			if (ia->primitive)
 				prim->interactionChain(ia, worldFrameId);
 
-			if (ia->queuedEntity)
-				ia->queuedEntity->interactionChain(ia, worldFrameId);
+			if (ia->entity)
+				ia->entity->interactionChain(ia, worldFrameId);
 		}
 
 		return ia;
@@ -92,7 +103,7 @@ Interaction *QueuedScene::addInteraction(RenderEntity *entity, Primitive *prim, 
 	return 0;
 }
 
-bool QueuedScene::addInteraction(Interaction *ia)
+bool RenderScene::addInteraction(Interaction *ia)
 {
 	interactions[numInteractions++] = ia;
 #if 0
@@ -136,7 +147,7 @@ bool QueuedScene::addInteraction(Interaction *ia)
 	return true;
 }
 
-void QueuedScene::addHelperPrims(RenderEntity *entity)
+void RenderScene::addHelperPrims(RenderEntity *entity)
 {
 	if (!r_helper.getBool())
 		return;
@@ -148,7 +159,7 @@ void QueuedScene::addHelperPrims(RenderEntity *entity)
 	}
 }
 
-void QueuedScene::addHelperInteraction(RenderEntity *entity, Primitive *prim)
+void RenderScene::addHelperInteraction(RenderEntity *entity, Primitive *prim)
 {
 	if (numDebugInteractions >= MAX_DEBUG_INTERACTIONS) {
 		Errorf("MAX_DEBUG_INTERACTIONS exceeded");
@@ -157,7 +168,7 @@ void QueuedScene::addHelperInteraction(RenderEntity *entity, Primitive *prim)
 
 	Interaction *ia = g_renderQueue->allocInteraction();
 	ia->primitive = prim;
-	ia->queuedEntity = entity->getQueued();
+	ia->entity = entity;
 	debugInteractions[numDebugInteractions++] = ia;
 }
 
@@ -166,12 +177,12 @@ inline static bool Lesser(const Interaction *a, const Interaction *b)
 	return a->sortkey < b->sortkey;
 }
 
-inline static bool LesserLight(const QueuedLight *a, const QueuedLight *b)
+inline static bool LesserLight(const RenderLight *a, const RenderLight *b)
 {
-	return a->preQueued->getVisSize() < b->preQueued->getVisSize();
+	return a->getVisSize() < b->getVisSize();
 }
 
-void QueuedScene::finalProcess()
+void RenderScene::finalProcess()
 {
 	findInstance();
 
@@ -184,7 +195,7 @@ void QueuedScene::finalProcess()
 	checkLights();
 }
 
-void QueuedScene::findInstance()
+void RenderScene::findInstance()
 {
 	if (r_geoInstancing.getInteger() < 2)
 		return;
@@ -219,7 +230,7 @@ void QueuedScene::findInstance()
 
 		int index = 0;
 		for (ia = head; ia; ia = ia->primNext, index++) {
-			if (!ia->queuedEntity) {
+			if (!ia->entity) {
 #if 0
 				interactions[numInteractions++] = ia;
 #else
@@ -228,7 +239,7 @@ void QueuedScene::findInstance()
 				continue;
 			}
 
-			geoins->setInstance(index, ia->queuedEntity->matrix, ia->queuedEntity->instanceParam);
+			geoins->setInstance(index, ia->entity->getMatrix(), ia->entity->getInstanceParam());
 			ia->instanced = true;
 		}
 
@@ -239,12 +250,12 @@ void QueuedScene::findInstance()
 	stat_instancedIA.add(numInstancedIA);
 }
 
-void QueuedScene::sortInteractions()
+void RenderScene::sortInteractions()
 {
 	std::sort(&interactions[0], &interactions[numInteractions], Lesser);
 }
 
-void QueuedScene::checkLights()
+void RenderScene::checkLights()
 {
 	// check lights shadow map gen
 	if (sceneType != WorldMain)
@@ -257,13 +268,16 @@ void QueuedScene::checkLights()
 		return;
 
 	// copy shadowed light
+#if 0
 	QueuedLight** shadowed = g_renderQueue->allocType<QueuedLight*>(numLights);
-
+#else
+	RenderLight **shadowed = g_renderQueue->allocType<RenderLight*>(numLights);
+#endif
 	int numShadowed = 0;
 	for (int i = 0; i < numLights; i++) {}
 
 	for (int i = 0; i < numLights; i++) {
-		bool v = lights[i]->preQueued->checkShadow(this);
+		bool v = lights[i]->checkShadow(this);
 		if (!v)
 			continue;
 
@@ -275,14 +289,14 @@ void QueuedScene::checkLights()
 
 	// sort by visSize
 	std::sort(&shadowed[0], &shadowed[numShadowed], LesserLight);
-	RenderWorld *world = shadowed[0]->preQueued->getWorld();
+	RenderWorld *world = shadowed[0]->getWorld();
 
 	// add to world's shadow link
 	for (int i = 0; i < numShadowed; i++) {
 #if 0
 		shadowed[i]->preQueued->linkShadow();
 #else
-		world->m_shadowLink.push_front(shadowed[i]->preQueued);
+		world->m_shadowLink.push_front(shadowed[i]);
 #endif
 	}
 
@@ -294,22 +308,6 @@ void QueuedScene::checkLights()
 	int desired = r_shadowPoolSize.getInteger();
 	desired = Math::clamp(desired, 8, 128) * 1024 * 1024;
 
-#if 0
-	RenderLight *light = world->m_shadowLink.getNext();
-	while (light) {
-		if (totalUsed > desired) {
-			frameFreed += light->getShadowMemoryUsed();
-			light->freeShadowMap();
-			light = light->unlinkShadow();
-			continue;
-		}
-		totalUsed += light->getShadowMemoryUsed();
-		if (light->genShadowMap(this)) {
-			frameUsed += light->getShadowMemoryUsed();
-		}
-		light = light->m_shadowLink.getNext();
-	}
-#else
 	RenderWorld::ShadowList::iterator it = world->m_shadowLink.begin();
 	while (it != world->m_shadowLink.end()) {
 		RenderLight *light = &*it;
@@ -325,26 +323,19 @@ void QueuedScene::checkLights()
 		}
 		++it;
 	}
-#endif
 
-#if 0
-	g_statistic->setValue(stat_shadowPoolSize, totalUsed);
-	g_statistic->setValue(stat_shadowPoolUsed, frameUsed);
-	g_statistic->setValue(stat_shadowPoolFreed, frameFreed);
-#else
 	stat_shadowPoolSize.setInt(totalUsed);
 	stat_shadowPoolUsed.setInt(frameUsed);
 	stat_shadowPoolFreed.setInt(frameFreed);
-#endif
 }
 
-QueuedScene *QueuedScene::addSubScene()
+RenderScene *RenderScene::addSubScene()
 {
 	if (numSubScenes >= MAX_SUB_SCENES) {
 		return 0;
 	}
 
-	QueuedScene *result = g_renderQueue->allocQueuedScene();
+	RenderScene *result = g_renderQueue->allocQueuedScene();
 	subScenes[numSubScenes++] = result;
 	return result;
 }
@@ -395,14 +386,14 @@ void RenderQueue::setTarget(RenderTarget *target)
 }
 
 
-QueuedScene *RenderQueue::allocQueuedScene()
+RenderScene *RenderQueue::allocQueuedScene()
 {
-	QueuedScene *queued_view = new(m_stack) QueuedScene;
+	RenderScene *queued_view = new(m_stack) RenderScene;
 
 	return queued_view;
 }
 
-void RenderQueue::addScene(QueuedScene *scene)
+void RenderQueue::addQueuedScene(RenderScene *scene)
 {
 	if (m_sceneCount >= MAX_VIEW) {
 		Errorf("RenderQueue::allocQueuedScene: MAX_VIEW exceeds");
@@ -422,7 +413,7 @@ Interaction** RenderQueue::allocInteractionPointer(int num)
 	return new(m_stack) Interaction*[num];
 }
 
-
+#if 0
 QueuedLight *RenderQueue::allocQueuedLight()
 {
 	return new(m_stack) QueuedLight;
@@ -432,6 +423,7 @@ QueuedEntity *RenderQueue::allocQueuedActor(int num)
 {
 	return new(m_stack) QueuedEntity[num];
 }
+#endif
 
 int *RenderQueue::allocPrimitives(int num)
 {
@@ -458,7 +450,7 @@ void RenderQueue::endSync()
 }
 
 
-QueuedScene *RenderQueue::getScene(int index)
+RenderScene *RenderQueue::getScene(int index)
 {
 	AX_ASSERT(index >= 0 && index < m_sceneCount);
 

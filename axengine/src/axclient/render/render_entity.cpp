@@ -116,6 +116,7 @@ bool RenderEntity::isFlagSet(Flag flag)
 	return(m_flags & flag) != 0;
 }
 
+#if 0
 void RenderEntity::setQueued(QueuedEntity *queued)
 {
 	m_queued = queued;
@@ -129,7 +130,7 @@ QueuedEntity *RenderEntity::getQueued() const
 {
 	return m_queued;
 }
-
+#endif
 
 // read only
 Matrix4 RenderEntity::getModelMatrix() const
@@ -137,7 +138,7 @@ Matrix4 RenderEntity::getModelMatrix() const
 	return m_affineMat.toMatrix4();
 }
 
-void RenderEntity::update(QueuedScene *qscene, Plane::Side side)
+void RenderEntity::update(RenderScene *qscene, Plane::Side side)
 {
 	m_cullSide = side;
 	calculateLod(qscene);
@@ -148,12 +149,12 @@ void RenderEntity::update(QueuedScene *qscene, Plane::Side side)
 		m_visFrameId = m_world->getVisFrameId();
 }
 
-void RenderEntity::frameUpdate(QueuedScene *qscene)
+void RenderEntity::frameUpdate(RenderScene *qscene)
 {
 	// do nothing
 }
 
-void RenderEntity::calculateLod(QueuedScene *qscene)
+void RenderEntity::calculateLod(RenderScene *qscene)
 {
 	if (!m_world)
 		return;
@@ -236,7 +237,7 @@ bool RenderEntity::isVisable() const
 	return m_visFrameId == m_world->getVisFrameId();
 }
 
-void RenderEntity::updateCsm(QueuedScene *qscene, Plane::Side side)
+void RenderEntity::updateCsm(RenderScene *qscene, Plane::Side side)
 {
 	if (!r_csmCull.getBool())
 		return;

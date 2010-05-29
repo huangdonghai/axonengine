@@ -12,12 +12,16 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
+#if 0
 struct QueuedScene;
 struct QueuedLight;
+#else
+struct QueuedShadow;
+#endif
 
 class AX_API RenderLight : public RenderEntity
 {
-	friend struct QueuedScene;
+	friend struct RenderScene;
 	friend class RenderWorld;
 
 public:
@@ -31,6 +35,8 @@ public:
 		MAX_SPLITS = 6,
 		NUM_VOLUME_VERTEXES = 8
 	};
+
+	typedef Vector3 VolumeVertexes[RenderLight::NUM_VOLUME_VERTEXES];
 
 	RenderLight();
 	RenderLight(Type t, const Vector3 &pos, Rgb color);
@@ -57,37 +63,40 @@ public:
 
 	void setLightColor(const Color3 &color, float intensity = 1.0f, float specularX = 1.0f);
 	Vector4 getLightColor() const { return m_color; }
+	Vector4 getSkyColor() const { return m_skyColor; }
 	void setSkyColor(const Color3 &color, float skyIntensity = 1.0f);
 	void setEnvColor(const Color3 &color, float envIntensity = 1.0f);
 	Vector3 getGlobalLightDirection() const { return m_affineMat.origin.getNormalized(); }
-
+#if 0
 	void fillQueued(QueuedLight *queued);
-
+#endif
 	// shadow
-	bool checkShadow(QueuedScene *qscene);
+	bool checkShadow(RenderScene *qscene);
+	QueuedShadow *getQueuedShadow() const { return shadowInfo; }
+	void setQueuedShadow(QueuedShadow *qshadow) { shadowInfo = qshadow; }
 #if 0
 	void linkShadow();
 	RenderLight *unlinkShadow();
 #endif
 	void freeShadowMap();
-	bool genShadowMap(QueuedScene *qscene);
+	bool genShadowMap(RenderScene *qscene);
 
 	int getShadowMemoryUsed() const;
 
 	// implement Actor
 	virtual BoundingBox getLocalBoundingBox();
 	virtual BoundingBox getBoundingBox();
-	virtual void issueToQueue(QueuedScene *qscene);
+	virtual void issueToQueue(RenderScene *qscene);
 
 protected:
 	void initShadowInfo();
 	void clearShadowInfo();
 
 	// for light buffer drawing
-	void prepareLightBuffer(QueuedScene *scene);
-	void prepareLightBuffer_Global(QueuedScene *scene);
-	void prepareLightBuffer_Point(QueuedScene *scene);
-	void prepareLightBuffer_Spot(QueuedScene *scene);
+	void prepareLightBuffer(RenderScene *scene);
+	void prepareLightBuffer_Global(RenderScene *scene);
+	void prepareLightBuffer_Point(RenderScene *scene);
+	void prepareLightBuffer_Spot(RenderScene *scene);
 
 private:
 	class ShadowInfo;
@@ -108,8 +117,17 @@ private:
 	IntrusiveLink<RenderLight> m_shadowLink;
 	int m_shadowMemoryUsed;
 
+	// runtime
+	VolumeVertexes lightVolume;
+	// if not intersect neap clip plane, we can use volume's front face to draw light buffer
+	bool isIntersectsNearPlane;
+	Matrix4 projMatrix;
+
+	QueuedShadow *shadowInfo;
+#if 0
 	// for shadow map
 	QueuedLight *m_queuedLight;
+#endif
 };
 
 struct QueuedShadow {
@@ -121,6 +139,7 @@ struct QueuedShadow {
 	Vector4 splitScaleOffsets[RenderLight::MAX_CSM_SPLITS];
 };
 
+#if 0
 struct QueuedLight {
 	typedef Vector3 VolumeVertexes[RenderLight::NUM_VOLUME_VERTEXES];
 
@@ -148,6 +167,7 @@ struct QueuedLight {
 };
 
 typedef Sequence<RenderLight*> LightSeq;
+#endif
 
 AX_END_NAMESPACE
 

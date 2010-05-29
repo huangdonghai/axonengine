@@ -38,8 +38,8 @@ public:
 	virtual Primitives getHitTestPrims();
 
 	// new interface
-	virtual void frameUpdate( QueuedScene *qscene );
-	virtual void issueToQueue(QueuedScene *qscene);
+	virtual void frameUpdate( RenderScene *qscene );
+	virtual void issueToQueue(RenderScene *qscene);
 
 
 private:

@@ -391,9 +391,9 @@ public:
 	virtual BoundingBox getLocalBoundingBox() { return m_bbox; }
 	virtual BoundingBox getBoundingBox() { return m_bbox; }
 	virtual Kind getType() const { return RenderEntity::kTerrain; }
-	virtual void frameUpdate(QueuedScene *qscene);
+	virtual void frameUpdate(RenderScene *qscene);
 
-	virtual void issueToQueue(QueuedScene *qscene);
+	virtual void issueToQueue(RenderScene *qscene);
 
 #if 0
 	virtual Primitives getAllPrimitives();

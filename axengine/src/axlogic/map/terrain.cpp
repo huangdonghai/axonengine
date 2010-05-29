@@ -2120,7 +2120,7 @@ void MapTerrain::generateLayerAlpha(bool doprogress, int id)
 	lg->autoGenerate();
 }
 
-void MapTerrain::frameUpdate(QueuedScene *qscene)
+void MapTerrain::frameUpdate(RenderScene *qscene)
 {
 	const Vector3 &org = qscene->camera.getOrigin();
 	if ((org - m_lastViewOrigin).getLength() < 32 && !m_heightDirtyLastView) {
@@ -2178,7 +2178,7 @@ RenderPrims Terrain::getViewedPrimitives()
 }
 #endif
 
-void MapTerrain::issueToQueue(QueuedScene *qscene)
+void MapTerrain::issueToQueue(RenderScene *qscene)
 {
 	double start = OsUtil::seconds();
 	MapEvent e;

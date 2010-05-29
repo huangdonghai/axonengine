@@ -12,6 +12,7 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
+#if 0
 struct RenderScene {
 	RenderCamera camera;
 	RenderWorld *world;
@@ -24,8 +25,9 @@ struct RenderScene {
 
 typedef shared_ptr<RenderScene> ScenePtr;
 typedef Sequence<ScenePtr> SceneSeq;
+#endif
 
-struct AX_API QueuedScene
+struct AX_API RenderScene
 {
 	enum {
 		MAX_DEBUG_INTERACTIONS = 1024,
@@ -33,6 +35,8 @@ struct AX_API QueuedScene
 		MAX_LIGHTS = 512,
 		MAX_ENTITIES = 2048*4,
 		MAX_INTERACTIONS = 2048*16,
+		MAX_PRIMITIVES = 1024,
+		MAX_OVERLAY_PRIMITIVES = 1024
 	};
 
 	enum SceneType {
@@ -43,7 +47,7 @@ struct AX_API QueuedScene
 
 	int worldFrameId;
 
-	QueuedLight *sourceLight; // if is shadowGen scene, this is light cast this shadow
+	RenderLight *sourceLight; // if is shadowGen scene, this is light cast this shadow
 	int splitIndex; // if is csm split, this is order index
 	bool rendered;
 
@@ -57,15 +61,16 @@ struct AX_API QueuedScene
 	float exposure;
 
 	int numSubScenes;
-	QueuedScene *subScenes[MAX_SUB_SCENES];
+	RenderScene *subScenes[MAX_SUB_SCENES];
 
 	RenderScene *source;
 	RenderCamera camera;
 	RenderTarget *target; // main scene maybe have a render target
+	RenderWorld *world;
 
 	int numLights;
-	QueuedLight *lights[MAX_LIGHTS];
-	QueuedLight *globalLight;
+	RenderLight *lights[MAX_LIGHTS];
+	RenderLight *globalLight;
 
 	QueuedFog *globalFog;
 	QueuedFog *waterFog;
@@ -73,10 +78,10 @@ struct AX_API QueuedScene
 	bool isEyeInWater;
 
 	int numEntities;
-	QueuedEntity *queuedEntities[MAX_ENTITIES];
+	RenderEntity *queuedEntities[MAX_ENTITIES];
 
 	int numPrimitives;
-	int *primIds;
+	Primitive *primIds[MAX_PRIMITIVES];
 
 	int numInteractions;
 	Interaction *interactions[MAX_INTERACTIONS];
@@ -85,9 +90,9 @@ struct AX_API QueuedScene
 	Interaction *debugInteractions[MAX_DEBUG_INTERACTIONS];
 
 	int numOverlayPrimitives;
-	int *overlayPrimIds;
+	Primitive *overlayPrimIds[MAX_OVERLAY_PRIMITIVES];
 
-	QueuedScene *addSubScene();
+	RenderScene *addSubScene();
 	void addLight(RenderLight *light);
 	void addEntity(RenderEntity *entity);
 	Interaction *addInteraction(RenderEntity *qentity, Primitive *prim, bool chain = true);
@@ -96,6 +101,9 @@ struct AX_API QueuedScene
 	void finalProcess();
 
 	bool isLastCsmSplits() const;
+
+	void addPrimitive(Primitive *prim);
+	void addOverlayPrimitive(Primitive *prim);
 
 protected:
 	void checkLights();
@@ -106,7 +114,7 @@ protected:
 	void sortInteractions();
 };
 
-inline bool QueuedScene::isLastCsmSplits() const
+inline bool RenderScene::isLastCsmSplits() const
 {
 	if (sceneType != ShadowGen)
 		return false;
@@ -114,7 +122,7 @@ inline bool QueuedScene::isLastCsmSplits() const
 	if (!sourceLight)
 		return false;
 
-	if (sourceLight->type != RenderLight::kGlobal)
+	if (sourceLight->getLightType() != RenderLight::kGlobal)
 		return false;
 
 	if (splitIndex != sourceLight->shadowInfo->numSplitCamera-1)
@@ -146,12 +154,15 @@ public:
 	void beginProviding();
 	MemoryStack *getMemoryStack();
 	void setTarget(RenderTarget *target);
-	QueuedScene *allocQueuedScene();
-	void addScene(QueuedScene *scene);
+	RenderScene *allocQueuedScene();
+	void addQueuedScene(RenderScene *scene);
+	void addSourceScene(RenderScene *scene);
 	Interaction *allocInteraction();
 	Interaction **allocInteractionPointer(int num);
+#if 0
 	QueuedLight *allocQueuedLight();
 	QueuedEntity *allocQueuedActor(int num = 1);
+#endif
 	int *allocPrimitives(int num);
 	void addDeferredDeleteResource(RenderData *rfr) { m_deferredDeleteResources.push_back(rfr); }
 	void addDeferredCommand(SyncMethod *cmd) { m_deferredCommand.push_back(cmd); }
@@ -164,7 +175,7 @@ public:
 	void beginConsuming();
 	void endSync();
 	int getSceneCount() { return m_sceneCount; }
-	QueuedScene *getScene(int index);
+	RenderScene *getScene(int index);
 	void clear();
 	void endConsuming();
 
@@ -172,7 +183,9 @@ private:
 	MemoryStack *m_stack;
 	RenderTarget *m_target;
 	int m_sceneCount;
-	QueuedScene *m_queuedScenes[MAX_VIEW];
+	RenderScene *m_queuedScenes[MAX_VIEW];
+	int m_sourceSceneCount;
+	RenderScene *m_sourceScenes[MAX_VIEW];
 	SyncEvent *m_providingEvent;
 	SyncEvent *m_consumingEvent;
 	SyncEvent *m_cacheEndEvent;

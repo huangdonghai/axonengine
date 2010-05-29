@@ -99,7 +99,7 @@ public:
 		return false;
 	}
 
-	void update(QueuedScene *qscene)
+	void update(RenderScene *qscene)
 	{
 		switch (m_light->getLightType()) {
 			case RenderLight::kGlobal:
@@ -114,13 +114,13 @@ public:
 		}
 	}
 
-	void issueQueuedShadow(QueuedScene *qscene)
+	void issueQueuedShadow(RenderScene *qscene)
 	{
 		if (m_updateFrame < 0)
 			return;
 
 		QueuedShadow *qshadow = g_renderQueue->allocType<QueuedShadow>(1);
-		m_light->m_queuedLight->shadowInfo = qshadow;
+		m_light->setQueuedShadow(qshadow);
 
 		if (m_light->isGlobal()) {
 			qshadow->numSplitCamera = m_numCsmSplits;
@@ -137,7 +137,7 @@ public:
 
 	}
 
-	void updatePoint(QueuedScene *qscene)
+	void updatePoint(RenderScene *qscene)
 	{
 		bool needRegen = initPoint();
 
@@ -152,16 +152,16 @@ public:
 		for (int i = 0; i < m_numSplits; i++) {
 			SplitInfo *si = m_splits[i];
 
-			QueuedScene *subscene = qscene->addSubScene();
+			RenderScene *subscene = qscene->addSubScene();
 
 			if (!subscene)
 				break;
 
 			stat_shadowPoolUpdate.inc();
-			subscene->sceneType = QueuedScene::ShadowGen;
+			subscene->sceneType = RenderScene::ShadowGen;
 
 			subscene->camera = si->m_camera;
-			subscene->sourceLight = m_light->m_queuedLight;
+			subscene->sourceLight = m_light;
 			subscene->splitIndex = i;
 
 			si->m_updateFrame = m_light->getWorld()->getVisFrameId();
@@ -178,7 +178,7 @@ public:
 		issueQueuedShadow(qscene);
 	}
 
-	void updateSpot(QueuedScene *qscene)
+	void updateSpot(RenderScene *qscene)
 	{
 		bool needRegen = initSpot();
 
@@ -191,7 +191,7 @@ public:
 
 		SplitInfo *si = m_splits[0];
 
-		QueuedScene *subscene = qscene->addSubScene();
+		RenderScene *subscene = qscene->addSubScene();
 		if (!subscene) {
 			issueQueuedShadow(qscene);
 			return;
@@ -200,10 +200,10 @@ public:
 		//g_statistic->incValue(stat_shadowPoolUpdate);
 		stat_shadowPoolUpdate.inc();
 
-		subscene->sceneType = QueuedScene::ShadowGen;
+		subscene->sceneType = RenderScene::ShadowGen;
 
 		subscene->camera = si->m_camera;
-		subscene->sourceLight = m_light->m_queuedLight;
+		subscene->sourceLight = m_light;
 		subscene->splitIndex = 0;
 
 		m_updateFrame = m_light->getWorld()->getVisFrameId();
@@ -258,9 +258,9 @@ public:
 			return false;
 	}
 
-	void updateGlobalSplit(QueuedScene *scene, int index, float *f)
+	void updateGlobalSplit(RenderScene *scene, int index, float *f)
 	{
-		QueuedScene *subscene = scene->addSubScene();
+		RenderScene *subscene = scene->addSubScene();
 		if (!subscene)
 			return;
 
@@ -279,8 +279,6 @@ public:
 		si->m_camera.setTime(visCamera.getTime());
 
 		const Matrix4 &lightmatrix = si->m_camera.getViewMatrix();
-
-		size_t s = sizeof(QueuedLight);
 
 		for (int j = 0; j < 8; j++) {
 			Vector3 lightspace = lightmatrix * points[j];
@@ -310,20 +308,20 @@ public:
 
 		si->m_camera.setOrtho(bbox.min.x, bbox.max.x, bbox.min.y, bbox.max.y, m_csmZfar - 512, m_csmZfar);
 
-		subscene->sceneType = QueuedScene::ShadowGen;
+		subscene->sceneType = RenderScene::ShadowGen;
 
 		// setup atlas info
 		static Point s_viewOffsets[4] = { Point(0,1), Point(1,1), Point(0,0), Point(1,0) };
 
 		subscene->camera = si->m_camera;
 		subscene->camera.setViewRect(Rect(s_viewOffsets[index].x * m_shadowMapSize, s_viewOffsets[index].y * m_shadowMapSize, m_shadowMapSize, m_shadowMapSize));
-		subscene->sourceLight = m_light->m_queuedLight;
+		subscene->sourceLight = m_light;
 		subscene->splitIndex = index;
 
 		si->m_updateFrame = m_light->getWorld()->getVisFrameId();
 	}
 
-	void updateZfar(QueuedScene *scene, float *f)
+	void updateZfar(RenderScene *scene, float *f)
 	{
 		SplitInfo *si = m_splits[m_numCsmSplits-1];
 		if (si->m_updateFrame > 0) {
@@ -345,8 +343,6 @@ public:
 
 		const Matrix4 &lightmatrix = si->m_camera.getViewMatrix();
 
-		size_t s = sizeof(QueuedLight);
-
 		for (int j = 0; j < 8; j++) {
 			Vector3 lightspace = lightmatrix * points[j];
 			bbox.expandBy(lightspace);
@@ -358,7 +354,7 @@ public:
 		m_csmZfar = zfar + 16;
 	}
 
-	void updateGlobal(QueuedScene *scene)
+	void updateGlobal(RenderScene *scene)
 	{
 		if (!r_shadowGen.getBool()) {
 			issueQueuedShadow(scene);
@@ -618,8 +614,11 @@ RenderLight::RenderLight() : RenderEntity(kLight)
 
 //	m_shadowLink.setOwner(this);
 	m_shadowInfo = 0;
+#if 0
 	m_queuedLight = 0;
-
+#else
+	shadowInfo = 0;
+#endif
 	m_preferShadowMapSize = 256;
 }
 
@@ -637,8 +636,11 @@ RenderLight::RenderLight(Type t, const Vector3 &pos, Rgb color) : RenderEntity(k
 
 //	m_shadowLink.setOwner(this);
 	m_shadowInfo = 0;
+#if 0
 	m_queuedLight = 0;
-
+#else
+	shadowInfo = 0;
+#endif
 	m_preferShadowMapSize = 256;
 }
 
@@ -656,7 +658,11 @@ RenderLight::RenderLight(Type t, const Vector3 &pos, Rgb color, float radius) : 
 
 //	m_shadowLink.setOwner(this);
 	m_shadowInfo = 0;
+#if 0
 	m_queuedLight = 0;
+#else
+	shadowInfo = 0;
+#endif
 
 	m_preferShadowMapSize = 256;
 }
@@ -702,7 +708,7 @@ BoundingBox RenderLight::getBoundingBox()
 	return getLocalBoundingBox().getTransformed(m_affineMat);
 }
 
-
+#if 0
 void RenderLight::fillQueued(QueuedLight *queued)
 {
 	m_queuedLight = queued;
@@ -728,14 +734,16 @@ void RenderLight::fillQueued(QueuedLight *queued)
 	queued->envColor = m_envColor;
 	queued->radius = m_radius;
 }
+#endif
 
-void RenderLight::issueToQueue(QueuedScene *qscene)
+void RenderLight::issueToQueue(RenderScene *qscene)
 {
+#if 0
 	if (!m_queuedLight) {
 		return;
 	}
-
-	if (qscene->sceneType != QueuedScene::WorldMain)
+#endif
+	if (qscene->sceneType != RenderScene::WorldMain)
 		return;
 
 	prepareLightBuffer(qscene);
@@ -782,10 +790,10 @@ void RenderLight::issueToQueue(QueuedScene *qscene)
 		static Point s_offsets[4] = { Point(0,1), Point(1,1), Point(0,0), Point(1,0) };
 
 		for (int i = 0; i < qshadow->numSplitCamera; i++) {
-			QueuedScene *subscene = g_renderQueue->allocQueuedScene();
+			RenderScene *subscene = g_renderQueue->allocQueuedScene();
 			qscene->subScenes[qscene->numSubScenes++] = subscene;
 			TypeZero(subscene);
-			subscene->sceneType = QueuedScene::ShadowGen;
+			subscene->sceneType = RenderScene::ShadowGen;
 			qshadow->shadowGenScenes[i] = subscene;
 
 			subscene->camera = qshadow->splitCameras[i];
@@ -798,7 +806,7 @@ void RenderLight::issueToQueue(QueuedScene *qscene)
 #endif
 }
 
-void RenderLight::prepareLightBuffer(QueuedScene *scene)
+void RenderLight::prepareLightBuffer(RenderScene *scene)
 {
 	if (m_type == kGlobal) {
 		prepareLightBuffer_Global(scene);
@@ -809,17 +817,17 @@ void RenderLight::prepareLightBuffer(QueuedScene *scene)
 	}
 }
 
-void RenderLight::prepareLightBuffer_Global( QueuedScene *scene )
+void RenderLight::prepareLightBuffer_Global( RenderScene *scene )
 {
 	const RenderCamera &camera = scene->camera;
 	float znear = camera.getZnear();
 	float zfar = camera.getZfar();
 
-	camera.calcPointsAlongZdist(m_queuedLight->lightVolume, znear);
-	camera.calcPointsAlongZdist(&m_queuedLight->lightVolume[4], zfar * 0.9f);
+	camera.calcPointsAlongZdist(lightVolume, znear);
+	camera.calcPointsAlongZdist(&lightVolume[4], zfar * 0.9f);
 }
 
-void RenderLight::prepareLightBuffer_Point(QueuedScene *scene)
+void RenderLight::prepareLightBuffer_Point(RenderScene *scene)
 {
 	// calculate light volume
 	const Vector3 &origin = getOrigin();
@@ -832,24 +840,24 @@ void RenderLight::prepareLightBuffer_Point(QueuedScene *scene)
 			for (int k = 0; k < 2; k++) {
 				Vector3 down_up = viewaxis[2] *((k==0) ? -1.0f : 1.0f);
 
-				m_queuedLight->lightVolume[i*4+j*2+k] = origin +(back_forward+left_right+down_up) * m_radius;
+				lightVolume[i*4+j*2+k] = origin +(back_forward+left_right+down_up) * m_radius;
 			}
 		}
 	}
 
 	// calculate texture projection matrix
-	m_queuedLight->projMatrix.fromAxisInverse(m_affineMat.axis, m_affineMat.origin);
-	m_queuedLight->projMatrix.scale(1.0f/m_radius, 1.0f/m_radius, 1.0f/m_radius);
+	projMatrix.fromAxisInverse(m_affineMat.axis, m_affineMat.origin);
+	projMatrix.scale(1.0f/m_radius, 1.0f/m_radius, 1.0f/m_radius);
 
 	// check if intersert near clip plane
 	if (m_linkedBbox.pointDistance(scene->camera.getOrigin()) > scene->camera.getZnear() * 4.0f) {
-		m_queuedLight->isIntersectsNearPlane = false;
+		isIntersectsNearPlane = false;
 	} else {
-		m_queuedLight->isIntersectsNearPlane = true;
+		isIntersectsNearPlane = true;
 	}
 }
 
-void RenderLight::prepareLightBuffer_Spot(QueuedScene *scene)
+void RenderLight::prepareLightBuffer_Spot(RenderScene *scene)
 {
 	// calculate light volume
 	const Vector3 &origin = getOrigin();
@@ -858,36 +866,36 @@ void RenderLight::prepareLightBuffer_Spot(QueuedScene *scene)
 
 	float extend = m_radius * atanf(Math::d2r(m_spotAngle*0.5f));
 
-	m_queuedLight->lightVolume[0] = origin;
-	m_queuedLight->lightVolume[1] = origin;
-	m_queuedLight->lightVolume[2] = origin;
-	m_queuedLight->lightVolume[3] = origin;
+	lightVolume[0] = origin;
+	lightVolume[1] = origin;
+	lightVolume[2] = origin;
+	lightVolume[3] = origin;
 
 	for (int j = 0; j < 2; j++) {
 		Vector3 left_right = viewaxis[0] *((j==0) ? 1.0f : -1.0f);
 		for (int k = 0; k < 2; k++) {
 			Vector3 down_up = viewaxis[1] *((k==0) ? -1.0f : 1.0f);
 
-			m_queuedLight->lightVolume[4+j*2+k] = origin + back_forward + (left_right+down_up) * extend;
+			lightVolume[4+j*2+k] = origin + back_forward + (left_right+down_up) * extend;
 		}
 	}
 
 	// calculate texture projection matrix
-	m_queuedLight->projMatrix.fromAxisInverse(m_affineMat.axis, m_affineMat.origin);
-	m_queuedLight->projMatrix.scale(1.0f/extend, 1.0f/extend, 1.0f/m_radius);
+	projMatrix.fromAxisInverse(m_affineMat.axis, m_affineMat.origin);
+	projMatrix.scale(1.0f/extend, 1.0f/extend, 1.0f/m_radius);
 
-	const Matrix4 &m = m_queuedLight->projMatrix;
+	const Matrix4 &m = projMatrix;
 	Vector3 p1 = origin;
-	Vector3 p2 = m_queuedLight->lightVolume[4];
+	Vector3 p2 = lightVolume[4];
 
 	p1 = m * p1;
 	p2 = m * p2;
 
 	// check if intersect near clip plane
 	if (m_linkedBbox.pointDistance(scene->camera.getOrigin()) > scene->camera.getZnear() * 4.0f) {
-		m_queuedLight->isIntersectsNearPlane = false;
+		isIntersectsNearPlane = false;
 	} else {
-		m_queuedLight->isIntersectsNearPlane = true;
+		isIntersectsNearPlane = true;
 	}
 }
 
@@ -915,7 +923,7 @@ void RenderLight::clearShadowInfo()
 	SafeDelete(m_shadowInfo);
 }
 
-bool RenderLight::checkShadow( QueuedScene *qscene )
+bool RenderLight::checkShadow( RenderScene *qscene )
 {
 	if (!m_castShadowMap) {
 		return false;
@@ -962,7 +970,7 @@ void RenderLight::freeShadowMap()
 	m_shadowInfo->unuseShadowMap();
 }
 
-bool RenderLight::genShadowMap(QueuedScene *qscene)
+bool RenderLight::genShadowMap(RenderScene *qscene)
 {
 	AX_ASSERT(m_shadowInfo);
 

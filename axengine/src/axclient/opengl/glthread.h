@@ -20,7 +20,7 @@ extern GLframebuffer *gWorldFramebuffer;
 extern bool gIsReflecting;
 extern RenderTarget *gTarget;
 extern RenderCamera *gCamera;
-extern QueuedScene *gScene;
+extern RenderScene *gScene;
 extern GLframebuffer *gFramebuffer;
 extern const QueuedEntity *gActor;
 
@@ -93,30 +93,30 @@ public:
 
 protected:
 	void beginFrame();
-	void drawScene(QueuedScene *scene, const Clearer &clearer);
-	void setupScene(QueuedScene *scene, const Clearer *clearer = nullptr, RenderTarget *target = nullptr, RenderCamera *camera = nullptr);
-	void unsetScene(QueuedScene *scene, const Clearer *clearer = nullptr, RenderTarget *target = nullptr, RenderCamera *camera = nullptr);
+	void drawScene(RenderScene *scene, const Clearer &clearer);
+	void setupScene(RenderScene *scene, const Clearer *clearer = nullptr, RenderTarget *target = nullptr, RenderCamera *camera = nullptr);
+	void unsetScene(RenderScene *scene, const Clearer *clearer = nullptr, RenderTarget *target = nullptr, RenderCamera *camera = nullptr);
 	void drawPrimitive(int prim_id);
 	void drawInteraction(Interaction *ia);
 	void endFrame();
 
-	void drawPass_zfill(QueuedScene *scene);
-	void drawPass_overlay(QueuedScene *scene);
-	void drawPass_composite(QueuedScene *scene);
-	void drawPass_shadowGen(QueuedScene *scene);
+	void drawPass_zfill(RenderScene *scene);
+	void drawPass_overlay(RenderScene *scene);
+	void drawPass_composite(RenderScene *scene);
+	void drawPass_shadowGen(RenderScene *scene);
 #if 0
 	void drawPass_shadowMasks(QueuedScene *scene);
 	void drawPass_shadowMask(QueuedScene *scene, const Matrix4 &matrix);
 	void drawPass_shadowBlur(QueuedScene *scene);
 #endif
-	void drawPass_postprocess(QueuedScene *scene);
+	void drawPass_postprocess(RenderScene *scene);
 
-	void drawScene_world(QueuedScene *scene, const Clearer &clearer);
-	void drawScene_worldSub(QueuedScene *scene);
-	void drawScene_noworld(QueuedScene *scene, const Clearer &clearer);
+	void drawScene_world(RenderScene *scene, const Clearer &clearer);
+	void drawScene_worldSub(RenderScene *scene);
+	void drawScene_noworld(RenderScene *scene, const Clearer &clearer);
 
 	void cacheResource();
-	void cacheSceneRes(QueuedScene *scene);
+	void cacheSceneRes(RenderScene *scene);
 
 	void beginQuery(int id);
 	void endQuery();

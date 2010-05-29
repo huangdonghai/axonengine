@@ -87,6 +87,27 @@ struct DepthStencilStateDesc {
 		StencilOp_Decrement
 	};
 
+	DepthStencilStateDesc()
+	{
+		depthEnable = true;
+		depthWritable = true;
+		depthFunc = CompareFunc_LessEqual;
+
+		stencilEnable = false;
+		stencilReadMask = 0xff;
+		stencilWriteMask = 0xff;
+
+		stencilFailOp = StencilOp_Keep;
+		stencilDepthFailOp = StencilOp_Keep;
+		stencilPassOp = StencilOp_Keep;
+		stencilFunc = CompareFunc_Never;
+
+		stencilFailOpBackface = stencilFailOp;
+		stencilDepthFailOpBackface = stencilDepthFailOp;
+		stencilPassOpBackface = stencilPassOp;
+		stencilFuncBackface = stencilFunc;
+	}
+
 	bool depthEnable;
 	bool depthWritable;
 	CompareFunc depthFunc;
@@ -117,6 +138,21 @@ struct RasterizerStateDesc {
 		CullMode_None
 	};
 
+	RasterizerStateDesc()
+	{
+		fillMode = FillMode_Solid;
+		cullMode = CullMode_Back;
+
+		frontCounterClockwise = false;
+		depthBias = 0;
+		depthBiasClamp = 0;
+		slopeScaledDepthBias = 0;
+		depthClipEnable = false;
+		scissorEnable = true;
+		multisampleEnable = false;
+		antialiasedLineEnable = false;
+	}
+
 	FillMode fillMode;
 	CullMode cullMode;
 	bool frontCounterClockwise;
@@ -146,6 +182,23 @@ struct BlendStateDesc {
 		BlendOp_Add, BlendOp_Subtract, BlendOp_RevSubtract, BlendOp_Min, BlendOp_Max
 	};
 
+	BlendStateDesc()
+	{
+		alphaToCoverageEnable = false;
+		independentBlendEnable = false;
+
+		blendEnable = false;
+		srcBlend = BlendFactor_One;
+		destBlend = BlendFactor_Zero;
+		blendOp = BlendOp_Add;
+
+		srcBlendAlpha = srcBlend;
+		destBlendAlpha = destBlend;
+		blendOpAlpha = blendOp;
+
+		renderTargetWriteMask = 0xff;
+	}
+
 	bool alphaToCoverageEnable;
 	bool independentBlendEnable;
 
@@ -167,19 +220,23 @@ struct RenderClearer {
 	bool isClearDepth : 1;
 	bool isClearStencil : 1;
 
-	RenderClearer() : color(Rgba::Black), depth(1.0f), stencil(0), isClearColor(false), isClearDepth(false), isClearStencil(false) {}
+	RenderClearer() : color(Rgba::Black), depth(1.0f), stencil(0), isClearColor(false), isClearDepth(false), isClearStencil(false)
+	{}
 
-	void clearDepth(bool enable, float ref = 1.0f) {
+	void clearDepth(bool enable, float ref = 1.0f)
+	{
 		isClearDepth = enable;
 		depth = ref;
 	}
 
-	void clearColor(bool enable, Rgba ref = Rgba::Zero) {
+	void clearColor(bool enable, Rgba ref = Rgba::Zero)
+	{
 		isClearColor = enable;
 		color = ref;
 	}
 
-	void clearStencil(bool enable, int ref) {
+	void clearStencil(bool enable, int ref)
+	{
 		isClearStencil = enable;
 		stencil = ref;
 	}

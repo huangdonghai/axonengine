@@ -28,8 +28,8 @@ public:
 	// implement IEntityManager
 	virtual bool isSupportExt(const String &ext) const;
 	virtual RenderEntity *create(const String &name, intptr_t arg = 0);
-	virtual void updateForFrame(QueuedScene *qscene );
-	virtual void issueToQueue(QueuedScene *qscene);
+	virtual void updateForFrame(RenderScene *qscene );
+	virtual void issueToQueue(RenderScene *qscene);
 
 private:
 	typedef Dict<String, TreeAsset*>	TreeAssetDict;

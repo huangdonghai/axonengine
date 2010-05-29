@@ -45,8 +45,8 @@ void Interaction::calcSort(bool eyeInWater)
 	}
 
 	int distance = 0;
-	if (queuedEntity) {
-		distance = queuedEntity->distance * 1024;
+	if (entity) {
+		distance = entity->getDistance() * 1024;
 	}
 
 	sortkey = (sortkey << 28) + ((uint_t)(distance) &0x0fffffff);

@@ -413,7 +413,7 @@ Primitives OutdoorEnv::getAllPrimitives()
 }
 #endif
 
-void OutdoorEnv::frameUpdate(QueuedScene *qscene)
+void OutdoorEnv::frameUpdate(RenderScene *qscene)
 {
 	if (!m_dateTimeInited) {
 		m_dateTime.initSystemTime(qscene->camera.getTime() * 1000);
@@ -435,7 +435,7 @@ void OutdoorEnv::frameUpdate(QueuedScene *qscene)
 }
 
 
-void OutdoorEnv::issueToQueue(QueuedScene *qscene)
+void OutdoorEnv::issueToQueue(RenderScene *qscene)
 {
 	if (m_haveGlobalLight) {
 		qscene->addEntity(this->getGlobalLight());
@@ -494,13 +494,13 @@ void OutdoorEnv::issueToQueue(QueuedScene *qscene)
 }
 
 
-void OutdoorEnv::genNishitaUpdateScene(QueuedScene *qscene)
+void OutdoorEnv::genNishitaUpdateScene(RenderScene *qscene)
 {
-	QueuedScene *scene = qscene->addSubScene();
+	RenderScene *scene = qscene->addSubScene();
 	if (!scene)
 		return;
 
-	scene->sceneType = QueuedScene::RenderToTexture;
+	scene->sceneType = RenderScene::RenderToTexture;
 	scene->camera = qscene->camera;
 
 	scene->camera.setTarget(m_skyNishitaRt);

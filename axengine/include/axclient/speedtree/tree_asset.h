@@ -38,7 +38,7 @@ public:
 	void addActor(TreeEntity *actor);
 	void removeActor(TreeEntity *actor);
 
-	void issueToQueue(TreeEntity *actor, QueuedScene *qscene);
+	void issueToQueue(TreeEntity *actor, RenderScene *qscene);
 #if 0
 	void issueToQueueInstancing(QueuedScene *qscene);
 #endif

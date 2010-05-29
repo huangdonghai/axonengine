@@ -472,6 +472,51 @@ void ApiWrap::setShaderConst(Uniforms::ItemName name, int size, const void *p)
 
 }
 
+void ApiWrap::setShaderConst(const FixedString &name, int size, const void *p)
+{
+
+}
+
+void ApiWrap::setShader(const FixedString & name, const ShaderMacro &sm, Technique tech)
+{
+
+}
+
+void ApiWrap::setVertices(phandle_t vb, VertexType vt, int offset)
+{
+
+}
+
+void ApiWrap::setVerticesInstanced(phandle_t vb, VertexType vt, int offset, phandle_t inb, int incount)
+{
+
+}
+
+void ApiWrap::setIndices(phandle_t ib, ElementType et, int offset, int vertcount, int indicescount)
+{
+
+}
+
+void ApiWrap::draw()
+{
+
+}
+
+
+
+
+
+
+RenderContext::RenderContext()
+{
+	m_defaultMat = new Material("_debug");
+}
+
+RenderContext::~RenderContext()
+{
+	SafeDelete(m_defaultMat);
+}
+
 
 void RenderContext::issueQueue(RenderQueue *rq)
 {
@@ -498,7 +543,7 @@ void RenderContext::issueQueue(RenderQueue *rq)
 		if (i == view_count - 1) m_isStatistic = true;
 
 		double s = OsUtil::seconds();
-		QueuedScene *queued = rq->getScene(i);
+		RenderScene *queued = rq->getScene(i);
 
 		drawScene(queued, clearer);
 		clearer.clearColor(false);
@@ -524,11 +569,11 @@ void RenderContext::endFrame()
 
 }
 
-void RenderContext::drawScene(QueuedScene *scene, const RenderClearer &clearer)
+void RenderContext::drawScene(RenderScene *scene, const RenderClearer &clearer)
 {
-	if (scene->sceneType == QueuedScene::WorldMain) {
+	if (scene->sceneType == RenderScene::WorldMain) {
 		drawScene_world(scene, clearer);
-	} else if (scene->sceneType == QueuedScene::Default) {
+	} else if (scene->sceneType == RenderScene::Default) {
 		drawScene_noworld(scene, clearer);
 	} else {
 		Errorf("D3D9Thread::drawScene: error scene");
@@ -539,7 +584,7 @@ void RenderContext::drawScene(QueuedScene *scene, const RenderClearer &clearer)
 #define END_PIX()
 #define AX_SU(a,b) setUniform(Uniforms::a, b);
 
-void RenderContext::drawScene_world(QueuedScene *scene, const RenderClearer &clearer)
+void RenderContext::drawScene_world(RenderScene *scene, const RenderClearer &clearer)
 {
 	BEGIN_PIX("DrawWorld");
 
@@ -551,10 +596,10 @@ void RenderContext::drawScene_world(QueuedScene *scene, const RenderClearer &cle
 
 	if (1) {
 		m_gbuffer = m_frameWindow->getGBuffer();
-		AX_SU(g_sceneDepth, m_gbuffer->getPHandle());
+		AX_SU(g_sceneDepth, m_gbuffer->getTexture());
 
 		m_lbuffer = m_frameWindow->getLightBuffer();
-		AX_SU(g_lightBuffer, m_lbuffer->getPHandle());
+		AX_SU(g_lightBuffer, m_lbuffer->getTexture());
 
 	} else {
 		m_worldRt = 0;
@@ -569,18 +614,15 @@ void RenderContext::drawScene_world(QueuedScene *scene, const RenderClearer &cle
 		g_shaderMacro.setMacro(ShaderMacro::G_HDR);
 	}
 
-#if 0
-	g_statistic->setValue(stat_exposure, exposure * 100);
-#else
 	stat_exposure.setInt(exposure * 100);
-#endif
+
 	AX_SU(g_exposure, Vector4(1.0f/exposure, exposure,0,0));
 
 	// set global light parameter
 	if (scene->globalLight) {
-		AX_SU(g_globalLightPos, scene->globalLight->pos);
-		AX_SU(g_globalLightColor, scene->globalLight->color);
-		AX_SU(g_skyColor, scene->globalLight->skyColor);
+		AX_SU(g_globalLightPos, scene->globalLight->getOrigin());
+		AX_SU(g_globalLightColor, scene->globalLight->getLightColor());
+		AX_SU(g_skyColor, scene->globalLight->getSkyColor());
 	}
 
 	// set global fog
@@ -600,17 +642,17 @@ void RenderContext::drawScene_world(QueuedScene *scene, const RenderClearer &cle
 
 	// draw subscene first
 	for (int i = 0; i < scene->numSubScenes; i++) {
-		QueuedScene *sub = scene->subScenes[i];
+		RenderScene *sub = scene->subScenes[i];
 
-		if (sub->sceneType == QueuedScene::ShadowGen) {
+		if (sub->sceneType == RenderScene::ShadowGen) {
 			drawPass_shadowGen(sub);
-		} else if (sub->sceneType == QueuedScene::Reflection) {
+		} else if (sub->sceneType == RenderScene::Reflection) {
 			BEGIN_PIX("ReflectionGen");
 			g_shaderMacro.setMacro(ShaderMacro::G_REFLECTION);
 			drawScene_worldSub(sub);
 			g_shaderMacro.resetMacro(ShaderMacro::G_REFLECTION);
 			END_PIX();
-		} else if (sub->sceneType == QueuedScene::RenderToTexture) {
+		} else if (sub->sceneType == RenderScene::RenderToTexture) {
 			BEGIN_PIX("RenderToTexture");
 			drawScene_worldSub(sub);
 			END_PIX();
@@ -645,7 +687,7 @@ void RenderContext::drawScene_world(QueuedScene *scene, const RenderClearer &cle
 	END_PIX();
 }
 
-void RenderContext::drawScene_noworld(QueuedScene *scene, const RenderClearer &clearer)
+void RenderContext::drawScene_noworld(RenderScene *scene, const RenderClearer &clearer)
 {
 	BEGIN_PIX("DrawNoworld");
 	m_technique = Technique::Main;
@@ -675,7 +717,7 @@ void RenderContext::drawScene_noworld(QueuedScene *scene, const RenderClearer &c
 	END_PIX();
 }
 
-void RenderContext::drawPass_gfill(QueuedScene *scene)
+void RenderContext::drawPass_gfill(RenderScene *scene)
 {
 	m_technique = Technique::Zpass;
 
@@ -692,7 +734,7 @@ void RenderContext::drawPass_gfill(QueuedScene *scene)
 //	unsetScene(scene, &clearer, s_gbuffer);
 }
 
-void RenderContext::drawPass_overlay(QueuedScene *scene)
+void RenderContext::drawPass_overlay(RenderScene *scene)
 {
 	if (!scene->numOverlayPrimitives) {
 		return;
@@ -711,17 +753,17 @@ void RenderContext::drawPass_overlay(QueuedScene *scene)
 //	unsetScene(scene, nullptr, nullptr, &camera);
 }
 
-void RenderContext::drawPass_composite(QueuedScene *scene)
+void RenderContext::drawPass_composite(RenderScene *scene)
 {
-#if 0
+#if 1
 	if (r_wireframe.getBool()) {
 		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		d3d9StateManager->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
-		d3d9ForceWireframe = true;
+		//d3d9StateManager->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
+		m_forceWireframe = true;
 	} else {
 		//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		d3d9StateManager->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
-		d3d9ForceWireframe = false;
+		//d3d9StateManager->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
+		m_forceWireframe = false;
 	}
 #endif
 
@@ -749,15 +791,15 @@ void RenderContext::drawPass_composite(QueuedScene *scene)
 	for (int i = 0; i < scene->numPrimitives; i++) {
 		drawPrimitive(scene->primIds[i]);
 	}
-#if 0
-	unsetScene(scene, 0, scene->target);
+	//unsetScene(scene, 0, scene->target);
 
-	d3d9StateManager->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
-	d3d9ForceWireframe = false;
+#if 1
+	//d3d9StateManager->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
+	m_forceWireframe = false;
 #endif
 }
 
-void RenderContext::drawPass_shadowGen(QueuedScene *scene)
+void RenderContext::drawPass_shadowGen(RenderScene *scene)
 {
 	if (!scene->numInteractions)
 		return;
@@ -766,8 +808,8 @@ void RenderContext::drawPass_shadowGen(QueuedScene *scene)
 
 	Texture *tex = target->getTexture();
 
-	QueuedLight *qlight = scene->sourceLight;
-	QueuedShadow *qshadow = qlight->shadowInfo;
+	RenderLight *qlight = scene->sourceLight;
+	QueuedShadow *qshadow = qlight->getQueuedShadow();
 
 	if (r_shadowGen.getBool()) {
 		BEGIN_PIX("ShadowGen");
@@ -820,7 +862,7 @@ void RenderContext::drawPass_shadowGen(QueuedScene *scene)
 	scene->rendered = true;
 }
 
-void RenderContext::drawPass_lights(QueuedScene *scene)
+void RenderContext::drawPass_lights(RenderScene *scene)
 {
 	RenderClearer clearer;
 
@@ -833,9 +875,9 @@ void RenderContext::drawPass_lights(QueuedScene *scene)
 	clearer.clearColor(false);
 
 	for (int i = 0; i < scene->numLights; i++) {
-		QueuedLight *ql = scene->lights[i];
+		RenderLight *ql = scene->lights[i];
 
-		if (ql->type == RenderLight::kGlobal) {
+		if (ql->getLightType() == RenderLight::kGlobal) {
 			drawGlobalLight(scene, ql);
 		} else {
 			drawLocalLight(scene, ql);
@@ -845,12 +887,12 @@ void RenderContext::drawPass_lights(QueuedScene *scene)
 	//unsetScene(d3d9WorldScene, nullptr, s_lbuffer);
 }
 
-void RenderContext::drawPass_postprocess(QueuedScene *scene)
+void RenderContext::drawPass_postprocess(RenderScene *scene)
 {
 
 }
 
-void RenderContext::drawScene_worldSub(QueuedScene *scene)
+void RenderContext::drawScene_worldSub(RenderScene *scene)
 {
 	m_technique = Technique::Main;
 
@@ -876,9 +918,20 @@ void RenderContext::drawScene_worldSub(QueuedScene *scene)
 //	unsetScene(scene, &clear);
 }
 
-void RenderContext::drawPrimitive(int prim_id)
+void RenderContext::drawPrimitive(Primitive *prim)
 {
+	m_ia = 0;
 
+	if (!prim)
+		return;
+
+	// check actor
+	if (m_entity) {
+		m_entity = 0;
+		AX_SU(g_modelMatrix, Matrix::getIdentity());
+	}
+
+	prim->draw(Technique::Main);
 }
 
 void RenderContext::drawInteraction(Interaction *ia)
@@ -893,7 +946,7 @@ void RenderContext::drawInteraction(Interaction *ia)
 	}
 
 	// check actor
-	const QueuedEntity *re = ia->queuedEntity;
+	const RenderEntity *re = ia->entity;
 	if (re != m_entity || prim->isMatrixSet() || primMatrixSet) {
 		m_entity = re;
 
@@ -904,29 +957,29 @@ void RenderContext::drawInteraction(Interaction *ia)
 				primMatrixSet = false;
 			}
 
-			AX_SU(g_modelMatrix, m_entity->matrix);
-			AX_SU(g_instanceParam, m_entity->instanceParam);
+			AX_SU(g_modelMatrix, m_entity->getMatrix());
+			AX_SU(g_instanceParam, m_entity->getInstanceParam());
 
 			if (prim->isMatrixSet()) {
 				Matrix mat = prim->getMatrix().getAffineMat();
-				mat = m_entity->matrix * mat;
-				AX_SU(g_modelMatrix, m_entity->matrix);
+				mat = m_entity->getMatrix() * mat;
+				AX_SU(g_modelMatrix, mat);
 			}
 
-			if (m_entity->flags & RenderEntity::DepthHack) {
-				//					glDepthRange(0, 0.3f);
+			if (m_entity->getFlags() & RenderEntity::DepthHack) {
+				//glDepthRange(0, 0.3f);
 			} else {
-				//					glDepthRange(0, 1);
+				//glDepthRange(0, 1);
 			}
 		} else {
 			AX_SU(g_modelMatrix, Matrix::getIdentity());
 			AX_SU(g_instanceParam, Vector4(0,0,0,1));
 		}
 	}
-//	prim->draw(m_technique);
+	prim->draw(m_technique);
 }
 
-void RenderContext::setupScene(QueuedScene *scene, const RenderClearer *clearer /*= 0*/, RenderTarget *target /*= 0*/, RenderCamera *camera /*= 0*/)
+void RenderContext::setupScene(RenderScene *scene, const RenderClearer *clearer /*= 0*/, RenderTarget *target /*= 0*/, RenderCamera *camera /*= 0*/)
 {
 
 }
@@ -941,32 +994,127 @@ void RenderContext::issueShadowQuery()
 
 }
 
-void RenderContext::drawGlobalLight(QueuedScene *scene, QueuedLight *light)
+void RenderContext::drawGlobalLight(RenderScene *scene, RenderLight *light)
 {
 
 }
 
-void RenderContext::drawLocalLight(QueuedScene *scene, QueuedLight *light)
+void RenderContext::drawLocalLight(RenderScene *scene, RenderLight *light)
 {
 
 }
 
 void RenderContext::draw(VertexObject *vert, InstanceObject *inst, IndexObject *index, Material *mat, Technique tech)
 {
+	if (!mat)
+		mat = m_defaultMat;
+
+	if (!mat->getShaderInfo()->m_haveTechnique[tech])
+		return;
+
+	ShaderMacro macro = g_shaderMacro;
+	const ShaderMacro &matmacro = mat->getShaderMacro();
+	macro.mergeFrom(&matmacro);
+
 	if (!inst) {
-		g_apiWrap->setVertices(&vert->m_h, vert->m_vt, vert->m_offset);
-		g_shaderMacro.resetMacro(ShaderMacro::G_GEOMETRY_INSTANCING);
+		g_apiWrap->setVertices(vert->m_h, vert->m_vt, vert->m_offset);
+		macro.resetMacro(ShaderMacro::G_GEOMETRY_INSTANCING);
 	} else {
-		g_apiWrap->setVerticesInstanced(&vert->m_h, vert->m_vt, vert->m_offset, &inst->m_h, inst->m_count);
-		g_shaderMacro.setMacro(ShaderMacro::G_GEOMETRY_INSTANCING);
+		g_apiWrap->setVerticesInstanced(vert->m_h, vert->m_vt, vert->m_offset, inst->m_h, inst->m_count);
+		macro.setMacro(ShaderMacro::G_GEOMETRY_INSTANCING);
 	}
 
-	g_apiWrap->setIndices(&index->m_h, index->m_elementType, index->m_offset, vert->m_count, index->m_count);
+	if (!r_detail.getBool() && mat->haveDetail()) {
+		macro.resetMacro(ShaderMacro::G_HAVE_DETAIL);
+		macro.resetMacro(ShaderMacro::G_HAVE_DETAIL_NORMAL);
+	}
 
+	if (!r_bumpmap.getBool()) {
+		macro.resetMacro(ShaderMacro::G_HAVE_NORMAL);
+	}
 
-	g_apiWrap->setShader(mat->getShaderName(), mat->getShaderMacro(), tech);
+#if 0
+	AX_SU(g_lightMap,  prim->m_lightmap);
+	if (prim->m_lightmap && r_lightmap.getBool()) {
+		macro.setMacro(ShaderMacro::G_HAVE_LIGHTMAP);
+	} else {
+		macro.resetMacro(ShaderMacro::G_HAVE_LIGHTMAP);
+	}
+#endif
+	stat_numDrawElements.inc();
 
-	g_apiWrap->dp();
+#if 0
+	if (mat->isWireframe() & !d3d9ForceWireframe) {
+		d3d9StateManager->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
+	}
+
+	draw(shader, tech, prim);
+
+	if (mat->isWireframe()  & !d3d9ForceWireframe) {
+		d3d9StateManager->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
+	}
+#endif
+
+	g_apiWrap->setIndices(index->m_h, index->m_elementType, index->m_offset, vert->m_count, index->m_count);
+
+	g_apiWrap->setShader(mat->getShaderName(), macro, tech);
+
+	setMaterialUniforms(mat);
+
+	g_apiWrap->draw();
+}
+
+void RenderContext::setMaterialUniforms(Material *mat)
+{
+	if (!mat) {
+		AX_SU(g_matDiffuse, Vector3(1,1,1));
+		AX_SU(g_matSpecular, Vector3(0,0,0));
+		AX_SU(g_matShiness, 10);
+		return;
+	}
+
+	// set texgen parameters
+	if (mat->isBaseTcAnim()) {
+		const Matrix4 *matrix = mat->getBaseTcMatrix();
+		if (matrix) {
+			AX_SU(g_baseTcMatrix, *matrix);
+		}
+	}
+
+	// set material parameter
+	AX_SU(g_matDiffuse, mat->getMatDiffuse());
+	AX_SU(g_matSpecular, mat->getMatSpecular());
+	AX_SU(g_matShiness, mat->getMatShiness());
+
+	if (mat->haveDetail()) {
+		float scale = mat->getDetailScale();
+		Vector2 scale2(scale, scale);
+		AX_SU(g_layerScale, scale2);
+	}
+
+	const ShaderParams &params = mat->getParameters();
+
+	ShaderParams::const_iterator it = params.begin();
+	for (; it != params.end(); ++it) {
+		const FloatSeq &value = it->second;
+		g_apiWrap->setShaderConst(it->first, value.size() * sizeof(float),  &value[0]);
+	}
+}
+
+RenderState * RenderContext::findRenderState(RenderStateId id)
+{
+	RenderStateDict::const_iterator it = m_renderStateDict.find(id);
+	if (it != m_renderStateDict.end())
+		return it->second;
+
+	RenderState *result = new RenderState(id);
+	m_renderStateDict[id] = result;
+	return result;
+}
+
+void RenderContext::setUniform(Uniforms::ItemName, Texture *texture)
+{
+
 }
 
 AX_END_NAMESPACE

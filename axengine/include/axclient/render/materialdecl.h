@@ -55,6 +55,8 @@ struct SurfaceType {
 	}
 };
 
+
+
 struct SamplerType {
 	enum Type {
 		// material sampler
@@ -83,18 +85,54 @@ inline TextureDef::TextureDef() : clampToBorder(false), clampToEdge(false), filt
 typedef Sequence<float> FloatSeq;
 typedef Dict<FixedString, FloatSeq> ShaderParams;
 
+struct RenderStateId
+{
+public:
+	enum StencilMode {
+		StencilMode_Disable,
+		StencilMode_Mark,
+		StencilMode_MarkVolume,
+		StencilMode_TestVolume
+	};
+
+	enum BlendMode {
+		BlendMode_Disabled,
+		BlendMode_Add,
+		BlendMode_Blend,
+		BlendMode_Modulate
+	};
+
+	union {
+		struct {
+			int depthWrite : 1;
+			int depthTest : 1;
+			int twoSided : 1;
+			int wireframed : 1;
+			int stencilMode : 2;
+			int blendMode : 2;
+		};
+
+		int intValue;
+	};
+
+	RenderStateId() : intValue(0) {}
+
+	size_t hash() const { return intValue; }
+	bool operator==(RenderStateId rhs) const { return intValue == rhs.intValue; }
+	operator size_t() const { return hash(); }
+};
+
+AX_STATIC_ASSERT(sizeof(RenderStateId)<=sizeof(int));
+
+
 class MaterialDecl
 {
 public:
+	friend class Material;
+
 	enum {
 		MAX_FEATURES = 8,
 		MAX_LITERALS = 8
-	};
-
-	enum CreationFlag {
-		JustParse = 1,
-		BlendDefault = 2,
-		LightedDefault = 4
 	};
 
 	// defined in material
@@ -109,10 +147,8 @@ public:
 	};
 
 	enum Flag {
-		DontDraw = 1,
-		TwoSided = 2,
-		Wireframed = 4,
-		PhysicsHelper = 8,
+		Flag_NoDraw = 1,
+		Flag_PhysicsHelper = 0x80000,
 	};
 
 	typedef Flags_<Flag> Flags;
@@ -121,8 +157,8 @@ public:
 
 	const String &getShaderName() { return m_shaderName; }
 	TextureDef *getTextureDef(SamplerType maptype) { return m_textures[maptype]; }
-	bool isWireframed() const { return m_flags.isSet(Wireframed); }
-	bool isTwoSided() const { return m_flags.isSet(TwoSided); }
+	bool isWireframed() const { return m_renderStateId.wireframed; }
+	bool isTwoSided() const { return m_renderStateId.twoSided; }
 	Flags getFlags() const { return m_flags; }
 	void setFlags(Flags flags) { m_flags = flags; }
 	Rgba getDiffuse() const { return m_diffuse; }
@@ -148,6 +184,7 @@ private:
 	int m_shaderGenMask;
 	Flags m_flags;
 	SurfaceType m_surfaceType;
+	RenderStateId m_renderStateId;
 	TextureDef *m_textures[SamplerType::NUMBER_ALL];
 	ShaderParams m_shaderParams;
 	Rgba m_diffuse, m_specular, m_emission;

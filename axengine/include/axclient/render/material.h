@@ -24,10 +24,13 @@ public:
 	// must be success
 	bool init(const FixedString &name);
 
-	const ShaderInfo *getShaderInfo() const;
+	const ShaderInfo *getShaderInfo() const { return m_shaderInfo; }
 	const FixedString &getShaderName() const { return m_shaderName; }
 	bool isWireframe() const;
 	bool isPhysicsHelper() const;
+
+	RenderStateId getRenderStateId() const { return m_renderStateId; }
+	void setRenderStateId(RenderStateId id) { m_renderStateId = id; }
 
 	void setTextureSet(const String &texname);
 
@@ -88,6 +91,7 @@ public:
 private:
 	FixedString m_key;
 	MaterialDecl *m_decl;
+	RenderStateId m_renderStateId;
 
 	bool m_shaderMacroNeedRegen;
 	ShaderMacro m_shaderMacro;

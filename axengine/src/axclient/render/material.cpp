@@ -32,6 +32,9 @@ Material::Material(const String &name)
 
 	TypeZeroArray(m_features);
 	TypeZeroArray(m_literals);
+
+	FixedString key = normalizeKey(name);
+	init(key);
 }
 
 Material::~Material()
@@ -87,17 +90,9 @@ bool Material::init(const FixedString &key)
 	m_shaderName = getShaderName();
 //	m_shaderInfo = g_shaderManager->findShader(m_shaderNameId, macro);
 
+	m_renderStateId = m_decl->m_renderStateId;
+
 	return true;
-}
-
-const String &Material::getShaderName() const
-{
-	return m_decl->getShaderName();
-}
-
-const ShaderInfo *Material::getShaderInfo() const
-{
-	return m_shaderInfo;
 }
 
 #if 0
@@ -218,7 +213,7 @@ bool Material::isPhysicsHelper() const
 		return true;
 	}
 
-	return m_decl->getFlags().isSet(MaterialDecl::PhysicsHelper);
+	return m_decl->getFlags().isSet(MaterialDecl::Flag_PhysicsHelper);
 }
 
 void Material::setTextureSet( const String &texname )

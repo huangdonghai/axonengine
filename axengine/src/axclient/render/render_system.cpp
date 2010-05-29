@@ -182,16 +182,20 @@ void RenderSystem::beginScene(const RenderCamera &camera)
 	if (camera.getTarget() != m_curTarget)
 		Errorf("camera's target != current target");
 
+#if 0
 	ScenePtr sourceview(new RenderScene);
-
-	m_curScene = sourceview;
-
+#endif
+	m_curScene = g_renderQueue->allocQueuedScene();
+	g_renderQueue->addSourceScene(m_curScene);
+#if 0
 	m_sceneSeq.push_back(m_curScene);
-
+#endif
 	m_curScene->camera = camera;
 	m_curScene->world = NULL;
+#if 0
 	m_curScene->primitives.reserve(256);
 	m_curScene->primitives.reserve(256);
+#endif
 }
 
 void RenderSystem::addToScene(RenderWorld *world)
@@ -205,17 +209,19 @@ void RenderSystem::addToScene(RenderWorld *world)
 
 void RenderSystem::addToScene(Primitive *primitive)
 {
-	m_curScene->primitives.push_back(primitive);
+	m_curScene->addPrimitive(primitive);
 }
 
 void RenderSystem::addToOverlay(Primitive *primitive)
 {
-	m_curScene->overlays.push_back(primitive);
+	m_curScene->addOverlayPrimitive(primitive);
 }
 
 void RenderSystem::endScene()
 {
+#if 0
 	m_curScene.reset();
+#endif
 }
 
 void RenderSystem::endFrame()
@@ -318,6 +324,7 @@ void RenderSystem::endFrame()
 
 	// add to render queue
 	// gQueryManager->runFrame();
+#if 0
 	for (size_t i = 0; i < m_sceneSeq.size(); i++) {
 		RenderScene *s_view = m_sceneSeq[i].get();
 
@@ -331,8 +338,9 @@ void RenderSystem::endFrame()
 			s_view->world->renderTo(queued);
 		}
 
-		g_renderQueue->addScene(queued);
+		g_renderQueue->addQueuedScene(queued);
 	}
+#endif
 
 	float frontEndTime = OsUtil::seconds() - frontEndStart;
 
@@ -350,9 +358,10 @@ void RenderSystem::endFrame()
 	g_renderContext->issueQueue(g_renderQueue);
 #endif
 
+#if 0
 	m_sceneSeq.clear();
 	m_curScene.reset();
-
+#endif
 	m_frameNum++;
 }
 

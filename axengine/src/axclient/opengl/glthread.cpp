@@ -12,12 +12,12 @@ read the license and understand and accept it fully.
 AX_BEGIN_NAMESPACE
 
 RenderCamera *gCamera;
-QueuedScene *gScene;
+RenderScene *gScene;
 
 GLwindow *gFrameWindow;
 bool gIsReflecting;
 
-QueuedScene *gWorldScene;
+RenderScene *gWorldScene;
 GLtarget *gWorldTarget;
 GLframebuffer *gWorldFramebuffer;
 
@@ -134,7 +134,7 @@ void GLthread::runFrame(bool isInThread) {
 	}
 
 	for (int i = 0; i < view_count; i++) {
-		QueuedScene *queued = g_renderQueue->getScene(i);
+		RenderScene *queued = g_renderQueue->getScene(i);
 
 		drawScene(queued, clearer);
 		clearer.clearColor(false);
@@ -189,10 +189,10 @@ void GLthread::beginFrame() {
 	}
 }
 
-void GLthread::drawScene(QueuedScene *scene, const Clearer &clearer) {
-	if (scene->sceneType == QueuedScene::WorldMain) {
+void GLthread::drawScene(RenderScene *scene, const Clearer &clearer) {
+	if (scene->sceneType == RenderScene::WorldMain) {
 		drawScene_world(scene, clearer);
-	} else if (scene->sceneType == QueuedScene::Default) {
+	} else if (scene->sceneType == RenderScene::Default) {
 		drawScene_noworld(scene, clearer);
 	} else {
 		Errorf("GLthread::drawScene: error scene");
@@ -241,7 +241,7 @@ static void ModifyProjectionMatrix(const Vector4 &clipPlane, float matrix[16])
 //		glLoadMatrixf(matrix);
 }
 
-void GLthread::setupScene(QueuedScene *scene, const Clearer *clearer, RenderTarget *target, RenderCamera *camera) {
+void GLthread::setupScene(RenderScene *scene, const Clearer *clearer, RenderTarget *target, RenderCamera *camera) {
 //		AX_ASSERT(scene);
 	if (!scene && !camera) {
 		Errorf("GLthread::setupScene: parameter error");
@@ -303,7 +303,7 @@ void GLthread::setupScene(QueuedScene *scene, const Clearer *clearer, RenderTarg
 	}
 }
 
-void GLthread::unsetScene(QueuedScene *scene, const Clearer *clearer, RenderTarget *target, RenderCamera *camera) {
+void GLthread::unsetScene(RenderScene *scene, const Clearer *clearer, RenderTarget *target, RenderCamera *camera) {
 	if (!scene && !camera) {
 		Errorf("GLthread::unsetScene: parameter error");
 	}
@@ -351,7 +351,7 @@ void GLthread::drawInteraction(Interaction *ia) {
 	}
 
 	// check actor
-	const QueuedEntity *re = ia->queuedEntity;
+	const QueuedEntity *re = ia->entity;
 	if (re != gActor || prim->isMatrixSet() || primMatrixSet) {
 		gActor = re;
 
@@ -400,7 +400,7 @@ void GLthread::cacheResource() {
 	int viewcount = g_renderQueue->getSceneCount();
 
 	for (int i = 0; i < viewcount; i++) {
-		QueuedScene *queued = g_renderQueue->getScene(i);
+		RenderScene *queued = g_renderQueue->getScene(i);
 
 		cacheSceneRes(queued);
 
@@ -413,7 +413,7 @@ void GLthread::cacheResource() {
 		g_renderQueue->endSync();
 }
 
-void GLthread::cacheSceneRes(QueuedScene *scene) {
+void GLthread::cacheSceneRes(RenderScene *scene) {
 	RenderScene *s_view = scene->source;
 
 //		scene->camera = s_view->camera;
@@ -433,7 +433,7 @@ void GLthread::cacheSceneRes(QueuedScene *scene) {
 
 		scene->interactions[j]->resource = glPrimitiveManager->cachePrimitive(scene->interactions[j]->primitive);
 
-		if (scene->numDebugInteractions == QueuedScene::MAX_DEBUG_INTERACTIONS)
+		if (scene->numDebugInteractions == RenderScene::MAX_DEBUG_INTERACTIONS)
 			break;
 
 		if (normallen > 0.00001f) {
@@ -446,7 +446,7 @@ void GLthread::cacheSceneRes(QueuedScene *scene) {
 					continue;
 				LinePrim *line = mesh->getNormalLine(normallen);
 				Interaction *ia = g_renderQueue->allocInteraction();
-				ia->queuedEntity = scene->interactions[j]->queuedEntity;
+				ia->entity = scene->interactions[j]->entity;
 				ia->primitive = line;
 				ia->resource = glPrimitiveManager->cachePrimitive(line);
 
@@ -469,7 +469,7 @@ void GLthread::cacheSceneRes(QueuedScene *scene) {
 				continue;
 			LinePrim *line = mesh->getTangentLine(tangentlen);
 			Interaction *ia = g_renderQueue->allocInteraction();
-			ia->queuedEntity = scene->interactions[j]->queuedEntity;
+			ia->entity = scene->interactions[j]->entity;
 			ia->primitive = line;
 			ia->resource = glPrimitiveManager->cachePrimitive(line);
 
@@ -520,7 +520,7 @@ void GLdriver::runFrame() {
 	glThread->runFrame(false);
 }
 
-void GLthread::drawPass_zfill(QueuedScene *scene) {
+void GLthread::drawPass_zfill(RenderScene *scene) {
 	s_technique = Technique::Zpass;
 
 	Clearer clearer;
@@ -542,7 +542,7 @@ void GLthread::drawPass_zfill(QueuedScene *scene) {
 	unsetScene(scene, &clearer, s_gbuffer);
 }
 
-void GLthread::drawPass_composite(QueuedScene *scene) {
+void GLthread::drawPass_composite(RenderScene *scene) {
 
 	if (r_wireframe.getBool()) {
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -576,7 +576,7 @@ void GLthread::drawPass_composite(QueuedScene *scene) {
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
 
-void GLthread::drawPass_shadowGen(QueuedScene *scene) {
+void GLthread::drawPass_shadowGen(RenderScene *scene) {
 	if (!scene->numInteractions) {
 		return;
 	}
@@ -759,7 +759,7 @@ void GLthread::drawPass_shadowMask(QueuedScene *scene, const Matrix4 &matrix) {
 #endif
 }
 
-void GLthread::drawPass_shadowBlur(QueuedScene *scene) {
+void GLthread::drawPass_shadowBlur(RenderScene *scene) {
 	int blurtimes = r_shadowBlur->getInteger();
 
 	if (blurtimes <= 0) {
@@ -787,7 +787,7 @@ void GLthread::drawPass_shadowBlur(QueuedScene *scene) {
 }
 #endif
 
-void GLthread::drawPass_postprocess(QueuedScene *scene) {
+void GLthread::drawPass_postprocess(RenderScene *scene) {
 	// draw overlay
 	GLtarget *downscale = 0;
 	GLtarget *downscale2 = 0;
@@ -840,7 +840,7 @@ void GLthread::drawPass_postprocess(QueuedScene *scene) {
 	unsetScene(scene, nullptr, nullptr, &camera);
 }
 
-void GLthread::drawPass_overlay(QueuedScene *scene) {
+void GLthread::drawPass_overlay(RenderScene *scene) {
 	if (!scene->numOverlayPrimitives) {
 		return;
 	}
@@ -858,7 +858,7 @@ void GLthread::drawPass_overlay(QueuedScene *scene) {
 	unsetScene(scene, nullptr, nullptr, &camera);
 }
 
-void GLthread::drawScene_world(QueuedScene *scene, const Clearer &clearer) {
+void GLthread::drawScene_world(RenderScene *scene, const Clearer &clearer) {
 
 	double start = OsUtil::seconds();
 
@@ -935,15 +935,15 @@ void GLthread::drawScene_world(QueuedScene *scene, const Clearer &clearer) {
 #if 1
 	// draw subscene first
 	for (int i = 0; i < scene->numSubScenes; i++) {
-		QueuedScene *sub = scene->subScenes[i];
+		RenderScene *sub = scene->subScenes[i];
 
-		if (sub->sceneType == QueuedScene::ShadowGen) {
+		if (sub->sceneType == RenderScene::ShadowGen) {
 			drawPass_shadowGen(sub);
-		} else if (sub->sceneType == QueuedScene::Reflection) {
+		} else if (sub->sceneType == RenderScene::Reflection) {
 			g_shaderMacro.setMacro(ShaderMacro::G_REFLECTION);
 			drawScene_worldSub(sub);
 			g_shaderMacro.resetMacro(ShaderMacro::G_REFLECTION);
-		} else if (sub->sceneType == QueuedScene::RenderToTexture) {
+		} else if (sub->sceneType == RenderScene::RenderToTexture) {
 			drawScene_worldSub(sub);
 		}
 	}
@@ -972,7 +972,7 @@ void GLthread::drawScene_world(QueuedScene *scene, const Clearer &clearer) {
 //		Printf("FRAMETIME: %d", end - start);
 }
 
-void GLthread::drawScene_worldSub(QueuedScene *scene) {
+void GLthread::drawScene_worldSub(RenderScene *scene) {
 	s_technique = Technique::Main;
 
 	Clearer clear;
@@ -997,7 +997,7 @@ void GLthread::drawScene_worldSub(QueuedScene *scene) {
 	unsetScene(scene, &clear);
 }
 
-void GLthread::drawScene_noworld(QueuedScene *scene, const Clearer &clearer) {
+void GLthread::drawScene_noworld(RenderScene *scene, const Clearer &clearer) {
 	s_technique = Technique::Main;
 
 	glColorMask(1, 1, 1, 1);

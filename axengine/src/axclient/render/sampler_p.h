@@ -3,6 +3,7 @@
 
 AX_BEGIN_NAMESPACE
 
+class ApiWrap;
 extern ApiWrap *g_apiWrap;
 
 class SamplerState : public RefObject
@@ -51,6 +52,57 @@ public:
 
 private:
 	Handle m_h;
+};
+
+class RenderState {
+public:
+	RenderState(RenderStateId id)
+	{
+		BlendStateDesc blend_desc;
+		DepthStencilStateDesc ds_desc;
+		RasterizerStateDesc rs_desc;
+
+		if (!id.depthWrite)
+			ds_desc.depthWritable = false;
+
+		if (!id.depthTest)
+			ds_desc.depthEnable = false;
+
+		if (id.twoSided)
+			rs_desc.cullMode = RasterizerStateDesc::CullMode_None;
+
+		if (id.wireframed)
+			rs_desc.fillMode = RasterizerStateDesc::FillMode_Wireframe;
+
+		switch (id.stencilMode) {
+		case RenderStateId::StencilMode_Disable:
+		case RenderStateId::StencilMode_Mark:
+		case RenderStateId::StencilMode_MarkVolume:
+		case RenderStateId::StencilMode_TestVolume:
+			break;
+		}
+
+		switch (id.blendMode) {
+		case RenderStateId::BlendMode_Disabled:
+		case RenderStateId::BlendMode_Add:
+		case RenderStateId::BlendMode_Blend:
+		case RenderStateId::BlendMode_Modulate:
+			break;
+		}
+
+		m_blendState = g_renderSystem->findBlendState(&blend_desc);
+		m_depthStencilState = g_renderSystem->findDepthStencilState(&ds_desc);
+		m_rasterizerState = g_renderSystem->findRasterizerState(&rs_desc);
+	}
+
+	~RenderState()
+	{
+	}
+
+public:
+	BlendStatePtr m_blendState;
+	DepthStencilStatePtr m_depthStencilState;
+	RasterizerStatePtr m_rasterizerState;
 };
 
 AX_END_NAMESPACE

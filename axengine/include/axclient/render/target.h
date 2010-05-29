@@ -84,14 +84,14 @@ private:
 class RenderWorld;
 class RenderEntity;
 class Primitive;
-struct QueuedScene;
+struct RenderScene;
 
 class AX_API ReflectionMap {
 public:
 	ReflectionMap(RenderWorld *world, RenderEntity *actor, Primitive *prim, int width, int height);
 	~ReflectionMap();
 
-	void update(QueuedScene *qscene);
+	void update(RenderScene *qscene);
 
 public:
 	RenderWorld *m_world;

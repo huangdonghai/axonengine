@@ -108,9 +108,12 @@ private:
 	RenderTarget *m_curTarget;
 
 	// current view buf
+#if 0
 	SceneSeq m_sceneSeq;
 	ScenePtr m_curScene;
-
+#else
+	RenderScene *m_curScene;
+#endif
 	// selection camera
 	RenderCamera m_selectionCamera;
 	Selection *m_selection;

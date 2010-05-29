@@ -13,8 +13,9 @@ read the license and understand and accept it fully.
 AX_BEGIN_NAMESPACE
 
 // forward declaration
-struct QueuedScene;
+struct RenderScene;
 
+#if 0
 struct QueuedEntity {
 	enum {
 		MAX_TARGETS = 8
@@ -46,6 +47,7 @@ inline void QueuedEntity::interactionChain(Interaction *last, int chainId)
 	last->actorNext = m_headInteraction;
 	m_headInteraction = last;
 }
+#endif
 
 class QuadNode;
 
@@ -77,6 +79,7 @@ public:
 	void setAxis(const Angles &angles, float scale);
 	const Matrix &getMatrix() const;
 	void setMatrix(const Matrix &mat);
+	const Vector4 &getInstanceParam() const { return m_instanceParam; }
 
 	void setInstanceColor(const Vector3 &color);
 	Vector3 getInstanceColor() const;
@@ -92,10 +95,13 @@ public:
 	bool isVisable() const;
 	bool isLight() const { return m_kind == kLight; }
 	float getVisSize() const { return m_visSize; }
+	float getDistance() const { return m_distance; }
 
+#if 0
 	// queued
 	void setQueued(QueuedEntity *queued);
 	QueuedEntity *getQueued() const;
+#endif
 
 	// read only
 	Matrix4 getModelMatrix() const;
@@ -108,19 +114,21 @@ public:
 	void addHelperPrim(Primitive *prim);
 	const Primitives &getHelperPrims() const;
 
+	void interactionChain(Interaction *last, int chainId);
+
 	// virtual interface
 	virtual BoundingBox getLocalBoundingBox() = 0;
 	virtual BoundingBox getBoundingBox() = 0;
 	virtual Primitives getHitTestPrims() { return Primitives(); }
-	virtual void frameUpdate(QueuedScene *qscene);
-	virtual void issueToQueue(QueuedScene *qscene) {}
+	virtual void frameUpdate(RenderScene *qscene);
+	virtual void issueToQueue(RenderScene *qscene) {}
 
 protected:
 	// only called by RenderWorld
-	void update(QueuedScene *qscene, Plane::Side side);
-	void updateCsm(QueuedScene *qscene, Plane::Side side);
+	void update(RenderScene *qscene, Plane::Side side);
+	void updateCsm(RenderScene *qscene, Plane::Side side);
 	bool isCsmCulled() const;
-	void calculateLod(QueuedScene *qscene);
+	void calculateLod(RenderScene *qscene);
 
 protected:
 	const Kind m_kind;
@@ -128,7 +136,9 @@ protected:
 	int m_flags;
 	Vector4 m_instanceParam;
 
+#if 0
 	QueuedEntity *m_queued;
+#endif
 
 	int m_visFrameId;
 	BoundingBox m_linkedBbox;
@@ -153,6 +163,10 @@ protected:
 	Query *m_visQuery;
 	Query *m_shadowQuery;
 	Plane::Side m_cullSide;
+
+	// used by interaction
+	int m_chainId;
+	Interaction *m_headInteraction;
 };
 
 inline void RenderEntity::clearHelperPrims()
@@ -170,6 +184,18 @@ inline const Primitives &RenderEntity::getHelperPrims() const
 	return m_helperPrims;
 }
 
+inline void RenderEntity::interactionChain(Interaction *last, int chainId)
+{
+	if (m_chainId != chainId) {
+		m_headInteraction = last;
+		m_chainId = chainId;
+		return;
+	}
+
+	last->actorNext = m_headInteraction;
+	m_headInteraction = last;
+}
+
 
 //--------------------------------------------------------------------------
 // class IEntityManager
@@ -179,8 +205,8 @@ class AX_API IEntityManager {
 public:
 	virtual bool isSupportExt(const String &ext) const = 0;
 	virtual RenderEntity *create(const String &name, intptr_t arg = 0) = 0;
-	virtual void updateForFrame(QueuedScene *qscene ) {}
-	virtual void issueToQueue(QueuedScene *qscene) {}
+	virtual void updateForFrame(RenderScene *qscene ) {}
+	virtual void issueToQueue(RenderScene *qscene) {}
 };
 
 AX_END_NAMESPACE

@@ -64,7 +64,7 @@ Enum<T>& Enum<T>::operator=(int t) {
 	return *this;
 }
 
-template< class E >
+template <class E>
 class Flags_ {
 public:
 	Flags_() {}
@@ -83,7 +83,7 @@ public:
 
 	operator int() const { return m_data; }
 
-private:
+protected:
 	int m_data;
 };
 

@@ -54,8 +54,8 @@ public:
 	virtual Kind getType() const { return kOutdoorEnv; }
 
 	// new interface
-	virtual void frameUpdate(QueuedScene *qscene);
-	virtual void issueToQueue(QueuedScene *qscene);
+	virtual void frameUpdate(RenderScene *qscene);
+	virtual void issueToQueue(RenderScene *qscene);
 
 protected:
 	void createSkyBox();
@@ -63,7 +63,7 @@ protected:
 	void createOceanMesh();
 	void createOceanGrid();
 
-	void genNishitaUpdateScene(QueuedScene *qscene);
+	void genNishitaUpdateScene(RenderScene *qscene);
 
 private:
 	// flags

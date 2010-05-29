@@ -106,7 +106,7 @@ void RenderWorld::removeEntity(RenderEntity *entity)
 }
 
 
-void RenderWorld::renderTo(QueuedScene *qscene)
+void RenderWorld::renderTo(RenderScene *qscene)
 {
 	m_frameNum++;
 
@@ -117,7 +117,7 @@ void RenderWorld::renderTo(QueuedScene *qscene)
 
 	m_updateShadowVis = qscene->isLastCsmSplits();
 
-	if (qscene->sceneType == QueuedScene::Reflection) {
+	if (qscene->sceneType == RenderScene::Reflection) {
 		int ref = r_reflection.getInteger();
 
 		s_drawTerrain = false;
@@ -129,7 +129,7 @@ void RenderWorld::renderTo(QueuedScene *qscene)
 			case 1:
 				s_drawTerrain = true;
 		}
-	} else if (qscene->sceneType == QueuedScene::ShadowGen) {
+	} else if (qscene->sceneType == RenderScene::ShadowGen) {
 		if (r_terrainShadow.getBool()) {
 			s_drawTerrain = true;
 		} else {
@@ -147,7 +147,7 @@ void RenderWorld::renderTo(QueuedScene *qscene)
 
 	// outdoor environment
 	if (m_outdoorEnv) {
-		if (qscene->sceneType == QueuedScene::WorldMain) {
+		if (qscene->sceneType == RenderScene::WorldMain) {
 			updateExposure(qscene);
 			m_outdoorEnv->update(qscene, Plane::Cross);
 		} else {
@@ -165,7 +165,7 @@ void RenderWorld::renderTo(QueuedScene *qscene)
 
 	// terrain
 	if (m_terrain && r_terrain.getBool() && s_drawTerrain) {
-		if (qscene->sceneType == QueuedScene::WorldMain) {
+		if (qscene->sceneType == RenderScene::WorldMain) {
 			m_terrain->update(qscene, Plane::Cross);
 		}
 #if 0
@@ -202,7 +202,7 @@ void RenderWorld::renderTo(QueuedScene *qscene)
 
 	qscene->finalProcess();
 
-	if (qscene->sceneType != QueuedScene::WorldMain) {
+	if (qscene->sceneType != RenderScene::WorldMain) {
 		return;
 	}
 
@@ -243,13 +243,13 @@ void RenderWorld::renderTo(QueuedScene *qscene)
 			if (refl->m_target)
 				ia->targets[ia->numTargets++] = refl->m_target;
 
-			if (qscene->numSubScenes == QueuedScene::MAX_SUB_SCENES) {
+			if (qscene->numSubScenes == RenderScene::MAX_SUB_SCENES) {
 				Errorf("MAX_SUB_SCENES exceeds");
 				break;
 			}
 		}
 
-		if (qscene->numSubScenes == QueuedScene::MAX_SUB_SCENES) {
+		if (qscene->numSubScenes == RenderScene::MAX_SUB_SCENES) {
 			Errorf("MAX_SUB_SCENES exceeds");
 			break;
 		}
@@ -257,25 +257,25 @@ void RenderWorld::renderTo(QueuedScene *qscene)
 
 	for (int i = 0; i < qscene->numSubScenes; i++) {
 		// render to texture no world
-		QueuedScene *subscene = qscene->subScenes[i];
-		if (subscene->sceneType == QueuedScene::RenderToTexture) {
+		RenderScene *subscene = qscene->subScenes[i];
+		if (subscene->sceneType == RenderScene::RenderToTexture) {
 			continue;
 		}
 
 		QuadNode *node = m_rootNode;
 
-		if (subscene->sceneType == QueuedScene::ShadowGen) {
-			RenderLight *light = subscene->sourceLight->preQueued;
+		if (subscene->sceneType == RenderScene::ShadowGen) {
+			RenderLight *light = subscene->sourceLight;
 
 			if (light->getLightType() != RenderLight::kGlobal) {
-				node = subscene->sourceLight->preQueued->m_linkedNode;
+				node = light->m_linkedNode;
 			}
 		}
 		renderTo(qscene->subScenes[i], node);
 	}
 }
 
-void RenderWorld::renderTo( QueuedScene *qscene, QuadNode *node )
+void RenderWorld::renderTo( RenderScene *qscene, QuadNode *node )
 {
 	m_frameNum++;
 
@@ -286,7 +286,7 @@ void RenderWorld::renderTo( QueuedScene *qscene, QuadNode *node )
 
 	m_updateShadowVis = qscene->isLastCsmSplits();
 
-	if (qscene->sceneType == QueuedScene::Reflection) {
+	if (qscene->sceneType == RenderScene::Reflection) {
 		int ref = r_reflection.getInteger();
 
 		s_drawTerrain = false;
@@ -298,7 +298,7 @@ void RenderWorld::renderTo( QueuedScene *qscene, QuadNode *node )
 			case 1:
 				s_drawTerrain = true;
 		}
-	} else if (qscene->sceneType == QueuedScene::ShadowGen) {
+	} else if (qscene->sceneType == RenderScene::ShadowGen) {
 		if (r_terrainShadow.getBool()) {
 			s_drawTerrain = true;
 		} else {
@@ -316,7 +316,7 @@ void RenderWorld::renderTo( QueuedScene *qscene, QuadNode *node )
 
 	// outdoor environment
 	if (m_outdoorEnv) {
-		if (qscene->sceneType == QueuedScene::WorldMain) {
+		if (qscene->sceneType == RenderScene::WorldMain) {
 			updateExposure(qscene);
 			m_outdoorEnv->update(qscene, Plane::Cross);
 		} else {
@@ -334,7 +334,7 @@ void RenderWorld::renderTo( QueuedScene *qscene, QuadNode *node )
 
 	// terrain
 	if (m_terrain && r_terrain.getBool() && s_drawTerrain) {
-		if (qscene->sceneType == QueuedScene::WorldMain) {
+		if (qscene->sceneType == RenderScene::WorldMain) {
 			m_terrain->update(qscene, Plane::Cross);
 		}
 #if 0
@@ -373,7 +373,7 @@ void RenderWorld::renderTo( QueuedScene *qscene, QuadNode *node )
 }
 
 // mark visible
-void RenderWorld::markVisible_r(QueuedScene *qscene, QuadNode *node, Plane::Side parentSide)
+void RenderWorld::markVisible_r(RenderScene *qscene, QuadNode *node, Plane::Side parentSide)
 {
 	if (node == NULL)
 		return;
@@ -395,7 +395,7 @@ void RenderWorld::markVisible_r(QueuedScene *qscene, QuadNode *node, Plane::Side
 
 	for (IntrusiveList<RenderEntity>::iterator it = node->linkHead.begin(); it != node->linkHead.end(); ++it) {
 		RenderEntity *entity = &*it;
-		if (qscene->sceneType == QueuedScene::ShadowGen && qscene->sourceLight->type == RenderLight::kGlobal) {
+		if (qscene->sceneType == RenderScene::ShadowGen && qscene->sourceLight->getLightType() == RenderLight::kGlobal) {
 			if (entity->isCsmCulled()) {
 #if 0
 				g_statistic->incValue(stat_csmCulled);
@@ -419,7 +419,7 @@ void RenderWorld::markVisible_r(QueuedScene *qscene, QuadNode *node, Plane::Side
 			}
 		}
 
-		if (qscene->sceneType == QueuedScene::WorldMain) {
+		if (qscene->sceneType == RenderScene::WorldMain) {
 			entity->update(qscene, actorSide);
 
 			if (entity->m_queryCulled)
@@ -596,7 +596,7 @@ void RenderWorld::unlinkEntity(RenderEntity *la)
 #endif
 }
 
-void RenderWorld::updateExposure(QueuedScene *qscene)
+void RenderWorld::updateExposure(RenderScene *qscene)
 {
 	if (1 || !r_hdr.getBool()) {
 		qscene->m_histogramIndex = -1;

@@ -124,8 +124,8 @@ public:
 	virtual BoundingBox getLocalBoundingBox();
 	virtual BoundingBox getBoundingBox();
 	virtual Primitives getHitTestPrims();
-	virtual void frameUpdate(QueuedScene *qscene);
-	virtual void issueToQueue(QueuedScene *qscene);
+	virtual void frameUpdate(RenderScene *qscene);
+	virtual void issueToQueue(RenderScene *qscene);
 
 protected:
 	Particle *planeEmit(float width, float length, float speed, float variant, float spread, float spread2);

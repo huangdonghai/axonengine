@@ -81,12 +81,12 @@ RenderEntity *TreeManager::create(const String &name, intptr_t arg)
 	return new TreeEntity(name, arg);
 }
 
-void TreeManager::updateForFrame(QueuedScene *qscene)
+void TreeManager::updateForFrame(RenderScene *qscene)
 {
 	// do nothing
 }
 
-void TreeManager::issueToQueue(QueuedScene *qscene)
+void TreeManager::issueToQueue(RenderScene *qscene)
 {
 #if 0
 	if (!r_geoInstancing->getInteger()) {
