@@ -41,7 +41,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="E:\_axisv\hk650r1\Source"
+				AdditionalIncludeDirectories="D:\trunk\axextlibs\hk650r1\Source"
 				ForcedIncludeFiles=""
 			/>
 			<Tool
