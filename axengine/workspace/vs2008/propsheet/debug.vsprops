@@ -7,7 +7,7 @@
 	<Tool
 		Name="VCCLCompilerTool"
 		Optimization="0"
-		AdditionalIncludeDirectories="&quot;$(ProjectDir)/../../../include&quot;;&quot;$(SolutionDir)/../../../axextlibs/vc9/include&quot;"
+		AdditionalIncludeDirectories="&quot;$(ProjectDir)/../../../include&quot;;&quot;$(SolutionDir)/../../../axextlibs/hk650r1/Source&quot;;&quot;$(SolutionDir)/../../../axextlibs/vc9/include&quot;"
 		PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_LIB"
 		RuntimeLibrary="3"
 		UsePrecompiledHeader="2"
