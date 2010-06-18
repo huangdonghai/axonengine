@@ -14,6 +14,9 @@ RenderThread::~RenderThread()
 
 void RenderThread::runFrame(bool isInThread)
 {
+	while (1) {
+
+	}
 }
 
 void RenderThread::doRun()
