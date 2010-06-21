@@ -9,8 +9,6 @@ public:
 	RenderThread();
 	~RenderThread();
 
-	void runFrame(bool isInThread);
-
 	// implement thread run
 	virtual void doRun();		// work entry
 

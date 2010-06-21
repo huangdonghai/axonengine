@@ -53,7 +53,15 @@ public:
 	static void (*clear)(const RenderClearer &clearer);
 };
 
-class ApiCommand;
+class ApiCommand
+{
+public:
+	ApiCommand() {}
+	virtual ~ApiCommand() {}
+	virtual void exec() = 0;
+	int m_bufPos;
+};
+
 
 class ApiWrap
 {
@@ -117,6 +125,9 @@ public:
 	byte_t *allocRingBuf(int size);
 	int getWritePos() { return m_bufWritePos; }
 
+	// called in render thread, return number commands executed
+	int rumCommands();
+
 	template <class Q>
 	Q *allocType(int n=1)
 	{
@@ -132,6 +143,7 @@ public:
 		Q *ptr = reinterpret_cast<Q *>(pbuf);
 
 		m_ringCommand[m_cmdWritePos++] = ptr;
+		ptr->m_bufPos = m_bufWritePos;
 
 		return ptr;
 	}

@@ -39,14 +39,6 @@ void (*RenderApi::setVertices)(phandle_t h, VertexType vt, int vertcount);
 void (*RenderApi::setInstanceVertices)(phandle_t h, VertexType vt, int vertcount, Handle inb, int incount);
 void (*RenderApi::setIndices)(phandle_t h);
 
-class ApiCommand
-{
-public:
-	ApiCommand() {}
-	virtual ~ApiCommand() {}
-	virtual void exec() = 0;
-};
-
 
 template <typename Signature>
 class ApiCommand_ : public ApiCommand
@@ -220,6 +212,7 @@ private:
 };
 
 static void BeginCommand() {}
+static void EndCommand() {}
 
 static ApiCommand_<void (*)()> &AddCommand0(void (*method)())
 {
@@ -500,6 +493,27 @@ void ApiWrap::setIndices(phandle_t ib, ElementType et, int offset, int vertcount
 void ApiWrap::draw()
 {
 
+}
+
+int ApiWrap::rumCommands()
+{
+	int count = 0;
+
+	while (1) {
+		if (m_cmdReadPos == m_cmdWritePos)
+			break;
+
+		ApiCommand *cmd = m_ringCommand[m_cmdReadPos];
+		cmd->exec();
+
+		m_bufReadPos = cmd->m_bufPos;
+		m_cmdReadPos = (m_cmdReadPos + 1) % ApiWrap::MAX_COMMANDS;
+
+		cmd->~ApiCommand();
+		count++;
+	}
+
+	return count;
 }
 
 
