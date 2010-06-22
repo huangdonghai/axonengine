@@ -25,18 +25,21 @@ float Script : STANDARDSGLOBAL <
 float4x4 s_testarray;
 float4 s_boxrange[4];
 
-/*********** Generic Vertex Shader ******/
+struct testStruct {
+	float4 a;
+	float4 b;
+	float3 c;
+	float d;
+} ts : register(c30);
 
-cbuffer batch {
-	float4x4 worldMatrix;
-	float4 color;
-};
+/*********** Generic Vertex Shader ******/
 
 VertexOut VP_main(VertexIn IN) {
     VertexOut OUT = (VertexOut)0;
 
-	OUT.hpos = color;
-
+	OUT.hpos = ts.a;
+	OUT.color.xyz = ts.c;
+	OUT.color.w = ts.d;
     return OUT;
 }
 

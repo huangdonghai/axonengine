@@ -23,7 +23,8 @@ public:
 	static void (*uploadIndexBuffer)(phandle_t h, int datasize, void *p);
 	static void (*deleteIndexBuffer)(phandle_t h);
 
-	static void (*createWindowTarget)(phandle_t h, Handle hwnd);
+	static void (*createWindowTarget)(phandle_t h, Handle hwnd, int width, int height);
+	static void (*updateWindowTarget)(phandle_t h, Handle newHwnd, int width, int height);
 	static void (*deleteWindowTarget)(phandle_t h);
 
 	static void (*createSamplerState)(phandle_t h, const SamplerStateDesc &samplerState);
@@ -123,10 +124,17 @@ public:
 	void clear(const RenderClearer &clearer);
 
 	byte_t *allocRingBuf(int size);
-	int getWritePos() { return m_bufWritePos; }
+
+	// wait all commands executed
+	void finish()
+	{
+		while (m_cmdWritePos != m_cmdReadPos) {
+			OsUtil::sleep(0);
+		}
+	}
 
 	// called in render thread, return number commands executed
-	int rumCommands();
+	int runCommands();
 
 	template <class Q>
 	Q *allocType(int n=1)
@@ -138,12 +146,17 @@ public:
 	template <class Q>
 	Q *allocCommand()
 	{
+		while (isFull()) {
+			OsUtil::sleep(0);
+		}
+
 		int size = sizeof(Q);
 		byte_t *pbuf = allocRingBuf(size);
 		Q *ptr = reinterpret_cast<Q *>(pbuf);
 
-		m_ringCommand[m_cmdWritePos++] = ptr;
+		m_ringCommand[m_cmdWritePos] = ptr;
 		ptr->m_bufPos = m_bufWritePos;
+		m_cmdWritePos = (m_cmdWritePos + 1) % MAX_COMMANDS;
 
 		return ptr;
 	}
@@ -153,6 +166,12 @@ protected:
 	void addObjectDeletion(delete_func_t func, phandle_t h);
 
 	void waitToPos(int pos);
+	bool isFull() const
+	{
+		int freeSlots = ((m_cmdWritePos - m_cmdReadPos) + MAX_COMMANDS) % MAX_COMMANDS;
+		if (freeSlots == 1) return true;
+		return false;
+	}
 
 private:
 	enum {

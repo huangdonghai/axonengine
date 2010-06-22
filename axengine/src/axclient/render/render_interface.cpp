@@ -16,7 +16,8 @@ void (*RenderApi::createIndexBuffer)(phandle_t h, int datasize, Primitive::Hint 
 void (*RenderApi::uploadIndexBuffer)(phandle_t h, int datasize, void *p);
 void (*RenderApi::deleteIndexBuffer)(phandle_t h);
 
-void (*RenderApi::createWindowTarget)(phandle_t h, Handle hwnd);
+void (*RenderApi::createWindowTarget)(phandle_t h, Handle hwnd, int width, int height);
+void (*RenderApi::updateWindowTarget)(phandle_t h, Handle newHwnd, int width, int height);
 void (*RenderApi::deleteWindowTarget)(phandle_t h);
 
 void (*RenderApi::createSamplerState)(phandle_t h, const SamplerStateDesc &samplerState);
@@ -334,9 +335,9 @@ void ApiWrap::deleteIndexBuffer(phandle_t h)
 	addObjectDeletion(RenderApi::deleteVertexBuffer, h);
 }
 
-void ApiWrap::clear( const RenderClearer &clearer )
+void ApiWrap::clear(const RenderClearer &clearer)
 {
-
+	AddCommand1(RenderApi::clear).args(clearer);
 }
 
 void ApiWrap::createSamplerState(phandle_t h, const SamplerStateDesc &desc)
@@ -393,12 +394,12 @@ void ApiWrap::addObjectDeletion(delete_func_t func, phandle_t h)
 
 void ApiWrap::createWindowTarget(phandle_t h, Handle hwnd, int width, int height)
 {
-	AddCommand2(RenderApi::createWindowTarget).args(h, hwnd);
+	AddCommand4(RenderApi::createWindowTarget).args(h, hwnd, width, height);
 }
 
 void ApiWrap::updateWindowTarget(phandle_t h, Handle newWndId, int width, int height)
 {
-
+	AddCommand4(RenderApi::updateWindowTarget).args(h, newWndId, width, height);
 }
 
 void ApiWrap::deleteWindowTarget(phandle_t h)
@@ -495,7 +496,7 @@ void ApiWrap::draw()
 
 }
 
-int ApiWrap::rumCommands()
+int ApiWrap::runCommands()
 {
 	int count = 0;
 

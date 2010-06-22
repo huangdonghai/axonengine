@@ -15,7 +15,7 @@ RenderThread::~RenderThread()
 void RenderThread::doRun()
 {
 	while (1) {
-		g_apiWrap->rumCommands();
+		g_apiWrap->runCommands();
 	}
 }
 
