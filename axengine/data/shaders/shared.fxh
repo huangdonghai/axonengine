@@ -150,6 +150,53 @@ AX_SHADERCONST(SHADERMACRO_VERSION, 2)
 	AX_DECL_MACRO(G_LITERAL6				, 4) \
 	AX_DECL_MACRO(G_LITERAL7				, 4)
 
+struct PerSceneUniforms {
+};
+
+#define AX_SCENE_UNIFORMS \
+	/* both vs and ps use */ \
+	AX_UNIFORM(float, float, g_time) \
+	AX_UNIFORM(float4, Vector4, g_cameraPos) \
+	AX_UNIFORM(float4, Vector4, g_fogParams) \
+	AX_UNIFORM(float4, Vector4, g_waterFogParams) \
+	\
+	/* vs use */ \
+	AX_UNIFORM(float4x4, Matrix4, g_viewProjMatrix) \
+	AX_UNIFORM(float4x4, Matrix4, g_viewProjNoTranslate) \
+	AX_UNIFORM(float3x3, Matrix3, g_cameraAxis) \
+	AX_UNIFORM(float3, Vector3, g_cameraAngles) \
+	AX_UNIFORM(float4, Vector4, g_sceneSize) \
+	AX_ARRAY_UNIFORM(float4x4, Matrix4, g_windMatrices, 3) \
+	AX_ARRAY_UNIFORM(float4, Vector4, g_leafAngles, 8) \
+	\
+	/* ps use */ \
+	AX_UNIFORM(float4, Vector4, g_globalLightPos) \
+	AX_UNIFORM(float4, Vector4,	g_globalLightColor) \
+	AX_UNIFORM(float4, Vector4,	g_skyColor) \
+	AX_UNIFORM(float4, Vector4,	g_exposure) \
+
+#define AX_IA_UNIFORMS \
+	AX_UNIFORM(float3x4, Matrix, g_modelMatrix) \
+	AX_UNIFORM(float4, Vector4,	g_instanceParam) \
+	AX_UNIFORM(float4, Vector4,	g_terrainRect) \
+	AX_UNIFORM(float4, Vector4,	g_zoneRect) \
+	AX_UNIFORM(float4, Vector4,	g_chunkRect) \
+	\
+	AX_UNIFORM(float4x4, Matrix4, g_baseTcMatrix) \
+	AX_UNIFORM(float3, Vector3,	g_matDiffuse) \
+	AX_UNIFORM(float3, Vector3,	g_matSpecular) \
+	AX_UNIFORM(float, float, g_matShiness) \
+	AX_UNIFORM(float2, Vector2,	g_layerScale) \
+	/*shadow parameter*/ \
+	AX_UNIFORM(float4x4, Matrix4, g_shadowMatrix) \
+	AX_UNIFORM(float4x4, Matrix4, g_csmOffsetScales) \
+
+#define AX_SAMPLER_UNIFORMS \
+	AX_TEXTURE_UNIFORM(sampler2D, g_sceneDepth) \
+	AX_TEXTURE_UNIFORM(sampler2D, g_lightBuffer) \
+	AX_TEXTURE_UNIFORM(sampler2D, g_lightMap) \
+	AX_TEXTURE_UNIFORM(sampler2D, g_shadowMap) \
+
 #define AX_UNIFORM_DEFS															\
 	/* both vs and ps use */ \
 	AX_UNIFORM(float,		float,		g_time,						1, 1)		\
