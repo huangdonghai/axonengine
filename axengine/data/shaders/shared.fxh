@@ -150,7 +150,40 @@ AX_SHADERCONST(SHADERMACRO_VERSION, 2)
 	AX_DECL_MACRO(G_LITERAL6				, 4) \
 	AX_DECL_MACRO(G_LITERAL7				, 4)
 
-struct PerSceneUniforms {
+struct PerSceneGlobal {
+	float time;
+	float4 cameraPos;
+	float4 fogParams;
+	float4 waterFogParams;
+};
+
+struct PerSceneGlobal_VS {
+	float4x4 viewProjMatrix;
+	float4x4 viewProjNoTranslate;
+	float3x3 cameraAxis;
+	float3 cameraAngles;
+	float4 sceneSize;
+	float4x4 windMatrices[3];
+	float4 leafAngles[8];
+};
+
+struct PerSceneGlobal_PS {
+	float4 globalLightPos;
+	float4 globalLightColor;
+	float4 skyColor;
+	float4 exposure;
+};
+
+struct PerInteractionGlobal_VS {
+	float3x4 modelMatrix;
+	float4 instanceParam;
+};
+
+struct PerInteractionGlobal_PS {
+};
+
+struct PerInteractionLocal {
+	float4 data[32];
 };
 
 #define AX_SCENE_UNIFORMS \
