@@ -150,14 +150,14 @@ AX_SHADERCONST(SHADERMACRO_VERSION, 2)
 	AX_DECL_MACRO(G_LITERAL6				, 4) \
 	AX_DECL_MACRO(G_LITERAL7				, 4)
 
-struct PerSceneGlobal {
+struct GlobalConst {
 	float time;
 	float4 cameraPos;
 	float4 fogParams;
 	float4 waterFogParams;
 };
 
-struct PerSceneGlobal_VS {
+struct VS_GlobalConst {
 	float4x4 viewProjMatrix;
 	float4x4 viewProjNoTranslate;
 	float3x3 cameraAxis;
@@ -167,22 +167,27 @@ struct PerSceneGlobal_VS {
 	float4 leafAngles[8];
 };
 
-struct PerSceneGlobal_PS {
+struct PS_GlobalConst {
 	float4 globalLightPos;
 	float4 globalLightColor;
 	float4 skyColor;
 	float4 exposure;
 };
 
-struct PerInteractionGlobal_VS {
+struct VS_InteractionConst {
 	float3x4 modelMatrix;
 	float4 instanceParam;
+	float4x4 texMatrix;
 };
 
-struct PerInteractionGlobal_PS {
+struct PS_InteractionConst {
+	float3 matDiffuse;
+	float3 matSpecular;
+	float matShiness;
+	float2 layerScale;
 };
 
-struct PerInteractionLocal {
+struct InteractionLocal {
 	float4 data[32];
 };
 
@@ -211,11 +216,11 @@ struct PerInteractionLocal {
 #define AX_IA_UNIFORMS \
 	AX_UNIFORM(float3x4, Matrix, g_modelMatrix) \
 	AX_UNIFORM(float4, Vector4,	g_instanceParam) \
+	AX_UNIFORM(float4x4, Matrix4, g_baseTcMatrix) \
 	AX_UNIFORM(float4, Vector4,	g_terrainRect) \
 	AX_UNIFORM(float4, Vector4,	g_zoneRect) \
 	AX_UNIFORM(float4, Vector4,	g_chunkRect) \
 	\
-	AX_UNIFORM(float4x4, Matrix4, g_baseTcMatrix) \
 	AX_UNIFORM(float3, Vector3,	g_matDiffuse) \
 	AX_UNIFORM(float3, Vector3,	g_matSpecular) \
 	AX_UNIFORM(float, float, g_matShiness) \

@@ -33,51 +33,24 @@ float Script : STANDARDSGLOBAL <
 float4x4 s_testarray;
 float4 s_boxrange[4];
 
-struct testStruct {
-	float4 a;
-	float4 b;
-	float3 c;
-	float d;
-} ts : register(c30);
-
 /*********** Generic Vertex Shader ******/
+
+cbuffer per_scene_global : register (b0)
+{
+	float4 psg_color;
+}
 
 VertexOut VP_main(VertexIn IN) {
     VertexOut OUT = (VertexOut)0;
 
-	OUT.hpos = ts.a;
-	OUT.color.xyz = ts.c;
-	OUT.color.w = ts.d;
+	OUT.hpos = psg_color;
     return OUT;
 }
 
 /********* pixel shaders ********/
-half4 FP_main(VertexOut IN) : COLOR {
-	half4 c = IN.color;
-	return all(c);
-	float4 sb;
-#if 1
-	c = c > s_boxrange[0] && c < s_boxrange[1] && c > s_boxrange[2] && c < s_boxrange[3];
+float4 FP_main(VertexOut IN) : COLOR0 {
 
-	if (c.x!=0)
-		sb = s_testarray[0];
-	else if (c.y!=0)
-		sb = s_testarray[1];
-	else if (c.z!=0)
-		sb = s_testarray[2];
-	else
-		sb = s_testarray[3];
-#else
-	c = c > s_boxrange[0] && c < s_boxrange[1];
-	c = mul(s_testarray, c);
-	sb = c;
-#endif
-	return sb;
-
-	c *= FP_GetDiffuse(IN);
-	c.rgb *= g_matDiffuse.xyz;
-
-	return c;
+	return psg_color;
 }
 
 //////////////////////////////////////////////////////////////////////
