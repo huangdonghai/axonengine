@@ -3,8 +3,6 @@
 
 AX_BEGIN_NAMESPACE
 
-struct RenderState;
-
 class RenderApi
 {
 public:
@@ -247,6 +245,11 @@ protected:
 private:
 	// init
 	Material *m_defaultMat;
+	UniformStruct *m_globalConst;
+	UniformStruct *m_vsGlobalConst;
+	UniformStruct *m_psGlobalConst;
+	UniformStruct *m_vsIaConst;
+	UniformStruct *m_psIaConst;
 
 	// runtime
 	RenderTarget *m_frameWindow;

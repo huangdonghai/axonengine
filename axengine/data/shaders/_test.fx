@@ -33,24 +33,17 @@ float Script : STANDARDSGLOBAL <
 float4x4 s_testarray;
 float4 s_boxrange[4];
 
-/*********** Generic Vertex Shader ******/
-
-cbuffer per_scene_global : register (b0)
-{
-	float4 psg_color;
-}
-
 VertexOut VP_main(VertexIn IN) {
     VertexOut OUT = (VertexOut)0;
 
-	OUT.hpos = psg_color;
+	OUT.hpos = g_gc.waterFogParams;
     return OUT;
 }
 
 /********* pixel shaders ********/
 float4 FP_main(VertexOut IN) : COLOR0 {
 
-	return psg_color;
+	return g_pic.layerScale.xyxy;
 }
 
 //////////////////////////////////////////////////////////////////////

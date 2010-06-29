@@ -106,6 +106,7 @@ private:
 	FixedString m_shaderName;
 	Texture *m_textures[SamplerType::NUMBER_ALL];
 	ShaderParams m_shaderParams;
+	UniformStruct *m_localUniforms;
 
 	// texgen etc...
 	bool m_baseTcAnim;

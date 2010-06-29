@@ -150,6 +150,16 @@ AX_SHADERCONST(SHADERMACRO_VERSION, 2)
 	AX_DECL_MACRO(G_LITERAL6				, 4) \
 	AX_DECL_MACRO(G_LITERAL7				, 4)
 
+#if G_D3D
+#	if G_DX11
+#		define AX_DECL_BUFFER(decl, obj, reg, buf) cbuffer cb##buf : register(b##buf) { decl obj; };
+#	else
+#		define AX_DECL_BUFFER(decl, obj, reg, buf) decl obj : register(c##reg)
+#	endif
+#else
+#define AX_DECL_BUFFER(decl, obj, reg, buf) decl obj : BUFFER[buf]
+#endif
+
 struct GlobalConst {
 	float time;
 	float4 cameraPos;
@@ -187,9 +197,43 @@ struct PS_InteractionConst {
 	float2 layerScale;
 };
 
+AX_DECL_BUFFER(GlobalConst, g_gc, 0, 0);
+AX_DECL_BUFFER(VS_GlobalConst, g_vgc, 4, 1);
+AX_DECL_BUFFER(PS_GlobalConst, g_pgc, 4, 2);
+AX_DECL_BUFFER(VS_InteractionConst, g_vic, 22, 3);
+AX_DECL_BUFFER(PS_InteractionConst, g_pic, 8, 4);
+
 struct InteractionLocal {
 	float4 data[32];
 };
+
+#define AX_GLOBAL_UNIFORMS \
+	AX_UNIFORM(time) \
+	AX_UNIFORM(cameraPos) \
+	AX_UNIFORM(fogParams) \
+	AX_UNIFORM(waterFogParams) \
+	\
+	AX_UNIFORM(viewProjMatrix) \
+	AX_UNIFORM(viewProjNoTranslate) \
+	AX_UNIFORM(cameraAxis) \
+	AX_UNIFORM(cameraAngles) \
+	AX_UNIFORM(sceneSize) \
+	AX_UNIFORM(windMatrices) \
+	AX_UNIFORM(leafAngles) \
+	\
+	AX_UNIFORM(globalLightPos) \
+	AX_UNIFORM(globalLightColor) \
+	AX_UNIFORM(skyColor) \
+	AX_UNIFORM(exposure) \
+	\
+	AX_UNIFORM(modelMatrix) \
+	AX_UNIFORM(instanceParam) \
+	AX_UNIFORM(texMatrix) \
+	\
+	AX_UNIFORM(matDiffuse) \
+	AX_UNIFORM(matSpecular) \
+	AX_UNIFORM(matShiness) \
+	AX_UNIFORM(layerScale) \
 
 #define AX_SCENE_UNIFORMS \
 	/* both vs and ps use */ \

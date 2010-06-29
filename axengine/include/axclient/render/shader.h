@@ -68,6 +68,48 @@ private:
 	};
 };
 
+class UniformStruct
+{
+public:
+	struct Field {
+		FixedString m_name;
+		int m_offset;
+		int m_byteSize;
+	};
+
+	UniformStruct();
+	~UniformStruct();
+
+	int getDataSize() const { return m_byteSize; }
+	const float *getDataPointer() const { return m_data; }
+	bool isDirty() const { return m_dirty; }
+
+	void setData(int dataSize, float *datap);
+	void setFieldData(const FixedString &fieldName, int datasize, float *datap);
+	void setFieldData(const FixedString &fieldName, int count, const Matrix4 mtr[]);
+	void setFieldData(const FixedString &fieldName, int count, const Matrix mtrs[]);
+	const float *getFieldPointer(const FixedString &fieldName) const;
+
+private:
+	bool m_dirty;
+	Sequence<Field> m_fields;
+	int m_byteSize; // in bytes
+	float *m_data;
+};
+
+class UniformField
+{
+public:
+private:
+	UniformStruct *m_struct;
+	UniformStruct::Field *m_field;
+};
+
+class UniformFields
+{
+public:
+private:
+};
 //-------------------------------------------------------------------------
 
 class UniformItem
@@ -336,6 +378,7 @@ public:
 	SamplerInfos m_samplerAnnos;
 	ParameterInfos m_parameterAnnos;
 	bool m_haveTechnique[Technique::Number];
+	const UniformStruct *m_localUniforms;
 };
 
 typedef Dict<FixedString, ShaderInfo*> ShaderInfoDict;
