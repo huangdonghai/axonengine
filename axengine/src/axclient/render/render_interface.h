@@ -164,6 +164,7 @@ protected:
 	void addObjectDeletion(delete_func_t func, phandle_t h);
 
 	void waitToPos(int pos);
+
 	bool isFull() const
 	{
 		int freeSlots = ((m_cmdWritePos - m_cmdReadPos) + MAX_COMMANDS) % MAX_COMMANDS;
@@ -233,14 +234,12 @@ protected:
 	void setMaterialUniforms(Material *mat);
 
 	template <class Q>
-	void setUniform(Uniforms::ItemName name, const Q &q)
+	void setUniform(UniformFields::FieldName name, const Q &q)
 	{
-		g_apiWrap->setShaderConst(name, sizeof(Q), &q);
+//		g_apiWrap->setShaderConst(name, sizeof(Q), &q);
 	}
 
 	void setUniform(Uniforms::ItemName, Texture *texture);
-
-	RenderState *findRenderState(RenderStateId id);
 
 private:
 	// init
@@ -265,9 +264,6 @@ private:
 	ShaderMacro m_shaderMacro;
 	RenderStateId m_renderStateId;
 	bool m_forceWireframe;
-
-	typedef Dict<RenderStateId, RenderState *> RenderStateDict;
-	RenderStateDict m_renderStateDict;
 };
 
 extern RenderContext *g_renderContext;

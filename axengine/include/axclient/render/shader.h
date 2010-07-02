@@ -87,7 +87,6 @@ public:
 	void setData(int dataSize, float *datap);
 	void setFieldData(const FixedString &fieldName, int datasize, float *datap);
 	void setFieldData(const FixedString &fieldName, int count, const Matrix4 mtr[]);
-	void setFieldData(const FixedString &fieldName, int count, const Matrix mtrs[]);
 	const float *getFieldPointer(const FixedString &fieldName) const;
 
 private:
@@ -108,8 +107,25 @@ private:
 class UniformFields
 {
 public:
+	enum FieldName {
+#define AX_TEXTURE_UNIFORM(type, name) name,
+		AX_SAMPLER_UNIFORMS
+#undef AX_TEXTURE_UNIFORM
+		MAX_TEXTURES,
+
+#define AX_UNIFORM(name) name,
+		AX_GLOBAL_UNIFORMS
+#undef AX_UNIFORM
+		NUM_FIELDS
+	};
+
+	void setField(FieldName fieldName, int dataSize, const float *dataptr);
+	void setField(FieldName fieldName, int count, const Matrix4 mtr[]);
+
 private:
+	UniformField *m_fields[NUM_FIELDS];
 };
+
 //-------------------------------------------------------------------------
 
 class UniformItem

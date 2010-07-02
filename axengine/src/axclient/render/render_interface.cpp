@@ -597,7 +597,7 @@ void RenderContext::drawScene(RenderScene *scene, const RenderClearer &clearer)
 
 #define BEGIN_PIX(x)
 #define END_PIX()
-#define AX_SU(a,b) setUniform(Uniforms::a, b);
+#define AX_SU(a,b) setUniform(UniformFields::a, b);
 
 void RenderContext::drawScene_world(RenderScene *scene, const RenderClearer &clearer)
 {
@@ -631,29 +631,29 @@ void RenderContext::drawScene_world(RenderScene *scene, const RenderClearer &cle
 
 	stat_exposure.setInt(exposure * 100);
 
-	AX_SU(g_exposure, Vector4(1.0f/exposure, exposure,0,0));
+	AX_SU(exposure, Vector4(1.0f/exposure, exposure,0,0));
 
 	// set global light parameter
 	if (scene->globalLight) {
-		AX_SU(g_globalLightPos, scene->globalLight->getOrigin());
-		AX_SU(g_globalLightColor, scene->globalLight->getLightColor());
-		AX_SU(g_skyColor, scene->globalLight->getSkyColor());
+		AX_SU(globalLightPos, scene->globalLight->getOrigin());
+		AX_SU(globalLightColor, scene->globalLight->getLightColor());
+		AX_SU(skyColor, scene->globalLight->getSkyColor());
 	}
 
 	// set global fog
 	if (scene->globalFog && r_fog.getBool()) {
 		g_shaderMacro.setMacro(ShaderMacro::G_FOG);
-		AX_SU(g_fogParams, scene->globalFog->m_fogParams);
+		AX_SU(fogParams, scene->globalFog->m_fogParams);
 	} else {
 		g_shaderMacro.resetMacro(ShaderMacro::G_FOG);
 	}
 
 	if (scene->waterFog && r_fog.getBool()) {
-		AX_SU(g_waterFogParams, scene->waterFog->m_fogParams);
+		AX_SU(waterFogParams, scene->waterFog->m_fogParams);
 	}
 
-	AX_SU(g_windMatrices, scene->windMatrices);
-	AX_SU(g_leafAngles, scene->leafAngles);
+	AX_SU(windMatrices, scene->windMatrices);
+	AX_SU(leafAngles, scene->leafAngles);
 
 	// draw subscene first
 	for (int i = 0; i < scene->numSubScenes; i++) {
@@ -943,7 +943,7 @@ void RenderContext::drawPrimitive(Primitive *prim)
 	// check actor
 	if (m_entity) {
 		m_entity = 0;
-		AX_SU(g_modelMatrix, Matrix::getIdentity());
+		AX_SU(modelMatrix, Matrix::getIdentity());
 	}
 
 	prim->draw(Technique::Main);
@@ -972,13 +972,13 @@ void RenderContext::drawInteraction(Interaction *ia)
 				primMatrixSet = false;
 			}
 
-			AX_SU(g_modelMatrix, m_entity->getMatrix());
-			AX_SU(g_instanceParam, m_entity->getInstanceParam());
+			AX_SU(modelMatrix, m_entity->getMatrix());
+			AX_SU(instanceParam, m_entity->getInstanceParam());
 
 			if (prim->isMatrixSet()) {
 				Matrix mat = prim->getMatrix().getAffineMat();
 				mat = m_entity->getMatrix() * mat;
-				AX_SU(g_modelMatrix, mat);
+				AX_SU(modelMatrix, mat);
 			}
 
 			if (m_entity->getFlags() & RenderEntity::DepthHack) {
@@ -987,8 +987,8 @@ void RenderContext::drawInteraction(Interaction *ia)
 				//glDepthRange(0, 1);
 			}
 		} else {
-			AX_SU(g_modelMatrix, Matrix::getIdentity());
-			AX_SU(g_instanceParam, Vector4(0,0,0,1));
+			AX_SU(modelMatrix, Matrix::getIdentity());
+			AX_SU(instanceParam, Vector4(0,0,0,1));
 		}
 	}
 	prim->draw(m_technique);
@@ -1082,9 +1082,9 @@ void RenderContext::draw(VertexObject *vert, InstanceObject *inst, IndexObject *
 void RenderContext::setMaterialUniforms(Material *mat)
 {
 	if (!mat) {
-		AX_SU(g_matDiffuse, Vector3(1,1,1));
-		AX_SU(g_matSpecular, Vector3(0,0,0));
-		AX_SU(g_matShiness, 10);
+		AX_SU(matDiffuse, Vector3(1,1,1));
+		AX_SU(matSpecular, Vector3(0,0,0));
+		AX_SU(matShiness, 10);
 		return;
 	}
 
@@ -1092,19 +1092,19 @@ void RenderContext::setMaterialUniforms(Material *mat)
 	if (mat->isBaseTcAnim()) {
 		const Matrix4 *matrix = mat->getBaseTcMatrix();
 		if (matrix) {
-			AX_SU(g_baseTcMatrix, *matrix);
+			AX_SU(texMatrix, *matrix);
 		}
 	}
 
 	// set material parameter
-	AX_SU(g_matDiffuse, mat->getMatDiffuse());
-	AX_SU(g_matSpecular, mat->getMatSpecular());
-	AX_SU(g_matShiness, mat->getMatShiness());
+	AX_SU(matDiffuse, mat->getMatDiffuse());
+	AX_SU(matSpecular, mat->getMatSpecular());
+	AX_SU(matShiness, mat->getMatShiness());
 
 	if (mat->haveDetail()) {
 		float scale = mat->getDetailScale();
 		Vector2 scale2(scale, scale);
-		AX_SU(g_layerScale, scale2);
+		AX_SU(layerScale, scale2);
 	}
 
 	const ShaderParams &params = mat->getParameters();
@@ -1114,17 +1114,6 @@ void RenderContext::setMaterialUniforms(Material *mat)
 		const FloatSeq &value = it->second;
 		g_apiWrap->setShaderConst(it->first, value.size() * sizeof(float),  &value[0]);
 	}
-}
-
-RenderState * RenderContext::findRenderState(RenderStateId id)
-{
-	RenderStateDict::const_iterator it = m_renderStateDict.find(id);
-	if (it != m_renderStateDict.end())
-		return it->second;
-
-	RenderState *result = new RenderState(id);
-	m_renderStateDict[id] = result;
-	return result;
 }
 
 void RenderContext::setUniform(Uniforms::ItemName, Texture *texture)

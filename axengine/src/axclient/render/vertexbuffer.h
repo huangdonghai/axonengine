@@ -6,6 +6,8 @@ AX_BEGIN_NAMESPACE
 class VertexObject
 {
 public:
+	VertexObject();
+	~VertexObject();
 
 public:
 	phandle_t m_h;
@@ -20,6 +22,9 @@ public:
 class InstanceObject
 {
 public:
+	InstanceObject();
+	~InstanceObject();
+
 public:
 	phandle_t m_h;
 	int m_offset;
@@ -30,6 +35,9 @@ public:
 class IndexObject
 {
 public:
+	IndexObject();
+	~IndexObject();
+
 public:
 	phandle_t m_h;
 	ElementType m_elementType;

@@ -160,6 +160,8 @@ AX_SHADERCONST(SHADERMACRO_VERSION, 2)
 #define AX_DECL_BUFFER(decl, obj, reg, buf) decl obj : BUFFER[buf]
 #endif
 
+#ifndef __cplusplus
+
 struct GlobalConst {
 	float time;
 	float4 cameraPos;
@@ -206,6 +208,8 @@ AX_DECL_BUFFER(PS_InteractionConst, g_pic, 8, 4);
 struct InteractionLocal {
 	float4 data[32];
 };
+
+#endif // __cplusplus
 
 #define AX_GLOBAL_UNIFORMS \
 	AX_UNIFORM(time) \

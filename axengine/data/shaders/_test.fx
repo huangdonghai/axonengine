@@ -22,14 +22,6 @@ float Script : STANDARDSGLOBAL <
 	string TechniqueLayer = "";
 > = 0.8;
 
-
-#define SCENE_BUFFER_DEF \
-	AX_UNIFORM(float,		float,		g_time,						1, 1)		\
-	AX_UNIFORM(float4,		Vector4,	g_cameraPos,				2, 2)		\
-	AX_UNIFORM(float4,		Vector4,	g_fogParams,				3, 3)		\
-	AX_UNIFORM(float4,		Vector4,	g_waterFogParams,			4, 4)
-
-
 float4x4 s_testarray;
 float4 s_boxrange[4];
 

@@ -100,10 +100,13 @@ protected:
 	int m_numChainedInteractions;
 
 	// overload parameter
-	InstanceObject *m_drawInstanceObject;
-	Material *m_drawMaterial;
-	IndexObject *m_drawIndexObj;
+	InstanceObject *m_overloadInstanceObject;
+	Material *m_overloadMaterial;
+	IndexObject *m_overloadIndexObject;
 
+	// geometry data
+	VertexObject *m_vertexObject;
+	IndexObject *m_indexObject;
 };
 
 inline void Primitive::interactionChain(Interaction *last, int chainId)
@@ -303,9 +306,6 @@ private:
 	int m_numIndexes;
 	ushort_t *m_indexes;
 	bool m_isStriped;
-
-	VertexObject *m_vertexObject;
-	IndexObject *m_indexObject;
 };
 
 //--------------------------------------------------------------------------

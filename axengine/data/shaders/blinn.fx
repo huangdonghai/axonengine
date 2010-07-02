@@ -44,14 +44,16 @@ struct ShadowVertexOut {
 };
 
 
-ShadowVertexOut VP_zpass(VertexIn IN) {
+ShadowVertexOut VP_zpass(VertexIn IN)
+{
 	ShadowVertexOut OUT;
 	OUT.hpos = VP_modelToClip(IN, IN.xyz);
 	OUT.diffuseTc = IN.st;
 	return OUT;
 }
 
-half4 FP_zpass(ShadowVertexOut IN) : COLOR {
+half4 FP_zpass(ShadowVertexOut IN) : COLOR
+{
 #if !S_ALPHATEST
 	return 1;
 #else
@@ -66,7 +68,8 @@ half4 FP_zpass(ShadowVertexOut IN) : COLOR {
 #endif
 }
 
-GpassOut VP_gpass(VertexIn IN) {
+GpassOut VP_gpass(VertexIn IN)
+{
 	GpassOut OUT = (GpassOut)0;
 
 	// transform tangent space vector to world space
@@ -87,7 +90,8 @@ GpassOut VP_gpass(VertexIn IN) {
 	return OUT;
 }
 
-half4 FP_gpass(GpassOut IN) : COLOR {
+half4 FP_gpass(GpassOut IN) : COLOR
+{
 	half3 N;
 
 #if NO_NORMALMAPPING
@@ -110,7 +114,8 @@ half4 FP_gpass(GpassOut IN) : COLOR {
 
 /*********** Generic Vertex Shader ******/
 
-VertexOut VP_main(VertexIn IN) {
+VertexOut VP_main(VertexIn IN)
+{
     VertexOut OUT = (VertexOut)0;
 
 	// transform tangent space vector to world space
@@ -140,7 +145,8 @@ VertexOut VP_main(VertexIn IN) {
 }
 
 /********* pixel shaders ********/
-half4 FP_main(VertexOut IN) : COLOR {
+half4 FP_main(VertexOut IN) : COLOR
+{
 #if 0 && G_HAVE_DETAIL_NORMAL
 	return tex2D(g_detailNormalMap, IN.streamTc.xy);
 #endif

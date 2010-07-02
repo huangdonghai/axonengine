@@ -30,9 +30,12 @@ Primitive::Primitive(Hint hint)
 
 	m_activedIndexes = 0;
 
-	m_drawInstanceObject = 0;
-	m_drawMaterial = 0;
-	m_drawIndexObj = 0;
+	m_overloadInstanceObject = 0;
+	m_overloadMaterial = 0;
+	m_overloadIndexObject = 0;
+
+	m_vertexObject = 0;
+	m_indexObject = 0;
 }
 
 Primitive::~Primitive()
@@ -1118,9 +1121,9 @@ bool MeshPrim::setupHexahedron(MeshPrim*& mesh, Vector3 volumeverts[8])
 void MeshPrim::draw(Technique tech)
 {
 	VertexObject *vert = m_vertexObject;
-	InstanceObject *inst = m_drawInstanceObject;
-	IndexObject *index = m_drawIndexObj ? m_drawIndexObj : m_indexObject;
-	Material *mat = m_drawMaterial ? m_drawMaterial : m_material;
+	InstanceObject *inst = m_overloadInstanceObject;
+	IndexObject *index = m_overloadIndexObject ? m_overloadIndexObject : m_indexObject;
+	Material *mat = m_overloadMaterial ? m_overloadMaterial : m_material;
 
 	g_renderContext->draw(vert, inst, index, mat, tech);
 }
