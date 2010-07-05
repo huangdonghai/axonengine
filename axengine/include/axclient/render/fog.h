@@ -13,8 +13,9 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
+#if 0
 struct QueuedFog;
-
+#endif
 class RenderFog : public RenderEntity
 {
 public:
@@ -26,8 +27,15 @@ public:
 	float getFogDensity() const { return m_fogDensity; }
 	void setFogDensity(float val) { m_fogDensity = val; }
 
+	Vector4 getFogParams() const
+	{
+		return Vector4(m_fogColor.x, m_fogColor.y, m_fogColor.z, m_fogDensity);
+	}
+
+#if 0
 	void fillQueuedFog(QueuedFog *queued);
 	QueuedFog *getQueuedFog() const { return m_queuedFog;}
+#endif
 
 	// implement fog
 	virtual BoundingBox getLocalBoundingBox();
@@ -38,10 +46,12 @@ public:
 private:
 	Vector4 m_fogColor;
 	float m_fogDensity;
+#if 0
 	QueuedFog *m_queuedFog;
+#endif
 };
 
-
+#if 0
 struct QueuedFog {
 	Vector4 m_fogParams;
 };
@@ -51,7 +61,7 @@ inline void RenderFog::fillQueuedFog(QueuedFog *queued) {
 	m_queuedFog->m_fogParams = m_fogColor;
 	m_queuedFog->m_fogParams.w = m_fogDensity;
 }
-
+#endif
 AX_END_NAMESPACE
 
 #endif // AX_RENDER_FOG_H

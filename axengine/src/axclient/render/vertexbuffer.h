@@ -9,8 +9,12 @@ public:
 	VertexObject();
 	~VertexObject();
 
+	void init(const void *p, int count, Primitive::Hint, VertexType vt);
+	void clear();
+
 public:
 	phandle_t m_h;
+	Primitive::Hint m_hint;
 	VertexType m_vt;
 	int m_offset;		// byte offset
 	int m_dataSize;
@@ -25,11 +29,12 @@ public:
 	InstanceObject();
 	~InstanceObject();
 
+	void init(int numInstances, const InstancePrim::Param* params);
+
 public:
 	phandle_t m_h;
 	int m_offset;
 	int m_count;
-	Handle m_localHandle;
 };
 
 class IndexObject
@@ -38,8 +43,12 @@ public:
 	IndexObject();
 	~IndexObject();
 
+	void init(const ushort_t *p, int count, Primitive::Hint, int activeCount = 0);
+	void clear();
+
 public:
 	phandle_t m_h;
+	Primitive::Hint m_hint;
 	ElementType m_elementType;
 	int m_dataSize;
 	int m_count;
@@ -50,21 +59,35 @@ public:
 };
 
 struct DynamicBuf {
-	phandle_t m_h;
+	phandle_t phandle;
 	int offset;
 	void *writePtr;
 };
 
-class VertexBufferTraits {};
-class IndexBufferTraits {};
+struct VertexBufferTraits
+{
+	static void allocPage(phandle_t h, int size);
+	static void uploadPage(phandle_t h, int size, const void *p);
+	static void releasePage(phandle_t h);
+};
+
+struct IndexBufferTraits
+{
+	static void allocPage(phandle_t h, int size);
+	static void uploadPage(phandle_t h, int size, const void *p);
+	static void releasePage(phandle_t h);
+};
 
 template <int PageSize, class Traits>
 class ChainedBuffer
 {
 public:
+	enum { MAX_PAGES = 16 };
+
 	ChainedBuffer()
 	{
 		m_curIndex = -1;
+		m_numPages = 0;
 	}
 
 	virtual ~ChainedBuffer()
@@ -78,7 +101,6 @@ public:
 		m_isFrameAllocating = true;
 		m_curIndex = -1;
 		m_curOffset = 0;
-		m_curPointer = 0;
 		nextPage();
 	}
 
@@ -96,9 +118,9 @@ public:
 			nextPage();
 		}
 
-		result.buffer = m_pages[m_curIndex];
+		result.phandle = &m_pages[m_curIndex];
 		result.offset = m_curOffset;
-		result.writePtr = (byte_t*)m_curPointer+m_curOffset;
+		result.writePtr = m_pageCache + m_curOffset;
 
 		m_curOffset += datasize;
 
@@ -109,7 +131,7 @@ public:
 	{
 		AX_ASSERT(m_isFrameAllocating);
 		if (m_curIndex>=0) {
-			m_pages[m_curIndex]->Unlock();
+			Traits::uploadPage(&m_pages[m_curIndex], m_curOffset, m_pageCache);
 		}
 
 		m_isFrameAllocating = false;
@@ -149,30 +171,24 @@ protected:
 	void nextPage(bool isAppend = false)
 	{
 		if (m_curIndex >= 0) {
-			m_pages[m_curIndex]->Unlock();
-			m_curPointer = 0;
+			Traits::uploadPage(&m_pages[m_curIndex], m_curOffset, m_pageCache);
 		}
 
 		m_curIndex++;
-
-		if (s2i(m_pages.size()) <= m_curIndex) {
-			m_pages.push_back(CreatePage(PageSize));
-		}
-
-		HRESULT hr;
 		m_curOffset = 0;
-		V(m_pages[m_curIndex]->Lock(0, 0, &m_curPointer, lockNewFrame));
-		if (isAppend)
-			V(m_pages[m_curIndex]->Unlock())
 
-		AX_ASSERT(m_curPointer);
+		if (m_numPages <= m_curIndex) {
+//			m_pages.push_back(CreatePage(PageSize));
+			Traits::allocPage(&m_pages[m_numPages], PageSize);
+			m_numPages++;
+		}
 	}
 
 public:
-	Sequence<Handle> m_pages;
+	Handle m_pages[MAX_PAGES];
+	int m_numPages;
 	int m_curIndex;
 	int m_curOffset;
-	void *m_curPointer;
 	bool m_isFrameAllocating;
 	byte_t m_pageCache[PageSize];
 };
@@ -183,6 +199,9 @@ public:
 	typedef ChainedBuffer<1024*1024, VertexBufferTraits> VertexBufferChain;
 	typedef ChainedBuffer<256*1024, VertexBufferTraits> InstanceBufferChain;
 	typedef ChainedBuffer<512*1024, IndexBufferTraits> IndexBufferChain;
+
+	BufferManager();
+	~BufferManager();
 
 	void beginAlloc();
 	DynamicBuf allocVb(int datasize);

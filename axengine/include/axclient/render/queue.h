@@ -72,8 +72,8 @@ struct AX_API RenderScene
 	RenderLight *lights[MAX_LIGHTS];
 	RenderLight *globalLight;
 
-	QueuedFog *globalFog;
-	QueuedFog *waterFog;
+	RenderFog *globalFog;
+	RenderFog *waterFog;
 	Vector4 clearColor; // clear color
 	bool isEyeInWater;
 
@@ -81,7 +81,7 @@ struct AX_API RenderScene
 	RenderEntity *queuedEntities[MAX_ENTITIES];
 
 	int numPrimitives;
-	Primitive *primIds[MAX_PRIMITIVES];
+	Primitive *primtives[MAX_PRIMITIVES];
 
 	int numInteractions;
 	Interaction *interactions[MAX_INTERACTIONS];
@@ -90,7 +90,7 @@ struct AX_API RenderScene
 	Interaction *debugInteractions[MAX_DEBUG_INTERACTIONS];
 
 	int numOverlayPrimitives;
-	Primitive *overlayPrimIds[MAX_OVERLAY_PRIMITIVES];
+	Primitive *overlayPrimitives[MAX_OVERLAY_PRIMITIVES];
 
 	RenderScene *addSubScene();
 	void addLight(RenderLight *light);

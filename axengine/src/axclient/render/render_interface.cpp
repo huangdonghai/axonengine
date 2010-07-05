@@ -310,9 +310,11 @@ void ApiWrap::createVertexBuffer(phandle_t result, int datasize, Primitive::Hint
 	AddCommand3(RenderApi::createVertexBuffer).args(result, datasize, hint);
 }
 
-void ApiWrap::uploadVertexBuffer(phandle_t h, int datasize, void *p)
+void ApiWrap::uploadVertexBuffer(phandle_t h, int datasize, const void *p)
 {
-	AddCommand3(RenderApi::uploadVertexBuffer).args(h, datasize, p);
+	void *newp = allocRingBuf(datasize);
+	memcpy(newp, p, datasize);
+	AddCommand3(RenderApi::uploadVertexBuffer).args(h, datasize, newp);
 }
 
 void ApiWrap::deleteVertexBuffer(phandle_t h)
@@ -325,9 +327,11 @@ void ApiWrap::createIndexBuffer(phandle_t result, int datasize, Primitive::Hint 
 	AddCommand3(RenderApi::createIndexBuffer).args(result, datasize, hint);
 }
 
-void ApiWrap::uploadIndexBuffer(phandle_t h, int datasize, void *p)
+void ApiWrap::uploadIndexBuffer(phandle_t h, int datasize, const void *p)
 {
-	AddCommand3(RenderApi::uploadIndexBuffer).args(h, datasize, p);
+	void *newp = allocRingBuf(datasize);
+	memcpy(newp, p, datasize);
+	AddCommand3(RenderApi::uploadIndexBuffer).args(h, datasize, newp);
 }
 
 void ApiWrap::deleteIndexBuffer(phandle_t h)
@@ -643,13 +647,13 @@ void RenderContext::drawScene_world(RenderScene *scene, const RenderClearer &cle
 	// set global fog
 	if (scene->globalFog && r_fog.getBool()) {
 		g_shaderMacro.setMacro(ShaderMacro::G_FOG);
-		AX_SU(fogParams, scene->globalFog->m_fogParams);
+		AX_SU(fogParams, scene->globalFog->getFogParams());
 	} else {
 		g_shaderMacro.resetMacro(ShaderMacro::G_FOG);
 	}
 
 	if (scene->waterFog && r_fog.getBool()) {
-		AX_SU(waterFogParams, scene->waterFog->m_fogParams);
+		AX_SU(waterFogParams, scene->waterFog->getFogParams());
 	}
 
 	AX_SU(windMatrices, scene->windMatrices);
@@ -719,7 +723,7 @@ void RenderContext::drawScene_noworld(RenderScene *scene, const RenderClearer &c
 
 	double start = OsUtil::seconds();
 	for (int i = 0; i < scene->numPrimitives; i++) {
-		drawPrimitive(scene->primIds[i]);
+		drawPrimitive(scene->primtives[i]);
 	}
 	double end = OsUtil::seconds();
 
@@ -762,7 +766,7 @@ void RenderContext::drawPass_overlay(RenderScene *scene)
 	setupScene(scene, nullptr, nullptr, &camera);
 
 	for (int i = 0; i < scene->numOverlayPrimitives; i++) {
-		drawPrimitive(scene->overlayPrimIds[i]);
+		drawPrimitive(scene->overlayPrimitives[i]);
 	}
 
 //	unsetScene(scene, nullptr, nullptr, &camera);
@@ -804,7 +808,7 @@ void RenderContext::drawPass_composite(RenderScene *scene)
 	}
 
 	for (int i = 0; i < scene->numPrimitives; i++) {
-		drawPrimitive(scene->primIds[i]);
+		drawPrimitive(scene->primtives[i]);
 	}
 	//unsetScene(scene, 0, scene->target);
 
@@ -927,7 +931,7 @@ void RenderContext::drawScene_worldSub(RenderScene *scene)
 	}
 
 	for (int i = 0; i < scene->numPrimitives; i++) {
-		drawPrimitive(scene->primIds[i]);
+		drawPrimitive(scene->primtives[i]);
 	}
 
 //	unsetScene(scene, &clear);
@@ -1119,6 +1123,76 @@ void RenderContext::setMaterialUniforms(Material *mat)
 void RenderContext::setUniform(Uniforms::ItemName, Texture *texture)
 {
 
+}
+
+void RenderContext::issueBuffer(RenderQueue *queue)
+{
+	g_bufferManager->beginAlloc();
+
+	for (int i = 0; i < queue->getSceneCount(); i++) {
+		RenderScene *scene = queue->getScene(i);
+		cacheScene(scene);
+	}
+
+	g_bufferManager->endAlloc();
+}
+
+void RenderContext::cacheScene(RenderScene *scene)
+{
+	float tangentlen = r_showTangents.getFloat();
+	float normallen = r_showNormal.getFloat();
+
+	for (int j = 0; j < scene->numInteractions; j++) {
+		Primitive *prim = scene->interactions[j]->primitive;
+
+		prim->sync();
+
+		if (scene->sceneType != RenderScene::WorldMain)
+			continue;
+
+		if (scene->numDebugInteractions >= RenderScene::MAX_DEBUG_INTERACTIONS)
+			continue;
+
+		// check if need draw normal
+		if (normallen > 0.00001f && prim->isMesh()) {
+			MeshPrim *mesh = static_cast<MeshPrim*>(prim);
+
+			LinePrim *line = mesh->getNormalLine(normallen);
+			Interaction *ia = g_renderQueue->allocInteraction();
+			ia->entity = scene->interactions[j]->entity;
+			ia->primitive = line;
+			ia->primitive->sync();
+
+			scene->debugInteractions[scene->numDebugInteractions++] = ia;
+
+			continue;
+		}
+
+		// check if need draw tangent space
+		if (tangentlen > 0.00001f && prim->isMesh()) {
+			MeshPrim *mesh = static_cast<MeshPrim*>(prim);
+
+			LinePrim *line = mesh->getTangentLine(tangentlen);
+			Interaction *ia = g_renderQueue->allocInteraction();
+			ia->entity = scene->interactions[j]->entity;
+			ia->primitive = line;
+			ia->primitive->sync();
+
+			scene->debugInteractions[scene->numDebugInteractions++] = ia;
+		}
+	}
+
+	for (int i=0; i<scene->numDebugInteractions; i++) {
+		scene->debugInteractions[i]->primitive->sync();
+	}
+
+	for (int j = 0; j < scene->numPrimitives; j++) {
+		scene->primtives[j]->sync();
+	}
+
+	for (int j = 0; j < scene->numOverlayPrimitives; j++) {
+		scene->overlayPrimitives[j]->sync();
+	}
 }
 
 AX_END_NAMESPACE

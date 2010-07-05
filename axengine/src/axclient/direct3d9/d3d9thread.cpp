@@ -475,17 +475,17 @@ void D3D9Thread::cacheSceneRes(RenderScene *scene)
 	}
 
 	scene->numPrimitives = s2i(s_view->primitives.size());
-	scene->primIds = d3d9Queue->allocPrimitives(scene->numPrimitives);
+	scene->primtives = d3d9Queue->allocPrimitives(scene->numPrimitives);
 
 	for (int j = 0; j < scene->numPrimitives; j++) {
-		scene->primIds[j] = d3d9PrimitiveManager->cachePrimitive(s_view->primitives[j]);
+		scene->primtives[j] = d3d9PrimitiveManager->cachePrimitive(s_view->primitives[j]);
 	}
 
 	scene->numOverlayPrimitives = s2i(s_view->overlays.size());
-	scene->overlayPrimIds = d3d9Queue->allocPrimitives(scene->numOverlayPrimitives);
+	scene->overlayPrimitives = d3d9Queue->allocPrimitives(scene->numOverlayPrimitives);
 
 	for (int j = 0; j < scene->numOverlayPrimitives; j++) {
-		scene->overlayPrimIds[j] = d3d9PrimitiveManager->cachePrimitive(s_view->overlays[j]);
+		scene->overlayPrimitives[j] = d3d9PrimitiveManager->cachePrimitive(s_view->overlays[j]);
 	}
 }
 
@@ -549,7 +549,7 @@ void D3D9Thread::drawPass_composite(RenderScene *scene)
 	}
 
 	for (int i = 0; i < scene->numPrimitives; i++) {
-		drawPrimitive(scene->primIds[i]);
+		drawPrimitive(scene->primtives[i]);
 	}
 #endif
 	unsetScene(scene, 0, scene->target);
@@ -697,7 +697,7 @@ void D3D9Thread::drawPass_overlay(RenderScene *scene)
 	setupScene(scene, nullptr, nullptr, &camera);
 
 	for (int i = 0; i < scene->numOverlayPrimitives; i++) {
-		drawPrimitive(scene->overlayPrimIds[i]);
+		drawPrimitive(scene->overlayPrimitives[i]);
 	}
 
 	unsetScene(scene, nullptr, nullptr, &camera);
@@ -830,7 +830,7 @@ void D3D9Thread::drawScene_worldSub(RenderScene *scene)
 	}
 
 	for (int i = 0; i < scene->numPrimitives; i++) {
-		drawPrimitive(scene->primIds[i]);
+		drawPrimitive(scene->primtives[i]);
 	}
 
 	unsetScene(scene, &clear);
@@ -853,7 +853,7 @@ void D3D9Thread::drawScene_noworld(RenderScene *scene, const D3D9clearer &cleare
 
 	double start = OsUtil::seconds();
 	for (int i = 0; i < scene->numPrimitives; i++) {
-		drawPrimitive(scene->primIds[i]);
+		drawPrimitive(scene->primtives[i]);
 	}
 	double end = OsUtil::seconds();
 

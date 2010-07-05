@@ -76,11 +76,11 @@ public:
 	void deleteTexture2D(phandle_t h);
 
 	void createVertexBuffer(phandle_t result, int datasize, Primitive::Hint hint);
-	void uploadVertexBuffer(phandle_t h, int datasize, void *p);
+	void uploadVertexBuffer(phandle_t h, int datasize, const void *p);
 	void deleteVertexBuffer(phandle_t h);
 
 	void createIndexBuffer(phandle_t result, int datasize, Primitive::Hint hint);
-	void uploadIndexBuffer(phandle_t h, int datasize, void *p);
+	void uploadIndexBuffer(phandle_t h, int datasize, const void *p);
 	void deleteIndexBuffer(phandle_t h);
 
 	void createWindowTarget(phandle_t h, Handle hwnd, int width, int height);
@@ -206,6 +206,9 @@ public:
 	void draw(VertexObject *vert, InstanceObject *inst, IndexObject *index, Material *mat, Technique tech);
 
 protected:
+	void cacheScene(RenderScene *scene);
+	void issueBuffer(RenderQueue *queue);
+
 	void beginFrame();
 	void drawScene(RenderScene *scene, const RenderClearer &clearer);
 	void setupScene(RenderScene *scene, const RenderClearer *clearer = 0, RenderTarget *target = 0, RenderCamera *camera = 0);

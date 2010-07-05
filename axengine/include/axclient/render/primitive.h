@@ -45,8 +45,10 @@ public:
 	virtual ~Primitive() = 0;
 
 	inline Hint getHint() const { return m_hint; }
+#if 0
 	inline int getCachedFrame() const { return m_cachedFrame; }
 	inline void setCachedFrame(int frame) { m_cachedFrame = frame; }
+#endif
 	inline Type getType() const { return m_type; }
 
 	inline bool isDirty() const { return m_isDirty; }
@@ -56,6 +58,8 @@ public:
 
 	inline bool isWorldSpace() const { return m_isWorldSpace; }
 	inline void setWorldSpace(bool val) { m_isWorldSpace = val; }
+
+	inline bool isMesh() const { return m_type == MeshType; }
 
 	inline void setMatrix(const Matrix4 &matrix) { m_isMatrixSet = true; m_matrix = matrix; }
 	inline bool isMatrixSet() const { return m_isMatrixSet; }
@@ -75,6 +79,7 @@ public:
 	int getNumChainedInteractions() const { return m_numChainedInteractions; }
 
 	virtual void draw(Technique tech) = 0;
+	virtual void sync() = 0;
 
 protected:
 	const Hint m_hint;
@@ -83,8 +88,10 @@ protected:
 	bool m_isIndexBufferDirty;
 	bool m_isWorldSpace; // primitive already in world space, so don't need model transform
 
+#if 0
 	int m_cachedId;		// used by render driver
 	int m_cachedFrame;
+#endif
 
 	Type m_type;
 	Material *m_material;
@@ -174,6 +181,7 @@ public:
 	float getPointSize() const;
 
 	virtual void draw(Technique tech) {}
+	virtual void sync() {}
 
 private:
 	int m_numPoints;
@@ -191,8 +199,6 @@ private:
 class AX_API LinePrim : public Primitive
 {
 public:
-	typedef DebugVertex VertexType;
-
 	LinePrim(Hint hint);
 	virtual ~LinePrim();
 
@@ -211,18 +217,19 @@ public:
 
 	// helper
 	ushort_t getIndex(int order) const;
-	const VertexType &getVertex(int order) const;
+	const DebugVertex &getVertex(int order) const;
 
 	void lock();
 	void setIndex(int order, int index);
-	void setVertex(int order, const VertexType &vert);
-	VertexType &getVertexRef(int order);
+	void setVertex(int order, const DebugVertex &vert);
+	DebugVertex &getVertexRef(int order);
 	void unlock();
 
 	void setLineWidth(float line_width);
 	float getLineWidth() const;
 
-	virtual void draw(Technique tech) {}
+	virtual void draw(Technique tech);
+	virtual void sync();
 
 	// helper static create
 	static LinePrim *createAxis(Hint hint, float line_length);
@@ -242,7 +249,7 @@ public:
 
 private:
 	int m_numVertexes;
-	VertexType *m_vertexes;
+	DebugVertex *m_vertexes;
 	int m_numIndexes;
 	ushort_t *m_indexes;
 	float m_lineWidth;
@@ -255,7 +262,7 @@ private:
 class AX_API MeshPrim : public Primitive
 {
 public:
-	typedef MeshVertex VertexType;
+	typedef MeshVertex Vertex;
 
 	MeshPrim(Hint hint);
 	virtual ~MeshPrim();
@@ -283,6 +290,7 @@ public:
 	void setStriped(bool val) { m_isStriped = val; }
 
 	virtual void draw(Technique tech);
+	virtual void sync();
 
 	// static helper function
 	static MeshPrim *createScreenQuad(Hint hint, const Rect &rect, const Rgba &color, Material *material=nullptr, const Vector4 &st = Vector4(0,0,1,1));
@@ -357,6 +365,7 @@ public:
 	void setVerticalAlign(VerticalAlign align) { m_verticalAlign = align; }
 
 	virtual void draw(Technique tech) {}
+	virtual void sync() {}
 
 	// static helper function
 	static TextPrim *createSimpleText(Hint hint, const Vector3 &xyz, const Rgba &color, const String &text, bool fixedWidth = true);
@@ -385,7 +394,7 @@ public:
 	enum {
 		MAX_LAYERS = 4
 	};
-	typedef ChunkVertex VertexType;
+	typedef ChunkVertex Vertex;
 
 	struct Layer {
 		Texture *alphaTex;
@@ -438,7 +447,8 @@ public:
 	bool isZonePrim() const { return m_isZonePrim; }
 	void setIsZonePrim(bool val) { m_isZonePrim = val; }
 
-	virtual void draw(Technique tech) {}
+	virtual void draw(Technique tech);
+	virtual void sync();
 
 private:
 	int m_numVertexes;
@@ -485,7 +495,8 @@ public:
 	Primitive *getPrimitive(int index);
 	void clear();
 
-	virtual void draw(Technique tech) {}
+	virtual void draw(Technique tech);
+	virtual void sync();
 
 private:
 	typedef Sequence<bool> BoolSeq;
@@ -515,7 +526,8 @@ public:
 	ushort_t *lockIndexes();
 	void unlockIndexes();
 
-	virtual void draw(Technique tech) {}
+	virtual void draw(Technique tech);
+	virtual void sync();
 
 private:
 	Primitive *m_refered;
@@ -552,12 +564,14 @@ public:
 	const Param &getInstance(int index) const;
 	const Param *getAllInstances() const;
 
-	virtual void draw(Technique tech) {}
+	virtual void draw(Technique tech);
+	virtual void sync();
 
 private:
 	int m_numInstances;
 	Primitive *m_instanced;
 	Param* m_params;
+	InstanceObject *m_instanceObject;
 };
 
 #if 0

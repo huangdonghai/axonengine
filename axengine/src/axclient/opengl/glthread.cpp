@@ -482,17 +482,17 @@ void GLthread::cacheSceneRes(RenderScene *scene) {
 	}
 
 	scene->numPrimitives = s2i(s_view->primitives.size());
-	scene->primIds = g_renderQueue->allocPrimitives(scene->numPrimitives);
+	scene->primtives = g_renderQueue->allocPrimitives(scene->numPrimitives);
 
 	for (int j = 0; j < scene->numPrimitives; j++) {
-		scene->primIds[j] = glPrimitiveManager->cachePrimitive(s_view->primitives[j]);
+		scene->primtives[j] = glPrimitiveManager->cachePrimitive(s_view->primitives[j]);
 	}
 
 	scene->numOverlayPrimitives = s2i(s_view->overlays.size());
-	scene->overlayPrimIds = g_renderQueue->allocPrimitives(scene->numOverlayPrimitives);
+	scene->overlayPrimitives = g_renderQueue->allocPrimitives(scene->numOverlayPrimitives);
 
 	for (int j = 0; j < scene->numOverlayPrimitives; j++) {
-		scene->overlayPrimIds[j] = glPrimitiveManager->cachePrimitive(s_view->overlays[j]);
+		scene->overlayPrimitives[j] = glPrimitiveManager->cachePrimitive(s_view->overlays[j]);
 	}
 }
 
@@ -568,7 +568,7 @@ void GLthread::drawPass_composite(RenderScene *scene) {
 	}
 
 	for (int i = 0; i < scene->numPrimitives; i++) {
-		drawPrimitive(scene->primIds[i]);
+		drawPrimitive(scene->primtives[i]);
 	}
 #endif
 	unsetScene(scene, nullptr, scene->target);
@@ -852,7 +852,7 @@ void GLthread::drawPass_overlay(RenderScene *scene) {
 	setupScene(scene, nullptr, nullptr, &camera);
 
 	for (int i = 0; i < scene->numOverlayPrimitives; i++) {
-		drawPrimitive(scene->overlayPrimIds[i]);
+		drawPrimitive(scene->overlayPrimitives[i]);
 	}
 
 	unsetScene(scene, nullptr, nullptr, &camera);
@@ -991,7 +991,7 @@ void GLthread::drawScene_worldSub(RenderScene *scene) {
 	}
 
 	for (int i = 0; i < scene->numPrimitives; i++) {
-		drawPrimitive(scene->primIds[i]);
+		drawPrimitive(scene->primtives[i]);
 	}
 
 	unsetScene(scene, &clear);
@@ -1013,7 +1013,7 @@ void GLthread::drawScene_noworld(RenderScene *scene, const Clearer &clearer) {
 	}
 
 	for (int i = 0; i < scene->numPrimitives; i++) {
-		drawPrimitive(scene->primIds[i]);
+		drawPrimitive(scene->primtives[i]);
 	}
 
 	unsetScene(scene, nullptr, scene->target);

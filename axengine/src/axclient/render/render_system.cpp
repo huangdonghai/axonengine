@@ -29,6 +29,8 @@ IRenderDriver *g_renderDriver;
 // module object
 ApiWrap *g_apiWrap = 0;
 RenderContext *g_renderContext = 0;
+BufferManager *g_bufferManager = 0;
+
 
 AX_BEGIN_COMMAND_MAP(RenderSystem)
 	AX_COMMAND_ENTRY("texlist",	texlist_f)

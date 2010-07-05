@@ -17,9 +17,9 @@ AX_BEGIN_NAMESPACE
 //------------------------------------------------------------------------------
 
 Primitive::Primitive(Hint hint)
-	: m_cachedId(0)
+	: /*m_cachedId(0)
 	, m_cachedFrame(-1)
-	, m_hint(hint)
+	, */m_hint(hint)
 	, m_type(NoneType)
 {
 	m_isWorldSpace = false;
@@ -127,6 +127,9 @@ LinePrim::LinePrim(Hint hint)
 	, m_lineWidth(1.0f)
 {
 	m_type = LineType;
+
+	m_vertexObject = new VertexObject();
+	m_indexObject = new IndexObject();
 }
 
 LinePrim::~LinePrim()
@@ -208,7 +211,7 @@ ushort_t LinePrim::getIndex(int order) const
 	return m_indexes[order];
 }
 
-const LinePrim::VertexType &LinePrim::getVertex(int order) const
+const DebugVertex &LinePrim::getVertex(int order) const
 {
 	AX_ASSERT(order >= 0 && order < m_numVertexes);
 	return m_vertexes[order];
@@ -223,13 +226,13 @@ void LinePrim::setIndex(int order, int index)
 	m_indexes[order] = index;
 }
 
-void LinePrim::setVertex(int order, const VertexType &vert)
+void LinePrim::setVertex(int order, const DebugVertex &vert)
 {
 	AX_ASSERT(order >= 0 && order < m_numVertexes);
 	m_vertexes[order] = vert;
 }
 
-LinePrim::VertexType &LinePrim::getVertexRef(int order)
+DebugVertex &LinePrim::getVertexRef(int order)
 {
 	AX_ASSERT(order >= 0 && order < m_numVertexes);
 	return m_vertexes[order];
@@ -479,7 +482,7 @@ bool LinePrim::setupBoundingBox(LinePrim*& line, const Vector3 &origin, const Ma
 		bbox = inbbox;
 	}
 
-	VertexType *verts = line->lockVertexes();
+	DebugVertex *verts = line->lockVertexes();
 	for (int i = 0; i < 8; i++) {
 		Vector3 axisscale;
 		axisscale.x = i&1;
@@ -535,7 +538,7 @@ bool LinePrim::setupCircle(LinePrim*& line, const Vector3 &origin, const Vector3
 		first = true;
 	}
 
-	VertexType *verts = line->lockVertexes();
+	DebugVertex *verts = line->lockVertexes();
 	float step = AX_PI * 2.0f / subdivided;
 	float angle = 0;
 	for (int i = 0; i < subdivided; i++) {
@@ -563,7 +566,7 @@ LinePrim *LinePrim::createWorldBoundingBox( Hint hint, const BoundingBox &bbox, 
 	LinePrim *line = new LinePrim(hint);
 
 	line->init(8, 24);
-	VertexType *verts = line->lockVertexes();
+	DebugVertex *verts = line->lockVertexes();
 	for (int i = 0; i < 2; i++) {
 		for (int j = 0; j < 2; j++) {
 			for (int k = 0; k < 2; k++) {
@@ -589,6 +592,27 @@ LinePrim *LinePrim::createWorldBoundingBox( Hint hint, const BoundingBox &bbox, 
 	return line;
 }
 
+void LinePrim::draw(Technique tech)
+{
+
+}
+
+void LinePrim::sync()
+{
+	if (!m_isDirty)
+		return;
+
+	if (m_isVertexBufferDirty) {
+		m_vertexObject->init(m_vertexes, m_numVertexes, m_hint, VertexType::kDebug);
+	}
+
+	if (m_isIndexBufferDirty) {
+		m_indexObject->init(m_indexes, m_numIndexes, m_hint, m_activedIndexes);
+	}
+
+	m_isDirty = m_isVertexBufferDirty = m_isIndexBufferDirty = 0;
+}
+
 //------------------------------------------------------------------------------
 // class MeshPrim
 //------------------------------------------------------------------------------
@@ -603,8 +627,8 @@ MeshPrim::MeshPrim(Hint hint)
 	m_type = MeshType;
 	m_isStriped = false;
 
-	m_vertexObject = 0;
-	m_indexObject = 0;
+	m_vertexObject = new VertexObject();
+	m_indexObject = new IndexObject();
 }
 
 MeshPrim::~MeshPrim()
@@ -944,7 +968,7 @@ bool MeshPrim::setupPolygon(MeshPrim*& mesh, int numverts, const Vector3 *verts,
 			mesh->m_indexes[i*3+2] = i + 2;
 		}
 		mesh->unlockVertexes();
-		memset(mesh->m_vertexes, 0, numverts * sizeof(VertexType));
+		memset(mesh->m_vertexes, 0, numverts * sizeof(Vertex));
 		mesh->setMaterial(material);
 	}
 
@@ -1126,6 +1150,20 @@ void MeshPrim::draw(Technique tech)
 	Material *mat = m_overloadMaterial ? m_overloadMaterial : m_material;
 
 	g_renderContext->draw(vert, inst, index, mat, tech);
+}
+
+void MeshPrim::sync()
+{
+	if (!m_isDirty)
+		return;
+
+	if (m_isVertexBufferDirty)
+		m_vertexObject->init(m_vertexes, m_numVertexes, m_hint, VertexType::kMesh);
+
+	if (m_isIndexBufferDirty)
+		m_indexObject->init(m_indexes, m_numIndexes, m_hint, m_activedIndexes);
+
+	m_isDirty = m_isVertexBufferDirty = m_isIndexBufferDirty = false;
 }
 
 #if 0
@@ -1395,6 +1433,25 @@ bool ChunkPrim::isLayerVerticalProjection(int index) const
 	return m_layers[index].isVerticalProjection;
 }
 
+void ChunkPrim::draw(Technique tech)
+{
+
+}
+
+void ChunkPrim::sync()
+{
+	if (!m_isDirty)
+		return;
+
+	if (m_isVertexBufferDirty)
+		m_vertexObject->init(m_vertexes, m_numVertexes, m_hint, VertexType::kChunk);
+
+	if (m_isIndexBufferDirty)
+		m_indexObject->init(m_indexes, m_numIndexes, m_hint, m_activedIndexes);
+
+	m_isDirty = m_isVertexBufferDirty = m_isIndexBufferDirty = 0;
+}
+
 //------------------------------------------------------------------------------
 // class GroupPrim
 //------------------------------------------------------------------------------
@@ -1437,6 +1494,17 @@ void GroupPrim::clear()
 	m_needFrees.clear();
 }
 
+void GroupPrim::draw( Technique tech )
+{
+
+}
+
+void GroupPrim::sync()
+{
+	for (size_t i = 0; i < m_primitives.size(); i++)
+		m_primitives[i]->sync();
+}
+
 //--------------------------------------------------------------------------
 // class RefPrim
 //--------------------------------------------------------------------------
@@ -1444,9 +1512,11 @@ void GroupPrim::clear()
 RefPrim::RefPrim(Hint hint) : Primitive(hint)
 {
 	m_type = ReferenceType;
-	m_refered = nullptr;
+	m_refered = 0;
 	m_numIndexes = 0;
-	m_indexes = nullptr;
+	m_indexes = 0;
+
+	m_indexObject = new IndexObject();
 }
 
 RefPrim::~RefPrim()
@@ -1495,6 +1565,24 @@ void RefPrim::unlockIndexes()
 {
 	m_isDirty = true;
 	m_isIndexBufferDirty = true;
+}
+
+void RefPrim::draw( Technique tech )
+{
+
+}
+
+void RefPrim::sync()
+{
+	if (!m_isDirty)
+		return;
+
+	if (m_isIndexBufferDirty && m_numIndexes)
+		m_indexObject->init(m_indexes, m_numIndexes, m_hint, m_activedIndexes);
+
+	m_refered->sync();
+
+	m_isDirty = m_isIndexBufferDirty = false;
 }
 
 //--------------------------------------------------------------------------
@@ -1560,6 +1648,18 @@ const InstancePrim::Param &InstancePrim::getInstance(int index) const
 const InstancePrim::Param *InstancePrim::getAllInstances() const
 {
 	return m_params;
+}
+
+void InstancePrim::draw( Technique tech )
+{
+
+}
+
+void InstancePrim::sync()
+{
+	m_instanced->sync();
+
+	m_instanceObject->init(m_numInstances, m_params);
 }
 
 #if 0
