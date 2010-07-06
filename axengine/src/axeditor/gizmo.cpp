@@ -221,8 +221,8 @@ void MoveGizmo::setupAxis(int axis) {
 	}
 
 	line->lock();
-	LinePrim::VertexType &v0 = line->getVertexRef(0);
-	LinePrim::VertexType &v1 = line->getVertexRef(1);
+	DebugVertex &v0 = line->getVertexRef(0);
+	DebugVertex &v1 = line->getVertexRef(1);
 	v0.xyz = p0;
 	v0.rgba = color;
 	v1.xyz = p1;
@@ -275,7 +275,7 @@ void MoveGizmo::setupPlane(int axis) {
 
 	float length = m_length * 0.5f;
 
-	LinePrim::VertexType *verts = line->lockVertexes();
+	DebugVertex *verts = line->lockVertexes();
 	verts[0].xyz = m_pos + v0 * length;
 	verts[0].rgba = color0;
 	verts[1].xyz = verts[0].xyz + v1 * length;
@@ -344,7 +344,7 @@ void MoveGizmo::setupXYZ(const RenderCamera &camera) {
 	}
 
 	const Matrix3 &axis = camera.getViewAxis();
-	LinePrim::VertexType *verts = line->lockVertexes();
+	DebugVertex *verts = line->lockVertexes();
 	verts[0].xyz = m_pos - axis[1] * len - axis[2] * len;
 	verts[0].rgba = color;
 	verts[1].xyz = m_pos - axis[1] * len + axis[2] * len;

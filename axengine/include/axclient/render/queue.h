@@ -134,7 +134,7 @@ inline bool RenderScene::isLastCsmSplits() const
 class SyncMethod;
 class RenderData;
 
-class AX_API RenderQueue
+class AX_API RenderFrame
 {
 public:
 	enum {
@@ -143,48 +143,53 @@ public:
 		MAX_VIEW = 16
 	};
 
-	RenderQueue();
-	~RenderQueue();
+	RenderFrame();
+	~RenderFrame();
 
 	void initialize();
 	void finalize();
 	RenderTarget *getTarget();
 
 	// for providing thread
+#if 0
 	void beginProviding();
+#endif
 	MemoryStack *getMemoryStack();
 	void setTarget(RenderTarget *target);
 	RenderScene *allocQueuedScene();
-	void addQueuedScene(RenderScene *scene);
-	void addSourceScene(RenderScene *scene);
+	void addScene(RenderScene *scene);
 	Interaction *allocInteraction();
 	Interaction **allocInteractionPointer(int num);
 #if 0
 	QueuedLight *allocQueuedLight();
 	QueuedEntity *allocQueuedActor(int num = 1);
-#endif
 	int *allocPrimitives(int num);
 	void addDeferredDeleteResource(RenderData *rfr) { m_deferredDeleteResources.push_back(rfr); }
 	void addDeferredCommand(SyncMethod *cmd) { m_deferredCommand.push_back(cmd); }
 	void endProviding();
+#endif
 
 	template <class T>
 	T *allocType(int num = 1);
 
 	// for consuming thread
+#if 0
 	void beginConsuming();
 	void endSync();
+#endif
 	int getSceneCount() { return m_sceneCount; }
 	RenderScene *getScene(int index);
 	void clear();
+#if 0
 	void endConsuming();
-
+#endif
 private:
 	MemoryStack *m_stack;
 	RenderTarget *m_target;
 	int m_sceneCount;
 	RenderScene *m_queuedScenes[MAX_VIEW];
 	int m_sourceSceneCount;
+#if 0
 	RenderScene *m_sourceScenes[MAX_VIEW];
 	SyncEvent *m_providingEvent;
 	SyncEvent *m_consumingEvent;
@@ -192,10 +197,11 @@ private:
 
 	List<SyncMethod*> m_deferredCommand;
 	List<RenderData*> m_deferredDeleteResources;
+#endif
 };
 
 template <class T>
-T *RenderQueue::allocType(int num)
+T *RenderFrame::allocType(int num)
 {
 #if 0
 	if (num == 1) {
@@ -208,7 +214,7 @@ T *RenderQueue::allocType(int num)
 #endif
 }
 
-inline RenderTarget *RenderQueue::getTarget()
+inline RenderTarget *RenderFrame::getTarget()
 {
 	return m_target;
 }

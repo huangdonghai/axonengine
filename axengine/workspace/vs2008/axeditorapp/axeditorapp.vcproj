@@ -206,7 +206,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing actorpanel.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\actorpanel.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_actorpanel.cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\actorpanel.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\actorpanel.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\actorpanel.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\actorpanel.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_actorpanel.cpp&quot;"
 					/>
@@ -217,7 +217,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing actorpanel.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\actorpanel.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_actorpanel.cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\actorpanel.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\actorpanel.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\actorpanel.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\actorpanel.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_actorpanel.cpp&quot;"
 					/>
@@ -236,7 +236,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing application.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\application.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_application.cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\application.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\application.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\application.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\application.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_application.cpp&quot;"
 					/>
@@ -247,7 +247,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing application.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\application.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_application.cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\application.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\application.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\application.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\application.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_application.cpp&quot;"
 					/>
@@ -266,7 +266,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing camerasetting.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\camerasetting.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_camerasetting.cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\camerasetting.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\camerasetting.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\camerasetting.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\camerasetting.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_camerasetting.cpp&quot;"
 					/>
@@ -277,7 +277,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing camerasetting.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\camerasetting.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_camerasetting.cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\camerasetting.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\camerasetting.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\camerasetting.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\camerasetting.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_camerasetting.cpp&quot;"
 					/>
@@ -313,7 +313,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing consoledlg.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\consoledlg.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_consoledlg.cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\consoledlg.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\consoledlg.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\consoledlg.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\consoledlg.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_consoledlg.cpp&quot;"
 					/>
@@ -324,7 +324,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing consoledlg.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\consoledlg.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_consoledlg.cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\consoledlg.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\consoledlg.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\consoledlg.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\consoledlg.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_consoledlg.cpp&quot;"
 					/>
@@ -343,7 +343,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing creationpanel.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\creationpanel.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_creationpanel.cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\creationpanel.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\creationpanel.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\creationpanel.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\creationpanel.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_creationpanel.cpp&quot;"
 					/>
@@ -354,7 +354,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing creationpanel.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\creationpanel.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_creationpanel.cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\creationpanel.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\creationpanel.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\creationpanel.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\creationpanel.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_creationpanel.cpp&quot;"
 					/>
@@ -390,7 +390,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing displaysettingpanel.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\displaysettingpanel.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_displaysettingpanel.cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\displaysettingpanel.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\displaysettingpanel.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\displaysettingpanel.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\displaysettingpanel.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_displaysettingpanel.cpp&quot;"
 					/>
@@ -401,7 +401,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing displaysettingpanel.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\displaysettingpanel.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_displaysettingpanel.cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\displaysettingpanel.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\displaysettingpanel.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\displaysettingpanel.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\displaysettingpanel.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_displaysettingpanel.cpp&quot;"
 					/>
@@ -437,7 +437,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing editorframe.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\editorframe.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_editorframe.cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\editorframe.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\editorframe.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\editorframe.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\editorframe.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_editorframe.cpp&quot;"
 					/>
@@ -448,7 +448,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing editorframe.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\editorframe.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_editorframe.cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\editorframe.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\editorframe.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\editorframe.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\editorframe.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_editorframe.cpp&quot;"
 					/>
@@ -508,7 +508,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing frame.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\frame.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_frame.cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\frame.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\frame.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\frame.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\frame.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_frame.cpp&quot;"
 					/>
@@ -519,7 +519,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing frame.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\frame.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_frame.cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\frame.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\frame.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\frame.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\frame.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_frame.cpp&quot;"
 					/>
@@ -576,7 +576,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing modelviewer.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\modelviewer.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_modelviewer.cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\modelviewer.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\modelviewer.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\modelviewer.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\modelviewer.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_modelviewer.cpp&quot;"
 					/>
@@ -587,7 +587,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing modelviewer.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\modelviewer.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_modelviewer.cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\modelviewer.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\modelviewer.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\modelviewer.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\modelviewer.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_modelviewer.cpp&quot;"
 					/>
@@ -623,7 +623,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing newmapdlg.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\newmapdlg.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_newmapdlg.cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\newmapdlg.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\newmapdlg.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\newmapdlg.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\newmapdlg.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_newmapdlg.cpp&quot;"
 					/>
@@ -634,7 +634,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing newmapdlg.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\newmapdlg.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_newmapdlg.cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\newmapdlg.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\newmapdlg.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\newmapdlg.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\newmapdlg.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_newmapdlg.cpp&quot;"
 					/>
@@ -721,7 +721,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing quickconsole.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\quickconsole.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_quickconsole.cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\quickconsole.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\quickconsole.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\quickconsole.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\quickconsole.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_quickconsole.cpp&quot;"
 					/>
@@ -732,7 +732,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing quickconsole.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\quickconsole.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_quickconsole.cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\quickconsole.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\quickconsole.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\quickconsole.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\quickconsole.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_quickconsole.cpp&quot;"
 					/>
@@ -768,7 +768,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing quickstatusinfopanel.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\quickstatusinfopanel.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_quickstatusinfopanel.cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\quickstatusinfopanel.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\quickstatusinfopanel.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\quickstatusinfopanel.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\quickstatusinfopanel.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_quickstatusinfopanel.cpp&quot;"
 					/>
@@ -779,7 +779,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing quickstatusinfopanel.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\quickstatusinfopanel.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_quickstatusinfopanel.cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\quickstatusinfopanel.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\quickstatusinfopanel.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\quickstatusinfopanel.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\quickstatusinfopanel.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_quickstatusinfopanel.cpp&quot;"
 					/>
@@ -798,7 +798,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing selectbynamedlg.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\selectbynamedlg.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_selectbynamedlg.cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\selectbynamedlg.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\selectbynamedlg.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\selectbynamedlg.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\selectbynamedlg.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_selectbynamedlg.cpp&quot;"
 					/>
@@ -809,7 +809,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing selectbynamedlg.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\selectbynamedlg.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_selectbynamedlg.cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\selectbynamedlg.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\selectbynamedlg.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\selectbynamedlg.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\selectbynamedlg.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_selectbynamedlg.cpp&quot;"
 					/>
@@ -845,7 +845,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing sidepanel.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\sidepanel.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_sidepanel.cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\sidepanel.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\sidepanel.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\sidepanel.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\sidepanel.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_sidepanel.cpp&quot;"
 					/>
@@ -856,7 +856,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing sidepanel.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\sidepanel.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_sidepanel.cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\sidepanel.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\sidepanel.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\sidepanel.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\sidepanel.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_sidepanel.cpp&quot;"
 					/>
@@ -875,7 +875,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing terraingen.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\terraingen.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_terraingen.cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\terraingen.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\terraingen.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\terraingen.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\terraingen.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_terraingen.cpp&quot;"
 					/>
@@ -886,7 +886,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing terraingen.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\terraingen.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_terraingen.cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\terraingen.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\terraingen.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\terraingen.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\terraingen.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_terraingen.cpp&quot;"
 					/>
@@ -922,7 +922,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing terrainmaterialdlg.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\terrainmaterialdlg.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_terrainmaterialdlg.cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\terrainmaterialdlg.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\terrainmaterialdlg.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\terrainmaterialdlg.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\terrainmaterialdlg.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_terrainmaterialdlg.cpp&quot;"
 					/>
@@ -933,7 +933,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing terrainmaterialdlg.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\terrainmaterialdlg.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_terrainmaterialdlg.cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\terrainmaterialdlg.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\terrainmaterialdlg.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\terrainmaterialdlg.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\terrainmaterialdlg.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_terrainmaterialdlg.cpp&quot;"
 					/>
@@ -969,7 +969,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing terrainpanel.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\terrainpanel.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_terrainpanel.cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\terrainpanel.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\terrainpanel.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\terrainpanel.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\terrainpanel.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_terrainpanel.cpp&quot;"
 					/>
@@ -980,7 +980,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing terrainpanel.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\terrainpanel.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_terrainpanel.cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\terrainpanel.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\terrainpanel.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\terrainpanel.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\terrainpanel.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_terrainpanel.cpp&quot;"
 					/>
@@ -1016,7 +1016,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing toolspanel.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\toolspanel.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_toolspanel.cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\toolspanel.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\toolspanel.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\toolspanel.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\toolspanel.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_toolspanel.cpp&quot;"
 					/>
@@ -1027,7 +1027,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing toolspanel.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\toolspanel.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_toolspanel.cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\toolspanel.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\toolspanel.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\toolspanel.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\toolspanel.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_toolspanel.cpp&quot;"
 					/>
@@ -1046,7 +1046,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing workbench.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\workbench.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_workbench.cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\workbench.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\workbench.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\workbench.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\workbench.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_workbench.cpp&quot;"
 					/>
@@ -1057,7 +1057,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing workbench.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\workbench.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_workbench.cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\workbench.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\workbench.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\workbench.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\workbench.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_workbench.cpp&quot;"
 					/>
@@ -1093,7 +1093,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing workspace.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\workspace.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_workspace.cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\workspace.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\workspace.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\workspace.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\workspace.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_workspace.cpp&quot;"
 					/>
@@ -1104,7 +1104,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing workspace.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\workspace.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_workspace.cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\workspace.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\workspace.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\workspace.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\workspace.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_workspace.cpp&quot;"
 					/>
@@ -2338,10 +2338,6 @@
 			<File
 				RelativePath="..\..\..\src\axeditorapp\resources\images\gizmo_rel.png"
 				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\axeditorapp\resources\images\gizmo_rel.png"
-				>
 				<FileConfiguration
 					Name="Debug|Win32"
 					ExcludedFromBuild="true"
@@ -2358,6 +2354,10 @@
 						Name="VCCustomBuildTool"
 					/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\..\..\src\axeditorapp\resources\images\gizmo_rel.png"
+				>
 			</File>
 			<File
 				RelativePath="..\..\..\src\axeditorapp\resources\images\gizmo_selection_center.png"
@@ -3640,7 +3640,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axeditorapp\resources\images\save.png"
+				RelativePath="..\..\..\src\axeditorapp\resources\materialeditor\save.png"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -3660,7 +3660,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axeditorapp\resources\materialeditor\save.png"
+				RelativePath="..\..\..\src\axeditorapp\resources\images\save.png"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -4440,7 +4440,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axeditorapp\resources\materialeditor\up.png"
+				RelativePath="..\..\..\src\axeditorapp\resources\images\up.png"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -4460,7 +4460,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axeditorapp\resources\images\up.png"
+				RelativePath="..\..\..\src\axeditorapp\resources\materialeditor\up.png"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -4660,26 +4660,6 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axeditorapp\resources\cursors\view_pan.png"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
 				RelativePath="..\..\..\src\axeditorapp\resources\images\view_pan.png"
 				>
 				<FileConfiguration
@@ -4700,7 +4680,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axeditorapp\resources\cursors\view_rotate.png"
+				RelativePath="..\..\..\src\axeditorapp\resources\cursors\view_pan.png"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -4721,6 +4701,26 @@
 			</File>
 			<File
 				RelativePath="..\..\..\src\axeditorapp\resources\images\view_rotate.png"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\..\..\src\axeditorapp\resources\cursors\view_rotate.png"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -4780,7 +4780,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axeditorapp\resources\images\view_zoom.png"
+				RelativePath="..\..\..\src\axeditorapp\resources\cursors\view_zoom.png"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -4800,7 +4800,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axeditorapp\resources\cursors\view_zoom.png"
+				RelativePath="..\..\..\src\axeditorapp\resources\images\view_zoom.png"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -5047,18 +5047,6 @@
 			SourceControlFiles="false"
 			>
 			<File
-				RelativePath=".\GeneratedFiles\Release\moc_actorpanel.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
 				RelativePath=".\GeneratedFiles\Debug\moc_actorpanel.cpp"
 				>
 				<FileConfiguration
@@ -5071,7 +5059,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\GeneratedFiles\Release\moc_application.cpp"
+				RelativePath=".\GeneratedFiles\Release\moc_actorpanel.cpp"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -5095,7 +5083,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\GeneratedFiles\Release\moc_camerasetting.cpp"
+				RelativePath=".\GeneratedFiles\Release\moc_application.cpp"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -5111,6 +5099,18 @@
 				>
 				<FileConfiguration
 					Name="Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\GeneratedFiles\Release\moc_camerasetting.cpp"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -5143,18 +5143,6 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\GeneratedFiles\Debug\moc_creationpanel.cpp"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
 				RelativePath=".\GeneratedFiles\Release\moc_creationpanel.cpp"
 				>
 				<FileConfiguration
@@ -5167,10 +5155,10 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\GeneratedFiles\Release\moc_customlabel.cpp"
+				RelativePath=".\GeneratedFiles\Debug\moc_creationpanel.cpp"
 				>
 				<FileConfiguration
-					Name="Debug|Win32"
+					Name="Release|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -5183,6 +5171,18 @@
 				>
 				<FileConfiguration
 					Name="Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\GeneratedFiles\Release\moc_customlabel.cpp"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -5215,18 +5215,6 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\GeneratedFiles\Release\moc_displaysettingpanel.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
 				RelativePath=".\GeneratedFiles\Debug\moc_displaysettingpanel.cpp"
 				>
 				<FileConfiguration
@@ -5239,17 +5227,10 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\GeneratedFiles\Debug\moc_editorframe.cpp"
+				RelativePath=".\GeneratedFiles\Release\moc_displaysettingpanel.cpp"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -5268,19 +5249,12 @@
 						Name="VCCLCompilerTool"
 					/>
 				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\GeneratedFiles\Release\moc_filedialog.cpp"
+				RelativePath=".\GeneratedFiles\Debug\moc_editorframe.cpp"
 				>
 				<FileConfiguration
-					Name="Debug|Win32"
+					Name="Release|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -5293,6 +5267,18 @@
 				>
 				<FileConfiguration
 					Name="Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\GeneratedFiles\Release\moc_filedialog.cpp"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -5325,18 +5311,6 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\GeneratedFiles\Release\moc_frame.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
 				RelativePath=".\GeneratedFiles\Debug\moc_frame.cpp"
 				>
 				<FileConfiguration
@@ -5349,10 +5323,10 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\GeneratedFiles\Debug\moc_gfxcentral.cpp"
+				RelativePath=".\GeneratedFiles\Release\moc_frame.cpp"
 				>
 				<FileConfiguration
-					Name="Release|Win32"
+					Name="Debug|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -5365,6 +5339,18 @@
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\GeneratedFiles\Debug\moc_gfxcentral.cpp"
+				>
+				<FileConfiguration
+					Name="Release|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -5397,18 +5383,6 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\GeneratedFiles\Release\moc_gfxtrackedit.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
 				RelativePath=".\GeneratedFiles\Debug\moc_gfxtrackedit.cpp"
 				>
 				<FileConfiguration
@@ -5421,7 +5395,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\GeneratedFiles\Release\moc_gfxviewc.cpp"
+				RelativePath=".\GeneratedFiles\Release\moc_gfxtrackedit.cpp"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -5445,10 +5419,10 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\GeneratedFiles\Debug\moc_grapheditor.cpp"
+				RelativePath=".\GeneratedFiles\Release\moc_gfxviewc.cpp"
 				>
 				<FileConfiguration
-					Name="Release|Win32"
+					Name="Debug|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -5461,6 +5435,18 @@
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\GeneratedFiles\Debug\moc_grapheditor.cpp"
+				>
+				<FileConfiguration
+					Name="Release|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -5493,18 +5479,6 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\GeneratedFiles\Release\moc_modelviewer.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
 				RelativePath=".\GeneratedFiles\Debug\moc_modelviewer.cpp"
 				>
 				<FileConfiguration
@@ -5517,7 +5491,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\GeneratedFiles\Release\moc_newmapdlg.cpp"
+				RelativePath=".\GeneratedFiles\Release\moc_modelviewer.cpp"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -5533,6 +5507,18 @@
 				>
 				<FileConfiguration
 					Name="Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\GeneratedFiles\Release\moc_newmapdlg.cpp"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -5565,18 +5551,6 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\GeneratedFiles\Release\moc_propertyeditor_delegate.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
 				RelativePath=".\GeneratedFiles\Debug\moc_propertyeditor_delegate.cpp"
 				>
 				<FileConfiguration
@@ -5589,7 +5563,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\GeneratedFiles\Release\moc_propertyeditor_items.cpp"
+				RelativePath=".\GeneratedFiles\Release\moc_propertyeditor_delegate.cpp"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -5605,6 +5579,18 @@
 				>
 				<FileConfiguration
 					Name="Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\GeneratedFiles\Release\moc_propertyeditor_items.cpp"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -5637,18 +5623,6 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\GeneratedFiles\Debug\moc_quickconsole.cpp"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
 				RelativePath=".\GeneratedFiles\Release\moc_quickconsole.cpp"
 				>
 				<FileConfiguration
@@ -5661,10 +5635,10 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\GeneratedFiles\Release\moc_quickstatusinfopanel.cpp"
+				RelativePath=".\GeneratedFiles\Debug\moc_quickconsole.cpp"
 				>
 				<FileConfiguration
-					Name="Debug|Win32"
+					Name="Release|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -5685,6 +5659,18 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\GeneratedFiles\Release\moc_quickstatusinfopanel.cpp"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
 				RelativePath=".\GeneratedFiles\Release\moc_renderwidget.cpp"
 				>
 				<FileConfiguration
@@ -5695,38 +5681,12 @@
 						Name="VCCLCompilerTool"
 					/>
 				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\GeneratedFiles\Debug\moc_renderwidget.cpp"
 				>
 				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
 					Name="Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\GeneratedFiles\Release\moc_rollup.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -5747,7 +5707,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\GeneratedFiles\Release\moc_scripteditor.cpp"
+				RelativePath=".\GeneratedFiles\Release\moc_rollup.cpp"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -5771,7 +5731,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\GeneratedFiles\Release\moc_selectbynamedlg.cpp"
+				RelativePath=".\GeneratedFiles\Release\moc_scripteditor.cpp"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -5787,6 +5747,18 @@
 				>
 				<FileConfiguration
 					Name="Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\GeneratedFiles\Release\moc_selectbynamedlg.cpp"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -5819,18 +5791,6 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\GeneratedFiles\Release\moc_terraingen.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
 				RelativePath=".\GeneratedFiles\Debug\moc_terraingen.cpp"
 				>
 				<FileConfiguration
@@ -5843,10 +5803,10 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\GeneratedFiles\Debug\moc_terrainmaterialdlg.cpp"
+				RelativePath=".\GeneratedFiles\Release\moc_terraingen.cpp"
 				>
 				<FileConfiguration
-					Name="Release|Win32"
+					Name="Debug|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -5859,6 +5819,18 @@
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\GeneratedFiles\Debug\moc_terrainmaterialdlg.cpp"
+				>
+				<FileConfiguration
+					Name="Release|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -5891,18 +5863,6 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\GeneratedFiles\Release\moc_timeline.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
 				RelativePath=".\GeneratedFiles\Debug\moc_timeline.cpp"
 				>
 				<FileConfiguration
@@ -5915,10 +5875,10 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\GeneratedFiles\Debug\moc_toolspanel.cpp"
+				RelativePath=".\GeneratedFiles\Release\moc_timeline.cpp"
 				>
 				<FileConfiguration
-					Name="Release|Win32"
+					Name="Debug|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -5931,6 +5891,18 @@
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\GeneratedFiles\Debug\moc_toolspanel.cpp"
+				>
+				<FileConfiguration
+					Name="Release|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -5963,18 +5935,6 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\GeneratedFiles\Release\moc_workbench.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
 				RelativePath=".\GeneratedFiles\Debug\moc_workbench.cpp"
 				>
 				<FileConfiguration
@@ -5987,7 +5947,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\GeneratedFiles\Release\moc_workspace.cpp"
+				RelativePath=".\GeneratedFiles\Release\moc_workbench.cpp"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -6003,6 +5963,18 @@
 				>
 				<FileConfiguration
 					Name="Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\GeneratedFiles\Release\moc_workspace.cpp"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -6212,7 +6184,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing $(InputFileName)..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\curvewidget.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\curvewidget.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\curvewidget.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\curvewidget.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot;"
 					/>
@@ -6223,7 +6195,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing $(InputFileName)..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\curvewidget.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\curvewidget.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\curvewidget.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\curvewidget.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot;"
 					/>
@@ -6242,7 +6214,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing customlabel.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\customlabel.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_customlabel.cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\customlabel.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\customlabel.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\customlabel.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\customlabel.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_customlabel.cpp&quot;"
 					/>
@@ -6253,7 +6225,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing customlabel.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\customlabel.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_customlabel.cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\customlabel.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\customlabel.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\customlabel.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\customlabel.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_customlabel.cpp&quot;"
 					/>
@@ -6272,7 +6244,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing dirtree.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\dirtree.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_dirtree.cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\dirtree.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\dirtree.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\dirtree.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\dirtree.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_dirtree.cpp&quot;"
 					/>
@@ -6283,7 +6255,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing dirtree.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\dirtree.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_dirtree.cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\dirtree.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\dirtree.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\dirtree.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\dirtree.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_dirtree.cpp&quot;"
 					/>
@@ -6323,7 +6295,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing filedialog.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\filedialog.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_filedialog.cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\filedialog.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\filedialog.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\filedialog.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\filedialog.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_filedialog.cpp&quot;"
 					/>
@@ -6334,7 +6306,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing filedialog.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\filedialog.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_filedialog.cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\filedialog.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\filedialog.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\filedialog.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\filedialog.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_filedialog.cpp&quot;"
 					/>
@@ -6353,7 +6325,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing flagbox.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\flagbox.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_flagbox.cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\flagbox.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\flagbox.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\flagbox.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\flagbox.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_flagbox.cpp&quot;"
 					/>
@@ -6364,7 +6336,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing flagbox.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\flagbox.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_flagbox.cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\flagbox.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\flagbox.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\flagbox.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\flagbox.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_flagbox.cpp&quot;"
 					/>
@@ -6383,7 +6355,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing grapheditor.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\grapheditor.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_grapheditor.cpp&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\grapheditor.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\grapheditor.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\grapheditor.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_grapheditor.cpp&quot;"
 					/>
@@ -6394,7 +6366,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing grapheditor.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\grapheditor.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_grapheditor.cpp&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\grapheditor.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\grapheditor.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\grapheditor.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_grapheditor.cpp&quot;"
 					/>
@@ -6413,7 +6385,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing propertyeditor.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\propertyeditor.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_propertyeditor.cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\propertyeditor.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\propertyeditor.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\propertyeditor.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\propertyeditor.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_propertyeditor.cpp&quot;"
 					/>
@@ -6424,7 +6396,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing propertyeditor.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\propertyeditor.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_propertyeditor.cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\propertyeditor.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\propertyeditor.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\propertyeditor.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\propertyeditor.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_propertyeditor.cpp&quot;"
 					/>
@@ -6443,7 +6415,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing propertyeditor_delegate.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\propertyeditor_delegate.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_propertyeditor_delegate.cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\propertyeditor_delegate.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\propertyeditor_delegate.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\propertyeditor_delegate.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\propertyeditor_delegate.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_propertyeditor_delegate.cpp&quot;"
 					/>
@@ -6454,7 +6426,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing propertyeditor_delegate.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\propertyeditor_delegate.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_propertyeditor_delegate.cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\propertyeditor_delegate.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\propertyeditor_delegate.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\propertyeditor_delegate.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\propertyeditor_delegate.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_propertyeditor_delegate.cpp&quot;"
 					/>
@@ -6473,7 +6445,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing propertyeditor_items.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\propertyeditor_items.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_propertyeditor_items.cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\propertyeditor_items.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\propertyeditor_items.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\propertyeditor_items.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\propertyeditor_items.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_propertyeditor_items.cpp&quot;"
 					/>
@@ -6484,7 +6456,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing propertyeditor_items.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\propertyeditor_items.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_propertyeditor_items.cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\propertyeditor_items.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\propertyeditor_items.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\propertyeditor_items.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\propertyeditor_items.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_propertyeditor_items.cpp&quot;"
 					/>
@@ -6503,7 +6475,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing propertyeditor_model.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\propertyeditor_model.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_propertyeditor_model.cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\propertyeditor_model.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\propertyeditor_model.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\propertyeditor_model.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\propertyeditor_model.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_propertyeditor_model.cpp&quot;"
 					/>
@@ -6514,7 +6486,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing propertyeditor_model.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\propertyeditor_model.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_propertyeditor_model.cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\propertyeditor_model.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\propertyeditor_model.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\propertyeditor_model.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\propertyeditor_model.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_propertyeditor_model.cpp&quot;"
 					/>
@@ -6550,7 +6522,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing renderwidget.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\renderwidget.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_renderwidget.cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\renderwidget.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\renderwidget.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\renderwidget.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\renderwidget.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_renderwidget.cpp&quot;"
 					/>
@@ -6561,7 +6533,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing renderwidget.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\renderwidget.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_renderwidget.cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\renderwidget.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\renderwidget.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\renderwidget.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\renderwidget.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_renderwidget.cpp&quot;"
 					/>
@@ -6580,7 +6552,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing rollup.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\rollup.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_rollup.cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\rollup.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\rollup.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\rollup.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\rollup.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_rollup.cpp&quot;"
 					/>
@@ -6591,7 +6563,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing rollup.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\rollup.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_rollup.cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\rollup.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\rollup.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\rollup.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\rollup.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_rollup.cpp&quot;"
 					/>
@@ -6610,7 +6582,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing timeline.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\timeline.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_timeline.cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\timeline.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\timeline.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\timeline.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\timeline.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_timeline.cpp&quot;"
 					/>
@@ -6621,7 +6593,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing timeline.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\timeline.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_timeline.cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\timeline.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\timeline.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\timeline.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\timeline.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_timeline.cpp&quot;"
 					/>
@@ -6640,7 +6612,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing $(InputFileName)..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\trackwidget.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\trackwidget.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\trackwidget.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\trackwidget.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot;"
 					/>
@@ -6651,7 +6623,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing $(InputFileName)..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\trackwidget.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\trackwidget.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\trackwidget.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\trackwidget.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot;"
 					/>
@@ -6670,7 +6642,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing widgetlib.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\widgetlib.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_widgetlib.cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\widgetlib.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\widgetlib.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\widgetlib.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\widgetlib.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_widgetlib.cpp&quot;"
 					/>
@@ -6681,7 +6653,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing widgetlib.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\widgetlib.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_widgetlib.cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\widgetlib.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\widgetlib.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\widgetlib.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\widgetlib.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_widgetlib.cpp&quot;"
 					/>
@@ -6704,7 +6676,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing gfxcentral.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\gfxcentral.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_gfxcentral.cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\gfxcentral.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\gfxcentral.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\gfxcentral.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\gfxcentral.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_gfxcentral.cpp&quot;"
 					/>
@@ -6715,7 +6687,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing gfxcentral.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\gfxcentral.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_gfxcentral.cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\gfxcentral.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\gfxcentral.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\gfxcentral.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\gfxcentral.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_gfxcentral.cpp&quot;"
 					/>
@@ -6760,7 +6732,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing gfxeditor.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\gfxeditor.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_gfxeditor.cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\gfxeditor.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\gfxeditor.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\gfxeditor.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\gfxeditor.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_gfxeditor.cpp&quot;"
 					/>
@@ -6771,7 +6743,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing gfxeditor.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\gfxeditor.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_gfxeditor.cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\gfxeditor.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\gfxeditor.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\gfxeditor.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\gfxeditor.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_gfxeditor.cpp&quot;"
 					/>
@@ -6816,7 +6788,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing gfxtrackedit.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\gfxtrackedit.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_gfxtrackedit.cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\gfxtrackedit.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\gfxtrackedit.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\gfxtrackedit.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\gfxtrackedit.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_gfxtrackedit.cpp&quot;"
 					/>
@@ -6827,7 +6799,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing gfxtrackedit.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\gfxtrackedit.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_gfxtrackedit.cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\gfxtrackedit.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\gfxtrackedit.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\gfxtrackedit.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\gfxtrackedit.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_gfxtrackedit.cpp&quot;"
 					/>
@@ -6872,7 +6844,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing gfxviewc.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\gfxviewc.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_gfxviewc.cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\gfxviewc.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\gfxviewc.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\gfxviewc.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\gfxviewc.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_gfxviewc.cpp&quot;"
 					/>
@@ -6883,7 +6855,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing gfxviewc.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\gfxviewc.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_gfxviewc.cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\gfxviewc.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\gfxviewc.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\gfxviewc.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\gfxviewc.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_gfxviewc.cpp&quot;"
 					/>
@@ -6906,7 +6878,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing scripteditor.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\scripteditor.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_scripteditor.cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\scripteditor.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\scripteditor.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\scripteditor.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\scripteditor.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_scripteditor.cpp&quot;"
 					/>
@@ -6917,7 +6889,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing scripteditor.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\scripteditor.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_scripteditor.cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\scripteditor.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\scripteditor.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\scripteditor.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\scripteditor.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_scripteditor.cpp&quot;"
 					/>
@@ -6970,7 +6942,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing materialeditor.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\materialeditor.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_materialeditor.cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\materialeditor.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -D_DEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\materialeditor.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\materialeditor.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\materialeditor.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_materialeditor.cpp&quot;"
 					/>
@@ -6981,7 +6953,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing materialeditor.h..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\materialeditor.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_materialeditor.cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\materialeditor.h&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DUNICODE -DWIN32 -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -D_LIB -DQT_DLL -DWIN32 -DNDEBUG -D_WINDOWS -D_LIB  -I&quot;.\GeneratedFiles\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;.\..\..\..\src\axeditorapp\.&quot; -I&quot;.\.&quot; -I&quot;$(ProjectDir)\..\..\..\include\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\hk650r1\Source\.&quot; -I&quot;$(SolutionDir)\..\..\..\axextlibs\vc9\include\.&quot; &quot;..\..\..\src\axeditorapp\materialeditor.h&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; &quot;-fpch.h&quot; &quot;-f..\..\..\..\..\src\axeditorapp\materialeditor.h&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;..\..\..\src\axeditorapp\materialeditor.h"
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_materialeditor.cpp&quot;"
 					/>

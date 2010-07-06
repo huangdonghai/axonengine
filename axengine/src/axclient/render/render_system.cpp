@@ -20,7 +20,7 @@ FontPtr g_defaultFont;
 FontPtr g_consoleFont;
 FontPtr g_miniFont;
 
-RenderQueue *g_renderQueue;
+RenderFrame *g_renderFrame;
 ShaderMacro g_shaderMacro;
 Uniforms g_uniforms;
 IRenderDriver *g_renderDriver;
@@ -57,7 +57,7 @@ void RenderSystem::initialize()
 
 	Printf("Initializing RenderSystem...\n");
 
-	g_renderQueue = new RenderQueue();
+	g_renderFrame = new RenderFrame();
 
 #if 0
 	gRenderDriver = (IDriver*)(gClassFactory->createInstanceByAlias(ClassName_RenderDriver));
@@ -187,8 +187,8 @@ void RenderSystem::beginScene(const RenderCamera &camera)
 #if 0
 	ScenePtr sourceview(new RenderScene);
 #endif
-	m_curScene = g_renderQueue->allocQueuedScene();
-	g_renderQueue->addSourceScene(m_curScene);
+	m_curScene = g_renderFrame->allocQueuedScene();
+	g_renderFrame->addScene(m_curScene);
 #if 0
 	m_sceneSeq.push_back(m_curScene);
 #endif
@@ -321,8 +321,10 @@ void RenderSystem::endFrame()
 		this->endScene();
 	}
 
+#if 0
 	g_renderQueue->beginProviding();
-	g_renderQueue->setTarget(m_curTarget);
+#endif
+	g_renderFrame->setTarget(m_curTarget);
 
 	// add to render queue
 	// gQueryManager->runFrame();
@@ -357,7 +359,7 @@ void RenderSystem::endFrame()
 		g_renderQueue->endConsuming();
 	}
 #else
-	g_renderContext->issueQueue(g_renderQueue);
+	g_renderContext->issueQueue(g_renderFrame);
 #endif
 
 #if 0

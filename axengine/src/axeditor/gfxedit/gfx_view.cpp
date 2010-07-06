@@ -29,7 +29,7 @@ static LinePrim *createGrid()
 
 	LinePrim *result = new LinePrim(Primitive::HintStatic);
 	result->init(numVerts, numIndexes);
-	LinePrim::VertexType *verts = result->lockVertexes();
+	DebugVertex *verts = result->lockVertexes();
 	ushort_t *indices = result->lockIndexes();
 
 	for (int i = 0; i < totalGrid; i++) {

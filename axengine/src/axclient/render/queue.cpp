@@ -65,13 +65,14 @@ void RenderScene::addEntity(RenderEntity *entity)
 		AX_ASSERT(light);
 		addLight(light);
 	}
-
+#if 0
 	if (entity->getKind() == RenderEntity::kFog) {
 		RenderFog *fog = dynamic_cast<RenderFog*>(entity);
 		AX_ASSERT(fog);
 		QueuedFog *qf = g_renderQueue->allocType<QueuedFog>();
 		fog->fillQueuedFog(qf);
 	}
+#endif
 }
 
 Interaction *RenderScene::addInteraction(RenderEntity *entity, Primitive *prim, bool chain)
@@ -81,7 +82,7 @@ Interaction *RenderScene::addInteraction(RenderEntity *entity, Primitive *prim, 
 		return 0;
 	}
 
-	Interaction *ia = g_renderQueue->allocInteraction();
+	Interaction *ia = g_renderFrame->allocInteraction();
 	ia->primitive = prim;
 	if (entity)
 		ia->entity = entity;
@@ -166,7 +167,7 @@ void RenderScene::addHelperInteraction(RenderEntity *entity, Primitive *prim)
 		return;
 	}
 
-	Interaction *ia = g_renderQueue->allocInteraction();
+	Interaction *ia = g_renderFrame->allocInteraction();
 	ia->primitive = prim;
 	ia->entity = entity;
 	debugInteractions[numDebugInteractions++] = ia;
@@ -201,7 +202,7 @@ void RenderScene::findInstance()
 		return;
 
 	int oldNumInteractions = numInteractions;
-	Interaction** oldInteractions = g_renderQueue->allocType<Interaction*>(numInteractions);
+	Interaction** oldInteractions = g_renderFrame->allocType<Interaction*>(numInteractions);
 	memcpy(oldInteractions, interactions, numInteractions*sizeof(oldInteractions[0]));
 
 	numInteractions = 0;
@@ -271,7 +272,7 @@ void RenderScene::checkLights()
 #if 0
 	QueuedLight** shadowed = g_renderQueue->allocType<QueuedLight*>(numLights);
 #else
-	RenderLight **shadowed = g_renderQueue->allocType<RenderLight*>(numLights);
+	RenderLight **shadowed = g_renderFrame->allocType<RenderLight*>(numLights);
 #endif
 	int numShadowed = 0;
 	for (int i = 0; i < numLights; i++) {}
@@ -335,65 +336,87 @@ RenderScene *RenderScene::addSubScene()
 		return 0;
 	}
 
-	RenderScene *result = g_renderQueue->allocQueuedScene();
+	RenderScene *result = g_renderFrame->allocQueuedScene();
 	subScenes[numSubScenes++] = result;
 	return result;
 }
 
-RenderQueue::RenderQueue()
+void RenderScene::addPrimitive( Primitive *prim )
+{
+	if (numPrimitives >= MAX_PRIMITIVES)
+		return;
+
+	primtives[numPrimitives++] = prim;
+}
+
+void RenderScene::addOverlayPrimitive( Primitive *prim )
+{
+	if (numOverlayPrimitives >= MAX_OVERLAY_PRIMITIVES)
+		return;
+
+	overlayPrimitives[numOverlayPrimitives++] = prim;
+}
+
+RenderFrame::RenderFrame()
 {}
 
-RenderQueue::~RenderQueue()
+RenderFrame::~RenderFrame()
 {}
 
-void RenderQueue::initialize()
+void RenderFrame::initialize()
 {
 //	m_queuedScenes = NULL;
 	m_sceneCount = 0;
 	m_stack = new MemoryStack();
+#if 0
 	m_providingEvent = new SyncEvent();
 	m_consumingEvent = new SyncEvent();
 	m_cacheEndEvent = new SyncEvent();
-
+#endif
 	m_target = nullptr;
-
+#if 0
 	// set can providing
 	m_providingEvent->setEvent();
+#endif
 }
 
-void RenderQueue::finalize()
+void RenderFrame::finalize()
 {
+#if 0
 	beginProviding();
 	delete(m_cacheEndEvent);
 	delete(m_consumingEvent);
 	delete(m_providingEvent);
+#endif
 	delete(m_stack);
 }
 
+#if 0
 void RenderQueue::beginProviding()
 {
 	m_providingEvent->lock();
 }
+#endif
 
-MemoryStack *RenderQueue::getMemoryStack()
+MemoryStack *RenderFrame::getMemoryStack()
 {
 	return m_stack;
 }
 
-void RenderQueue::setTarget(RenderTarget *target)
+void RenderFrame::setTarget(RenderTarget *target)
 {
 	m_target = target;
 }
 
 
-RenderScene *RenderQueue::allocQueuedScene()
+RenderScene *RenderFrame::allocQueuedScene()
 {
 	RenderScene *queued_view = new(m_stack) RenderScene;
 
 	return queued_view;
 }
 
-void RenderQueue::addQueuedScene(RenderScene *scene)
+void RenderFrame::addScene(RenderScene *scene)
 {
 	if (m_sceneCount >= MAX_VIEW) {
 		Errorf("RenderQueue::allocQueuedScene: MAX_VIEW exceeds");
@@ -403,12 +426,12 @@ void RenderQueue::addQueuedScene(RenderScene *scene)
 	m_queuedScenes[m_sceneCount++] = scene;
 }
 
-Interaction *RenderQueue::allocInteraction()
+Interaction *RenderFrame::allocInteraction()
 {
 	return new(m_stack) Interaction;
 }
 
-Interaction** RenderQueue::allocInteractionPointer(int num)
+Interaction** RenderFrame::allocInteractionPointer(int num)
 {
 	return new(m_stack) Interaction*[num];
 }
@@ -423,7 +446,6 @@ QueuedEntity *RenderQueue::allocQueuedActor(int num)
 {
 	return new(m_stack) QueuedEntity[num];
 }
-#endif
 
 int *RenderQueue::allocPrimitives(int num)
 {
@@ -448,27 +470,28 @@ void RenderQueue::endSync()
 {
 	m_cacheEndEvent->setEvent();
 }
+#endif
 
 
-RenderScene *RenderQueue::getScene(int index)
+RenderScene *RenderFrame::getScene(int index)
 {
 	AX_ASSERT(index >= 0 && index < m_sceneCount);
 
 	return m_queuedScenes[index];
 }
 
-void RenderQueue::clear()
+void RenderFrame::clear()
 {
 	m_stack->clear();
 	m_sceneCount = 0;
 }
-
+#if 0
 void RenderQueue::endConsuming()
 {
 	m_consumingEvent->resetEvent();
 	m_providingEvent->setEvent();
 }
-
+#endif
 #if 0
 int Queue::allocQueryId() {
 	if (m_curQueryId == MAX_QUERIES) {

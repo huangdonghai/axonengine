@@ -2,7 +2,7 @@
 #define AX_COMMANDBUF_H
 
 AX_BEGIN_NAMESPACE
-
+#if 0
 class RenderData;
 
 class SyncMethod
@@ -311,7 +311,7 @@ struct CommandBuf
 	int bufSize;
 	byte_t buf[MaxBufSize];
 };
-
+#endif
 AX_END_NAMESPACE
 
 #endif // AX_COMMANDBUF_H

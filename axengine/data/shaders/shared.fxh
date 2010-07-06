@@ -180,6 +180,8 @@ struct VS_GlobalConst {
 };
 
 struct PS_GlobalConst {
+	float4x4 shadowMatrix;
+	float4x4 csmOffsetScales;
 	float4 globalLightPos;
 	float4 globalLightColor;
 	float4 skyColor;
@@ -203,7 +205,7 @@ AX_DECL_BUFFER(GlobalConst, g_gc, 0, 0);
 AX_DECL_BUFFER(VS_GlobalConst, g_vgc, 4, 1);
 AX_DECL_BUFFER(PS_GlobalConst, g_pgc, 4, 2);
 AX_DECL_BUFFER(VS_InteractionConst, g_vic, 22, 3);
-AX_DECL_BUFFER(PS_InteractionConst, g_pic, 8, 4);
+AX_DECL_BUFFER(PS_InteractionConst, g_pic, 16, 4);
 
 struct InteractionLocal {
 	float4 data[32];
@@ -212,32 +214,34 @@ struct InteractionLocal {
 #endif // __cplusplus
 
 #define AX_GLOBAL_UNIFORMS \
-	AX_UNIFORM(time) \
-	AX_UNIFORM(cameraPos) \
-	AX_UNIFORM(fogParams) \
-	AX_UNIFORM(waterFogParams) \
+	AX_UNIFORM(g_gc, time) \
+	AX_UNIFORM(g_gc, cameraPos) \
+	AX_UNIFORM(g_gc, fogParams) \
+	AX_UNIFORM(g_gc, waterFogParams) \
 	\
-	AX_UNIFORM(viewProjMatrix) \
-	AX_UNIFORM(viewProjNoTranslate) \
-	AX_UNIFORM(cameraAxis) \
-	AX_UNIFORM(cameraAngles) \
-	AX_UNIFORM(sceneSize) \
-	AX_UNIFORM(windMatrices) \
-	AX_UNIFORM(leafAngles) \
+	AX_UNIFORM(g_vgc, viewProjMatrix) \
+	AX_UNIFORM(g_vgc, viewProjNoTranslate) \
+	AX_UNIFORM(g_vgc, cameraAxis) \
+	AX_UNIFORM(g_vgc, cameraAngles) \
+	AX_UNIFORM(g_vgc, sceneSize) \
+	AX_UNIFORM(g_vgc, windMatrices) \
+	AX_UNIFORM(g_vgc, leafAngles) \
 	\
-	AX_UNIFORM(globalLightPos) \
-	AX_UNIFORM(globalLightColor) \
-	AX_UNIFORM(skyColor) \
-	AX_UNIFORM(exposure) \
+	AX_UNIFORM(g_pgc, shadowMatrix) \
+	AX_UNIFORM(g_pgc, csmOffsetScales) \
+	AX_UNIFORM(g_pgc, globalLightPos) \
+	AX_UNIFORM(g_pgc, globalLightColor) \
+	AX_UNIFORM(g_pgc, skyColor) \
+	AX_UNIFORM(g_pgc, exposure) \
 	\
-	AX_UNIFORM(modelMatrix) \
-	AX_UNIFORM(instanceParam) \
-	AX_UNIFORM(texMatrix) \
+	AX_UNIFORM(g_vic, modelMatrix) \
+	AX_UNIFORM(g_vic, instanceParam) \
+	AX_UNIFORM(g_vic, texMatrix) \
 	\
-	AX_UNIFORM(matDiffuse) \
-	AX_UNIFORM(matSpecular) \
-	AX_UNIFORM(matShiness) \
-	AX_UNIFORM(layerScale) \
+	AX_UNIFORM(g_pic, matDiffuse) \
+	AX_UNIFORM(g_pic, matSpecular) \
+	AX_UNIFORM(g_pic, matShiness) \
+	AX_UNIFORM(g_pic, layerScale) \
 
 #define AX_SCENE_UNIFORMS \
 	/* both vs and ps use */ \

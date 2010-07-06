@@ -1552,7 +1552,7 @@ void HavokModel::applyPose()
 			binding.m_bonesPerVertex = helper.getBonesPerVertex();
 
 			binding.m_oPosBase = &data->m_renderMesh->lockVertexes()->xyz[0];
-			binding.m_oPosStride = sizeof(MeshPrim::VertexType) / sizeof(float);
+			binding.m_oPosStride = sizeof(MeshVertex) / sizeof(float);
 
 			binding.m_numVerts = data->m_renderMesh->getNumVertexes();
 

@@ -95,8 +95,8 @@ void axClientQuit()
 	g_renderSystem->finalize();
 	SafeDelete(g_renderSystem);
 
-	g_renderQueue->finalize();
-	SafeDelete(g_renderQueue);
+	g_renderFrame->finalize();
+	SafeDelete(g_renderFrame);
 }
 
 AX_END_NAMESPACE

@@ -443,11 +443,11 @@ void OutdoorEnv::issueToQueue(RenderScene *qscene)
 	}
 
 	qscene->addEntity(m_globalFog);
-	qscene->globalFog = m_globalFog->getQueuedFog();
+	qscene->globalFog = m_globalFog;
 
 	if (m_haveOcean) {
 		qscene->addEntity(m_oceanFog);
-		qscene->waterFog = m_oceanFog->getQueuedFog();
+		qscene->waterFog = m_oceanFog;
 	}
 
 	if (qscene->camera.getOrigin().z <= 0) {

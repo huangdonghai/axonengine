@@ -326,7 +326,7 @@ void TextureManager::uploadSubTexture(Texture *tex, const Rect &rect, const void
 	cmd.format = format;
 
 	// clone pixel
-	void *clonedPixels = g_renderQueue->allocType<byte_t>(size);
+	void *clonedPixels = g_renderFrame->allocType<byte_t>(size);
 	memcpy(clonedPixels, pixels, size);
 	cmd.pixel = clonedPixels;
 

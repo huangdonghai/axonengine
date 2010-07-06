@@ -201,13 +201,13 @@ public:
 	RenderContext();
 	~RenderContext();
 
-	void issueQueue(RenderQueue *rq);
+	void issueQueue(RenderFrame *rq);
 
 	void draw(VertexObject *vert, InstanceObject *inst, IndexObject *index, Material *mat, Technique tech);
 
 protected:
 	void cacheScene(RenderScene *scene);
-	void issueBuffer(RenderQueue *queue);
+	void cacheFrame(RenderFrame *queue);
 
 	void beginFrame();
 	void drawScene(RenderScene *scene, const RenderClearer &clearer);

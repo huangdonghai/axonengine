@@ -66,16 +66,34 @@ struct DynamicBuf {
 
 struct VertexBufferTraits
 {
-	static void allocPage(phandle_t h, int size);
-	static void uploadPage(phandle_t h, int size, const void *p);
-	static void releasePage(phandle_t h);
+	static void allocPage(phandle_t h, int size)
+	{
+		g_apiWrap->createVertexBuffer(h, size, Primitive::HintDynamic);
+	}
+	static void uploadPage(phandle_t h, int size, const void *p)
+	{
+		g_apiWrap->uploadVertexBuffer(h, size, p);
+	}
+	static void releasePage(phandle_t h)
+	{
+		g_apiWrap->deleteVertexBuffer(h);
+	}
 };
 
 struct IndexBufferTraits
 {
-	static void allocPage(phandle_t h, int size);
-	static void uploadPage(phandle_t h, int size, const void *p);
-	static void releasePage(phandle_t h);
+	static void allocPage(phandle_t h, int size)
+	{
+		g_apiWrap->createIndexBuffer(h, size, Primitive::HintDynamic);
+	}
+	static void uploadPage(phandle_t h, int size, const void *p)
+	{
+		g_apiWrap->uploadIndexBuffer(h, size, p);
+	}
+	static void releasePage(phandle_t h)
+	{
+		g_apiWrap->deleteIndexBuffer(h);
+	}
 };
 
 template <int PageSize, class Traits>

@@ -40,6 +40,8 @@ void (*RenderApi::setVertices)(phandle_t h, VertexType vt, int vertcount);
 void (*RenderApi::setInstanceVertices)(phandle_t h, VertexType vt, int vertcount, Handle inb, int incount);
 void (*RenderApi::setIndices)(phandle_t h);
 
+void (*RenderApi::clear)(const RenderClearer &clearer);
+
 
 template <typename Signature>
 class ApiCommand_ : public ApiCommand
@@ -537,9 +539,11 @@ RenderContext::~RenderContext()
 }
 
 
-void RenderContext::issueQueue(RenderQueue *rq)
+void RenderContext::issueQueue(RenderFrame *rq)
 {
 	double startTime = OsUtil::seconds();
+
+	cacheFrame(rq);
 
 	beginFrame();
 
@@ -1125,7 +1129,7 @@ void RenderContext::setUniform(Uniforms::ItemName, Texture *texture)
 
 }
 
-void RenderContext::issueBuffer(RenderQueue *queue)
+void RenderContext::cacheFrame(RenderFrame *queue)
 {
 	g_bufferManager->beginAlloc();
 
@@ -1158,7 +1162,7 @@ void RenderContext::cacheScene(RenderScene *scene)
 			MeshPrim *mesh = static_cast<MeshPrim*>(prim);
 
 			LinePrim *line = mesh->getNormalLine(normallen);
-			Interaction *ia = g_renderQueue->allocInteraction();
+			Interaction *ia = g_renderFrame->allocInteraction();
 			ia->entity = scene->interactions[j]->entity;
 			ia->primitive = line;
 			ia->primitive->sync();
@@ -1173,7 +1177,7 @@ void RenderContext::cacheScene(RenderScene *scene)
 			MeshPrim *mesh = static_cast<MeshPrim*>(prim);
 
 			LinePrim *line = mesh->getTangentLine(tangentlen);
-			Interaction *ia = g_renderQueue->allocInteraction();
+			Interaction *ia = g_renderFrame->allocInteraction();
 			ia->entity = scene->interactions[j]->entity;
 			ia->primitive = line;
 			ia->primitive->sync();

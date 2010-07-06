@@ -298,7 +298,7 @@ template <typename Wrapper> static inline typename Wrapper::pointer GetPtrHelper
 
 AX_BEGIN_NAMESPACE
 
-extern RenderQueue *g_renderQueue;
+extern RenderFrame *g_renderFrame;
 extern ShaderMacro g_shaderMacro;
 extern Uniforms g_uniforms;
 extern IRenderDriver *g_renderDriver;

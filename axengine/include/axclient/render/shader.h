@@ -113,7 +113,7 @@ public:
 #undef AX_TEXTURE_UNIFORM
 		MAX_TEXTURES,
 
-#define AX_UNIFORM(name) name,
+#define AX_UNIFORM(obj, name) name,
 		AX_GLOBAL_UNIFORMS
 #undef AX_UNIFORM
 		NUM_FIELDS

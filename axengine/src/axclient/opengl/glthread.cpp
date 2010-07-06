@@ -107,7 +107,7 @@ void GLthread::runFrame(bool isInThread) {
 
 	m_threadRendering = isInThread;
 
-	GLwindow *window = dynamic_cast<GLwindow*>(g_renderQueue->getTarget());
+	GLwindow *window = dynamic_cast<GLwindow*>(g_renderFrame->getTarget());
 #if 0
 	m_numQueries[m_curQueryBucket] = gRenderQueue->allocQueryId();
 #endif
@@ -122,8 +122,8 @@ void GLthread::runFrame(bool isInThread) {
 
 	double cacheend = OsUtil::seconds();
 
-	int view_count = g_renderQueue->getSceneCount();
-	float frametime = g_renderQueue->getScene(0)->camera.getFrameTime();
+	int view_count = g_renderFrame->getSceneCount();
+	float frametime = g_renderFrame->getScene(0)->camera.getFrameTime();
 
 	Clearer clearer;
 	clearer.clearDepth(true);
@@ -134,7 +134,7 @@ void GLthread::runFrame(bool isInThread) {
 	}
 
 	for (int i = 0; i < view_count; i++) {
-		RenderScene *queued = g_renderQueue->getScene(i);
+		RenderScene *queued = g_renderFrame->getScene(i);
 
 		drawScene(queued, clearer);
 		clearer.clearColor(false);
@@ -169,11 +169,11 @@ void GLthread::doRun() {
 //		initialize();
 
 	while (1) {
-		g_renderQueue->beginConsuming();
+		g_renderFrame->beginConsuming();
 
 		runFrame(true);
 
-		g_renderQueue->endConsuming();
+		g_renderFrame->endConsuming();
 	}
 
 //		finalize();
@@ -393,14 +393,14 @@ void GLthread::endFrame() {
 
 	glPrimitiveManager->endFrame();
 
-	g_renderQueue->clear();
+	g_renderFrame->clear();
 }
 
 void GLthread::cacheResource() {
-	int viewcount = g_renderQueue->getSceneCount();
+	int viewcount = g_renderFrame->getSceneCount();
 
 	for (int i = 0; i < viewcount; i++) {
-		RenderScene *queued = g_renderQueue->getScene(i);
+		RenderScene *queued = g_renderFrame->getScene(i);
 
 		cacheSceneRes(queued);
 
@@ -410,7 +410,7 @@ void GLthread::cacheResource() {
 	}
 
 	if (m_threadRendering)
-		g_renderQueue->endSync();
+		g_renderFrame->endSync();
 }
 
 void GLthread::cacheSceneRes(RenderScene *scene) {
@@ -445,7 +445,7 @@ void GLthread::cacheSceneRes(RenderScene *scene) {
 				if (mesh == nullptr)
 					continue;
 				LinePrim *line = mesh->getNormalLine(normallen);
-				Interaction *ia = g_renderQueue->allocInteraction();
+				Interaction *ia = g_renderFrame->allocInteraction();
 				ia->entity = scene->interactions[j]->entity;
 				ia->primitive = line;
 				ia->resource = glPrimitiveManager->cachePrimitive(line);
@@ -468,7 +468,7 @@ void GLthread::cacheSceneRes(RenderScene *scene) {
 			if (mesh == nullptr)
 				continue;
 			LinePrim *line = mesh->getTangentLine(tangentlen);
-			Interaction *ia = g_renderQueue->allocInteraction();
+			Interaction *ia = g_renderFrame->allocInteraction();
 			ia->entity = scene->interactions[j]->entity;
 			ia->primitive = line;
 			ia->resource = glPrimitiveManager->cachePrimitive(line);
@@ -482,14 +482,14 @@ void GLthread::cacheSceneRes(RenderScene *scene) {
 	}
 
 	scene->numPrimitives = s2i(s_view->primitives.size());
-	scene->primtives = g_renderQueue->allocPrimitives(scene->numPrimitives);
+	scene->primtives = g_renderFrame->allocPrimitives(scene->numPrimitives);
 
 	for (int j = 0; j < scene->numPrimitives; j++) {
 		scene->primtives[j] = glPrimitiveManager->cachePrimitive(s_view->primitives[j]);
 	}
 
 	scene->numOverlayPrimitives = s2i(s_view->overlays.size());
-	scene->overlayPrimitives = g_renderQueue->allocPrimitives(scene->numOverlayPrimitives);
+	scene->overlayPrimitives = g_renderFrame->allocPrimitives(scene->numOverlayPrimitives);
 
 	for (int j = 0; j < scene->numOverlayPrimitives; j++) {
 		scene->overlayPrimitives[j] = glPrimitiveManager->cachePrimitive(s_view->overlays[j]);
