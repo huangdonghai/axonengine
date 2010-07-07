@@ -12,7 +12,7 @@ read the license and understand and accept it fully.
 
 float Script : STANDARDSGLOBAL <
 	// sort hint
-	int		SortHint = SortHint_aboveWater;
+	int SortHint = SortHint_aboveWater;
 
 	// technique
 	string TechniqueZpass = "";
@@ -24,7 +24,8 @@ float Script : STANDARDSGLOBAL <
 
 /*********** Generic Vertex Shader ******/
 
-VertexOut VP_main(VertexIn IN) {
+VertexOut VP_main(VertexIn IN)
+{
     VertexOut OUT = (VertexOut)0;
 
 #if !G_D3D
@@ -42,7 +43,8 @@ VertexOut VP_main(VertexIn IN) {
 }
 
 /********* pixel shaders ********/
-half4 FP_main(VertexOut IN) : COLOR {
+half4 FP_main(VertexOut IN) : COLOR
+{
 	half4 c = IN.color;
 
 	c *= FP_GetDiffuse(IN);

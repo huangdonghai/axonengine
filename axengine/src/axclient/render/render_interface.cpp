@@ -576,6 +576,8 @@ void RenderContext::issueQueue(RenderFrame *rq)
 	}
 
 	endFrame();
+
+	g_apiWrap->issueDeletions();
 }
 
 void RenderContext::beginFrame()

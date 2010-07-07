@@ -38,7 +38,7 @@ void DX9_Driver::initialize()
 
 	Printf("..Initializing D3D9Driver...\n");
 
-	d3d9InternalWindow = new DX9_Window("d3d9window");
+	d3d9InternalWindow = new DX9_Window();
 	d3d9DriverInfo = new RenderDriverInfo;
 	d3d9DriverInfo->driverType = RenderDriverInfo::D3D;
 	d3d9DriverInfo->highestQualitySupport = ShaderQuality::Low;
@@ -182,7 +182,7 @@ SelectRecordSeq D3D9driver::endSelect() {
 	return SelectRecordSeq();
 }
 #endif
-void DX9_Driver::reset( int width, int height, bool fullscreen )
+void DX9_Driver::reset(int width, int height, bool fullscreen)
 {
 	onDeviceLost();
 	onReset();

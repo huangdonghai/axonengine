@@ -25,23 +25,8 @@ public:
 	// implement IRenderDriver
 	virtual void initialize();
 	virtual void finalize();
-#if 0
-	virtual void postInit();			// after render system is initilized, call this
-
-	// some status
-	virtual bool isHDRRendering();
-	virtual bool isInRenderingThread();
-
-	// resource management
-	virtual RenderTarget *createWindowTarget(Handle wndId, const String &name);
-#endif
-	// caps
 	virtual const RenderDriverInfo *getDriverInfo();
 
-#if 0
-	// if not multi threads rendering, use this call render a frame
-	virtual void runFrame();
-#endif
 
 	void reset(int width, int height, bool fullscreen);
 	void onReset();

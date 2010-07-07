@@ -121,6 +121,7 @@ public:
 
 	void clear(const RenderClearer &clearer);
 
+	void issueDeletions() {}
 	byte_t *allocRingBuf(int size);
 
 	// wait all commands executed

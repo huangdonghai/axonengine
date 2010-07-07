@@ -243,19 +243,22 @@ void DX9_Uniform::setUniform(UniformItem &item, const void *q)
 
 DX9_Shader::DX9_Shader()
 {
+#if 0
 	m_p2tWidth = 0;
 	m_p2tHeight = 0;
+#endif
 	m_haveTextureTarget = false;
 	m_sortHint = ShaderInfo::SortHint_Opacit;
 	m_curTechnique = 0;
-
+#if 0
 	m_coupled = 0;
+#endif
 }
 
 DX9_Shader::~DX9_Shader()
 {}
 
-bool DX9_Shader::doInit(const String &name, const ShaderMacro &macro)
+bool DX9_Shader::init(const String &name, const ShaderMacro &macro)
 {
 	m_keyString = name;
 	String fullname = "shaders/" + name + ".fx";
@@ -398,7 +401,6 @@ void DX9_Shader::initSortHint()
 void DX9_Shader::initAnnotation()
 {
 	D3DXEFFECT_DESC effectDesc;
-	HRESULT hr;
 
 	V(m_object->GetDesc(&effectDesc));
 
@@ -493,7 +495,9 @@ void DX9_Shader::initSamplerAnn(D3DXHANDLE param)
 
 void DX9_Shader::initParameterAnn(D3DXHANDLE param)
 {
+#if 0
 	initPixelToTexel(param);
+#endif
 }
 
 D3DXHANDLE DX9_Shader::findTechnique(Technique tech)
@@ -562,6 +566,7 @@ void DX9_Shader::setSystemMap(SamplerType maptype, IDirect3DTexture9 *tex)
 	m_samplerBound[maptype] = tex;
 }
 
+#if 0
 void DX9_Shader::initPixelToTexel(D3DXHANDLE param)
 {
 	if (!isParameterUsed(param)) {
@@ -620,6 +625,7 @@ void DX9_Shader::setPixelToTexel(int width, int height)
 	m_p2tWidth = width;
 	m_p2tHeight = height;
 }
+#endif
 
 bool DX9_Shader::isParameterUsed(D3DXHANDLE param)
 {
@@ -656,15 +662,16 @@ void DX9_Shader::initAxonObject()
 		m_object->SetTechnique(m_d3dxTechniques[i]);
 		m_techniques[i] = new DX9_Technique(this, m_d3dxTechniques[i]);
 	}
-
 }
 
+#if 0
 void DX9_Shader::setCoupled( Material *mtr )
 {
 	m_coupled = mtr;
 }
+#endif
 
-UINT DX9_Shader::begin( Technique tech )
+UINT DX9_Shader::begin(Technique tech)
 {
 	if (!m_techniques[tech])
 		return 0;
@@ -673,7 +680,7 @@ UINT DX9_Shader::begin( Technique tech )
 	return m_curTech->m_numPasses;
 }
 
-void DX9_Shader::beginPass( UINT pass )
+void DX9_Shader::beginPass(UINT pass)
 {
 	m_curTech->m_passes[pass]->begin();
 }
@@ -684,6 +691,45 @@ void DX9_Shader::endPass()
 void DX9_Shader::end()
 {}
 
+void DX9_Shader::initGlobalStruct()
+{
+	D3DXHANDLE param = m_object->GetParameterByName(0, "g_gc");
+
+	AX_ASSERT(param);
+	D3DXPARAMETER_DESC paramDesc;
+	V(m_object->GetParameterDesc(param, &paramDesc));
+
+	DX9_Technique *tech = 0;
+	for (int i = 0; i < Technique::Number; i++) {
+		tech = m_techniques[i];
+		if (tech)
+			break;
+	}
+
+	DX9_Pass *pass = tech->m_passes[0];
+
+	D3DXPASS_DESC desc;
+	V(m_object->GetPassDesc(pass->m_d3dxhandle, &desc));
+
+	LPD3DXCONSTANTTABLE constTable;
+	D3DXGetShaderConstantTable(desc.pVertexShaderFunction, &constTable);
+
+	D3DXCONSTANTTABLE_DESC tableDesc;
+	constTable->GetDesc(&tableDesc);
+
+	D3DXHANDLE gc = constTable->GetConstant(0, 1);
+	AX_ASSERT(gc);
+
+	D3DXCONSTANT_DESC constDesc, memberDesc;
+	UINT count;
+	constTable->GetConstantDesc(gc, &constDesc, &count);
+
+	for (int i=0; i<constDesc.StructMembers; i++) {
+		D3DXHANDLE member = constTable->GetConstant(gc, i);
+		constTable->GetConstantDesc(member, &memberDesc, &count);
+	}
+}
+
 //--------------------------------------------------------------------------
 // class D3D9shadermanager
 //--------------------------------------------------------------------------
@@ -692,8 +738,11 @@ D3D9ShaderManager::D3D9ShaderManager()
 {
 	V(D3DXCreateEffectPool( &s_effectPool ));
 	m_defaulted = new DX9_Shader();
-	bool v = m_defaulted->doInit("blend");
+	bool v = m_defaulted->init("blend");
+
 	AX_ASSERT(v);
+
+	m_defaulted->initGlobalStruct();
 
 	_initialize();
 }
@@ -712,7 +761,7 @@ DX9_Shader *D3D9ShaderManager::findShader(const FixedString &nameId, const Shade
 
 	if (!shader) {
 		shader = new DX9_Shader();
-		bool v = shader->doInit(nameId, macro);
+		bool v = shader->init(nameId, macro);
 		if (!v) {
 			delete shader;
 			shader = m_defaulted;
@@ -801,7 +850,6 @@ void D3D9ShaderManager::_initialize()
 
 	AX_FOREACH(const String &s, ss) {
 		String n = PathUtil::getName(s);
-
 	}
 }
 
@@ -874,8 +922,9 @@ void DX9_Pass::initVs()
 
 			ParamDesc paramDesc;
 			paramDesc.d3dDesc = constDesc;
+#if 0
 			paramDesc.p2t = 0;
-
+#endif
 			m_vsParameters[constDesc.Name] = paramDesc;
 		}
 
@@ -920,8 +969,9 @@ void DX9_Pass::initPs()
 
 			ParamDesc paramDesc;
 			paramDesc.d3dDesc = constDesc;
+#if 0
 			paramDesc.p2t = findPixel2Texel(constDesc.Name);
-
+#endif
 			m_psParameters[constDesc.Name] = paramDesc;
 		}
 
@@ -929,7 +979,7 @@ void DX9_Pass::initPs()
 	}
 }
 
-
+#if 0
 const DX9_Pixel2Texel*  DX9_Pass::findPixel2Texel(const String &name)
 {
 	DX9_Pixel2Texels::const_iterator it = m_shader->pixel2Texels.begin();
@@ -941,7 +991,7 @@ const DX9_Pixel2Texel*  DX9_Pass::findPixel2Texel(const String &name)
 
 	return 0;
 }
-
+#endif
 
 void DX9_Pass::initState()
 {
@@ -1094,6 +1144,7 @@ void DX9_Pass::begin()
 
 void DX9_Pass::setParameters()
 {
+#if 0
 	const ShaderParams *mtrparams = 0;
 	if (m_shader->m_coupled) {
 		mtrparams = &m_shader->m_coupled->getParameters();
@@ -1130,10 +1181,12 @@ void DX9_Pass::setParameters()
 
 		setParameter(desc, value, true);
 	}
+#endif
 }
 
 void DX9_Pass::setParameter(const ParamDesc &param, const float *value, bool isPixelShader)
 {
+#if 0
 	const float *realvalue = (const float*)param.d3dDesc.DefaultValue;
 
 	if (value)
@@ -1152,6 +1205,7 @@ void DX9_Pass::setParameter(const ParamDesc &param, const float *value, bool isP
 	} else {
 		d3d9Device->SetVertexShaderConstantF(param.d3dDesc.RegisterIndex, realvalue, param.d3dDesc.RegisterCount);
 	}
+#endif
 }
 
 AX_END_NAMESPACE

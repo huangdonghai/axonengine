@@ -104,6 +104,7 @@ public:
 };
 typedef Sequence<DX9_SamplerInfo*>	DX9_SamplerInfos;
 
+#if 0
 //--------------------------------------------------------------------------
 // class D3D9pixeltotexel
 //--------------------------------------------------------------------------
@@ -117,6 +118,7 @@ public:
 	FloatSeq m_scaledValue;
 };
 typedef Sequence<DX9_Pixel2Texel>	DX9_Pixel2Texels;
+#endif
 
 class DX9_Pass
 {
@@ -125,7 +127,9 @@ public:
 	
 	struct ParamDesc {
 		D3DXCONSTANT_DESC d3dDesc;
+#if 0
 		const DX9_Pixel2Texel *p2t;
+#endif
 	};
 
 	DX9_Pass(DX9_Shader *shader, D3DXHANDLE d3dxhandle);
@@ -138,8 +142,9 @@ protected:
 	void initPs();
 	void initState();
 	void initSampler(const D3DXCONSTANT_DESC &desc);
-
+#if 0
 	const DX9_Pixel2Texel *findPixel2Texel(const String &name);
+#endif
 	void setParameters();
 	void setParameter(const ParamDesc &param, const float *value, bool isPixelShader);
 
@@ -201,25 +206,29 @@ public:
 	friend class DX9_Technique;
 
 	DX9_Shader();
-	virtual ~DX9_Shader();
+	~DX9_Shader();
 
 	// implement Shader
-	virtual bool doInit(const String &name, const ShaderMacro &macro = g_shaderMacro);
-	virtual bool isDepthWrite() const;
-	virtual bool haveTextureTarget() const;
-	virtual int getNumSampler() const;
-	virtual SamplerInfo *getSamplerAnno(int index) const;
-	virtual int getNumTweakable() const;
-	virtual ParameterInfo *getTweakableDef(int index);
-	virtual ShaderInfo::SortHint getSortHint() const;
-	virtual bool haveTechnique(Technique tech) const;
-	virtual const ShaderInfo *getShaderInfo() const { return 0; }
+	bool init(const String &name, const ShaderMacro &macro = g_shaderMacro);
+	bool isDepthWrite() const;
+	bool haveTextureTarget() const;
+	int getNumSampler() const;
+	SamplerInfo *getSamplerAnno(int index) const;
+	int getNumTweakable() const;
+	ParameterInfo *getTweakableDef(int index);
+	ShaderInfo::SortHint getSortHint() const;
+	bool haveTechnique(Technique tech) const;
+	const ShaderInfo *getShaderInfo() const { return 0; }
+
+	void initGlobalStruct();
 
 	void setSystemMap(SamplerType maptype, IDirect3DTexture9 *tex);
+
+#if 0
 	// set pixel to texel conversion parameter
 	void setPixelToTexel(int width, int height);
-
 	void setCoupled(Material *mtr);
+#endif
 
 	ID3DXEffect *getObject() const { return m_object; }
 
@@ -236,8 +245,9 @@ protected:
 	void initAnnotation();
 	void initSamplerAnn(D3DXHANDLE param);
 	void initParameterAnn(D3DXHANDLE param);
+#if 0
 	void initPixelToTexel(D3DXHANDLE param);
-
+#endif
 	void initAxonObject();
 
 	D3DXHANDLE findTechnique(Technique tech);
@@ -258,12 +268,21 @@ private:
 	DX9_SamplerInfos m_samplerannSeq;
 
 	// pixel2texel
+#if 0
 	DX9_Pixel2Texels pixel2Texels;
 	int m_p2tWidth, m_p2tHeight;
-
+#endif
 	DX9_Technique *m_techniques[Technique::Number];
 	DX9_Technique *m_curTech;
+#if 0
 	Material *m_coupled;
+#endif
+	UniformStruct *m_g_gc;
+	UniformStruct *m_g_vgc;
+	UniformStruct *m_g_pgc;
+	UniformStruct *m_g_vic;
+	UniformStruct *m_g_pic;
+	UniformStruct *m_g_pc;
 
 	// shader info
 	ShaderInfo *m_shaderInfo;

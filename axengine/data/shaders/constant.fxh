@@ -161,6 +161,8 @@ AX_UNIFORM_DEFS
 #define g_matShiness g_pic.matShiness
 #define g_layerScale g_pic.layerScale
 AX_SAMPLER_UNIFORMS
+
+float4 g_pad[32] : register(vs, c1);
 #endif
 
 // render hardware

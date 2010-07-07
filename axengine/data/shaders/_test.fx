@@ -28,7 +28,7 @@ float4 s_boxrange[4];
 VertexOut VP_main(VertexIn IN) {
     VertexOut OUT = (VertexOut)0;
 
-	OUT.hpos = g_gc.waterFogParams;
+	OUT.hpos = g_time;
     return OUT;
 }
 

@@ -153,11 +153,14 @@ AX_SHADERCONST(SHADERMACRO_VERSION, 2)
 #if G_D3D
 #	if G_DX11
 #		define AX_DECL_BUFFER(decl, obj, reg, buf) cbuffer cb##buf : register(b##buf) { decl obj; };
+#		define AX_DECL_PRIMITIVECONST(decl) cbuffer cbPrimitiveConst : register(b5) { decl g_pc; };
 #	else
-#		define AX_DECL_BUFFER(decl, obj, reg, buf) decl obj : register(c##reg)
+#		define AX_DECL_BUFFER(decl, obj, reg, buf) decl obj : register(c##reg);
+#		define AX_DECL_PRIMITIVECONST(decl) decl g_pc : register(vs, c30) : register(ps, c20);
 #	endif
 #else
-#define AX_DECL_BUFFER(decl, obj, reg, buf) decl obj : BUFFER[buf]
+#define AX_DECL_BUFFER(decl, obj, reg, buf) decl obj : BUFFER[buf];
+#define AX_DECL_PRIMITIVECONST(decl) decl g_pc : BUFFER[5];
 #endif
 
 #ifndef __cplusplus
@@ -206,10 +209,6 @@ AX_DECL_BUFFER(VS_GlobalConst, g_vgc, 4, 1);
 AX_DECL_BUFFER(PS_GlobalConst, g_pgc, 4, 2);
 AX_DECL_BUFFER(VS_InteractionConst, g_vic, 22, 3);
 AX_DECL_BUFFER(PS_InteractionConst, g_pic, 16, 4);
-
-struct InteractionLocal {
-	float4 data[32];
-};
 
 #endif // __cplusplus
 
@@ -325,7 +324,7 @@ struct InteractionLocal {
 	\
 	AX_TEXTURE_UNIFORM(sampler2D,	g_sceneDepth)		\
 	AX_TEXTURE_UNIFORM(sampler2D,	g_lightBuffer)		\
-	AX_TEXTURE_UNIFORM(sampler2D,	g_lightMap)		\
+	AX_TEXTURE_UNIFORM(sampler2D,	g_lightMap)			\
 	AX_TEXTURE_UNIFORM(sampler2D,	g_shadowMap)		\
 
 

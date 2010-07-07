@@ -12,7 +12,7 @@ read the license and understand and accept it fully.
 
 float Script : STANDARDSGLOBAL <
 	// sort hint
-	int		SortHint = SortHint_aboveWater;
+	int SortHint = SortHint_aboveWater;
 
 	// technique
 	string TechniqueZpass = "";

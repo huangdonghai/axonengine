@@ -58,11 +58,21 @@ float4	g_chunkRect;
 float2	g_layerScale;
 #endif
 
+struct TerrainConst {
+	float4	zoneRect;		// zone x, y, w, h
+	float4	chunkRect;
+};
+
+AX_DECL_PRIMITIVECONST(TerrainConst);
+#define g_zoneRect g_pc.zoneRect
+#define g_chunkRect g_pc.chunkRect
+
 //------------------------------------------------------------------------------
 // VP_zpass
 //------------------------------------------------------------------------------
 
-float4 VP_zpass(TerrainVertexIn IN) : POSITION {
+float4 VP_zpass(TerrainVertexIn IN) : POSITION
+{
 	return VP_worldToClip(IN.xyz);
 }
 
@@ -70,7 +80,8 @@ float4 VP_zpass(TerrainVertexIn IN) : POSITION {
 // FP_zpass
 //------------------------------------------------------------------------------
 
-half4 FP_zpass(float4 hpos : POSITION) : COLOR {
+half4 FP_zpass(float4 hpos : POSITION) : COLOR
+{
 	return 0;
 }
 
@@ -84,7 +95,8 @@ struct TerrainGpassOut {
 	float2 zoneTc	: TEXCOORD1;
 };
 
-TerrainGpassOut VP_gpass(TerrainVertexIn IN) {
+TerrainGpassOut VP_gpass(TerrainVertexIn IN)
+{
 	TerrainGpassOut OUT;
 
 	OUT.hpos = VP_worldToClip(IN.xyz);
@@ -98,10 +110,11 @@ TerrainGpassOut VP_gpass(TerrainVertexIn IN) {
 // FP_gpass
 //------------------------------------------------------------------------------
 
-half4 FP_gpass(TerrainGpassOut IN) : COLOR {
+half4 FP_gpass(TerrainGpassOut IN) : COLOR
+{
 	half4 result;
 
-	result.xyz = GetNormal(g_terrainNormal, IN.zoneTc.xy);
+	result.xyz = GetNormal(g_terrainNormal, IN.zoneTc.xy).xyz;
 	result.w = IN.screenTc.w;
 
 	return result;
@@ -112,7 +125,8 @@ half4 FP_gpass(TerrainGpassOut IN) : COLOR {
 // VP_main
 //------------------------------------------------------------------------------
 
-TerrainVertexOut VP_main(TerrainVertexIn IN) {
+TerrainVertexOut VP_main(TerrainVertexIn IN)
+{
 	TerrainVertexOut OUT = (TerrainVertexOut)0;
 
 	OUT.zoneTC.xy = (IN.xyz.xy - g_zoneRect.xy) / g_zoneRect.zw;
@@ -132,7 +146,8 @@ TerrainVertexOut VP_main(TerrainVertexIn IN) {
 // FP_main
 //------------------------------------------------------------------------------
 
-half4 FP_main(LayerVertexOut IN) : COLOR {
+half4 FP_main(LayerVertexOut IN) : COLOR
+{
 	half4 result = 1;
 
 	half3 N = GetNormal(g_terrainNormal, IN.streamTc.xy).rgb;
@@ -177,7 +192,8 @@ half4 FP_main(LayerVertexOut IN) : COLOR {
 // VP_layer
 //------------------------------------------------------------------------------
 
-LayerVertexOut VP_layer(TerrainVertexIn IN) {
+LayerVertexOut VP_layer(TerrainVertexIn IN)
+{
 	LayerVertexOut OUT = (LayerVertexOut)0;
 
 	OUT.streamTc.xy = (IN.xyz.xy - g_zoneRect.xy) / g_zoneRect.zw;
@@ -194,7 +210,8 @@ LayerVertexOut VP_layer(TerrainVertexIn IN) {
 	return OUT;
 }
 
-half4 getSampler(sampler2D smpl, float3 worldpos, half3 normal) {
+half4 getSampler(sampler2D smpl, float3 worldpos, half3 normal)
+{
 #if !S_VERTICAL_PROJECTION	// horizon projection
 	float2 tc = worldpos.xy * g_layerScale;
 	half4 result = tex2D(smpl, tc);
@@ -217,7 +234,8 @@ half4 getSampler(sampler2D smpl, float3 worldpos, half3 normal) {
 // FP_layer
 //------------------------------------------------------------------------------
 
-half4 FP_layer(LayerVertexOut IN) : COLOR {
+half4 FP_layer(LayerVertexOut IN) : COLOR
+{
 	half3 N = GetNormal(g_terrainNormal, IN.streamTc.xy).rgb;
 //	return tex2D(g_terrainNormal, IN.streamTc.xy);
 
