@@ -75,7 +75,7 @@ IDirect3DVertexBuffer9 *CreateVertexBufferPage(int pagesize) {
 	HRESULT hr;
 	IDirect3DVertexBuffer9 *vb;
 
-	V(d3d9Device->CreateVertexBuffer(pagesize, D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY, 0, D3DPOOL_DEFAULT, &vb, 0));
+	V(dx9_device->CreateVertexBuffer(pagesize, D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY, 0, D3DPOOL_DEFAULT, &vb, 0));
 	return vb;
 }
 
@@ -83,7 +83,7 @@ IDirect3DIndexBuffer9 *CreateIndexBufferPage(int pagesize) {
 	HRESULT hr;
 	IDirect3DIndexBuffer9 *ib;
 
-	V(d3d9Device->CreateIndexBuffer(pagesize, D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY, D3DFMT_INDEX16, D3DPOOL_DEFAULT, &ib, 0));
+	V(dx9_device->CreateIndexBuffer(pagesize, D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY, D3DFMT_INDEX16, D3DPOOL_DEFAULT, &ib, 0));
 	return ib;
 }
 
@@ -129,7 +129,7 @@ void D3D9VertexObject::setData(const void *p, int count, Primitive::Hint primhin
 
 	resetData();
 
-	V(d3d9Device->CreateVertexBuffer(size, D3DUSAGE_WRITEONLY, 0, D3DPOOL_DEFAULT, &m_object, NULL));
+	V(dx9_device->CreateVertexBuffer(size, D3DUSAGE_WRITEONLY, 0, D3DPOOL_DEFAULT, &m_object, NULL));
 #if 0
 	g_statistic->incValue(stat_numVertexBuffers);
 	g_statistic->addValue(stat_vertexBufferMemory, size);
@@ -170,7 +170,7 @@ void D3D9VertexObject::resetData() {
 void D3D9VertexObject::bind() {
 	HRESULT hr;
 
-	V(d3d9Device->SetStreamSource(0, m_object, m_offset, s_strides[m_vt]));
+	V(dx9_device->SetStreamSource(0, m_object, m_offset, s_strides[m_vt]));
 	d3d9StateManager->setVertexDeclaration(m_declaration->getObject());
 }
 
@@ -179,19 +179,19 @@ void D3D9VertexObject::bindInstanced(D3D9InstancedBuffer *instancedBuffer)
 {
 	HRESULT hr;
 
-	V(d3d9Device->SetStreamSource(0, m_object, m_offset, s_strides[m_vt]));
-	V(d3d9Device->SetStreamSourceFreq(0, D3DSTREAMSOURCE_INDEXEDDATA | instancedBuffer->m_count));
+	V(dx9_device->SetStreamSource(0, m_object, m_offset, s_strides[m_vt]));
+	V(dx9_device->SetStreamSourceFreq(0, D3DSTREAMSOURCE_INDEXEDDATA | instancedBuffer->m_count));
 
-	V(d3d9Device->SetStreamSource(1, instancedBuffer->m_object, instancedBuffer->m_offset, 64));
-	V(d3d9Device->SetStreamSourceFreq(1, D3DSTREAMSOURCE_INSTANCEDATA | 1ul));
+	V(dx9_device->SetStreamSource(1, instancedBuffer->m_object, instancedBuffer->m_offset, 64));
+	V(dx9_device->SetStreamSourceFreq(1, D3DSTREAMSOURCE_INSTANCEDATA | 1ul));
 	d3d9StateManager->setVertexDeclaration(m_declaration->getObjectInstanced());
 }
 
 void D3D9VertexObject::unbindInstanced()
 {
 	HRESULT hr;
-	V(d3d9Device->SetStreamSourceFreq(0, 1));
-	V(d3d9Device->SetStreamSourceFreq(1, 1));
+	V(dx9_device->SetStreamSourceFreq(0, 1));
+	V(dx9_device->SetStreamSourceFreq(1, 1));
 }
 
 void D3D9VertexObject::createDeclaration()
@@ -281,7 +281,7 @@ void D3D9IndexObject::setData(const ushort_t *p, int count, Primitive::Hint hint
 
 	HRESULT hr;
 
-	V(d3d9Device->CreateIndexBuffer(m_dataSize, D3DUSAGE_WRITEONLY, D3DFMT_INDEX16, D3DPOOL_DEFAULT, &m_object, NULL));
+	V(dx9_device->CreateIndexBuffer(m_dataSize, D3DUSAGE_WRITEONLY, D3DFMT_INDEX16, D3DPOOL_DEFAULT, &m_object, NULL));
 #if 0
 	g_statistic->incValue(stat_numIndexBuffers);
 	g_statistic->addValue(stat_indexBufferMemory, m_dataSize);
@@ -315,7 +315,7 @@ void D3D9IndexObject::resetData() {
 }
 
 void D3D9IndexObject::bind() {
-	d3d9Device->SetIndices(m_object);
+	dx9_device->SetIndices(m_object);
 }
 
 bool D3D9IndexObject::haveData() const {
@@ -332,8 +332,8 @@ void D3D9IndexObject::setActiveCount(int val) {
 
 void D3D9IndexObject::drawElements(D3DPRIMITIVETYPE mode, int numverts) {
 	HRESULT hr;
-	V(d3d9Device->SetIndices(m_object));
-	V(d3d9Device->DrawIndexedPrimitive(mode, 0, 0, numverts, m_offset, calcNumElements(mode, m_activeCount)));
+	V(dx9_device->SetIndices(m_object));
+	V(dx9_device->DrawIndexedPrimitive(mode, 0, 0, numverts, m_offset, calcNumElements(mode, m_activeCount)));
 }
 
 int D3D9IndexObject::calcNumElements(D3DPRIMITIVETYPE mode, int numindexes)
@@ -378,13 +378,13 @@ D3D9VertDecl::D3D9VertDecl(D3D9VertexBufferManager *manager, D3D9VertexObject::V
 	}
 
 	HRESULT hr;
-	V(d3d9Device->CreateVertexDeclaration(veinfo.ve, &m_d3dObject));
-	V(d3d9Device->CreateVertexDeclaration(&veiseq[0], &m_d3dObjectInstanced));
+	V(dx9_device->CreateVertexDeclaration(veinfo.ve, &m_d3dObject));
+	V(dx9_device->CreateVertexDeclaration(&veiseq[0], &m_d3dObjectInstanced));
 }
 
 D3D9VertDecl::~D3D9VertDecl()
 {
-	SAFE_RELEASE(d3d9Device);
+	SAFE_RELEASE(dx9_device);
 	m_manager->removeVertDecl(this);
 }
 

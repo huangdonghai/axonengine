@@ -80,7 +80,7 @@ void D3D9clearer::doClear() const
 
 	D3DCOLOR d3dcolor = D3DCOLOR_RGBA(color.r,color.g,color.b,color.a);
 
-	d3d9Device->Clear(0, 0, d3dclear, d3dcolor, depth, stencil);
+	dx9_device->Clear(0, 0, d3dclear, d3dcolor, depth, stencil);
 }
 
 
@@ -107,7 +107,7 @@ void D3D9Thread::runFrame(bool isInThread)
 	s_threadRendering = isInThread;
 
 	beginFrame();
-	d3d9Device->BeginScene();
+	dx9_device->BeginScene();
 
 	DX9_Window *window = dynamic_cast<DX9_Window*>(d3d9Queue->getTarget());
 	if (window != d3d9FrameWnd) {
@@ -150,7 +150,7 @@ void D3D9Thread::runFrame(bool isInThread)
 	}
 
 
-	d3d9Device->EndScene();
+	dx9_device->EndScene();
 	endFrame();
 
 	double end = OsUtil::seconds();
@@ -237,8 +237,8 @@ void D3D9Thread::setupScene(RenderScene *scene, const D3D9clearer *clearer, Rend
 	d3dRect.top = vp.y;
 	d3dRect.right = vp.x + vp.z;
 	d3dRect.bottom = vp.y + vp.w;
-	d3d9Device->SetViewport(&d3dviewport);
-	d3d9Device->SetScissorRect(&d3dRect);
+	dx9_device->SetViewport(&d3dviewport);
+	dx9_device->SetScissorRect(&d3dRect);
 
 	AX_SU(g_time, (float)camera->getTime());
 

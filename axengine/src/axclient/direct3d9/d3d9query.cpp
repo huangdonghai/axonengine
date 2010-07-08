@@ -20,7 +20,7 @@ D3D9Query::D3D9Query()
 
 	HRESULT hr;
 	for (int i = 0; i < NUMBER; i++) {
-		V(d3d9Device->CreateQuery(D3DQUERYTYPE_OCCLUSION, &m_queries[i]));
+		V(dx9_device->CreateQuery(D3DQUERYTYPE_OCCLUSION, &m_queries[i]));
 	}
 }
 

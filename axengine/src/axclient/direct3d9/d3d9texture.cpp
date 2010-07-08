@@ -248,7 +248,7 @@ void D3D9Texture::initialize(TexFormat format, int width, int height, InitFlags 
 
 	m_videoMemoryUsed = m_format.calculateDataSize(width, height);
 
-	V(d3d9Device->CreateTexture(m_width, m_height, 1, d3dusage, d3dformat, d3dpool, &m_object, 0));
+	V(dx9_device->CreateTexture(m_width, m_height, 1, d3dusage, d3dformat, d3dpool, &m_object, 0));
 
 #if 0
 	g_statistic->addValue(stat_textureMemory, m_videoMemoryUsed);
@@ -501,7 +501,7 @@ bool D3D9new TextureFile2D(const String &filename)
 	}
 
 	if (m_object == 0) {
-		V(d3d9Device->CreateTexture(m_width, m_height, !m_isMipmaped, d3dusage, d3dformat, D3DPOOL_MANAGED, &m_object, 0));
+		V(dx9_device->CreateTexture(m_width, m_height, !m_isMipmaped, d3dusage, d3dformat, D3DPOOL_MANAGED, &m_object, 0));
 	}
 
 	int width, height;
@@ -591,7 +591,7 @@ void D3D9Texture::issueSamplerState(DWORD dwStage)
 
 bool D3D9Texture::checkIfSupportHardwareMipmapGeneration(D3DFORMAT d3dformat, DWORD d3dusage)
 {
-	if (d3d9Api->CheckDeviceFormat(
+	if (dx9_api->CheckDeviceFormat(
 		D3DADAPTER_DEFAULT,
 		D3DDEVTYPE_HAL,
 		D3DFMT_X8R8G8B8,

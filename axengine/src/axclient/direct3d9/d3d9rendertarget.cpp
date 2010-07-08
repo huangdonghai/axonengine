@@ -78,19 +78,19 @@ void D3D9Target::bind()
 		// TODO: set dummy color target
 		TexFormat format = d3d9TargetManager->getNullTargetFormat();
 		m_nullColor = d3d9TargetManager->allocTargetDX(RenderTarget::TemporalAlloc, m_width, m_height, format);
-		V(d3d9Device->SetRenderTarget(0, m_nullColor->getSurface()));
+		V(dx9_device->SetRenderTarget(0, m_nullColor->getSurface()));
 		m_nullColor->releaseSurface();
 
 		m_isNullColor = true;
 	} else {
-		V(d3d9Device->SetRenderTarget(0, getSurface()));
+		V(dx9_device->SetRenderTarget(0, getSurface()));
 		releaseSurface();
 
 		if (m_colorAttached[0]) {
-			d3d9Device->SetRenderTarget(1, m_colorAttached[0]->getSurface());
+			dx9_device->SetRenderTarget(1, m_colorAttached[0]->getSurface());
 			m_colorAttached[0]->releaseSurface();
 		} else {
-			d3d9Device->SetRenderTarget(1, 0);
+			dx9_device->SetRenderTarget(1, 0);
 		}
 
 		IDirect3DSurface9 *ds = 0;
@@ -180,7 +180,7 @@ void D3D9Target::copyFramebuffer(const Rect &r)
 	d3drect.bottom = r.height;
 
 	HRESULT hr;
-	V(d3d9Device->StretchRect(surface, &d3drect, m_surface, &d3drect, D3DTEXF_NONE));
+	V(dx9_device->StretchRect(surface, &d3drect, m_surface, &d3drect, D3DTEXF_NONE));
 
 	releaseSurface();
 }
@@ -268,7 +268,7 @@ D3D9TargetManager::D3D9TargetManager()
 	D3DFORMAT d3dformat = (D3DFORMAT) MAKEFOURCC('N','V','D','B');
 
 	// check depth bounds test
-	if (d3d9Api->CheckDeviceFormat(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, D3DFMT_X8R8G8B8, 0, D3DRTYPE_SURFACE, d3dformat) == S_OK)
+	if (dx9_api->CheckDeviceFormat(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, D3DFMT_X8R8G8B8, 0, D3DRTYPE_SURFACE, d3dformat) == S_OK)
 	{
 		d3d9NVDB = true;
 	}
@@ -276,7 +276,7 @@ D3D9TargetManager::D3D9TargetManager()
 	d3dformat = (D3DFORMAT) MAKEFOURCC('N','U','L','L');
 
 	// check depth bounds test
-	if (d3d9Api->CheckDeviceFormat(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, D3DFMT_X8R8G8B8, D3DUSAGE_RENDERTARGET, D3DRTYPE_SURFACE, d3dformat) == S_OK)
+	if (dx9_api->CheckDeviceFormat(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, D3DFMT_X8R8G8B8, D3DUSAGE_RENDERTARGET, D3DRTYPE_SURFACE, d3dformat) == S_OK)
 	{
 		d3d9NULL = true;
 	}
@@ -392,14 +392,14 @@ void D3D9TargetManager::checkFormats()
 
 		HRESULT hr;
 		if (format.isDepth() || format.isStencil()) {
-			hr = d3d9Api->CheckDeviceFormat(D3DADAPTER_DEFAULT,
+			hr = dx9_api->CheckDeviceFormat(D3DADAPTER_DEFAULT,
 				D3DDEVTYPE_HAL,
 				D3DFMT_X8R8G8B8,
 				D3DUSAGE_DEPTHSTENCIL,
 				D3DRTYPE_SURFACE,
 				d3dformat);
 		} else {
-			hr = d3d9Api->CheckDeviceFormat(D3DADAPTER_DEFAULT,
+			hr = dx9_api->CheckDeviceFormat(D3DADAPTER_DEFAULT,
 				D3DDEVTYPE_HAL,
 				D3DFMT_X8R8G8B8,
 				D3DUSAGE_RENDERTARGET,
@@ -519,7 +519,7 @@ IDirect3DSurface9 *D3D9TargetManager::getDepthStencil(int width, int height)
 #endif
 	SAFE_RELEASE(m_depthStencilSurface);
 	HRESULT hr;
-	V(d3d9Device->CreateDepthStencilSurface(width, height, D3DFMT_D24S8, D3DMULTISAMPLE_NONE, 0, FALSE, & m_depthStencilSurface, 0));
+	V(dx9_device->CreateDepthStencilSurface(width, height, D3DFMT_D24S8, D3DMULTISAMPLE_NONE, 0, FALSE, & m_depthStencilSurface, 0));
 	m_dsWidth = width;
 	m_dsHeight = height;
 

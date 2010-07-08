@@ -329,6 +329,10 @@
 			Name="shaders"
 			>
 			<File
+				RelativePath=".\shaders\_alluniforms.fx"
+				>
+			</File>
+			<File
 				RelativePath=".\shaders\_debug.fx"
 				>
 			</File>

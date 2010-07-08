@@ -377,5 +377,34 @@ ShaderMacro::ShaderMacroDefs::ShaderMacroDefs()
 		m_size = intoffset + 1;
 }
 
+
+UniformStruct::UniformStruct(int index, int numFloats)
+{
+	m_index = index;
+	m_numFloats = numFloats;
+	m_data = new float[numFloats];
+	m_dirty = true;
+}
+
+UniformStruct::~UniformStruct()
+{
+	if (m_data)
+		delete [] m_data;
+}
+
+void UniformStruct::addField( const Field &field )
+{
+	m_fields.push_back(field);
+}
+
+UniformStruct * UniformStruct::clone() const
+{
+	UniformStruct *cloned = new UniformStruct(m_index, m_numFloats);
+	memcpy(cloned->m_data, m_data, m_numFloats * sizeof(float));
+	cloned->m_fields = m_fields;
+
+	return cloned;
+}
+
 AX_END_NAMESPACE
 

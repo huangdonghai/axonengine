@@ -145,11 +145,11 @@ void DX9_Uniform::setUniform(UniformItem &item, const void *q)
 			int n = (item.m_dataSize + 15) / 16;
 			const float *data = (const float*)q;
 			if (item.m_vsregister) {
-				V(d3d9Device->SetVertexShaderConstantF(item.m_vsregister, data, n));
+				V(dx9_device->SetVertexShaderConstantF(item.m_vsregister, data, n));
 			}
 
 			if (item.m_psregister) {
-				V(d3d9Device->SetPixelShaderConstantF(item.m_psregister, data, n));
+				V(dx9_device->SetPixelShaderConstantF(item.m_psregister, data, n));
 			}
 		}
 		break;
@@ -157,11 +157,11 @@ void DX9_Uniform::setUniform(UniformItem &item, const void *q)
 		if (item.m_arraySize == 1 ) {
 			const float *data = (const float*)q;
 			if (item.m_vsregister) {
-				V(d3d9Device->SetVertexShaderConstantF(item.m_vsregister, data, 1));
+				V(dx9_device->SetVertexShaderConstantF(item.m_vsregister, data, 1));
 			}
 
 			if (item.m_psregister) {
-				V(d3d9Device->SetPixelShaderConstantF(item.m_psregister, data, 1));
+				V(dx9_device->SetPixelShaderConstantF(item.m_psregister, data, 1));
 			}
 		} else {
 			Vector4 vec4[8];
@@ -170,11 +170,11 @@ void DX9_Uniform::setUniform(UniformItem &item, const void *q)
 				vec4[i].set(vec2[i].x, vec2[i].y, 0, 0);
 			}
 			if (item.m_vsregister) {
-				V(d3d9Device->SetVertexShaderConstantF(item.m_vsregister, vec4[0].c_ptr(), item.m_arraySize));
+				V(dx9_device->SetVertexShaderConstantF(item.m_vsregister, vec4[0].c_ptr(), item.m_arraySize));
 			}
 
 			if (item.m_psregister) {
-				V(d3d9Device->SetPixelShaderConstantF(item.m_psregister, vec4[0].c_ptr(), item.m_arraySize));
+				V(dx9_device->SetPixelShaderConstantF(item.m_psregister, vec4[0].c_ptr(), item.m_arraySize));
 			}
 		}
 		break;
@@ -183,11 +183,11 @@ void DX9_Uniform::setUniform(UniformItem &item, const void *q)
 			Matrix3 &axis = *(Matrix3*)q;
 			Matrix4 matrix(axis, Vector3::Zero);
 			if (item.m_vsregister) {
-				V(d3d9Device->SetVertexShaderConstantF(item.m_vsregister, matrix.c_ptr(), 1));
+				V(dx9_device->SetVertexShaderConstantF(item.m_vsregister, matrix.c_ptr(), 1));
 			}
 
 			if (item.m_psregister) {
-				V(d3d9Device->SetPixelShaderConstantF(item.m_psregister, matrix.c_ptr(), 1));
+				V(dx9_device->SetPixelShaderConstantF(item.m_psregister, matrix.c_ptr(), 1));
 			}
 		}
 		break;
@@ -197,11 +197,11 @@ void DX9_Uniform::setUniform(UniformItem &item, const void *q)
 			Matrix4 matrix = am.toMatrix4().getTranspose();
 
 			if (item.m_vsregister) {
-				V(d3d9Device->SetVertexShaderConstantF(item.m_vsregister, matrix.c_ptr(), 3));
+				V(dx9_device->SetVertexShaderConstantF(item.m_vsregister, matrix.c_ptr(), 3));
 			}
 
 			if (item.m_psregister) {
-				V(d3d9Device->SetPixelShaderConstantF(item.m_psregister, matrix.c_ptr(), 3));
+				V(dx9_device->SetPixelShaderConstantF(item.m_psregister, matrix.c_ptr(), 3));
 			}
 		} else {
 			Errorf("not support");
@@ -211,11 +211,11 @@ void DX9_Uniform::setUniform(UniformItem &item, const void *q)
 		if (item.m_arraySize == 1) {
 			Matrix4 matrix = ((const Matrix4*)item.m_datap)->getTranspose();
 			if (item.m_vsregister) {
-				V(d3d9Device->SetVertexShaderConstantF(item.m_vsregister, matrix.c_ptr(), 4));
+				V(dx9_device->SetVertexShaderConstantF(item.m_vsregister, matrix.c_ptr(), 4));
 			}
 
 			if (item.m_psregister) {
-				V(d3d9Device->SetPixelShaderConstantF(item.m_psregister, matrix.c_ptr(), 4));
+				V(dx9_device->SetPixelShaderConstantF(item.m_psregister, matrix.c_ptr(), 4));
 			}
 		} else {
 			const Matrix4 *old = (const Matrix4*)q;
@@ -225,11 +225,11 @@ void DX9_Uniform::setUniform(UniformItem &item, const void *q)
 			}
 
 			if (item.m_vsregister) {
-				V(d3d9Device->SetVertexShaderConstantF(item.m_vsregister, matrix[0].c_ptr(), 4 * item.m_arraySize));
+				V(dx9_device->SetVertexShaderConstantF(item.m_vsregister, matrix[0].c_ptr(), 4 * item.m_arraySize));
 			}
 
 			if (item.m_psregister) {
-				V(d3d9Device->SetPixelShaderConstantF(item.m_psregister, matrix[0].c_ptr(), 4 * item.m_arraySize));
+				V(dx9_device->SetPixelShaderConstantF(item.m_psregister, matrix[0].c_ptr(), 4 * item.m_arraySize));
 			}
 		}
 		break;
@@ -237,6 +237,363 @@ void DX9_Uniform::setUniform(UniformItem &item, const void *q)
 		break;
 	}
 }
+
+DX9_Technique::DX9_Technique(DX9_Shader *shader, D3DXHANDLE d3dxhandle)
+{
+	m_shader = shader;
+	m_d3dxhandle = d3dxhandle;
+
+	HRESULT hr;
+
+	D3DXTECHNIQUE_DESC desc;
+	V(shader->m_object->GetTechniqueDesc(d3dxhandle, &desc));
+
+	m_numPasses = desc.Passes;
+
+	UINT checkpass;
+	shader->m_object->Begin(&checkpass, D3DXFX_DONOTSAVESTATE);
+	AX_ASSURE(checkpass == m_numPasses);
+	for (int i = 0; i < m_numPasses; i++) {
+		shader->m_object->BeginPass(i);
+		m_passes[i] = new DX9_Pass(shader, shader->m_object->GetPass(d3dxhandle, i));
+		shader->m_object->EndPass();
+	}
+	shader->m_object->End();
+}
+
+DX9_Technique::~DX9_Technique()
+{}
+
+DX9_Pass::DX9_Pass(DX9_Shader *shader, D3DXHANDLE d3dxhandle)
+{
+	m_shader = shader;
+	m_d3dxhandle = d3dxhandle;
+
+	memset(m_matSamplers, -1, sizeof(m_matSamplers));
+
+	initState();
+	initVs();
+	initPs();
+}
+
+DX9_Pass::~DX9_Pass()
+{}
+
+void DX9_Pass::initVs()
+{
+	HRESULT hr;
+
+	D3DXPASS_DESC desc;
+	V(m_shader->m_object->GetPassDesc(m_d3dxhandle, &desc));
+
+	LPD3DXCONSTANTTABLE constTable;
+	D3DXGetShaderConstantTable(desc.pVertexShaderFunction, &constTable);
+
+	D3DXCONSTANTTABLE_DESC tableDesc;
+	constTable->GetDesc(&tableDesc);
+
+	for (UINT i = 0; i < tableDesc.Constants; i++) {
+		D3DXHANDLE curConst = constTable->GetConstant(0, i);
+		D3DXCONSTANT_DESC constDesc;
+		UINT count;
+		constTable->GetConstantDesc(curConst, &constDesc, &count);
+
+		if (constDesc.RegisterSet == D3DXRS_SAMPLER) {
+			// error
+
+		} else {
+			if (g_uniforms.isVsregisterShared(constDesc.RegisterIndex))
+				continue;
+
+			ParamDesc paramDesc;
+			paramDesc.d3dDesc = constDesc;
+#if 0
+			paramDesc.p2t = 0;
+#endif
+			m_vsParameters[constDesc.Name] = paramDesc;
+		}
+
+		continue;
+	}
+}
+
+void DX9_Pass::initPs()
+{
+	HRESULT hr;
+
+	D3DXPASS_DESC desc;
+	V(m_shader->m_object->GetPassDesc(m_d3dxhandle, &desc));
+
+	LPD3DXCONSTANTTABLE constTable;
+
+#if 1
+	V(D3DXGetShaderConstantTable(desc.pPixelShaderFunction, &constTable));
+#else
+	DWORD func[4*1024];
+	UINT funcSize;
+	m_ps->GetFunction(&func, &funcSize);
+	AX_ASSERT(funcSize < 4*1024);
+	V(D3DXGetShaderConstantTable(func, &constTable));
+#endif
+	D3DXCONSTANTTABLE_DESC tableDesc;
+	V(constTable->GetDesc(&tableDesc));
+
+	D3DXHANDLE s_skyColor = constTable->GetConstantByName(0, "s_skyColor");
+
+	for (UINT i = 0; i < tableDesc.Constants; i++) {
+		D3DXHANDLE curConst = constTable->GetConstant(0, i);
+		D3DXCONSTANT_DESC constDesc;
+		UINT count;
+		constTable->GetConstantDesc(curConst, &constDesc, &count);
+
+		if (constDesc.RegisterSet == D3DXRS_SAMPLER) {
+			initSampler(constDesc);
+		} else {
+			if (g_uniforms.isPsregisterShared(constDesc.RegisterIndex))
+				continue;
+
+			ParamDesc paramDesc;
+			paramDesc.d3dDesc = constDesc;
+#if 0
+			paramDesc.p2t = findPixel2Texel(constDesc.Name);
+#endif
+			m_psParameters[constDesc.Name] = paramDesc;
+		}
+
+		continue;
+	}
+}
+
+#if 0
+const DX9_Pixel2Texel*  DX9_Pass::findPixel2Texel(const String &name)
+{
+	DX9_Pixel2Texels::const_iterator it = m_shader->pixel2Texels.begin();
+
+	for (; it != m_shader->pixel2Texels.end(); ++it) {
+		if (it->m_name == name)
+			return &*it;
+	}
+
+	return 0;
+}
+#endif
+
+void DX9_Pass::initState()
+{
+#if 0
+	HRESULT hr;
+	V(d3d9Device->GetVertexShader(&m_vs));
+	V(d3d9Device->GetPixelShader(&m_ps));
+
+	V(d3d9Device->GetRenderState(D3DRS_ZENABLE, &m_depthTest));
+	V(d3d9Device->GetRenderState(D3DRS_ZWRITEENABLE, &m_depthWrite));
+	V(d3d9Device->GetRenderState(D3DRS_CULLMODE, &m_cullMode));
+	V(d3d9Device->GetRenderState(D3DRS_ALPHABLENDENABLE, &m_blendEnable));
+	V(d3d9Device->GetRenderState(D3DRS_SRCBLEND, &m_blendSrc));
+	V(d3d9Device->GetRenderState(D3DRS_DESTBLEND, &m_blendDst));
+	//#else
+	m_vs = d3d9StateManager->getVertexShader();
+	m_ps = d3d9StateManager->getPixelShader();
+	m_depthTest = d3d9StateManager->getRenderState(D3DRS_ZENABLE);
+	m_depthWrite = d3d9StateManager->getRenderState(D3DRS_ZWRITEENABLE);
+	m_cullMode = d3d9StateManager->getRenderState(D3DRS_CULLMODE);
+	m_blendEnable = d3d9StateManager->getRenderState(D3DRS_ALPHABLENDENABLE);
+	m_blendSrc = d3d9StateManager->getRenderState(D3DRS_SRCBLEND);
+	m_blendDst = d3d9StateManager->getRenderState(D3DRS_DESTBLEND);
+#endif
+}
+
+void DX9_Pass::initSampler(const D3DXCONSTANT_DESC &desc)
+{
+	// check material sampler
+	for (UINT i = 0; i < ArraySize(samplername); i++) {
+		if (Strequ(samplername[i].paramname, desc.Name)) {
+			m_matSamplers[samplername[i].type] = desc.RegisterIndex;
+			return;
+		}
+	}
+
+	// check system sampler
+	for (int i = 0; i < Uniforms::NUM_UNIFORM_ITEMS; i++) {
+		UniformItem &item = g_uniforms.getItem(i);
+
+		if (item.m_valueType != UniformItem::vt_Texture)
+			continue;
+
+		if (Strequ(item.m_name, desc.Name)) {
+			m_sysSamplers[i] = desc.RegisterIndex;
+			return;
+		}
+	}
+
+	// check batch sampler
+	for (int i = 0; i < s2i(m_shader->m_samplerannSeq.size()); i++) {
+		DX9_SamplerInfo *bs = m_shader->m_samplerannSeq[i];
+		if (bs->m_paramName == desc.Name) {
+			DX9_SamplerInfo *newbs = new DX9_SamplerInfo();
+			*newbs = *bs;
+			newbs->m_register = desc.RegisterIndex;
+			m_batchSamplers.push_back(newbs);
+			return;
+		}
+	}
+
+	// local sampler
+	//	m_psParameters[desc.Name] = desc;
+}
+
+void DX9_Pass::begin()
+{
+#if 0
+	Material *mtr = m_shader->m_coupled;
+
+	// set shader
+	d3d9StateManager->SetVertexShader(m_vs);
+	d3d9StateManager->SetPixelShader(m_ps);
+
+	// set render state
+	d3d9StateManager->SetRenderState(D3DRS_ZENABLE, m_depthTest);
+	d3d9StateManager->SetRenderState(D3DRS_ZWRITEENABLE, m_depthWrite);
+	d3d9StateManager->SetRenderState(D3DRS_CULLMODE, m_cullMode);
+	d3d9StateManager->SetRenderState(D3DRS_ALPHABLENDENABLE, m_blendEnable);
+
+	if (m_blendEnable) {
+		d3d9StateManager->SetRenderState(D3DRS_SRCBLEND, m_blendSrc);
+		d3d9StateManager->SetRenderState(D3DRS_DESTBLEND, m_blendDst);
+	}
+
+	setParameters();
+
+	// set mtr sampler
+	if (mtr) {
+		for (int i = 0; i < SamplerType::NUMBER_ALL; i++) {
+			if (m_matSamplers[i] == -1)
+				continue;
+
+			//			IDirect3DTexture9 *tex = mtr->getTexture(i);
+			//			d3d9StateManager->setTexture(m_matSamplers[i], tex);
+		}
+	} else {
+		for (int i = 0; i < SamplerType::NUMBER_ALL; i++) {
+			if (m_matSamplers[i] == -1)
+				continue;
+
+			IDirect3DTexture9 *tex = m_shader->m_samplerBound[i];
+			d3d9StateManager->setTexture(m_matSamplers[i], tex);
+		}
+	}
+
+	// set sys sampler
+	Dict<int,int>::const_iterator it = m_sysSamplers.begin();
+	for (; it != m_sysSamplers.end(); ++it) {
+		int f = it->first;
+		int s = it->second;
+		UniformItem &item = g_uniforms.getItem(f);
+		IDirect3DTexture9 *tex = *(IDirect3DTexture9**)item.m_datap;
+		d3d9StateManager->setTexture(s, tex);
+	}
+
+	// set batch sampler
+	int count = 0;
+	for (size_t i = 0; i < m_batchSamplers.size(); i++) {
+		DX9_SamplerInfo *sa = m_batchSamplers[i];
+		if (sa->m_renderType == SamplerInfo::Reflection) {
+			if (!d3d9Interaction) {
+				continue;
+			}
+
+			if (d3d9Interaction->numTargets < count) {
+				continue;
+			}
+
+			Interaction *ia = d3d9Interaction;
+
+			RenderTarget *target = ia->targets[count];
+			D3D9Target *textarget = (D3D9Target*)target;
+			IDirect3DTexture9 *tex = textarget->getTextureDX();
+			tex->setClampMode(Texture::CM_ClampToEdge);
+
+			d3d9StateManager->setTexture(sa->m_register, tex);
+		} else if (sa->m_renderType == SamplerInfo::SceneColor) {
+			Rect r = d3d9BoundTarget->getRect();
+
+			D3D9Target *target = d3d9TargetManager->allocTargetDX(RenderTarget::TemporalAlloc, r.width, r.height, TexFormat::BGRA8);
+			IDirect3DTexture9 *tex = target->getTextureDX();
+			tex->setClampMode(Texture::CM_ClampToEdge);
+			target->copyFramebuffer(r);
+			d3d9StateManager->setTexture(sa->m_register, tex);
+		}
+	}
+#endif
+}
+
+void DX9_Pass::setParameters()
+{
+#if 0
+	const ShaderParams *mtrparams = 0;
+	if (m_shader->m_coupled) {
+		mtrparams = &m_shader->m_coupled->getParameters();
+
+		if (mtrparams->empty())
+			mtrparams = 0;
+	}
+
+	// set constant
+	for (Dict<String,ParamDesc>::const_iterator it = m_vsParameters.begin(); it != m_vsParameters.end(); ++it) {
+		const ParamDesc &desc = it->second;
+		const float *value = 0;
+
+		if (mtrparams) {
+			ShaderParams::const_iterator it2 = mtrparams->find(it->first);
+			if (it2 != mtrparams->end()) {
+				value = &it2->second[0];
+			}
+		}
+
+		setParameter(desc, value, false);
+	}
+
+	for (Dict<String,ParamDesc>::const_iterator it = m_psParameters.begin(); it != m_psParameters.end(); ++it) {
+		const ParamDesc &desc = it->second;
+		const float *value = 0;
+
+		if (mtrparams) {
+			ShaderParams::const_iterator it2 = mtrparams->find(it->first);
+			if (it2 != mtrparams->end()) {
+				value = &it2->second[0];
+			}
+		}
+
+		setParameter(desc, value, true);
+	}
+#endif
+}
+
+void DX9_Pass::setParameter(const ParamDesc &param, const float *value, bool isPixelShader)
+{
+#if 0
+	const float *realvalue = (const float*)param.d3dDesc.DefaultValue;
+
+	if (value)
+		realvalue = value;
+
+	// check p2t first
+	if (param.p2t && isPixelShader) {
+		realvalue = &param.p2t->m_scaledValue[0];
+	}
+
+	if (!realvalue)
+		return;
+
+	if (isPixelShader) {
+		d3d9Device->SetPixelShaderConstantF(param.d3dDesc.RegisterIndex, realvalue, param.d3dDesc.RegisterCount);
+	} else {
+		d3d9Device->SetVertexShaderConstantF(param.d3dDesc.RegisterIndex, realvalue, param.d3dDesc.RegisterCount);
+	}
+#endif
+}
+
+
 //--------------------------------------------------------------------------
 // class D3D9Shader
 //--------------------------------------------------------------------------
@@ -303,7 +660,7 @@ bool DX9_Shader::init(const String &name, const ShaderMacro &macro)
 		return false;
 	D3D9include d3d9Inc;
 
-	hr = D3DXCreateEffect(d3d9Device, filebuf, filesize, &d3dxmacros[0], &d3d9Inc, dwFlags, 0, &m_object, &errbuf);
+	hr = D3DXCreateEffect(dx9_device, filebuf, filesize, &d3dxmacros[0], &d3d9Inc, dwFlags, 0, &m_object, &errbuf);
 #endif
 	if (FAILED(hr)) {
 		if (errbuf) {
@@ -699,12 +1056,8 @@ void DX9_Shader::initGlobalStruct()
 	D3DXPARAMETER_DESC paramDesc;
 	V(m_object->GetParameterDesc(param, &paramDesc));
 
-	DX9_Technique *tech = 0;
-	for (int i = 0; i < Technique::Number; i++) {
-		tech = m_techniques[i];
-		if (tech)
-			break;
-	}
+	DX9_Technique *tech = m_techniques[Technique::Main];
+	if (!tech) return;
 
 	DX9_Pass *pass = tech->m_passes[0];
 
@@ -714,50 +1067,85 @@ void DX9_Shader::initGlobalStruct()
 	LPD3DXCONSTANTTABLE constTable;
 	D3DXGetShaderConstantTable(desc.pVertexShaderFunction, &constTable);
 
-	D3DXCONSTANTTABLE_DESC tableDesc;
-	constTable->GetDesc(&tableDesc);
+	dx9_uniformStructs[0] = parseStruct(constTable, "g_gc");
+	dx9_uniformStructs[1] = parseStruct(constTable, "g_vgc");
+	dx9_uniformStructs[3] = parseStruct(constTable, "g_vic");
 
-	D3DXHANDLE gc = constTable->GetConstant(0, 1);
-	AX_ASSERT(gc);
+	D3DXGetShaderConstantTable(desc.pPixelShaderFunction, &constTable);
+	dx9_uniformStructs[2] = parseStruct(constTable, "g_pgc");
+	dx9_uniformStructs[4] = parseStruct(constTable, "g_pic");
+
+	for (int i = 0; i < UniformStruct::NUMBER_STRUCT; i++) {
+		g_uniformStructs[i] = dx9_uniformStructs[i]->clone();
+	}
+}
+
+UniformStruct *DX9_Shader::parseStruct(LPD3DXCONSTANTTABLE constTable, const char *paramName)
+{
+	D3DXHANDLE param = constTable->GetConstantByName(0, paramName);
+	if (!param)
+		return 0;
 
 	D3DXCONSTANT_DESC constDesc, memberDesc;
 	UINT count;
-	constTable->GetConstantDesc(gc, &constDesc, &count);
+	constTable->GetConstantDesc(param, &constDesc, &count);
+
+	if (constDesc.RegisterSet != D3DXRS_FLOAT4)
+		return 0;
+
+	if (constDesc.Class != D3DXPC_STRUCT)
+		return 0;
+
+	int regIndex = constDesc.RegisterIndex;
+	int numFloats = constDesc.RegisterCount * 4;
+
+	UniformStruct *us = new UniformStruct(regIndex, numFloats);
 
 	for (int i=0; i<constDesc.StructMembers; i++) {
-		D3DXHANDLE member = constTable->GetConstant(gc, i);
+		D3DXHANDLE member = constTable->GetConstant(param, i);
 		constTable->GetConstantDesc(member, &memberDesc, &count);
+
+		UniformStruct::Field field;
+		field.m_name = memberDesc.Name;
+		field.m_offset = (memberDesc.RegisterIndex - regIndex) * 4;
+		field.m_numFloats = memberDesc.RegisterCount * 4;
+
+		us->addField(field);
 	}
+
+	return us;
 }
 
 //--------------------------------------------------------------------------
 // class D3D9shadermanager
 //--------------------------------------------------------------------------
 
-D3D9ShaderManager::D3D9ShaderManager()
+DX9_ShaderManager::DX9_ShaderManager()
 {
 	V(D3DXCreateEffectPool( &s_effectPool ));
 	m_defaulted = new DX9_Shader();
 	bool v = m_defaulted->init("blend");
-
 	AX_ASSERT(v);
 
-	m_defaulted->initGlobalStruct();
+	DX9_Shader *blinn = new DX9_Shader();
+	v = blinn->init("_alluniforms");
+	AX_ASSERT(v);
+	blinn->initGlobalStruct();
 
 	_initialize();
 }
 
-D3D9ShaderManager::~D3D9ShaderManager()
+DX9_ShaderManager::~DX9_ShaderManager()
 {}
 
-DX9_Shader *D3D9ShaderManager::findShader(const String &name, const ShaderMacro &macro)
+DX9_Shader *DX9_ShaderManager::findShader(const String &name, const ShaderMacro &macro)
 {
 	return findShader(FixedString(name), macro);
 }
 
-DX9_Shader *D3D9ShaderManager::findShader(const FixedString &nameId, const ShaderMacro &macro)
+DX9_Shader *DX9_ShaderManager::findShader(const FixedString &nameId, const ShaderMacro &macro)
 {
-	DX9_Shader*& shader = m_shaderPool[nameId][macro];
+	DX9_Shader*& shader = m_shaders[nameId][macro];
 
 	if (!shader) {
 		shader = new DX9_Shader();
@@ -772,12 +1160,12 @@ DX9_Shader *D3D9ShaderManager::findShader(const FixedString &nameId, const Shade
 	return shader;
 }
 
-DX9_Shader *D3D9ShaderManager::findShaderDX(const String &name, const ShaderMacro &macro)
+DX9_Shader *DX9_ShaderManager::findShaderDX(const String &name, const ShaderMacro &macro)
 {
 	return (DX9_Shader*)findShader(name, macro);
 }
 
-void D3D9ShaderManager::saveShaderCache( const String &name )
+void DX9_ShaderManager::saveShaderCache(const String &name)
 {
 	String filename;
 	if (filename.empty())
@@ -796,9 +1184,9 @@ void D3D9ShaderManager::saveShaderCache( const String &name )
 	doc.LinkEndChild(root);
 
 	// iterator shaders
-	ShaderPool::const_iterator it = m_shaderPool.begin();
+	ShaderDict::const_iterator it = m_shaders.begin();
 
-	for (; it != m_shaderPool.end(); ++it) {
+	for (; it != m_shaders.end(); ++it) {
 		const Dict<ShaderMacro,DX9_Shader*>& shaders = it->second;
 		Dict<ShaderMacro,DX9_Shader*>::const_iterator it2 = shaders.begin();
 
@@ -813,7 +1201,7 @@ void D3D9ShaderManager::saveShaderCache( const String &name )
 	doc.SaveFile(filename);
 }
 
-void D3D9ShaderManager::applyShaderCache( const String &name )
+void DX9_ShaderManager::applyShaderCache( const String &name )
 {
 	String filename;
 	if (filename.empty())
@@ -844,368 +1232,13 @@ void D3D9ShaderManager::applyShaderCache( const String &name )
 	}
 }
 
-void D3D9ShaderManager::_initialize()
+void DX9_ShaderManager::_initialize()
 {
 	StringSeq ss = g_fileSystem->fileListByExts("shaders/", ".fx", File::List_Nodirectory|File::List_Sorted);
 
 	AX_FOREACH(const String &s, ss) {
 		String n = PathUtil::getName(s);
 	}
-}
-
-DX9_Technique::DX9_Technique(DX9_Shader *shader, D3DXHANDLE d3dxhandle)
-{
-	m_shader = shader;
-	m_d3dxhandle = d3dxhandle;
-
-	HRESULT hr;
-
-	D3DXTECHNIQUE_DESC desc;
-	V(shader->m_object->GetTechniqueDesc(d3dxhandle, &desc));
-
-	m_numPasses = desc.Passes;
-
-	UINT checkpass;
-	shader->m_object->Begin(&checkpass, D3DXFX_DONOTSAVESTATE);
-	AX_ASSURE(checkpass == m_numPasses);
-	for (int i = 0; i < m_numPasses; i++) {
-		shader->m_object->BeginPass(i);
-		m_passes[i] = new DX9_Pass(shader, shader->m_object->GetPass(d3dxhandle, i));
-		shader->m_object->EndPass();
-	}
-	shader->m_object->End();
-}
-
-DX9_Technique::~DX9_Technique()
-{}
-
-DX9_Pass::DX9_Pass(DX9_Shader *shader, D3DXHANDLE d3dxhandle)
-{
-	m_shader = shader;
-	m_d3dxhandle = d3dxhandle;
-
-	memset(m_matSamplers, -1, sizeof(m_matSamplers));
-
-	initState();
-	initVs();
-	initPs();
-}
-
-DX9_Pass::~DX9_Pass()
-{}
-
-void DX9_Pass::initVs()
-{
-	HRESULT hr;
-
-	D3DXPASS_DESC desc;
-	V(m_shader->m_object->GetPassDesc(m_d3dxhandle, &desc));
-
-	LPD3DXCONSTANTTABLE constTable;
-	D3DXGetShaderConstantTable(desc.pVertexShaderFunction, &constTable);
-
-	D3DXCONSTANTTABLE_DESC tableDesc;
-	constTable->GetDesc(&tableDesc);
-
-	for (UINT i = 0; i < tableDesc.Constants; i++) {
-		D3DXHANDLE curConst = constTable->GetConstant(0, i);
-		D3DXCONSTANT_DESC constDesc;
-		UINT count;
-		constTable->GetConstantDesc(curConst, &constDesc, &count);
-
-		if (constDesc.RegisterSet == D3DXRS_SAMPLER) {
-			// error
-
-		} else {
-			if (g_uniforms.isVsregisterShared(constDesc.RegisterIndex))
-				continue;
-
-			ParamDesc paramDesc;
-			paramDesc.d3dDesc = constDesc;
-#if 0
-			paramDesc.p2t = 0;
-#endif
-			m_vsParameters[constDesc.Name] = paramDesc;
-		}
-
-		continue;
-	}
-}
-
-void DX9_Pass::initPs()
-{
-	HRESULT hr;
-
-	D3DXPASS_DESC desc;
-	V(m_shader->m_object->GetPassDesc(m_d3dxhandle, &desc));
-
-	LPD3DXCONSTANTTABLE constTable;
-
-#if 1
-	V(D3DXGetShaderConstantTable(desc.pPixelShaderFunction, &constTable));
-#else
-	DWORD func[4*1024];
-	UINT funcSize;
-	m_ps->GetFunction(&func, &funcSize);
-	AX_ASSERT(funcSize < 4*1024);
-	V(D3DXGetShaderConstantTable(func, &constTable));
-#endif
-	D3DXCONSTANTTABLE_DESC tableDesc;
-	V(constTable->GetDesc(&tableDesc));
-
-	D3DXHANDLE s_skyColor = constTable->GetConstantByName(0, "s_skyColor");
-
-	for (UINT i = 0; i < tableDesc.Constants; i++) {
-		D3DXHANDLE curConst = constTable->GetConstant(0, i);
-		D3DXCONSTANT_DESC constDesc;
-		UINT count;
-		constTable->GetConstantDesc(curConst, &constDesc, &count);
-
-		if (constDesc.RegisterSet == D3DXRS_SAMPLER) {
-			initSampler(constDesc);
-		} else {
-			if (g_uniforms.isPsregisterShared(constDesc.RegisterIndex))
-				continue;
-
-			ParamDesc paramDesc;
-			paramDesc.d3dDesc = constDesc;
-#if 0
-			paramDesc.p2t = findPixel2Texel(constDesc.Name);
-#endif
-			m_psParameters[constDesc.Name] = paramDesc;
-		}
-
-		continue;
-	}
-}
-
-#if 0
-const DX9_Pixel2Texel*  DX9_Pass::findPixel2Texel(const String &name)
-{
-	DX9_Pixel2Texels::const_iterator it = m_shader->pixel2Texels.begin();
-
-	for (; it != m_shader->pixel2Texels.end(); ++it) {
-		if (it->m_name == name)
-			return &*it;
-	}
-
-	return 0;
-}
-#endif
-
-void DX9_Pass::initState()
-{
-#if 0
-	HRESULT hr;
-	V(d3d9Device->GetVertexShader(&m_vs));
-	V(d3d9Device->GetPixelShader(&m_ps));
-
-	V(d3d9Device->GetRenderState(D3DRS_ZENABLE, &m_depthTest));
-	V(d3d9Device->GetRenderState(D3DRS_ZWRITEENABLE, &m_depthWrite));
-	V(d3d9Device->GetRenderState(D3DRS_CULLMODE, &m_cullMode));
-	V(d3d9Device->GetRenderState(D3DRS_ALPHABLENDENABLE, &m_blendEnable));
-	V(d3d9Device->GetRenderState(D3DRS_SRCBLEND, &m_blendSrc));
-	V(d3d9Device->GetRenderState(D3DRS_DESTBLEND, &m_blendDst));
-//#else
-	m_vs = d3d9StateManager->getVertexShader();
-	m_ps = d3d9StateManager->getPixelShader();
-	m_depthTest = d3d9StateManager->getRenderState(D3DRS_ZENABLE);
-	m_depthWrite = d3d9StateManager->getRenderState(D3DRS_ZWRITEENABLE);
-	m_cullMode = d3d9StateManager->getRenderState(D3DRS_CULLMODE);
-	m_blendEnable = d3d9StateManager->getRenderState(D3DRS_ALPHABLENDENABLE);
-	m_blendSrc = d3d9StateManager->getRenderState(D3DRS_SRCBLEND);
-	m_blendDst = d3d9StateManager->getRenderState(D3DRS_DESTBLEND);
-#endif
-}
-
-void DX9_Pass::initSampler(const D3DXCONSTANT_DESC &desc)
-{
-	// check material sampler
-	for (UINT i = 0; i < ArraySize(samplername); i++) {
-		if (Strequ(samplername[i].paramname, desc.Name)) {
-			m_matSamplers[samplername[i].type] = desc.RegisterIndex;
-			return;
-		}
-	}
-
-	// check system sampler
-	for (int i = 0; i < Uniforms::NUM_UNIFORM_ITEMS; i++) {
-		UniformItem &item = g_uniforms.getItem(i);
-
-		if (item.m_valueType != UniformItem::vt_Texture)
-			continue;
-
-		if (Strequ(item.m_name, desc.Name)) {
-			m_sysSamplers[i] = desc.RegisterIndex;
-			return;
-		}
-	}
-
-	// check batch sampler
-	for (int i = 0; i < s2i(m_shader->m_samplerannSeq.size()); i++) {
-		DX9_SamplerInfo *bs = m_shader->m_samplerannSeq[i];
-		if (bs->m_paramName == desc.Name) {
-			DX9_SamplerInfo *newbs = new DX9_SamplerInfo();
-			*newbs = *bs;
-			newbs->m_register = desc.RegisterIndex;
-			m_batchSamplers.push_back(newbs);
-			return;
-		}
-	}
-
-	// local sampler
-//	m_psParameters[desc.Name] = desc;
-}
-
-void DX9_Pass::begin()
-{
-#if 0
-	Material *mtr = m_shader->m_coupled;
-
-	// set shader
-	d3d9StateManager->SetVertexShader(m_vs);
-	d3d9StateManager->SetPixelShader(m_ps);
-
-	// set render state
-	d3d9StateManager->SetRenderState(D3DRS_ZENABLE, m_depthTest);
-	d3d9StateManager->SetRenderState(D3DRS_ZWRITEENABLE, m_depthWrite);
-	d3d9StateManager->SetRenderState(D3DRS_CULLMODE, m_cullMode);
-	d3d9StateManager->SetRenderState(D3DRS_ALPHABLENDENABLE, m_blendEnable);
-
-	if (m_blendEnable) {
-		d3d9StateManager->SetRenderState(D3DRS_SRCBLEND, m_blendSrc);
-		d3d9StateManager->SetRenderState(D3DRS_DESTBLEND, m_blendDst);
-	}
-
-	setParameters();
-
-	// set mtr sampler
-	if (mtr) {
-		for (int i = 0; i < SamplerType::NUMBER_ALL; i++) {
-			if (m_matSamplers[i] == -1)
-				continue;
-
-//			IDirect3DTexture9 *tex = mtr->getTexture(i);
-//			d3d9StateManager->setTexture(m_matSamplers[i], tex);
-		}
-	} else {
-		for (int i = 0; i < SamplerType::NUMBER_ALL; i++) {
-			if (m_matSamplers[i] == -1)
-				continue;
-
-			IDirect3DTexture9 *tex = m_shader->m_samplerBound[i];
-			d3d9StateManager->setTexture(m_matSamplers[i], tex);
-		}
-	}
-
-	// set sys sampler
-	Dict<int,int>::const_iterator it = m_sysSamplers.begin();
-	for (; it != m_sysSamplers.end(); ++it) {
-		int f = it->first;
-		int s = it->second;
-		UniformItem &item = g_uniforms.getItem(f);
-		IDirect3DTexture9 *tex = *(IDirect3DTexture9**)item.m_datap;
-		d3d9StateManager->setTexture(s, tex);
-	}
-
-	// set batch sampler
-	int count = 0;
-	for (size_t i = 0; i < m_batchSamplers.size(); i++) {
-		DX9_SamplerInfo *sa = m_batchSamplers[i];
-		if (sa->m_renderType == SamplerInfo::Reflection) {
-			if (!d3d9Interaction) {
-				continue;
-			}
-
-			if (d3d9Interaction->numTargets < count) {
-				continue;
-			}
-
-			Interaction *ia = d3d9Interaction;
-
-			RenderTarget *target = ia->targets[count];
-			D3D9Target *textarget = (D3D9Target*)target;
-			IDirect3DTexture9 *tex = textarget->getTextureDX();
-			tex->setClampMode(Texture::CM_ClampToEdge);
-
-			d3d9StateManager->setTexture(sa->m_register, tex);
-		} else if (sa->m_renderType == SamplerInfo::SceneColor) {
-			Rect r = d3d9BoundTarget->getRect();
-
-			D3D9Target *target = d3d9TargetManager->allocTargetDX(RenderTarget::TemporalAlloc, r.width, r.height, TexFormat::BGRA8);
-			IDirect3DTexture9 *tex = target->getTextureDX();
-			tex->setClampMode(Texture::CM_ClampToEdge);
-			target->copyFramebuffer(r);
-			d3d9StateManager->setTexture(sa->m_register, tex);
-		}
-	}
-#endif
-}
-
-void DX9_Pass::setParameters()
-{
-#if 0
-	const ShaderParams *mtrparams = 0;
-	if (m_shader->m_coupled) {
-		mtrparams = &m_shader->m_coupled->getParameters();
-
-		if (mtrparams->empty())
-			mtrparams = 0;
-	}
-
-	// set constant
-	for (Dict<String,ParamDesc>::const_iterator it = m_vsParameters.begin(); it != m_vsParameters.end(); ++it) {
-		const ParamDesc &desc = it->second;
-		const float *value = 0;
-
-		if (mtrparams) {
-			ShaderParams::const_iterator it2 = mtrparams->find(it->first);
-			if (it2 != mtrparams->end()) {
-				value = &it2->second[0];
-			}
-		}
-
-		setParameter(desc, value, false);
-	}
-
-	for (Dict<String,ParamDesc>::const_iterator it = m_psParameters.begin(); it != m_psParameters.end(); ++it) {
-		const ParamDesc &desc = it->second;
-		const float *value = 0;
-
-		if (mtrparams) {
-			ShaderParams::const_iterator it2 = mtrparams->find(it->first);
-			if (it2 != mtrparams->end()) {
-				value = &it2->second[0];
-			}
-		}
-
-		setParameter(desc, value, true);
-	}
-#endif
-}
-
-void DX9_Pass::setParameter(const ParamDesc &param, const float *value, bool isPixelShader)
-{
-#if 0
-	const float *realvalue = (const float*)param.d3dDesc.DefaultValue;
-
-	if (value)
-		realvalue = value;
-
-	// check p2t first
-	if (param.p2t && isPixelShader) {
-		realvalue = &param.p2t->m_scaledValue[0];
-	}
-
-	if (!realvalue)
-		return;
-
-	if (isPixelShader) {
-		d3d9Device->SetPixelShaderConstantF(param.d3dDesc.RegisterIndex, realvalue, param.d3dDesc.RegisterCount);
-	} else {
-		d3d9Device->SetVertexShaderConstantF(param.d3dDesc.RegisterIndex, realvalue, param.d3dDesc.RegisterCount);
-	}
-#endif
 }
 
 AX_END_NAMESPACE

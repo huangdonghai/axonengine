@@ -16,12 +16,14 @@ AX_BEGIN_CLASS_MAP(axdirect3d9)
 	AX_CLASS_ENTRY("driver", DX9_Driver)
 AX_END_CLASS_MAP()
 
-DX9_Window *d3d9InternalWindow;
-DX9_Driver *d3d9Driver;
-RenderDriverInfo *d3d9DriverInfo;
-IDirect3D9 *d3d9Api;
-IDirect3DDevice9 *d3d9Device;
-D3D9ShaderManager *d3d9ShaderManager;
+DX9_Window *dx9_internalWindow;
+DX9_Driver *dx9_driver;
+RenderDriverInfo *dx9_driverInfo;
+IDirect3D9 *dx9_api;
+IDirect3DDevice9 *dx9_device;
+DX9_ShaderManager *dx9_shaderManager;
+UniformStruct *dx9_uniformStructs[UniformStruct::NUMBER_STRUCT];
+
 
 
 #if 0

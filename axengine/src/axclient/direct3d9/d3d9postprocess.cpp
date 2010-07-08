@@ -226,10 +226,10 @@ D3D9Postprocess::D3D9Postprocess() {
 	m_mtrPointLight =  new Material("_pointlight");
 	m_mtrGlobalLight =  new Material("_globallight");
 
-	m_shaderDrawQuad = d3d9ShaderManager->findShaderDX("drawquad");
-	m_shaderHistogram = d3d9ShaderManager->findShaderDX("_histogram");
-	m_shaderDownscale4x4 = d3d9ShaderManager->findShaderDX("_downscale4x4");
-	m_shaderQuery = d3d9ShaderManager->findShaderDX("_query");
+	m_shaderDrawQuad = dx9_shaderManager->findShaderDX("drawquad");
+	m_shaderHistogram = dx9_shaderManager->findShaderDX("_histogram");
+	m_shaderDownscale4x4 = dx9_shaderManager->findShaderDX("_downscale4x4");
+	m_shaderQuery = dx9_shaderManager->findShaderDX("_query");
 
 	m_screenQuad = nullptr;
 	m_hexahedron = nullptr;
@@ -447,7 +447,7 @@ DX9_Shader *D3D9Postprocess::getShader(const String &name) {
 #if 0
 	D3D9shader *shader = FindAsset_<D3D9shader>(name);
 #else
-	DX9_Shader *shader = d3d9ShaderManager->findShaderDX(name);
+	DX9_Shader *shader = dx9_shaderManager->findShaderDX(name);
 #endif
 	m_genericShaders[name] = shader;
 	return shader;
@@ -725,7 +725,7 @@ void D3D9Postprocess::issueQueryList( const List<D3D9querymanager::ActiveQuery*>
 				continue;
 
 			PostMesh::setupBoundingBox(m_hexahedron, active->bbox);
-			d3d9Device->DrawIndexedPrimitiveUP(D3DPT_TRIANGLELIST, 0, m_hexahedron->m_numVertices, m_hexahedron->m_numIndices/3, m_hexahedron->m_indices, D3DFMT_INDEX16, m_hexahedron->m_vertices, sizeof(Vector3));
+			dx9_device->DrawIndexedPrimitiveUP(D3DPT_TRIANGLELIST, 0, m_hexahedron->m_numVertices, m_hexahedron->m_numIndices/3, m_hexahedron->m_indices, D3DFMT_INDEX16, m_hexahedron->m_vertices, sizeof(Vector3));
 
 			query->endQuery();
 			active->issued = true;

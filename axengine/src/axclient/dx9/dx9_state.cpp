@@ -5,50 +5,50 @@ AX_BEGIN_NAMESPACE
 DX9_SamplerState::DX9_SamplerState( const SamplerStateDesc &desc )
 {
 	for (int i=0; i<MAX_STAGES; i++) {
-		d3d9Device->BeginStateBlock();
+		dx9_device->BeginStateBlock();
 
 		switch (desc.clampMode) {
 		case SamplerStateDesc::CM_Clamp:
-			d3d9Device->SetSamplerState(i, D3DSAMP_ADDRESSU, D3DTADDRESS_CLAMP);
-			d3d9Device->SetSamplerState(i, D3DSAMP_ADDRESSV, D3DTADDRESS_CLAMP);
-			d3d9Device->SetSamplerState(i, D3DSAMP_ADDRESSW, D3DTADDRESS_CLAMP);
+			dx9_device->SetSamplerState(i, D3DSAMP_ADDRESSU, D3DTADDRESS_CLAMP);
+			dx9_device->SetSamplerState(i, D3DSAMP_ADDRESSV, D3DTADDRESS_CLAMP);
+			dx9_device->SetSamplerState(i, D3DSAMP_ADDRESSW, D3DTADDRESS_CLAMP);
 			break;
 		case SamplerStateDesc::CM_Border:
-			d3d9Device->SetSamplerState(i, D3DSAMP_ADDRESSU, D3DTADDRESS_BORDER);
-			d3d9Device->SetSamplerState(i, D3DSAMP_ADDRESSV, D3DTADDRESS_BORDER);
-			d3d9Device->SetSamplerState(i, D3DSAMP_ADDRESSW, D3DTADDRESS_BORDER);
-			d3d9Device->SetSamplerState(i, D3DSAMP_BORDERCOLOR, 0);
+			dx9_device->SetSamplerState(i, D3DSAMP_ADDRESSU, D3DTADDRESS_BORDER);
+			dx9_device->SetSamplerState(i, D3DSAMP_ADDRESSV, D3DTADDRESS_BORDER);
+			dx9_device->SetSamplerState(i, D3DSAMP_ADDRESSW, D3DTADDRESS_BORDER);
+			dx9_device->SetSamplerState(i, D3DSAMP_BORDERCOLOR, 0);
 			break;
 		case SamplerStateDesc::CM_Repeat:
-			d3d9Device->SetSamplerState(i, D3DSAMP_ADDRESSU, D3DTADDRESS_WRAP);
-			d3d9Device->SetSamplerState(i, D3DSAMP_ADDRESSV, D3DTADDRESS_WRAP);
-			d3d9Device->SetSamplerState(i, D3DSAMP_ADDRESSW, D3DTADDRESS_WRAP);
+			dx9_device->SetSamplerState(i, D3DSAMP_ADDRESSU, D3DTADDRESS_WRAP);
+			dx9_device->SetSamplerState(i, D3DSAMP_ADDRESSV, D3DTADDRESS_WRAP);
+			dx9_device->SetSamplerState(i, D3DSAMP_ADDRESSW, D3DTADDRESS_WRAP);
 		}
 
 		switch (desc.filterMode) {
 		case SamplerStateDesc::FM_Nearest:
-			d3d9Device->SetSamplerState(i, D3DSAMP_MINFILTER, D3DTEXF_POINT);
-			d3d9Device->SetSamplerState(i, D3DSAMP_MAGFILTER, D3DTEXF_POINT);
-			d3d9Device->SetSamplerState(i, D3DSAMP_MIPFILTER, D3DTEXF_NONE);
+			dx9_device->SetSamplerState(i, D3DSAMP_MINFILTER, D3DTEXF_POINT);
+			dx9_device->SetSamplerState(i, D3DSAMP_MAGFILTER, D3DTEXF_POINT);
+			dx9_device->SetSamplerState(i, D3DSAMP_MIPFILTER, D3DTEXF_NONE);
 			break;
 		case SamplerStateDesc::FM_Linear:
-			d3d9Device->SetSamplerState(i, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
-			d3d9Device->SetSamplerState(i, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
-			d3d9Device->SetSamplerState(i, D3DSAMP_MIPFILTER, D3DTEXF_NONE);
+			dx9_device->SetSamplerState(i, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
+			dx9_device->SetSamplerState(i, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
+			dx9_device->SetSamplerState(i, D3DSAMP_MIPFILTER, D3DTEXF_NONE);
 			break;
 		case SamplerStateDesc::FM_LinearMipmap:
-			d3d9Device->SetSamplerState(i, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
-			d3d9Device->SetSamplerState(i, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
-			d3d9Device->SetSamplerState(i, D3DSAMP_MIPFILTER, D3DTEXF_POINT);
+			dx9_device->SetSamplerState(i, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
+			dx9_device->SetSamplerState(i, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
+			dx9_device->SetSamplerState(i, D3DSAMP_MIPFILTER, D3DTEXF_POINT);
 			break;
 		case SamplerStateDesc::FM_Trilinear:
-			d3d9Device->SetSamplerState(i, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
-			d3d9Device->SetSamplerState(i, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
-			d3d9Device->SetSamplerState(i, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR);
+			dx9_device->SetSamplerState(i, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
+			dx9_device->SetSamplerState(i, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
+			dx9_device->SetSamplerState(i, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR);
 			break;
 		}
 
-		d3d9Device->EndStateBlock(&m_stateBlocks[i]);
+		dx9_device->EndStateBlock(&m_stateBlocks[i]);
 	}
 }
 

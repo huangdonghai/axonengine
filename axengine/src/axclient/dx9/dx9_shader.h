@@ -238,6 +238,7 @@ public:
 	void end();
 
 protected:
+	UniformStruct *parseStruct(LPD3DXCONSTANTTABLE constTable, const char *paramName);
 	void initTechniques();
 	void initFeatures();
 	void initSortHint();
@@ -277,12 +278,6 @@ private:
 #if 0
 	Material *m_coupled;
 #endif
-	UniformStruct *m_g_gc;
-	UniformStruct *m_g_vgc;
-	UniformStruct *m_g_pgc;
-	UniformStruct *m_g_vic;
-	UniformStruct *m_g_pic;
-	UniformStruct *m_g_pc;
 
 	// shader info
 	ShaderInfo *m_shaderInfo;
@@ -292,11 +287,11 @@ private:
 // class D3D9shadermanager
 //--------------------------------------------------------------------------
 
-class D3D9ShaderManager
+class DX9_ShaderManager
 {
 public:
-	D3D9ShaderManager();
-	virtual ~D3D9ShaderManager();
+	DX9_ShaderManager();
+	virtual ~DX9_ShaderManager();
 
 	virtual DX9_Shader *findShader(const String &name, const ShaderMacro &macro = g_shaderMacro);
 	virtual DX9_Shader *findShader(const FixedString &nameId, const ShaderMacro &macro);
@@ -309,8 +304,8 @@ protected:
 	void _initialize();
 
 private:
-	typedef Dict<FixedString,Dict<ShaderMacro,DX9_Shader*> > ShaderPool;
-	ShaderPool m_shaderPool;
+	typedef Dict<FixedString,Dict<ShaderMacro,DX9_Shader*> > ShaderDict;
+	ShaderDict m_shaders;
 	DX9_Shader *m_defaulted;
 	ShaderInfoDict m_shaderInfoDict;
 };

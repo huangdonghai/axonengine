@@ -13,7 +13,7 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-extern IDirect3DDevice9 *d3d9Device;
+extern IDirect3DDevice9 *dx9_device;
 
 
 template <typename _Kty, typename _Ty>
@@ -157,12 +157,12 @@ public:
 	STDMETHOD(SetSamplerState)(THIS_ DWORD dwStage, D3DSAMPLERSTATETYPE d3dSamplerState, DWORD dwValue)
 	{
 		m_nTotalStateChanges++;
-		return d3d9Device->SetSamplerState(dwStage, d3dSamplerState, dwValue);
+		return dx9_device->SetSamplerState(dwStage, d3dSamplerState, dwValue);
 	}
 	STDMETHOD(SetTextureStageState)(THIS_ DWORD dwStage, D3DTEXTURESTAGESTATETYPE d3dTextureStageState, DWORD dwValue)
 	{
 		m_nTotalStateChanges++;
-		return d3d9Device->SetTextureStageState(dwStage, d3dTextureStageState, dwValue);
+		return dx9_device->SetTextureStageState(dwStage, d3dTextureStageState, dwValue);
 	}
 	STDMETHOD(SetTexture)(THIS_ DWORD dwStage, LPDIRECT3DBASETEXTURE9 pTexture);
 
@@ -183,7 +183,7 @@ public:
 			return D3D_OK;
 
 		m_vertexShader = pShader;
-		return d3d9Device->SetVertexShader(pShader);
+		return dx9_device->SetVertexShader(pShader);
 	}
 	STDMETHOD(SetPixelShader)(THIS_ LPDIRECT3DPIXELSHADER9 pShader)
 	{
@@ -193,37 +193,37 @@ public:
 		}
 
 		m_pixelShader = pShader;
-		return d3d9Device->SetPixelShader(pShader);
+		return dx9_device->SetPixelShader(pShader);
 	}
 	STDMETHOD(SetFVF)(THIS_ DWORD dwFVF)
 	{
 		m_nTotalStateChanges++;
-		return d3d9Device->SetFVF(dwFVF);
+		return dx9_device->SetFVF(dwFVF);
 	}
 	STDMETHOD(SetTransform)(THIS_ D3DTRANSFORMSTATETYPE State, CONST D3DMATRIX *pMatrix)
 	{
 		m_nTotalStateChanges++;
-		return d3d9Device->SetTransform(State, pMatrix);
+		return dx9_device->SetTransform(State, pMatrix);
 	}
 	STDMETHOD(SetMaterial)(THIS_ CONST D3DMATERIAL9 *pMaterial)
 	{
 		m_nTotalStateChanges++;
-		return d3d9Device->SetMaterial(pMaterial);
+		return dx9_device->SetMaterial(pMaterial);
 	}
 	STDMETHOD(SetLight)(THIS_ DWORD Index, CONST D3DLIGHT9 *pLight)
 	{
 		m_nTotalStateChanges++;
-		return d3d9Device->SetLight(Index, pLight);
+		return dx9_device->SetLight(Index, pLight);
 	}
 	STDMETHOD(LightEnable)(THIS_ DWORD Index, BOOL Enable)
 	{
 		m_nTotalStateChanges++;
-		return d3d9Device->LightEnable(Index, Enable);
+		return dx9_device->LightEnable(Index, Enable);
 	}
 	STDMETHOD(SetNPatchMode)(THIS_ FLOAT NumSegments)
 	{
 		m_nTotalStateChanges++;
-		return d3d9Device->SetNPatchMode(NumSegments);
+		return dx9_device->SetNPatchMode(NumSegments);
 	}
 	STDMETHOD(SetVertexShaderConstantF)(THIS_ UINT RegisterIndex, CONST FLOAT *pConstantData, UINT RegisterCount)
 	{
@@ -231,7 +231,7 @@ public:
 		if (g_uniforms.isVsregisterShared(RegisterIndex))
 			return D3D_OK;
 
-		return d3d9Device->SetVertexShaderConstantF(RegisterIndex,
+		return dx9_device->SetVertexShaderConstantF(RegisterIndex,
 			pConstantData,
 			RegisterCount);
 	}
@@ -241,7 +241,7 @@ public:
 		if (g_uniforms.isVsregisterShared(RegisterIndex))
 			return D3D_OK;
 
-		return d3d9Device->SetVertexShaderConstantI(RegisterIndex,
+		return dx9_device->SetVertexShaderConstantI(RegisterIndex,
 			pConstantData,
 			RegisterCount);
 	}
@@ -251,7 +251,7 @@ public:
 		if (g_uniforms.isVsregisterShared(RegisterIndex))
 			return D3D_OK;
 
-		return d3d9Device->SetVertexShaderConstantB(RegisterIndex,
+		return dx9_device->SetVertexShaderConstantB(RegisterIndex,
 			pConstantData,
 			RegisterCount);
 	}
@@ -261,7 +261,7 @@ public:
 		if (g_uniforms.isPsregisterShared(RegisterIndex))
 			return D3D_OK;
 
-		return d3d9Device->SetPixelShaderConstantF(RegisterIndex,
+		return dx9_device->SetPixelShaderConstantF(RegisterIndex,
 			pConstantData,
 			RegisterCount);
 	}
@@ -270,7 +270,7 @@ public:
 		m_nTotalStateChanges++;
 		if (g_uniforms.isPsregisterShared(RegisterIndex))
 			return D3D_OK;
-		return d3d9Device->SetPixelShaderConstantI(RegisterIndex,
+		return dx9_device->SetPixelShaderConstantI(RegisterIndex,
 			pConstantData,
 			RegisterCount);
 	}
@@ -279,7 +279,7 @@ public:
 		m_nTotalStateChanges++;
 		if (g_uniforms.isPsregisterShared(RegisterIndex))
 			return D3D_OK;
-		return d3d9Device->SetPixelShaderConstantB(RegisterIndex,
+		return dx9_device->SetPixelShaderConstantB(RegisterIndex,
 			pConstantData,
 			RegisterCount);
 	}
@@ -306,7 +306,7 @@ public:
 		// If the return value is 'true', the command must be forwarded to
 		// the D3D Runtime.
 		if (cacheRenderStates.set_val(d3dRenderState, dwValue))
-			return d3d9Device->SetRenderState(d3dRenderState, dwValue);
+			return dx9_device->SetRenderState(d3dRenderState, dwValue);
 
 		m_nFilteredStateChanges++;
 

@@ -156,7 +156,7 @@ AX_SHADERCONST(SHADERMACRO_VERSION, 2)
 #		define AX_DECL_PRIMITIVECONST(decl) cbuffer cbPrimitiveConst : register(b5) { decl g_pc; };
 #	else
 #		define AX_DECL_BUFFER(decl, obj, reg, buf) decl obj : register(c##reg);
-#		define AX_DECL_PRIMITIVECONST(decl) decl g_pc : register(vs, c30) : register(ps, c20);
+#		define AX_DECL_PRIMITIVECONST(decl) decl g_pc : register(vs, c50) : register(ps, c24);
 #	endif
 #else
 #define AX_DECL_BUFFER(decl, obj, reg, buf) decl obj : BUFFER[buf];
@@ -192,9 +192,9 @@ struct PS_GlobalConst {
 };
 
 struct VS_InteractionConst {
+	float4x4 texMatrix;
 	float3x4 modelMatrix;
 	float4 instanceParam;
-	float4x4 texMatrix;
 };
 
 struct PS_InteractionConst {
@@ -204,11 +204,11 @@ struct PS_InteractionConst {
 	float2 layerScale;
 };
 
-AX_DECL_BUFFER(GlobalConst, g_gc, 0, 0);
-AX_DECL_BUFFER(VS_GlobalConst, g_vgc, 4, 1);
-AX_DECL_BUFFER(PS_GlobalConst, g_pgc, 4, 2);
-AX_DECL_BUFFER(VS_InteractionConst, g_vic, 22, 3);
-AX_DECL_BUFFER(PS_InteractionConst, g_pic, 16, 4);
+AX_DECL_BUFFER(GlobalConst, g_gc, 4, 0);
+AX_DECL_BUFFER(VS_GlobalConst, g_vgc, 8, 1);
+AX_DECL_BUFFER(PS_GlobalConst, g_pgc, 8, 2);
+AX_DECL_BUFFER(VS_InteractionConst, g_vic, 42, 3);
+AX_DECL_BUFFER(PS_InteractionConst, g_pic, 20, 4);
 
 #endif // __cplusplus
 

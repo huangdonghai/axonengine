@@ -94,9 +94,9 @@ void DX9_Window::bind()
 {
 	checkSwapChain();
 
-	IDirect3DSurface9 *ds = d3d9Driver->getDepthStencil(m_swapChainSize.x, m_swapChainSize.y);
+	IDirect3DSurface9 *ds = dx9_driver->getDepthStencil(m_swapChainSize.x, m_swapChainSize.y);
 
-	V(d3d9Device->SetRenderTarget(0, m_backbuffer));
+	V(dx9_device->SetRenderTarget(0, m_backbuffer));
 #if 0
 	V(d3d9StateManager->setDepthStencilSurface(ds, TexFormat::D24S8));
 #endif
@@ -173,7 +173,7 @@ void DX9_Window::checkSwapChain()
 	presentparams.SwapEffect = D3DSWAPEFFECT_DISCARD;
 	presentparams.PresentationInterval = flags;
 
-	V(d3d9Device->CreateAdditionalSwapChain(&presentparams, &m_swapChain));
+	V(dx9_device->CreateAdditionalSwapChain(&presentparams, &m_swapChain));
 	V(m_swapChain->GetBackBuffer(0, D3DBACKBUFFER_TYPE_MONO, &m_backbuffer));
 
 	m_swapChainSize.x = r.right;

@@ -43,7 +43,7 @@ static void setMaterialUniforms(Material *mat) {
 void D3D9Draw::draw(Material *mat, Technique tech, D3D9geometry *prim)
 {
 	if (!mat) {
-		static DX9_Shader *debugshader = d3d9ShaderManager->findShaderDX("_debug");
+		static DX9_Shader *debugshader = dx9_shaderManager->findShaderDX("_debug");
 
 		if (tech != Technique::Main) {
 			return;
@@ -87,7 +87,7 @@ void D3D9Draw::draw(Material *mat, Technique tech, D3D9geometry *prim)
 	}
 #endif
 
-	DX9_Shader *shader = (DX9_Shader*)d3d9ShaderManager->findShader(mat->getShaderNameId(), macro);
+	DX9_Shader *shader = (DX9_Shader*)dx9_shaderManager->findShader(mat->getShaderNameId(), macro);
 
 	if (!shader->haveTechnique(tech)) {
 		return;
@@ -127,7 +127,7 @@ void D3D9Draw::draw(DX9_Shader *shader, Technique tech, D3D9geometry *prim)
 
 D3D9Draw::D3D9Draw()
 {
-	m_fontShader = d3d9ShaderManager->findShaderDX("font", g_shaderMacro);
+	m_fontShader = dx9_shaderManager->findShaderDX("font", g_shaderMacro);
 	m_vertDecl = d3d9VertexBufferManager->getVertDecl(D3D9VertexObject::VertexBlend);
 	m_postVertDecl = d3d9VertexBufferManager->getVertDecl(D3D9VertexObject::VertexChunk);
 }
@@ -248,13 +248,13 @@ void D3D9Draw::drawChars(int count)
 	memcpy(dynvb.writePtr, m_fontVerts, count*6*sizeof(BlendVertex));
 	d3d9VertexBufferManager->endAppendVb();
 
-	V(d3d9Device->SetStreamSource(0, dynvb.vb, dynvb.offset, sizeof(BlendVertex)));
+	V(dx9_device->SetStreamSource(0, dynvb.vb, dynvb.offset, sizeof(BlendVertex)));
 	d3d9StateManager->setVertexDeclaration(m_vertDecl->getObject());
 
 	UINT cPasses = m_fontShader->begin(Technique::Main);
 	for (UINT i = 0; i < cPasses; i++) {
 		m_fontShader->beginPass(i);
-		d3d9Device->DrawPrimitive(D3DPT_TRIANGLELIST, 0, count*2);
+		dx9_device->DrawPrimitive(D3DPT_TRIANGLELIST, 0, count*2);
 		m_fontShader->endPass();
 	}
 	m_fontShader->end();
@@ -284,7 +284,7 @@ void D3D9Draw::drawPostUP(DX9_Shader *shader, PostMesh *mesh)
 	UINT cPasses = shader->begin(Technique::Main);
 	for (UINT i = 0; i < cPasses; i++) {
 		shader->beginPass(i);
-		d3d9Device->DrawIndexedPrimitiveUP(D3DPT_TRIANGLELIST, 0, mesh->m_numVertices, mesh->m_numIndices/3, mesh->m_indices, D3DFMT_INDEX16, mesh->m_vertices, sizeof(Vector3));
+		dx9_device->DrawIndexedPrimitiveUP(D3DPT_TRIANGLELIST, 0, mesh->m_numVertices, mesh->m_numIndices/3, mesh->m_indices, D3DFMT_INDEX16, mesh->m_vertices, sizeof(Vector3));
 		shader->endPass();
 	}
 	shader->end();
@@ -293,7 +293,7 @@ void D3D9Draw::drawPostUP(DX9_Shader *shader, PostMesh *mesh)
 DX9_Shader *D3D9Draw::findShader(Material *mat, Technique tech)
 {
 	if (!mat) {
-		static DX9_Shader *debugshader = d3d9ShaderManager->findShaderDX("_debug");
+		static DX9_Shader *debugshader = dx9_shaderManager->findShaderDX("_debug");
 
 		if (tech != Technique::Main) {
 			return 0;
@@ -307,7 +307,7 @@ DX9_Shader *D3D9Draw::findShader(Material *mat, Technique tech)
 	const ShaderMacro &matmacro = mat->getShaderMacro();
 	macro.mergeFrom(&matmacro);
 
-	DX9_Shader *shader = (DX9_Shader*)d3d9ShaderManager->findShader(mat->getShaderNameId(), macro);
+	DX9_Shader *shader = (DX9_Shader*)dx9_shaderManager->findShader(mat->getShaderNameId(), macro);
 
 	if (!shader->haveTechnique(tech)) {
 		return 0;

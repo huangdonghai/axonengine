@@ -94,17 +94,19 @@ inline const char *D3DErrorString(HRESULT hr)
 #undef D3DERR
 }
 
-extern DX9_Window *d3d9InternalWindow;
-extern DX9_Driver *d3d9Driver;
-extern RenderDriverInfo *d3d9DriverInfo;
+extern DX9_Window *dx9_internalWindow;
+extern DX9_Driver *dx9_driver;
+extern RenderDriverInfo *dx9_driverInfo;
 #if 0
 extern RenderQueue *d3d9Queue;
 extern SyncMutex d3d9Mutex;
 #endif
-extern IDirect3D9 *d3d9Api;
-extern IDirect3DDevice9 *d3d9Device;
+extern IDirect3D9 *dx9_api;
+extern IDirect3DDevice9 *dx9_device;
 
-extern D3D9ShaderManager *d3d9ShaderManager;
+extern DX9_ShaderManager *dx9_shaderManager;
+extern UniformStruct *dx9_uniformStructs[UniformStruct::NUMBER_STRUCT];
+
 #if 0
 //extern D3D9TargetManager *d3d9TargetManager;
 extern D3D9querymanager *d3d9QueryManager;

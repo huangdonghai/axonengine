@@ -245,7 +245,7 @@ HRESULT D3D9StateManager::setDepthStencilSurface(IDirect3DSurface9 *obj, TexForm
 	}
 
 	m_depthStencilSurface = obj;
-	return d3d9Device->SetDepthStencilSurface(obj);
+	return dx9_device->SetDepthStencilSurface(obj);
 }
 
 void D3D9StateManager::setVertexDeclaration( IDirect3DVertexDeclaration9 *vertdecl )
@@ -254,7 +254,7 @@ void D3D9StateManager::setVertexDeclaration( IDirect3DVertexDeclaration9 *vertde
 		return;
 
 	m_vertexDeclaration = vertdecl;
-	d3d9Device->SetVertexDeclaration(m_vertexDeclaration);
+	dx9_device->SetVertexDeclaration(m_vertexDeclaration);
 }
 
 void D3D9StateManager::setSamplerStateBlock( DWORD stage, Texture::ClampMode clampmode, Texture::FilterMode filtermode )
@@ -272,7 +272,7 @@ void D3D9StateManager::setSamplerStateBlock( DWORD stage, Texture::ClampMode cla
 	}
 
 	IDirect3DStateBlock9 *state = 0;
-	d3d9Device->BeginStateBlock();
+	dx9_device->BeginStateBlock();
 
 	switch (clampmode) {
 	case Texture::CM_Clamp:
@@ -316,7 +316,7 @@ void D3D9StateManager::setSamplerStateBlock( DWORD stage, Texture::ClampMode cla
 		break;
 	}
 
-	d3d9Device->EndStateBlock(&state);
+	dx9_device->EndStateBlock(&state);
 
 	m_states[hash] = state;
 	state->Apply();
@@ -337,7 +337,7 @@ STDMETHODIMP D3D9StateManager::SetTexture( THIS_ DWORD dwStage, LPDIRECT3DBASETE
 	DWORD size = sizeof(void*);
 
 	if (!pTexture) {
-		return d3d9Device->SetTexture(dwStage, pTexture);
+		return dx9_device->SetTexture(dwStage, pTexture);
 	}
 #if 0
 	pTexture->GetPrivateData(d3d9ResGuid, &appTex, &size);
@@ -347,7 +347,7 @@ STDMETHODIMP D3D9StateManager::SetTexture( THIS_ DWORD dwStage, LPDIRECT3DBASETE
 	if (appTex/* && size*/) {
 		appTex->issueSamplerState(dwStage);
 	}
-	return d3d9Device->SetTexture(dwStage, pTexture);
+	return dx9_device->SetTexture(dwStage, pTexture);
 }
 
 void D3D9StateManager::EndFrameStats()

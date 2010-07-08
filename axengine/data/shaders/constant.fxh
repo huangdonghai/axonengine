@@ -24,7 +24,6 @@ read the license and understand and accept it fully.
 
 // let hlsl use Cg/GLSL like matrix mode
 #if G_D3D
-#	pragma pack_matrix(row_major)
 #endif
 
 // effect state for d3d/opengl portability
@@ -161,8 +160,6 @@ AX_UNIFORM_DEFS
 #define g_matShiness g_pic.matShiness
 #define g_layerScale g_pic.layerScale
 AX_SAMPLER_UNIFORMS
-
-float4 g_pad[32] : register(vs, c1);
 #endif
 
 // render hardware

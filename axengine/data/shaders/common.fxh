@@ -29,7 +29,9 @@ DECL_SAMPLER(sampler2D, g_terrainNormal);
 DECL_SAMPLER(sampler2D, g_layerAlpha);
 
 #ifdef G_D3D
-#define for if (0) else for
+#	define for if (0) else for
+#	pragma warning(disable:3205) // warning X3205: conversion from larger type to smaller, possible loss of data
+#	pragma pack_matrix(row_major)
 #endif
 
 #include "shared.fxh"

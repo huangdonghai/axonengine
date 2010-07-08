@@ -71,28 +71,41 @@ private:
 class UniformStruct
 {
 public:
+	enum {
+		GLOBALCONST,
+		VS_GLOBALCONST,
+		PS_GLOBALCONST,
+		VS_INTERACTIONCONST,
+		PS_INTERACTIONCONST,
+		NUMBER_STRUCT
+	};
 	struct Field {
 		FixedString m_name;
 		int m_offset;
-		int m_byteSize;
+		int m_numFloats;
 	};
 
-	UniformStruct();
+	UniformStruct(int index, int numFloats);
 	~UniformStruct();
 
-	int getDataSize() const { return m_byteSize; }
+	int getNumFloats() const { return m_numFloats; }
 	const float *getDataPointer() const { return m_data; }
 	bool isDirty() const { return m_dirty; }
 
-	void setData(int dataSize, float *datap);
+	UniformStruct *clone() const;
+
+	void setData(int numFloats, float *datap);
 	void setFieldData(const FixedString &fieldName, int datasize, float *datap);
 	void setFieldData(const FixedString &fieldName, int count, const Matrix4 mtr[]);
 	const float *getFieldPointer(const FixedString &fieldName) const;
 
+	void addField(const Field &field);
+
 private:
 	bool m_dirty;
 	Sequence<Field> m_fields;
-	int m_byteSize; // in bytes
+	int m_numFloats; // in bytes
+	int m_index; // register index in dx9, buffer index in dx10,dx11
 	float *m_data;
 };
 

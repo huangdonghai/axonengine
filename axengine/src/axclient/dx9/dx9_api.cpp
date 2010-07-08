@@ -144,7 +144,7 @@ inline bool trTexFormat(TexFormat texformat, D3DFORMAT &d3dformat)
 
 bool CheckIfSupportHardwareMipmapGeneration(D3DFORMAT d3dformat, DWORD d3dusage)
 {
-	if (d3d9Api->CheckDeviceFormat(
+	if (dx9_api->CheckDeviceFormat(
 		D3DADAPTER_DEFAULT,
 		D3DDEVTYPE_HAL,
 		D3DFMT_X8R8G8B8,
@@ -192,7 +192,7 @@ void dx9CreateTexture2D(phandle_t h, TexFormat format, int width, int height, in
 
 	int m_videoMemoryUsed = format.calculateDataSize(width, height);
 
-	V(d3d9Device->CreateTexture(width, height, 1, d3dusage, d3dformat, d3dpool, (LPDIRECT3DTEXTURE9*)h, 0));
+	V(dx9_device->CreateTexture(width, height, 1, d3dusage, d3dformat, d3dpool, (LPDIRECT3DTEXTURE9*)h, 0));
 
 	stat_textureMemory.add(m_videoMemoryUsed);
 }
@@ -331,7 +331,7 @@ void dx9CreateVertexBuffer(phandle_t h, int datasize, Primitive::Hint hint)
 		d3dusage = D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY;
 	}
 
-	V(d3d9Device->CreateVertexBuffer(datasize, d3dusage, 0, d3dpool, (IDirect3DVertexBuffer9 **)h, 0));
+	V(dx9_device->CreateVertexBuffer(datasize, d3dusage, 0, d3dpool, (IDirect3DVertexBuffer9 **)h, 0));
 
 	stat_numVertexBuffers.inc();
 	stat_vertexBufferMemory.add(datasize);
@@ -363,7 +363,7 @@ void dx9CreateIndexBuffer(phandle_t h, int datasize, Primitive::Hint hint)
 		d3dusage = D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY;
 	}
 
-	V(d3d9Device->CreateIndexBuffer(datasize, d3dusage, D3DFMT_INDEX16, d3dpool, (IDirect3DIndexBuffer9 **)h, 0));
+	V(dx9_device->CreateIndexBuffer(datasize, d3dusage, D3DFMT_INDEX16, d3dpool, (IDirect3DIndexBuffer9 **)h, 0));
 
 	stat_numIndexBuffers.inc();
 	stat_indexBufferMemory.add(datasize);
@@ -412,8 +412,8 @@ void dx9DeleteSamplerState( phandle_t h )
 void dx9CreateBlendState( phandle_t h, const BlendStateDesc &src )
 {
 	IDirect3DStateBlock9 *stateblock;
-	d3d9Device->BeginStateBlock();
-	d3d9Device->EndStateBlock(&stateblock);
+	dx9_device->BeginStateBlock();
+	dx9_device->EndStateBlock(&stateblock);
 
 	*h = stateblock;
 }
@@ -427,8 +427,8 @@ void dx9DeleteBlendState( phandle_t h )
 void dx9CreateDepthStencilState( phandle_t h, const DepthStencilStateDesc &src )
 {
 	IDirect3DStateBlock9 *stateblock;
-	d3d9Device->BeginStateBlock();
-	d3d9Device->EndStateBlock(&stateblock);
+	dx9_device->BeginStateBlock();
+	dx9_device->EndStateBlock(&stateblock);
 
 	*h = stateblock;
 }
@@ -442,8 +442,8 @@ void dx9DeleteDepthStencilState( phandle_t h )
 void dx9CreateRasterizerState( phandle_t h, const RasterizerStateDesc &src )
 {
 	IDirect3DStateBlock9 *stateblock;
-	d3d9Device->BeginStateBlock();
-	d3d9Device->EndStateBlock(&stateblock);
+	dx9_device->BeginStateBlock();
+	dx9_device->EndStateBlock(&stateblock);
 
 	*h = stateblock;
 }

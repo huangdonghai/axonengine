@@ -34,43 +34,43 @@ void DX9_Driver::initialize()
 	}
 
 	g_renderDriver = this;
-	d3d9Driver = this;
+	dx9_driver = this;
 
 	Printf("..Initializing D3D9Driver...\n");
 
-	d3d9InternalWindow = new DX9_Window();
-	d3d9DriverInfo = new RenderDriverInfo;
-	d3d9DriverInfo->driverType = RenderDriverInfo::D3D;
-	d3d9DriverInfo->highestQualitySupport = ShaderQuality::Low;
-	d3d9DriverInfo->vendor = "unknown";
-	d3d9DriverInfo->renderer = "unknown";
-	d3d9DriverInfo->version = "unknown";
-	d3d9DriverInfo->extension = "unknown";
+	dx9_internalWindow = new DX9_Window();
+	dx9_driverInfo = new RenderDriverInfo;
+	dx9_driverInfo->driverType = RenderDriverInfo::D3D;
+	dx9_driverInfo->highestQualitySupport = ShaderQuality::Low;
+	dx9_driverInfo->vendor = "unknown";
+	dx9_driverInfo->renderer = "unknown";
+	dx9_driverInfo->version = "unknown";
+	dx9_driverInfo->extension = "unknown";
 
 	Printf("...Calling Direct3DCreate9(D3D_SDK_VERSION = %d)...", D3D_SDK_VERSION);
-	d3d9Api = Direct3DCreate9(D3D_SDK_VERSION);
+	dx9_api = Direct3DCreate9(D3D_SDK_VERSION);
 
-	if (!d3d9Api) {
+	if (!dx9_api) {
 		Errorf("D3D9Driver::initialize: Direct3DCreate9 error\nMaybe you should install DirectX 9 or later version runtime");
 		return;
 	}
 
 	D3DCAPS9 caps;
 
-	HRESULT hr = d3d9Api->GetDeviceCaps(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, &caps);
+	HRESULT hr = dx9_api->GetDeviceCaps(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, &caps);
 	if (FAILED(hr)) {
 		Errorf("D3D9Driver::initialize: GetDeviceCaps failed %s", D3DErrorString(hr));
 	}
 
-	d3d9DriverInfo->maxTextureUnits = caps.MaxTextureBlendStages;
-	d3d9DriverInfo->maxTextureSize = std::min(caps.MaxTextureWidth, caps.MaxTextureHeight);
-	d3d9DriverInfo->max3DTextureSize = caps.MaxVolumeExtent;
-	d3d9DriverInfo->maxCubeMapTextureSize = d3d9DriverInfo->maxTextureSize;
+	dx9_driverInfo->maxTextureUnits = caps.MaxTextureBlendStages;
+	dx9_driverInfo->maxTextureSize = std::min(caps.MaxTextureWidth, caps.MaxTextureHeight);
+	dx9_driverInfo->max3DTextureSize = caps.MaxVolumeExtent;
+	dx9_driverInfo->maxCubeMapTextureSize = dx9_driverInfo->maxTextureSize;
 
 
 	// Get the current desktop format
 	D3DDISPLAYMODE dispmode;
-	hr = d3d9Api->GetAdapterDisplayMode(D3DADAPTER_DEFAULT, &dispmode);
+	hr = dx9_api->GetAdapterDisplayMode(D3DADAPTER_DEFAULT, &dispmode);
 	if (FAILED(hr)) {
 		Errorf("GetAdapterDisplayMode failed %s", D3DErrorString(hr));
 	}
@@ -86,13 +86,13 @@ void DX9_Driver::initialize()
 	d3dpp.AutoDepthStencilFormat= D3DFMT_D24S8;
 	d3dpp.Flags = 0;
 	d3dpp.Windowed = TRUE;
-	d3dpp.hDeviceWindow = (HWND)d3d9InternalWindow->getHandle();
+	d3dpp.hDeviceWindow = (HWND)dx9_internalWindow->getHandle();
 	d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;
 	d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_IMMEDIATE;
 
 	DWORD BehaviorFlags = D3DCREATE_HARDWARE_VERTEXPROCESSING|D3DCREATE_PUREDEVICE;
 
-	hr = d3d9Api->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL,(HWND)d3d9InternalWindow->getHandle(), BehaviorFlags, &d3dpp, &d3d9Device);
+	hr = dx9_api->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL,(HWND)dx9_internalWindow->getHandle(), BehaviorFlags, &d3dpp, &dx9_device);
 	if (FAILED(hr)) {
 		Errorf("CreateDevice failed %s", D3DErrorString(hr));
 	}
@@ -114,7 +114,7 @@ void DX9_Driver::initialize()
 	g_targetManager = d3d9TargetManager;
 #endif
 	g_shaderMacro.setMacro(ShaderMacro::G_D3D);
-	d3d9ShaderManager = new D3D9ShaderManager;
+	dx9_shaderManager = new DX9_ShaderManager;
 #if 0
 	g_shaderManager = d3d9ShaderManager;
 
@@ -130,7 +130,7 @@ void DX9_Driver::initialize()
 	d3d9Draw = new D3D9Draw();
 #endif
 
-	d3d9InternalWindow->bind();
+	dx9_internalWindow->bind();
 
 	Printf("ok\n");
 }
@@ -159,7 +159,7 @@ RenderTarget *D3D9Driver::createWindowTarget(Handle wndId, const String &name)
 
 const RenderDriverInfo *DX9_Driver::getDriverInfo()
 {
-	return d3d9DriverInfo;
+	return dx9_driverInfo;
 }
 
 #if 0
