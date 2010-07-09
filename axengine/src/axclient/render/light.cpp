@@ -790,7 +790,7 @@ void RenderLight::issueToQueue(RenderScene *qscene)
 		static Point s_offsets[4] = { Point(0,1), Point(1,1), Point(0,0), Point(1,0) };
 
 		for (int i = 0; i < qshadow->numSplitCamera; i++) {
-			RenderScene *subscene = g_renderFrame->allocQueuedScene();
+			RenderScene *subscene = g_renderFrame->allocScene();
 			qscene->subScenes[qscene->numSubScenes++] = subscene;
 			TypeZero(subscene);
 			subscene->sceneType = RenderScene::ShadowGen;

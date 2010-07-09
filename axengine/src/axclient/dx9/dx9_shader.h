@@ -216,7 +216,6 @@ public:
 	SamplerInfo *getSamplerAnno(int index) const;
 	int getNumTweakable() const;
 	ParameterInfo *getTweakableDef(int index);
-	ShaderInfo::SortHint getSortHint() const;
 	bool haveTechnique(Technique tech) const;
 	const ShaderInfo *getShaderInfo() const { return 0; }
 
@@ -241,7 +240,6 @@ protected:
 	UniformStruct *parseStruct(LPD3DXCONSTANTTABLE constTable, const char *paramName);
 	void initTechniques();
 	void initFeatures();
-	void initSortHint();
 
 	void initAnnotation();
 	void initSamplerAnn(D3DXHANDLE param);
@@ -258,7 +256,6 @@ protected:
 private:
 	LPD3DXEFFECT m_object;              // Effect object
 	String m_keyString;
-	ShaderInfo::SortHint m_sortHint;
 
 	D3DXHANDLE m_d3dxTechniques[Technique::Number];
 	IDirect3DTexture9 *m_samplerBound[SamplerType::NUMBER_ALL];

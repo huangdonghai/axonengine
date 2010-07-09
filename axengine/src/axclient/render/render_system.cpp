@@ -14,7 +14,7 @@ read the license and understand and accept it fully.
 AX_BEGIN_NAMESPACE
 
 static const char *glname = "axopengl.driver";
-static const char *d3d9name = "axdirect3d9.driver";
+static const char *d3d9name = "AxDX9.Driver";
 
 FontPtr g_defaultFont;
 FontPtr g_consoleFont;
@@ -44,6 +44,9 @@ RenderSystem::RenderSystem()
 	, m_frameNum(0)
 {
 	g_cmdSystem->registerHandler(this);
+
+	m_curTarget = 0;
+	m_curScene = 0;
 }
 
 RenderSystem::~RenderSystem()
@@ -60,9 +63,6 @@ void RenderSystem::initialize()
 
 	g_renderFrame = new RenderFrame();
 
-#if 0
-	gRenderDriver = (IDriver*)(gClassFactory->createInstanceByAlias(ClassName_RenderDriver));
-#else
 	String rd = r_driver.getString();
 	String drivername = d3d9name;
 
@@ -73,7 +73,6 @@ void RenderSystem::initialize()
 	}
 
 	g_renderDriver = (IRenderDriver*)(g_classFactory->createInstance(drivername));
-#endif
 	g_renderDriver->initialize();
 
 	getShaderQuality();
@@ -84,16 +83,11 @@ void RenderSystem::initialize()
 
 	m_selection = new Selection();
 
-#if 0
-	gMaterialFactory = new MaterialManager;
-
-	g_fontFactory = new Manager;
-	g_fontFactory->initialize();
-	Material::initManager();
-#else
 	Font::initManager();
 	MaterialDecl::initManager();
-#endif
+
+	g_apiWrap = new ApiWrap();
+	g_renderContext = new RenderContext();
 
 	g_defaultFont = Font::load("fonts/default", 14,14);
 	g_consoleFont = Font::load("fonts/console", 14,14);
@@ -108,16 +102,11 @@ void RenderSystem::finalize()
 	g_consoleFont.clear();
 	g_miniFont.clear();
 
-#if 0
-	g_fontFactory->finalize();
-	SafeDelete(g_fontFactory);
+	SafeDelete(g_renderContext);
+	SafeDelete(g_apiWrap);
 
-	SafeDelete(gMaterialFactory);
-	Material::finalizeManager();
-#else
 	Font::finalizeManager();
 	MaterialDecl::finalizeManager();
-#endif
 
 	g_renderDriver->finalize();
 	SafeDelete(g_renderDriver);
@@ -180,25 +169,15 @@ void RenderSystem::beginFrame(RenderTarget *target)
 void RenderSystem::beginScene(const RenderCamera &camera)
 {
 	if (m_curScene)
-		Errorf("already in a camera");
+		Errorf("already in a scene");
 
 	if (camera.getTarget() != m_curTarget)
 		Errorf("camera's target != current target");
 
-#if 0
-	ScenePtr sourceview(new RenderScene);
-#endif
-	m_curScene = g_renderFrame->allocQueuedScene();
+	m_curScene = g_renderFrame->allocScene();
 	g_renderFrame->addScene(m_curScene);
-#if 0
-	m_sceneSeq.push_back(m_curScene);
-#endif
 	m_curScene->camera = camera;
 	m_curScene->world = NULL;
-#if 0
-	m_curScene->primitives.reserve(256);
-	m_curScene->primitives.reserve(256);
-#endif
 }
 
 void RenderSystem::addToScene(RenderWorld *world)
@@ -222,9 +201,7 @@ void RenderSystem::addToOverlay(Primitive *primitive)
 
 void RenderSystem::endScene()
 {
-#if 0
-	m_curScene.reset();
-#endif
+	m_curScene = 0;
 }
 
 void RenderSystem::endFrame()
@@ -322,9 +299,6 @@ void RenderSystem::endFrame()
 		this->endScene();
 	}
 
-#if 0
-	g_renderQueue->beginProviding();
-#endif
 	g_renderFrame->setTarget(m_curTarget);
 
 	// add to render queue
@@ -345,6 +319,15 @@ void RenderSystem::endFrame()
 
 		g_renderQueue->addQueuedScene(queued);
 	}
+#else
+	for (int i = 0; i < g_renderFrame->getSceneCount(); i++) {
+		RenderScene *scene = g_renderFrame->getScene(i);
+
+		if (scene->world) {
+			scene->sceneType = RenderScene::WorldMain;
+			scene->world->renderTo(scene);
+		}
+	}
 #endif
 
 	float frontEndTime = OsUtil::seconds() - frontEndStart;
@@ -352,21 +335,10 @@ void RenderSystem::endFrame()
 	//g_statistic->setValue(stat_frontendTime, frontEndTime * 1000);
 	stat_frontendTime.setInt(frontEndTime * 1000);
 
-#if 0
-	if (m_isMTrendering) {
-		g_renderQueue->endProviding();
-	} else {
-//		g_renderDriver->runFrame();
-		g_renderQueue->endConsuming();
-	}
-#else
 	g_renderContext->issueQueue(g_renderFrame);
-#endif
 
-#if 0
-	m_sceneSeq.clear();
-	m_curScene.reset();
-#endif
+	m_curTarget = 0;
+
 	m_frameNum++;
 }
 

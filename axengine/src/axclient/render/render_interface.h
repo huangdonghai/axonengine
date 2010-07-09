@@ -168,7 +168,7 @@ protected:
 
 	bool isFull() const
 	{
-		int freeSlots = ((m_cmdWritePos - m_cmdReadPos) + MAX_COMMANDS) % MAX_COMMANDS;
+		int freeSlots = ((m_cmdReadPos - m_cmdWritePos) + MAX_COMMANDS) % MAX_COMMANDS;
 		if (freeSlots == 1) return true;
 		return false;
 	}
@@ -248,11 +248,6 @@ protected:
 private:
 	// init
 	Material *m_defaultMat;
-	UniformStruct *m_globalConst;
-	UniformStruct *m_vsGlobalConst;
-	UniformStruct *m_psGlobalConst;
-	UniformStruct *m_vsIaConst;
-	UniformStruct *m_psIaConst;
 
 	// runtime
 	RenderTarget *m_frameWindow;

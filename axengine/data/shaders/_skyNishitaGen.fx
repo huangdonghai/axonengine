@@ -31,25 +31,25 @@ static const float3 WAVE_LENGTH = {0.65f, 0.57f, 0.475f};
 
 static const float OUT_RADIUS = RADIUS * OUTER_RADIUS_SCALE;
 
-float	InnerRadius = RADIUS;
-float	OuterRadius = OUT_RADIUS;
-float	NumSamples = 25;
-float	fScale = 1.0 / (OUT_RADIUS - RADIUS);
-float2	v2dRayleighMieScaleHeight = {0.25, 0.1};
+static const float InnerRadius = RADIUS;
+static const float OuterRadius = OUT_RADIUS;
+static const float NumSamples = 25;
+static const float fScale = 1.0 / (OUT_RADIUS - RADIUS);
+static const float2 v2dRayleighMieScaleHeight = {0.25, 0.1};
 
 //float ESun = 20.0f;
 //float Kr = 0.0025f;
 //float Km = 0.0010f;
-float	KrESun = KR * ESUN;
-float	KmESun = KM * ESUN;
-float	Kr4PI = KR * 4.0f * PI;
-float	Km4PI = KM * 4.0f * PI;
+static const float KrESun = KR * ESUN;
+static const float KmESun = KM * ESUN;
+static const float Kr4PI = KR * 4.0f * PI;
+static const float Km4PI = KM * 4.0f * PI;
 
-float	g = G;
-float	g2 = G * G;
+static const float g = G;
+static const float g2 = G * G;
 
-float3	InvWavelength = { 5.60204554,9.473285,19.6438026 };
-float3	WavelengthMie = { 1.43599451,1.60348582,1.86886263 };
+static const float3 InvWavelength = { 5.60204554,9.473285,19.6438026 };
+static const float3 WavelengthMie = { 1.43599451,1.60348582,1.86886263 };
 
 struct VertOut {
     float4 hpos		: POSITION;

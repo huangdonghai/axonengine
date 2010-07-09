@@ -394,15 +394,6 @@ public:
 		MAX_LITERALS = 8
 	};
 
-	enum SortHint {
-		SortHint_Opacit = SHADER::SortHint_opacit,
-		SortHint_Decal = SHADER::SortHint_decal,
-		SortHint_UnderWater = SHADER::SortHint_underWater,
-		SortHint_Water = SHADER::SortHint_water,
-		SortHint_AboveWater = SHADER::SortHint_aboveWater
-	};
-
-	SortHint m_sortHint;
 	bool m_haveTextureTarget;
 	SamplerInfos m_samplerAnnos;
 	ParameterInfos m_parameterAnnos;

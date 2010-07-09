@@ -146,8 +146,6 @@ public:
 	RenderFrame();
 	~RenderFrame();
 
-	void initialize();
-	void finalize();
 	RenderTarget *getTarget();
 
 	// for providing thread
@@ -156,7 +154,7 @@ public:
 #endif
 	MemoryStack *getMemoryStack();
 	void setTarget(RenderTarget *target);
-	RenderScene *allocQueuedScene();
+	RenderScene *allocScene();
 	void addScene(RenderScene *scene);
 	Interaction *allocInteraction();
 	Interaction **allocInteractionPointer(int num);

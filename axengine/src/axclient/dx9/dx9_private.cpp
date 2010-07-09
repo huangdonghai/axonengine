@@ -12,8 +12,8 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-AX_BEGIN_CLASS_MAP(axdirect3d9)
-	AX_CLASS_ENTRY("driver", DX9_Driver)
+AX_BEGIN_CLASS_MAP(AxDX9)
+	AX_CLASS_ENTRY("Driver", DX9_Driver)
 AX_END_CLASS_MAP()
 
 DX9_Window *dx9_internalWindow;

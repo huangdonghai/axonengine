@@ -12,7 +12,7 @@ read the license and understand and accept it fully.
 AX_BEGIN_NAMESPACE
 
 AX_DECLARE_MODULE(axopengl);
-AX_DECLARE_MODULE(axdirect3d9);
+AX_DECLARE_MODULE(AxDX9);
 
 // console variable
 #define AX_CVARDECL(name, defaultstring, flags) \
@@ -61,7 +61,7 @@ void axClientInit()
 
 #if 1 // _LIB
 //	AX_REGISTER_MODULE(axopengl);
-	AX_REGISTER_MODULE(axdirect3d9);
+	AX_REGISTER_MODULE(AxDX9);
 #endif
 
 	g_renderSystem = new RenderSystem;
@@ -95,7 +95,6 @@ void axClientQuit()
 	g_renderSystem->finalize();
 	SafeDelete(g_renderSystem);
 
-	g_renderFrame->finalize();
 	SafeDelete(g_renderFrame);
 }
 

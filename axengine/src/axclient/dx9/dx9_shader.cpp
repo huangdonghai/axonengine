@@ -600,16 +600,8 @@ void DX9_Pass::setParameter(const ParamDesc &param, const float *value, bool isP
 
 DX9_Shader::DX9_Shader()
 {
-#if 0
-	m_p2tWidth = 0;
-	m_p2tHeight = 0;
-#endif
 	m_haveTextureTarget = false;
-	m_sortHint = ShaderInfo::SortHint_Opacit;
 	m_curTechnique = 0;
-#if 0
-	m_coupled = 0;
-#endif
 }
 
 DX9_Shader::~DX9_Shader()
@@ -682,9 +674,6 @@ bool DX9_Shader::init(const String &name, const ShaderMacro &macro)
 	// init shader features
 	initFeatures();
 
-	// init sort hint
-	initSortHint();
-
 	// init axon object
 	initAxonObject();
 
@@ -722,11 +711,6 @@ ParameterInfo *DX9_Shader::getTweakableDef(int index)
 }
 
 
-ShaderInfo::SortHint DX9_Shader::getSortHint() const
-{
-	return m_sortHint;
-}
-
 bool DX9_Shader::haveTechnique(Technique tech) const
 {
 	return m_techniques[tech] != 0;
@@ -741,19 +725,6 @@ void DX9_Shader::initTechniques()
 
 void DX9_Shader::initFeatures()
 {}
-
-void DX9_Shader::initSortHint()
-{
-	D3DXHANDLE script = m_object->GetParameterByName(0, "Script");
-
-	if (!script) return;
-
-	D3DXHANDLE anno = m_object->GetAnnotationByName(script, "SortHint");
-
-	if (!anno) return;
-
-	m_sortHint = (ShaderInfo::SortHint)EffectHelper(m_object).getInt(anno);
-}
 
 void DX9_Shader::initAnnotation()
 {
@@ -1077,6 +1048,7 @@ void DX9_Shader::initGlobalStruct()
 
 	for (int i = 0; i < UniformStruct::NUMBER_STRUCT; i++) {
 		g_uniformStructs[i] = dx9_uniformStructs[i]->clone();
+		AX_ASSURE(g_uniformStructs[i]);
 	}
 }
 

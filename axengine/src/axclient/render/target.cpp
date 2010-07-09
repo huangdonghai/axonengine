@@ -29,7 +29,7 @@ RenderTarget::RenderTarget(int width, int height, TexFormat format)
 	String texname;
 	StringUtil::sprintf(texname, "_render_target_%d_%d_%d", m_width, m_height, g_system->generateId());
 
-	g_apiWrap->createTexture2D(&m_window, format, width, height, Texture::IF_RenderTarget);
+	m_texture = new Texture(texname, format, width, height, Texture::IF_RenderTarget);
 }
 
 RenderTarget::RenderTarget(Handle hwnd, const String &debugname)

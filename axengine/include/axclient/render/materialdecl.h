@@ -130,6 +130,14 @@ class MaterialDecl
 public:
 	friend class Material;
 
+	enum SortHint {
+		SortHint_Opacit,
+		SortHint_Decal,
+		SortHint_UnderWater,
+		SortHint_Water,
+		SortHint_AboveWater
+	};
+
 	enum {
 		MAX_FEATURES = 8,
 		MAX_LITERALS = 8
@@ -180,6 +188,7 @@ protected:
 
 private:
 	FixedString m_key;
+	SortHint m_sortHint;
 	String m_shaderName;
 	int m_shaderGenMask;
 	Flags m_flags;

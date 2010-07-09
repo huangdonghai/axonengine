@@ -336,7 +336,7 @@ RenderScene *RenderScene::addSubScene()
 		return 0;
 	}
 
-	RenderScene *result = g_renderFrame->allocQueuedScene();
+	RenderScene *result = g_renderFrame->allocScene();
 	subScenes[numSubScenes++] = result;
 	return result;
 }
@@ -358,45 +358,17 @@ void RenderScene::addOverlayPrimitive( Primitive *prim )
 }
 
 RenderFrame::RenderFrame()
-{}
-
-RenderFrame::~RenderFrame()
-{}
-
-void RenderFrame::initialize()
 {
-//	m_queuedScenes = NULL;
 	m_sceneCount = 0;
 	m_stack = new MemoryStack();
-#if 0
-	m_providingEvent = new SyncEvent();
-	m_consumingEvent = new SyncEvent();
-	m_cacheEndEvent = new SyncEvent();
-#endif
 	m_target = nullptr;
-#if 0
-	// set can providing
-	m_providingEvent->setEvent();
-#endif
 }
 
-void RenderFrame::finalize()
+RenderFrame::~RenderFrame()
 {
-#if 0
-	beginProviding();
-	delete(m_cacheEndEvent);
-	delete(m_consumingEvent);
-	delete(m_providingEvent);
-#endif
 	delete(m_stack);
 }
 
-#if 0
-void RenderQueue::beginProviding()
-{
-	m_providingEvent->lock();
-}
-#endif
 
 MemoryStack *RenderFrame::getMemoryStack()
 {
@@ -409,7 +381,7 @@ void RenderFrame::setTarget(RenderTarget *target)
 }
 
 
-RenderScene *RenderFrame::allocQueuedScene()
+RenderScene *RenderFrame::allocScene()
 {
 	RenderScene *queued_view = new(m_stack) RenderScene;
 
@@ -436,43 +408,6 @@ Interaction** RenderFrame::allocInteractionPointer(int num)
 	return new(m_stack) Interaction*[num];
 }
 
-#if 0
-QueuedLight *RenderQueue::allocQueuedLight()
-{
-	return new(m_stack) QueuedLight;
-}
-
-QueuedEntity *RenderQueue::allocQueuedActor(int num)
-{
-	return new(m_stack) QueuedEntity[num];
-}
-
-int *RenderQueue::allocPrimitives(int num)
-{
-	return new(m_stack) int[num];
-}
-
-void RenderQueue::endProviding()
-{
-	m_providingEvent->resetEvent();
-	m_consumingEvent->setEvent();
-
-	// wait render driver cache end
-	m_cacheEndEvent->lock();
-}
-
-void RenderQueue::beginConsuming()
-{
-	m_consumingEvent->lock();
-}
-
-void RenderQueue::endSync()
-{
-	m_cacheEndEvent->setEvent();
-}
-#endif
-
-
 RenderScene *RenderFrame::getScene(int index)
 {
 	AX_ASSERT(index >= 0 && index < m_sceneCount);
@@ -485,35 +420,6 @@ void RenderFrame::clear()
 	m_stack->clear();
 	m_sceneCount = 0;
 }
-#if 0
-void RenderQueue::endConsuming()
-{
-	m_consumingEvent->resetEvent();
-	m_providingEvent->setEvent();
-}
-#endif
-#if 0
-int Queue::allocQueryId() {
-	if (m_curQueryId == MAX_QUERIES) {
-		Errorf("Queue::allocQueryId: MAX_QUERIES exceeded");
-	}
-	return m_curQueryId++;
-}
-
-void Queue::setQueryResult(int num, int *result) {
-	memcpy(m_lastFrameResult, result, num * sizeof(int));
-}
-
-int Queue::getQueryResult(int id) {
-	QueryResults::iterator it = m_queryResults[m_readOffset].find(id);
-
-	if (it == m_queryResults[m_readOffset].end()) {
-		Debugf("Queue::getQueryResult: not queried");
-		return -1;
-	}
-	return it->second;
-}
-#endif
 
 AX_END_NAMESPACE
 

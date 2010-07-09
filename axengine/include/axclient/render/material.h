@@ -32,6 +32,8 @@ public:
 	RenderStateId getRenderStateId() const { return m_renderStateId; }
 	void setRenderStateId(RenderStateId id) { m_renderStateId = id; }
 
+	MaterialDecl::SortHint getSortHint() const { return m_sortHint; }
+
 	void setTextureSet(const String &texname);
 
 	void setDiffuse(const Vector3 &v);
@@ -92,6 +94,7 @@ private:
 	FixedString m_key;
 	MaterialDecl *m_decl;
 	RenderStateId m_renderStateId;
+	MaterialDecl::SortHint m_sortHint;
 
 	bool m_shaderMacroNeedRegen;
 	ShaderMacro m_shaderMacro;

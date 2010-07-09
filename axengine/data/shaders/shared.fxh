@@ -155,7 +155,7 @@ AX_SHADERCONST(SHADERMACRO_VERSION, 2)
 #		define AX_DECL_BUFFER(decl, obj, reg, buf) cbuffer cb##buf : register(b##buf) { decl obj; };
 #		define AX_DECL_PRIMITIVECONST(decl) cbuffer cbPrimitiveConst : register(b5) { decl g_pc; };
 #	else
-#		define AX_DECL_BUFFER(decl, obj, reg, buf) decl obj : register(c##reg);
+#		define AX_DECL_BUFFER(decl, obj, reg, buf) shared decl obj : register(c##reg);
 #		define AX_DECL_PRIMITIVECONST(decl) decl g_pc : register(vs, c50) : register(ps, c24);
 #	endif
 #else

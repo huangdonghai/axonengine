@@ -363,6 +363,15 @@
 			<File
 				RelativePath=".\shaders\_skyNishitaGen.fx"
 				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="build-axon-fx"
+						VSPROFILE="vs_3_0"
+						PSPROFILE="ps_3_0"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\shaders\_terrainbrush.fx"

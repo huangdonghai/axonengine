@@ -12,17 +12,17 @@ read the license and understand and accept it fully.
 AX_BEGIN_NAMESPACE
 
 static int eyeInWaterSort[] = {
-	ShaderInfo::SortHint_Opacit,
-	ShaderInfo::SortHint_Decal,
-	ShaderInfo::SortHint_AboveWater,
-	ShaderInfo::SortHint_Water,
-	ShaderInfo::SortHint_UnderWater,
+	MaterialDecl::SortHint_Opacit,
+	MaterialDecl::SortHint_Decal,
+	MaterialDecl::SortHint_AboveWater,
+	MaterialDecl::SortHint_Water,
+	MaterialDecl::SortHint_UnderWater,
 };
 
 
 void Interaction::calcSort(bool eyeInWater)
 {
-	sortkey = ShaderInfo::SortHint_Opacit << 28;
+	sortkey = MaterialDecl::SortHint_Opacit << 28;
 
 	Material *mat = primitive->getMaterial();
 
@@ -36,7 +36,7 @@ void Interaction::calcSort(bool eyeInWater)
 		return;
 	}
 
-	sortkey = shader->m_sortHint;
+	sortkey = mat->getSortHint();
 
 	Texture *tex = mat->getTexture(SamplerType::Diffuse);
 
