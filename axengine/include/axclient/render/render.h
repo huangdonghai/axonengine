@@ -293,7 +293,7 @@ template <typename Wrapper> static inline typename Wrapper::pointer GetPtrHelper
 #include "timeofday.h"
 #include "outdoorenv.h"
 #include "render_world.h"
-#include "queue.h"
+#include "frame.h"
 #include "render_system.h"
 
 AX_BEGIN_NAMESPACE
