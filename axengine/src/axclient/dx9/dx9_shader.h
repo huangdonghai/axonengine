@@ -104,22 +104,6 @@ public:
 };
 typedef Sequence<DX9_SamplerInfo*>	DX9_SamplerInfos;
 
-#if 0
-//--------------------------------------------------------------------------
-// class D3D9pixeltotexel
-//--------------------------------------------------------------------------
-
-class DX9_Pixel2Texel
-{
-public:
-	String m_name;
-	D3DXHANDLE m_param;
-	FloatSeq m_pixelValue;
-	FloatSeq m_scaledValue;
-};
-typedef Sequence<DX9_Pixel2Texel>	DX9_Pixel2Texels;
-#endif
-
 class DX9_Pass
 {
 public:
@@ -127,9 +111,6 @@ public:
 	
 	struct ParamDesc {
 		D3DXCONSTANT_DESC d3dDesc;
-#if 0
-		const DX9_Pixel2Texel *p2t;
-#endif
 	};
 
 	DX9_Pass(DX9_Shader *shader, D3DXHANDLE d3dxhandle);
@@ -223,12 +204,6 @@ public:
 
 	void setSystemMap(SamplerType maptype, IDirect3DTexture9 *tex);
 
-#if 0
-	// set pixel to texel conversion parameter
-	void setPixelToTexel(int width, int height);
-	void setCoupled(Material *mtr);
-#endif
-
 	ID3DXEffect *getObject() const { return m_object; }
 
 	UINT begin(Technique tech);
@@ -244,9 +219,6 @@ protected:
 	void initAnnotation();
 	void initSamplerAnn(D3DXHANDLE param);
 	void initParameterAnn(D3DXHANDLE param);
-#if 0
-	void initPixelToTexel(D3DXHANDLE param);
-#endif
 	void initAxonObject();
 
 	D3DXHANDLE findTechnique(Technique tech);
@@ -266,15 +238,8 @@ private:
 	DX9_SamplerInfos m_samplerannSeq;
 
 	// pixel2texel
-#if 0
-	DX9_Pixel2Texels pixel2Texels;
-	int m_p2tWidth, m_p2tHeight;
-#endif
 	DX9_Technique *m_techniques[Technique::Number];
 	DX9_Technique *m_curTech;
-#if 0
-	Material *m_coupled;
-#endif
 
 	// shader info
 	ShaderInfo *m_shaderInfo;

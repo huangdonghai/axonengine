@@ -115,8 +115,8 @@ private:
 	bool m_baseTcAnim;
 	Matrix4 m_baseTcMatrix;
 
-	bool m_features[ShaderInfo::MAX_FEATURES];
-	int m_literals[ShaderInfo::MAX_LITERALS];
+	bool m_features[MaterialDecl::MAX_FEATURES];
+	int m_literals[MaterialDecl::MAX_LITERALS];
 
 	// pixel to texel conversion
 	bool m_p2tEnabled;
@@ -163,7 +163,7 @@ inline float Material::getMatShiness() const
 
 inline void Material::setFeature(int index, bool enabled)
 {
-	AX_ASSERT(index >= 0 && index < ShaderInfo::MAX_FEATURES);
+	AX_ASSERT(index >= 0 && index < MaterialDecl::MAX_FEATURES);
 	if (m_features[index] != enabled) {
 		m_shaderMacroNeedRegen = true;
 		m_features[index] = enabled;
@@ -172,13 +172,13 @@ inline void Material::setFeature(int index, bool enabled)
 
 inline bool Material::isFeatureEnabled(int index) const
 {
-	AX_ASSERT(index >= 0 && index < ShaderInfo::MAX_FEATURES);
+	AX_ASSERT(index >= 0 && index < MaterialDecl::MAX_FEATURES);
 	return m_features[index];
 }
 
 inline void Material::setLiteral(int index, int value)
 {
-	AX_ASSERT(index >= 0 && index < ShaderInfo::MAX_LITERALS);
+	AX_ASSERT(index >= 0 && index < MaterialDecl::MAX_LITERALS);
 	if (m_literals[index] != value) {
 		m_literals[index] = value;
 		m_shaderMacroNeedRegen = true;
@@ -186,7 +186,7 @@ inline void Material::setLiteral(int index, int value)
 }
 inline int Material::getLiteral(int index) const
 {
-	AX_ASSERT(index >= 0 && index < ShaderInfo::MAX_LITERALS);
+	AX_ASSERT(index >= 0 && index < MaterialDecl::MAX_LITERALS);
 	return m_literals[index];
 }
 

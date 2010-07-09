@@ -341,18 +341,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\shaders\_model_particle.fx"
-				>
-			</File>
-			<File
-				RelativePath=".\shaders\_particle.fx"
-				>
-			</File>
-			<File
-				RelativePath=".\shaders\_particle_cpu.fx"
-				>
-			</File>
-			<File
 				RelativePath=".\shaders\_query.fx"
 				>
 			</File>
@@ -391,10 +379,6 @@
 						PSPROFILE="ps_2_0"
 					/>
 				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\shaders\activeArea.fx"
-				>
 			</File>
 			<File
 				RelativePath=".\shaders\blend.fx"

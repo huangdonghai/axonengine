@@ -389,11 +389,6 @@ typedef Sequence<ParameterInfo> ParameterInfos;
 class ShaderInfo
 {
 public:
-	enum {
-		MAX_FEATURES = 8,
-		MAX_LITERALS = 8
-	};
-
 	bool m_haveTextureTarget;
 	SamplerInfos m_samplerAnnos;
 	ParameterInfos m_parameterAnnos;

@@ -992,13 +992,6 @@ void DX9_Shader::initAxonObject()
 	}
 }
 
-#if 0
-void DX9_Shader::setCoupled( Material *mtr )
-{
-	m_coupled = mtr;
-}
-#endif
-
 UINT DX9_Shader::begin(Technique tech)
 {
 	if (!m_techniques[tech])
