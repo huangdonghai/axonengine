@@ -200,7 +200,8 @@ public:
 	bool haveTechnique(Technique tech) const;
 	const ShaderInfo *getShaderInfo() const { return 0; }
 
-	void initGlobalStruct();
+	void checkGlobalStruct();
+	void checkShaderInfo();
 
 	void setSystemMap(SamplerType maptype, IDirect3DTexture9 *tex);
 
@@ -233,8 +234,6 @@ private:
 	IDirect3DTexture9 *m_samplerBound[SamplerType::NUMBER_ALL];
 	D3DXHANDLE m_curTechnique;
 
-	bool m_haveTextureTarget;
-
 	DX9_SamplerInfos m_samplerannSeq;
 
 	// pixel2texel
@@ -242,7 +241,7 @@ private:
 	DX9_Technique *m_curTech;
 
 	// shader info
-	ShaderInfo *m_shaderInfo;
+	ShaderInfo m_shaderInfo;
 };
 
 //--------------------------------------------------------------------------

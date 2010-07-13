@@ -600,7 +600,7 @@ void DX9_Pass::setParameter(const ParamDesc &param, const float *value, bool isP
 
 DX9_Shader::DX9_Shader()
 {
-	m_haveTextureTarget = false;
+	m_shaderInfo.m_haveTextureTarget = false;
 	m_curTechnique = 0;
 }
 
@@ -687,7 +687,7 @@ bool DX9_Shader::isDepthWrite() const
 
 bool DX9_Shader::haveTextureTarget() const
 {
-	return m_haveTextureTarget;
+	return m_shaderInfo.m_haveTextureTarget;
 }
 
 int DX9_Shader::getNumSampler() const
@@ -817,7 +817,7 @@ void DX9_Shader::initSamplerAnn(D3DXHANDLE param)
 
 		m_samplerannSeq.push_back(san);
 
-		m_haveTextureTarget = true;
+		m_shaderInfo.m_haveTextureTarget = true;
 	}
 }
 
@@ -1012,7 +1012,7 @@ void DX9_Shader::endPass()
 void DX9_Shader::end()
 {}
 
-void DX9_Shader::initGlobalStruct()
+void DX9_Shader::checkGlobalStruct()
 {
 	D3DXHANDLE param = m_object->GetParameterByName(0, "g_gc");
 
@@ -1081,6 +1081,13 @@ UniformStruct *DX9_Shader::parseStruct(LPD3DXCONSTANTTABLE constTable, const cha
 	return us;
 }
 
+void DX9_Shader::checkShaderInfo()
+{
+	for (int i = 0; i < Technique::Number; i++) {
+		m_shaderInfo.m_haveTechnique[i] = m_techniques[i] != 0;
+	}
+}
+
 //--------------------------------------------------------------------------
 // class D3D9shadermanager
 //--------------------------------------------------------------------------
@@ -1095,7 +1102,7 @@ DX9_ShaderManager::DX9_ShaderManager()
 	DX9_Shader *blinn = new DX9_Shader();
 	v = blinn->init("_alluniforms");
 	AX_ASSERT(v);
-	blinn->initGlobalStruct();
+	blinn->checkGlobalStruct();
 
 	_initialize();
 }

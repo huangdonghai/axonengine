@@ -22,16 +22,13 @@ float Script : STANDARDSGLOBAL <
 	string TechniqueLayer = "";
 > = 0.8;
 
-struct TestStruct {
-	float4 a;
-};
-
-TestStruct s1 = { float4(1,1,1,1) };
+float4 v_T : BUFFER[0][16*10] = float4(1,1,1,1);
+float4 v_T2 : BUFFER[0][11*16] = float4(2,2,2,2);
 
 VertexOut VP_main(VertexIn IN) {
     VertexOut OUT = (VertexOut)0;
 
-	OUT.hpos = s1.a;
+	OUT.hpos = v_T2;
     return OUT;
 }
 

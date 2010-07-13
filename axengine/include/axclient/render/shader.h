@@ -391,7 +391,6 @@ class ShaderInfo
 public:
 	bool m_haveTextureTarget;
 	SamplerInfos m_samplerAnnos;
-	ParameterInfos m_parameterAnnos;
 	bool m_haveTechnique[Technique::Number];
 	const UniformStruct *m_localUniforms;
 };
