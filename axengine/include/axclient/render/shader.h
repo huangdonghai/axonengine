@@ -358,31 +358,8 @@ public:
 	bool m_needClearDepth;
 	bool m_needHdr;
 };
-typedef Sequence<SamplerInfo> SamplerInfos;
+typedef Sequence<SamplerInfo*> SamplerInfos;
 
-//-------------------------------------------------------------------------
-
-class ParameterInfo
-{
-public:
-	enum WidgetType {
-		kNone, kSlider, kNumeric, kColor
-	};
-	bool m_uiTweakable;
-	String m_uiName;
-	String m_uiHelp;
-	String m_uiWidget;
-
-	// for slider
-	float m_uiMin, m_uiMax, m_uiStep;
-
-	// for numeric and slider
-	float m_defaultFloat;
-
-	// for color
-	Vector3 m_defaultColor;
-};
-typedef Sequence<ParameterInfo> ParameterInfos;
 
 //-------------------------------------------------------------------------
 

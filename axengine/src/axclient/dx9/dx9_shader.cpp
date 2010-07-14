@@ -427,8 +427,8 @@ void DX9_Pass::initSampler(const D3DXCONSTANT_DESC &desc)
 	}
 
 	// check batch sampler
-	for (int i = 0; i < s2i(m_shader->m_samplerannSeq.size()); i++) {
-		DX9_SamplerInfo *bs = m_shader->m_samplerannSeq[i];
+	for (int i = 0; i < s2i(m_shader->m_samplerInfos.size()); i++) {
+		DX9_SamplerInfo *bs = m_shader->m_samplerInfos[i];
 		if (bs->m_paramName == desc.Name) {
 			DX9_SamplerInfo *newbs = new DX9_SamplerInfo();
 			*newbs = *bs;
@@ -692,24 +692,13 @@ bool DX9_Shader::haveTextureTarget() const
 
 int DX9_Shader::getNumSampler() const
 {
-	return s2i(m_samplerannSeq.size());
+	return s2i(m_samplerInfos.size());
 }
 
 SamplerInfo *DX9_Shader::getSamplerAnno(int index) const
 {
-	return m_samplerannSeq[index];
+	return m_samplerInfos[index];
 }
-
-int DX9_Shader::getNumTweakable() const
-{
-	return 0;
-}
-
-ParameterInfo *DX9_Shader::getTweakableDef(int index)
-{
-	return 0;
-}
-
 
 bool DX9_Shader::haveTechnique(Technique tech) const
 {
@@ -815,7 +804,7 @@ void DX9_Shader::initSamplerAnn(D3DXHANDLE param)
 		san->m_paramName = paramname;
 		san->m_texName = filename;
 
-		m_samplerannSeq.push_back(san);
+		m_samplerInfos.push_back(san);
 
 		m_shaderInfo.m_haveTextureTarget = true;
 	}
@@ -1045,6 +1034,14 @@ void DX9_Shader::checkGlobalStruct()
 	}
 }
 
+UniformStruct *DX9_Shader::mergeStruct(const char *paramName)
+{
+	int vsReg = 0;
+	int psReg = 0;
+	int numFloags = 0;
+}
+
+
 UniformStruct *DX9_Shader::parseStruct(LPD3DXCONSTANTTABLE constTable, const char *paramName)
 {
 	D3DXHANDLE param = constTable->GetConstantByName(0, paramName);
@@ -1086,6 +1083,12 @@ void DX9_Shader::checkShaderInfo()
 	for (int i = 0; i < Technique::Number; i++) {
 		m_shaderInfo.m_haveTechnique[i] = m_techniques[i] != 0;
 	}
+
+	for (int i = 0; i < m_samplerInfos.size(); i++) {
+		m_shaderInfo.m_samplerAnnos.push_back(m_samplerInfos[i]);
+	}
+
+	m_shaderInfo.m_localUniforms = mergeStruct("g_pc");
 }
 
 //--------------------------------------------------------------------------

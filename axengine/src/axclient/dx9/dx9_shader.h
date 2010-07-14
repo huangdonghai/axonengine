@@ -137,14 +137,6 @@ private:
 	IDirect3DVertexShader9 *m_vs;
 	IDirect3DPixelShader9 *m_ps;
 
-	// render state
-	DWORD m_depthTest;
-	DWORD m_depthWrite;
-	DWORD m_cullMode;
-	DWORD m_blendEnable;
-	DWORD m_blendSrc;
-	DWORD m_blendDst;
-
 	// material sampler
 	int m_matSamplers[SamplerType::NUMBER_ALL];
 
@@ -195,8 +187,6 @@ public:
 	bool haveTextureTarget() const;
 	int getNumSampler() const;
 	SamplerInfo *getSamplerAnno(int index) const;
-	int getNumTweakable() const;
-	ParameterInfo *getTweakableDef(int index);
 	bool haveTechnique(Technique tech) const;
 	const ShaderInfo *getShaderInfo() const { return 0; }
 
@@ -214,6 +204,7 @@ public:
 
 protected:
 	UniformStruct *parseStruct(LPD3DXCONSTANTTABLE constTable, const char *paramName);
+	UniformStruct *mergeStruct(const char *paramName);
 	void initTechniques();
 	void initFeatures();
 
@@ -234,7 +225,7 @@ private:
 	IDirect3DTexture9 *m_samplerBound[SamplerType::NUMBER_ALL];
 	D3DXHANDLE m_curTechnique;
 
-	DX9_SamplerInfos m_samplerannSeq;
+	DX9_SamplerInfos m_samplerInfos;
 
 	// pixel2texel
 	DX9_Technique *m_techniques[Technique::Number];
