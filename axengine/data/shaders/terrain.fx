@@ -56,22 +56,28 @@ float4	g_terrainRect;
 float4	g_zoneRect;		// zone x, y, w, h
 float4	g_chunkRect;
 float2	g_layerScale;
-#endif
 
 struct TerrainConst {
 	float4	zoneRect;		// zone x, y, w, h
 	float4	chunkRect;
 };
 
-AX_DECL_PRIMITIVECONST(TerrainConst);
+//AX_DECL_PRIMITIVECONST(TerrainConst);
+TerrainConst g_pc;
 #define g_zoneRect g_pc.zoneRect
 #define g_chunkRect g_pc.chunkRect
+#endif
+
+AX_BEGIN_PARAMETER
+float4 g_zoneRect : PC0;
+float4 g_chunkRect : PC1;
+AX_END_PARAMETER
 
 //------------------------------------------------------------------------------
 // VP_zpass
 //------------------------------------------------------------------------------
 
-float4 VP_zpass(TerrainVertexIn IN) : POSITION
+float4 VP_zpass(Terrai nVertexIn IN) : POSITION
 {
 	return VP_worldToClip(IN.xyz);
 }

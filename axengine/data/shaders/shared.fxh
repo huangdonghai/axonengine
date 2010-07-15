@@ -154,13 +154,25 @@ AX_SHADERCONST(SHADERMACRO_VERSION, 2)
 #	if G_DX11
 #		define AX_DECL_BUFFER(decl, obj, reg, buf) cbuffer cb##buf : register(b##buf) { decl obj; };
 #		define AX_DECL_PRIMITIVECONST(decl) cbuffer cbPrimitiveConst : register(b5) { decl g_pc; };
+#		define AX_BEGIN_PARAMETER cbuffer cbPrimitiveConst : register(b5) {
+#		define PC0 packoffset(c0)
+#		define PC1 packoffset(c1)
+#		define AX_END_PARAMETER }
 #	else
 #		define AX_DECL_BUFFER(decl, obj, reg, buf) shared decl obj : register(c##reg);
 #		define AX_DECL_PRIMITIVECONST(decl) decl g_pc : register(vs, c50) : register(ps, c24);
+#		define AX_BEGIN_PARAMETER
+#		define PC0 register(vs, c50) : register(ps, c24)
+#		define PC1 register(vs, c51) : register(ps, c25)
+#		define AX_END_PARAMETER
 #	endif
 #else
-#define AX_DECL_BUFFER(decl, obj, reg, buf) decl obj : BUFFER[buf];
-#define AX_DECL_PRIMITIVECONST(decl) decl g_pc : BUFFER[5];
+#	define AX_DECL_BUFFER(decl, obj, reg, buf) decl obj : BUFFER[buf];
+#	define AX_DECL_PRIMITIVECONST(decl) decl g_pc : BUFFER[5];
+#	define AX_BEGIN_PARAMETER
+#	define PC0 BUFFER[5][0]
+#	define PC1 BUFFER[5][16]
+#	define AX_END_PARAMETER
 #endif
 
 #ifndef __cplusplus

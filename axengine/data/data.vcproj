@@ -419,6 +419,15 @@
 			<File
 				RelativePath=".\shaders\terrain.fx"
 				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="build-axon-fx"
+						VPPROFILE="gp4vp"
+						FPPROFILE="gp4fp"
+					/>
+				</FileConfiguration>
 			</File>
 			<Filter
 				Name="include"
