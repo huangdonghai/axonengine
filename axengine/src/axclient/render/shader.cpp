@@ -378,7 +378,7 @@ ShaderMacro::ShaderMacroDefs::ShaderMacroDefs()
 }
 
 
-UniformStruct::UniformStruct(int index, int numFloats)
+ConstBuffer::ConstBuffer(int index, int numFloats)
 {
 	m_index = index;
 	m_numFloats = numFloats;
@@ -386,20 +386,20 @@ UniformStruct::UniformStruct(int index, int numFloats)
 	m_dirty = true;
 }
 
-UniformStruct::~UniformStruct()
+ConstBuffer::~ConstBuffer()
 {
 	if (m_data)
 		delete [] m_data;
 }
 
-void UniformStruct::addField( const Field &field )
+void ConstBuffer::addField( const Field &field )
 {
 	m_fields.push_back(field);
 }
 
-UniformStruct * UniformStruct::clone() const
+ConstBuffer * ConstBuffer::clone() const
 {
-	UniformStruct *cloned = new UniformStruct(m_index, m_numFloats);
+	ConstBuffer *cloned = new ConstBuffer(m_index, m_numFloats);
 	memcpy(cloned->m_data, m_data, m_numFloats * sizeof(float));
 	cloned->m_fields = m_fields;
 

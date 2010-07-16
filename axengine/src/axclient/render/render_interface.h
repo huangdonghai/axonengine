@@ -238,7 +238,7 @@ protected:
 	void setMaterialUniforms(Material *mat);
 
 	template <class Q>
-	void setUniform(UniformFields::FieldName name, const Q &q)
+	void setUniform(ConstFields::FieldName name, const Q &q)
 	{
 //		g_apiWrap->setShaderConst(name, sizeof(Q), &q);
 	}

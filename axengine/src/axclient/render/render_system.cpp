@@ -30,7 +30,7 @@ IRenderDriver *g_renderDriver;
 ApiWrap *g_apiWrap = 0;
 RenderContext *g_renderContext = 0;
 BufferManager *g_bufferManager = 0;
-UniformStruct *g_uniformStructs[UniformStruct::NUMBER_STRUCT];
+ConstBuffer *g_uniformStructs[ConstBuffer::NUMBER_STRUCT];
 
 
 AX_BEGIN_COMMAND_MAP(RenderSystem)

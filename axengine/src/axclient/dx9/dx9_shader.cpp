@@ -1028,21 +1028,23 @@ void DX9_Shader::checkGlobalStruct()
 	dx9_uniformStructs[2] = parseStruct(constTable, "g_pgc");
 	dx9_uniformStructs[4] = parseStruct(constTable, "g_pic");
 
-	for (int i = 0; i < UniformStruct::NUMBER_STRUCT; i++) {
+	for (int i = 0; i < ConstBuffer::NUMBER_STRUCT; i++) {
 		g_uniformStructs[i] = dx9_uniformStructs[i]->clone();
 		AX_ASSURE(g_uniformStructs[i]);
 	}
 }
 
-UniformStruct *DX9_Shader::mergeStruct(const char *paramName)
+ConstBuffer *DX9_Shader::mergeStruct(const char *paramName)
 {
 	int vsReg = 0;
 	int psReg = 0;
 	int numFloags = 0;
+
+	return 0;
 }
 
 
-UniformStruct *DX9_Shader::parseStruct(LPD3DXCONSTANTTABLE constTable, const char *paramName)
+ConstBuffer *DX9_Shader::parseStruct(LPD3DXCONSTANTTABLE constTable, const char *paramName)
 {
 	D3DXHANDLE param = constTable->GetConstantByName(0, paramName);
 	if (!param)
@@ -1061,13 +1063,13 @@ UniformStruct *DX9_Shader::parseStruct(LPD3DXCONSTANTTABLE constTable, const cha
 	int regIndex = constDesc.RegisterIndex;
 	int numFloats = constDesc.RegisterCount * 4;
 
-	UniformStruct *us = new UniformStruct(regIndex, numFloats);
+	ConstBuffer *us = new ConstBuffer(regIndex, numFloats);
 
 	for (int i=0; i<constDesc.StructMembers; i++) {
 		D3DXHANDLE member = constTable->GetConstant(param, i);
 		constTable->GetConstantDesc(member, &memberDesc, &count);
 
-		UniformStruct::Field field;
+		ConstBuffer::Field field;
 		field.m_name = memberDesc.Name;
 		field.m_offset = (memberDesc.RegisterIndex - regIndex) * 4;
 		field.m_numFloats = memberDesc.RegisterCount * 4;

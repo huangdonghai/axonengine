@@ -457,11 +457,19 @@
 					>
 				</File>
 				<File
+					RelativePath=".\shaders\interactionconst.fxh"
+					>
+				</File>
+				<File
 					RelativePath=".\shaders\light.fxh"
 					>
 				</File>
 				<File
 					RelativePath=".\shaders\mathlib.fxh"
+					>
+				</File>
+				<File
+					RelativePath=".\shaders\sceneconst.fxh"
 					>
 				</File>
 				<File

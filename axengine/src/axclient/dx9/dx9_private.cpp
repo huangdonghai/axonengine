@@ -22,7 +22,7 @@ RenderDriverInfo *dx9_driverInfo;
 IDirect3D9 *dx9_api;
 IDirect3DDevice9 *dx9_device;
 DX9_ShaderManager *dx9_shaderManager;
-UniformStruct *dx9_uniformStructs[UniformStruct::NUMBER_STRUCT];
+ConstBuffer *dx9_uniformStructs[ConstBuffer::NUMBER_STRUCT];
 
 
 

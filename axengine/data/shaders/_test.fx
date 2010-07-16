@@ -12,7 +12,7 @@ read the license and understand and accept it fully.
 
 float Script : STANDARDSGLOBAL <
 	// sort hint
-	int		SortHint = SortHint_aboveWater;
+	int SortHint = SortHint_aboveWater;
 
 	// technique
 	string TechniqueZpass = "";
@@ -22,19 +22,23 @@ float Script : STANDARDSGLOBAL <
 	string TechniqueLayer = "";
 > = 0.8;
 
-float4 v_T : BUFFER[0][16*10] = float4(1,1,1,1);
-float4 v_T2 : BUFFER[0][11*16] = float4(2,2,2,2);
+#define TEST0 1
+
+#define G_DECL \
+	A_ITEM(float4, v_T, TEST0)
+
+#define A_ITEM(t, n, i) t n = i;
+G_DECL
 
 VertexOut VP_main(VertexIn IN) {
     VertexOut OUT = (VertexOut)0;
 
-	OUT.hpos = v_T2;
+	OUT.hpos = v_T;
     return OUT;
 }
 
 /********* pixel shaders ********/
 float4 FP_main(VertexOut IN) : COLOR0 {
-
 	return g_pic.layerScale.xyxy;
 }
 

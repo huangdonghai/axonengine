@@ -232,7 +232,7 @@ void RenderWorld::renderTo(RenderScene *qscene)
 		}
 
 		for (int j = 0; j < shader->m_samplerAnnos.size(); j++) {
-			const SamplerInfo *sa = &shader->m_samplerAnnos[j];
+			const SamplerInfo *sa = shader->m_samplerAnnos[j];
 			if (sa->m_renderType != SamplerInfo::Reflection) {
 				continue;
 			}

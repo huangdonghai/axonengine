@@ -105,7 +105,7 @@ extern IDirect3D9 *dx9_api;
 extern IDirect3DDevice9 *dx9_device;
 
 extern DX9_ShaderManager *dx9_shaderManager;
-extern UniformStruct *dx9_uniformStructs[UniformStruct::NUMBER_STRUCT];
+extern ConstBuffer *dx9_uniformStructs[ConstBuffer::NUMBER_STRUCT];
 
 #if 0
 //extern D3D9TargetManager *d3d9TargetManager;

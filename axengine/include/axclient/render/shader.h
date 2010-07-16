@@ -68,7 +68,7 @@ private:
 	};
 };
 
-class UniformStruct
+class ConstBuffer
 {
 public:
 	enum {
@@ -85,14 +85,14 @@ public:
 		int m_numFloats;
 	};
 
-	UniformStruct(int index, int numFloats);
-	~UniformStruct();
+	ConstBuffer(int index, int numFloats);
+	~ConstBuffer();
 
 	int getNumFloats() const { return m_numFloats; }
 	const float *getDataPointer() const { return m_data; }
 	bool isDirty() const { return m_dirty; }
 
-	UniformStruct *clone() const;
+	ConstBuffer *clone() const;
 
 	void setData(int numFloats, float *datap);
 	void setFieldData(const FixedString &fieldName, int datasize, float *datap);
@@ -109,15 +109,15 @@ private:
 	float *m_data;
 };
 
-class UniformField
+class ConstField
 {
 public:
 private:
-	UniformStruct *m_struct;
-	UniformStruct::Field *m_field;
+	ConstBuffer *m_struct;
+	ConstBuffer::Field *m_field;
 };
 
-class UniformFields
+class ConstFields
 {
 public:
 	enum FieldName {
@@ -136,7 +136,7 @@ public:
 	void setField(FieldName fieldName, int count, const Matrix4 mtr[]);
 
 private:
-	UniformField *m_fields[NUM_FIELDS];
+	ConstField *m_fields[NUM_FIELDS];
 };
 
 //-------------------------------------------------------------------------
@@ -369,7 +369,7 @@ public:
 	bool m_haveTextureTarget;
 	SamplerInfos m_samplerAnnos;
 	bool m_haveTechnique[Technique::Number];
-	const UniformStruct *m_localUniforms;
+	const ConstBuffer *m_localUniforms;
 };
 
 typedef Dict<FixedString, ShaderInfo*> ShaderInfoDict;

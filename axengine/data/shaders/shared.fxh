@@ -150,6 +150,13 @@ AX_SHADERCONST(SHADERMACRO_VERSION, 2)
 	AX_DECL_MACRO(G_LITERAL6				, 4) \
 	AX_DECL_MACRO(G_LITERAL7				, 4)
 
+#define SCENECONST_BUF 0
+#define SCENECONST_REG 8
+#define INTERACTIONCONST_BUF 1
+#define INTERACTIONCONST_REG 64
+#define PRIMITIVECONST_BUF 2
+#define PRIMITIVECONST_REG 80
+
 #if G_D3D
 #	if G_DX11
 #		define AX_DECL_BUFFER(decl, obj, reg, buf) cbuffer cb##buf : register(b##buf) { decl obj; };
@@ -165,6 +172,12 @@ AX_SHADERCONST(SHADERMACRO_VERSION, 2)
 #		define PC0 register(vs, c50) : register(ps, c24)
 #		define PC1 register(vs, c51) : register(ps, c25)
 #		define AX_END_PARAMETER
+
+#		define SCR0 register(c8)
+
+#		define ICR0 register(c64)
+
+#		define PCR0 register(c80)
 #	endif
 #else
 #	define AX_DECL_BUFFER(decl, obj, reg, buf) decl obj : BUFFER[buf];

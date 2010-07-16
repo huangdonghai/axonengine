@@ -203,8 +203,8 @@ public:
 	void end();
 
 protected:
-	UniformStruct *parseStruct(LPD3DXCONSTANTTABLE constTable, const char *paramName);
-	UniformStruct *mergeStruct(const char *paramName);
+	ConstBuffer *parseStruct(LPD3DXCONSTANTTABLE constTable, const char *paramName);
+	ConstBuffer *mergeStruct(const char *paramName);
 	void initTechniques();
 	void initFeatures();
 

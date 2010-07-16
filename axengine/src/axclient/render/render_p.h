@@ -18,7 +18,7 @@ extern ApiWrap *g_apiWrap;
 extern BufferManager *g_bufferManager;
 
 // filled by drivers
-extern UniformStruct *g_uniformStructs[UniformStruct::NUMBER_STRUCT];
+extern ConstBuffer *g_uniformStructs[ConstBuffer::NUMBER_STRUCT];
 
 #ifdef AX_CONFIG_OPTION_USE_SPEEDTREE_40
 extern TreeManager *g_treeManager;

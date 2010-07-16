@@ -174,13 +174,13 @@ const ShaderMacro &Material::getShaderMacro()
 //		m_shaderMacro.setMacro(ShaderMacro::G_SPECULAR_TEXGEN, m_texgens[SamplerType::Specular].type);
 //		m_shaderMacro.setMacro(ShaderMacro::G_NORMAL_TEXGEN, m_texgens[SamplerType::Normal].type);
 
-		for (int i = 0; i < ShaderInfo::MAX_FEATURES; i++) {
+		for (int i = 0; i < MaterialDecl::MAX_FEATURES; i++) {
 			if (m_features[i]) {
 				m_shaderMacro.setMacro(ShaderMacro::Flag(ShaderMacro::G_FEATURE0 + i));
 			}
 		}
 
-		for (int i = 0; i < ShaderInfo::MAX_LITERALS; i++) {
+		for (int i = 0; i < MaterialDecl::MAX_LITERALS; i++) {
 			if (m_literals[i]) {
 				m_shaderMacro.setMacro(ShaderMacro::Flag(ShaderMacro::G_LITERAL0 + i), m_literals[i]);
 			}

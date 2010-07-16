@@ -607,7 +607,7 @@ void RenderContext::drawScene(RenderScene *scene, const RenderClearer &clearer)
 
 #define BEGIN_PIX(x)
 #define END_PIX()
-#define AX_SU(a,b) setUniform(UniformFields::a, b);
+#define AX_SU(a,b) setUniform(ConstFields::a, b);
 
 void RenderContext::drawScene_world(RenderScene *scene, const RenderClearer &clearer)
 {
