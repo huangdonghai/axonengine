@@ -68,16 +68,16 @@ TerrainConst g_pc;
 #define g_chunkRect g_pc.chunkRect
 #endif
 
-AX_BEGIN_PARAMETER
-float4 g_zoneRect : PC0;
-float4 g_chunkRect : PC1;
-AX_END_PARAMETER
+AX_BEGIN_PC
+	float4 g_zoneRect : PREG0;
+	float4 g_chunkRect : PREG1;
+AX_END_PC
 
 //------------------------------------------------------------------------------
 // VP_zpass
 //------------------------------------------------------------------------------
 
-float4 VP_zpass(Terrai nVertexIn IN) : POSITION
+float4 VP_zpass(TerrainVertexIn IN) : POSITION
 {
 	return VP_worldToClip(IN.xyz);
 }

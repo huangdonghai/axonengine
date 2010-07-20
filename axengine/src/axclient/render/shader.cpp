@@ -381,15 +381,17 @@ ShaderMacro::ShaderMacroDefs::ShaderMacroDefs()
 ConstBuffer::ConstBuffer(int index, int numFloats)
 {
 	m_index = index;
-	m_numFloats = numFloats;
-	m_data = new float[numFloats];
+	m_data.resize(numFloats);
 	m_dirty = true;
+}
+
+ConstBuffer::ConstBuffer()
+{
+
 }
 
 ConstBuffer::~ConstBuffer()
 {
-	if (m_data)
-		delete [] m_data;
 }
 
 void ConstBuffer::addField( const Field &field )
@@ -397,13 +399,42 @@ void ConstBuffer::addField( const Field &field )
 	m_fields.push_back(field);
 }
 
+void ConstBuffer::addField( ValueType vt, const char *name, int offset )
+{
+
+}
+
 ConstBuffer * ConstBuffer::clone() const
 {
-	ConstBuffer *cloned = new ConstBuffer(m_index, m_numFloats);
-	memcpy(cloned->m_data, m_data, m_numFloats * sizeof(float));
+	ConstBuffer *cloned = new ConstBuffer(m_index, getNumFloats());
+	cloned->m_data = m_data;
 	cloned->m_fields = m_fields;
 
 	return cloned;
+}
+
+void ConstBuffer::initSceneConst()
+{
+#define AX_ITEM(stype, atype, name, reg) addField(vt_##atype, #name, reg);
+#define AX_ARRAY(stype, atype, name, n, reg) addField(vt_##atype, #name, reg);
+#include "../../../data/shaders/sceneconst.fxh"
+#undef AX_ITEM
+#undef AX_ARRAY
+}
+
+void ConstBuffer::initInteractionConst()
+{
+
+}
+
+int ConstBuffer::getNumFloatForValueType(ValueType vt)
+{
+	return 0;
+}
+
+bool ConstBuffer::isMatrix(ValueType vt)
+{
+	return false;
 }
 
 AX_END_NAMESPACE

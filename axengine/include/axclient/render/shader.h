@@ -71,25 +71,31 @@ private:
 class ConstBuffer
 {
 public:
+	enum ValueType {
+		vt_empty, vt_float, vt_Vector2, vt_Vector3, vt_Matrix3, vt_Vector4, vt_Matrix, vt_Matrix4
+	};
+
 	enum {
 		GLOBALCONST,
-		VS_GLOBALCONST,
-		PS_GLOBALCONST,
-		VS_INTERACTIONCONST,
-		PS_INTERACTIONCONST,
+		INTERACTIONCONST,
 		NUMBER_STRUCT
 	};
 	struct Field {
 		FixedString m_name;
 		int m_offset;
 		int m_numFloats;
+		bool m_isMatrix;
 	};
 
+	ConstBuffer();
 	ConstBuffer(int index, int numFloats);
 	~ConstBuffer();
 
-	int getNumFloats() const { return m_numFloats; }
-	const float *getDataPointer() const { return m_data; }
+	void initSceneConst();
+	void initInteractionConst();
+
+	int getNumFloats() const { return m_data.size(); }
+	const float *getDataPointer() const { return &m_data[0]; }
 	bool isDirty() const { return m_dirty; }
 
 	ConstBuffer *clone() const;
@@ -101,12 +107,17 @@ public:
 
 	void addField(const Field &field);
 
+protected:
+	void addField(ValueType vt, const char *name, int offset);
+	static int getNumFloatForValueType(ValueType vt);
+	static bool isMatrix(ValueType vt);
+
 private:
 	bool m_dirty;
 	Sequence<Field> m_fields;
-	int m_numFloats; // in bytes
 	int m_index; // register index in dx9, buffer index in dx10,dx11
-	float *m_data;
+	FloatSeq m_data;
+	FloatSeq m_default;
 };
 
 class ConstField

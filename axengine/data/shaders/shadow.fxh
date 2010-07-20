@@ -28,6 +28,8 @@ float4 s_splitRanges[4];
 };
 #endif
 
+#define g_shadowMatrix g_texMatrix
+
 half SampleShadow(float3 worldpos, float depth)
 {
 	static const float bias = 2.0 / 65536.0;

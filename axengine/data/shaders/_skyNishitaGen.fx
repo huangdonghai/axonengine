@@ -20,9 +20,10 @@ float Script : STANDARDSGLOBAL <
 	string TechniqueLayer = "";
 > = 0.8;
 
+static const float PI = 3.1415159;
+
 static const float RADIUS = 6356.7523142;
 static const float OUTER_RADIUS_SCALE = 1.0157313;
-static const float PI = 3.1415159;
 static const float ESUN = 20.0f;
 static const float KR = 0.0025f;
 static const float KM = 0.0015f;

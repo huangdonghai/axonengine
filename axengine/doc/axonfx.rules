@@ -7,7 +7,7 @@
 		<CustomBuildRule
 			Name="build-axon-fx"
 			DisplayName="Axon Effect files"
-			CommandLine="cgc.exe -DNOT_IN_ENGINE=1 [VPENTRY] [VPPROFILE] &quot;$(InputPath)&quot;&#x0D;&#x0A;cgc.exe -DNOT_IN_ENGINE=1 [FPENTRY] [FPPROFILE] &quot;$(InputPath)&quot;&#x0D;&#x0A;fxc.exe /Gec /DNOT_IN_ENGINE=1 /DG_D3D=1 /I$(InputDir) [VSENTRY] [VSPROFILE] &quot;$(InputPath)&quot;&#x0D;&#x0A;fxc.exe /Gec /DNOT_IN_ENGINE=1 /DG_D3D=1 /I$(InputDir) [PSENTRY] [PSPROFILE] &quot;$(InputPath)&quot;&#x0D;&#x0A;fxc.exe /Gec /DNOT_IN_ENGINE=1 /DG_D3D=1 /DG_DX11=1 /I$(InputDir) [VSENTRY] /T vs_4_0 &quot;$(InputPath)&quot;&#x0D;&#x0A;fxc.exe /Gec /DNOT_IN_ENGINE=1 /DG_D3D=1 /DG_DX11=1 /I$(InputDir) [PSENTRY] /T ps_4_0 &quot;$(InputPath)&quot;&#x0D;&#x0A;&#x0D;&#x0A;"
+			CommandLine="cgc.exe -DNOT_IN_ENGINE=1 -DG_OPENGL=1 [VPENTRY] [VPPROFILE] &quot;$(InputPath)&quot;&#x0D;&#x0A;cgc.exe -DNOT_IN_ENGINE=1 -DG_OPENGL=1 [FPENTRY] [FPPROFILE] &quot;$(InputPath)&quot;&#x0D;&#x0A;fxc.exe /Gec /DNOT_IN_ENGINE=1 /DG_D3D=1 /I$(InputDir) [VSENTRY] [VSPROFILE] &quot;$(InputPath)&quot;&#x0D;&#x0A;fxc.exe /Gec /DNOT_IN_ENGINE=1 /DG_D3D=1 /I$(InputDir) [PSENTRY] [PSPROFILE] &quot;$(InputPath)&quot;&#x0D;&#x0A;fxc.exe /Gec /DNOT_IN_ENGINE=1 /DG_D3D=1 /DG_DX11=1 /I$(InputDir) [VSENTRY] /T vs_4_0 &quot;$(InputPath)&quot;&#x0D;&#x0A;fxc.exe /Gec /DNOT_IN_ENGINE=1 /DG_D3D=1 /DG_DX11=1 /I$(InputDir) [PSENTRY] /T ps_4_0 &quot;$(InputPath)&quot;&#x0D;&#x0A;&#x0D;&#x0A;"
 			Outputs="$(InputName).vp"
 			AdditionalDependencies="*.fxh"
 			FileExtensions="*.fx"

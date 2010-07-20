@@ -11,9 +11,6 @@ read the license and understand and accept it fully.
 #include "common.fxh"
 
 float Script : STANDARDSGLOBAL <
-	// sort hint
-	int SortHint = SortHint_aboveWater;
-
 	// technique
 	string TechniqueZpass = "";
 	string TechniqueShadowGen = "";
@@ -39,7 +36,7 @@ VertexOut VP_main(VertexIn IN) {
 
 /********* pixel shaders ********/
 float4 FP_main(VertexOut IN) : COLOR0 {
-	return g_pic.layerScale.xyxy;
+	return g_layerScale.xyxy;
 }
 
 //////////////////////////////////////////////////////////////////////

@@ -128,39 +128,10 @@ read the license and understand and accept it fully.
 #define AX_TEXTURE_UNIFORM(shadertype, name) texture name##_tex; shadertype name = sampler_state { Texture = <name##_tex>; };
 #endif
 
-#if 0
-AX_UNIFORM_DEFS
-#else
-#define g_time g_gc.time
-#define g_cameraPos g_gc.cameraPos
-#define g_fogParams g_gc.fogParams
-#define g_waterFogParams g_gc.waterFogParams
+#include "sceneconst.fxh"
+#include "interactionconst.fxh"
 
-#define g_viewProjMatrix g_vgc.viewProjMatrix
-#define g_viewProjNoTranslate g_vgc.viewProjNoTranslate
-#define g_cameraAxis g_vgc.cameraAxis
-#define g_cameraAngles g_vgc.cameraAngles
-#define g_sceneSize g_vgc.sceneSize
-#define g_windMatrices g_vgc.windMatrices
-#define g_leafAngles g_vgc.leafAngles
-
-#define g_shadowMatrix g_pgc.shadowMatrix
-#define g_csmOffsetScales g_pgc.csmOffsetScales
-#define g_globalLightPos g_pgc.globalLightPos
-#define g_globalLightColor g_pgc.globalLightColor
-#define g_skyColor g_pgc.skyColor
-#define g_exposure g_pgc.exposure
-
-#define g_modelMatrix g_vic.modelMatrix
-#define g_instanceParam g_vic.instanceParam
-#define g_texMatrix g_vic.texMatrix
-
-#define g_matDiffuse g_pic.matDiffuse
-#define g_matSpecular g_pic.matSpecular
-#define g_matShiness g_pic.matShiness
-#define g_layerScale g_pic.layerScale
 AX_SAMPLER_UNIFORMS
-#endif
 
 // render hardware
 #define HARDWARE_GENERIC	0
