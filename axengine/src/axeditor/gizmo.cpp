@@ -252,7 +252,7 @@ void MoveGizmo::setupPlane(int axis) {
 		v1 = m_axis[2]; color1 = Rgba::Blue;
 		break;
 	default:
-		AX_NO_DEFAULT;
+		AX_WRONGPLACE;
 		break;
 	}
 

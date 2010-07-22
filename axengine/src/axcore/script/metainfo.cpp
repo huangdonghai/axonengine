@@ -332,7 +332,7 @@ void ScriptProp::init()
 			}
 			break;
 		default:
-			AX_NO_DEFAULT;
+			AX_WRONGPLACE;
 			break;
 	}
 

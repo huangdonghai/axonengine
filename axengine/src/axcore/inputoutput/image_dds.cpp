@@ -565,7 +565,7 @@ static void RepairLinearSize(DdsHeader *pHeader, DdsReadParams *pParams)
 		pParams->linearSize = std::max<uint_t>(1,pParams->width) * std::max<uint_t>(1,pParams->height) * pParams->inbpp;
 		break;
 	default:
-		AX_NO_DEFAULT;
+		AX_WRONGPLACE;
 		break;
 	}
 
@@ -689,7 +689,7 @@ static bool DecompressARGB(DdsHeader *pHeader, DdsReadParams *pParams)
 			*outptr++ = alpha;
 		}
 		break;
-	default:	AX_NO_DEFAULT;	break;
+	default:	AX_WRONGPLACE;	break;
 	}
 	return true;
 }
@@ -720,7 +720,7 @@ static bool DecompressDdsData(DdsHeader *pHeader, DdsReadParams *pParams)
 			switch (pParams->format){
 			case PF_DXT3:	return DecompressDXT3(pParams);
 			case PF_DXT5:	return DecompressDXT5(pParams);
-			default: AX_NO_DEFAULT; return true;
+			default: AX_WRONGPLACE; return true;
 			}
 		} else {
 			for (uint_t i=0; i<pParams->outDataSize; i+=16) {
@@ -750,7 +750,7 @@ static bool DecompressDdsData(DdsHeader *pHeader, DdsReadParams *pParams)
 		pParams->inData += pParams->outDataSize;
 		break;
 		
-	default:	AX_NO_DEFAULT;		return true;
+	default:	AX_WRONGPLACE;		return true;
 	}
 	return true;
 }
@@ -777,7 +777,7 @@ static void GetOutFormat(DdsReadParams *pParams)
 			pParams->outFormat = TexFormat::LA8;	pParams->outbpp = 2;
 			break;
 		default:
-			AX_NO_DEFAULT;
+			AX_WRONGPLACE;
 			break;
 		}
 		break;
@@ -791,7 +791,7 @@ static void GetOutFormat(DdsReadParams *pParams)
 			case PF_DXT1:	pParams->outFormat = TexFormat::DXT1;	break;
 			case PF_DXT3:	pParams->outFormat = TexFormat::DXT3;	break;
 			case PF_DXT5:	pParams->outFormat = TexFormat::DXT5;	break;
-			default: AX_NO_DEFAULT; break;
+			default: AX_WRONGPLACE; break;
 			}
 		}
 		break;
@@ -816,13 +816,13 @@ static void GetOutFormat(DdsReadParams *pParams)
 			pParams->outFormat = TexFormat::RGBA16F;	pParams->outbpp = 8;
 			break;
 		default:
-			AX_NO_DEFAULT;
+			AX_WRONGPLACE;
 			break;
 		}
 		break;
 
 	default:
-		AX_NO_DEFAULT;
+		AX_WRONGPLACE;
 		break;
 	}
 }
@@ -1225,7 +1225,7 @@ static void ChangeFormatToNormal(DdsWriteParams *pParams, byte_t** ppNewMem)
 			pBuffer[i].a = 255;
 		}
 		break;
-	default: AX_NO_DEFAULT; break;
+	default: AX_WRONGPLACE; break;
 	}
 
 	pParams->inData = *ppNewMem;
@@ -1583,7 +1583,7 @@ void Compress(DdsWriteParams *pParams)
 		case PF_DXT5:
 			MyDxt5Compress(pParams);
 			break;
-		default: AX_NO_DEFAULT; break;
+		default: AX_WRONGPLACE; break;
 		}
 
 		pParams->inData = NULL;
@@ -1635,7 +1635,7 @@ void CopyData(DdsWriteParams *pParams)
 	case PF_LUMINANCE:		
 		memcpy(pParams->outData, pParams->inData, pParams->linearSize);
 		break;
-	default: AX_NO_DEFAULT; break;
+	default: AX_WRONGPLACE; break;
 	}
 	pParams->outfp->write(pParams->outData, pParams->linearSize);
 }

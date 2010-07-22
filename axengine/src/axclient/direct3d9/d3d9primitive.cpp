@@ -86,7 +86,7 @@ void D3D9geometry::initialize(Primitive *src)
 	case Primitive::ChunkType:
 		break;
 	default:
-		AX_NO_DEFAULT;
+		AX_WRONGPLACE;
 	}
 }
 
@@ -113,7 +113,7 @@ void D3D9geometry::update()
 		updateMesh();
 		break;
 	default:
-		AX_NO_DEFAULT;
+		AX_WRONGPLACE;
 	}
 
 	m_src->clearDirty();

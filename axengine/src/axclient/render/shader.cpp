@@ -377,6 +377,49 @@ ShaderMacro::ShaderMacroDefs::ShaderMacroDefs()
 		m_size = intoffset + 1;
 }
 
+static inline int getSizeByFloatOfValueType(ConstBuffer::ValueType vt)
+{
+	switch (vt) {
+	case ConstBuffer::vt_float:
+		return 1;
+	case ConstBuffer::vt_Vector2:
+		return 2;
+	case ConstBuffer::vt_Vector3:
+		return 3;
+	case ConstBuffer::vt_Vector4:
+		return 4;
+	case ConstBuffer::vt_Matrix3:
+		return 3*3;
+	case ConstBuffer::vt_Matrix:
+		return 3*4;
+	case ConstBuffer::vt_Matrix4:
+		return 4*4;
+	}
+
+	AX_WRONGPLACE;
+	return 0;
+}
+
+static inline bool isMatrix(ConstBuffer::ValueType vt)
+{
+	switch (vt) {
+	case ConstBuffer::vt_empty:
+	case ConstBuffer::vt_float:
+	case ConstBuffer::vt_Vector2:
+	case ConstBuffer::vt_Vector3:
+	case ConstBuffer::vt_Vector4:
+		return false;
+	case ConstBuffer::vt_Matrix3:
+	case ConstBuffer::vt_Matrix:
+	case ConstBuffer::vt_Matrix4:
+		return true;
+	}
+
+	AX_WRONGPLACE;
+	return false;
+}
+
+
 
 ConstBuffer::ConstBuffer(int index, int numFloats)
 {
@@ -394,27 +437,38 @@ ConstBuffer::~ConstBuffer()
 {
 }
 
-void ConstBuffer::addField( const Field &field )
+void ConstBuffer::addField(const Field &field)
 {
 	m_fields.push_back(field);
 }
 
-void ConstBuffer::addField( ValueType vt, const char *name, int offset )
+void ConstBuffer::addField(ValueType vt, const char *name, int offset)
 {
+	Field field;
+	field.m_isMatrix = isMatrix(vt);
+	field.m_name = name;
+	field.m_numFloats = getSizeByFloatOfValueType(vt);
+	field.m_offset = offset;
 
+	m_fields.push_back(field);
 }
 
-ConstBuffer * ConstBuffer::clone() const
+ConstBuffer *ConstBuffer::clone() const
 {
 	ConstBuffer *cloned = new ConstBuffer(m_index, getNumFloats());
 	cloned->m_data = m_data;
+	cloned->m_default = m_default;
 	cloned->m_fields = m_fields;
+	cloned->m_dirty = m_dirty;
+	cloned->m_index = m_index;
 
 	return cloned;
 }
 
 void ConstBuffer::initSceneConst()
 {
+	clear();
+
 #define AX_ITEM(stype, atype, name, reg) addField(vt_##atype, #name, reg);
 #define AX_ARRAY(stype, atype, name, n, reg) addField(vt_##atype, #name, reg);
 #include "../../../data/shaders/sceneconst.fxh"
@@ -424,17 +478,21 @@ void ConstBuffer::initSceneConst()
 
 void ConstBuffer::initInteractionConst()
 {
+	clear();
 
+#define AX_ITEM(stype, atype, name, reg) addField(vt_##atype, #name, reg);
+#define AX_ARRAY(stype, atype, name, n, reg) addField(vt_##atype, #name, reg);
+#include "../../../data/shaders/interactionconst.fxh"
+#undef AX_ITEM
+#undef AX_ARRAY
 }
 
-int ConstBuffer::getNumFloatForValueType(ValueType vt)
+void ConstBuffer::clear()
 {
-	return 0;
-}
-
-bool ConstBuffer::isMatrix(ValueType vt)
-{
-	return false;
+	m_data.clear();
+	m_default.clear();
+	m_fields.clear();
+	m_dirty = true;
 }
 
 AX_END_NAMESPACE

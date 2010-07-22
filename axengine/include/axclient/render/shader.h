@@ -80,6 +80,7 @@ public:
 		INTERACTIONCONST,
 		NUMBER_STRUCT
 	};
+
 	struct Field {
 		FixedString m_name;
 		int m_offset;
@@ -108,9 +109,8 @@ public:
 	void addField(const Field &field);
 
 protected:
+	void clear();
 	void addField(ValueType vt, const char *name, int offset);
-	static int getNumFloatForValueType(ValueType vt);
-	static bool isMatrix(ValueType vt);
 
 private:
 	bool m_dirty;
@@ -132,14 +132,13 @@ class ConstFields
 {
 public:
 	enum FieldName {
-#define AX_TEXTURE_UNIFORM(type, name) name,
-		AX_SAMPLER_UNIFORMS
-#undef AX_TEXTURE_UNIFORM
-		MAX_TEXTURES,
+#define AX_ITEM(stype, atype, name, reg) name,
+#define AX_ARRAY(stype, atype, name, n, reg) name,
+#include "../../../data/shaders/sceneconst.fxh"
+#include "../../../data/shaders/interactionconst.fxh"
+#undef AX_ITEM
+#undef AX_ARRAY
 
-#define AX_UNIFORM(obj, name) name,
-		AX_GLOBAL_UNIFORMS
-#undef AX_UNIFORM
 		NUM_FIELDS
 	};
 

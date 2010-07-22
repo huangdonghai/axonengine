@@ -126,7 +126,7 @@ bool FilterInfo::isIn(const String &name) const {
 		return IsMatch(name.c_str(), this->str.c_str());
 
 	default:
-		AX_NO_DEFAULT;
+		AX_WRONGPLACE;
 		return false;
 	}
 }

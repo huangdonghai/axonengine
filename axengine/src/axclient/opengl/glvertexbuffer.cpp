@@ -19,7 +19,7 @@ static inline GLenum trBufferHint(Primitive::Hint hint) {
 		return GL_STREAM_DRAW;
 	case Primitive::HintFrame:
 		return GL_STREAM_DRAW;
-	default: AX_NO_DEFAULT;
+	default: AX_WRONGPLACE;
 		return GL_DYNAMIC_DRAW;
 	}
 }

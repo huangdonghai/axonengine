@@ -152,7 +152,7 @@ __GNUG__
 
 #define AX_ASSURE(x) if (!(x)) Errorf("%s: ASSURE \'%s\' FAILURE", __func__, #x);
 
-#define AX_NO_DEFAULT AX_ASSERT(0)
+#define AX_WRONGPLACE AX_ASSERT(0)
 
 #define AX_MAKEFOURCC(ch0, ch1, ch2, ch3)															\
 ((unsigned int)(unsigned char)(ch0)			| ((unsigned int)(unsigned char)(ch1) << 8) |		\

@@ -105,7 +105,7 @@ void GLgeometry::initialize(Primitive *src) {
 	case Primitive::ChunkType:
 		break;
 	default:
-		AX_NO_DEFAULT;
+		AX_WRONGPLACE;
 	}
 }
 
@@ -129,7 +129,7 @@ void GLgeometry::update() {
 		updateMesh();
 		break;
 	default:
-		AX_NO_DEFAULT;
+		AX_WRONGPLACE;
 	}
 }
 

@@ -177,7 +177,7 @@ String Variant::toString() const
 			return as<Matrix>().toString();
 		}
 	default:
-		AX_NO_DEFAULT;
+		AX_WRONGPLACE;
 	}
 	return result;
 }
@@ -238,7 +238,7 @@ void Variant::fromString(TypeId t, const char *str)
 			break;
 		}
 	default:
-		AX_NO_DEFAULT;
+		AX_WRONGPLACE;
 	}
 }
 
