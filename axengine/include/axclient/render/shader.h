@@ -13,6 +13,7 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
+#if 0
 class UniformData
 {
 public:
@@ -67,6 +68,7 @@ private:
 		Handle *m_textureHandle;
 	};
 };
+#endif
 
 class ConstBuffer
 {
@@ -120,18 +122,10 @@ private:
 	FloatSeq m_default;
 };
 
-class ConstField
+class ConstBuffers
 {
 public:
-private:
-	ConstBuffer *m_struct;
-	ConstBuffer::Field *m_field;
-};
-
-class ConstFields
-{
-public:
-	enum FieldName {
+	enum Item {
 #define AX_ITEM(stype, atype, name, reg) name,
 #define AX_ARRAY(stype, atype, name, n, reg) name,
 #include "../../../data/shaders/sceneconst.fxh"
@@ -142,15 +136,27 @@ public:
 		NUM_FIELDS
 	};
 
-	void setField(FieldName fieldName, int dataSize, const float *dataptr);
-	void setField(FieldName fieldName, int count, const Matrix4 mtr[]);
+	ConstBuffers();
+	~ConstBuffers();
+
+	void init(const Sequence<ConstBuffer*> bufs);
+	void setField(Item fieldName, int dataSize, const float *dataptr);
+	void setField(Item fieldName, int count, const Matrix4 mtr[]);
 
 private:
-	ConstField *m_fields[NUM_FIELDS];
+	class FieldLink
+	{
+	public:
+	private:
+		ConstBuffer *m_buffer;
+		ConstBuffer::Field *m_field;
+	};
+
+	FieldLink *m_fields[NUM_FIELDS];
 };
 
 //-------------------------------------------------------------------------
-
+#if 0
 class UniformItem
 {
 public:
@@ -259,6 +265,7 @@ struct ShaderQuality {
 	} t;
 	AX_DECLARE_ENUM(ShaderQuality);
 };
+#endif
 
 //-------------------------------------------------------------------------
 

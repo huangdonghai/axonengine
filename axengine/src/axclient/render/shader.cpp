@@ -12,6 +12,7 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
+#if 0
 //--------------------------------------------------------------------------
 // class UniformItem
 //--------------------------------------------------------------------------
@@ -149,6 +150,7 @@ void Uniforms::findRegisters()
 		}
 	}
 }
+#endif
 
 //--------------------------------------------------------------------------
 // class ShaderMacro

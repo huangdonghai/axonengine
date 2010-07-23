@@ -41,7 +41,6 @@ void DX9_Driver::initialize()
 	dx9_internalWindow = new DX9_Window();
 	dx9_driverInfo = new RenderDriverInfo;
 	dx9_driverInfo->driverType = RenderDriverInfo::D3D;
-	dx9_driverInfo->highestQualitySupport = ShaderQuality::Low;
 	dx9_driverInfo->vendor = "unknown";
 	dx9_driverInfo->renderer = "unknown";
 	dx9_driverInfo->version = "unknown";

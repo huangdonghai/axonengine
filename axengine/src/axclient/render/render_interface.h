@@ -107,7 +107,7 @@ public:
 	void setDepthStencil(phandle_t h);
 
 	void setShader(const FixedString & name, const ShaderMacro &sm, Technique tech);
-	void setShaderConst(Uniforms::ItemName name, int size, const void *p);
+	void setShaderConst(ConstBuffers::Item name, int size, const void *p);
 	void setShaderConst(const FixedString &name, int size, const void *p);
 
 	void setVertices(phandle_t vb, VertexType vt, int offset);
@@ -238,12 +238,12 @@ protected:
 	void setMaterialUniforms(Material *mat);
 
 	template <class Q>
-	void setUniform(ConstFields::FieldName name, const Q &q)
+	void setUniform(ConstBuffers::Item name, const Q &q)
 	{
 //		g_apiWrap->setShaderConst(name, sizeof(Q), &q);
 	}
 
-	void setUniform(Uniforms::ItemName, Texture *texture);
+	void setUniform(ConstBuffers::Item, Texture *texture);
 
 private:
 	// init

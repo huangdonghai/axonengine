@@ -22,7 +22,7 @@ FontPtr g_miniFont;
 
 RenderFrame *g_renderFrame;
 ShaderMacro g_shaderMacro;
-Uniforms g_uniforms;
+ConstBuffers g_constBuffers;
 IRenderDriver *g_renderDriver;
 
 
@@ -75,8 +75,6 @@ void RenderSystem::initialize()
 	g_renderDriver = (IRenderDriver*)(g_classFactory->createInstance(drivername));
 	g_renderDriver->initialize();
 
-	getShaderQuality();
-
 	set_objectName("gRenderSystem");
 
 	m_isMTrendering = r_multiThread.getBool();
@@ -112,17 +110,8 @@ void RenderSystem::finalize()
 	SafeDelete(g_renderDriver);
 }
 
-ShaderQuality RenderSystem::getShaderQuality()
+void RenderSystem::screenShot(const String &name, const Rect &rect)
 {
-	if (r_shaderQuality.isModified()) {
-		m_shaderQuality = std::min<int>(r_shaderQuality.getInteger(), g_renderDriver->getDriverInfo()->highestQualitySupport);
-		r_shaderQuality.clearModifiedFlag();
-	}
-	return m_shaderQuality;
-}
-
-
-void RenderSystem::screenShot(const String &name, const Rect &rect) {
 }
 
 void RenderSystem::info()

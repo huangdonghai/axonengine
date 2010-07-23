@@ -44,7 +44,6 @@ struct RenderDriverInfo {
 
 	// some caps
 	int caps;					// DriverCaps
-	ShaderQuality highestQualitySupport;
 
 	// for opengl
 	String vendor;

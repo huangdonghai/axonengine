@@ -106,6 +106,7 @@ public:
 	}
 };
 
+#if 0
 //--------------------------------------------------------------------------
 // class UniformCache
 //--------------------------------------------------------------------------
@@ -237,7 +238,7 @@ void DX9_Uniform::setUniform(UniformItem &item, const void *q)
 		break;
 	}
 }
-
+#endif
 DX9_Technique::DX9_Technique(DX9_Shader *shader, D3DXHANDLE d3dxhandle)
 {
 	m_shader = shader;
@@ -302,9 +303,10 @@ void DX9_Pass::initVs()
 			// error
 
 		} else {
+#if 0
 			if (g_uniforms.isVsregisterShared(constDesc.RegisterIndex))
 				continue;
-
+#endif
 			ParamDesc paramDesc;
 			paramDesc.d3dDesc = constDesc;
 #if 0
@@ -349,9 +351,10 @@ void DX9_Pass::initPs()
 		if (constDesc.RegisterSet == D3DXRS_SAMPLER) {
 			initSampler(constDesc);
 		} else {
+#if 0
 			if (g_uniforms.isPsregisterShared(constDesc.RegisterIndex))
 				continue;
-
+#endif
 			ParamDesc paramDesc;
 			paramDesc.d3dDesc = constDesc;
 #if 0
@@ -412,7 +415,7 @@ void DX9_Pass::initSampler(const D3DXCONSTANT_DESC &desc)
 			return;
 		}
 	}
-
+#if 0
 	// check system sampler
 	for (int i = 0; i < Uniforms::NUM_UNIFORM_ITEMS; i++) {
 		UniformItem &item = g_uniforms.getItem(i);
@@ -425,7 +428,7 @@ void DX9_Pass::initSampler(const D3DXCONSTANT_DESC &desc)
 			return;
 		}
 	}
-
+#endif
 	// check batch sampler
 	for (int i = 0; i < s2i(m_shader->m_samplerInfos.size()); i++) {
 		DX9_SamplerInfo *bs = m_shader->m_samplerInfos[i];

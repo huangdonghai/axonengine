@@ -31,8 +31,6 @@ public:
 	void initialize();
 	void finalize();
 
-	ShaderQuality getShaderQuality();
-
 	const RenderDriverInfo *getDriverInfo();
 	int getFrameNum() const;
 
@@ -101,7 +99,6 @@ public:
 private:
 	bool m_isMTrendering;
 	bool m_initialized;
-	ShaderQuality m_shaderQuality;
 	bool m_isSelectMode;
 	int m_frameNum;
 

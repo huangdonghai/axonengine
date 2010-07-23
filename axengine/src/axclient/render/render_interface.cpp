@@ -467,7 +467,7 @@ void ApiWrap::waitToPos(int pos)
 	}
 }
 
-void ApiWrap::setShaderConst(Uniforms::ItemName name, int size, const void *p)
+void ApiWrap::setShaderConst(ConstBuffers::Item name, int size, const void *p)
 {
 
 }
@@ -607,7 +607,7 @@ void RenderContext::drawScene(RenderScene *scene, const RenderClearer &clearer)
 
 #define BEGIN_PIX(x)
 #define END_PIX()
-#define AX_SU(a,b) setUniform(ConstFields::a, b);
+#define AX_SU(a,b) setUniform(ConstBuffers::a, b);
 
 void RenderContext::drawScene_world(RenderScene *scene, const RenderClearer &clearer)
 {
