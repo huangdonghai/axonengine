@@ -67,8 +67,6 @@ struct TexFormat {
 	int getBlockDataSize() const;
 	int getDepthBits() const;
 	const char *toString() const;
-
-	Type t;
 };
 
 inline bool TexFormat::isByte() const {

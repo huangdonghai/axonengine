@@ -152,25 +152,25 @@ bool GLshader::doInit(const String &name, const ShaderMacro &macro) {
 
 	// cache system samplers
 	static struct SamplerParam {
-		SamplerType type;
+		MaterialTextureId type;
 		const char *paramname;
 	} samplername[] = {
-		SamplerType::Diffuse, "g_diffuseMap",
-		SamplerType::Normal, "g_normalMap",
-		SamplerType::Specular, "g_specularMap",
-		SamplerType::Detail, "g_detailMap",
-		SamplerType::DetailNormal, "g_detailNormalMap",
-		SamplerType::Opacit, "g_opacitMap",
-		SamplerType::Emission, "g_emissionMap",
-		SamplerType::Displacement, "g_displacementMap",
-		SamplerType::Envmap, "g_envMap",
-		SamplerType::Custom1, "g_customMap1",
-		SamplerType::Custom2, "g_customMap2",
+		MaterialTextureId::Diffuse, "g_diffuseMap",
+		MaterialTextureId::Normal, "g_normalMap",
+		MaterialTextureId::Specular, "g_specularMap",
+		MaterialTextureId::Detail, "g_detailMap",
+		MaterialTextureId::DetailNormal, "g_detailNormalMap",
+		MaterialTextureId::Opacit, "g_opacitMap",
+		MaterialTextureId::Emission, "g_emissionMap",
+		MaterialTextureId::Displacement, "g_displacementMap",
+		MaterialTextureId::Envmap, "g_envMap",
+		MaterialTextureId::Custom1, "g_customMap1",
+		MaterialTextureId::Custom2, "g_customMap2",
 
 		// engine sampler
-		SamplerType::TerrainColor, "g_terrainColor",
-		SamplerType::TerrainNormal, "g_terrainNormal",
-		SamplerType::LayerAlpha, "g_layerAlpha",
+		MaterialTextureId::TerrainColor, "g_terrainColor",
+		MaterialTextureId::TerrainNormal, "g_terrainNormal",
+		MaterialTextureId::LayerAlpha, "g_layerAlpha",
 	};
 
 	for (size_t i = 0; i < ArraySize(samplername); i++) {
@@ -253,12 +253,12 @@ CGtechnique GLshader::getSystemTechnique(Technique tech) {
 }
 
 
-void GLshader::setSystemMap(SamplerType maptype, GLtexture *tex) {
+void GLshader::setSystemMap(MaterialTextureId maptype, GLtexture *tex) {
 	if (r_nulldraw.getBool()) {
 		return;
 	}
 
-	AX_ASSERT(maptype >= 0 && maptype < SamplerType::NUMBER_ALL);
+	AX_ASSERT(maptype >= 0 && maptype < MaterialTextureId::MaxType);
 
 	if (m_sysSamplers[maptype] == 0) {
 		//g_statistic->incValue(stat_shaderParamNotused);

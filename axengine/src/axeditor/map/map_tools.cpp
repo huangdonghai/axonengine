@@ -187,7 +187,7 @@ void TerrainRaiseTool::updatePrim(const Vector3 &from)
 #if 0
 	m_brushMat->setBaseTcMatrix(matrix);
 #else
-	m_brushMat->setTexGen(SamplerType::Diffuse, texgen);
+	m_brushMat->setTexGen(MaterialTextureId::Diffuse, texgen);
 #endif
 #endif
 //		m_view->doUpdate();

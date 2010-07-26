@@ -13,6 +13,7 @@ read the license and understand and accept it fully.
 #define AX_ENUM_H
 
 #define AX_DECLARE_ENUM(type)	\
+	type::Type t; \
 	inline type() {}	\
 	inline type(Type e) { t = e; } \
 	inline type(int i) { t = (Type)i; } \

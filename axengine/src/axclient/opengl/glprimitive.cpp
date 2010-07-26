@@ -593,8 +593,8 @@ void GLterrain::draw(Technique tech) {
 		drawlayer = false;
 	}
 
-	m_material->setTexture(SamplerType::TerrainColor, m_colorTexture);
-	m_material->setTexture(SamplerType::TerrainNormal, m_normalTexture);
+	m_material->setTexture(MaterialTextureId::TerrainColor, m_colorTexture);
+	m_material->setTexture(MaterialTextureId::TerrainNormal, m_normalTexture);
 
 	AX_SU(g_terrainRect, m_terrainRect);
 	AX_SU(g_zoneRect, m_zoneRect);
@@ -627,9 +627,9 @@ void GLterrain::draw(Technique tech) {
 		stat_numTerrainLayeredDrawElements.inc();
 
 		ChunkPrim::Layer &l = m_layers[i];
-		l.detailMat->setTexture(SamplerType::TerrainColor, m_colorTexture);
-		l.detailMat->setTexture(SamplerType::TerrainNormal, m_normalTexture);
-		l.detailMat->setTexture(SamplerType::LayerAlpha, l.alphaTex.get());
+		l.detailMat->setTexture(MaterialTextureId::TerrainColor, m_colorTexture);
+		l.detailMat->setTexture(MaterialTextureId::TerrainNormal, m_normalTexture);
+		l.detailMat->setTexture(MaterialTextureId::LayerAlpha, l.alphaTex.get());
 
 		l.detailMat->setFeature(0, l.isVerticalProjection);
 		l.detailMat->setFeature(1, combine && (i == 0)); // if is first layer, set first layer flag

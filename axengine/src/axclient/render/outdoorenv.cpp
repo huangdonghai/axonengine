@@ -154,7 +154,7 @@ void OutdoorEnv::setSkyBoxTexture(const String &matname)
 		}
 		Texture *tex = new Texture(matname + "_12");
 		AX_ASSERT(tex);
-		skymat->setTexture(SamplerType::Diffuse, tex);
+		skymat->setTexture(MaterialTextureId::Diffuse, tex);
 
 		m_skybox12->setMaterial(skymat);
 	}
@@ -165,7 +165,7 @@ void OutdoorEnv::setSkyBoxTexture(const String &matname)
 		}
 		Texture *tex = new Texture(matname + "_34");
 		AX_ASSERT(tex);
-		skymat->setTexture(SamplerType::Diffuse, tex);
+		skymat->setTexture(MaterialTextureId::Diffuse, tex);
 
 		m_skybox34->setMaterial(skymat);
 	}
@@ -176,7 +176,7 @@ void OutdoorEnv::setSkyBoxTexture(const String &matname)
 		}
 		Texture *tex = new Texture(matname + "_5");
 		AX_ASSERT(tex);
-		skymat->setTexture(SamplerType::Diffuse, tex);
+		skymat->setTexture(MaterialTextureId::Diffuse, tex);
 
 		m_skybox5->setMaterial(skymat);
 	}
@@ -275,8 +275,8 @@ void OutdoorEnv::createSkyDome()
 	m_skyNishitaRt->attachColor(0, miert);
 
 	m_skyNishitaMat = new Material("_skyNishita");
-	m_skyNishitaMat->setTexture(SamplerType::Diffuse, m_skyNishitaRt->getTexture());
-	m_skyNishitaMat->setTexture(SamplerType::Specular, miert->getTexture());
+	m_skyNishitaMat->setTexture(MaterialTextureId::Diffuse, m_skyNishitaRt->getTexture());
+	m_skyNishitaMat->setTexture(MaterialTextureId::Specular, miert->getTexture());
 	m_skyNishitaGenMat = 0; //Material::loadUnique("_skyNishitaGen");
 
 	m_skydome->setMaterial(m_skyNishitaMat);

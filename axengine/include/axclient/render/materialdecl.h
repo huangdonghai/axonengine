@@ -26,7 +26,7 @@ AX_BEGIN_NAMESPACE
 	AX_ENUM(Snow) \
 	AX_ENUM(Glass) \
 	AX_ENUM(Water) \
-	AX_ENUM(NUMBER_ALL)
+	AX_ENUM(MaxType)
 
 struct SurfaceType {
 	enum Type {
@@ -34,7 +34,7 @@ struct SurfaceType {
 	AX_DECL_SURFACETYPE
 #undef AX_ENUM
 // Dust, Metal, Sand, Wood, Grass, Snow, Glass, Water
-	} t;
+	};
 	AX_DECLARE_ENUM(SurfaceType);
 
 	const char *toString() {
@@ -55,20 +55,30 @@ struct SurfaceType {
 	}
 };
 
+struct GlobalTextureId {
+	enum Type {
+		GeoBuffer,
+		LightBuffer,
+		SceneColor,
+		LightMap,
+		ShadowMap,
 
+		MaxType
+	};
+	AX_DECLARE_ENUM(GlobalTextureId);
+};
 
-struct SamplerType {
+struct MaterialTextureId {
 	enum Type {
 		// material sampler
-		Diffuse, Normal, Specular, Detail, DetailNormal, Opacit, Emission, Displacement,
-		Envmap, Custom1, Custom2, 
+		Diffuse, Normal, Specular, Detail, DetailNormal, Opacit, Emission, Displacement, Envmap, 
 
 		// engine sampler
 		TerrainColor, TerrainNormal, LayerAlpha,
 
-		NUMBER_ALL
-	} t;
-	AX_DECLARE_ENUM(SamplerType);
+		MaxType
+	};
+	AX_DECLARE_ENUM(MaterialTextureId);
 };
 
 class TextureDef {
@@ -164,7 +174,7 @@ public:
 	bool tryLoad(const String &name);
 
 	const String &getShaderName() { return m_shaderName; }
-	TextureDef *getTextureDef(SamplerType maptype) { return m_textures[maptype]; }
+	TextureDef *getTextureDef(MaterialTextureId maptype) { return m_textures[maptype]; }
 	bool isWireframed() const { return m_renderStateId.wireframed; }
 	bool isTwoSided() const { return m_renderStateId.twoSided; }
 	Flags getFlags() const { return m_flags; }
@@ -194,7 +204,7 @@ private:
 	Flags m_flags;
 	SurfaceType m_surfaceType;
 	RenderStateId m_renderStateId;
-	TextureDef *m_textures[SamplerType::NUMBER_ALL];
+	TextureDef *m_textures[MaterialTextureId::MaxType];
 	ShaderParams m_shaderParams;
 	Rgba m_diffuse, m_specular, m_emission;
 	float m_specExp, m_specLevel;

@@ -59,7 +59,7 @@ void MaterialEditor::initWidgets()
 
 	// fill surface type widget
 //	ui.surfaceType->clear();
-	for (int i = 0; i < SurfaceType::NUMBER_ALL; i++) {
+	for (int i = 0; i < SurfaceType::MaxType; i++) {
 //		ui.surfaceType->addItem(SurfaceType(i).toString());
 	}
 }

@@ -16,23 +16,6 @@ AX_BEGIN_NAMESPACE
 static const char *glname = "axopengl.driver";
 static const char *d3d9name = "AxDX9.Driver";
 
-FontPtr g_defaultFont;
-FontPtr g_consoleFont;
-FontPtr g_miniFont;
-
-RenderFrame *g_renderFrame;
-ShaderMacro g_shaderMacro;
-ConstBuffers g_constBuffers;
-IRenderDriver *g_renderDriver;
-
-
-// module object
-ApiWrap *g_apiWrap = 0;
-RenderContext *g_renderContext = 0;
-BufferManager *g_bufferManager = 0;
-ConstBuffer *g_uniformStructs[ConstBuffer::NUMBER_STRUCT];
-
-
 AX_BEGIN_COMMAND_MAP(RenderSystem)
 	AX_COMMAND_ENTRY("texlist",	texlist_f)
 	AX_COMMAND_ENTRY("matlist",	matlist_f)

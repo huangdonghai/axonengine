@@ -107,7 +107,7 @@ private:
 
 	const ShaderInfo *m_shaderInfo;
 	FixedString m_shaderName;
-	Texture *m_textures[SamplerType::NUMBER_ALL];
+	Texture *m_textures[MaterialTextureId::MaxType];
 	ShaderParams m_shaderParams;
 	ConstBuffer *m_localUniforms;
 
@@ -212,14 +212,14 @@ inline void Material::setPixelToTexel(int width, int height)
 
 inline Texture *Material::getTexture(int sampler) const
 {
-	AX_ASSERT(sampler >= 0 && sampler < SamplerType::NUMBER_ALL);
+	AX_ASSERT(sampler >= 0 && sampler < MaterialTextureId::MaxType);
 	return m_textures[sampler];
 }
 
 inline void Material::setTexture(int sampler, Texture *tex)
 {
 	m_shaderMacroNeedRegen = true;
-	AX_ASSERT(sampler >= 0 && sampler < SamplerType::NUMBER_ALL);
+	AX_ASSERT(sampler >= 0 && sampler < MaterialTextureId::MaxType);
 	m_textures[sampler] = tex;
 }
 

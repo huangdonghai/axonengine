@@ -17,11 +17,11 @@ namespace
 {
 	int getMapType(const char *name) {
 		if (Strequ(name, "diffuse")) {
-			return SamplerType::Diffuse;
+			return MaterialTextureId::Diffuse;
 		} else if (Strequ(name, "specular")) {
-			return SamplerType::Specular;
+			return MaterialTextureId::Specular;
 		} else if (Strequ(name, "normal")) {
-			return SamplerType::Normal;
+			return MaterialTextureId::Normal;
 		}
 
 		return -1;
@@ -42,7 +42,7 @@ MaterialDecl::MaterialDecl()
 	const char *s = m_surfaceType.toString();
 	SurfaceType st2 = SurfaceType::fromString("Water");
 
-	memset(m_textures, 0, sizeof(TextureDef*) * SamplerType::NUMBER_ALL);
+	memset(m_textures, 0, sizeof(TextureDef*) * MaterialTextureId::MaxType);
 	m_diffuse.set(255, 255, 255, 255);
 	m_specular.set(0, 0, 0, 0);
 	m_emission.set(0, 0, 0, 0);
@@ -137,7 +137,7 @@ bool MaterialDecl::tryLoad(const String &name)
 					maptype = getMapType(attr->Value());
 					if (maptype < 0)
 						continue;
-					AX_ASSERT(maptype < SamplerType::NUMBER_ALL);
+					AX_ASSERT(maptype < MaterialTextureId::MaxType);
 					if (m_textures[maptype] != nullptr)
 						continue;
 

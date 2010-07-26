@@ -27,7 +27,7 @@ struct ActorNum {
 		NONE = MAX_ACTORS - 1,
 		LANDSCAPE = MAX_ACTORS - 2,
 		MAX_NORMAL = LANDSCAPE
-	} t;
+	};
 	AX_DECLARE_ENUM(ActorNum);
 };
 

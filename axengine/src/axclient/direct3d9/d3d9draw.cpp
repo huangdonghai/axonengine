@@ -168,7 +168,7 @@ Vector2 D3D9Draw::drawString(Font *font, Rgba color, const TextQuad &tq, const V
 
 		// check if need render
 		if ((tex && newtex != tex) || (count == NUM_CHARS_PER_BATCH)) {
-			m_fontShader->setSystemMap(SamplerType::Diffuse, (D3D9Texture*)tex);
+			m_fontShader->setSystemMap(MaterialTextureId::Diffuse, (D3D9Texture*)tex);
 
 			drawChars(count);
 
@@ -219,7 +219,7 @@ Vector2 D3D9Draw::drawString(Font *font, Rgba color, const TextQuad &tq, const V
 		pos.x += glyphinfo.advance;
 	}
 
-	m_fontShader->setSystemMap(SamplerType::Diffuse, (D3D9Texture*)tex);
+	m_fontShader->setSystemMap(MaterialTextureId::Diffuse, (D3D9Texture*)tex);
 
 //	ulonglong_t t2 = OsUtil::microseconds();
 	drawChars(count);

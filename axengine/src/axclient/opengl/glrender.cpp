@@ -50,12 +50,12 @@ void GLrender::draw(Material *mat, Technique tech, GLgeometry *prim)
 	ShaderMacro macro = g_shaderMacro;
 
 	// bind sample
-	GLtexture *diffuse = (GLtexture*)(mat->getTexture(SamplerType::Diffuse));
-	GLtexture *normalmap = (GLtexture*)mat->getTexture(SamplerType::Normal);
-	GLtexture *specular = (GLtexture*)mat->getTexture(SamplerType::Specular);
-	GLtexture *terrcolor = (GLtexture*)mat->getTexture(SamplerType::TerrainColor);
-	GLtexture *terrnormal = (GLtexture*)mat->getTexture(SamplerType::TerrainNormal);
-	GLtexture *layeralpha = (GLtexture*)mat->getTexture(SamplerType::LayerAlpha);
+	GLtexture *diffuse = (GLtexture*)(mat->getTexture(MaterialTextureId::Diffuse));
+	GLtexture *normalmap = (GLtexture*)mat->getTexture(MaterialTextureId::Normal);
+	GLtexture *specular = (GLtexture*)mat->getTexture(MaterialTextureId::Specular);
+	GLtexture *terrcolor = (GLtexture*)mat->getTexture(MaterialTextureId::TerrainColor);
+	GLtexture *terrnormal = (GLtexture*)mat->getTexture(MaterialTextureId::TerrainNormal);
+	GLtexture *layeralpha = (GLtexture*)mat->getTexture(MaterialTextureId::LayerAlpha);
 
 	const ShaderMacro &matmacro = mat->getShaderMacro();
 	macro.mergeFrom(&matmacro);
@@ -106,12 +106,12 @@ void GLrender::draw(Material *mat, Technique tech, GLgeometry *prim)
 		return;
 	}
 
-	shader->setSystemMap(SamplerType::Diffuse, diffuse);
-	shader->setSystemMap(SamplerType::Normal, normalmap);
-	shader->setSystemMap(SamplerType::Specular, specular);
-	shader->setSystemMap(SamplerType::TerrainColor, terrcolor);
-	shader->setSystemMap(SamplerType::TerrainNormal, terrnormal);
-	shader->setSystemMap(SamplerType::LayerAlpha, layeralpha);
+	shader->setSystemMap(MaterialTextureId::Diffuse, diffuse);
+	shader->setSystemMap(MaterialTextureId::Normal, normalmap);
+	shader->setSystemMap(MaterialTextureId::Specular, specular);
+	shader->setSystemMap(MaterialTextureId::TerrainColor, terrcolor);
+	shader->setSystemMap(MaterialTextureId::TerrainNormal, terrnormal);
+	shader->setSystemMap(MaterialTextureId::LayerAlpha, layeralpha);
 
 	shader->setSU();
 	shader->setInteractionMap();
@@ -563,7 +563,7 @@ Vector2 GLfontrender::drawString(Font *font, Rgba color, const TextQuad &tq, con
 //				m_vertexCount = count * 4;
 //				activeCount = count * 6;
 
-			m_shader->setSystemMap(SamplerType::Diffuse, (GLtexture*)tex);
+			m_shader->setSystemMap(MaterialTextureId::Diffuse, (GLtexture*)tex);
 
 			glUnmapBuffer(GL_ARRAY_BUFFER);
 			draw(count);
@@ -603,7 +603,7 @@ Vector2 GLfontrender::drawString(Font *font, Rgba color, const TextQuad &tq, con
 //		m_vertexCount = count * 4;
 //		activeCount = count * 6;
 
-	m_shader->setSystemMap(SamplerType::Diffuse, (GLtexture*)tex);
+	m_shader->setSystemMap(MaterialTextureId::Diffuse, (GLtexture*)tex);
 
 	glUnmapBuffer(GL_ARRAY_BUFFER);
 

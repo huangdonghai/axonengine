@@ -140,7 +140,7 @@ struct AX_API InputKey {
 #undef KEYITEM
 
 		MAX
-	} t;
+	};
 	AX_DECLARE_ENUM(InputKey)
 
 	String getName() const;

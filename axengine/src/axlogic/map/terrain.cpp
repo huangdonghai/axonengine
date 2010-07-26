@@ -195,12 +195,12 @@ void MapLayerGen::update()
 		Texture *normal = new Texture(fn+"_n");
 		Texture *specular = new Texture(fn+"_s");
 
-		m_detailMat->setTexture(SamplerType::Diffuse, diffuse);
+		m_detailMat->setTexture(MaterialTextureId::Diffuse, diffuse);
 //			if (!normal->isDefaulted()) {
-			m_detailMat->setTexture(SamplerType::Normal, normal);
+			m_detailMat->setTexture(MaterialTextureId::Normal, normal);
 //			}
 //			if (!specular->isDefaulted()) {
-			m_detailMat->setTexture(SamplerType::Specular, specular);
+			m_detailMat->setTexture(MaterialTextureId::Specular, specular);
 //			}
 
 #if 0

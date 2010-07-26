@@ -77,12 +77,6 @@ public:
 		vt_empty, vt_float, vt_Vector2, vt_Vector3, vt_Matrix3, vt_Vector4, vt_Matrix, vt_Matrix4
 	};
 
-	enum {
-		GLOBALCONST,
-		INTERACTIONCONST,
-		NUMBER_STRUCT
-	};
-
 	struct Field {
 		FixedString m_name;
 		int m_offset;
@@ -133,8 +127,15 @@ public:
 #undef AX_ITEM
 #undef AX_ARRAY
 
-		NUM_FIELDS
+		MaxItem
 	};
+
+	enum Type {
+		GlobalConst,
+		InteractionConst,
+		MaxType
+	};
+
 
 	ConstBuffers();
 	~ConstBuffers();
@@ -152,7 +153,15 @@ private:
 		ConstBuffer::Field *m_field;
 	};
 
-	FieldLink *m_fields[NUM_FIELDS];
+	FieldLink *m_fields[MaxItem];
+};
+
+class TextureSet
+{
+public:
+private:
+	Texture *m_globalTextures[GlobalTextureId::MaxType];
+	Texture *m_materialTextures[MaterialTextureId::MaxType];
 };
 
 //-------------------------------------------------------------------------
@@ -321,7 +330,7 @@ private:
 struct Technique {
 	enum Type {
 		Zpass, ShadowGen, Main, Layer, Glow, Reflection, Number
-	} t;
+	};
 
 	AX_DECLARE_ENUM(Technique);
 

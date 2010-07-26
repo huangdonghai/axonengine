@@ -38,12 +38,15 @@ public:
 	static void (*deleteRasterizerState)(phandle_t h);
 
 	static void (*setShader)(const FixedString &name, const ShaderMacro &sm, Technique tech);
-	static void (*setVsConst)(const FixedString &name, int count, float *value);
-	static void (*setPsConst)(const FixedString &name, int count, float *value);
+	static void (*setConstBuffer)(ConstBuffers::Type type, int size, const float *data);
+	static void (*setShaderConst)(const FixedString &name, int count, float *value);
 
 	static void (*setVertices)(phandle_t vb, VertexType vt, int vertcount);
 	static void (*setInstanceVertices)(phandle_t vb, VertexType vt, int vertcount, Handle inb, int incount);
 	static void (*setIndices)(phandle_t ib);
+
+	static void (*setGlobalTexture)(GlobalTextureId id, phandle_t h);
+	static void (*setMaterialTexture)(phandle_t texs[]);
 
 //	static void dip(ElementType et, int offset, int vertcount, int indices_count) = 0;
 	static void (*draw)();
@@ -107,7 +110,6 @@ public:
 	void setDepthStencil(phandle_t h);
 
 	void setShader(const FixedString & name, const ShaderMacro &sm, Technique tech);
-	void setShaderConst(ConstBuffers::Item name, int size, const void *p);
 	void setShaderConst(const FixedString &name, int size, const void *p);
 
 	void setVertices(phandle_t vb, VertexType vt, int offset);
@@ -116,6 +118,9 @@ public:
 
 	void setVerticesUP(const void *vb, VertexType vt, int offset);
 	void setIndicesUP(const void *ib, ElementType et, int offset, int vertcount, int indicescount);
+
+	void setGlobalTexture(GlobalTextureId gt, Texture *tex);
+	void setMaterialTexture(Texture *tex[]);
 
 	void draw();
 

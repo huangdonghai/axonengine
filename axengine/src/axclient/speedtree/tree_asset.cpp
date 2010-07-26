@@ -168,23 +168,23 @@ void TreeAsset::loadMaterials()
 	Texture *tex = new Texture(texname);
 
 	m_branchMat = new Material("_branch");
-	m_branchMat->setTexture(SamplerType::Diffuse, tex);
+	m_branchMat->setTexture(MaterialTextureId::Diffuse, tex);
 
 	setMaterialColor(m_branchMat, m_treeRt->GetBranchMaterial(), sShaderParams.m_fGlobalLightScalar * sShaderParams.m_fBranchLightScalar, sShaderParams.m_fAmbientScalar);
 
 	texname = m_filepath + PathUtil::getName(sMapBank.m_pCompositeMaps[CSpeedTreeRT::TL_DIFFUSE]);
 	tex = new Texture(texname);
 	m_frondMat = new Material("_frond");
-	m_frondMat->setTexture(SamplerType::Diffuse, tex);
+	m_frondMat->setTexture(MaterialTextureId::Diffuse, tex);
 
 	setMaterialColor(m_frondMat, m_treeRt->GetFrondMaterial(), sShaderParams.m_fGlobalLightScalar * sShaderParams.m_fFrondLightScalar, sShaderParams.m_fAmbientScalar);
 
 	m_leafCardMat = new Material("_leafcard");
-	m_leafCardMat->setTexture(SamplerType::Diffuse, tex);
+	m_leafCardMat->setTexture(MaterialTextureId::Diffuse, tex);
 	setMaterialColor(m_leafCardMat, m_treeRt->GetLeafMaterial(), sShaderParams.m_fGlobalLightScalar * sShaderParams.m_fLeafLightScalar, sShaderParams.m_fAmbientScalar);
 
 	m_leafMeshMat = new Material("_leafmesh");
-	m_leafMeshMat->setTexture(SamplerType::Diffuse, tex);
+	m_leafMeshMat->setTexture(MaterialTextureId::Diffuse, tex);
 	setMaterialColor(m_leafMeshMat, m_treeRt->GetLeafMaterial(), sShaderParams.m_fGlobalLightScalar * sShaderParams.m_fLeafLightScalar, sShaderParams.m_fAmbientScalar);
 }
 

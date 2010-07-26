@@ -16,25 +16,23 @@ static ID3DXEffectPool *s_effectPool = NULL;   // Effect pool for sharing parame
 
 // cache system samplers
 static struct SamplerParam {
-	SamplerType type;
+	MaterialTextureId type;
 	const char *paramname;
 } samplername[] = {
-	SamplerType::Diffuse, "g_diffuseMap",
-	SamplerType::Normal, "g_normalMap",
-	SamplerType::Specular, "g_specularMap",
-	SamplerType::Detail, "g_detailMap",
-	SamplerType::DetailNormal, "g_detailNormalMap",
-	SamplerType::Opacit, "g_opacitMap",
-	SamplerType::Emission, "g_emissionMap",
-	SamplerType::Displacement, "g_displacementMap",
-	SamplerType::Envmap, "g_envMap",
-	SamplerType::Custom1, "g_customMap1",
-	SamplerType::Custom2, "g_customMap2",
+	MaterialTextureId::Diffuse, "g_diffuseMap",
+	MaterialTextureId::Normal, "g_normalMap",
+	MaterialTextureId::Specular, "g_specularMap",
+	MaterialTextureId::Detail, "g_detailMap",
+	MaterialTextureId::DetailNormal, "g_detailNormalMap",
+	MaterialTextureId::Opacit, "g_opacitMap",
+	MaterialTextureId::Emission, "g_emissionMap",
+	MaterialTextureId::Displacement, "g_displacementMap",
+	MaterialTextureId::Envmap, "g_envMap",
 
 	// engine sampler
-	SamplerType::TerrainColor, "g_terrainColor",
-	SamplerType::TerrainNormal, "g_terrainNormal",
-	SamplerType::LayerAlpha, "g_layerAlpha",
+	MaterialTextureId::TerrainColor, "g_terrainColor",
+	MaterialTextureId::TerrainNormal, "g_terrainNormal",
+	MaterialTextureId::LayerAlpha, "g_layerAlpha",
 };
 
 
@@ -879,9 +877,9 @@ D3DXHANDLE DX9_Shader::getUsedParameter(const char *name)
 	}
 }
 
-void DX9_Shader::setSystemMap(SamplerType maptype, IDirect3DTexture9 *tex)
+void DX9_Shader::setSystemMap(MaterialTextureId maptype, IDirect3DTexture9 *tex)
 {
-	AX_ASSERT(maptype >= 0 && maptype < SamplerType::NUMBER_ALL);
+	AX_ASSERT(maptype >= 0 && maptype < MaterialTextureId::MaxType);
 
 	m_samplerBound[maptype] = tex;
 }
@@ -1023,6 +1021,7 @@ void DX9_Shader::checkGlobalStruct()
 	LPD3DXCONSTANTTABLE constTable;
 	D3DXGetShaderConstantTable(desc.pVertexShaderFunction, &constTable);
 
+#if 0
 	dx9_uniformStructs[0] = parseStruct(constTable, "g_gc");
 	dx9_uniformStructs[1] = parseStruct(constTable, "g_vgc");
 	dx9_uniformStructs[3] = parseStruct(constTable, "g_vic");
@@ -1030,11 +1029,11 @@ void DX9_Shader::checkGlobalStruct()
 	D3DXGetShaderConstantTable(desc.pPixelShaderFunction, &constTable);
 	dx9_uniformStructs[2] = parseStruct(constTable, "g_pgc");
 	dx9_uniformStructs[4] = parseStruct(constTable, "g_pic");
-
 	for (int i = 0; i < ConstBuffer::NUMBER_STRUCT; i++) {
-		g_uniformStructs[i] = dx9_uniformStructs[i]->clone();
-		AX_ASSURE(g_uniformStructs[i]);
+		g_constBuffers[i] = dx9_uniformStructs[i]->clone();
+		AX_ASSURE(g_constBuffers[i]);
 	}
+#endif
 }
 
 ConstBuffer *DX9_Shader::mergeStruct(const char *paramName)

@@ -213,7 +213,7 @@ void GLpostprocess::drawQuad(GLtexture *texture) {
 #else
 //		texture->setFilterMode(Texture::Nearest);
 
-	m_shaderDrawQuad->setSystemMap(SamplerType::Diffuse, texture);
+	m_shaderDrawQuad->setSystemMap(MaterialTextureId::Diffuse, texture);
 	m_shaderDrawQuad->setSU();
 
 	const Rect &r = gCamera->getViewRect();
@@ -235,7 +235,7 @@ void GLpostprocess::measureHistogram(GLtexture *tex, int index) {
 	param.w = 1;
 
 	AX_SU(g_instanceParam, param);
-	m_shaderHistogram->setSystemMap(SamplerType::Diffuse, tex);
+	m_shaderHistogram->setSystemMap(MaterialTextureId::Diffuse, tex);
 	m_shaderHistogram->setSU();
 
 	const Rect &r = gCamera->getViewRect();
@@ -265,7 +265,7 @@ void GLpostprocess::maskShadow(Vector3 volume[8], const Matrix4 &matrix, GLtextu
 	tex->getSize(width, height);
 	m_matShadowMask->setPixelToTexel(width, height);
 
-	m_matShadowMask->setTexture(SamplerType::Diffuse, tex);
+	m_matShadowMask->setTexture(MaterialTextureId::Diffuse, tex);
 	m_matShadowMask->setParameter("s_shadowMatrix", 16, matrix.c_ptr());
 	m_matShadowMask->setParameter("s_shadowRange", 2, zrange.c_ptr());
 
@@ -291,7 +291,7 @@ void GLpostprocess::maskShadow(Vector3 volume[8], const Matrix4 &matrix, GLtextu
 	tex->getSize(width, height);
 	m_matShadowMask->setPixelToTexel(width, height);
 
-	m_matShadowMask->setTexture(SamplerType::Diffuse, tex);
+	m_matShadowMask->setTexture(MaterialTextureId::Diffuse, tex);
 	m_matShadowMask->setParameter("s_shadowMatrix", 16, matrix.c_ptr());
 	m_matShadowMask->setParameter("s_shadowRange", 2, zrange.c_ptr());
 
@@ -316,7 +316,7 @@ void GLpostprocess::shadowBlur(GLtexture *texture, bool is_du) {
 	const Vector4 &viewport = gCamera->getViewPort();
 //		getSampleOffsets_GaussBlur5x5(viewport.z, viewport.w, sSampleOffsets, sSampleWeights);
 	getSamplerOffsets_Gauss1D(viewport.z, viewport.w, 5, sSampleOffsets, sSampleWeights, is_du);
-	m_matShadowBlur->setTexture(SamplerType::Diffuse, texture);
+	m_matShadowBlur->setTexture(MaterialTextureId::Diffuse, texture);
 	m_matShadowBlur->setParameter("g_sampleOffsets", 32 * 2, sSampleOffsets[0].c_ptr());
 	m_matShadowBlur->setParameter("g_sampleWeights", 32, sSampleWeights);
 
@@ -332,7 +332,7 @@ void GLpostprocess::downscale4x4(GLtexture *tex, const Rect &rect) {
 	tex->setFilterMode(Texture::FM_Linear);
 	tex->setClampMode(Texture::CM_ClampToEdge);
 
-	m_shaderDownscale4x4->setSystemMap(SamplerType::Diffuse, tex);
+	m_shaderDownscale4x4->setSystemMap(MaterialTextureId::Diffuse, tex);
 	m_shaderDownscale4x4->setSU();
 
 	Vector2 param[4];
@@ -377,7 +377,7 @@ void GLpostprocess::genericPP(const String &shadername, GLtexture *src) {
 	src->setFilterMode(Texture::FM_Nearest);
 	src->setClampMode(Texture::CM_ClampToEdge);
 
-	shader->setSystemMap(SamplerType::Diffuse, src);
+	shader->setSystemMap(MaterialTextureId::Diffuse, src);
 	shader->setSU();
 
 	int width, height;
@@ -403,7 +403,7 @@ void GLpostprocess::genericPP(const String &shadername, RenderTarget *target, GL
 	src->setFilterMode(Texture::FM_Nearest);
 	src->setClampMode(Texture::CM_ClampToEdge);
 
-	shader->setSystemMap(SamplerType::Diffuse, src);
+	shader->setSystemMap(MaterialTextureId::Diffuse, src);
 	shader->setSU();
 
 	int width, height;
@@ -435,8 +435,8 @@ void GLpostprocess::genericPP(const String &shadername, RenderTarget *target, GL
 		glThread->setupScene(0, 0, 0, &camera);
 	}
 
-	shader->setSystemMap(SamplerType::Diffuse, src1);
-	shader->setSystemMap(SamplerType::Specular, src2);
+	shader->setSystemMap(MaterialTextureId::Diffuse, src1);
+	shader->setSystemMap(MaterialTextureId::Specular, src2);
 	shader->setSU();
 
 	int width, height;

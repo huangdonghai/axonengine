@@ -255,7 +255,7 @@ void D3D9Postprocess::drawQuad(D3D9Texture *texture) {
 #else
 	//		texture->setFilterMode(Texture::Nearest);
 
-	m_shaderDrawQuad->setSystemMap(SamplerType::Diffuse, texture);
+	m_shaderDrawQuad->setSystemMap(MaterialTextureId::Diffuse, texture);
 #if 0
 	m_shaderDrawQuad->setSU();
 #endif
@@ -275,7 +275,7 @@ void D3D9Postprocess::measureHistogram(D3D9Texture *tex, int index) {
 	param.w = 1;
 
 	AX_SU(g_instanceParam, param);
-	m_shaderHistogram->setSystemMap(SamplerType::Diffuse, tex);
+	m_shaderHistogram->setSystemMap(MaterialTextureId::Diffuse, tex);
 #if 0
 	m_shaderHistogram->setSU();
 #endif
@@ -403,7 +403,7 @@ void D3D9Postprocess::shadowBlur(D3D9Texture *texture, bool is_du) {
 	const Vector4 &viewport = d3d9Camera->getViewPort();
 	//		getSampleOffsets_GaussBlur5x5(viewport.z, viewport.w, sSampleOffsets, sSampleWeights);
 	getSamplerOffsets_Gauss1D(viewport.z, viewport.w, 5, sSampleOffsets, sSampleWeights, is_du);
-	m_mtrShadowBlur->setTexture(SamplerType::Diffuse, texture);
+	m_mtrShadowBlur->setTexture(MaterialTextureId::Diffuse, texture);
 	m_mtrShadowBlur->setParameter("g_sampleOffsets", 32 * 2, sSampleOffsets[0].c_ptr());
 	m_mtrShadowBlur->setParameter("g_sampleWeights", 32, sSampleWeights);
 
@@ -416,7 +416,7 @@ void D3D9Postprocess::downscale4x4(D3D9Texture *tex, const Rect &rect) {
 	tex->setFilterMode(Texture::FM_Linear);
 	tex->setClampMode(Texture::CM_ClampToEdge);
 
-	m_shaderDownscale4x4->setSystemMap(SamplerType::Diffuse, tex);
+	m_shaderDownscale4x4->setSystemMap(MaterialTextureId::Diffuse, tex);
 #if 0
 	m_shaderDownscale4x4->setSU();
 #endif
@@ -459,7 +459,7 @@ void D3D9Postprocess::genericPP(const String &shadername, D3D9Texture *src) {
 	src->setFilterMode(Texture::FM_Nearest);
 	src->setClampMode(Texture::CM_ClampToEdge);
 
-	shader->setSystemMap(SamplerType::Diffuse, src);
+	shader->setSystemMap(MaterialTextureId::Diffuse, src);
 #if 0
 	shader->setSU();
 #endif
@@ -482,7 +482,7 @@ void D3D9Postprocess::genericPP(const String &shadername, RenderTarget *target, 
 	src->setFilterMode(Texture::FM_Nearest);
 	src->setClampMode(Texture::CM_ClampToEdge);
 
-	shader->setSystemMap(SamplerType::Diffuse, src);
+	shader->setSystemMap(MaterialTextureId::Diffuse, src);
 #if 0
 	shader->setSU();
 #endif
@@ -512,8 +512,8 @@ void D3D9Postprocess::genericPP(const String &shadername, RenderTarget *target, 
 		d3d9Thread->setupScene(0, 0, 0, &camera);
 	}
 
-	shader->setSystemMap(SamplerType::Diffuse, src1);
-	shader->setSystemMap(SamplerType::Specular, src2);
+	shader->setSystemMap(MaterialTextureId::Diffuse, src1);
+	shader->setSystemMap(MaterialTextureId::Specular, src2);
 #if 0
 	shader->setSU();
 #endif

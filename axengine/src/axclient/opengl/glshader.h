@@ -96,7 +96,7 @@ public:
 	virtual bool haveTechnique(Technique tech) const { return m_techniques[tech] != 0; }
 	virtual const ShaderInfo *getShaderInfo() const { return 0; }
 
-	void setSystemMap(SamplerType maptype, GLtexture *tex);
+	void setSystemMap(MaterialTextureId maptype, GLtexture *tex);
 	void setInteractionMap();
 	void setInteractionParameter(const ShaderParams &params);
 
@@ -143,8 +143,8 @@ private:
 	String m_name;
 	CGeffect m_cgfx;
 	CGtechnique m_techniques[Technique::Number];
-	CGparameter m_sysSamplers[SamplerType::NUMBER_ALL];
-	GLuint m_samplerBound[SamplerType::NUMBER_ALL];
+	CGparameter m_sysSamplers[MaterialTextureId::MaxType];
+	GLuint m_samplerBound[MaterialTextureId::MaxType];
 
 	SortHint m_sortHint;
 	CGsamplerannSeq m_samplerannSeq;

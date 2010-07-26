@@ -53,7 +53,7 @@ struct CursorType {
 		ViewRotate,
 		ViewZoom,
 		ViewPan,
-	} t;
+	};
 	AX_DECLARE_ENUM(CursorType);
 };
 
@@ -65,7 +65,7 @@ struct SelectPart {
 		kActor = 8,
 
 		All = 0xFFFFFFFF
-	} t;
+	};
 	AX_DECLARE_ENUM(SelectPart);
 };
 
@@ -88,7 +88,7 @@ struct ClipBoardData {
 struct Space {
 	enum Type {
 		WorldSpace, ViewSpace, ObjectSpace
-	} t;
+	};
 
 	AX_DECLARE_ENUM(Space);
 };

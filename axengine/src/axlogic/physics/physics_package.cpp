@@ -308,9 +308,9 @@ namespace { namespace Internal {
 			}
 		}
 
-		SamplerType guessTypeFromName(const String &texname)
+		MaterialTextureId guessTypeFromName(const String &texname)
 		{
-			SamplerType samplertype = SamplerType::NUMBER_ALL;
+			MaterialTextureId samplertype = MaterialTextureId::MaxType;
 
 			String filename = PathUtil::getName(texname);
 			if (filename.size() < 7)
@@ -321,15 +321,15 @@ namespace { namespace Internal {
 
 			size_t size = filename.size();
 			if (filename[size-2] == '_' && filename[size-1] == 'n') {
-				samplertype = SamplerType::DetailNormal;
+				samplertype = MaterialTextureId::DetailNormal;
 			} else {
-				samplertype = SamplerType::Detail;
+				samplertype = MaterialTextureId::Detail;
 			}
 
 			return samplertype;
 		}
 
-		void fillStatges(Texture *samplers[SamplerType::NUMBER_ALL], Texture *&lightmap)
+		void fillStatges(Texture *samplers[MaterialTextureId::MaxType], Texture *&lightmap)
 		{
 			for (int i = 0; i < m_hkmat->m_numStages; i++) {
 				hkxMaterial::TextureStage *stage = &m_hkmat->m_stages[i];
@@ -344,7 +344,7 @@ namespace { namespace Internal {
 					continue;
 				}
 
-				SamplerType samplertype = SamplerType::NUMBER_ALL;
+				MaterialTextureId samplertype = MaterialTextureId::MaxType;
 				if (stage->m_tcoordChannel == 0) {
 					switch (stage->m_usageHint) {
 					case hkxMaterial::TEX_UNKNOWN:
@@ -357,23 +357,23 @@ namespace { namespace Internal {
 						samplertype = guessTypeFromName(filename);
 						break;
 					case hkxMaterial::TEX_DIFFUSE:
-						samplertype = SamplerType::Diffuse;
+						samplertype = MaterialTextureId::Diffuse;
 						break;
 					case hkxMaterial::TEX_REFLECTION:
-						samplertype = SamplerType::Envmap;
+						samplertype = MaterialTextureId::Envmap;
 						break;
 					case hkxMaterial::TEX_BUMP:
 					case hkxMaterial::TEX_NORMAL:
-						samplertype = SamplerType::Normal;
+						samplertype = MaterialTextureId::Normal;
 						break;
 					case hkxMaterial::TEX_DISPLACEMENT:
-						samplertype = SamplerType::Displacement;
+						samplertype = MaterialTextureId::Displacement;
 						break;
 					case hkxMaterial::TEX_SPECULAR:
-						samplertype = SamplerType::Specular;
+						samplertype = MaterialTextureId::Specular;
 						break;
 					case hkxMaterial::TEX_EMISSIVE:
-						samplertype = SamplerType::Emission;
+						samplertype = MaterialTextureId::Emission;
 						break;
 					}
 
@@ -381,13 +381,13 @@ namespace { namespace Internal {
 					lightmap = tex;
 				}
 
-				if (samplertype == SamplerType::NUMBER_ALL)
+				if (samplertype == MaterialTextureId::MaxType)
 					continue;
 
 				samplers[samplertype] = tex;
 
 				// set texture set
-				if (samplertype == SamplerType::Diffuse) {
+				if (samplertype == MaterialTextureId::Diffuse) {
 #if 0
 					if (!samplers[SamplerType::Normal]) {
 						tex = new Texture(filename + "_n");
@@ -416,9 +416,9 @@ namespace { namespace Internal {
 #endif
 				}
 
-				if (samplertype == SamplerType::Detail && !samplers[SamplerType::DetailNormal]) {
+				if (samplertype == MaterialTextureId::Detail && !samplers[MaterialTextureId::DetailNormal]) {
 					tex = new Texture(filename + "_n");
-					samplers[SamplerType::DetailNormal] = tex;
+					samplers[MaterialTextureId::DetailNormal] = tex;
 				}
 			}
 		}
@@ -456,7 +456,7 @@ namespace { namespace Internal {
 				axname = fn;
 			}
 
-			Texture *samplers[SamplerType::NUMBER_ALL];
+			Texture *samplers[MaterialTextureId::MaxType];
 			Texture *lightmap = 0;
 			TypeZeroArray(samplers);
 
@@ -465,7 +465,7 @@ namespace { namespace Internal {
 			Material *mat = new Material(axname);
 
 			// set samplers to material
-			for (int i = 0; i < SamplerType::NUMBER_ALL; i++) {
+			for (int i = 0; i < MaterialTextureId::MaxType; i++) {
 				if (samplers[i]) {
 					mat->setTexture(i, samplers[i]);
 				}

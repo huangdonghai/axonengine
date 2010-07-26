@@ -139,7 +139,7 @@ private:
 	IDirect3DPixelShader9 *m_ps;
 
 	// material sampler
-	int m_matSamplers[SamplerType::NUMBER_ALL];
+	int m_matSamplers[MaterialTextureId::MaxType];
 
 	// sys sampler
 	Dict<int,int> m_sysSamplers;
@@ -194,7 +194,7 @@ public:
 	void checkGlobalStruct();
 	void checkShaderInfo();
 
-	void setSystemMap(SamplerType maptype, IDirect3DTexture9 *tex);
+	void setSystemMap(MaterialTextureId maptype, IDirect3DTexture9 *tex);
 
 	ID3DXEffect *getObject() const { return m_object; }
 
@@ -223,7 +223,7 @@ private:
 	String m_keyString;
 
 	D3DXHANDLE m_d3dxTechniques[Technique::Number];
-	IDirect3DTexture9 *m_samplerBound[SamplerType::NUMBER_ALL];
+	IDirect3DTexture9 *m_samplerBound[MaterialTextureId::MaxType];
 	D3DXHANDLE m_curTechnique;
 
 	DX9_SamplerInfos m_samplerInfos;

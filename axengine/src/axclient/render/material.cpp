@@ -52,7 +52,7 @@ bool Material::init(const FixedString &key)
 	if (m_decl->isDefaulted()) {
 		setTextureSet(m_key);
 	} else {
-		for (int i = 0; i < SamplerType::NUMBER_ALL; i++) {
+		for (int i = 0; i < MaterialTextureId::MaxType; i++) {
 			TextureDef *texdef = m_decl->getTextureDef(i);
 
 			if (!texdef)
@@ -141,29 +141,29 @@ const ShaderMacro &Material::getShaderMacro()
 
 		m_shaderMacro.clear();
 
-		if (m_textures[SamplerType::Diffuse])
+		if (m_textures[MaterialTextureId::Diffuse])
 			m_shaderMacro.setMacro(ShaderMacro::G_HAVE_DIFFUSE);
 
-		if (m_textures[SamplerType::Normal])
+		if (m_textures[MaterialTextureId::Normal])
 			m_shaderMacro.setMacro(ShaderMacro::G_HAVE_NORMAL);
 
-		if (m_textures[SamplerType::Specular])
+		if (m_textures[MaterialTextureId::Specular])
 			m_shaderMacro.setMacro(ShaderMacro::G_HAVE_SPECULAR);
 
-		if (m_textures[SamplerType::Detail]) {
+		if (m_textures[MaterialTextureId::Detail]) {
 			m_shaderMacro.setMacro(ShaderMacro::G_HAVE_DETAIL);
 			m_haveDetail = true;
 		}
 
-		if (m_textures[SamplerType::DetailNormal]) {
+		if (m_textures[MaterialTextureId::DetailNormal]) {
 			m_shaderMacro.setMacro(ShaderMacro::G_HAVE_DETAIL_NORMAL);
 			m_haveDetail = true;
 		}
 
-		if (m_textures[SamplerType::Emission])
+		if (m_textures[MaterialTextureId::Emission])
 			m_shaderMacro.setMacro(ShaderMacro::G_HAVE_EMISSION);
 
-		if (m_textures[SamplerType::LayerAlpha])
+		if (m_textures[MaterialTextureId::LayerAlpha])
 			m_shaderMacro.setMacro(ShaderMacro::G_HAVE_LAYERALPHA);
 
 		if (m_baseTcAnim) {
@@ -219,16 +219,16 @@ bool Material::isPhysicsHelper() const
 void Material::setTextureSet( const String &texname )
 {
 	Texture *texture = new Texture(texname);
-	m_textures[SamplerType::Diffuse] = texture;
+	m_textures[MaterialTextureId::Diffuse] = texture;
 
 	texture = new Texture(texname + "_n");
-	m_textures[SamplerType::Normal] = texture;
+	m_textures[MaterialTextureId::Normal] = texture;
 
 	texture = new Texture(texname + "_s");
-	m_textures[SamplerType::Specular] = texture;
+	m_textures[MaterialTextureId::Specular] = texture;
 
 	texture = new Texture(texname + "_g");
-	m_textures[SamplerType::Emission] = texture;
+	m_textures[MaterialTextureId::Emission] = texture;
 
 	m_shaderMacroNeedRegen = true;
 }

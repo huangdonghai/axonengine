@@ -38,7 +38,7 @@ void Interaction::calcSort(bool eyeInWater)
 
 	sortkey = mat->getSortHint();
 
-	Texture *tex = mat->getTexture(SamplerType::Diffuse);
+	Texture *tex = mat->getTexture(MaterialTextureId::Diffuse);
 
 	if (eyeInWater) {
 		sortkey = eyeInWaterSort[sortkey];

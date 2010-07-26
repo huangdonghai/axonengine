@@ -13,12 +13,16 @@
 
 AX_BEGIN_NAMESPACE
 
+extern RenderFrame *g_renderFrame;
+extern ShaderMacro g_shaderMacro;
+extern ConstBuffers g_constBuffers;
+extern IRenderDriver *g_renderDriver;
+
 extern IRenderDriver *g_renderDriver;
 extern ApiWrap *g_apiWrap;
 extern BufferManager *g_bufferManager;
 
 // filled by drivers
-extern ConstBuffer *g_uniformStructs[ConstBuffer::NUMBER_STRUCT];
 
 #ifdef AX_CONFIG_OPTION_USE_SPEEDTREE_40
 extern TreeManager *g_treeManager;

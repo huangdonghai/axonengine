@@ -271,11 +271,6 @@ AX_END_NAMESPACE
 
 AX_BEGIN_NAMESPACE
 
-extern RenderFrame *g_renderFrame;
-extern ShaderMacro g_shaderMacro;
-extern ConstBuffers g_constBuffers;
-extern IRenderDriver *g_renderDriver;
-
 AX_END_NAMESPACE
 
 #endif // end guardian

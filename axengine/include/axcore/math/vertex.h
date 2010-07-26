@@ -22,7 +22,7 @@ struct Joint {
 struct VertexType {
 	enum Type {
 		kMesh, kDebug, kBlend, kChunk, kNumber
-	} t;
+	};
 	AX_DECLARE_ENUM(VertexType);
 };
 
