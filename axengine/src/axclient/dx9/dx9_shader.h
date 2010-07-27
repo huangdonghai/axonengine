@@ -244,14 +244,12 @@ class DX9_ShaderManager
 {
 public:
 	DX9_ShaderManager();
-	virtual ~DX9_ShaderManager();
+	~DX9_ShaderManager();
 
-	virtual DX9_Shader *findShader(const String &name, const ShaderMacro &macro = g_shaderMacro);
-	virtual DX9_Shader *findShader(const FixedString &nameId, const ShaderMacro &macro);
-	virtual void saveShaderCache(const String &name);
-	virtual void applyShaderCache(const String &name);
-
-	DX9_Shader *findShaderDX(const String &name, const ShaderMacro &macro = g_shaderMacro);
+	DX9_Shader *findShader(const String &name, const ShaderMacro &macro = g_shaderMacro);
+	DX9_Shader *findShader(const FixedString &nameId, const ShaderMacro &macro);
+	void saveShaderCache(const String &name);
+	void applyShaderCache(const String &name);
 
 protected:
 	void _initialize();

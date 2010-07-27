@@ -1139,11 +1139,6 @@ DX9_Shader *DX9_ShaderManager::findShader(const FixedString &nameId, const Shade
 	return shader;
 }
 
-DX9_Shader *DX9_ShaderManager::findShaderDX(const String &name, const ShaderMacro &macro)
-{
-	return (DX9_Shader*)findShader(name, macro);
-}
-
 void DX9_ShaderManager::saveShaderCache(const String &name)
 {
 	String filename;
