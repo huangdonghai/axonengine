@@ -73,23 +73,22 @@ private:
 class ConstBuffer
 {
 public:
+	friend class ConstBuffers;
+
 	enum ValueType {
 		vt_empty, vt_float, vt_Vector2, vt_Vector3, vt_Matrix3, vt_Vector4, vt_Matrix, vt_Matrix4
 	};
 
 	struct Field {
+		ValueType m_valueType;
 		FixedString m_name;
 		int m_offset;
-		int m_numFloats;
-		bool m_isMatrix;
+		int m_dataSizeOfFloat;
 	};
 
 	ConstBuffer();
-	ConstBuffer(int index, int numFloats);
+	ConstBuffer(int type);
 	~ConstBuffer();
-
-	void initSceneConst();
-	void initInteractionConst();
 
 	int getNumFloats() const { return m_data.size(); }
 	const float *getDataPointer() const { return &m_data[0]; }
@@ -99,12 +98,14 @@ public:
 
 	void setData(int numFloats, float *datap);
 	void setFieldData(const FixedString &fieldName, int datasize, float *datap);
-	void setFieldData(const FixedString &fieldName, int count, const Matrix4 mtr[]);
 	const float *getFieldPointer(const FixedString &fieldName) const;
 
 	void addField(const Field &field);
 
 protected:
+	void initSceneConst();
+	void initInteractionConst();
+
 	void clear();
 	void addField(ValueType vt, const char *name, int offset);
 
@@ -140,29 +141,21 @@ public:
 	ConstBuffers();
 	~ConstBuffers();
 
-	void init(const Sequence<ConstBuffer*> bufs);
 	void setField(Item fieldName, int dataSize, const float *dataptr);
-	void setField(Item fieldName, int count, const Matrix4 mtr[]);
 
 private:
 	class FieldLink
 	{
 	public:
-	private:
 		ConstBuffer *m_buffer;
 		ConstBuffer::Field *m_field;
 	};
 
+	ConstBuffer *m_buffers[MaxType];
+
 	FieldLink *m_fields[MaxItem];
 };
 
-class TextureSet
-{
-public:
-private:
-	Texture *m_globalTextures[GlobalTextureId::MaxType];
-	Texture *m_materialTextures[MaterialTextureId::MaxType];
-};
 
 //-------------------------------------------------------------------------
 #if 0

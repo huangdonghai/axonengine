@@ -35,15 +35,7 @@ struct RenderDriverInfo {
 		SUGGEST_MAX
 	};
 
-	enum DriverCaps {
-		DXT = 1,		// supports DXT compressed texture
-		HDR = 2,		// supports HDR rendering
-	};
-
 	DriverType driverType;	// opengl, d3d etc...
-
-	// some caps
-	int caps;					// DriverCaps
 
 	// for opengl
 	String vendor;
@@ -59,11 +51,13 @@ struct RenderDriverInfo {
 	int maxTextureCoords;		// arb_fragment_program
 	int maxTextureImageUnits;	// arb_fragment_program
 
-	bool m_textureFormatSupports[TexFormat::MAX_NUMBER];
-	bool m_renderTargetFormatSupport[TexFormat::MAX_NUMBER];
-	bool m_autogenMipmapSupports[TexFormat::MAX_NUMBER];
+	bool textureFormatSupports[TexFormat::MAX_NUMBER];
+	bool renderTargetFormatSupport[TexFormat::MAX_NUMBER];
+	bool autogenMipmapSupports[TexFormat::MAX_NUMBER];
 
 	TexFormat suggestFormats[SUGGEST_MAX];
+
+	bool transposeMatrix;
 };
 
 class IRenderDriver
@@ -73,25 +67,6 @@ public:
 	virtual ~IRenderDriver() {}
 	virtual void initialize() = 0;
 	virtual void finalize() = 0;
-
-#if 0
-	virtual void postInit() = 0;			// after render system is initilized, call this
-
-	// some status
-	virtual bool isHDRRendering() = 0;
-	virtual bool isInRenderingThread() = 0;
-
-	// resource management
-	virtual RenderTarget *createWindowTarget(Handle wndId, const String &name) = 0;
-#endif
-
-	// caps
-	virtual const RenderDriverInfo *getDriverInfo() = 0;
-
-#if 0
-	// if not multi threads rendering, use this call render a frame
-	virtual void runFrame() = 0;
-#endif
 };
 
 AX_END_NAMESPACE

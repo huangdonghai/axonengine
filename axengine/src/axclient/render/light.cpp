@@ -50,7 +50,7 @@ public:
 		m_shadowMapSize = Math::nearestPowerOfTwo(shadowSize);
 
 		if (m_light->getLightType() == kGlobal) {
-			int maxsize = g_renderDriver->getDriverInfo()->maxTextureSize;
+			int maxsize = g_renderDriverInfo.maxTextureSize;
 
 			if (m_shadowMapSize > maxsize / 2) {
 				m_shadowMapSize = maxsize / 2;
@@ -467,7 +467,7 @@ public:
 
 	void checkCsmTarget()
 	{
-		int maxsize = g_renderDriver->getDriverInfo()->maxTextureSize;
+		int maxsize = g_renderDriverInfo.maxTextureSize;
 
 		int desiredSize = r_shadowMapSize.getInteger();
 		if (desiredSize > maxsize / 2) {

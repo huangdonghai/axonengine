@@ -18,7 +18,6 @@ AX_END_CLASS_MAP()
 
 DX9_Window *dx9_internalWindow;
 DX9_Driver *dx9_driver;
-RenderDriverInfo *dx9_driverInfo;
 IDirect3D9 *dx9_api;
 IDirect3DDevice9 *dx9_device;
 DX9_ShaderManager *dx9_shaderManager;

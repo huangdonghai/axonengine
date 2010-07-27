@@ -39,12 +39,11 @@ void DX9_Driver::initialize()
 	Printf("..Initializing D3D9Driver...\n");
 
 	dx9_internalWindow = new DX9_Window();
-	dx9_driverInfo = new RenderDriverInfo;
-	dx9_driverInfo->driverType = RenderDriverInfo::D3D;
-	dx9_driverInfo->vendor = "unknown";
-	dx9_driverInfo->renderer = "unknown";
-	dx9_driverInfo->version = "unknown";
-	dx9_driverInfo->extension = "unknown";
+	g_renderDriverInfo.driverType = RenderDriverInfo::D3D;
+	g_renderDriverInfo.vendor = "unknown";
+	g_renderDriverInfo.renderer = "unknown";
+	g_renderDriverInfo.version = "unknown";
+	g_renderDriverInfo.extension = "unknown";
 
 	Printf("...Calling Direct3DCreate9(D3D_SDK_VERSION = %d)...", D3D_SDK_VERSION);
 	dx9_api = Direct3DCreate9(D3D_SDK_VERSION);
@@ -61,11 +60,12 @@ void DX9_Driver::initialize()
 		Errorf("D3D9Driver::initialize: GetDeviceCaps failed %s", D3DErrorString(hr));
 	}
 
-	dx9_driverInfo->maxTextureUnits = caps.MaxTextureBlendStages;
-	dx9_driverInfo->maxTextureSize = std::min(caps.MaxTextureWidth, caps.MaxTextureHeight);
-	dx9_driverInfo->max3DTextureSize = caps.MaxVolumeExtent;
-	dx9_driverInfo->maxCubeMapTextureSize = dx9_driverInfo->maxTextureSize;
+	g_renderDriverInfo.maxTextureUnits = caps.MaxTextureBlendStages;
+	g_renderDriverInfo.maxTextureSize = std::min(caps.MaxTextureWidth, caps.MaxTextureHeight);
+	g_renderDriverInfo.max3DTextureSize = caps.MaxVolumeExtent;
+	g_renderDriverInfo.maxCubeMapTextureSize = g_renderDriverInfo.maxTextureSize;
 
+	g_renderDriverInfo.transposeMatrix = true;
 
 	// Get the current desktop format
 	D3DDISPLAYMODE dispmode;
@@ -154,12 +154,12 @@ RenderTarget *D3D9Driver::createWindowTarget(Handle wndId, const String &name)
 	AX_ASSERT(state);
 	return state;
 }
-#endif
 
 const RenderDriverInfo *DX9_Driver::getDriverInfo()
 {
 	return dx9_driverInfo;
 }
+#endif
 
 #if 0
 uint_t D3D9Driver::getBackendCaps() {

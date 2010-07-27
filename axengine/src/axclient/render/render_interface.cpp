@@ -517,6 +517,16 @@ int ApiWrap::runCommands()
 	return count;
 }
 
+void ApiWrap::setGlobalTexture(GlobalTextureId gt, Texture *tex)
+{
+
+}
+
+void ApiWrap::setMaterialTexture(Texture *tex[])
+{
+
+}
+
 
 
 
@@ -1119,11 +1129,6 @@ void RenderContext::setMaterialUniforms(Material *mat)
 		const FloatSeq &value = it->second;
 		g_apiWrap->setShaderConst(it->first, value.size() * sizeof(float),  &value[0]);
 	}
-}
-
-void RenderContext::setUniform(ConstBuffers::Item, Texture *texture)
-{
-
 }
 
 void RenderContext::cacheFrame(RenderFrame *queue)

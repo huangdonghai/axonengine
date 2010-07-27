@@ -1074,7 +1074,7 @@ ConstBuffer *DX9_Shader::parseStruct(LPD3DXCONSTANTTABLE constTable, const char 
 		ConstBuffer::Field field;
 		field.m_name = memberDesc.Name;
 		field.m_offset = (memberDesc.RegisterIndex - regIndex) * 4;
-		field.m_numFloats = memberDesc.RegisterCount * 4;
+		field.m_dataSizeOfFloat = memberDesc.RegisterCount * 4;
 
 		us->addField(field);
 	}

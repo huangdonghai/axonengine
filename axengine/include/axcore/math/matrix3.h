@@ -21,6 +21,7 @@ AX_BEGIN_NAMESPACE
 struct AX_API Matrix3
 {
 	enum { Forward, Left, Up };
+	enum { NumFloats = 9 };
 
 	static const Matrix3 Identity;
 

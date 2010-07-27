@@ -271,6 +271,8 @@ AX_END_NAMESPACE
 
 AX_BEGIN_NAMESPACE
 
+extern RenderDriverInfo g_renderDriverInfo;
+
 AX_END_NAMESPACE
 
 #endif // end guardian

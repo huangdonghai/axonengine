@@ -6,6 +6,7 @@ FontPtr g_defaultFont;
 FontPtr g_consoleFont;
 FontPtr g_miniFont;
 
+RenderDriverInfo g_renderDriverInfo;
 RenderFrame *g_renderFrame;
 ShaderMacro g_shaderMacro;
 ConstBuffers g_constBuffers;

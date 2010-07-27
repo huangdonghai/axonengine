@@ -110,7 +110,11 @@ public:
 	void setDepthStencil(phandle_t h);
 
 	void setShader(const FixedString & name, const ShaderMacro &sm, Technique tech);
+	void setConstBuffer(ConstBuffers::Type type, int size, const float *data);
 	void setShaderConst(const FixedString &name, int size, const void *p);
+
+	void setGlobalTexture(GlobalTextureId gt, Texture *tex);
+	void setMaterialTexture(Texture *tex[]);
 
 	void setVertices(phandle_t vb, VertexType vt, int offset);
 	void setVerticesInstanced(phandle_t vb, VertexType vt, int offset, phandle_t inb, int incount);
@@ -118,9 +122,6 @@ public:
 
 	void setVerticesUP(const void *vb, VertexType vt, int offset);
 	void setIndicesUP(const void *ib, ElementType et, int offset, int vertcount, int indicescount);
-
-	void setGlobalTexture(GlobalTextureId gt, Texture *tex);
-	void setMaterialTexture(Texture *tex[]);
 
 	void draw();
 
@@ -247,8 +248,6 @@ protected:
 	{
 //		g_apiWrap->setShaderConst(name, sizeof(Q), &q);
 	}
-
-	void setUniform(ConstBuffers::Item, Texture *texture);
 
 private:
 	// init

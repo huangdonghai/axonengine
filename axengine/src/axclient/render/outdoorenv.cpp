@@ -261,7 +261,7 @@ void OutdoorEnv::createSkyDome()
 	// create nishita render target
 	m_skyNishitaRt = nullptr;
 
-	if (!g_renderSystem->getDriverInfo()->m_textureFormatSupports[TexFormat::RGBA16F]) {
+	if (!g_renderDriverInfo.textureFormatSupports[TexFormat::RGBA16F]) {
 		return;
 	}
 

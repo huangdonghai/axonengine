@@ -26,7 +26,10 @@ AX_BEGIN_NAMESPACE
 //		3 7 11 15
 //------------------------------------------------------------------------------
 
-struct AX_API Matrix4 {
+struct AX_API Matrix4
+{
+	enum { NumFloats = 16 };
+
 	static const Matrix4 Identity;
 
 	Vector4 m[4];

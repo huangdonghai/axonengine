@@ -47,7 +47,7 @@ void TextureAtlas::initialize(const String &name, int chunk_width, int chunk_hei
 	m_chunkWidth = chunk_width;
 	m_chunkHeight = chunk_height;
 
-	const RenderDriverInfo *info = g_renderDriver->getDriverInfo();
+	const RenderDriverInfo *info = &g_renderDriverInfo;
 
 	if (side_length > info->maxTextureSize) {
 		m_textureSize = info->maxTextureSize;

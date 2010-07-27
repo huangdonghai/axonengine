@@ -31,7 +31,6 @@ public:
 	void initialize();
 	void finalize();
 
-	const RenderDriverInfo *getDriverInfo();
 	int getFrameNum() const;
 
 	// new rendering

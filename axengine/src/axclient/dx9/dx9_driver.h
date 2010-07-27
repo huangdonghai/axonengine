@@ -25,7 +25,6 @@ public:
 	// implement IRenderDriver
 	virtual void initialize();
 	virtual void finalize();
-	virtual const RenderDriverInfo *getDriverInfo();
 
 
 	void reset(int width, int height, bool fullscreen);

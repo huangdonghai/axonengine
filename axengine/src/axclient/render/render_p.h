@@ -18,7 +18,6 @@ extern ShaderMacro g_shaderMacro;
 extern ConstBuffers g_constBuffers;
 extern IRenderDriver *g_renderDriver;
 
-extern IRenderDriver *g_renderDriver;
 extern ApiWrap *g_apiWrap;
 extern BufferManager *g_bufferManager;
 

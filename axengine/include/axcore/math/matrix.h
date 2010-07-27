@@ -19,7 +19,7 @@ struct AX_API Matrix
 {
 public:
 	enum { Forward, Left, Up, Origin };
-	enum { NumFloat = 12 };
+	enum { NumFloats = 12 };
 
 	static const Matrix Identity;
 
@@ -43,6 +43,8 @@ public:
 
 	void fromMatrix4(const Matrix4 &mat4x4);
 	Matrix4 toMatrix4() const;
+
+	Matrix getTranspose() const;
 
 	Vector3 transformPoint(const Vector3 &point) const;
 	Vector3 transformNormal(const Vector3 &normal) const;
@@ -179,6 +181,12 @@ inline Matrix4 Matrix::toMatrix4() const
 {
 	return Matrix4(axis, origin);
 }
+
+inline Matrix Matrix::getTranspose() const
+{
+	
+}
+
 
 inline Vector3 Matrix::transformPoint(const Vector3 &point) const
 {

@@ -423,11 +423,14 @@ static inline bool isMatrix(ConstBuffer::ValueType vt)
 
 
 
-ConstBuffer::ConstBuffer(int index, int numFloats)
+ConstBuffer::ConstBuffer(int type)
 {
-	m_index = index;
-	m_data.resize(numFloats);
-	m_dirty = true;
+	if (type == ConstBuffers::GlobalConst)
+		initSceneConst();
+	else if (type == ConstBuffers::InteractionConst)
+		initInteractionConst();
+	else
+		AX_WRONGPLACE;
 }
 
 ConstBuffer::ConstBuffer()
@@ -447,9 +450,9 @@ void ConstBuffer::addField(const Field &field)
 void ConstBuffer::addField(ValueType vt, const char *name, int offset)
 {
 	Field field;
-	field.m_isMatrix = isMatrix(vt);
+	field.m_valueType = vt;
 	field.m_name = name;
-	field.m_numFloats = getSizeByFloatOfValueType(vt);
+	field.m_dataSizeOfFloat = getSizeByFloatOfValueType(vt);
 	field.m_offset = offset;
 
 	m_fields.push_back(field);
@@ -457,7 +460,7 @@ void ConstBuffer::addField(ValueType vt, const char *name, int offset)
 
 ConstBuffer *ConstBuffer::clone() const
 {
-	ConstBuffer *cloned = new ConstBuffer(m_index, getNumFloats());
+	ConstBuffer *cloned = new ConstBuffer();
 	cloned->m_data = m_data;
 	cloned->m_default = m_default;
 	cloned->m_fields = m_fields;
@@ -495,6 +498,65 @@ void ConstBuffer::clear()
 	m_default.clear();
 	m_fields.clear();
 	m_dirty = true;
+}
+
+
+ConstBuffers::ConstBuffers()
+{
+
+}
+
+ConstBuffers::~ConstBuffers()
+{
+
+}
+
+void ConstBuffers::setField(Item fieldName, int dataSize, const float *dataptr)
+{
+	FieldLink *fl = m_fields[fieldName];
+
+	// check data size
+	if (dataSize != fl->m_field->m_dataSizeOfFloat)
+		AX_WRONGPLACE;
+
+	// check matrix
+	if (g_renderDriverInfo.transposeMatrix) {
+		switch (fl->m_field->m_valueType) {
+		case ConstBuffer::vt_Matrix3:
+			{
+				int n = fl->m_field->m_dataSizeOfFloat / Matrix3::NumFloats;
+				const Matrix3 *src = reinterpret_cast<const Matrix3 *>(dataptr);
+				Matrix3 *dst = reinterpret_cast<Matrix3 *>(&fl->m_buffer->m_data[fl->m_field->m_offset]);
+				for (int i = 0; i < n; i++) {
+					dst[i] = src[i].getTranspose();
+				}
+				return;
+			}
+		case ConstBuffer::vt_Matrix:
+			{
+				int n = fl->m_field->m_dataSizeOfFloat / Matrix::NumFloats;
+				const Matrix *src = reinterpret_cast<const Matrix *>(dataptr);
+				Matrix *dst = reinterpret_cast<Matrix *>(&fl->m_buffer->m_data[fl->m_field->m_offset]);
+				for (int i = 0; i < n; i++) {
+					dst[i] = src[i].getTranspose();
+				}
+				return;
+			}
+		case ConstBuffer::vt_Matrix4:
+			{
+				int n = fl->m_field->m_dataSizeOfFloat / Matrix4::NumFloats;
+				const Matrix4 *src = reinterpret_cast<const Matrix4 *>(dataptr);
+				Matrix4 *dst = reinterpret_cast<Matrix4 *>(&fl->m_buffer->m_data[fl->m_field->m_offset]);
+				for (int i = 0; i < n; i++) {
+					dst[i] = src[i].getTranspose();
+				}
+				return;
+			}
+		}
+	}
+
+	// copy data
+	memcpy(&fl->m_buffer->m_data[fl->m_field->m_offset], dataptr, dataSize * sizeof(float));
 }
 
 AX_END_NAMESPACE

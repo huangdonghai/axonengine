@@ -99,7 +99,7 @@ void RenderSystem::screenShot(const String &name, const Rect &rect)
 
 void RenderSystem::info()
 {
-	const RenderDriverInfo *info = g_renderDriver->getDriverInfo();
+	const RenderDriverInfo *info = &g_renderDriverInfo;
 
 	Printf("------- Render Driver Caps -------\n");
 
@@ -379,11 +379,6 @@ int RenderSystem::getNumEntityManager() const
 IEntityManager *RenderSystem::getEntityManager(int index) const
 {
 	return m_entityManagers[index];
-}
-
-const RenderDriverInfo *RenderSystem::getDriverInfo()
-{
-	return g_renderDriver->getDriverInfo();
 }
 
 void RenderSystem::texlist_f( const CmdArgs &args )
