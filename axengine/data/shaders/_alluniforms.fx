@@ -13,9 +13,6 @@ read the license and understand and accept it fully.
 // use all global uniform for engine parse uniform struct
 
 float Script : STANDARDSGLOBAL <
-	// sort hint
-	int		SortHint = SortHint_aboveWater;
-
 	// technique
 	string TechniqueZpass = "";
 	string TechniqueShadowGen = "";

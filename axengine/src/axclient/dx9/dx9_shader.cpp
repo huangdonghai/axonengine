@@ -1065,7 +1065,7 @@ ConstBuffer *DX9_Shader::parseStruct(LPD3DXCONSTANTTABLE constTable, const char 
 	int regIndex = constDesc.RegisterIndex;
 	int numFloats = constDesc.RegisterCount * 4;
 
-	ConstBuffer *us = new ConstBuffer(regIndex, numFloats);
+	ConstBuffer *us = new ConstBuffer();
 
 	for (int i=0; i<constDesc.StructMembers; i++) {
 		D3DXHANDLE member = constTable->GetConstant(param, i);

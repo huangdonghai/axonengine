@@ -21,7 +21,7 @@ _MEMBER_FUNCTION_IMPL(Matrix, constructor)
 					return sa.throwError(_SC("Matrix() invalid instance type"));
 			} else {
 				sqObject arr = sa.getObjectHandle(2);
-				if (arr.len() != Matrix::NumFloat) {
+				if (arr.len() != Matrix::NumFloats) {
 					return sa.throwError(_SC("Matrix(array) need a 12 elements array"));
 				}
 				float *fp = self->w_ptr();
@@ -46,7 +46,7 @@ _MEMBER_FUNCTION_IMPL(Matrix,_set)
 	StackHandler sa(v);
 	_CHECK_SELF(Matrix,Matrix);
 	int index = sa.getInt(2);
-	if (index < 0 && index >= Matrix::NumFloat)
+	if (index < 0 && index >= Matrix::NumFloats)
 		return SQ_ERROR;
 	self->w_ptr()[index] = sa.getFloat(2);
 	return SQ_OK;
@@ -57,7 +57,7 @@ _MEMBER_FUNCTION_IMPL(Matrix,_get)
 	StackHandler sa(v);
 	_CHECK_SELF(Matrix,Matrix);
 	int index = sa.getInt(2);
-	if (index < 0 && index >= Matrix::NumFloat)
+	if (index < 0 && index >= Matrix::NumFloats)
 		return SQ_ERROR;
 	return sa.Return(self->w_ptr()[index]);
 }

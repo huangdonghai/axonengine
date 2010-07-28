@@ -184,7 +184,14 @@ inline Matrix4 Matrix::toMatrix4() const
 
 inline Matrix Matrix::getTranspose() const
 {
-	
+	Matrix result;
+	Vector4 *dst = reinterpret_cast<Vector4 *>(&result);
+
+	dst[0] = getRow(0);
+	dst[1] = getRow(1);
+	dst[2] = getRow(2);
+
+	return result;
 }
 
 

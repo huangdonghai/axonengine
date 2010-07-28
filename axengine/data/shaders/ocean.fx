@@ -12,9 +12,6 @@ read the license and understand and accept it fully.
 #include "light.fxh"
 
 float Script : STANDARDSGLOBAL <
-	// sort hint
-	int		SortHint = SortHint_water;
-
 	// features
 	string	Features =	"F_GLOBAL_SPECULAR:Global Specular:Specular for global light(sun or moon)|"
 	"F_TEST2:Test2:just for test";

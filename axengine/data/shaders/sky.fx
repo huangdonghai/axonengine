@@ -10,9 +10,6 @@ read the license and understand and accept it fully.
 #include "common.fxh"
 
 float Script : STANDARDSGLOBAL <
-	// sort hint
-	int		SortHint = SortHint_decal;
-
 	// technique
 	string TechniqueZpass = "gpass";
 	string TechniqueShadowGen = "";
