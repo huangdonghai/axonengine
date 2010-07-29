@@ -151,6 +151,10 @@ AX_SHADERCONST(SHADERMACRO_VERSION, 2)
 #		define AX_BEGIN_PC cbuffer cbPrimitiveConst : register(b2) {
 #		define AX_END_PC }
 
+#		define SREG 0
+#		define IREG 1
+#		define PREG 2
+
 #		define SREG0 packoffset(c0)
 #		define SREG1 packoffset(c1)
 #		define SREG2 packoffset(c2)
@@ -249,6 +253,10 @@ AX_SHADERCONST(SHADERMACRO_VERSION, 2)
 
 #		define AX_BEGIN_PC
 #		define AX_END_PC
+
+#		define SREG 8
+#		define IREG 64
+#		define PREG 80
 
 #		define SREG0 register(c8)
 #		define SREG1 register(c9)
@@ -351,6 +359,10 @@ AX_SHADERCONST(SHADERMACRO_VERSION, 2)
 
 #	define AX_BEGIN_PC
 #	define AX_END_PC
+
+#	define SREG 0
+#	define IREG 1
+#	define PREG 2
 
 #	define SREG0 BUFFER[0][0]
 #	define SREG1 BUFFER[0][16]

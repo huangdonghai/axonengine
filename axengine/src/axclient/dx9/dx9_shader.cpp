@@ -1004,6 +1004,7 @@ void DX9_Shader::end()
 
 void DX9_Shader::checkGlobalStruct()
 {
+#if 0
 	D3DXHANDLE param = m_object->GetParameterByName(0, "g_gc");
 
 	AX_ASSERT(param);
@@ -1021,7 +1022,6 @@ void DX9_Shader::checkGlobalStruct()
 	LPD3DXCONSTANTTABLE constTable;
 	D3DXGetShaderConstantTable(desc.pVertexShaderFunction, &constTable);
 
-#if 0
 	dx9_uniformStructs[0] = parseStruct(constTable, "g_gc");
 	dx9_uniformStructs[1] = parseStruct(constTable, "g_vgc");
 	dx9_uniformStructs[3] = parseStruct(constTable, "g_vic");

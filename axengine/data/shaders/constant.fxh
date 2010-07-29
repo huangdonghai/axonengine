@@ -11,8 +11,8 @@ read the license and understand and accept it fully.
 #define IS_SET(x) defined(x) && (x != 0)
 
 #if !G_OPENGL
-#	define VP_2_0	vs_2_0
-#	define FP_2_0	ps_2_0
+#	define VP_2_0	vs_3_0
+#	define FP_2_0	ps_3_0
 #	define VP_3_0	vs_3_0
 #	define FP_3_0	ps_3_0
 #else	// D3D
