@@ -26,10 +26,11 @@ Material::Material(const String &name)
 	m_detailScale = 20;
 	m_haveDetail = false;
 
+#if 0
 	m_p2tEnabled = false;
 	m_p2tWidth = 1;
 	m_p2tHeight = 1;
-
+#endif
 	TypeZeroArray(m_features);
 	TypeZeroArray(m_literals);
 

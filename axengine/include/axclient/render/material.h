@@ -70,6 +70,7 @@ public:
 	bool isBaseTcAnim() const { return m_baseTcAnim; }
 	const Matrix4 *getBaseTcMatrix() const { return &m_baseTcMatrix; }
 
+#if 0
 	// pixel to texel
 	void setPixelToTexel(int width, int height);
 	bool isPixelToTexelEnabled() const { return m_p2tEnabled; }
@@ -77,7 +78,6 @@ public:
 	int getPixelToTexelHeight() const { return m_p2tHeight; }
 
 	// management
-#if 0
 	static Material *load(const String &name);
 	static Material *loadUnique(const String &name);
 	static void initManager();
@@ -118,9 +118,11 @@ private:
 	bool m_features[MaterialDecl::MAX_FEATURES];
 	int m_literals[MaterialDecl::MAX_LITERALS];
 
+#if 0
 	// pixel to texel conversion
 	bool m_p2tEnabled;
 	int m_p2tWidth, m_p2tHeight;
+#endif
 
 private:
 	// management
@@ -202,13 +204,14 @@ inline void Material::clearLiterals()
 	TypeZeroArray(m_literals);
 }
 
-
+#if 0
 inline void Material::setPixelToTexel(int width, int height)
 {
 	m_p2tEnabled = true;
 	m_p2tWidth = width;
 	m_p2tHeight = height;
 }
+#endif
 
 inline Texture *Material::getTexture(int sampler) const
 {

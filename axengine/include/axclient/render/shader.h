@@ -388,7 +388,6 @@ public:
 	bool m_haveTextureTarget;
 	SamplerInfos m_samplerAnnos;
 	bool m_haveTechnique[Technique::Number];
-	const ConstBuffer *m_localUniforms;
 };
 
 typedef Dict<FixedString, ShaderInfo*> ShaderInfoDict;
