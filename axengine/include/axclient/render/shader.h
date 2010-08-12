@@ -386,7 +386,7 @@ class ShaderInfo
 {
 public:
 	bool m_haveTextureTarget;
-	SamplerInfos m_samplerAnnos;
+	SamplerInfos m_samplerInfos;
 	bool m_haveTechnique[Technique::Number];
 };
 

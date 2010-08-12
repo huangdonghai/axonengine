@@ -231,8 +231,8 @@ void RenderWorld::renderTo(RenderScene *qscene)
 			continue;
 		}
 
-		for (int j = 0; j < shader->m_samplerAnnos.size(); j++) {
-			const SamplerInfo *sa = shader->m_samplerAnnos[j];
+		for (int j = 0; j < shader->m_samplerInfos.size(); j++) {
+			const SamplerInfo *sa = shader->m_samplerInfos[j];
 			if (sa->m_renderType != SamplerInfo::Reflection) {
 				continue;
 			}

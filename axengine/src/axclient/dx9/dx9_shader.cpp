@@ -1089,7 +1089,7 @@ void DX9_Shader::checkShaderInfo()
 	}
 
 	for (int i = 0; i < m_samplerInfos.size(); i++) {
-		m_shaderInfo.m_samplerAnnos.push_back(m_samplerInfos[i]);
+		m_shaderInfo.m_samplerInfos.push_back(m_samplerInfos[i]);
 	}
 
 	m_shaderInfo.m_localUniforms = mergeStruct("g_pc");
