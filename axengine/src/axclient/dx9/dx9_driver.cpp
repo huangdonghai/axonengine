@@ -216,5 +216,10 @@ IDirect3DSurface9 * DX9_Driver::getDepthStencil(int width, int height)
 	return 0;
 }
 
+const ShaderInfo * DX9_Driver::findShaderInfo( const FixedString &key )
+{
+	return dx9_shaderManager->findShaderInfo(key);
+}
+
 AX_END_NAMESPACE
 

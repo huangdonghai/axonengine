@@ -251,6 +251,8 @@ public:
 	void saveShaderCache(const String &name);
 	void applyShaderCache(const String &name);
 
+	const ShaderInfo *findShaderInfo(const FixedString &key);
+
 protected:
 	void _initialize();
 

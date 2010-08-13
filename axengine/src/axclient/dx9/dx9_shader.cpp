@@ -1091,8 +1091,6 @@ void DX9_Shader::checkShaderInfo()
 	for (int i = 0; i < m_samplerInfos.size(); i++) {
 		m_shaderInfo.m_samplerInfos.push_back(m_samplerInfos[i]);
 	}
-
-	m_shaderInfo.m_localUniforms = mergeStruct("g_pc");
 }
 
 //--------------------------------------------------------------------------
@@ -1213,6 +1211,16 @@ void DX9_ShaderManager::_initialize()
 	AX_FOREACH(const String &s, ss) {
 		String n = PathUtil::getName(s);
 	}
+}
+
+const ShaderInfo * DX9_ShaderManager::findShaderInfo(const FixedString &key)
+{
+	ShaderInfoDict::const_iterator it = m_shaderInfoDict.find(key);
+
+	if (it != m_shaderInfoDict.end())
+		return it->second;
+
+	return 0;
 }
 
 AX_END_NAMESPACE

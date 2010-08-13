@@ -67,6 +67,8 @@ public:
 	virtual ~IRenderDriver() {}
 	virtual void initialize() = 0;
 	virtual void finalize() = 0;
+
+	virtual const ShaderInfo *findShaderInfo(const FixedString &key) = 0;
 };
 
 AX_END_NAMESPACE

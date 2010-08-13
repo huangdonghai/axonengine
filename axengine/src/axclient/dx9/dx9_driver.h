@@ -20,11 +20,13 @@ public:
 	AX_DECLARE_COMMAND_HANDLER(DX9_Driver);
 
 	DX9_Driver();
-	~DX9_Driver();
+	virtual ~DX9_Driver();
 
 	// implement IRenderDriver
 	virtual void initialize();
 	virtual void finalize();
+
+	virtual const ShaderInfo *findShaderInfo(const FixedString &key);
 
 
 	void reset(int width, int height, bool fullscreen);
