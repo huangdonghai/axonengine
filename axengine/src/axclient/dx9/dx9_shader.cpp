@@ -1220,6 +1220,7 @@ const ShaderInfo * DX9_ShaderManager::findShaderInfo(const FixedString &key)
 	if (it != m_shaderInfoDict.end())
 		return it->second;
 
+	Errorf("Can't found shader info for '%s'", key.c_str());
 	return 0;
 }
 
