@@ -416,6 +416,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\shaders\shaderlist.xml"
+				>
+			</File>
+			<File
 				RelativePath=".\shaders\sky.fx"
 				>
 			</File>
