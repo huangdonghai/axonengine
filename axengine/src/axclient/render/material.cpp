@@ -26,6 +26,8 @@ Material::Material(const String &name)
 	m_detailScale = 20;
 	m_haveDetail = false;
 
+	m_shaderInfo = 0;
+
 #if 0
 	m_p2tEnabled = false;
 	m_p2tWidth = 1;
@@ -88,8 +90,8 @@ bool Material::init(const FixedString &key)
 	ShaderMacro macro = getShaderMacro();
 	macro.mergeFrom(&g_shaderMacro);
 
-	m_shaderName = getShaderName();
-//	m_shaderInfo = g_shaderManager->findShader(m_shaderNameId, macro);
+	m_shaderName = m_decl->getShaderName();
+	m_shaderInfo = g_renderDriver->findShaderInfo(m_shaderName);
 
 	m_renderStateId = m_decl->m_renderStateId;
 

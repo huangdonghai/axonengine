@@ -558,10 +558,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\shaders\_shadowmaskatlas.fx"
-					>
-				</File>
-				<File
 					RelativePath=".\shaders\drawquad.fx"
 					>
 				</File>
