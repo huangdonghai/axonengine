@@ -90,7 +90,7 @@ half4 FP_main( ShadowVertexOut IN ) : COLOR {
 
 technique main {
     pass p0 {
-        VertexShader = compile VP_2_0 VP_main();
+        VERTEXPROGRAM = compile VP_2_0 VP_main();
 		FRAGMENTPROGRAM = compile FP_2_0 FP_main();
 #if F_MASKFRONT
 	    DEPTHTESTENABLE = true;

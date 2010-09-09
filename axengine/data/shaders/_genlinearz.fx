@@ -59,13 +59,8 @@ fragOut FP_main(v2f IN) {
 
 technique main {
     pass p0 {
-        VertexShader = compile VP_2_0 VP_main();
-		FragmentProgram = compile FP_2_0 FP_main();
-
-	    DepthTestEnable = false;
-//		DepthFunc = Always;
-		DepthMask = true;
-		CULL_NONE;
+        VERTEXPROGRAM = compile VP_2_0 VP_main();
+		FRAGMENTPROGRAM = compile FP_2_0 FP_main();
     }
 }
 

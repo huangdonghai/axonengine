@@ -82,7 +82,7 @@ private:
 	ID3DXEffect *m_object;
 };
 
-class D3D9include : public ID3DXInclude
+class DX9_Include : public ID3DXInclude
 {
 public:
 	STDMETHOD(Open)(THIS_ D3DXINCLUDE_TYPE IncludeType, LPCSTR pFileName, LPCVOID pParentData, LPCVOID *ppData, UINT *pBytes)
@@ -651,7 +651,7 @@ bool DX9_Shader::init(const String &name, const ShaderMacro &macro)
 	filesize = g_fileSystem->readFile(fullname, &filebuf);
 	if (!filesize || !filebuf)
 		return false;
-	D3D9include d3d9Inc;
+	DX9_Include d3d9Inc;
 
 	hr = D3DXCreateEffect(dx9_device, filebuf, filesize, &d3dxmacros[0], &d3d9Inc, dwFlags, 0, &m_object, &errbuf);
 #endif
@@ -677,6 +677,9 @@ bool DX9_Shader::init(const String &name, const ShaderMacro &macro)
 
 	// init axon object
 	initAxonObject();
+
+	// init shader info
+	initShaderInfo();
 
 	return true;
 }
@@ -1002,9 +1005,9 @@ void DX9_Shader::endPass()
 void DX9_Shader::end()
 {}
 
+#if 0
 void DX9_Shader::checkGlobalStruct()
 {
-#if 0
 	D3DXHANDLE param = m_object->GetParameterByName(0, "g_gc");
 
 	AX_ASSERT(param);
@@ -1033,8 +1036,8 @@ void DX9_Shader::checkGlobalStruct()
 		g_constBuffers[i] = dx9_uniformStructs[i]->clone();
 		AX_ASSURE(g_constBuffers[i]);
 	}
-#endif
 }
+#endif
 
 ConstBuffer *DX9_Shader::mergeStruct(const char *paramName)
 {
@@ -1082,7 +1085,7 @@ ConstBuffer *DX9_Shader::parseStruct(LPD3DXCONSTANTTABLE constTable, const char 
 	return us;
 }
 
-void DX9_Shader::checkShaderInfo()
+void DX9_Shader::initShaderInfo()
 {
 	for (int i = 0; i < Technique::Number; i++) {
 		m_shaderInfo.m_haveTechnique[i] = m_techniques[i] != 0;
@@ -1091,6 +1094,8 @@ void DX9_Shader::checkShaderInfo()
 	for (int i = 0; i < m_samplerInfos.size(); i++) {
 		m_shaderInfo.m_samplerInfos.push_back(m_samplerInfos[i]);
 	}
+
+	/*m_shaderInfo.m_haveTextureTarget;*/
 }
 
 //--------------------------------------------------------------------------
@@ -1106,8 +1111,12 @@ DX9_ShaderManager::DX9_ShaderManager()
 
 	DX9_Shader *blinn = new DX9_Shader();
 	v = blinn->init("_alluniforms");
+
 	AX_ASSERT(v);
+
+#if 0
 	blinn->checkGlobalStruct();
+#endif
 
 	_initialize();
 }
@@ -1210,6 +1219,19 @@ void DX9_ShaderManager::_initialize()
 
 	AX_FOREACH(const String &s, ss) {
 		String n = PathUtil::getName(s);
+		findShader(n);
+	}
+
+	// add to ShaderInfoDict
+	ShaderDict::const_iterator it = m_shaders.begin();
+
+	for (; it != m_shaders.end(); ++it) {
+		const FixedString &name = it->first;
+
+		Dict<ShaderMacro,DX9_Shader*>::const_iterator it2 = it->second.begin();
+
+		if (it2 != it->second.end())
+			m_shaderInfoDict[name] = &it2->second->m_shaderInfo;
 	}
 }
 

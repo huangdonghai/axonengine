@@ -178,6 +178,7 @@ class DX9_Shader : public Unknown
 public:
 	friend class DX9_Pass;
 	friend class DX9_Technique;
+	friend class DX9_ShaderManager;
 
 	DX9_Shader();
 	~DX9_Shader();
@@ -190,9 +191,6 @@ public:
 	SamplerInfo *getSamplerAnno(int index) const;
 	bool haveTechnique(Technique tech) const;
 	const ShaderInfo *getShaderInfo() const { return 0; }
-
-	void checkGlobalStruct();
-	void checkShaderInfo();
 
 	void setSystemMap(MaterialTextureId maptype, IDirect3DTexture9 *tex);
 
@@ -213,6 +211,8 @@ protected:
 	void initSamplerAnn(D3DXHANDLE param);
 	void initParameterAnn(D3DXHANDLE param);
 	void initAxonObject();
+
+	void initShaderInfo();
 
 	D3DXHANDLE findTechnique(Technique tech);
 	D3DXHANDLE getUsedParameter(const char *name);
