@@ -454,4 +454,46 @@ void dx9DeleteRasterizerState( phandle_t h )
 	SAFE_RELEASE(stateblock);
 }
 
+void dx9AssignRenderApi()
+{
+	RenderApi::createTexture2D = &dx9CreateTexture2D;
+	RenderApi::uploadTexture = &dx9UploadTexture;
+	RenderApi::uploadSubTexture = &dx9UploadSubTexture;
+	RenderApi::generateMipmap = &dx9GenerateMipmap;
+	RenderApi::deleteTexture2D
+
+	RenderApi::createVertexBuffer
+	RenderApi::uploadVertexBuffer
+	RenderApi::deleteVertexBuffer
+
+	RenderApi::createIndexBuffer
+	RenderApi::uploadIndexBuffer
+	RenderApi::deleteIndexBuffer
+
+	RenderApi::createWindowTarget
+	RenderApi::updateWindowTarget
+	RenderApi::deleteWindowTarget
+
+	RenderApi::createSamplerState
+	RenderApi::deleteSamplerState
+
+	RenderApi::createBlendState
+	RenderApi::deleteBlendState
+
+	RenderApi::createDepthStencilState
+	RenderApi::deleteDepthStencilState
+
+	RenderApi::createRasterizerState
+	RenderApi::deleteRasterizerState
+
+	RenderApi::setShader
+	RenderApi::setShaderConst
+
+	RenderApi::setVertices
+	RenderApi::setInstanceVertices
+	RenderApi::setIndices
+
+	RenderApi::clear
+}
+
 AX_END_NAMESPACE

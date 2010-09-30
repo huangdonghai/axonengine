@@ -38,6 +38,8 @@ void dx9DeleteDepthStencilState(phandle_t h);
 void dx9CreateRasterizerState(phandle_t h, const RasterizerStateDesc &src);
 void dx9DeleteRasterizerState(phandle_t h);
 
+void dx9AssignRenderApi();
+
 AX_END_NAMESPACE
 
 #endif // AX_D3D9API_H
