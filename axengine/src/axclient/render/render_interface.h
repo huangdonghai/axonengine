@@ -148,6 +148,7 @@ public:
 		return result;
 	}
 
+	// alloca a command from ring buffer
 	template <class Q>
 	Q *allocCommand()
 	{
@@ -159,11 +160,14 @@ public:
 		byte_t *pbuf = allocRingBuf(size);
 		Q *ptr = reinterpret_cast<Q *>(pbuf);
 
-		m_ringCommand[m_cmdWritePos] = ptr;
-		ptr->m_bufPos = m_bufWritePos;
-		m_cmdWritePos = (m_cmdWritePos + 1) % MAX_COMMANDS;
-
 		return ptr;
+	}
+
+	void addCommand(ApiCommand *cmd)
+	{
+		m_ringCommand[m_cmdWritePos] = cmd;
+		cmd->m_bufPos = m_bufWritePos;
+		m_cmdWritePos = (m_cmdWritePos + 1) % MAX_COMMANDS;
 	}
 
 protected:
@@ -252,6 +256,7 @@ protected:
 private:
 	// init
 	Material *m_defaultMat;
+	RenderThread *m_renderThread;
 
 	// runtime
 	RenderTarget *m_frameWindow;

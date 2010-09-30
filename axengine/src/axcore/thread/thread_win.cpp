@@ -116,7 +116,7 @@ void Thread::startThread()
 	::ResumeThread(m_handle.to<HANDLE>());
 }
 
-void Thread::endThread()
+void Thread::stopThread()
 {
 	m_exitEvent->setEvent();
 }

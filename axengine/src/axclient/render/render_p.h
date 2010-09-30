@@ -2,6 +2,7 @@
 #define AX_RENDER_PRIVATE_H
 
 #include "selection.h"
+#include "render_thread.h"
 #include "render_interface.h"
 #include "commandbuf.h"
 #include "sampler_p.h"
@@ -9,7 +10,6 @@
 #include "material_p.h"
 #include "vertexbuffer.h"
 #include "primitive_p.h"
-#include "render_thread.h"
 
 AX_BEGIN_NAMESPACE
 

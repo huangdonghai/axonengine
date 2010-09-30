@@ -96,7 +96,7 @@ public:
 	virtual ~Thread();
 
 	void startThread();
-	void endThread();
+	void stopThread();
 	bool isCurrentThread() const;
 
 	virtual void doRun() = 0;		// work entry

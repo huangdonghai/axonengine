@@ -57,10 +57,12 @@ public:
 
 	ApiCommand_(FunctionType m)
 		: m_m(m)
-	{}
+	{ AX_ASSERT(m); }
 
 	void args()
-	{}
+	{
+		g_apiWrap->addCommand(this);
+	}
 
 	virtual void exec()
 	{
@@ -79,11 +81,12 @@ public:
 
 	ApiCommand_(FunctionType m)
 		: m_m(m)
-	{}
+	{ AX_ASSERT(m); }
 
 	void args(Arg0 arg0)
 	{
 		m_arg0 = arg0;
+		g_apiWrap->addCommand(this);
 	}
 
 	virtual void exec()
@@ -103,12 +106,13 @@ public:
 
 	ApiCommand_(FunctionType m)
 		: m_m(m)
-	{}
+	{ AX_ASSERT(m); }
 
 	void args(Arg0 arg0, Arg1 arg1)
 	{
 		m_arg0 = arg0;
 		m_arg1 = arg1;
+		g_apiWrap->addCommand(this);
 	}
 
 	virtual void exec()
@@ -129,13 +133,14 @@ public:
 
 	ApiCommand_(FunctionType m)
 		: m_m(m)
-	{}
+	{ AX_ASSERT(m); }
 
 	void args(Arg0 arg0, Arg1 arg1, Arg2 arg2)
 	{
 		m_arg0 = arg0;
 		m_arg1 = arg1;
 		m_arg2 = arg2;
+		g_apiWrap->addCommand(this);
 	}
 
 	virtual void exec()
@@ -157,7 +162,7 @@ public:
 
 	ApiCommand_(FunctionType m)
 		: m_m(m)
-	{}
+	{ AX_ASSERT(m); }
 
 	void args(Arg0 arg0, Arg1 arg1, Arg2 arg2, Arg3 arg3)
 	{
@@ -165,6 +170,7 @@ public:
 		m_arg1 = arg1;
 		m_arg2 = arg2;
 		m_arg3 = arg3;
+		g_apiWrap->addCommand(this);
 	}
 
 	virtual void exec()
@@ -188,7 +194,7 @@ public:
 
 	ApiCommand_(FunctionType m)
 		: m_m(m)
-	{}
+	{ AX_ASSERT(m); }
 
 	void args(Arg0 arg0, Arg1 arg1, Arg2 arg2, Arg3 arg3, Arg4 arg4)
 	{
@@ -197,6 +203,7 @@ public:
 		m_arg2 = arg2;
 		m_arg3 = arg3;
 		m_arg4 = arg4;
+		g_apiWrap->addCommand(this);
 	}
 
 	virtual void exec()
@@ -213,10 +220,7 @@ private:
 	typename remove_const_reference<Arg4>::type m_arg4;
 };
 
-static void BeginCommand() {}
-static void EndCommand() {}
-
-static ApiCommand_<void (*)()> &AddCommand0(void (*method)())
+static ApiCommand_<void (*)()> &sAllocCommand(void (*method)())
 {
 	typedef ApiCommand_<void (*)()> ResultType;
 	ResultType *result = g_apiWrap->allocCommand<ResultType>();
@@ -225,7 +229,7 @@ static ApiCommand_<void (*)()> &AddCommand0(void (*method)())
 }
 
 template <typename Arg0>
-static ApiCommand_<void (*)(Arg0)> &AddCommand1(void (*method)(Arg0))
+static ApiCommand_<void (*)(Arg0)> &sAllocCommand(void (*method)(Arg0))
 {
 	typedef ApiCommand_<void (*)(Arg0)> ResultType;
 	ResultType *result = g_apiWrap->allocCommand<ResultType>();
@@ -234,7 +238,7 @@ static ApiCommand_<void (*)(Arg0)> &AddCommand1(void (*method)(Arg0))
 }
 
 template <typename Arg0, typename Arg1>
-static ApiCommand_<void (*)(Arg0,Arg1)> &AddCommand2(void (*method)(Arg0,Arg1))
+static ApiCommand_<void (*)(Arg0,Arg1)> &sAllocCommand(void (*method)(Arg0,Arg1))
 {
 	typedef ApiCommand_<void (*)(Arg0,Arg1)> ResultType;
 	ResultType *result = g_apiWrap->allocCommand<ResultType>();
@@ -243,7 +247,7 @@ static ApiCommand_<void (*)(Arg0,Arg1)> &AddCommand2(void (*method)(Arg0,Arg1))
 }
 
 template <typename Rt, typename Arg0, typename Arg1, typename Arg2>
-static ApiCommand_<Rt (*)(Arg0,Arg1,Arg2)> &AddCommand3(Rt (*method)(Arg0,Arg1,Arg2))
+static ApiCommand_<Rt (*)(Arg0,Arg1,Arg2)> &sAllocCommand(Rt (*method)(Arg0,Arg1,Arg2))
 {
 	typedef ApiCommand_<Rt (*)(Arg0,Arg1,Arg2)> ResultType;
 	ResultType *result = g_apiWrap->allocCommand<ResultType>();
@@ -252,7 +256,7 @@ static ApiCommand_<Rt (*)(Arg0,Arg1,Arg2)> &AddCommand3(Rt (*method)(Arg0,Arg1,A
 }
 
 template <typename Arg0, typename Arg1, typename Arg2, typename Arg3>
-static ApiCommand_<void (*)(Arg0,Arg1,Arg2,Arg3)> &AddCommand4(void (*method)(Arg0,Arg1,Arg2,Arg3))
+static ApiCommand_<void (*)(Arg0,Arg1,Arg2,Arg3)> &sAllocCommand(void (*method)(Arg0,Arg1,Arg2,Arg3))
 {
 	typedef ApiCommand_<void (*)(Arg0,Arg1,Arg2,Arg3)> ResultType;
 	ResultType *result = g_apiWrap->allocCommand<ResultType>();
@@ -261,7 +265,7 @@ static ApiCommand_<void (*)(Arg0,Arg1,Arg2,Arg3)> &AddCommand4(void (*method)(Ar
 }
 
 template <typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4>
-static ApiCommand_<void (*)(Arg0,Arg1,Arg2,Arg3,Arg4)> &AddCommand5(void (*method)(Arg0,Arg1,Arg2,Arg3,Arg4))
+static ApiCommand_<void (*)(Arg0,Arg1,Arg2,Arg3,Arg4)> &sAllocCommand(void (*method)(Arg0,Arg1,Arg2,Arg3,Arg4))
 {
 	typedef ApiCommand_<void (*)(Arg0,Arg1,Arg2,Arg3,Arg4)> ResultType;
 	ResultType *result = g_apiWrap->allocCommand<ResultType>();
@@ -283,22 +287,22 @@ ApiWrap::~ApiWrap()
 
 void ApiWrap::createTexture2D(phandle_t result, TexFormat format, int width, int height, int flags /*= 0*/)
 {
-	AddCommand5(RenderApi::createTexture2D).args(result, format, width, height, flags);
+	sAllocCommand(RenderApi::createTexture2D).args(result, format, width, height, flags);
 }
 
 void ApiWrap::uploadTexture( phandle_t h, int level, void *pixels, TexFormat format )
 {
-	AddCommand4(RenderApi::uploadTexture).args(h, level, pixels, format);
+	sAllocCommand(RenderApi::uploadTexture).args(h, level, pixels, format);
 }
 
 void ApiWrap::uploadSubTexture(phandle_t h, const Rect &rect, const void *pixels, TexFormat format)
 {
-	AddCommand4(RenderApi::uploadSubTexture).args(h, rect, pixels, format);
+	sAllocCommand(RenderApi::uploadSubTexture).args(h, rect, pixels, format);
 }
 
 void ApiWrap::generateMipmap(phandle_t h)
 {
-	AddCommand1(RenderApi::generateMipmap).args(h);
+	sAllocCommand(RenderApi::generateMipmap).args(h);
 }
 
 void ApiWrap::deleteTexture2D(phandle_t h)
@@ -308,14 +312,14 @@ void ApiWrap::deleteTexture2D(phandle_t h)
 
 void ApiWrap::createVertexBuffer(phandle_t result, int datasize, Primitive::Hint hint)
 {
-	AddCommand3(RenderApi::createVertexBuffer).args(result, datasize, hint);
+	sAllocCommand(RenderApi::createVertexBuffer).args(result, datasize, hint);
 }
 
 void ApiWrap::uploadVertexBuffer(phandle_t h, int datasize, const void *p)
 {
 	void *newp = allocRingBuf(datasize);
 	memcpy(newp, p, datasize);
-	AddCommand3(RenderApi::uploadVertexBuffer).args(h, datasize, newp);
+	sAllocCommand(RenderApi::uploadVertexBuffer).args(h, datasize, newp);
 }
 
 void ApiWrap::deleteVertexBuffer(phandle_t h)
@@ -325,14 +329,14 @@ void ApiWrap::deleteVertexBuffer(phandle_t h)
 
 void ApiWrap::createIndexBuffer(phandle_t result, int datasize, Primitive::Hint hint)
 {
-	AddCommand3(RenderApi::createIndexBuffer).args(result, datasize, hint);
+	sAllocCommand(RenderApi::createIndexBuffer).args(result, datasize, hint);
 }
 
 void ApiWrap::uploadIndexBuffer(phandle_t h, int datasize, const void *p)
 {
 	void *newp = allocRingBuf(datasize);
 	memcpy(newp, p, datasize);
-	AddCommand3(RenderApi::uploadIndexBuffer).args(h, datasize, newp);
+	sAllocCommand(RenderApi::uploadIndexBuffer).args(h, datasize, newp);
 }
 
 void ApiWrap::deleteIndexBuffer(phandle_t h)
@@ -342,12 +346,12 @@ void ApiWrap::deleteIndexBuffer(phandle_t h)
 
 void ApiWrap::clear(const RenderClearer &clearer)
 {
-	AddCommand1(RenderApi::clear).args(clearer);
+	sAllocCommand(RenderApi::clear).args(clearer);
 }
 
 void ApiWrap::createSamplerState(phandle_t h, const SamplerStateDesc &desc)
 {
-	AddCommand2(RenderApi::createSamplerState).args(h, desc);
+	sAllocCommand(RenderApi::createSamplerState).args(h, desc);
 }
 
 void ApiWrap::deleteSamplerState(phandle_t h)
@@ -357,7 +361,7 @@ void ApiWrap::deleteSamplerState(phandle_t h)
 
 void ApiWrap::createBlendState(phandle_t h, const BlendStateDesc &desc)
 {
-	AddCommand2(RenderApi::createBlendState).args(h, desc);
+	sAllocCommand(RenderApi::createBlendState).args(h, desc);
 }
 
 void ApiWrap::deleteBlendState(phandle_t h)
@@ -367,7 +371,7 @@ void ApiWrap::deleteBlendState(phandle_t h)
 
 void ApiWrap::createDepthStencilState(phandle_t h, const DepthStencilStateDesc &desc)
 {
-	AddCommand2(RenderApi::createDepthStencilState).args(h, desc);
+	sAllocCommand(RenderApi::createDepthStencilState).args(h, desc);
 }
 
 void ApiWrap::deleteDepthStencilState(phandle_t h)
@@ -377,7 +381,7 @@ void ApiWrap::deleteDepthStencilState(phandle_t h)
 
 void ApiWrap::createRasterizerState(phandle_t h, const RasterizerStateDesc &desc)
 {
-	AddCommand2(RenderApi::createRasterizerState).args(h, desc);
+	sAllocCommand(RenderApi::createRasterizerState).args(h, desc);
 }
 
 void ApiWrap::deleteRasterizerState(phandle_t h)
@@ -399,12 +403,12 @@ void ApiWrap::addObjectDeletion(delete_func_t func, phandle_t h)
 
 void ApiWrap::createWindowTarget(phandle_t h, Handle hwnd, int width, int height)
 {
-	AddCommand4(RenderApi::createWindowTarget).args(h, hwnd, width, height);
+	sAllocCommand(RenderApi::createWindowTarget).args(h, hwnd, width, height);
 }
 
 void ApiWrap::updateWindowTarget(phandle_t h, Handle newWndId, int width, int height)
 {
-	AddCommand4(RenderApi::updateWindowTarget).args(h, newWndId, width, height);
+	sAllocCommand(RenderApi::updateWindowTarget).args(h, newWndId, width, height);
 }
 
 void ApiWrap::deleteWindowTarget(phandle_t h)
@@ -534,12 +538,20 @@ void ApiWrap::setMaterialTexture(Texture *tex[])
 
 RenderContext::RenderContext()
 {
+	m_renderThread = new RenderThread();
+	m_renderThread->startThread();
+
+	g_bufferManager = new BufferManager();
 	m_defaultMat = new Material("_debug");
 }
 
 RenderContext::~RenderContext()
 {
+	m_renderThread->stopThread();
+	SafeDelete(m_renderThread);
+
 	SafeDelete(m_defaultMat);
+	SafeDelete(g_bufferManager);
 }
 
 
