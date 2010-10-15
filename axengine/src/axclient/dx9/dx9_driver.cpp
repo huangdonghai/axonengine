@@ -29,12 +29,13 @@ DX9_Driver::~DX9_Driver()
 
 void DX9_Driver::initialize()
 {
-	if (m_initialized) {
+	if (m_initialized)
 		return;
-	}
 
 	g_renderDriver = this;
 	dx9_driver = this;
+
+	dx9AssignRenderApi();
 
 	Printf("..Initializing D3D9Driver...\n");
 

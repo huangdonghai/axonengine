@@ -337,7 +337,7 @@ void dx9CreateVertexBuffer(phandle_t h, int datasize, Primitive::Hint hint)
 	stat_vertexBufferMemory.add(datasize);
 }
 
-void dx9UploadVertexBuffer(phandle_t h, int datasize, void *p)
+void dx9UploadVertexBuffer(phandle_t h, int datasize, const void *p)
 {
 	IDirect3DVertexBuffer9 *obj = h->to<IDirect3DVertexBuffer9 *>();
 
@@ -369,7 +369,7 @@ void dx9CreateIndexBuffer(phandle_t h, int datasize, Primitive::Hint hint)
 	stat_indexBufferMemory.add(datasize);
 }
 
-void dx9UploadIndexBuffer(phandle_t h, int datasize, void *p)
+void dx9UploadIndexBuffer(phandle_t h, int datasize, const void *p)
 {
 	IDirect3DIndexBuffer9 *obj = h->to<IDirect3DIndexBuffer9 *>();
 
@@ -386,10 +386,17 @@ void dx9DeleteIndexBuffer(phandle_t h)
 	SAFE_RELEASE(obj);
 }
 
-void dx9CreateWindowTarget(phandle_t h, Handle hwnd)
+void dx9CreateWindowTarget(phandle_t h, Handle hwnd, int width, int height)
 {
 	DX9_Window *window = new DX9_Window(hwnd);
 	*h = window;
+}
+
+void dx9UpdateWindowTarget(phandle_t h, Handle newHwnd, int width, int height)
+{
+	DX9_Window *window = h->to<DX9_Window *>();
+
+	// TODO
 }
 
 void dx9DeleteWindowTarget(phandle_t h)
@@ -433,13 +440,13 @@ void dx9CreateDepthStencilState( phandle_t h, const DepthStencilStateDesc &src )
 	*h = stateblock;
 }
 
-void dx9DeleteDepthStencilState( phandle_t h )
+void dx9DeleteDepthStencilState(phandle_t h)
 {
 	IDirect3DStateBlock9 *stateblock = handle_cast<IDirect3DStateBlock9 *>(*h);
 	SAFE_RELEASE(stateblock);
 }
 
-void dx9CreateRasterizerState( phandle_t h, const RasterizerStateDesc &src )
+void dx9CreateRasterizerState(phandle_t h, const RasterizerStateDesc &src)
 {
 	IDirect3DStateBlock9 *stateblock;
 	dx9_device->BeginStateBlock();
@@ -448,11 +455,69 @@ void dx9CreateRasterizerState( phandle_t h, const RasterizerStateDesc &src )
 	*h = stateblock;
 }
 
-void dx9DeleteRasterizerState( phandle_t h )
+void dx9DeleteRasterizerState(phandle_t h)
 {
 	IDirect3DStateBlock9 *stateblock = handle_cast<IDirect3DStateBlock9 *>(*h);
 	SAFE_RELEASE(stateblock);
 }
+
+static void dx9SetShader(const FixedString &name, const ShaderMacro &sm, Technique tech)
+{
+
+}
+
+static void dx9SetConstBuffer(ConstBuffers::Type type, int size, const float *data)
+{
+
+}
+
+static void dx9SetShaderConst(const FixedString &name, int count, float *value)
+{
+
+}
+
+
+static void dx9SetVertices(phandle_t vb, VertexType vt, int vertcount)
+{
+
+}
+
+static void dx9SetInstanceVertices(phandle_t vb, VertexType vt, int vertcount, Handle inb, int incount)
+{
+
+}
+
+static void dx9SetIndices(phandle_t ib)
+{
+
+}
+
+
+static void dx9SetGlobalTexture(GlobalTextureId id, phandle_t h)
+{
+
+}
+
+static void dx9SetMaterialTexture(phandle_t texs[])
+{
+
+}
+
+
+//	static vOid dip(ElementType et, int offset, int vertcount, int indices_count) = 0;
+static void dx9Draw()
+{
+
+}
+
+
+// actions
+static void dx9Clear(const RenderClearer &clearer)
+{
+
+}
+
+
 
 void dx9AssignRenderApi()
 {
@@ -460,40 +525,46 @@ void dx9AssignRenderApi()
 	RenderApi::uploadTexture = &dx9UploadTexture;
 	RenderApi::uploadSubTexture = &dx9UploadSubTexture;
 	RenderApi::generateMipmap = &dx9GenerateMipmap;
-	RenderApi::deleteTexture2D
+	RenderApi::deleteTexture2D = &dx9DeleteTexture2D;
 
-	RenderApi::createVertexBuffer
-	RenderApi::uploadVertexBuffer
-	RenderApi::deleteVertexBuffer
+	RenderApi::createVertexBuffer = &dx9CreateVertexBuffer;
+	RenderApi::uploadVertexBuffer = &dx9UploadVertexBuffer;
+	RenderApi::deleteVertexBuffer = &dx9DeleteVertexBuffer;
 
-	RenderApi::createIndexBuffer
-	RenderApi::uploadIndexBuffer
-	RenderApi::deleteIndexBuffer
+	RenderApi::createIndexBuffer = &dx9CreateIndexBuffer;
+	RenderApi::uploadIndexBuffer = &dx9UploadIndexBuffer;
+	RenderApi::deleteIndexBuffer = &dx9DeleteIndexBuffer;
 
-	RenderApi::createWindowTarget
-	RenderApi::updateWindowTarget
-	RenderApi::deleteWindowTarget
+	RenderApi::createWindowTarget = &dx9CreateWindowTarget;
+	RenderApi::updateWindowTarget = &dx9UpdateWindowTarget;
+	RenderApi::deleteWindowTarget = &dx9DeleteWindowTarget;
 
-	RenderApi::createSamplerState
-	RenderApi::deleteSamplerState
+	RenderApi::createSamplerState = &dx9CreateSamplerState;
+	RenderApi::deleteSamplerState = &dx9DeleteSamplerState;
 
-	RenderApi::createBlendState
-	RenderApi::deleteBlendState
+	RenderApi::createBlendState = &dx9CreateBlendState;
+	RenderApi::deleteBlendState = &dx9DeleteBlendState;
 
-	RenderApi::createDepthStencilState
-	RenderApi::deleteDepthStencilState
+	RenderApi::createDepthStencilState = &dx9CreateDepthStencilState;
+	RenderApi::deleteDepthStencilState = &dx9DeleteDepthStencilState;
 
-	RenderApi::createRasterizerState
-	RenderApi::deleteRasterizerState
+	RenderApi::createRasterizerState = &dx9CreateRasterizerState;
+	RenderApi::deleteRasterizerState = &dx9DeleteRasterizerState;
 
-	RenderApi::setShader
-	RenderApi::setShaderConst
+	RenderApi::setShader = &dx9SetShader;
+	RenderApi::setConstBuffer = &dx9SetConstBuffer;
+	RenderApi::setShaderConst = &dx9SetShaderConst;
 
-	RenderApi::setVertices
-	RenderApi::setInstanceVertices
-	RenderApi::setIndices
+	RenderApi::setVertices = &dx9SetVertices;
+	RenderApi::setInstanceVertices = &dx9SetInstanceVertices;
+	RenderApi::setIndices = &dx9SetIndices;
 
-	RenderApi::clear
+	RenderApi::setGlobalTexture = &dx9SetGlobalTexture;
+	RenderApi::setMaterialTexture = &dx9SetMaterialTexture;
+
+	RenderApi::draw = &dx9Draw;
+
+	RenderApi::clear = &dx9Clear;
 }
 
 AX_END_NAMESPACE

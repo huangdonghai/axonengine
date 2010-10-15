@@ -23,7 +23,8 @@ void dx9CreateIndexBuffer(phandle_t h, int datasize, Primitive::Hint hint);
 void dx9UploadIndexBuffer(phandle_t h, int datasize, const void *p);
 void dx9DeleteIndexBuffer(phandle_t h);
 
-void dx9CreateWindowTarget(phandle_t h, Handle hwnd);
+void dx9CreateWindowTarget(phandle_t h, Handle hwnd, int width, int height);
+void dx9UpdateWindowTarget(phandle_t h, Handle newHwnd, int width, int height);
 void dx9DeleteWindowTarget(phandle_t h);
 
 void dx9CreateSamplerState(phandle_t h, const SamplerStateDesc &samplerState);

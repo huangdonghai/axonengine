@@ -3,17 +3,17 @@
 AX_BEGIN_NAMESPACE
 
 void (*RenderApi::createTexture2D)(phandle_t h, TexFormat format, int width, int height, int flags) = 0;
-void (*RenderApi::uploadTexture)(phandle_t h, int level, void *pixels, TexFormat format);
+void (*RenderApi::uploadTexture)(phandle_t h, int level, const void *pixels, TexFormat format);
 void (*RenderApi::uploadSubTexture)(phandle_t h, const Rect &rect, const void *pixels, TexFormat format);
 void (*RenderApi::generateMipmap)(phandle_t h);
 void (*RenderApi::deleteTexture2D)(phandle_t h);
 	  
 void (*RenderApi::createVertexBuffer)(phandle_t h, int datasize, Primitive::Hint hint);
-void (*RenderApi::uploadVertexBuffer)(phandle_t h, int datasize, void *p);
+void (*RenderApi::uploadVertexBuffer)(phandle_t h, int datasize, const void *p);
 void (*RenderApi::deleteVertexBuffer)(phandle_t h);
 	  
 void (*RenderApi::createIndexBuffer)(phandle_t h, int datasize, Primitive::Hint hint);
-void (*RenderApi::uploadIndexBuffer)(phandle_t h, int datasize, void *p);
+void (*RenderApi::uploadIndexBuffer)(phandle_t h, int datasize, const void *p);
 void (*RenderApi::deleteIndexBuffer)(phandle_t h);
 
 void (*RenderApi::createWindowTarget)(phandle_t h, Handle hwnd, int width, int height);
@@ -33,11 +33,19 @@ void (*RenderApi::createRasterizerState)(phandle_t h, const RasterizerStateDesc 
 void (*RenderApi::deleteRasterizerState)(phandle_t h);
 
 void (*RenderApi::setShader)(const FixedString & name, const ShaderMacro &sm, Technique tech);
-void (*RenderApi::setShaderConst)(const FixedString &name, int count, float *value);
+void (*RenderApi::setConstBuffer)(ConstBuffers::Type type, int size, const float *data);
+void (*RenderApi::setShaderConst)(const FixedString &name, int count, const float *value);
 	  
 void (*RenderApi::setVertices)(phandle_t h, VertexType vt, int vertcount);
 void (*RenderApi::setInstanceVertices)(phandle_t h, VertexType vt, int vertcount, Handle inb, int incount);
 void (*RenderApi::setIndices)(phandle_t h);
+
+void (*RenderApi::setGlobalTexture)(GlobalTextureId id, phandle_t h);
+void (*RenderApi::setMaterialTexture)(phandle_t texs[]);
+
+//	static void dip(ElementType et, int offset, int vertcount, int indices_count) = 0;
+void (*RenderApi::draw)();
+
 
 void (*RenderApi::clear)(const RenderClearer &clearer);
 
@@ -416,6 +424,50 @@ void ApiWrap::deleteWindowTarget(phandle_t h)
 	addObjectDeletion(RenderApi::deleteWindowTarget, h);
 }
 
+void ApiWrap::setShaderConst(const FixedString &name, int count, const float *p)
+{
+	float * copyData = allocType<float>(count);
+	memcpy(copyData, p, count * sizeof(float));
+	sAllocCommand(RenderApi::setShaderConst).args(name, count, copyData);
+}
+
+void ApiWrap::setShader(const FixedString & name, const ShaderMacro &sm, Technique tech)
+{
+	sAllocCommand(RenderApi::setShader).args(name, sm, tech);
+}
+
+void ApiWrap::setGlobalTexture(GlobalTextureId gt, Texture *tex)
+{
+	sAllocCommand(RenderApi::setGlobalTexture).args(gt, tex->getPHandle());
+}
+
+void ApiWrap::setMaterialTexture(Texture *tex[])
+{
+
+}
+
+
+
+void ApiWrap::setVertices(phandle_t vb, VertexType vt, int offset)
+{
+
+}
+
+void ApiWrap::setVerticesInstanced(phandle_t vb, VertexType vt, int offset, phandle_t inb, int incount)
+{
+
+}
+
+void ApiWrap::setIndices(phandle_t ib, ElementType et, int offset, int vertcount, int indicescount)
+{
+
+}
+
+void ApiWrap::draw()
+{
+
+}
+
 byte_t *ApiWrap::allocRingBuf(int size)
 {
 	// 4 bytes align
@@ -470,35 +522,6 @@ void ApiWrap::waitToPos(int pos)
 	}
 }
 
-void ApiWrap::setShaderConst(const FixedString &name, int size, const void *p)
-{
-
-}
-
-void ApiWrap::setShader(const FixedString & name, const ShaderMacro &sm, Technique tech)
-{
-
-}
-
-void ApiWrap::setVertices(phandle_t vb, VertexType vt, int offset)
-{
-
-}
-
-void ApiWrap::setVerticesInstanced(phandle_t vb, VertexType vt, int offset, phandle_t inb, int incount)
-{
-
-}
-
-void ApiWrap::setIndices(phandle_t ib, ElementType et, int offset, int vertcount, int indicescount)
-{
-
-}
-
-void ApiWrap::draw()
-{
-
-}
 
 int ApiWrap::runCommands()
 {
@@ -520,17 +543,6 @@ int ApiWrap::runCommands()
 
 	return count;
 }
-
-void ApiWrap::setGlobalTexture(GlobalTextureId gt, Texture *tex)
-{
-
-}
-
-void ApiWrap::setMaterialTexture(Texture *tex[])
-{
-
-}
-
 
 
 

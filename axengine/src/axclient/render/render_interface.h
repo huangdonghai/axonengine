@@ -8,17 +8,17 @@ class RenderApi
 public:
 	// resource management
 	static void (*createTexture2D)(phandle_t h, TexFormat format, int width, int height, int flags);
-	static void (*uploadTexture)(phandle_t h, int level, void *pixels, TexFormat format);
+	static void (*uploadTexture)(phandle_t h, int level, const void *pixels, TexFormat format);
 	static void (*uploadSubTexture)(phandle_t h, const Rect &rect, const void *pixels, TexFormat format);
 	static void (*generateMipmap)(phandle_t h);
 	static void (*deleteTexture2D)(phandle_t h);
 
 	static void (*createVertexBuffer)(phandle_t h, int datasize, Primitive::Hint hint);
-	static void (*uploadVertexBuffer)(phandle_t h, int datasize, void *p);
+	static void (*uploadVertexBuffer)(phandle_t h, int datasize, const void *p);
 	static void (*deleteVertexBuffer)(phandle_t h);
 
 	static void (*createIndexBuffer)(phandle_t h, int datasize, Primitive::Hint hint);
-	static void (*uploadIndexBuffer)(phandle_t h, int datasize, void *p);
+	static void (*uploadIndexBuffer)(phandle_t h, int datasize, const void *p);
 	static void (*deleteIndexBuffer)(phandle_t h);
 
 	static void (*createWindowTarget)(phandle_t h, Handle hwnd, int width, int height);
@@ -39,7 +39,7 @@ public:
 
 	static void (*setShader)(const FixedString &name, const ShaderMacro &sm, Technique tech);
 	static void (*setConstBuffer)(ConstBuffers::Type type, int size, const float *data);
-	static void (*setShaderConst)(const FixedString &name, int count, float *value);
+	static void (*setShaderConst)(const FixedString &name, int count, const float *value);
 
 	static void (*setVertices)(phandle_t vb, VertexType vt, int vertcount);
 	static void (*setInstanceVertices)(phandle_t vb, VertexType vt, int vertcount, Handle inb, int incount);
@@ -111,7 +111,7 @@ public:
 
 	void setShader(const FixedString & name, const ShaderMacro &sm, Technique tech);
 	void setConstBuffer(ConstBuffers::Type type, int size, const float *data);
-	void setShaderConst(const FixedString &name, int size, const void *p);
+	void setShaderConst(const FixedString &name, int size, const float *p);
 
 	void setGlobalTexture(GlobalTextureId gt, Texture *tex);
 	void setMaterialTexture(Texture *tex[]);
