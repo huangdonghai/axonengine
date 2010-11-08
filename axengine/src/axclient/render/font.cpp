@@ -48,7 +48,7 @@ namespace {
 
 	private:
 		bool m_initialized;
-		typedef Dict<String, BufInfo,hash_pathname,equal_pathname> FileBufDict;
+		typedef Dict<String, BufInfo,HashPath,EqualPath> FileBufDict;
 		FileBufDict m_fontFileBufs;
 		typedef Dict<FixedString, Font*> FontDict;
 		FontDict m_fontDict;

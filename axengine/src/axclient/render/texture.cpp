@@ -21,27 +21,27 @@ Texture::ExistDict Texture::m_existDict;
 
 TextureWrap::TextureWrap(const FixedString &key)
 {
-
+	g_apiWrap->createTexture2D();
 }
 
 TextureWrap::TextureWrap(const FixedString &key, TexFormat format, int width, int height)
 {
-
+	g_apiWrap->createTexture2D(&m_handle, format, width, height);
 }
 
 TextureWrap::~TextureWrap()
 {
-
+	g_apiWrap->deleteTexture2D(&m_handle);
 }
 
 void TextureWrap::uploadSubTexture(const Rect &rect, const void *pixels, TexFormat format)
 {
-
+	g_apiWrap->uploadSubTexture(&m_handle, rect, pixels, format);
 }
 
 void TextureWrap::generateMipmap()
 {
-
+	g_apiWrap->generateMipmap(&m_handle);
 }
 
 //--------------------------------------------------------------------------

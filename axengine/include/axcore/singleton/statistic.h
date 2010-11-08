@@ -120,7 +120,7 @@ private:
 #endif
 	// new api
 	typedef List<Stat *> Stats;
-	typedef Dict<const char *, Stats, hash_cstr, equal_cstr> StatGroup;
+	typedef Dict<const char *, Stats, HashCstr, EqualCstr> StatGroup;
 
 	StatGroup m_statGroup;
 };

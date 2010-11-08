@@ -307,7 +307,7 @@ void RenderSystem::endFrame()
 	//g_statistic->setValue(stat_frontendTime, frontEndTime * 1000);
 	stat_frontendTime.setInt(frontEndTime * 1000);
 
-	g_renderContext->issueQueue(g_renderFrame);
+	g_renderContext->issueFrame(g_renderFrame);
 
 	m_curTarget = 0;
 

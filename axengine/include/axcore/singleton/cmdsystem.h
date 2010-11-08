@@ -74,7 +74,7 @@ struct Cmd {
 	ICmdHandler *handler;
 };
 
-typedef Dict<String, Cmd, hash_istr, equal_istr> CmdDict;
+typedef Dict<String, Cmd, HashIstr, EqualIstr> CmdDict;
 
 #if 1
 class AX_API CmdSystem : public ICmdHandler

@@ -41,7 +41,7 @@ int FixedStringManager::findString(const String &str)
 {
 	SCOPE_LOCK;
 
-	Dict<const char*, int, hash_cstr, equal_cstr>::const_iterator it = m_dict.find(str.c_str());
+	Dict<const char*, int, HashCstr, equal_cstr>::const_iterator it = m_dict.find(str.c_str());
 
 	if (it == m_dict.end()) {
 		const String *newsz = new String(str);
@@ -62,7 +62,7 @@ int FixedStringManager::findString(const char *lpcz)
 
 	SCOPE_LOCK;
 
-	Dict<const char*, int, hash_cstr, equal_cstr>::const_iterator it = m_dict.find(lpcz);
+	Dict<const char*, int, HashCstr, EqualCstr>::const_iterator it = m_dict.find(lpcz);
 
 	if (it == m_dict.end()) {
 		const String *newsz = new String(lpcz);

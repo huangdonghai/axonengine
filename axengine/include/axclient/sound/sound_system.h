@@ -47,7 +47,7 @@ protected:
 
 private:
 	FMOD::System *m_fmodSystem;
-	typedef Dict<String, SoundFx*, hash_pathname, equal_pathname> SfxDict;
+	typedef Dict<String, SoundFx*, HashPath, EqualPath> SfxDict;
 	SfxDict m_sfxDict;
 	SfxPtr m_commandSfx;
 

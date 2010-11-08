@@ -252,7 +252,7 @@ private:
 	void removePackage(const String &name);
 
 private:
-	typedef Dict<String,HavokPackage*,hash_pathname,equal_pathname> PackageDict;
+	typedef Dict<String,HavokPackage*,HashPath,EqualPath> PackageDict;
 	PackageDict m_packageDict;
 };
 

@@ -43,7 +43,7 @@ public:
 
 	static void (*setVertices)(phandle_t vb, VertexType vt, int vertcount);
 	static void (*setInstanceVertices)(phandle_t vb, VertexType vt, int vertcount, Handle inb, int incount);
-	static void (*setIndices)(phandle_t ib);
+	static void (*setIndices)(phandle_t ib, ElementType et, int offset, int vertcount, int indicescount);
 
 	static void (*setGlobalTexture)(GlobalTextureId id, phandle_t h);
 	static void (*setMaterialTexture)(phandle_t texs[]);
@@ -163,11 +163,22 @@ public:
 		return ptr;
 	}
 
-	void addCommand(ApiCommand *cmd)
+	ApiCommand *fetchCommand()
 	{
-		m_ringCommand[m_cmdWritePos] = cmd;
+
+	}
+
+	void popCommand()
+	{}
+
+	void pushCommand(ApiCommand *cmd)
+	{
 		cmd->m_bufPos = m_bufWritePos;
+		m_ringCommand[m_cmdWritePos] = cmd;
 		m_cmdWritePos = (m_cmdWritePos + 1) % MAX_COMMANDS;
+
+		if (m_cmdWritePos == m_cmdReadPos)
+			m_isFull = true;
 	}
 
 protected:
@@ -178,9 +189,12 @@ protected:
 
 	bool isFull() const
 	{
+		return m_isFull;
+#if 0
 		int freeSlots = ((m_cmdReadPos - m_cmdWritePos) + MAX_COMMANDS) % MAX_COMMANDS;
 		if (freeSlots == 1) return true;
 		return false;
+#endif
 	}
 
 private:
@@ -201,6 +215,7 @@ private:
 
 	volatile int m_bufReadPos, m_bufWritePos;
 	volatile int m_cmdReadPos, m_cmdWritePos;
+	volatile bool m_isFull;
 
 	int m_numObjectDeletions;
 	ObjectDeletion m_objectDeletions[MAX_DELETE_COMMANDS];
@@ -212,7 +227,7 @@ public:
 	RenderContext();
 	~RenderContext();
 
-	void issueQueue(RenderFrame *rq);
+	void issueFrame(RenderFrame *rq);
 
 	void draw(VertexObject *vert, InstanceObject *inst, IndexObject *index, Material *mat, Technique tech);
 

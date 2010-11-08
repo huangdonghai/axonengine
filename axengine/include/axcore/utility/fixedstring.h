@@ -33,7 +33,7 @@ public:
 	static FixedStringManager &instance();
 
 private:
-	Dict<const char*,int,hash_cstr, equal_cstr> m_dict;
+	Dict<const char*,int,HashCstr, EqualCstr> m_dict;
 	Sequence<const String*> m_strings;
 };
 

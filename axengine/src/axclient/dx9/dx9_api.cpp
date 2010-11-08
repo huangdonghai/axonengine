@@ -471,7 +471,7 @@ static void dx9SetConstBuffer(ConstBuffers::Type type, int size, const float *da
 
 }
 
-static void dx9SetShaderConst(const FixedString &name, int count, float *value)
+static void dx9SetShaderConst(const FixedString &name, int count, const float *value)
 {
 
 }
@@ -487,7 +487,7 @@ static void dx9SetInstanceVertices(phandle_t vb, VertexType vt, int vertcount, H
 
 }
 
-static void dx9SetIndices(phandle_t ib)
+static void dx9SetIndices(phandle_t ib, ElementType et, int offset, int vertcount, int indicescount)
 {
 
 }

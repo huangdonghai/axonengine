@@ -38,7 +38,7 @@ void (*RenderApi::setShaderConst)(const FixedString &name, int count, const floa
 	  
 void (*RenderApi::setVertices)(phandle_t h, VertexType vt, int vertcount);
 void (*RenderApi::setInstanceVertices)(phandle_t h, VertexType vt, int vertcount, Handle inb, int incount);
-void (*RenderApi::setIndices)(phandle_t h);
+void (*RenderApi::setIndices)(phandle_t h, ElementType et, int offset, int vertcount, int indicescount);
 
 void (*RenderApi::setGlobalTexture)(GlobalTextureId id, phandle_t h);
 void (*RenderApi::setMaterialTexture)(phandle_t texs[]);
@@ -69,7 +69,7 @@ public:
 
 	void args()
 	{
-		g_apiWrap->addCommand(this);
+		g_apiWrap->pushCommand(this);
 	}
 
 	virtual void exec()
@@ -94,7 +94,7 @@ public:
 	void args(Arg0 arg0)
 	{
 		m_arg0 = arg0;
-		g_apiWrap->addCommand(this);
+		g_apiWrap->pushCommand(this);
 	}
 
 	virtual void exec()
@@ -120,7 +120,7 @@ public:
 	{
 		m_arg0 = arg0;
 		m_arg1 = arg1;
-		g_apiWrap->addCommand(this);
+		g_apiWrap->pushCommand(this);
 	}
 
 	virtual void exec()
@@ -148,7 +148,7 @@ public:
 		m_arg0 = arg0;
 		m_arg1 = arg1;
 		m_arg2 = arg2;
-		g_apiWrap->addCommand(this);
+		g_apiWrap->pushCommand(this);
 	}
 
 	virtual void exec()
@@ -178,7 +178,7 @@ public:
 		m_arg1 = arg1;
 		m_arg2 = arg2;
 		m_arg3 = arg3;
-		g_apiWrap->addCommand(this);
+		g_apiWrap->pushCommand(this);
 	}
 
 	virtual void exec()
@@ -211,7 +211,7 @@ public:
 		m_arg2 = arg2;
 		m_arg3 = arg3;
 		m_arg4 = arg4;
-		g_apiWrap->addCommand(this);
+		g_apiWrap->pushCommand(this);
 	}
 
 	virtual void exec()
@@ -285,6 +285,7 @@ ApiWrap::ApiWrap()
 {
 	m_bufReadPos = m_bufWritePos = 0;
 	m_cmdReadPos = m_cmdWritePos = 0;
+	m_isFull = false;
 
 	m_numObjectDeletions = 0;
 }
@@ -443,29 +444,34 @@ void ApiWrap::setGlobalTexture(GlobalTextureId gt, Texture *tex)
 
 void ApiWrap::setMaterialTexture(Texture *tex[])
 {
+	phandle_t *handles = allocType<phandle_t>(MaterialTextureId::MaxType);
+	for (int i = 0; i < MaterialTextureId::MaxType; i++) {
+		handles[i] = tex[i]->getPHandle();
+	}
 
+	sAllocCommand(RenderApi::setMaterialTexture).args(handles);
 }
 
 
 
 void ApiWrap::setVertices(phandle_t vb, VertexType vt, int offset)
 {
-
+	sAllocCommand(RenderApi::setVertices).args(vb, vt, offset);
 }
 
 void ApiWrap::setVerticesInstanced(phandle_t vb, VertexType vt, int offset, phandle_t inb, int incount)
 {
-
+	sAllocCommand(RenderApi::setInstanceVertices).args(vb, vt, offset, inb, incount);
 }
 
 void ApiWrap::setIndices(phandle_t ib, ElementType et, int offset, int vertcount, int indicescount)
 {
-
+	sAllocCommand(RenderApi::setIndices).args(ib, et, offset, vertcount, indicescount);
 }
 
 void ApiWrap::draw()
 {
-
+	sAllocCommand(RenderApi::draw).args();
 }
 
 byte_t *ApiWrap::allocRingBuf(int size)
@@ -567,7 +573,7 @@ RenderContext::~RenderContext()
 }
 
 
-void RenderContext::issueQueue(RenderFrame *rq)
+void RenderContext::issueFrame(RenderFrame *rq)
 {
 	double startTime = OsUtil::seconds();
 
@@ -606,6 +612,8 @@ void RenderContext::issueQueue(RenderFrame *rq)
 	endFrame();
 
 	g_apiWrap->issueDeletions();
+
+	rq->clear();
 }
 
 void RenderContext::beginFrame()
@@ -629,7 +637,7 @@ void RenderContext::drawScene(RenderScene *scene, const RenderClearer &clearer)
 	} else if (scene->sceneType == RenderScene::Default) {
 		drawScene_noworld(scene, clearer);
 	} else {
-		Errorf("D3D9Thread::drawScene: error scene");
+		Errorf("RenderContext::drawScene: error scene");
 	}
 }
 

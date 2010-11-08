@@ -272,7 +272,7 @@ private:
 	int m_numFilesInPack;
 	int m_hashSeed;
 
-	typedef Dict<String, PakedFile*, hash_pathname, equal_pathname> EntryDict;
+	typedef Dict<String, PakedFile*, HashPath, EqualPath> EntryDict;
 	typedef Sequence<const FilePackage*> FilePackages;	
 	FilePackages m_pakFiles;
 	EntryDict m_pakedFileDict;

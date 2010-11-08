@@ -104,18 +104,18 @@ inline size_t hash_filename(const wchar_t *s)
 	return size_t(h);
 }
 
-struct hash_cstr
+struct HashCstr
 {
 	inline size_t operator()(const char *s) const { return hash_string(s); }
 };
 
-struct hash_istr
+struct HashIstr
 {
 	inline size_t operator()(const String &s) const { return hash_istring(s.c_str()); }
 	inline size_t operator()(const char *s) const { return hash_istring(s); }
 };
 
-struct hash_pathname
+struct HashPath
 {
 	inline size_t operator()(const String &s) const { return hash_filename(s.c_str()); }
 	inline size_t operator()(const char *s) const { return hash_filename(s); }
@@ -128,7 +128,7 @@ inline char __tofilenamechar(char c)
 	return c;
 }
 
-struct equal_pathname
+struct EqualPath
 {
 	inline bool operator()(const String &s1, const String &s2) const {
 		return operator()(s1.c_str(), s2.c_str());
@@ -145,7 +145,7 @@ struct equal_pathname
 	}
 };
 
-struct equal_istr
+struct EqualIstr
 {
 	inline bool operator()(const String &s1, const String &s2) const {
 		return StringUtil::stricmp(s1.c_str(), s2.c_str()) == 0;
@@ -155,7 +155,7 @@ struct equal_istr
 	}
 };
 
-struct equal_cstr
+struct EqualCstr
 {
 	inline bool operator()(const char *s1, const char *s2) const {
 		return strcmp(s1, s2) == 0;
