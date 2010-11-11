@@ -76,12 +76,12 @@ struct DdsHeader {
 	byte_t Signature[4];
 
 	uint_t Size1;				// size of the structure (minus MagicNum)
-	uint_t Flags1; 			// determines what fields are valid
-	uint_t Height; 			// height of surface to be created
+	uint_t Flags1; 				// determines what fields are valid
+	uint_t Height; 				// height of surface to be created
 	uint_t Width;				// width of input surface
-	uint_t LinearSize; 		// Formless late-allocated optimized surface size
+	uint_t LinearSize; 			// Formless late-allocated optimized surface size
 	uint_t Depth;				// Depth if a volume texture
-	uint_t MipMapCount;		// number of mip-map levels requested
+	uint_t MipMapCount;			// number of mip-map levels requested
 	uint_t AlphaBitDepth;		// depth of alpha buffer requested
 
 	uint_t NotUsed[10];
@@ -89,7 +89,7 @@ struct DdsHeader {
 	uint_t Size2;				// size of structure
 	uint_t Flags2;				// pixel format flags
 	uint_t FourCC;				// (FOURCC code)
-	uint_t RGBBitCount;		// how many bits per pixel
+	uint_t RGBBitCount;			// how many bits per pixel
 	uint_t RBitMask;			// mask for red bit
 	uint_t GBitMask;			// mask for green bits
 	uint_t BBitMask;			// mask for blue bits
@@ -709,7 +709,7 @@ static bool DecompressDdsData(DdsHeader *pHeader, DdsReadParams *pParams)
 			for (uint_t i=0; i<pParams->outDataSize; i+=8) {
 				*(ushort_t*)(pParams->outData + i)		= LittleShort(*(ushort_t*)(pParams->inData + i));
 				*(ushort_t*)(pParams->outData + i + 2)	= LittleShort(*(ushort_t*)(pParams->inData + i + 2));
-				*(uint_t*)(pParams->outData + i + 4)		= LittleInt(*(uint_t*)(pParams->inData + i + 4));
+				*(uint_t*)(pParams->outData + i + 4)	= LittleInt(*(uint_t*)(pParams->inData + i + 4));
 			}
 			pParams->inData += pParams->outDataSize;
 		}

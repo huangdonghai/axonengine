@@ -285,7 +285,6 @@ ApiWrap::ApiWrap()
 {
 	m_bufReadPos = m_bufWritePos = 0;
 	m_cmdReadPos = m_cmdWritePos = 0;
-	m_isFull = false;
 
 	m_numObjectDeletions = 0;
 }
@@ -534,16 +533,17 @@ int ApiWrap::runCommands()
 	int count = 0;
 
 	while (1) {
-		if (m_cmdReadPos == m_cmdWritePos)
-			break;
+		ApiCommand *cmd = fetchCommand();
 
-		ApiCommand *cmd = m_ringCommand[m_cmdReadPos];
+		if (!cmd) {
+			OsUtil::sleep(0);
+			continue;
+		}
+
 		cmd->exec();
 
-		m_bufReadPos = cmd->m_bufPos;
-		m_cmdReadPos = (m_cmdReadPos + 1) % ApiWrap::MAX_COMMANDS;
+		popCommand();
 
-		cmd->~ApiCommand();
 		count++;
 	}
 

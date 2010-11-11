@@ -152,9 +152,8 @@ public:
 	template <class Q>
 	Q *allocCommand()
 	{
-		while (isFull()) {
+		while (isFull())
 			OsUtil::sleep(0);
-		}
 
 		int size = sizeof(Q);
 		byte_t *pbuf = allocRingBuf(size);
@@ -165,20 +164,25 @@ public:
 
 	ApiCommand *fetchCommand()
 	{
-
+		if (isEmpty())
+			return 0;
+		return m_ringCommand[m_cmdReadPos];
 	}
 
 	void popCommand()
-	{}
+	{
+		ApiCommand *cmd = m_ringCommand[m_cmdReadPos];
+		int bufpos = cmd->m_bufPos;
+		cmd->~ApiCommand();
+		m_bufReadPos = bufpos;
+		m_cmdReadPos = (m_cmdReadPos + 1) % MAX_COMMANDS;
+	}
 
 	void pushCommand(ApiCommand *cmd)
 	{
 		cmd->m_bufPos = m_bufWritePos;
 		m_ringCommand[m_cmdWritePos] = cmd;
 		m_cmdWritePos = (m_cmdWritePos + 1) % MAX_COMMANDS;
-
-		if (m_cmdWritePos == m_cmdReadPos)
-			m_isFull = true;
 	}
 
 protected:
@@ -187,15 +191,9 @@ protected:
 
 	void waitToPos(int pos);
 
-	bool isFull() const
-	{
-		return m_isFull;
-#if 0
-		int freeSlots = ((m_cmdReadPos - m_cmdWritePos) + MAX_COMMANDS) % MAX_COMMANDS;
-		if (freeSlots == 1) return true;
-		return false;
-#endif
-	}
+	bool isFull() const { return normalizeRange(m_cmdReadPos - m_cmdWritePos) == 1; }
+	bool isEmpty() const { return m_cmdReadPos == m_cmdWritePos; }
+	static int normalizeRange(int a) { return (a + MAX_COMMANDS) % MAX_COMMANDS; }
 
 private:
 	enum {
@@ -215,7 +213,6 @@ private:
 
 	volatile int m_bufReadPos, m_bufWritePos;
 	volatile int m_cmdReadPos, m_cmdWritePos;
-	volatile bool m_isFull;
 
 	int m_numObjectDeletions;
 	ObjectDeletion m_objectDeletions[MAX_DELETE_COMMANDS];

@@ -21,7 +21,7 @@ Texture::ExistDict Texture::m_existDict;
 
 TextureWrap::TextureWrap(const FixedString &key)
 {
-	g_apiWrap->createTexture2D();
+//	g_apiWrap->createTexture2D();
 }
 
 TextureWrap::TextureWrap(const FixedString &key, TexFormat format, int width, int height)
