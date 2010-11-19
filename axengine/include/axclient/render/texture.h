@@ -14,7 +14,7 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-AX_DECLARE_REFPTR(TextureWrap);
+AX_DECLARE_REFPTR(TextureResource);
 
 
 //--------------------------------------------------------------------------
@@ -27,6 +27,7 @@ public:
 	friend class TextureManager;
 
 	enum InitFlag {
+		IF_None = 0,
 		IF_NoMipmap = 1,
 		IF_NoDownsample = 2,
 		IF_AutoGenMipmap = 4,
@@ -70,7 +71,7 @@ public:
 	phandle_t getPHandle() const;
 
 private:
-	TextureWrapPtr m_textureWrap;
+	TextureResourcePtr m_resource;
 	SamplerStatePtr m_samplerState;
 
 	// for dynamic texture

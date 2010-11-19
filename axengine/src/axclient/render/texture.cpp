@@ -19,30 +19,48 @@ Texture::ExistDict Texture::m_existDict;
 // class TextureWrap
 //--------------------------------------------------------------------------
 
-TextureWrap::TextureWrap(const FixedString &key)
+TextureResource::TextureResource(const FixedString &key, InitFlags flags)
 {
 //	g_apiWrap->createTexture2D();
 }
 
-TextureWrap::TextureWrap(const FixedString &key, TexFormat format, int width, int height)
+TextureResource::TextureResource(const FixedString &key, TexFormat format, int width, int height, InitFlags flags)
 {
 	g_apiWrap->createTexture2D(&m_handle, format, width, height);
 }
 
-TextureWrap::~TextureWrap()
+TextureResource::~TextureResource()
 {
 	g_apiWrap->deleteTexture2D(&m_handle);
 }
 
-void TextureWrap::uploadSubTexture(const Rect &rect, const void *pixels, TexFormat format)
+void TextureResource::uploadSubTexture(const Rect &rect, const void *pixels, TexFormat format)
 {
 	g_apiWrap->uploadSubTexture(&m_handle, rect, pixels, format);
 }
 
-void TextureWrap::generateMipmap()
+void TextureResource::generateMipmap()
 {
 	g_apiWrap->generateMipmap(&m_handle);
 }
+
+TextureResourcePtr TextureResource::findResource(const String &name, int flags)
+{
+	ResourceDict::iterator it = ms_texDict.find(name);
+
+	if (it != ms_texDict.end())
+		return it->second;
+
+	TextureResource *resource = new TextureResource(name, flags);
+
+	return TextureResourcePtr(resource);
+}
+
+TextureResourcePtr TextureResource::createResource(const String &debugname, TexFormat format, int width, int height, int flags)
+{
+	return new TextureResource(debugname, format, width, height, flags);
+}
+
 
 //--------------------------------------------------------------------------
 // class Texture
@@ -50,19 +68,17 @@ void TextureWrap::generateMipmap()
 
 Texture::Texture()
 {
-//	m_needFreeLink.setOwner(this);
-//	m_needGenMipmapLink.setOwner(this);
 }
 
 Texture::Texture(const String &name, InitFlags flags/*=0*/)
 {
-	m_textureWrap = g_renderSystem->findTexture(name, flags);
+	m_resource = TextureResource::findResource(name, flags);
 	m_samplerState = g_renderSystem->findSamplerState(0);
 }
 
 Texture::Texture(const String &debugname, TexFormat format, int width, int height, InitFlags flags /*= 0*/)
 {
-	m_textureWrap = g_renderSystem->createTexture(debugname, format, width, height, flags);
+	m_resource = TextureResource::createResource(debugname, format, width, height, flags);
 	m_samplerState = g_renderSystem->findSamplerState(0);
 }
 
@@ -71,12 +87,12 @@ Texture::~Texture()
 
 void Texture::uploadSubTexture(const Rect &rect, const void *pixels, TexFormat format /*= TexFormat::AUTO*/)
 {
-	m_textureWrap->uploadSubTexture(rect, pixels, format);
+	m_resource->uploadSubTexture(rect, pixels, format);
 }
 
 void Texture::generateMipmap()
 {
-	m_textureWrap->generateMipmap();
+	m_resource->generateMipmap();
 }
 
 #if 0
@@ -168,7 +184,7 @@ void Texture::saveToFile(const String &filename)
 
 phandle_t Texture::getPHandle() const
 {
-	return m_textureWrap->getPHandle();
+	return m_resource->getPHandle();
 }
 
 #if 0
@@ -374,10 +390,10 @@ void TextureManager::texlist_f(const CmdArgs &args)
 
 //---------------------------------------------------------------------------
 
-Dict<FixedString, TextureWrap*> TextureWrap::ms_texDict;
-List<TextureWrap*> TextureWrap::ms_asioList;
+Dict<FixedString, TextureResource*> TextureResource::ms_texDict;
+List<TextureResource*> TextureResource::ms_asioList;
 
-TextureWrap::TextureWrap(const FixedString &key)
+TextureResource::TextureResource(const FixedString &key)
 {
 	setKey(key);
 
@@ -391,7 +407,7 @@ TextureWrap::TextureWrap(const FixedString &key)
 }
 
 
-TextureWrap::TextureWrap(const FixedString &key, TexFormat format, int width, int height)
+TextureResource::TextureResource(const FixedString &key, TexFormat format, int width, int height)
 {
 	setKey(key);
 
@@ -400,7 +416,7 @@ TextureWrap::TextureWrap(const FixedString &key, TexFormat format, int width, in
 	g_apiWrap->createTexture2D(&m_handle, format, width, height, Texture::IF_NoMipmap);
 }
 
-TextureWrap::~TextureWrap()
+TextureResource::~TextureResource()
 {
 	ms_texDict.erase(getKey());
 
@@ -408,21 +424,21 @@ TextureWrap::~TextureWrap()
 		g_apiWrap->deleteTexture2D(&m_handle);
 }
 
-void TextureWrap::uploadSubTexture(const Rect &rect, const void *pixels, TexFormat format)
+void TextureResource::uploadSubTexture(const Rect &rect, const void *pixels, TexFormat format)
 {
 	if (!m_handle) return;
 
 	g_apiWrap->uploadSubTexture(&m_handle, rect, pixels, format);
 }
 
-void TextureWrap::generateMipmap()
+void TextureResource::generateMipmap()
 {
 	if (!m_handle) return;
 
 	g_apiWrap->generateMipmap(&m_handle);
 }
 
-FixedString TextureWrap::normalizeKey( const String &name )
+FixedString TextureResource::normalizeKey( const String &name )
 {
 	String key;
 
@@ -436,9 +452,9 @@ FixedString TextureWrap::normalizeKey( const String &name )
 	return key;
 }
 
-TextureWrapPtr TextureWrap::findTexture(const FixedString &key)
+TextureWrapPtr TextureResource::findTexture(const FixedString &key)
 {
-	Dict<FixedString, TextureWrap*>::const_iterator it = ms_texDict.find(key);
+	Dict<FixedString, TextureResource*>::const_iterator it = ms_texDict.find(key);
 
 	if (it != ms_texDict.end())
 		return it->second;
@@ -446,14 +462,14 @@ TextureWrapPtr TextureWrap::findTexture(const FixedString &key)
 	return 0;
 }
 
-TextureWrapPtr TextureWrap::createTexture(const String &debugname, TexFormat format, int width, int height)
+TextureWrapPtr TextureResource::createTexture(const String &debugname, TexFormat format, int width, int height)
 {
 	std::stringstream ss;
 	ss << "_" << debugname << "$" << g_system->generateId();
 
 	FixedString key = ss.str();
 
-	TextureWrap *result = new TextureWrap(key, format, width, height);
+	TextureResource *result = new TextureResource(key, format, width, height);
 
 	return result;
 }

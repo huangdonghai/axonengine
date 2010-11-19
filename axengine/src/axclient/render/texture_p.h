@@ -3,7 +3,7 @@
 
 AX_BEGIN_NAMESPACE
 
-class TextureWrap : public KeyedObject
+class TextureResource : public KeyedObject
 {
 public:
 	enum Status {
@@ -13,21 +13,27 @@ public:
 		Missed
 	};
 
-	TextureWrap(const FixedString &key);
-	TextureWrap(const FixedString &key, TexFormat format, int width, int height);
-	virtual ~TextureWrap();
+	typedef Texture::InitFlags InitFlags;
+
+	TextureResource(const FixedString &key, InitFlags flags);
+	TextureResource(const FixedString &key, TexFormat format, int width, int height, InitFlags flags);
+	virtual ~TextureResource();
 
 	void uploadSubTexture(const Rect &rect, const void *pixels, TexFormat format);
 	void generateMipmap();
 
 	phandle_t getPHandle() { return &m_handle; }
 
+	static TextureResourcePtr findResource(const String &name, int flags);
+	static TextureResourcePtr createResource(const String &debugname, TexFormat format, int width, int height, int flags);
+
 private:
 	Handle m_handle;
 	AsioRead m_asioRead;
 
-	static Dict<FixedString, TextureWrap*> ms_texDict;
-	static List<TextureWrap*> ms_asioList;
+	typedef Dict<FixedString, TextureResource*> ResourceDict;
+	static ResourceDict ms_texDict;
+	static List<TextureResource*> ms_asioList;
 };
 
 AX_END_NAMESPACE

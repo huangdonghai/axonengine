@@ -73,9 +73,6 @@ public:
 
 	ReflectionMap *findReflection(RenderWorld *world, RenderEntity *actor, Primitive *prim, int width, int height);
 
-	TextureWrapPtr findTexture(const String &name, int flags);
-	TextureWrapPtr createTexture(const String &debugname, TexFormat format, int width, int height, int flags);
-
 	SamplerStatePtr findSamplerState(const SamplerStateDesc *desc);
 
 	BlendStatePtr findBlendState(const BlendStateDesc *desc);
