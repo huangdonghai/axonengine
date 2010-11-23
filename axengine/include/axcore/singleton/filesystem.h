@@ -188,12 +188,40 @@ private:
 	PackedFolderList m_childrenList;
 };
 
-struct AsioRead {
-	String filename;
-	size_t filesize;
-	void *filedata;
-	AtomicInt syncCounter; // if count == 0, data is ready
+class AsioRead {
+public:
+	friend class AsioThread;
+
+	AsioRead();
+	~AsioRead();
+
+	void setFilename(const String &filename) { m_filename = filename; }
+	void freeData();
+	int getFileSize() const { return m_filesize; }
+	void *getFileData() const { return m_filedata; }
+	bool isDataReady() const;
+
+private:
+	String m_filename;
+	int m_filesize;
+	void *m_filedata;
+	AtomicInt m_isDataReady; // if m_isDataReady != 0, data is ready
 };
+
+class AsioThread : public Thread, public ThreadSafe
+{
+public:
+	void flush();
+	virtual void doRun();
+	void queRequest(AsioRead *request);
+
+protected:
+	AsioRead *getFirstRequest();
+
+private:
+	List<AsioRead*> m_readEntries;
+};
+
 
 //------------------------------------------------------------------------------
 // class FileSystem

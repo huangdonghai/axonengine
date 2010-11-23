@@ -429,6 +429,7 @@ ReflectionMap * RenderSystem::findReflection(RenderWorld *world, RenderEntity *a
 	return 0;
 }
 
+#if 0
 TextureWrapPtr RenderSystem::findTexture(const String &name, int flags)
 {
 	return TextureWrapPtr();
@@ -438,6 +439,7 @@ TextureWrapPtr RenderSystem::createTexture(const String &debugname, TexFormat fo
 {
 	return TextureWrapPtr();
 }
+#endif
 
 BlendStatePtr RenderSystem::findBlendState(const BlendStateDesc *desc)
 {

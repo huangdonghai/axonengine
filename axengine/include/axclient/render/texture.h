@@ -42,7 +42,6 @@ public:
 		TT_CUBE,
 	};
 
-	Texture();
 	Texture(const String &name, InitFlags flags=0);
 	Texture(const String &debugname, TexFormat format, int width, int height, InitFlags flags = 0);
 	~Texture();

@@ -63,64 +63,75 @@ namespace {
 		return fullpath;
 	}
 
-	class AsioThread : public Thread, public ThreadSafe
-	{
-	public:
-		void flush()
-		{
-			SCOPE_LOCK;
-
-			while (!m_readEntries.empty()) {
-				OsUtil::sleep(0);
-			}
-		}
-
-		virtual void doRun()
-		{
-			while (1) {
-				AsioRead *request = getFirstRequest();
-
-				if (!request) {
-					OsUtil::sleep(0);
-					continue;
-				}
-
-				// do read
-				request->filesize = g_fileSystem->readFile(request->filename, &request->filedata);
-				request->syncCounter.decref();
-
-				removeFirstRequest();
-			}
-		}
-
-		void queRequest(AsioRead *request)
-		{
-			SCOPE_LOCK;
-			m_readEntries.push_back(request);
-		}
-
-	protected:
-		AsioRead *getFirstRequest()
-		{
-			SCOPE_LOCK;
-			if (m_readEntries.empty())
-				return 0;
-			return m_readEntries.front();
-		}
-
-		void removeFirstRequest()
-		{
-			SCOPE_LOCK;
-			m_readEntries.pop_front();
-		}
-
-	private:
-		List<AsioRead*> m_readEntries;
-	};
-
 	AsioThread *s_asioThread = 0;
 
 } // anonymous namespace
+
+
+AsioRead::AsioRead()
+{
+	m_filesize = 0;
+	m_filedata = 0;
+}
+
+AsioRead::~AsioRead()
+{
+
+}
+
+void AsioRead::freeData()
+{
+	g_fileSystem->freeFile(m_filedata); m_filesize = 0; m_filedata = 0;
+}
+
+bool AsioRead::isDataReady() const
+{
+	return m_isDataReady == 0;
+}
+
+
+void AsioThread::flush()
+{
+	SCOPE_LOCK;
+
+	while (!m_readEntries.empty()) {
+		OsUtil::sleep(0);
+	}
+}
+
+void AsioThread::doRun()
+{
+	while (1) {
+		AsioRead *request = getFirstRequest();
+
+		if (!request) {
+			OsUtil::sleep(0);
+			continue;
+		}
+
+		// do read
+		request->m_filesize = g_fileSystem->readFile(request->m_filename, &request->m_filedata);
+		request->m_isDataReady.incref();
+	}
+}
+
+void AsioThread::queRequest( AsioRead *request )
+{
+	SCOPE_LOCK;
+	m_readEntries.push_back(request);
+}
+
+AsioRead * AsioThread::getFirstRequest()
+{
+	SCOPE_LOCK;
+	if (m_readEntries.empty())
+		return 0;
+
+	AsioRead *result = m_readEntries.front();
+	m_readEntries.pop_front();
+
+	return result;
+}
 
 //------------------------------------------------------------------------------
 // class PakedFolder

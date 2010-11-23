@@ -32,7 +32,7 @@ private:
 	AsioRead m_asioRead;
 
 	typedef Dict<FixedString, TextureResource*> ResourceDict;
-	static ResourceDict ms_texDict;
+	static ResourceDict ms_resources;
 	static List<TextureResource*> ms_asioList;
 };
 

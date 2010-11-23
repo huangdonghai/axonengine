@@ -19,14 +19,21 @@ Texture::ExistDict Texture::m_existDict;
 // class TextureWrap
 //--------------------------------------------------------------------------
 
+TextureResource::ResourceDict TextureResource::ms_resources;
+List<TextureResource*> TextureResource::ms_asioList;
+
+
 TextureResource::TextureResource(const FixedString &key, InitFlags flags)
 {
+	String filename = key.toString() + ".dds";
+	m_asioRead.setFilename(filename);
+	g_fileSystem->queAsioRead(&m_asioRead);
 //	g_apiWrap->createTexture2D();
 }
 
 TextureResource::TextureResource(const FixedString &key, TexFormat format, int width, int height, InitFlags flags)
 {
-	g_apiWrap->createTexture2D(&m_handle, format, width, height);
+	g_apiWrap->createTexture2D(&m_handle, format, width, height, flags);
 }
 
 TextureResource::~TextureResource()
@@ -46,9 +53,9 @@ void TextureResource::generateMipmap()
 
 TextureResourcePtr TextureResource::findResource(const String &name, int flags)
 {
-	ResourceDict::iterator it = ms_texDict.find(name);
+	ResourceDict::iterator it = ms_resources.find(name);
 
-	if (it != ms_texDict.end())
+	if (it != ms_resources.end())
 		return it->second;
 
 	TextureResource *resource = new TextureResource(name, flags);
@@ -66,13 +73,10 @@ TextureResourcePtr TextureResource::createResource(const String &debugname, TexF
 // class Texture
 //--------------------------------------------------------------------------
 
-Texture::Texture()
-{
-}
-
 Texture::Texture(const String &name, InitFlags flags/*=0*/)
 {
-	m_resource = TextureResource::findResource(name, flags);
+	FixedString key = normalizeKey(name);
+	m_resource = TextureResource::findResource(key, flags);
 	m_samplerState = g_renderSystem->findSamplerState(0);
 }
 
@@ -137,14 +141,13 @@ void Texture::finalizeManager()
 
 FixedString Texture::normalizeKey(const String &name)
 {
+	String normalizedName = PathUtil::normalizePath(name);
 	FixedString key;
 
 	if (!PathUtil::haveDir(name))
-		key = "textures/" + name;
-	else
-		key = name;
+		normalizedName = "textures/" + normalizedName;
 
-	key = PathUtil::removeExt(key);
+	key = PathUtil::removeExt(normalizedName);
 
 	return key;
 }
@@ -390,14 +393,14 @@ void TextureManager::texlist_f(const CmdArgs &args)
 
 //---------------------------------------------------------------------------
 
-Dict<FixedString, TextureResource*> TextureResource::ms_texDict;
+Dict<FixedString, TextureResource*> TextureResource::ms_resources;
 List<TextureResource*> TextureResource::ms_asioList;
 
 TextureResource::TextureResource(const FixedString &key)
 {
 	setKey(key);
 
-	ms_texDict[key] = this;
+	ms_resources[key] = this;
 
 	m_asioRead.filename = key;
 	m_asioRead.syncCounter.incref();
@@ -411,14 +414,14 @@ TextureResource::TextureResource(const FixedString &key, TexFormat format, int w
 {
 	setKey(key);
 
-	ms_texDict[key] = this;
+	ms_resources[key] = this;
 
 	g_apiWrap->createTexture2D(&m_handle, format, width, height, Texture::IF_NoMipmap);
 }
 
 TextureResource::~TextureResource()
 {
-	ms_texDict.erase(getKey());
+	ms_resources.erase(getKey());
 
 	if (m_handle);
 		g_apiWrap->deleteTexture2D(&m_handle);
@@ -454,9 +457,9 @@ FixedString TextureResource::normalizeKey( const String &name )
 
 TextureWrapPtr TextureResource::findTexture(const FixedString &key)
 {
-	Dict<FixedString, TextureResource*>::const_iterator it = ms_texDict.find(key);
+	Dict<FixedString, TextureResource*>::const_iterator it = ms_resources.find(key);
 
-	if (it != ms_texDict.end())
+	if (it != ms_resources.end())
 		return it->second;
 
 	return 0;
