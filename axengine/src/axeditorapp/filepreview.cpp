@@ -21,16 +21,16 @@ FilePreview::~FilePreview(void)
 {
 }
 
-static QWidget*
-CreateWidgetFromQPixmap(const QPixmap &pixmap, QWidget *parent) {
+static QWidget* CreateWidgetFromQPixmap(const QPixmap &pixmap, QWidget *parent)
+{
 	QLabel *label = new QLabel(parent);
 	label->setScaledContents(true);
 	label->setPixmap(pixmap);
 	return label;
 }
 
-static QWidget*
-CreateWidgetFromImage(const String &filePathName, Image::FileType type, QWidget *parent) {
+static QWidget* CreateWidgetFromImage(const String &filePathName, Image::FileType type, QWidget *parent)
+{
 	Image image;
 	if (!image.loadFileByType(filePathName, type, Image::NoCompressed | Image::ExpandAlpha))
 		return NULL;
@@ -43,8 +43,8 @@ CreateWidgetFromImage(const String &filePathName, Image::FileType type, QWidget 
 	return CreateWidgetFromQPixmap(pixmap, parent);
 }
 
-static QWidget*
-CreateWidgetFromQImageFile(const String &filePathName, QWidget *parent) {
+static QWidget* CreateWidgetFromQImageFile(const String &filePathName, QWidget *parent)
+{
 	QPixmap pixmap;
 	String gamePath = g_fileSystem->dataPathToOsPath(filePathName);
 	if (!pixmap.load(u2q(gamePath))) {
@@ -54,8 +54,8 @@ CreateWidgetFromQImageFile(const String &filePathName, QWidget *parent) {
 	return CreateWidgetFromQPixmap(pixmap, parent);
 }
 
-static QWidget*
-CreateWidgetFrom3DFile(const String &filePathName, QWidget *parent) {
+static QWidget* CreateWidgetFrom3DFile(const String &filePathName, QWidget *parent)
+{
 	PreviewWidget *preview = new PreviewWidget(parent);
 	String modelName = PathUtil::removeExt(filePathName);
 #if 0
@@ -81,8 +81,8 @@ static inline QWidget *CreateWidgetFromHdr(const String &filePathName, QWidget *
 //{	return CreateWidgetFromCxImage(filePathName, Image::JPEG, parent);	}
 
 
-void 
-FilePreview::Init(){
+void FilePreview::Init()
+{
 	AX_ASSERT(m_createWidgetDict.size() == 0);
 	m_createWidgetDict["TGA"] = &CreateWidgetFromTga;
 	m_createWidgetDict["JP2"] = &CreateWidgetFromJp2;
@@ -106,8 +106,8 @@ FilePreview::Init(){
 	m_createWidgetDict["JPEG"] = &CreateWidgetFromQImageFile;
 }
 
-QWidget* 
-FilePreview::CreateWidget(const String &filePathName, QWidget *parent) {
+QWidget* FilePreview::CreateWidget(const String &filePathName, QWidget *parent)
+{
 	String ext = PathUtil::getExt(filePathName);
 	if (ext[0] == L'.')
 		ext = ext.c_str() + 1;

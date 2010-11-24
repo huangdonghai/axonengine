@@ -14,7 +14,7 @@ AX_BEGIN_NAMESPACE
 
 class Selection;
 
-class AX_API RenderSystem : public Object, public ICmdHandler
+class AX_API RenderSystem : public Object, public ICmdHandler, public ITickable
 {
 public:
 	// script
@@ -30,6 +30,9 @@ public:
 
 	void initialize();
 	void finalize();
+
+	// implement ITickable
+	virtual void tick();
 
 	int getFrameNum() const;
 
@@ -72,15 +75,10 @@ public:
 	void freeShadowMap(ShadowMap *target);
 
 	ReflectionMap *findReflection(RenderWorld *world, RenderEntity *actor, Primitive *prim, int width, int height);
-
 	SamplerStatePtr findSamplerState(const SamplerStateDesc *desc);
-
 	BlendStatePtr findBlendState(const BlendStateDesc *desc);
-
 	RasterizerStatePtr findRasterizerState(const RasterizerStateDesc *desc);
-
 	DepthStencilStatePtr findDepthStencilState(const DepthStencilStateDesc *desc);
-
 
 	static Rect getWindowRect(Handle hwnd);
 

@@ -28,17 +28,24 @@ TextureResource::TextureResource(const FixedString &key, InitFlags flags)
 	String filename = key.toString() + ".dds";
 	m_asioRead.setFilename(filename);
 	g_fileSystem->queAsioRead(&m_asioRead);
-//	g_apiWrap->createTexture2D();
+
+	// add to dictionary
+	setKey(key);
+	ms_resources[key] = this;
 }
 
 TextureResource::TextureResource(const FixedString &key, TexFormat format, int width, int height, InitFlags flags)
 {
 	g_apiWrap->createTexture2D(&m_handle, format, width, height, flags);
+
+	setKey(key);
+	ms_resources[key] = this;
 }
 
 TextureResource::~TextureResource()
 {
 	g_apiWrap->deleteTexture2D(&m_handle);
+	ms_resources.erase(getKey());
 }
 
 void TextureResource::uploadSubTexture(const Rect &rect, const void *pixels, TexFormat format)
@@ -51,7 +58,7 @@ void TextureResource::generateMipmap()
 	g_apiWrap->generateMipmap(&m_handle);
 }
 
-TextureResourcePtr TextureResource::findResource(const String &name, int flags)
+TextureResourcePtr TextureResource::findResource(const FixedString &name, int flags)
 {
 	ResourceDict::iterator it = ms_resources.find(name);
 
@@ -63,11 +70,31 @@ TextureResourcePtr TextureResource::findResource(const String &name, int flags)
 	return TextureResourcePtr(resource);
 }
 
-TextureResourcePtr TextureResource::createResource(const String &debugname, TexFormat format, int width, int height, int flags)
+TextureResourcePtr TextureResource::createResource(const FixedString &debugname, TexFormat format, int width, int height, int flags)
 {
 	return new TextureResource(debugname, format, width, height, flags);
 }
 
+void TextureResource::loadFileMemory( int size, void *data )
+{
+
+}
+
+void TextureResource::stepAsio()
+{
+	List<TextureResource*>::iterator it = ms_asioList.begin();
+
+	while (it != ms_asioList.end()) {
+		TextureResource *res = *it;
+		if (res->m_asioRead.isDataReady()) {
+			it = ms_asioList.erase(it);
+			res->loadFileMemory(res->m_asioRead.getFileSize(), res->m_asioRead.getFileData());
+			res->m_asioRead.freeData();
+		} else {
+			it++;
+		}
+	}
+}
 
 //--------------------------------------------------------------------------
 // class Texture

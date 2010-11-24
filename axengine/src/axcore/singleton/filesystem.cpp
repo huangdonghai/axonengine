@@ -1172,14 +1172,15 @@ void FileSystem::checkGamePath()
 	fclose(f);
 }
 
-void FileSystem::queAsioRead( AsioRead *entry )
+void FileSystem::queAsioRead(AsioRead *entry)
 {
-
+	s_asioThread->queRequest(entry);
 }
 
 void FileSystem::flushAsio()
 {
-
+	s_asioThread->flush();
 }
+
 AX_END_NAMESPACE
 

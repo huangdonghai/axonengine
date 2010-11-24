@@ -456,6 +456,11 @@ DepthStencilStatePtr RenderSystem::findDepthStencilState(const DepthStencilState
 	return DepthStencilStatePtr();
 }
 
+void RenderSystem::tick()
+{
+	TextureResource::stepAsio();
+}
+
 
 AX_END_NAMESPACE
 

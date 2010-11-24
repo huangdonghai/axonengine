@@ -24,8 +24,12 @@ public:
 
 	phandle_t getPHandle() { return &m_handle; }
 
-	static TextureResourcePtr findResource(const String &name, int flags);
-	static TextureResourcePtr createResource(const String &debugname, TexFormat format, int width, int height, int flags);
+	static TextureResourcePtr findResource(const FixedString &name, int flags);
+	static TextureResourcePtr createResource(const FixedString &debugname, TexFormat format, int width, int height, int flags);
+	static void stepAsio();
+
+protected:
+	void loadFileMemory(int size, void *data);
 
 private:
 	Handle m_handle;

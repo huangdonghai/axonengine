@@ -34,13 +34,15 @@ TerrainMaterialDlg::TerrainMaterialDlg(QWidget *parent)
 	initMaterialDef();
 }
 
-TerrainMaterialDlg::~TerrainMaterialDlg() {
+TerrainMaterialDlg::~TerrainMaterialDlg()
+{
 	SafeDelete(m_materialDef);
 	SafeDelete(m_heightImage);
 	SafeDelete(m_slopeImage);
 }
 
-void TerrainMaterialDlg::initMaterialDef() {
+void TerrainMaterialDlg::initMaterialDef()
+{
 	if (m_terrain) {
 		m_materialDef = m_terrain->getMaterialDef()->clone();
 	} else {
@@ -62,13 +64,15 @@ void TerrainMaterialDlg::initMaterialDef() {
 //	on_layerList_currentItemChanged(item, nullptr);
 }
 
-MapLayerDef *TerrainMaterialDlg::getLayerDef(QTreeWidgetItem *item) {
+MapLayerDef *TerrainMaterialDlg::getLayerDef(QTreeWidgetItem *item)
+{
 	int id = item->data(0, Qt::UserRole).toInt();
 
 	return m_materialDef->findLayerDefById(id);
 }
 
-void TerrainMaterialDlg::writeToDef(QTreeWidgetItem *item) {
+void TerrainMaterialDlg::writeToDef(QTreeWidgetItem *item)
+{
 	if (!item)
 		return;
 
@@ -92,7 +96,8 @@ void TerrainMaterialDlg::writeToDef(QTreeWidgetItem *item) {
 	l->isVerticalProjection = ui.vertical->isChecked();
 }
 
-void TerrainMaterialDlg::readFromDef(QTreeWidgetItem *item) {
+void TerrainMaterialDlg::readFromDef(QTreeWidgetItem *item)
+{
 	if (!item)
 		return;
 
@@ -137,7 +142,8 @@ void TerrainMaterialDlg::readFromDef(QTreeWidgetItem *item) {
 	updateBaseImage();
 }
 
-void TerrainMaterialDlg::updataMaskPreview() {
+void TerrainMaterialDlg::updataMaskPreview()
+{
 	if (!m_heightImage || !m_slopeImage)
 		return;
 
@@ -386,7 +392,8 @@ void TerrainMaterialDlg::on_selectBase_clicked()
 	updateBaseImage();
 }
 
-void TerrainMaterialDlg::updateBaseImage() {
+void TerrainMaterialDlg::updateBaseImage()
+{
 	Image image;
 	if (!image.loadFileByType(m_baseImage, Image::TGA, Image::NoCompressed | Image::ExpandAlpha)) {
 		ui.baseImagePreview->clear();
@@ -404,7 +411,8 @@ void TerrainMaterialDlg::updateBaseImage() {
 	ui.baseFilename->setText(u2q(PathUtil::removeDir(m_baseImage)));
 }
 
-void TerrainMaterialDlg::writeCurrentDef() {
+void TerrainMaterialDlg::writeCurrentDef()
+{
 	QTreeWidgetItem *item = ui.layerList->currentItem();
 	writeToDef(item);
 }
