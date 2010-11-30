@@ -17,7 +17,6 @@ read the license and understand and accept it fully.
 #	pragma warning(disable : 4284)	// return type for 'identifier::operator ->' is not a UDT or reference to a UDT. Will produce errors if applied using infix notation
 #	pragma warning(disable : 4251)	// 'identifier' : class 'type' needs to have dll-interface to be used by clients of class 'type2'
 #	pragma warning(disable : 4275)	// non - DLL-interface classkey 'identifier' used as base for DLL-interface classkey 'identifier'
-
 #endif
 
 #if _MSC_VER == 1400
