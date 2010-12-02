@@ -34,6 +34,8 @@ protected:
 private:
 	Handle m_handle;
 	AsioRead m_asioRead;
+	Image *m_asioImage;
+	AtomicInt m_isUploaded;
 
 	typedef Dict<FixedString, TextureResource*> ResourceDict;
 	static ResourceDict ms_resources;
