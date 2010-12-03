@@ -362,6 +362,8 @@ public:
 	// io & processing
 	bool loadFile(const String &filename, int flags = 0);
 	bool loadFileByType(const String &filename, FileType filetype, int flags = 0);
+	bool loadFileFromMemory(size_t filesize, void *filedata, FileType filetype);
+
 	Image *resize(int width, int height);
 	Image *getFloatHeightmap(float max_height);
 	void generateMipmaps();
@@ -429,6 +431,7 @@ public:
 	bool loadFile_tga(const String &filename);
 	bool loadFile_hdr(const String &filename);
 	bool loadFile_dds(const String &filename);
+	bool loadFileFromMemory_dds(size_t filesize, void *filedata);
 
 	// save function
 	void saveFile_dds(const String &filename, bool bFast = true);
