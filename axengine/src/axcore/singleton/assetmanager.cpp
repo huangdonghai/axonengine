@@ -187,7 +187,7 @@ AX_BEGIN_NAMESPACE
 
 	// create an empty asset
 	Asset *AssetManager::createEmptyAsset(int type) {
-		SCOPE_LOCK;
+		SCOPED_LOCK;
 
 		checkType(__func__, type);
 
@@ -195,7 +195,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 	Asset *AssetManager::findAsset(int type, const std::string &name, intptr_t arg) {
-		SCOPE_LOCK;
+		SCOPED_LOCK;
 
 		checkType(__func__, type);
 
@@ -222,7 +222,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 	Asset *AssetManager::uniqueAsset(int type, const std::string &name, intptr_t arg /*= 0 */) {
-		SCOPE_LOCK;
+		SCOPED_LOCK;
 
 		checkType(__func__, type);
 
@@ -241,7 +241,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 	void AssetManager::addAsset(int type, const std::string &key, Asset *asset) {
-		SCOPE_LOCK;
+		SCOPED_LOCK;
 
 		checkType(__func__, type);
 
@@ -273,7 +273,7 @@ AX_BEGIN_NAMESPACE
 #endif
 
 	void AssetManager::removeAsset(Asset *asset) {
-		SCOPE_LOCK;
+		SCOPED_LOCK;
 
 		AX_ASSERT(asset->getRefCount() == 0);
 		AX_ASSERT(asset);
@@ -319,7 +319,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 	void AssetManager::listType(int type, const char *filter) {
-		SCOPE_LOCK;
+		SCOPED_LOCK;
 
 		if (type < 0 || type >= Asset::MAX_TYPES)
 			return;
@@ -343,7 +343,7 @@ AX_BEGIN_NAMESPACE
 
 
 	void AssetManager::list_f(const CmdArgs &param) {
-		SCOPE_LOCK;
+		SCOPED_LOCK;
 
 		int type = 0;
 		if (param.tokened.size() > 1)

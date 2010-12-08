@@ -48,7 +48,7 @@ read the license and understand and accept it fully.
 #endif
 
 #if 0
-#define D3D9_SCOPELOCK ScopeLock _autoLocker(d3d9Mutex)
+#define D3D9_SCOPELOCK ScopedLocker _autoLocker(d3d9Mutex)
 #endif
 
 #define BEGIN_PIX(x) D3DPERF_BeginEvent(D3DCOLOR_RGBA(0,0,0,255), L##x)

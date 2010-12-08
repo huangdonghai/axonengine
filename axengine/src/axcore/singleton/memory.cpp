@@ -81,7 +81,7 @@ MemoryHeap::~MemoryHeap()
 
 void MemoryHeap::initialize()
 {
-	SCOPE_LOCK;
+	SCOPED_LOCK;
 
 	if (m_initialized)
 		return;
@@ -108,7 +108,7 @@ void MemoryHeap::initialize()
 
 void MemoryHeap::finalize()
 {
-	SCOPE_LOCK;
+	SCOPED_LOCK;
 
 	return;
 
@@ -152,7 +152,7 @@ void MemoryHeap::finalize()
 
 void *MemoryHeap::alloc(uint_t size)
 {
-	SCOPE_LOCK;
+	SCOPED_LOCK;
 
 	if (!m_initialized)
 		initialize();
@@ -177,7 +177,7 @@ void *MemoryHeap::alloc(uint_t size)
 
 void MemoryHeap::free(void *p)
 {
-	SCOPE_LOCK;
+	SCOPED_LOCK;
 
 	if (!p) {
 		return;
@@ -206,7 +206,7 @@ void MemoryHeap::free(void *p)
 
 void *MemoryHeap::alloc16(uint_t size)
 {
-	SCOPE_LOCK;
+	SCOPED_LOCK;
 
 	byte_t *ptr, *alignedPtr;
 
@@ -221,14 +221,14 @@ void *MemoryHeap::alloc16(uint_t size)
 
 void MemoryHeap::free16(void *p)
 {
-	SCOPE_LOCK;
+	SCOPED_LOCK;
 
 	Free((void *) *((size_t *) (((byte_t *) p) - 4)));
 }
 
 MemoryHeap::Page *MemoryHeap::allocatePage(uint_t bytes)
 {
-	SCOPE_LOCK;
+	SCOPED_LOCK;
 
 	MemoryHeap::Page *p;
 
@@ -263,7 +263,7 @@ MemoryHeap::Page *MemoryHeap::allocatePage(uint_t bytes)
 
 void MemoryHeap::freePage(MemoryHeap::Page *p)
 {
-	SCOPE_LOCK;
+	SCOPED_LOCK;
 
 	AX_ASSERT(p);
 

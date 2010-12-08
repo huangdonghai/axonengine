@@ -92,7 +92,7 @@ bool AsioRead::isDataReady() const
 
 void AsioThread::flush()
 {
-	SCOPE_LOCK;
+	SCOPED_LOCK;
 
 	while (!m_readEntries.empty()) {
 		OsUtil::sleep(0);
@@ -117,13 +117,13 @@ void AsioThread::doRun()
 
 void AsioThread::queRequest( AsioRead *request )
 {
-	SCOPE_LOCK;
+	SCOPED_LOCK;
 	m_readEntries.push_back(request);
 }
 
 AsioRead * AsioThread::getFirstRequest()
 {
-	SCOPE_LOCK;
+	SCOPED_LOCK;
 	if (m_readEntries.empty())
 		return 0;
 
@@ -291,25 +291,25 @@ File::~File()
 
 std::string File::getName() const
 {
-	SCOPE_LOCK;
+	SCOPED_LOCK;
 	return m_name;
 }
 
 File::Type File::getType() const
 {
-	SCOPE_LOCK;
+	SCOPED_LOCK;
 	return m_type;
 }
 
 File::AccessMode File::getMode() const
 {
-	SCOPE_LOCK;
+	SCOPED_LOCK;
 	return m_mode;
 }
 
 size_t File::read(void *buffer, size_t len)
 {
-	SCOPE_LOCK;
+	SCOPED_LOCK;
 
 	if (m_type == kStdio) {
 		len = fread(buffer, 1, len, m_handle);
@@ -325,7 +325,7 @@ size_t File::read(void *buffer, size_t len)
 
 char *File::readLine(char *buffer, int n)
 {
-	SCOPE_LOCK;
+	SCOPED_LOCK;
 
 	if (m_type == kStdio) {
 		return fgets(buffer, n, m_handle);
@@ -338,7 +338,7 @@ char *File::readLine(char *buffer, int n)
 
 size_t File::write(const void *buffer, size_t len)
 {
-	SCOPE_LOCK;
+	SCOPED_LOCK;
 
 	size_t size = len;
 	const byte_t *buf = (byte_t*)buffer;
@@ -371,7 +371,7 @@ size_t File::write(const void *buffer, size_t len)
 
 int File::writeLine(const char *str)
 {
-	SCOPE_LOCK;
+	SCOPED_LOCK;
 
 	return fputs(str, m_handle);
 }
@@ -383,14 +383,14 @@ bool File::isReading() const
 
 size_t File::size()
 {
-	SCOPE_LOCK;
+	SCOPED_LOCK;
 
 	return m_size;
 }
 
 int File::seek(int offset, File::SeekMode origin)
 {
-	SCOPE_LOCK;
+	SCOPED_LOCK;
 
 	int whence;
 
@@ -422,7 +422,7 @@ int File::seek(int offset, File::SeekMode origin)
 
 int File::fTell()
 {
-	SCOPE_LOCK;
+	SCOPED_LOCK;
 
 	if (m_type == kPacked) {
 		return unztell(m_unzFile);
@@ -438,19 +438,19 @@ bool File::isEnd()
 
 int File::flush()
 {
-	SCOPE_LOCK;
+	SCOPED_LOCK;
 	return fflush(m_handle);
 }
 
 int File::forceFlush()
 {
-	SCOPE_LOCK;
+	SCOPED_LOCK;
 	return setvbuf(m_handle, NULL, _IONBF, 0);
 }
 
 int File::close()
 {
-	SCOPE_LOCK;
+	SCOPED_LOCK;
 
 	int ret = 0;
 	if (m_type == File::kPacked) {
@@ -500,7 +500,7 @@ FileSystem::~FileSystem()
 
 void FileSystem::initialize()
 {
-	SCOPE_LOCK;
+	SCOPED_LOCK;
 
 	finalize();
 
@@ -535,7 +535,7 @@ void FileSystem::finalize()
 
 void FileSystem::addGameDirectory(const std::string &dir, bool extractSrc)
 {
-	SCOPE_LOCK;
+	SCOPED_LOCK;
 
 	/* check if already added */
 	SearchDirs::const_iterator pos = m_searchDirs.begin();
@@ -569,7 +569,7 @@ void FileSystem::addGameDirectory(const std::string &dir, bool extractSrc)
 
 bool FileSystem::ospathToDataPath(const std::string &path, std::string &gpath)
 {
-	SCOPE_LOCK;
+	SCOPED_LOCK;
 
 	size_t len = m_dataPath.length();
 	size_t i;
@@ -632,7 +632,7 @@ std::string FileSystem::getDataPath()
 
 StringSeq FileSystem::fileListByExts(const std::string &path, const std::string &exts, int flags)
 {
-	SCOPE_LOCK;
+	SCOPED_LOCK;
 
 	std::string datapath = m_dataPath;
 	datapath += "/";
@@ -643,7 +643,7 @@ StringSeq FileSystem::fileListByExts(const std::string &path, const std::string 
 
 FileInfoSeq FileSystem::getFileInfos(const std::string &path, const std::string &exts, int flags)
 {
-	SCOPE_LOCK;
+	SCOPED_LOCK;
 
 	FileInfoSeq fis;
 
@@ -674,7 +674,7 @@ FileInfoSeq FileSystem::getFileInfos(const std::string &path, const std::string 
 
 File *FileSystem::openFileByMode(const std::string &filename, File::AccessMode mode)
 {
-	SCOPE_LOCK;
+	SCOPED_LOCK;
 
 	bool sync;
 	File *file = 0;
@@ -700,7 +700,7 @@ File *FileSystem::openFileByMode(const std::string &filename, File::AccessMode m
 
 File *FileSystem::openFileRead(const std::string &filename)
 {
-	SCOPE_LOCK;
+	SCOPED_LOCK;
 
 	File *file = nullptr;
 
@@ -785,7 +785,7 @@ File *FileSystem::openFileRead(const std::string &filename)
 
 File *FileSystem::openFileWrite(const std::string &filename)
 {
-	SCOPE_LOCK;
+	SCOPED_LOCK;
 
 	std::string path = filename;
 	if (filename[1] != L':') {
@@ -819,7 +819,7 @@ File *FileSystem::openFileWrite(const std::string &filename)
 
 File *FileSystem::openFileAppend(const std::string &filename)
 {
-	SCOPE_LOCK;
+	SCOPED_LOCK;
 
 	std::string path = fullPath(m_modPath, filename);
 
@@ -846,7 +846,7 @@ File *FileSystem::openFileAppend(const std::string &filename)
 
 size_t FileSystem::readFile(const std::string &filename, void **buffer)
 {
-	SCOPE_LOCK;
+	SCOPED_LOCK;
 
 	if (buffer)
 		*buffer = 0;	// clear it first
@@ -885,14 +885,14 @@ size_t FileSystem::readFile(const std::string &filename, void **buffer)
 
 void FileSystem::freeFile(void *buffer)
 {
-	SCOPE_LOCK;
+	SCOPED_LOCK;
 
 	SafeDeleteArray(buffer);
 }
 
 void FileSystem::writeFile(const std::string &filename, const void *buffer, size_t size)
 {
-	SCOPE_LOCK;
+	SCOPED_LOCK;
 
 	if (filename.empty()) {
 		return;
@@ -911,7 +911,7 @@ void FileSystem::writeFile(const std::string &filename, const void *buffer, size
 
 int FileSystem::compareFileModifyTime(const std::string &srcfile, const std::string &destfile)
 {
-	SCOPE_LOCK;
+	SCOPED_LOCK;
 
 	longlong_t srcTime, dstTime;
 
@@ -929,14 +929,14 @@ int FileSystem::compareFileModifyTime(const std::string &srcfile, const std::str
 
 void FileSystem::attachFileObject(File *cf)
 {
-	SCOPE_LOCK;
+	SCOPED_LOCK;
 
 	m_fileList.push_front(cf);
 }
 
 void FileSystem::detachFileObject(File *cf)
 {
-	SCOPE_LOCK;
+	SCOPED_LOCK;
 
 	FileList::iterator it = m_fileList.begin();
 	for (; it!=m_fileList.end(); ++it) {
@@ -1002,7 +1002,7 @@ FilePackage *FileSystem::loadPakFile(const std::string &fullpath, const std::str
 
 bool FileSystem::getFileModifyTime(const std::string &filename, longlong_t *time) const
 {
-	SCOPE_LOCK;
+	SCOPED_LOCK;
 
 	if (filename.empty()) {
 		return false;

@@ -17,14 +17,14 @@ ConfigFile::ConfigFile()
 
 ConfigFile::~ConfigFile()
 {
-	SCOPE_LOCK;
+	SCOPED_LOCK;
 	m_data.clear();
 }
 
 
 bool ConfigFile::load(const std::string &filename)
 {
-	SCOPE_LOCK;
+	SCOPED_LOCK;
 //	SCOPE_CONVERT;
 
 #if 0 // don't clear, so we can load more than one file
@@ -119,7 +119,7 @@ error_exit:
 
 bool ConfigFile::save() const
 {
-	SCOPE_LOCK;
+	SCOPED_LOCK;
 
 	if (m_filename.empty())
 		return false;
@@ -129,7 +129,7 @@ bool ConfigFile::save() const
 
 bool ConfigFile::saveTo(const std::string &filename) const
 {
-	SCOPE_LOCK;
+	SCOPED_LOCK;
 //	SCOPE_CONVERT;
 
 	File *file = g_fileSystem->openFileWrite(filename);
@@ -166,14 +166,14 @@ bool ConfigFile::saveTo(const std::string &filename) const
 
 size_t ConfigFile::getSectionCount() const
 {
-	SCOPE_LOCK;
+	SCOPED_LOCK;
 
 	return m_data.size();
 }
 
 StringSeq ConfigFile::getSections() const
 {
-	SCOPE_LOCK;
+	SCOPED_LOCK;
 
 	StringSeq sv;
 
@@ -188,7 +188,7 @@ StringSeq ConfigFile::getSections() const
 
 size_t ConfigFile::getItemCount(const std::string &section) const
 {
-	SCOPE_LOCK;
+	SCOPED_LOCK;
 
 	SectionType::const_iterator section_it;
 
@@ -203,7 +203,7 @@ size_t ConfigFile::getItemCount(const std::string &section) const
 
 StringPairSeq ConfigFile::getItems(const std::string &section) const
 {
-	SCOPE_LOCK;
+	SCOPED_LOCK;
 
 	StringPairSeq spv;
 
@@ -225,7 +225,7 @@ StringPairSeq ConfigFile::getItems(const std::string &section) const
 
 std::string ConfigFile::getKeyValue(const std::string &section, const std::string &key) const
 {
-	SCOPE_LOCK;
+	SCOPED_LOCK;
 
 	SectionType::const_iterator section_it;
 	ItemType::const_iterator item_it;
@@ -247,14 +247,14 @@ std::string ConfigFile::getKeyValue(const std::string &section, const std::strin
 
 void ConfigFile::setValue(const std::string &section, const std::string &key, const std::string &value)
 {
-	SCOPE_LOCK;
+	SCOPED_LOCK;
 
 	m_data[section][key] = value;
 }
 
 void ConfigFile::clear()
 {
-	SCOPE_LOCK;
+	SCOPED_LOCK;
 
 	m_data.clear();
 }

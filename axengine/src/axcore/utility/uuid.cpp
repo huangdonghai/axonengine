@@ -104,7 +104,7 @@ public:
 	// m_ref added
 	Handle find(const T &t)
 	{
-		SCOPE_LOCK;
+		SCOPED_LOCK;
 
 		const T *ptr = &t;
 		DataType::iterator it = m_data.find(ptr);
@@ -133,7 +133,7 @@ public:
 		Item *item = h.to<Item *>();
 
 		if (item->m_ref.decref() == 0) {
-			SCOPE_LOCK;
+			SCOPED_LOCK;
 			m_data.erase(&item->m_value);
 			delete item;
 		}

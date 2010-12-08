@@ -39,7 +39,7 @@ const std::string &FixedStringManager::getString(int handle) const
 
 int FixedStringManager::findString(const std::string &str)
 {
-	SCOPE_LOCK;
+	SCOPED_LOCK;
 
 	Dict<const char*, int, HashCstr, EqualCstr>::const_iterator it = m_dict.find(str.c_str());
 
@@ -60,7 +60,7 @@ int FixedStringManager::findString(const char *lpcz)
 	if (!lpcz || !lpcz[0])
 		return 0;
 
-	SCOPE_LOCK;
+	SCOPED_LOCK;
 
 	Dict<const char*, int, HashCstr, EqualCstr>::const_iterator it = m_dict.find(lpcz);
 

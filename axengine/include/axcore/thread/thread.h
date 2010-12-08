@@ -14,9 +14,7 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-
 #define AX_INFINITE 0xFFFFFFFF
-
 
 //------------------------------------------------------------------------------
 // class SyncObject
@@ -27,7 +25,6 @@ struct AX_API SyncObject {
 	virtual bool lock(uint_t timeout = AX_INFINITE) = 0;
 	virtual bool unlock() = 0;
 };
-
 
 //------------------------------------------------------------------------------
 // class SyncMutex
@@ -47,23 +44,21 @@ private:
 //------------------------------------------------------------------------------
 // class auto lock
 //------------------------------------------------------------------------------
-#define SCOPE_LOCK ScopeLock __scopeLocker(m_mutex);
 
+#define SCOPED_LOCK ScopedLocker __scopeLocker(m_mutex);
 
 class AX_API ThreadSafe {
 public:
 	mutable SyncMutex m_mutex;
 };
 
-class ScopeLock {
+class ScopedLocker {
 public:
-	ScopeLock(SyncMutex &syncobject) : m_mutex(syncobject) { m_mutex.lock(); }
-	~ScopeLock() { m_mutex.unlock(); }
+	ScopedLocker(SyncMutex &syncobject) : m_mutex(syncobject) { m_mutex.lock(); }
+	~ScopedLocker() { m_mutex.unlock(); }
 private:
 	SyncMutex &m_mutex;
 };
-
-
 
 //------------------------------------------------------------------------------
 // class SyncEvent
@@ -84,11 +79,10 @@ private:
 	void *m_object;
 };
 
-
-
 //------------------------------------------------------------------------------
 // class Thread
 //------------------------------------------------------------------------------
+
 class INotifyHandler;
 class AX_API Thread {
 public:
@@ -100,6 +94,7 @@ public:
 	bool isCurrentThread() const;
 
 	void addAsyncNotify(INotifyHandler *handler, int index);
+	void dispatchAsyncNotiry();
 
 	virtual void doRun() = 0;		// work entry
 
@@ -113,9 +108,8 @@ private:
 		int index;
 	};
 	std::list<AsyncNotify> m_asyncNotifyList;
+	SyncMutex m_asyncNotifyMutex;
 };
-
-
 
 AX_END_NAMESPACE
 

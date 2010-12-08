@@ -879,7 +879,7 @@ int GLprimitivemanager::cachePrimitive(Primitive *prim) {
 }
 
 void GLprimitivemanager::uncachePrimitive(Primitive *prim) {
-	SCOPE_LOCK;		// this function will called from main thread
+	SCOPED_LOCK;		// this function will called from main thread
 
 	int id = prim->getCachedId();
 
@@ -898,7 +898,7 @@ void GLprimitivemanager::uncachePrimitive(Primitive *prim) {
 }
 
 void GLprimitivemanager::endFrame() {
-	SCOPE_LOCK;		// Lock WaitForDelete
+	SCOPED_LOCK;		// Lock WaitForDelete
 
 	// clear frame primitive
 	for (int i = 0; i < m_numFramePrims; i++) {

@@ -21,11 +21,27 @@ AX_BEGIN_NAMESPACE
 
 void Thread::addAsyncNotify(INotifyHandler *handler, int index)
 {
+	ScopedLocker autoLocker(m_asyncNotifyMutex);
+
 	AsyncNotify an;
 	an.handler = handler;
 	an.index = index;
 
 	m_asyncNotifyList.push_back(an);
 }
+
+void Thread::dispatchAsyncNotiry()
+{
+	ScopedLocker autoLocker(m_asyncNotifyMutex);
+
+	std::list<AsyncNotify>::const_iterator it = m_asyncNotifyList.begin();
+
+	for (; it != m_asyncNotifyList.end(); ++it) {
+		it->handler->notify(it->index);
+	}
+
+	m_asyncNotifyList.clear();
+}
+
 
 AX_END_NAMESPACE
