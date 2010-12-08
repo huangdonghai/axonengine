@@ -12,7 +12,7 @@ read the license and understand and accept it fully.
 #define AX_NETWORK_BITMSG_H
 
 AX_BEGIN_NAMESPACE
-	typedef Dict<String, String> StringDict;
+	typedef Dict<std::string, std::string> StringDict;
 
 	// network address
 	struct NetAdr {

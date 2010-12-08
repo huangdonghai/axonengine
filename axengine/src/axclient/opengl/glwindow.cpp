@@ -18,7 +18,7 @@ AX_BEGIN_NAMESPACE
 //	wrap OpenGL state operation
 //------------------------------------------------------------------------------
 
-GLwindow::GLwindow(const String &name)
+GLwindow::GLwindow(const std::string &name)
 	: m_hdc(NULL)
 	, m_name(name)
 {
@@ -29,7 +29,7 @@ GLwindow::GLwindow(const String &name)
 #endif
 }
 
-GLwindow::GLwindow(Handle wndId, const String &name) : m_wndId(wndId.to<HWND>()), m_name(name) {
+GLwindow::GLwindow(Handle wndId, const std::string &name) : m_wndId(wndId.to<HWND>()), m_name(name) {
 #if 0
 	initGLRC();
 	initialize();

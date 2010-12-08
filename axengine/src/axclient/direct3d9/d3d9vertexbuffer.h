@@ -263,7 +263,7 @@ protected:
 	}
 
 public:
-	Sequence<BufType> m_pages;
+	std::vector<BufType> m_pages;
 	int m_curIndex;
 	int m_curOffset;
 	void *m_curPointer;

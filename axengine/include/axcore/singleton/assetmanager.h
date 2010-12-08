@@ -54,7 +54,7 @@ AX_BEGIN_NAMESPACE
 		bool m_isDefaulted : 1;
 		bool m_isInDeleteList : 1;
 	};
-	typedef Sequence<Asset*>	AssetSeq;
+	typedef std::vector<Asset*>	AssetSeq;
 
 	//--------------------------------------------------------------------------
 	// class AssetFactory
@@ -112,7 +112,7 @@ AX_BEGIN_NAMESPACE
 
 		typedef Dict<String,Asset*>		AssetDict;
 		typedef DictSet<Asset*>			AssetSet;
-		typedef Sequence<Asset*>		AssetSeq;
+		typedef std::vector<Asset*>		AssetSeq;
 
 		AssetManager();
 		~AssetManager();
@@ -172,7 +172,7 @@ AX_BEGIN_NAMESPACE
 #endif
 
 	template< class T >
-	ResultPtr<T> FindAsset_(const String &name, intptr_t arg = 0) {
+	ResultPtr<T> FindAsset_(const std::string &name, intptr_t arg = 0) {
 #if 0
 		RefPtr<T> result;
 		result << dynamic_cast<T*>(g_assetManager->findAsset(T::AssetType, name, arg));
@@ -183,7 +183,7 @@ AX_BEGIN_NAMESPACE
 	}
 
 	template< class T >
-	ResultPtr<T> UniqueAsset_(const String &name, intptr_t arg = 0) {
+	ResultPtr<T> UniqueAsset_(const std::string &name, intptr_t arg = 0) {
 #if 0
 		RefPtr<T> result;
 		result << dynamic_cast<T*>(g_assetManager->uniqueAsset(T::AssetType, name, arg));

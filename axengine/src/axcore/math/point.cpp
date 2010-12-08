@@ -12,8 +12,8 @@ read the license and understand and accept it fully.
 AX_BEGIN_NAMESPACE
 
 
-String Point::toString() const {
-	String result;
+std::string Point::toString() const {
+	std::string result;
 	StringUtil::sprintf(result, "%d %d", x, y);
 	return result;
 }

@@ -100,7 +100,7 @@ void System::registerLog(ILogHandler *log) {
 }
 
 void System::removeLog(ILogHandler *log) {
-	Sequence<ILogHandler*>::iterator it;
+	std::vector<ILogHandler*>::iterator it;
 //	mLogCol::iterator it;
 
 	it = m_logSeq.begin();
@@ -147,7 +147,7 @@ void System::printLine()
 		m_logBufPos++;
 	}
 
-	Sequence<ILogHandler*>::iterator it=m_logSeq.begin();
+	std::vector<ILogHandler*>::iterator it=m_logSeq.begin();
 	for (; it!=m_logSeq.end(); ++it) {
 		(*it)->print(m_line);
 	}
@@ -173,7 +173,7 @@ void System::registerProgress(IProgressHandler *progress) {
 }
 
 void System::removeProgress(IProgressHandler *progress) {
-	Sequence<IProgressHandler*>::iterator it;
+	std::vector<IProgressHandler*>::iterator it;
 	//	mLogCol::iterator it;
 
 	it = m_progressSeq.begin();
@@ -190,19 +190,19 @@ void System::removeProgress(IProgressHandler *progress) {
 }
 
 // implement IProgressHandler
-void System::beginProgress(const String &title)
+void System::beginProgress(const std::string &title)
 {
 	sys_noSleep.setBool(true);
 
-	Sequence<IProgressHandler*>::iterator it;
+	std::vector<IProgressHandler*>::iterator it;
 	for (it=m_progressSeq.begin(); it!=m_progressSeq.end(); ++it) {
 		(*it)->beginProgress(title);
 	}
 }
 
 // return false if want go on, otherwise return true
-bool System::showProgress(uint_t percent, const String &msg) {
-	Sequence<IProgressHandler*>::iterator it;
+bool System::showProgress(uint_t percent, const std::string &msg) {
+	std::vector<IProgressHandler*>::iterator it;
 	bool ret;
 
 	for (it=m_progressSeq.begin(); it!=m_progressSeq.end(); ++it) {
@@ -213,7 +213,7 @@ bool System::showProgress(uint_t percent, const String &msg) {
 }
 
 void System::endProgress() {
-	Sequence<IProgressHandler*>::iterator it;
+	std::vector<IProgressHandler*>::iterator it;
 	for (it=m_progressSeq.begin(); it!=m_progressSeq.end(); ++it) {
 		(*it)->endProgress();
 	}
@@ -225,7 +225,7 @@ void System::printCpuInfo() {
 	Printf(_("..found %s\n"), m_cpuInfo.cpu_type.c_str());
 	Printf(_("..found %d logical cores\n"), m_cpuInfo.numLogicCores);
 
-	String features = "..features:";
+	std::string features = "..features:";
 
 	if (m_cpuInfo.features & PF_MMX)
 		features += " MMX";

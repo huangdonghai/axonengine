@@ -62,7 +62,7 @@ public:
 
 	InterpolateType m_interpolateType;
 	FixedString m_name;
-	Sequence<KeyValue> m_keyValues;
+	std::vector<KeyValue> m_keyValues;
 	bool m_loop;
 };
 
@@ -165,7 +165,7 @@ public:
 	Control *findControl(Object *obj, Member *member) const;
 
 private:
-	Sequence<Control*> m_controls;
+	std::vector<Control*> m_controls;
 	CycleType m_cycleType;
 };
 
@@ -173,31 +173,31 @@ private:
 class FloatTrack : public Control
 {
 public:
-	FloatTrack(const String &name);
+	FloatTrack(const std::string &name);
 	virtual ~FloatTrack();
 
 private:
-	String m_name;
-	Sequence<FloatKey> m_keyValues;
+	std::string m_name;
+	std::vector<FloatKey> m_keyValues;
 };
 
 //--------------------------------------------------------------------------
 class VectorTrack : public Control
 {
 public:
-	VectorTrack(const String &name);
+	VectorTrack(const std::string &name);
 	virtual ~VectorTrack();
 
 private:
-	String m_name;
-	Sequence<VectorKey> m_keyValues;
+	std::string m_name;
+	std::vector<VectorKey> m_keyValues;
 };
 
 //--------------------------------------------------------------------------
 class ColorTrack : public Control
 {
 public:
-	ColorTrack(const String &name);
+	ColorTrack(const std::string &name);
 	virtual ~ColorTrack();
 
 private:

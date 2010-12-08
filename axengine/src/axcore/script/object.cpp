@@ -63,12 +63,12 @@ CppClass *Object::registerCppClass()
 }
 
 
-void Object::set_objectName(const String &name)
+void Object::set_objectName(const std::string &name)
 {
 	setObjectName(name);
 }
 
-String Object::get_objectName() const
+std::string Object::get_objectName() const
 {
 	return m_objectName;
 }
@@ -148,7 +148,7 @@ bool Object::setProperty(const FixedString &name, const char *value)
 
 void Object::writeProperties(File *f, int indent) const
 {
-	String indstr(indent*2, ' ');
+	std::string indstr(indent*2, ' ');
 #define INDENT if (indent) f->printf("%s", indstr.c_str());
 
 	// write properties
@@ -244,7 +244,7 @@ void Object::copyPropertiesFrom(const Object *rhs)
 	}
 }
 
-void Object::setObjectName(const String &name)
+void Object::setObjectName(const std::string &name)
 {
 	if (m_objectName == name) {
 		return;

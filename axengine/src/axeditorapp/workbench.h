@@ -36,8 +36,8 @@ public:
 	virtual void doNotify(IObservable *subjest, int arg);
 
 	// implement IProgressHandler
-	virtual void beginProgress(const String &title);
-	virtual bool showProgress(uint_t percent, const String &msg);
+	virtual void beginProgress(const std::string &title);
+	virtual bool showProgress(uint_t percent, const std::string &msg);
 	virtual void endProgress();
 
 	// implement IWorkbench, for editordll use

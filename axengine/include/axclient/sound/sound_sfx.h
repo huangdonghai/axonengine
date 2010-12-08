@@ -26,7 +26,7 @@ private:
 	SoundFx();
 	virtual ~SoundFx();
 
-	String m_name;
+	std::string m_name;
 	FMOD::Sound *m_fmodSound;
 };
 

@@ -888,11 +888,11 @@ void D3D9Thread::issueVisQuery()
 
 void D3D9Thread::issueShadowQuery()
 {
-	const List<D3D9querymanager::ActiveQuery*>& querylist = d3d9QueryManager->getActiveQuery(Query::QueryType_Shadow);
+	const std::list<D3D9querymanager::ActiveQuery*>& querylist = d3d9QueryManager->getActiveQuery(Query::QueryType_Shadow);
 	int count = 0;
 
 	d3d9StateManager->SetRenderState(D3DRS_COLORWRITEENABLE, 0);
-	List<D3D9querymanager::ActiveQuery*>::const_iterator it = querylist.begin();
+	std::list<D3D9querymanager::ActiveQuery*>::const_iterator it = querylist.begin();
 	for (; it != querylist.end(); ++it) {
 		D3D9querymanager::ActiveQuery *active = *it;
 

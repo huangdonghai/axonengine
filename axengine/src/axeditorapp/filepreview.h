@@ -14,15 +14,15 @@ read the license and understand and accept it fully.
 
 class FilePreview
 {
-	typedef QWidget* (*CreateWidgetFunc)(const String &filePathName, QWidget *parent);
-	Dict<String, CreateWidgetFunc>	m_createWidgetDict;
+	typedef QWidget* (*CreateWidgetFunc)(const std::string &filePathName, QWidget *parent);
+	Dict<std::string, CreateWidgetFunc>	m_createWidgetDict;
 
 	void Init();
 public:
 	FilePreview(void);
 	~FilePreview(void);
 
-	QWidget *CreateWidget(const String &filePathName, QWidget *parent);
+	QWidget *CreateWidget(const std::string &filePathName, QWidget *parent);
 };
 
 #endif // __FILE_PREVIEW_H__

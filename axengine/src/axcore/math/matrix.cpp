@@ -14,9 +14,9 @@ AX_BEGIN_NAMESPACE
 const Matrix Matrix::Identity(1,0,0,0,1,0,0,0,1,0,0,0);
 
 
-String Matrix::toString() const
+std::string Matrix::toString() const
 {
-	String result;
+	std::string result;
 
 	StringUtil::sprintf(result, "%f %f %f %f %f %f %f %f %f %f %f %f"
 		, axis[0][0], axis[0][1], axis[0][2]

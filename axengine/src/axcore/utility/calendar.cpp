@@ -536,7 +536,7 @@ ushort_t DateTime::getLeapMonth(ushort_t lunarYear) {
 }
   
 
-String DateTime::formatLunarYear(ushort_t year) {
+std::string DateTime::formatLunarYear(ushort_t year) {
 	wchar_t szText1[] = { 0x7532, 0x4e59, 0x4e19, 0x4e01, 0x620a, 0x5df1, 0x5e9a, 0x8f9b, 0x58ec, 0x7678 }; // 甲乙丙丁戊己庚辛壬癸
 	wchar_t szText2[] = { 0x5b50, 0x4e11, 0x5bc5, 0x536f, 0x8fb0, 0x5df3, 0x5348, 0x672a, 0x7533, 0x9149, 0x620c, 0x4ea5}; // 子丑寅卯辰巳午未申酉戌亥
 
@@ -551,13 +551,13 @@ String DateTime::formatLunarYear(ushort_t year) {
 }
  
 
-String DateTime::formatMonth(ushort_t month, bool lunar) {
-	return String();
+std::string DateTime::formatMonth(ushort_t month, bool lunar) {
+	return std::string();
 }
   
 
-String DateTime::formatLunarDay(ushort_t  day) {
-	return String();
+std::string DateTime::formatLunarDay(ushort_t  day) {
+	return std::string();
 }
   
 

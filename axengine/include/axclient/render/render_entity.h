@@ -203,8 +203,8 @@ inline void RenderEntity::interactionChain(Interaction *last, int chainId)
 
 class AX_API IEntityManager {
 public:
-	virtual bool isSupportExt(const String &ext) const = 0;
-	virtual RenderEntity *create(const String &name, intptr_t arg = 0) = 0;
+	virtual bool isSupportExt(const std::string &ext) const = 0;
+	virtual RenderEntity *create(const std::string &name, intptr_t arg = 0) = 0;
 	virtual void updateForFrame(RenderScene *qscene ) {}
 	virtual void issueToQueue(RenderScene *qscene) {}
 };

@@ -386,7 +386,7 @@ Variant ScriptProp::getProperty(const Object *obj)
 }
 #endif
 
-static String getsortkey(const SqProperty *prop)
+static std::string getsortkey(const SqProperty *prop)
 {
 	if (prop->getGroup())
 		return prop->getGroup()->getRealName().toString() + prop->getRealName().toString();
@@ -394,7 +394,7 @@ static String getsortkey(const SqProperty *prop)
 	if (prop->getPropKind() == Member::kGroup)
 		return prop->getRealName().toString();
 
-	return String(" ") + prop->getRealName().toString();
+	return std::string(" ") + prop->getRealName().toString();
 }
 
 static bool sqlesser(const SqProperty *a, const SqProperty *b)
@@ -422,7 +422,7 @@ SqProperty::SqProperty(const sqObject &key, const sqObject &val, const sqObject 
 		int len = enums.len();
 		for (int i = 0; i < len; i++) {
 			int v = enums.getInt(i);
-			String k = StringUtil::format("%d", v);
+			std::string k = StringUtil::format("%d", v);
 			m_enumItems.push_back(std::make_pair(k,v));
 		}
 	} else if (enums.isTable()) {

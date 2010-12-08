@@ -34,8 +34,8 @@ struct CpuInfo {
 	int model;
 	int stepping;
 	uint_t numLogicCores;
-	String vendor;
-	String cpu_type;
+	std::string vendor;
+	std::string cpu_type;
 };
 
 struct ILogHandler {
@@ -45,9 +45,9 @@ struct ILogHandler {
 
 struct IProgressHandler {
 	virtual ~IProgressHandler() {}
-	virtual void beginProgress(const String &title) = 0;
+	virtual void beginProgress(const std::string &title) = 0;
 	// return true if want go on, otherwise return false
-	virtual bool showProgress(uint_t percent, const String &msg) = 0;
+	virtual bool showProgress(uint_t percent, const std::string &msg) = 0;
 	virtual void endProgress() = 0;
 };
 
@@ -93,9 +93,9 @@ public:
 	void removeProgress(IProgressHandler *progress);
 
 	// implement IProgressHandler
-	virtual void beginProgress(const String &title);
+	virtual void beginProgress(const std::string &title);
 	// return true if want interrupt, false if want go on, otherwise return true
-	virtual bool showProgress(uint_t percent, const String &msg);
+	virtual bool showProgress(uint_t percent, const std::string &msg);
 	virtual void endProgress();
 
 	// tick
@@ -125,8 +125,8 @@ private:
 	char m_line[LINE_SIZE];
 	int m_linePos;
 
-	Sequence<ILogHandler*>		m_logSeq;
-	Sequence<IProgressHandler*>	m_progressSeq;
+	std::vector<ILogHandler*>		m_logSeq;
+	std::vector<IProgressHandler*>	m_progressSeq;
 
 	// for id
 	int m_lastId;
@@ -135,7 +135,7 @@ private:
 	CpuInfo m_cpuInfo;
 
 	// run loop
-	typedef List<ITickable*>	ITickableList;
+	typedef std::list<ITickable*>	ITickableList;
 	ITickableList m_tickableLists[TickNumber];
 	bool m_canExit;
 };

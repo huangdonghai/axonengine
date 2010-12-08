@@ -19,19 +19,19 @@ struct ConvexSide {
 	bool isSolid;
 };
 
-typedef Sequence<ConvexSide> ConvexSideSeq;
+typedef std::vector<ConvexSide> ConvexSideSeq;
 
 struct Convex {
 	int numPlanes;
 	ConvexSideSeq sides;
 };
-typedef Sequence<Convex> ConvexSeq;
+typedef std::vector<Convex> ConvexSeq;
 
 class VisArea : public Actor {
 public:
 	BoundingBox m_linkedBbox;
 	float m_height;
-	Sequence<Vector3>	points;
+	std::vector<Vector3>	points;
 
 	Portal *m_portals;
 	bool inSun;

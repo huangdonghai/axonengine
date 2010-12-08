@@ -38,13 +38,13 @@ public:
 	void setHaveGlobalLight(bool have);
 	void setFog(const Vector3 &color, float density);
 	void setOceanFog(const Vector3 &color, float density);
-	void setOceanMaterial(const String &matname);
+	void setOceanMaterial(const std::string &matname);
 	void setSunColor(const Color3 &color, float intensity, float specularX);
 	void setCastShadow(bool val);
 	void setSunDir(const Vector3 &dir);
 	void setSkyColor(const Color3 &color, float intensity);
 	void setEnvColor(const Color3 &color, float intensity);
-	void setSkyBoxTexture(const String &matname);
+	void setSkyBoxTexture(const std::string &matname);
 
 	RenderLight *getGlobalLight() const;
 
@@ -73,7 +73,7 @@ private:
 	bool m_haveGlobalLight : 1;
 
 	// skybox
-	String m_skyBoxMatName;
+	std::string m_skyBoxMatName;
 	MeshPrim *m_skybox12;
 	MeshPrim *m_skybox34;
 	MeshPrim *m_skybox5;

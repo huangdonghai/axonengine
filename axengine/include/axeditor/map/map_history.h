@@ -16,7 +16,7 @@ AX_BEGIN_NAMESPACE
 	class AX_API MapHistory : public History {
 	public:
 		MapHistory();
-		MapHistory(const String &msg);
+		MapHistory(const std::string &msg);
 	};
 
 	//--------------------------------------------------------------------------
@@ -25,14 +25,14 @@ AX_BEGIN_NAMESPACE
 
 	class HeightmapHis : public MapHistory {
 	public:
-		HeightmapHis(const String &msg, const Rect &rect, Image *olddata, Image *newdata, MapTerrain *terrain);
+		HeightmapHis(const std::string &msg, const Rect &rect, Image *olddata, Image *newdata, MapTerrain *terrain);
 		virtual ~HeightmapHis();
 
 		// implement Action
 		virtual void doIt();
 		virtual void undo();
 		virtual bool isUndoable();
-		virtual String getName();
+		virtual std::string getName();
 		virtual int getMemoryUsed();
 
 	private:
@@ -55,7 +55,7 @@ AX_BEGIN_NAMESPACE
 		virtual void doIt();
 		virtual void undo();
 		virtual bool isUndoable();
-		virtual String getName();
+		virtual std::string getName();
 		virtual int getMemoryUsed();
 
 	private:
@@ -79,13 +79,13 @@ AX_BEGIN_NAMESPACE
 
 	class TerrainPaintHis : public MapHistory {
 	public:
-		TerrainPaintHis(const String &msg, const Rect &rect, int layerId, Image *olddata, Image *newdata);
+		TerrainPaintHis(const std::string &msg, const Rect &rect, int layerId, Image *olddata, Image *newdata);
 		virtual ~TerrainPaintHis();
 
 		virtual void doIt();
 		virtual void undo();
 		virtual bool isUndoable();
-		virtual String getName();
+		virtual std::string getName();
 		virtual int getMemoryUsed();
 
 	private:

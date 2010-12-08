@@ -115,7 +115,7 @@ void TerrainRaiseTool::doRelease(int x, int y)
 		return;
 
 	// create undo action
-	String msg = "Edit Height";
+	std::string msg = "Edit Height";
 	Image *oldimage = m_terrain->copyOldHeight(m_editedRect);
 	Image *newimage = m_terrain->copyHeight(m_editedRect);
 	m_terrain->writeOldHeight(m_editedRect, newimage);
@@ -490,7 +490,7 @@ void TerrainPaintTool::doRelease(int x, int y)
 		return;
 
 	// create undo action
-	String msg = "mapTerrain Paint";
+	std::string msg = "mapTerrain Paint";
 	Image *newimage = m_layerGen->copyAlpha(m_editedRect);
 	TerrainPaintHis *action = new TerrainPaintHis(msg, m_editedRect, m_layerGen->getLayerId(), m_oldPixel, newimage);
 
@@ -529,7 +529,7 @@ void TerrainEraseTool::doRelease( int x, int y )
 		return;
 
 	// create undo action
-	String msg = "mapTerrain Erase";
+	std::string msg = "mapTerrain Erase";
 	Image *newimage = m_layerGen->copyAlpha(m_editedRect);
 	TerrainPaintHis *action = new TerrainPaintHis(msg, m_editedRect, m_layerGen->getLayerId(), m_oldPixel, newimage);
 

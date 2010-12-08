@@ -19,7 +19,7 @@ AX_BEGIN_NAMESPACE
 	class AX_API MapActor : public MapAgent {
 	public:
 		MapActor();
-		MapActor(const String &type);
+		MapActor(const std::string &type);
 		virtual ~MapActor();
 
 		// implement Actor

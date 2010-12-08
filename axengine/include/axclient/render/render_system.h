@@ -54,7 +54,7 @@ public:
 	void hitTest(Primitive *prim, const Matrix &matrix);
 	HitRecords endHitTest();
 
-	void screenShot(const String &name, const Rect &rect);
+	void screenShot(const std::string &name, const Rect &rect);
 
 	void info();
 	int testArgs(int arg0, float arg1, const Vector3 &arg2, const Color3 &arg3, const Rect &arg4);
@@ -88,7 +88,7 @@ protected:
 	void matlist_f(const CmdArgs &args);
 
 public:
-	String name;
+	std::string name;
 
 private:
 	bool m_isMTrendering;
@@ -104,7 +104,7 @@ private:
 	Selection *m_selection;
 
 	// actor manager registry
-	Sequence<IEntityManager*> m_entityManagers;
+	std::vector<IEntityManager*> m_entityManagers;
 
 	// samplerstates
 	typedef Dict<SamplerStateDesc, SamplerState*> SamplerStateDict;

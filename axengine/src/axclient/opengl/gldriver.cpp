@@ -488,7 +488,7 @@ bool GLdriver::isHDRRendering()
 	return r_hdr.getInteger() && glDriverInfo->caps & RenderDriverInfo::HDR;
 }
 
-RenderTarget *GLdriver::createWindowTarget(Handle wndId, const String &name)
+RenderTarget *GLdriver::createWindowTarget(Handle wndId, const std::string &name)
 {
 	GLwindow *state = new GLwindow(wndId, name);
 	AX_ASSERT(state);
@@ -501,9 +501,9 @@ AX_BEGIN_COMMAND_MAP(GLdriver)
 AX_END_COMMAND_MAP()
 
 
-static const String getImageFilename(const char *ext)
+static const std::string getImageFilename(const char *ext)
 {
-	String filename;
+	std::string filename;
 	char *pattern;
 	int i;
 
@@ -516,7 +516,7 @@ static const String getImageFilename(const char *ext)
 	}
 	if (i==10000) {
 		Printf("getImageFilename: Couldn't create a file\n");
-		return String();
+		return std::string();
 	}
 
 	return filename;
@@ -528,7 +528,7 @@ void GLdriver::dumpTex_f(const CmdArgs &params)
 		Printf("Usage: writeTexture <tex_name>\n");
 		return;
 	}
-	const String &imagename = params.tokened[1];
+	const std::string &imagename = params.tokened[1];
 
 	Texture *tex = new Texture(imagename);
 
@@ -555,7 +555,7 @@ void GLdriver::dumpTex_f(const CmdArgs &params)
 	if (gltex->getFormat().isFloat()) {
 		pixels = new byte_t[width*height*8];
 		glGetTexImage(GL_TEXTURE_2D, 0, GL_BGRA, GL_HALF_FLOAT_ARB, pixels);
-		String filename = getImageFilename("exr");
+		std::string filename = getImageFilename("exr");
 #if 0
 		if (!filename.empty()) {
 			Image::WriteEXR(filename, pixels, width, height);
@@ -565,7 +565,7 @@ void GLdriver::dumpTex_f(const CmdArgs &params)
 	} else if (gltex->getFormat().isDepth()) {
 		pixels = new byte_t[width*height*4];
 		glGetTexImage(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_INT, pixels);
-		String filename = getImageFilename("tga");
+		std::string filename = getImageFilename("tga");
 
 		if (!filename.empty()) {
 			Image::writeTGA(filename, pixels, width, height);
@@ -574,7 +574,7 @@ void GLdriver::dumpTex_f(const CmdArgs &params)
 	} else if (gltex->getFormat() == TexFormat::D24S8) {
 		pixels = new byte_t[width*height*4];
 		glGetTexImage(GL_TEXTURE_2D, 0, GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8_EXT, pixels);
-		String filename = getImageFilename("tga");
+		std::string filename = getImageFilename("tga");
 
 		if (!filename.empty()) {
 			Image::writeTGA(filename, pixels, width, height);
@@ -583,7 +583,7 @@ void GLdriver::dumpTex_f(const CmdArgs &params)
 	} else {
 		pixels = new byte_t[width*height*4];
 		glGetTexImage(GL_TEXTURE_2D, 0, GL_BGRA, GL_UNSIGNED_BYTE, pixels);
-		String filename = getImageFilename("tga");
+		std::string filename = getImageFilename("tga");
 
 		if (!filename.empty()) {
 			Image::writeTGA(filename, pixels, width, height);

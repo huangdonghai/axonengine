@@ -343,14 +343,14 @@ bool ShaderMacro::operator==(const ShaderMacro &rhs) const
 	return true;
 }
 
-String ShaderMacro::toString() const
+std::string ShaderMacro::toString() const
 {
-	String result;
+	std::string result;
 	StringUtil::sprintf(result, "%x %x %x %x", m_data[0], m_data[1], m_data[2], m_data[3]);
 	return result;
 }
 
-void ShaderMacro::fromString( const String &str )
+void ShaderMacro::fromString( const std::string &str )
 {
 	int v = sscanf(str.c_str(), "%x %x %x %x", &m_data[0], &m_data[1], &m_data[2], &m_data[3]);
 	AX_ASSERT(v == 4);

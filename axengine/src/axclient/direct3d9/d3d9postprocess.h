@@ -53,7 +53,7 @@ public:
 	void shadowBlur(D3D9texture *texture, bool is_du);
 #endif
 
-	void issueQueryList(const List<D3D9querymanager::ActiveQuery*>& querylist);
+	void issueQueryList(const std::list<D3D9querymanager::ActiveQuery*>& querylist);
 	void issueBboxQuery(const BoundingBox &bbox);
 
 	void drawLight(Vector3 volume[8], QueuedLight *light);
@@ -63,13 +63,13 @@ public:
 	void measureHistogram(IDirect3DTexture9 *tex, int index);
 	void downscale4x4(IDirect3DTexture9 *tex, const Rect &rect);
 
-	void genericPP(const String &shadername, IDirect3DTexture9 *src);
-	void genericPP(const String &shadername, RenderTarget *target, IDirect3DTexture9 *src);
-	void genericPP(const String &shadername, IDirect3DTexture9 *src1, IDirect3DTexture9 *src2);
-	void genericPP(const String &shadername, RenderTarget *target, IDirect3DTexture9 *src1, IDirect3DTexture9 *src2);
+	void genericPP(const std::string &shadername, IDirect3DTexture9 *src);
+	void genericPP(const std::string &shadername, RenderTarget *target, IDirect3DTexture9 *src);
+	void genericPP(const std::string &shadername, IDirect3DTexture9 *src1, IDirect3DTexture9 *src2);
+	void genericPP(const std::string &shadername, RenderTarget *target, IDirect3DTexture9 *src1, IDirect3DTexture9 *src2);
 
 protected:
-	DX9_Shader *getShader(const String &name);
+	DX9_Shader *getShader(const std::string &name);
 
 private:
 	PostMesh *m_screenQuad;
@@ -86,7 +86,7 @@ private:
 	DX9_Shader *m_shaderDownscale4x4;
 	DX9_Shader *m_shaderQuery;
 
-	Dict<String, DX9_Shader*>	m_genericShaders;
+	Dict<std::string, DX9_Shader*>	m_genericShaders;
 };
 
 AX_END_NAMESPACE

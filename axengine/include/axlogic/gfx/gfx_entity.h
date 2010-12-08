@@ -18,7 +18,7 @@ class GfxEntity : public RenderEntity
 {
 public:
 	GfxEntity();
-	GfxEntity(const String &filename);
+	GfxEntity(const std::string &filename);
 	virtual ~GfxEntity();
 
 	// implement RenderEntity
@@ -37,7 +37,7 @@ public:
 protected:
 
 private:
-	List<GfxObject*> m_objects;
+	std::list<GfxObject*> m_objects;
 	Animator *m_animator;
 };
 

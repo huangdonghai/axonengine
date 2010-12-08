@@ -15,7 +15,7 @@ AX_BEGIN_NAMESPACE
 
 enum { LAYER_TEST = 1 };
 
-PhysicsRagdoll::PhysicsRagdoll(const String &name) {
+PhysicsRagdoll::PhysicsRagdoll(const std::string &name) {
 	m_instance = nullptr;
 	m_ragdollToSkeletal = nullptr;
 	m_skeletalToRagdoll = nullptr;

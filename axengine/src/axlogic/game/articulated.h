@@ -28,7 +28,7 @@ public:
 
 protected:
 	// properties
-	String m_ragdollName;
+	std::string m_ragdollName;
 
 protected:
 	PhysicsRagdoll *m_ragdoll;

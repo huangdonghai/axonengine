@@ -47,12 +47,12 @@ public:
 
 	void reset();
 
-	String getTitle() const;
-	String getFilename() const;
+	std::string getTitle() const;
+	std::string getFilename() const;
 	bool createNew();
-	bool load(const String &filename);
+	bool load(const std::string &filename);
 	bool save();
-	bool saveAs(const String &filename);
+	bool saveAs(const std::string &filename);
 	bool isDirty() const { return m_isDirty; }
 	bool isLoading() const { return m_isLoading; }
 
@@ -71,7 +71,7 @@ public:
 
 	// history
 	void addHistory(Action *his);
-	void beginHis(const String &msg) { m_historyManager.begin(this, msg); }
+	void beginHis(const std::string &msg) { m_historyManager.begin(this, msg); }
 	void endHis() { m_historyManager.end(); }
 	void undo();
 	void redo();
@@ -88,7 +88,7 @@ public:
 	void addSelection(const AgentList &elist, bool undoable=true);
 
 	// properties
-	void setActorProperty(const String &propName, const Variant &value);
+	void setActorProperty(const std::string &propName, const Variant &value);
 
 	// state
 	State *getState() const { return m_state; }

@@ -111,7 +111,7 @@ protected:
 
 private:
 	bool m_dirty;
-	Sequence<Field> m_fields;
+	std::vector<Field> m_fields;
 	int m_index; // register index in dx9, buffer index in dx10,dx11
 	FloatSeq m_data;
 	FloatSeq m_default;
@@ -306,8 +306,8 @@ public:
 	size_t hash() const;
 	bool operator==(const ShaderMacro &rhs) const;
 
-	String toString() const;
-	void fromString(const String &str);
+	std::string toString() const;
+	void fromString(const std::string &str);
 
 	static void initDefs();
 	static const char *getMacroName(int f);
@@ -327,14 +327,14 @@ struct Technique {
 
 	AX_DECLARE_ENUM(Technique);
 
-	String toString();
+	std::string toString();
 };
 
 //-------------------------------------------------------------------------
 
-inline String Technique::toString()
+inline std::string Technique::toString()
 {
-	String result("Technique");
+	std::string result("Technique");
 
 #define ENUMDECL(t) case t: result += #t; break;
 	switch (t) {
@@ -377,7 +377,7 @@ public:
 	bool m_needClearDepth;
 	bool m_needHdr;
 };
-typedef Sequence<SamplerInfo*> SamplerInfos;
+typedef std::vector<SamplerInfo*> SamplerInfos;
 
 
 //-------------------------------------------------------------------------

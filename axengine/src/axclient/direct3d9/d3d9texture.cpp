@@ -192,7 +192,7 @@ D3D9Texture::~D3D9Texture()
 #endif
 }
 
-bool D3D9Texture::doInit(const String &name, intptr_t arg)
+bool D3D9Texture::doInit(const std::string &name, intptr_t arg)
 {
 	AX_ASSERT(!m_initialized);
 
@@ -371,9 +371,9 @@ void D3D9Texture::setHardwareShadowMap(bool enable)
 	m_hardwareShadowMap = enable;
 }
 
-void D3D9Texture::saveToFile(const String &filename)
+void D3D9Texture::saveToFile(const std::string &filename)
 {
-	String ospath = g_fileSystem->modPathToOsPath(filename);
+	std::string ospath = g_fileSystem->modPathToOsPath(filename);
 	HRESULT hr;
 	V(D3DXSaveTextureToFileW(u2w(ospath).c_str(), D3DXIFF_DDS, m_object, 0));
 }
@@ -432,7 +432,7 @@ TexFormat D3D9Texture::getFormat()
 	return m_format;
 }
 
-bool D3D9new TextureFile2D(const String &filename)
+bool D3D9new TextureFile2D(const std::string &filename)
 {
 	D3D9_SCOPELOCK;
 
@@ -630,8 +630,8 @@ AX_BEGIN_COMMAND_MAP(D3D9texturemanager)
 	AX_COMMAND_ENTRY("dumpTex",	dumpTex_f)
 AX_END_COMMAND_MAP()
 
-static const String getImageFilename(const char *ext) {
-	String filename;
+static const std::string getImageFilename(const char *ext) {
+	std::string filename;
 	char *pattern;
 	int i;
 
@@ -644,7 +644,7 @@ static const String getImageFilename(const char *ext) {
 	}
 	if (i==10000) {
 		Printf("getImageFilename: Couldn't create a file\n");
-		return String();
+		return std::string();
 	}
 
 	return filename;
@@ -666,7 +666,7 @@ void D3D9texturemanager::dumpTex_f(const CmdArgs &params)
 		Printf("Usage: dumpTex <tex_name>\n");
 		return;
 	}
-	const String &texname = params.tokened[1];
+	const std::string &texname = params.tokened[1];
 
 	Texture *tex = new Texture(texname);
 
@@ -675,7 +675,7 @@ void D3D9texturemanager::dumpTex_f(const CmdArgs &params)
 		return;
 	}
 
-	String filename = getImageFilename("dds");
+	std::string filename = getImageFilename("dds");
 
 	tex->saveToFile(filename);
 }

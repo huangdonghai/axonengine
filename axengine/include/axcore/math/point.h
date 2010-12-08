@@ -146,7 +146,7 @@ struct AX_API Point {
 		return &x;
 	}
 
-	String toString() const;
+	std::string toString() const;
 	bool fromString(const char *str);
 };
 

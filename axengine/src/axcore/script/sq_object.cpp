@@ -225,42 +225,42 @@ bool sqObject::setValue(const sqObject &key, const sqObject &val)
 	sq_settop(VM, top); \
 	return ret;
 
-bool sqObject::setValue(const String &key, const sqObject &val)
+bool sqObject::setValue(const std::string &key, const sqObject &val)
 {
 	_SETVALUE_STR_BEGIN
 	sq_pushobject(VM, val.m_obj);
 	_SETVALUE_STR_END
 }
 
-bool sqObject::setValue(const String &key, int n)
+bool sqObject::setValue(const std::string &key, int n)
 {
 	_SETVALUE_STR_BEGIN
 	sq_pushinteger(VM, n);
 	_SETVALUE_STR_END
 }
 
-bool sqObject::setValue(const String &key, float f)
+bool sqObject::setValue(const std::string &key, float f)
 {
 	_SETVALUE_STR_BEGIN
 	sq_pushfloat(VM, f);
 	_SETVALUE_STR_END
 }
 
-bool sqObject::setValue(const String &key, const SQChar *s)
+bool sqObject::setValue(const std::string &key, const SQChar *s)
 {
 	_SETVALUE_STR_BEGIN
 	sq_pushstring(VM, s,-1);
 	_SETVALUE_STR_END
 }
 
-bool sqObject::setValue(const String &key, bool b)
+bool sqObject::setValue(const std::string &key, bool b)
 {
 	_SETVALUE_STR_BEGIN
 	sq_pushbool(VM, b);
 	_SETVALUE_STR_END
 }
 
-bool sqObject::setValue( const String &key, const ConstRef &ref )
+bool sqObject::setValue( const std::string &key, const ConstRef &ref )
 {
 	_SETVALUE_STR_BEGIN
 		sqVM::pushMeta(VM, ref);
@@ -269,14 +269,14 @@ bool sqObject::setValue( const String &key, const ConstRef &ref )
 
 // === BEGIN User Pointer, User Data ===
 
-bool sqObject::setUserPointer(const String &key, SQUserPointer up)
+bool sqObject::setUserPointer(const std::string &key, SQUserPointer up)
 {
 	_SETVALUE_STR_BEGIN
 	sq_pushuserpointer(VM, up);
 	_SETVALUE_STR_END
 }
 
-SQUserPointer sqObject::getUserPointer(const String &key)
+SQUserPointer sqObject::getUserPointer(const std::string &key)
 {
 	SQUserPointer ret = NULL;
 	if (getSlot(key)) {
@@ -307,7 +307,7 @@ SQUserPointer sqObject::getUserPointer(int key)
 
 // === User Data ===
 
-bool sqObject::newUserData(const String &key, int size, SQUserPointer * typetag)
+bool sqObject::newUserData(const std::string &key, int size, SQUserPointer * typetag)
 {
 	_SETVALUE_STR_BEGIN
 		sq_newuserdata(VM, size);
@@ -317,7 +317,7 @@ bool sqObject::newUserData(const String &key, int size, SQUserPointer * typetag)
 	_SETVALUE_STR_END
 }
 
-bool sqObject::getUserData(const String &key, SQUserPointer * data, SQUserPointer * typetag)
+bool sqObject::getUserData(const std::string &key, SQUserPointer * data, SQUserPointer * typetag)
 {
 	bool ret = false;
 	if (getSlot(key)) {
@@ -329,7 +329,7 @@ bool sqObject::getUserData(const String &key, SQUserPointer * data, SQUserPointe
 	return ret;
 }
 
-bool sqObject::rawGetUserData(const String &key, SQUserPointer * data, SQUserPointer * typetag)
+bool sqObject::rawGetUserData(const std::string &key, SQUserPointer * data, SQUserPointer * typetag)
 {
 	bool ret = false;
 	if (rawGetSlot(key)) {
@@ -470,7 +470,7 @@ bool sqObject::getBool(int key) const
 	return ret ? true : false;
 }
 
-bool sqObject::exists(const String &key) const
+bool sqObject::exists(const std::string &key) const
 {
 	if (getSlot(key)) {
 		sq_pop(VM, 2);
@@ -503,7 +503,7 @@ bool sqObject::rawGetSlot(const SQChar *name, int size) const {
 	return false;
 } // sqObject::rawGetSlot
 
-sqObject sqObject::getValue(const String &key)const
+sqObject sqObject::getValue(const std::string &key)const
 {
 	sqObject ret;
 	if (getSlot(key)) {
@@ -514,7 +514,7 @@ sqObject sqObject::getValue(const String &key)const
 	return ret;
 }
 
-float sqObject::getFloat(const String &key) const
+float sqObject::getFloat(const std::string &key) const
 {
 	float ret = 0.0f;
 	if (getSlot(key)) {
@@ -525,7 +525,7 @@ float sqObject::getFloat(const String &key) const
 	return ret;
 }
 
-int sqObject::getInt(const String &key) const
+int sqObject::getInt(const std::string &key) const
 {
 	int ret = 0;
 	if (getSlot(key)) {
@@ -536,7 +536,7 @@ int sqObject::getInt(const String &key) const
 	return ret;
 }
 
-const SQChar *sqObject::getString(const String &key) const
+const SQChar *sqObject::getString(const std::string &key) const
 {
 	const SQChar *ret = NULL;
 
@@ -549,7 +549,7 @@ const SQChar *sqObject::getString(const String &key) const
 	return ret;
 }
 
-bool sqObject::getBool(const String &key) const
+bool sqObject::getBool(const std::string &key) const
 {
 	SQBool ret = false;
 
@@ -587,7 +587,7 @@ bool sqObject::setInstanceUP(SQUserPointer up)
 	return true;
 }
 
-sqObject sqObject::getAttributes(const String &key)
+sqObject sqObject::getAttributes(const std::string &key)
 {
 	sqObject ret;
 	int top = sq_gettop(VM);

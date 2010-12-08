@@ -23,7 +23,7 @@ public:
 	bool isTable() const;
 	bool isInstance() const;
 
-	ScriptValue getValue(const String &name) const;
+	ScriptValue getValue(const std::string &name) const;
 
 	sqObject& getSqObject() { return *m_d; }
 	const sqObject& getSqObject() const { return *m_d; }

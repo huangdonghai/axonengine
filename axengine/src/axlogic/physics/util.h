@@ -127,26 +127,26 @@ AX_BEGIN_NAMESPACE
 		}
 	}
 
-	inline String h2x(hkxMaterial *mat) {
+	inline std::string h2x(hkxMaterial *mat) {
 		if (!mat) {
-			return String();
+			return std::string();
 		}
 
 		if (!mat->m_numStages) {
-			return String();
+			return std::string();
 		}
 
 
 		if (mat->m_stages->m_texture.m_class != &hkxTextureFileClass) {
-			return String();
+			return std::string();
 		}
 
 		hkxTextureFile *texfile = (hkxTextureFile*)mat->m_stages->m_texture.m_object;
 		if (!texfile) {
-			return String();
+			return std::string();
 		}
 
-		String result = PathUtil::getRelativePath(l2u(texfile->m_filename));
+		std::string result = PathUtil::getRelativePath(l2u(texfile->m_filename));
 		return PathUtil::removeExt(result);
 	}
 

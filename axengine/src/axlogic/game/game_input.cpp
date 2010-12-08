@@ -91,7 +91,7 @@ void GameInput::runFrame(int msec)
 				if (e->delta<0)
 					key = InputKey::MouseWheelDown;
 
-				Dict<InputKey,String>::const_iterator it = m_keybinding.find(key);
+				Dict<InputKey,std::string>::const_iterator it = m_keybinding.find(key);
 				if (it == m_keybinding.end()) {
 					continue;
 				}
@@ -104,7 +104,7 @@ void GameInput::runFrame(int msec)
 			continue;
 		}
 
-		Dict<InputKey,String>::const_iterator it = m_keybinding.find(e->key);
+		Dict<InputKey,std::string>::const_iterator it = m_keybinding.find(e->key);
 		if (it == m_keybinding.end()) {
 			continue;
 		}
@@ -286,7 +286,7 @@ void GameInput::bind_f(const CmdArgs &args)
 
 	InputKey k = InputKey::getKey(tokens[1]);
 	if (tokens.size() == 2) {
-		Dict<InputKey,String>::const_iterator it = m_keybinding.find(k);
+		Dict<InputKey,std::string>::const_iterator it = m_keybinding.find(k);
 		if (it == m_keybinding.end()) {
 			return;
 		}
@@ -300,7 +300,7 @@ void GameInput::bind_f(const CmdArgs &args)
 
 void GameInput::bindlist_f(const CmdArgs &args)
 {
-	Dict<InputKey,String>::const_iterator it = m_keybinding.begin();
+	Dict<InputKey,std::string>::const_iterator it = m_keybinding.begin();
 
 	int count = 0;
 	while (it != m_keybinding.end()) {

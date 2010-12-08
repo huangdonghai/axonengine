@@ -56,8 +56,8 @@ public:
 	StaticFixed();
 	virtual ~StaticFixed();
 
-	String get_model() const { return m_modelName; }
-	void set_model(const String &val);
+	std::string get_model() const { return m_modelName; }
+	void set_model(const std::string &val);
 
 protected:
 	// implement GameObject
@@ -65,7 +65,7 @@ protected:
 	virtual void onReset();
 
 protected:
-	String m_modelName;
+	std::string m_modelName;
 	HavokModel *m_model;
 	PhysicsRigid *m_rigid;
 };
@@ -115,11 +115,11 @@ public:
 	virtual void onReload();
 	virtual void onReset();
 
-	String get_tree() const { return m_treeName; }
-	void set_tree(const String &val);
+	std::string get_tree() const { return m_treeName; }
+	void set_tree(const std::string &val);
 
 protected:
-	String m_treeName;
+	std::string m_treeName;
 	RenderTree *m_renderTree;
 };
 #endif // AX_CONFIG_OPTION_USE_SPEEDTREE_40

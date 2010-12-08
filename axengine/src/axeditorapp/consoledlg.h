@@ -26,7 +26,7 @@ public:
 
 	// implement ILogHandler
 //	virtual void Print(const Wchar *text);
-	virtual void print(const String &str);
+	virtual void print(const std::string &str);
 	virtual void print(const char *text);
 
 private slots:

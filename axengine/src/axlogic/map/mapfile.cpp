@@ -234,7 +234,7 @@ inline void Indent(File*f, const char *ind) {
 
 void MapMaterialDef::writeToFile(File *f, int indent) {
 #define INDENT Indent(f, ind.c_str())
-	String ind(indent*2, ' ');
+	std::string ind(indent*2, ' ');
 
 	INDENT;f->printf("<materialDef maxLayerId=\"%d\" numLayers=\"%d\">\n", m_maxLayerId, m_numLayers);
 
@@ -310,7 +310,7 @@ void MapEnvDef::parseXml(const TiXmlElement *node) {
 
 void MapEnvDef::writeToFile(File *f, int indent/*=0 */) {
 #define INDENT Indent(f, ind.c_str())
-	String ind(indent*2, ' ');
+	std::string ind(indent*2, ' ');
 
 	INDENT;f->printf("<envDef\n");
 	writeProperties(f, indent++);

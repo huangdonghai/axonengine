@@ -56,7 +56,7 @@ MapAgent *MapAgent::clone() const {
 
 
 void MapAgent::writeXml(File *f, int indent) const {
-	String indstr(indent*2, ' ');
+	std::string indstr(indent*2, ' ');
 #define INDENT if (indent) f->printf("%s", indstr.c_str());
 
 	INDENT; f->printf("<actor type=\"%s\" id=\"%d\"\n", typeToString(getType()), m_id);
@@ -113,7 +113,7 @@ MapAgent::Type MapAgent::stringToType(const char *str) {
 	return kNone;
 }
 
-Variant MapAgent::getProperty( const String &propname )
+Variant MapAgent::getProperty( const std::string &propname )
 {
 	Variant result;
 
@@ -123,7 +123,7 @@ Variant MapAgent::getProperty( const String &propname )
 	return result;
 }
 
-void MapAgent::setProperty(const String &name, const Variant &value)
+void MapAgent::setProperty(const std::string &name, const Variant &value)
 {
 	if (m_gameObj) {
 		m_gameObj->setProperty(name.c_str(), value);
@@ -175,7 +175,7 @@ MapStatic::MapStatic() {
 	m_gameFixed->set_objectName(g_scriptSystem->generateObjectName(PathUtil::getName(mapState->staticModelName)));
 }
 
-MapStatic::MapStatic(const String &nametemplate) {
+MapStatic::MapStatic(const std::string &nametemplate) {
 	m_gameFixed = new StaticFixed();
 	m_gameObj = m_gameFixed;
 
@@ -227,7 +227,7 @@ MapSpeedTree::MapSpeedTree() {
 	m_gameFixed->set_objectName(g_scriptSystem->generateObjectName(PathUtil::getName(mapState->treeFilename)));
 }
 
-MapSpeedTree::MapSpeedTree(const String &nametemplate) {
+MapSpeedTree::MapSpeedTree(const std::string &nametemplate) {
 	m_gameFixed = new TreeFixed();
 	m_gameObj = m_gameFixed;
 

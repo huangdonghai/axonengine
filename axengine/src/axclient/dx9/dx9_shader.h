@@ -103,7 +103,7 @@ public:
 	D3DXHANDLE m_param;
 	int m_register;
 };
-typedef Sequence<DX9_SamplerInfo*>	DX9_SamplerInfos;
+typedef std::vector<DX9_SamplerInfo*>	DX9_SamplerInfos;
 
 class DX9_Pass
 {
@@ -148,8 +148,8 @@ private:
 	DX9_SamplerInfos m_batchSamplers;
 
 	// local parameter
-	Dict<String,ParamDesc> m_vsParameters;
-	Dict<String,ParamDesc> m_psParameters;
+	Dict<std::string,ParamDesc> m_vsParameters;
+	Dict<std::string,ParamDesc> m_psParameters;
 };
 
 class DX9_Technique
@@ -184,7 +184,7 @@ public:
 	~DX9_Shader();
 
 	// implement Shader
-	bool init(const String &name, const ShaderMacro &macro = g_shaderMacro);
+	bool init(const std::string &name, const ShaderMacro &macro = g_shaderMacro);
 	bool isDepthWrite() const;
 	bool haveTextureTarget() const;
 	int getNumSampler() const;
@@ -220,7 +220,7 @@ protected:
 
 private:
 	LPD3DXEFFECT m_object;              // Effect object
-	String m_keyString;
+	std::string m_keyString;
 
 	D3DXHANDLE m_d3dxTechniques[Technique::Number];
 	IDirect3DTexture9 *m_samplerBound[MaterialTextureId::MaxType];
@@ -246,10 +246,10 @@ public:
 	DX9_ShaderManager();
 	~DX9_ShaderManager();
 
-	DX9_Shader *findShader(const String &name, const ShaderMacro &macro = g_shaderMacro);
+	DX9_Shader *findShader(const std::string &name, const ShaderMacro &macro = g_shaderMacro);
 	DX9_Shader *findShader(const FixedString &nameId, const ShaderMacro &macro);
-	void saveShaderCache(const String &name);
-	void applyShaderCache(const String &name);
+	void saveShaderCache(const std::string &name);
+	void applyShaderCache(const std::string &name);
 
 	const ShaderInfo *findShaderInfo(const FixedString &key);
 

@@ -23,7 +23,7 @@ public:
 	TextureAtlas();
 	~TextureAtlas();
 
-	void initialize(const String &name, int chunk_width, int chunk_height, int side_length, TexFormat format);
+	void initialize(const std::string &name, int chunk_width, int chunk_height, int side_length, TexFormat format);
 	void finalize();
 	uint_t newFrame();
 	bool isChunkResident(int id);
@@ -41,7 +41,7 @@ protected:
 
 
 private:
-	String m_name;
+	std::string m_name;
 	bool m_initialized;
 	int m_frameNum;
 	int m_numTextures;

@@ -49,7 +49,7 @@ public:
 	virtual bool isInRenderingThread() { return false; }
 
 	// resource management
-	virtual RenderTarget *createWindowTarget(Handle wndId, const String &name);
+	virtual RenderTarget *createWindowTarget(Handle wndId, const std::string &name);
 #if 0
 	virtual Target *getColorTarget(int width, int height);
 	virtual Target *getDepthTarget(int width, int height);
@@ -81,7 +81,7 @@ public:
 	virtual int getQueryResult( int id ){ return 0; }
 
 public:
-	static Handle createGLWindow(const String &wnd_name);
+	static Handle createGLWindow(const std::string &wnd_name);
 	
 protected:
 	// console command

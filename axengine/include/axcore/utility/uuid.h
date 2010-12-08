@@ -27,8 +27,8 @@ public:
 			m_dwords[3] == rhs.m_dwords[3];
 	}
 
-	Uuid &fromString(const String &str);
-	String toString();
+	Uuid &fromString(const std::string &str);
+	std::string toString();
 
 	size_t hash() const;
 

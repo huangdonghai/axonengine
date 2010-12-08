@@ -12,8 +12,8 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-String Rgb::toString() const {
-	String result;
+std::string Rgb::toString() const {
+	std::string result;
 	StringUtil::sprintf(result, "%d %d %d", r, g, b);
 	return result;
 }
@@ -75,8 +75,8 @@ const Rgba Rgba::ColorTable[]= {
 	White ,	
 };
 
-String Rgba::toString() const {
-	String result;
+std::string Rgba::toString() const {
+	std::string result;
 
 	StringUtil::sprintf(result, "%d %d %d %d", r,g,b,a);
 
@@ -91,9 +91,9 @@ void Rgba::fromString(const char *str)
 	r = _r; g = _g; b = _b; a = _a;
 }
 
-String Color3::toString() const
+std::string Color3::toString() const
 {
-	String result;
+	std::string result;
 	StringUtil::sprintf(result, "%f %f %f", r, g, b);
 	return result;
 }
@@ -113,9 +113,9 @@ bool Color3::fromString(const char *str)
 }
 
 
-String Color4::toString() const
+std::string Color4::toString() const
 {
-	String result;
+	std::string result;
 	StringUtil::sprintf(result, "%f %f %f %f", r, g, b, a);
 	return result;
 }

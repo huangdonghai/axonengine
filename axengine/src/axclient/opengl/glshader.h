@@ -61,14 +61,14 @@ public:
 	CGparameter m_param;
 };
 
-typedef Sequence<CGsamplerann*>	CGsamplerannSeq;
+typedef std::vector<CGsamplerann*>	CGsamplerannSeq;
 
 class CGpixeltotexel {
 public:
 	CGparameter m_param;
 	FloatSeq m_pixelValue;
 };
-typedef Sequence<CGpixeltotexel>	CGpixeltotexelSeq;
+typedef std::vector<CGpixeltotexel>	CGpixeltotexelSeq;
 
 
 //--------------------------------------------------------------------------
@@ -81,7 +81,7 @@ public:
 	virtual ~GLshader();
 
 	// implement Shader
-	virtual bool doInit(const String &name, const ShaderMacro &macro = g_shaderMacro);
+	virtual bool doInit(const std::string &name, const ShaderMacro &macro = g_shaderMacro);
 	virtual bool isDepthWrite() const;
 	virtual bool haveTextureTarget() const;
 	virtual int getNumSampler() const;
@@ -140,7 +140,7 @@ protected:
 	void setUniformCache(GLuniform *uc);
 
 private:
-	String m_name;
+	std::string m_name;
 	CGeffect m_cgfx;
 	CGtechnique m_techniques[Technique::Number];
 	CGparameter m_sysSamplers[MaterialTextureId::MaxType];
@@ -171,15 +171,15 @@ public:
 	GLshadermanager();
 	virtual ~GLshadermanager();
 
-	virtual Shader*findShader(const String &name, const ShaderMacro &macro = g_shaderMacro);
+	virtual Shader*findShader(const std::string &name, const ShaderMacro &macro = g_shaderMacro);
 	virtual Shader *findShader(const FixedString &nameId, const ShaderMacro &macro);
-	virtual void saveShaderCache(const String &name);
-	virtual void applyShaderCache(const String &name);
+	virtual void saveShaderCache(const std::string &name);
+	virtual void applyShaderCache(const std::string &name);
 
-	GLshader *findShaderGL(const String &name, const ShaderMacro &macro = g_shaderMacro);
+	GLshader *findShaderGL(const std::string &name, const ShaderMacro &macro = g_shaderMacro);
 
 private:
-	typedef Dict<String,Dict<ShaderMacro,GLshader*> > ShaderPool;
+	typedef Dict<std::string,Dict<ShaderMacro,GLshader*> > ShaderPool;
 	ShaderPool m_shaderPool;
 	GLshader *m_defaulted;
 

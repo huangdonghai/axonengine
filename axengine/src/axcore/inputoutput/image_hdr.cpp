@@ -555,7 +555,7 @@ int RGBE_ReadPixels_Raw_RLE(File *fp, byte_t *data, int scanline_width, int num_
 }
 
 bool
-Image::loadFile_hdr(const String &filename) {
+Image::loadFile_hdr(const std::string &filename) {
 	clear();
 
 	/* load file */ 

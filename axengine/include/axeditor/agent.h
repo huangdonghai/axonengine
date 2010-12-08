@@ -30,8 +30,8 @@ public:
 
 	virtual BoundingBox getBoundingBox() = 0;
 
-	virtual Variant getProperty(const String &propname) = 0;
-	virtual void setProperty(const String &propname, const Variant &value) = 0;
+	virtual Variant getProperty(const std::string &propname) = 0;
+	virtual void setProperty(const std::string &propname, const Variant &value) = 0;
 	virtual void doPropertyChanged() = 0;
 
 	virtual Rgb getColor() const = 0;
@@ -76,7 +76,7 @@ protected:
 // class AgentList
 //--------------------------------------------------------------------------
 
-class AX_API AgentList : public List<Agent*> {
+class AX_API AgentList : public std::list<Agent*> {
 public:
 	bool containsOne() const;	// if contains one object, return true
 	void beginTransform() const;
@@ -91,7 +91,7 @@ public:
 	const Matrix3 &getBackAxis() const;
 	Vector3 getFrontOrigin() const;
 	const Matrix3 &getFrontAxis() const;
-	void setNodeProperty(const String &propname, const Variant &value) const;
+	void setNodeProperty(const std::string &propname, const Variant &value) const;
 	void doPropertyChanged() const;
 	void setColor(Rgb val) const;
 

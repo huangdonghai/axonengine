@@ -166,7 +166,7 @@ struct QueuedLight {
 	QueuedShadow *shadowInfo;
 };
 
-typedef Sequence<RenderLight*> LightSeq;
+typedef std::vector<RenderLight*> LightSeq;
 #endif
 
 AX_END_NAMESPACE

@@ -95,7 +95,7 @@ bool ScriptValue::isTable() const
 	return m_d->isTable();
 }
 
-ScriptValue ScriptValue::getValue( const String &name ) const
+ScriptValue ScriptValue::getValue( const std::string &name ) const
 {
 	return m_d->getValue(name);
 }

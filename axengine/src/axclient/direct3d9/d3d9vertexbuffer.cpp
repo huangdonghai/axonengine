@@ -365,7 +365,7 @@ D3D9VertDecl::D3D9VertDecl(D3D9VertexBufferManager *manager, D3D9VertexObject::V
 
 	// apply offset
 	int c = 0;
-	Sequence<D3DVERTEXELEMENT9> veiseq;
+	std::vector<D3DVERTEXELEMENT9> veiseq;
 
 	for (D3DVERTEXELEMENT9 *ve = &veinfo.ve[0]; ve->Stream != 0xff; ve++, c++) {
 		ve->Offset = offset + veinfo.offset[c];

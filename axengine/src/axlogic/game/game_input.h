@@ -97,7 +97,7 @@ private:
 	};
 
 	Button m_buttons[ButtonMax];
-	Dict<InputKey,String>	m_keybinding;
+	Dict<InputKey,std::string>	m_keybinding;
 
 	int m_frameMsec;
 

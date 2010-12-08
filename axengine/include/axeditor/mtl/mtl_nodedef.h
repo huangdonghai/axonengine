@@ -51,14 +51,14 @@ public:
 	bool parseXml(const TiXmlElement *elem);
 
 	static NodeKind stringToKind(const char *str);
-	static const Sequence<MtlNodeDef>& getNodeDefs();
+	static const std::vector<MtlNodeDef>& getNodeDefs();
 	
 private:
 	FixedString m_name;
 	NodeKind m_nodeKind;
-	Sequence<MtlSocketDef> m_inSockets;
-	Sequence<MtlSocketDef> m_outSockets;
-	String m_template;
+	std::vector<MtlSocketDef> m_inSockets;
+	std::vector<MtlSocketDef> m_outSockets;
+	std::string m_template;
 };
 
 

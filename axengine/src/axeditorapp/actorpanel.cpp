@@ -61,7 +61,7 @@ void ActorPanel::doNotify(IObservable *subject, int arg ) {
 		const ScriptClass *ci = actor->getGameObject()->getScriptClass();
 		if (ci ) {
 			ui.scriptClass->setText(u2q(ci->getName()) );
-			QString filename = u2q(String("scripts/") + ci->getName().toString());
+			QString filename = u2q(std::string("scripts/") + ci->getName().toString());
 
 			for (int i = 0; i < filename.size(); i++ ) {
 				if (filename[i] == '.' ) {

@@ -118,7 +118,7 @@ void GameObject::doDebugRender() const
 
 void GameObject::writeXml(File *f, int indent/*=0 */)
 {
-	String indstr(indent*2, ' ');
+	std::string indstr(indent*2, ' ');
 #define INDENT if (indent) f->printf("%s", indstr.c_str());
 
 	INDENT; f->printf("<node className=\"%s\"\n", this->getClassName().c_str());

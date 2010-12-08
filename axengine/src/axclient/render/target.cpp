@@ -26,13 +26,13 @@ RenderTarget::RenderTarget(int width, int height, TexFormat format)
 	m_gbuffer = 0;
 	m_lightBuffer = 0;
 
-	String texname;
+	std::string texname;
 	StringUtil::sprintf(texname, "_render_target_%d_%d_%d", m_width, m_height, g_system->generateId());
 
 	m_texture = new Texture(texname, format, width, height, Texture::IF_RenderTarget);
 }
 
-RenderTarget::RenderTarget(Handle hwnd, const String &debugname)
+RenderTarget::RenderTarget(Handle hwnd, const std::string &debugname)
 {
 	m_type = kWindow;
 	m_wndId = hwnd;
@@ -184,7 +184,7 @@ void RenderTargetManager::freeReal(RenderTarget *target)
 
 ReflectionMap *RenderTargetManager::findReflection(RenderWorld *world, RenderEntity *actor, Primitive *prim, int width, int height)
 {
-	List<ReflectionMap*>::iterator it = m_reflectionTargets.begin();
+	std::list<ReflectionMap*>::iterator it = m_reflectionTargets.begin();
 
 	ReflectionMap *reflTarget = 0;
 	for (; it != m_reflectionTargets.end(); ++it) {

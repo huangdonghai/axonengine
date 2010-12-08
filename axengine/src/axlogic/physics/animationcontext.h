@@ -25,7 +25,7 @@ class AnimationChannel {
 public:
 	friend class AnimationContext;
 
-	AnimationChannel(AnimationContext *context, int index, const String &name, const StringSeq &bones);
+	AnimationChannel(AnimationContext *context, int index, const std::string &name, const StringSeq &bones);
 	~AnimationChannel();
 
 	void step(int msec);
@@ -38,21 +38,21 @@ protected:
 	void playCycle(int anim);
 	void playAnim(int anim);
 	bool isAnimDone(float timeleft);
-	void switchState(const String &state, float easein);
+	void switchState(const std::string &state, float easein);
 
 private:
 	// assets
 	AnimationContext *m_context;
 	int m_index;
-	String m_channelName;
+	std::string m_channelName;
 	StringSeq m_bones;
 	HavokAnimator *m_animator;
 	HavokPose *m_pose;
-	Sequence<HavokAnimation*> m_animations;
+	std::vector<HavokAnimation*> m_animations;
 
 	// runtime
 	hkReal m_currentTime;
-	String m_state;
+	std::string m_state;
 	float m_easeinDuration;
 	HavokAnimation *m_currentAnimation;
 };
@@ -76,7 +76,7 @@ public:
 	AnimationContext();
 	virtual ~AnimationContext();
 
-	void initFromLua(const String &luaobj);
+	void initFromLua(const std::string &luaobj);
 
 	HavokPose *getPose() const;
 
@@ -89,27 +89,27 @@ protected:
 	void initAnimations();
 
 	// script method
-	void playCycle(const String &anim);
-	void playCycleSync(const String &anim, int syncState); // play cycled sync to other state
-	void playAnim(const String &anim);
+	void playCycle(const std::string &anim);
+	void playCycleSync(const std::string &anim, int syncState); // play cycled sync to other state
+	void playAnim(const std::string &anim);
 
 	bool isAnimDone(float timeleft);
 
-	void switchState(const String &state, float easein);
+	void switchState(const std::string &state, float easein);
 
 	void clear();
 
 private:
 	enum { MAX_CHANNELS = 4, MAX_BONES = 256 };
 
-	String m_lua;
+	std::string m_lua;
 	int m_numChannels;
 	AnimationChannel *m_channels[MAX_CHANNELS];
 
 	// assets
 	HavokRig *m_rig;
 	int m_boneChannelMap[MAX_BONES]; // identify each bones channel
-	Dict<String,int> m_animDict; // map animations name and filename
+	Dict<std::string,int> m_animDict; // map animations name and filename
 	StringSeq m_animations;
 
 	// runtime

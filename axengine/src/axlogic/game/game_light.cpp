@@ -13,11 +13,11 @@ read the license and understand and accept it fully.
 AX_BEGIN_NAMESPACE
 
 void test() {
-	String abc;
-	const String& cr = abc;
+	std::string abc;
+	const std::string& cr = abc;
 
-	int t1 = GetVariantType_<String>();
-	int t2 = GetVariantType_<remove_const_reference<const String&>::type>();
+	int t1 = GetVariantType_<std::string>();
+	int t2 = GetVariantType_<remove_const_reference<const std::string&>::type>();
 }
 
 GameLight::GameLight()

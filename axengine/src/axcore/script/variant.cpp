@@ -77,7 +77,7 @@ public:
 		CANCAST(bool);
 		CANCAST(int);
 		CANCAST(float);
-		CANCAST(String);
+		CANCAST(std::string);
 		CANCAST(ObjectStar);
 		CANCAST(Vector3);
 		CANCAST(Color3);
@@ -125,7 +125,7 @@ static Variant::TypeHandler *s_typeHandlers[Variant::kMaxType] = {
 	NEW_TH(bool),
 	NEW_TH(int),
 	NEW_TH(float),
-	NEW_TH(String),
+	NEW_TH(std::string),
 	NEW_TH(ObjectStar),
 	NEW_TH(Vector3),
 	NEW_TH(Color3),
@@ -137,9 +137,9 @@ static Variant::TypeHandler *s_typeHandlers[Variant::kMaxType] = {
 AX_STATIC_ASSERT(12==Variant::kMaxType);
 #undef NEW_TH
 
-String Variant::toString() const
+std::string Variant::toString() const
 {
-	String result;
+	std::string result;
 	switch (m_type) {
 	case kVoid:
 		break;
@@ -153,7 +153,7 @@ String Variant::toString() const
 		StringUtil::sprintf(result, "%f", float(*this));
 		break;
 	case kString:
-		return as<String>();
+		return as<std::string>();
 	case kObject:
 		break;
 	case kVector3:

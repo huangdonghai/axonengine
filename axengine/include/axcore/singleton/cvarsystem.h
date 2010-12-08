@@ -34,18 +34,18 @@ public:
 		Cheat = 0x20, // for debug only, only cheat mode can modify this
 	};
 
-	Cvar(const String &name, const String &default_string, int flags);
+	Cvar(const std::string &name, const std::string &default_string, int flags);
 	~Cvar();
 
-	const String &getName() const;
+	const std::string &getName() const;
 	int getFlags() const;
 
-	const String &getString() const;
+	const std::string &getString() const;
 	float getFloat() const;
 	int getInteger() const;
 	bool getBool() const { return getInteger() ? true : false; }
 
-	void setString(const String &sz_value);
+	void setString(const std::string &sz_value);
 	void setFloat(float float_value);
 	void setInt(int int_value);
 	void setBool(bool b);
@@ -53,16 +53,16 @@ public:
 	bool isModified() const;
 	void clearModifiedFlag();
 
-	void forceSet(const String &sz_value);
+	void forceSet(const std::string &sz_value);
 	void forceSet(float float_value);
 	void forceSet(int int_value);
-	void setString(const String &sz, bool force);
+	void setString(const std::string &sz, bool force);
 
 private:
-	String m_name;
-	String m_defaultString; // cvar_restart will reset to this value
-	String m_latchedString; // for CVF_latch vars
-	String m_stringValue;
+	std::string m_name;
+	std::string m_defaultString; // cvar_restart will reset to this value
+	std::string m_latchedString; // for CVF_latch vars
+	std::string m_stringValue;
 	int m_flags;
 	bool m_modified; // set each time the cvar is changed
 	uint_t m_modifiedCount; // incremented each time the cvar is changed
@@ -73,12 +73,12 @@ private:
 	static Cvar *ms_staticLink;
 };
 
-inline const String & Cvar::getName() const
+inline const std::string & Cvar::getName() const
 {
 	return m_name;
 }
 
-inline const String & Cvar::getString() const
+inline const std::string & Cvar::getString() const
 {
 	return m_stringValue;
 }
@@ -133,10 +133,10 @@ protected:
 	Cvar *createCvar(const String &name, const String &defaultString);
 #endif
 	void registerCvar(Cvar *cvar);
-	void removeCvar(const String &name);
+	void removeCvar(const std::string &name);
 
 private:
-	void set(const String &name, const String& value);
+	void set(const std::string &name, const std::string& value);
 
 	// console command
 	void set_f(const CmdArgs &param);
@@ -145,11 +145,11 @@ private:
 
 private:
 	// member data
-	typedef Dict<String, Cvar*> CvarDict;
+	typedef Dict<std::string, Cvar*> CvarDict;
 	CvarDict m_cvarDict;
 	uint_t m_dirtyFlags;
 
-	Dict<String, String> m_penddingSets;
+	Dict<std::string, std::string> m_penddingSets;
 };
 
 AX_END_NAMESPACE

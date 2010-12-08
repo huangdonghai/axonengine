@@ -141,7 +141,7 @@ void OutdoorEnv::createSkyBox() {
 	m_skybox5->unlockIndexes();
 }
 
-void OutdoorEnv::setSkyBoxTexture(const String &matname)
+void OutdoorEnv::setSkyBoxTexture(const std::string &matname)
 {
 	if (m_skyBoxMatName == matname)
 		return;
@@ -537,7 +537,7 @@ void OutdoorEnv::setOceanFog(const Vector3 &color, float density)
 	m_oceanFog->setFogDensity(density);
 }
 
-void OutdoorEnv::setOceanMaterial(const String &matname)
+void OutdoorEnv::setOceanMaterial(const std::string &matname)
 {}
 
 void OutdoorEnv::setSunColor(const Color3 &color, float intensity, float specularX)

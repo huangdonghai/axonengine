@@ -14,7 +14,7 @@ read the license and understand and accept it fully.
 AX_BEGIN_NAMESPACE
 
 struct FileInfo;
-typedef Sequence<FileInfo> FileInfoSeq;
+typedef std::vector<FileInfo> FileInfoSeq;
 
 AX_API void CDECL Errorf(const char *fmt, ...);
 AX_API void CDECL Debugf(const char *fmt, ...);
@@ -24,10 +24,10 @@ struct FilterInfo;
 class Filter {
 	std::vector<FilterInfo*>	mfilters;
 public:
-	Filter(const String &filterStr);
+	Filter(const std::string &filterStr);
 	~Filter();
 
-	bool In(const String &name) const;
+	bool In(const std::string &name) const;
 };
 
 
@@ -46,21 +46,21 @@ struct AX_API OsUtil
 	// now time, in seconds
 	static double seconds();
 
-	static String getClipboardString();
+	static std::string getClipboardString();
 
 	// DLL
-	static Handle loadDll(const String &name);
-	static Handle loadSysDll(const String &name);
-	static void *getProcEntry(Handle handle, const String &name);
+	static Handle loadDll(const std::string &name);
+	static Handle loadSysDll(const std::string &name);
+	static void *getProcEntry(Handle handle, const std::string &name);
 	static bool freeDll(Handle handle);
 
 	// Network address or host name
 	// get primary adapter's mac address(physics address)
 	static bool getMacAddress(byte_t address[6]);
-	static String getHostName();
+	static std::string getHostName();
 
 	static bool mkdir(const char *dirname);
-	static String getworkpath();
+	static std::string getworkpath();
 
 	static int getCpuUsage();
 	static int getMemoryUsage();

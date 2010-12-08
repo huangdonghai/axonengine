@@ -63,11 +63,11 @@ MaterialDecl::~MaterialDecl()
 	// free params
 }
 
-bool MaterialDecl::tryLoad(const String &name)
+bool MaterialDecl::tryLoad(const std::string &name)
 {
 	m_key = normalizeKey(name);
 
-	String filename = m_key.toString() + ".mtr";
+	std::string filename = m_key.toString() + ".mtr";
 
 	char *buffer;
 	size_t size;
@@ -103,7 +103,7 @@ bool MaterialDecl::tryLoad(const String &name)
 
 	// parse attribute
 	for (attr = root->FirstAttribute(); attr; attr = attr->Next()) {
-		const String &attrname = attr->NameTStr();
+		const std::string &attrname = attr->NameTStr();
 		if (attrname == "flags") {
 
 		} else if (attrname == "shader") {
@@ -179,7 +179,7 @@ error_exit:
 	return false;
 }
 
-FixedString MaterialDecl::normalizeKey(const String &name)
+FixedString MaterialDecl::normalizeKey(const std::string &name)
 {
 	FixedString key;
 
@@ -193,7 +193,7 @@ FixedString MaterialDecl::normalizeKey(const String &name)
 	return key;
 }
 
-MaterialDecl *MaterialDecl::load( const String &name )
+MaterialDecl *MaterialDecl::load( const std::string &name )
 {
 	// normalize key first
 	FixedString key = normalizeKey(name);

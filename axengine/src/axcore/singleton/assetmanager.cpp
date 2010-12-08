@@ -56,7 +56,7 @@ AX_BEGIN_NAMESPACE
 	// class AssetManager
 	//--------------------------------------------------------------------------
 
-	typedef List<Asset*>	AssetList;
+	typedef std::list<Asset*>	AssetList;
 
 	AX_BEGIN_COMMAND_MAP(AssetManager)
 		AX_COMMAND_ENTRY("assetlist", list_f)
@@ -194,7 +194,7 @@ AX_BEGIN_NAMESPACE
 		return m_datas[type]->factory->create();
 	}
 
-	Asset *AssetManager::findAsset(int type, const String &name, intptr_t arg) {
+	Asset *AssetManager::findAsset(int type, const std::string &name, intptr_t arg) {
 		SCOPE_LOCK;
 
 		checkType(__func__, type);
@@ -221,7 +221,7 @@ AX_BEGIN_NAMESPACE
 		return d->defaulted;
 	}
 
-	Asset *AssetManager::uniqueAsset(int type, const String &name, intptr_t arg /*= 0 */) {
+	Asset *AssetManager::uniqueAsset(int type, const std::string &name, intptr_t arg /*= 0 */) {
 		SCOPE_LOCK;
 
 		checkType(__func__, type);
@@ -240,7 +240,7 @@ AX_BEGIN_NAMESPACE
 		return d->defaulted;
 	}
 
-	void AssetManager::addAsset(int type, const String &key, Asset *asset) {
+	void AssetManager::addAsset(int type, const std::string &key, Asset *asset) {
 		SCOPE_LOCK;
 
 		checkType(__func__, type);
@@ -329,7 +329,7 @@ AX_BEGIN_NAMESPACE
 		if (d == nullptr)
 			return;
 
-		Printf("List %s asset:\n", xGetTypeName(type));
+		Printf("std::list %s asset:\n", xGetTypeName(type));
 
 		int count = 0;
 		AssetDict::const_iterator it = d->assetDict.begin();
@@ -361,7 +361,7 @@ AX_BEGIN_NAMESPACE
 		if (d == nullptr)
 			return;
 
-		Printf("List %s texture:\n", xGetTypeName(Asset::kTexture));
+		Printf("std::list %s texture:\n", xGetTypeName(Asset::kTexture));
 
 		int count = 0;
 		AssetDict::const_iterator it = d->assetDict.begin();

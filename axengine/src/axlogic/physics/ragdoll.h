@@ -19,7 +19,7 @@ AX_BEGIN_NAMESPACE
 
 	class PhysicsRagdoll : public HavokPackable, public PhysicsEntity {
 	public:
-		PhysicsRagdoll(const String &name);
+		PhysicsRagdoll(const std::string &name);
 		virtual ~PhysicsRagdoll();
 
 		virtual void setAutoDeactive(bool val);

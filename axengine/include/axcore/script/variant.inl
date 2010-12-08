@@ -12,12 +12,12 @@ inline Variant::Variant(int v)
 inline Variant::Variant(float v)
 { _init(kFloat, &v); }
 
-inline Variant::Variant(const String &v)
+inline Variant::Variant(const std::string &v)
 { _init(kString, &v); }
 
 inline Variant::Variant(const char *v)
 {
-	String str(v);
+	std::string str(v);
 	_init(kString, &str);
 }
 
@@ -111,9 +111,9 @@ inline Variant &Variant::operator=(const Variant &v) {
 }
 
 
-inline Variant::operator String() const
+inline Variant::operator std::string() const
 {
-	return castHelper<String>();
+	return castHelper<std::string>();
 }
 
 inline bool ConstRef::castTo(Variant &val) const

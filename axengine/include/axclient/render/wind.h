@@ -123,8 +123,8 @@ protected:
 	WindController m_finalWindDirectionZ;             // The wind direction Z controller
 	float m_finalBendAngle;                  // The current bend angle of the tree
 
-	Sequence<Matrix4>	m_windMatrices;                    // The wind matrices
-	Sequence<Matrix4>	m_leafAngleMatrices;               // The leaf angle matrices
+	std::vector<Matrix4>	m_windMatrices;                    // The wind matrices
+	std::vector<Matrix4>	m_leafAngleMatrices;               // The leaf angle matrices
 };
 
 AX_END_NAMESPACE

@@ -15,9 +15,9 @@ static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
 	return 0;
 }
 
-Handle GLdriver::createGLWindow(const String &wnd_name)
+Handle GLdriver::createGLWindow(const std::string &wnd_name)
 {
-	WString ws = u2w(wnd_name);
+	std::wstring ws = u2w(wnd_name);
 	WNDCLASSEXW wcex;	
 	wcex.cbSize = sizeof(WNDCLASSEX);
 	wcex.style = 0;

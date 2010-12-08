@@ -111,13 +111,13 @@ struct HashCstr
 
 struct HashIstr
 {
-	inline size_t operator()(const String &s) const { return hash_istring(s.c_str()); }
+	inline size_t operator()(const std::string &s) const { return hash_istring(s.c_str()); }
 	inline size_t operator()(const char *s) const { return hash_istring(s); }
 };
 
 struct HashPath
 {
-	inline size_t operator()(const String &s) const { return hash_filename(s.c_str()); }
+	inline size_t operator()(const std::string &s) const { return hash_filename(s.c_str()); }
 	inline size_t operator()(const char *s) const { return hash_filename(s); }
 };
 
@@ -130,7 +130,7 @@ inline char __tofilenamechar(char c)
 
 struct EqualPath
 {
-	inline bool operator()(const String &s1, const String &s2) const {
+	inline bool operator()(const std::string &s1, const std::string &s2) const {
 		return operator()(s1.c_str(), s2.c_str());
 	}
 	inline bool operator()(const char *s1, const char *s2) const {
@@ -147,7 +147,7 @@ struct EqualPath
 
 struct EqualIstr
 {
-	inline bool operator()(const String &s1, const String &s2) const {
+	inline bool operator()(const std::string &s1, const std::string &s2) const {
 		return StringUtil::stricmp(s1.c_str(), s2.c_str()) == 0;
 	}
 	inline bool operator()(const char *s1, const char *s2) const {

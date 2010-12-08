@@ -16,7 +16,7 @@ AX_BEGIN_NAMESPACE
 // class TransformHis
 //--------------------------------------------------------------------------
 
-TransformHis::TransformHis(Context *context, const String &msg, int actorId, const Matrix &oldmat, const Matrix &newmat)
+TransformHis::TransformHis(Context *context, const std::string &msg, int actorId, const Matrix &oldmat, const Matrix &newmat)
 	: History(context, msg)
 {
 	m_actorId = actorId;
@@ -52,7 +52,7 @@ void TransformHis::undo() {
 bool TransformHis::isUndoable() {
 	return true;
 }
-String TransformHis::getName() {
+std::string TransformHis::getName() {
 	return "TransformHis";
 }
 
@@ -64,7 +64,7 @@ int TransformHis::getMemoryUsed() {
 // class GroupHis
 //--------------------------------------------------------------------------
 
-GroupHis::GroupHis(Context *context, const String &msg)
+GroupHis::GroupHis(Context *context, const std::string &msg)
 	: History(context, msg)
 {}
 
@@ -90,7 +90,7 @@ bool GroupHis::isUndoable() {
 	return true;
 }
 
-String GroupHis::getName() {
+std::string GroupHis::getName() {
 	return "GroupHis";
 }
 
@@ -115,7 +115,7 @@ void GroupHis::append(Action *his) {
 // class DeleteHis
 //--------------------------------------------------------------------------
 
-DeleteHis::DeleteHis(Context *context, const String &msg, const AgentList &actorlist)
+DeleteHis::DeleteHis(Context *context, const std::string &msg, const AgentList &actorlist)
 	: History(context, msg)
 	, m_actorList(actorlist)
 {}
@@ -142,7 +142,7 @@ int DeleteHis::getMemoryUsed() {
 // class UndeleteHis
 //--------------------------------------------------------------------------
 
-UndeleteHis::UndeleteHis(Context *ctx, const String &msg, const AgentList &actorlist)
+UndeleteHis::UndeleteHis(Context *ctx, const std::string &msg, const AgentList &actorlist)
 	: History(ctx, msg)
 	, m_actorList(actorlist)
 {}
@@ -169,7 +169,7 @@ int UndeleteHis::getMemoryUsed() {
 // class PropertyEditHis
 //--------------------------------------------------------------------------
 
-PropertyEditHis::PropertyEditHis(Context *ctx, Agent *actor, const String &propname, const Variant &oldvalue, const Variant &newvalue) 
+PropertyEditHis::PropertyEditHis(Context *ctx, Agent *actor, const std::string &propname, const Variant &oldvalue, const Variant &newvalue) 
 	: History(ctx, "Property Edited")
 	, m_actor(actor)
 	, m_propName(propname)
@@ -277,7 +277,7 @@ void HistoryManager::clear() {
 	m_redoList.clear();
 }
 
-void HistoryManager::begin(Context *ctx, const String &msg)
+void HistoryManager::begin(Context *ctx, const std::string &msg)
 {
 	GroupHis *groupHis = new GroupHis(ctx, msg);
 	m_stacked.push_front(groupHis);

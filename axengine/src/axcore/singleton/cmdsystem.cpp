@@ -45,7 +45,7 @@ void CmdSystem::finalize()
 	Printf(_("Finalized CmdSystem\n"));
 }
 
-bool CmdSystem::isCmd(const String &name)
+bool CmdSystem::isCmd(const std::string &name)
 {
 	if (m_cmdDict.find(name) != m_cmdDict.end())
 		return true;
@@ -53,7 +53,7 @@ bool CmdSystem::isCmd(const String &name)
 		return false;
 }
 
-void CmdSystem::executeString(const String &text, ExecType cet)
+void CmdSystem::executeString(const std::string &text, ExecType cet)
 {
 	// check if is script command first
 	if (text.size() > 1) {
@@ -82,7 +82,7 @@ void CmdSystem::executeString(const String &text, ExecType cet)
 	Printf(_("Cann't found command or variable '%s'\n"), param.tokened[0].c_str());
 }
 
-void CmdSystem::enumerate(void (*func)(const String &name))
+void CmdSystem::enumerate(void (*func)(const std::string &name))
 {
 }
 
@@ -125,7 +125,7 @@ bool CmdSystem::executeCmd(const CmdArgs &params)
 	return true;
 }
 
-CmdArgs CmdSystem::parseCmdString(const String &text)
+CmdArgs CmdSystem::parseCmdString(const std::string &text)
 {
 	CmdArgs param;
 
@@ -133,7 +133,7 @@ CmdArgs CmdSystem::parseCmdString(const String &text)
 
 	size_t pos = text.find(L' ');
 
-	if (pos != String::npos) {
+	if (pos != std::string::npos) {
 		param.rawParam = text.c_str() + pos + 1;
 	}
 

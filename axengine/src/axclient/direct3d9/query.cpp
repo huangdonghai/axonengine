@@ -65,7 +65,7 @@ void QueryManager::issueQuery( Query *query, int frameId, const BoundingBox &bbo
 void QueryManager::runFrame()
 {
 	for (int i = 0; i < Query::QueryType_Number; i++) {
-		List<ActiveQuery*>::iterator it = m_activeQuery[i].begin();
+		std::list<ActiveQuery*>::iterator it = m_activeQuery[i].begin();
 
 		while (it != m_activeQuery[i].end()) {
 			ActiveQuery *issued = *it;
@@ -93,7 +93,7 @@ void QueryManager::runFrame()
 	}
 }
 
-const List<QueryManager::ActiveQuery*>& QueryManager::getActiveQuery( Query::QueryType type ) const
+const std::list<QueryManager::ActiveQuery*>& QueryManager::getActiveQuery( Query::QueryType type ) const
 {
 	return m_activeQuery[type];
 }

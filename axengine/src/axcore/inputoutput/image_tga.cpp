@@ -47,7 +47,7 @@ struct TgaHeader {
 	byte_t pixel_size, attributes; 
 }; 
 
-void Image::writeTGA(const String &filename, const byte_t *pixels, int width, int height)
+void Image::writeTGA(const std::string &filename, const byte_t *pixels, int width, int height)
 { 
 	TgaHeader header; 
 	byte_t *filebuf; 
@@ -103,7 +103,7 @@ void Image::writeTGA(const String &filename, const byte_t *pixels, int width, in
 	delete [](filebuf); 
 } 
  
-void WriteTGA24(const String &filename, const byte_t *pixels, int width, int height)
+void WriteTGA24(const std::string &filename, const byte_t *pixels, int width, int height)
 { 
 	TgaHeader header; 
 	byte_t *filebuf; 
@@ -167,7 +167,7 @@ void WriteTGA24(const String &filename, const byte_t *pixels, int width, int hei
 	delete[](filebuf); 
 }
 
-bool Image::loadFile_tga(const String &filename)
+bool Image::loadFile_tga(const std::string &filename)
 {
 	// clear first
 	clear();
@@ -504,7 +504,7 @@ PixEncode:
 	return m_dataPresent = true; 
 }
 
-void Image::saveFile_tga(const String &filename)
+void Image::saveFile_tga(const std::string &filename)
 {
 	if (m_format == TexFormat::BGR8) {
 		WriteTGA24(filename, getData(0), m_width, m_height);

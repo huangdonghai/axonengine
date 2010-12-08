@@ -49,9 +49,9 @@ enum SndChannelId {
 };
 
 class GameActor;
-typedef List<GameActor*> ActorList;
+typedef std::list<GameActor*> ActorList;
 typedef ActorList::iterator EntityIterator;
-typedef Dict<String,GameActor*> ActorHash;
+typedef Dict<std::string,GameActor*> ActorHash;
 
 class AX_API GameActor : public GameObject, public IObserver
 {
@@ -92,7 +92,7 @@ protected:
 	// scriptable method
 	void sleep(float seconds);
 	void gotoState(const ScriptValue &state);
-	void switchState(const String &name);
+	void switchState(const std::string &name);
 	// end scriptable method
 
 

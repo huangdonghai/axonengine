@@ -19,7 +19,7 @@ void IObservable::attachObserver(IObserver *observer) {
 }
 
 void IObservable::detachObserver(IObserver *observer) {
-	List<IObserver*>::iterator it = m_observers.begin();
+	std::list<IObserver*>::iterator it = m_observers.begin();
 
 	for (; it != m_observers.end(); ++it) {
 		if (*it == observer) {
@@ -32,7 +32,7 @@ void IObservable::detachObserver(IObserver *observer) {
 }
 
 void IObservable::notify(int arg) {
-	List<IObserver*>::iterator it = m_observers.begin();
+	std::list<IObserver*>::iterator it = m_observers.begin();
 
 	for (; it != m_observers.end(); ++it) {
 		(*it)->doNotify(this, arg);

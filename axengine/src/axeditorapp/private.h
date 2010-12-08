@@ -49,19 +49,19 @@ extern Application *g_app;
 extern Workbench *g_workbench;
 extern QSettings *g_settings;
 
-inline QString u2q(const String &str) {
+inline QString u2q(const std::string &str) {
 	return QString::fromUtf8(str.c_str(), str.size());
 }
 
-inline String q2u(const QString &qstr) {
-	String str;
+inline std::string q2u(const QString &qstr) {
+	std::string str;
 #if defined(_MSC_VER) && _MSC_VER >= 1400
 	// VS2005 crashes if the string is empty
 	if (!qstr.length())
 		return str;
 #endif
 	QByteArray ba = qstr.toUtf8();
-	return String(ba.constData(), ba.size());
+	return std::string(ba.constData(), ba.size());
 }
 
 inline QColor x2q(const Color3 &x) {

@@ -42,8 +42,8 @@ public:
 		TT_CUBE,
 	};
 
-	Texture(const String &name, InitFlags flags=0);
-	Texture(const String &debugname, TexFormat format, int width, int height, InitFlags flags = 0);
+	Texture(const std::string &name, InitFlags flags=0);
+	Texture(const std::string &debugname, TexFormat format, int width, int height, InitFlags flags = 0);
 	~Texture();
 
 	void uploadSubTexture(const Rect &rect, const void *pixels, TexFormat format = TexFormat::AUTO);
@@ -58,11 +58,11 @@ public:
 	void setClampMode(SamplerStateDesc::ClampMode clampMode);
 	void setFilterMode(SamplerStateDesc::FilterMode filterMode);
 
-	void saveToFile(const String &filename);
+	void saveToFile(const std::string &filename);
 
 	// management
-	static bool isExist(const String &name);
-	static FixedString normalizeKey(const String &name);
+	static bool isExist(const std::string &name);
+	static FixedString normalizeKey(const std::string &name);
 #if 0
 	static void Texture::texlist_f(const CmdArgs &args);
 #endif
@@ -118,7 +118,7 @@ protected:
 		int width;
 		int height;
 	};
-	typedef List<LoadCmd> LoadCmdList;
+	typedef std::list<LoadCmd> LoadCmdList;
 
 	struct UploadCmd {
 		Texture *texture;
@@ -127,13 +127,13 @@ protected:
 		TexFormat format;
 		Rgba color; // if pixel is null, then use this color
 	};
-	typedef List<UploadCmd> UploadCmdList;
+	typedef std::list<UploadCmd> UploadCmdList;
 
 	struct FreeCmd {
 		Texture *texture;
 		int frameId;
 	};
-	typedef List<FreeCmd> FreeCmdList;
+	typedef std::list<FreeCmd> FreeCmdList;
 
 	typedef Dict<FixedString,bool> ExistDict;
 	typedef Dict<FixedString,Texture*> TextureDict;

@@ -90,13 +90,13 @@ public:
 	static ushort_t getLeapMonth(ushort_t lunarYear);
 
 	// 把iYear年格式化成天干记年法表示的字符串
-	static String formatLunarYear(ushort_t  year);
+	static std::string formatLunarYear(ushort_t  year);
 
 	// 把iMonth格式化成中文字符串
-	static String formatMonth(ushort_t month, bool lunar = true);
+	static std::string formatMonth(ushort_t month, bool lunar = true);
 
 	// 把iDay格式化成中文字符串
-	static String formatLunarDay(ushort_t  day);
+	static std::string formatLunarDay(ushort_t  day);
 
 	// 计算公历两个日期间相差的天数  1年1月1日 --- 65535年12月31日
 	static int calcDateDiff(ushort_t endYear, ushort_t endMonth, ushort_t endDay, ushort_t startYear = START_YEAR, ushort_t startMonth =1, ushort_t startDay =1);

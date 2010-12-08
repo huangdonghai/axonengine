@@ -25,7 +25,7 @@ AX_END_COMMAND_MAP()
 
 Cvar *Cvar::ms_staticLink = 0;
 
-Cvar::Cvar(const String &name, const String &default_string, int flags)
+Cvar::Cvar(const std::string &name, const std::string &default_string, int flags)
 	: m_name(name)
 	, m_defaultString(default_string)
 	, m_latchedString()
@@ -51,9 +51,9 @@ Cvar::~Cvar()
 	g_cvarSystem->removeCvar(m_name);
 }
 
-void Cvar::setString(const String &sz, bool force)
+void Cvar::setString(const std::string &sz, bool force)
 {
-	String value;
+	std::string value;
 
 	if (sz.empty()) {
 		value = m_defaultString;
@@ -103,7 +103,7 @@ void Cvar::setString(const String &sz, bool force)
 	m_integerValue = atoi(m_stringValue.c_str());
 }
 
-void Cvar::forceSet(const String &sz_value)
+void Cvar::forceSet(const std::string &sz_value)
 {
 	setString(sz_value, true);
 }
@@ -130,7 +130,7 @@ void Cvar::forceSet(int i)
 	setString(buf, true);
 }
 
-void Cvar::setString(const String &sz_value)
+void Cvar::setString(const std::string &sz_value)
 {
 	setString(sz_value, false);
 }
@@ -194,7 +194,7 @@ CvarSystem::~CvarSystem() {
 }
 
 
-void CvarSystem::removeCvar(const String &name)
+void CvarSystem::removeCvar(const std::string &name)
 {
 	return;
 #if 0
@@ -376,7 +376,7 @@ void CvarSystem::set_f(const CmdArgs &params)
 #endif
 }
 
-void CvarSystem::set(const String &name, const String& value)
+void CvarSystem::set(const std::string &name, const std::string& value)
 {
 	CvarDict::iterator it = m_cvarDict.find(name);
 
@@ -390,7 +390,7 @@ void CvarSystem::set(const String &name, const String& value)
 
 void CvarSystem::registerCvar(Cvar *cvar)
 {
-	const String &name = cvar->getName();
+	const std::string &name = cvar->getName();
 
 	if (m_cvarDict.find(name) != m_cvarDict.end()) {
 		Errorf("Cvar '%s' already registered", name.c_str());
@@ -398,7 +398,7 @@ void CvarSystem::registerCvar(Cvar *cvar)
 
 	m_cvarDict[name] = cvar;
 
-	Dict<String, String>::iterator it = m_penddingSets.find(name);
+	Dict<std::string, std::string>::iterator it = m_penddingSets.find(name);
 	if (it != m_penddingSets.end()) {
 		cvar->setString(it->second, true);
 		m_penddingSets.erase(it);

@@ -30,7 +30,7 @@ TextureAtlas::TextureAtlas()
 TextureAtlas::~TextureAtlas()
 {}
 
-void TextureAtlas::initialize(const String &name, int chunk_width, int chunk_height, int side_length, TexFormat format)
+void TextureAtlas::initialize(const std::string &name, int chunk_width, int chunk_height, int side_length, TexFormat format)
 {
 	if (m_initialized) {
 		Errorf("TextureAtlas::initialize: has initialized");
@@ -81,7 +81,7 @@ void TextureAtlas::initialize(const String &name, int chunk_width, int chunk_hei
 
 	int image_size = format.calculateDataSize(m_textureSize, m_textureSize);
 
-	String tex_name;
+	std::string tex_name;
 
 	for (i=0; i<m_numTextures; i++) {
 		// maybe some machine fast enough so spend time < 1ms, so we add i to

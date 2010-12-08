@@ -89,7 +89,7 @@ private:
 //------------------------------------------------------------------------------
 // class Thread
 //------------------------------------------------------------------------------
-
+class INotifyHandler;
 class AX_API Thread {
 public:
 	Thread();
@@ -99,12 +99,20 @@ public:
 	void stopThread();
 	bool isCurrentThread() const;
 
+	void addAsyncNotify(INotifyHandler *handler, int index);
+
 	virtual void doRun() = 0;		// work entry
 
 private:
 	Handle m_handle;
 	SyncEvent *m_exitEvent;
 	ulong_t m_id;
+
+	struct AsyncNotify {
+		INotifyHandler *handler;
+		int index;
+	};
+	std::list<AsyncNotify> m_asyncNotifyList;
 };
 
 

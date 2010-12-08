@@ -23,8 +23,8 @@ public:
 
 protected:
 	void initWidgets();
-	void createMaterial(const String &shadername);
-	void initFromMaterial(const String &name);
+	void createMaterial(const std::string &shadername);
+	void initFromMaterial(const std::string &name);
 
 private:
 	Ui::MaterialEditorClass ui;
@@ -34,8 +34,8 @@ private slots:
 	void on_matTree_itemActivated(QTreeWidgetItem*,int);
 
 private:
-	Sequence<Material*> m_openedMat;
-	const Sequence<MtlNodeDef> &m_sysNodeDefs;
+	std::vector<Material*> m_openedMat;
+	const std::vector<MtlNodeDef> &m_sysNodeDefs;
 	Material *m_curMat;
 };
 

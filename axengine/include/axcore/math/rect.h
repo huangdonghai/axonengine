@@ -82,7 +82,7 @@ struct AX_API Rect {
 
 	Vector4 toVector4() const;
 
-	String toString() const;
+	std::string toString() const;
 	bool fromString(const char *str);
 };
 

@@ -53,8 +53,8 @@ struct AX_API Vector2 {
 	void clear();
 	Vector2 &set(float ix=0.0f, float iy=0.0f);
 	const float *c_ptr() const;
-	String toString() const;
-	bool parse(const String &str);
+	std::string toString() const;
+	bool parse(const std::string &str);
 	bool parse(const char *text);
 };
 
@@ -192,13 +192,13 @@ inline const float *Vector2::c_ptr() const {
 	return &x;
 }
 
-inline String Vector2::toString() const {
-	String result;
+inline std::string Vector2::toString() const {
+	std::string result;
 	StringUtil::sprintf(result, "%f,%f", x, y);
 	return result;
 }
 
-inline bool Vector2::parse(const String &str) {
+inline bool Vector2::parse(const std::string &str) {
 	return parse(str.c_str());
 }
 

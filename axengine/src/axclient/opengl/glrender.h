@@ -27,7 +27,7 @@ enum VertexDef {
 	VDF_tangent,				// Vector3
 	VDF_binormal,				// Vector3
 };
-typedef Sequence<VertexDef> VertexDefSeq;
+typedef std::vector<VertexDef> VertexDefSeq;
 
 enum { AX_MAX_TEXTURE_UNITS = 16 };
 

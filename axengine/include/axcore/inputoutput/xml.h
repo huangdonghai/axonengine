@@ -37,7 +37,7 @@ distribution.
 
 AX_BEGIN_NAMESPACE
 
-#define TIXML_STRING String
+#define TIXML_STRING std::string
 #define TIXML_USE_STL 1
 
 // Deprecated library function hell. Compilers want to use the

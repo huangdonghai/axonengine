@@ -22,12 +22,12 @@ struct PakedFile;
 struct FilePackage;
 
 struct SearchDir {
-	SearchDir(const String &dir, bool extractSrc = false) : dir(dir), extractSrc(extractSrc) {}
+	SearchDir(const std::string &dir, bool extractSrc = false) : dir(dir), extractSrc(extractSrc) {}
 
-	String dir;
+	std::string dir;
 	bool extractSrc;
 };
-typedef List<SearchDir> SearchDirs;
+typedef std::list<SearchDir> SearchDirs;
 
 class PakedFolder;
 class File;
@@ -76,7 +76,7 @@ public:
 	virtual ~File();
 
 	FILE *getHandle() const { return m_handle; }
-	String getName() const;
+	std::string getName() const;
 	Type getType() const;
 	AccessMode getMode() const;
 	size_t read(void *buffer, size_t len);
@@ -96,8 +96,8 @@ public:
 	// read and write
 	inline int readInt() { int i; read(&i, 4); return i; }
 	inline float readFloat() { float f; read(&f, 4); return f; }
-	inline String readString() {
-		String result;
+	inline std::string readString() {
+		std::string result;
 		char ch;
 
 		while (read(&ch, 1) && ch)
@@ -108,7 +108,7 @@ public:
 
 	inline size_t writeInt(int i) { return write(&i, 4); }
 	inline size_t writeFloat(float f) { return write(&f, 4); }
-	inline size_t writeString(const String &s) { return write(s.c_str(), s.length() + 1); }
+	inline size_t writeString(const std::string &s) { return write(s.c_str(), s.length() + 1); }
 
 private:
 	Type m_type;
@@ -119,11 +119,11 @@ private:
 	int m_pos;
 	int m_size;
 	int m_offset;
-	String m_name;
+	std::string m_name;
 };
 
 
-typedef List<File*>			FileList;
+typedef std::list<File*>			FileList;
 
 class FileInfo
 {
@@ -131,20 +131,20 @@ public:
 	bool operator<(const FileInfo &rhs) const { return fullpath < rhs.fullpath; }
 	bool operator==(const FileInfo &rhs) const { return fullpath == rhs.fullpath; }
 
-	String fullpath;
+	std::string fullpath;
 	uint_t filetime;
 	size_t filesize;
 	bool isDir;
 	File::Type filetype;
 
 	// parsed file info
-	String filepath;			// not include name and ext
-	String filename;			// include ext
-	String fileext;
+	std::string filepath;			// not include name and ext
+	std::string filename;			// include ext
+	std::string fileext;
 	struct tm localtime;
 };
 
-typedef Sequence<FileInfo>	FileInfoSeq;
+typedef std::vector<FileInfo>	FileInfoSeq;
 
 struct PakedFile {
 	FilePackage *packfile;
@@ -152,8 +152,8 @@ struct PakedFile {
 };
 
 struct FilePackage {
-	String fullpath;
-	String filename;
+	std::string fullpath;
+	std::string filename;
 	void *unzfile;
 	int checksum;
 	int checksumkey;
@@ -171,18 +171,18 @@ public:
 	PakedFolder();
 	~PakedFolder();
 
-	void addPath(const String &fullpath);
-	void addFile(const String &fullpath, PakedFile *info);
-	void getFileInfos(const String &path, const String &exts, int flags, OUT FileInfoSeq &fis);
+	void addPath(const std::string &fullpath);
+	void addFile(const std::string &fullpath, PakedFile *info);
+	void getFileInfos(const std::string &path, const std::string &exts, int flags, OUT FileInfoSeq &fis);
 
 protected:
-	PakedFolder *getPath(const String &path, bool bAddPath = true);
+	PakedFolder *getPath(const std::string &path, bool bAddPath = true);
 
 private:
-	typedef Dict<String,PakedFile*> PackedFileDict;
-	typedef List<PakedFolder*> PackedFolderList;
-	String m_fullName;
-	String m_name;
+	typedef Dict<std::string,PakedFile*> PackedFileDict;
+	typedef std::list<PakedFolder*> PackedFolderList;
+	std::string m_fullName;
+	std::string m_name;
 	PackedFileDict m_packedFileDict;
 	PakedFolder *m_parent;
 	PackedFolderList m_childrenList;
@@ -195,14 +195,14 @@ public:
 	AsioRead();
 	~AsioRead();
 
-	void setFilename(const String &filename) { m_filename = filename; }
+	void setFilename(const std::string &filename) { m_filename = filename; }
 	void freeData();
 	int getFileSize() const { return m_filesize; }
 	void *getFileData() const { return m_filedata; }
 	bool isDataReady() const;
 
 private:
-	String m_filename;
+	std::string m_filename;
 	int m_filesize;
 	void *m_filedata;
 	AtomicInt m_isDataReady; // if m_isDataReady != 0, data is ready
@@ -219,7 +219,7 @@ protected:
 	AsioRead *getFirstRequest();
 
 private:
-	List<AsioRead*> m_readEntries;
+	std::list<AsioRead*> m_readEntries;
 };
 
 
@@ -238,29 +238,29 @@ public:
 	void initialize();
 	void finalize();
 
-	void addGameDirectory(const String &dir, bool extractSrc = false);
+	void addGameDirectory(const std::string &dir, bool extractSrc = false);
 
-	bool ospathToDataPath(const String &path, String &gpath);
-	String dataPathToOsPath(const String &gpath);
-	String modPathToOsPath(const String &modpath);
-	String getDataPath();
-	StringSeq fileListByExts(const String &path, const String &exts, int flags);
-	FileInfoSeq getFileInfos(const String &path, const String &exts, int flags);
+	bool ospathToDataPath(const std::string &path, std::string &gpath);
+	std::string dataPathToOsPath(const std::string &gpath);
+	std::string modPathToOsPath(const std::string &modpath);
+	std::string getDataPath();
+	StringSeq fileListByExts(const std::string &path, const std::string &exts, int flags);
+	FileInfoSeq getFileInfos(const std::string &path, const std::string &exts, int flags);
 
 	/// below open file method return a File smart pointer, if failure, it contain
 	/// NULL pointer. when the pointer destructed, file object auto released
-	File *openFileByMode(const String &filename, File::AccessMode mode);
-	File *openFileRead(const String &filename);
-	File *openFileWrite(const String &filename);
-	File *openFileAppend(const String &filename);
+	File *openFileByMode(const std::string &filename, File::AccessMode mode);
+	File *openFileRead(const std::string &filename);
+	File *openFileWrite(const std::string &filename);
+	File *openFileAppend(const std::string &filename);
 
-	size_t readFile(const String &filename, void** buffer);
-	size_t readTextFile(const String &filename, void** buffer);
+	size_t readFile(const std::string &filename, void** buffer);
+	size_t readTextFile(const std::string &filename, void** buffer);
 	void freeFile(void *buffer);
-	void writeFile(const String &filename, const void *buffer, size_t size);
+	void writeFile(const std::string &filename, const void *buffer, size_t size);
 
-	bool getFileModifyTime(const String &filename, longlong_t *time) const;
-	bool isFileExist(const String &filename) const;
+	bool getFileModifyTime(const std::string &filename, longlong_t *time) const;
+	bool isFileExist(const std::string &filename) const;
 
 	void queAsioRead(AsioRead *entry);
 	void flushAsio();
@@ -275,14 +275,14 @@ public:
 	 *  1 First file time is greater than second file time. 
 	 *  2 Second file is not exist. 
 	 */
-	int compareFileModifyTime(const String &m_srcfile, const String &m_destfile);
+	int compareFileModifyTime(const std::string &m_srcfile, const std::string &m_destfile);
 
-	static String getDefaultDataPath();
+	static std::string getDefaultDataPath();
 
 protected:
 	void attachFileObject(File *cf);
 	void detachFileObject(File *cf);
-	FilePackage *loadPakFile(const String &fullpath, const String &filename);
+	FilePackage *loadPakFile(const std::string &fullpath, const std::string &filename);
 	void addPakedFileInfo(const FileInfo *fi);
 
 	void checkGamePath();
@@ -293,15 +293,15 @@ private:
 	SearchDirs m_searchDirs;
 	FileList m_fileList;
 
-	String m_workPath;		// exe run path
-	String m_dataPath;		// main data path
-	String m_gamePath;		// game root path
-	String m_modPath;		// modification path, if no set, same as m_dataPath
+	std::string m_workPath;		// exe run path
+	std::string m_dataPath;		// main data path
+	std::string m_gamePath;		// game root path
+	std::string m_modPath;		// modification path, if no set, same as m_dataPath
 	int m_numFilesInPack;
 	int m_hashSeed;
 
-	typedef Dict<String, PakedFile*, HashPath, EqualPath> EntryDict;
-	typedef Sequence<const FilePackage*> FilePackages;	
+	typedef Dict<std::string, PakedFile*, HashPath, EqualPath> EntryDict;
+	typedef std::vector<const FilePackage*> FilePackages;	
 	FilePackages m_pakFiles;
 	EntryDict m_pakedFileDict;
 	PakedFolder m_pakedFolders;

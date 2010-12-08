@@ -15,7 +15,7 @@ AX_BEGIN_NAMESPACE
 Material::MaterialDict Material::ms_materialDict;
 IntrusiveList<Material, &Material::m_needDeleteLink> ms_needDeleteLinkHead;
 
-Material::Material(const String &name)
+Material::Material(const std::string &name)
 {
 	size_t s = sizeof(Material);
 	m_baseTcAnim = false;
@@ -115,7 +115,7 @@ void Material::setMacroParameter(const String &name, int value) {
 }
 #endif
 
-void Material::setParameter(const String &name, int count, const float *ptr)
+void Material::setParameter(const std::string &name, int count, const float *ptr)
 {
 	if (!count) {
 		count = 1;
@@ -219,7 +219,7 @@ bool Material::isPhysicsHelper() const
 	return m_decl->getFlags().isSet(MaterialDecl::Flag_PhysicsHelper);
 }
 
-void Material::setTextureSet( const String &texname )
+void Material::setTextureSet( const std::string &texname )
 {
 	Texture *texture = new Texture(texname);
 	m_textures[MaterialTextureId::Diffuse] = texture;
@@ -236,7 +236,7 @@ void Material::setTextureSet( const String &texname )
 	m_shaderMacroNeedRegen = true;
 }
 
-FixedString Material::normalizeKey(const String &name)
+FixedString Material::normalizeKey(const std::string &name)
 {
 	if (!PathUtil::haveDir(name))
 		return "materials/" + name;
@@ -339,7 +339,7 @@ void Material::deleteThis()
 
 void Material::matlist_f(const CmdArgs &args)
 {
-	Printf("List material(s):\n");
+	Printf("std::list material(s):\n");
 
 	int count = 0;
 	MaterialDict::const_iterator it = ms_materialDict.begin();

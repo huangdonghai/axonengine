@@ -354,14 +354,14 @@ public:
 	};
 
 	typedef shared_array<byte_t>	DataBuffer;
-	typedef Sequence<DataBuffer>	DataBufferSeq;
+	typedef std::vector<DataBuffer>	DataBufferSeq;
 
 	Image();
 	virtual ~Image();
 
 	// io & processing
-	bool loadFile(const String &filename, int flags = 0);
-	bool loadFileByType(const String &filename, FileType filetype, int flags = 0);
+	bool loadFile(const std::string &filename, int flags = 0);
+	bool loadFileByType(const std::string &filename, FileType filetype, int flags = 0);
 	bool loadFileFromMemory(size_t filesize, void *filedata, FileType filetype);
 
 	Image *resize(int width, int height);
@@ -408,7 +408,7 @@ public:
 	int getHeight(int level = 0) const;
 	int getNumMipmapLevels() const;
 	TexFormat getFormat() const;
-	String getRealName() const;
+	std::string getRealName() const;
 
 	// get data
 	const byte_t *getData(int level) const;
@@ -425,20 +425,20 @@ public:
 	// rotate must be one of 0, 90, 180, 270, it is clock-wise rotate
 	void writeDataTo(int level, const Rect &rect, int rotate, byte_t *data, bool flipS = false, bool flipT = false) const;
 
-	static void writeTGA(const String &filename, const byte_t *pixels, int width, int height);
+	static void writeTGA(const std::string &filename, const byte_t *pixels, int width, int height);
 
 	// load function
-	bool loadFile_tga(const String &filename);
-	bool loadFile_hdr(const String &filename);
-	bool loadFile_dds(const String &filename);
+	bool loadFile_tga(const std::string &filename);
+	bool loadFile_hdr(const std::string &filename);
+	bool loadFile_dds(const std::string &filename);
 	bool loadFileFromMemory_dds(size_t filesize, void *filedata);
 
 	// save function
-	void saveFile_dds(const String &filename, bool bFast = true);
-	void saveFile_tga(const String &filename);
+	void saveFile_dds(const std::string &filename, bool bFast = true);
+	void saveFile_tga(const std::string &filename);
 
-	bool loadFile_raw(const String &filename, int width, int height);
-	void saveFile_raw(const String &filename);
+	bool loadFile_raw(const std::string &filename, int width, int height);
+	void saveFile_raw(const std::string &filename);
 
 protected:
 	int convertFormatTo(TexFormat format, int level, byte_t *pBuf) const;
@@ -448,7 +448,7 @@ private:
 	bool m_dataPresent;
 	int m_loadFlags;
 
-	String m_realName;
+	std::string m_realName;
 	int m_width, m_height, m_depth;
 	DataBufferSeq m_datas;
 };

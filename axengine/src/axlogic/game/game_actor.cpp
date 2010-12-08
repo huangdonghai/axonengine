@@ -56,7 +56,7 @@ void GameActor::onReload()
 
 void GameActor::autoGenerateName()
 {
-	String objname = "entity";
+	std::string objname = "entity";
 
 	if (getScriptClass())
 		objname = getScriptClass()->getName();
@@ -92,7 +92,7 @@ void GameActor::doRemove()
 	m_spawned = false;
 }
 
-void GameActor::switchState(const String &name)
+void GameActor::switchState(const std::string &name)
 {
 #if 1
 	if (!isScriptInstanced())

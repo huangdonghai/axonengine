@@ -48,7 +48,7 @@ void MaterialEditor::initWidgets()
 	StringSeq ss = g_fileSystem->fileListByExts("shaders/", ".fx", File::List_Nodirectory|File::List_Sorted);
 //	ui.shaderName->clear();
 
-	AX_FOREACH(const String &s, ss) {
+	AX_FOREACH(const std::string &s, ss) {
 		QString qs = u2q(PathUtil::getName(s));
 
 		if (!qs[0].isLetter()) {
@@ -78,7 +78,7 @@ void MaterialEditor::on_actionRefresh_triggered()
 
 }
 
-void MaterialEditor::initFromMaterial(const String &name)
+void MaterialEditor::initFromMaterial(const std::string &name)
 {
 	Material *mat = new Material(name);
 

@@ -55,7 +55,7 @@ private:
 	Vector4 tcolor;
 	float tabove, tbelow;
 
-	List<RibbonSegment> segs;
+	std::list<RibbonSegment> segs;
 };
 
 AX_END_NAMESPACE

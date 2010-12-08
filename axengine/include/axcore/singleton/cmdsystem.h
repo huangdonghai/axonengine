@@ -54,7 +54,7 @@ AX_BEGIN_NAMESPACE
 
 struct CmdArgs {
 	StringSeq tokened;	// tokenized parameter by ' '(SPACE), usually use this
-	String rawParam;	// raw parameter string, for some complicate, scription command
+	std::string rawParam;	// raw parameter string, for some complicate, scription command
 };
 
 struct CmdEntry {
@@ -70,11 +70,11 @@ struct ICmdHandler {
 
 
 struct Cmd {
-	String name;
+	std::string name;
 	ICmdHandler *handler;
 };
 
-typedef Dict<String, Cmd, HashIstr, EqualIstr> CmdDict;
+typedef Dict<std::string, Cmd, HashIstr, EqualIstr> CmdDict;
 
 #if 1
 class AX_API CmdSystem : public ICmdHandler
@@ -94,9 +94,9 @@ public:
 
 	void initialize(void);
 	void finalize(void);
-	bool isCmd(const String &name);
-	void executeString(const String &text, ExecType cet = Exec_Immediately);
-	void enumerate(void (*func)(const String &name));
+	bool isCmd(const std::string &name);
+	void executeString(const std::string &text, ExecType cet = Exec_Immediately);
+	void enumerate(void (*func)(const std::string &name));
 	void registerHandler(ICmdHandler *handler);
 	void removeHandler(ICmdHandler *handler);
 	void runFrame(uint_t frame_time);
@@ -104,7 +104,7 @@ public:
 public:
 	// console command
 	bool executeCmd(const CmdArgs &params);
-	CmdArgs parseCmdString(const String &text);
+	CmdArgs parseCmdString(const std::string &text);
 
 	void list_f(const CmdArgs &param);
 	void quit_f(const CmdArgs &param);

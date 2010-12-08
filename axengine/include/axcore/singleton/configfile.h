@@ -28,24 +28,24 @@ public:
 	ConfigFile();
 	virtual ~ConfigFile();
 
-	bool load(const String &filename);
+	bool load(const std::string &filename);
 	bool save() const;
-	bool saveTo(const String &filename) const;
+	bool saveTo(const std::string &filename) const;
 	size_t getSectionCount() const;
 	StringSeq getSections() const;
-	size_t getItemCount(const String &section) const;
-	StringPairSeq getItems(const String &section) const;
-	String getKeyValue(const String &section, const String &key) const;
-	void setValue(const String &section, const String &key, const String &value);
+	size_t getItemCount(const std::string &section) const;
+	StringPairSeq getItems(const std::string &section) const;
+	std::string getKeyValue(const std::string &section, const std::string &key) const;
+	void setValue(const std::string &section, const std::string &key, const std::string &value);
 
 private:
 	void clear();
 	
 private:
-	typedef std::map<String, String>	ItemType;
-	typedef std::map<String, ItemType > SectionType;
+	typedef std::map<std::string, std::string>	ItemType;
+	typedef std::map<std::string, ItemType > SectionType;
 	SectionType m_data;
-	String m_filename;
+	std::string m_filename;
 };
 
 

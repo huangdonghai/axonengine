@@ -47,7 +47,7 @@ public:
 	virtual void bindFrame(IViewFrame *container);
 
 	Context *getContext() { return m_context; }
-	String &getTitle();
+	std::string &getTitle();
 	void setCursor(CursorType cursor_type) { if (m_frame) m_frame->setCursor(cursor_type); }
 	void resetCursor() { if (m_frame) m_frame->resetCursor(); }
 	Vector3 getCursorPos() { return m_cursorPos; }
@@ -84,7 +84,7 @@ protected:
 protected:
 	Context *m_context;
 	IViewFrame *m_frame;
-	String m_title;
+	std::string m_title;
 	RenderCamera m_camera;
 	int m_frameNumCur;
 	double m_frameOldTime;

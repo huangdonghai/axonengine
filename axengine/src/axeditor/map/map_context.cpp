@@ -119,7 +119,7 @@ bool MapContext::createNew()
 	return true;
 }
 
-bool MapContext::load(const String &filename)
+bool MapContext::load(const std::string &filename)
 {
 	m_isLoading = true;
 
@@ -153,7 +153,7 @@ bool MapContext::load(const String &filename)
 	if (!root)
 		return false;
 
-	String map_name = PathUtil::removeExt(filename);
+	std::string map_name = PathUtil::removeExt(filename);
 
 	int progress = 0;
 	int numActors = 0;
@@ -167,7 +167,7 @@ bool MapContext::load(const String &filename)
 
 	const TiXmlElement *elem;
 	for (elem = root->FirstChildElement(); elem; elem = elem->NextSiblingElement()) {
-		const String &value = elem->ValueTStr();
+		const std::string &value = elem->ValueTStr();
 
 		if (value == "envDef") {
 			MapEnvDef *ed = m_gameWorld->getEnvironment();
@@ -225,7 +225,7 @@ bool MapContext::save()
 	return true;
 }
 
-bool MapContext::saveAs(const String &filename)
+bool MapContext::saveAs(const std::string &filename)
 {
 	std::auto_ptr<File> file(g_fileSystem->openFileWrite(filename));
 	if (!file.get())
@@ -472,7 +472,7 @@ void MapContext::readActor(const TiXmlElement *node)
 	g_scriptSystem->updateNameIndex(gamenode->get_objectName());
 }
 
-void MapContext::addBookmark(const Matrix &viewMatrix, const String &name, int id)
+void MapContext::addBookmark(const Matrix &viewMatrix, const std::string &name, int id)
 {
 	Bookmark bookmark;
 
@@ -491,7 +491,7 @@ void MapContext::addBookmark(const Matrix &viewMatrix, const String &name, int i
 
 		_itoa(bookmark.id, ch, 10);
 
-		bookmark.name = String("bookmark ") + ch;
+		bookmark.name = std::string("bookmark ") + ch;
 	}
 	else
 	{
@@ -510,9 +510,9 @@ void MapContext::addBookmark(const Bookmark &bookmark)
 	++ m_bookmarkIndex;
 }
 
-void MapContext::deleteBookmark(const String &name)
+void MapContext::deleteBookmark(const std::string &name)
 {
-	Sequence<Bookmark>::iterator itr;
+	std::vector<Bookmark>::iterator itr;
 
 	for (itr=m_bookmarks.begin(); itr!=m_bookmarks.end(); ++itr)
 	{
@@ -537,9 +537,9 @@ int MapContext::getNumBookmark()
 	return (int) m_bookmarks.size();
 }
 
-Bookmark *MapContext::getBookmark(const String &name)
+Bookmark *MapContext::getBookmark(const std::string &name)
 {
-	Sequence<Bookmark>::iterator itr;
+	std::vector<Bookmark>::iterator itr;
 
 	for (itr=m_bookmarks.begin(); itr!=m_bookmarks.end(); ++itr)
 	{
@@ -572,9 +572,9 @@ void MapContext::clearAllBookmarks()
 	m_bookmarkIndex = 0;
 }
 
-void MapContext::saveEditorInfo(const String &filename)
+void MapContext::saveEditorInfo(const std::string &filename)
 {
-	String filepath = PathUtil::removeExt(filename) + "_editor.info";
+	std::string filepath = PathUtil::removeExt(filename) + "_editor.info";
 
 	File *file = g_fileSystem->openFileWrite(filepath);
 	if (!file)
@@ -593,9 +593,9 @@ void MapContext::saveEditorInfo(const String &filename)
 	file->close();
 }
 
-bool MapContext::loadEditorInfo(const String &filename)
+bool MapContext::loadEditorInfo(const std::string &filename)
 {
-	String filepath = PathUtil::removeExt(filename) + "_editor.info";
+	std::string filepath = PathUtil::removeExt(filename) + "_editor.info";
 
 	void *filebuf;
 	size_t filesize = g_fileSystem->readFile(filepath, &filebuf);
@@ -634,7 +634,7 @@ bool MapContext::loadEditorInfo(const String &filename)
 	const TiXmlElement *elem;
 	for (elem = root->FirstChildElement(); elem; elem = elem->NextSiblingElement()) 
 	{
-		const String &value = elem->ValueTStr();
+		const std::string &value = elem->ValueTStr();
 
 		if (value == "bookmark") 
 		{
@@ -654,7 +654,7 @@ bool MapContext::loadEditorInfo(const String &filename)
 void MapContext::saveBookmarkInfo(File *file, int indent)
 {
 #define INDENT if (indent) file->printf("%s", ind.c_str());
-	String ind(indent, '\t');		//String ind(indent*2, ' ');
+	std::string ind(indent, '\t');		//String ind(indent*2, ' ');
 
 	INDENT; file->printf("<bookmark num=\"%d\">\n", m_bookmarks.size());
 
@@ -708,7 +708,7 @@ void MapContext::loadBookmarkInfo(const TiXmlElement *elem)
 	}
 }
 
-void MapContext::setActorProperty(const String &propName, const Variant &value)
+void MapContext::setActorProperty(const std::string &propName, const Variant &value)
 {
 	m_selections.setNodeProperty(propName,value);
 }

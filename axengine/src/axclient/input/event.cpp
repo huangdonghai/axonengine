@@ -14,13 +14,13 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-String InputKey::getName() const {
+std::string InputKey::getName() const {
 	if (t < 32) {
 		Errorf("Error InputKey");
 	}
 
 	if (t >= 32 && t < 128) {
-		return String(1,char(t));
+		return std::string(1,char(t));
 	}
 
 #define KEYITEM(key) case key: return #key; break;
@@ -30,10 +30,10 @@ String InputKey::getName() const {
 	}
 #undef KEYITEM
 
-	return String();
+	return std::string();
 }
 
-int InputKey::getKey(const String &keyname)
+int InputKey::getKey(const std::string &keyname)
 {
 	if (keyname.empty()) {
 		Errorf("error keyname");
@@ -43,14 +43,14 @@ int InputKey::getKey(const String &keyname)
 		return keyname[0];
 	}
 
-	static Dict<String,int> nameDict;
+	static Dict<std::string,int> nameDict;
 	if (nameDict.empty()) {
 #define KEYITEM(key) nameDict[#key] = key;
 		AX_KEYITEMS
 #undef KEYITEM
 	}
 
-	Dict<String,int>::const_iterator it = nameDict.find(keyname);
+	Dict<std::string,int>::const_iterator it = nameDict.find(keyname);
 	if (it == nameDict.end()) {
 		return 0;
 	}
@@ -196,7 +196,7 @@ void InputSystem::startCapture(CaptureMode mode) {
 	m_isCapturing = true;
 	m_captureMode = mode;
 
-	List<IInputSource*>::iterator it = m_eventSources.begin();
+	std::list<IInputSource*>::iterator it = m_eventSources.begin();
 
 	m_winInput->setWindow(m_gameWnd);
 	m_winInput->startCapture(mode);
@@ -207,7 +207,7 @@ void InputSystem::startCapture(CaptureMode mode) {
 }
 
 void InputSystem::processEvents() {
-	List<IInputSource*>::iterator it = m_eventSources.begin();
+	std::list<IInputSource*>::iterator it = m_eventSources.begin();
 
 	m_winInput->process();
 
@@ -217,7 +217,7 @@ void InputSystem::processEvents() {
 }
 
 void InputSystem::setVibration(float left, float right) {
-	List<IInputSource*>::iterator it = m_eventSources.begin();
+	std::list<IInputSource*>::iterator it = m_eventSources.begin();
 
 	for (; it != m_eventSources.end(); ++it) {
 		(*it)->setVibration(left, right);
@@ -226,7 +226,7 @@ void InputSystem::setVibration(float left, float right) {
 
 void InputSystem::setMouseMode(MouseMode mode)
 {
-	List<IInputSource*>::iterator it = m_eventSources.begin();
+	std::list<IInputSource*>::iterator it = m_eventSources.begin();
 
 	for (; it != m_eventSources.end(); ++it) {
 		(*it)->setMouseMode(mode);
@@ -234,7 +234,7 @@ void InputSystem::setMouseMode(MouseMode mode)
 }
 
 void InputSystem::stopCapture() {
-	List<IInputSource*>::iterator it = m_eventSources.begin();
+	std::list<IInputSource*>::iterator it = m_eventSources.begin();
 
 	for (; it != m_eventSources.end(); ++it) {
 		(*it)->stopCapture();

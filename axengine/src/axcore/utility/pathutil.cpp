@@ -20,7 +20,7 @@ read the license and understand and accept it fully.
 #endif
 AX_BEGIN_NAMESPACE
 
-void PathUtil::splitPath(const String &path, String &dir, String &fname, String &ext)
+void PathUtil::splitPath(const std::string &path, std::string &dir, std::string &fname, std::string &ext)
 {
 	dir = path;
 
@@ -52,9 +52,9 @@ void PathUtil::splitPath(const String &path, String &dir, String &fname, String 
 	return;
 }
 
-String PathUtil::removeExt(const String &path)
+std::string PathUtil::removeExt(const std::string &path)
 {
-	String out = path;
+	std::string out = path;
 
 	size_t len = out.length();
 
@@ -69,7 +69,7 @@ String PathUtil::removeExt(const String &path)
 	return out;
 }
 
-String PathUtil::removeDir(const String &fullpath)
+std::string PathUtil::removeDir(const std::string &fullpath)
 {
 	for (int i = (int)fullpath.size()-1; i>=0; i--) {
 		if (isDirectoryLetter(fullpath[i])) {
@@ -80,7 +80,7 @@ String PathUtil::removeDir(const String &fullpath)
 	return fullpath;
 }
 
-String PathUtil::removeDirOne(const String &path)
+std::string PathUtil::removeDirOne(const std::string &path)
 {
 	for (size_t i = 0; i < path.size(); i++) {
 		if (isDirectoryLetter(path[i])) {
@@ -91,9 +91,9 @@ String PathUtil::removeDirOne(const String &path)
 }
 
 
-String PathUtil::getDir(const String &fullpath)
+std::string PathUtil::getDir(const std::string &fullpath)
 {
-	String out = fullpath;
+	std::string out = fullpath;
 	intptr_t i;
 
 	size_t len = out.length();
@@ -109,7 +109,7 @@ String PathUtil::getDir(const String &fullpath)
 	return out;
 }
 
-bool PathUtil::haveDir(const String &fullpath)
+bool PathUtil::haveDir(const std::string &fullpath)
 {
 	for (size_t i = 0; i < fullpath.length(); i++)
 		if (isDirectoryLetter(fullpath[i]))
@@ -119,7 +119,7 @@ bool PathUtil::haveDir(const String &fullpath)
 }
 
 
-String PathUtil::getExt(const String &fullpath)
+std::string PathUtil::getExt(const std::string &fullpath)
 {
 	size_t len = fullpath.length();
 
@@ -130,34 +130,34 @@ String PathUtil::getExt(const String &fullpath)
 		}
 	}
 
-	return String();
+	return std::string();
 }
 
-String PathUtil::getName(const String &fullpath)
+std::string PathUtil::getName(const std::string &fullpath)
 {
 	size_t extpos = fullpath.rfind('.');
 	size_t pathpos = fullpath.find_last_of("/\\");
 
-	if (pathpos == String::npos) {
+	if (pathpos == std::string::npos) {
 		pathpos = 0;
 	} else {
 		pathpos++;
 	}
 
-	if (extpos == String::npos || extpos <= pathpos ) {
+	if (extpos == std::string::npos || extpos <= pathpos ) {
 		extpos = fullpath.size();
 	}
 
 	return fullpath.substr(pathpos, extpos-pathpos);
 }
 
-bool PathUtil::createDir(const String &OSPath)
+bool PathUtil::createDir(const std::string &OSPath)
 {
-	if (OSPath.find("..") != String::npos  || OSPath.find("::") != String::npos) {
+	if (OSPath.find("..") != std::string::npos  || OSPath.find("::") != std::string::npos) {
 		return false;
 	}
 
-	String path = removeFilename(OSPath);
+	std::string path = removeFilename(OSPath);
 
 	if (OsUtil::mkdir(path.c_str()) == 0)
 		return true;
@@ -165,9 +165,9 @@ bool PathUtil::createDir(const String &OSPath)
 	return false;
 }
 
-String PathUtil::normalizePath(const String &path)
+std::string PathUtil::normalizePath(const std::string &path)
 {
-	String epath = path;
+	std::string epath = path;
 
 	for (size_t i = 0; i < epath.size(); i++) {
 		if (epath[i] == OS_PATH_SEP)
@@ -177,19 +177,19 @@ String PathUtil::normalizePath(const String &path)
 	return cleanPath(epath);
 }
 
-String PathUtil::getRelativePath(const String &filename, const char *rootname)
+std::string PathUtil::getRelativePath(const std::string &filename, const char *rootname)
 {
 	if (rootname == nullptr)
 		rootname = "axgame";
-	String rootpath = "/";
+	std::string rootpath = "/";
 	rootpath += rootname;
 	rootpath += "/";
 
-	String normalized = PathUtil::normalizePath(filename);
+	std::string normalized = PathUtil::normalizePath(filename);
 	size_t pos = normalized.find(rootpath);
 
-	String result;
-	if (pos == String::npos)
+	std::string result;
+	if (pos == std::string::npos)
 		return result;
 
 	result = normalized.substr(pos + rootpath.size());
@@ -210,9 +210,9 @@ const char *PathUtil::skipDir(const char *pathname)
 	return last;
 }
 
-String PathUtil::removeFilename(const String &in)
+std::string PathUtil::removeFilename(const std::string &in)
 {
-	String out = in;
+	std::string out = in;
 	size_t len = out.length();
 
 	for (len-=1; len; len--) {
@@ -228,7 +228,7 @@ String PathUtil::removeFilename(const String &in)
 	return out;
 }
 
-void PathUtil::toUnixPath(String &path)
+void PathUtil::toUnixPath(std::string &path)
 {
 	size_t len = path.length();
 	for (size_t i=0; i<len; i++) {
@@ -237,7 +237,7 @@ void PathUtil::toUnixPath(String &path)
 	}
 }
 
-void PathUtil::convertSlash(String &path, char slash)
+void PathUtil::convertSlash(std::string &path, char slash)
 {
 	size_t len = path.length();
 	for (size_t i=0; i<len; i++) {
@@ -246,7 +246,7 @@ void PathUtil::convertSlash(String &path, char slash)
 	}
 }
 
-bool PathUtil::getFileModifiedTime(const String &filename, longlong_t *t)
+bool PathUtil::getFileModifiedTime(const std::string &filename, longlong_t *t)
 {
 	WIN32_FILE_ATTRIBUTE_DATA fileAttr;
 	if (GetFileAttributesExW(u2w(filename).c_str(), GetFileExInfoStandard, &fileAttr)) {
@@ -262,7 +262,7 @@ bool PathUtil::getFileModifiedTime(const String &filename, longlong_t *t)
 	return false;
 }
 
-StringSeq PathUtil::findFiles(const String &dir, const String &filter, bool dironly)
+StringSeq PathUtil::findFiles(const std::string &dir, const std::string &filter, bool dironly)
 {
 	uint_t flags = 0;
 	if (dironly) {
@@ -274,7 +274,7 @@ StringSeq PathUtil::findFiles(const String &dir, const String &filter, bool diro
 	return listFileByExts(dir + '/', dir, filter, flags);
 }
 
-StringSeq PathUtil::listFileByExts(const String &base, const String &path, const String &exts, uint_t flags)
+StringSeq PathUtil::listFileByExts(const std::string &base, const std::string &path, const std::string &exts, uint_t flags)
 {
 
 	StringSeq strvec;
@@ -298,7 +298,7 @@ static bool CmpFileInfoNameLess(const FileInfo &left, const FileInfo &right)
 	return left.filename < right.filename;
 }
 
-FileInfoSeq PathUtil::getFileInfos(const String &base, const String &path, const String &filters, int flags)
+FileInfoSeq PathUtil::getFileInfos(const std::string &base, const std::string &path, const std::string &filters, int flags)
 {
 	FileInfoSeq fileinfos;
 	_wfinddata_t finddata;
@@ -308,7 +308,7 @@ FileInfoSeq PathUtil::getFileInfos(const String &base, const String &path, const
 
 	Filter filter(filters);
 
-	String pattern = path;
+	std::string pattern = path;
 	if (!PathUtil::isDirectoryLetter(pattern[pattern.length() - 1])) {
 		pattern += '/';
 	}
@@ -381,15 +381,15 @@ FileInfoSeq PathUtil::getFileInfos(const String &base, const String &path, const
 	return fileinfos;
 }
 
-String PathUtil::cleanPath( const String &path )
+std::string PathUtil::cleanPath( const std::string &path )
 {
 	if (path.empty())
 		return path;
-	String name = path;
+	std::string name = path;
 
 	int used = 0, levels = 0;
 	const int len = name.length();
-	Sequence<char> out;
+	std::vector<char> out;
 	out.resize(len);
 	const char *p = name.c_str();
 
@@ -485,9 +485,9 @@ String PathUtil::cleanPath( const String &path )
 		out[iwrite++] = p[i];
 		used++;
 	}
-	String ret;
+	std::string ret;
 	if (used == len) ret = name;
-	else ret = String(&out[0], used);
+	else ret = std::string(&out[0], used);
 
 	// Strip away last slash except for root directories
 	if (ret[ret.length()-1] == '/' && !(ret.size() == 1 || (ret.size() == 3 && ret.at(1) == (':'))))

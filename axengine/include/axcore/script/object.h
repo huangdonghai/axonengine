@@ -22,7 +22,7 @@ public:
 	virtual ~Object();
 
 	virtual CppClass *getCppClass() const;
-	virtual String getNamespace() const { return String(); }
+	virtual std::string getNamespace() const { return std::string(); }
 	static CppClass *registerCppClass();
 	const ScriptClass *getScriptClass() const { return m_scriptClass; }
 
@@ -40,8 +40,8 @@ public:
 	bool setProperty(const FixedString &name, const char *value);
 
 	// properties
-	void set_objectName(const String &name);
-	String get_objectName() const;
+	void set_objectName(const std::string &name);
+	std::string get_objectName() const;
 
 	bool inherits(const FixedString &cls) const;
 
@@ -67,17 +67,17 @@ public:
 protected:
 	virtual void onPropertyChanged();
 
-	void setObjectName(const String &name);
+	void setObjectName(const std::string &name);
 	void resetObjectName();
 
-	void raiseSignal(const String &signal, const Variant &param);
+	void raiseSignal(const std::string &signal, const Variant &param);
 	void initScriptClass(const ScriptClass *sqclass);
 
 protected:
 	const ScriptClass *m_scriptClass;
 
-	String m_objectNamespace;
-	String m_objectName;
+	std::string m_objectNamespace;
+	std::string m_objectName;
 
 	ScriptValue m_scriptInstance;
 

@@ -13,14 +13,6 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-template< class T, class AllocT = Allocator<T> >
-class Sequence : public std::vector< T, AllocT >
-{};
-
-template< class T, class AllocT = Allocator<T> >
-class List : public std::list< T, AllocT >
-{};
-
 template<class _Kty,
 	class _Ty,
 	class _Hasher = std::tr1::hash<_Kty>,
@@ -35,36 +27,34 @@ template<class _Kty,
 class DictSet : public std::tr1::unordered_set<_Kty,_Hasher,_Keyeq,_Alloc> {};
 
 
-typedef Sequence<byte_t> ByteSeq;
-typedef Sequence<int>	IntSeq;
+typedef std::vector<byte_t> ByteSeq;
+typedef std::vector<int> IntSeq;
 
-typedef std::string String;
-typedef Sequence<String>			StringSeq;
-typedef List<String>				StringList;
-typedef std::pair<String, String>	StringPair;
-typedef Sequence<StringPair>		StringPairSeq;
-typedef std::wstring WString;
+typedef std::vector<std::string> StringSeq;
+typedef std::list<std::string> StringList;
+typedef std::pair<std::string, std::string> StringPair;
+typedef std::vector<StringPair> StringPairSeq;
 
 
-AX_API WString u2w(const String &utf8str);
-AX_API WString u2w(const char *utf8str);
-AX_API String l2u(const char *localstr);
-AX_API String l2u(const String &lstr);
-AX_API String u2l(const char *localstr);
-AX_API String u2l(const String &lstr);
-AX_API String w2u(const wchar_t *localstr);
-AX_API String w2u(const WString &localstr);
-AX_API WString l2w(const char *localstr);
-AX_API WString l2w(const String &lstr);
-AX_API String w2l(const wchar_t *localstr);
-AX_API String w2l(const WString &lstr);
+AX_API std::wstring u2w(const std::string &utf8str);
+AX_API std::wstring u2w(const char *utf8str);
+AX_API std::string l2u(const char *localstr);
+AX_API std::string l2u(const std::string &lstr);
+AX_API std::string u2l(const char *localstr);
+AX_API std::string u2l(const std::string &lstr);
+AX_API std::string w2u(const wchar_t *localstr);
+AX_API std::string w2u(const std::wstring &localstr);
+AX_API std::wstring l2w(const char *localstr);
+AX_API std::wstring l2w(const std::string &lstr);
+AX_API std::string w2l(const wchar_t *localstr);
+AX_API std::string w2l(const std::wstring &lstr);
 
 #define _(ascii_str) (ascii_str)
 
 struct AX_API StringUtil {
 	static int vsnprintf(char *buffer, size_t count, const char *format, va_list argptr);
 	static int CDECL snprintf(char *buffer, size_t count, const char *format, ...);
-	static int CDECL sprintf(String &str, const char *format, ...);
+	static int CDECL sprintf(std::string &str, const char *format, ...);
 	static int stricmp(const char *string1, const char *string2);
 	static int strnicmp(const char *string1, const char *string2, size_t count);
 	static char *strncpyz(char *strDest, const char *strSource, size_t count);
@@ -72,7 +62,7 @@ struct AX_API StringUtil {
 	static StringList tokenize(const char *text, char split = ' ');
 	static StringSeq tokenizeSeq(const char *text, char split = ' ');
 	static bool filterString(const char *filter, const char *fname, bool casesensitive);
-	static String CDECL format(const char *fmt, ...);
+	static std::string CDECL format(const char *fmt, ...);
 };
 
 inline int StringUtil::vsnprintf(char *buffer, size_t count, const char *format, va_list argptr) {
@@ -90,7 +80,7 @@ inline int CDECL StringUtil::snprintf(char *buffer, size_t count, const char *fo
 	return len;
 }
 
-inline int CDECL StringUtil::sprintf(String &str, const char *format, ...) {
+inline int CDECL StringUtil::sprintf(std::string &str, const char *format, ...) {
 	char tmp[1024];
 	va_list argptr;
 	int len;
@@ -104,7 +94,7 @@ inline int CDECL StringUtil::sprintf(String &str, const char *format, ...) {
 	return len;
 }
 
-inline String CDECL StringUtil::format(const char *fmt, ...)
+inline std::string CDECL StringUtil::format(const char *fmt, ...)
 {
 	char tmp[1024];
 	va_list argptr;
@@ -114,7 +104,7 @@ inline String CDECL StringUtil::format(const char *fmt, ...)
 	len = ::vsnprintf_s(tmp, ArraySize(tmp), _TRUNCATE, fmt, argptr);
 	va_end(argptr);
 
-	return String(tmp, len);
+	return std::string(tmp, len);
 }
 
 inline int StringUtil::stricmp(const char *string1, const char *string2) {

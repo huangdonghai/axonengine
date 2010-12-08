@@ -32,14 +32,14 @@ public:
 	void measureHistogram(GLtexture *tex, int index);
 	void downscale4x4(GLtexture *tex, const Rect &rect);
 
-	void genericPP(const String &shadername, GLtexture *src);
-	void genericPP(const String &shadername, RenderTarget *target, GLtexture *src);
-	void genericPP(const String &shadername, GLtexture *src1, GLtexture *src2);
-	void genericPP(const String &shadername, RenderTarget *target, GLtexture *src1, GLtexture *src2);
+	void genericPP(const std::string &shadername, GLtexture *src);
+	void genericPP(const std::string &shadername, RenderTarget *target, GLtexture *src);
+	void genericPP(const std::string &shadername, GLtexture *src1, GLtexture *src2);
+	void genericPP(const std::string &shadername, RenderTarget *target, GLtexture *src1, GLtexture *src2);
 
 protected:
 	void updateScreenQuad(const Rect &rect);
-	GLshader *getShader(const String &name);
+	GLshader *getShader(const std::string &name);
 
 private:
 	MeshPrim *m_screenQuad;
@@ -54,7 +54,7 @@ private:
 	GLshader *m_shaderHistogram;
 	GLshader *m_shaderDownscale4x4;
 
-	Dict<String, GLshader*>	m_genericShaders;
+	Dict<std::string, GLshader*>	m_genericShaders;
 };
 
 AX_END_NAMESPACE

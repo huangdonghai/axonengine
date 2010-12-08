@@ -355,8 +355,8 @@ void GLpostprocess::downscale4x4(GLtexture *tex, const Rect &rect) {
 	GLrender::draw(m_shaderDownscale4x4, Technique::Main, m_screenQuadGeo);
 }
 
-GLshader *GLpostprocess::getShader(const String &name) {
-	Dict<String, GLshader*>::iterator it = m_genericShaders.find(name);
+GLshader *GLpostprocess::getShader(const std::string &name) {
+	Dict<std::string, GLshader*>::iterator it = m_genericShaders.find(name);
 
 	if (it != m_genericShaders.end()) {
 		return it->second;
@@ -371,7 +371,7 @@ GLshader *GLpostprocess::getShader(const String &name) {
 	return shader;
 }
 
-void GLpostprocess::genericPP(const String &shadername, GLtexture *src) {
+void GLpostprocess::genericPP(const std::string &shadername, GLtexture *src) {
 	GLshader *shader = getShader(shadername);
 
 	src->setFilterMode(Texture::FM_Nearest);
@@ -392,7 +392,7 @@ void GLpostprocess::genericPP(const String &shadername, GLtexture *src) {
 	GLrender::draw(shader, Technique::Main, m_screenQuadGeo);
 }
 
-void GLpostprocess::genericPP(const String &shadername, RenderTarget *target, GLtexture *src) {
+void GLpostprocess::genericPP(const std::string &shadername, RenderTarget *target, GLtexture *src) {
 	GLshader *shader = getShader(shadername);
 	RenderCamera camera;
 	camera.setTarget(target);
@@ -420,11 +420,11 @@ void GLpostprocess::genericPP(const String &shadername, RenderTarget *target, GL
 	glThread->unsetScene(0, 0, 0, &camera);
 }
 
-void GLpostprocess::genericPP(const String &shadername, GLtexture *src1, GLtexture *src2) {
+void GLpostprocess::genericPP(const std::string &shadername, GLtexture *src1, GLtexture *src2) {
 	genericPP(shadername, nullptr, src1, src2);
 }
 
-void GLpostprocess::genericPP(const String &shadername, RenderTarget *target, GLtexture *src1, GLtexture *src2) {
+void GLpostprocess::genericPP(const std::string &shadername, RenderTarget *target, GLtexture *src1, GLtexture *src2) {
 	GLshader *shader = getShader(shadername);
 
 	RenderCamera camera;

@@ -139,7 +139,7 @@ private:
 	float m_aspect;
 	int m_format;			// format flags
 	Font *m_font;				// font used
-	String m_text;				// string to draw
+	std::string m_text;				// string to draw
 	TextPrim::HorizonAlign m_horizonAlign;
 	TextPrim::VerticalAlign m_verticalAlign;
 	Rgba m_color;
@@ -195,7 +195,7 @@ public:
 //		virtual void drawElements();
 
 private:
-	Sequence<int>		m_primitives;
+	std::vector<int>		m_primitives;
 };
 
 //--------------------------------------------------------------------------

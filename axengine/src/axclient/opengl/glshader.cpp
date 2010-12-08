@@ -115,16 +115,16 @@ GLshader::~GLshader() {
 	cgDestroyEffect(m_cgfx);
 }
 
-bool GLshader::doInit(const String &name, const ShaderMacro &macro) {
+bool GLshader::doInit(const std::string &name, const ShaderMacro &macro) {
 	m_name = name;
 
-	String fullname = "shaders/" + name + ".fx";
+	std::string fullname = "shaders/" + name + ".fx";
 	fullname = g_fileSystem->dataPathToOsPath(fullname);
 
-	String path = g_fileSystem->dataPathToOsPath("shaders/");
+	std::string path = g_fileSystem->dataPathToOsPath("shaders/");
 	path = "-I" + path;
 
-	Sequence<const char*> args;
+	std::vector<const char*> args;
 
 	args.push_back(path.c_str());
 #if 0
@@ -342,7 +342,7 @@ void GLshader::setInteractionParameter(const ShaderParams &params) {
 	ShaderParams::const_iterator it = params.begin();
 
 	for (; it != params.end(); ++it) {
-		const String &n = it->first;
+		const std::string &n = it->first;
 		const FloatSeq &v = it->second;
 
 		setParameter(n.c_str(), &v[0], s2i(v.size()));
@@ -633,7 +633,7 @@ void GLshader::initFeatures() {
 
 	StringList flist = StringUtil::tokenize(value, '|');
 
-	AX_FOREACH(const String &s, flist) {
+	AX_FOREACH(const std::string &s, flist) {
 		StringSeq ftext = StringUtil::tokenizeSeq(s.c_str(), ':');
 
 		if (ftext.size() < 3) {
@@ -659,7 +659,7 @@ void GLshader::initMacroParameters() {
 
 	StringList flist = StringUtil::tokenize(value, '|');
 
-	AX_FOREACH(const String &s, flist) {
+	AX_FOREACH(const std::string &s, flist) {
 		StringSeq ftext = StringUtil::tokenizeSeq(s.c_str(), ':');
 
 		if (!ftext.size()) {
@@ -844,7 +844,7 @@ GLshadermanager::~GLshadermanager()
 {
 }
 
-Shader *GLshadermanager::findShader(const String &name, const ShaderMacro &macro)
+Shader *GLshadermanager::findShader(const std::string &name, const ShaderMacro &macro)
 {
 	return findShaderGL(name, macro);
 }
@@ -854,7 +854,7 @@ Shader *GLshadermanager::findShader( const FixedString &nameId, const ShaderMacr
 	return 0;
 }
 
-GLshader *GLshadermanager::findShaderGL(const String &name, const ShaderMacro &macro)
+GLshader *GLshadermanager::findShaderGL(const std::string &name, const ShaderMacro &macro)
 {
 	ShaderPool::const_iterator it = m_shaderPool.find(name);
 	if (it != m_shaderPool.end()) {
@@ -878,12 +878,12 @@ GLshader *GLshadermanager::findShaderGL(const String &name, const ShaderMacro &m
 	return shader;
 }
 
-void GLshadermanager::saveShaderCache( const String &name )
+void GLshadermanager::saveShaderCache( const std::string &name )
 {
 
 }
 
-void GLshadermanager::applyShaderCache( const String &name )
+void GLshadermanager::applyShaderCache( const std::string &name )
 {
 
 }

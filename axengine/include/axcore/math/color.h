@@ -47,7 +47,7 @@ struct AX_API Rgb {
 
 	void fromVector(const Vector3 &v);
 	Vector3 toVector() const;
-	String toString() const;
+	std::string toString() const;
 	bool fromString(const char *str);
 
 	const static Rgb Black ;
@@ -199,12 +199,12 @@ struct AX_API Rgba {
 	byte_t &operator[](int index);
 	byte_t operator[](int index) const;
 
-	String toStringRgb() const;
+	std::string toStringRgb() const;
 	void parseRgb(const char *text);
 
 	Rgb rgb() const { return Rgb(r,g,b); }
 
-	String toString() const;
+	std::string toString() const;
 	void fromString(const char *str);
 
 	static Rgba randColor();
@@ -342,8 +342,8 @@ inline byte_t Rgba::operator[](int index) const {
 	return *(&r+index);
 }
 
-inline String Rgba::toStringRgb() const {
-	String result;
+inline std::string Rgba::toStringRgb() const {
+	std::string result;
 
 	StringUtil::sprintf(result, "%d,%d,%d", r,g,b);
 
@@ -404,7 +404,7 @@ struct AX_API Color3
 	Color3 operator/(float rhs) const { return Color3(r/rhs, g/rhs, b/rhs); }
 	Color3& operator/=(float rhs) { r /= rhs; g /= rhs; b /= rhs; return *this; }
 
-	String toString() const;
+	std::string toString() const;
 	bool fromString(const char *str);
 };
 
@@ -445,7 +445,7 @@ struct AX_API Color4
 	Color4 operator/(float rhs) const { return *this * (1.0f/rhs); }
 	Color4& operator/=(float rhs) { return *this = *this / rhs; }
 
-	String toString() const;
+	std::string toString() const;
 	bool fromString(const char *str);
 };
 

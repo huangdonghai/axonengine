@@ -41,14 +41,14 @@ namespace {
 
 		void initialize();
 		void finalize();
-		BufInfo getFontFileBuf(const String filename);
+		BufInfo getFontFileBuf(const std::string filename);
 
-		FontPtr load(const String &name, int w, int h);
+		FontPtr load(const std::string &name, int w, int h);
 		void deleteFont(Font *font);
 
 	private:
 		bool m_initialized;
-		typedef Dict<String, BufInfo,HashPath,EqualPath> FileBufDict;
+		typedef Dict<std::string, BufInfo,HashPath,EqualPath> FileBufDict;
 		FileBufDict m_fontFileBufs;
 		typedef Dict<FixedString, Font*> FontDict;
 		FontDict m_fontDict;
@@ -84,7 +84,7 @@ namespace {
 	{}
 
 
-	BufInfo Manager::getFontFileBuf(const String name)
+	BufInfo Manager::getFontFileBuf(const std::string name)
 	{
 		FileBufDict::iterator it;
 
@@ -93,7 +93,7 @@ namespace {
 		if (it != m_fontFileBufs.end())
 			return it->second;
 
-		String filename = gFontPath;
+		std::string filename = gFontPath;
 		filename += "/" + name;
 		void *buf;
 		size_t size;
@@ -113,7 +113,7 @@ namespace {
 		return buf_info;
 	}
 
-	FontPtr Manager::load( const String &name, int w, int h )
+	FontPtr Manager::load( const std::string &name, int w, int h )
 	{
 		FixedString key = Font::normalizeKey(name, w, h);
 
@@ -289,7 +289,7 @@ bool FontFace::getCharBitmap(wchar_t ch, int width, int height, byte_t *data) {
 Font::~Font()
 {}
 
-bool Font::doInit(const String &name, int w, int h)
+bool Font::doInit(const std::string &name, int w, int h)
 {
 	m_name = name;
 #if 0
@@ -361,7 +361,7 @@ bool Font::doInit(const String &name, int w, int h)
 
 bool Font::parseFontDef()
 {
-	String fname = m_name + ".font";
+	std::string fname = m_name + ".font";
 	char *fbuf;
 	size_t fsize;
 
@@ -419,12 +419,12 @@ bool Font::parseFontDef()
 	return true;
 }
 
-String Font::getName()
+std::string Font::getName()
 {
 	return m_name;
 }
 
-uint_t Font::getStringWidth(const WString &string)
+uint_t Font::getStringWidth(const std::wstring &string)
 {
 	uint_t width = 0;
 
@@ -532,7 +532,7 @@ void Font::newFrame()
 	m_texAtlas->newFrame();
 }
 
-FontPtr Font::load( const String &name, int w, int h )
+FontPtr Font::load( const std::string &name, int w, int h )
 {
 	return s_fontManager->load(name, w, h);
 }
@@ -552,7 +552,7 @@ void Font::deleteThis()
 	s_fontManager->deleteFont(this);
 }
 
-FixedString Font::normalizeKey( const String &name, int w, int h )
+FixedString Font::normalizeKey( const std::string &name, int w, int h )
 {
 	std::stringstream ss;
 	ss << name << "_" << w << "x" << h;

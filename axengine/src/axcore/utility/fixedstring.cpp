@@ -17,19 +17,19 @@ FixedStringManager::FixedStringManager()
 	m_strings.reserve(MAX_HANDLES);
 
 	// add empty string in index 0
-	findString(String());
+	findString(std::string());
 }
 
 FixedStringManager::~FixedStringManager()
 {}
 
-const String &FixedStringManager::getString(int handle) const
+const std::string &FixedStringManager::getString(int handle) const
 {
 	if (handle >= s2i(m_strings.size()) || handle < 0) {
 		Errorf("invalid handle");
 	}
 
-	const String *refstring = m_strings[handle];
+	const std::string *refstring = m_strings[handle];
 	if (!refstring) {
 		Errorf("not found");
 	}
@@ -37,14 +37,14 @@ const String &FixedStringManager::getString(int handle) const
 	return *refstring;
 }
 
-int FixedStringManager::findString(const String &str)
+int FixedStringManager::findString(const std::string &str)
 {
 	SCOPE_LOCK;
 
 	Dict<const char*, int, HashCstr, EqualCstr>::const_iterator it = m_dict.find(str.c_str());
 
 	if (it == m_dict.end()) {
-		const String *newsz = new String(str);
+		const std::string *newsz = new std::string(str);
 		m_strings.push_back(newsz);
 		int handle = m_strings.size() - 1;
 		m_dict[newsz->c_str()] = handle;
@@ -65,7 +65,7 @@ int FixedStringManager::findString(const char *lpcz)
 	Dict<const char*, int, HashCstr, EqualCstr>::const_iterator it = m_dict.find(lpcz);
 
 	if (it == m_dict.end()) {
-		const String *newsz = new String(lpcz);
+		const std::string *newsz = new std::string(lpcz);
 		m_strings.push_back(newsz);
 		int handle = m_strings.size() - 1;
 		m_dict[newsz->c_str()] = handle;

@@ -16,7 +16,7 @@ AX_BEGIN_NAMESPACE
 // class AnimationContext
 //--------------------------------------------------------------------------
 
-AnimationChannel::AnimationChannel(AnimationContext *context, int index, const String &name, const StringSeq &bones)
+AnimationChannel::AnimationChannel(AnimationContext *context, int index, const std::string &name, const StringSeq &bones)
 	: m_context(context)
 	, m_index(index)
 	, m_channelName(name)
@@ -81,7 +81,7 @@ bool AnimationChannel::isAnimDone(float timeleft)
 
 void AnimationChannel::step(int msec)
 {
-	String update = m_context->m_lua + '.' + m_channelName + '.' + m_state + '.' + "update";
+	std::string update = m_context->m_lua + '.' + m_channelName + '.' + m_state + '.' + "update";
 #if 0
 	g_scriptSystem->invokeLuaMethod(update.c_str(), Variant(m_context));
 #endif
@@ -89,7 +89,7 @@ void AnimationChannel::step(int msec)
 	m_animator->renderToPose(m_pose);
 }
 
-void AnimationChannel::switchState(const String &state, float easein)
+void AnimationChannel::switchState(const std::string &state, float easein)
 {
 	if (m_state == state) {
 		return;
@@ -99,7 +99,7 @@ void AnimationChannel::switchState(const String &state, float easein)
 	m_easeinDuration = easein;
 
 	// enterstate
-	String enterstate = m_context->m_lua + '.' + m_channelName + '.' + m_state + '.' + "enterState";
+	std::string enterstate = m_context->m_lua + '.' + m_channelName + '.' + m_state + '.' + "enterState";
 #if 0
 	g_scriptSystem->invokeLuaMethod(enterstate.c_str(), Variant(m_context));
 #endif
@@ -122,7 +122,7 @@ AnimationContext::~AnimationContext()
 
 }
 
-void AnimationContext::initFromLua(const String &luaobj)
+void AnimationContext::initFromLua(const std::string &luaobj)
 {
 	m_lua = luaobj;
 
@@ -200,11 +200,11 @@ void AnimationContext::initFromLua(const String &luaobj)
 	m_currentChannel = -1;
 }
 
-void AnimationContext::playCycle(const String &anim)
+void AnimationContext::playCycle(const std::string &anim)
 {
 	AX_ASSERT(m_currentChannel != -1);
 
-	Dict<String,int>::const_iterator it = m_animDict.find(anim);
+	Dict<std::string,int>::const_iterator it = m_animDict.find(anim);
 
 	if (it == m_animDict.end())
 		Errorf("can't find animation to play");
@@ -212,16 +212,16 @@ void AnimationContext::playCycle(const String &anim)
 	m_channels[m_currentChannel]->playCycle(it->second);
 }
 
-void AnimationContext::playCycleSync(const String &anim, int syncState)
+void AnimationContext::playCycleSync(const std::string &anim, int syncState)
 {
 
 }
 
-void AnimationContext::playAnim(const String &anim)
+void AnimationContext::playAnim(const std::string &anim)
 {
 	AX_ASSERT(m_currentChannel != -1);
 
-	Dict<String,int>::const_iterator it = m_animDict.find(anim);
+	Dict<std::string,int>::const_iterator it = m_animDict.find(anim);
 
 	if (it == m_animDict.end())
 		Errorf("can't find animation to play");
@@ -235,7 +235,7 @@ bool AnimationContext::isAnimDone(float timeleft)
 	return m_channels[m_currentChannel]->isAnimDone(timeleft);
 }
 
-void AnimationContext::switchState(const String &state, float easyin)
+void AnimationContext::switchState(const std::string &state, float easyin)
 {
 	AX_ASSERT(m_currentChannel != -1);
 	m_channels[m_currentChannel]->switchState(state, easyin);
@@ -299,7 +299,7 @@ void AnimationContext::initBoneChannelMap()
 
 			// find bone name in channel bone def
 			for (size_t k = 0; k < channel_bones.size(); k++) {
-				const String &channel_bone = channel_bones[k];
+				const std::string &channel_bone = channel_bones[k];
 				if (channel_bone == bone->m_name) {
 					m_boneChannelMap[i] = j;
 					break;

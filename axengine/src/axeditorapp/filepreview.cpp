@@ -29,7 +29,7 @@ static QWidget* CreateWidgetFromQPixmap(const QPixmap &pixmap, QWidget *parent)
 	return label;
 }
 
-static QWidget* CreateWidgetFromImage(const String &filePathName, Image::FileType type, QWidget *parent)
+static QWidget* CreateWidgetFromImage(const std::string &filePathName, Image::FileType type, QWidget *parent)
 {
 	Image image;
 	if (!image.loadFileByType(filePathName, type, Image::NoCompressed | Image::ExpandAlpha))
@@ -43,10 +43,10 @@ static QWidget* CreateWidgetFromImage(const String &filePathName, Image::FileTyp
 	return CreateWidgetFromQPixmap(pixmap, parent);
 }
 
-static QWidget* CreateWidgetFromQImageFile(const String &filePathName, QWidget *parent)
+static QWidget* CreateWidgetFromQImageFile(const std::string &filePathName, QWidget *parent)
 {
 	QPixmap pixmap;
-	String gamePath = g_fileSystem->dataPathToOsPath(filePathName);
+	std::string gamePath = g_fileSystem->dataPathToOsPath(filePathName);
 	if (!pixmap.load(u2q(gamePath))) {
 		return NULL;
 	}
@@ -54,10 +54,10 @@ static QWidget* CreateWidgetFromQImageFile(const String &filePathName, QWidget *
 	return CreateWidgetFromQPixmap(pixmap, parent);
 }
 
-static QWidget* CreateWidgetFrom3DFile(const String &filePathName, QWidget *parent)
+static QWidget* CreateWidgetFrom3DFile(const std::string &filePathName, QWidget *parent)
 {
 	PreviewWidget *preview = new PreviewWidget(parent);
-	String modelName = PathUtil::removeExt(filePathName);
+	std::string modelName = PathUtil::removeExt(filePathName);
 #if 0
 	Render::Model *modelPtr = gRenderSystem->createModel(modelName);
 #endif
@@ -65,17 +65,17 @@ static QWidget* CreateWidgetFrom3DFile(const String &filePathName, QWidget *pare
 	return preview;
 }
 
-static inline QWidget *CreateWidgetFromTga(const String &filePathName, QWidget *parent)
+static inline QWidget *CreateWidgetFromTga(const std::string &filePathName, QWidget *parent)
 {	return CreateWidgetFromImage(filePathName, Image::TGA, parent);	}
-static inline QWidget *CreateWidgetFromDds(const String &filePathName, QWidget *parent)
+static inline QWidget *CreateWidgetFromDds(const std::string &filePathName, QWidget *parent)
 {	return CreateWidgetFromImage(filePathName, Image::DDS, parent);	}
-static inline QWidget *CreateWidgetFromJp2(const String &filePathName, QWidget *parent)
+static inline QWidget *CreateWidgetFromJp2(const std::string &filePathName, QWidget *parent)
 {	return CreateWidgetFromImage(filePathName, Image::JP2, parent);	}
 #if 0
 static inline QWidget *CreateWidgetFromPng(const String &filePathName, QWidget *parent)
 {	return CreateWidgetFromCxImage(filePathName, Image::PNG, parent);	}
 #endif
-static inline QWidget *CreateWidgetFromHdr(const String &filePathName, QWidget *parent)
+static inline QWidget *CreateWidgetFromHdr(const std::string &filePathName, QWidget *parent)
 {	return CreateWidgetFromImage(filePathName, Image::HDR, parent);	}
 //static inline QWidget *CreateWidgetFromJpg(const String &filePathName, QWidget *parent)
 //{	return CreateWidgetFromCxImage(filePathName, Image::JPEG, parent);	}
@@ -106,9 +106,9 @@ void FilePreview::Init()
 	m_createWidgetDict["JPEG"] = &CreateWidgetFromQImageFile;
 }
 
-QWidget* FilePreview::CreateWidget(const String &filePathName, QWidget *parent)
+QWidget* FilePreview::CreateWidget(const std::string &filePathName, QWidget *parent)
 {
-	String ext = PathUtil::getExt(filePathName);
+	std::string ext = PathUtil::getExt(filePathName);
 	if (ext[0] == L'.')
 		ext = ext.c_str() + 1;
 	strupr(const_cast<char*>(ext.c_str()));

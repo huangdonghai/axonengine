@@ -145,7 +145,7 @@ void D3D9querymanager::issueQuery( Query *query, int frameId, const BoundingBox 
 void D3D9querymanager::syncFrame()
 {
 	for (int i = 0; i < Query::QueryType_Number; i++) {
-		List<ActiveQuery*>::iterator it = m_activeQuery[i].begin();
+		std::list<ActiveQuery*>::iterator it = m_activeQuery[i].begin();
 
 		while (it != m_activeQuery[i].end()) {
 			ActiveQuery *issued = *it;
@@ -172,7 +172,7 @@ void D3D9querymanager::syncFrame()
 	}
 }
 
-const List<D3D9querymanager::ActiveQuery*>& D3D9querymanager::getActiveQuery( Query::QueryType type ) const
+const std::list<D3D9querymanager::ActiveQuery*>& D3D9querymanager::getActiveQuery( Query::QueryType type ) const
 {
 	return m_activeQuery[type];
 }

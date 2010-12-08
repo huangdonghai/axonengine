@@ -84,7 +84,7 @@ struct MaterialTextureId {
 class TextureDef {
 public:
 	TextureDef();
-	String file;
+	std::string file;
 	bool clampToBorder;
 	bool clampToEdge;
 	bool filter;
@@ -92,7 +92,7 @@ public:
 
 inline TextureDef::TextureDef() : clampToBorder(false), clampToEdge(false), filter(true) {}
 
-typedef Sequence<float> FloatSeq;
+typedef std::vector<float> FloatSeq;
 typedef Dict<FixedString, FloatSeq> ShaderParams;
 
 struct RenderStateId
@@ -171,9 +171,9 @@ public:
 
 	typedef Flags_<Flag> Flags;
 
-	bool tryLoad(const String &name);
+	bool tryLoad(const std::string &name);
 
-	const String &getShaderName() { return m_shaderName; }
+	const std::string &getShaderName() { return m_shaderName; }
 	TextureDef *getTextureDef(MaterialTextureId maptype) { return m_textures[maptype]; }
 	bool isWireframed() const { return m_renderStateId.wireframed; }
 	bool isTwoSided() const { return m_renderStateId.twoSided; }
@@ -186,7 +186,7 @@ public:
 	bool isDefaulted() const { return this == ms_defaulted; }
 
 	// management
-	static MaterialDecl *load(const String &name);
+	static MaterialDecl *load(const std::string &name);
 	static void initManager();
 	static void finalizeManager();
 
@@ -194,12 +194,12 @@ protected:
 	MaterialDecl();
 	virtual ~MaterialDecl();
 
-	static FixedString normalizeKey(const String &name);
+	static FixedString normalizeKey(const std::string &name);
 
 private:
 	FixedString m_key;
 	SortHint m_sortHint;
-	String m_shaderName;
+	std::string m_shaderName;
 	int m_shaderGenMask;
 	Flags m_flags;
 	SurfaceType m_surfaceType;

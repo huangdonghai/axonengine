@@ -155,7 +155,7 @@ private:
 	Vector3 m_pos;
 	int m_blend, m_order, m_type;
 	int m_tileRows, m_tileCols;
-	Sequence<Vector4> m_tiles;
+	std::vector<Vector4> m_tiles;
 	bool m_billboard;
 	int m_flags;
 

@@ -41,8 +41,8 @@ public:
 	enum { INIT_THREADPOOL_SIZE = 256 };
 	static sqObject ms_getClosure;
 	static sqObject ms_setClosure;
-	static Sequence<sqObject> ms_threadPool;
-	static List<int> ms_freeThreads;
+	static std::vector<sqObject> ms_threadPool;
+	static std::list<int> ms_freeThreads;
 
 	HSQUIRRELVM m_vm;
 };

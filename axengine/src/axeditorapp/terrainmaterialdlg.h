@@ -59,7 +59,7 @@ private:
 	MapMaterialDef *m_materialDef;
 	Image *m_heightImage;
 	Image *m_slopeImage;
-	String m_baseImage;
+	std::string m_baseImage;
 };
 
 #endif // CXTERRAINMATERIALDLG_H

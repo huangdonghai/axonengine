@@ -29,8 +29,8 @@ public:
 	TreeAsset(TreeManager *forest);
 	~TreeAsset();
 
-	bool load(const String &filename, int seed);
-	String getKey() const;
+	bool load(const std::string &filename, int seed);
+	std::string getKey() const;
 
 	BoundingBox getBoundingBox() const;
 	Primitives getAllPrimitives(float lod) const;
@@ -42,7 +42,7 @@ public:
 #if 0
 	void issueToQueueInstancing(QueuedScene *qscene);
 #endif
-	static String genKey(const String &filename, int seed);
+	static std::string genKey(const std::string &filename, int seed);
 
 protected:
 	void loadMaterials();
@@ -56,10 +56,10 @@ protected:
 private:
 	TreeManager *m_manager;
 	CSpeedTreeRT *m_treeRt;
-	String m_filename;
-	String m_filepath;
+	std::string m_filename;
+	std::string m_filepath;
 	int m_seed;
-	String m_key;
+	std::string m_key;
 
 	// primitives
 	int m_numBranchLods;
@@ -83,8 +83,8 @@ private:
 
 AX_DECLARE_REFPTR(TreeAsset);
 
-inline String TreeAsset::genKey(const String &filename, int seed) {
-	String result;
+inline std::string TreeAsset::genKey(const std::string &filename, int seed) {
+	std::string result;
 	StringUtil::sprintf(result, "%s_%d", filename.c_str(), seed);
 	return result;
 }

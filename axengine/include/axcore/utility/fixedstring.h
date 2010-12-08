@@ -26,15 +26,15 @@ public:
 	FixedStringManager();
 	~FixedStringManager();
 
-	const String &getString(int handle) const;
-	int findString(const String &str);
+	const std::string &getString(int handle) const;
+	int findString(const std::string &str);
 	int findString(const char *lpcz);
 
 	static FixedStringManager &instance();
 
 private:
 	Dict<const char*,int,HashCstr, EqualCstr> m_dict;
-	Sequence<const String*> m_strings;
+	std::vector<const std::string*> m_strings;
 };
 
 class AX_API FixedString
@@ -48,7 +48,7 @@ public:
 		m_handle = rhs.m_handle;
 	}
 
-	FixedString(const String &str)
+	FixedString(const std::string &str)
 	{
 		m_handle = FixedStringManager::instance().findString(str.c_str());
 	}
@@ -61,11 +61,11 @@ public:
 	~FixedString()
 	{}
 
-	const String &toString() const {
+	const std::string &toString() const {
 		return FixedStringManager::instance().getString(m_handle);
 	}
 #if 1
-	operator const String&() const {
+	operator const std::string&() const {
 		return FixedStringManager::instance().getString(m_handle);
 	}
 #endif
@@ -78,7 +78,7 @@ public:
 		return *this;
 	}
 
-	FixedString &operator=(const String &rhs) {
+	FixedString &operator=(const std::string &rhs) {
 		m_handle = FixedStringManager::instance().findString(rhs);
 		return *this;
 	}

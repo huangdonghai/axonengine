@@ -39,18 +39,18 @@ public:
 		ItemValue value;
 	};
 
-	typedef Sequence<ItemData> ItemDataSeq;
+	typedef std::vector<ItemData> ItemDataSeq;
 
 	class Item {
 	public:
-		String getName() const;
+		std::string getName() const;
 		void addControlPoint(int minutes, float value);
 		void addControlPoint(int minutes, Rgb color);
 		float getFloatValue(int minutes) const;
 		Rgb getColorValue(int minutes) const;
 
 	private:
-		String m_name;
+		std::string m_name;
 		Category m_category;
 		ItemDataType m_dataType;
 		ItemDataSeq m_datas;

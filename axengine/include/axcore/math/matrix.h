@@ -67,7 +67,7 @@ public:
 	void rotateSelfByAngles(float pitch, float yaw, float roll);
 	void scaleSelf(float x, float y, float z);
 
-	String toString() const;
+	std::string toString() const;
 	bool fromString(const char *str);
 
 	static Matrix getIdentity() { Matrix result; result.setIdentity(); return result; }

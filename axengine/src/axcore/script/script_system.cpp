@@ -25,11 +25,11 @@ HSQUIRRELVM VM;
 //--------------------------------------------------------------------------
 struct Connection {
 	Object *obj;
-	String callname;
+	std::string callname;
 };
 
-typedef List<Connection> ConnectionSeq;
-typedef Dict<Object*,Dict<String, ConnectionSeq>> Connections;
+typedef std::list<Connection> ConnectionSeq;
+typedef Dict<Object*,Dict<std::string, ConnectionSeq>> Connections;
 
 ScriptSystem::ScriptSystem()
 {
@@ -288,20 +288,20 @@ String ScriptSystem::generateLuaString(const String &text)
 }
 #endif
 
-inline String xRemoveScope(const String &str)
+inline std::string xRemoveScope(const std::string &str)
 {
 	size_t pos = str.rfind('.');
-	if (pos == String::npos || pos >= str.length()-1) {
+	if (pos == std::string::npos || pos >= str.length()-1) {
 		return str;
 	}
 
 	return str.substr(pos+1, str.length()-pos-1);
 }
 
-inline String xRemoveIndex(const String &str)
+inline std::string xRemoveIndex(const std::string &str)
 {
 	// first get index from str
-	String::const_reverse_iterator it = str.rbegin();
+	std::string::const_reverse_iterator it = str.rbegin();
 
 	int count = 0;
 	for (; it != str.rend(); ++it) {
@@ -324,7 +324,7 @@ inline String xRemoveIndex(const String &str)
 	return str.substr(0, str.size() - count - 1);
 }
 
-int ScriptSystem::getNameIndex(const String &str) const
+int ScriptSystem::getNameIndex(const std::string &str) const
 {
 	StringIntDict::const_iterator it = m_objectNameGen.find(xRemoveIndex(str));
 	if (it == m_objectNameGen.end())
@@ -332,10 +332,10 @@ int ScriptSystem::getNameIndex(const String &str) const
 	return it->second;
 }
 
-void ScriptSystem::updateNameIndex(const String &str)
+void ScriptSystem::updateNameIndex(const std::string &str)
 {
 	// first get index from str
-	String::const_reverse_iterator it = str.rbegin();
+	std::string::const_reverse_iterator it = str.rbegin();
 
 	int count = 0;
 	for (; it != str.rend(); ++it) {
@@ -360,11 +360,11 @@ void ScriptSystem::updateNameIndex(const String &str)
 	}
 
 	int index = 0;
-	String name(str);
+	std::string name(str);
 
 	if (!noindex) {
 		index = atoi(p + 1);
-		name = String(&str[0], p);
+		name = std::string(&str[0], p);
 	}
 
 	// check if need update
@@ -375,21 +375,21 @@ void ScriptSystem::updateNameIndex(const String &str)
 	m_objectNameGen[name] = index+1;
 }
 
-int ScriptSystem::nextNameIndex(const String &str)
+int ScriptSystem::nextNameIndex(const std::string &str)
 {
 	return m_objectNameGen[str]++;
 }
 
-String ScriptSystem::generateObjectName(const String &str)
+std::string ScriptSystem::generateObjectName(const std::string &str)
 {
-	String noindex = xRemoveScope(xRemoveIndex(str));
+	std::string noindex = xRemoveScope(xRemoveIndex(str));
 
 	int index = nextNameIndex(noindex);
 
 	if (!index)
 		return noindex;
 
-	String result;
+	std::string result;
 	StringUtil::sprintf(result, "%s_%d", noindex.c_str(), index);
 	return result;
 }
@@ -547,7 +547,7 @@ void ScriptSystem::registerClass(const String &self, const String &base)
 #endif
 
 
-void ScriptSystem::registerScriptClass( const String &name )
+void ScriptSystem::registerScriptClass( const std::string &name )
 {
 	ScriptClassDict::iterator it = m_scriptClassReg.find(name);
 
@@ -594,7 +594,7 @@ void ScriptSystem::getClassList(const char *prefix, bool sort, StringSeq &result
 	}
 
 	if (sort) {
-		std::sort(result.begin(), result.end(), std::less<String>());
+		std::sort(result.begin(), result.end(), std::less<std::string>());
 	}
 }
 

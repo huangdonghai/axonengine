@@ -37,8 +37,8 @@ public:
 	virtual BoundingBox getBoundingBox() { return m_gameObj->getBoundingBox(); }
 
 	// properties
-	virtual Variant getProperty(const String &propname);
-	virtual void setProperty(const String &propname, const Variant &value);
+	virtual Variant getProperty(const std::string &propname);
+	virtual void setProperty(const std::string &propname, const Variant &value);
 	virtual void doPropertyChanged();
 
 	virtual Rgb getColor() const;
@@ -77,7 +77,7 @@ private:
 class AX_API MapStatic : public MapAgent {
 public:
 	MapStatic();
-	MapStatic(const String &nametemplate);
+	MapStatic(const std::string &nametemplate);
 	virtual ~MapStatic();
 
 	// implement editor actor
@@ -98,7 +98,7 @@ private:
 class AX_API MapSpeedTree : public MapAgent {
 public:
 	MapSpeedTree();
-	MapSpeedTree(const String &nametemplate);
+	MapSpeedTree(const std::string &nametemplate);
 	virtual ~MapSpeedTree();
 
 	// implement editor actor

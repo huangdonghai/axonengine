@@ -63,15 +63,15 @@ public:
 	void syncFrame();
 
 	// called in render thread
-	const List<ActiveQuery*>& getActiveQuery(Query::QueryType type) const;
+	const std::list<ActiveQuery*>& getActiveQuery(Query::QueryType type) const;
 
 private:
-	Sequence<D3D9Query*> m_queries;
-	List<int> m_freeQueries;
+	std::vector<D3D9Query*> m_queries;
+	std::list<int> m_freeQueries;
 
 	BlockAlloc<ActiveQuery> m_issuedQueryAlloc;
-	List<ActiveQuery*> m_activeQuery[Query::QueryType_Number];
-	List<ActiveQuery*> m_frameIssuedQuery[Query::QueryType_Number];
+	std::list<ActiveQuery*> m_activeQuery[Query::QueryType_Number];
+	std::list<ActiveQuery*> m_frameIssuedQuery[Query::QueryType_Number];
 };
 
 AX_END_NAMESPACE

@@ -18,7 +18,7 @@ public:
 	TreeManager();
 	~TreeManager();
 
-	TreeAssetPtr findAsset(const String &name, int seed);
+	TreeAssetPtr findAsset(const std::string &name, int seed);
 
 	void addAsset(TreeAsset *wrapper);
 	void removeAsset(TreeAsset *wrapper);
@@ -26,13 +26,13 @@ public:
 	void removeTree(TreeEntity *tree);
 
 	// implement IEntityManager
-	virtual bool isSupportExt(const String &ext) const;
-	virtual RenderEntity *create(const String &name, intptr_t arg = 0);
+	virtual bool isSupportExt(const std::string &ext) const;
+	virtual RenderEntity *create(const std::string &name, intptr_t arg = 0);
 	virtual void updateForFrame(RenderScene *qscene );
 	virtual void issueToQueue(RenderScene *qscene);
 
 private:
-	typedef Dict<String, TreeAsset*>	TreeAssetDict;
+	typedef Dict<std::string, TreeAsset*>	TreeAssetDict;
 	TreeAssetDict m_treeAssetDict;
 
 	typedef DictSet<TreeEntity*>		TreeDict;

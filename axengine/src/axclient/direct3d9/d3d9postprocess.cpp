@@ -437,8 +437,8 @@ void D3D9Postprocess::downscale4x4(D3D9Texture *tex, const Rect &rect) {
 	PostMesh::setupScreenQuad(m_screenQuad, r);
 }
 
-DX9_Shader *D3D9Postprocess::getShader(const String &name) {
-	Dict<String, DX9_Shader*>::iterator it = m_genericShaders.find(name);
+DX9_Shader *D3D9Postprocess::getShader(const std::string &name) {
+	Dict<std::string, DX9_Shader*>::iterator it = m_genericShaders.find(name);
 
 	if (it != m_genericShaders.end()) {
 		return it->second;
@@ -453,7 +453,7 @@ DX9_Shader *D3D9Postprocess::getShader(const String &name) {
 	return shader;
 }
 
-void D3D9Postprocess::genericPP(const String &shadername, D3D9Texture *src) {
+void D3D9Postprocess::genericPP(const std::string &shadername, D3D9Texture *src) {
 	DX9_Shader *shader = getShader(shadername);
 
 	src->setFilterMode(Texture::FM_Nearest);
@@ -471,7 +471,7 @@ void D3D9Postprocess::genericPP(const String &shadername, D3D9Texture *src) {
 	PostMesh::setupScreenQuad(m_screenQuad, r);
 }
 
-void D3D9Postprocess::genericPP(const String &shadername, RenderTarget *target, D3D9Texture *src) {
+void D3D9Postprocess::genericPP(const std::string &shadername, RenderTarget *target, D3D9Texture *src) {
 	DX9_Shader *shader = getShader(shadername);
 	RenderCamera camera;
 	camera.setTarget(target);
@@ -497,11 +497,11 @@ void D3D9Postprocess::genericPP(const String &shadername, RenderTarget *target, 
 	d3d9Thread->unsetScene(0, 0, 0, &camera);
 }
 
-void D3D9Postprocess::genericPP(const String &shadername, D3D9Texture *src1, D3D9Texture *src2) {
+void D3D9Postprocess::genericPP(const std::string &shadername, D3D9Texture *src1, D3D9Texture *src2) {
 	genericPP(shadername, nullptr, src1, src2);
 }
 
-void D3D9Postprocess::genericPP(const String &shadername, RenderTarget *target, D3D9Texture *src1, D3D9Texture *src2) {
+void D3D9Postprocess::genericPP(const std::string &shadername, RenderTarget *target, D3D9Texture *src1, D3D9Texture *src2) {
 	DX9_Shader *shader = getShader(shadername);
 
 	RenderCamera camera;
@@ -697,7 +697,7 @@ void D3D9Postprocess::issueBboxQuery( const BoundingBox &bbox )
 	d3d9Draw->drawPostUP(m_shaderQuery, m_hexahedron);
 }
 
-void D3D9Postprocess::issueQueryList( const List<D3D9querymanager::ActiveQuery*>& querylist )
+void D3D9Postprocess::issueQueryList( const std::list<D3D9querymanager::ActiveQuery*>& querylist )
 {
 	d3d9StateManager->SetRenderState(D3DRS_COLORWRITEENABLE, 0);
 	d3d9StateManager->setVertexDeclaration(d3d9Draw->m_postVertDecl->getObject());
@@ -707,7 +707,7 @@ void D3D9Postprocess::issueQueryList( const List<D3D9querymanager::ActiveQuery*>
 	for (UINT i = 0; i < cPasses; i++) {
 		m_shaderQuery->beginPass(i);
 
-		List<D3D9querymanager::ActiveQuery*>::const_iterator it = querylist.begin();
+		std::list<D3D9querymanager::ActiveQuery*>::const_iterator it = querylist.begin();
 		for (; it != querylist.end(); ++it) {
 			D3D9querymanager::ActiveQuery *active = *it;
 

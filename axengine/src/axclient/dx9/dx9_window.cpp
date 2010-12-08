@@ -35,7 +35,7 @@ DX9_Window::DX9_Window()
 	m_swapChainWnd = 0;
 	m_presentInterval = 0;
 
-	WString ws = u2w("DX9_Window");
+	std::wstring ws = u2w("DX9_Window");
 	WNDCLASSEXW wcex;	
 	wcex.cbSize = sizeof(WNDCLASSEX);
 	wcex.style = 0;

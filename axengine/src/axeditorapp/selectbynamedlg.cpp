@@ -95,7 +95,7 @@ void SelectByNameDlg::refreshDlg()
 
 		if (typeCheck[type] == true)
 		{
-			String str = actor->getGameObject()->get_objectName();
+			std::string str = actor->getGameObject()->get_objectName();
 
 			QTreeWidgetItem *item = new QTreeWidgetItem(ui.selection);
 

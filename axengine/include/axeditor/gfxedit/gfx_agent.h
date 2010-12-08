@@ -30,8 +30,8 @@ public:
 
 	virtual BoundingBox getBoundingBox();
 
-	virtual Variant getProperty(const String &propname);
-	virtual void setProperty(const String &propname, const Variant &value);
+	virtual Variant getProperty(const std::string &propname);
+	virtual void setProperty(const std::string &propname, const Variant &value);
 	virtual void doPropertyChanged();
 
 	virtual Rgb getColor() const;

@@ -64,7 +64,7 @@ Texture *MapAlphaBlock::getTexture()
 void MapAlphaBlock::updateTexture()
 {
 	if (!m_texture) {
-		String key;
+		std::string key;
 		StringUtil::sprintf(key, "_alphablock_%d", g_system->generateId());
 #if 0
 		m_texture << (Texture*)g_assetManager->createEmptyAsset(Asset::kTexture);
@@ -189,7 +189,7 @@ void MapLayerGen::update()
 #else
 		m_detailMat = new Material("terrain");
 #endif
-		String fn = PathUtil::removeExt(l->detailMat);
+		std::string fn = PathUtil::removeExt(l->detailMat);
 
 		Texture *diffuse = new Texture(fn);
 		Texture *normal = new Texture(fn+"_n");
@@ -1085,7 +1085,7 @@ void MapZone::initialize(MapTerrain *terrain, int x, int y)
 	m_material = new Material("materials/terrain");
 
 	// create normal texture
-	String texname;
+	std::string texname;
 	StringUtil::sprintf(texname, "_zone_normal_%d_%d_%d", g_renderSystem->getFrameNum(), m_index.x, m_index.y);
 #if 0
 	m_normalTexture << dynamic_cast<Texture*>(g_assetManager->createEmptyAsset(Asset::kTexture));
@@ -1624,7 +1624,7 @@ void MapTerrain::init(int tiles, int tilemeters)
 	notify(RenderTerrain::HeightfieldSetted);
 }
 
-void MapTerrain::initFromXml(const String &map_name, const TiXmlElement *elem)
+void MapTerrain::initFromXml(const std::string &map_name, const TiXmlElement *elem)
 {
 	clear();
 
@@ -1747,13 +1747,13 @@ void MapTerrain::initFromXml(const String &map_name, const TiXmlElement *elem)
 	notify(RenderTerrain::HeightfieldSetted);
 }
 
-bool MapTerrain::loadColorTexture(const String &map_name)
+bool MapTerrain::loadColorTexture(const std::string &map_name)
 {
 	for (int i = 0; i < m_zoneCount; i++) {
 		MapZone *z = m_zones[i];
 		Point zindex = z->getZoneIndex();
 
-		String texname;
+		std::string texname;
 		StringUtil::sprintf(texname, "%s_%d_%d", map_name.c_str(), m_zones[i]->getZoneIndex().x, m_zones[i]->getZoneIndex().y);
 
 #if 0
@@ -1775,12 +1775,12 @@ bool MapTerrain::loadColorTexture(const String &map_name)
 void MapTerrain::writeXml(File *f, int indent)
 {
 #define INDENT if (indent) f->printf("%s", ind.c_str());
-	String ind(indent*2, ' ');
+	std::string ind(indent*2, ' ');
 
-	String filename = f->getName();
+	std::string filename = f->getName();
 	filename = PathUtil::removeExt(filename);
-	String heightfile = filename + "_height.raw";
-	String layerfilename = filename + "_layer.bin";
+	std::string heightfile = filename + "_height.raw";
+	std::string layerfilename = filename + "_layer.bin";
 
 	INDENT;f->printf("<terrain\n");
 	INDENT;f->printf("  tilesize=\"%d\"\n", m_tiles);
@@ -1817,7 +1817,7 @@ void MapTerrain::writeXml(File *f, int indent)
 			continue;
 		}
 		tex->generateMipmap();
-		String texname;
+		std::string texname;
 		StringUtil::sprintf(texname, "%s_%d_%d.dds", filename.c_str(), m_zones[i]->getZoneIndex().x, m_zones[i]->getZoneIndex().y);
 		tex->saveToFile(texname);
 	}
@@ -2096,7 +2096,7 @@ void MapTerrain::generateLayerAlpha(bool doprogress, int id)
 		m_numLayerGens = m_materialDef->getNumLayers();
 
 		for (int i = 0; i < m_materialDef->getNumLayers(); i++) {
-			String msg;
+			std::string msg;
 			StringUtil::sprintf(msg, "generating %d layer...", i);
 			g_system->showProgress(i*100 / m_materialDef->getNumLayers(), msg);
 			if (m_layerGens[i]->getLayerDef()->isAutoGen) {

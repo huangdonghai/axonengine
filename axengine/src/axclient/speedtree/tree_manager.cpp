@@ -22,9 +22,9 @@ TreeManager::~TreeManager()
 {
 }
 
-TreeAssetPtr TreeManager::findAsset(const String &name, int seed)
+TreeAssetPtr TreeManager::findAsset(const std::string &name, int seed)
 {
-	String key = TreeAsset::genKey(name, seed);
+	std::string key = TreeAsset::genKey(name, seed);
 	TreeAssetDict::iterator it = m_treeAssetDict.find(key);
 
 	if (it != m_treeAssetDict.end()) {
@@ -63,7 +63,7 @@ void TreeManager::removeTree(TreeEntity *tree)
 	m_treeDict.erase(tree);
 }
 
-bool TreeManager::isSupportExt(const String &ext) const
+bool TreeManager::isSupportExt(const std::string &ext) const
 {
 	if (ext == "spt") {
 		return true;
@@ -76,7 +76,7 @@ bool TreeManager::isSupportExt(const String &ext) const
 	return false;
 }
 
-RenderEntity *TreeManager::create(const String &name, intptr_t arg)
+RenderEntity *TreeManager::create(const std::string &name, intptr_t arg)
 {
 	return new TreeEntity(name, arg);
 }

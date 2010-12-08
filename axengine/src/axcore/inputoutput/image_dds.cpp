@@ -521,16 +521,19 @@ namespace {
 		//}
 		switch (format){
 		//This is officially 6, we have 8 here because DXT1 may contain alpha
-		case TexFormat::DXT1:		return 8;
+		case TexFormat::DXT1:
+			return 8;
 		//case PF_DXT2:
 		case TexFormat::DXT3:
 		//case PF_DXT4:
-		case TexFormat::DXT5:		return 4;
+		case TexFormat::DXT5:
+			return 4;
 		//This is officially 4 for 3dc, but that's bullshit :) There's no alpha data in 3dc images
 		//case PF_RXGB:
 		//case PF_3DC:		return 3;
 		//case PF_ATI1N:		return 2;
-		default:			return 1;
+		default:
+			return 1;
 		}
 	}
 
@@ -643,7 +646,7 @@ namespace {
 		readParams->inData += readParams->linearSize;
 		byte_t *outptr = readParams->outData;
 	#endif
-		switch (readParams->outbpp){
+		switch (readParams->outbpp) {
 		case 1:
 			for (int i = 0; i < count; i++) {
 				uint_t pixel = LittleInt(*(uint_t*)inptr);
@@ -921,7 +924,8 @@ namespace {
 	//////////////////////////////////////////////////////////////////////////
 	// write
 
-	struct DdsWriteParams {
+	struct DdsWriteParams
+	{
 		TexFormat orgFormat;
 		TexFormat outFormat;
 		uint_t formatType;
@@ -930,7 +934,7 @@ namespace {
 		int loadflags;
 
 		const byte_t *inData;
-		uint_t inDataSize;			// current org data block's size
+		uint_t inDataSize;			// current origin data block's size
 
 		byte_t *outData;
 		uint_t outDataSize;
@@ -1059,8 +1063,10 @@ namespace {
 			pHeader->RGBBitCount = 8;
 			writeParams->formatType = DDS_TYPE_ARGB;
 			break;
-		default: break;
+		default:
+			break;
 		}
+
 		writeParams->orgFormat = format;
 		writeParams->outFormat = outFormat;
 		writeParams->width = pHeader->Width;
@@ -1104,8 +1110,7 @@ namespace {
 		Rgba *pBuffer = new Rgba[pixelCount];
 		*ppNewMem = (byte_t*)pBuffer;
 
-		switch (writeParams->orgFormat)
-		{
+		switch (writeParams->orgFormat) {
 		case TexFormat::BGR8:
 			for (uint_t i=0; i<pixelCount; i++) {
 				pBuffer[i].r = writeParams->inData[i * 3 + 2];
@@ -1503,8 +1508,7 @@ namespace {
 
 	void CopyData(DdsWriteParams *writeParams)
 	{
-		switch (writeParams->outFormat)
-		{
+		switch (writeParams->outFormat) {
 		case TexFormat::DXT1:
 			for (uint_t i=0; i<writeParams->linearSize; i+=8) {
 				*(ushort_t*)(writeParams->outData + i)		= LittleShort(*(ushort_t*)(writeParams->inData + i));
@@ -1540,7 +1544,9 @@ namespace {
 		case TexFormat::L8:		
 			memcpy(writeParams->outData, writeParams->inData, writeParams->linearSize);
 			break;
-		default: AX_WRONGPLACE; break;
+		default:
+			AX_WRONGPLACE;
+			break;
 		}
 		writeParams->outfp->write(writeParams->outData, writeParams->linearSize);
 	}
@@ -1634,7 +1640,7 @@ bool Image::loadFileFromMemory_dds(size_t filesize, void *filedata)
 }
 
 
-bool Image::loadFile_dds(const String &filename)
+bool Image::loadFile_dds(const std::string &filename)
 {
 	// clear first
 	clear();
@@ -1658,7 +1664,7 @@ bool Image::loadFile_dds(const String &filename)
 	return loadFileFromMemory_dds(filesize, filedata);
 }
 
-void Image::saveFile_dds(const String &filename, bool bFast)
+void Image::saveFile_dds(const std::string &filename, bool bFast)
 {
 	File *fp = g_fileSystem->openFileWrite(filename);
 

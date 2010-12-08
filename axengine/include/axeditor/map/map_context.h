@@ -25,7 +25,7 @@ private:
 struct Bookmark 
 {
 	int id;
-	String name;
+	std::string name;
 	Matrix viewMatrix;
 };
 
@@ -47,12 +47,12 @@ public:
 
 	void reset();
 
-	String getTitle() const;
-	String getFilename() const;
+	std::string getTitle() const;
+	std::string getFilename() const;
 	bool createNew();
-	bool load(const String &filename);
+	bool load(const std::string &filename);
 	bool save();
-	bool saveAs(const String &filename);
+	bool saveAs(const std::string &filename);
 
 	// view process
 	void setActiveView(View *view) { m_activeView = view; }
@@ -72,19 +72,19 @@ public:
 	virtual void doHitTest(const RenderCamera &camera, int part);
 
 	// bookmarks --timlly add
-	void addBookmark(const Matrix &viewMatrix, const String &name = "", int id = -1);
+	void addBookmark(const Matrix &viewMatrix, const std::string &name = "", int id = -1);
 	void addBookmark(const Bookmark &bookmark);
-	void deleteBookmark(const String &name);
+	void deleteBookmark(const std::string &name);
 	void deleteBookmark(int index);
 
 	int getNumBookmark();
-	Bookmark *getBookmark(const String &name);
+	Bookmark *getBookmark(const std::string &name);
 	Bookmark *getBookmark(int index);
 
 	void clearAllBookmarks();
 
 	// properties
-	void setActorProperty(const String &propName, const Variant &value);
+	void setActorProperty(const std::string &propName, const Variant &value);
 
 	// map state
 	MapState *getMapState() const { return m_mapState; }
@@ -95,8 +95,8 @@ protected:
 	void readActor(const TiXmlElement *node);
 
 	// save/load the helper info in the editor. --timlly add
-	void saveEditorInfo(const String &filename);
-	bool loadEditorInfo(const String &filename);
+	void saveEditorInfo(const std::string &filename);
+	bool loadEditorInfo(const std::string &filename);
 
 	// save/load the bookmark info. --timlly add
 	void saveBookmarkInfo(File *file, int indent);
@@ -104,8 +104,8 @@ protected:
 
 private:
 	GameWorld *m_gameWorld;
-	String m_title;
-	String m_filename;
+	std::string m_title;
+	std::string m_filename;
 	MapTerrain *m_terrain;
 	TerrainFixed *m_terrainFixed;
 
@@ -119,17 +119,17 @@ private:
 	MapState *m_mapState;
 
 	// bookmarks  --timlly add
-	Sequence<Bookmark>	m_bookmarks;
+	std::vector<Bookmark>	m_bookmarks;
 	int m_bookmarkIndex;
 };
 
-inline String MapContext::getTitle() const {
+inline std::string MapContext::getTitle() const {
 	if (m_filename.empty())
 		return m_title;
 	return m_filename;
 }
 
-inline String MapContext::getFilename() const {
+inline std::string MapContext::getFilename() const {
 	return m_filename;
 }
 

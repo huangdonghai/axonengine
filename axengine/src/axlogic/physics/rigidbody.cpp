@@ -29,7 +29,7 @@ PhysicsRigid::PhysicsRigid(HavokPackage *package, hkpRigidBody *rigid) {
 	setAutoDeactive(true);
 }
 
-PhysicsRigid::PhysicsRigid(const String &name)
+PhysicsRigid::PhysicsRigid(const std::string &name)
 	: m_package(nullptr)
 	, m_havokRigid(nullptr)
 {

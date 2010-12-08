@@ -686,7 +686,7 @@ void Workbench::on_actionOpen_triggered()
 
 void Workbench::on_actionSave_triggered()
 {
-	String fn = g_mapContext->getFilename();
+	std::string fn = g_mapContext->getFilename();
 
 	if (fn.empty()) {
 		on_actionSaveAs_triggered();
@@ -699,7 +699,7 @@ void Workbench::on_actionSave_triggered()
 void Workbench::on_actionSaveAs_triggered()
 {
 	QString qfn = FileDialog::getSaveFileName(this, tr("Save Map As"), "/maps", ".map");
-	String fn = q2u(qfn);
+	std::string fn = q2u(qfn);
 
 	if (fn.empty())
 		return;
@@ -805,7 +805,7 @@ void Workbench::on_actionSnapToAngle_triggered()
 	g_mapContext->getMapState()->isSnapToAngle = ui.actionSnapToAngle->isChecked();
 }
 
-void Workbench::beginProgress(const String &title)
+void Workbench::beginProgress(const std::string &title)
 {
 	m_statusBar->addWidget(ui.progress);
 	ui.progress->show();
@@ -814,7 +814,7 @@ void Workbench::beginProgress(const String &title)
 	QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 }
 
-bool Workbench::showProgress(uint_t percent, const String &msg)
+bool Workbench::showProgress(uint_t percent, const std::string &msg)
 {
 	ui.progressLabel->setText(u2q(msg));
 	ui.progressBar->setValue(percent);

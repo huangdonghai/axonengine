@@ -43,20 +43,20 @@ typedef const ClassEntry* (*funcGetClassEntries)();
 
 class Module {
 public:
-	Module(const String &name);
-	Module(const String &name, funcGetClassEntries);
+	Module(const std::string &name);
+	Module(const std::string &name, funcGetClassEntries);
 	~Module();
 
-	const ClassEntry *findClassEntry(const String &name) const;
+	const ClassEntry *findClassEntry(const std::string &name) const;
 	const ClassEntry *getClassEntries() const;
 
 private:
-	String m_name;
+	std::string m_name;
 	Handle m_handle;
 	const ClassEntry *m_classEntries;
 };
 
-typedef Dict<String, Module*>	ModuleDict;
+typedef Dict<std::string, Module*>	ModuleDict;
 
 
 class AX_API ClassFactory {
@@ -66,13 +66,13 @@ public:
 
 	void initialize();
 	void finalize();
-	void *createInstance(const String &class_name);
-	void *createInstanceByAlias(const String &class_alias);
-	void registerStaticModule(const String &module, funcGetClassEntries);
+	void *createInstance(const std::string &class_name);
+	void *createInstanceByAlias(const std::string &class_alias);
+	void registerStaticModule(const std::string &module, funcGetClassEntries);
 
 protected:
 	// find a module have loaded, if not load yet, load it
-	Module *findModule(const String &module_name);
+	Module *findModule(const std::string &module_name);
 
 private:
 	ModuleDict m_moduleDict;

@@ -156,7 +156,7 @@ Action *AgentList::endTransform() const {
 	return group;
 }
 
-void AgentList::setNodeProperty(const String &propname, const Variant &value) const
+void AgentList::setNodeProperty(const std::string &propname, const Variant &value) const
 {
 	if (empty()) return;
 

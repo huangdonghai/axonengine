@@ -15,11 +15,11 @@ namespace {
 
 	const char *ClassFactoryReg = "ClassFactory";
 
-	String GetModuleIdFromClassName(const String &class_name) {
-		String moduleid = class_name;
+	std::string GetModuleIdFromClassName(const std::string &class_name) {
+		std::string moduleid = class_name;
 
 		size_t pos = moduleid.find(".");
-		if (pos != String::npos) {
+		if (pos != std::string::npos) {
 			moduleid.resize(pos);
 		} else {
 			moduleid.clear();
@@ -28,9 +28,9 @@ namespace {
 		return moduleid;
 	}
 
-	String GetClassIdFromClassName(const String &class_name) {
+	std::string GetClassIdFromClassName(const std::string &class_name) {
 		size_t pos = class_name.find(".");
-		if (pos != String::npos) {
+		if (pos != std::string::npos) {
 			return class_name.c_str() + pos + 1;
 		} else {
 			return class_name;
@@ -39,7 +39,7 @@ namespace {
 
 }
 
-Module::Module(const String &name)
+Module::Module(const std::string &name)
 	: m_name(name)
 	, m_handle(NULL)
 	, m_classEntries(NULL)
@@ -51,7 +51,7 @@ Module::Module(const String &name)
 		return;
 	}
 
-	String symbol = name;
+	std::string symbol = name;
 	symbol += "_entry";
 
 	typedef ClassEntry* (*fnGetClassEntries)();
@@ -64,7 +64,7 @@ Module::Module(const String &name)
 		Errorf(_("Module::Module: cann't get class entry."));
 }
 
-Module::Module(const String &name, funcGetClassEntries func) : m_name(name), m_handle(NULL) {
+Module::Module(const std::string &name, funcGetClassEntries func) : m_name(name), m_handle(NULL) {
 	m_classEntries = func();
 }
 
@@ -73,7 +73,7 @@ Module::~Module() {
 		OsUtil::freeDll(m_handle);
 }
 
-const ClassEntry *Module::findClassEntry(const String &name) const {
+const ClassEntry *Module::findClassEntry(const std::string &name) const {
 	const ClassEntry *entry;
 
 	for (entry = m_classEntries; entry->factory; entry++) {
@@ -107,12 +107,12 @@ void ClassFactory::initialize() {
 void ClassFactory::finalize() {
 }
 
-void *ClassFactory::createInstance(const String &class_name) {
-	String mid = GetModuleIdFromClassName(class_name);
+void *ClassFactory::createInstance(const std::string &class_name) {
+	std::string mid = GetModuleIdFromClassName(class_name);
 
 	Module *module = findModule(mid);
 
-	String cid = GetClassIdFromClassName(class_name);
+	std::string cid = GetClassIdFromClassName(class_name);
 
 	const ClassEntry *entry = module->findClassEntry(cid);
 
@@ -122,11 +122,11 @@ void *ClassFactory::createInstance(const String &class_name) {
 	return entry->factory();
 }
 
-void *ClassFactory::createInstanceByAlias(const String &class_alias) {
+void *ClassFactory::createInstanceByAlias(const std::string &class_alias) {
 	if (!g_systemConfig)
 		Errorf(_("ClassFactory::CreateInstanceByAlias: system configure coundn't found"));
 
-	String class_name = g_systemConfig->getKeyValue(ClassFactoryReg, class_alias);
+	std::string class_name = g_systemConfig->getKeyValue(ClassFactoryReg, class_alias);
 
 	if (!class_name.empty())
 		return createInstance(class_name);
@@ -134,13 +134,13 @@ void *ClassFactory::createInstanceByAlias(const String &class_alias) {
 	return createInstance(class_alias);
 }
 
-void ClassFactory::registerStaticModule(const String &name, funcGetClassEntries func) {
+void ClassFactory::registerStaticModule(const std::string &name, funcGetClassEntries func) {
 	Module *module = new Module(name, func);
 	m_moduleDict[name] = module;
 }
 
 
-Module *ClassFactory::findModule(const String &module_name) {
+Module *ClassFactory::findModule(const std::string &module_name) {
 	ModuleDict::iterator it = m_moduleDict.find(module_name);
 	if (it != m_moduleDict.end())
 		return it->second;

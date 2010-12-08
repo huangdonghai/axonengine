@@ -15,7 +15,7 @@ AX_BEGIN_NAMESPACE
 class AX_API Material
 {
 public:
-	Material(const String &name);
+	Material(const std::string &name);
 	~Material();
 
 	// implement RefObject
@@ -34,7 +34,7 @@ public:
 
 	MaterialDecl::SortHint getSortHint() const { return m_sortHint; }
 
-	void setTextureSet(const String &texname);
+	void setTextureSet(const std::string &texname);
 
 	void setDiffuse(const Vector3 &v);
 	void setSpecular(const Vector3 &v);
@@ -60,7 +60,7 @@ public:
 	void setTexture(int sampler, Texture *tex);
 
 	// parameter setting and getting
-	void setParameter(const String &name, int num, const float *ptr);
+	void setParameter(const std::string &name, int num, const float *ptr);
 	const ShaderParams &getParameters() const;
 
 	// shader macro
@@ -83,7 +83,7 @@ public:
 	static void initManager();
 	static void finalizeManager();
 #endif
-	static FixedString normalizeKey(const String &name);
+	static FixedString normalizeKey(const std::string &name);
 #if 0
 	static void syncFrame();
 #endif

@@ -40,7 +40,7 @@ void DirTree::refresh()
 	}
 }
 
-void DirTree::browseSub_r(const String &path, QTreeWidgetItem *parentItem)
+void DirTree::browseSub_r(const std::string &path, QTreeWidgetItem *parentItem)
 {
 	FileInfoSeq infos = g_fileSystem->getFileInfos(path, q2u(m_filter), File::List_Sorted);
 	for (size_t i = 0; i < infos.size(); i++) {

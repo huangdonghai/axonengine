@@ -323,7 +323,7 @@ public:
 	virtual ~MapTerrain();
 
 	void init(int tiles, int tilemeters);
-	void initFromXml(const String &map_name, const TiXmlElement *elem);
+	void initFromXml(const std::string &map_name, const TiXmlElement *elem);
 	void clear();
 	void writeXml(File *f, int indent=0);
 
@@ -405,7 +405,7 @@ public:
 	virtual void getHeightinfo(ushort_t*& datap, int &size, float &tilemeters);
 
 protected:
-	bool loadColorTexture(const String &map_name);
+	bool loadColorTexture(const std::string &map_name);
 
 private:
 	Image *m_heightmap;

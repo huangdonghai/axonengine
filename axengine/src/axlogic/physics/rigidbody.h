@@ -24,7 +24,7 @@ AX_BEGIN_NAMESPACE
 	class PhysicsRigid : public PhysicsEntity {
 	public:
 		PhysicsRigid();
-		PhysicsRigid(const String &name);
+		PhysicsRigid(const std::string &name);
 		PhysicsRigid(HavokPackage *package, hkpRigidBody *rigid);
 		virtual ~PhysicsRigid();
 

@@ -46,7 +46,7 @@ void View::bindFrame(IViewFrame *container)
 	m_frame = container;
 }
 
-String &View::getTitle()
+std::string &View::getTitle()
 {
 	return m_title;
 }
@@ -135,7 +135,7 @@ void View::drawFrameNum()
 	rv.setOverlay(m_camera.getViewRect());
 
 	Rect rect;
-	String text;
+	std::string text;
 
 #if 1
 	const float AccTimeInterval = 1; // per second calc

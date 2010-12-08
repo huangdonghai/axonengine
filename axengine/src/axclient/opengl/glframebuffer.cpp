@@ -33,7 +33,7 @@ GLtarget::GLtarget(GLframebuffer *fb, int width, int height, TexFormat format, b
 
 	// create asset
 	if (!m_isRenderBuffer) {
-		String texname;
+		std::string texname;
 		StringUtil::sprintf(texname, "_RenderTarget_%d_%d_%d", m_width, m_height, g_system->generateId());
 #if 0
 		m_texture = dynamic_cast<GLtexture*>(g_assetManager->createEmptyAsset(Texture::AssetType));
@@ -242,7 +242,7 @@ void GLframebuffer::bind(GLtarget *target) {
 
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, m_object);    
 	if (m_boundTarget->isColorFormat()) {
-		Sequence<GLenum> buffers;
+		std::vector<GLenum> buffers;
 
 		GLenum b = bindColor(m_boundTarget);
 		buffers.push_back(b + GL_COLOR_ATTACHMENT0_EXT);

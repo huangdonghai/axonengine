@@ -58,7 +58,7 @@ public:
 public:
 	HavokRig *m_rig;
 	hkaAnimatedSkeleton *m_animator;
-	List<HavokAnimation*>		m_animations;
+	std::list<HavokAnimation*> m_animations;
 };
 
 //--------------------------------------------------------------------------
@@ -67,7 +67,7 @@ public:
 
 class HavokAnimation : HavokPackable {
 public:
-	HavokAnimation(const String &name);
+	HavokAnimation(const std::string &name);
 	virtual ~HavokAnimation();
 
 	bool isValid() const;
@@ -90,7 +90,7 @@ public:
 
 class HavokRig : public HavokPackable {
 public:
-	HavokRig(const String &name);
+	HavokRig(const std::string &name);
 	HavokRig(const HavokPackagePtr &package);
 	virtual ~HavokRig() {}
 
@@ -129,16 +129,16 @@ public:
 class HavokPackage : public RefObject {
 public:
 	class MeshData;
-	typedef List<MeshData*>	MeshDataList;
+	typedef std::list<MeshData*>	MeshDataList;
 
 	struct MaterialMap {
 		hkxMaterial *m_hkMat;
 		Material *m_axMat;
 		Texture *m_lightMap;
 	};
-	typedef Sequence<MaterialMap*>	MaterialMaps;
+	typedef std::vector<MaterialMap*>	MaterialMaps;
 
-	HavokPackage(const String &filename);
+	HavokPackage(const std::string &filename);
 	~HavokPackage();
 
 	// implement RefObject
@@ -178,7 +178,7 @@ protected:
 private:
 	enum{ MaxLod = 8 };
 
-	String m_name;
+	std::string m_name;
 	hkLoader *m_loader;
 	hkDataWorldDict *m_dataWorld;
 	hkRootLevelContainer *m_root;
@@ -208,7 +208,7 @@ private:
 
 class AX_API HavokModel : public RenderEntity {
 public:
-	HavokModel(const String &name);
+	HavokModel(const std::string &name);
 	HavokModel(HavokPackage *package);
 	virtual ~HavokModel();
 
@@ -245,14 +245,14 @@ public:
 	HavokPackageManager();
 	~HavokPackageManager();
 
-	HavokPackagePtr findPackage(const String &name);
+	HavokPackagePtr findPackage(const std::string &name);
 
 private:
 	friend class HavokPackage;
-	void removePackage(const String &name);
+	void removePackage(const std::string &name);
 
 private:
-	typedef Dict<String,HavokPackage*,HashPath,EqualPath> PackageDict;
+	typedef Dict<std::string,HavokPackage*,HashPath,EqualPath> PackageDict;
 	PackageDict m_packageDict;
 };
 

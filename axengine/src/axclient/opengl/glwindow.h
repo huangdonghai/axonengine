@@ -16,8 +16,8 @@ class GLprimitive;
 
 class GLwindow : public RenderTarget {
 public:
-	GLwindow(const String &name);
-	GLwindow(Handle wndId, const String &name);
+	GLwindow(const std::string &name);
+	GLwindow(Handle wndId, const std::string &name);
 	virtual ~GLwindow();
 
 	// implement ITarget
@@ -43,7 +43,7 @@ protected:
 
 protected:
 	// window, dc, gl context
-	String m_name;					// just for easy debug
+	std::string m_name;					// just for easy debug
 
 #ifdef _WIN32
 	HWND m_wndId;

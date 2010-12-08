@@ -687,8 +687,8 @@ ConversionResult ConvertUTF8toUTF32 (
 
    --------------------------------------------------------------------- */
 
-inline WString u2w(const char *utf8str, size_t len) {
-	WString result;
+inline std::wstring u2w(const char *utf8str, size_t len) {
+	std::wstring result;
 
 	result.resize(len);
 	if (sizeof(wchar_t) == sizeof(UTF16)) {
@@ -703,7 +703,7 @@ inline WString u2w(const char *utf8str, size_t len) {
 	return result;
 }
 
-WString u2w(const String &utf8str) {
+std::wstring u2w(const std::string &utf8str) {
 	return u2w(utf8str.c_str(), utf8str.size());
 #if 0
 	size_t len = utf8str.size();
@@ -723,7 +723,7 @@ WString u2w(const String &utf8str) {
 #endif
 }
 
-WString u2w(const char *utf8str) {
+std::wstring u2w(const char *utf8str) {
 	return u2w(utf8str, strlen(utf8str));
 #if 0
 	size_t len = strlen(utf8str);
@@ -743,25 +743,25 @@ WString u2w(const char *utf8str) {
 #endif
 }
 
-String l2u(const char *localstr) {
-	WString ws = l2w(localstr);
+std::string l2u(const char *localstr) {
+	std::wstring ws = l2w(localstr);
 	return w2u(ws);
 }
 
-String l2u(const String &lstr) {
+std::string l2u(const std::string &lstr) {
 	return w2u(l2w(lstr));
 }
 
-String u2l(const char *ustr) {
+std::string u2l(const char *ustr) {
 	return w2l(u2w(ustr));
 }
 
-String u2l(const String &ustr) {
+std::string u2l(const std::string &ustr) {
 	return w2l(u2w(ustr));
 }
 
-inline String w2u(const wchar_t *wstr, size_t len) {
-	String result;
+inline std::string w2u(const wchar_t *wstr, size_t len) {
+	std::string result;
 
 	result.resize(len * AX_UTF8_LEN_MAX);
 	if (sizeof(wchar_t) == sizeof(UTF16)) {
@@ -776,7 +776,7 @@ inline String w2u(const wchar_t *wstr, size_t len) {
 	return result;
 }
 
-String w2u(const wchar_t *wstr) {
+std::string w2u(const wchar_t *wstr) {
 	return w2u(wstr, wcslen(wstr));
 #if 0
 	size_t len = wcslen(wstr);
@@ -796,7 +796,7 @@ String w2u(const wchar_t *wstr) {
 #endif
 }
 
-String w2u(const WString &wstr) {
+std::string w2u(const std::wstring &wstr) {
 	return w2u(wstr.c_str(), wstr.size());
 #if 0
 	size_t len = wstr.size();
@@ -816,8 +816,8 @@ String w2u(const WString &wstr) {
 #endif
 }
 
-inline WString l2w(const char *localstr, size_t len) {
-	WString result;
+inline std::wstring l2w(const char *localstr, size_t len) {
+	std::wstring result;
 
 	result.resize(len);
 
@@ -830,7 +830,7 @@ inline WString l2w(const char *localstr, size_t len) {
 	return result;
 }
 
-WString l2w(const char *localstr) {
+std::wstring l2w(const char *localstr) {
 	return l2w(localstr, strlen(localstr));
 #if 0
 	size_t len = strlen(localstr);
@@ -848,7 +848,7 @@ WString l2w(const char *localstr) {
 #endif
 }
 
-WString l2w(const String &lstr) {
+std::wstring l2w(const std::string &lstr) {
 	return l2w(lstr.c_str(), lstr.size());
 #if 0
 	size_t len = lstr.size();
@@ -866,8 +866,8 @@ WString l2w(const String &lstr) {
 #endif
 }
 
-inline String w2l(const wchar_t *wstr, size_t len) {
-	String result;
+inline std::string w2l(const wchar_t *wstr, size_t len) {
+	std::string result;
 
 	result.resize(len * AX_MB_LEN_MAX);
 
@@ -880,7 +880,7 @@ inline String w2l(const wchar_t *wstr, size_t len) {
 	return result;
 }
 
-String w2l(const wchar_t *wstr) {
+std::string w2l(const wchar_t *wstr) {
 	return w2l(wstr, wcslen(wstr));
 #if 0
 	size_t len = wcslen(wstr);
@@ -898,7 +898,7 @@ String w2l(const wchar_t *wstr) {
 #endif
 }
 
-String w2l(const WString &wstr) {
+std::string w2l(const std::wstring &wstr) {
 	return w2l(wstr.c_str(), wstr.size());
 #if 0
 	size_t len = wstr.size();
@@ -923,7 +923,7 @@ StringList StringUtil::tokenize(const char *text, char split /*= ' ' */) {
 	if (!text || !text[0])
 		return result;
 
-	String str;
+	std::string str;
 
 	const char *token = text;
 
@@ -968,7 +968,7 @@ StringSeq StringUtil::tokenizeSeq(const char *text, char split /*= ' ' */) {
 	if (!text || !text[0])
 		return result;
 
-	String str;
+	std::string str;
 
 	const char *token = text;
 

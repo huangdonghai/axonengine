@@ -42,7 +42,7 @@ public:
 	EffectHelper(ID3DXEffect *obj) : m_object(obj)
 	{}
 
-	String getString(D3DXHANDLE h)
+	std::string getString(D3DXHANDLE h)
 	{
 		const char *str;
 
@@ -51,7 +51,7 @@ public:
 			return str;
 		}
 
-		return String();
+		return std::string();
 	}
 
 	int getInt(D3DXHANDLE h)
@@ -66,9 +66,9 @@ public:
 		return 0;
 	}
 
-	String getAnno(D3DXHANDLE param, const char *anno_name)
+	std::string getAnno(D3DXHANDLE param, const char *anno_name)
 	{
-		String result;
+		std::string result;
 		D3DXHANDLE anno = m_object->GetAnnotationByName(param, anno_name);
 
 		if (!anno) {
@@ -87,7 +87,7 @@ class DX9_Include : public ID3DXInclude
 public:
 	STDMETHOD(Open)(THIS_ D3DXINCLUDE_TYPE IncludeType, LPCSTR pFileName, LPCVOID pParentData, LPCVOID *ppData, UINT *pBytes)
 	{
-		String filename = "shaders/";
+		std::string filename = "shaders/";
 		filename += pFileName;
 		*pBytes = g_fileSystem->readFile(filename, (void**)ppData);
 
@@ -608,16 +608,16 @@ DX9_Shader::DX9_Shader()
 DX9_Shader::~DX9_Shader()
 {}
 
-bool DX9_Shader::init(const String &name, const ShaderMacro &macro)
+bool DX9_Shader::init(const std::string &name, const ShaderMacro &macro)
 {
 	m_keyString = name;
-	String fullname = "shaders/" + name + ".fx";
-	String ospath = g_fileSystem->dataPathToOsPath(fullname);
+	std::string fullname = "shaders/" + name + ".fx";
+	std::string ospath = g_fileSystem->dataPathToOsPath(fullname);
 
-	String path = g_fileSystem->dataPathToOsPath("shaders/");
+	std::string path = g_fileSystem->dataPathToOsPath("shaders/");
 	path = "-I" + path;
 
-	Sequence<D3DXMACRO> d3dxmacros;
+	std::vector<D3DXMACRO> d3dxmacros;
 
 	StringPairSeq defines;
 	D3DXMACRO d3dxmacro;
@@ -751,8 +751,8 @@ void DX9_Shader::initSamplerAnn(D3DXHANDLE param)
 
 	V(m_object->GetParameterDesc(param, &paramDesc));
 
-	String paramname = paramDesc.Name;
-	String texname = paramname + "_tex";
+	std::string paramname = paramDesc.Name;
+	std::string texname = paramname + "_tex";
 
 	D3DXHANDLE texparam = m_object->GetParameterByName(0, texname.c_str());
 	if (!texparam) {
@@ -774,7 +774,7 @@ void DX9_Shader::initSamplerAnn(D3DXHANDLE param)
 			continue;
 		}
 
-		String filename = helper.getString(anno);
+		std::string filename = helper.getString(anno);
 
 		if (filename.empty()) {
 			break;
@@ -832,7 +832,7 @@ D3DXHANDLE DX9_Shader::findTechnique(Technique tech)
 	D3DXHANDLE annon = m_object->GetAnnotationByName(script, tech.toString().c_str());
 	if (!annon) return 0;
 
-	String techname = helper.getString(annon);
+	std::string techname = helper.getString(annon);
 
 	if (techname.empty()) return 0;
 
@@ -1124,7 +1124,7 @@ DX9_ShaderManager::DX9_ShaderManager()
 DX9_ShaderManager::~DX9_ShaderManager()
 {}
 
-DX9_Shader *DX9_ShaderManager::findShader(const String &name, const ShaderMacro &macro)
+DX9_Shader *DX9_ShaderManager::findShader(const std::string &name, const ShaderMacro &macro)
 {
 	return findShader(FixedString(name), macro);
 }
@@ -1146,9 +1146,9 @@ DX9_Shader *DX9_ShaderManager::findShader(const FixedString &nameId, const Shade
 	return shader;
 }
 
-void DX9_ShaderManager::saveShaderCache(const String &name)
+void DX9_ShaderManager::saveShaderCache(const std::string &name)
 {
-	String filename;
+	std::string filename;
 	if (filename.empty())
 		filename = "shaders/shaderCaches.xml";
 	else
@@ -1182,9 +1182,9 @@ void DX9_ShaderManager::saveShaderCache(const String &name)
 	doc.SaveFile(filename);
 }
 
-void DX9_ShaderManager::applyShaderCache( const String &name )
+void DX9_ShaderManager::applyShaderCache( const std::string &name )
 {
-	String filename;
+	std::string filename;
 	if (filename.empty())
 		filename = "shaders/shaderCaches.xml";
 	else
@@ -1203,7 +1203,7 @@ void DX9_ShaderManager::applyShaderCache( const String &name )
 		return;
 
 	TiXmlElement *item = root->FirstChildElement();
-	String shadername = item->Attribute("name");
+	std::string shadername = item->Attribute("name");
 	ShaderMacro macro;
 	for (; item; item = item->NextSiblingElement()) {
 		shadername = item->Attribute("name");
@@ -1217,8 +1217,8 @@ void DX9_ShaderManager::_initialize()
 {
 	StringSeq ss = g_fileSystem->fileListByExts("shaders/", ".fx", File::List_Nodirectory|File::List_Sorted);
 
-	AX_FOREACH(const String &s, ss) {
-		String n = PathUtil::getName(s);
+	AX_FOREACH(const std::string &s, ss) {
+		std::string n = PathUtil::getName(s);
 		findShader(n);
 	}
 

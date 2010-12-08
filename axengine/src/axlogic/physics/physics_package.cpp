@@ -279,7 +279,7 @@ namespace { namespace Internal {
 			return 0;
 		}
 
-		void parseMaterialName(const char *hkname, String &axname, StringPairSeq &keyvalues)
+		void parseMaterialName(const char *hkname, std::string &axname, StringPairSeq &keyvalues)
 		{
 			StringSeq t1 = StringUtil::tokenizeSeq(hkname, '?');
 
@@ -308,11 +308,11 @@ namespace { namespace Internal {
 			}
 		}
 
-		MaterialTextureId guessTypeFromName(const String &texname)
+		MaterialTextureId guessTypeFromName(const std::string &texname)
 		{
 			MaterialTextureId samplertype = MaterialTextureId::MaxType;
 
-			String filename = PathUtil::getName(texname);
+			std::string filename = PathUtil::getName(texname);
 			if (filename.size() < 7)
 				return samplertype;
 
@@ -333,7 +333,7 @@ namespace { namespace Internal {
 		{
 			for (int i = 0; i < m_hkmat->m_numStages; i++) {
 				hkxMaterial::TextureStage *stage = &m_hkmat->m_stages[i];
-				String filename = getTextureFilename(stage);
+				std::string filename = getTextureFilename(stage);
 
 				if (filename.empty())
 					continue;
@@ -429,9 +429,9 @@ namespace { namespace Internal {
 				return new Material("default");
 			}
 
-			String fn = findStageFilename(hkxMaterial::TEX_DIFFUSE, 0);
+			std::string fn = findStageFilename(hkxMaterial::TEX_DIFFUSE, 0);
 
-			String axname;
+			std::string axname;
 			StringPairSeq keyvalues;
 
 			if (m_hkmat->m_name && m_hkmat->m_name[0] == '_') {
@@ -493,9 +493,9 @@ namespace { namespace Internal {
 		}
 
 	private:
-		String findStageFilename(hkxMaterial::TextureType textype, int channel)
+		std::string findStageFilename(hkxMaterial::TextureType textype, int channel)
 		{
-			String result;
+			std::string result;
 
 			hkxMaterial::TextureStage *stage = findStage(textype, channel);
 
@@ -524,9 +524,9 @@ namespace { namespace Internal {
 			return nullptr;
 		}
 
-		String getTextureFilename(hkxMaterial::TextureStage *stage)
+		std::string getTextureFilename(hkxMaterial::TextureStage *stage)
 		{
-			String result;
+			std::string result;
 
 			if (stage->m_texture.m_class != &hkxTextureFileClass) {
 				return result;
@@ -545,7 +545,7 @@ namespace { namespace Internal {
 
 		Texture *convert(hkxMaterial::TextureStage *stage)
 		{
-			String fn = getTextureFilename(stage);
+			std::string fn = getTextureFilename(stage);
 
 			return new Texture(fn);
 		}
@@ -556,7 +556,7 @@ namespace { namespace Internal {
 
 	class IStream {
 	public:
-		IStream(const String &filename)
+		IStream(const std::string &filename)
 		{
 			m_hkstream = 0;
 
@@ -640,7 +640,7 @@ void HavokAnimator::step(int frametime) {
 // class HavokAnimation
 //--------------------------------------------------------------------------
 
-HavokAnimation::HavokAnimation(const String &name)
+HavokAnimation::HavokAnimation(const std::string &name)
 {
 	m_package = 0;
 	m_animBinding = 0;
@@ -759,7 +759,7 @@ HavokRig::HavokRig(const HavokPackagePtr &package) : HavokPackable(package), m_h
 	if (m_package) m_havokSkeleton = m_package->getSkeleton();
 }
 
-HavokRig::HavokRig(const String &name)
+HavokRig::HavokRig(const std::string &name)
 {
 	m_package = g_havokPackageManager->findPackage(name);
 	m_havokSkeleton = 0;
@@ -900,7 +900,7 @@ public:
 	}
 };
 
-HavokPackage::HavokPackage(const String &filename)
+HavokPackage::HavokPackage(const std::string &filename)
 {
 	m_loader = nullptr;
 	m_root = nullptr;
@@ -1369,7 +1369,7 @@ HavokPackageManager::~HavokPackageManager()
 {
 }
 
-HavokPackagePtr HavokPackageManager::findPackage(const String &name)
+HavokPackagePtr HavokPackageManager::findPackage(const std::string &name)
 {
 	PackageDict::iterator it = m_packageDict.find(name);
 	if (it != m_packageDict.end()) {
@@ -1386,7 +1386,7 @@ HavokPackagePtr HavokPackageManager::findPackage(const String &name)
 	return package;
 }
 
-void HavokPackageManager::removePackage(const String &name)
+void HavokPackageManager::removePackage(const std::string &name)
 {
 	PackageDict::iterator it = m_packageDict.find(name);
 
@@ -1409,7 +1409,7 @@ HavokModel::HavokModel(HavokPackage *package) : RenderEntity(kModel)
 	m_isMeshDataInited = false;
 }
 
-HavokModel::HavokModel(const String &name) : RenderEntity(kModel)
+HavokModel::HavokModel(const std::string &name) : RenderEntity(kModel)
 {
 	m_package = g_havokPackageManager->findPackage(name);
 	m_pose = nullptr;

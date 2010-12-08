@@ -161,7 +161,7 @@ void ConsoleDlg::print(const char *text) {
 	}
 }
 
-void ConsoleDlg::print(const String &text) {
+void ConsoleDlg::print(const std::string &text) {
 	print(text.c_str());
 }
 

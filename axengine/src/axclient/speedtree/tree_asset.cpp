@@ -47,7 +47,7 @@ TreeAsset::~TreeAsset()
 	m_manager->removeAsset(this);
 }
 
-bool TreeAsset::load(const String &filename, int seed)
+bool TreeAsset::load(const std::string &filename, int seed)
 {
 	m_treeRt->SetNumWindMatrices(NUM_WIND_MATRIX);
 
@@ -106,7 +106,7 @@ bool TreeAsset::load(const String &filename, int seed)
 	return true;
 }
 
-String TreeAsset::getKey() const
+std::string TreeAsset::getKey() const
 {
 	return m_key;
 }
@@ -164,7 +164,7 @@ void TreeAsset::loadMaterials()
 	m_treeRt->GetMapBank(sMapBank);
 	m_treeRt->GetLightShaderParams(sShaderParams);
 
-	String texname = m_filepath + PathUtil::getName(sMapBank.m_pBranchMaps[CSpeedTreeRT::TL_DIFFUSE]);
+	std::string texname = m_filepath + PathUtil::getName(sMapBank.m_pBranchMaps[CSpeedTreeRT::TL_DIFFUSE]);
 	Texture *tex = new Texture(texname);
 
 	m_branchMat = new Material("_branch");

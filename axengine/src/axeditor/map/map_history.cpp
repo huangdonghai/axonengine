@@ -16,7 +16,7 @@ AX_BEGIN_NAMESPACE
 	// class HeightmapHis, for terrain heightmap editing
 	//--------------------------------------------------------------------------
 
-	HeightmapHis::HeightmapHis(const String &msg, const Rect &rect, Image *olddata, Image *newdata, MapTerrain *terrain)
+	HeightmapHis::HeightmapHis(const std::string &msg, const Rect &rect, Image *olddata, Image *newdata, MapTerrain *terrain)
 		: MapHistory(msg)
 	{
 		m_tilerect = rect;
@@ -46,7 +46,7 @@ AX_BEGIN_NAMESPACE
 		return true;
 	}
 
-	String HeightmapHis::getName() { return "HeightmapHis";}
+	std::string HeightmapHis::getName() { return "HeightmapHis";}
 
 	int HeightmapHis::getMemoryUsed() {
 		return m_newData->getTotalDataSize() * 2 + sizeof(HeightmapHis);
@@ -81,7 +81,7 @@ AX_BEGIN_NAMESPACE
 		return true;
 	}
 
-	String TerrainMaterialDefHis::getName() {
+	std::string TerrainMaterialDefHis::getName() {
 		return "TerrainMaterialDefHis";
 	}
 
@@ -93,7 +93,7 @@ AX_BEGIN_NAMESPACE
 	// class TerrainPaintHis
 	//--------------------------------------------------------------------------
 
-	TerrainPaintHis::TerrainPaintHis(const String &msg, const Rect &rect, int layerId, Image *olddata, Image *newdata)
+	TerrainPaintHis::TerrainPaintHis(const std::string &msg, const Rect &rect, int layerId, Image *olddata, Image *newdata)
 		: MapHistory(msg)
 	{
 		m_pixelrect = rect;
@@ -139,7 +139,7 @@ AX_BEGIN_NAMESPACE
 		return true;
 	}
 
-	String TerrainPaintHis::getName() {
+	std::string TerrainPaintHis::getName() {
 		return "TerrainPaintHis";
 	}
 
@@ -154,7 +154,7 @@ AX_BEGIN_NAMESPACE
 
 	}
 
-	MapHistory::MapHistory( const String &msg ) : History(g_mapContext, msg)
+	MapHistory::MapHistory( const std::string &msg ) : History(g_mapContext, msg)
 	{
 
 	}

@@ -100,7 +100,7 @@ NewMapDlg::OnParamsChanged() {
 
 void
 NewMapDlg::OnAccept() {
-	String new_mapname = q2u(ui.mapName->text());
+	std::string new_mapname = q2u(ui.mapName->text());
 	bool usePerlinNoise = ui.usePerlinNoise->isChecked();
 	bool generateHeight = ui.generateHeight->isChecked();
 	bool generateColor = ui.generateColor->isChecked();
@@ -114,7 +114,7 @@ NewMapDlg::OnAccept() {
 	gEditorSystem->setEditorParam("Map.noiseScale",	Variant(noiseScale));
 #endif
 
-	String map_name = "Maps/";
+	std::string map_name = "Maps/";
 #if 0
 	map_name += gEditorSystem->getEditorParam("Map.NewMapName").ToString();
 #endif

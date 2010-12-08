@@ -106,9 +106,9 @@ void Statistic::registerStat(Stat *stat)
 	m_statGroup[stat->getGroup()].push_front(stat);
 }
 
-const List<Stat *> & Statistic::getGroup(const char *groupname) const
+const std::list<Stat *> & Statistic::getGroup(const char *groupname) const
 {
-	static List<Stat *> s_empty;
+	static std::list<Stat *> s_empty;
 
 	StatGroup::const_iterator it = m_statGroup.find(groupname);
 	if (it != m_statGroup.end())

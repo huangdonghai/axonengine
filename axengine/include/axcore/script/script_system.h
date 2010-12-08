@@ -66,19 +66,19 @@ public:
 	Object *cloneObject(const Object *obj);
 
 	// for automatic name gen
-	int getNameIndex(const String &str) const;
-	void updateNameIndex(const String &str);
-	int nextNameIndex(const String &str);
-	String generateObjectName(const String &str);
+	int getNameIndex(const std::string &str) const;
+	void updateNameIndex(const std::string &str);
+	int nextNameIndex(const std::string &str);
+	std::string generateObjectName(const std::string &str);
 
 	void registerCppClass(CppClass *metainfo);
-	void registerScriptClass(const String &name);
+	void registerScriptClass(const std::string &name);
 
 	void getClassList(const char *prefix, bool sort, StringSeq &result) const;
 
 	// connect signal and slot
-	bool connect(Object *sender, const String &sig, Object *recevier, const String &slot);
-	bool disconnect(Object *sender, const String &sig, Object *recevier, const String &slot);
+	bool connect(Object *sender, const std::string &sig, Object *recevier, const std::string &slot);
+	bool disconnect(Object *sender, const std::string &sig, Object *recevier, const std::string &slot);
 
 	CppClass *findCppClass(const char *name) const;
 	ScriptClass *findScriptClass(const char *name) const;
@@ -97,7 +97,7 @@ private:
 	typedef Dict<FixedString, CppClass*> CppClassDict;
 	CppClassDict m_cppClassReg;
 
-	typedef Dict<String,int> StringIntDict;
+	typedef Dict<std::string,int> StringIntDict;
 	StringIntDict m_objectNameGen;
 
 	bool m_isReading;

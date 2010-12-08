@@ -322,7 +322,7 @@ void D3D9TargetManager::syncFrame()
 	m_curFrame ++;
 
 	{ // free real target first
-		List<RenderTarget*>::iterator it = m_freeRealTargets.begin();
+		std::list<RenderTarget*>::iterator it = m_freeRealTargets.begin();
 		while (it != m_freeRealTargets.end()) {
 			D3D9Target *target = static_cast<D3D9Target*>(*it);
 			target->freeRealTarget();
@@ -332,7 +332,7 @@ void D3D9TargetManager::syncFrame()
 	}
 
 	{ // alloc real target
-		List<RenderTarget*>::iterator it = m_realAllocTargets.begin();
+		std::list<RenderTarget*>::iterator it = m_realAllocTargets.begin();
 
 		while (it != m_realAllocTargets.end()) {
 			D3D9Target *target = static_cast<D3D9Target*>(*it);

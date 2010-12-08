@@ -22,8 +22,8 @@ public:
 		kEnum = Variant::kMaxType, kFlag, kTexture, kModel, kMaterial, kAnimation, kSpeedTree, kSound, kGroup
 	};
 
-	typedef std::pair<String,int> EnumItem;
-	typedef Sequence<EnumItem> EnumItems;
+	typedef std::pair<std::string,int> EnumItem;
+	typedef std::vector<EnumItem> EnumItems;
 
 	Member(const FixedString &name, Type t) : m_name(name), m_type(t), m_propKind(Variant::kVoid) {}
 
@@ -86,7 +86,7 @@ protected:
 	EnumItems m_enumItems;
 };
 
-typedef Sequence<Member*> MemberSeq;
+typedef std::vector<Member*> MemberSeq;
 typedef Dict<FixedString, Member*> MemberDict;
 
 //--------------------------------------------------------------------------
@@ -654,7 +654,7 @@ public:
 	Variant m_defaultValue;
 	ScriptProp *m_group;
 };
-typedef Sequence<ScriptProp*> ScriptPropSeq;
+typedef std::vector<ScriptProp*> ScriptPropSeq;
 typedef Dict<String,ScriptProp*> ScriptPropDict;
 
 
@@ -714,7 +714,7 @@ private:
 	SqProperty *m_group;
 };
 
-typedef Sequence<SqProperty*> SqProperties;
+typedef std::vector<SqProperty*> SqProperties;
 typedef Dict<FixedString,SqProperty*> SqPropertyDict;
 
 //--------------------------------------------------------------------------

@@ -274,7 +274,7 @@ GLtexture::~GLtexture()
 #endif
 }
 
-bool GLtexture::doInit(const String &name, intptr_t arg) {
+bool GLtexture::doInit(const std::string &name, intptr_t arg) {
 	if (!PathUtil::haveDir(name))
 		m_name = "textures/" + name;
 	else
@@ -649,7 +649,7 @@ void GLtexture::setFilterMode(FilterMode filtermode) {
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, mag_filter);
 }
 
-void GLtexture::saveToFile(const String &filename) {
+void GLtexture::saveToFile(const std::string &filename) {
 	glBindTexture(GL_TEXTURE_2D, getObject());
 
 	int width, height;

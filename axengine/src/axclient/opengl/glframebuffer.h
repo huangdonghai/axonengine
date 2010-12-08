@@ -123,7 +123,7 @@ private:
 	bool m_dirty;
 #endif
 	// render to texture's target
-	typedef Sequence<GLtarget*>	GLtargetseq;
+	typedef std::vector<GLtarget*>	GLtargetseq;
 	GLtargetseq m_targetpool;
 };
 

@@ -27,7 +27,7 @@ public:
 #if 0
 	virtual void Print(const Wchar *text);
 #endif
-	virtual void print(const String &str);
+	virtual void print(const std::string &str);
 	virtual void print(const char *text);
 
 private:

@@ -26,7 +26,7 @@ public:
 		InstanceScale = 3
 	};
 
-	TreeEntity(const String &filename, int seed = 1);
+	TreeEntity(const std::string &filename, int seed = 1);
 	~TreeEntity();
 
 	void setWindMatrixOffset(float fOffset) { m_instanceParam[WindMatrixOffset] = float(int(10.0f * fOffset)); }

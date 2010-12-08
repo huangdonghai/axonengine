@@ -189,7 +189,7 @@ struct AX_API Vector3
 		return Vector2(x, y);
 	}
 
-	String toString() const;
+	std::string toString() const;
 	bool fromString(const char *str);
 };
 

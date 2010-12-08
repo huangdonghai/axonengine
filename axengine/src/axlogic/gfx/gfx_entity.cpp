@@ -18,7 +18,7 @@ GfxEntity::GfxEntity() : RenderEntity(kEffect)
 
 }
 
-GfxEntity::GfxEntity( const String &filename ) : RenderEntity(kEffect)
+GfxEntity::GfxEntity( const std::string &filename ) : RenderEntity(kEffect)
 {
 
 }
@@ -47,7 +47,7 @@ Primitives GfxEntity::getHitTestPrims()
 
 void GfxEntity::frameUpdate(RenderScene *qscene)
 {
-	List<GfxObject*>::iterator it = m_objects.begin();
+	std::list<GfxObject*>::iterator it = m_objects.begin();
 	for (; it != m_objects.end(); ++it) {
 		GfxObject *obj = *it;
 		obj->frameUpdate(qscene);
@@ -56,7 +56,7 @@ void GfxEntity::frameUpdate(RenderScene *qscene)
 
 void GfxEntity::issueToQueue(RenderScene *qscene)
 {
-	List<GfxObject*>::iterator it = m_objects.begin();
+	std::list<GfxObject*>::iterator it = m_objects.begin();
 	for (; it != m_objects.end(); ++it) {
 		GfxObject *obj = *it;
 		obj->issueToQueue(qscene);
@@ -71,7 +71,7 @@ void GfxEntity::addObject( GfxObject *obj )
 
 void GfxEntity::removeObject( GfxObject *obj )
 {
-	List<GfxObject*>::iterator it = m_objects.begin();
+	std::list<GfxObject*>::iterator it = m_objects.begin();
 	for (; it != m_objects.end(); ++it) {
 		if (*it == obj) {
 			m_objects.erase(it);

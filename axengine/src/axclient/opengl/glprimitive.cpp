@@ -416,7 +416,7 @@ void GLtext::draw(Technique tech)
 		tq.height = m_rect.height;
 	}
 
-	WString wstr = u2w(m_text);
+	std::wstring wstr = u2w(m_text);
 	const wchar_t *pStr = wstr.c_str();
 	size_t total_len = wstr.length();
 	Vector2 scale, offset;

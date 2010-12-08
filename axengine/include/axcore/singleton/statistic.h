@@ -66,7 +66,7 @@ class AX_API Statistic
 	friend class Stat;
 
 public:
-	typedef Sequence<int> IndexSeq;
+	typedef std::vector<int> IndexSeq;
 	enum Group {
 		NoneGroup,
 		EngineGroup,
@@ -98,7 +98,7 @@ public:
 	const IndexSeq &getIndexsForGroup(Group group) const;
 	const String &getValueName(int index) const;
 #endif
-	const List<Stat *> &getGroup(const char *groupname) const;
+	const std::list<Stat *> &getGroup(const char *groupname) const;
 
 protected:
 	void registerStat(Stat *stat);
@@ -119,7 +119,7 @@ private:
 	int m_numValues;
 #endif
 	// new api
-	typedef List<Stat *> Stats;
+	typedef std::list<Stat *> Stats;
 	typedef Dict<const char *, Stats, HashCstr, EqualCstr> StatGroup;
 
 	StatGroup m_statGroup;

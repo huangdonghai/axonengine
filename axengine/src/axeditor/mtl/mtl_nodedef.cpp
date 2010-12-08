@@ -50,7 +50,7 @@ public:
 
 	~NodeDefManager() {}
 
-	Sequence<MtlNodeDef> m_defs;
+	std::vector<MtlNodeDef> m_defs;
 };
 
 MtlNodeDef::MtlNodeDef()
@@ -62,7 +62,7 @@ MtlNodeDef::~MtlNodeDef()
 }
 
 
-const Sequence<MtlNodeDef>& MtlNodeDef::getNodeDefs()
+const std::vector<MtlNodeDef>& MtlNodeDef::getNodeDefs()
 {
 	NodeDefManager defManager;
 	return defManager.m_defs;

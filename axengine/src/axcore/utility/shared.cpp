@@ -22,11 +22,11 @@ struct FilterInfo {
 		FT_MAX,
 	};
 
-	String str;
+	std::string str;
 	int type;
 
 public:
-	bool isIn(const String &name) const;
+	bool isIn(const std::string &name) const;
 };
 
 Filter::~Filter() {
@@ -35,7 +35,7 @@ Filter::~Filter() {
 	}
 }
 
-Filter::Filter(const String &filterStr) {
+Filter::Filter(const std::string &filterStr) {
 	StringList strs = StringUtil::tokenize(filterStr.c_str(), L';');
 
 	if (strs.size() == 0) {
@@ -46,7 +46,7 @@ Filter::Filter(const String &filterStr) {
 	for (; it != strs.end(); ++it) {
 		FilterInfo *pfi = new FilterInfo;
 		FilterInfo &fi = *pfi;
-		const String &orgStr = *it;
+		const std::string &orgStr = *it;
 		fi.str = orgStr;
 		if (orgStr == "*") {
 			fi.type = FilterInfo::FT_ALL;
@@ -106,7 +106,7 @@ static bool IsMatch(const char *pName, const char *pFilter) {
 	return true;
 }
 
-bool FilterInfo::isIn(const String &name) const {
+bool FilterInfo::isIn(const std::string &name) const {
 	switch (this->type) {
 	case FilterInfo::FT_ALL:
 		return true;
@@ -131,7 +131,7 @@ bool FilterInfo::isIn(const String &name) const {
 	}
 }
 
-bool Filter::In(const String &name) const {
+bool Filter::In(const std::string &name) const {
 	std::vector<FilterInfo*>::const_iterator it = mfilters.begin();
 	for (; it != mfilters.end(); ++it) {
 		if ((*it)->isIn(name)) {

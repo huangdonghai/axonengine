@@ -33,9 +33,9 @@ namespace {
 		return end;
 	}
 
-	String fullPath(const String &base, const String &path, const String &file)
+	std::string fullPath(const std::string &base, const std::string &path, const std::string &file)
 	{
-		String fullpath;
+		std::string fullpath;
 
 		fullpath = base;
 
@@ -53,9 +53,9 @@ namespace {
 		return fullpath;
 	}
 
-	String fullPath(const String &base, const String &file)
+	std::string fullPath(const std::string &base, const std::string &file)
 	{
-		String fullpath = fullPath(base, file, "");
+		std::string fullpath = fullPath(base, file, "");
 
 		//	fullpath[fullpath.length()-1] = 0;
 		fullpath.resize(fullpath.length()-1);
@@ -144,14 +144,14 @@ PakedFolder::PakedFolder()
 PakedFolder::~PakedFolder()
 {}
 
-void PakedFolder::addPath(const String &fullpath)
+void PakedFolder::addPath(const std::string &fullpath)
 {
 	getPath(fullpath);
 }
 
-void PakedFolder::addFile(const String &fullpath, PakedFile *info)
+void PakedFolder::addFile(const std::string &fullpath, PakedFile *info)
 {
-	String path = PathUtil::getDir(fullpath);
+	std::string path = PathUtil::getDir(fullpath);
 
 	PakedFolder *pf = getPath(path);
 
@@ -160,9 +160,9 @@ void PakedFolder::addFile(const String &fullpath, PakedFile *info)
 	pf->m_packedFileDict[fullpath] = info;
 }
 
-void PakedFolder::getFileInfos(const String &path, const String &exts, int flags, OUT FileInfoSeq &fis)
+void PakedFolder::getFileInfos(const std::string &path, const std::string &exts, int flags, OUT FileInfoSeq &fis)
 {
-	String new_path = path;
+	std::string new_path = path;
 
 	if (!PathUtil::isDirectoryLetter(*new_path.rbegin())) {
 		new_path += '/';
@@ -231,7 +231,7 @@ void PakedFolder::getFileInfos(const String &path, const String &exts, int flags
 	}
 }
 
-PakedFolder *PakedFolder::getPath(const String &path, bool bAddPath)
+PakedFolder *PakedFolder::getPath(const std::string &path, bool bAddPath)
 {
 	if (path == m_fullName)
 		return this;
@@ -239,11 +239,11 @@ PakedFolder *PakedFolder::getPath(const String &path, bool bAddPath)
 	if (StringUtil::strnicmp(m_fullName.c_str(), path.c_str(), m_fullName.size()) != 0)
 		Errorf(_("error path"));
 
-	String::size_type pos = path.find(AX_PATH_SEP_STR, m_fullName.size());
+	std::string::size_type pos = path.find(AX_PATH_SEP_STR, m_fullName.size());
 
 	// get subpath name
-	String subpath = path;
-	if (pos != String::npos) {
+	std::string subpath = path;
+	if (pos != std::string::npos) {
 		subpath.resize(pos + 1);	// we need '/', so + 1
 	}
 
@@ -289,7 +289,7 @@ File::~File()
 	g_fileSystem->detachFileObject(this);
 }
 
-String File::getName() const
+std::string File::getName() const
 {
 	SCOPE_LOCK;
 	return m_name;
@@ -533,7 +533,7 @@ void FileSystem::finalize()
 {}
 
 
-void FileSystem::addGameDirectory(const String &dir, bool extractSrc)
+void FileSystem::addGameDirectory(const std::string &dir, bool extractSrc)
 {
 	SCOPE_LOCK;
 
@@ -556,7 +556,7 @@ void FileSystem::addGameDirectory(const String &dir, bool extractSrc)
 
 	StringSeq::iterator it = strvec.begin();
 	for (; it != strvec.end(); ++it) {
-		String fullpath = fullPath(dir, *it);
+		std::string fullpath = fullPath(dir, *it);
 
 		FilePackage *packfile = loadPakFile(fullpath, *it);
 
@@ -567,7 +567,7 @@ void FileSystem::addGameDirectory(const String &dir, bool extractSrc)
 }
 
 
-bool FileSystem::ospathToDataPath(const String &path, String &gpath)
+bool FileSystem::ospathToDataPath(const std::string &path, std::string &gpath)
 {
 	SCOPE_LOCK;
 
@@ -613,9 +613,9 @@ bool FileSystem::ospathToDataPath(const String &path, String &gpath)
 	return true;
 }
 
-String FileSystem::dataPathToOsPath(const String &gpath)
+std::string FileSystem::dataPathToOsPath(const std::string &gpath)
 {
-	String fullpath = m_dataPath;
+	std::string fullpath = m_dataPath;
 	if (gpath.length()) {
 		if (!PathUtil::isDirectoryLetter(gpath[0])) {
 			fullpath += "/";
@@ -625,23 +625,23 @@ String FileSystem::dataPathToOsPath(const String &gpath)
 	return fullpath;
 }
 
-String FileSystem::getDataPath()
+std::string FileSystem::getDataPath()
 {
 	return m_dataPath;
 }
 
-StringSeq FileSystem::fileListByExts(const String &path, const String &exts, int flags)
+StringSeq FileSystem::fileListByExts(const std::string &path, const std::string &exts, int flags)
 {
 	SCOPE_LOCK;
 
-	String datapath = m_dataPath;
+	std::string datapath = m_dataPath;
 	datapath += "/";
-	String fullpath = dataPathToOsPath(path);
+	std::string fullpath = dataPathToOsPath(path);
 
 	return PathUtil::listFileByExts(datapath, fullpath, exts, flags);
 }
 
-FileInfoSeq FileSystem::getFileInfos(const String &path, const String &exts, int flags)
+FileInfoSeq FileSystem::getFileInfos(const std::string &path, const std::string &exts, int flags)
 {
 	SCOPE_LOCK;
 
@@ -650,8 +650,8 @@ FileInfoSeq FileSystem::getFileInfos(const String &path, const String &exts, int
 	m_pakedFolders.getFileInfos(path, exts, flags, fis);
 
 	AX_FOREACH(const SearchDir &sp, m_searchDirs) {
-		String datapath = sp.dir + AX_PATH_SEP_STR;
-		String fullpath = sp.dir;
+		std::string datapath = sp.dir + AX_PATH_SEP_STR;
+		std::string fullpath = sp.dir;
 
 		if (path.length()) {
 			if (!PathUtil::isDirectoryLetter(path[0])) {
@@ -672,7 +672,7 @@ FileInfoSeq FileSystem::getFileInfos(const String &path, const String &exts, int
 }
 
 
-File *FileSystem::openFileByMode(const String &filename, File::AccessMode mode)
+File *FileSystem::openFileByMode(const std::string &filename, File::AccessMode mode)
 {
 	SCOPE_LOCK;
 
@@ -698,7 +698,7 @@ File *FileSystem::openFileByMode(const String &filename, File::AccessMode mode)
 	return file;
 }
 
-File *FileSystem::openFileRead(const String &filename)
+File *FileSystem::openFileRead(const std::string &filename)
 {
 	SCOPE_LOCK;
 
@@ -716,7 +716,7 @@ File *FileSystem::openFileRead(const String &filename)
 
 	for (; sp != m_searchDirs.end(); ++sp) {
 		/* real file */
-		String path = fullPath(sp->dir, filename);
+		std::string path = fullPath(sp->dir, filename);
 
 		FILE *fp = NULL;
 		gzFile gzf = NULL;
@@ -737,7 +737,7 @@ File *FileSystem::openFileRead(const String &filename)
 		attachFileObject(file);
 
 		if (sp->extractSrc && doExtract) {
-			String extractDir = m_gamePath + '/' + fs_extractDir.getString() + '/' + filename;
+			std::string extractDir = m_gamePath + '/' + fs_extractDir.getString() + '/' + filename;
 
 			PathUtil::createDir(extractDir);
 
@@ -756,7 +756,7 @@ File *FileSystem::openFileRead(const String &filename)
 	}
 
 	/// not found, try packed file
-	String fn = filename;
+	std::string fn = filename;
 
 	EntryDict::iterator it = m_pakedFileDict.find(fn);
 	if (it != m_pakedFileDict.end()) {
@@ -783,11 +783,11 @@ File *FileSystem::openFileRead(const String &filename)
 	return file;
 }
 
-File *FileSystem::openFileWrite(const String &filename)
+File *FileSystem::openFileWrite(const std::string &filename)
 {
 	SCOPE_LOCK;
 
-	String path = filename;
+	std::string path = filename;
 	if (filename[1] != L':') {
 		path = fullPath(m_modPath, filename);
 	}
@@ -817,11 +817,11 @@ File *FileSystem::openFileWrite(const String &filename)
 	return cf;
 }
 
-File *FileSystem::openFileAppend(const String &filename)
+File *FileSystem::openFileAppend(const std::string &filename)
 {
 	SCOPE_LOCK;
 
-	String path = fullPath(m_modPath, filename);
+	std::string path = fullPath(m_modPath, filename);
 
 	PathUtil::createDir(path);
 
@@ -844,7 +844,7 @@ File *FileSystem::openFileAppend(const String &filename)
 	return cf;
 }
 
-size_t FileSystem::readFile(const String &filename, void **buffer)
+size_t FileSystem::readFile(const std::string &filename, void **buffer)
 {
 	SCOPE_LOCK;
 
@@ -890,7 +890,7 @@ void FileSystem::freeFile(void *buffer)
 	SafeDeleteArray(buffer);
 }
 
-void FileSystem::writeFile(const String &filename, const void *buffer, size_t size)
+void FileSystem::writeFile(const std::string &filename, const void *buffer, size_t size)
 {
 	SCOPE_LOCK;
 
@@ -909,7 +909,7 @@ void FileSystem::writeFile(const String &filename, const void *buffer, size_t si
 }
 
 
-int FileSystem::compareFileModifyTime(const String &srcfile, const String &destfile)
+int FileSystem::compareFileModifyTime(const std::string &srcfile, const std::string &destfile)
 {
 	SCOPE_LOCK;
 
@@ -947,7 +947,7 @@ void FileSystem::detachFileObject(File *cf)
 	}
 }
 
-FilePackage *FileSystem::loadPakFile(const String &fullpath, const String &filename)
+FilePackage *FileSystem::loadPakFile(const std::string &fullpath, const std::string &filename)
 {
 	unzFile unzfile;
 	unz_global_info global_info;
@@ -983,7 +983,7 @@ FilePackage *FileSystem::loadPakFile(const String &fullpath, const String &filen
 		if (unzGetCurrentFileInfo(unzfile, &file_info, entryName, sizeof(entryName), NULL, 0, NULL, 0) != UNZ_OK)
 			break;
 
-		String packedname = entryName;
+		std::string packedname = entryName;
 
 		if (packedname[packedname.size()-1] == AX_PATH_SEP) {
 			m_pakedFolders.addPath(packedname);
@@ -1000,7 +1000,7 @@ FilePackage *FileSystem::loadPakFile(const String &fullpath, const String &filen
 	return packfile;
 }
 
-bool FileSystem::getFileModifyTime(const String &filename, longlong_t *time) const
+bool FileSystem::getFileModifyTime(const std::string &filename, longlong_t *time) const
 {
 	SCOPE_LOCK;
 
@@ -1010,13 +1010,13 @@ bool FileSystem::getFileModifyTime(const String &filename, longlong_t *time) con
 
 	SearchDirs::const_iterator sp;
 	for (sp = m_searchDirs.begin(); sp != m_searchDirs.end(); ++sp) {
-		String path = fullPath(sp->dir, filename);
+		std::string path = fullPath(sp->dir, filename);
 		if (PathUtil::getFileModifiedTime(path.c_str(), time))
 			return true;
 	}
 
 	/// not found, try packed file
-	String fn = filename;
+	std::string fn = filename;
 
 	EntryDict::const_iterator it = m_pakedFileDict.find(fn);
 	if (it != m_pakedFileDict.end()) {
@@ -1035,19 +1035,19 @@ bool FileSystem::getFileModifyTime(const String &filename, longlong_t *time) con
 	return false;
 }
 
-bool FileSystem::isFileExist(const String &filename) const
+bool FileSystem::isFileExist(const std::string &filename) const
 {
 	return getFileModifyTime(filename, nullptr);
 }
 
-size_t FileSystem::readTextFile(const String &filename, void** buffer)
+size_t FileSystem::readTextFile(const std::string &filename, void** buffer)
 {
 	return 0;
 }
 
-String FileSystem::getDefaultDataPath()
+std::string FileSystem::getDefaultDataPath()
 {
-	String result = OsUtil::getworkpath();
+	std::string result = OsUtil::getworkpath();
 
 	size_t i;
 	for (i=result.length(); i>0; i--) {
@@ -1067,7 +1067,7 @@ void FileSystem::addModPath()
 	// init to data path first
 	m_modPath = m_dataPath;
 
-	String modfilename = m_gamePath + "/modpath.txt";
+	std::string modfilename = m_gamePath + "/modpath.txt";
 	FILE *f = fopen(u2l(modfilename).c_str(), "rb");
 	if (!f) {
 		return;
@@ -1089,7 +1089,7 @@ void FileSystem::addModPath()
 
 void FileSystem::addSearchPath()
 {
-	String modfilename = m_gamePath + "/searchpath.txt";
+	std::string modfilename = m_gamePath + "/searchpath.txt";
 	FILE *f = fopen(u2l(modfilename).c_str(), "rb");
 	if (!f) {
 		return;
@@ -1111,7 +1111,7 @@ void FileSystem::addSearchPath()
 		if (v < 2)
 			isExtractSrc = 0;
 
-		String path = m_gamePath + "/" + dir;
+		std::string path = m_gamePath + "/" + dir;
 
 		// remove \r\d
 		size_t s = path.size();
@@ -1129,9 +1129,9 @@ void FileSystem::addSearchPath()
 	fclose(f);
 }
 
-String FileSystem::modPathToOsPath(const String &modpath)
+std::string FileSystem::modPathToOsPath(const std::string &modpath)
 {
-	String fullpath = m_modPath;
+	std::string fullpath = m_modPath;
 	if (modpath.length()) {
 		if (!PathUtil::isDirectoryLetter(modpath[0])) {
 			fullpath += "/";
@@ -1143,7 +1143,7 @@ String FileSystem::modPathToOsPath(const String &modpath)
 
 void FileSystem::checkGamePath()
 {
-	String modfilename = m_gamePath + "/gamepath.txt";
+	std::string modfilename = m_gamePath + "/gamepath.txt";
 	FILE *f = fopen(u2l(modfilename).c_str(), "rb");
 	if (!f) {
 		return;
@@ -1154,7 +1154,7 @@ void FileSystem::checkGamePath()
 			return;
 		}
 
-		String path = m_gamePath + "/" + linebuf;
+		std::string path = m_gamePath + "/" + linebuf;
 
 		// remove \r\d
 		size_t s = path.size();

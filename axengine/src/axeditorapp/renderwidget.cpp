@@ -178,7 +178,7 @@ void RenderWidget::drawFrameNum()
 	rv.setOverlay(Rect(0,0,size().width(),size().height()));
 
 	Rect rect;
-	String text;
+	std::string text;
 
 	double now = OsUtil::seconds();
 	float frame_time = now - m_frameOldTime;
@@ -2170,7 +2170,7 @@ void ParticlePreviewWidget::showHelpText()
 	float scale = (float)rect.height / (float)rect.width;
 	QString qStr;
 	qStr.sprintf("FPS: %0.1f",frameRate);
-	String ufpsStr = q2u(qStr);
+	std::string ufpsStr = q2u(qStr);
 	Matrix3 axis = m_renderCamera.getViewAxis();
 	Vector3 pos  = m_renderCamera.getOrigin();
 	pos += axis[0] * 15.0f;
@@ -2184,7 +2184,7 @@ void ParticlePreviewWidget::showHelpText()
 
 	size_t numActivePar = stasticsNumActiveParticle();
 	qStr.sprintf("particles: %d",numActivePar);
-	String uNumParStr = q2u(qStr);
+	std::string uNumParStr = q2u(qStr);
 	drawPos -= heightVec;
 	drawPos += widthVec * 0.7f;
 	Render::Text *numParTex = Render::Text::createSimpleText(Render::Primitive::OneFrame,drawPos,Rgba(255,0,0,255),uNumParStr);

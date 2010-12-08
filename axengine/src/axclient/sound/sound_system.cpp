@@ -102,7 +102,7 @@ SoundSystem::~SoundSystem()
 
 void SoundSystem::playSound_f( const CmdArgs &args )
 {
-	String name = "sounds/test.ogg";
+	std::string name = "sounds/test.ogg";
 
 	if (args.tokened.size() > 1)
 		name = args.tokened[1];
@@ -124,7 +124,7 @@ void SoundSystem::playSound_f( const CmdArgs &args )
 #endif
 }
 
-SoundFx *SoundSystem::createSfx( const String &name )
+SoundFx *SoundSystem::createSfx( const std::string &name )
 {
 	SfxDict::const_iterator it = m_sfxDict.find(name);
 

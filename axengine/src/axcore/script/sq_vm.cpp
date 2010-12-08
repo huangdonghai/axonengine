@@ -4,7 +4,7 @@ AX_BEGIN_NAMESPACE
 
 static SQRESULT _loadfile(HSQUIRRELVM v, const SQChar *filename, SQBool printerror)
 {
-	String name = "scripts/";
+	std::string name = "scripts/";
 	name += filename;
 
 	char *filebuf;
@@ -80,8 +80,8 @@ static SQInteger registerClass(HSQUIRRELVM v)
 
 sqObject sqVM::ms_getClosure;
 sqObject sqVM::ms_setClosure;
-Sequence<sqObject> sqVM::ms_threadPool;
-List<int> sqVM::ms_freeThreads;
+std::vector<sqObject> sqVM::ms_threadPool;
+std::list<int> sqVM::ms_freeThreads;
 
 static SQRegFunction ax_funcs[] = {
 	{ "loadfile", &loadfile, -2, _SC(".sb") },
@@ -333,7 +333,7 @@ void sqVM::pushMeta(HSQUIRRELVM v, const ConstRef &arg)
 		sq_pushfloat(v, arg.as<float>());
 		return;
 	case Variant::kString:
-		sq_pushstring(v, arg.as<String>().c_str(), arg.as<String>().size());
+		sq_pushstring(v, arg.as<std::string>().c_str(), arg.as<std::string>().size());
 		return;
 	case Variant::kObject:
 		sq_pushobject(v, arg.as<ObjectStar>()->getScriptInstance().getSqObject());
@@ -392,7 +392,7 @@ void sqVM::getMeta(HSQUIRRELVM v, int idx, Variant &result)
 	case OT_STRING:
 		{
 			result.init(Variant::kString);
-			result.as<String>() = sq_objtostring(&t);
+			result.as<std::string>() = sq_objtostring(&t);
 		}
 		return;
 	case OT_TABLE:

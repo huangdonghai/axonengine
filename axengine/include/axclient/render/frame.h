@@ -24,7 +24,7 @@ struct RenderScene {
 };
 
 typedef shared_ptr<RenderScene> ScenePtr;
-typedef Sequence<ScenePtr> SceneSeq;
+typedef std::vector<ScenePtr> SceneSeq;
 #endif
 
 struct AX_API RenderScene
@@ -193,8 +193,8 @@ private:
 	SyncEvent *m_consumingEvent;
 	SyncEvent *m_cacheEndEvent;
 
-	List<SyncMethod*> m_deferredCommand;
-	List<RenderData*> m_deferredDeleteResources;
+	std::list<SyncMethod*> m_deferredCommand;
+	std::list<RenderData*> m_deferredDeleteResources;
 #endif
 };
 

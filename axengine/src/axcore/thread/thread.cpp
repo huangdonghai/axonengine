@@ -18,4 +18,14 @@ AX_BEGIN_NAMESPACE
 #	include <pthread.h>
 #endif
 
+
+void Thread::addAsyncNotify(INotifyHandler *handler, int index)
+{
+	AsyncNotify an;
+	an.handler = handler;
+	an.index = index;
+
+	m_asyncNotifyList.push_back(an);
+}
+
 AX_END_NAMESPACE

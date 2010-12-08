@@ -57,7 +57,7 @@ public:
 	Variant(bool v);
 	Variant(int v);
 	Variant(float v);
-	Variant(const String &v);
+	Variant(const std::string &v);
 	Variant(const char *v);
 	Variant(Object *v);
 	Variant(const Vector3 &v);
@@ -78,7 +78,7 @@ public:
 	operator bool() const;
 	operator int() const;
 	operator float() const;
-	operator String() const;
+	operator std::string() const;
 	operator Object*() const;
 	operator Vector3() const;
 	operator Point() const;
@@ -87,7 +87,7 @@ public:
 	Variant& operator=(const Variant &v);
 	operator Matrix() const;
 
-	String toString() const;
+	std::string toString() const;
 	void fromString(TypeId t, const char *str);
 
 	template<class Q>
@@ -277,7 +277,7 @@ inline bool Variant::castTo( TypeId typeId, void *data )
 	return rawCast(m_type, getPointer(), typeId, data);
 }
 
-typedef Sequence<Variant> VariantSeq;
+typedef std::vector<Variant> VariantSeq;
 
 template< typename T >
 inline Variant::TypeId GetVariantType_() {
@@ -306,7 +306,7 @@ inline Variant::TypeId GetVariantType_<float>() {
 }
 
 template<>
-inline Variant::TypeId GetVariantType_<String>() {
+inline Variant::TypeId GetVariantType_<std::string>() {
 	return Variant::kString;
 }
 

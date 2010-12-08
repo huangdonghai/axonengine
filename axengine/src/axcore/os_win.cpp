@@ -24,7 +24,7 @@ AX_BEGIN_NAMESPACE
 -----------------------------------------------------------------------------*/
 bool OsUtil::mkdir(const char *dirname )
 {
-	WString wdirname = u2w(dirname );
+	std::wstring wdirname = u2w(dirname );
 	int ret = ::_wmkdir(wdirname.c_str() );
 
 	if (ret == -1 ) {
@@ -45,7 +45,7 @@ bool OsUtil::mkdir(const char *dirname )
 	return true;
 }
 
-String OsUtil::getworkpath()
+std::string OsUtil::getworkpath()
 {
 	wchar_t buf[260];
 	wchar_t * v = ::_wgetcwd(buf, ArraySize(buf));
@@ -120,9 +120,9 @@ double OsUtil::seconds()
 }
 
 
-String OsUtil::getClipboardString()
+std::string OsUtil::getClipboardString()
 {
-	String out;
+	std::string out;
 	wchar_t *data;
 
 	if (!OpenClipboard(NULL))
@@ -139,9 +139,9 @@ String OsUtil::getClipboardString()
 	return out;
 }
 
-Handle OsUtil::loadSysDll(const String &name)
+Handle OsUtil::loadSysDll(const std::string &name)
 {
-	String libname = name + ".dll";
+	std::string libname = name + ".dll";
 
 	Handle hDll = (Handle)::LoadLibraryW(u2w(libname).c_str());
 	if (!hDll) {
@@ -150,7 +150,7 @@ Handle OsUtil::loadSysDll(const String &name)
 	return hDll;
 }
 
-Handle OsUtil::loadDll(const String &name)
+Handle OsUtil::loadDll(const std::string &name)
 {
 #if 0
 	String libname = name + "D";
@@ -160,7 +160,7 @@ Handle OsUtil::loadDll(const String &name)
 #endif
 }
 
-void *OsUtil::getProcEntry(Handle handle, const String &name)
+void *OsUtil::getProcEntry(Handle handle, const std::string &name)
 {
 	return (void *)::GetProcAddress(handle.to<HMODULE>(), name.c_str());
 }
@@ -237,7 +237,7 @@ bool OsUtil::getMacAddress(byte_t address[6])
 	return __haveit;
 }
 
-String OsUtil::getHostName()
+std::string OsUtil::getHostName()
 {
 	return "";
 }

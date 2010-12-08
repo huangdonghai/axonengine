@@ -23,9 +23,9 @@ AX_BEGIN_NAMESPACE
 		int terrainCurLayerId;
 
 		bool followTerrain;
-		String staticModelName;
-		String treeFilename;
-		String entityClass;		// current entity class for creation
+		std::string staticModelName;
+		std::string treeFilename;
+		std::string entityClass;		// current entity class for creation
 	};
 
 AX_END_NAMESPACE

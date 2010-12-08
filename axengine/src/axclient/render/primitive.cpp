@@ -1190,7 +1190,7 @@ TextPrim::TextPrim(Hint hint) : Primitive(hint), m_horizonAlign(Center), m_verti
 TextPrim::~TextPrim() {
 }
 
-void TextPrim::init(const Rect &rect, Rgba color, float aspect, int format, Font *font, const String &text)
+void TextPrim::init(const Rect &rect, Rgba color, float aspect, int format, Font *font, const std::string &text)
 {
 	m_rect = rect;
 	m_color = color;
@@ -1201,7 +1201,7 @@ void TextPrim::init(const Rect &rect, Rgba color, float aspect, int format, Font
 	m_isSimpleText = false;
 }
 
-void TextPrim::initSimple(const Vector3 &xyz, Rgba color, const String &text, bool fixedWidth)
+void TextPrim::initSimple(const Vector3 &xyz, Rgba color, const std::string &text, bool fixedWidth)
 {
 	m_isSimpleText = true;
 	m_color = color;
@@ -1221,7 +1221,7 @@ void TextPrim::clear()
 }
 
 // static helper function
-TextPrim *TextPrim::createSimpleText(Hint hint, const Vector3 &xyz, const Rgba &color, const String &text, bool fixedWidth)
+TextPrim *TextPrim::createSimpleText(Hint hint, const Vector3 &xyz, const Rgba &color, const std::string &text, bool fixedWidth)
 {
 	TextPrim *rp_text = new TextPrim(hint);
 	rp_text->initSimple(xyz, color, text, fixedWidth);
@@ -1229,7 +1229,7 @@ TextPrim *TextPrim::createSimpleText(Hint hint, const Vector3 &xyz, const Rgba &
 	return rp_text;
 }
 
-TextPrim *TextPrim::createText(Hint hint, const Rect &rect, Font *font, const String &text, const Rgba &color, HorizonAlign halign, VerticalAlign valign, int format, float aspect)
+TextPrim *TextPrim::createText(Hint hint, const Rect &rect, Font *font, const std::string &text, const Rgba &color, HorizonAlign halign, VerticalAlign valign, int format, float aspect)
 {
 	TextPrim *rp_text = new TextPrim(hint);
 

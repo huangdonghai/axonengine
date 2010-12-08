@@ -22,7 +22,7 @@ ConfigFile::~ConfigFile()
 }
 
 
-bool ConfigFile::load(const String &filename)
+bool ConfigFile::load(const std::string &filename)
 {
 	SCOPE_LOCK;
 //	SCOPE_CONVERT;
@@ -75,7 +75,7 @@ bool ConfigFile::load(const String &filename)
 			continue;
 		}
 
-		std::map<String, String>& item_hash = m_data[ section_name ];
+		std::map<std::string, std::string>& item_hash = m_data[ section_name ];
 
 		TiXmlElement *item;
 		for (item = section->FirstChildElement("Item"); item; item = item->NextSiblingElement("Item")) {
@@ -127,7 +127,7 @@ bool ConfigFile::save() const
 	return saveTo(m_filename);
 }
 
-bool ConfigFile::saveTo(const String &filename) const
+bool ConfigFile::saveTo(const std::string &filename) const
 {
 	SCOPE_LOCK;
 //	SCOPE_CONVERT;
@@ -186,7 +186,7 @@ StringSeq ConfigFile::getSections() const
 	return sv;
 }
 
-size_t ConfigFile::getItemCount(const String &section) const
+size_t ConfigFile::getItemCount(const std::string &section) const
 {
 	SCOPE_LOCK;
 
@@ -201,7 +201,7 @@ size_t ConfigFile::getItemCount(const String &section) const
 	}
 }
 
-StringPairSeq ConfigFile::getItems(const String &section) const
+StringPairSeq ConfigFile::getItems(const std::string &section) const
 {
 	SCOPE_LOCK;
 
@@ -223,13 +223,13 @@ StringPairSeq ConfigFile::getItems(const String &section) const
 	return spv;
 }
 
-String ConfigFile::getKeyValue(const String &section, const String &key) const
+std::string ConfigFile::getKeyValue(const std::string &section, const std::string &key) const
 {
 	SCOPE_LOCK;
 
 	SectionType::const_iterator section_it;
 	ItemType::const_iterator item_it;
-	String value;
+	std::string value;
 
 	section_it = m_data.find(section);
 
@@ -245,7 +245,7 @@ String ConfigFile::getKeyValue(const String &section, const String &key) const
 	return value;
 }
 
-void ConfigFile::setValue(const String &section, const String &key, const String &value)
+void ConfigFile::setValue(const std::string &section, const std::string &key, const std::string &value)
 {
 	SCOPE_LOCK;
 

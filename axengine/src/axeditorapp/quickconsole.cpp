@@ -101,7 +101,7 @@ void QuickConsole::print(const char *text) {
 	ui.message->verticalScrollBar()->setValue(ui.message->verticalScrollBar()->maximum());
 }
 
-void QuickConsole::print(const String &str) {
+void QuickConsole::print(const std::string &str) {
 	print(str.c_str());
 }
 

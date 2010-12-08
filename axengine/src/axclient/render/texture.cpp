@@ -20,12 +20,12 @@ Texture::ExistDict Texture::m_existDict;
 //--------------------------------------------------------------------------
 
 TextureResource::ResourceDict TextureResource::ms_resources;
-List<TextureResource*> TextureResource::ms_asioList;
+std::list<TextureResource*> TextureResource::ms_asioList;
 
 
 TextureResource::TextureResource(const FixedString &key, InitFlags flags)
 {
-	String filename = key.toString() + ".dds";
+	std::string filename = key.toString() + ".dds";
 	m_asioRead.setFilename(filename);
 	g_fileSystem->queAsioRead(&m_asioRead);
 
@@ -82,7 +82,7 @@ void TextureResource::loadFileMemory( int size, void *data )
 
 void TextureResource::stepAsio()
 {
-	List<TextureResource*>::iterator it = ms_asioList.begin();
+	std::list<TextureResource*>::iterator it = ms_asioList.begin();
 
 	while (it != ms_asioList.end()) {
 		TextureResource *res = *it;
@@ -100,14 +100,14 @@ void TextureResource::stepAsio()
 // class Texture
 //--------------------------------------------------------------------------
 
-Texture::Texture(const String &name, InitFlags flags/*=0*/)
+Texture::Texture(const std::string &name, InitFlags flags/*=0*/)
 {
 	FixedString key = normalizeKey(name);
 	m_resource = TextureResource::findResource(key, flags);
 	m_samplerState = g_renderSystem->findSamplerState(0);
 }
 
-Texture::Texture(const String &debugname, TexFormat format, int width, int height, InitFlags flags /*= 0*/)
+Texture::Texture(const std::string &debugname, TexFormat format, int width, int height, InitFlags flags /*= 0*/)
 {
 	m_resource = TextureResource::createResource(debugname, format, width, height, flags);
 	m_samplerState = g_renderSystem->findSamplerState(0);
@@ -142,7 +142,7 @@ Texture *Texture::create( const String &debugname, TexFormat format, int width, 
 }
 #endif
 
-bool Texture::isExist(const String &name)
+bool Texture::isExist(const std::string &name)
 {
 	FixedString key = normalizeKey(name);
 
@@ -150,7 +150,7 @@ bool Texture::isExist(const String &name)
 	if (it != m_existDict.end())
 		return it->second;
 
-	String filename = key.toString() + ".dds";
+	std::string filename = key.toString() + ".dds";
 
 	bool result = g_fileSystem->isFileExist(filename);
 	m_existDict[key] = result;
@@ -166,9 +166,9 @@ void Texture::finalizeManager()
 { /* do nothing */ }
 #endif
 
-FixedString Texture::normalizeKey(const String &name)
+FixedString Texture::normalizeKey(const std::string &name)
 {
-	String normalizedName = PathUtil::normalizePath(name);
+	std::string normalizedName = PathUtil::normalizePath(name);
 	FixedString key;
 
 	if (!PathUtil::haveDir(name))
@@ -206,7 +206,7 @@ void Texture::setFilterMode(SamplerStateDesc::FilterMode filterMode)
 }
 
 
-void Texture::saveToFile(const String &filename)
+void Texture::saveToFile(const std::string &filename)
 {
 
 }
@@ -220,7 +220,7 @@ phandle_t Texture::getPHandle() const
 #if 0
 void Texture::texlist_f(const CmdArgs &args)
 {
-	Printf("List texture(s):\n");
+	Printf("std::list texture(s):\n");
 
 	int count = 0;
 	TextureDict::const_iterator it = m_textureDict.begin();
@@ -306,7 +306,7 @@ Texture *TextureManager::loadTexture(const String &texname, Texture::InitFlags f
 	return tex;
 }
 
-Texture *TextureManager::createTexture(const String &debugname, TexFormat format, int width, int height, Texture::InitFlags flags /*= 0*/)
+Texture *TextureManager::createTexture(const std::string &debugname, TexFormat format, int width, int height, Texture::InitFlags flags /*= 0*/)
 {
 	std::stringstream ss;
 	ss << "_" << debugname << "$" << g_system->generateId();
@@ -343,7 +343,7 @@ bool TextureManager::isExist(const FixedString &key)
 	if (it != m_existDict.end())
 		return it->second;
 
-	String filename = key.toString() + ".dds";
+	std::string filename = key.toString() + ".dds";
 
 	bool result = g_fileSystem->isFileExist(filename);
 	m_existDict[key] = result;
@@ -399,7 +399,7 @@ void TextureManager::freeTexture(Texture *tex)
 
 void TextureManager::texlist_f(const CmdArgs &args)
 {
-	Printf("List texture(s):\n");
+	Printf("std::list texture(s):\n");
 
 	int count = 0;
 	TextureDict::const_iterator it = m_textureDict.begin();
@@ -421,7 +421,7 @@ void TextureManager::texlist_f(const CmdArgs &args)
 //---------------------------------------------------------------------------
 
 Dict<FixedString, TextureResource*> TextureResource::ms_resources;
-List<TextureResource*> TextureResource::ms_asioList;
+std::list<TextureResource*> TextureResource::ms_asioList;
 
 TextureResource::TextureResource(const FixedString &key)
 {
@@ -468,9 +468,9 @@ void TextureResource::generateMipmap()
 	g_apiWrap->generateMipmap(&m_handle);
 }
 
-FixedString TextureResource::normalizeKey( const String &name )
+FixedString TextureResource::normalizeKey( const std::string &name )
 {
-	String key;
+	std::string key;
 
 	if (!PathUtil::haveDir(name))
 		key = "textures/" + name;
@@ -492,7 +492,7 @@ TextureWrapPtr TextureResource::findTexture(const FixedString &key)
 	return 0;
 }
 
-TextureWrapPtr TextureResource::createTexture(const String &debugname, TexFormat format, int width, int height)
+TextureWrapPtr TextureResource::createTexture(const std::string &debugname, TexFormat format, int width, int height)
 {
 	std::stringstream ss;
 	ss << "_" << debugname << "$" << g_system->generateId();

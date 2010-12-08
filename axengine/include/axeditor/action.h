@@ -32,9 +32,9 @@ public:
 	virtual void doIt() = 0;
 	virtual void undo() { /* do nothing default */}
 	virtual bool isUndoable() { return false; }
-	virtual String getName() { return "Action"; }
-	virtual String getMessage() { return getName(); }
-	virtual void setMessage(const String &msg) { /* do nothing default */}
+	virtual std::string getName() { return "Action"; }
+	virtual std::string getMessage() { return getName(); }
+	virtual void setMessage(const std::string &msg) { /* do nothing default */}
 	virtual int getMemoryUsed() { return 0; }
 
 protected:
@@ -93,8 +93,8 @@ public:
 	virtual void doIt();
 	virtual void undo();
 	virtual bool isUndoable() { return true; }
-	virtual String getName() { return "Delete"; }
-	virtual String getMessage() { return getName(); }
+	virtual std::string getName() { return "Delete"; }
+	virtual std::string getMessage() { return getName(); }
 	virtual int getMemoryUsed();
 
 private:
@@ -115,8 +115,8 @@ public:
 	virtual void doIt();
 	virtual void undo();
 	virtual bool isUndoable() { return true; }
-	virtual String getName() { return "Clone"; }
-	virtual String getMessage() { return getName(); }
+	virtual std::string getName() { return "Clone"; }
+	virtual std::string getMessage() { return getName(); }
 	virtual int getMemoryUsed();
 
 private:

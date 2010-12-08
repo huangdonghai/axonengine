@@ -46,8 +46,8 @@ void RenderSystem::initialize()
 
 	g_renderFrame = new RenderFrame();
 
-	String rd = r_driver.getString();
-	String drivername = d3d9name;
+	std::string rd = r_driver.getString();
+	std::string drivername = d3d9name;
 
 	if (rd == "gl") {
 		drivername = glname;
@@ -93,7 +93,7 @@ void RenderSystem::finalize()
 	SafeDelete(g_renderDriver);
 }
 
-void RenderSystem::screenShot(const String &name, const Rect &rect)
+void RenderSystem::screenShot(const std::string &name, const Rect &rect)
 {
 }
 
@@ -198,16 +198,16 @@ void RenderSystem::endFrame()
 		const int line_height = 12;
 
 		if (show_performer) {
-			const List<Stat *> &stats = g_statistic->getGroup("Client");
+			const std::list<Stat *> &stats = g_statistic->getGroup("Client");
 
 			Rect rect(0,0,120,12);
 
-			List<Stat *>::const_iterator it = stats.begin();
+			std::list<Stat *>::const_iterator it = stats.begin();
 
-			String msg;
+			std::string msg;
 			for (; it != stats.end(); ++it) {
 				Stat *index = *it;
-				const String &name = index->getName();
+				const std::string &name = index->getName();
 				int value = index->getInt();
 
 				StringUtil::sprintf(msg, "%32s: %d", name.c_str(), value);
@@ -228,7 +228,7 @@ void RenderSystem::endFrame()
 		if (show_memoryinfo) {
 			Rect rect(400,0,120,12);
 
-			String msg;
+			std::string msg;
 			TextPrim *text;
 
 			StringUtil::sprintf(msg, "%32s: %d", "Total Allocated", gMemoryInfo.totalAllocated);
@@ -361,7 +361,7 @@ void RenderSystem::addEntityManager(IEntityManager *manager)
 
 void RenderSystem::removeEntityManager(IEntityManager *manager)
 {
-	Sequence<IEntityManager*>::iterator it = m_entityManagers.begin();
+	std::vector<IEntityManager*>::iterator it = m_entityManagers.begin();
 
 	for (; it != m_entityManagers.end(); ++it) {
 		if (*it == manager) {

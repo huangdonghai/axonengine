@@ -151,7 +151,7 @@ inline Texture *Primitive::getLightMap() const
 }
 
 
-typedef Sequence<Primitive*> Primitives;
+typedef std::vector<Primitive*> Primitives;
 
 //--------------------------------------------------------------------------
 // class PointPrim
@@ -347,8 +347,8 @@ public:
 	TextPrim(Hint hint);
 	virtual ~TextPrim();
 
-	void init(const Rect &rect, Rgba color, float aspect, int format, Font *font, const String &text);
-	void initSimple(const Vector3 &xyz, Rgba color, const String &text, bool fixedWidth = true);
+	void init(const Rect &rect, Rgba color, float aspect, int format, Font *font, const std::string &text);
+	void initSimple(const Vector3 &xyz, Rgba color, const std::string &text, bool fixedWidth = true);
 	void clear();
 
 	const Rect &getRect() const { return m_rect; }
@@ -357,7 +357,7 @@ public:
 	const Rgba getColor() const { return m_color; }
 	const float getAspect() const { return m_aspect; }
 	const int getFormat() const { return m_format; }
-	const String &getText() const { return m_text; }
+	const std::string &getText() const { return m_text; }
 	Font *getFont() const { return m_font; }
 	HorizonAlign getHorizonAlign() const { return m_horizonAlign; }
 	VerticalAlign getVerticalAlign() const { return m_verticalAlign; }
@@ -368,8 +368,8 @@ public:
 	virtual void sync() {}
 
 	// static helper function
-	static TextPrim *createSimpleText(Hint hint, const Vector3 &xyz, const Rgba &color, const String &text, bool fixedWidth = true);
-	static TextPrim *createText(Hint hint, const Rect &rect, Font *font, const String &text, const Rgba &color=Rgba::White, HorizonAlign halign=Center, VerticalAlign valign=VCenter, int format=0, float aspect = 1.0f);
+	static TextPrim *createSimpleText(Hint hint, const Vector3 &xyz, const Rgba &color, const std::string &text, bool fixedWidth = true);
+	static TextPrim *createText(Hint hint, const Rect &rect, Font *font, const std::string &text, const Rgba &color=Rgba::White, HorizonAlign halign=Center, VerticalAlign valign=VCenter, int format=0, float aspect = 1.0f);
 
 private:
 	Rect m_rect;				// draw on this rect
@@ -379,7 +379,7 @@ private:
 	float m_aspect;
 	int m_format;				// format flags
 	Font *m_font;				// font used
-	String m_text;				// string to draw
+	std::string m_text;				// string to draw
 	HorizonAlign m_horizonAlign;
 	VerticalAlign m_verticalAlign;
 };
@@ -499,7 +499,7 @@ public:
 	virtual void sync();
 
 private:
-	typedef Sequence<bool> BoolSeq;
+	typedef std::vector<bool> BoolSeq;
 	Primitives m_primitives;
 	BoolSeq m_needFrees;
 };
@@ -596,7 +596,7 @@ protected:
 		FRAME_FLAG = 0x80000000,
 		INDEX_MASK = ~FRAME_FLAG,
 	};
-	List<int> m_waitUncache;
+	std::list<int> m_waitUncache;
 };
 #endif
 

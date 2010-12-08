@@ -21,7 +21,7 @@ public:
 	GLenum getTarget() const;
 
 	// implement Asset
-	virtual bool doInit(const String &name, intptr_t arg);
+	virtual bool doInit(const std::string &name, intptr_t arg);
 
 	// implement Texture
 	virtual void initialize(TexFormat format, int width, int height, InitFlags flags = 0);
@@ -35,7 +35,7 @@ public:
 #endif
 	virtual void setClampMode(ClampMode clampmode);
 	virtual void setFilterMode(FilterMode filtermode);
-	virtual void saveToFile(const String &filename);
+	virtual void saveToFile(const std::string &filename);
 	virtual void generateMipmap();
 	virtual void setBorderColor(const Rgba &color);
 	virtual void setHardwareShadowMap(bool enable);
@@ -53,7 +53,7 @@ private:
 
 private:
 	InitFlags m_createFlags;
-	String m_name;
+	std::string m_name;
 	TexFormat m_format;
 	GLenum m_glformat;
 	GLuint m_object;

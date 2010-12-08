@@ -20,20 +20,20 @@ Uuid::Uuid()
 	RPC_STATUS status = UuidCreateNil((UUID*)this);
 }
 
-Uuid &Uuid::fromString(const String &str)
+Uuid &Uuid::fromString(const std::string &str)
 {
 	RPC_STATUS status = UuidFromStringA((RPC_CSTR)str.c_str(), (UUID*)this);
 	AX_ASSERT(status == RPC_S_OK);
 	return *this;
 }
 
-String Uuid::toString()
+std::string Uuid::toString()
 {
 	RPC_CSTR str;
 
 	UuidToStringA((UUID*)this, &str);
 
-	String result = reinterpret_cast<char*>(str);
+	std::string result = reinterpret_cast<char*>(str);
 
 	RpcStringFreeA(&str);
 	return result;

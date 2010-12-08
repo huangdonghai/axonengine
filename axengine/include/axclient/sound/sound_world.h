@@ -32,7 +32,7 @@ private:
 	friend class SoundSystem;
 
 	SoundEntity *m_entities[MAX_ENTITIES];
-	List<int> m_freeEntities;
+	std::list<int> m_freeEntities;
 	FMOD::ChannelGroup *m_channelGroup;
 	Matrix m_listenerMatrix;
 	Vector3 m_listenerVelocity;

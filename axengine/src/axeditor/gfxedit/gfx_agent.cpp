@@ -70,12 +70,12 @@ BoundingBox GfxAgent::getBoundingBox()
 	return m_gfxObj->getBoundingBox();
 }
 
-Variant GfxAgent::getProperty(const String &propname)
+Variant GfxAgent::getProperty(const std::string &propname)
 {
 	return Variant();
 }
 
-void GfxAgent::setProperty(const String &propname, const Variant &value)
+void GfxAgent::setProperty(const std::string &propname, const Variant &value)
 {
 
 }

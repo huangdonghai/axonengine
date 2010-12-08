@@ -48,17 +48,17 @@ class AX_API MapLayerDef
 
 public:
 	const int id;
-	String name;
+	std::string name;
 	SurfaceType surfaceType;
 	Rgba color;
 
 	// base image
-	String baseImage;
+	std::string baseImage;
 	bool genBaseFromDetail;
 
 	// detail info
 	bool isUseDetail;
-	String detailMat;
+	std::string detailMat;
 	Vector2 uvScale;
 	bool isVerticalProjection;
 
@@ -149,9 +149,9 @@ public:		// let public just because for easy use
 
 	// sky
 	bool m_haveSkyBox;
-	String m_textureSkyBox;
+	std::string m_textureSkyBox;
 	bool m_haveSkyModel;
-	String m_skyModel;
+	std::string m_skyModel;
 
 	// lights
 	bool m_haveGlobalLight;
@@ -167,7 +167,7 @@ public:		// let public just because for easy use
 
 	// ocean
 	bool m_haveOcean;
-	String m_materialOcean;
+	std::string m_materialOcean;
 	float m_shoreSize;
 	Color3 m_oceanFogColor;
 	float m_oceanFogDensity;

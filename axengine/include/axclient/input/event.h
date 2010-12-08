@@ -143,8 +143,8 @@ struct AX_API InputKey {
 	};
 	AX_DECLARE_ENUM(InputKey)
 
-	String getName() const;
-	static int getKey(const String &keyname);
+	std::string getName() const;
+	static int getKey(const std::string &keyname);
 };
 
 //--------------------------------------------------------------------------
@@ -281,7 +281,7 @@ private:
 	InputEvent m_events[EVENT_POOL_SIZE];
 	int m_eventReadPos;
 	int m_eventWritePos;
-	List<IInputSource*>	m_eventSources;
+	std::list<IInputSource*>	m_eventSources;
 	RenderTarget *m_gameWnd;
 	WinInput *m_winInput;
 

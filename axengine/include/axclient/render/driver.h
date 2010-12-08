@@ -19,7 +19,7 @@ struct HitRecord {
 	float minz;
 	float maxz;
 };
-typedef Sequence<HitRecord> HitRecords;
+typedef std::vector<HitRecord> HitRecords;
 
 struct RenderDriverInfo {
 	enum DriverType {
@@ -38,10 +38,10 @@ struct RenderDriverInfo {
 	DriverType driverType;	// opengl, d3d etc...
 
 	// for opengl
-	String vendor;
-	String renderer;
-	String version;
-	String extension;
+	std::string vendor;
+	std::string renderer;
+	std::string version;
+	std::string extension;
 
 	int maxTextureSize;
 	int max3DTextureSize;

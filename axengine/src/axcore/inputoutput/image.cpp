@@ -27,7 +27,7 @@ Image::~Image()
 }
 
 // IO & processing
-bool Image::loadFile(const String &filename, int flags)
+bool Image::loadFile(const std::string &filename, int flags)
 {
 	clear();
 
@@ -46,7 +46,7 @@ bool Image::loadFile(const String &filename, int flags)
 	return m_dataPresent;
 }
 
-bool Image::loadFileByType(const String &filename, FileType filetype, int flags)
+bool Image::loadFileByType(const std::string &filename, FileType filetype, int flags)
 {
 	m_loadFlags = flags;
 #if 0
@@ -730,7 +730,7 @@ TexFormat Image::getFormat() const
 	return m_format;
 }
 
-String Image::getRealName() const
+std::string Image::getRealName() const
 {
 	if (!m_dataPresent) {
 		Errorf(_("Image::getRealName: data not present\n"));
@@ -1047,12 +1047,12 @@ int Image::getDataSize(int level) const
 }
 
 
-bool Image::loadFile_raw(const String &filename, int width, int height)
+bool Image::loadFile_raw(const std::string &filename, int width, int height)
 {
 	return false;
 }
 
-void Image::saveFile_raw(const String &filename)
+void Image::saveFile_raw(const std::string &filename)
 {
 	if (!m_dataPresent)
 		return;

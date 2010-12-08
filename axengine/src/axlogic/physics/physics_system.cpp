@@ -125,7 +125,7 @@ public:
 		return new MyStremReader(buf, s2i(size));
 	}
 	virtual hkStreamWriter *openWriter(const char *name) {
-		String ospath = g_fileSystem->dataPathToOsPath(name);
+		std::string ospath = g_fileSystem->dataPathToOsPath(name);
 		return new hkStdioStreamWriter(ospath.c_str());
 	}
 

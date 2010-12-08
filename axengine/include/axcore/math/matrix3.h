@@ -73,7 +73,7 @@ struct AX_API Matrix3
 	const float *c_ptr() const;
 	float *w_ptr() { return (float *)this; } // writable pointer
 
-	String toString() const;
+	std::string toString() const;
 	void fromString(const char *str);
 
 	static Matrix3 getIdentity();

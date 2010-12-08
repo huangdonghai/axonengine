@@ -66,8 +66,8 @@ Matrix3 Matrix3::getIdentity() {
 
 
 
-String Matrix3::toString() const {
-	String result;
+std::string Matrix3::toString() const {
+	std::string result;
 
 	StringUtil::sprintf(result, "%f %f %f %f %f %f %f %f %f"
 		, m[0][0], m[0][1], m[0][2]

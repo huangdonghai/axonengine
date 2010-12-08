@@ -38,7 +38,7 @@ StaticFixed::~StaticFixed()
 	onReset();
 }
 
-void StaticFixed::set_model(const String &val)
+void StaticFixed::set_model(const std::string &val)
 {
 	m_modelName = val;
 }
@@ -172,7 +172,7 @@ void TreeFixed::onReset()
 	SafeDelete(m_renderTree);
 }
 
-void TreeFixed::set_tree(const String &val)
+void TreeFixed::set_tree(const std::string &val)
 {
 	m_treeName = val;
 }

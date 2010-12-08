@@ -13,7 +13,7 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-TreeEntity::TreeEntity(const String &filename, int seed)
+TreeEntity::TreeEntity(const std::string &filename, int seed)
 	: RenderEntity(kSpeedTree)
 {
 	m_treeAsset = g_treeManager->findAsset(filename, seed);

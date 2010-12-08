@@ -25,7 +25,7 @@ public:
 	};
 
 	RenderTarget(int width, int height, TexFormat format);
-	RenderTarget(Handle hwnd, const String &debugname);
+	RenderTarget(Handle hwnd, const std::string &debugname);
 	~RenderTarget();
 
 	Type getType() const { return m_type; }
@@ -75,7 +75,7 @@ private:
 
 	// for window
 	Handle m_wndId;
-	String m_name;
+	std::string m_name;
 
 	RenderTarget *m_gbuffer;
 	RenderTarget *m_lightBuffer;
@@ -137,10 +137,10 @@ protected:
 	void freeReal(RenderTarget *target);
 
 protected:
-	List<RenderTarget*> m_realAllocTargets;
-	List<RenderTarget*> m_freeRealTargets;
+	std::list<RenderTarget*> m_realAllocTargets;
+	std::list<RenderTarget*> m_freeRealTargets;
 
-	List<ReflectionMap*> m_reflectionTargets;
+	std::list<ReflectionMap*> m_reflectionTargets;
 };
 #endif
 

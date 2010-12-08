@@ -22,7 +22,7 @@ public:
 	// implement ITickable
 	virtual void tick();
 
-	SoundFx *createSfx(const String &name);
+	SoundFx *createSfx(const std::string &name);
 	SoundFx *createStream();
 
 	void setWorld(SoundWorld *world);
@@ -47,7 +47,7 @@ protected:
 
 private:
 	FMOD::System *m_fmodSystem;
-	typedef Dict<String, SoundFx*, HashPath, EqualPath> SfxDict;
+	typedef Dict<std::string, SoundFx*, HashPath, EqualPath> SfxDict;
 	SfxDict m_sfxDict;
 	SfxPtr m_commandSfx;
 

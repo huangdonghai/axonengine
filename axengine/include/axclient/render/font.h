@@ -42,11 +42,11 @@ struct TextQuad {
 //------------------------------------------------------------------------------
 
 struct FaceDef {
-	String filename;
+	std::string filename;
 	bool antialias;
 	Vector2 scale;
 };
-typedef Sequence<FaceDef>	FaceDefs;
+typedef std::vector<FaceDef>	FaceDefs;
 
 struct FaceInfo {
 	int width;
@@ -115,10 +115,10 @@ public:
 	virtual void deleteThis();
 
 	// implement Asset
-	virtual bool doInit(const String &name, int w, int h);
+	virtual bool doInit(const std::string &name, int w, int h);
 
-	String getName();
-	uint_t getStringWidth(const WString &string);
+	std::string getName();
+	uint_t getStringWidth(const std::wstring &string);
 	uint_t getWidth();
 	uint_t getHeight();
 	void newFrame();
@@ -127,10 +127,10 @@ public:
 	const GlyphInfo &getGlyphInfo(wchar_t c);
 
 	// management
-	static FontPtr load(const String &name, int w, int h);
+	static FontPtr load(const std::string &name, int w, int h);
 	static void initManager();
 	static void finalizeManager();
-	static FixedString normalizeKey(const String &name, int w, int h);
+	static FixedString normalizeKey(const std::string &name, int w, int h);
 	// end management
 
 protected:
@@ -140,10 +140,10 @@ protected:
 	bool uploadCharGlyph(wchar_t c, byte_t *data);
 
 private:
-	String m_name;
-	String m_key;
+	std::string m_name;
+	std::string m_key;
 	FaceDefs m_faceDefs;
-	Sequence<FontFace*>	m_fontFaces;
+	std::vector<FontFace*>	m_fontFaces;
 	TextureAtlas *m_texAtlas;
 	GlyphInfo m_glyphInfos[MAX_CHARS];
 	int m_width, m_height;

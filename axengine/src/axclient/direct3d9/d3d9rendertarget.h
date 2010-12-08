@@ -112,7 +112,7 @@ protected:
 	void checkFormats();
 
 private:
-	typedef Sequence<D3D9Target*>	D3D9targetseq;
+	typedef std::vector<D3D9Target*>	D3D9targetseq;
 	typedef Dict<int,Dict<int,D3D9targetseq> > D3D9targetpool;
 	D3D9targetpool m_targetPool;
 	int m_curFrame;

@@ -31,7 +31,7 @@ public:
 	void notify(int arg);
 
 private:
-	List<IObserver*>	m_observers;
+	std::list<IObserver*>	m_observers;
 };
 
 AX_END_NAMESPACE
