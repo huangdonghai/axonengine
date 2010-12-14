@@ -99,14 +99,18 @@ void AsioThread::flush()
 	}
 }
 
-void AsioThread::doRun()
+Thread::RunningStatus AsioThread::doRun()
 {
 	while (1) {
 		AsioRead *request = getFirstRequest();
 
 		if (!request) {
+#if 0
 			OsUtil::sleep(0);
 			continue;
+#else
+			return Thread::RS_Continue;
+#endif
 		}
 
 		// do read

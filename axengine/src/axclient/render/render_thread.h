@@ -10,7 +10,7 @@ public:
 	~RenderThread();
 
 	// implement thread run
-	virtual void doRun();		// work entry
+	virtual RunningStatus doRun();		// work entry
 
 protected:
 

@@ -30,7 +30,7 @@ void Thread::addAsyncNotify(INotifyHandler *handler, int index)
 	m_asyncNotifyList.push_back(an);
 }
 
-void Thread::dispatchAsyncNotiry()
+void Thread::dispatchAsyncNotify()
 {
 	ScopedLocker autoLocker(m_asyncNotifyMutex);
 
@@ -42,6 +42,5 @@ void Thread::dispatchAsyncNotiry()
 
 	m_asyncNotifyList.clear();
 }
-
 
 AX_END_NAMESPACE

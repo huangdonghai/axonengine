@@ -86,7 +86,12 @@ private:
 class INotifyHandler;
 class AX_API Thread {
 public:
+	enum RunningStatus {
+		RS_Exit, RS_Continue
+	};
+
 	Thread();
+	Thread(ulong_t id);
 	virtual ~Thread();
 
 	void startThread();
@@ -94,9 +99,14 @@ public:
 	bool isCurrentThread() const;
 
 	void addAsyncNotify(INotifyHandler *handler, int index);
-	void dispatchAsyncNotiry();
+	void dispatchAsyncNotify();
 
-	virtual void doRun() = 0;		// work entry
+	virtual RunningStatus doRun() = 0;		// work entry
+
+	static Thread *getThreadById(ulong_t id);
+	static Thread *getCurrentThread();
+
+protected:
 
 private:
 	Handle m_handle;

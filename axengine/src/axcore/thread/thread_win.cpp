@@ -14,6 +14,47 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
+namespace {
+
+	typedef Dict<ulong_t, Thread*> ThreadDict;
+	static ThreadDict m_threadDict;
+
+	// TODO: not multi thread safe
+	static DWORD GetTlsId()
+	{
+		static DWORD tlsId = 0;
+
+		if (tlsId == 0) {
+			tlsId = ::TlsAlloc();
+		}
+
+		return tlsId;
+	}
+
+	static void SetTlsThread(Thread *thread)
+	{
+		DWORD tlsid = GetTlsId();
+		::TlsSetValue(tlsid, thread);
+	}
+
+	static Thread *GetTlsThread()
+	{
+		DWORD tlsid = GetTlsId();
+		Thread *thread = (Thread*)::TlsGetValue(tlsid);
+
+		if (thread)
+			return thread;
+
+		DWORD threadId = ::GetCurrentThreadId();
+		thread = Thread::getThreadById(threadId);
+
+		AX_ASSERT(thread);
+		SetTlsThread(thread);
+
+		return thread;
+	}
+}
+
 Stat stat_lockTimes("Client", "LockTimes", Stat::F_Int|Stat::F_AutoReset, "how many times synclock called");
 
 //--------------------------------------------------------------------------
@@ -99,17 +140,49 @@ DWORD WINAPI ThreadProc(LPVOID lpParameter)
 //	BT_SetTerminate(); // set_terminate() must be called from every thread
 	Thread *thread = (Thread*)lpParameter;
 
-	thread->doRun();
+	while (1) {
+		thread->dispatchAsyncNotify();
+
+		if (thread->doRun() == Thread::RS_Exit)
+			break;
+	}
 
 	return 0;
 }
-
 
 Thread::Thread()
 {
 	m_exitEvent = new SyncEvent();
 	m_handle = Handle(::CreateThread(NULL, 0, ThreadProc, this, CREATE_SUSPENDED, &m_id));
+	m_id = ::GetThreadId(m_handle.to<HANDLE>());
 	AX_ASSERT(m_handle);
+
+	m_threadDict[m_id] = this;
+}
+
+Thread::Thread(ulong_t id)
+{
+	m_id = id;
+	m_handle = 0;
+	m_exitEvent = 0;
+
+	m_threadDict[m_id] = this;
+}
+
+Thread *Thread::getThreadById(ulong_t id)
+{
+	ThreadDict::const_iterator it = m_threadDict.find(id);
+
+	if (it != m_threadDict.end())
+		return it->second;
+	else
+		return 0;
+}
+
+
+Thread *Thread::getCurrentThread()
+{
+	return GetTlsThread();
 }
 
 void Thread::startThread()
@@ -122,13 +195,11 @@ void Thread::stopThread()
 	m_exitEvent->setEvent();
 }
 
-
 Thread::~Thread()
 {
 	::CloseHandle(m_handle.to<HANDLE>());
 	delete(m_exitEvent);
 }
-
 
 bool Thread::isCurrentThread() const
 {

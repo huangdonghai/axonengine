@@ -12,11 +12,10 @@ RenderThread::~RenderThread()
 
 }
 
-void RenderThread::doRun()
+Thread::RunningStatus RenderThread::doRun()
 {
-	while (1) {
-		g_apiWrap->runCommands();
-	}
+	g_apiWrap->runCommands();
+	return Thread::RS_Continue;
 }
 
 AX_END_NAMESPACE

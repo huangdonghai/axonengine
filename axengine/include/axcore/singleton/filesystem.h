@@ -212,7 +212,7 @@ class AsioThread : public Thread, public ThreadSafe
 {
 public:
 	void flush();
-	virtual void doRun();
+	virtual RunningStatus doRun();
 	void queRequest(AsioRead *request);
 
 protected:
