@@ -11,7 +11,7 @@ read the license and understand and accept it fully.
 #ifndef AX_INPUT_ALL_H
 #define AX_INPUT_ALL_H
 
-#include "event.h"
+#include "inputevent.h"
 #include "eventsource.h"
 
 #endif // end guardian

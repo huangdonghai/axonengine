@@ -781,6 +781,26 @@
 		<Filter
 			Name="input"
 			>
+			<File
+				RelativePath="..\..\..\src\axclient\input\inputevent.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\axclient\input\wininput.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\axclient\input\wininput.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\axclient\input\xboxinput.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\axclient\input\xboxinput.h"
+				>
+			</File>
 			<Filter
 				Name="public"
 				>
@@ -789,35 +809,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\include\axclient\input\event.h"
-					>
-				</File>
-				<File
 					RelativePath="..\..\..\include\axclient\input\eventsource.h"
 					>
 				</File>
-			</Filter>
-			<Filter
-				Name="src"
-				>
 				<File
-					RelativePath="..\..\..\src\axclient\input\event.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\src\axclient\input\wininput.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\src\axclient\input\wininput.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\src\axclient\input\xboxinput.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\src\axclient\input\xboxinput.h"
+					RelativePath="..\..\..\include\axclient\input\inputevent.h"
 					>
 				</File>
 			</Filter>
