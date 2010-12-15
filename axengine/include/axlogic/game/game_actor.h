@@ -75,7 +75,7 @@ public:
 	virtual bool isPlayer() const { return false; }
 
 	// implement IObserver
-	virtual void doNotify(IObservable *subject, int arg);
+	virtual void beNotified(IObservable *subject, int arg);
 
 	void autoGenerateName();
 

@@ -39,7 +39,7 @@ void State::setTransformState(bool editable, bool clear, const Vector3 &paramete
 	transformState.editable = editable;
 	transformState.clear = clear;
 	transformState.parameter = parameter;
-	notify(TransformToApp);
+	notifyObservers(TransformToApp);
 }
 
 AX_END_NAMESPACE

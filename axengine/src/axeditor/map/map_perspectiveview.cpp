@@ -32,12 +32,12 @@ PerspectiveView::PerspectiveView(MapContext *context)
 	m_camera.setClearColor(Rgba::Black);
 	m_autoUpdate = true;
 
-	g_gameSystem->attachObserver(this);
+	g_gameSystem->addObserver(this);
 }
 
 PerspectiveView::~PerspectiveView()
 {
-	g_gameSystem->detachObserver(this);
+	g_gameSystem->removeObserver(this);
 }
 
 void PerspectiveView::updateMove()
@@ -76,7 +76,7 @@ void PerspectiveView::updateMove()
 	}
 
 	m_eyeMatrix.origin = origin;
-	m_context->notify(Context::StatusChanged);
+	m_context->notifyObservers(Context::StatusChanged);
 }
 
 void PerspectiveView::doRender()
@@ -106,7 +106,7 @@ void PerspectiveView::bindFrame(IViewFrame *container)
 		((MapContext*)m_context)->getGameWorld()->setWindow(m_frame->getRenderTarget());
 		g_system->registerTickable(System::TickGame, this);
 		m_frame->registerEventSource();
-		m_context->notify(Context::EverythingChanged);
+		m_context->notifyObservers(Context::EverythingChanged);
 	}
 }
 
@@ -354,7 +354,7 @@ void PerspectiveView::tick()
 	doUpdate();
 }
 
-void PerspectiveView::doNotify( IObservable *subject, int arg )
+void PerspectiveView::beNotified( IObservable *subject, int arg )
 {
 	if (subject != g_gameSystem)
 		return;

@@ -33,7 +33,7 @@ GameWorld::GameWorld()
 	m_outdoorEnv = m_renderWorld->getOutdoorEnv();
 
 	m_physicsWorld = new PhysicsWorld();
-	m_physicsWorld->attachObserver(this);
+	m_physicsWorld->addObserver(this);
 
 	m_soundWorld = new SoundWorld();
 
@@ -49,7 +49,7 @@ GameWorld::~GameWorld()
 {
 	g_gameSystem->setGameWorld(0);
 
-	m_physicsWorld->detachObserver(this);
+	m_physicsWorld->removeObserver(this);
 	SafeDelete(m_physicsWorld);
 	SafeDelete(m_renderWorld);
 }
@@ -195,7 +195,7 @@ void GameWorld::removeFixed(Fixed *fixed)
 	getLandscape()->removeFixed(fixed);
 }
 
-void GameWorld::doNotify(IObservable *subject, int arg)
+void GameWorld::beNotified(IObservable *subject, int arg)
 {
 }
 

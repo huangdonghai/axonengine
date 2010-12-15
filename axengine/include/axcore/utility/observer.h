@@ -19,16 +19,16 @@ class IObservable;
 
 class IObserver {
 public:
-	virtual void doNotify(IObservable *subject, int arg) = 0;
+	virtual void beNotified(IObservable *subject, int arg) = 0;
 };
 
 class AX_API IObservable {
 public:
 	virtual ~IObservable();
 
-	void attachObserver(IObserver *observer);
-	void detachObserver(IObserver *observer);
-	void notify(int arg);
+	void addObserver(IObserver *observer);
+	void removeObserver(IObserver *observer);
+	void notifyObservers(int arg);
 
 private:
 	std::list<IObserver*>	m_observers;

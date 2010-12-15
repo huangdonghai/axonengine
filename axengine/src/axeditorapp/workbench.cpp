@@ -44,7 +44,7 @@ Workbench::Workbench(QWidget *parent, Qt::WFlags flags)
 	createDockablePanel();
 	createMenus();
 
-	g_mapContext->attachObserver(this);
+	g_mapContext->addObserver(this);
 
 	m_workspace = new Workspace(this);
 	setCentralWidget(m_workspace);
@@ -70,7 +70,7 @@ Workbench::~Workbench()
 {
 	this->killTimer(m_timerUpdateStatus);
 	g_system->removeProgress(this);
-	g_mapContext->detachObserver(this);
+	g_mapContext->removeObserver(this);
 //	SafeDelete(m_uiEditor);
 }
 
@@ -89,7 +89,7 @@ void Workbench::updateTitle() {
 	setWindowTitle(title);
 }
 
-void Workbench::doNotify(IObservable *subjest, int arg) {
+void Workbench::beNotified(IObservable *subjest, int arg) {
 	if (subjest != g_mapContext)
 		return;
 
@@ -753,7 +753,7 @@ void Workbench::on_actionUseSelectionCenter_triggered(bool checked)
 		g_mapContext->getMapState()->transformCenter = TransformTool::PivotCenter;
 	}
 
-	g_mapContext->getMapState()->notify(State::Transform);
+	g_mapContext->getMapState()->notifyObservers(State::Transform);
 }
 
 void Workbench::on_transformSpace_currentIndexChanged(int index)
@@ -763,19 +763,19 @@ void Workbench::on_transformSpace_currentIndexChanged(int index)
 	}
 
 	g_mapContext->getMapState()->transformSpace = (TransformTool::Space)index;
-	g_mapContext->getMapState()->notify(State::Transform);
+	g_mapContext->getMapState()->notifyObservers(State::Transform);
 }
 
 void Workbench::on_actionUsePivotCenter_triggered()
 {
 	g_mapContext->getMapState()->transformCenter = TransformTool::PivotCenter;
-	g_mapContext->getMapState()->notify(State::Transform);
+	g_mapContext->getMapState()->notifyObservers(State::Transform);
 }
 
 void Workbench::on_actionUseTransformCenter_triggered()
 {
 	g_mapContext->getMapState()->transformCenter = TransformTool::TransformCenter;
-	g_mapContext->getMapState()->notify(State::Transform);
+	g_mapContext->getMapState()->notifyObservers(State::Transform);
 }
 
 void Workbench::onSnapToGridChanged(QAction *action) {

@@ -107,7 +107,7 @@ void Context::doTool(int tool) {
 
 	m_tooltype = tool;
 
-	notify(ToolChanged);
+	notifyObservers(ToolChanged);
 }
 
 History *Context::setSelectionHistoried( const AgentList &elist )
@@ -121,7 +121,7 @@ History *Context::setSelectionHistoried( const AgentList &elist )
 	m_selections.unique();
 	m_selections.setSelected(true);
 
-	notify(SelectionChanged);
+	notifyObservers(SelectionChanged);
 
 	return new SelectHis(this, oldlist, m_selections);
 }
@@ -141,7 +141,7 @@ void Context::setSelection(const AgentList &elist, bool undoable) {
 		addHistory(his);
 	}
 
-	notify(SelectionChanged);
+	notifyObservers(SelectionChanged);
 }
 
 void Context::addSelection( const AgentList &elist, bool undoable/*=true*/ )
@@ -168,7 +168,7 @@ void Context::setSelection(Agent *actor, bool undoable) {
 		addHistory(his);
 	}
 
-	notify(SelectionChanged);
+	notifyObservers(SelectionChanged);
 }
 
 void Context::selectNone(bool undoable) {
@@ -182,7 +182,7 @@ void Context::selectNone(bool undoable) {
 		addHistory(his);
 	}
 
-	notify(SelectionChanged);
+	notifyObservers(SelectionChanged);
 }
 
 void Context::selectAll(bool undoable) {
@@ -209,7 +209,7 @@ void Context::selectAll(bool undoable) {
 		addHistory(his);
 	}
 
-	notify(SelectionChanged);
+	notifyObservers(SelectionChanged);
 }
 
 void Context::selectInvert(bool undoable) {
@@ -234,17 +234,17 @@ void Context::addHistory(Action *his) {
 	m_isDirty = true;
 	m_historyManager.addHistory(his);
 
-	notify(HistoryChanged);
+	notifyObservers(HistoryChanged);
 }
 
 void Context::undo() {
 	m_historyManager.undo(1);
-	notify(HistoryChanged);
+	notifyObservers(HistoryChanged);
 }
 
 void Context::redo() {
 	m_historyManager.redo(1);
-	notify(HistoryChanged);
+	notifyObservers(HistoryChanged);
 }
 
 HistoryManager *Context::getHistory() {

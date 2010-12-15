@@ -101,12 +101,14 @@ public:
 	void addAsyncNotify(INotifyHandler *handler, int index);
 	void dispatchAsyncNotify();
 
-	virtual RunningStatus doRun() = 0;		// work entry
+	virtual RunningStatus doRun() { return RS_Continue; } // work entry
 
 	static Thread *getThreadById(ulong_t id);
 	static Thread *getCurrentThread();
+	static Thread *getMainThread();
 
 protected:
+	static void checkMainThread();
 
 private:
 	Handle m_handle;
@@ -119,6 +121,8 @@ private:
 	};
 	std::list<AsyncNotify> m_asyncNotifyList;
 	SyncMutex m_asyncNotifyMutex;
+
+	static Thread *ms_mainThread;
 };
 
 AX_END_NAMESPACE

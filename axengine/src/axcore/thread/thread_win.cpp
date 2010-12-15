@@ -31,13 +31,13 @@ namespace {
 		return tlsId;
 	}
 
-	static void SetTlsThread(Thread *thread)
+	static void SetCurrentThread(Thread *thread)
 	{
 		DWORD tlsid = GetTlsId();
 		::TlsSetValue(tlsid, thread);
 	}
 
-	static Thread *GetTlsThread()
+	static Thread *GetCurrentThread()
 	{
 		DWORD tlsid = GetTlsId();
 		Thread *thread = (Thread*)::TlsGetValue(tlsid);
@@ -49,12 +49,13 @@ namespace {
 		thread = Thread::getThreadById(threadId);
 
 		AX_ASSERT(thread);
-		SetTlsThread(thread);
+		SetCurrentThread(thread);
 
 		return thread;
 	}
-}
+} // namespace
 
+Thread *Thread::ms_mainThread = 0;
 Stat stat_lockTimes("Client", "LockTimes", Stat::F_Int|Stat::F_AutoReset, "how many times synclock called");
 
 //--------------------------------------------------------------------------
@@ -152,6 +153,8 @@ DWORD WINAPI ThreadProc(LPVOID lpParameter)
 
 Thread::Thread()
 {
+	checkMainThread();
+
 	m_exitEvent = new SyncEvent();
 	m_handle = Handle(::CreateThread(NULL, 0, ThreadProc, this, CREATE_SUSPENDED, &m_id));
 	m_id = ::GetThreadId(m_handle.to<HANDLE>());
@@ -173,16 +176,18 @@ Thread *Thread::getThreadById(ulong_t id)
 {
 	ThreadDict::const_iterator it = m_threadDict.find(id);
 
-	if (it != m_threadDict.end())
+	if (it != m_threadDict.end()) {
 		return it->second;
-	else
-		return 0;
+	} else {
+		Thread *newthread = new Thread(id);
+		return newthread;
+	}
 }
 
 
 Thread *Thread::getCurrentThread()
 {
-	return GetTlsThread();
+	return GetCurrentThread();
 }
 
 void Thread::startThread()
@@ -205,5 +210,17 @@ bool Thread::isCurrentThread() const
 {
 	return GetCurrentThreadId() == m_id;
 }
+
+
+void Thread::checkMainThread()
+{
+	Thread *t = getCurrentThread();
+
+	if (!t->m_handle) {
+		ms_mainThread = t;
+	}
+}
+
+
 
 AX_END_NAMESPACE

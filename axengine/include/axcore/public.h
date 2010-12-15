@@ -44,6 +44,7 @@ read the license and understand and accept it fully.
 #include "./singleton/cvarsystem.h"
 #include "./singleton/statistic.h"
 #include "./singleton/assetmanager.h"
+#include "./singleton/event.h"
 #include "./singleton/coresystem.h"
 
 AX_BEGIN_NAMESPACE

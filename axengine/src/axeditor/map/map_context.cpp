@@ -110,7 +110,7 @@ void MapContext::reset()
 	g_gameSystem->reset();
 	m_gameWorld->reset();
 
-	notify(EverythingChanged);
+	notifyObservers(EverythingChanged);
 }
 
 bool MapContext::createNew()
@@ -205,7 +205,7 @@ bool MapContext::load(const std::string &filename)
 
 	m_gameWorld->updateEnvdef();
 
-	notify(EverythingChanged);
+	notifyObservers(EverythingChanged);
 
 	m_isLoading = false;
 
@@ -306,7 +306,7 @@ void MapContext::setTerrainMaterialDef(MapMaterialDef *matdef)
 		TerrainMaterialDefHis *his = new TerrainMaterialDefHis(oldmatdef, matdef->clone(), m_terrain);
 		addHistory(his);
 
-		notify(MapContext::TerrainMaterialEdited);
+		notifyObservers(MapContext::TerrainMaterialEdited);
 	}
 }
 

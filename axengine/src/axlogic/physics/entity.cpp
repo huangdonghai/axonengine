@@ -24,11 +24,11 @@ AX_BEGIN_NAMESPACE
 		EntityActivationListener(PhysicsEntity *e) : m_wrapper(e) {}
 
 		virtual void entityDeactivatedCallback(hkpEntity *entity) {
-			m_wrapper->notify(PhysicsEntity::Deactivated);
+			m_wrapper->notifyObservers(PhysicsEntity::Deactivated);
 		}
 
 		virtual void entityActivatedCallback(hkpEntity *entity) {
-			m_wrapper->notify(PhysicsEntity::Activated);
+			m_wrapper->notifyObservers(PhysicsEntity::Activated);
 		}
 
 		/// Called when an entity is deleted. hkpEntityListener subclasses <b>must</b> implement this function.

@@ -83,12 +83,12 @@ TerrainFixed::TerrainFixed(RenderTerrain *terr)
 	m_renderTerrain = terr;
 	m_physicsTerrain = nullptr;
 
-	m_renderTerrain->attachObserver(this);
+	m_renderTerrain->addObserver(this);
 }
 
 TerrainFixed::~TerrainFixed()
 {
-	m_renderTerrain->detachObserver(this);
+	m_renderTerrain->removeObserver(this);
 	onReset();
 }
 
@@ -108,7 +108,7 @@ void TerrainFixed::onReset()
 	m_landscape->getGameWorld()->getPhysicsWorld()->removeEntity(m_physicsTerrain);
 }
 
-void TerrainFixed::doNotify(IObservable *subject, int arg)
+void TerrainFixed::beNotified(IObservable *subject, int arg)
 {
 	if (subject != m_renderTerrain) {
 		return;

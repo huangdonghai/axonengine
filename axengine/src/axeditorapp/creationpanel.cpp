@@ -74,7 +74,7 @@ CreationPanel::CreationPanel(QWidget *parent)
 	ui.propEditor->setInitialInput(collection);
 	ui.propEditor->setProperHeight();
 #endif
-	g_mapContext->attachObserver(this);
+	g_mapContext->addObserver(this);
 }
 
 CreationPanel::~CreationPanel()
@@ -83,10 +83,10 @@ CreationPanel::~CreationPanel()
 		ui.preview->getRenderWorld()->removeEntity(m_renderActor);
 		delete m_renderActor;
 	}
-	g_mapContext->detachObserver(this);
+	g_mapContext->removeObserver(this);
 }
 
-void CreationPanel::doNotify(IObservable *subject, int arg)
+void CreationPanel::beNotified(IObservable *subject, int arg)
 {
 	if (subject != g_mapContext) {
 		return;

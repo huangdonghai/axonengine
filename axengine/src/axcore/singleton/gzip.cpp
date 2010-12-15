@@ -36,13 +36,14 @@ Gzip::Gzip(char *lpsz, int len)
 	Init(lpsz,len);
 }
 
-Gzip::~Gzip() {
+Gzip::~Gzip()
+{
 	if (pgzip != m_buffer)
 		SafeFree(pgzip);
 }
 
-void
-Gzip::Init(char *lpsz, int len) {
+void Gzip::Init(char *lpsz, int len)
+{
 	if (lpsz == 0) {
 		pgzip=0; 
 		Length=0;
@@ -102,8 +103,8 @@ Gzip::Init(char *lpsz, int len) {
 	destroy();
 }
 
-int
-Gzip::write(byte_t *buf, int count) {
+int Gzip::write(byte_t *buf, int count)
+{
 	if (buf == 0)
 		return 0;
 	if (Length+count > m_CurrentBufferSize) {
@@ -119,8 +120,8 @@ Gzip::write(byte_t *buf, int count) {
 	return count;
 }
 
-int
-Gzip::finish() {
+int Gzip::finish()
+{
 	uInt len;
 	int done = 0;
 	m_zstream.avail_in = 0;
@@ -142,8 +143,8 @@ Gzip::finish() {
 	return  m_z_err == Z_STREAM_END ? Z_OK : m_z_err;
 }
 
-int
-Gzip::destroy() {
+int Gzip::destroy()
+{
 	int err = Z_OK;
 	if (m_zstream.state != NULL) {
 		err = deflateEnd(&(m_zstream));
@@ -153,8 +154,8 @@ Gzip::destroy() {
 	return err;
 }
 
-void
-Gzip::putLong(uint_t x) {
+void Gzip::putLong(uint_t x)
+{
 	for (int n = 0; n < 4; n++) {
 		unsigned char c=(unsigned char)(x & 0xff);
 		write(&c,1);
@@ -179,8 +180,8 @@ Ungzip::~Ungzip()
 	if (psz!=m_buffer) SafeFree(psz);  
 }
 
-void
-Ungzip::Init() {
+void Ungzip::Init()
+{
 	if (m_gzip == 0) {
 		psz=0; 
 		Length=0;
@@ -221,8 +222,8 @@ Ungzip::Init() {
 	destroy();
 }
 
-void
-Ungzip::check_header() {
+void Ungzip::check_header()
+{
 	int method; /* method byte */
 	int flags;  /* flags byte */
 	uInt len;
@@ -271,8 +272,8 @@ Ungzip::check_header() {
 	m_z_err = m_z_eof ? Z_DATA_ERROR : Z_OK;
 }
 
-int
-Ungzip::get_byte() {
+int Ungzip::get_byte()
+{
 	if (m_z_eof)
 		return EOF;
 	if (m_zstream.avail_in == 0) {
@@ -288,8 +289,8 @@ Ungzip::get_byte() {
 	return *(m_zstream.next_in)++;
 }
 
-int
-Ungzip::read(byte_t *buf, int size) {
+int Ungzip::read(byte_t *buf, int size)
+{
 	int nRead=size;
 	if (m_pos+size >= m_gziplen) {
 		nRead=m_gziplen-m_pos;
@@ -301,8 +302,8 @@ Ungzip::read(byte_t *buf, int size) {
 	return nRead;
 }
 
-int
-Ungzip::gzread(char *buf, int len) {
+int Ungzip::gzread(char *buf, int len)
+{
 	Bytef *start = (Bytef*)buf; /* starting point for crc computation */
 	byte_t  *next_out; /* == stream.next_out but not forced far (for MSDOS) */
 
@@ -374,8 +375,8 @@ Ungzip::gzread(char *buf, int len) {
 	return (int)(len - m_zstream.avail_out);
 }
 
-uint_t
-Ungzip::getLong() {
+uint_t Ungzip::getLong()
+{
 	uint_t x = (uint_t)get_byte();
 	int c;
 
@@ -387,8 +388,8 @@ Ungzip::getLong() {
 	return x;
 }
 
-int
-Ungzip::write(char *buf, int count) {
+int Ungzip::write(char *buf, int count)
+{
 	if (buf == 0)
 		return 0;
 
@@ -406,8 +407,8 @@ Ungzip::write(char *buf, int count) {
 	return count;
 }
 
-int
-Ungzip::destroy() {
+int Ungzip::destroy()
+{
 	int err = Z_OK;
 	if (m_zstream.state != NULL) {
 		err = inflateEnd(&(m_zstream));

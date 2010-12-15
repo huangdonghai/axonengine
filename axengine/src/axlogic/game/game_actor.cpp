@@ -36,7 +36,7 @@ void GameActor::doThink()
 {
 }
 
-void GameActor::doNotify(IObservable *subject, int arg)
+void GameActor::beNotified(IObservable *subject, int arg)
 {
 }
 

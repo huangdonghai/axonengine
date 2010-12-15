@@ -18,7 +18,7 @@ ActorPanel::ActorPanel(QWidget *parent)
 	ui.setupUi(this);
 	ui.rollup->initialize();
 
-	g_mapContext->attachObserver(this);
+	g_mapContext->addObserver(this);
 
 	connect(ui.propEditor, SIGNAL(propertyChanged(IProperty*)), this, SLOT(onPropertyChanged(IProperty*)) );
 	connect(ui.scriptProp, SIGNAL(propertyChanged(IProperty*)), this, SLOT(onPropertyChanged(IProperty*)) );
@@ -26,10 +26,10 @@ ActorPanel::ActorPanel(QWidget *parent)
 
 ActorPanel::~ActorPanel()
 {
-	g_mapContext->detachObserver(this);
+	g_mapContext->removeObserver(this);
 }
 
-void ActorPanel::doNotify(IObservable *subject, int arg ) {
+void ActorPanel::beNotified(IObservable *subject, int arg ) {
 	if (subject != g_mapContext ) {
 		return;
 	}

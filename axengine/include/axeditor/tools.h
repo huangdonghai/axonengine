@@ -142,7 +142,7 @@ public:
 	virtual void setCursor();
 
 	// IObserver
-	virtual void doNotify(IObservable *subjest, int arg);
+	virtual void beNotified(IObservable *subjest, int arg);
 
 	// immediately transform for use input from UI
 	virtual bool begin();

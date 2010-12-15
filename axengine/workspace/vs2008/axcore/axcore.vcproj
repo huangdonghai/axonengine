@@ -468,6 +468,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\axcore\singleton\event.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\axcore\singleton\filesystem.cpp"
 				>
 			</File>
@@ -516,6 +520,10 @@
 				</File>
 				<File
 					RelativePath="..\..\..\include\axcore\singleton\cvarsystem.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\include\axcore\singleton\event.h"
 					>
 				</File>
 				<File

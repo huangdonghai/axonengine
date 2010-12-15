@@ -43,4 +43,12 @@ void Thread::dispatchAsyncNotify()
 	m_asyncNotifyList.clear();
 }
 
+Thread *Thread::getMainThread()
+{
+	checkMainThread();
+
+	return ms_mainThread;
+}
+
+
 AX_END_NAMESPACE

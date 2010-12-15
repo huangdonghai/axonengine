@@ -359,7 +359,7 @@ void GfxView::updateMove()
 #endif
 
 	m_eyeMatrix.origin = origin;
-	m_context->notify(Context::StatusChanged);
+	m_context->notifyObservers(Context::StatusChanged);
 }
 
 AX_END_NAMESPACE

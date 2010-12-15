@@ -105,7 +105,7 @@ void GameSystem::tick()
 
 void GameSystem::startRunning()
 {
-	notify(ObserveFlag_StartRunning);
+	notifyObservers(ObserveFlag_StartRunning);
 
 	m_running = true;
 	m_gameInput->startRunning();
@@ -125,7 +125,7 @@ void GameSystem::stopRunning()
 
 	m_gameWorld->restoreActors();
 
-	notify(ObserveFlag_StopRunning);
+	notifyObservers(ObserveFlag_StopRunning);
 }
 
 const UserInput *GameSystem::getUserInput(ActorNum clientNum)

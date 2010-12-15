@@ -58,7 +58,7 @@ public:
 	void updateEnvdef();
 
 	// implement IObserver
-	virtual void doNotify(IObservable *subject, int arg);
+	virtual void beNotified(IObservable *subject, int arg);
 
 	Matrix getLastViewMatrix() const;
 

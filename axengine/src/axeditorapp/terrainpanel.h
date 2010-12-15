@@ -22,7 +22,7 @@ public:
     ~TerrainPanel();
 
 	// IObserver
-	virtual void doNotify(IObservable *subject, int arg);
+	virtual void beNotified(IObservable *subject, int arg);
 
 protected:
 	void setParams();

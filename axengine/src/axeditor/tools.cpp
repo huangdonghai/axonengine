@@ -260,8 +260,8 @@ void SelectTool::areaSelect()
 //--------------------------------------------------------------------------
 
 TransformTool::TransformTool(Context *context) : SelectTool(context) {
-	m_context->attachObserver(this);
-	m_context->getState()->attachObserver(this);
+	m_context->addObserver(this);
+	m_context->getState()->addObserver(this);
 
 	m_isSelectMode = true;
 	m_gizmo = nullptr; // need subclass to init this
@@ -269,8 +269,8 @@ TransformTool::TransformTool(Context *context) : SelectTool(context) {
 
 TransformTool::~TransformTool() {
 	m_context->getState()->setTransformState(false, true, Vector3(0,0,0));
-	m_context->getState()->detachObserver(this);
-	m_context->detachObserver(this);
+	m_context->getState()->removeObserver(this);
+	m_context->removeObserver(this);
 }
 
 void TransformTool::doBindView(View *view) {
@@ -353,7 +353,7 @@ void TransformTool::doRender(const RenderCamera &camera) {
 	}
 }
 
-void TransformTool::doNotify(IObservable *subject, int arg) {
+void TransformTool::beNotified(IObservable *subject, int arg) {
 	if (m_isPressed)
 		return;
 

@@ -317,12 +317,12 @@ Workspace::Workspace(QWidget *parent)
 	ui.transformX->setSpecialValueText("?");
 	ui.transformY->setSpecialValueText("?");
 	ui.transformZ->setSpecialValueText("?");
-	g_mapContext->getMapState()->attachObserver(this);
+	g_mapContext->getMapState()->addObserver(this);
 }
 
 Workspace::~Workspace()
 {
-	g_mapContext->getMapState()->detachObserver(this);
+	g_mapContext->getMapState()->removeObserver(this);
 }
 
 Frame *Workspace::getActiveFrame() {
@@ -376,10 +376,10 @@ void Workspace::on_transformAbsOrRel_clicked()
 		ui.transformAbsOrRel->setIcon(QIcon(QString::fromUtf8(":/images/gizmo_abs.png")));
 	}
 
-	g_mapContext->getMapState()->notify(State::Transform);
+	g_mapContext->getMapState()->notifyObservers(State::Transform);
 }
 
-void Workspace::doNotify(IObservable *subject, int arg)
+void Workspace::beNotified(IObservable *subject, int arg)
 {
 	if (subject != g_mapContext->getMapState())
 		return;

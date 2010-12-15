@@ -35,7 +35,7 @@ void TransformHis::doIt() {
 
 	actor->setMatrix(m_newMat);
 
-	m_context->notify(Context::ActorTransformed);
+	m_context->notifyObservers(Context::ActorTransformed);
 }
 
 void TransformHis::undo() {
@@ -46,7 +46,7 @@ void TransformHis::undo() {
 	}
 
 	actor->setMatrix(m_oldMat);
-	m_context->notify(Context::ActorTransformed);
+	m_context->notifyObservers(Context::ActorTransformed);
 }
 
 bool TransformHis::isUndoable() {
@@ -183,12 +183,12 @@ PropertyEditHis::~PropertyEditHis() {
 
 void PropertyEditHis::doIt() {
 	m_actor->setProperty(m_propName, m_newValue);
-	m_context->notify(Context::SelectionChanged);
+	m_context->notifyObservers(Context::SelectionChanged);
 }
 
 void PropertyEditHis::undo() {
 	m_actor->setProperty(m_propName, m_oldValue);
-	m_context->notify(Context::SelectionChanged);
+	m_context->notifyObservers(Context::SelectionChanged);
 }
 
 int PropertyEditHis::getMemoryUsed() {

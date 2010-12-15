@@ -8,8 +8,8 @@ read the license and understand and accept it fully.
 */
 
 
-#ifndef AX_EVENT_H
-#define AX_EVENT_H
+#ifndef AX_CLIENT_EVENT_H
+#define AX_CLIENT_EVENT_H
 
 AX_BEGIN_NAMESPACE
 
@@ -125,7 +125,8 @@ AX_BEGIN_NAMESPACE
 	KEYITEM(XBOX_rthumb_downright) \
 	KEYITEM(XBOX_rthumb_downleft)
 
-struct AX_API InputKey {
+struct AX_API InputKey
+{
 	enum Type {
 		// lower than 32 is invalid
 		Invalid = 0,
@@ -151,7 +152,8 @@ struct AX_API InputKey {
 // struct InputEvent
 //--------------------------------------------------------------------------
 
-struct AX_API InputEvent {
+struct AX_API InputEvent
+{
 	enum Type {
 		KeyDown, KeyUp, MouseDown, MouseUp, MouseMove, Char, Wheel, XboxAxis,
 		User
@@ -179,41 +181,32 @@ struct AX_API InputEvent {
 	int delta;
 };
 
-inline bool InputEvent::isMouseEvent() {
+inline bool InputEvent::isMouseEvent()
+{
 	return type >= MouseDown && type <= MouseMove;
 }
 
-inline bool InputEvent::isKeyEvent() {
+inline bool InputEvent::isKeyEvent()
+{
 	return type == KeyDown || type == KeyUp;
 }
 
-inline bool InputEvent::isCharEvent() {
+inline bool InputEvent::isCharEvent()
+{
 	return type == Char;
 }
 
-inline bool InputEvent::isWheelEvent() {
+inline bool InputEvent::isWheelEvent()
+{
 	return type == Wheel;
 }
-
-#if 0
-struct Event : public Event {
-};
-
-struct Event : public Event {
-};
-
-struct Event : public Event {
-};
-
-struct Event : public Event {
-};
-#endif
 
 //--------------------------------------------------------------------------
 // class IInputHandler
 //--------------------------------------------------------------------------
 
-class AX_API IInputHandler {
+class AX_API IInputHandler
+{
 public:
 	virtual void preHandleEvent(InputEvent *e) {}
 	virtual void handleEvent(InputEvent *e);
@@ -236,7 +229,8 @@ protected:
 class IInputSource;
 class WinInput;
 
-class AX_API InputSystem : public ITickable {
+class AX_API InputSystem : public ITickable
+{
 public:
 	InputSystem();
 	~InputSystem();
@@ -293,7 +287,8 @@ private:
 // class IInputSource
 //--------------------------------------------------------------------------
 
-class IInputSource {
+class IInputSource
+{
 public:
 	virtual void startCapture(InputSystem::CaptureMode capturemode) = 0;
 	virtual void process() = 0;
@@ -304,5 +299,5 @@ public:
 
 AX_END_NAMESPACE
 
-#endif // end guardian
+#endif // AX_CLIENT_EVENT_H
 

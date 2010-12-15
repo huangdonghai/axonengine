@@ -94,18 +94,18 @@ TerrainPanel::TerrainPanel(QWidget *parent)
 	MapEnvDef *def = g_mapContext->getGameWorld()->getEnvironment();
 	ui.envProps->initFromObject(def);
 
-	g_mapContext->attachObserver(this);
+	g_mapContext->addObserver(this);
 
 	connect(ui.grassColor, SIGNAL(colorEdited(const QColor&)), this, SLOT(on_grassColor_colorChanged(const QColor&)));
 }
 
 TerrainPanel::~TerrainPanel()
 {
-	g_mapContext->detachObserver(this);
+	g_mapContext->removeObserver(this);
 
 }
 
-void TerrainPanel::doNotify(IObservable *subject, int arg) {
+void TerrainPanel::beNotified(IObservable *subject, int arg) {
 	MapContext *context = dynamic_cast<MapContext*>(subject);
 	if (context != g_mapContext)
 		return;

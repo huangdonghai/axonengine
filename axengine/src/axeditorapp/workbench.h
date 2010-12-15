@@ -33,7 +33,7 @@ public:
     ~Workbench();
 
 	// implement IObserver
-	virtual void doNotify(IObservable *subjest, int arg);
+	virtual void beNotified(IObservable *subjest, int arg);
 
 	// implement IProgressHandler
 	virtual void beginProgress(const std::string &title);

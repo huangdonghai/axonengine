@@ -14,11 +14,12 @@ AX_BEGIN_NAMESPACE
 
 IObservable::~IObservable() {}
 
-void IObservable::attachObserver(IObserver *observer) {
+void IObservable::addObserver(IObserver *observer) {
 	m_observers.push_back(observer);
 }
 
-void IObservable::detachObserver(IObserver *observer) {
+void IObservable::removeObserver(IObserver *observer) {
+#if 0
 	std::list<IObserver*>::iterator it = m_observers.begin();
 
 	for (; it != m_observers.end(); ++it) {
@@ -29,13 +30,16 @@ void IObservable::detachObserver(IObserver *observer) {
 	}
 
 	Errorf("Observable::detachObserver: cann't find observer to detach");
+#else
+	m_observers.remove(observer);
+#endif
 }
 
-void IObservable::notify(int arg) {
+void IObservable::notifyObservers(int arg) {
 	std::list<IObserver*>::iterator it = m_observers.begin();
 
 	for (; it != m_observers.end(); ++it) {
-		(*it)->doNotify(this, arg);
+		(*it)->beNotified(this, arg);
 	}
 }
 

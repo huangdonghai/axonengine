@@ -104,7 +104,7 @@ void PhysicsWorld::step(float frametime) {
 	double start = OsUtil::seconds();
 
 	m_havokWorld->stepDeltaTime(frametime);
-	notify(Synchronize);
+	notifyObservers(Synchronize);
 
 	if (m_vdb) {
 		m_vdb->step(frametime);

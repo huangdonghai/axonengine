@@ -1621,7 +1621,7 @@ void MapTerrain::init(int tiles, int tilemeters)
 	doLayerPainted(m_tilerect * Map::TilePixels);
 	doUpdateColorTextureLod(m_tilerect * Map::TilePixels);
 
-	notify(RenderTerrain::HeightfieldSetted);
+	notifyObservers(RenderTerrain::HeightfieldSetted);
 }
 
 void MapTerrain::initFromXml(const std::string &map_name, const TiXmlElement *elem)
@@ -1744,7 +1744,7 @@ void MapTerrain::initFromXml(const std::string &map_name, const TiXmlElement *el
 		doUpdateColorTextureLod(m_tilerect * Map::TilePixels);
 	}
 
-	notify(RenderTerrain::HeightfieldSetted);
+	notifyObservers(RenderTerrain::HeightfieldSetted);
 }
 
 bool MapTerrain::loadColorTexture(const std::string &map_name)
