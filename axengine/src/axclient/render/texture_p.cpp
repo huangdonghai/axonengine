@@ -105,4 +105,10 @@ bool TextureResource::event(Event *e)
 	}
 }
 
+
+void TextureResource::deleteThis()
+{
+
+}
+
 AX_END_NAMESPACE

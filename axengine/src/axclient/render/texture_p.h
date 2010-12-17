@@ -27,6 +27,9 @@ public:
 	// implement IEventHandler
 	virtual bool event(Event *e);
 
+	// implement RefObject
+	virtual void deleteThis();
+
 	static TextureResourcePtr findResource(const FixedString &name, int flags);
 	static TextureResourcePtr createResource(const FixedString &debugname, TexFormat format, int width, int height, int flags);
 
@@ -37,7 +40,6 @@ private:
 	Handle m_handle;
 	AsioRequest *m_asioRequest;
 	Image *m_asioImage;
-	AtomicInt m_isUploaded;
 
 	typedef Dict<FixedString, TextureResource*> ResourceDict;
 	static ResourceDict ms_resources;
