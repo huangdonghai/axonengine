@@ -8,17 +8,17 @@ class RenderApi
 public:
 	// resource management
 	static void (*createTexture2D)(phandle_t h, TexFormat format, int width, int height, int flags);
-	static void (*uploadTexture)(phandle_t h, int level, const void *pixels, TexFormat format);
-	static void (*uploadSubTexture)(phandle_t h, const Rect &rect, const void *pixels, TexFormat format);
+	static void (*uploadTexture)(phandle_t h, int level, const void *pixels, TexFormat format, IEventHandler *uploadedEventSendTo);
+	static void (*uploadSubTexture)(phandle_t h, const Rect &rect, const void *pixels, TexFormat format, IEventHandler *uploadedEventSendTo);
 	static void (*generateMipmap)(phandle_t h);
 	static void (*deleteTexture2D)(phandle_t h);
 
 	static void (*createVertexBuffer)(phandle_t h, int datasize, Primitive::Hint hint);
-	static void (*uploadVertexBuffer)(phandle_t h, int datasize, const void *p);
+	static void (*uploadVertexBuffer)(phandle_t h, int datasize, const void *p, IEventHandler *uploadedEventSendTo);
 	static void (*deleteVertexBuffer)(phandle_t h);
 
 	static void (*createIndexBuffer)(phandle_t h, int datasize, Primitive::Hint hint);
-	static void (*uploadIndexBuffer)(phandle_t h, int datasize, const void *p);
+	static void (*uploadIndexBuffer)(phandle_t h, int datasize, const void *p, IEventHandler *uploadedEventSendTo);
 	static void (*deleteIndexBuffer)(phandle_t h);
 
 	static void (*createWindowTarget)(phandle_t h, Handle hwnd, int width, int height);
@@ -73,17 +73,17 @@ public:
 
 	// api wrapper interface
 	void createTexture2D(phandle_t result, TexFormat format, int width, int height, int flags = 0);
-	void uploadTexture(phandle_t h, int level, void *pixels, TexFormat format);
-	void uploadSubTexture(phandle_t h, const Rect &rect, const void *pixels, TexFormat format);
+	void uploadTexture(phandle_t h, int level, void *pixels, TexFormat format, IEventHandler *eventHandler);
+	void uploadSubTexture(phandle_t h, const Rect &rect, const void *pixels, TexFormat format, IEventHandler *eventHandler);
 	void generateMipmap(phandle_t h);
 	void deleteTexture2D(phandle_t h);
 
 	void createVertexBuffer(phandle_t result, int datasize, Primitive::Hint hint);
-	void uploadVertexBuffer(phandle_t h, int datasize, const void *p);
+	void uploadVertexBuffer(phandle_t h, int datasize, const void *p, IEventHandler *eventHandler);
 	void deleteVertexBuffer(phandle_t h);
 
 	void createIndexBuffer(phandle_t result, int datasize, Primitive::Hint hint);
-	void uploadIndexBuffer(phandle_t h, int datasize, const void *p);
+	void uploadIndexBuffer(phandle_t h, int datasize, const void *p, IEventHandler *eventHandler);
 	void deleteIndexBuffer(phandle_t h);
 
 	void createWindowTarget(phandle_t h, Handle hwnd, int width, int height);

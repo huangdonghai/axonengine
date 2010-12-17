@@ -458,7 +458,7 @@ DepthStencilStatePtr RenderSystem::findDepthStencilState(const DepthStencilState
 
 void RenderSystem::tick()
 {
-	TextureResource::stepAsio();
+//	TextureResource::stepAsio();
 }
 
 

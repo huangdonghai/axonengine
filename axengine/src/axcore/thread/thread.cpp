@@ -50,5 +50,11 @@ Thread *Thread::getMainThread()
 	return ms_mainThread;
 }
 
+bool Thread::isInMainThread()
+{
+	return getCurrentThread() == ms_mainThread;
+}
+
+
 
 AX_END_NAMESPACE

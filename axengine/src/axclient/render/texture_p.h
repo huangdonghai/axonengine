@@ -3,7 +3,7 @@
 
 AX_BEGIN_NAMESPACE
 
-class TextureResource : public KeyedObject
+class TextureResource : public KeyedObject, public IEventHandler
 {
 public:
 	enum Status {
@@ -24,16 +24,18 @@ public:
 
 	phandle_t getPHandle() { return &m_handle; }
 
+	// implement IEventHandler
+	virtual bool event(Event *e);
+
 	static TextureResourcePtr findResource(const FixedString &name, int flags);
 	static TextureResourcePtr createResource(const FixedString &debugname, TexFormat format, int width, int height, int flags);
-	static void stepAsio();
 
 protected:
 	void loadFileMemory(int size, void *data);
 
 private:
 	Handle m_handle;
-	AsioRead m_asioRead;
+	AsioRequest *m_asioRequest;
 	Image *m_asioImage;
 	AtomicInt m_isUploaded;
 

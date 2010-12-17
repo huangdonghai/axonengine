@@ -197,7 +197,7 @@ void dx9CreateTexture2D(phandle_t h, TexFormat format, int width, int height, in
 	stat_textureMemory.add(m_videoMemoryUsed);
 }
 
-void dx9UploadTexture(phandle_t h, int level, const void *pixels, TexFormat format)
+void dx9UploadTexture(phandle_t h, int level, const void *pixels, TexFormat format, IEventHandler *eventHandler)
 {
 	LPDIRECT3DTEXTURE9 obj = h->to<LPDIRECT3DTEXTURE9>();
 	LPDIRECT3DSURFACE9 surface;
@@ -224,7 +224,7 @@ void dx9UploadTexture(phandle_t h, int level, const void *pixels, TexFormat form
 	SAFE_RELEASE(surface);
 }
 
-void dx9UploadSubTexture(phandle_t h, const Rect &rect, const void *pixels, TexFormat format)
+void dx9UploadSubTexture(phandle_t h, const Rect &rect, const void *pixels, TexFormat format, IEventHandler *eventHandler)
 {
 	if (rect.isEmpty())
 		return;
@@ -285,7 +285,7 @@ void dx9GenerateMipmap(phandle_t h)
 
 	Handle dum;
 	dx9CreateTexture2D(&dum, TexFormat::BGRA8, surfdesc.Width, surfdesc.Height, Texture::IF_AutoGenMipmap);
-	dx9UploadTexture(&dum, 0, lockedRect.pBits, surfdesc.Format);
+	dx9UploadTexture(&dum, 0, lockedRect.pBits, surfdesc.Format, 0);
 
 	LPDIRECT3DTEXTURE9 dummyobj = dum.to<LPDIRECT3DTEXTURE9>();
 
@@ -303,7 +303,7 @@ void dx9GenerateMipmap(phandle_t h)
 		if (i >= (DWORD)image.getNumMipmapLevels()) {
 			break;
 		}
-		dx9UploadTexture(h, i, image.getData(i), TexFormat::BGR8);
+		dx9UploadTexture(h, i, image.getData(i), TexFormat::BGR8, 0);
 
 		width >>= 1;
 		height >>= 1;
@@ -337,7 +337,7 @@ void dx9CreateVertexBuffer(phandle_t h, int datasize, Primitive::Hint hint)
 	stat_vertexBufferMemory.add(datasize);
 }
 
-void dx9UploadVertexBuffer(phandle_t h, int datasize, const void *p)
+void dx9UploadVertexBuffer(phandle_t h, int datasize, const void *p, IEventHandler *eventHandler)
 {
 	IDirect3DVertexBuffer9 *obj = h->to<IDirect3DVertexBuffer9 *>();
 
@@ -369,7 +369,7 @@ void dx9CreateIndexBuffer(phandle_t h, int datasize, Primitive::Hint hint)
 	stat_indexBufferMemory.add(datasize);
 }
 
-void dx9UploadIndexBuffer(phandle_t h, int datasize, const void *p)
+void dx9UploadIndexBuffer(phandle_t h, int datasize, const void *p, IEventHandler *eventHandler)
 {
 	IDirect3DIndexBuffer9 *obj = h->to<IDirect3DIndexBuffer9 *>();
 

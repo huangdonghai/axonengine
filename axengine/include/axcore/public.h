@@ -38,13 +38,13 @@ read the license and understand and accept it fully.
 #include "./inputoutput/image.h"
 #include "./script/script_all.h"
 #include "./singleton/classfactory.h"
+#include "./singleton/event.h"
 #include "./singleton/filesystem.h"
 #include "./singleton/configfile.h"
 #include "./singleton/cmdsystem.h"
 #include "./singleton/cvarsystem.h"
 #include "./singleton/statistic.h"
 #include "./singleton/assetmanager.h"
-#include "./singleton/event.h"
 #include "./singleton/coresystem.h"
 
 AX_BEGIN_NAMESPACE

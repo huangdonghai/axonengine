@@ -106,7 +106,7 @@ public:
 	static Thread *getThreadById(ulong_t id);
 	static Thread *getCurrentThread();
 	static Thread *getMainThread();
-	static bool isMainThread();
+	static bool isInMainThread();
 
 protected:
 	static void checkMainThread();

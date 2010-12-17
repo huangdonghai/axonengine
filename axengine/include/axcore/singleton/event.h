@@ -4,7 +4,7 @@
 
 AX_BEGIN_NAMESPACE
 
-class EventHandler;
+class IEventHandler;
 class Event
 {
 public:
@@ -12,7 +12,8 @@ public:
 		None = 0,                               // invalid event
 		KeyDown, KeyUp, MouseDown, MouseUp, MouseMove, CharInput, MouseWheel, XboxAxis,
 
-		AsioCompleted,
+		AsioCompleted, // asio file reading is completed
+		ResourceUploaded, // 3d resource have uploaded, memory can be free now
 
 		User = 1000,                            // first user event id
 		MaxUser = 65535                         // last user event id
@@ -31,11 +32,11 @@ public:
 	inline void ignore() { m_accept = false; }
 
 	static int registerEventType(int hint = -1);
-	static void postEvent(EventHandler *receiver, Event *e); // thread safe
-	static bool sendEvent(EventHandler *receiver, Event *e);
+	static void postEvent(IEventHandler *receiver, Event *e); // thread safe
+	static bool sendEvent(IEventHandler *receiver, Event *e); // called in main thread only
 
 protected:
-	static void processEvents(); // thread safe
+	static void processEvents(); // called in main loop
 
 protected:
 	Type m_type;
@@ -47,21 +48,21 @@ private:
 	ushort_t m_reserved : 13;
 };
 
-class EventHandler
+class IEventHandler
 {
 public:
 	friend class Event;
 
-	EventHandler();
-	virtual ~EventHandler();
+	IEventHandler();
+	virtual ~IEventHandler();
 
 	virtual bool event(Event *e);
-	virtual bool eventFilter(EventHandler *watched, Event *e);
-	void installEventFilter(EventHandler *watcher);
-	void removeEventFilter(EventHandler *watcher);
+	virtual bool eventFilter(IEventHandler *watched, Event *e);
+	void installEventFilter(IEventHandler *watcher);
+	void removeEventFilter(IEventHandler *watcher);
 
 protected:
-	std::list<EventHandler *> m_eventFilters;
+	std::list<IEventHandler *> m_eventFilters;
 };
 
 AX_END_NAMESPACE

@@ -10,17 +10,17 @@ bool CheckIfSupportHardwareMipmapGeneration(D3DFORMAT d3dformat, DWORD d3dusage)
 
 // render api
 void dx9CreateTexture2D(phandle_t h, TexFormat format, int width, int height, int flags);
-void dx9UploadTexture(phandle_t h, int level, const void *pixels, TexFormat format);
-void dx9UploadSubTexture(phandle_t h, const Rect &rect, const void *pixels, TexFormat format);
+void dx9UploadTexture(phandle_t h, int level, const void *pixels, TexFormat format, IEventHandler *eventHandler);
+void dx9UploadSubTexture(phandle_t h, const Rect &rect, const void *pixels, TexFormat format, IEventHandler *eventHandler);
 void dx9GenerateMipmap(phandle_t h);
 void dx9DeleteTexture2D(phandle_t h);
 
 void dx9CreateVertexBuffer(phandle_t h, int datasize, Primitive::Hint hint);
-void dx9UploadVertexBuffer(phandle_t h, int datasize, const void *p);
+void dx9UploadVertexBuffer(phandle_t h, int datasize, const void *p, IEventHandler *eventHandler);
 void dx9DeleteVertexBuffer(phandle_t h);
 
 void dx9CreateIndexBuffer(phandle_t h, int datasize, Primitive::Hint hint);
-void dx9UploadIndexBuffer(phandle_t h, int datasize, const void *p);
+void dx9UploadIndexBuffer(phandle_t h, int datasize, const void *p, IEventHandler *eventHandler);
 void dx9DeleteIndexBuffer(phandle_t h);
 
 void dx9CreateWindowTarget(phandle_t h, Handle hwnd, int width, int height);

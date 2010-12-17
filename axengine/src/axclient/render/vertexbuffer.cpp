@@ -45,7 +45,7 @@ void VertexObject::init(const void *p, int count, Primitive::Hint hint, VertexTy
 		return;
 	} else {
 		g_apiWrap->createVertexBuffer(m_h, m_dataSize, m_hint);
-		g_apiWrap->uploadVertexBuffer(m_h, m_dataSize, p);
+		g_apiWrap->uploadVertexBuffer(m_h, m_dataSize, p, 0);
 
 		stat_numVertexBuffers.inc();
 		stat_vertexBufferMemory.add(m_dataSize);
@@ -146,7 +146,7 @@ void IndexObject::init(const ushort_t *p, int count, Primitive::Hint hint, int a
 		m_offset = 0;
 
 		g_apiWrap->createIndexBuffer(m_h, m_dataSize, m_hint);
-		g_apiWrap->uploadIndexBuffer(m_h, m_dataSize, p);
+		g_apiWrap->uploadIndexBuffer(m_h, m_dataSize, p, 0);
 
 		stat_numIndexBuffers.inc();
 		stat_indexBufferMemory.add(m_dataSize);

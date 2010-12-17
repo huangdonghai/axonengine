@@ -3,17 +3,17 @@
 AX_BEGIN_NAMESPACE
 
 void (*RenderApi::createTexture2D)(phandle_t h, TexFormat format, int width, int height, int flags) = 0;
-void (*RenderApi::uploadTexture)(phandle_t h, int level, const void *pixels, TexFormat format);
-void (*RenderApi::uploadSubTexture)(phandle_t h, const Rect &rect, const void *pixels, TexFormat format);
+void (*RenderApi::uploadTexture)(phandle_t h, int level, const void *pixels, TexFormat format, IEventHandler *uploadedEventSendTo = 0);
+void (*RenderApi::uploadSubTexture)(phandle_t h, const Rect &rect, const void *pixels, TexFormat format, IEventHandler *uploadedEventSendTo = 0);
 void (*RenderApi::generateMipmap)(phandle_t h);
 void (*RenderApi::deleteTexture2D)(phandle_t h);
 	  
 void (*RenderApi::createVertexBuffer)(phandle_t h, int datasize, Primitive::Hint hint);
-void (*RenderApi::uploadVertexBuffer)(phandle_t h, int datasize, const void *p);
+void (*RenderApi::uploadVertexBuffer)(phandle_t h, int datasize, const void *p, IEventHandler *uploadedEventSendTo = 0);
 void (*RenderApi::deleteVertexBuffer)(phandle_t h);
 	  
 void (*RenderApi::createIndexBuffer)(phandle_t h, int datasize, Primitive::Hint hint);
-void (*RenderApi::uploadIndexBuffer)(phandle_t h, int datasize, const void *p);
+void (*RenderApi::uploadIndexBuffer)(phandle_t h, int datasize, const void *p, IEventHandler *uploadedEventSendTo = 0);
 void (*RenderApi::deleteIndexBuffer)(phandle_t h);
 
 void (*RenderApi::createWindowTarget)(phandle_t h, Handle hwnd, int width, int height);
@@ -298,14 +298,14 @@ void ApiWrap::createTexture2D(phandle_t result, TexFormat format, int width, int
 	sAllocCommand(RenderApi::createTexture2D).args(result, format, width, height, flags);
 }
 
-void ApiWrap::uploadTexture( phandle_t h, int level, void *pixels, TexFormat format )
+void ApiWrap::uploadTexture( phandle_t h, int level, void *pixels, TexFormat format, IEventHandler *eventHandler)
 {
-	sAllocCommand(RenderApi::uploadTexture).args(h, level, pixels, format);
+	sAllocCommand(RenderApi::uploadTexture).args(h, level, pixels, format, eventHandler);
 }
 
-void ApiWrap::uploadSubTexture(phandle_t h, const Rect &rect, const void *pixels, TexFormat format)
+void ApiWrap::uploadSubTexture(phandle_t h, const Rect &rect, const void *pixels, TexFormat format, IEventHandler *eventHandler)
 {
-	sAllocCommand(RenderApi::uploadSubTexture).args(h, rect, pixels, format);
+	sAllocCommand(RenderApi::uploadSubTexture).args(h, rect, pixels, format, eventHandler);
 }
 
 void ApiWrap::generateMipmap(phandle_t h)
@@ -323,11 +323,11 @@ void ApiWrap::createVertexBuffer(phandle_t result, int datasize, Primitive::Hint
 	sAllocCommand(RenderApi::createVertexBuffer).args(result, datasize, hint);
 }
 
-void ApiWrap::uploadVertexBuffer(phandle_t h, int datasize, const void *p)
+void ApiWrap::uploadVertexBuffer(phandle_t h, int datasize, const void *p, IEventHandler *eventHandler)
 {
 	void *newp = allocRingBuf(datasize);
 	memcpy(newp, p, datasize);
-	sAllocCommand(RenderApi::uploadVertexBuffer).args(h, datasize, newp);
+	sAllocCommand(RenderApi::uploadVertexBuffer).args(h, datasize, newp, eventHandler);
 }
 
 void ApiWrap::deleteVertexBuffer(phandle_t h)
@@ -340,11 +340,11 @@ void ApiWrap::createIndexBuffer(phandle_t result, int datasize, Primitive::Hint 
 	sAllocCommand(RenderApi::createIndexBuffer).args(result, datasize, hint);
 }
 
-void ApiWrap::uploadIndexBuffer(phandle_t h, int datasize, const void *p)
+void ApiWrap::uploadIndexBuffer(phandle_t h, int datasize, const void *p, IEventHandler *eventHandler)
 {
 	void *newp = allocRingBuf(datasize);
 	memcpy(newp, p, datasize);
-	sAllocCommand(RenderApi::uploadIndexBuffer).args(h, datasize, newp);
+	sAllocCommand(RenderApi::uploadIndexBuffer).args(h, datasize, newp, eventHandler);
 }
 
 void ApiWrap::deleteIndexBuffer(phandle_t h)

@@ -72,7 +72,7 @@ struct VertexBufferTraits
 	}
 	static void uploadPage(phandle_t h, int size, const void *p)
 	{
-		g_apiWrap->uploadVertexBuffer(h, size, p);
+		g_apiWrap->uploadVertexBuffer(h, size, p, 0);
 	}
 	static void releasePage(phandle_t h)
 	{
@@ -88,7 +88,7 @@ struct IndexBufferTraits
 	}
 	static void uploadPage(phandle_t h, int size, const void *p)
 	{
-		g_apiWrap->uploadIndexBuffer(h, size, p);
+		g_apiWrap->uploadIndexBuffer(h, size, p, 0);
 	}
 	static void releasePage(phandle_t h)
 	{

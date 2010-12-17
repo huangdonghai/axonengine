@@ -188,24 +188,35 @@ private:
 	PackedFolderList m_childrenList;
 };
 
-class AsioRead {
+class AX_API AsioRequest {
 public:
 	friend class AsioThread;
 
-	AsioRead();
-	~AsioRead();
+	AsioRequest(IEventHandler *handler, const std::string &filename);
+	~AsioRequest();
 
-	void setFilename(const std::string &filename) { m_filename = filename; }
+	IEventHandler *eventHandler() const { return m_eventHandler; }
+	const std::string &fileName() const { return m_filename; }
 	void freeData();
-	int getFileSize() const { return m_filesize; }
-	void *getFileData() const { return m_filedata; }
-	bool isDataReady() const;
+	int fileSize() const { return m_filesize; }
+	void *fileData() const { return m_filedata; }
 
 private:
+	IEventHandler *m_eventHandler;
 	std::string m_filename;
 	int m_filesize;
 	void *m_filedata;
-	AtomicInt m_isDataReady; // if m_isDataReady != 0, data is ready
+};
+
+class AX_API AsioCompletedEvent : public Event
+{
+public:
+	AsioCompletedEvent(AsioRequest *asioRead);
+
+	AsioRequest *asioRequest() { return m_asioRequest; }
+
+private:
+	AsioRequest *m_asioRequest;
 };
 
 class AsioThread : public Thread, public ThreadSafe
@@ -213,13 +224,13 @@ class AsioThread : public Thread, public ThreadSafe
 public:
 	void flush();
 	virtual RunningStatus doRun();
-	void queRequest(AsioRead *request);
+	void queRequest(AsioRequest *request);
 
 protected:
-	AsioRead *getFirstRequest();
+	AsioRequest *getFirstRequest();
 
 private:
-	std::list<AsioRead*> m_readEntries;
+	std::list<AsioRequest*> m_readEntries;
 };
 
 
@@ -262,7 +273,7 @@ public:
 	bool getFileModifyTime(const std::string &filename, longlong_t *time) const;
 	bool isFileExist(const std::string &filename) const;
 
-	void queAsioRead(AsioRead *entry);
+	void queAsioRead(AsioRequest *entry);
 	void flushAsio();
 
 	/*

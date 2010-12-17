@@ -4,7 +4,7 @@ AX_BEGIN_NAMESPACE
 
 namespace {
 	struct PostedEvent {
-		EventHandler *handler;
+		IEventHandler *handler;
 		Event *event;
 	};
 
@@ -26,7 +26,7 @@ int Event::registerEventType( int hint /*= -1*/ )
 	return 0;
 }
 
-void Event::postEvent(EventHandler *receiver, Event *e)
+void Event::postEvent(IEventHandler *receiver, Event *e)
 {
 	PostedEvent pe;
 	pe.handler = receiver;
@@ -36,9 +36,11 @@ void Event::postEvent(EventHandler *receiver, Event *e)
 	s_postedEvents.push_back(pe);
 }
 
-bool Event::sendEvent(EventHandler *receiver, Event *e)
+bool Event::sendEvent(IEventHandler *receiver, Event *e)
 {
-	std::list<EventHandler *>::const_iterator it = receiver->m_eventFilters.begin();
+	AX_ASSERT(Thread::isInMainThread());
+
+	std::list<IEventHandler *>::const_iterator it = receiver->m_eventFilters.begin();
 
 	for (; it != receiver->m_eventFilters.end(); ++it) {
 		if ((*it)->eventFilter(receiver, e))
@@ -52,11 +54,15 @@ void Event::processEvents()
 {
 	ScopedLocker locker(s_peMutex);
 
-	std::list<PostedEvent>::const_iterator it = s_postedEvents.begin();
+	std::list<PostedEvent>::iterator it = s_postedEvents.begin();
 
 	for (; it != s_postedEvents.end(); ++it) {
-		const PostedEvent &pe = *it;
+		PostedEvent &pe = *it;
 		sendEvent(pe.handler, pe.event);
+
+		// delete event object
+		delete pe.event;
+		pe.event = 0;
 	}
 
 	s_postedEvents.clear();
@@ -64,33 +70,33 @@ void Event::processEvents()
 
 
 
-EventHandler::EventHandler()
+IEventHandler::IEventHandler()
 {
-	if (!Thread::isMainThread())
+	if (!Thread::isInMainThread())
 		Errorf("EventHandler can only be owned by main thread");
 }
 
-EventHandler::~EventHandler()
+IEventHandler::~IEventHandler()
 {
 
 }
 
-bool EventHandler::event(Event *e)
-{
-	return false;
-}
-
-bool EventHandler::eventFilter(EventHandler *watched, Event *e)
+bool IEventHandler::event(Event *e)
 {
 	return false;
 }
 
-void EventHandler::installEventFilter(EventHandler *watcher)
+bool IEventHandler::eventFilter(IEventHandler *watched, Event *e)
+{
+	return false;
+}
+
+void IEventHandler::installEventFilter(IEventHandler *watcher)
 {
 	m_eventFilters.push_back(watcher);
 }
 
-void EventHandler::removeEventFilter( EventHandler *watcher )
+void IEventHandler::removeEventFilter( IEventHandler *watcher )
 {
 	m_eventFilters.remove(watcher);
 }

@@ -68,25 +68,23 @@ namespace {
 } // anonymous namespace
 
 
-AsioRead::AsioRead()
+AsioRequest::AsioRequest(IEventHandler *handler, const std::string &filename)
+	: m_eventHandler(handler)
+	, m_filename(filename)
+	, m_filesize(0)
+	, m_filedata(0)
+{}
+
+AsioRequest::~AsioRequest()
 {
-	m_filesize = 0;
-	m_filedata = 0;
+	freeData();
 }
 
-AsioRead::~AsioRead()
+void AsioRequest::freeData()
 {
-
-}
-
-void AsioRead::freeData()
-{
-	g_fileSystem->freeFile(m_filedata); m_filesize = 0; m_filedata = 0;
-}
-
-bool AsioRead::isDataReady() const
-{
-	return m_isDataReady == 0;
+	if (m_filedata) {
+		g_fileSystem->freeFile(m_filedata); m_filesize = 0; m_filedata = 0;
+	}
 }
 
 
@@ -102,7 +100,7 @@ void AsioThread::flush()
 Thread::RunningStatus AsioThread::doRun()
 {
 	while (1) {
-		AsioRead *request = getFirstRequest();
+		AsioRequest *request = getFirstRequest();
 
 		if (!request) {
 #if 0
@@ -115,27 +113,37 @@ Thread::RunningStatus AsioThread::doRun()
 
 		// do read
 		request->m_filesize = g_fileSystem->readFile(request->m_filename, &request->m_filedata);
-		request->m_isDataReady.incref();
+
+		// post event to handler
+		AsioCompletedEvent *event = new AsioCompletedEvent(request);
+		Event::postEvent(request->m_eventHandler, event);
 	}
 }
 
-void AsioThread::queRequest( AsioRead *request )
+void AsioThread::queRequest( AsioRequest *request )
 {
 	SCOPED_LOCK;
 	m_readEntries.push_back(request);
 }
 
-AsioRead * AsioThread::getFirstRequest()
+AsioRequest * AsioThread::getFirstRequest()
 {
 	SCOPED_LOCK;
 	if (m_readEntries.empty())
 		return 0;
 
-	AsioRead *result = m_readEntries.front();
+	AsioRequest *result = m_readEntries.front();
 	m_readEntries.pop_front();
 
 	return result;
 }
+
+
+AsioCompletedEvent::AsioCompletedEvent(AsioRequest *asioRead)
+	: Event(Event::AsioCompleted)
+	, m_asioRequest(asioRead)
+{}
+
 
 //------------------------------------------------------------------------------
 // class PakedFolder
@@ -1176,7 +1184,7 @@ void FileSystem::checkGamePath()
 	fclose(f);
 }
 
-void FileSystem::queAsioRead(AsioRead *entry)
+void FileSystem::queAsioRead(AsioRequest *entry)
 {
 	s_asioThread->queRequest(entry);
 }

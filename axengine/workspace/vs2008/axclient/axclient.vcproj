@@ -635,6 +635,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\axclient\render\texture_p.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\axclient\render\texture_p.h"
 				>
 			</File>
