@@ -29,6 +29,7 @@ public:
 
 	// implement RefObject
 	virtual void deleteThis();
+	virtual bool canBeDeletedNow();
 
 	static TextureResourcePtr findResource(const FixedString &name, int flags);
 	static TextureResourcePtr createResource(const FixedString &debugname, TexFormat format, int width, int height, int flags);

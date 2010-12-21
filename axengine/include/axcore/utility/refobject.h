@@ -19,15 +19,20 @@ AX_BEGIN_NAMESPACE
 
 class AX_API RefObject {
 public:
+	friend class System;
+
 	void incref() { m_ref.incref(); }
 	void decref() { if (!m_ref.decref()) deleteThis(); }
 	int getref() const { return m_ref.getref(); }
 
-	virtual void deleteThis() { delete this; }
+	virtual void deleteThis();
+	virtual bool canBeDeletedNow() { return true; }
 
 protected:
 	RefObject() {}
 	virtual ~RefObject() {}
+
+	static void checkDeferredDeleteObject();
 
 	AtomicInt m_ref;
 };

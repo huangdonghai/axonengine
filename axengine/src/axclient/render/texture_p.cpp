@@ -108,6 +108,11 @@ bool TextureResource::event(Event *e)
 
 void TextureResource::deleteThis()
 {
+	RefObject::deleteThis();
+}
+
+bool TextureResource::canBeDeletedNow()
+{
 
 }
 

@@ -20,11 +20,13 @@ System::System()
 	m_canExit = false;
 }
 
-System::~System() {
+System::~System()
+{
 }
 
 
-void System::initialize() {
+void System::initialize()
+{
 	if (m_initialized)
 		return;
 
@@ -57,14 +59,16 @@ void System::initialize() {
 	Printf(_("Initialized BaseSystem\n"));
 }
 
-void System::finalize() {
+void System::finalize()
+{
 	Printf(_("Finalizing BaseSystem...\n"));
 	Printf(_("Finalized BaseSystem\n"));
 }
 
 // register output system, core system can output info to multi target at
 // the same time
-void System::registerLog(ILogHandler *log) {
+void System::registerLog(ILogHandler *log)
+{
 	size_t i;
 
 	for (i=0; i<m_logSeq.size(); i++) {
@@ -99,7 +103,8 @@ void System::registerLog(ILogHandler *log) {
 	}
 }
 
-void System::removeLog(ILogHandler *log) {
+void System::removeLog(ILogHandler *log)
+{
 	std::vector<ILogHandler*>::iterator it;
 //	mLogCol::iterator it;
 
@@ -116,7 +121,8 @@ void System::removeLog(ILogHandler *log) {
 	m_logSeq.erase(it);
 }
 
-void System::print(const char *text) {
+void System::print(const char *text)
+{
 	// save to log buffer
 	const char *p = text;
 
@@ -153,11 +159,13 @@ void System::printLine()
 	}
 }
 
-int System::generateId() {
+int System::generateId()
+{
 	return ++m_lastId;
 }
 
-void System::registerProgress(IProgressHandler *progress) {
+void System::registerProgress(IProgressHandler *progress)
+{
 	size_t i;
 
 	for (i=0; i<m_progressSeq.size(); i++) {
@@ -172,7 +180,8 @@ void System::registerProgress(IProgressHandler *progress) {
 	m_progressSeq.push_back(progress);
 }
 
-void System::removeProgress(IProgressHandler *progress) {
+void System::removeProgress(IProgressHandler *progress)
+{
 	std::vector<IProgressHandler*>::iterator it;
 	//	mLogCol::iterator it;
 
@@ -201,7 +210,8 @@ void System::beginProgress(const std::string &title)
 }
 
 // return false if want go on, otherwise return true
-bool System::showProgress(uint_t percent, const std::string &msg) {
+bool System::showProgress(uint_t percent, const std::string &msg)
+{
 	std::vector<IProgressHandler*>::iterator it;
 	bool ret;
 
@@ -212,7 +222,8 @@ bool System::showProgress(uint_t percent, const std::string &msg) {
 	return ret;
 }
 
-void System::endProgress() {
+void System::endProgress()
+{
 	std::vector<IProgressHandler*>::iterator it;
 	for (it=m_progressSeq.begin(); it!=m_progressSeq.end(); ++it) {
 		(*it)->endProgress();
@@ -221,7 +232,8 @@ void System::endProgress() {
 	sys_noSleep.setBool(false);
 }
 
-void System::printCpuInfo() {
+void System::printCpuInfo()
+{
 	Printf(_("..found %s\n"), m_cpuInfo.cpu_type.c_str());
 	Printf(_("..found %d logical cores\n"), m_cpuInfo.numLogicCores);
 
@@ -245,15 +257,18 @@ void System::printCpuInfo() {
 	Printf("%s\n", features.c_str());
 }
 
-void System::registerTickable(TickPriority priority, ITickable *tickable) {
+void System::registerTickable(TickPriority priority, ITickable *tickable)
+{
 	m_tickableLists[priority].push_back(tickable);
 }
 
-void System::removeTickable(TickPriority priority, ITickable *tickable) {
+void System::removeTickable(TickPriority priority, ITickable *tickable)
+{
 	m_tickableLists[priority].remove(tickable);
 }
 
-int System::run() {
+int System::run()
+{
 	while (!m_canExit) {
 		forceTick(0);
 	}
@@ -263,6 +278,8 @@ int System::run() {
 
 void System::forceTick(int mssleep)
 {
+	RefObject::checkDeferredDeleteObject();
+
 	for (int i = 0; i < TickNumber; i++) {
 		AX_FOREACH(ITickable *tickable, m_tickableLists[i]) {
 			tickable->tick();
