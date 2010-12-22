@@ -28,7 +28,7 @@ public:
 	virtual bool event(Event *e);
 
 	// implement RefObject
-	virtual void deleteThis();
+	virtual void onDestroy();
 	virtual bool canBeDeletedNow();
 
 	static TextureResourcePtr findResource(const FixedString &name, int flags);

@@ -106,9 +106,9 @@ bool TextureResource::event(Event *e)
 }
 
 
-void TextureResource::deleteThis()
+void TextureResource::onDestroy()
 {
-	RefObject::deleteThis();
+	RefObject::onDestroy();
 }
 
 bool TextureResource::canBeDeletedNow()

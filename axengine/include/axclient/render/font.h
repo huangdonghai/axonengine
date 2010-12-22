@@ -112,7 +112,7 @@ public:
 	~Font();
 
 	// implement RefObject
-	virtual void deleteThis();
+	virtual void onDestroy();
 
 	// implement Asset
 	virtual bool doInit(const std::string &name, int w, int h);

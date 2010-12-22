@@ -547,7 +547,7 @@ void Font::finalizeManager()
 	SafeDelete(s_fontManager);
 }
 
-void Font::deleteThis()
+void Font::onDestroy()
 {
 	s_fontManager->deleteFont(this);
 }

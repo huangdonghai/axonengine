@@ -13,12 +13,13 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-class AX_API SoundFx : public RefObject {
+class AX_API SoundFx : public RefObject
+{
 public:
 	friend class SoundSystem;
 
 	// implement RefObject
-	virtual void deleteThis();
+	virtual void onDestroy();
 
 	bool isValid() const { return m_fmodSound != 0; }
 

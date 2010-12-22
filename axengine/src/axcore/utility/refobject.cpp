@@ -7,14 +7,29 @@ namespace {
 } // namespace
 
 
-void RefObject::deleteThis()
+void RefObject::incref()
 {
+	m_ref.incref();
+}
+
+void RefObject::decref()
+{
+	if (m_ref.decref() != 0)
+		return;
+
+	onDestroy();
+
 	if (canBeDeletedNow()) {
 		delete this;
 		return;
 	} else {
 		s_deferredDeleteObjectList.push_back(this);
 	}
+}
+
+
+void RefObject::onDestroy()
+{
 }
 
 void RefObject::checkDeferredDeleteObject()
@@ -32,5 +47,6 @@ void RefObject::checkDeferredDeleteObject()
 		}
 	}
 }
+
 
 AX_END_NAMESPACE

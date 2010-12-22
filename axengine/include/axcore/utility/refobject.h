@@ -17,15 +17,16 @@ AX_BEGIN_NAMESPACE
 // class RefObject
 //--------------------------------------------------------------------------
 
-class AX_API RefObject {
+class AX_API RefObject
+{
 public:
 	friend class System;
 
-	void incref() { m_ref.incref(); }
-	void decref() { if (!m_ref.decref()) deleteThis(); }
+	void incref();
+	void decref();
 	int getref() const { return m_ref.getref(); }
 
-	virtual void deleteThis();
+	virtual void onDestroy();
 	virtual bool canBeDeletedNow() { return true; }
 
 protected:

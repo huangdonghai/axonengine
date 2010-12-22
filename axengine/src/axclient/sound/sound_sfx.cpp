@@ -23,7 +23,7 @@ SoundFx::~SoundFx()
 	SafeRelease(m_fmodSound);
 }
 
-void SoundFx::deleteThis()
+void SoundFx::onDestroy()
 {
 	g_soundSystem->_removeSfx(this);
 }
