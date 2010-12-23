@@ -7,8 +7,9 @@ class RenderApi
 {
 public:
 	// resource management
+	static void (*createTextureFromFileInMemory)(phandle_t h, AsioRequest *asioRequest);
 	static void (*createTexture2D)(phandle_t h, TexFormat format, int width, int height, int flags);
-	static void (*uploadTexture)(phandle_t h, int level, const void *pixels, TexFormat format, IEventHandler *uploadedEventSendTo);
+	static void (*uploadTexture)(phandle_t h, const void *pixels, TexFormat format, IEventHandler *uploadedEventSendTo);
 	static void (*uploadSubTexture)(phandle_t h, const Rect &rect, const void *pixels, TexFormat format, IEventHandler *uploadedEventSendTo);
 	static void (*generateMipmap)(phandle_t h);
 	static void (*deleteTexture2D)(phandle_t h);
@@ -72,8 +73,9 @@ public:
 	~ApiWrap();
 
 	// api wrapper interface
+	void createTextureFromFileInMemory(phandle_t h, AsioRequest *asioRequest);
 	void createTexture2D(phandle_t result, TexFormat format, int width, int height, int flags = 0);
-	void uploadTexture(phandle_t h, int level, void *pixels, TexFormat format, IEventHandler *eventHandler);
+	void uploadTexture(phandle_t h, void *pixels, TexFormat format, IEventHandler *eventHandler);
 	void uploadSubTexture(phandle_t h, const Rect &rect, const void *pixels, TexFormat format, IEventHandler *eventHandler);
 	void generateMipmap(phandle_t h);
 	void deleteTexture2D(phandle_t h);
@@ -91,7 +93,7 @@ public:
 	void deleteWindowTarget(phandle_t h);
 
 	void createQuery(phandle_t h);
-	void issueQuery(phandle_t h, AsioQuery *asioQuery);
+	void issueQuery(phandle_t h, AsyncQuery *asioQuery);
 	void deleteQuery(phandle_t h);
 
 	void createSamplerState(phandle_t h, const SamplerStateDesc &desc);

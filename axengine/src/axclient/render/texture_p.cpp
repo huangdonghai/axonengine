@@ -12,6 +12,9 @@ std::list<TextureResource*> TextureResource::ms_asioList;
 
 TextureResource::TextureResource(const FixedString &key, InitFlags flags)
 {
+	m_isFileTexture = true;
+	m_fileTextureUploaded = false;
+
 	std::string filename = key.toString() + ".dds";
 
 	m_asioRequest = new AsioRequest(this, filename);
@@ -24,6 +27,9 @@ TextureResource::TextureResource(const FixedString &key, InitFlags flags)
 
 TextureResource::TextureResource(const FixedString &key, TexFormat format, int width, int height, InitFlags flags)
 {
+	m_isFileTexture = false;
+	m_fileTextureUploaded = false;
+
 	g_apiWrap->createTexture2D(&m_handle, format, width, height, flags);
 
 	setKey(key);
@@ -33,7 +39,6 @@ TextureResource::TextureResource(const FixedString &key, TexFormat format, int w
 TextureResource::~TextureResource()
 {
 	g_apiWrap->deleteTexture2D(&m_handle);
-	ms_resources.erase(getKey());
 }
 
 void TextureResource::uploadSubTexture(const Rect &rect, const void *pixels, TexFormat format)
@@ -63,42 +68,19 @@ TextureResourcePtr TextureResource::createResource(const FixedString &debugname,
 	return new TextureResource(debugname, format, width, height, flags);
 }
 
-void TextureResource::loadFileMemory( int size, void *data )
-{
-
-}
-
-#if 0
-void TextureResource::stepAsio()
-{
-	std::list<TextureResource*>::iterator it = ms_asioList.begin();
-
-	while (it != ms_asioList.end()) {
-		TextureResource *res = *it;
-		if (res->m_asioRead.isDataReady()) {
-			it = ms_asioList.erase(it);
-			res->loadFileMemory(res->m_asioRead.getFileSize(), res->m_asioRead.getFileData());
-			res->m_asioRead.freeData();
-		} else {
-			it++;
-		}
-	}
-}
-#endif
-
 bool TextureResource::event(Event *e)
 {
 	Event::Type eventType = e->type();
 
 	if (eventType == Event::AsioCompleted) {
+		AX_ASSERT(m_isFileTexture);
 		AsioCompletedEvent *ace = static_cast<AsioCompletedEvent *>(e);
 		AsioRequest *request = ace->asioRequest();
 		AX_ASSERT(request->eventHandler() == this);
 		AX_ASSERT(m_asioRequest == request);
-		loadFileMemory(request->fileSize(), request->fileData());
-		return true;
-	} else if(eventType == Event::ResourceUploaded) {
-		// TODO
+		g_apiWrap->createTextureFromFileInMemory(&m_handle, request);
+		m_asioRequest = 0;
+		m_fileTextureUploaded = true;
 		return true;
 	} else {
 		return IEventHandler::event(e);
@@ -108,12 +90,15 @@ bool TextureResource::event(Event *e)
 
 void TextureResource::onDestroy()
 {
-	RefObject::onDestroy();
+	ms_resources.erase(getKey());
 }
 
 bool TextureResource::canBeDeletedNow()
 {
-
+	if (m_isFileTexture && !m_fileTextureUploaded)
+		return false;
+	else
+		return true;
 }
 
 AX_END_NAMESPACE

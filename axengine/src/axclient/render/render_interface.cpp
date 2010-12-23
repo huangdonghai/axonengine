@@ -2,8 +2,9 @@
 
 AX_BEGIN_NAMESPACE
 
+void (*RenderApi::createTextureFromFileInMemory)(phandle_t h, AsioRequest *asioRequest);
 void (*RenderApi::createTexture2D)(phandle_t h, TexFormat format, int width, int height, int flags) = 0;
-void (*RenderApi::uploadTexture)(phandle_t h, int level, const void *pixels, TexFormat format, IEventHandler *uploadedEventSendTo = 0);
+void (*RenderApi::uploadTexture)(phandle_t h, const void *pixels, TexFormat format, IEventHandler *uploadedEventSendTo = 0);
 void (*RenderApi::uploadSubTexture)(phandle_t h, const Rect &rect, const void *pixels, TexFormat format, IEventHandler *uploadedEventSendTo = 0);
 void (*RenderApi::generateMipmap)(phandle_t h);
 void (*RenderApi::deleteTexture2D)(phandle_t h);
@@ -293,14 +294,19 @@ ApiWrap::~ApiWrap()
 {}
 
 
+void ApiWrap::createTextureFromFileInMemory(phandle_t h, AsioRequest *asioRequest)
+{
+	sAllocCommand(RenderApi::createTextureFromFileInMemory).args(h, asioRequest);
+}
+
 void ApiWrap::createTexture2D(phandle_t result, TexFormat format, int width, int height, int flags /*= 0*/)
 {
 	sAllocCommand(RenderApi::createTexture2D).args(result, format, width, height, flags);
 }
 
-void ApiWrap::uploadTexture( phandle_t h, int level, void *pixels, TexFormat format, IEventHandler *eventHandler)
+void ApiWrap::uploadTexture( phandle_t h, void *pixels, TexFormat format, IEventHandler *eventHandler)
 {
-	sAllocCommand(RenderApi::uploadTexture).args(h, level, pixels, format, eventHandler);
+	sAllocCommand(RenderApi::uploadTexture).args(h, pixels, format, eventHandler);
 }
 
 void ApiWrap::uploadSubTexture(phandle_t h, const Rect &rect, const void *pixels, TexFormat format, IEventHandler *eventHandler)

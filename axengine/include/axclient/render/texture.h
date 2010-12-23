@@ -27,11 +27,8 @@ public:
 	friend class TextureManager;
 
 	enum InitFlag {
-		IF_None = 0,
-		IF_NoMipmap = 1,
-		IF_NoDownsample = 2,
-		IF_AutoGenMipmap = 4,
-		IF_RenderTarget = 8
+		IF_AutoGenMipmap = 1,
+		IF_RenderTarget = 2
 	};
 
 	typedef Flags_<InitFlag> InitFlags;

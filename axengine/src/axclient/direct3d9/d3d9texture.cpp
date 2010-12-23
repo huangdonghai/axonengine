@@ -432,7 +432,7 @@ TexFormat D3D9Texture::getFormat()
 	return m_format;
 }
 
-bool D3D9new TextureFile2D(const std::string &filename)
+bool D3D9Texture::loadFile2D(const std::string &filename)
 {
 	D3D9_SCOPELOCK;
 

@@ -13,7 +13,6 @@ public:
 		KeyDown, KeyUp, MouseDown, MouseUp, MouseMove, CharInput, MouseWheel, XboxAxis,
 
 		AsioCompleted, // asio file reading is completed
-		ResourceUploaded, // 3d resource have uploaded, memory can be free now
 
 		User = 1000,                            // first user event id
 		MaxUser = 65535                         // last user event id

@@ -13,7 +13,7 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-struct AsioQuery {
+struct AsyncQuery {
 	AtomicInt m_atomic;
 	int m_queryFrame;
 	int m_resultFrame;

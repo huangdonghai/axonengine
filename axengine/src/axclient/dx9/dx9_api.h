@@ -9,8 +9,10 @@ bool CheckIfSupportHardwareMipmapGeneration(D3DFORMAT d3dformat, DWORD d3dusage)
 // module private
 
 // render api
+
+void dx9CreateTextureFromFileInMemory(phandle_t h, AsioRequest *asioRequest);
 void dx9CreateTexture2D(phandle_t h, TexFormat format, int width, int height, int flags);
-void dx9UploadTexture(phandle_t h, int level, const void *pixels, TexFormat format, IEventHandler *eventHandler);
+void dx9UploadTexture(phandle_t h, const void *pixels, TexFormat format, IEventHandler *eventHandler);
 void dx9UploadSubTexture(phandle_t h, const Rect &rect, const void *pixels, TexFormat format, IEventHandler *eventHandler);
 void dx9GenerateMipmap(phandle_t h);
 void dx9DeleteTexture2D(phandle_t h);

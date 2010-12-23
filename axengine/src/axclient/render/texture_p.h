@@ -34,13 +34,12 @@ public:
 	static TextureResourcePtr findResource(const FixedString &name, int flags);
 	static TextureResourcePtr createResource(const FixedString &debugname, TexFormat format, int width, int height, int flags);
 
-protected:
-	void loadFileMemory(int size, void *data);
-
 private:
 	Handle m_handle;
+	bool m_isFileTexture;
+	bool m_fileTextureUploaded;
+
 	AsioRequest *m_asioRequest;
-	Image *m_asioImage;
 
 	typedef Dict<FixedString, TextureResource*> ResourceDict;
 	static ResourceDict ms_resources;
