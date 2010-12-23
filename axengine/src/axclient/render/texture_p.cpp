@@ -13,7 +13,7 @@ std::list<TextureResource*> TextureResource::ms_asioList;
 TextureResource::TextureResource(const FixedString &key, InitFlags flags)
 {
 	m_isFileTexture = true;
-	m_fileTextureUploaded = false;
+	m_fileLoaded = false;
 
 	std::string filename = key.toString() + ".dds";
 
@@ -28,7 +28,7 @@ TextureResource::TextureResource(const FixedString &key, InitFlags flags)
 TextureResource::TextureResource(const FixedString &key, TexFormat format, int width, int height, InitFlags flags)
 {
 	m_isFileTexture = false;
-	m_fileTextureUploaded = false;
+	m_fileLoaded = false;
 
 	g_apiWrap->createTexture2D(&m_handle, format, width, height, flags);
 
@@ -80,7 +80,7 @@ bool TextureResource::event(Event *e)
 		AX_ASSERT(m_asioRequest == request);
 		g_apiWrap->createTextureFromFileInMemory(&m_handle, request);
 		m_asioRequest = 0;
-		m_fileTextureUploaded = true;
+		m_fileLoaded = true;
 		return true;
 	} else {
 		return IEventHandler::event(e);
@@ -95,7 +95,7 @@ void TextureResource::onDestroy()
 
 bool TextureResource::canBeDeletedNow()
 {
-	if (m_isFileTexture && !m_fileTextureUploaded)
+	if (m_isFileTexture && !m_fileLoaded)
 		return false;
 	else
 		return true;

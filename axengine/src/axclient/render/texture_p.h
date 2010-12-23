@@ -37,7 +37,7 @@ public:
 private:
 	Handle m_handle;
 	bool m_isFileTexture;
-	bool m_fileTextureUploaded;
+	bool m_fileLoaded;
 
 	AsioRequest *m_asioRequest;
 
