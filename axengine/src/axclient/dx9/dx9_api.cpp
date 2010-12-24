@@ -418,6 +418,7 @@ void dx9DeleteWindowTarget(phandle_t h)
 	SAFE_RELEASE(window);
 }
 
+#if 0
 void dx9CreateSamplerState( phandle_t h, const SamplerDesc &desc )
 {
 	*h = new DX9_SamplerState(desc);
@@ -473,6 +474,7 @@ void dx9DeleteRasterizerState(phandle_t h)
 	IDirect3DStateBlock9 *stateblock = handle_cast<IDirect3DStateBlock9 *>(*h);
 	SAFE_RELEASE(stateblock);
 }
+#endif
 
 static void dx9SetShader(const FixedString &name, const ShaderMacro &sm, Technique tech)
 {
@@ -516,6 +518,11 @@ static void dx9SetMaterialTexture(phandle_t texs[], SamplerDesc descs[])
 
 }
 
+static void dx9SetRenderState(const DepthStencilDesc &dsd, const RasterizerDesc &rd, const BlendDesc &bd)
+{
+
+}
+
 
 //	static vOid dip(ElementType et, int offset, int vertcount, int indices_count) = 0;
 static void dx9Draw()
@@ -551,7 +558,7 @@ void dx9AssignRenderApi()
 	RenderApi::createWindowTarget = &dx9CreateWindowTarget;
 	RenderApi::updateWindowTarget = &dx9UpdateWindowTarget;
 	RenderApi::deleteWindowTarget = &dx9DeleteWindowTarget;
-
+#if 0
 	RenderApi::createSamplerState = &dx9CreateSamplerState;
 	RenderApi::deleteSamplerState = &dx9DeleteSamplerState;
 
@@ -563,7 +570,7 @@ void dx9AssignRenderApi()
 
 	RenderApi::createRasterizerState = &dx9CreateRasterizerState;
 	RenderApi::deleteRasterizerState = &dx9DeleteRasterizerState;
-
+#endif
 	RenderApi::setShader = &dx9SetShader;
 	RenderApi::setConstBuffer = &dx9SetConstBuffer;
 	RenderApi::setShaderConst = &dx9SetShaderConst;

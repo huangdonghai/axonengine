@@ -21,6 +21,7 @@ void (*RenderApi::createWindowTarget)(phandle_t h, Handle hwnd, int width, int h
 void (*RenderApi::updateWindowTarget)(phandle_t h, Handle newHwnd, int width, int height);
 void (*RenderApi::deleteWindowTarget)(phandle_t h);
 
+#if 0
 void (*RenderApi::createSamplerState)(phandle_t h, const SamplerDesc &samplerState);
 void (*RenderApi::deleteSamplerState)(phandle_t h);
 
@@ -32,6 +33,7 @@ void (*RenderApi::deleteDepthStencilState)(phandle_t h);
 
 void (*RenderApi::createRasterizerState)(phandle_t h, const RasterizerDesc &src);
 void (*RenderApi::deleteRasterizerState)(phandle_t h);
+#endif
 
 void (*RenderApi::setShader)(const FixedString & name, const ShaderMacro &sm, Technique tech);
 void (*RenderApi::setConstBuffer)(ConstBuffers::Type type, int size, const float *data);

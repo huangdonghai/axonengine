@@ -155,6 +155,7 @@ AX_STATIC_ASSERT(sizeof(DepthStencilDesc)<=sizeof(int));
 
 struct RasterizerDesc {
 	enum FillMode {
+		FillMode_Point,
 		FillMode_Wireframe,
 		FillMode_Solid
 	};

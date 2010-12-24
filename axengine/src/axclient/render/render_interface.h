@@ -25,7 +25,7 @@ public:
 	static void (*createWindowTarget)(phandle_t h, Handle hwnd, int width, int height);
 	static void (*updateWindowTarget)(phandle_t h, Handle newHwnd, int width, int height);
 	static void (*deleteWindowTarget)(phandle_t h);
-
+#if 0
 	static void (*createSamplerState)(phandle_t h, const SamplerDesc &samplerState);
 	static void (*deleteSamplerState)(phandle_t h);
 
@@ -37,7 +37,7 @@ public:
 
 	static void (*createRasterizerState)(phandle_t h, const RasterizerDesc &src);
 	static void (*deleteRasterizerState)(phandle_t h);
-
+#endif
 	static void (*setShader)(const FixedString &name, const ShaderMacro &sm, Technique tech);
 	static void (*setConstBuffer)(ConstBuffers::Type type, int size, const float *data);
 	static void (*setShaderConst)(const FixedString &name, int count, const float *value);

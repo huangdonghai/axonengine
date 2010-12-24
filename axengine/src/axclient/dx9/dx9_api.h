@@ -29,6 +29,7 @@ void dx9CreateWindowTarget(phandle_t h, Handle hwnd, int width, int height);
 void dx9UpdateWindowTarget(phandle_t h, Handle newHwnd, int width, int height);
 void dx9DeleteWindowTarget(phandle_t h);
 
+#if 0
 void dx9CreateSamplerState(phandle_t h, const SamplerDesc &samplerState);
 void dx9DeleteSamplerState(phandle_t h);
 
@@ -40,6 +41,7 @@ void dx9DeleteDepthStencilState(phandle_t h);
 
 void dx9CreateRasterizerState(phandle_t h, const RasterizerDesc &src);
 void dx9DeleteRasterizerState(phandle_t h);
+#endif
 
 void dx9AssignRenderApi();
 
