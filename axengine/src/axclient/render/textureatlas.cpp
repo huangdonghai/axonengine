@@ -188,10 +188,10 @@ void TextureAtlas::getChunkInfoByIndex(int index, int &tex, Rect &rect)
 	rect = Rect(col*m_chunkWidth, row*m_chunkHeight, m_chunkWidth, m_chunkHeight);
 }
 
-void TextureAtlas::setTextureFilterMode(SamplerStateDesc::FilterMode mode)
+void TextureAtlas::setTextureFilterMode(SamplerDesc::FilterMode mode)
 {
 	for (int i = 0; i < m_numTextures; i++) {
-		SamplerStateDesc desc = m_textures[i]->getSamplerState();
+		SamplerDesc desc = m_textures[i]->getSamplerState();
 		desc.filterMode = mode;
 		m_textures[i]->setSamplerState(desc);
 	}

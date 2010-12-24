@@ -21,16 +21,16 @@ void (*RenderApi::createWindowTarget)(phandle_t h, Handle hwnd, int width, int h
 void (*RenderApi::updateWindowTarget)(phandle_t h, Handle newHwnd, int width, int height);
 void (*RenderApi::deleteWindowTarget)(phandle_t h);
 
-void (*RenderApi::createSamplerState)(phandle_t h, const SamplerStateDesc &samplerState);
+void (*RenderApi::createSamplerState)(phandle_t h, const SamplerDesc &samplerState);
 void (*RenderApi::deleteSamplerState)(phandle_t h);
 
-void (*RenderApi::createBlendState)(phandle_t h, const BlendStateDesc &src);
+void (*RenderApi::createBlendState)(phandle_t h, const BlendDesc &src);
 void (*RenderApi::deleteBlendState)(phandle_t h);
 
-void (*RenderApi::createDepthStencilState)(phandle_t h, const DepthStencilStateDesc &src);
+void (*RenderApi::createDepthStencilState)(phandle_t h, const DepthStencilDesc &src);
 void (*RenderApi::deleteDepthStencilState)(phandle_t h);
 
-void (*RenderApi::createRasterizerState)(phandle_t h, const RasterizerStateDesc &src);
+void (*RenderApi::createRasterizerState)(phandle_t h, const RasterizerDesc &src);
 void (*RenderApi::deleteRasterizerState)(phandle_t h);
 
 void (*RenderApi::setShader)(const FixedString & name, const ShaderMacro &sm, Technique tech);
@@ -41,8 +41,8 @@ void (*RenderApi::setVertices)(phandle_t h, VertexType vt, int vertcount);
 void (*RenderApi::setInstanceVertices)(phandle_t h, VertexType vt, int vertcount, Handle inb, int incount);
 void (*RenderApi::setIndices)(phandle_t h, ElementType et, int offset, int vertcount, int indicescount);
 
-void (*RenderApi::setGlobalTexture)(GlobalTextureId id, phandle_t h);
-void (*RenderApi::setMaterialTexture)(phandle_t texs[]);
+void (*RenderApi::setGlobalTexture)(GlobalTextureId id, phandle_t h, const SamplerDesc &samplerState);
+void (*RenderApi::setMaterialTexture)(phandle_t texs[], SamplerDesc samplerStates[]);
 
 //	static void dip(ElementType et, int offset, int vertcount, int indices_count) = 0;
 void (*RenderApi::draw)();
@@ -367,7 +367,7 @@ void ApiWrap::clear(const RenderClearer &clearer)
 	sAllocCommand(RenderApi::clear).args(clearer);
 }
 
-void ApiWrap::createSamplerState(phandle_t &h, const SamplerStateDesc &desc)
+void ApiWrap::createSamplerState(phandle_t &h, const SamplerDesc &desc)
 {
 	h = allocHandle();
 	sAllocCommand(RenderApi::createSamplerState).args(h, desc);
@@ -378,7 +378,7 @@ void ApiWrap::deleteSamplerState(phandle_t h)
 	addObjectDeletion(RenderApi::deleteSamplerState, h);
 }
 
-void ApiWrap::createBlendState(phandle_t &h, const BlendStateDesc &desc)
+void ApiWrap::createBlendState(phandle_t &h, const BlendDesc &desc)
 {
 	h = allocHandle();
 	sAllocCommand(RenderApi::createBlendState).args(h, desc);
@@ -389,7 +389,7 @@ void ApiWrap::deleteBlendState(phandle_t h)
 	addObjectDeletion(RenderApi::deleteSamplerState, h);
 }
 
-void ApiWrap::createDepthStencilState(phandle_t &h, const DepthStencilStateDesc &desc)
+void ApiWrap::createDepthStencilState(phandle_t &h, const DepthStencilDesc &desc)
 {
 	h = allocHandle();
 	sAllocCommand(RenderApi::createDepthStencilState).args(h, desc);
@@ -400,7 +400,7 @@ void ApiWrap::deleteDepthStencilState(phandle_t h)
 	addObjectDeletion(RenderApi::deleteDepthStencilState, h);
 }
 
-void ApiWrap::createRasterizerState(phandle_t &h, const RasterizerStateDesc &desc)
+void ApiWrap::createRasterizerState(phandle_t &h, const RasterizerDesc &desc)
 {
 	h = allocHandle();
 	sAllocCommand(RenderApi::createRasterizerState).args(h, desc);
@@ -453,17 +453,20 @@ void ApiWrap::setShader(const FixedString & name, const ShaderMacro &sm, Techniq
 
 void ApiWrap::setGlobalTexture(GlobalTextureId gt, Texture *tex)
 {
-	sAllocCommand(RenderApi::setGlobalTexture).args(gt, tex->getPHandle());
+	sAllocCommand(RenderApi::setGlobalTexture).args(gt, tex->getPHandle(), tex->getSamplerState());
 }
 
 void ApiWrap::setMaterialTexture(Texture * const tex[])
 {
 	phandle_t *handles = allocType<phandle_t>(MaterialTextureId::MaxType);
+	SamplerDesc *descs = allocType<SamplerDesc>(MaterialTextureId::MaxType);
+
 	for (int i = 0; i < MaterialTextureId::MaxType; i++) {
 		handles[i] = tex[i]->getPHandle();
+		descs[i] = tex[i]->getSamplerState();
 	}
 
-	sAllocCommand(RenderApi::setMaterialTexture).args(handles);
+	sAllocCommand(RenderApi::setMaterialTexture).args(handles, descs);
 }
 
 

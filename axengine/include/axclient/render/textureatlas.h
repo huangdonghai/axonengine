@@ -31,7 +31,7 @@ public:
 	bool updateChunk(int id, byte_t *data, TexFormat format = TexFormat::AUTO);
 	void getChunkInfo(int id, Texture*& tex, Vector4 &tc);
 
-	void setTextureFilterMode(SamplerStateDesc::FilterMode mode);
+	void setTextureFilterMode(SamplerDesc::FilterMode mode);
 
 	enum { MAX_TEXTURES = 8 };
 	static const int INVALID_Chunk = -1;

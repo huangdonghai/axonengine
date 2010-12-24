@@ -348,7 +348,7 @@ bool Font::doInit(const std::string &name, int w, int h)
 	// init texture pool
 	m_texAtlas = new TextureAtlas;
 	m_texAtlas->initialize(m_name, m_width, m_height, TEXTURE_SIZE, TexFormat::A8);
-	m_texAtlas->setTextureFilterMode(SamplerStateDesc::FM_Linear);
+	m_texAtlas->setTextureFilterMode(SamplerDesc::FilterMode_Linear);
 
 	// test
 	newFrame();

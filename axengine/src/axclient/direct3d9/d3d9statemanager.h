@@ -109,7 +109,7 @@ public:
 	TexFormat getDepthStencilFormat() const { return m_depthStencilFormat; }
 	void setVertexDeclaration(IDirect3DVertexDeclaration9 *vertdecl);
 
-	void setSamplerStateBlock(DWORD stage, SamplerStateDesc::ClampMode clampmode, SamplerStateDesc::FilterMode filtermode);
+	void setSamplerStateBlock(DWORD stage, SamplerDesc::ClampMode clampmode, SamplerDesc::FilterMode filtermode);
 
 	void onReset();
 	void onDeviceLost();

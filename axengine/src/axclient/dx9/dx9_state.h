@@ -8,7 +8,7 @@ class DX9_SamplerState : public Unknown
 public:
 	enum { MAX_STAGES = 8 };
 
-	DX9_SamplerState(const SamplerStateDesc &desc);
+	DX9_SamplerState(const SamplerDesc &desc);
 	virtual ~DX9_SamplerState();
 
 private:

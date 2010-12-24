@@ -66,15 +66,15 @@ bool Material::init(const FixedString &key)
 			if (!m_textures[i])
 				continue;
 
-			SamplerStateDesc desc = m_textures[i]->getSamplerState();
+			SamplerDesc desc = m_textures[i]->getSamplerState();
 
 			if (texdef->clampToBorder && m_textures[i]) {
-				desc.clampMode = SamplerStateDesc::CM_Border;
+				desc.clampMode = SamplerDesc::ClampMode_Border;
 				m_textures[i]->setSamplerState(desc);
 			}
 
 			if (texdef->clampToEdge && m_textures[i]) {
-				desc.clampMode = SamplerStateDesc::CM_Clamp;
+				desc.clampMode = SamplerDesc::ClampMode_Clamp;
 				m_textures[i]->setSamplerState(desc);
 			}
 		}

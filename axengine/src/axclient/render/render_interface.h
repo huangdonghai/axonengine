@@ -26,16 +26,16 @@ public:
 	static void (*updateWindowTarget)(phandle_t h, Handle newHwnd, int width, int height);
 	static void (*deleteWindowTarget)(phandle_t h);
 
-	static void (*createSamplerState)(phandle_t h, const SamplerStateDesc &samplerState);
+	static void (*createSamplerState)(phandle_t h, const SamplerDesc &samplerState);
 	static void (*deleteSamplerState)(phandle_t h);
 
-	static void (*createBlendState)(phandle_t h, const BlendStateDesc &src);
+	static void (*createBlendState)(phandle_t h, const BlendDesc &src);
 	static void (*deleteBlendState)(phandle_t h);
 
-	static void (*createDepthStencilState)(phandle_t h, const DepthStencilStateDesc &src);
+	static void (*createDepthStencilState)(phandle_t h, const DepthStencilDesc &src);
 	static void (*deleteDepthStencilState)(phandle_t h);
 
-	static void (*createRasterizerState)(phandle_t h, const RasterizerStateDesc &src);
+	static void (*createRasterizerState)(phandle_t h, const RasterizerDesc &src);
 	static void (*deleteRasterizerState)(phandle_t h);
 
 	static void (*setShader)(const FixedString &name, const ShaderMacro &sm, Technique tech);
@@ -46,8 +46,10 @@ public:
 	static void (*setInstanceVertices)(phandle_t vb, VertexType vt, int vertcount, Handle inb, int incount);
 	static void (*setIndices)(phandle_t ib, ElementType et, int offset, int vertcount, int indicescount);
 
-	static void (*setGlobalTexture)(GlobalTextureId id, phandle_t h);
-	static void (*setMaterialTexture)(phandle_t texs[]);
+	static void (*setGlobalTexture)(GlobalTextureId id, phandle_t h, const SamplerDesc &samplerState);
+	static void (*setMaterialTexture)(phandle_t texs[], SamplerDesc states[]);
+
+	static void (*setRenderState)(const DepthStencilDesc &dsd, const RasterizerDesc &rd, const BlendDesc &bd);
 
 //	static void dip(ElementType et, int offset, int vertcount, int indices_count) = 0;
 	static void (*draw)();
@@ -96,16 +98,16 @@ public:
 	void issueQuery(phandle_t h, AsyncQuery *asioQuery);
 	void deleteQuery(phandle_t h);
 
-	void createSamplerState(phandle_t &h, const SamplerStateDesc &desc);
+	void createSamplerState(phandle_t &h, const SamplerDesc &desc);
 	void deleteSamplerState(phandle_t h);
 
-	void createBlendState(phandle_t &h, const BlendStateDesc &desc);
+	void createBlendState(phandle_t &h, const BlendDesc &desc);
 	void deleteBlendState(phandle_t h);
 
-	void createDepthStencilState(phandle_t &h, const DepthStencilStateDesc &desc);
+	void createDepthStencilState(phandle_t &h, const DepthStencilDesc &desc);
 	void deleteDepthStencilState(phandle_t h);
 
-	void createRasterizerState(phandle_t &h, const RasterizerStateDesc &desc);
+	void createRasterizerState(phandle_t &h, const RasterizerDesc &desc);
 	void deleteRasterizerState(phandle_t h);
 
 	void setRenderTarget(int index, phandle_t h);
@@ -289,6 +291,14 @@ private:
 	ShaderMacro m_shaderMacro;
 	RenderStateId m_renderStateId;
 	bool m_forceWireframe;
+
+	DepthStencilDesc m_depthStencilDesc;
+	RasterizerDesc m_rasterizerDesc;
+	BlendDesc m_blendDesc;
+
+	DepthStencilDesc m_depthStencilDescLast;
+	RasterizerDesc m_rasterizerDescLast;
+	BlendDesc m_blendDescLast;
 };
 
 extern RenderContext *g_renderContext;

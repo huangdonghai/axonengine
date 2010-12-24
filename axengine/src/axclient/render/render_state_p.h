@@ -6,51 +6,52 @@ AX_BEGIN_NAMESPACE
 class ApiWrap;
 extern ApiWrap *g_apiWrap;
 
+#if 0
 class SamplerState : public RefObject
 {
 public:
-	SamplerState(const SamplerStateDesc &desc);
+	SamplerState(const SamplerDesc &desc);
 
 	virtual ~SamplerState();
 
-	const SamplerStateDesc &getDesc() const
+	const SamplerDesc &getDesc() const
 	{ return m_desc; }
 
 private:
-	SamplerStateDesc m_desc;
+	SamplerDesc m_desc;
 	phandle_t m_h;
 };
 
 class BlendState : public RefObject
 {
 public:
-	BlendState(const BlendStateDesc &desc);
+	BlendState(const BlendDesc &desc);
 	virtual ~BlendState();
 
 private:
-	BlendStateDesc m_desc;
+	BlendDesc m_desc;
 	phandle_t m_h;
 };
 
 class DepthStencilState : public RefObject
 {
 public:
-	DepthStencilState(const DepthStencilStateDesc &desc);
+	DepthStencilState(const DepthStencilDesc &desc);
 	virtual ~DepthStencilState();
 
 private:
-	DepthStencilStateDesc m_desc;
+	DepthStencilDesc m_desc;
 	phandle_t m_h;
 };
 
 class RasterizerState : public RefObject
 {
 public:
-	RasterizerState(const RasterizerStateDesc &desc);
+	RasterizerState(const RasterizerDesc &desc);
 	virtual ~RasterizerState();
 
 private:
-	RasterizerStateDesc m_desc;
+	RasterizerDesc m_desc;
 	phandle_t m_h;
 };
 
@@ -58,9 +59,9 @@ class RenderState {
 public:
 	RenderState(RenderStateId id)
 	{
-		BlendStateDesc blend_desc;
-		DepthStencilStateDesc ds_desc;
-		RasterizerStateDesc rs_desc;
+		BlendDesc blend_desc;
+		DepthStencilDesc ds_desc;
+		RasterizerDesc rs_desc;
 
 		if (!id.depthWrite)
 			ds_desc.depthWritable = false;
@@ -69,10 +70,10 @@ public:
 			ds_desc.depthEnable = false;
 
 		if (id.twoSided)
-			rs_desc.cullMode = RasterizerStateDesc::CullMode_None;
+			rs_desc.cullMode = RasterizerDesc::CullMode_None;
 
 		if (id.wireframed)
-			rs_desc.fillMode = RasterizerStateDesc::FillMode_Wireframe;
+			rs_desc.fillMode = RasterizerDesc::FillMode_Wireframe;
 
 		switch (id.stencilMode) {
 		case RenderStateId::StencilMode_Disable:
@@ -99,16 +100,18 @@ public:
 	{
 	}
 
-	static SamplerStatePtr findSamplerState(const SamplerStateDesc *desc);
-	static BlendStatePtr findBlendState(const BlendStateDesc *desc);
-	static RasterizerStatePtr findRasterizerState(const RasterizerStateDesc *desc);
-	static DepthStencilStatePtr findDepthStencilState(const DepthStencilStateDesc *desc);
+	static SamplerStatePtr findSamplerState(const SamplerDesc *desc);
+	static BlendStatePtr findBlendState(const BlendDesc *desc);
+	static RasterizerStatePtr findRasterizerState(const RasterizerDesc *desc);
+	static DepthStencilStatePtr findDepthStencilState(const DepthStencilDesc *desc);
 
 public:
 	BlendStatePtr m_blendState;
 	DepthStencilStatePtr m_depthStencilState;
 	RasterizerStatePtr m_rasterizerState;
 };
+
+#endif
 
 AX_END_NAMESPACE
 

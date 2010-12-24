@@ -2,30 +2,31 @@
 
 AX_BEGIN_NAMESPACE
 
+#if 0
 namespace {
 	// sampler states
-	typedef Dict<SamplerStateDesc, SamplerState*> SamplerStateDict;
+	typedef Dict<SamplerDesc, SamplerState*> SamplerStateDict;
 	SamplerStateDict s_samplerStateDict;
-	SamplerStateDesc s_defaultSamplerStateDesc;
+	SamplerDesc s_defaultSamplerStateDesc;
 
 	// depth stencil states
-	typedef Dict<DepthStencilStateDesc, DepthStencilState *> DepthStencilStateDict;
+	typedef Dict<DepthStencilDesc, DepthStencilState *> DepthStencilStateDict;
 	DepthStencilStateDict s_depthStencilStateDict;
-	DepthStencilStateDesc s_defaultDepthStencilStateDesc;
+	DepthStencilDesc s_defaultDepthStencilStateDesc;
 
 	// rasterizer state
-	typedef Dict<RasterizerStateDesc, RasterizerState *> RasterizerStateDict;
+	typedef Dict<RasterizerDesc, RasterizerState *> RasterizerStateDict;
 	RasterizerStateDict s_rasterizerStateDict;
-	RasterizerStateDesc s_defaultRasterizerStateDesc;
+	RasterizerDesc s_defaultRasterizerStateDesc;
 
 	// blend state
-	typedef Dict<BlendStateDesc, BlendState *> BlendStateDict;
+	typedef Dict<BlendDesc, BlendState *> BlendStateDict;
 	BlendStateDict s_blendStateDict;
-	BlendStateDesc s_defaultBlendStateDesc;
+	BlendDesc s_defaultBlendStateDesc;
 } // namespace
 
 
-SamplerState::SamplerState(const SamplerStateDesc &desc) : m_desc(desc)
+SamplerState::SamplerState(const SamplerDesc &desc) : m_desc(desc)
 {
 	g_apiWrap->createSamplerState(m_h, m_desc);
 	s_samplerStateDict[m_desc] = this;
@@ -38,7 +39,7 @@ SamplerState::~SamplerState()
 }
 
 
-BlendState::BlendState(const BlendStateDesc &desc) : m_desc(desc)
+BlendState::BlendState(const BlendDesc &desc) : m_desc(desc)
 {
 	g_apiWrap->createBlendState(m_h, m_desc);
 	s_blendStateDict[m_desc] = this;
@@ -51,7 +52,7 @@ BlendState::~BlendState()
 }
 
 
-DepthStencilState::DepthStencilState(const DepthStencilStateDesc &desc) : m_desc(desc)
+DepthStencilState::DepthStencilState(const DepthStencilDesc &desc) : m_desc(desc)
 {
 	g_apiWrap->createDepthStencilState(m_h, m_desc);
 	s_depthStencilStateDict[m_desc] = this;
@@ -64,7 +65,7 @@ DepthStencilState::~DepthStencilState()
 }
 
 
-RasterizerState::RasterizerState(const RasterizerStateDesc &desc)
+RasterizerState::RasterizerState(const RasterizerDesc &desc)
 {
 	g_apiWrap->createRasterizerState(m_h, m_desc);
 	s_rasterizerStateDict[m_desc] = this;
@@ -76,7 +77,7 @@ RasterizerState::~RasterizerState()
 	g_apiWrap->deleteRasterizerState(m_h);
 }
 
-SamplerStatePtr RenderState::findSamplerState(const SamplerStateDesc *desc)
+SamplerStatePtr RenderState::findSamplerState(const SamplerDesc *desc)
 {
 	if (!desc)
 		desc = &s_defaultSamplerStateDesc;
@@ -88,7 +89,7 @@ SamplerStatePtr RenderState::findSamplerState(const SamplerStateDesc *desc)
 	return new SamplerState(*desc);
 }
 
-BlendStatePtr RenderState::findBlendState(const BlendStateDesc *desc)
+BlendStatePtr RenderState::findBlendState(const BlendDesc *desc)
 {
 	if (!desc)
 		desc = &s_defaultBlendStateDesc;
@@ -100,7 +101,7 @@ BlendStatePtr RenderState::findBlendState(const BlendStateDesc *desc)
 	return new BlendState(*desc);
 }
 
-RasterizerStatePtr RenderState::findRasterizerState(const RasterizerStateDesc *desc)
+RasterizerStatePtr RenderState::findRasterizerState(const RasterizerDesc *desc)
 {
 	if (!desc)
 		desc = &s_defaultRasterizerStateDesc;
@@ -112,7 +113,7 @@ RasterizerStatePtr RenderState::findRasterizerState(const RasterizerStateDesc *d
 	return new RasterizerState(*desc);
 }
 
-DepthStencilStatePtr RenderState::findDepthStencilState(const DepthStencilStateDesc *desc)
+DepthStencilStatePtr RenderState::findDepthStencilState(const DepthStencilDesc *desc)
 {
 	if (!desc)
 		desc = &s_defaultDepthStencilStateDesc;
@@ -123,6 +124,6 @@ DepthStencilStatePtr RenderState::findDepthStencilState(const DepthStencilStateD
 
 	return new DepthStencilState(*desc);
 }
-
+#endif
 
 AX_END_NAMESPACE

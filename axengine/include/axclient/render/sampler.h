@@ -3,10 +3,12 @@
 
 AX_BEGIN_NAMESPACE
 
+#if 0
 AX_DECLARE_REFPTR(SamplerState);
 AX_DECLARE_REFPTR(BlendState);
 AX_DECLARE_REFPTR(DepthStencilState);
 AX_DECLARE_REFPTR(RasterizerState);
+#endif
 
 AX_END_NAMESPACE
 

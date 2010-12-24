@@ -10,26 +10,33 @@ enum ElementType {
 	ElementType_TriStrip
 };
 
-struct SamplerStateDesc {
+struct SamplerDesc {
 	enum ClampMode {
-		CM_Repeat,
-		CM_Clamp,
-		CM_Border // only used in engine internal
+		ClampMode_Repeat,
+		ClampMode_Clamp,
+		ClampMode_Border // only used in engine internal
 	};
 
 	enum FilterMode {
-		FM_Nearest,
-		FM_Linear,
-		FM_LinearMipmap,
-		FM_Trilinear,
-		FM_Anisotropic
+		FilterMode_Nearest,
+		FilterMode_Linear,
+		FilterMode_LinearMipmap,
+		FilterMode_Trilinear,
+		FilterMode_Anisotropic
 	};
 
 	enum BorderColor {
-		BM_Zero, BM_One
+		BorderColor_Zero, BorderColor_One
 	};
 
-	SamplerStateDesc() : clampMode(CM_Repeat), filterMode(FM_Trilinear), borderMode(BM_Zero), maxAnisotropy(0) {}
+	SamplerDesc()
+	{
+		intValue = 0;
+		clampMode = ClampMode_Repeat;
+		filterMode = FilterMode_Trilinear;
+		borderColor = BorderColor_Zero;
+		maxAnisotropy = 0;
+	}
 
 	size_t hash() const
 	{
@@ -38,7 +45,7 @@ struct SamplerStateDesc {
 
 	operator size_t() const { return hash(); }
 
-	bool operator==(const SamplerStateDesc &rhs) const
+	bool operator==(const SamplerDesc &rhs) const
 	{
 		return intValue == rhs.intValue;
 	}
@@ -47,14 +54,17 @@ struct SamplerStateDesc {
 		struct {
 			ClampMode clampMode : 8;
 			FilterMode filterMode : 8;
-			BorderColor borderMode : 8;
+			BorderColor borderColor : 8;
 			int maxAnisotropy : 8;
 		};
 		int intValue;
 	};
 };
 
-struct DepthStencilStateDesc {
+AX_STATIC_ASSERT(sizeof(SamplerDesc)<=sizeof(int));
+
+
+struct DepthStencilDesc {
 	enum CompareFunc {
 		CompareFunc_Never,
 		CompareFunc_Less,
@@ -77,16 +87,20 @@ struct DepthStencilStateDesc {
 		StencilOp_Decrement
 	};
 
-	DepthStencilStateDesc()
+	DepthStencilDesc()
 	{
+		intValue = 0;
 		depthEnable = true;
 		depthWritable = true;
 		depthFunc = CompareFunc_LessEqual;
 
 		stencilEnable = false;
+		stencilSkyMaskRead = false;
+		stencilSkyMaskWrite = false;
+#if 0
 		stencilReadMask = 0xff;
 		stencilWriteMask = 0xff;
-
+#endif
 		stencilFailOp = StencilOp_Keep;
 		stencilDepthFailOp = StencilOp_Keep;
 		stencilPassOp = StencilOp_Keep;
@@ -100,42 +114,46 @@ struct DepthStencilStateDesc {
 
 	size_t hash() const
 	{
-		int size = sizeof(*this);
-		byte_t const *bytes = reinterpret_cast<byte_t const *>(this);
-
-		size_t result = 0;
-		for (int i = 0; i < size; i++) {
-			hash_combine(result, bytes[i]);
-		}
-		return result;
+		return intValue;
 	}
 
 	operator size_t() const { return hash(); }
 
-	bool operator==(const DepthStencilStateDesc &rhs) const
+	bool operator==(const DepthStencilDesc &rhs) const
 	{
-		return ::memcmp(this, &rhs, sizeof(*this)) == 0;
+		return intValue == rhs.intValue;
 	}
 
-	bool depthEnable;
-	bool depthWritable;
-	CompareFunc depthFunc;
-	bool stencilEnable;
-	byte_t stencilReadMask;
-	byte_t stencilWriteMask;
+	union {
+		struct {
+			int depthEnable : 1;
+			int depthWritable : 1;
+			int stencilEnable : 1;
 
-	StencilOp stencilFailOp;
-	StencilOp stencilDepthFailOp;
-	StencilOp stencilPassOp;
-	CompareFunc stencilFunc;
+			CompareFunc depthFunc : 3;
 
-	StencilOp stencilFailOpBackface;
-	StencilOp stencilDepthFailOpBackface;
-	StencilOp stencilPassOpBackface;
-	CompareFunc stencilFuncBackface;
+			int stencilSkyMaskRead : 1;
+			int stencilSkyMaskWrite : 1;
+#if 0
+			int stencilReadMask : 8;
+			int stencilWriteMask : 8;
+#endif
+			StencilOp stencilFailOp : 3;
+			StencilOp stencilDepthFailOp : 3;
+			StencilOp stencilPassOp : 3;
+			CompareFunc stencilFunc : 3;
+
+			StencilOp stencilFailOpBackface : 3;
+			StencilOp stencilDepthFailOpBackface : 3;
+			StencilOp stencilPassOpBackface : 3;
+			CompareFunc stencilFuncBackface : 3;
+		};
+		int intValue;
+	};
 };
+AX_STATIC_ASSERT(sizeof(DepthStencilDesc)<=sizeof(int));
 
-struct RasterizerStateDesc {
+struct RasterizerDesc {
 	enum FillMode {
 		FillMode_Wireframe,
 		FillMode_Solid
@@ -147,15 +165,14 @@ struct RasterizerStateDesc {
 		CullMode_None
 	};
 
-	RasterizerStateDesc()
+	RasterizerDesc()
 	{
+		intValue = 0;
 		fillMode = FillMode_Solid;
 		cullMode = CullMode_Back;
 
 		frontCounterClockwise = false;
 		depthBias = 0;
-		depthBiasClamp = 0;
-		slopeScaledDepthBias = 0;
 		depthClipEnable = false;
 		scissorEnable = true;
 		multisampleEnable = false;
@@ -164,36 +181,35 @@ struct RasterizerStateDesc {
 
 	size_t hash() const
 	{
-		int size = sizeof(*this);
-		byte_t const *bytes = reinterpret_cast<byte_t const *>(this);
-
-		size_t result = 0;
-		for (int i = 0; i < size; i++) {
-			hash_combine(result, bytes[i]);
-		}
-		return result;
+		return intValue;
 	}
 
 	operator size_t() const { return hash(); }
 
-	bool operator==(const RasterizerStateDesc &rhs) const
+	bool operator==(const RasterizerDesc &rhs) const
 	{
-		return ::memcmp(this, &rhs, sizeof(*this)) == 0;
+		return intValue == rhs.intValue;
 	}
 
-	FillMode fillMode;
-	CullMode cullMode;
-	bool frontCounterClockwise;
-	int depthBias;
-	float depthBiasClamp;
-	float slopeScaledDepthBias;
-	bool depthClipEnable;
-	bool scissorEnable;
-	bool multisampleEnable;
-	bool antialiasedLineEnable;
+	union {
+		struct {
+			FillMode fillMode : 1;
+			CullMode cullMode : 2;
+			int frontCounterClockwise : 1;
+			int depthBias : 1;
+			int depthClipEnable : 1;
+			int scissorEnable : 1;
+			int multisampleEnable : 1;
+			int antialiasedLineEnable : 1;
+		};
+		int intValue;
+	};
 };
 
-struct BlendStateDesc {
+AX_STATIC_ASSERT(sizeof(RasterizerDesc)<=sizeof(int));
+
+
+struct BlendDesc {
 	enum BlendFactor {
 		BlendFactor_Zero,
 		BlendFactor_One,
@@ -210,8 +226,9 @@ struct BlendStateDesc {
 		BlendOp_Add, BlendOp_Subtract, BlendOp_RevSubtract, BlendOp_Min, BlendOp_Max
 	};
 
-	BlendStateDesc()
+	BlendDesc()
 	{
+		intValue = 0;
 		alphaToCoverageEnable = false;
 		independentBlendEnable = false;
 
@@ -229,35 +246,37 @@ struct BlendStateDesc {
 
 	size_t hash() const
 	{
-		int size = sizeof(*this);
-		byte_t const *bytes = reinterpret_cast<byte_t const *>(this);
-
-		size_t result = 0;
-		for (int i = 0; i < size; i++) {
-			hash_combine(result, bytes[i]);
-		}
-		return result;
+		return intValue;
 	}
 
 	operator size_t() const { return hash(); }
 
-	bool operator==(const BlendStateDesc &rhs) const
+	bool operator==(const BlendDesc &rhs) const
 	{
-		return ::memcmp(this, &rhs, sizeof(*this)) == 0;
+		return intValue == rhs.intValue;
 	}
 
-	bool alphaToCoverageEnable;
-	bool independentBlendEnable;
+	union {
+		struct {
+			int alphaToCoverageEnable : 1;
+			int independentBlendEnable : 1;
 
-	bool blendEnable;
-	BlendFactor srcBlend;
-	BlendFactor destBlend;
-	BlendOp blendOp;
-	BlendFactor srcBlendAlpha;
-	BlendFactor destBlendAlpha;
-	BlendOp blendOpAlpha;
-	byte_t renderTargetWriteMask;
+			int blendEnable : 1;
+			BlendFactor srcBlend : 4;
+			BlendFactor destBlend : 4;
+			BlendOp blendOp : 4;
+			BlendFactor srcBlendAlpha : 4;
+			BlendFactor destBlendAlpha : 4;
+			BlendOp blendOpAlpha : 4;
+			int renderTargetWriteMask : 4;
+		};
+
+		int intValue;
+	};
 };
+
+AX_STATIC_ASSERT(sizeof(BlendDesc)<=sizeof(int));
+
 
 AX_END_NAMESPACE
 

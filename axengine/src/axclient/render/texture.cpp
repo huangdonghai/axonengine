@@ -23,13 +23,11 @@ Texture::Texture(const std::string &name, InitFlags flags/*=0*/)
 {
 	FixedString key = normalizeKey(name);
 	m_resource = TextureResource::findResource(key, flags);
-	m_samplerState = RenderState::findSamplerState(0);
 }
 
 Texture::Texture(const std::string &debugname, TexFormat format, int width, int height, InitFlags flags /*= 0*/)
 {
 	m_resource = TextureResource::createResource(debugname, format, width, height, flags);
-	m_samplerState = RenderState::findSamplerState(0);
 }
 
 Texture::~Texture()
@@ -98,30 +96,26 @@ FixedString Texture::normalizeKey(const std::string &name)
 	return key;
 }
 
-void Texture::setSamplerState(const SamplerStateDesc &desc)
+void Texture::setSamplerState(const SamplerDesc &desc)
 {
-	m_samplerState = RenderState::findSamplerState(&desc);
+	m_samplerDesc = desc;
 }
 
-const SamplerStateDesc & Texture::getSamplerState() const
+const SamplerDesc &Texture::getSamplerState() const
 {
-	return m_samplerState->getDesc();
-}
-
-
-void Texture::setClampMode(SamplerStateDesc::ClampMode clampMode)
-{
-	SamplerStateDesc desc = getSamplerState();
-	desc.clampMode = clampMode;
-	setSamplerState(desc);
+	return m_samplerDesc;
 }
 
 
-void Texture::setFilterMode(SamplerStateDesc::FilterMode filterMode)
+void Texture::setClampMode(SamplerDesc::ClampMode clampMode)
 {
-	SamplerStateDesc desc = getSamplerState();
-	desc.filterMode = filterMode;
-	setSamplerState(desc);
+	m_samplerDesc.clampMode = clampMode;
+}
+
+
+void Texture::setFilterMode(SamplerDesc::FilterMode filterMode)
+{
+	m_samplerDesc.filterMode = filterMode;
 }
 
 

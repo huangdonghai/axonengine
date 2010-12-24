@@ -268,8 +268,8 @@ void OutdoorEnv::createSkyDome()
 	m_skyNishitaRt = new RenderTarget(128, 64, TexFormat::RGBA16F);
 	RenderTarget *miert = new RenderTarget(128, 64, TexFormat::RGBA16F);
 
-	SamplerStateDesc desc;
-	desc.clampMode = SamplerStateDesc::CM_Clamp;
+	SamplerDesc desc;
+	desc.clampMode = SamplerDesc::ClampMode_Clamp;
 	m_skyNishitaRt->getTexture()->setSamplerState(desc);
 	miert->getTexture()->setSamplerState(desc);
 	m_skyNishitaRt->attachColor(0, miert);

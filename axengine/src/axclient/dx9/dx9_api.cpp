@@ -418,7 +418,7 @@ void dx9DeleteWindowTarget(phandle_t h)
 	SAFE_RELEASE(window);
 }
 
-void dx9CreateSamplerState( phandle_t h, const SamplerStateDesc &desc )
+void dx9CreateSamplerState( phandle_t h, const SamplerDesc &desc )
 {
 	*h = new DX9_SamplerState(desc);
 }
@@ -429,7 +429,7 @@ void dx9DeleteSamplerState( phandle_t h )
 	SAFE_RELEASE(obj);
 }
 
-void dx9CreateBlendState( phandle_t h, const BlendStateDesc &src )
+void dx9CreateBlendState( phandle_t h, const BlendDesc &src )
 {
 	IDirect3DStateBlock9 *stateblock;
 	dx9_device->BeginStateBlock();
@@ -444,7 +444,7 @@ void dx9DeleteBlendState( phandle_t h )
 	SAFE_RELEASE(stateblock);
 }
 
-void dx9CreateDepthStencilState( phandle_t h, const DepthStencilStateDesc &src )
+void dx9CreateDepthStencilState( phandle_t h, const DepthStencilDesc &src )
 {
 	IDirect3DStateBlock9 *stateblock;
 	dx9_device->BeginStateBlock();
@@ -459,7 +459,7 @@ void dx9DeleteDepthStencilState(phandle_t h)
 	SAFE_RELEASE(stateblock);
 }
 
-void dx9CreateRasterizerState(phandle_t h, const RasterizerStateDesc &src)
+void dx9CreateRasterizerState(phandle_t h, const RasterizerDesc &src)
 {
 	IDirect3DStateBlock9 *stateblock;
 	dx9_device->BeginStateBlock();
@@ -506,12 +506,12 @@ static void dx9SetIndices(phandle_t ib, ElementType et, int offset, int vertcoun
 }
 
 
-static void dx9SetGlobalTexture(GlobalTextureId id, phandle_t h)
+static void dx9SetGlobalTexture(GlobalTextureId id, phandle_t h, const SamplerDesc &desc)
 {
 
 }
 
-static void dx9SetMaterialTexture(phandle_t texs[])
+static void dx9SetMaterialTexture(phandle_t texs[], SamplerDesc descs[])
 {
 
 }

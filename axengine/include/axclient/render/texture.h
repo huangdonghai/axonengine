@@ -50,10 +50,10 @@ public:
 	void getSize(int &width, int &height, int &depth);
 	TexFormat getFormat();
 
-	void setSamplerState(const SamplerStateDesc &desc);
-	const SamplerStateDesc &getSamplerState() const;
-	void setClampMode(SamplerStateDesc::ClampMode clampMode);
-	void setFilterMode(SamplerStateDesc::FilterMode filterMode);
+	void setSamplerState(const SamplerDesc &desc);
+	const SamplerDesc &getSamplerState() const;
+	void setClampMode(SamplerDesc::ClampMode clampMode);
+	void setFilterMode(SamplerDesc::FilterMode filterMode);
 
 	void saveToFile(const std::string &filename);
 
@@ -68,8 +68,11 @@ public:
 
 private:
 	TextureResourcePtr m_resource;
+#if 0
 	SamplerStatePtr m_samplerState;
-
+#else
+	SamplerDesc m_samplerDesc;
+#endif
 	// for dynamic texture
 	int m_width, m_height;
 	TexFormat m_texformat;

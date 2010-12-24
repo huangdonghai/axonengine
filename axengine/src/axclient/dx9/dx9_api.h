@@ -29,16 +29,16 @@ void dx9CreateWindowTarget(phandle_t h, Handle hwnd, int width, int height);
 void dx9UpdateWindowTarget(phandle_t h, Handle newHwnd, int width, int height);
 void dx9DeleteWindowTarget(phandle_t h);
 
-void dx9CreateSamplerState(phandle_t h, const SamplerStateDesc &samplerState);
+void dx9CreateSamplerState(phandle_t h, const SamplerDesc &samplerState);
 void dx9DeleteSamplerState(phandle_t h);
 
-void dx9CreateBlendState(phandle_t h, const BlendStateDesc &src);
+void dx9CreateBlendState(phandle_t h, const BlendDesc &src);
 void dx9DeleteBlendState(phandle_t h);
 
-void dx9CreateDepthStencilState(phandle_t h, const DepthStencilStateDesc &src);
+void dx9CreateDepthStencilState(phandle_t h, const DepthStencilDesc &src);
 void dx9DeleteDepthStencilState(phandle_t h);
 
-void dx9CreateRasterizerState(phandle_t h, const RasterizerStateDesc &src);
+void dx9CreateRasterizerState(phandle_t h, const RasterizerDesc &src);
 void dx9DeleteRasterizerState(phandle_t h);
 
 void dx9AssignRenderApi();

@@ -73,9 +73,9 @@ void MapAlphaBlock::updateTexture()
 #else
 		m_texture = new Texture(key, AlphaFormat, Map::ChunkPixels, Map::ChunkPixels);
 #endif
-		SamplerStateDesc desc;
-		desc.clampMode = SamplerStateDesc::CM_Clamp;
-		m_texture->setClampMode(SamplerStateDesc::CM_Clamp);
+		SamplerDesc desc;
+		desc.clampMode = SamplerDesc::ClampMode_Clamp;
+		m_texture->setClampMode(SamplerDesc::ClampMode_Clamp);
 	}
 
 	m_texture->uploadSubTexture(Rect(0,0,Map::ChunkPixels,Map::ChunkPixels), &m_data[0][0], AlphaFormat);
@@ -1094,7 +1094,7 @@ void MapZone::initialize(MapTerrain *terrain, int x, int y)
 #else
 	m_normalTexture = new Texture(texname, TexFormat::BGRA8, Map::ZoneTiles, Map::ZoneTiles, Texture::IF_AutoGenMipmap);
 #endif
-	m_normalTexture->setClampMode(SamplerStateDesc::CM_Clamp);
+	m_normalTexture->setClampMode(SamplerDesc::ClampMode_Clamp);
 	// create color texture
 	StringUtil::sprintf(texname, "_zone_color_%d_%d_%d", g_renderSystem->getFrameNum(), m_index.x, m_index.y);
 #if 0
@@ -1104,8 +1104,8 @@ void MapZone::initialize(MapTerrain *terrain, int x, int y)
 #else
 	m_colorTexture = new Texture(texname, TexFormat::DXT1, Map::ZonePixels, Map::ZonePixels, Texture::IF_AutoGenMipmap);
 #endif
-	m_colorTexture->setClampMode(SamplerStateDesc::CM_Clamp);
-	m_colorTexture->setFilterMode(SamplerStateDesc::FM_LinearMipmap);
+	m_colorTexture->setClampMode(SamplerDesc::ClampMode_Clamp);
+	m_colorTexture->setFilterMode(SamplerDesc::FilterMode_LinearMipmap);
 
 	// init primitive
 	m_prim = new ChunkPrim(Primitive::HintStatic);
@@ -1763,7 +1763,7 @@ bool MapTerrain::loadColorTexture(const std::string &map_name)
 #endif
 		if (tex) {
 			z->setColorTexture(tex);
-			tex->setClampMode(SamplerStateDesc::CM_Clamp);
+			tex->setClampMode(SamplerDesc::ClampMode_Clamp);
 		} else {
 			Errorf("can't load color texture");
 		}
