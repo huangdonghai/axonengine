@@ -73,39 +73,39 @@ public:
 	~ApiWrap();
 
 	// api wrapper interface
-	void createTextureFromFileInMemory(phandle_t h, AsioRequest *asioRequest);
-	void createTexture2D(phandle_t result, TexFormat format, int width, int height, int flags = 0);
+	void createTextureFromFileInMemory(phandle_t &h, AsioRequest *asioRequest);
+	void createTexture2D(phandle_t &h, TexFormat format, int width, int height, int flags = 0);
 	void uploadTexture(phandle_t h, void *pixels, TexFormat format, IEventHandler *eventHandler);
 	void uploadSubTexture(phandle_t h, const Rect &rect, const void *pixels, TexFormat format, IEventHandler *eventHandler);
 	void generateMipmap(phandle_t h);
 	void deleteTexture2D(phandle_t h);
 
-	void createVertexBuffer(phandle_t result, int datasize, Primitive::Hint hint);
+	void createVertexBuffer(phandle_t &h, int datasize, Primitive::Hint hint);
 	void uploadVertexBuffer(phandle_t h, int datasize, const void *p, IEventHandler *eventHandler);
 	void deleteVertexBuffer(phandle_t h);
 
-	void createIndexBuffer(phandle_t result, int datasize, Primitive::Hint hint);
+	void createIndexBuffer(phandle_t &h, int datasize, Primitive::Hint hint);
 	void uploadIndexBuffer(phandle_t h, int datasize, const void *p, IEventHandler *eventHandler);
 	void deleteIndexBuffer(phandle_t h);
 
-	void createWindowTarget(phandle_t h, Handle hwnd, int width, int height);
+	void createWindowTarget(phandle_t &h, Handle hwnd, int width, int height);
 	void updateWindowTarget(phandle_t h, Handle newWndId, int width, int height);
 	void deleteWindowTarget(phandle_t h);
 
-	void createQuery(phandle_t h);
+	void createQuery(phandle_t &h);
 	void issueQuery(phandle_t h, AsyncQuery *asioQuery);
 	void deleteQuery(phandle_t h);
 
-	void createSamplerState(phandle_t h, const SamplerStateDesc &desc);
+	void createSamplerState(phandle_t &h, const SamplerStateDesc &desc);
 	void deleteSamplerState(phandle_t h);
 
-	void createBlendState(phandle_t h, const BlendStateDesc &desc);
+	void createBlendState(phandle_t &h, const BlendStateDesc &desc);
 	void deleteBlendState(phandle_t h);
 
-	void createDepthStencilState(phandle_t h, const DepthStencilStateDesc &desc);
+	void createDepthStencilState(phandle_t &h, const DepthStencilStateDesc &desc);
 	void deleteDepthStencilState(phandle_t h);
 
-	void createRasterizerState(phandle_t h, const RasterizerStateDesc &desc);
+	void createRasterizerState(phandle_t &h, const RasterizerStateDesc &desc);
 	void deleteRasterizerState(phandle_t h);
 
 	void setRenderTarget(int index, phandle_t h);
@@ -188,6 +188,9 @@ public:
 	}
 
 protected:
+	phandle_t allocHandle();
+	void freeHandle(phandle_t h);
+
 	typedef void (*delete_func_t)(phandle_t);
 	void addObjectDeletion(delete_func_t func, phandle_t h);
 

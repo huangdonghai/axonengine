@@ -5,7 +5,7 @@
 #include "render_thread.h"
 #include "render_interface.h"
 #include "commandbuf.h"
-#include "sampler_p.h"
+#include "render_state_p.h"
 #include "texture_p.h"
 #include "material_p.h"
 #include "vertexbuffer.h"

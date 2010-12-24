@@ -51,9 +51,9 @@ RenderTarget::RenderTarget(Handle hwnd, const std::string &debugname)
 RenderTarget::~RenderTarget()
 {
 	if (isTexture()) {
-		g_apiWrap->deleteTexture2D(&m_window);
+		g_apiWrap->deleteTexture2D(m_window);
 	} else {
-		g_apiWrap->deleteWindowTarget(&m_window);
+		g_apiWrap->deleteWindowTarget(m_window);
 		SafeDelete(m_gbuffer);
 		SafeDelete(m_lightBuffer);
 	}
@@ -102,9 +102,9 @@ void RenderTarget::setWindowHandle(Handle newId)
 		return;
 
 	if (m_width == -1) {
-		g_apiWrap->createWindowTarget(&m_window, newId, rect.width, rect.height);
+		g_apiWrap->createWindowTarget(m_window, newId, rect.width, rect.height);
 	} else {
-		g_apiWrap->updateWindowTarget(&m_window, newId, rect.width, rect.height);
+		g_apiWrap->updateWindowTarget(m_window, newId, rect.width, rect.height);
 	}
 
 	SafeDelete(m_gbuffer);

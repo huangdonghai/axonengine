@@ -57,12 +57,12 @@ public:
 	phandle_t getPHandle()
 	{
 		if (isTexture()) return m_texture->getPHandle();
-		else return &m_window;
+		else return m_window;
 	}
 
 private:
 	Type m_type;
-	Handle m_window;
+	phandle_t m_window;
 	Texture *m_texture;
 
 	TexFormat m_format;

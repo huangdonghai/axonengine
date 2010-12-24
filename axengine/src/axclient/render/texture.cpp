@@ -23,13 +23,13 @@ Texture::Texture(const std::string &name, InitFlags flags/*=0*/)
 {
 	FixedString key = normalizeKey(name);
 	m_resource = TextureResource::findResource(key, flags);
-	m_samplerState = g_renderSystem->findSamplerState(0);
+	m_samplerState = RenderState::findSamplerState(0);
 }
 
 Texture::Texture(const std::string &debugname, TexFormat format, int width, int height, InitFlags flags /*= 0*/)
 {
 	m_resource = TextureResource::createResource(debugname, format, width, height, flags);
-	m_samplerState = g_renderSystem->findSamplerState(0);
+	m_samplerState = RenderState::findSamplerState(0);
 }
 
 Texture::~Texture()
@@ -100,7 +100,7 @@ FixedString Texture::normalizeKey(const std::string &name)
 
 void Texture::setSamplerState(const SamplerStateDesc &desc)
 {
-	m_samplerState = g_renderSystem->findSamplerState(&desc);
+	m_samplerState = RenderState::findSamplerState(&desc);
 }
 
 const SamplerStateDesc & Texture::getSamplerState() const

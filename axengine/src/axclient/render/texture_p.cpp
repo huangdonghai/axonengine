@@ -30,7 +30,7 @@ TextureResource::TextureResource(const FixedString &key, TexFormat format, int w
 	m_isFileTexture = false;
 	m_fileLoaded = false;
 
-	g_apiWrap->createTexture2D(&m_handle, format, width, height, flags);
+	g_apiWrap->createTexture2D(m_handle, format, width, height, flags);
 
 	setKey(key);
 	ms_resources[key] = this;
@@ -38,17 +38,17 @@ TextureResource::TextureResource(const FixedString &key, TexFormat format, int w
 
 TextureResource::~TextureResource()
 {
-	g_apiWrap->deleteTexture2D(&m_handle);
+	g_apiWrap->deleteTexture2D(m_handle);
 }
 
 void TextureResource::uploadSubTexture(const Rect &rect, const void *pixels, TexFormat format)
 {
-	g_apiWrap->uploadSubTexture(&m_handle, rect, pixels, format, 0);
+	g_apiWrap->uploadSubTexture(m_handle, rect, pixels, format, 0);
 }
 
 void TextureResource::generateMipmap()
 {
-	g_apiWrap->generateMipmap(&m_handle);
+	g_apiWrap->generateMipmap(m_handle);
 }
 
 TextureResourcePtr TextureResource::findResource(const FixedString &name, int flags)
@@ -78,7 +78,7 @@ bool TextureResource::event(Event *e)
 		AsioRequest *request = ace->asioRequest();
 		AX_ASSERT(request->eventHandler() == this);
 		AX_ASSERT(m_asioRequest == request);
-		g_apiWrap->createTextureFromFileInMemory(&m_handle, request);
+		g_apiWrap->createTextureFromFileInMemory(m_handle, request);
 		m_asioRequest = 0;
 		m_fileLoaded = true;
 		return true;

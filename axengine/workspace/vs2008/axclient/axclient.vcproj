@@ -591,6 +591,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\axclient\render\render_state_p.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\axclient\render\render_state_p.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\axclient\render\render_system.cpp"
 				>
 			</File>
@@ -604,14 +612,6 @@
 			</File>
 			<File
 				RelativePath="..\..\..\src\axclient\render\render_world.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\axclient\render\sampler.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\axclient\render\sampler_p.h"
 				>
 			</File>
 			<File
@@ -727,6 +727,10 @@
 				</File>
 				<File
 					RelativePath="..\..\..\include\axclient\render\render_entity.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\include\axclient\render\render_state.h"
 					>
 				</File>
 				<File

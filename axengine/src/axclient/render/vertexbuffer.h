@@ -136,7 +136,7 @@ public:
 			nextPage();
 		}
 
-		result.phandle = &m_pages[m_curIndex];
+		result.phandle = m_pages[m_curIndex];
 		result.offset = m_curOffset;
 		result.writePtr = m_pageCache + m_curOffset;
 
@@ -149,7 +149,7 @@ public:
 	{
 		AX_ASSERT(m_isFrameAllocating);
 		if (m_curIndex>=0) {
-			Traits::uploadPage(&m_pages[m_curIndex], m_curOffset, m_pageCache);
+			Traits::uploadPage(m_pages[m_curIndex], m_curOffset, m_pageCache);
 		}
 
 		m_isFrameAllocating = false;
@@ -189,7 +189,7 @@ protected:
 	void nextPage(bool isAppend = false)
 	{
 		if (m_curIndex >= 0) {
-			Traits::uploadPage(&m_pages[m_curIndex], m_curOffset, m_pageCache);
+			Traits::uploadPage(m_pages[m_curIndex], m_curOffset, m_pageCache);
 		}
 
 		m_curIndex++;
@@ -197,13 +197,13 @@ protected:
 
 		if (m_numPages <= m_curIndex) {
 //			m_pages.push_back(CreatePage(PageSize));
-			Traits::allocPage(&m_pages[m_numPages], PageSize);
+			Traits::allocPage(m_pages[m_numPages], PageSize);
 			m_numPages++;
 		}
 	}
 
 public:
-	Handle m_pages[MAX_PAGES];
+	phandle_t m_pages[MAX_PAGES];
 	int m_numPages;
 	int m_curIndex;
 	int m_curOffset;

@@ -22,7 +22,7 @@ public:
 	void uploadSubTexture(const Rect &rect, const void *pixels, TexFormat format);
 	void generateMipmap();
 
-	phandle_t getPHandle() { return &m_handle; }
+	phandle_t getPHandle() { return m_handle; }
 
 	// implement IEventHandler
 	virtual bool event(Event *e);
@@ -35,7 +35,7 @@ public:
 	static TextureResourcePtr createResource(const FixedString &debugname, TexFormat format, int width, int height, int flags);
 
 private:
-	Handle m_handle;
+	phandle_t m_handle;
 	bool m_isFileTexture;
 	bool m_fileLoaded;
 

@@ -294,14 +294,16 @@ ApiWrap::~ApiWrap()
 {}
 
 
-void ApiWrap::createTextureFromFileInMemory(phandle_t h, AsioRequest *asioRequest)
+void ApiWrap::createTextureFromFileInMemory(phandle_t &h, AsioRequest *asioRequest)
 {
+	h = allocHandle();
 	sAllocCommand(RenderApi::createTextureFromFileInMemory).args(h, asioRequest);
 }
 
-void ApiWrap::createTexture2D(phandle_t result, TexFormat format, int width, int height, int flags /*= 0*/)
+void ApiWrap::createTexture2D(phandle_t &h, TexFormat format, int width, int height, int flags /*= 0*/)
 {
-	sAllocCommand(RenderApi::createTexture2D).args(result, format, width, height, flags);
+	h = allocHandle();
+	sAllocCommand(RenderApi::createTexture2D).args(h, format, width, height, flags);
 }
 
 void ApiWrap::uploadTexture( phandle_t h, void *pixels, TexFormat format, IEventHandler *eventHandler)
@@ -324,9 +326,10 @@ void ApiWrap::deleteTexture2D(phandle_t h)
 	addObjectDeletion(RenderApi::deleteTexture2D, h);
 }
 
-void ApiWrap::createVertexBuffer(phandle_t result, int datasize, Primitive::Hint hint)
+void ApiWrap::createVertexBuffer(phandle_t &h, int datasize, Primitive::Hint hint)
 {
-	sAllocCommand(RenderApi::createVertexBuffer).args(result, datasize, hint);
+	h = allocHandle();
+	sAllocCommand(RenderApi::createVertexBuffer).args(h, datasize, hint);
 }
 
 void ApiWrap::uploadVertexBuffer(phandle_t h, int datasize, const void *p, IEventHandler *eventHandler)
@@ -341,9 +344,10 @@ void ApiWrap::deleteVertexBuffer(phandle_t h)
 	addObjectDeletion(RenderApi::deleteVertexBuffer, h);
 }
 
-void ApiWrap::createIndexBuffer(phandle_t result, int datasize, Primitive::Hint hint)
+void ApiWrap::createIndexBuffer(phandle_t &h, int datasize, Primitive::Hint hint)
 {
-	sAllocCommand(RenderApi::createIndexBuffer).args(result, datasize, hint);
+	h = allocHandle();
+	sAllocCommand(RenderApi::createIndexBuffer).args(h, datasize, hint);
 }
 
 void ApiWrap::uploadIndexBuffer(phandle_t h, int datasize, const void *p, IEventHandler *eventHandler)
@@ -363,8 +367,9 @@ void ApiWrap::clear(const RenderClearer &clearer)
 	sAllocCommand(RenderApi::clear).args(clearer);
 }
 
-void ApiWrap::createSamplerState(phandle_t h, const SamplerStateDesc &desc)
+void ApiWrap::createSamplerState(phandle_t &h, const SamplerStateDesc &desc)
 {
+	h = allocHandle();
 	sAllocCommand(RenderApi::createSamplerState).args(h, desc);
 }
 
@@ -373,8 +378,9 @@ void ApiWrap::deleteSamplerState(phandle_t h)
 	addObjectDeletion(RenderApi::deleteSamplerState, h);
 }
 
-void ApiWrap::createBlendState(phandle_t h, const BlendStateDesc &desc)
+void ApiWrap::createBlendState(phandle_t &h, const BlendStateDesc &desc)
 {
+	h = allocHandle();
 	sAllocCommand(RenderApi::createBlendState).args(h, desc);
 }
 
@@ -383,8 +389,9 @@ void ApiWrap::deleteBlendState(phandle_t h)
 	addObjectDeletion(RenderApi::deleteSamplerState, h);
 }
 
-void ApiWrap::createDepthStencilState(phandle_t h, const DepthStencilStateDesc &desc)
+void ApiWrap::createDepthStencilState(phandle_t &h, const DepthStencilStateDesc &desc)
 {
+	h = allocHandle();
 	sAllocCommand(RenderApi::createDepthStencilState).args(h, desc);
 }
 
@@ -393,8 +400,9 @@ void ApiWrap::deleteDepthStencilState(phandle_t h)
 	addObjectDeletion(RenderApi::deleteDepthStencilState, h);
 }
 
-void ApiWrap::createRasterizerState(phandle_t h, const RasterizerStateDesc &desc)
+void ApiWrap::createRasterizerState(phandle_t &h, const RasterizerStateDesc &desc)
 {
+	h = allocHandle();
 	sAllocCommand(RenderApi::createRasterizerState).args(h, desc);
 }
 
@@ -415,8 +423,9 @@ void ApiWrap::addObjectDeletion(delete_func_t func, phandle_t h)
 	m_numObjectDeletions++;
 }
 
-void ApiWrap::createWindowTarget(phandle_t h, Handle hwnd, int width, int height)
+void ApiWrap::createWindowTarget(phandle_t &h, Handle hwnd, int width, int height)
 {
+	h = allocHandle();
 	sAllocCommand(RenderApi::createWindowTarget).args(h, hwnd, width, height);
 }
 
@@ -554,6 +563,16 @@ int ApiWrap::runCommands()
 	}
 
 	return count;
+}
+
+phandle_t ApiWrap::allocHandle()
+{
+	return new Handle;
+}
+
+void ApiWrap::freeHandle( phandle_t h )
+{
+	delete h;
 }
 
 

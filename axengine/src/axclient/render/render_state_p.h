@@ -1,5 +1,5 @@
-#ifndef AX_SAMPLERDATA_H
-#define AX_SAMPLERDATA_H
+#ifndef AX_RENDER_STATE_P_H
+#define AX_RENDER_STATE_P_H
 
 AX_BEGIN_NAMESPACE
 
@@ -9,19 +9,16 @@ extern ApiWrap *g_apiWrap;
 class SamplerState : public RefObject
 {
 public:
-	SamplerState(const SamplerStateDesc &desc)
-	{ g_apiWrap->createSamplerState(&m_h, desc); }
+	SamplerState(const SamplerStateDesc &desc);
 
-	virtual ~SamplerState()
-	{ g_apiWrap->deleteSamplerState(&m_h); }
+	virtual ~SamplerState();
 
 	const SamplerStateDesc &getDesc() const
 	{ return m_desc; }
 
-
 private:
 	SamplerStateDesc m_desc;
-	Handle m_h;
+	phandle_t m_h;
 };
 
 class BlendState : public RefObject
@@ -31,7 +28,8 @@ public:
 	virtual ~BlendState();
 
 private:
-	Handle m_h;
+	BlendStateDesc m_desc;
+	phandle_t m_h;
 };
 
 class DepthStencilState : public RefObject
@@ -41,7 +39,8 @@ public:
 	virtual ~DepthStencilState();
 
 private:
-	Handle m_h;
+	DepthStencilStateDesc m_desc;
+	phandle_t m_h;
 };
 
 class RasterizerState : public RefObject
@@ -51,7 +50,8 @@ public:
 	virtual ~RasterizerState();
 
 private:
-	Handle m_h;
+	RasterizerStateDesc m_desc;
+	phandle_t m_h;
 };
 
 class RenderState {
@@ -90,14 +90,19 @@ public:
 			break;
 		}
 
-		m_blendState = g_renderSystem->findBlendState(&blend_desc);
-		m_depthStencilState = g_renderSystem->findDepthStencilState(&ds_desc);
-		m_rasterizerState = g_renderSystem->findRasterizerState(&rs_desc);
+		m_blendState = RenderState::findBlendState(&blend_desc);
+		m_depthStencilState = RenderState::findDepthStencilState(&ds_desc);
+		m_rasterizerState = RenderState::findRasterizerState(&rs_desc);
 	}
 
 	~RenderState()
 	{
 	}
+
+	static SamplerStatePtr findSamplerState(const SamplerStateDesc *desc);
+	static BlendStatePtr findBlendState(const BlendStateDesc *desc);
+	static RasterizerStatePtr findRasterizerState(const RasterizerStateDesc *desc);
+	static DepthStencilStatePtr findDepthStencilState(const DepthStencilStateDesc *desc);
 
 public:
 	BlendStatePtr m_blendState;
@@ -107,4 +112,4 @@ public:
 
 AX_END_NAMESPACE
 
-#endif // AX_SAMPLERDATA_H
+#endif // AX_RENDER_STATE_P_H
