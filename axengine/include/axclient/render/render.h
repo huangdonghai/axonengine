@@ -108,6 +108,25 @@ struct DepthStencilStateDesc {
 		stencilFuncBackface = stencilFunc;
 	}
 
+	size_t hash() const
+	{
+		int size = sizeof(*this);
+		byte_t const *bytes = reinterpret_cast<byte_t const *>(this);
+
+		size_t result = 0;
+		for (int i = 0; i < size; i++) {
+			hash_combine(result, bytes[i]);
+		}
+		return result;
+	}
+
+	operator size_t() const { return hash(); }
+
+	bool operator==(const DepthStencilStateDesc &rhs) const
+	{
+		return ::memcmp(this, &rhs, sizeof(*this)) == 0;
+	}
+
 	bool depthEnable;
 	bool depthWritable;
 	CompareFunc depthFunc;
@@ -151,6 +170,25 @@ struct RasterizerStateDesc {
 		scissorEnable = true;
 		multisampleEnable = false;
 		antialiasedLineEnable = false;
+	}
+
+	size_t hash() const
+	{
+		int size = sizeof(*this);
+		byte_t const *bytes = reinterpret_cast<byte_t const *>(this);
+
+		size_t result = 0;
+		for (int i = 0; i < size; i++) {
+			hash_combine(result, bytes[i]);
+		}
+		return result;
+	}
+
+	operator size_t() const { return hash(); }
+
+	bool operator==(const RasterizerStateDesc &rhs) const
+	{
+		return ::memcmp(this, &rhs, sizeof(*this)) == 0;
 	}
 
 	FillMode fillMode;
@@ -197,6 +235,25 @@ struct BlendStateDesc {
 		blendOpAlpha = blendOp;
 
 		renderTargetWriteMask = 0xff;
+	}
+
+	size_t hash() const
+	{
+		int size = sizeof(*this);
+		byte_t const *bytes = reinterpret_cast<byte_t const *>(this);
+
+		size_t result = 0;
+		for (int i = 0; i < size; i++) {
+			hash_combine(result, bytes[i]);
+		}
+		return result;
+	}
+
+	operator size_t() const { return hash(); }
+
+	bool operator==(const BlendStateDesc &rhs) const
+	{
+		return ::memcmp(this, &rhs, sizeof(*this)) == 0;
 	}
 
 	bool alphaToCoverageEnable;

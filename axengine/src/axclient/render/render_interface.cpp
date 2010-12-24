@@ -447,7 +447,7 @@ void ApiWrap::setGlobalTexture(GlobalTextureId gt, Texture *tex)
 	sAllocCommand(RenderApi::setGlobalTexture).args(gt, tex->getPHandle());
 }
 
-void ApiWrap::setMaterialTexture(Texture *tex[])
+void ApiWrap::setMaterialTexture(Texture * const tex[])
 {
 	phandle_t *handles = allocType<phandle_t>(MaterialTextureId::MaxType);
 	for (int i = 0; i < MaterialTextureId::MaxType; i++) {
@@ -1167,6 +1167,9 @@ void RenderContext::setMaterialUniforms(Material *mat)
 		const FloatSeq &value = it->second;
 		g_apiWrap->setShaderConst(it->first, value.size() * sizeof(float),  &value[0]);
 	}
+
+	// set material textures
+	g_apiWrap->setMaterialTexture(mat->getTextures());
 }
 
 void RenderContext::cacheFrame(RenderFrame *queue)

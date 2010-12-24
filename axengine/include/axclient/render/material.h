@@ -58,6 +58,7 @@ public:
 	// texture setting and getting
 	Texture *getTexture(int sample) const;
 	void setTexture(int sampler, Texture *tex);
+	Texture * const * getTextures() const { return m_textures; }
 
 	// parameter setting and getting
 	void setParameter(const std::string &name, int num, const float *ptr);

@@ -116,7 +116,7 @@ public:
 	void setShaderConst(const FixedString &name, int size, const float *p);
 
 	void setGlobalTexture(GlobalTextureId gt, Texture *tex);
-	void setMaterialTexture(Texture *tex[]);
+	void setMaterialTexture(Texture * const tex[]);
 
 	void setVertices(phandle_t vb, VertexType vt, int offset);
 	void setVerticesInstanced(phandle_t vb, VertexType vt, int offset, phandle_t inb, int incount);

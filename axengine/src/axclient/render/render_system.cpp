@@ -409,7 +409,7 @@ Rect RenderSystem::getWindowRect( Handle hwnd )
 	return Rect(0, 0, r.right, r.bottom);
 }
 
-SamplerStatePtr RenderSystem::findSamplerState( const SamplerStateDesc *desc )
+SamplerStatePtr RenderSystem::findSamplerState(const SamplerStateDesc *desc)
 {
 	if (!desc)
 		desc = &m_defaultSamplerStateDesc;
@@ -443,17 +443,47 @@ TextureWrapPtr RenderSystem::createTexture(const String &debugname, TexFormat fo
 
 BlendStatePtr RenderSystem::findBlendState(const BlendStateDesc *desc)
 {
-	return BlendStatePtr();
+	if (!desc)
+		desc = &m_defaultBlendStateDesc;
+
+	BlendStateDict::const_iterator it = m_blendStateDict.find(*desc);
+	if (it != m_blendStateDict.end())
+		return it->second;
+
+	BlendState *result = new BlendState(*desc);
+	m_blendStateDict[*desc] = result;
+
+	return result;
 }
 
 RasterizerStatePtr RenderSystem::findRasterizerState(const RasterizerStateDesc *desc)
 {
-	return RasterizerStatePtr();
+	if (!desc)
+		desc = &m_defaultRasterizerStateDesc;
+
+	RasterizerStateDict::const_iterator it = m_rasterizerStateDict.find(*desc);
+	if (it != m_rasterizerStateDict.end())
+		return it->second;
+
+	RasterizerState *result = new RasterizerState(*desc);
+	m_rasterizerStateDict[*desc] = result;
+
+	return result;
 }
 
 DepthStencilStatePtr RenderSystem::findDepthStencilState(const DepthStencilStateDesc *desc)
 {
-	return DepthStencilStatePtr();
+	if (!desc)
+		desc = &m_defaultDepthStencilStateDesc;
+
+	DepthStencilStateDict::const_iterator it = m_depthStencilStateDict.find(*desc);
+	if (it != m_depthStencilStateDict.end())
+		return it->second;
+
+	DepthStencilState *result = new DepthStencilState(*desc);
+	m_depthStencilStateDict[*desc] = result;
+
+	return result;
 }
 
 void RenderSystem::tick()

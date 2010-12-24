@@ -160,8 +160,6 @@ typedef std::vector<Primitive*> Primitives;
 class AX_API PointPrim : public Primitive
 {
 public:
-	typedef DebugVertex VertexType;
-
 	PointPrim(Hint hint);
 	virtual ~PointPrim();
 
@@ -262,8 +260,6 @@ private:
 class AX_API MeshPrim : public Primitive
 {
 public:
-	typedef MeshVertex Vertex;
-
 	MeshPrim(Hint hint);
 	virtual ~MeshPrim();
 
@@ -394,8 +390,6 @@ public:
 	enum {
 		MAX_LAYERS = 4
 	};
-	typedef ChunkVertex Vertex;
-
 	struct Layer {
 		Texture *alphaTex;
 		Material *detailMat;

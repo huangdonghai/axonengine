@@ -968,7 +968,7 @@ bool MeshPrim::setupPolygon(MeshPrim*& mesh, int numverts, const Vector3 *verts,
 			mesh->m_indexes[i*3+2] = i + 2;
 		}
 		mesh->unlockVertexes();
-		memset(mesh->m_vertexes, 0, numverts * sizeof(Vertex));
+		memset(mesh->m_vertexes, 0, numverts * sizeof(MeshVertex));
 		mesh->setMaterial(material);
 	}
 
