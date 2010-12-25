@@ -273,10 +273,12 @@ technique main {
 		VERTEXPROGRAM = compile VP_3_0 VP_main();
 		FRAGMENTPROGRAM = compile FP_3_0 FP_main();
 
+#if 0
 		DEPTHTEST = true;
 		DEPTHMASK = false;
 		CULL_NONE;
 		BLEND_NONE;
+#endif
 	}
 }
 

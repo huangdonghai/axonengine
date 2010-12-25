@@ -34,8 +34,9 @@ Material::Material(const std::string &name)
 	m_p2tHeight = 1;
 #endif
 	TypeZeroArray(m_features);
+#if 0
 	TypeZeroArray(m_literals);
-
+#endif
 	FixedString key = normalizeKey(name);
 	init(key);
 }
@@ -182,12 +183,13 @@ const ShaderMacro &Material::getShaderMacro()
 				m_shaderMacro.setMacro(ShaderMacro::Flag(ShaderMacro::G_FEATURE0 + i));
 			}
 		}
-
+#if 0
 		for (int i = 0; i < MaterialDecl::MAX_LITERALS; i++) {
 			if (m_literals[i]) {
 				m_shaderMacro.setMacro(ShaderMacro::Flag(ShaderMacro::G_LITERAL0 + i), m_literals[i]);
 			}
 		}
+#endif
 	}
 
 	return m_shaderMacro;

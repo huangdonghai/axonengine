@@ -194,7 +194,7 @@ struct RasterizerDesc {
 
 	union {
 		struct {
-			FillMode fillMode : 1;
+			FillMode fillMode : 2;
 			CullMode cullMode : 2;
 			int frontCounterClockwise : 1;
 			int depthBias : 1;
@@ -242,7 +242,7 @@ struct BlendDesc {
 		destBlendAlpha = destBlend;
 		blendOpAlpha = blendOp;
 
-		renderTargetWriteMask = 0xff;
+		renderTargetWriteMask = 0xf;
 	}
 
 	size_t hash() const

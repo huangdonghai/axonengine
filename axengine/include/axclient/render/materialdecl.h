@@ -150,7 +150,9 @@ public:
 
 	enum {
 		MAX_FEATURES = 8,
+#if 0
 		MAX_LITERALS = 8
+#endif
 	};
 
 	// defined in material
@@ -213,8 +215,9 @@ private:
 
 	// features and literals
 	bool m_features[MAX_FEATURES];
+#if 0
 	int m_literals[MAX_LITERALS];
-
+#endif
 	// manager
 	static MaterialDecl *ms_defaulted;
 	typedef Dict<FixedString, MaterialDecl*> MaterialDeclDict;

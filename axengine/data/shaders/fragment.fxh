@@ -84,11 +84,7 @@ half3 FinalOutput(half3 input) {
 	return input;
 #endif
 
-#if 0 && G_REFLECTION
-	return input / MAX_EXPOSURE;
-#else
 	return input * g_exposure.x;
-#endif
 //	return input * 0.25;
 //	half3 c = input * g_exposure.y;
 //	return c / (1 + c);

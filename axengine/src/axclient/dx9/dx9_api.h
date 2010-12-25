@@ -10,6 +10,7 @@ bool CheckIfSupportHardwareMipmapGeneration(D3DFORMAT d3dformat, DWORD d3dusage)
 
 // render api
 
+#if 0
 void dx9CreateTextureFromFileInMemory(phandle_t h, AsioRequest *asioRequest);
 void dx9CreateTexture2D(phandle_t h, TexFormat format, int width, int height, int flags);
 void dx9UploadTexture(phandle_t h, const void *pixels, TexFormat format, IEventHandler *eventHandler);
@@ -29,7 +30,6 @@ void dx9CreateWindowTarget(phandle_t h, Handle hwnd, int width, int height);
 void dx9UpdateWindowTarget(phandle_t h, Handle newHwnd, int width, int height);
 void dx9DeleteWindowTarget(phandle_t h);
 
-#if 0
 void dx9CreateSamplerState(phandle_t h, const SamplerDesc &samplerState);
 void dx9DeleteSamplerState(phandle_t h);
 

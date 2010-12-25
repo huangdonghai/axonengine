@@ -180,10 +180,11 @@ technique Update {
     pass Pass1 {
 		VertexShader = compile VP_3_0 VP_main();
 		PixelShader = compile FP_3_0 FP_main();
-
+#if 0
 		DEPTHTEST = false;
 		DEPTHMASK = false;
 		CULL_ENABLED;
 		BLEND_NONE;
+#endif
     }
 }

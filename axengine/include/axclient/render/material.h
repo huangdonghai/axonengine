@@ -117,9 +117,9 @@ private:
 	Matrix4 m_baseTcMatrix;
 
 	bool m_features[MaterialDecl::MAX_FEATURES];
+#if 0
 	int m_literals[MaterialDecl::MAX_LITERALS];
 
-#if 0
 	// pixel to texel conversion
 	bool m_p2tEnabled;
 	int m_p2tWidth, m_p2tHeight;
@@ -178,7 +178,7 @@ inline bool Material::isFeatureEnabled(int index) const
 	AX_ASSERT(index >= 0 && index < MaterialDecl::MAX_FEATURES);
 	return m_features[index];
 }
-
+#if 0
 inline void Material::setLiteral(int index, int value)
 {
 	AX_ASSERT(index >= 0 && index < MaterialDecl::MAX_LITERALS);
@@ -192,20 +192,20 @@ inline int Material::getLiteral(int index) const
 	AX_ASSERT(index >= 0 && index < MaterialDecl::MAX_LITERALS);
 	return m_literals[index];
 }
-
+#endif
 inline void Material::clearFeatures()
 {
 	m_shaderMacroNeedRegen = true;
 	TypeZeroArray(m_features);
 }
 
+#if 0
 inline void Material::clearLiterals()
 {
 	m_shaderMacroNeedRegen = true;
 	TypeZeroArray(m_literals);
 }
 
-#if 0
 inline void Material::setPixelToTexel(int width, int height)
 {
 	m_p2tEnabled = true;

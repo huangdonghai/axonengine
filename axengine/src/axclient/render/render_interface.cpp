@@ -368,7 +368,7 @@ void ApiWrap::clear(const RenderClearer &clearer)
 {
 	sAllocCommand(RenderApi::clear).args(clearer);
 }
-
+#if 0
 void ApiWrap::createSamplerState(phandle_t &h, const SamplerDesc &desc)
 {
 	h = allocHandle();
@@ -412,7 +412,7 @@ void ApiWrap::deleteRasterizerState(phandle_t h)
 {
 	addObjectDeletion(RenderApi::deleteRasterizerState, h);
 }
-
+#endif
 void ApiWrap::addObjectDeletion(delete_func_t func, phandle_t h)
 {
 	if (m_numObjectDeletions >= MAX_DELETE_COMMANDS) {
@@ -740,9 +740,9 @@ void RenderContext::drawScene_world(RenderScene *scene, const RenderClearer &cle
 			drawPass_shadowGen(sub);
 		} else if (sub->sceneType == RenderScene::Reflection) {
 			BEGIN_PIX("ReflectionGen");
-			g_shaderMacro.setMacro(ShaderMacro::G_REFLECTION);
+//			g_shaderMacro.setMacro(ShaderMacro::G_REFLECTION);
 			drawScene_worldSub(sub);
-			g_shaderMacro.resetMacro(ShaderMacro::G_REFLECTION);
+//			g_shaderMacro.resetMacro(ShaderMacro::G_REFLECTION);
 			END_PIX();
 		} else if (sub->sceneType == RenderScene::RenderToTexture) {
 			BEGIN_PIX("RenderToTexture");

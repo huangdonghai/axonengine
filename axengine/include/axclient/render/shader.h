@@ -315,7 +315,7 @@ public:
 private:
 	class ShaderMacroDefs;
 	static ShaderMacroDefs *m_defs;
-	int m_data[4];
+	int m_data[1];
 };
 
 //-------------------------------------------------------------------------

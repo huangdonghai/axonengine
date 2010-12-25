@@ -111,11 +111,12 @@ technique main {
     pass p1 {
         VERTEXPROGRAM = compile VP_2_0 VP_main();
 		FRAGMENTPROGRAM = compile FP_2_0 FP_main();
-
+#if 0
 	    DEPTHTEST = false;
 		DEPTHMASK = false;
 		CULL_NONE;
 		BLEND_BLEND;
+#endif
     }
 }
 

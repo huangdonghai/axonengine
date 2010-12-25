@@ -940,9 +940,9 @@ void GLthread::drawScene_world(RenderScene *scene, const Clearer &clearer) {
 		if (sub->sceneType == RenderScene::ShadowGen) {
 			drawPass_shadowGen(sub);
 		} else if (sub->sceneType == RenderScene::Reflection) {
-			g_shaderMacro.setMacro(ShaderMacro::G_REFLECTION);
+			//g_shaderMacro.setMacro(ShaderMacro::G_REFLECTION);
 			drawScene_worldSub(sub);
-			g_shaderMacro.resetMacro(ShaderMacro::G_REFLECTION);
+			//g_shaderMacro.resetMacro(ShaderMacro::G_REFLECTION);
 		} else if (sub->sceneType == RenderScene::RenderToTexture) {
 			drawScene_worldSub(sub);
 		}

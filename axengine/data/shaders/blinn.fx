@@ -252,7 +252,7 @@ technique zpass {
     pass p0 {
         VertexShader = compile VP_2_0 VP_gpass();
 		PixelShader = compile FP_2_0 FP_gpass();
-
+#if 0
 	    DEPTHTEST = true;
 #if S_DECAL
 		DEPTHMASK = false;
@@ -261,6 +261,7 @@ technique zpass {
 #endif
 		CULL_ENABLED;
 		BLEND_NONE;
+#endif
     }
 }
 
@@ -269,10 +270,12 @@ technique shadowgen {
         VertexShader = compile VP_2_0 VP_zpass();
 		PixelShader = compile FP_2_0 FP_zpass();
 
+#if 0
 	    DEPTHTEST = true;
 		DEPTHMASK = true;
 		CULL_ENABLED;
 		BLEND_NONE;
+#endif
     }
 }
 
@@ -282,6 +285,7 @@ technique main {
         VertexShader = compile VP_2_0 VP_main();
         PixelShader = compile FP_2_0 FP_main();
 
+#if 0
 	    DEPTHTEST = true;
 		DEPTHMASK_MAIN;
 		CULL_ENABLED;
@@ -289,6 +293,7 @@ technique main {
 		BLEND_BLEND;
 #else
 		BLEND_NONE;
+#endif
 #endif
     }
 }

@@ -27,7 +27,7 @@ namespace {
 		case DepthStencilDesc::CompareFunc_NotEqual: return D3DCMP_NOTEQUAL;
 		case DepthStencilDesc::CompareFunc_GreaterEqual: return D3DCMP_GREATEREQUAL;
 		case DepthStencilDesc::CompareFunc_Always: return D3DCMP_ALWAYS;
-		default: AX_ASSERT(0); return D3DCMP_NEVER;
+		default: AX_WRONGPLACE; return D3DCMP_NEVER;
 		}
 	}
 
@@ -42,23 +42,66 @@ namespace {
 		case DepthStencilDesc::StencilOp_Invert: return D3DSTENCILOP_INVERT;
 		case DepthStencilDesc::StencilOp_Increment: return D3DSTENCILOP_INCR;
 		case DepthStencilDesc::StencilOp_Decrement: return D3DSTENCILOP_DECR;
-		default: AX_ASSERT(0); return D3DSTENCILOP_KEEP;
+		default: AX_WRONGPLACE; return D3DSTENCILOP_KEEP;
 		}
 	}
 
 	inline D3DFILLMODE trFillMode(RasterizerDesc::FillMode mode)
 	{
-
+		switch (mode) {
+		case RasterizerDesc::FillMode_Point: return D3DFILL_POINT;
+		case RasterizerDesc::FillMode_Wireframe: return D3DFILL_WIREFRAME;
+		case RasterizerDesc::FillMode_Solid: return D3DFILL_SOLID;
+		default: AX_WRONGPLACE; return D3DFILL_SOLID;
+		}
 	}
 
 	inline D3DCULL trCullMode(bool frontCounterClockwise, RasterizerDesc::CullMode mode)
 	{
-
+		if (frontCounterClockwise) {
+			switch (mode) {
+			case RasterizerDesc::CullMode_Front: return D3DCULL_CCW;
+			case RasterizerDesc::CullMode_Back: return D3DCULL_CW;
+			case RasterizerDesc::CullMode_None: return D3DCULL_NONE;
+			default: AX_WRONGPLACE; return D3DCULL_NONE;
+			}
+		} else {
+			switch (mode) {
+			case RasterizerDesc::CullMode_Front: return D3DCULL_CW;
+			case RasterizerDesc::CullMode_Back: return D3DCULL_CCW;
+			case RasterizerDesc::CullMode_None: return D3DCULL_NONE;
+			default: AX_WRONGPLACE; return D3DCULL_NONE;
+			}
+		}
 	}
 
-	inline D3DBLEND trBlendFactor(BlendDesc::BlendFactor factor) {}
+	inline D3DBLEND trBlendFactor(BlendDesc::BlendFactor factor)
+	{
+		switch (factor) {
+		case BlendDesc::BlendFactor_Zero: return D3DBLEND_ZERO;
+		case BlendDesc::BlendFactor_One: return D3DBLEND_ONE;
+		case BlendDesc::BlendFactor_SrcColor: return D3DBLEND_SRCCOLOR;
+		case BlendDesc::BlendFactor_OneMinusSrcColor: return D3DBLEND_INVSRCCOLOR;
+		case BlendDesc::BlendFactor_DstColor: return D3DBLEND_DESTCOLOR;
+		case BlendDesc::BlendFactor_OneMinusDstColor: return D3DBLEND_INVDESTCOLOR;
+		case BlendDesc::BlendFactor_SrcAlpha: return D3DBLEND_SRCALPHA;
+		case BlendDesc::BlendFactor_OneMinusSrcAlpha: return D3DBLEND_INVSRCALPHA;
+		case BlendDesc::BlendFactor_SrcAlphaSaturate: return D3DBLEND_SRCALPHASAT;
+		default: AX_WRONGPLACE; return D3DBLEND_ZERO;
+		}
+	}
 
-	inline D3DBLENDOP trBlendOp(BlendDesc::BlendOp op) {}
+	inline D3DBLENDOP trBlendOp(BlendDesc::BlendOp op)
+	{
+		switch (op) {
+		case BlendDesc::BlendOp_Add: return D3DBLENDOP_ADD;
+		case BlendDesc::BlendOp_Subtract: return D3DBLENDOP_SUBTRACT;
+		case BlendDesc::BlendOp_RevSubtract: return D3DBLENDOP_REVSUBTRACT;
+		case BlendDesc::BlendOp_Min: return D3DBLENDOP_MIN;
+		case BlendDesc::BlendOp_Max: return D3DBLENDOP_MAX;
+		default: AX_WRONGPLACE; return D3DBLENDOP_ADD;
+		}
+	}
 
 } // namespace
 
@@ -181,6 +224,10 @@ DX9_DepthStencilState * DX9_DepthStencilState::find( const DepthStencilDesc &des
 	return new DX9_DepthStencilState(desc);
 }
 
+inline DWORD F2DW(FLOAT f)
+{
+	return *((DWORD*)&f);
+}
 
 DX9_RasterizerState::DX9_RasterizerState( const RasterizerDesc &desc )
 {
@@ -190,7 +237,16 @@ DX9_RasterizerState::DX9_RasterizerState( const RasterizerDesc &desc )
 	dx9_device->SetRenderState(D3DRS_FILLMODE, trFillMode(m_desc.fillMode));
 	dx9_device->SetRenderState(D3DRS_CULLMODE, trCullMode(m_desc.frontCounterClockwise, m_desc.cullMode));
 
-	if (m_desc.depthBias) {}
+	if (m_desc.depthBias) {
+		float factor = gl_shadowOffsetFactor.getFloat();
+		float units = gl_shadowOffsetUnits.getFloat() / 0x10000;
+
+		dx9_device->SetRenderState(D3DRS_DEPTHBIAS, F2DW(units));
+		dx9_device->SetRenderState(D3DRS_SLOPESCALEDEPTHBIAS, F2DW(factor));
+	} else {
+		dx9_device->SetRenderState(D3DRS_DEPTHBIAS, 0);
+		dx9_device->SetRenderState(D3DRS_SLOPESCALEDEPTHBIAS, 0);
+	}
 
 	dx9_device->SetRenderState(D3DRS_SCISSORTESTENABLE, m_desc.scissorEnable);
 
@@ -232,6 +288,28 @@ DX9_BlendState::DX9_BlendState(const BlendDesc &desc)
 DX9_BlendState::~DX9_BlendState()
 {
 	s_blendStateDict.erase(m_desc);
+
+	if (!m_desc.blendEnable) {
+		dx9_device->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
+		dx9_device->SetRenderState(D3DRS_SEPARATEALPHABLENDENABLE, FALSE);
+
+		dx9_device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE);
+		dx9_device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ZERO);
+		dx9_device->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
+	} else {
+		dx9_device->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
+		dx9_device->SetRenderState(D3DRS_SEPARATEALPHABLENDENABLE, TRUE);
+
+		dx9_device->SetRenderState(D3DRS_SRCBLEND, trBlendFactor(m_desc.srcBlend));
+		dx9_device->SetRenderState(D3DRS_DESTBLEND, trBlendFactor(m_desc.destBlend));
+		dx9_device->SetRenderState(D3DRS_BLENDOP, trBlendOp(m_desc.blendOp));
+
+		dx9_device->SetRenderState(D3DRS_SRCBLENDALPHA, trBlendFactor(m_desc.srcBlendAlpha));
+		dx9_device->SetRenderState(D3DRS_DESTBLENDALPHA, trBlendFactor(m_desc.destBlendAlpha));
+		dx9_device->SetRenderState(D3DRS_BLENDOPALPHA, trBlendOp(m_desc.blendOpAlpha));
+	}
+
+	dx9_device->SetRenderState(D3DRS_COLORWRITEENABLE, m_desc.renderTargetWriteMask);
 
 	SAFE_RELEASE(m_stateBlock);
 }

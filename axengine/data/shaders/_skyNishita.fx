@@ -96,10 +96,11 @@ technique Render
 	{
 		VERTEXPROGRAM = compile VP_2_0 VP_main();
 		FRAGMENTPROGRAM = compile FP_2_0 FP_main();
-
+#if 0
 		DEPTHTEST = true;
 		DEPTHMASK = true;
 		CULL_ENABLED;
 		BLEND_NONE;
+#endif
 	}
 }

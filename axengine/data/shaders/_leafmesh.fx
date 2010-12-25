@@ -233,11 +233,6 @@ technique zpass {
 	pass p0 {
 		VERTEXPROGRAM = compile VP_2_0 VP_gpass();
 		FRAGMENTPROGRAM = compile FP_2_0 FP_gpass();
-
-		DEPTHTEST = true;
-		DEPTHMASK = true;
-		CULL_NONE;
-		BLEND_NONE;
 	}
 }
 
@@ -245,11 +240,6 @@ technique shadowgen {
 	pass p0 {
 		VERTEXPROGRAM = compile VP_2_0 VP_zpass();
 		FRAGMENTPROGRAM = compile FP_2_0 FP_zpass();
-
-		DEPTHTEST = true;
-		DEPTHMASK = true;
-		CULL_NONE;
-		BLEND_NONE;
 	}
 }
 
@@ -257,11 +247,6 @@ technique main {
 	pass p0 {
 		VERTEXPROGRAM = compile VP_2_0 VP_main();
 		FRAGMENTPROGRAM = compile FP_2_0 FP_main();
-
-		DEPTHTEST = true;
-		DEPTHMASK_MAIN;
-		CULL_NONE;
-		BLEND_NONE;
 	}
 }
 

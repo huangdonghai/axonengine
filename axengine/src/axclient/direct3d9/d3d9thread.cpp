@@ -771,9 +771,9 @@ void D3D9Thread::drawScene_world(RenderScene *scene, const D3D9clearer &clearer)
 			drawPass_shadowGen(sub);
 		} else if (sub->sceneType == RenderScene::Reflection) {
 			BEGIN_PIX("ReflectionGen");
-			g_shaderMacro.setMacro(ShaderMacro::G_REFLECTION);
+			//g_shaderMacro.setMacro(ShaderMacro::G_REFLECTION);
 			drawScene_worldSub(sub);
-			g_shaderMacro.resetMacro(ShaderMacro::G_REFLECTION);
+			//g_shaderMacro.resetMacro(ShaderMacro::G_REFLECTION);
 			END_PIX();
 		} else if (sub->sceneType == RenderScene::RenderToTexture) {
 			BEGIN_PIX("RenderToTexture");

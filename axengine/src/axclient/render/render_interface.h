@@ -97,7 +97,7 @@ public:
 	void createQuery(phandle_t &h);
 	void issueQuery(phandle_t h, AsyncQuery *asioQuery);
 	void deleteQuery(phandle_t h);
-
+#if 0
 	void createSamplerState(phandle_t &h, const SamplerDesc &desc);
 	void deleteSamplerState(phandle_t h);
 
@@ -109,7 +109,7 @@ public:
 
 	void createRasterizerState(phandle_t &h, const RasterizerDesc &desc);
 	void deleteRasterizerState(phandle_t h);
-
+#endif
 	void setRenderTarget(int index, phandle_t h);
 	void setDepthStencil(phandle_t h);
 

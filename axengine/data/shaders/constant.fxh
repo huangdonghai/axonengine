@@ -30,6 +30,7 @@ read the license and understand and accept it fully.
 #if G_D3D
 #	define VERTEXPROGRAM		VertexShader
 #	define FRAGMENTPROGRAM		PixelShader
+/*
 #	define DEPTHTEST			ZEnable
 #	define DEPTHMASK			ZWriteEnable
 #	define BLEND_NONE			AlphaBlendEnable = false
@@ -57,10 +58,11 @@ read the license and understand and accept it fully.
 #	define DEPTHFUNC_GREATER
 #	define DEPTHFUNC_LESS
 #endif
-
+*/
 #else // G_D3D
 #	define VERTEXPROGRAM		VertexProgram
 #	define FRAGMENTPROGRAM		FragmentProgram
+/*
 #	define DEPTHTEST			DepthTestEnable
 #	define DEPTHMASK			DepthMask
 #	define BLEND_NONE			BlendEnable = false
@@ -77,7 +79,7 @@ read the license and understand and accept it fully.
 #	else
 #		define DEPTHMASK_MAIN DepthMask = true
 #	endif
-
+*/
 #endif // G_D3D
 
 /*
@@ -133,17 +135,6 @@ read the license and understand and accept it fully.
 
 AX_SAMPLER_UNIFORMS
 
-// render hardware
-#define HARDWARE_GENERIC	0
-#define HARDWARE_NV_SM2		0
-#define HARDWARE_NV_SM3		0
-#define HARDWARE_NV_SM4		0
-#define HARDWARE_ATI_SM2	0
-#define HARDWARE_ATI_SM3	0
-#define HARDWARE_ATI_SM4	0
-#define HARDWARE_XBOX360	0
-#define HARDWARE_PS3		0
-
 // shader debug mode
 #define DEBUG_NONE			0
 #define DEBUG_DIFFUSEMAP	1
@@ -158,7 +149,6 @@ AX_SAMPLER_UNIFORMS
 // G_OPENGL
 // G_D3D
 // G_SHADER_QUALITY
-#define G_MODELMATRIX_IDENTITY	0
 #define G_GEOMETRY_INSTANCING	0
 #define G_HAVE_DIFFUSE	1
 #define G_HAVE_NORMAL	1
@@ -171,7 +161,7 @@ AX_SAMPLER_UNIFORMS
 // G_HAVE_DISPLACEMENT
 // G_HAVE_CUSTOM1
 // G_HAVE_CUSTOM2
-#define G_REFLECTION 1
+//#define G_REFLECTION 1
 #define G_HAVE_LAYERALPHA	1
 #define G_HAVE_LIGHTMAP	1
 #define G_DISABLE_SPECULAR 0
@@ -186,14 +176,6 @@ AX_SAMPLER_UNIFORMS
 #define G_FEATURE5		0
 #define G_FEATURE6		0
 #define G_FEATURE7		0
-#define G_LITERAL0		0
-#define G_LITERAL1		0
-#define G_LITERAL2		0
-#define G_LITERAL3		0
-#define G_LITERAL4		0
-#define G_LITERAL5		0
-#define G_LITERAL6		0
-#define G_LITERAL7		0
 #endif
 
 #if (!G_HAVE_NORMAL && !G_HAVE_DETAIL_NORMAL)

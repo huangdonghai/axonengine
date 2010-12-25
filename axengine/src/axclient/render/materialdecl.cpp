@@ -54,7 +54,9 @@ MaterialDecl::MaterialDecl()
 	m_flags = 0;
 
 	TypeZeroArray(m_features);
+#if 0
 	TypeZeroArray(m_literals);
+#endif
 }
 
 MaterialDecl::~MaterialDecl()
