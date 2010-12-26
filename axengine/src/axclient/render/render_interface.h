@@ -40,10 +40,10 @@ public:
 #endif
 	static void (*setShader)(const FixedString &name, const ShaderMacro &sm, Technique tech);
 	static void (*setConstBuffer)(ConstBuffers::Type type, int size, const float *data);
-	static void (*setShaderConst)(const FixedString &name, int count, const float *value);
+	static void (*setParameters)(const FastParams *params1, const FastParams *params2);
 
-	static void (*setVertices)(phandle_t vb, VertexType vt, int vertcount);
-	static void (*setInstanceVertices)(phandle_t vb, VertexType vt, int vertcount, Handle inb, int incount);
+	static void (*setVertices)(phandle_t vb, VertexType vt, int offset);
+	static void (*setInstanceVertices)(phandle_t vb, VertexType vt, int offset, phandle_t inb, int inoffset, int incount);
 	static void (*setIndices)(phandle_t ib, ElementType et, int offset, int vertcount, int indicescount);
 
 	static void (*setGlobalTexture)(GlobalTextureId id, phandle_t h, const SamplerDesc &samplerState);
@@ -115,13 +115,13 @@ public:
 
 	void setShader(const FixedString & name, const ShaderMacro &sm, Technique tech);
 	void setConstBuffer(ConstBuffers::Type type, int size, const float *data);
-	void setShaderConst(const FixedString &name, int size, const float *p);
+	void setParameters(const FastParams *params1, const FastParams *param2);
 
 	void setGlobalTexture(GlobalTextureId gt, Texture *tex);
 	void setMaterialTexture(Texture * const tex[]);
 
 	void setVertices(phandle_t vb, VertexType vt, int offset);
-	void setVerticesInstanced(phandle_t vb, VertexType vt, int offset, phandle_t inb, int incount);
+	void setVerticesInstanced(phandle_t vb, VertexType vt, int offset, phandle_t inb, int inoffset, int incount);
 	void setIndices(phandle_t ib, ElementType et, int offset, int vertcount, int indicescount);
 
 	void setVerticesUP(const void *vb, VertexType vt, int offset);

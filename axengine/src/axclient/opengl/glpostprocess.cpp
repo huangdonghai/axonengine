@@ -266,8 +266,8 @@ void GLpostprocess::maskShadow(Vector3 volume[8], const Matrix4 &matrix, GLtextu
 	m_matShadowMask->setPixelToTexel(width, height);
 
 	m_matShadowMask->setTexture(MaterialTextureId::Diffuse, tex);
-	m_matShadowMask->setParameter("s_shadowMatrix", 16, matrix.c_ptr());
-	m_matShadowMask->setParameter("s_shadowRange", 2, zrange.c_ptr());
+	m_matShadowMask->addParameter("s_shadowMatrix", 16, matrix.c_ptr());
+	m_matShadowMask->addParameter("s_shadowRange", 2, zrange.c_ptr());
 
 	m_matShadowMask->setFeature(0, front);
 	m_matShadowMask->setFeature(1, false);
@@ -292,12 +292,12 @@ void GLpostprocess::maskShadow(Vector3 volume[8], const Matrix4 &matrix, GLtextu
 	m_matShadowMask->setPixelToTexel(width, height);
 
 	m_matShadowMask->setTexture(MaterialTextureId::Diffuse, tex);
-	m_matShadowMask->setParameter("s_shadowMatrix", 16, matrix.c_ptr());
-	m_matShadowMask->setParameter("s_shadowRange", 2, zrange.c_ptr());
+	m_matShadowMask->addParameter("s_shadowMatrix", 16, matrix.c_ptr());
+	m_matShadowMask->addParameter("s_shadowRange", 2, zrange.c_ptr());
 
-	m_matShadowMask->setParameter("s_minRange", 4, minrange.c_ptr());
-	m_matShadowMask->setParameter("s_maxRange", 4, maxrange.c_ptr());
-	m_matShadowMask->setParameter("s_offsetScales", 16, scaleoffset.c_ptr());
+	m_matShadowMask->addParameter("s_minRange", 4, minrange.c_ptr());
+	m_matShadowMask->addParameter("s_maxRange", 4, maxrange.c_ptr());
+	m_matShadowMask->addParameter("s_offsetScales", 16, scaleoffset.c_ptr());
 
 	m_matShadowMask->setFeature(0, front);
 	m_matShadowMask->setFeature(1, true);
@@ -317,8 +317,8 @@ void GLpostprocess::shadowBlur(GLtexture *texture, bool is_du) {
 //		getSampleOffsets_GaussBlur5x5(viewport.z, viewport.w, sSampleOffsets, sSampleWeights);
 	getSamplerOffsets_Gauss1D(viewport.z, viewport.w, 5, sSampleOffsets, sSampleWeights, is_du);
 	m_matShadowBlur->setTexture(MaterialTextureId::Diffuse, texture);
-	m_matShadowBlur->setParameter("g_sampleOffsets", 32 * 2, sSampleOffsets[0].c_ptr());
-	m_matShadowBlur->setParameter("g_sampleWeights", 32, sSampleWeights);
+	m_matShadowBlur->addParameter("g_sampleOffsets", 32 * 2, sSampleOffsets[0].c_ptr());
+	m_matShadowBlur->addParameter("g_sampleWeights", 32, sSampleWeights);
 
 	m_screenQuad->setMaterial(m_matShadowBlur.get());
 

@@ -43,6 +43,9 @@ public:
 	FixedString()
 	{ m_handle = FixedStringManager::EMPTY_HANDLE; }
 
+	FixedString(int id)
+	{ m_handle = id; }
+
 	FixedString(const FixedString &rhs)
 	{
 		m_handle = rhs.m_handle;
@@ -60,6 +63,8 @@ public:
 
 	~FixedString()
 	{}
+
+	int id() const { return m_handle; }
 
 	const std::string &toString() const {
 		return FixedStringManager::instance().getString(m_handle);

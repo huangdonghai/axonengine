@@ -69,7 +69,7 @@ DX9_Window::DX9_Window()
 		, NULL);
 }
 
-DX9_Window::DX9_Window(Handle wndId)
+DX9_Window::DX9_Window(Handle wndId, int width, int height)
 {
 	m_swapChain = 0;
 	m_backbuffer = 0;

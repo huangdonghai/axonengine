@@ -61,8 +61,9 @@ public:
 	Texture * const * getTextures() const { return m_textures; }
 
 	// parameter setting and getting
-	void setParameter(const std::string &name, int num, const float *ptr);
-	const ShaderParams &getParameters() const;
+	void clearParameters();
+	void addParameter(const FixedString &name, int num, const float *ptr);
+	const FastParams *getParameters() const;
 
 	// shader macro
 	const ShaderMacro &getShaderMacro();
@@ -109,7 +110,7 @@ private:
 	const ShaderInfo *m_shaderInfo;
 	FixedString m_shaderName;
 	Texture *m_textures[MaterialTextureId::MaxType];
-	ShaderParams m_shaderParams;
+	FastParams *m_shaderParams;
 	ConstBuffer *m_localUniforms;
 
 	// texgen etc...

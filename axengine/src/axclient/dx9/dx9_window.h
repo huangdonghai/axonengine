@@ -17,7 +17,7 @@ class DX9_Window : public Unknown
 {
 public:
 	DX9_Window();
-	DX9_Window(Handle wndId);
+	DX9_Window(Handle wndId, int width, int height);
 	~DX9_Window();
 
 	// implement RenderTarget
@@ -26,7 +26,7 @@ public:
 	void unbind();
 	bool isWindow() { return true;}
 
-	void setWindowHandle(Handle newId) { m_wndId = handle_cast<HWND>(newId); }
+	void update(Handle newId, int width, int height) { m_wndId = handle_cast<HWND>(newId); }
 	Handle getWindowHandle() { return Handle(m_wndId); }
 
 	HWND getHandle() const { return m_wndId; }

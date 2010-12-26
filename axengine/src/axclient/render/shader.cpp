@@ -311,10 +311,9 @@ void ShaderMacro::mergeFrom(const ShaderMacro *from)
 		}
 	}
 #else
-	m_data[0] |= from->m_data[0];
-	m_data[1] |= from->m_data[1];
-	m_data[2] |= from->m_data[2];
-	m_data[3] |= from->m_data[3];
+	for (int i = 0; i < ArraySize(m_data); i++) {
+		m_data[i] = from->m_data[i];
+	}
 #endif
 }
 
@@ -433,11 +432,6 @@ ConstBuffer::ConstBuffer(int type)
 		AX_WRONGPLACE;
 }
 
-ConstBuffer::ConstBuffer()
-{
-
-}
-
 ConstBuffer::~ConstBuffer()
 {
 }
@@ -458,6 +452,7 @@ void ConstBuffer::addField(ValueType vt, const char *name, int offset)
 	m_fields.push_back(field);
 }
 
+#if 0
 ConstBuffer *ConstBuffer::clone() const
 {
 	ConstBuffer *cloned = new ConstBuffer();
@@ -469,6 +464,7 @@ ConstBuffer *ConstBuffer::clone() const
 
 	return cloned;
 }
+#endif
 
 void ConstBuffer::initSceneConst()
 {
@@ -503,7 +499,9 @@ void ConstBuffer::clear()
 
 ConstBuffers::ConstBuffers()
 {
-
+	for (int i = 0; i < MaxType; i++) {
+		m_buffers[i] = new ConstBuffer(i);
+	}
 }
 
 ConstBuffers::~ConstBuffers()

@@ -24,6 +24,8 @@ struct VertexType {
 		kMesh, kDebug, kBlend, kChunk, kNumber
 	};
 	AX_DECLARE_ENUM(VertexType);
+
+	int stride() const;
 };
 
 struct MeshVertex {
@@ -51,6 +53,12 @@ struct BlendVertex {
 struct ChunkVertex {
 	Vector3 xyz;
 };
+
+inline int VertexType::stride() const
+{
+	static int strides[] = { sizeof(MeshVertex), sizeof(DebugVertex), sizeof(BlendVertex), sizeof(ChunkVertex) };
+	return strides[t];
+}
 
 AX_END_NAMESPACE
 

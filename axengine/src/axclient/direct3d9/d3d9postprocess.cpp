@@ -559,9 +559,9 @@ void D3D9Postprocess::drawLight(Vector3 volume[8], QueuedLight *light)
 
 	m_mtrPointLight->setFeature(F_SPOTLIGHT, light->type == RenderLight::kSpot);
 
-	m_mtrPointLight->setParameter("s_lightColor", 4, light->color.c_ptr());
-	m_mtrPointLight->setParameter("s_lightPos", 4, lightpos.c_ptr());
-	m_mtrPointLight->setParameter("s_lightMatrix", 16, light->projMatrix.getTranspose().c_ptr());
+	m_mtrPointLight->addParameter("s_lightColor", 4, light->color.c_ptr());
+	m_mtrPointLight->addParameter("s_lightPos", 4, lightpos.c_ptr());
+	m_mtrPointLight->addParameter("s_lightMatrix", 16, light->projMatrix.getTranspose().c_ptr());
 
 	d3d9Draw->drawPostUP(m_mtrPointLight.get(), m_hexahedron);
 }
@@ -587,9 +587,9 @@ void D3D9Postprocess::drawLightShadowed(Vector3 volume[8], QueuedLight *light, c
 	m_mtrPointLight->setFeature(F_SHADOWED, true);
 	m_mtrPointLight->setFeature(F_SPOTLIGHT, light->type == RenderLight::kSpot);
 
-	m_mtrPointLight->setParameter("s_lightColor", 4, light->color.c_ptr());
-	m_mtrPointLight->setParameter("s_lightPos", 4, lightpos.c_ptr());
-	m_mtrPointLight->setParameter("s_lightMatrix", 16, light->projMatrix.getTranspose().c_ptr());
+	m_mtrPointLight->addParameter("s_lightColor", 4, light->color.c_ptr());
+	m_mtrPointLight->addParameter("s_lightPos", 4, lightpos.c_ptr());
+	m_mtrPointLight->addParameter("s_lightMatrix", 16, light->projMatrix.getTranspose().c_ptr());
 
 #if 0
 	m_mtrPointLight->setParameter("s_shadowMatrix", 16, matrix.getTranspose());
@@ -664,7 +664,7 @@ void D3D9Postprocess::drawGlobalLight( Vector3 volume[8], QueuedLight *light )
 		g_splitRanges[2] = (g_splitRanges[2] - fixmtx[2].zw()) / fixmtx[2].xy();
 		g_splitRanges[3] = (g_splitRanges[3] - fixmtx[3].zw()) / fixmtx[3].xy();
 #endif
-		m_mtrGlobalLight->setParameter("s_splitRanges", 16, g_splitRanges.getTranspose().c_ptr());
+		m_mtrGlobalLight->addParameter("s_splitRanges", 16, g_splitRanges.getTranspose().c_ptr());
 
 		m_mtrGlobalLight->setPixelToTexel(width, height);
 	}
@@ -679,10 +679,10 @@ void D3D9Postprocess::drawGlobalLight( Vector3 volume[8], QueuedLight *light )
 	m_mtrGlobalLight->setFeature(F_DIRECTION_LIGHT, !light->color.xyz().isZero());
 	m_mtrGlobalLight->setFeature(F_SKY_LIGHT, !light->skyColor.isZero());
 	m_mtrGlobalLight->setFeature(F_ENV_LIGHT, !light->envColor.isZero());
-	m_mtrGlobalLight->setParameter("s_lightColor", 4, light->color.c_ptr());
-	m_mtrGlobalLight->setParameter("s_skyColor", 3, light->skyColor.c_ptr());
-	m_mtrGlobalLight->setParameter("s_envColor", 3, light->envColor.c_ptr());
-	m_mtrGlobalLight->setParameter("s_lightPos", 4, lightpos.c_ptr());
+	m_mtrGlobalLight->addParameter("s_lightColor", 4, light->color.c_ptr());
+	m_mtrGlobalLight->addParameter("s_skyColor", 3, light->skyColor.c_ptr());
+	m_mtrGlobalLight->addParameter("s_envColor", 3, light->envColor.c_ptr());
+	m_mtrGlobalLight->addParameter("s_lightPos", 4, lightpos.c_ptr());
 
 	d3d9Draw->drawPostUP(m_mtrGlobalLight.get(), m_hexahedron);
 }

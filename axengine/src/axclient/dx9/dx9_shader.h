@@ -142,14 +142,14 @@ private:
 	int m_matSamplers[MaterialTextureId::MaxType];
 
 	// sys sampler
-	Dict<int,int> m_sysSamplers;
+	int m_sysSamplers[GlobalTextureId::MaxType];
 
 	// batch sampler
 	DX9_SamplerInfos m_batchSamplers;
 
 	// local parameter
-	Dict<std::string,ParamDesc> m_vsParameters;
-	Dict<std::string,ParamDesc> m_psParameters;
+	Dict<FixedString, ParamDesc> m_vsParameters;
+	Dict<FixedString, ParamDesc> m_psParameters;
 };
 
 class DX9_Technique

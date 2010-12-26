@@ -37,7 +37,7 @@ void (*RenderApi::deleteRasterizerState)(phandle_t h);
 
 void (*RenderApi::setShader)(const FixedString & name, const ShaderMacro &sm, Technique tech);
 void (*RenderApi::setConstBuffer)(ConstBuffers::Type type, int size, const float *data);
-void (*RenderApi::setShaderConst)(const FixedString &name, int count, const float *value);
+void (*RenderApi::setParameters)(const FastParams *params1, const FastParams *param2);
 	  
 void (*RenderApi::setVertices)(phandle_t h, VertexType vt, int vertcount);
 void (*RenderApi::setInstanceVertices)(phandle_t h, VertexType vt, int vertcount, Handle inb, int incount);
@@ -441,13 +441,23 @@ void ApiWrap::deleteWindowTarget(phandle_t h)
 	addObjectDeletion(RenderApi::deleteWindowTarget, h);
 }
 
-void ApiWrap::setShaderConst(const FixedString &name, int count, const float *p)
+void ApiWrap::setParameters(const FastParams *params1, const FastParams *params2)
 {
-	float * copyData = allocType<float>(count);
-	memcpy(copyData, p, count * sizeof(float));
-	sAllocCommand(RenderApi::setShaderConst).args(name, count, copyData);
-}
+	FastParams *newp1 = 0;
+	FastParams *newp2 = 0;
 
+	if (params1) {
+		newp1 = allocType<FastParams>();
+		*newp1 = *params1;
+	}
+
+	if (params2) {
+		newp2 = allocType<FastParams>();
+		*newp2 = *params2;
+	}
+
+	sAllocCommand(RenderApi::setParameters).args(newp1, newp2);
+}
 void ApiWrap::setShader(const FixedString & name, const ShaderMacro &sm, Technique tech)
 {
 	sAllocCommand(RenderApi::setShader).args(name, sm, tech);
@@ -1184,6 +1194,7 @@ void RenderContext::setMaterialUniforms(Material *mat)
 		AX_SU(g_layerScale, scale2);
 	}
 
+#if 0
 	const ShaderParams &params = mat->getParameters();
 
 	ShaderParams::const_iterator it = params.begin();
@@ -1191,6 +1202,10 @@ void RenderContext::setMaterialUniforms(Material *mat)
 		const FloatSeq &value = it->second;
 		g_apiWrap->setShaderConst(it->first, value.size() * sizeof(float),  &value[0]);
 	}
+#else
+	const FastParams *params = mat->getParameters();
+	g_apiWrap->setParameters(0, params);
+#endif
 
 	// set material textures
 	g_apiWrap->setMaterialTexture(mat->getTextures());

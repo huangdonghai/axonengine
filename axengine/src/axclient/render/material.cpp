@@ -38,11 +38,15 @@ Material::Material(const std::string &name)
 	TypeZeroArray(m_literals);
 #endif
 	FixedString key = normalizeKey(name);
+
+	m_shaderParams = 0;
+
 	init(key);
 }
 
 Material::~Material()
 {
+	SafeDelete(m_shaderParams);
 }
 
 bool Material::init(const FixedString &key)
@@ -116,7 +120,15 @@ void Material::setMacroParameter(const String &name, int value) {
 }
 #endif
 
-void Material::setParameter(const std::string &name, int count, const float *ptr)
+
+void Material::clearParameters()
+{
+	if (m_shaderParams)
+		m_shaderParams->clear();
+}
+
+
+void Material::addParameter(const FixedString &name, int count, const float *ptr)
 {
 	if (!count) {
 		count = 1;
@@ -126,12 +138,13 @@ void Material::setParameter(const std::string &name, int count, const float *ptr
 		return;
 	}
 
-	FloatSeq &value = m_shaderParams[name];
-	value.resize(count);
-	::memcpy(&value[0], ptr, count * sizeof(float));
+	if (!m_shaderParams)
+		m_shaderParams = new FastParams();
+
+	m_shaderParams->addParam(name, count, ptr);
 }
 
-const ShaderParams &Material::getParameters() const
+const FastParams *Material::getParameters() const
 {
 	return m_shaderParams;
 }

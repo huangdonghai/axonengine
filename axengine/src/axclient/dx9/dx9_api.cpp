@@ -2,6 +2,16 @@
 
 AX_BEGIN_NAMESPACE
 
+static FastParams s_curParams1;
+static FastParams s_curParams;
+static DX9_Shader *s_curShader;
+static Technique s_curTechnique;
+static ConstBuffers s_curConstBuffer;
+static D3DPRIMITIVETYPE s_curPrimitiveType;
+static int s_curNumVertices;
+static int s_curStartIndex;
+static int s_curPrimitiveCount;
+
 inline bool trTexFormat(TexFormat texformat, D3DFORMAT &d3dformat)
 {
 	d3dformat = D3DFMT_UNKNOWN;
@@ -40,11 +50,35 @@ inline bool trTexFormat(TexFormat texformat, D3DFORMAT &d3dformat)
 	default: AX_WRONGPLACE;
 	}
 
-	if (d3dformat == D3DFMT_UNKNOWN)
-		return false;
-	else
-		return true;
+	return d3dformat != D3DFMT_UNKNOWN;
 }
+
+inline D3DPRIMITIVETYPE trElementType(ElementType type)
+{
+	switch (type) {
+	case ElementType_PointList: return D3DPT_POINTLIST;
+	case ElementType_LineList: return D3DPT_LINELIST;
+	case ElementType_TriList: return D3DPT_TRIANGLELIST;
+	case ElementType_TriStrip: return D3DPT_TRIANGLESTRIP;
+	default: AX_WRONGPLACE; return D3DPT_TRIANGLELIST;
+	}
+}
+
+static inline int sCalcNumElements(D3DPRIMITIVETYPE mode, int numindexes)
+{
+	switch (mode) {
+	case D3DPT_POINTLIST: return numindexes;
+	case D3DPT_LINELIST: return numindexes / 2;
+	case D3DPT_LINESTRIP: return numindexes - 1;
+	case D3DPT_TRIANGLELIST: return numindexes / 3;
+	case D3DPT_TRIANGLESTRIP: return numindexes - 2;
+	case D3DPT_TRIANGLEFAN: return numindexes - 2;
+	}
+
+	Errorf("not support element mode %d", mode);
+	return 0;
+}
+
 
 bool CheckIfSupportHardwareMipmapGeneration(D3DFORMAT d3dformat, DWORD d3dusage)
 {
@@ -306,7 +340,7 @@ void dx9DeleteIndexBuffer(phandle_t h)
 
 void dx9CreateWindowTarget(phandle_t h, Handle hwnd, int width, int height)
 {
-	DX9_Window *window = new DX9_Window(hwnd);
+	DX9_Window *window = new DX9_Window(hwnd, width, height);
 	*h = window;
 }
 
@@ -314,7 +348,7 @@ void dx9UpdateWindowTarget(phandle_t h, Handle newHwnd, int width, int height)
 {
 	DX9_Window *window = h->to<DX9_Window *>();
 
-	// TODO
+	window->update(newHwnd, width, height);
 }
 
 void dx9DeleteWindowTarget(phandle_t h)
@@ -384,33 +418,54 @@ void dx9DeleteRasterizerState(phandle_t h)
 
 static void dx9SetShader(const FixedString &name, const ShaderMacro &sm, Technique tech)
 {
-
+	s_curShader = dx9_shaderManager->findShader(name, sm);
+	s_curTechnique = tech;
 }
 
 static void dx9SetConstBuffer(ConstBuffers::Type type, int size, const float *data)
 {
-
+	s_curConstBuffer.setData(type, size, data);
 }
 
-static void dx9SetShaderConst(const FixedString &name, int count, const float *value)
+static void dx9SetParameters(const FastParams *params1, const FastParams *params2)
 {
+	if (params1)
+		s_curParams1 = *params1;
+	else
+		s_curParams1.clear();
 
+	if (params2)
+		s_curParams = *params2;
+	else
+		s_curParams.clear();
 }
 
-
-static void dx9SetVertices(phandle_t vb, VertexType vt, int vertcount)
+static void dx9SetVertices(phandle_t vb, VertexType vt, int offset)
 {
+	V(dx9_device->SetStreamSource(0, vb->to<IDirect3DVertexBuffer9 *>(), offset, vt.stride()));
+	V(dx9_device->SetVertexDeclaration(dx9_vertexDeclarations[vt]));
 
+	V(dx9_device->SetStreamSourceFreq(0, 1));
+	V(dx9_device->SetStreamSourceFreq(1, 1));
 }
 
-static void dx9SetInstanceVertices(phandle_t vb, VertexType vt, int vertcount, Handle inb, int incount)
+static void dx9SetInstanceVertices(phandle_t vb, VertexType vt, int offset, phandle_t inb, int inoffset, int incount)
 {
+	V(dx9_device->SetStreamSource(0, vb->to<IDirect3DVertexBuffer9 *>(), offset, vt.stride()));
+	V(dx9_device->SetStreamSourceFreq(0, D3DSTREAMSOURCE_INDEXEDDATA | incount));
 
+	V(dx9_device->SetStreamSource(1, inb->to<IDirect3DVertexBuffer9 *>(), inoffset, incount));
+	V(dx9_device->SetStreamSourceFreq(1, D3DSTREAMSOURCE_INSTANCEDATA | 1ul));
+	V(dx9_device->SetVertexDeclaration(dx9_vertexDeclarationsInstanced[vt]));
 }
 
 static void dx9SetIndices(phandle_t ib, ElementType et, int offset, int vertcount, int indicescount)
 {
-
+	V(dx9_device->SetIndices(ib->to<IDirect3DIndexBuffer9 *>()));
+	s_curPrimitiveType = trElementType(et);
+	s_curNumVertices = vertcount;
+	s_curStartIndex = offset;
+	s_curPrimitiveCount = sCalcNumElements(s_curPrimitiveType, indicescount);
 }
 
 
@@ -479,7 +534,7 @@ void dx9AssignRenderApi()
 #endif
 	RenderApi::setShader = &dx9SetShader;
 	RenderApi::setConstBuffer = &dx9SetConstBuffer;
-	RenderApi::setShaderConst = &dx9SetShaderConst;
+	RenderApi::setParameters = &dx9SetParameters;
 
 	RenderApi::setVertices = &dx9SetVertices;
 	RenderApi::setInstanceVertices = &dx9SetInstanceVertices;

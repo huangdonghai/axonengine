@@ -86,7 +86,6 @@ public:
 		int m_dataSizeOfFloat;
 	};
 
-	ConstBuffer();
 	ConstBuffer(int type);
 	~ConstBuffer();
 
@@ -94,9 +93,7 @@ public:
 	const float *getDataPointer() const { return &m_data[0]; }
 	bool isDirty() const { return m_dirty; }
 
-	ConstBuffer *clone() const;
-
-	void setData(int numFloats, float *datap);
+	void setData(int numFloats, const float *datap);
 	void setFieldData(const FixedString &fieldName, int datasize, float *datap);
 	const float *getFieldPointer(const FixedString &fieldName) const;
 
@@ -141,6 +138,7 @@ public:
 	ConstBuffers();
 	~ConstBuffers();
 
+	void setData(Type type, int numFloats, const float *datap);
 	void setField(Item fieldName, int dataSize, const float *dataptr);
 
 private:

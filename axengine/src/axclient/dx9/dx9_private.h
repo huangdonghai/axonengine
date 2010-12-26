@@ -107,6 +107,9 @@ extern IDirect3DDevice9 *dx9_device;
 extern DX9_ShaderManager *dx9_shaderManager;
 extern ConstBuffers *dx9_constBuffers;
 
+extern IDirect3DVertexDeclaration9 *dx9_vertexDeclarations[VertexType::kNumber];
+extern IDirect3DVertexDeclaration9 *dx9_vertexDeclarationsInstanced[VertexType::kNumber];
+
 #if 0
 //extern D3D9TargetManager *d3d9TargetManager;
 extern D3D9querymanager *d3d9QueryManager;

@@ -95,6 +95,41 @@ inline TextureDef::TextureDef() : clampToBorder(false), clampToEdge(false), filt
 typedef std::vector<float> FloatSeq;
 typedef Dict<FixedString, FloatSeq> ShaderParams;
 
+class FastParams
+{
+public:
+	FastParams() { m_numItems = 0; }
+	~FastParams() {}
+
+	void clear() { m_numItems = 0; }
+	void addParam(const FixedString &name, int num, const float *data)
+	{
+		AX_ASSURE(m_numItems < NUM_ITEMS);
+		Item &item = m_items[m_numItems];
+		item.nameId = name.id();
+		item.count = num;
+		if (m_numItems == 0) {
+			item.offset = 0;
+		} else {
+			Item &preItem = m_items[m_numItems - 1];
+			item.offset = preItem.offset + preItem.count;
+		}
+		::memcpy(m_floatData+item.offset, data, num * sizeof(float));
+		m_numItems++;
+	}
+
+private:
+	enum { NUM_ITEMS = 16, NUM_FLOATDATA = 256 };
+	struct Item {
+		int nameId;
+		int offset;
+		int count;
+	};
+	int m_numItems;
+	Item m_items[NUM_ITEMS];
+	float m_floatData[NUM_FLOATDATA];
+};
+
 struct RenderStateId
 {
 public:
@@ -207,7 +242,7 @@ private:
 	SurfaceType m_surfaceType;
 	RenderStateId m_renderStateId;
 	TextureDef *m_textures[MaterialTextureId::MaxType];
-	ShaderParams m_shaderParams;
+	FastParams *m_fastParams;
 	Rgba m_diffuse, m_specular, m_emission;
 	float m_specExp, m_specLevel;
 	float m_opacity;
