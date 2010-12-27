@@ -11,6 +11,17 @@ static D3DPRIMITIVETYPE s_curPrimitiveType;
 static int s_curNumVertices;
 static int s_curStartIndex;
 static int s_curPrimitiveCount;
+static const void *s_curVerticeBufferUP;
+static VertexType s_curVertexType;
+static int s_curVertexOffset;
+static const void *s_curIndiceBufferUP;
+static phandle_t s_curGlobalTextures[GlobalTextureId::MaxType];
+static SamplerDesc s_curGlobalTextureSamplerDescs[GlobalTextureId::MaxType];
+static phandle_t s_curMaterialTextures[MaterialTextureId::MaxType];
+static SamplerDesc s_curMaterialTextureSamplerDescs[MaterialTextureId::MaxType];
+static DepthStencilDesc s_curDepthStencilDesc;
+static RasterizerDesc s_curRasterizerDesc;
+static BlendDesc s_curBlendDesc;
 
 inline bool trTexFormat(TexFormat texformat, D3DFORMAT &d3dformat)
 {
@@ -442,6 +453,7 @@ static void dx9SetParameters(const FastParams *params1, const FastParams *params
 
 static void dx9SetVertices(phandle_t vb, VertexType vt, int offset)
 {
+	s_curVerticeBufferUP = 0;
 	V(dx9_device->SetStreamSource(0, vb->to<IDirect3DVertexBuffer9 *>(), offset, vt.stride()));
 	V(dx9_device->SetVertexDeclaration(dx9_vertexDeclarations[vt]));
 
@@ -451,6 +463,7 @@ static void dx9SetVertices(phandle_t vb, VertexType vt, int offset)
 
 static void dx9SetInstanceVertices(phandle_t vb, VertexType vt, int offset, phandle_t inb, int inoffset, int incount)
 {
+	s_curVerticeBufferUP = 0;
 	V(dx9_device->SetStreamSource(0, vb->to<IDirect3DVertexBuffer9 *>(), offset, vt.stride()));
 	V(dx9_device->SetStreamSourceFreq(0, D3DSTREAMSOURCE_INDEXEDDATA | incount));
 
@@ -461,6 +474,7 @@ static void dx9SetInstanceVertices(phandle_t vb, VertexType vt, int offset, phan
 
 static void dx9SetIndices(phandle_t ib, ElementType et, int offset, int vertcount, int indicescount)
 {
+	s_curIndiceBufferUP = 0;
 	V(dx9_device->SetIndices(ib->to<IDirect3DIndexBuffer9 *>()));
 	s_curPrimitiveType = trElementType(et);
 	s_curNumVertices = vertcount;
@@ -468,34 +482,97 @@ static void dx9SetIndices(phandle_t ib, ElementType et, int offset, int vertcoun
 	s_curPrimitiveCount = sCalcNumElements(s_curPrimitiveType, indicescount);
 }
 
+static void dx9SetVerticesUP(const void *vb, VertexType vt, int vertcount)
+{
+	s_curVerticeBufferUP = vb;
+	s_curVertexType = vt;
+	s_curNumVertices = vertcount;
+}
+
+static void dx9SetIndicesUP(const void *ib, ElementType et, int indicescount)
+{
+	s_curIndiceBufferUP = ib;
+	s_curPrimitiveType = trElementType(et);
+	s_curPrimitiveCount = sCalcNumElements(s_curPrimitiveType, indicescount);
+}
 
 static void dx9SetGlobalTexture(GlobalTextureId id, phandle_t h, const SamplerDesc &desc)
 {
-
+	s_curGlobalTextures[id] = h;
+	s_curGlobalTextureSamplerDescs[id] = desc;
 }
 
 static void dx9SetMaterialTexture(phandle_t texs[], SamplerDesc descs[])
 {
-
+	::memcpy(s_curMaterialTextures, texs, sizeof(phandle_t) * MaterialTextureId::MaxType);
+	::memcpy(s_curMaterialTextureSamplerDescs, descs, sizeof(SamplerDesc) * MaterialTextureId::MaxType);
 }
 
 static void dx9SetRenderState(const DepthStencilDesc &dsd, const RasterizerDesc &rd, const BlendDesc &bd)
 {
+	if (dsd != s_curDepthStencilDesc) {
+		s_curDepthStencilDesc = dsd;
+		DX9_DepthStencilState::find(dsd)->apply();
+	}
 
+	if (rd != s_curRasterizerDesc) {
+		s_curRasterizerDesc = rd;
+		DX9_RasterizerState::find(rd)->apply();
+	}
+
+	if (bd != s_curBlendDesc) {
+		s_curBlendDesc = bd;
+		DX9_BlendState::find(bd)->apply();
+	}
 }
 
 
 //	static vOid dip(ElementType et, int offset, int vertcount, int indices_count) = 0;
 static void dx9Draw()
 {
+	UINT npass = s_curShader->begin(s_curTechnique);
+	for (int i = 0; i < npass; i++) {
+		s_curShader->beginPass(i);
 
+		if (s_curIndiceBufferUP && s_curVerticeBufferUP) {
+			dx9_device->DrawIndexedPrimitiveUP(s_curPrimitiveType, 0, s_curNumVertices, s_curPrimitiveCount, s_curIndiceBufferUP, D3DFMT_INDEX16, s_curVerticeBufferUP, s_curVertexType.stride());
+		} else if (!s_curVerticeBufferUP && !s_curIndiceBufferUP) {
+			dx9_device->DrawIndexedPrimitive(s_curPrimitiveType, 0, 0, s_curNumVertices, s_curStartIndex, s_curPrimitiveCount);
+		} else {
+			AX_WRONGPLACE;
+			Errorf("wrong");
+		}
+
+		s_curShader->endPass();
+	}
+	s_curShader->end();
 }
 
 
 // actions
 static void dx9Clear(const RenderClearer &clearer)
 {
+	DWORD d3dclear = 0;
 
+	if (clearer.isClearDepth) {
+		d3dclear |= D3DCLEAR_ZBUFFER;
+	}
+
+	if (clearer.isClearStencil) {
+		d3dclear |= D3DCLEAR_STENCIL;
+	}
+
+	if (clearer.isClearColor) {
+		d3dclear |= D3DCLEAR_TARGET;
+	}
+
+	if (!d3dclear) {
+		return;
+	}
+
+	D3DCOLOR d3dcolor = D3DCOLOR_RGBA(clearer.color.r,clearer.color.g,clearer.color.b,clearer.color.a);
+
+	dx9_device->Clear(0, 0, d3dclear, d3dcolor, clearer.depth, clearer.stencil);
 }
 
 
@@ -539,6 +616,9 @@ void dx9AssignRenderApi()
 	RenderApi::setVertices = &dx9SetVertices;
 	RenderApi::setInstanceVertices = &dx9SetInstanceVertices;
 	RenderApi::setIndices = &dx9SetIndices;
+
+	RenderApi::setVerticesUP = &dx9SetVerticesUP;
+	RenderApi::setIndicesUP = &dx9SetIndicesUP;
 
 	RenderApi::setGlobalTexture = &dx9SetGlobalTexture;
 	RenderApi::setMaterialTexture = &dx9SetMaterialTexture;

@@ -40,8 +40,11 @@ void (*RenderApi::setConstBuffer)(ConstBuffers::Type type, int size, const float
 void (*RenderApi::setParameters)(const FastParams *params1, const FastParams *param2);
 	  
 void (*RenderApi::setVertices)(phandle_t h, VertexType vt, int vertcount);
-void (*RenderApi::setInstanceVertices)(phandle_t h, VertexType vt, int vertcount, Handle inb, int incount);
+void (*RenderApi::setInstanceVertices)(phandle_t h, VertexType vt, int vertcount, phandle_t inb, int inoffset, int incount);
 void (*RenderApi::setIndices)(phandle_t h, ElementType et, int offset, int vertcount, int indicescount);
+
+void (*RenderApi::setVerticesUP)(const void *vb, VertexType vt, int vertcount);
+void (*RenderApi::setIndicesUP)(const void *ib, ElementType et, int indicescount);
 
 void (*RenderApi::setGlobalTexture)(GlobalTextureId id, phandle_t h, const SamplerDesc &samplerState);
 void (*RenderApi::setMaterialTexture)(phandle_t texs[], SamplerDesc samplerStates[]);
@@ -231,6 +234,41 @@ private:
 	typename remove_const_reference<Arg4>::type m_arg4;
 };
 
+template <typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4, typename Arg5>
+class ApiCommand_<void (*)(Arg0,Arg1,Arg2,Arg3,Arg4,Arg5)> : public ApiCommand {
+public:
+	typedef void (*FunctionType)(Arg0,Arg1,Arg2,Arg3,Arg4,Arg5);
+
+	ApiCommand_(FunctionType m)
+		: m_m(m)
+	{ AX_ASSERT(m); }
+
+	void args(Arg0 arg0, Arg1 arg1, Arg2 arg2, Arg3 arg3, Arg4 arg4,Arg5 arg5)
+	{
+		m_arg0 = arg0;
+		m_arg1 = arg1;
+		m_arg2 = arg2;
+		m_arg3 = arg3;
+		m_arg4 = arg4;
+		m_arg5 = arg5;
+		g_apiWrap->pushCommand(this);
+	}
+
+	virtual void exec()
+	{
+		(m_m)(m_arg0, m_arg1, m_arg2, m_arg3, m_arg4, m_arg5);
+	}
+
+private:
+	FunctionType m_m;
+	typename remove_const_reference<Arg0>::type m_arg0;
+	typename remove_const_reference<Arg1>::type m_arg1;
+	typename remove_const_reference<Arg2>::type m_arg2;
+	typename remove_const_reference<Arg3>::type m_arg3;
+	typename remove_const_reference<Arg4>::type m_arg4;
+	typename remove_const_reference<Arg5>::type m_arg5;
+};
+
 static ApiCommand_<void (*)()> &sAllocCommand(void (*method)())
 {
 	typedef ApiCommand_<void (*)()> ResultType;
@@ -279,6 +317,15 @@ template <typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename A
 static ApiCommand_<void (*)(Arg0,Arg1,Arg2,Arg3,Arg4)> &sAllocCommand(void (*method)(Arg0,Arg1,Arg2,Arg3,Arg4))
 {
 	typedef ApiCommand_<void (*)(Arg0,Arg1,Arg2,Arg3,Arg4)> ResultType;
+	ResultType *result = g_apiWrap->allocCommand<ResultType>();
+	new (result) ResultType(method);
+	return *result;
+}
+
+template <typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4, typename Arg5>
+static ApiCommand_<void (*)(Arg0,Arg1,Arg2,Arg3,Arg4,Arg5)> &sAllocCommand(void (*method)(Arg0,Arg1,Arg2,Arg3,Arg4,Arg5))
+{
+	typedef ApiCommand_<void (*)(Arg0,Arg1,Arg2,Arg3,Arg4,Arg5)> ResultType;
 	ResultType *result = g_apiWrap->allocCommand<ResultType>();
 	new (result) ResultType(method);
 	return *result;
@@ -488,9 +535,9 @@ void ApiWrap::setVertices(phandle_t vb, VertexType vt, int offset)
 	sAllocCommand(RenderApi::setVertices).args(vb, vt, offset);
 }
 
-void ApiWrap::setVerticesInstanced(phandle_t vb, VertexType vt, int offset, phandle_t inb, int incount)
+void ApiWrap::setVerticesInstanced(phandle_t vb, VertexType vt, int offset, phandle_t inb, int inoffset, int incount)
 {
-	sAllocCommand(RenderApi::setInstanceVertices).args(vb, vt, offset, inb, incount);
+	sAllocCommand(RenderApi::setInstanceVertices).args(vb, vt, offset, inb, inoffset, incount);
 }
 
 void ApiWrap::setIndices(phandle_t ib, ElementType et, int offset, int vertcount, int indicescount)
@@ -588,6 +635,16 @@ phandle_t ApiWrap::allocHandle()
 void ApiWrap::freeHandle( phandle_t h )
 {
 	delete h;
+}
+
+void ApiWrap::setVerticesUP(const void *vb, VertexType vt, int vertcount)
+{
+
+}
+
+void ApiWrap::setIndicesUP(const void *ib, ElementType et, int indicescount)
+{
+
 }
 
 
@@ -1122,7 +1179,7 @@ void RenderContext::draw(VertexObject *vert, InstanceObject *inst, IndexObject *
 		g_apiWrap->setVertices(vert->m_h, vert->m_vt, vert->m_offset);
 		macro.resetMacro(ShaderMacro::G_GEOMETRY_INSTANCING);
 	} else {
-		g_apiWrap->setVerticesInstanced(vert->m_h, vert->m_vt, vert->m_offset, inst->m_h, inst->m_count);
+		g_apiWrap->setVerticesInstanced(vert->m_h, vert->m_vt, vert->m_offset, inst->m_h, inst->m_offset, inst->m_count);
 		macro.setMacro(ShaderMacro::G_GEOMETRY_INSTANCING);
 	}
 

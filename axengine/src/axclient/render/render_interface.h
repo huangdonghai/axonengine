@@ -46,6 +46,9 @@ public:
 	static void (*setInstanceVertices)(phandle_t vb, VertexType vt, int offset, phandle_t inb, int inoffset, int incount);
 	static void (*setIndices)(phandle_t ib, ElementType et, int offset, int vertcount, int indicescount);
 
+	static void (*setVerticesUP)(const void *vb, VertexType vt, int vertcount);
+	static void (*setIndicesUP)(const void *ib, ElementType et, int indicescount);
+
 	static void (*setGlobalTexture)(GlobalTextureId id, phandle_t h, const SamplerDesc &samplerState);
 	static void (*setMaterialTexture)(phandle_t texs[], SamplerDesc states[]);
 
@@ -124,8 +127,8 @@ public:
 	void setVerticesInstanced(phandle_t vb, VertexType vt, int offset, phandle_t inb, int inoffset, int incount);
 	void setIndices(phandle_t ib, ElementType et, int offset, int vertcount, int indicescount);
 
-	void setVerticesUP(const void *vb, VertexType vt, int offset);
-	void setIndicesUP(const void *ib, ElementType et, int offset, int vertcount, int indicescount);
+	void setVerticesUP(const void *vb, VertexType vt, int vertcount);
+	void setIndicesUP(const void *ib, ElementType et, int indicescount);
 
 	void draw();
 

@@ -1051,6 +1051,7 @@ ConstBuffer *DX9_Shader::mergeStruct(const char *paramName)
 
 ConstBuffer *DX9_Shader::parseStruct(LPD3DXCONSTANTTABLE constTable, const char *paramName)
 {
+#if 0
 	D3DXHANDLE param = constTable->GetConstantByName(0, paramName);
 	if (!param)
 		return 0;
@@ -1083,6 +1084,8 @@ ConstBuffer *DX9_Shader::parseStruct(LPD3DXCONSTANTTABLE constTable, const char 
 	}
 
 	return us;
+#endif
+	return 0;
 }
 
 void DX9_Shader::initShaderInfo()

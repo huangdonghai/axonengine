@@ -496,6 +496,12 @@ void ConstBuffer::clear()
 	m_dirty = true;
 }
 
+void ConstBuffer::setData(int numFloats, const float *datap)
+{
+	AX_ASSERT(numFloats <= m_data.size());
+	::memcpy(&m_data[0], datap, numFloats * sizeof(float));
+}
+
 
 ConstBuffers::ConstBuffers()
 {
@@ -555,6 +561,11 @@ void ConstBuffers::setField(Item fieldName, int dataSize, const float *dataptr)
 
 	// copy data
 	memcpy(&fl->m_buffer->m_data[fl->m_field->m_offset], dataptr, dataSize * sizeof(float));
+}
+
+void ConstBuffers::setData(Type type, int numFloats, const float *datap)
+{
+	m_buffers[type]->setData(numFloats, datap);
 }
 
 AX_END_NAMESPACE

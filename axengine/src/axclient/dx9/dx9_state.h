@@ -10,6 +10,7 @@ public:
 	DX9_SamplerState(int stage, const SamplerDesc &desc);
 	virtual ~DX9_SamplerState();
 
+	void apply() const { V(m_stateBlock->Apply()); }
 	static DX9_SamplerState *find(int stage, const SamplerDesc &desc);
 
 private:
@@ -24,6 +25,7 @@ public:
 	DX9_DepthStencilState(const DepthStencilDesc &desc);
 	virtual ~DX9_DepthStencilState();
 
+	void apply() const { V(m_stateBlock->Apply()); }
 	static DX9_DepthStencilState *find(const DepthStencilDesc &desc);
 
 private:
@@ -37,6 +39,7 @@ public:
 	DX9_RasterizerState(const RasterizerDesc &desc);
 	virtual ~DX9_RasterizerState();
 
+	void apply() const { V(m_stateBlock->Apply()); }
 	static DX9_RasterizerState *find(const RasterizerDesc &desc);
 
 private:
@@ -50,6 +53,7 @@ public:
 	DX9_BlendState(const BlendDesc &desc);
 	virtual ~DX9_BlendState();
 
+	void apply() const { V(m_stateBlock->Apply()); }
 	static DX9_BlendState *find(const BlendDesc &desc);
 
 private:
