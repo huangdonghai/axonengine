@@ -146,7 +146,7 @@ bool GLshader::doInit(const std::string &name, const ShaderMacro &macro) {
 	if (!m_cgfx)
 		return false;
 
-	for (int i = 0; i < Technique::Number; i++) {
+	for (int i = 0; i < Technique::MaxType; i++) {
 		m_techniques[i] = getSystemTechnique(i);
 	}
 
@@ -163,7 +163,7 @@ bool GLshader::doInit(const std::string &name, const ShaderMacro &macro) {
 		MaterialTextureId::Opacit, "g_opacitMap",
 		MaterialTextureId::Emission, "g_emissionMap",
 		MaterialTextureId::Displacement, "g_displacementMap",
-		MaterialTextureId::Envmap, "g_envMap",
+		MaterialTextureId::Env, "g_envMap",
 		MaterialTextureId::Custom1, "g_customMap1",
 		MaterialTextureId::Custom2, "g_customMap2",
 

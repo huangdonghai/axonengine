@@ -12,6 +12,7 @@ read the license and understand and accept it fully.
 	texture name##_tex; \
 	type name = sampler_state { texture = <name##_tex>; };
 
+// material
 DECL_SAMPLER(sampler2D, g_diffuseMap);
 DECL_SAMPLER(sampler2D, g_normalMap);
 DECL_SAMPLER(sampler2D, g_specularMap);
@@ -21,12 +22,18 @@ DECL_SAMPLER(sampler2D, g_detailNormalMap);
 DECL_SAMPLER(sampler2D, g_opacitMap);
 DECL_SAMPLER(sampler2D, g_displacementMap);
 DECL_SAMPLER(sampler2D, g_envMap);
-DECL_SAMPLER(sampler2D, g_customMap1);
-DECL_SAMPLER(sampler2D, g_customMap2);
-
+// terrain
 DECL_SAMPLER(sampler2D, g_terrainColor);
 DECL_SAMPLER(sampler2D, g_terrainNormal);
 DECL_SAMPLER(sampler2D, g_layerAlpha);
+// engine
+DECL_SAMPLER(sampler2D, g_reflectionMap);
+DECL_SAMPLER(sampler2D, g_lightMap);
+DECL_SAMPLER(sampler2D, g_shadowMap);
+// global
+DECL_SAMPLER(sampler2D, g_geoBuffer);
+DECL_SAMPLER(sampler2D, g_lightBuffer);
+DECL_SAMPLER(sampler2D, g_sceneColor);
 
 #ifdef G_D3D
 #	define for if (0) else for

@@ -551,8 +551,9 @@ AX_SHADERCONST(SHADERMACRO_VERSION, 2)
 
 #endif
 
+#if 0
 #define AX_SAMPLER_UNIFORMS \
-	AX_TEXTURE_UNIFORM(sampler2D, g_sceneDepth) \
+	AX_TEXTURE_UNIFORM(sampler2D, g_geoBuffer) \
 	AX_TEXTURE_UNIFORM(sampler2D, g_lightBuffer) \
 	AX_TEXTURE_UNIFORM(sampler2D, g_lightMap) \
 	AX_TEXTURE_UNIFORM(sampler2D, g_shadowMap) \
@@ -598,6 +599,7 @@ AX_SHADERCONST(SHADERMACRO_VERSION, 2)
 	AX_TEXTURE_UNIFORM(sampler2D,	g_lightMap)			\
 	AX_TEXTURE_UNIFORM(sampler2D,	g_shadowMap)		\
 
+#endif
 
 // float4x4    g_amWindMatrices[NUM_WIND_MATRICES] REG(21);// houses all of the wind matrices shared by all geometry types
 // float4      g_avLeafAngles[MAX_NUM_LEAF_ANGLES]; // each element: .x = rock angle, .y = rustle angle

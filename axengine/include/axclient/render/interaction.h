@@ -32,9 +32,6 @@ struct Interaction {
 	RenderEntity *entity;
 	Primitive *primitive;
 
-	int numTargets;
-	RenderTarget *targets[MAX_TARGETS];
-
 	uint_t frameNum;
 
 	bool instanced;

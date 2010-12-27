@@ -222,32 +222,22 @@ void RenderWorld::renderTo(RenderScene *qscene)
 	for (int i = 0; i < qscene->numInteractions; i++) {
 		Interaction *ia = qscene->interactions[i];
 		Material *mat = ia->primitive->getMaterial();
-		if (!mat) {
+
+		if (!mat)
 			continue;
-		}
 
 		const ShaderInfo *shader = mat->getShaderInfo();
-		if (!shader) {
+		if (!shader)
 			continue;
-		}
 
-		for (int j = 0; j < shader->m_samplerInfos.size(); j++) {
-			const SamplerInfo *sa = shader->m_samplerInfos[j];
-			if (sa->m_renderType != SamplerInfo::Reflection) {
-				continue;
-			}
+		if (!shader->m_needReflection)
+			continue;
 
-			ReflectionMap *refl = g_renderSystem->findReflection(this, 0, ia->primitive, 512, 512);
-			refl->update(qscene);
+		ReflectionMap *refl = g_renderSystem->findReflection(this, 0, ia->primitive, 512, 512);
+		refl->update(qscene);
 
-			if (refl->m_target)
-				ia->targets[ia->numTargets++] = refl->m_target;
-
-			if (qscene->numSubScenes == RenderScene::MAX_SUB_SCENES) {
-				Errorf("MAX_SUB_SCENES exceeds");
-				break;
-			}
-		}
+		if (refl->m_target)
+			mat->setTexture(MaterialTextureId::Reflection, refl->m_target->getTexture());
 
 		if (qscene->numSubScenes == RenderScene::MAX_SUB_SCENES) {
 			Errorf("MAX_SUB_SCENES exceeds");
@@ -293,10 +283,10 @@ void RenderWorld::renderTo( RenderScene *qscene, QuadNode *node )
 		s_drawActor = false;
 
 		switch (ref) {
-			case 2:
-				s_drawActor = true;
-			case 1:
-				s_drawTerrain = true;
+		case 2:
+			s_drawActor = true;
+		case 1:
+			s_drawTerrain = true;
 		}
 	} else if (qscene->sceneType == RenderScene::ShadowGen) {
 		if (r_terrainShadow.getBool()) {
@@ -357,9 +347,8 @@ void RenderWorld::renderTo( RenderScene *qscene, QuadNode *node )
 		side = Plane::Front;
 	}
 
-	if (s_drawActor) {
+	if (s_drawActor)
 		markVisible_r(qscene, node, side);
-	}
 
 	// issue entity manager
 	for (int i = 0; i < g_renderSystem->getNumEntityManager(); i++) {
@@ -378,9 +367,8 @@ void RenderWorld::markVisible_r(RenderScene *qscene, QuadNode *node, Plane::Side
 	if (node == NULL)
 		return;
 
-	if (node->bbox.empty()) {
+	if (node->bbox.empty())
 		return;
-	}
 
 	const RenderCamera &cam = qscene->camera;
 
@@ -434,16 +422,14 @@ void RenderWorld::markVisible_r(RenderScene *qscene, QuadNode *node, Plane::Side
 			continue;
 
 		// check if is light
-		if (entity->getKind() == RenderEntity::kLight || s_drawActor) {
+		if (entity->getKind() == RenderEntity::kLight || s_drawActor)
 			qscene->addEntity(entity);
-		}
 
-		if (!s_drawActor) {
+		if (!s_drawActor)
 			continue;
-		}
 
 #if 0
- 			Primitives prims = la->actor->getViewedPrimitives();
+ 		Primitives prims = la->actor->getViewedPrimitives();
 
 		for (size_t i = 0; i < prims.size(); i++) {
 			qscene->addInteraction(la->queued, prims[i]);
@@ -457,7 +443,6 @@ void RenderWorld::markVisible_r(RenderScene *qscene, QuadNode *node, Plane::Side
 		markVisible_r(qscene, node->children[1], side);
 		markVisible_r(qscene, node->children[2], side);
 		markVisible_r(qscene, node->children[3], side);
-	} else {
 	}
 
 	if (!r_showNode.getBool())

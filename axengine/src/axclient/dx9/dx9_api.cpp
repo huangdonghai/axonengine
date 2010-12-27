@@ -4,6 +4,13 @@ AX_BEGIN_NAMESPACE
 
 FastParams s_curParams1;
 FastParams s_curParams2;
+phandle_t s_curGlobalTextures[GlobalTextureId::MaxType];
+SamplerDesc s_curGlobalTextureSamplerDescs[GlobalTextureId::MaxType];
+DX9_SamplerState *s_curGlobalSamplerState[GlobalTextureId::MaxType];
+phandle_t s_curMaterialTextures[MaterialTextureId::MaxType];
+SamplerDesc s_curMaterialTextureSamplerDescs[MaterialTextureId::MaxType];
+DX9_SamplerState *s_curMaterialSamplerState[MaterialTextureId::MaxType];
+
 static DX9_Shader *s_curShader;
 static Technique s_curTechnique;
 static ConstBuffers s_curConstBuffer;
@@ -15,10 +22,6 @@ static const void *s_curVerticeBufferUP;
 static VertexType s_curVertexType;
 static int s_curVertexOffset;
 static const void *s_curIndiceBufferUP;
-static phandle_t s_curGlobalTextures[GlobalTextureId::MaxType];
-static SamplerDesc s_curGlobalTextureSamplerDescs[GlobalTextureId::MaxType];
-static phandle_t s_curMaterialTextures[MaterialTextureId::MaxType];
-static SamplerDesc s_curMaterialTextureSamplerDescs[MaterialTextureId::MaxType];
 static DepthStencilDesc s_curDepthStencilDesc;
 static RasterizerDesc s_curRasterizerDesc;
 static BlendDesc s_curBlendDesc;

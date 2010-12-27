@@ -96,9 +96,10 @@ public:
 // class DX9_SamplerInfo
 //--------------------------------------------------------------------------
 
-class DX9_SamplerInfo : public SamplerInfo
+class DX9_SamplerInfo
 {
 public:
+	std::string m_textureName;
 	FixedString m_paramName;
 	D3DXHANDLE m_param;
 	int m_register;
@@ -111,6 +112,7 @@ public:
 	friend class DX9_Shader;
 	
 	struct ParamDesc {
+		int setflag;
 		D3DXCONSTANT_DESC d3dDesc;
 	};
 
@@ -141,18 +143,18 @@ private:
 	IDirect3DVertexShader9 *m_vs;
 	IDirect3DPixelShader9 *m_ps;
 
-	// material sampler
-	int m_matSamplers[MaterialTextureId::MaxType];
-
 	// sys sampler
 	int m_sysSamplers[GlobalTextureId::MaxType];
+
+	// material sampler
+	int m_matSamplers[MaterialTextureId::MaxType];
 
 	// batch sampler
 	DX9_SamplerInfos m_batchSamplers;
 
 	// local parameter
-	Dict<FixedString, ParamDesc> m_vsParameters;
-	Dict<FixedString, ParamDesc> m_psParameters;
+	int m_setflag;
+	Dict<FixedString, ParamDesc> m_parameters;
 };
 
 class DX9_Technique
@@ -179,14 +181,6 @@ private:
 class DX9_Shader : public Unknown
 {
 public:
-	enum {
-		SREG_BEGIN = 8,
-		SREG_END = 63,
-		IREG_BEGIN = 64,
-		IREG_END = 79,
-		PREG_BEGIN = 80,
-		PREG_END = 95
-	};
 	friend class DX9_Pass;
 	friend class DX9_Technique;
 	friend class DX9_ShaderManager;
@@ -196,9 +190,6 @@ public:
 
 	// implement Shader
 	bool init(const std::string &name, const ShaderMacro &macro = g_shaderMacro);
-	bool haveTextureTarget() const;
-	int getNumSampler() const;
-	SamplerInfo *getSamplerAnno(int index) const;
 	bool haveTechnique(Technique tech) const;
 	const ShaderInfo *getShaderInfo() const { return 0; }
 
@@ -211,8 +202,8 @@ public:
 	void endPass();
 	void end();
 
-	static bool isGlobalReg(int reg) { return reg >= SREG_BEGIN && reg <= IREG_END; }
-	static bool isPrimitiveReg(int reg) { return reg >= PREG_BEGIN && reg <= PREG_END; }
+	static bool isGlobalReg(int reg) { return reg >= SCENECONST_REG && reg < PRIMITIVECONST_REG; }
+	static bool isPrimitiveReg(int reg) { return reg >= PRIMITIVECONST_REG; }
 
 protected:
 	ConstBuffer *parseStruct(LPD3DXCONSTANTTABLE constTable, const char *paramName);
@@ -230,19 +221,21 @@ protected:
 	D3DXHANDLE findTechnique(Technique tech);
 	D3DXHANDLE getUsedParameter(const char *name);
 	bool isParameterUsed(D3DXHANDLE param);
+	bool isGlobalTextureUsed(GlobalTextureId id) const;
+	bool isMaterialTextureUsed(MaterialTextureId id) const;
 
 private:
 	LPD3DXEFFECT m_object;              // Effect object
 	std::string m_keyString;
 
-	D3DXHANDLE m_d3dxTechniques[Technique::Number];
+	D3DXHANDLE m_d3dxTechniques[Technique::MaxType];
 	IDirect3DTexture9 *m_samplerBound[MaterialTextureId::MaxType];
 	D3DXHANDLE m_curTechnique;
 
 	DX9_SamplerInfos m_samplerInfos;
 
 	// pixel2texel
-	DX9_Technique *m_techniques[Technique::Number];
+	DX9_Technique *m_techniques[Technique::MaxType];
 	DX9_Technique *m_curTech;
 
 	// shader info

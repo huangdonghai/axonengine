@@ -60,7 +60,6 @@ struct GlobalTextureId {
 		GeoBuffer,
 		LightBuffer,
 		SceneColor,
-		LightMap,
 		ShadowMap,
 
 		MaxType
@@ -71,10 +70,14 @@ struct GlobalTextureId {
 struct MaterialTextureId {
 	enum Type {
 		// material sampler
-		Diffuse, Normal, Specular, Detail, DetailNormal, Opacit, Emission, Displacement, Envmap, 
+		Diffuse, Normal, Specular, Detail, DetailNormal, Opacit, Emission,
+		Displacement, Env,
+
+		// terrain sampler
+		TerrainColor, TerrainNormal, LayerAlpha,
 
 		// engine sampler
-		TerrainColor, TerrainNormal, LayerAlpha,
+		Reflection, LightMap, ShadowMap,
 
 		MaxType
 	};

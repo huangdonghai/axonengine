@@ -360,7 +360,7 @@ namespace { namespace Internal {
 						samplertype = MaterialTextureId::Diffuse;
 						break;
 					case hkxMaterial::TEX_REFLECTION:
-						samplertype = MaterialTextureId::Envmap;
+						samplertype = MaterialTextureId::Env;
 						break;
 					case hkxMaterial::TEX_BUMP:
 					case hkxMaterial::TEX_NORMAL:

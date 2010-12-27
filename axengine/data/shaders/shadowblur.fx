@@ -70,17 +70,17 @@ half4 FP_main(PostVertexOut IN) : COLOR {
 	float	weight = 0;
 
 	// get center depth
-	float center_depth = tex2D(g_sceneDepth, screenTc.xy).r;
+	float center_depth = tex2D(g_geoBuffer, screenTc.xy).r;
 
 	for(int i = 0; i < 11; i++) {
 		float2 offset_tc = screenTc.xy + g_sampleOffsets[i];
 #if 0
-		float cur_depth = tex2D(g_sceneDepth, offset_tc);
+		float cur_depth = tex2D(g_geoBuffer, offset_tc);
 		if (abs(cur_depth - center_depth) > s_depthDeltaMax) {
 			continue;
 		}
 #else
-		float cur_depth = tex2D(g_sceneDepth, offset_tc).r;
+		float cur_depth = tex2D(g_geoBuffer, offset_tc).r;
 		float c = step(abs(cur_depth - center_depth), s_depthDeltaMax);
 		float D = c * g_sampleWeights[i];
 #endif

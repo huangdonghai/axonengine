@@ -135,7 +135,7 @@ bool RenderScene::addInteraction(Interaction *ia)
 		}
 	}
 
-	if (shader->m_haveTextureTarget && sceneType != WorldMain) {
+	if (shader->m_needReflection && sceneType != WorldMain) {
 		numInteractions--;
 		return false;
 	}

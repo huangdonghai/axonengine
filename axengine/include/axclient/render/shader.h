@@ -320,7 +320,7 @@ private:
 
 struct Technique {
 	enum Type {
-		Zpass, ShadowGen, Main, Layer, Glow, Reflection, Number
+		Zpass, ShadowGen, Main, Layer, Glow, Reflection, MaxType
 	};
 
 	AX_DECLARE_ENUM(Technique);
@@ -347,45 +347,12 @@ inline std::string Technique::toString()
 
 //-------------------------------------------------------------------------
 
-// render to texture annotations
-class SamplerInfo
-{
-public:
-	enum RenderType {
-		None,
-		Reflection,
-		SceneColor,
-	};
-
-	// default c-tor
-	SamplerInfo()
-	{
-		m_renderType = None;
-		m_width = 512;
-		m_height = 512;
-		m_needClearColor = true;
-		m_needClearDepth = true;
-	}
-
-	RenderType m_renderType;
-	FixedString m_texName;
-	int m_width, m_height;
-
-	bool m_needClearColor;
-	bool m_needClearDepth;
-	bool m_needHdr;
-};
-typedef std::vector<SamplerInfo*> SamplerInfos;
-
-
-//-------------------------------------------------------------------------
-
 class ShaderInfo
 {
 public:
-	bool m_haveTextureTarget;
-	SamplerInfos m_samplerInfos;
-	bool m_haveTechnique[Technique::Number];
+	bool m_needReflection;
+	bool m_needSceneColor;
+	bool m_haveTechnique[Technique::MaxType];
 };
 
 typedef Dict<FixedString, ShaderInfo*> ShaderInfoDict;

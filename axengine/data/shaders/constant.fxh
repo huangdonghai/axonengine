@@ -132,9 +132,9 @@ read the license and understand and accept it fully.
 
 #include "sceneconst.fxh"
 #include "interactionconst.fxh"
-
+#if 0
 AX_SAMPLER_UNIFORMS
-
+#endif
 // shader debug mode
 #define DEBUG_NONE			0
 #define DEBUG_DIFFUSEMAP	1

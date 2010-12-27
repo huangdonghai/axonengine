@@ -142,7 +142,7 @@ protected:
 private:
 	std::string m_name;
 	CGeffect m_cgfx;
-	CGtechnique m_techniques[Technique::Number];
+	CGtechnique m_techniques[Technique::MaxType];
 	CGparameter m_sysSamplers[MaterialTextureId::MaxType];
 	GLuint m_samplerBound[MaterialTextureId::MaxType];
 

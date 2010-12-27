@@ -71,7 +71,7 @@ half4 FP_main(ShadowVertexOut IN) : COLOR {
 	half4 result = 0;
 
 	// get gbuffer
-	half4 gbuffer = tex2Dproj(g_sceneDepth, IN.screenTc);
+	half4 gbuffer = tex2Dproj(g_geoBuffer, IN.screenTc);
 
 	float3 worldpos = g_cameraPos.xyz + IN.viewDir.xyz / IN.viewDir.w * gbuffer.a;
 
@@ -117,16 +117,6 @@ technique main {
     pass p0 {
         VERTEXPROGRAM = compile VP_3_0 VP_main();
 		FRAGMENTPROGRAM = compile FP_3_0 FP_main();
-#if 0//F_MASKFRONT
-	    DEPTHTEST = true;
-		CULL_BACK;
-#else
-		DEPTHTEST = false;
-		CULL_FRONT;
-#endif
-		DEPTHMASK = false;
-
-		BLEND_ADD;
     }
 }
 

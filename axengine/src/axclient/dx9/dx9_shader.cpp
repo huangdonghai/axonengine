@@ -29,20 +29,23 @@ static SamplerParam s_materialTextureNames[] = {
 	MaterialTextureId::Opacit, "g_opacitMap",
 	MaterialTextureId::Emission, "g_emissionMap",
 	MaterialTextureId::Displacement, "g_displacementMap",
-	MaterialTextureId::Envmap, "g_envMap",
+	MaterialTextureId::Env, "g_envMap",
 
-	// engine sampler
+	// terrain sampler
 	MaterialTextureId::TerrainColor, "g_terrainColor",
 	MaterialTextureId::TerrainNormal, "g_terrainNormal",
 	MaterialTextureId::LayerAlpha, "g_layerAlpha",
+
+	// engine sampler
+	MaterialTextureId::Reflection, "g_reflectionMap",
+	MaterialTextureId::LightMap, "g_lightMap",
+	MaterialTextureId::ShadowMap, "g_shadowMap"
 };
 
 static SamplerParam s_globalTextureNames[] = {
-	GlobalTextureId::GeoBuffer, "g_gbuffer",
+	GlobalTextureId::GeoBuffer, "g_geoBuffer",
 	GlobalTextureId::LightBuffer, "g_lightBuffer",
 	GlobalTextureId::SceneColor, "g_sceneColor",
-	GlobalTextureId::LightMap, "g_lightMap",
-	GlobalTextureId::ShadowMap, "g_shadowMap"
 };
 
 class EffectHelper
@@ -317,7 +320,7 @@ void DX9_Pass::initVs()
 
 			ParamDesc paramDesc;
 			paramDesc.d3dDesc = constDesc;
-			m_vsParameters[constDesc.Name] = paramDesc;
+			m_parameters[constDesc.Name] = paramDesc;
 		}
 
 		continue;
@@ -361,7 +364,7 @@ void DX9_Pass::initPs()
 
 			ParamDesc paramDesc;
 			paramDesc.d3dDesc = constDesc;
-			m_psParameters[constDesc.Name] = paramDesc;
+			m_parameters[constDesc.Name] = paramDesc;
 		}
 
 		continue;
@@ -409,18 +412,18 @@ void DX9_Pass::initState()
 
 void DX9_Pass::initSampler(const D3DXCONSTANT_DESC &desc)
 {
-	// check material sampler
-	for (int i = 0; i < ArraySize(s_materialTextureNames); i++) {
-		if (Strequ(s_materialTextureNames[i].paramname, desc.Name)) {
-			m_matSamplers[s_materialTextureNames[i].type] = desc.RegisterIndex;
-			return;
-		}
-	}
-
 	// check global sampler
 	for (int i = 0; i < ArraySize(s_globalTextureNames); i++) {
 		if (Strequ(s_globalTextureNames[i].paramname, desc.Name)) {
 			m_sysSamplers[s_globalTextureNames[i].type] = desc.RegisterIndex;
+			return;
+		}
+	}
+
+	// check material sampler
+	for (int i = 0; i < ArraySize(s_materialTextureNames); i++) {
+		if (Strequ(s_materialTextureNames[i].paramname, desc.Name)) {
+			m_matSamplers[s_materialTextureNames[i].type] = desc.RegisterIndex;
 			return;
 		}
 	}
@@ -453,6 +456,13 @@ void DX9_Pass::initSampler(const D3DXCONSTANT_DESC &desc)
 	// local sampler
 	//	m_psParameters[desc.Name] = desc;
 }
+
+extern phandle_t s_curGlobalTextures[GlobalTextureId::MaxType];
+extern SamplerDesc s_curGlobalTextureSamplerDescs[GlobalTextureId::MaxType];
+extern DX9_SamplerState *s_curGlobalSamplerState[GlobalTextureId::MaxType];
+extern phandle_t s_curMaterialTextures[MaterialTextureId::MaxType];
+extern SamplerDesc s_curMaterialTextureSamplerDescs[MaterialTextureId::MaxType];
+extern DX9_SamplerState *s_curMaterialSamplerState[MaterialTextureId::MaxType];
 
 void DX9_Pass::begin()
 {
@@ -536,6 +546,28 @@ void DX9_Pass::begin()
 			d3d9StateManager->setTexture(sa->m_register, tex);
 		}
 	}
+#else
+	// set primitive parameters
+	setPrimitiveParameters();
+
+	// set global textures
+	for (int i = 0; i < GlobalTextureId::MaxType; i++) {
+		if (m_sysSamplers[i] != 0) {
+			dx9_device->SetTexture(m_sysSamplers[i], s_curGlobalTextures[i]->to<IDirect3DBaseTexture9 *>());
+			DX9_SamplerState::find(m_sysSamplers[i], s_curGlobalTextureSamplerDescs[i])->apply();
+		}
+	}
+
+	// set material textures
+	for (int i = 0; i < MaterialTextureId::MaxType; i++) {
+		if (m_matSamplers[i] != 0) {
+			dx9_device->SetTexture(m_matSamplers[i], s_curMaterialTextures[i]->to<IDirect3DBaseTexture9 *>());
+			DX9_SamplerState::find(m_matSamplers[i], s_curMaterialTextureSamplerDescs[i])->apply();
+		}
+	}
+
+	// set batch texture
+	// TODO
 #endif
 }
 
@@ -582,6 +614,7 @@ void DX9_Pass::setPrimitiveParameters()
 		setParameter(desc, value, true);
 	}
 #else
+	m_setflag++;
 	// set params1
 	for (int i = 0; i < s_curParams1.m_numItems; i++) {
 		FixedString name(s_curParams1.m_items[i].nameId);
@@ -592,6 +625,21 @@ void DX9_Pass::setPrimitiveParameters()
 	for (int i = 0; i < s_curParams2.m_numItems; i++) {
 		FixedString name(s_curParams2.m_items[i].nameId);
 		setParameter(name, s_curParams2.m_items[i].count, &s_curParams2.m_floatData[s_curParams2.m_items[i].offset]);
+	}
+
+	// if not set by material parameter, set it to default value
+	Dict<FixedString, ParamDesc>::iterator it = m_parameters.begin();
+	for (; it != m_parameters.end(); ++it) {
+		ParamDesc &param = it->second;
+
+		if (param.setflag == m_setflag)
+			continue;
+
+		if (!param.d3dDesc.DefaultValue)
+			continue;
+
+		dx9_device->SetPixelShaderConstantF(param.d3dDesc.RegisterIndex, (const float*)param.d3dDesc.DefaultValue, param.d3dDesc.RegisterCount);
+		dx9_device->SetVertexShaderConstantF(param.d3dDesc.RegisterIndex, (const float*)param.d3dDesc.DefaultValue, param.d3dDesc.RegisterCount);
 	}
 #endif
 }
@@ -620,9 +668,19 @@ void DX9_Pass::setParameter(const ParamDesc &param, const float *value, bool isP
 #endif
 }
 
-void DX9_Pass::setParameter( const FixedString &name, int numFloats, const float *data )
+void DX9_Pass::setParameter(const FixedString &name, int numFloats, const float *data)
 {
+	Dict<FixedString, ParamDesc>::iterator it = m_parameters.find(name);
 
+	if (it == m_parameters.end()) {
+		return;
+	}
+
+	ParamDesc &param = it->second;
+	param.setflag = m_setflag;
+
+	dx9_device->SetPixelShaderConstantF(param.d3dDesc.RegisterIndex, data, param.d3dDesc.RegisterCount);
+	dx9_device->SetVertexShaderConstantF(param.d3dDesc.RegisterIndex, data, param.d3dDesc.RegisterCount);
 }
 
 
@@ -633,7 +691,7 @@ void DX9_Pass::setParameter( const FixedString &name, int numFloats, const float
 
 DX9_Shader::DX9_Shader()
 {
-	m_shaderInfo.m_haveTextureTarget = false;
+	m_shaderInfo.m_needReflection = false;
 	m_curTechnique = 0;
 }
 
@@ -716,21 +774,6 @@ bool DX9_Shader::init(const std::string &name, const ShaderMacro &macro)
 	return true;
 }
 
-bool DX9_Shader::haveTextureTarget() const
-{
-	return m_shaderInfo.m_haveTextureTarget;
-}
-
-int DX9_Shader::getNumSampler() const
-{
-	return s2i(m_samplerInfos.size());
-}
-
-SamplerInfo *DX9_Shader::getSamplerAnno(int index) const
-{
-	return m_samplerInfos[index];
-}
-
 bool DX9_Shader::haveTechnique(Technique tech) const
 {
 	return m_techniques[tech] != 0;
@@ -738,7 +781,7 @@ bool DX9_Shader::haveTechnique(Technique tech) const
 
 void DX9_Shader::initTechniques()
 {
-	for (int i = 0; i < Technique::Number; i++) {
+	for (int i = 0; i < Technique::MaxType; i++) {
 		m_d3dxTechniques[i] = findTechnique(i);
 	}
 }
@@ -790,54 +833,29 @@ void DX9_Shader::initSamplerAnn(D3DXHANDLE param)
 	for (UINT i = 0; i < paramDesc.Annotations; i++) {
 		D3DXHANDLE anno = m_object->GetAnnotation(texparam, i);
 
-		if (!anno) {
+		if (!anno)
 			continue;
-		}
 
 		D3DXPARAMETER_DESC annoDesc;
 		V(m_object->GetParameterDesc(anno, &annoDesc));
 
-		if (!Striequ(annoDesc.Name, "file")) {
+		if (!Striequ(annoDesc.Name, "file"))
 			continue;
-		}
 
 		std::string filename = helper.getString(anno);
 
-		if (filename.empty()) {
+		if (filename.empty())
 			break;
-		}
-
-		if (filename[0] != '$') {
-#if 0
-			IDirect3DTexture9 *tex = FindAsset_<IDirect3DTexture9>(filename);
-			if (tex) {
-				m_object->SetTexture(texparam, tex->getObject());
-			}
-#endif
-			return;
-		}
-
-		SamplerInfo::RenderType rendertype = SamplerInfo::None;
-		if (Striequ(filename.c_str(), "$SceneColor")) {
-			rendertype = SamplerInfo::SceneColor;
-		} else if (Striequ(filename.c_str(), "$Reflection")) {
-			rendertype = SamplerInfo::Reflection;
-		}
-
-		if (rendertype == SamplerInfo::None) {
-			return;
-		}
 
 		DX9_SamplerInfo *san = new DX9_SamplerInfo;
 
 		san->m_param = texparam;
-		san->m_renderType = rendertype;
 		san->m_paramName = paramname;
-		san->m_texName = filename;
+		san->m_textureName = filename;
 
 		m_samplerInfos.push_back(san);
 
-		m_shaderInfo.m_haveTextureTarget = true;
+		m_shaderInfo.m_needReflection = true;
 	}
 }
 
@@ -890,7 +908,7 @@ D3DXHANDLE DX9_Shader::getUsedParameter(const char *name)
 	}
 
 	int i;
-	for (i = 0; i < Technique::Number; i++) {
+	for (i = 0; i < Technique::MaxType; i++) {
 		if (!m_d3dxTechniques[i]) {
 			continue;
 		}
@@ -900,7 +918,7 @@ D3DXHANDLE DX9_Shader::getUsedParameter(const char *name)
 		}
 	}
 
-	if (i == Technique::Number) {
+	if (i == Technique::MaxType) {
 		return 0;
 	} else {
 		return param;
@@ -977,31 +995,27 @@ void DX9_Shader::setPixelToTexel(int width, int height)
 
 bool DX9_Shader::isParameterUsed(D3DXHANDLE param)
 {
-	if (!param) {
+	if (!param)
 		return false;
-	}
 
 	int i;
-	for (i = 0; i < Technique::Number; i++) {
-		if (!m_d3dxTechniques[i]) {
+	for (i = 0; i < Technique::MaxType; i++) {
+		if (!m_d3dxTechniques[i])
 			continue;
-		}
 
-		if (m_object->IsParameterUsed(param, m_d3dxTechniques[i])) {
+		if (m_object->IsParameterUsed(param, m_d3dxTechniques[i]))
 			break;
-		}
 	}
 
-	if (i == Technique::Number) {
+	if (i == Technique::MaxType)
 		return false;
-	} else {
+	else
 		return true;
-	}
 }
 
 void DX9_Shader::initAxonObject()
 {
-	for (int i = 0; i < Technique::Number; i++) {
+	for (int i = 0; i < Technique::MaxType; i++) {
 		if (!m_d3dxTechniques[i]) {
 			m_techniques[i] = 0;
 			continue;
@@ -1117,16 +1131,24 @@ ConstBuffer *DX9_Shader::parseStruct(LPD3DXCONSTANTTABLE constTable, const char 
 
 void DX9_Shader::initShaderInfo()
 {
-	for (int i = 0; i < Technique::Number; i++) {
+	for (int i = 0; i < Technique::MaxType; i++)
 		m_shaderInfo.m_haveTechnique[i] = m_techniques[i] != 0;
-	}
 
-	for (int i = 0; i < m_samplerInfos.size(); i++) {
-		m_shaderInfo.m_samplerInfos.push_back(m_samplerInfos[i]);
-	}
-
-	/*m_shaderInfo.m_haveTextureTarget;*/
+	m_shaderInfo.m_needReflection = isMaterialTextureUsed(MaterialTextureId::Reflection);
+	m_shaderInfo.m_needSceneColor = isGlobalTextureUsed(GlobalTextureId::SceneColor);
 }
+
+bool DX9_Shader::isGlobalTextureUsed(GlobalTextureId id) const
+{
+	return false;
+}
+
+bool DX9_Shader::isMaterialTextureUsed(MaterialTextureId id) const
+{
+	return false;
+}
+
+
 
 //--------------------------------------------------------------------------
 // class D3D9shadermanager

@@ -61,7 +61,7 @@ static const float delta = 0.000001;
 
 half4 FP_main(ShadowVertexOut IN) : COLOR {
 	// get scene depth
-	float depth = tex2Dproj(g_sceneDepth, IN.screenTc).a;
+	float depth = tex2Dproj(g_geoBuffer, IN.screenTc).a;
 
 	float4 worldpos = float4(g_cameraPos.xyz + IN.viewDir.xyz * depth, 1);
 

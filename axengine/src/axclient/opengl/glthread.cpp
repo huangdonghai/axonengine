@@ -537,7 +537,7 @@ void GLthread::drawPass_zfill(RenderScene *scene) {
 	}
 //		glColorMask(1, 1, 1, 1);
 
-	AX_SU(g_sceneDepth, s_gbuffer->getTextureGL());
+	AX_SU(g_geoBuffer, s_gbuffer->getTextureGL());
 
 	unsetScene(scene, &clearer, s_gbuffer);
 }

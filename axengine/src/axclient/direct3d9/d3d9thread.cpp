@@ -716,7 +716,7 @@ void D3D9Thread::drawScene_world(RenderScene *scene, const D3D9clearer &clearer)
 
 	if (1) {
 		s_gbuffer = d3d9FrameWnd->m_gbuffer;
-		AX_SU(g_sceneDepth, s_gbuffer->getTextureDX());
+		AX_SU(g_geoBuffer, s_gbuffer->getTextureDX());
 
 		s_lbuffer = d3d9FrameWnd->m_lightBuffer;
 		AX_SU(g_lightBuffer, s_lbuffer->getTextureDX());
