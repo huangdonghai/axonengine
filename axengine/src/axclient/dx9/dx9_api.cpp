@@ -2,8 +2,8 @@
 
 AX_BEGIN_NAMESPACE
 
-static FastParams s_curParams1;
-static FastParams s_curParams;
+FastParams s_curParams1;
+FastParams s_curParams2;
 static DX9_Shader *s_curShader;
 static Technique s_curTechnique;
 static ConstBuffers s_curConstBuffer;
@@ -446,9 +446,9 @@ static void dx9SetParameters(const FastParams *params1, const FastParams *params
 		s_curParams1.clear();
 
 	if (params2)
-		s_curParams = *params2;
+		s_curParams2 = *params2;
 	else
-		s_curParams.clear();
+		s_curParams2.clear();
 }
 
 static void dx9SetVertices(phandle_t vb, VertexType vt, int offset)

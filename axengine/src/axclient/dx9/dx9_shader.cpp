@@ -15,10 +15,12 @@ AX_BEGIN_NAMESPACE
 static ID3DXEffectPool *s_effectPool = NULL;   // Effect pool for sharing parameters
 
 // cache system samplers
-static struct SamplerParam {
-	MaterialTextureId type;
+struct SamplerParam {
+	int type;
 	const char *paramname;
-} samplername[] = {
+};
+
+static SamplerParam s_materialTextureNames[] = {
 	MaterialTextureId::Diffuse, "g_diffuseMap",
 	MaterialTextureId::Normal, "g_normalMap",
 	MaterialTextureId::Specular, "g_specularMap",
@@ -35,6 +37,13 @@ static struct SamplerParam {
 	MaterialTextureId::LayerAlpha, "g_layerAlpha",
 };
 
+static SamplerParam s_globalTextureNames[] = {
+	GlobalTextureId::GeoBuffer, "g_gbuffer",
+	GlobalTextureId::LightBuffer, "g_lightBuffer",
+	GlobalTextureId::SceneColor, "g_sceneColor",
+	GlobalTextureId::LightMap, "g_lightMap",
+	GlobalTextureId::ShadowMap, "g_shadowMap"
+};
 
 class EffectHelper
 {
@@ -270,7 +279,9 @@ DX9_Pass::DX9_Pass(DX9_Shader *shader, D3DXHANDLE d3dxhandle)
 
 	memset(m_matSamplers, -1, sizeof(m_matSamplers));
 
+#if 0
 	initState();
+#endif
 	initVs();
 	initPs();
 }
@@ -301,15 +312,11 @@ void DX9_Pass::initVs()
 			// error
 
 		} else {
-#if 0
-			if (g_uniforms.isVsregisterShared(constDesc.RegisterIndex))
+			if (!DX9_Shader::isPrimitiveReg(constDesc.RegisterIndex))
 				continue;
-#endif
+
 			ParamDesc paramDesc;
 			paramDesc.d3dDesc = constDesc;
-#if 0
-			paramDesc.p2t = 0;
-#endif
 			m_vsParameters[constDesc.Name] = paramDesc;
 		}
 
@@ -349,15 +356,11 @@ void DX9_Pass::initPs()
 		if (constDesc.RegisterSet == D3DXRS_SAMPLER) {
 			initSampler(constDesc);
 		} else {
-#if 0
-			if (g_uniforms.isPsregisterShared(constDesc.RegisterIndex))
+			if (!DX9_Shader::isPrimitiveReg(constDesc.RegisterIndex))
 				continue;
-#endif
+
 			ParamDesc paramDesc;
 			paramDesc.d3dDesc = constDesc;
-#if 0
-			paramDesc.p2t = findPixel2Texel(constDesc.Name);
-#endif
 			m_psParameters[constDesc.Name] = paramDesc;
 		}
 
@@ -379,9 +382,9 @@ const DX9_Pixel2Texel*  DX9_Pass::findPixel2Texel(const String &name)
 }
 #endif
 
+#if 0
 void DX9_Pass::initState()
 {
-#if 0
 	HRESULT hr;
 	V(d3d9Device->GetVertexShader(&m_vs));
 	V(d3d9Device->GetPixelShader(&m_ps));
@@ -401,15 +404,23 @@ void DX9_Pass::initState()
 	m_blendEnable = d3d9StateManager->getRenderState(D3DRS_ALPHABLENDENABLE);
 	m_blendSrc = d3d9StateManager->getRenderState(D3DRS_SRCBLEND);
 	m_blendDst = d3d9StateManager->getRenderState(D3DRS_DESTBLEND);
-#endif
 }
+#endif
 
 void DX9_Pass::initSampler(const D3DXCONSTANT_DESC &desc)
 {
 	// check material sampler
-	for (UINT i = 0; i < ArraySize(samplername); i++) {
-		if (Strequ(samplername[i].paramname, desc.Name)) {
-			m_matSamplers[samplername[i].type] = desc.RegisterIndex;
+	for (int i = 0; i < ArraySize(s_materialTextureNames); i++) {
+		if (Strequ(s_materialTextureNames[i].paramname, desc.Name)) {
+			m_matSamplers[s_materialTextureNames[i].type] = desc.RegisterIndex;
+			return;
+		}
+	}
+
+	// check global sampler
+	for (int i = 0; i < ArraySize(s_globalTextureNames); i++) {
+		if (Strequ(s_globalTextureNames[i].paramname, desc.Name)) {
+			m_sysSamplers[s_globalTextureNames[i].type] = desc.RegisterIndex;
 			return;
 		}
 	}
@@ -528,7 +539,10 @@ void DX9_Pass::begin()
 #endif
 }
 
-void DX9_Pass::setParameters()
+extern FastParams s_curParams1;
+extern FastParams s_curParams2;
+
+void DX9_Pass::setPrimitiveParameters()
 {
 #if 0
 	const ShaderParams *mtrparams = 0;
@@ -567,6 +581,18 @@ void DX9_Pass::setParameters()
 
 		setParameter(desc, value, true);
 	}
+#else
+	// set params1
+	for (int i = 0; i < s_curParams1.m_numItems; i++) {
+		FixedString name(s_curParams1.m_items[i].nameId);
+		setParameter(name, s_curParams1.m_items[i].count, &s_curParams1.m_floatData[s_curParams1.m_items[i].offset]);
+	}
+
+	// set params2
+	for (int i = 0; i < s_curParams2.m_numItems; i++) {
+		FixedString name(s_curParams2.m_items[i].nameId);
+		setParameter(name, s_curParams2.m_items[i].count, &s_curParams2.m_floatData[s_curParams2.m_items[i].offset]);
+	}
 #endif
 }
 
@@ -593,6 +619,12 @@ void DX9_Pass::setParameter(const ParamDesc &param, const float *value, bool isP
 	}
 #endif
 }
+
+void DX9_Pass::setParameter( const FixedString &name, int numFloats, const float *data )
+{
+
+}
+
 
 
 //--------------------------------------------------------------------------
@@ -681,11 +713,6 @@ bool DX9_Shader::init(const std::string &name, const ShaderMacro &macro)
 	// init shader info
 	initShaderInfo();
 
-	return true;
-}
-
-bool DX9_Shader::isDepthWrite() const
-{
 	return true;
 }
 

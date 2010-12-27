@@ -122,13 +122,16 @@ public:
 protected:
 	void initVs();
 	void initPs();
+#if 0
 	void initState();
+#endif
 	void initSampler(const D3DXCONSTANT_DESC &desc);
 #if 0
 	const DX9_Pixel2Texel *findPixel2Texel(const String &name);
 #endif
-	void setParameters();
+	void setPrimitiveParameters();
 	void setParameter(const ParamDesc &param, const float *value, bool isPixelShader);
+	void setParameter(const FixedString &name, int numFloats, const float *data);
 
 private:
 	DX9_Shader *m_shader;
@@ -176,6 +179,14 @@ private:
 class DX9_Shader : public Unknown
 {
 public:
+	enum {
+		SREG_BEGIN = 8,
+		SREG_END = 63,
+		IREG_BEGIN = 64,
+		IREG_END = 79,
+		PREG_BEGIN = 80,
+		PREG_END = 95
+	};
 	friend class DX9_Pass;
 	friend class DX9_Technique;
 	friend class DX9_ShaderManager;
@@ -185,7 +196,6 @@ public:
 
 	// implement Shader
 	bool init(const std::string &name, const ShaderMacro &macro = g_shaderMacro);
-	bool isDepthWrite() const;
 	bool haveTextureTarget() const;
 	int getNumSampler() const;
 	SamplerInfo *getSamplerAnno(int index) const;
@@ -200,6 +210,9 @@ public:
 	void beginPass(UINT pass);
 	void endPass();
 	void end();
+
+	static bool isGlobalReg(int reg) { return reg >= SREG_BEGIN && reg <= IREG_END; }
+	static bool isPrimitiveReg(int reg) { return reg >= PREG_BEGIN && reg <= PREG_END; }
 
 protected:
 	ConstBuffer *parseStruct(LPD3DXCONSTANTTABLE constTable, const char *paramName);

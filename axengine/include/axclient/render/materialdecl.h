@@ -118,7 +118,7 @@ public:
 		m_numItems++;
 	}
 
-private:
+public:
 	enum { NUM_ITEMS = 16, NUM_FLOATDATA = 256 };
 	struct Item {
 		int nameId;
