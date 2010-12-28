@@ -759,7 +759,7 @@ void RenderContext::drawScene_world(RenderScene *scene, const RenderClearer &cle
 	int height = rect.height;
 
 	if (1) {
-		m_gbuffer = m_frameWindow->getGBuffer();
+		m_gbuffer = m_frameWindow->getGeoBuffer();
 		AX_ST(GeoBuffer, m_gbuffer->getTexture());
 
 		m_lbuffer = m_frameWindow->getLightBuffer();

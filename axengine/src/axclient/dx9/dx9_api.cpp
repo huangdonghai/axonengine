@@ -430,12 +430,29 @@ void dx9DeleteRasterizerState(phandle_t h)
 
 static void dx9SetRenderTarget(int index, phandle_t h)
 {
+	IUnknown *unknown = h->to<IUnknown *>();
 
+	if (!unknown) return;
+	IDirect3DTexture9 *texture = 0;
+	unknown->QueryInterface(IID_IDirect3DBaseTexture9, (void **)&texture);
+
+	IDirect3DSurface9 *surface = 0;
+	if (texture) {
+		texture->GetSurfaceLevel(0, &surface);
+	} else {
+		DX9_Window *window = h->to<DX9_Window *>();
+		surface = window->getSurface();
+	}
+	AX_ASSERT(surface);
+	dx9_device->SetRenderTarget(index, surface);
+	SAFE_RELEASE(surface);
 }
 
 static void dx9SetDepthStencil(phandle_t h)
 {
-
+	if (*h) {
+		dx9_device->SetDepthStencilSurface();
+	}
 }
 
 static void dx9SetViewport(const Rect &rect, const Vector2 & depthRange)

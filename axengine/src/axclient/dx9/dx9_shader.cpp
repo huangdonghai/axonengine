@@ -554,7 +554,7 @@ void DX9_Pass::begin()
 
 	// set global textures
 	for (int i = 0; i < GlobalTextureId::MaxType; i++) {
-		if (m_sysSamplers[i] > 0) {
+		if (m_sysSamplers[i] >= 0) {
 			dx9_device->SetTexture(m_sysSamplers[i], s_curGlobalTextures[i]->to<IDirect3DBaseTexture9 *>());
 			DX9_SamplerState::find(m_sysSamplers[i], s_curGlobalTextureSamplerDescs[i])->apply();
 		}
@@ -562,7 +562,7 @@ void DX9_Pass::begin()
 
 	// set material textures
 	for (int i = 0; i < MaterialTextureId::MaxType; i++) {
-		if (m_matSamplers[i] > 0) {
+		if (m_matSamplers[i] >= 0) {
 			dx9_device->SetTexture(m_matSamplers[i], s_curMaterialTextures[i]->to<IDirect3DBaseTexture9 *>());
 			DX9_SamplerState::find(m_matSamplers[i], s_curMaterialTextureSamplerDescs[i])->apply();
 		}

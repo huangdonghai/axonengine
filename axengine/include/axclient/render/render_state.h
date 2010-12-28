@@ -10,6 +10,21 @@ enum ElementType {
 	ElementType_TriStrip
 };
 
+struct RHandle
+{
+public:
+	RHandle() : m_phandle(0) {}
+
+	RHandle &operator=(void *p) { *m_phandle = p; }
+
+	template<class Q>
+	Q cast() { return m_phandle->to<Q>(); }
+	void alloc() { m_phandle = new Handle; }
+	void free() { delete m_phandle; }
+
+	Handle *m_phandle;
+};
+
 struct SamplerDesc {
 	enum ClampMode {
 		ClampMode_Repeat,

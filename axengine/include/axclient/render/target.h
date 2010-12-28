@@ -51,7 +51,7 @@ public:
 	void setWindowHandle(Handle newId);
 	Handle getWindowHandle() { return m_wndId; }
 
-	RenderTarget *getGBuffer() const { return m_gbuffer; }
+	RenderTarget *getGeoBuffer() const { return m_geoBuffer; }
 	RenderTarget *getLightBuffer() const { return m_lightBuffer; }
 
 	phandle_t getPHandle()
@@ -77,7 +77,7 @@ private:
 	Handle m_wndId;
 	std::string m_name;
 
-	RenderTarget *m_gbuffer;
+	RenderTarget *m_geoBuffer;
 	RenderTarget *m_lightBuffer;
 };
 

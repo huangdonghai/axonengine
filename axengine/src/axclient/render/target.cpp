@@ -23,7 +23,7 @@ RenderTarget::RenderTarget(int width, int height, TexFormat format)
 	m_height = height;
 	m_format = format;
 
-	m_gbuffer = 0;
+	m_geoBuffer = 0;
 	m_lightBuffer = 0;
 
 	std::string texname;
@@ -42,7 +42,7 @@ RenderTarget::RenderTarget(Handle hwnd, const std::string &debugname)
 	m_height = -1;
 	m_format = TexFormat::AUTO;
 
-	m_gbuffer = 0;
+	m_geoBuffer = 0;
 	m_lightBuffer = 0;
 
 	setWindowHandle(hwnd);
@@ -54,7 +54,7 @@ RenderTarget::~RenderTarget()
 		g_apiWrap->deleteTexture2D(m_window);
 	} else {
 		g_apiWrap->deleteWindowTarget(m_window);
-		SafeDelete(m_gbuffer);
+		SafeDelete(m_geoBuffer);
 		SafeDelete(m_lightBuffer);
 	}
 }
@@ -107,9 +107,9 @@ void RenderTarget::setWindowHandle(Handle newId)
 		g_apiWrap->updateWindowTarget(m_window, newId, rect.width, rect.height);
 	}
 
-	SafeDelete(m_gbuffer);
+	SafeDelete(m_geoBuffer);
 	SafeDelete(m_lightBuffer);
-	m_gbuffer = new RenderTarget(rect.width, rect.height, TexFormat::RGBA16F);
+	m_geoBuffer = new RenderTarget(rect.width, rect.height, TexFormat::RGBA16F);
 	m_lightBuffer = new RenderTarget(rect.width, rect.height, TexFormat::BGRA8);
 
 	m_width = rect.width;
