@@ -38,6 +38,12 @@ public:
 	static void (*createRasterizerState)(phandle_t h, const RasterizerDesc &src);
 	static void (*deleteRasterizerState)(phandle_t h);
 #endif
+	static void (*setRenderTarget)(int index, phandle_t h);
+	static void (*setDepthStencil)(phandle_t h);
+
+	static void (*setViewport)(const Rect &rect, const Vector2 & depthRange);
+	static void (*setScissorRect)(const Rect &scissorRect);
+
 	static void (*setShader)(const FixedString &name, const ShaderMacro &sm, Technique tech);
 	static void (*setConstBuffer)(ConstBuffers::Type type, int size, const float *data);
 	static void (*setParameters)(const FastParams *params1, const FastParams *params2);
@@ -115,6 +121,9 @@ public:
 #endif
 	void setRenderTarget(int index, phandle_t h);
 	void setDepthStencil(phandle_t h);
+
+	void setViewport(const Rect &rect, const Vector2 & depthRange);
+	void setScissorRect(const Rect &scissorRect);
 
 	void setShader(const FixedString & name, const ShaderMacro &sm, Technique tech);
 	void setConstBuffer(ConstBuffers::Type type, int size, const float *data);

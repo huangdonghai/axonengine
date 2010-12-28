@@ -1082,6 +1082,7 @@ void DX9_Shader::checkGlobalStruct()
 }
 #endif
 
+#if 0
 ConstBuffer *DX9_Shader::mergeStruct(const char *paramName)
 {
 	int vsReg = 0;
@@ -1094,7 +1095,6 @@ ConstBuffer *DX9_Shader::mergeStruct(const char *paramName)
 
 ConstBuffer *DX9_Shader::parseStruct(LPD3DXCONSTANTTABLE constTable, const char *paramName)
 {
-#if 0
 	D3DXHANDLE param = constTable->GetConstantByName(0, paramName);
 	if (!param)
 		return 0;
@@ -1127,9 +1127,9 @@ ConstBuffer *DX9_Shader::parseStruct(LPD3DXCONSTANTTABLE constTable, const char 
 	}
 
 	return us;
-#endif
 	return 0;
 }
+#endif
 
 void DX9_Shader::initShaderInfo()
 {
@@ -1142,11 +1142,39 @@ void DX9_Shader::initShaderInfo()
 
 bool DX9_Shader::isGlobalTextureUsed(GlobalTextureId id) const
 {
+	for (int i = 0; i < Technique::MaxType; i++) {
+		DX9_Technique *tech = m_techniques[i];
+
+		if (!tech)
+			continue;
+
+		for (int j = 0; j < tech->m_numPasses; j++) {
+			DX9_Pass * pass = tech->m_passes[j];
+			if (!pass) continue;
+
+			if (pass->m_sysSamplers[id] != -1)
+				return true;
+		}
+	}
 	return false;
 }
 
 bool DX9_Shader::isMaterialTextureUsed(MaterialTextureId id) const
 {
+	for (int i = 0; i < Technique::MaxType; i++) {
+		DX9_Technique *tech = m_techniques[i];
+
+		if (!tech)
+			continue;
+
+		for (int j = 0; j < tech->m_numPasses; j++) {
+			DX9_Pass * pass = tech->m_passes[j];
+			if (!pass) continue;
+
+			if (pass->m_matSamplers[id] != -1)
+				return true;
+		}
+	}
 	return false;
 }
 
@@ -1289,7 +1317,7 @@ void DX9_ShaderManager::_initialize()
 	}
 }
 
-const ShaderInfo * DX9_ShaderManager::findShaderInfo(const FixedString &key)
+const ShaderInfo *DX9_ShaderManager::findShaderInfo(const FixedString &key)
 {
 	ShaderInfoDict::const_iterator it = m_shaderInfoDict.find(key);
 

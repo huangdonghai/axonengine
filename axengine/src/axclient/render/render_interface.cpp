@@ -34,6 +34,11 @@ void (*RenderApi::deleteDepthStencilState)(phandle_t h);
 void (*RenderApi::createRasterizerState)(phandle_t h, const RasterizerDesc &src);
 void (*RenderApi::deleteRasterizerState)(phandle_t h);
 #endif
+void (*RenderApi::setRenderTarget)(int index, phandle_t h);
+void (*RenderApi::setDepthStencil)(phandle_t h);
+
+void (*RenderApi::setViewport)(const Rect &rect, const Vector2 & depthRange);
+void (*RenderApi::setScissorRect)(const Rect &scissorRect);
 
 void (*RenderApi::setShader)(const FixedString & name, const ShaderMacro &sm, Technique tech);
 void (*RenderApi::setConstBuffer)(ConstBuffers::Type type, int size, const float *data);

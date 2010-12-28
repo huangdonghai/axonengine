@@ -206,8 +206,10 @@ public:
 	static bool isPrimitiveReg(int reg) { return reg >= PRIMITIVECONST_REG; }
 
 protected:
+#if 0
 	ConstBuffer *parseStruct(LPD3DXCONSTANTTABLE constTable, const char *paramName);
 	ConstBuffer *mergeStruct(const char *paramName);
+#endif
 	void initTechniques();
 	void initFeatures();
 

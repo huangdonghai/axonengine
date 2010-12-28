@@ -6,10 +6,8 @@ FastParams s_curParams1;
 FastParams s_curParams2;
 phandle_t s_curGlobalTextures[GlobalTextureId::MaxType];
 SamplerDesc s_curGlobalTextureSamplerDescs[GlobalTextureId::MaxType];
-DX9_SamplerState *s_curGlobalSamplerState[GlobalTextureId::MaxType];
 phandle_t s_curMaterialTextures[MaterialTextureId::MaxType];
 SamplerDesc s_curMaterialTextureSamplerDescs[MaterialTextureId::MaxType];
-DX9_SamplerState *s_curMaterialSamplerState[MaterialTextureId::MaxType];
 
 static DX9_Shader *s_curShader;
 static Technique s_curTechnique;
@@ -429,6 +427,24 @@ void dx9DeleteRasterizerState(phandle_t h)
 	SAFE_RELEASE(stateblock);
 }
 #endif
+
+static void dx9SetRenderTarget(int index, phandle_t h)
+{
+
+}
+
+static void dx9SetDepthStencil(phandle_t h)
+{
+
+}
+
+static void dx9SetViewport(const Rect &rect, const Vector2 & depthRange)
+{
+
+}
+static void dx9SetScissorRect(const Rect &scissorRect)
+{}
+
 
 static void dx9SetShader(const FixedString &name, const ShaderMacro &sm, Technique tech)
 {
