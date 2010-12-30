@@ -57,6 +57,7 @@ struct SurfaceType {
 
 struct GlobalTextureId {
 	enum Type {
+		DepthBuffer,
 		GeoBuffer,
 		LightBuffer,
 		SceneColor,

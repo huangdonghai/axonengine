@@ -291,8 +291,10 @@ private:
 
 	// runtime
 	RenderTarget *m_frameWindow;
-	RenderTarget *m_gbuffer;
-	RenderTarget *m_lbuffer;
+	RenderTarget *m_depthBuffer;
+	RenderTarget *m_geoBuffer;
+	RenderTarget *m_lightBuffer; // reuse as copied SceneColor
+	RenderTarget *m_sceneBuffer;
 	RenderTarget *m_worldRt;
 	RenderScene *m_worldScene;
 	Interaction *m_ia;

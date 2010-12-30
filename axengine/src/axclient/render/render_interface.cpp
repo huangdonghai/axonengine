@@ -759,11 +759,11 @@ void RenderContext::drawScene_world(RenderScene *scene, const RenderClearer &cle
 	int height = rect.height;
 
 	if (1) {
-		m_gbuffer = m_frameWindow->getGeoBuffer();
-		AX_ST(GeoBuffer, m_gbuffer->getTexture());
+		m_geoBuffer = m_frameWindow->getGeoBuffer();
+		AX_ST(GeoBuffer, m_geoBuffer->getTexture());
 
-		m_lbuffer = m_frameWindow->getLightBuffer();
-		AX_ST(LightBuffer, m_lbuffer->getTexture());
+		m_lightBuffer = m_frameWindow->getLightBuffer();
+		AX_ST(LightBuffer, m_lightBuffer->getTexture());
 
 	} else {
 		m_worldRt = 0;
@@ -889,7 +889,7 @@ void RenderContext::drawPass_gfill(RenderScene *scene)
 	clearer.clearDepth(true);
 	clearer.clearColor(true, Rgba::Zero);
 
-	setupScene(scene, &clearer, m_gbuffer);
+	setupScene(scene, &clearer, m_geoBuffer);
 
 	for (int i = 0; i < scene->numInteractions; i++) {
 		drawInteraction(scene->interactions[i]);
@@ -1033,9 +1033,9 @@ void RenderContext::drawPass_lights(RenderScene *scene)
 	clearer.clearColor(true, Rgba::Zero);
 
 	if (r_showLightBuf.getBool())
-		m_lbuffer = 0;
+		m_lightBuffer = 0;
 
-	setupScene(m_worldScene, &clearer, m_lbuffer);
+	setupScene(m_worldScene, &clearer, m_lightBuffer);
 	clearer.clearColor(false);
 
 	for (int i = 0; i < scene->numLights; i++) {

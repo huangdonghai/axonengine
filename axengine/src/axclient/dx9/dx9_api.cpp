@@ -457,10 +457,27 @@ static void dx9SetDepthStencil(phandle_t h)
 
 static void dx9SetViewport(const Rect &rect, const Vector2 & depthRange)
 {
+	D3DVIEWPORT9 d3dviewport;
 
+	d3dviewport.X = rect.x;
+	d3dviewport.Y = rect.y;
+	d3dviewport.Width = rect.width;
+	d3dviewport.Height = rect.height;
+	d3dviewport.MinZ = depthRange.x;
+	d3dviewport.MaxZ = depthRange.y;
+
+	V(dx9_device->SetViewport(&d3dviewport));
 }
+
 static void dx9SetScissorRect(const Rect &scissorRect)
-{}
+{
+	RECT d3dRect;
+	d3dRect.left = scissorRect.x;
+	d3dRect.top = scissorRect.y;
+	d3dRect.right = scissorRect.xMax();
+	d3dRect.bottom = scissorRect.yMax();
+	V(dx9_device->SetScissorRect(&d3dRect));
+}
 
 
 static void dx9SetShader(const FixedString &name, const ShaderMacro &sm, Technique tech)
