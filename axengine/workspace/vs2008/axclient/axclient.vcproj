@@ -575,6 +575,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\axclient\render\render_context.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\axclient\render\render_context.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\axclient\render\render_entity.cpp"
 				>
 			</File>

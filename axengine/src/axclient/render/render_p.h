@@ -4,6 +4,7 @@
 #include "selection.h"
 #include "render_thread.h"
 #include "render_interface.h"
+#include "render_context.h"
 #include "commandbuf.h"
 #include "render_state_p.h"
 #include "texture_p.h"

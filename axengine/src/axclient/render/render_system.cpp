@@ -381,22 +381,22 @@ IEntityManager *RenderSystem::getEntityManager(int index) const
 	return m_entityManagers[index];
 }
 
-void RenderSystem::texlist_f( const CmdArgs &args )
+void RenderSystem::texlist_f(const CmdArgs &args)
 {
 //	Texture::texlist_f(args);
 }
 
-void RenderSystem::matlist_f( const CmdArgs &args )
+void RenderSystem::matlist_f(const CmdArgs &args)
 {
 	Material::matlist_f(args);
 }
 
-int RenderSystem::testArgs( int arg0, float arg1, const Vector3 &arg2, const Color3 &arg3, const Rect &arg4 )
+int RenderSystem::testArgs(int arg0, float arg1, const Vector3 &arg2, const Color3 &arg3, const Rect &arg4)
 {
 	return 1975;
 }
 
-Rect RenderSystem::getWindowRect( Handle hwnd )
+Rect RenderSystem::getWindowRect(Handle hwnd)
 {
 	RECT r;
 	BOOL v = ::GetClientRect(hwnd.to<HWND>(), &r);
