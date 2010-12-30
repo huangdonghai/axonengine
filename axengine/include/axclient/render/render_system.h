@@ -77,6 +77,7 @@ public:
 	ReflectionMap *findReflection(RenderWorld *world, RenderEntity *actor, Primitive *prim, int width, int height);
 
 	static Rect getWindowRect(Handle hwnd);
+	static Size getScreenSize();
 
 protected:
 	// console command

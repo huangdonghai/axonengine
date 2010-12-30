@@ -162,12 +162,12 @@ Handle OsUtil::loadDll(const std::string &name)
 
 void *OsUtil::getProcEntry(Handle handle, const std::string &name)
 {
-	return (void *)::GetProcAddress(handle.to<HMODULE>(), name.c_str());
+	return (void *)::GetProcAddress(handle.castTo<HMODULE>(), name.c_str());
 }
 
 bool OsUtil::freeDll(Handle handle)
 {
-	return ::FreeLibrary(handle.to<HMODULE>()) ? true : false;
+	return ::FreeLibrary(handle.castTo<HMODULE>()) ? true : false;
 }
 
 #include "Iphlpapi.h"

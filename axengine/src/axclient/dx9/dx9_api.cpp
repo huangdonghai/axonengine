@@ -156,7 +156,7 @@ void dx9CreateTexture2D(phandle_t h, TexFormat format, int width, int height, in
 
 static void sUploadTexture(phandle_t h, int level, const void *pixels, TexFormat format, IEventHandler *eventHandler)
 {
-	LPDIRECT3DTEXTURE9 obj = h->to<LPDIRECT3DTEXTURE9>();
+	LPDIRECT3DTEXTURE9 obj = h->castTo<LPDIRECT3DTEXTURE9>();
 	LPDIRECT3DSURFACE9 surface;
 
 	V(obj->GetSurfaceLevel(level, &surface));
@@ -203,7 +203,7 @@ void dx9UploadSubTexture(phandle_t h, const Rect &rect, const void *pixels, TexF
 	}
 
 	LPDIRECT3DSURFACE9 surface;
-	LPDIRECT3DTEXTURE9 obj = h->to<LPDIRECT3DTEXTURE9>();
+	LPDIRECT3DTEXTURE9 obj = h->castTo<LPDIRECT3DTEXTURE9>();
 	V(obj->GetSurfaceLevel(0, &surface));
 
 	RECT d3drect;
@@ -222,7 +222,7 @@ void dx9UploadSubTexture(phandle_t h, const Rect &rect, const void *pixels, TexF
 
 void dx9DeleteTexture2D(phandle_t h)
 {
-	LPDIRECT3DTEXTURE9 obj = h->to<LPDIRECT3DTEXTURE9>();
+	LPDIRECT3DTEXTURE9 obj = h->castTo<LPDIRECT3DTEXTURE9>();
 
 	SAFE_RELEASE(obj);
 
@@ -231,7 +231,7 @@ void dx9DeleteTexture2D(phandle_t h)
 
 void dx9GenerateMipmap(phandle_t h)
 {
-	LPDIRECT3DTEXTURE9 obj = h->to<LPDIRECT3DTEXTURE9>();
+	LPDIRECT3DTEXTURE9 obj = h->castTo<LPDIRECT3DTEXTURE9>();
 	LPDIRECT3DSURFACE9 surface;
 
 	V(obj->GetSurfaceLevel(0, &surface));
@@ -259,7 +259,7 @@ void dx9GenerateMipmap(phandle_t h)
 	dx9CreateTexture2D(&dum, TexFormat::BGRA8, surfdesc.Width, surfdesc.Height, Texture::IF_AutoGenMipmap);
 	sUploadTexture(&dum, 0, lockedRect.pBits, surfdesc.Format, 0);
 
-	LPDIRECT3DTEXTURE9 dummyobj = dum.to<LPDIRECT3DTEXTURE9>();
+	LPDIRECT3DTEXTURE9 dummyobj = dum.castTo<LPDIRECT3DTEXTURE9>();
 
 	V(dummyobj->LockRect(0, &lockedRect, 0, 0));
 	Image image;
@@ -303,7 +303,7 @@ void dx9CreateVertexBuffer(phandle_t h, int datasize, Primitive::Hint hint)
 
 void dx9UploadVertexBuffer(phandle_t h, int datasize, const void *p, IEventHandler *eventHandler)
 {
-	IDirect3DVertexBuffer9 *obj = h->to<IDirect3DVertexBuffer9 *>();
+	IDirect3DVertexBuffer9 *obj = h->castTo<IDirect3DVertexBuffer9 *>();
 
 	void *dst = 0;
 	V(obj->Lock(0, datasize, &dst, D3DLOCK_DISCARD));
@@ -313,7 +313,7 @@ void dx9UploadVertexBuffer(phandle_t h, int datasize, const void *p, IEventHandl
 
 void dx9DeleteVertexBuffer(phandle_t h)
 {
-	IDirect3DVertexBuffer9 *obj = h->to<IDirect3DVertexBuffer9 *>();
+	IDirect3DVertexBuffer9 *obj = h->castTo<IDirect3DVertexBuffer9 *>();
 
 	SAFE_RELEASE(obj);
 }
@@ -335,7 +335,7 @@ void dx9CreateIndexBuffer(phandle_t h, int datasize, Primitive::Hint hint)
 
 void dx9UploadIndexBuffer(phandle_t h, int datasize, const void *p, IEventHandler *eventHandler)
 {
-	IDirect3DIndexBuffer9 *obj = h->to<IDirect3DIndexBuffer9 *>();
+	IDirect3DIndexBuffer9 *obj = h->castTo<IDirect3DIndexBuffer9 *>();
 
 	void *dst = 0;
 	V(obj->Lock(0, datasize, &dst, D3DLOCK_DISCARD));
@@ -345,7 +345,7 @@ void dx9UploadIndexBuffer(phandle_t h, int datasize, const void *p, IEventHandle
 
 void dx9DeleteIndexBuffer(phandle_t h)
 {
-	IDirect3DIndexBuffer9 *obj = h->to<IDirect3DIndexBuffer9 *>();
+	IDirect3DIndexBuffer9 *obj = h->castTo<IDirect3DIndexBuffer9 *>();
 	SAFE_RELEASE(obj);
 	delete h;
 }
@@ -358,7 +358,7 @@ void dx9CreateWindowTarget(phandle_t h, Handle hwnd, int width, int height)
 
 void dx9UpdateWindowTarget(phandle_t h, Handle newHwnd, int width, int height)
 {
-	DX9_Window *window = h->to<DX9_Window *>();
+	DX9_Window *window = h->castTo<DX9_Window *>();
 
 	window->update(newHwnd, width, height);
 }
@@ -430,7 +430,7 @@ void dx9DeleteRasterizerState(phandle_t h)
 
 static void dx9SetRenderTarget(int index, phandle_t h)
 {
-	IUnknown *unknown = h->to<IUnknown *>();
+	IUnknown *unknown = h->castTo<IUnknown *>();
 
 	if (!unknown) return;
 	IDirect3DTexture9 *texture = 0;
@@ -440,7 +440,7 @@ static void dx9SetRenderTarget(int index, phandle_t h)
 	if (texture) {
 		texture->GetSurfaceLevel(0, &surface);
 	} else {
-		DX9_Window *window = h->to<DX9_Window *>();
+		DX9_Window *window = h->castTo<DX9_Window *>();
 		surface = window->getSurface();
 	}
 	AX_ASSERT(surface);
@@ -507,7 +507,7 @@ static void dx9SetParameters(const FastParams *params1, const FastParams *params
 static void dx9SetVertices(phandle_t vb, VertexType vt, int offset)
 {
 	s_curVerticeBufferUP = 0;
-	V(dx9_device->SetStreamSource(0, vb->to<IDirect3DVertexBuffer9 *>(), offset, vt.stride()));
+	V(dx9_device->SetStreamSource(0, vb->castTo<IDirect3DVertexBuffer9 *>(), offset, vt.stride()));
 	V(dx9_device->SetVertexDeclaration(dx9_vertexDeclarations[vt]));
 
 	V(dx9_device->SetStreamSourceFreq(0, 1));
@@ -517,10 +517,10 @@ static void dx9SetVertices(phandle_t vb, VertexType vt, int offset)
 static void dx9SetInstanceVertices(phandle_t vb, VertexType vt, int offset, phandle_t inb, int inoffset, int incount)
 {
 	s_curVerticeBufferUP = 0;
-	V(dx9_device->SetStreamSource(0, vb->to<IDirect3DVertexBuffer9 *>(), offset, vt.stride()));
+	V(dx9_device->SetStreamSource(0, vb->castTo<IDirect3DVertexBuffer9 *>(), offset, vt.stride()));
 	V(dx9_device->SetStreamSourceFreq(0, D3DSTREAMSOURCE_INDEXEDDATA | incount));
 
-	V(dx9_device->SetStreamSource(1, inb->to<IDirect3DVertexBuffer9 *>(), inoffset, incount));
+	V(dx9_device->SetStreamSource(1, inb->castTo<IDirect3DVertexBuffer9 *>(), inoffset, incount));
 	V(dx9_device->SetStreamSourceFreq(1, D3DSTREAMSOURCE_INSTANCEDATA | 1ul));
 	V(dx9_device->SetVertexDeclaration(dx9_vertexDeclarationsInstanced[vt]));
 }
@@ -528,7 +528,7 @@ static void dx9SetInstanceVertices(phandle_t vb, VertexType vt, int offset, phan
 static void dx9SetIndices(phandle_t ib, ElementType et, int offset, int vertcount, int indicescount)
 {
 	s_curIndiceBufferUP = 0;
-	V(dx9_device->SetIndices(ib->to<IDirect3DIndexBuffer9 *>()));
+	V(dx9_device->SetIndices(ib->castTo<IDirect3DIndexBuffer9 *>()));
 	s_curPrimitiveType = trElementType(et);
 	s_curNumVertices = vertcount;
 	s_curStartIndex = offset;

@@ -399,7 +399,7 @@ int RenderSystem::testArgs(int arg0, float arg1, const Vector3 &arg2, const Colo
 Rect RenderSystem::getWindowRect(Handle hwnd)
 {
 	RECT r;
-	BOOL v = ::GetClientRect(hwnd.to<HWND>(), &r);
+	BOOL v = ::GetClientRect(hwnd.castTo<HWND>(), &r);
 
 	if (!v) {
 		DWORD error = ::GetLastError();
@@ -430,6 +430,11 @@ void RenderSystem::tick()
 {
 //	TextureResource::stepAsio();
 }
+
+Size RenderSystem::getScreenSize()
+{
+	DWORD dwWidth = GetSystemMetrics(SM_CXBORDER);	DWORD dwHeight = GetSystemMetrics(SM_CYBORDER);	return Size(dwWidth, dwHeight);}
+
 
 
 AX_END_NAMESPACE

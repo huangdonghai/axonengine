@@ -150,6 +150,17 @@ struct AX_API Point {
 	bool fromString(const char *str);
 };
 
+struct Size {
+	Size();
+	Size(int w, int h) : width(width), height(height) {}
+	int width, height;
+};
+
+struct SizeF {
+	SizeF();
+	SizeF(float w, float h) : width(width), height(height) {}
+	float width, height;
+};
 
 AX_END_NAMESPACE
 

@@ -18,7 +18,7 @@ public:
 	RHandle &operator=(void *p) { *m_phandle = p; }
 
 	template<class Q>
-	Q cast() { return m_phandle->to<Q>(); }
+	Q cast() { return m_phandle->castTo<Q>(); }
 	void alloc() { m_phandle = new Handle; }
 	void free() { delete m_phandle; }
 

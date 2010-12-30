@@ -157,7 +157,7 @@ Thread::Thread()
 
 	m_exitEvent = new SyncEvent();
 	m_handle = Handle(::CreateThread(NULL, 0, ThreadProc, this, CREATE_SUSPENDED, &m_id));
-	m_id = ::GetThreadId(m_handle.to<HANDLE>());
+	m_id = ::GetThreadId(m_handle.castTo<HANDLE>());
 	AX_ASSERT(m_handle);
 
 	m_threadDict[m_id] = this;
@@ -192,7 +192,7 @@ Thread *Thread::getCurrentThread()
 
 void Thread::startThread()
 {
-	::ResumeThread(m_handle.to<HANDLE>());
+	::ResumeThread(m_handle.castTo<HANDLE>());
 }
 
 void Thread::stopThread()
@@ -202,7 +202,7 @@ void Thread::stopThread()
 
 Thread::~Thread()
 {
-	::CloseHandle(m_handle.to<HANDLE>());
+	::CloseHandle(m_handle.castTo<HANDLE>());
 	delete(m_exitEvent);
 }
 

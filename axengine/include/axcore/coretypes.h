@@ -195,7 +195,7 @@ public:
 	Handle(void *d) : m_data(d) {}
 
 	template <class T>
-	T to() const {AX_STATIC_ASSERT(sizeof(T)<=sizeof(Handle)); return reinterpret_cast<T>(m_data); }
+	T castTo() const { /*AX_STATIC_ASSERT(sizeof(T)<=sizeof(Handle));*/ return reinterpret_cast<T>(m_data); }
 
 	void *toVoidStar() const { return m_data; }
 
@@ -216,7 +216,7 @@ typedef const Handle *cphandle_t;
 template <class T>
 T handle_cast(const Handle & h)
 {
-	return h.to<T>();
+	return h.castTo<T>();
 }
 
 template<typename T>

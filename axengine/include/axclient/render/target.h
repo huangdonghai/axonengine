@@ -77,8 +77,12 @@ private:
 	Handle m_wndId;
 	std::string m_name;
 
+	RenderTarget *m_depthBuffer;
 	RenderTarget *m_geoBuffer;
-	RenderTarget *m_lightBuffer;
+	RenderTarget *m_lightBuffer; // reuse as copied SceneColor
+	RenderTarget *m_sceneBuffer;
+	RenderTarget *m_albodoBuffer;
+	RenderTarget *m_miscBuffer;
 };
 
 class RenderWorld;

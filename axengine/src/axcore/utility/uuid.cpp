@@ -124,13 +124,13 @@ public:
 
 	void incref(Handle h)
 	{
-		Item *item = h.to<Item *>();
+		Item *item = h.castTo<Item *>();
 		item->m_ref.incref();
 	}
 
 	void decref(Handle h)
 	{
-		Item *item = h.to<Item *>();
+		Item *item = h.castTo<Item *>();
 
 		if (item->m_ref.decref() == 0) {
 			SCOPED_LOCK;
@@ -141,7 +141,7 @@ public:
 
 	const T &getValue(Handle h)
 	{
-		Item *item = h.to<Item *>();
+		Item *item = h.castTo<Item *>();
 		return item->m_value;
 	}
 
