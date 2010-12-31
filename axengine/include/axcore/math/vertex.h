@@ -28,30 +28,39 @@ struct VertexType {
 	int stride() const;
 };
 
-struct MeshVertex {
-	Vector3 xyz;
-	Vector2 st;
-	Rgba rgba;
-	Vector2 st2;		// for ambient st or lightmap st
-	Vector3 normal;
+// 64 bytes
+struct SkinVertex {
+	Vector3 position;
+	Rgba color;
+	Vector2 streamTc;
+	Vector4 normal;
 	Vector3 tangent;
-	Vector3 binormal;
+	Vector3 oldPosition;
 };
 
-// define some vertex format
+// 64 bytes
+struct MeshVertex {
+	Vector3 position;
+	Rgba color;
+	Vector4 streamTc;	// channel 0 and 1
+	Vector4 normal;		// normal.w is mirroredTbn flag, is 1 or -1
+	Vector4 tangent;	// tangent.w is pad, or used somewhere
+};
+
+// 16 bytes
 struct DebugVertex {
-	Vector3 xyz;
-	Rgba rgba;
+	Vector3 position;
+	Rgba color;
 };
 
 struct BlendVertex {
-	Vector3 xyz;
-	Vector2 st;
-	Rgba rgba;
+	Vector3 position;
+	Vector2 streamTc;
+	Rgba color;
 };
 
 struct ChunkVertex {
-	Vector3 xyz;
+	Vector3 position;
 };
 
 inline int VertexType::stride() const

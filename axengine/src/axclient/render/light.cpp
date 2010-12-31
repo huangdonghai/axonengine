@@ -607,9 +607,9 @@ RenderLight::RenderLight() : RenderEntity(kLight)
 	m_castShadowMap = 0;
 	m_radius = 0;
 	m_spotAngle = 60;
-	m_color = Vector4::One;
-	m_skyColor = Vector3::One * 0.5f;
-	m_envColor = Vector3::Zero;
+	m_color = Color3(1,1,1);
+	m_skyColor = Color3(0.5,0.5,0.5);
+	m_envColor = Color3(0,0,0);
 	m_hdrStops = 0;
 
 //	m_shadowLink.setOwner(this);
@@ -626,9 +626,9 @@ RenderLight::RenderLight(Type t, const Vector3 &pos, Rgb color) : RenderEntity(k
 {
 	m_type = t;
 	setOrigin(pos);
-	m_color = Vector4::One;
-	m_skyColor = Vector3::One * 0.5f;
-	m_envColor = Vector3::Zero;
+	m_color = Color3(1,1,1);
+	m_skyColor = Color3(0.5,0.5,0.5);
+	m_envColor = Color3(0,0,0);
 	m_spotAngle = 60;
 	m_castShadowMap = 0;
 	m_radius = 0;
@@ -648,9 +648,9 @@ RenderLight::RenderLight(Type t, const Vector3 &pos, Rgb color, float radius) : 
 {
 	m_type = t;
 	setOrigin(pos);
-	m_color = Vector4::One;
-	m_skyColor = Vector3::One * 0.5f;
-	m_envColor = Vector3::Zero;
+	m_color = Color3(1,1,1);
+	m_skyColor = Color3(0.5,0.5,0.5);
+	m_envColor = Color3(0,0,0);
 	m_spotAngle = 60;
 	m_castShadowMap = 0;
 	m_radius = radius;
@@ -992,18 +992,17 @@ int RenderLight::getShadowMemoryUsed() const
 
 void RenderLight::setLightColor(const Color3 &color, float intensity, float specularX)
 {
-	m_color.xyz() = color.toVector3() * intensity;
-	m_color.w = m_color.xyz().getLength() * specularX;
+	m_color = color * intensity;
 }
 
 void RenderLight::setSkyColor(const Color3 &color, float skyIntensity /*= 1.0f*/)
 {
-	m_skyColor = color.toVector3() * skyIntensity;
+	m_skyColor = color * skyIntensity;
 }
 
 void RenderLight::setEnvColor(const Color3 &color, float envIntensity /*= 1.0f*/)
 {
-	m_envColor = color.toVector3() * envIntensity;
+	m_envColor = color * envIntensity;
 }
 
 

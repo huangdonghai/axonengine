@@ -35,21 +35,21 @@ static LinePrim *createGrid()
 	for (int i = 0; i < totalGrid; i++) {
 		float pos = (i - gridNum) * gridSize;
 
-		verts[i*4].xyz.set(pos, -halfWidth, 0);
-		verts[i*4+1].xyz.set(pos, halfWidth, 0);
-		verts[i*4+2].xyz.set(-halfWidth, pos, 0);
-		verts[i*4+3].xyz.set(halfWidth, pos, 0);
+		verts[i*4].position.set(pos, -halfWidth, 0);
+		verts[i*4+1].position.set(pos, halfWidth, 0);
+		verts[i*4+2].position.set(-halfWidth, pos, 0);
+		verts[i*4+3].position.set(halfWidth, pos, 0);
 
 		if (pos == 0.0f) {
-			verts[i*4].rgba = Rgba::Black;
-			verts[i*4+1].rgba = Rgba::Black;
-			verts[i*4+2].rgba = Rgba::Black;
-			verts[i*4+3].rgba = Rgba::Black;
+			verts[i*4].color = Rgba::Black;
+			verts[i*4+1].color = Rgba::Black;
+			verts[i*4+2].color = Rgba::Black;
+			verts[i*4+3].color = Rgba::Black;
 		} else {
-			verts[i*4].rgba = Rgba::DkGrey;
-			verts[i*4+1].rgba = Rgba::DkGrey;
-			verts[i*4+2].rgba = Rgba::DkGrey;
-			verts[i*4+3].rgba = Rgba::DkGrey;
+			verts[i*4].color = Rgba::DkGrey;
+			verts[i*4+1].color = Rgba::DkGrey;
+			verts[i*4+2].color = Rgba::DkGrey;
+			verts[i*4+3].color = Rgba::DkGrey;
 		}
 	}
 

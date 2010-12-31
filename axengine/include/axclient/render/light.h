@@ -62,8 +62,8 @@ public:
 	void setSpotAngle(float val) { m_spotAngle = val; }
 
 	void setLightColor(const Color3 &color, float intensity = 1.0f, float specularX = 1.0f);
-	Vector4 getLightColor() const { return m_color; }
-	Vector4 getSkyColor() const { return m_skyColor; }
+	Color3 getLightColor() const { return m_color; }
+	Color3 getSkyColor() const { return m_skyColor; }
 	void setSkyColor(const Color3 &color, float skyIntensity = 1.0f);
 	void setEnvColor(const Color3 &color, float envIntensity = 1.0f);
 	Vector3 getGlobalLightDirection() const { return m_affineMat.origin.getNormalized(); }
@@ -105,10 +105,10 @@ private:
 	bool m_castShadowMap;
 	float m_radius;
 	float m_spotAngle;
-	Vector4 m_color;
+	Color3 m_color;
 	float m_hdrStops;
-	Vector3 m_skyColor;
-	Vector3 m_envColor;
+	Color3 m_skyColor;
+	Color3 m_envColor;
 
 	int m_preferShadowMapSize;
 

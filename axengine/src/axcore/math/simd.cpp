@@ -15,12 +15,14 @@ void Simd::initialize() {
 	g_simd = new Simd();
 }
 
-void Simd::computeTangentSpace(MeshVertex *verts, int numVerts, const ushort_t *indexes, int numIndexes) {
+void Simd::computeTangentSpace(MeshVertex *verts, int numVerts, const ushort_t *indexes, int numIndexes)
+{
 	bool *used = (bool *)Alloca16(numVerts * sizeof(used[0]));
 	memset(used, 0, numVerts * sizeof(used[0]));
 
 	for (int i = 0; i < numIndexes; i += 3) {
 		MeshVertex *a, *b, *c;
+		Vector3 a_binormal, b_binormal, c_binormal;
 		unsigned long signBit;
 		float d0[5], d1[5], f, area;
 		Vector3 n, t0, t1;
@@ -33,17 +35,17 @@ void Simd::computeTangentSpace(MeshVertex *verts, int numVerts, const ushort_t *
 		b = verts + v1;
 		c = verts + v2;
 
-		d0[0] = b->xyz[0] - a->xyz[0];
-		d0[1] = b->xyz[1] - a->xyz[1];
-		d0[2] = b->xyz[2] - a->xyz[2];
-		d0[3] = b->st[0] - a->st[0];
-		d0[4] = b->st[1] - a->st[1];
+		d0[0] = b->position[0] - a->position[0];
+		d0[1] = b->position[1] - a->position[1];
+		d0[2] = b->position[2] - a->position[2];
+		d0[3] = b->streamTc[0] - a->streamTc[0];
+		d0[4] = b->streamTc[1] - a->streamTc[1];
 
-		d1[0] = c->xyz[0] - a->xyz[0];
-		d1[1] = c->xyz[1] - a->xyz[1];
-		d1[2] = c->xyz[2] - a->xyz[2];
-		d1[3] = c->st[0] - a->st[0];
-		d1[4] = c->st[1] - a->st[1];
+		d1[0] = c->position[0] - a->position[0];
+		d1[1] = c->position[1] - a->position[1];
+		d1[2] = c->position[2] - a->position[2];
+		d1[3] = c->streamTc[0] - a->streamTc[0];
+		d1[4] = c->streamTc[1] - a->streamTc[1];
 
 		// normal
 		n[0] = d1[1] * d0[2] - d1[2] * d0[1];
@@ -85,35 +87,29 @@ void Simd::computeTangentSpace(MeshVertex *verts, int numVerts, const ushort_t *
 		t1.z *= f;
 
 		if (used[v0]) {
-			a->normal += n;
-			a->tangent += t0;
-			a->binormal += t1;
+			a->normal.xyz() += n;
+			a->tangent.xyz() += t0;
 		} else {
-			a->normal = n;
-			a->tangent = t0;
-			a->binormal = t1;
+			a->normal.xyz() = n;
+			a->tangent.xyz() = t0;
 			used[v0] = true;
 		}
 
 		if (used[v1]) {
-			b->normal += n;
-			b->tangent += t0;
-			b->binormal += t1;
+			b->normal.xyz() += n;
+			b->tangent.xyz() += t0;
 		} else {
-			b->normal = n;
-			b->tangent = t0;
-			b->binormal = t1;
+			b->normal.xyz() = n;
+			b->tangent.xyz() = t0;
 			used[v1] = true;
 		}
 
 		if (used[v2]) {
-			c->normal += n;
-			c->tangent += t0;
-			c->binormal += t1;
+			c->normal.xyz() += n;
+			c->tangent.xyz() += t0;
 		} else {
-			c->normal = n;
-			c->tangent = t0;
-			c->binormal = t1;
+			c->normal.xyz() = n;
+			c->tangent.xyz() = t0;
 			used[v2] = true;
 		}
 	}
@@ -143,17 +139,17 @@ void Simd::computeTangentSpaceSlow( MeshVertex *verts, int numVerts, const ushor
 		b = verts + v1;
 		c = verts + v2;
 
-		d0[0] = b->xyz[0] - a->xyz[0];
-		d0[1] = b->xyz[1] - a->xyz[1];
-		d0[2] = b->xyz[2] - a->xyz[2];
-		d0[3] = b->st[0] - a->st[0];
-		d0[4] = b->st[1] - a->st[1];
+		d0[0] = b->position[0] - a->position[0];
+		d0[1] = b->position[1] - a->position[1];
+		d0[2] = b->position[2] - a->position[2];
+		d0[3] = b->streamTc[0] - a->streamTc[0];
+		d0[4] = b->streamTc[1] - a->streamTc[1];
 
-		d1[0] = c->xyz[0] - a->xyz[0];
-		d1[1] = c->xyz[1] - a->xyz[1];
-		d1[2] = c->xyz[2] - a->xyz[2];
-		d1[3] = c->st[0] - a->st[0];
-		d1[4] = c->st[1] - a->st[1];
+		d1[0] = c->position[0] - a->position[0];
+		d1[1] = c->position[1] - a->position[1];
+		d1[2] = c->position[2] - a->position[2];
+		d1[3] = c->streamTc[0] - a->streamTc[0];
+		d1[4] = c->streamTc[1] - a->streamTc[1];
 
 		// normal
 		n[0] = d1[1] * d0[2] - d1[2] * d0[1];
@@ -195,29 +191,23 @@ void Simd::computeTangentSpaceSlow( MeshVertex *verts, int numVerts, const ushor
 		t1.z *= f;
 
 		if (used[v0]) {
-			a->tangent += t0;
-			a->binormal += t1;
+			a->tangent.xyz() += t0;
 		} else {
-			a->tangent = t0;
-			a->binormal = t1;
+			a->tangent.xyz() = t0;
 			used[v0] = true;
 		}
 
 		if (used[v1]) {
-			b->tangent += t0;
-			b->binormal += t1;
+			b->tangent.xyz() += t0;
 		} else {
-			b->tangent = t0;
-			b->binormal = t1;
+			b->tangent.xyz() = t0;
 			used[v1] = true;
 		}
 
 		if (used[v2]) {
-			c->tangent += t0;
-			c->binormal += t1;
+			c->tangent.xyz() += t0;
 		} else {
-			c->tangent = t0;
-			c->binormal = t1;
+			c->tangent.xyz() = t0;
 			used[v2] = true;
 		}
 	}
@@ -228,17 +218,11 @@ void Simd::computeTangentSpaceSlow( MeshVertex *verts, int numVerts, const ushor
 			continue;
 
 		MeshVertex *v = verts + i;
-		Vector3 b = v->normal ^ v->tangent;
+		Vector3 b = v->normal.xyz() ^ v->tangent.xyz();
 
-		if ((b | v->binormal) < 0)
-			b = -b;
+		Vector3 t = b ^ v->normal.xyz();
 
-		Vector3 t = b ^ v->normal;
-		if ((t | v->tangent) < 0)
-			t = -t;
-
-		v->tangent = t.getNormalized();
-		v->binormal = b.getNormalized();
+		v->tangent.xyz() = t.getNormalized();
 	}
 }
 

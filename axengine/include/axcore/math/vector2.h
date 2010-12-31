@@ -51,7 +51,7 @@ struct AX_API Vector2 {
 	float normalize();
 	Vector2 getNormalized();
 	void clear();
-	Vector2 &set(float ix=0.0f, float iy=0.0f);
+	Vector2 &set(float ix, float iy);
 	const float *c_ptr() const;
 	std::string toString() const;
 	bool parse(const std::string &str);

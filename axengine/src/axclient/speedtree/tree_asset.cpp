@@ -239,13 +239,12 @@ void TreeAsset::buildBranch()
 		float fWindMatrixIndex2 = float(int(b.m_pWindMatrixIndices[1][i] * 10.0f / RenderWind::NUM_WIND_MATRIXES));
 		float fWindMatrixWeight2 = b.m_pWindWeights[1][i];
 
-		verts[i].xyz.set(b.m_pCoords[i*3+0], b.m_pCoords[i*3+1], b.m_pCoords[i*3+2]);
-		verts[i].st.set(diffuseTc[0], diffuseTc[1]);
-		verts[i].rgba = Rgba::White;
-		verts[i].st2.set(fWindMatrixIndex1 + fWindMatrixWeight1, fWindMatrixIndex2 + fWindMatrixWeight2);	// TODO: set wind parameter
-		verts[i].normal.set( b.m_pNormals[i * 3 + 0], b.m_pNormals[i * 3 + 1], b.m_pNormals[i * 3 + 2]);
-		verts[i].tangent.set(b.m_pTangents[i*3+0], b.m_pTangents[i*3+1], b.m_pTangents[i*3+2]);
-		verts[i].binormal =(verts[i].normal ^ verts[i].tangent).getNormalized();
+		verts[i].position.set(b.m_pCoords[i*3+0], b.m_pCoords[i*3+1], b.m_pCoords[i*3+2]);
+		verts[i].streamTc.set(diffuseTc[0], diffuseTc[1], fWindMatrixIndex1 + fWindMatrixWeight1, fWindMatrixIndex2 + fWindMatrixWeight2);
+		verts[i].color = Rgba::White;
+		verts[i].normal.set( b.m_pNormals[i * 3 + 0], b.m_pNormals[i * 3 + 1], b.m_pNormals[i * 3 + 2], 1);
+		verts[i].tangent.set(b.m_pTangents[i*3+0], b.m_pTangents[i*3+1], b.m_pTangents[i*3+2], 0);
+		//verts[i].binormal =(verts[i].normal ^ verts[i].tangent).getNormalized();
 	}
 
 	lod0->unlockVertexes();
@@ -323,13 +322,12 @@ void TreeAsset::buildFrond()
 		float fWindMatrixIndex2 = float(int(b.m_pWindMatrixIndices[1][i] * 10.0f / RenderWind::NUM_WIND_MATRIXES));
 		float fWindMatrixWeight2 = b.m_pWindWeights[1][i];
 
-		verts[i].xyz.set(b.m_pCoords[i*3+0], b.m_pCoords[i*3+1], b.m_pCoords[i*3+2]);
-		verts[i].st.set(diffuseTc[0], 1.0 - diffuseTc[1]);
-		verts[i].rgba = Rgba::White;
-		verts[i].st2.set(fWindMatrixIndex1 + fWindMatrixWeight1, fWindMatrixIndex2 + fWindMatrixWeight2);	// TODO: set wind parameter
-		verts[i].normal.set( b.m_pNormals[i * 3 + 0], b.m_pNormals[i * 3 + 1], b.m_pNormals[i * 3 + 2]);
-		verts[i].tangent.set(b.m_pTangents[i*3+0], b.m_pTangents[i*3+1], b.m_pTangents[i*3+2]);
-		verts[i].binormal =(verts[i].normal ^ verts[i].tangent).getNormalized();
+		verts[i].position.set(b.m_pCoords[i*3+0], b.m_pCoords[i*3+1], b.m_pCoords[i*3+2]);
+		verts[i].streamTc.set(diffuseTc[0], 1.0 - diffuseTc[1], fWindMatrixIndex1 + fWindMatrixWeight1, fWindMatrixIndex2 + fWindMatrixWeight2);
+		verts[i].color = Rgba::White;
+		verts[i].normal.set( b.m_pNormals[i * 3 + 0], b.m_pNormals[i * 3 + 1], b.m_pNormals[i * 3 + 2], 1.0f);
+		verts[i].tangent.set(b.m_pTangents[i*3+0], b.m_pTangents[i*3+1], b.m_pTangents[i*3+2], 0);
+		//verts[i].binormal =(verts[i].normal ^ verts[i].tangent).getNormalized();
 	}
 	lod0->unlockVertexes();
 
@@ -416,26 +414,25 @@ void TreeAsset::buildLeafCard()
 				float fWindMatrixIndex2 = float(int(sLeaves.m_pWindMatrixIndices[1][j] * 10.0f / NUM_WIND_MATRIX));
 				float fWindMatrixWeight2 = sLeaves.m_pWindWeights[1][j];
 //				cBuffer.TexCoord4(0, pCard->m_pTexCoords[k * 2], pCard->m_pTexCoords[k * 2 + 1], fWindMatrixIndex1 + fWindMatrixWeight1, fWindMatrixIndex2 + fWindMatrixWeight2);
-				vert->st.set(pCard->m_pTexCoords[k * 2], 1.0f - pCard->m_pTexCoords[k * 2 + 1]);
-				vert->st2.set(fWindMatrixIndex1 + fWindMatrixWeight1, fWindMatrixIndex2 + fWindMatrixWeight2);
+				vert->streamTc.set(pCard->m_pTexCoords[k * 2], 1.0f - pCard->m_pTexCoords[k * 2 + 1], fWindMatrixIndex1 + fWindMatrixWeight1, fWindMatrixIndex2 + fWindMatrixWeight2);
 
 // tex layer 1: .x = width, .y = height, .z = pivot x, .w = pivot.y
 //						cBuffer.TexCoord4(1, pCard->m_fWidth, pCard->m_fHeight, pCard->m_afPivotPoint[0] - 0.5f, pCard->m_afPivotPoint[1] - 0.5f);
-				vert->tangent.set(pCard->m_fWidth, pCard->m_fHeight);
-				vert->binormal.set(pCard->m_afPivotPoint[0] - 0.5f, pCard->m_afPivotPoint[1] - 0.5f);
+				vert->tangent.set(pCard->m_fWidth, pCard->m_fHeight, pCard->m_afPivotPoint[0] - 0.5f, pCard->m_afPivotPoint[1] - 0.5f);
+				//vert->binormal.set();
 
-				vert->tangent.set(sLeaves.m_pCenterCoords[j * 3 + 0], sLeaves.m_pCenterCoords[j * 3 + 1], sLeaves.m_pCenterCoords[j * 3 + 2]/*, float(k) */);
+				vert->tangent.set(sLeaves.m_pCenterCoords[j * 3 + 0], sLeaves.m_pCenterCoords[j * 3 + 1], sLeaves.m_pCenterCoords[j * 3 + 2]/*, float(k) */, 0);
 // tex layer 2: .x = angle.x, .y = angle.y, .z = leaf angle index [0,c_nNumSpeedWindAngles-1], .w = dimming
 //						cBuffer.TexCoord4(2, Math::d2r(pCard->m_afAngleOffsets[0]), Math::d2r(pCard->m_afAngleOffsets[1]),  float(j % NUM_LEAF_ANGLES), sLeaves.m_pDimming[j]);
-				vert->rgba.set(pCard->m_afAngleOffsets[0] + 127, pCard->m_afAngleOffsets[1] + 127, j % NUM_LEAF_ANGLES, sLeaves.m_pDimming[j] * 255);
+				vert->color.set(pCard->m_afAngleOffsets[0] + 127, pCard->m_afAngleOffsets[1] + 127, j % NUM_LEAF_ANGLES, sLeaves.m_pDimming[j] * 255);
 
 				// normal
 				vert->normal.set(sLeaves.m_pNormals + j * 12 + k * 3);
 
 				// coordinate
-				vert->xyz.set(sLeaves.m_pCenterCoords[j * 3 + 0], sLeaves.m_pCenterCoords[j * 3 + 1], sLeaves.m_pCenterCoords[j * 3 + 2]/*, float(k) */);
-				vert->xyz.y += pCard->m_fWidth * offsets[k].x * 0.5f;
-				vert->xyz.z += pCard->m_fHeight * offsets[k].y * 0.5f;
+				vert->position.set(sLeaves.m_pCenterCoords[j * 3 + 0], sLeaves.m_pCenterCoords[j * 3 + 1], sLeaves.m_pCenterCoords[j * 3 + 2]/*, float(k) */);
+				vert->position.y += pCard->m_fWidth * offsets[k].x * 0.5f;
+				vert->position.z += pCard->m_fHeight * offsets[k].y * 0.5f;
 			}
 
 			ushort_t *idx = indexes + j * 6;
@@ -523,8 +520,7 @@ void TreeAsset::buildLeafMesh()
 				// tex layer 0: .xy = diffuse texcoords, .z = leaf angle index [0,c_nNumSpeedWindAngles-1], .w = dimming
 //					cBuffer.TexCoord4(0, pMesh->m_pTexCoords[nVertex * 2], pMesh->m_pTexCoords[nVertex * 2 + 1], float(j % NUM_LEAF_ANGLES), sLeaves.m_pDimming[j]);
 
-				vert->st.set(pMesh->m_pTexCoords[nVertex * 2], 1.0f - pMesh->m_pTexCoords[nVertex * 2 + 1]);
-				vert->st2.set(fWindMatrixIndex1 + fWindMatrixWeight1, fWindMatrixIndex2 + fWindMatrixWeight2);
+				vert->streamTc.set(pMesh->m_pTexCoords[nVertex * 2], 1.0f - pMesh->m_pTexCoords[nVertex * 2 + 1], fWindMatrixIndex1 + fWindMatrixWeight1, fWindMatrixIndex2 + fWindMatrixWeight2);
 
 				// orientation vectors
 //					cBuffer.TexCoord3(1, sLeaves.m_pTangents[j * 12 + 0], sLeaves.m_pBinormals[j * 12 + 0], sLeaves.m_pNormals[j * 12 + 0]);
@@ -536,17 +532,18 @@ void TreeAsset::buildLeafMesh()
 				org.set(sLeaves.m_pCenterCoords[j * 3 + 0], sLeaves.m_pCenterCoords[j * 3 + 1], sLeaves.m_pCenterCoords[j * 3 + 2]);
 
 				// offset (used to position the mesh on the tree)
-				vert->tangent.set(sLeaves.m_pCenterCoords[j * 3 + 0], sLeaves.m_pCenterCoords[j * 3 + 1], sLeaves.m_pCenterCoords[j * 3 + 2]);
+				vert->tangent.set(sLeaves.m_pCenterCoords[j * 3 + 0], sLeaves.m_pCenterCoords[j * 3 + 1], sLeaves.m_pCenterCoords[j * 3 + 2], 0);
 
 				// normal
 				vert->normal.set(pMesh->m_pNormals + nVertex * 3);
-				vert->normal = axis * vert->normal;
+				vert->normal.xyz() = axis * vert->normal.xyz();
+				vert->normal.w = 1;
 
 				// coordinate (3d coord of leaf mesh)
-				vert->xyz.set(pMesh->m_pCoords[nVertex * 3 + 0], pMesh->m_pCoords[nVertex * 3 + 1], pMesh->m_pCoords[nVertex * 3 + 2]);
-				vert->xyz = matrix * vert->xyz;
+				vert->position.set(pMesh->m_pCoords[nVertex * 3 + 0], pMesh->m_pCoords[nVertex * 3 + 1], pMesh->m_pCoords[nVertex * 3 + 2]);
+				vert->position = matrix * vert->position;
 
-				vert->rgba.set(255, 255, j % NUM_LEAF_ANGLES, sLeaves.m_pDimming[j] * 255);
+				vert->color.set(255, 255, j % NUM_LEAF_ANGLES, sLeaves.m_pDimming[j] * 255);
 			}
 
 			// setup the triangle indices

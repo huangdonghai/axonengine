@@ -44,13 +44,13 @@ OutdoorEnv::OutdoorEnv(RenderWorld *world) : RenderEntity(kOutdoorEnv) {
 	// global fog
 	m_globalFog = new RenderFog();
 	m_globalFog->setFogDensity(0.0004f);
-	m_globalFog->setFogColor(Rgba(119,171,201).toVector4());
+	m_globalFog->setFogColor(Rgb(119,171,201).toColor3());
 	m_globalFog->setWorld(m_world);
 
 	// ocean fog
 	m_oceanFog = new RenderFog();
 	m_oceanFog->setFogDensity(0.04f);
-	m_oceanFog->setFogColor(Rgba(119,201,171).toVector4() * 0.25f);
+	m_oceanFog->setFogColor((Rgb(119,201,171) * 0.25f).toColor3());
 	m_oceanFog->setWorld(m_world);
 
 	TypeZero(&m_lastNishitaParams);
@@ -99,9 +99,9 @@ void OutdoorEnv::createSkyBox() {
 	m_skybox12->init(8, 12);
 	MeshVertex *verts = m_skybox12->lockVertexes();
 	for (int i = 0; i < 8; i++) {
-		verts[i].xyz.set(l_verts12[i]);
-		verts[i].st.set(l_verts12[i][3], l_verts12[i][4]);
-		verts[i].rgba.set(255, 255, 255, 255);
+		verts[i].position.set(l_verts12[i]);
+		verts[i].streamTc.set(l_verts12[i][3], l_verts12[i][4], 0, 0);
+		verts[i].color.set(255, 255, 255, 255);
 	}
 	m_skybox12->unlockVertexes();
 
@@ -114,9 +114,9 @@ void OutdoorEnv::createSkyBox() {
 	m_skybox34->init(8, 12);
 	verts = m_skybox34->lockVertexes();
 	for (int i = 0; i < 8; i++) {
-		verts[i].xyz.set(l_verts12[i+8]);
-		verts[i].st.set(l_verts12[i+8][3], l_verts12[i+8][4]);
-		verts[i].rgba.set(255, 255, 255, 255);
+		verts[i].position.set(l_verts12[i+8]);
+		verts[i].streamTc.set(l_verts12[i+8][3], l_verts12[i+8][4], 0, 0);
+		verts[i].color.set(255, 255, 255, 255);
 	}
 	m_skybox34->unlockVertexes();
 
@@ -130,9 +130,9 @@ void OutdoorEnv::createSkyBox() {
 
 	verts = m_skybox5->lockVertexes();
 	for (int i = 0; i < 4; i++) {
-		verts[i].xyz.set(l_verts12[i+16]);
-		verts[i].st.set(l_verts12[i+16][3], l_verts12[i+16][4]);
-		verts[i].rgba.set(255, 255, 255, 255);
+		verts[i].position.set(l_verts12[i+16]);
+		verts[i].streamTc.set(l_verts12[i+16][3], l_verts12[i+16][4], 0, 0);
+		verts[i].color.set(255, 255, 255, 255);
 	}
 	m_skybox5->unlockVertexes();
 
@@ -213,15 +213,15 @@ void OutdoorEnv::createSkyDome()
 			float as, ac;
 			Math::sincos(alpha, as, ac);
 
-			verts->xyz.x = vbs * ac;
-			verts->xyz.y = vbs * as;
-			verts->xyz.z = vbc;
+			verts->position.x = vbs * ac;
+			verts->position.y = vbs * as;
+			verts->position.z = vbc;
 			verts->normal.x = bs * ac;
 			verts->normal.y = bs * as;
 			verts->normal.z = bc;
-			verts->xyz *= radius;
-			verts->st.set(j / (float)tess, i / (float)halftess);
-			verts->rgba.set(255,255,255,255);
+			verts->position *= radius;
+			verts->streamTc.set(j / (float)tess, i / (float)halftess, 0, 0);
+			verts->color.set(255,255,255,255);
 			verts++;
 		}
 	}
@@ -309,12 +309,11 @@ void OutdoorEnv::createOceanMesh()
 	memset(verts, 0, sizeof(MeshVertex) * numverts);
 
 	// first vertex is zero center
-	verts->xyz.set(0, 0, 0);
-	verts->normal.set(0, 0, 1);
-	verts->tangent.set(1, 0, 0);
-	verts->binormal.set(0, 1, 0);
-	verts->st.set(0, 0); //  verts->st = verts->xyz.xy() * 0.01f;
-	verts->rgba.set(255, 255, 255, 255);
+	verts->position.set(0, 0, 0);
+	verts->normal.set(0, 0, 1, 1);
+	verts->tangent.set(1, 0, 0, 0);
+	verts->streamTc.set(0, 0, 0, 0); //  verts->st = verts->xyz.xy() * 0.01f;
+	verts->color.set(255, 255, 255, 255);
 	verts++;
 
 	// inner vertexes
@@ -325,14 +324,13 @@ void OutdoorEnv::createOceanMesh()
 			float angle = j * angelStep;
 			float s, c;
 			Math::sincos(angle, s, c);
-			verts->xyz.set(r * c, r * s, 0);
-			verts->normal.set(0, 0, 1);
-			verts->tangent.set(1, 0, 0);
-			verts->binormal.set(0, 1, 0);
-			verts->st.set(0, 0); // verts->st = verts->xyz.xy() * 0.01f;
-			verts->rgba.set(255, 255, 255, 255);
+			verts->position.set(r * c, r * s, 0);
+			verts->normal.set(0, 0, 1, 1);
+			verts->tangent.set(1, 0, 0, 0);
+			verts->streamTc.set(0, 0, 0, 0); // verts->st = verts->xyz.xy() * 0.01f;
+			verts->color.set(255, 255, 255, 255);
 			if (i == num - 1) {
-				verts->st.set(0, 1);
+				verts->streamTc.set(0, 1, 0, 0);
 			}
 			verts++;
 		}
@@ -459,7 +457,7 @@ void OutdoorEnv::issueToQueue(RenderScene *qscene)
 	if (exposure == 0) {
 		exposure = 1;
 	}
-	qscene->clearColor = m_oceanFog->getFogColor() / exposure;
+	qscene->clearColor.xyz() = (m_oceanFog->getFogColor() / exposure).toVector3();
 
 	bool havesky = m_haveSky && r_sky.getBool();
 	bool haveocean = m_haveOcean && r_water.getBool();
@@ -525,13 +523,13 @@ void OutdoorEnv::setHaveFarSky(bool have)
 	m_haveSky = have;
 }
 
-void OutdoorEnv::setFog(const Vector3 &color, float density)
+void OutdoorEnv::setFog(const Color3 &color, float density)
 {
 	m_globalFog->setFogColor(color);
 	m_globalFog->setFogDensity(density);
 }
 
-void OutdoorEnv::setOceanFog(const Vector3 &color, float density)
+void OutdoorEnv::setOceanFog(const Color3 &color, float density)
 {
 	m_oceanFog->setFogColor(color);
 	m_oceanFog->setFogDensity(density);

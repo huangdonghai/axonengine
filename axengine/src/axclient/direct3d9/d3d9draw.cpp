@@ -185,17 +185,17 @@ Vector2 D3D9Draw::drawString(Font *font, Rgba color, const TextQuad &tq, const V
 
 		// set vertex buffer
 		// set vertex buffer
-		data[count*6+0].xyz = tq.getPos(pos.x + glyphinfo.bearing - 1 * Font::ATLAS_PAD, pos.y + fontheight, scale);
-		data[count*6+0].st.set(tc[0], tc[3]);
-		data[count*6+0].rgba = color;
+		data[count*6+0].position = tq.getPos(pos.x + glyphinfo.bearing - 1 * Font::ATLAS_PAD, pos.y + fontheight, scale);
+		data[count*6+0].streamTc.set(tc[0], tc[3]);
+		data[count*6+0].color = color;
 
-		data[count*6+1].xyz = tq.getPos(pos.x + glyphinfo.bearing - 1 * Font::ATLAS_PAD + fontitalic, pos.y, scale);
-		data[count*6+1].st.set(tc[0], tc[1]);
-		data[count*6+1].rgba = color;
+		data[count*6+1].position = tq.getPos(pos.x + glyphinfo.bearing - 1 * Font::ATLAS_PAD + fontitalic, pos.y, scale);
+		data[count*6+1].streamTc.set(tc[0], tc[1]);
+		data[count*6+1].color = color;
 
-		data[count*6+2].xyz = tq.getPos(pos.x +(glyphinfo.bearing + glyphinfo.width + 3 * Font::ATLAS_PAD) + fontitalic, pos.y, scale);
-		data[count*6+2].st.set(tc[2], tc[1]);
-		data[count*6+2].rgba = color;
+		data[count*6+2].position = tq.getPos(pos.x +(glyphinfo.bearing + glyphinfo.width + 3 * Font::ATLAS_PAD) + fontitalic, pos.y, scale);
+		data[count*6+2].streamTc.set(tc[2], tc[1]);
+		data[count*6+2].color = color;
 
 		data[count*6+3] = data[count*6+2];
 #if 0
@@ -203,9 +203,9 @@ Vector2 D3D9Draw::drawString(Font *font, Rgba color, const TextQuad &tq, const V
 		data[count*6+3].st.set(tc[2], tc[1]);
 		data[count*6+3].rgba = color;
 #endif
-		data[count*6+4].xyz = tq.getPos(pos.x +(glyphinfo.bearing + glyphinfo.width + 3 * Font::ATLAS_PAD), pos.y + fontheight, scale);
-		data[count*6+4].st.set(tc[2], tc[3]);
-		data[count*6+4].rgba = color;
+		data[count*6+4].position = tq.getPos(pos.x +(glyphinfo.bearing + glyphinfo.width + 3 * Font::ATLAS_PAD), pos.y + fontheight, scale);
+		data[count*6+4].streamTc.set(tc[2], tc[3]);
+		data[count*6+4].color = color;
 
 
 		data[count*6+5] = data[count*6+0];

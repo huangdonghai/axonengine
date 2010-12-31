@@ -111,36 +111,36 @@ GLpostprocess::GLpostprocess() {
 	m_screenQuad->init(4, 6);
 	MeshVertex *verts = m_screenQuad->lockVertexes();
 //		verts[0].xyz = Vector3(rect.x, rect.y, 0.0f);
-	verts[0].st.x = 0;
-	verts[0].st.y = 1;
-	verts[0].rgba = color;
+	verts[0].streamTc.x = 0;
+	verts[0].streamTc.y = 1;
+	verts[0].color = color;
 	verts[0].st2 = Vector2(0, 0);
 	verts[0].normal = Vector3(0, 0, 1);
 	verts[0].tangent = Vector3(1, 0, 0);
 	verts[0].binormal = Vector3(0, 1, 0);
 
 //		verts[1].xyz = Vector3(rect.x + rect.width, rect.y, 0.0f);
-	verts[1].st.x = 1;
-	verts[1].st.y = 1;
-	verts[1].rgba = color;
+	verts[1].streamTc.x = 1;
+	verts[1].streamTc.y = 1;
+	verts[1].color = color;
 	verts[1].st2 = Vector2(0, 0);
 	verts[1].normal = Vector3(0, 0, 1);
 	verts[1].tangent = Vector3(1, 0, 0);
 	verts[1].binormal = Vector3(0, 1, 0);
 
 //		verts[2].xyz = Vector3(rect.x, rect.y + rect.height, 0.0f);
-	verts[2].st.x = 0;
-	verts[2].st.y = 0;
-	verts[2].rgba = color;
+	verts[2].streamTc.x = 0;
+	verts[2].streamTc.y = 0;
+	verts[2].color = color;
 	verts[2].st2 = Vector2(0, 0);
 	verts[2].normal = Vector3(0, 0, 1);
 	verts[2].tangent = Vector3(1, 0, 0);
 	verts[2].binormal = Vector3(0, 1, 0);
 
 //		verts[3].xyz = Vector3(rect.x + rect.width, rect.y + rect.height, 0.0f);
-	verts[3].st.x = 1;
-	verts[3].st.y = 0;
-	verts[3].rgba = color;
+	verts[3].streamTc.x = 1;
+	verts[3].streamTc.y = 0;
+	verts[3].color = color;
 	verts[3].st2 = Vector2(0, 0);
 	verts[3].normal = Vector3(0, 0, 1);
 	verts[3].tangent = Vector3(1, 0, 0);
@@ -188,10 +188,10 @@ void GLpostprocess::process(Type type, GLtexture *texture) {
 
 void GLpostprocess::updateScreenQuad(const Rect &rect) {
 	MeshVertex *verts = m_screenQuad->lockVertexes();
-	verts[0].xyz = Vector3(rect.x, rect.y, 0.0f);
-	verts[1].xyz = Vector3(rect.x + rect.width, rect.y, 0.0f);
-	verts[2].xyz = Vector3(rect.x, rect.y + rect.height, 0.0f);
-	verts[3].xyz = Vector3(rect.x + rect.width, rect.y + rect.height, 0.0f);
+	verts[0].position = Vector3(rect.x, rect.y, 0.0f);
+	verts[1].position = Vector3(rect.x + rect.width, rect.y, 0.0f);
+	verts[2].position = Vector3(rect.x, rect.y + rect.height, 0.0f);
+	verts[3].position = Vector3(rect.x + rect.width, rect.y + rect.height, 0.0f);
 	m_screenQuad->unlockVertexes();
 
 	GLprimitive *glprim = glPrimitiveManager->getPrimitive(m_screenQuad->getCachedId());

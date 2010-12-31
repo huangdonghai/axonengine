@@ -755,9 +755,9 @@ void MapChunk::updatePrimitive()
 	for (j = rect.y; j <= rect.yMax(); j+=tilegridsize) {
 		for (i = rect.x; i <= rect.xMax(); i+=tilegridsize) {
 			// vertexes
-			verts->xyz.x = (i + offset.x)* mpt;
-			verts->xyz.y = (j + offset.y) * mpt;
-			verts->xyz.z = m_terrain->getHeight(i, j);
+			verts->position.x = (i + offset.x)* mpt;
+			verts->position.y = (j + offset.y) * mpt;
+			verts->position.z = m_terrain->getHeight(i, j);
 
 			verts++;
 		}
@@ -1161,9 +1161,9 @@ void MapZone::updatePrimVertexes(const Rect &rect_in)
 			float h = m_terrain->getHeight(x, y);
 			int offset = lineoffset + ((x-tileoffset.x)>>m_zonePrimLod);
 			ChunkVertex *vert = verts + offset;
-			vert->xyz.x = x * m_terrain->getTileMeters();
-			vert->xyz.y = y * m_terrain->getTileMeters();
-			vert->xyz.z = h;
+			vert->position.x = x * m_terrain->getTileMeters();
+			vert->position.y = y * m_terrain->getTileMeters();
+			vert->position.z = h;
 		}
 	}
 	m_prim->unlockVertexes();

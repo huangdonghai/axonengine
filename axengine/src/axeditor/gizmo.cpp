@@ -223,10 +223,10 @@ void MoveGizmo::setupAxis(int axis) {
 	line->lock();
 	DebugVertex &v0 = line->getVertexRef(0);
 	DebugVertex &v1 = line->getVertexRef(1);
-	v0.xyz = p0;
-	v0.rgba = color;
-	v1.xyz = p1;
-	v1.rgba = color;
+	v0.position = p0;
+	v0.color = color;
+	v1.position = p1;
+	v1.color = color;
 	line->unlock();
 
 	MeshPrim::setupCone(m_meshs[axis], p1, m_length * 0.03f, p2, color );
@@ -276,14 +276,14 @@ void MoveGizmo::setupPlane(int axis) {
 	float length = m_length * 0.5f;
 
 	DebugVertex *verts = line->lockVertexes();
-	verts[0].xyz = m_pos + v0 * length;
-	verts[0].rgba = color0;
-	verts[1].xyz = verts[0].xyz + v1 * length;
-	verts[1].rgba = color0;
-	verts[2].xyz = m_pos + v1 * length;
-	verts[2].rgba = color1;
-	verts[3].xyz = verts[1].xyz;
-	verts[3].rgba = color1;
+	verts[0].position = m_pos + v0 * length;
+	verts[0].color = color0;
+	verts[1].position = verts[0].position + v1 * length;
+	verts[1].color = color0;
+	verts[2].position = m_pos + v1 * length;
+	verts[2].color = color1;
+	verts[3].position = verts[1].position;
+	verts[3].color = color1;
 	line->unlockVertexes();
 
 	MeshPrim*& mesh = m_meshs[axis];
@@ -308,14 +308,14 @@ void MoveGizmo::setupPlane(int axis) {
 
 	MeshVertex *mverts = mesh->lockVertexes();
 	if (first) memset(mverts, 0, sizeof(MeshVertex) * 4);
-	mverts[0].xyz = m_pos;
-	mverts[0].rgba = meshcolor;
-	mverts[1].xyz = m_pos + v0 * length;
-	mverts[1].rgba = meshcolor;
-	mverts[2].xyz = m_pos + v1 * length;
-	mverts[2].rgba = meshcolor;
-	mverts[3].xyz = m_pos + v0 * length + v1 * length;
-	mverts[3].rgba = meshcolor;
+	mverts[0].position = m_pos;
+	mverts[0].color = meshcolor;
+	mverts[1].position = m_pos + v0 * length;
+	mverts[1].color = meshcolor;
+	mverts[2].position = m_pos + v1 * length;
+	mverts[2].color = meshcolor;
+	mverts[3].position = m_pos + v0 * length + v1 * length;
+	mverts[3].color = meshcolor;
 	mesh->unlockVertexes();
 }
 
@@ -345,14 +345,14 @@ void MoveGizmo::setupXYZ(const RenderCamera &camera) {
 
 	const Matrix3 &axis = camera.getViewAxis();
 	DebugVertex *verts = line->lockVertexes();
-	verts[0].xyz = m_pos - axis[1] * len - axis[2] * len;
-	verts[0].rgba = color;
-	verts[1].xyz = m_pos - axis[1] * len + axis[2] * len;
-	verts[1].rgba = color;
-	verts[2].xyz = m_pos + axis[1] * len + axis[2] * len;
-	verts[2].rgba = color;
-	verts[3].xyz = m_pos + axis[1] * len - axis[2] * len;
-	verts[3].rgba = color;
+	verts[0].position = m_pos - axis[1] * len - axis[2] * len;
+	verts[0].color = color;
+	verts[1].position = m_pos - axis[1] * len + axis[2] * len;
+	verts[1].color = color;
+	verts[2].position = m_pos + axis[1] * len + axis[2] * len;
+	verts[2].color = color;
+	verts[3].position = m_pos + axis[1] * len - axis[2] * len;
+	verts[3].color = color;
 	line->unlockVertexes();
 }
 
@@ -674,14 +674,14 @@ void ScaleGizmo::setupScreenQuad(const RenderCamera &camera, MeshPrim*& mesh, co
 	float len = 6.0f * m_scale;
 	const Matrix3 &axis = camera.getViewAxis();
 	MeshVertex *vert = mesh->lockVertexes();
-	vert[0].xyz = pos + axis[1] * len - axis[2] * len;
-	vert[0].rgba = color;
-	vert[1].xyz = pos - axis[1] * len - axis[2] * len;
-	vert[1].rgba = color;
-	vert[2].xyz = pos + axis[1] * len + axis[2] * len;
-	vert[2].rgba = color;
-	vert[3].xyz = pos - axis[1] * len + axis[2] * len;
-	vert[3].rgba = color;
+	vert[0].position = pos + axis[1] * len - axis[2] * len;
+	vert[0].color = color;
+	vert[1].position = pos - axis[1] * len - axis[2] * len;
+	vert[1].color = color;
+	vert[2].position = pos + axis[1] * len + axis[2] * len;
+	vert[2].color = color;
+	vert[3].position = pos - axis[1] * len + axis[2] * len;
+	vert[3].color = color;
 	mesh->unlockVertexes();
 }
 

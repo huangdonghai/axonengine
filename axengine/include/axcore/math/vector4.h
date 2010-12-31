@@ -22,7 +22,7 @@ struct AX_API Vector4 {
 
 	// ctor and dtor
 	inline Vector4(){}
-	inline Vector4(const Vector3 &v, float iw=1) : x(v.x),y(v.y),z(v.z), w(iw) {}
+	inline Vector4(const Vector3 &v, float iw) : x(v.x),y(v.y),z(v.z), w(iw) {}
 	inline Vector4(const Vector4 &p) : x(p.x),y(p.y),z(p.z), w(p.w) {}
 	inline Vector4(float ix, float iy, float iz, float iw) : x(ix) , y(iy), z(iz), w(iw) {}
 	inline Vector4(const Vector3 &base, const Vector3 &normal)
@@ -123,29 +123,39 @@ struct AX_API Vector4 {
 		AX_STRICT_ASSERT(index>=0 && index<4);
 		return *(&x+index);
 	}
-	inline Vector4 &set(float ix=0.f, float iy=0.f, float iz=0.f, float iw=0) {
+	inline void set(float ix, float iy, float iz, float iw)
+	{
 		x = ix; y = iy; z = iz; w = iw;
-		return *this;
 	}
-	inline const float* c_ptr() const {
+	inline void set(const float *ptr)
+	{
+		x = ptr[0]; y = ptr[1]; z = ptr[2]; w = ptr[3];
+	}
+	inline const float* c_ptr() const
+	{
 		return &x;
 	}
-	inline float mapping(Vector3 &p) {
+	inline float mapping(Vector3 &p)
+	{
 		return x*p.x + y*p.y + z*p.z - w;
 	}
-	inline Vector3 &xyz() {
+	inline Vector3 &xyz()
+	{
 		return *(Vector3*)this;
 	}
 
-	inline Vector2 &xy() {
+	inline Vector2 &xy()
+	{
 		return *(Vector2*)this;
 	}
 
-	inline Vector2 &zw() {
+	inline Vector2 &zw()
+	{
 		return *(Vector2*)&z;
 	}
 
-	inline const Vector3 &xyz() const {
+	inline const Vector3 &xyz() const
+	{
 		return *(Vector3*)this;
 	}
 };

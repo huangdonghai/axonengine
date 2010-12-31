@@ -856,32 +856,35 @@ public:
 		memset(verts, 0, sizeof(MeshVertex) * numverts);
 		for (int i = 0; i < numverts; i++) {
 			if (m_haveLocalTransform) {
-				verts[i].xyz = m_localTransform * helper.getPostion(i);
+				verts[i].position = m_localTransform * helper.getPostion(i);
 			} else {
-				verts[i].xyz = helper.getPostion(i);
+				verts[i].position = helper.getPostion(i);
 			}
-			verts[i].st = helper.getTexcoord(i);
-			verts[i].st2 = helper.getLightmapTexcoord(i);
-			verts[i].rgba = helper.getVertexColor(i);
+			verts[i].streamTc.xy() = helper.getTexcoord(i);
+			verts[i].streamTc.zw() = helper.getLightmapTexcoord(i);
+			verts[i].color = helper.getVertexColor(i);
 
 			if (helper.haveNormal()) {
 				if (m_haveLocalTransform) {
-					verts[i].normal = m_localTransform.axis * helper.getNormal(i);
+					verts[i].normal.xyz() = m_localTransform.axis * helper.getNormal(i);
 				} else {
-					verts[i].normal = helper.getNormal(i);
+					verts[i].normal.xyz() = helper.getNormal(i);
 				}
 			} else {
 				Errorf("mesh must have normal");
 			}
 
 			if (haveTangents) {
+				Vector3 binormal;
 				if (m_haveLocalTransform) {
-					verts[i].tangent = m_localTransform.axis * helper.getTangent(i);
-					verts[i].binormal = m_localTransform.axis * -helper.getBinormal(i);
+					verts[i].tangent.xyz() = m_localTransform.axis * helper.getTangent(i);
+					binormal = m_localTransform.axis * -helper.getBinormal(i);
 				} else {
-					verts[i].tangent = helper.getTangent(i);
-					verts[i].binormal = -helper.getBinormal(i);
+					verts[i].tangent.xyz() = helper.getTangent(i);
+					binormal = -helper.getBinormal(i);
 				}
+				Vector3 normal = verts[i].tangent.xyz() ^ binormal;
+				verts[i].normal.w = (normal | verts[i].normal.xyz()) > 0;
 			}
 		}
 		m_renderMesh->unlockVertexes();
@@ -1016,7 +1019,7 @@ const BoundingBox &HavokPackage::getBoundingBox()
 
 		const MeshVertex *verts = mesh->getVertexesPointer();
 		for (int j = 0; j < mesh->getNumVertexes(); j++) {
-			m_staticBbox.expandBy(verts[j].xyz);
+			m_staticBbox.expandBy(verts[j].position);
 		}
 #endif
 	}
@@ -1551,7 +1554,7 @@ void HavokModel::applyPose()
 			binding.m_iIndexStride = binding.m_iPosStride;
 			binding.m_bonesPerVertex = helper.getBonesPerVertex();
 
-			binding.m_oPosBase = &data->m_renderMesh->lockVertexes()->xyz[0];
+			binding.m_oPosBase = &data->m_renderMesh->lockVertexes()->position[0];
 			binding.m_oPosStride = sizeof(MeshVertex) / sizeof(float);
 
 			binding.m_numVerts = data->m_renderMesh->getNumVertexes();

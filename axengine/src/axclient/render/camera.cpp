@@ -220,7 +220,7 @@ bool RenderCamera::cullBox(const BoundingBox &bbox) const
 
 Vector3 RenderCamera::worldToScreen(const Vector3 &in) const
 {
-	Vector4 out(in);
+	Vector4 out(in, 1);
 
 	out = m_vp * out;
 
@@ -239,7 +239,7 @@ Vector3 RenderCamera::worldToScreen(const Vector3 &in) const
 
 Vector3 RenderCamera::screenToWorld(const Vector3 &in) const
 {
-	Vector4 vert(in);
+	Vector4 vert(in, 1);
 
 	vert.y = m_clientSize.y - vert.y;
 

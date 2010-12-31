@@ -26,36 +26,28 @@ void Interaction::calcSort(bool eyeInWater)
 
 	Material *mat = primitive->getMaterial();
 
-	if (!mat) {
+	if (!mat)
 		return;
-	}
 
 	const ShaderInfo *shader = mat->getShaderInfo();
 
-	if (!shader) {
+	if (!shader)
 		return;
-	}
 
 	sortkey = mat->getSortHint();
 
 	Texture *tex = mat->getTexture(MaterialTextureId::Diffuse);
 
-	if (eyeInWater) {
+	if (eyeInWater)
 		sortkey = eyeInWaterSort[sortkey];
-	}
 
 	int distance = 0;
-	if (entity) {
+	if (entity)
 		distance = entity->getDistance() * 1024;
-	}
 
 	sortkey = (sortkey << 28) + ((uint_t)(distance) &0x0fffffff);
 }
 
-void Interaction::setupShader()
-{
-
-}
 
 AX_END_NAMESPACE
 

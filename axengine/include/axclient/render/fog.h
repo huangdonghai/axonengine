@@ -22,14 +22,14 @@ public:
 	RenderFog() : RenderEntity(RenderEntity::kFog) {}
 	~RenderFog() {}
 
-	Vector4 getFogColor() const { return m_fogColor; }
-	void setFogColor(Vector4 val) { m_fogColor = val; }
+	Color3 getFogColor() const { return m_fogColor; }
+	void setFogColor(const Color3 &val) { m_fogColor = val; }
 	float getFogDensity() const { return m_fogDensity; }
 	void setFogDensity(float val) { m_fogDensity = val; }
 
 	Vector4 getFogParams() const
 	{
-		return Vector4(m_fogColor.x, m_fogColor.y, m_fogColor.z, m_fogDensity);
+		return Vector4(m_fogColor.r, m_fogColor.g, m_fogColor.b, m_fogDensity);
 	}
 
 #if 0
@@ -44,7 +44,7 @@ public:
 
 
 private:
-	Vector4 m_fogColor;
+	Color3 m_fogColor;
 	float m_fogDensity;
 #if 0
 	QueuedFog *m_queuedFog;

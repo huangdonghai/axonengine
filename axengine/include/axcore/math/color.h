@@ -17,7 +17,7 @@ AX_BEGIN_NAMESPACE
 //------------------------------------------------------------------------------
 // Rgb, 3 unsigned byte, identical to D3DFMT_R8G8B8
 //------------------------------------------------------------------------------
-
+class Color3;
 struct AX_API Rgb {
 	enum {
 		B, G, R
@@ -47,6 +47,7 @@ struct AX_API Rgb {
 
 	void fromVector(const Vector3 &v);
 	Vector3 toVector() const;
+	Color3 toColor3() const;
 	std::string toString() const;
 	bool fromString(const char *str);
 
@@ -461,6 +462,14 @@ inline Rgba::Rgba(const Color4 &rhs)
 	, b(Math::clampByte(rhs.b*255.f))
 	, a(Math::clampByte(rhs.a*255.f))
 {}
+
+inline Color3 Rgb::toColor3() const
+{
+	Color3 c(r,g,b);
+	c *= 1.0f / 255.0f;
+	return c;
+}
+
 
 AX_END_NAMESPACE
 

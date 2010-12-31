@@ -203,8 +203,8 @@ void GameWorld::updateEnvdef()
 {
 	m_outdoorEnv->setHaveFarSky(m_mapEnvDef->m_haveSkyBox);
 	m_outdoorEnv->setHaveOcean(m_mapEnvDef->m_haveOcean);
-	m_outdoorEnv->setFog(m_mapEnvDef->m_fogColor.toVector3(), m_mapEnvDef->m_fogDensity);
-	m_outdoorEnv->setOceanFog(m_mapEnvDef->m_oceanFogColor.toVector3(), m_mapEnvDef->m_oceanFogDensity);
+	m_outdoorEnv->setFog(m_mapEnvDef->m_fogColor, m_mapEnvDef->m_fogDensity);
+	m_outdoorEnv->setOceanFog(m_mapEnvDef->m_oceanFogColor, m_mapEnvDef->m_oceanFogDensity);
 	m_outdoorEnv->setHaveGlobalLight(m_mapEnvDef->m_haveGlobalLight);
 	m_outdoorEnv->setSunColor(m_mapEnvDef->m_sunColor, m_mapEnvDef->m_sunColorX, 1);
 	m_outdoorEnv->setSkyColor(m_mapEnvDef->m_skyColor, m_mapEnvDef->m_skyColorX);

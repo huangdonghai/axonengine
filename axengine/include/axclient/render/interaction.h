@@ -24,7 +24,6 @@ class Primitive;
 struct Interaction {
 	enum {
 		MAX_LIGHTS = 4,
-		MAX_TARGETS = 8
 	};
 
 	uint_t sortkey;
@@ -41,7 +40,6 @@ struct Interaction {
 	Interaction *primNext;
 
 	void calcSort(bool eyeInWater);
-	void setupShader();
 };
 
 AX_END_NAMESPACE

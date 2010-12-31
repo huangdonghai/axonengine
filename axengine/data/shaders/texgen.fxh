@@ -20,22 +20,20 @@ float FOG_compute(float4 hpos) {
 float4 VP_computeStreamTc(VertexIn a2v) {
 	float4 result;
 #if G_BASETC_ANIM
-	result.xy = mul(g_baseTcMatrix, float4(a2v.st, 0, 1)).xy;
-	result.zw = a2v.st2;
+	result.xy = mul(g_baseTcMatrix, float4(a2v.streamTc.xy, 0, 1)).xy;
+	result.zw = a2v.streamTc.zw;
 #else
-	result.xy = a2v.st;
-	result.zw = a2v.st2;
+	result = a2v.streamTc;
 #endif
 	return result;
 }
 
 void VP_final(VertexIn a2v, inout VertexOut v2f) {
 #if G_BASETC_ANIM
-	v2f.streamTc.xy = mul(g_baseTcMatrix, float4(a2v.st, 0, 1)).xy;
-	v2f.streamTc.zw = a2v.st2;
+	v2f.streamTc.xy = mul(g_baseTcMatrix, float4(a2v.streamTc.xy, 0, 1)).xy;
+	v2f.streamTc.zw = a2v.streamTc.zw;
 #else
-	v2f.streamTc.xy = a2v.st;
-	v2f.streamTc.zw = a2v.st2;
+	v2f.streamTc = a2v.streamTc;
 #endif
 
 #if G_FOG

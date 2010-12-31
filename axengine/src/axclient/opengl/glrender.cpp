@@ -580,21 +580,21 @@ Vector2 GLfontrender::drawString(Font *font, Rgba color, const TextQuad &tq, con
 		tc[2] = tc[0] +(tc[2] - tc[0]) * (float)(glyphinfo.width + 4 * Font::ATLAS_PAD) / font->getWidth();
 
 		// set vertex buffer
-		data[count*4+0].xyz = tq.getPos(pos.x + glyphinfo.bearing - 1 * Font::ATLAS_PAD, pos.y + fontheight, scale);
-		data[count*4+0].st = Vector2(tc[0], tc[3]);
-		data[count*4+0].rgba = color;
+		data[count*4+0].position = tq.getPos(pos.x + glyphinfo.bearing - 1 * Font::ATLAS_PAD, pos.y + fontheight, scale);
+		data[count*4+0].streamTc = Vector2(tc[0], tc[3]);
+		data[count*4+0].color = color;
 
-		data[count*4+1].xyz = tq.getPos(pos.x + glyphinfo.bearing - 1 * Font::ATLAS_PAD + fontitalic, pos.y, scale);
-		data[count*4+1].st = Vector2(tc[0], tc[1]);
-		data[count*4+1].rgba = color;
+		data[count*4+1].position = tq.getPos(pos.x + glyphinfo.bearing - 1 * Font::ATLAS_PAD + fontitalic, pos.y, scale);
+		data[count*4+1].streamTc = Vector2(tc[0], tc[1]);
+		data[count*4+1].color = color;
 
-		data[count*4+3].xyz = tq.getPos(pos.x +(glyphinfo.bearing + glyphinfo.width + 3 * Font::ATLAS_PAD), pos.y + fontheight, scale);
-		data[count*4+3].st = Vector2(tc[2], tc[3]);
-		data[count*4+3].rgba = color;
+		data[count*4+3].position = tq.getPos(pos.x +(glyphinfo.bearing + glyphinfo.width + 3 * Font::ATLAS_PAD), pos.y + fontheight, scale);
+		data[count*4+3].streamTc = Vector2(tc[2], tc[3]);
+		data[count*4+3].color = color;
 
-		data[count*4+2].xyz = tq.getPos(pos.x +(glyphinfo.bearing + glyphinfo.width + 3 * Font::ATLAS_PAD) + fontitalic, pos.y, scale);
-		data[count*4+2].st = Vector2(tc[2], tc[1]);
-		data[count*4+2].rgba = color;
+		data[count*4+2].position = tq.getPos(pos.x +(glyphinfo.bearing + glyphinfo.width + 3 * Font::ATLAS_PAD) + fontitalic, pos.y, scale);
+		data[count*4+2].streamTc = Vector2(tc[2], tc[1]);
+		data[count*4+2].color = color;
 		count++;
 
 		pos.x += glyphinfo.advance;

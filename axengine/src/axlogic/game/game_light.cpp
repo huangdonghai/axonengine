@@ -125,7 +125,7 @@ void GameLight::setupPointPrim()
 		m_pointPrim->unlockIndexes();
 	}
 
-	Rgb color = m_renderLight->getLightColor().xyz();
+	Rgb color = m_renderLight->getLightColor();
 	const float size = 0.5f;
 	const float height = size * AX_SQRT1_2;
 
@@ -138,16 +138,16 @@ void GameLight::setupPointPrim()
 
 	Vector3 origin = Vector3(0,0,0);
 
-	verts[0].xyz = origin - up * height;
-	verts[1].xyz = origin + left * height;
-	verts[2].xyz = origin + forward * height;
-	verts[3].xyz = origin - left * height;
-	verts[4].xyz = origin - forward * height;
-	verts[5].xyz = origin + up * height;
+	verts[0].position = origin - up * height;
+	verts[1].position = origin + left * height;
+	verts[2].position = origin + forward * height;
+	verts[3].position = origin - left * height;
+	verts[4].position = origin - forward * height;
+	verts[5].position = origin + up * height;
 
 	for (int i = 0; i<6; i++) {
 		static const float colorx[] = { 0.3f, 0.9f, 0.8f, 0.7f, 0.6f,1.0f };
-		verts[i].rgba.set(color*colorx[i]);
+		verts[i].color.set(color*colorx[i]);
 	}
 
 	m_pointPrim->unlockVertexes();
@@ -172,7 +172,7 @@ void GameLight::setupSpotPrim()
 		m_spotPrim->unlockIndexes();
 	}
 
-	Rgb color = m_renderLight->getLightColor().xyz();
+	Rgb color = m_renderLight->getLightColor();
 	const float spotangle = Math::d2r(m_renderLight->getSpotAngle());
 	const float size = 0.5f;
 	float len, height;
@@ -205,8 +205,8 @@ void GameLight::setupSpotPrim()
 
 	MeshVertex *verts = m_spotPrim->lockVertexes();
 	for (int i=0; i<18; i++) {
-		verts[i].xyz = pos[s_posindices[i]];
-		verts[i].rgba = facecolor[s_colorindices[i]];
+		verts[i].position = pos[s_posindices[i]];
+		verts[i].color = facecolor[s_colorindices[i]];
 	}
 	m_spotPrim->unlockVertexes();
 

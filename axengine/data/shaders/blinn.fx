@@ -40,8 +40,8 @@ struct ShadowVertexOut {
 ShadowVertexOut VP_zpass(VertexIn IN)
 {
 	ShadowVertexOut OUT;
-	OUT.hpos = VP_modelToClip(IN, IN.xyz);
-	OUT.diffuseTc = IN.st;
+	OUT.hpos = VP_modelToClip(IN, IN.position);
+	OUT.diffuseTc = IN.streamTc.xy;
 	return OUT;
 }
 
@@ -66,12 +66,12 @@ GpassOut VP_gpass(VertexIn IN)
 	GpassOut OUT = (GpassOut)0;
 
 	// transform tangent space vector to world space
-	OUT.normal = N_modelToWorld(IN, IN.normal);
+	OUT.normal = N_modelToWorld(IN, IN.normal.xyz);
 #if !NO_NORMALMAPPING
-	OUT.tangent = N_modelToWorld(IN, IN.tangent);
-	OUT.binormal = N_modelToWorld(IN, IN.binormal);
+	OUT.tangent = N_modelToWorld(IN, IN.tangent.xyz);
+	OUT.binormal = cross(OUT.normal, OUT.tangent);
 #endif
-	float3 posWorld = VP_modelToWorld(IN, IN.xyz);
+	float3 posWorld = VP_modelToWorld(IN, IN.position);
 
 	float4 posClip = VP_worldToClip(posWorld);
 	OUT.hpos = posClip;
@@ -112,12 +112,12 @@ VertexOut VP_main(VertexIn IN)
     VertexOut OUT = (VertexOut)0;
 
 	// transform tangent space vector to world space
-	OUT.normal = N_modelToWorld(IN, IN.normal);
+	OUT.normal = N_modelToWorld(IN, IN.normal.xyz);
 #if !NO_NORMALMAPPING
-	OUT.tangent = N_modelToWorld(IN, IN.tangent);
-	OUT.binormal = N_modelToWorld(IN, IN.binormal);
+	OUT.tangent = N_modelToWorld(IN, IN.tangent.xyz);
+	OUT.binormal = cross(OUT.normal, OUT.tangent);
 #endif
-	float3 posWorld = VP_modelToWorld(IN, IN.xyz);
+	float3 posWorld = VP_modelToWorld(IN, IN.position);
 	OUT.worldPos = posWorld;
 
 	float4 posClip = VP_worldToClip(posWorld);

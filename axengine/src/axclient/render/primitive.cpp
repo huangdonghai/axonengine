@@ -262,26 +262,26 @@ LinePrim *LinePrim::createAxis(Hint hint, float line_length)
 	line->init(6, 6);
 
 	// x
-	line->m_vertexes[0].xyz = Vector3(0, 0, 0);
-	line->m_vertexes[0].rgba = Rgba::Red;
-	line->m_vertexes[1].xyz = Vector3(line_length, 0, 0);
-	line->m_vertexes[1].rgba = Rgba::Red;
+	line->m_vertexes[0].position = Vector3(0, 0, 0);
+	line->m_vertexes[0].color = Rgba::Red;
+	line->m_vertexes[1].position = Vector3(line_length, 0, 0);
+	line->m_vertexes[1].color = Rgba::Red;
 	line->m_indexes[0] = 0;
 	line->m_indexes[1] = 1;
 
 	// y
-	line->m_vertexes[2].xyz = Vector3(0, 0, 0);
-	line->m_vertexes[2].rgba = Rgba::Green;
-	line->m_vertexes[3].xyz = Vector3(0, line_length, 0);
-	line->m_vertexes[3].rgba = Rgba::Green;
+	line->m_vertexes[2].position = Vector3(0, 0, 0);
+	line->m_vertexes[2].color = Rgba::Green;
+	line->m_vertexes[3].position = Vector3(0, line_length, 0);
+	line->m_vertexes[3].color = Rgba::Green;
 	line->m_indexes[2] = 2;
 	line->m_indexes[3] = 3;
 
 	// z
-	line->m_vertexes[4].xyz = Vector3(0, 0, 0);
-	line->m_vertexes[4].rgba = Rgba::Blue;
-	line->m_vertexes[5].xyz = Vector3(0, 0, line_length);
-	line->m_vertexes[5].rgba = Rgba::Blue;
+	line->m_vertexes[4].position = Vector3(0, 0, 0);
+	line->m_vertexes[4].color = Rgba::Blue;
+	line->m_vertexes[5].position = Vector3(0, 0, line_length);
+	line->m_vertexes[5].color = Rgba::Blue;
 	line->m_indexes[4] = 4;
 	line->m_indexes[5] = 5;
 
@@ -295,26 +295,26 @@ LinePrim *LinePrim::createAxis(Hint hint, const Vector3 &origin, const Matrix3 &
 	line->init(6, 6);
 
 	// x
-	line->m_vertexes[0].xyz = origin;
-	line->m_vertexes[0].rgba = Rgba::Red;
-	line->m_vertexes[1].xyz = origin + axis[0] * line_length;
-	line->m_vertexes[1].rgba = Rgba::Red;
+	line->m_vertexes[0].position = origin;
+	line->m_vertexes[0].color = Rgba::Red;
+	line->m_vertexes[1].position = origin + axis[0] * line_length;
+	line->m_vertexes[1].color = Rgba::Red;
 	line->m_indexes[0] = 0;
 	line->m_indexes[1] = 1;
 
 	// y
-	line->m_vertexes[2].xyz = origin;
-	line->m_vertexes[2].rgba = Rgba::Green;
-	line->m_vertexes[3].xyz = origin + axis[1] * line_length;
-	line->m_vertexes[3].rgba = Rgba::Green;
+	line->m_vertexes[2].position = origin;
+	line->m_vertexes[2].color = Rgba::Green;
+	line->m_vertexes[3].position = origin + axis[1] * line_length;
+	line->m_vertexes[3].color = Rgba::Green;
 	line->m_indexes[2] = 2;
 	line->m_indexes[3] = 3;
 
 	// z
-	line->m_vertexes[4].xyz = origin;
-	line->m_vertexes[4].rgba = Rgba::Blue;
-	line->m_vertexes[5].xyz = origin + axis[2] * line_length;
-	line->m_vertexes[5].rgba = Rgba::Blue;
+	line->m_vertexes[4].position = origin;
+	line->m_vertexes[4].color = Rgba::Blue;
+	line->m_vertexes[5].position = origin + axis[2] * line_length;
+	line->m_vertexes[5].color = Rgba::Blue;
 	line->m_indexes[4] = 4;
 	line->m_indexes[5] = 5;
 
@@ -328,14 +328,14 @@ LinePrim *LinePrim::createScreenRect(Hint hint, const Rect &rect, const Rgba &co
 	line->init(4, 8);
 
 	// x
-	line->m_vertexes[0].xyz = Vector3(rect.xMin(), rect.yMin(), 0);
-	line->m_vertexes[0].rgba = color;
-	line->m_vertexes[1].xyz = Vector3(rect.xMin(), rect.yMax(), 0);
-	line->m_vertexes[1].rgba = color;
-	line->m_vertexes[2].xyz = Vector3(rect.xMax(), rect.yMax(), 0);
-	line->m_vertexes[2].rgba = color;
-	line->m_vertexes[3].xyz = Vector3(rect.xMax(), rect.yMin(), 0);
-	line->m_vertexes[3].rgba = color;
+	line->m_vertexes[0].position = Vector3(rect.xMin(), rect.yMin(), 0);
+	line->m_vertexes[0].color = color;
+	line->m_vertexes[1].position = Vector3(rect.xMin(), rect.yMax(), 0);
+	line->m_vertexes[1].color = color;
+	line->m_vertexes[2].position = Vector3(rect.xMax(), rect.yMax(), 0);
+	line->m_vertexes[2].color = color;
+	line->m_vertexes[3].position = Vector3(rect.xMax(), rect.yMin(), 0);
+	line->m_vertexes[3].color = color;
 
 	line->m_indexes[0] = 0;
 	line->m_indexes[1] = 1;
@@ -357,14 +357,14 @@ bool LinePrim::setupScreenRect(LinePrim*& line, const Rect &rect, const Rgba &co
 	}
 	line->lockVertexes();
 	// x
-	line->m_vertexes[0].xyz = Vector3(rect.xMin(), rect.yMin(), 0);
-	line->m_vertexes[0].rgba = color;
-	line->m_vertexes[1].xyz = Vector3(rect.xMin(), rect.yMax(), 0);
-	line->m_vertexes[1].rgba = color;
-	line->m_vertexes[2].xyz = Vector3(rect.xMax(), rect.yMax(), 0);
-	line->m_vertexes[2].rgba = color;
-	line->m_vertexes[3].xyz = Vector3(rect.xMax(), rect.yMin(), 0);
-	line->m_vertexes[3].rgba = color;
+	line->m_vertexes[0].position = Vector3(rect.xMin(), rect.yMin(), 0);
+	line->m_vertexes[0].color = color;
+	line->m_vertexes[1].position = Vector3(rect.xMin(), rect.yMax(), 0);
+	line->m_vertexes[1].color = color;
+	line->m_vertexes[2].position = Vector3(rect.xMax(), rect.yMax(), 0);
+	line->m_vertexes[2].color = color;
+	line->m_vertexes[3].position = Vector3(rect.xMax(), rect.yMin(), 0);
+	line->m_vertexes[3].color = color;
 	line->unlockVertexes();
 	return true;
 }
@@ -376,10 +376,10 @@ LinePrim *LinePrim::createLine(Hint hint, const Vector3 &from, const Vector3 &to
 	line->init(2, 2);
 
 	// x
-	line->m_vertexes[0].xyz = from;
-	line->m_vertexes[0].rgba = color;
-	line->m_vertexes[1].xyz = to;
-	line->m_vertexes[1].rgba = color;
+	line->m_vertexes[0].position = from;
+	line->m_vertexes[0].color = color;
+	line->m_vertexes[1].position = to;
+	line->m_vertexes[1].color = color;
 
 	line->m_indexes[0] = 0;
 	line->m_indexes[1] = 1;
@@ -402,10 +402,10 @@ bool LinePrim::setupLine(LinePrim*& line, const Vector3 &from, const Vector3 &to
 	}
 
 	line->lockVertexes();
-	line->m_vertexes[0].xyz = from;
-	line->m_vertexes[0].rgba = color;
-	line->m_vertexes[1].xyz = to;
-	line->m_vertexes[1].rgba = color;
+	line->m_vertexes[0].position = from;
+	line->m_vertexes[0].color = color;
+	line->m_vertexes[1].position = to;
+	line->m_vertexes[1].color = color;
 	line->unlockVertexes();
 
 	return isinit;
@@ -430,22 +430,22 @@ bool LinePrim::setupAxis(LinePrim*& line, const Vector3 &origin, const Matrix3 &
 	}
 
 	line->lockVertexes();
-	line->m_vertexes[0].xyz = origin;
-	line->m_vertexes[0].rgba = xcolor;
-	line->m_vertexes[1].xyz = origin + axis[0] * length;
-	line->m_vertexes[1].rgba = xcolor;
+	line->m_vertexes[0].position = origin;
+	line->m_vertexes[0].color = xcolor;
+	line->m_vertexes[1].position = origin + axis[0] * length;
+	line->m_vertexes[1].color = xcolor;
 
 	// y
-	line->m_vertexes[2].xyz = origin;
-	line->m_vertexes[2].rgba = ycolor;
-	line->m_vertexes[3].xyz = origin + axis[1] * length;
-	line->m_vertexes[3].rgba = ycolor;
+	line->m_vertexes[2].position = origin;
+	line->m_vertexes[2].color = ycolor;
+	line->m_vertexes[3].position = origin + axis[1] * length;
+	line->m_vertexes[3].color = ycolor;
 
 	// z
-	line->m_vertexes[4].xyz = origin;
-	line->m_vertexes[4].rgba = zcolor;
-	line->m_vertexes[5].xyz = origin + axis[2] * length;
-	line->m_vertexes[5].rgba = zcolor;
+	line->m_vertexes[4].position = origin;
+	line->m_vertexes[4].color = zcolor;
+	line->m_vertexes[5].position = origin + axis[2] * length;
+	line->m_vertexes[5].color = zcolor;
 	line->unlockVertexes();
 
 	return isInit;
@@ -492,14 +492,14 @@ bool LinePrim::setupBoundingBox(LinePrim*& line, const Vector3 &origin, const Ma
 		Vector3 vec = Vector3(0.25f, 0.25f, 0.25f) - axisscale * 0.5f;
 		Vector3 width = bbox.getExtends(vec);
 
-		verts[i*4].xyz = origin + axis * bbox.getLerped(axisscale);
-		verts[i*4].rgba = Rgba::White;
-		verts[i*4+1].xyz = verts[i*4].xyz + axis * Vector3(width.x, 0, 0);
-		verts[i*4+1].rgba = Rgba::White;
-		verts[i*4+2].xyz = verts[i*4].xyz + axis * Vector3(0, width.y, 0);
-		verts[i*4+2].rgba = Rgba::White;
-		verts[i*4+3].xyz = verts[i*4].xyz + axis * Vector3(0, 0, width.z);
-		verts[i*4+3].rgba = Rgba::White;
+		verts[i*4].position = origin + axis * bbox.getLerped(axisscale);
+		verts[i*4].color = Rgba::White;
+		verts[i*4+1].position = verts[i*4].position + axis * Vector3(width.x, 0, 0);
+		verts[i*4+1].color = Rgba::White;
+		verts[i*4+2].position = verts[i*4].position + axis * Vector3(0, width.y, 0);
+		verts[i*4+2].color = Rgba::White;
+		verts[i*4+3].position = verts[i*4].position + axis * Vector3(0, 0, width.z);
+		verts[i*4+3].color = Rgba::White;
 	}
 	line->unlockVertexes();
 
@@ -545,16 +545,16 @@ bool LinePrim::setupCircle(LinePrim*& line, const Vector3 &origin, const Vector3
 		float s, c;
 
 		Math::sincos(angle, s, c);
-		verts[i].xyz = origin + p0 * s + p1 * c;
-		verts[i].rgba = color;
+		verts[i].position = origin + p0 * s + p1 * c;
+		verts[i].color = color;
 
 		angle += step;
 
 		if (!clipplane)
 			continue;
 
-		if (plane.distance(verts[i].xyz) >= -0.01) {
-			verts[i].rgba.a = 64;
+		if (plane.distance(verts[i].position) >= -0.01) {
+			verts[i].color.a = 64;
 		}
 	}
 	line->unlockVertexes();
@@ -570,10 +570,10 @@ LinePrim *LinePrim::createWorldBoundingBox( Hint hint, const BoundingBox &bbox, 
 	for (int i = 0; i < 2; i++) {
 		for (int j = 0; j < 2; j++) {
 			for (int k = 0; k < 2; k++) {
-				verts[i*4+j*2+k].xyz.x = i == 0 ? bbox.min.x : bbox.max.x; 
-				verts[i*4+j*2+k].xyz.y = j == 0 ? bbox.min.y : bbox.max.y; 
-				verts[i*4+j*2+k].xyz.z = k == 0 ? bbox.min.z : bbox.max.z; 
-				verts[i*4+j*2+k].rgba = color; 
+				verts[i*4+j*2+k].position.x = i == 0 ? bbox.min.x : bbox.max.x; 
+				verts[i*4+j*2+k].position.y = j == 0 ? bbox.min.y : bbox.max.y; 
+				verts[i*4+j*2+k].position.z = k == 0 ? bbox.min.z : bbox.max.z; 
+				verts[i*4+j*2+k].color = color; 
 			}
 		}
 	}
@@ -715,23 +715,23 @@ LinePrim *MeshPrim::getTangentLine(float len) const
 	ushort_t *idxes = line->lockIndexes();
 
 	for (int i = 0; i < m_numVertexes; i++) {
-		verts[i*6+0].xyz = m_vertexes[i].xyz;
-		verts[i*6+0].rgba = Rgba::Red;
+		verts[i*6+0].position = m_vertexes[i].position;
+		verts[i*6+0].color = Rgba::Red;
 
-		verts[i*6+1].xyz = m_vertexes[i].xyz + m_vertexes[i].tangent.getNormalized() * len;
-		verts[i*6+1].rgba = Rgba::Red;
+		verts[i*6+1].position = m_vertexes[i].position + m_vertexes[i].tangent.xyz().getNormalized() * len;
+		verts[i*6+1].color = Rgba::Red;
 
-		verts[i*6+2].xyz = m_vertexes[i].xyz;
-		verts[i*6+2].rgba = Rgba::Green;
+		verts[i*6+2].position = m_vertexes[i].position;
+		verts[i*6+2].color = Rgba::Green;
 
-		verts[i*6+3].xyz = m_vertexes[i].xyz + m_vertexes[i].binormal.getNormalized() * len;
-		verts[i*6+3].rgba = Rgba::Green;
+		//verts[i*6+3].position = m_vertexes[i].position + m_vertexes[i].binormal.getNormalized() * len;
+		verts[i*6+3].color = Rgba::Green;
 
-		verts[i*6+4].xyz = m_vertexes[i].xyz;
-		verts[i*6+4].rgba = Rgba::Blue;
+		verts[i*6+4].position = m_vertexes[i].position;
+		verts[i*6+4].color = Rgba::Blue;
 
-		verts[i*6+5].xyz = m_vertexes[i].xyz + m_vertexes[i].normal.getNormalized() * len;
-		verts[i*6+5].rgba = Rgba::Blue;
+		verts[i*6+5].position = m_vertexes[i].position + m_vertexes[i].normal.xyz().getNormalized() * len;
+		verts[i*6+5].color = Rgba::Blue;
 
 		idxes[i*6+0] = i*6+0;
 		idxes[i*6+1] = i*6+1;
@@ -759,11 +759,11 @@ LinePrim *MeshPrim::getNormalLine(float len) const
 	ushort_t *idxes = line->lockIndexes();
 
 	for (int i = 0; i < m_numVertexes; i++) {
-		verts[i*2+0].xyz = m_vertexes[i].xyz;
-		verts[i*2+0].rgba = Rgba::Blue;
+		verts[i*2+0].position = m_vertexes[i].position;
+		verts[i*2+0].color = Rgba::Blue;
 
-		verts[i*2+1].xyz = m_vertexes[i].xyz + m_vertexes[i].normal.getNormalized() * len;
-		verts[i*2+1].rgba = Rgba::Blue;
+		verts[i*2+1].position = m_vertexes[i].position + m_vertexes[i].normal.xyz().getNormalized() * len;
+		verts[i*2+1].color = Rgba::Blue;
 
 		idxes[i*2+0] = i*2+0;
 		idxes[i*2+1] = i*2+1;
@@ -808,41 +808,31 @@ MeshPrim *MeshPrim::createScreenQuad(Hint hint, const Rect &rect, const Rgba &co
 
 	quad->init(4, 6);
 	MeshVertex *verts = quad->lockVertexes();
-	verts[0].xyz = Vector3(rect.x, rect.y, 0.0f);
-	verts[0].st.x = st[0];
-	verts[0].st.y = st[1];
-	verts[0].rgba = color;
-	verts[0].st2 = Vector2(0, 0);
-	verts[0].normal = Vector3(0, 0, 1);
-	verts[0].tangent = Vector3(1, 0, 0);
-	verts[0].binormal = Vector3(0, 1, 0);
+	verts[0].position = Vector3(rect.x, rect.y, 0.0f);
+	verts[0].streamTc.set(st[0], st[1], 0, 0);
+	verts[0].color = color;
+	verts[0].normal = Vector4(0, 0, 1, 1);
+	verts[0].tangent = Vector4(1, 0, 0, 1);
 
-	verts[1].xyz = Vector3(rect.x + rect.width, rect.y, 0.0f);
-	verts[1].st.x = st[2];
-	verts[1].st.y = st[1];
-	verts[1].rgba = color;
-	verts[1].st2 = Vector2(0, 0);
-	verts[1].normal = Vector3(0, 0, 1);
-	verts[1].tangent = Vector3(1, 0, 0);
-	verts[1].binormal = Vector3(0, 1, 0);
+	verts[1].position = Vector3(rect.x + rect.width, rect.y, 0.0f);
+	verts[1].streamTc.set(st[2], st[1], 0, 0);
+	verts[1].color = color;
+	verts[1].normal = Vector4(0, 0, 1, 1);
+	verts[1].tangent = Vector4(1, 0, 0, 1);
 
-	verts[2].xyz = Vector3(rect.x, rect.y + rect.height, 0.0f);
-	verts[2].st.x = st[0];
-	verts[2].st.y = st[3];
-	verts[2].rgba = color;
-	verts[2].st2 = Vector2(0, 0);
-	verts[2].normal = Vector3(0, 0, 1);
-	verts[2].tangent = Vector3(1, 0, 0);
-	verts[2].binormal = Vector3(0, 1, 0);
+	verts[2].position = Vector3(rect.x, rect.y + rect.height, 0.0f);
+	verts[2].streamTc.x = st[0];
+	verts[2].streamTc.y = st[3];
+	verts[2].color = color;
+	verts[2].normal = Vector4(0, 0, 1, 1);
+	verts[2].tangent = Vector4(1, 0, 0, 1);
 
-	verts[3].xyz = Vector3(rect.x + rect.width, rect.y + rect.height, 0.0f);
-	verts[3].st.x = st[2];
-	verts[3].st.y = st[3];
-	verts[3].rgba = color;
-	verts[3].st2 = Vector2(0, 0);
-	verts[3].normal = Vector3(0, 0, 1);
-	verts[3].tangent = Vector3(1, 0, 0);
-	verts[3].binormal = Vector3(0, 1, 0);
+	verts[3].position = Vector3(rect.x + rect.width, rect.y + rect.height, 0.0f);
+	verts[3].streamTc.x = st[2];
+	verts[3].streamTc.y = st[3];
+	verts[3].color = color;
+	verts[3].normal = Vector4(0, 0, 1, 1);
+	verts[3].tangent = Vector4(1, 0, 0, 1);
 	quad->unlockVertexes();
 
 	ushort_t *indexes = quad->lockIndexes();
@@ -862,41 +852,33 @@ MeshPrim *MeshPrim::createScreenQuad(Hint hint, const Rect &rect, const Rgba &co
 bool MeshPrim::setupScreenQuad(MeshPrim*& quad, const Rect &rect, const Rgba &color, Material *material, const Vector4 &st)
 {
 	MeshVertex *verts = quad->lockVertexes();
-	verts[0].xyz = Vector3(rect.x, rect.y, 0.0f);
-	verts[0].st.x = st[0];
-	verts[0].st.y = st[1];
-	verts[0].rgba = color;
-	verts[0].st2 = Vector2(0, 0);
-	verts[0].normal = Vector3(0, 0, 1);
-	verts[0].tangent = Vector3(1, 0, 0);
-	verts[0].binormal = Vector3(0, 1, 0);
+	verts[0].position = Vector3(rect.x, rect.y, 0.0f);
+	verts[0].streamTc.x = st[0];
+	verts[0].streamTc.y = st[1];
+	verts[0].color = color;
+	verts[0].normal = Vector4(0, 0, 1, 1);
+	verts[0].tangent = Vector4(1, 0, 0, 1);
 
-	verts[1].xyz = Vector3(rect.x + rect.width, rect.y, 0.0f);
-	verts[1].st.x = st[2];
-	verts[1].st.y = st[1];
-	verts[1].rgba = color;
-	verts[1].st2 = Vector2(0, 0);
-	verts[1].normal = Vector3(0, 0, 1);
-	verts[1].tangent = Vector3(1, 0, 0);
-	verts[1].binormal = Vector3(0, 1, 0);
+	verts[1].position = Vector3(rect.x + rect.width, rect.y, 0.0f);
+	verts[1].streamTc.x = st[2];
+	verts[1].streamTc.y = st[1];
+	verts[1].color = color;
+	verts[1].normal = Vector4(0, 0, 1, 1);
+	verts[1].tangent = Vector4(1, 0, 0, 1);
 
-	verts[2].xyz = Vector3(rect.x, rect.y + rect.height, 0.0f);
-	verts[2].st.x = st[0];
-	verts[2].st.y = st[3];
-	verts[2].rgba = color;
-	verts[2].st2 = Vector2(0, 0);
-	verts[2].normal = Vector3(0, 0, 1);
-	verts[2].tangent = Vector3(1, 0, 0);
-	verts[2].binormal = Vector3(0, 1, 0);
+	verts[2].position = Vector3(rect.x, rect.y + rect.height, 0.0f);
+	verts[2].streamTc.x = st[0];
+	verts[2].streamTc.y = st[3];
+	verts[2].color = color;
+	verts[2].normal = Vector4(0, 0, 1, 1);
+	verts[2].tangent = Vector4(1, 0, 0, 1);
 
-	verts[3].xyz = Vector3(rect.x + rect.width, rect.y + rect.height, 0.0f);
-	verts[3].st.x = st[2];
-	verts[3].st.y = st[3];
-	verts[3].rgba = color;
-	verts[3].st2 = Vector2(0, 0);
-	verts[3].normal = Vector3(0, 0, 1);
-	verts[3].tangent = Vector3(1, 0, 0);
-	verts[3].binormal = Vector3(0, 1, 0);
+	verts[3].position = Vector3(rect.x + rect.width, rect.y + rect.height, 0.0f);
+	verts[3].streamTc.x = st[2];
+	verts[3].streamTc.y = st[3];
+	verts[3].color = color;
+	verts[3].normal = Vector4(0, 0, 1, 1);
+	verts[3].tangent = Vector4(1, 0, 0, 1);
 	quad->unlockVertexes();
 
 	ushort_t *indexes = quad->lockIndexes();
@@ -936,15 +918,15 @@ bool MeshPrim::setupFan(MeshPrim*& mesh, const Vector3 &center, const Vector3 &v
 	}
 
 	mesh->lockVertexes();
-	mesh->m_vertexes[0].xyz = center;
-	mesh->m_vertexes[0].rgba = color;
+	mesh->m_vertexes[0].position = center;
+	mesh->m_vertexes[0].color = color;
 	float step =(end - start) / subdivided;
 	for (int i = 0; i <= subdivided; i++) {
 		float angle = start + step * i;
 		float s, c;
 		Math::sincos(angle, s, c);
-		mesh->m_vertexes[i+1].xyz = center + v0 * c + v1 * s;
-		mesh->m_vertexes[i+1].rgba = color;
+		mesh->m_vertexes[i+1].position = center + v0 * c + v1 * s;
+		mesh->m_vertexes[i+1].color = color;
 	}
 	mesh->unlockVertexes();
 
@@ -975,8 +957,8 @@ bool MeshPrim::setupPolygon(MeshPrim*& mesh, int numverts, const Vector3 *verts,
 	AX_ASSERT(numverts = mesh->getNumVertexes());
 	mesh->lockVertexes();
 	for (int i = 0; i < numverts; i++) {
-		mesh->m_vertexes[i].xyz = verts[i];
-		mesh->m_vertexes[i].rgba = color;
+		mesh->m_vertexes[i].position = verts[i];
+		mesh->m_vertexes[i].color = color;
 	}
 	mesh->unlockVertexes();
 
@@ -997,22 +979,22 @@ bool MeshPrim::setupBox(MeshPrim*& mesh, const BoundingBox &bbox, const Rgba &co
 	ushort_t *indexes  = mesh->lockIndexes();
 
 	Vector3 bSize = bbox.max - bbox.min;
-    vertexes[0].xyz  = bbox.min;
-	vertexes[0].rgba = color;
-	vertexes[1].xyz  = Vector3(bbox.min.x,bbox.min.y,bbox.min.z + bSize.z);
-	vertexes[1].rgba = color;
-	vertexes[2].xyz  = Vector3(bbox.min.x,bbox.min.y + bSize.y,bbox.min.z + bSize.z);
-	vertexes[2].rgba = color;
-	vertexes[3].xyz  = Vector3(bbox.min.x,bbox.min.y + bSize.y,bbox.min.z);
-	vertexes[3].rgba  = color;
-	vertexes[4].xyz  = Vector3(bbox.min.x + bSize.x,bbox.min.y,bbox.min.z);
-	vertexes[4].rgba = color;
-	vertexes[5].xyz  = Vector3(bbox.min.x + bSize.x,bbox.min.y,bbox.min.z + bSize.z);
-	vertexes[5].rgba = color;
-	vertexes[6].xyz  = Vector3(bbox.min.x + bSize.x,bbox.min.y + bSize.y,bbox.min.z + bSize.z);
-	vertexes[6].rgba = color;
-	vertexes[7].xyz  = Vector3(bbox.min.x + bSize.x,bbox.min.y + bSize.y,bbox.min.z);
-	vertexes[7].rgba = color;
+    vertexes[0].position  = bbox.min;
+	vertexes[0].color = color;
+	vertexes[1].position  = Vector3(bbox.min.x,bbox.min.y,bbox.min.z + bSize.z);
+	vertexes[1].color = color;
+	vertexes[2].position  = Vector3(bbox.min.x,bbox.min.y + bSize.y,bbox.min.z + bSize.z);
+	vertexes[2].color = color;
+	vertexes[3].position  = Vector3(bbox.min.x,bbox.min.y + bSize.y,bbox.min.z);
+	vertexes[3].color  = color;
+	vertexes[4].position  = Vector3(bbox.min.x + bSize.x,bbox.min.y,bbox.min.z);
+	vertexes[4].color = color;
+	vertexes[5].position  = Vector3(bbox.min.x + bSize.x,bbox.min.y,bbox.min.z + bSize.z);
+	vertexes[5].color = color;
+	vertexes[6].position  = Vector3(bbox.min.x + bSize.x,bbox.min.y + bSize.y,bbox.min.z + bSize.z);
+	vertexes[6].color = color;
+	vertexes[7].position  = Vector3(bbox.min.x + bSize.x,bbox.min.y + bSize.y,bbox.min.z);
+	vertexes[7].color = color;
 
 	int boxindexes[36] = {0,1,3,3,1,2,3,2,7,7,2,6,7,6,4,4,6,5,4,5,0,0,5,1,1,5,2,2,5,6,3,7,0,0,7,4};
 	memcpy(indexes,boxindexes,sizeof(boxindexes));
@@ -1058,12 +1040,12 @@ bool MeshPrim::setupCone(MeshPrim*& cone, const Vector3 &center, float radius, c
 		memset(verts, 0, sizeof(MeshVertex) * numverts);
 
 		// vertex 0 is top
-		verts[0].xyz = top;
-		verts[0].rgba = color;
+		verts[0].position = top;
+		verts[0].color = color;
 
 		// vertex 1 is center
-		verts[1].xyz = center;
-		verts[1].rgba = color;
+		verts[1].position = center;
+		verts[1].color = color;
 
 		// round subdivided
 
@@ -1088,8 +1070,8 @@ bool MeshPrim::setupCone(MeshPrim*& cone, const Vector3 &center, float radius, c
 		int i;
 		for (i = 0; i < subdivided; i++) {
 			float alpha = AX_PI * 2.0f / subdivided * i;
-			verts[2 + i].xyz = center + right * cosf(alpha) + forward * sinf(alpha);
-			verts[2 + i].rgba = color;
+			verts[2 + i].position = center + right * cosf(alpha) + forward * sinf(alpha);
+			verts[2 + i].color = color;
 		}
 
 	cone->unlockVertexes();
@@ -1135,7 +1117,7 @@ bool MeshPrim::setupHexahedron(MeshPrim*& mesh, Vector3 volumeverts[8])
 
 	MeshVertex *verts = mesh->lockVertexes();
 	for (int i = 0; i < numverts; i++) {
-		verts[i].xyz = volumeverts[i];
+		verts[i].position = volumeverts[i];
 	}
 	mesh->unlockIndexes();
 

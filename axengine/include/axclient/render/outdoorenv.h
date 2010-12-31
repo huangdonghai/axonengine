@@ -36,8 +36,8 @@ public:
 	void setHaveOcean(bool have);
 	void setHaveFarSky(bool have);
 	void setHaveGlobalLight(bool have);
-	void setFog(const Vector3 &color, float density);
-	void setOceanFog(const Vector3 &color, float density);
+	void setFog(const Color3 &color, float density);
+	void setOceanFog(const Color3 &color, float density);
 	void setOceanMaterial(const std::string &matname);
 	void setSunColor(const Color3 &color, float intensity, float specularX);
 	void setCastShadow(bool val);

@@ -257,21 +257,21 @@ void ParticleEmitter::frameUpdate(RenderScene *qscene)
 		Particle &p = *it;
 		Vector4 &tc = m_tiles[p.m_tile];
 
-		verts[0].xyz = p.m_pos - (right + up) * p.m_size;
-		verts[0].st.set(tc[0], tc[0]);
-		verts[0].rgba = p.m_color;
+		verts[0].position = p.m_pos - (right + up) * p.m_size;
+		verts[0].streamTc.set(tc[0], tc[0], 0, 0);
+		verts[0].color = p.m_color;
 
-		verts[1].xyz = p.m_pos + (right - up) * p.m_size;
-		verts[1].st.set(tc[1], tc[0]);
-		verts[1].rgba = p.m_color;
+		verts[1].position = p.m_pos + (right - up) * p.m_size;
+		verts[1].streamTc.set(tc[1], tc[0], 0, 0);
+		verts[1].color = p.m_color;
 
-		verts[2].xyz = p.m_pos + (right + up) * p.m_size;
-		verts[2].st.set(tc[1], tc[1]);
-		verts[2].rgba = p.m_color;
+		verts[2].position = p.m_pos + (right + up) * p.m_size;
+		verts[2].streamTc.set(tc[1], tc[1], 0, 0);
+		verts[2].color = p.m_color;
 
-		verts[3].xyz = p.m_pos - (right - up) * p.m_size;
-		verts[3].st.set(tc[0], tc[1]);
-		verts[3].rgba = p.m_color;
+		verts[3].position = p.m_pos - (right - up) * p.m_size;
+		verts[3].streamTc.set(tc[0], tc[1], 0, 0);
+		verts[3].color = p.m_color;
 
 		verts += 4;
 	}

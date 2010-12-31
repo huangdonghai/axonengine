@@ -221,7 +221,7 @@ void Selection::testLine(const LinePrim *line)
 	Vector3 v;
 	for (int i=0; i<numVexTranslate; ++i)
 	{
-		translateToEyeCoor(vertexs[i].xyz, gSelectionVertexs[i].eyeCoor);
+		translateToEyeCoor(vertexs[i].position, gSelectionVertexs[i].eyeCoor);
 
 		CheckNumError(gSelectionVertexs[i].eyeCoor.x);
 		CheckNumError(gSelectionVertexs[i].eyeCoor.y);
@@ -283,7 +283,7 @@ void Selection::testMesh(const MeshPrim *mesh)
 	Vector3 v;
 	for (int i=0; i<numVexTranslate; ++i)
 	{
-		translateToEyeCoor(vertexs[i].xyz, gSelectionVertexs[i].eyeCoor);
+		translateToEyeCoor(vertexs[i].position, gSelectionVertexs[i].eyeCoor);
 
 		CheckNumError(gSelectionVertexs[i].eyeCoor.x);
 		CheckNumError(gSelectionVertexs[i].eyeCoor.y);
@@ -366,7 +366,7 @@ void Selection::testChunk(const ChunkPrim *chunk)
 	Vector3 v;
 	for (int i=0; i<numVexTranslate; ++i)
 	{
-		translateToEyeCoor(vertexs[i].xyz, gSelectionVertexs[i].eyeCoor);
+		translateToEyeCoor(vertexs[i].position, gSelectionVertexs[i].eyeCoor);
 
 		CheckNumError(gSelectionVertexs[i].eyeCoor.x);
 		CheckNumError(gSelectionVertexs[i].eyeCoor.y);

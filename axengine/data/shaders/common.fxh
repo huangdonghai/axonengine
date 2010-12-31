@@ -82,13 +82,11 @@ float ZR_getViewSpace(float zbuf) {
 // sturct
 /* data from application vertex buffer */
 struct VertexIn {
-    float3 xyz			: POSITION;
-    float2 st			: TEXCOORD0;
-	float2 st2			: TEXCOORD1;
+    float3 position		: POSITION;
+    float4 streamTc		: TEXCOORD0;
 	float4 color		: COLOR0;
-	float3 normal		: NORMAL;
-	float3 tangent		: TEXCOORD6;
-	float3 binormal		: TEXCOORD7;
+	float4 normal		: NORMAL;
+	float4 tangent		: TEXCOORD6;
 
 	// instance
 #if G_GEOMETRY_INSTANCING
@@ -96,6 +94,8 @@ struct VertexIn {
 	float4 matrixY		: TEXCOORD3;
 	float4 matrixZ		: TEXCOORD4;
 	float4 userDefined	: TEXCOORD5;
+#else
+	float3 oldPosition	: TEXCOORD2;
 #endif
 };
 

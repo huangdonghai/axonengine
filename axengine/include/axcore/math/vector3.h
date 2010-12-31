@@ -167,7 +167,7 @@ struct AX_API Vector3
 		x=0.0f;y=0.0f;z=0.0f;
 	}
 	// Set value
-	inline Vector3 &set(float ix=0.0f, float iy=0.0f, float iz=0.0f) {
+	inline Vector3 &set(float ix, float iy, float iz) {
 		x = ix; y = iy; z = iz;
 		return *this;
 	}
