@@ -451,7 +451,7 @@ static void dx9SetRenderTarget(int index, phandle_t h)
 static void dx9SetDepthStencil(phandle_t h)
 {
 	if (*h) {
-		dx9_device->SetDepthStencilSurface();
+//		dx9_device->SetDepthStencilSurface();
 	}
 }
 

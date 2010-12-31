@@ -433,7 +433,10 @@ void RenderSystem::tick()
 
 Size RenderSystem::getScreenSize()
 {
-	DWORD dwWidth = GetSystemMetrics(SM_CXBORDER);	DWORD dwHeight = GetSystemMetrics(SM_CYBORDER);	return Size(dwWidth, dwHeight);}
+	DWORD dwWidth = GetSystemMetrics(SM_CXBORDER);
+	DWORD dwHeight = GetSystemMetrics(SM_CYBORDER);
+	return Size(dwWidth, dwHeight);
+}
 
 
 

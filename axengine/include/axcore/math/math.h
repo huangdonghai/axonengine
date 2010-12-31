@@ -336,6 +336,7 @@ AX_END_NAMESPACE
 #include "plane.h"
 #include "matrix4.h"
 #include "point.h"
+#include "size.h"
 #include "rect.h"
 #include "angles.h"
 #include "vertex.h"

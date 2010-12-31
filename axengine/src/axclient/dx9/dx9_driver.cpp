@@ -212,7 +212,7 @@ bool D3D9Driver::isInRenderingThread()
 
 #endif
 
-IDirect3DSurface9 * DX9_Driver::getDepthStencil(int width, int height)
+IDirect3DSurface9 * DX9_Driver::getDepthStencil(const Size &size)
 {
 	return 0;
 }

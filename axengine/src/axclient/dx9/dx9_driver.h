@@ -33,7 +33,7 @@ public:
 	void onReset();
 	void onDeviceLost();
 
-	IDirect3DSurface9 *getDepthStencil(int width, int height);
+	IDirect3DSurface9 *getDepthStencil(const Size &size);
 
 private:
 	bool m_initialized;

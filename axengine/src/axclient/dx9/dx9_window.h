@@ -21,12 +21,12 @@ public:
 	~DX9_Window();
 
 	// implement RenderTarget
-	Rect getRect();
+	Size getSize();
 	void bind();
 	void unbind();
 	bool isWindow() { return true;}
 
-	void update(Handle newId, int width, int height) { m_wndId = handle_cast<HWND>(newId); }
+	void update(Handle newId, int width, int height);
 	Handle getWindowHandle() { return Handle(m_wndId); }
 
 	HWND getHandle() const { return m_wndId; }
@@ -40,7 +40,8 @@ protected:
 private:
 	LONG m_ref;
 	HWND m_wndId;
-	Point m_swapChainSize;
+	Size m_swapChainSize;
+	Size m_updatedSize;
 	IDirect3DSwapChain9 *m_swapChain;
 	IDirect3DSurface9 *m_backbuffer;
 	HWND m_swapChainWnd;

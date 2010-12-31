@@ -85,16 +85,16 @@ DX9_Window::~DX9_Window()
 }
 
 // implement ITarget
-Rect DX9_Window::getRect()
+Size DX9_Window::getSize()
 {
-	return Rect(0, 0, m_swapChainSize.x, m_swapChainSize.y);
+	return m_swapChainSize;
 }
 
 void DX9_Window::bind()
 {
 	checkSwapChain();
 
-	IDirect3DSurface9 *ds = dx9_driver->getDepthStencil(m_swapChainSize.x, m_swapChainSize.y);
+	IDirect3DSurface9 *ds = dx9_driver->getDepthStencil(m_swapChainSize);
 
 	V(dx9_device->SetRenderTarget(0, m_backbuffer));
 #if 0
@@ -138,31 +138,22 @@ void DX9_Window::present()
 
 void DX9_Window::checkSwapChain()
 {
-	RECT r;
-	BOOL v = ::GetClientRect(m_wndId, &r);
-
-	if (!v) {
-		DWORD error = ::GetLastError();
-		Errorf("error wndId");
-	}
-
 	DWORD flags = D3DPRESENT_INTERVAL_IMMEDIATE;
 
 	if (r_vsync.getBool())
 		flags = D3DPRESENT_INTERVAL_DEFAULT;
 
 
-	if (m_swapChain && r.right == m_swapChainSize.x && r.bottom == m_swapChainSize.y && m_wndId == m_swapChainWnd && flags == m_presentInterval) {
+	if (m_swapChain && m_swapChainSize == m_updatedSize && m_wndId == m_swapChainWnd && flags == m_presentInterval)
 		return;
-	}
 
 	SAFE_RELEASE(m_backbuffer);
 	SAFE_RELEASE(m_swapChain);
 
 	D3DPRESENT_PARAMETERS presentparams;
 	memset(&presentparams, 0, sizeof(presentparams));
-	presentparams.BackBufferWidth = r.right;
-	presentparams.BackBufferHeight = r.bottom;
+	presentparams.BackBufferWidth = m_updatedSize.width;
+	presentparams.BackBufferHeight = m_updatedSize.height;
 	presentparams.BackBufferFormat = D3DFMT_A8R8G8B8;
 	presentparams.BackBufferCount = 1;
 	presentparams.EnableAutoDepthStencil= FALSE;
@@ -176,8 +167,7 @@ void DX9_Window::checkSwapChain()
 	V(dx9_device->CreateAdditionalSwapChain(&presentparams, &m_swapChain));
 	V(m_swapChain->GetBackBuffer(0, D3DBACKBUFFER_TYPE_MONO, &m_backbuffer));
 
-	m_swapChainSize.x = r.right;
-	m_swapChainSize.y = r.bottom;
+	m_swapChainSize = m_updatedSize;
 	m_swapChainWnd = m_wndId;
 	m_presentInterval = flags;
 
@@ -200,6 +190,12 @@ void DX9_Window::checkSwapChain()
 //	m_lightBuffer->getTexture()->setFilterMode(Texture::FM_Nearest);
 //	m_lightBuffer->getTexture()->setClampMode(Texture::CM_ClampToEdge);
 #endif
+}
+
+void DX9_Window::update(Handle newId, int width, int height)
+{
+	m_wndId = handle_cast<HWND>(newId);
+	m_updatedSize = Size(width, height);
 }
 
 AX_END_NAMESPACE

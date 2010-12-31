@@ -200,10 +200,10 @@ RenderTarget *EditorFrame::getRenderTarget() {
 
 	WId wid = winId();
 
-	if (wid != m_oldWId) {
+	//if (wid != m_oldWId) {
 		m_renderTarget->setWindowHandle(Handle(wid));
 		m_oldWId = wid;
-	}
+	//}
 
 	return m_renderTarget;
 }

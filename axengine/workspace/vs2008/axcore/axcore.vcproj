@@ -328,6 +328,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\axcore\math\size.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\axcore\math\spline.cpp"
 				>
 			</File>
@@ -412,6 +416,10 @@
 				</File>
 				<File
 					RelativePath="..\..\..\include\axcore\math\simd.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\include\axcore\math\size.h"
 					>
 				</File>
 				<File
