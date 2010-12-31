@@ -42,7 +42,7 @@ struct ShadowVertexOut {
 ShadowVertexOut VP_main(VertexIn IN) {
 	ShadowVertexOut OUT;
 
-	float3 worldpos = VP_modelToWorld(IN, IN.xyz);
+	float3 worldpos = VP_modelToWorld(IN, IN.position);
 
 	OUT.hpos = VP_worldToClip(worldpos);
 

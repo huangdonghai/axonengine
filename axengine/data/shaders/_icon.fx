@@ -28,11 +28,11 @@ VertexOut VP_main(VertexIn IN) {
 
 	OUT.color = IN.color;
 
-	IN.xyz *= s_iconparam.w;
+	IN.position *= s_iconparam.w;
 
-	float3 worldpos = IN.xyz.x * g_cameraAxis._m01_m11_m21 - IN.xyz.y * g_cameraAxis._m02_m12_m22 + s_iconparam.xyz;
+	float3 worldpos = IN.position.x * g_cameraAxis._m01_m11_m21 - IN.position.y * g_cameraAxis._m02_m12_m22 + s_iconparam.xyz;
 
-	OUT.worldPos = VP_modelToWorld(IN, IN.xyz + s_iconparam.xyz);
+	OUT.worldPos = VP_modelToWorld(IN, IN.position + s_iconparam.xyz);
 	OUT.worldPos = worldpos;
 	OUT.hpos = VP_worldToClip(OUT.worldPos);
 

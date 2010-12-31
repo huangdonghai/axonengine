@@ -63,9 +63,9 @@ struct FragOut {
 };
 
 
-VertOut VP_main(VertexIn input) {
+VertOut VP_main(VertexIn IN) {
     VertOut result = (VertOut)0;
-    result.hpos = VP_worldToClip(input.xyz);
+    result.hpos = VP_worldToClip(IN.position);
 	result.screenTc = Clip2Screen(result.hpos);
 	return result;
 }

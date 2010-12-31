@@ -34,7 +34,7 @@ static const float c_alpharef = 0.3;
 float3 ComputeWorldpos(VertexIn IN, bool extrude = false) {
 	float3 posWorld;
 	float3 pivot = VP_modelToWorld(IN, IN.tangent);
-	float3 corner = (IN.tangent - IN.xyz) * VP_getInstanceParam(IN)[SCALE];
+	float3 corner = (IN.tangent - IN.position) * VP_getInstanceParam(IN)[SCALE];
 
 #if G_OPENGL
 	float angleIndex = IN.color.b * 255;

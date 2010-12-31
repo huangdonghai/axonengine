@@ -37,7 +37,7 @@ struct FrondVertexOut {
 FrondVertexOut VP_zpass(VertexIn IN) {
 	FrondVertexOut OUT;
 
-	float3 offset = VP_modelRotateScale(IN, IN.xyz);
+	float3 offset = VP_modelRotateScale(IN, IN.position);
 	offset = WindEffect(IN, offset, IN.st2);
 	float3 posWorld = offset + VP_getModelPos(IN);
 
@@ -62,7 +62,7 @@ GpassOut VP_gpass(VertexIn IN) {
 	OUT.tangent = N_modelToWorld(IN, IN.tangent);
 	OUT.binormal = N_modelToWorld(IN, IN.binormal);
 #endif
-	float3 offset = VP_modelRotateScale(IN, IN.xyz);
+	float3 offset = VP_modelRotateScale(IN, IN.position);
 	offset = WindEffect(IN, offset, IN.st2);
 	float3 posWorld = offset + VP_getModelPos(IN);
 
@@ -108,7 +108,7 @@ VertexOut VP_main(VertexIn IN) {
 	OUT.binormal = N_modelToWorld(IN, IN.binormal);
 #endif
 
-	float3 offset = VP_modelRotateScale(IN, IN.xyz);
+	float3 offset = VP_modelRotateScale(IN, IN.position);
 	offset = WindEffect(IN, offset, IN.st2);
 	float3 posWorld = offset + VP_getModelPos(IN);
 

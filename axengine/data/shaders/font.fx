@@ -50,7 +50,7 @@ VertexOut VP_main(VertexIn IN) {
 	OUT.streamTc.xy = IN.st.xy;
 	OUT.color = IN.color;
 
-	OUT.hpos = VP_modelToClip(IN, IN.xyz);
+	OUT.hpos = VP_modelToClip(IN, IN.position);
 
 	return OUT;
 }

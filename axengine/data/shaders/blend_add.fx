@@ -34,7 +34,7 @@ VertexOut VP_main(VertexIn IN) {
 
 	OUT.color.rgb *= VP_getInstanceParam(IN).rgb;
 
-	OUT.worldPos = VP_modelToWorld(IN, IN.xyz);
+	OUT.worldPos = VP_modelToWorld(IN, IN.position);
 	OUT.hpos = VP_worldToClip(OUT.worldPos);
 
 #if S_GLOW // glow will adjust color by view/normal

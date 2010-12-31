@@ -53,7 +53,7 @@ struct PostVertexOut {
 PostVertexOut VP_main(VertexIn IN) {
 	PostVertexOut OUT;
 
-	OUT.hpos = VP_modelToClip(IN, IN.xyz);
+	OUT.hpos = VP_modelToClip(IN, IN.position);
 	OUT.screenTc = Clip2Screen(OUT.hpos);
 
 	return OUT;

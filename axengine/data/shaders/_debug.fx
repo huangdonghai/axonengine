@@ -30,7 +30,7 @@ VertexOut VP_main(VertexIn IN) {
 	OUT.color = IN.color;
 #endif
 
-	OUT.worldPos = VP_modelToWorld(IN, IN.xyz);
+	OUT.worldPos = VP_modelToWorld(IN, IN.position);
 	OUT.hpos = VP_worldToClip(OUT.worldPos);
 
 //	VP_final(IN, OUT);
@@ -58,11 +58,6 @@ technique main {
     pass p0 {
         VERTEXPROGRAM = compile VP_2_0 VP_main();
 		FRAGMENTPROGRAM = compile FP_2_0 FP_main();
-
-	    DEPTHTEST = true;
-		DEPTHMASK = true;
-		CULL_NONE;
-		BLEND_BLEND;
     }
 }
 

@@ -51,12 +51,12 @@ struct PS_INPUT
 	float3 viewDir : TEXCOORD1;
 };
 
-PS_INPUT VP_main(VertexIn input)
+PS_INPUT VP_main(VertexIn IN)
 {
 	PS_INPUT result = (PS_INPUT)0;
-	result.hpos =  VP_modelToClip(input, input.xyz);
-	result.texCoord = input.st; 
-	result.viewDir = -input.normal;
+	result.hpos =  VP_modelToClip(IN, IN.position);
+	result.texCoord = IN.streamTc.xy; 
+	result.viewDir = -IN.normal.xyz;
 	return result;
 }
 

@@ -24,7 +24,7 @@ float Script : STANDARDSGLOBAL <
 #define S_FIRST_LAYER			G_FEATURE1
 
 struct TerrainVertexIn {
-	float3 xyz			: POSITION;
+	float3 position		: POSITION;
 };
 
 struct TerrainVertexOut {
@@ -79,7 +79,7 @@ AX_END_PC
 
 float4 VP_zpass(TerrainVertexIn IN) : POSITION
 {
-	return VP_worldToClip(IN.xyz);
+	return VP_worldToClip(IN.position);
 }
 
 //------------------------------------------------------------------------------
@@ -105,9 +105,9 @@ TerrainGpassOut VP_gpass(TerrainVertexIn IN)
 {
 	TerrainGpassOut OUT;
 
-	OUT.hpos = VP_worldToClip(IN.xyz);
+	OUT.hpos = VP_worldToClip(IN.position);
 	OUT.screenTc = Clip2Screen(OUT.hpos);
-	OUT.zoneTc.xy = (IN.xyz.xy - g_zoneRect.xy) / g_zoneRect.zw;
+	OUT.zoneTc.xy = (IN.position.xy - g_zoneRect.xy) / g_zoneRect.zw;
 
 	return OUT;
 }
@@ -135,15 +135,15 @@ TerrainVertexOut VP_main(TerrainVertexIn IN)
 {
 	TerrainVertexOut OUT = (TerrainVertexOut)0;
 
-	OUT.zoneTC.xy = (IN.xyz.xy - g_zoneRect.xy) / g_zoneRect.zw;
+	OUT.zoneTC.xy = (IN.position.xy - g_zoneRect.xy) / g_zoneRect.zw;
 
-	OUT.eyevec = g_cameraPos.xyz - IN.xyz;
+	OUT.eyevec = g_cameraPos.xyz - IN.position;
 
-	OUT.hpos = VP_worldToClip(IN.xyz);
+	OUT.hpos = VP_worldToClip(IN.position);
 
 	OUT.screenTc = Clip2Screen(OUT.hpos);
 
-	OUT.fog = IN.xyz.z;
+	OUT.fog = IN.position.z;
 
 	return OUT;
 }
@@ -202,13 +202,13 @@ LayerVertexOut VP_layer(TerrainVertexIn IN)
 {
 	LayerVertexOut OUT = (LayerVertexOut)0;
 
-	OUT.streamTc.xy = (IN.xyz.xy - g_zoneRect.xy) / g_zoneRect.zw;
-	OUT.streamTc.zw = (IN.xyz.xy - g_chunkRect.xy) / g_chunkRect.zw;
-	OUT.worldPos = IN.xyz;
+	OUT.streamTc.xy = (IN.position.xy - g_zoneRect.xy) / g_zoneRect.zw;
+	OUT.streamTc.zw = (IN.position.xy - g_chunkRect.xy) / g_chunkRect.zw;
+	OUT.worldPos = IN.position;
 	OUT.viewDir.xyz = g_cameraPos.xyz - OUT.worldPos;
 	OUT.viewDir.w = length(OUT.viewDir.xyz);
 
-	OUT.hpos = VP_worldToClip(IN.xyz);
+	OUT.hpos = VP_worldToClip(IN.position);
 	OUT.screenTc = Clip2Screen(OUT.hpos);
 
 	OUT.fog = FOG_compute(OUT.hpos);
@@ -329,11 +329,6 @@ technique zpass {
 	pass p0 {
 		VERTEXPROGRAM = compile VP_2_0 VP_gpass();
 		FRAGMENTPROGRAM = compile FP_2_0 FP_gpass();
-
-		DEPTHTEST = true;
-		DEPTHMASK = true;
-		CULL_ENABLED;
-		BLEND_NONE;
 	}
 }
 
@@ -341,11 +336,6 @@ technique shadowGen {
 	pass p0 {
 		VERTEXPROGRAM = compile VP_2_0 VP_zpass();
 		FRAGMENTPROGRAM = compile FP_2_0 FP_zpass();
-
-		DEPTHTEST = true;
-		DEPTHMASK = true;
-		CULL_ENABLED;
-		BLEND_NONE;
 	}
 }
 
@@ -354,11 +344,6 @@ technique main {
 	pass p0 {
 		VERTEXPROGRAM = compile VP_2_0 VP_layer();
 		FRAGMENTPROGRAM = compile FP_2_0 FP_main();
-
-		DEPTHTEST = true;
-		DEPTHMASK_MAIN;
-		CULL_ENABLED;
-		BLEND_NONE;
 	}
 }
 
@@ -366,7 +351,7 @@ technique layer {
 	pass p0 {
 		VERTEXPROGRAM = compile VP_2_0 VP_layer();
 		FRAGMENTPROGRAM = compile FP_2_0 FP_layer();
-
+#if 0
 		DEPTHTEST = true;
 		DEPTHMASK = false;
 		CULL_ENABLED;
@@ -374,6 +359,7 @@ technique layer {
 		BLEND_BLEND;
 #else
 		BLEND_NONE;
+#endif
 #endif
 	}
 }

@@ -49,7 +49,7 @@ ZpassVertexOut VP_zpass(VertexIn IN) {
 	// useful on leaf mesh geometry)
 	float3x3 matRockRustle = RotationMatrix_xAxis(vLeafRockAndRustle.x); // rock
 
-	float3 local = IN.xyz - IN.tangent;
+	float3 local = IN.position - IN.tangent;
 	local = mul(matRockRustle, local) + IN.tangent;
 
 	float3 offset = VP_modelRotateScale(IN, local);
@@ -88,7 +88,7 @@ GpassOut VP_gpass(VertexIn IN) {
 	// useful on leaf mesh geometry)
 	float3x3 matRockRustle = RotationMatrix_xAxis(vLeafRockAndRustle.x); // rock
 
-	float3 local = IN.xyz - IN.tangent;
+	float3 local = IN.position - IN.tangent;
 	local = mul(matRockRustle, local) + IN.tangent;
 
 	float3 offset = VP_modelRotateScale(IN, local);
@@ -151,7 +151,7 @@ VertexOut VP_main(VertexIn IN) {
 	// useful on leaf mesh geometry)
 	float3x3 matRockRustle = RotationMatrix_xAxis(vLeafRockAndRustle.x); // rock
 
-	float3 local = IN.xyz - IN.tangent;
+	float3 local = IN.position - IN.tangent;
 	local = mul(matRockRustle, local) + IN.tangent;
 
 	float3 offset = VP_modelRotateScale(IN, local);

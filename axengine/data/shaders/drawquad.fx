@@ -32,7 +32,7 @@ VertexOut VP_main(VertexIn IN) {
 
 	OUT.color = IN.color;
 
-	OUT.hpos = VP_modelToClip(IN, IN.xyz);
+	OUT.hpos = VP_modelToClip(IN, IN.position);
 	OUT.screenTc = Clip2Screen(OUT.hpos);
 
 	VP_final(IN, OUT);

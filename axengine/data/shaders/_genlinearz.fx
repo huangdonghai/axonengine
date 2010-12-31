@@ -38,7 +38,7 @@ struct fragOut {
 v2f VP_main(VertexIn IN) {
 	v2f OUT;
 
-	OUT.hpos = VP_modelToClip(IN, IN.xyz);
+	OUT.hpos = VP_modelToClip(IN, IN.position);
 	OUT.screenTc = Clip2Screen(OUT.hpos);
 
    return OUT;

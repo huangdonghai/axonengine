@@ -25,7 +25,7 @@ VertexOut VP_main(VertexIn IN) {
 
 	OUT.color = IN.color;
 
-	OUT.worldPos = IN.xyz;
+	OUT.worldPos = IN.position;
 
 #if G_REFLECTION	// HACK
 	OUT.worldPos.z -= 20.0f;
@@ -72,11 +72,6 @@ technique gpass {
 	pass p0 {
 		VERTEXPROGRAM = compile VP_2_0 VP_main();
 		FRAGMENTPROGRAM = compile FP_2_0 FP_gpass();
-
-		DEPTHTEST = true;
-		DEPTHMASK = false;
-		CULL_ENABLED;
-		BLEND_NONE;
 	}
 }
 
@@ -85,11 +80,6 @@ technique main {
     pass p0 {
         VERTEXPROGRAM = compile VP_2_0 VP_main();
 		FRAGMENTPROGRAM = compile FP_2_0 FP_main();
-
-	    DEPTHTEST = true;
-		DEPTHMASK = false;
-		CULL_ENABLED;
-		BLEND_NONE;
     }
 }
 

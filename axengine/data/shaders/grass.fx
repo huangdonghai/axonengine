@@ -26,7 +26,7 @@ VertexOut VP_main(VertexIn IN) {
 
 	OUT.color = IN.color;
 
-	OUT.worldPos = VP_modelToWorld(IN, IN.xyz);
+	OUT.worldPos = VP_modelToWorld(IN, IN.position);
 	OUT.hpos = VP_worldToClip(OUT.worldPos);
 
 	VP_final(IN, OUT);

@@ -22,7 +22,7 @@ float Script : STANDARDSGLOBAL <
 /*********** Generic Vertex Shader ******/
 
 float4 VP_main(VertexIn IN) : POSITION {
-	return VP_worldToClip(IN.xyz);
+	return VP_worldToClip(IN.position);
 }
 
 /********* pixel shaders ********/

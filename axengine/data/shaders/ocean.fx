@@ -110,9 +110,9 @@ VertexOut VP_main(VertexIn IN) {
 
 	OUT.color = IN.color;
 
-	float4 pos = float4(IN.xyz,1);
+	float4 pos = float4(IN.position,1);
 
-	pos.z = g_cameraPos.z * IN.st.y;
+	pos.z = g_cameraPos.z * IN.streamTc.y;
 
 	float3 worldpos;
 	worldpos.xy = pos.xy + g_cameraPos.xy;
@@ -120,7 +120,7 @@ VertexOut VP_main(VertexIn IN) {
 
 	OUT.streamTc.xy = (worldpos.xy) * 0.01f;
 	OUT.streamTc.z = 1;
-	OUT.streamTc.w = (1.0 - IN.st.y) + 1e-4;
+	OUT.streamTc.w = (1.0 - IN.streamTc.y) + 1e-4;
 
 	OUT.streamTc.xy += float2(0.01, 0.01) * g_time;
 
