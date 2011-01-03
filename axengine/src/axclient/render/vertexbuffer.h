@@ -43,7 +43,7 @@ public:
 	IndexObject();
 	~IndexObject();
 
-	void init(const ushort_t *p, int count, Primitive::Hint, int activeCount = 0);
+	void init(const ushort_t *p, int count, Primitive::Hint, ElementType et, int activeCount = 0);
 	void clear();
 
 public:

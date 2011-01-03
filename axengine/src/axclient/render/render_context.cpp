@@ -10,11 +10,10 @@ RenderContext::RenderContext()
 	g_bufferManager = new BufferManager();
 	m_defaultMat = new Material("_debug");
 
-	m_bufferWidth = m_bufferHeight = 0;
-	m_depthBuffer = 0;
-	m_geoBuffer = 0;
-	m_lightBuffer = 0; // reuse as copied SceneColor
-	m_sceneBuffer = 0;
+	m_curDepthBuffer = 0;
+	m_curGeoBuffer = 0;
+	m_curLightBuffer = 0; // reuse as copied SceneColor
+	m_curSceneBuffer = 0;
 }
 
 RenderContext::~RenderContext()
@@ -35,8 +34,8 @@ void RenderContext::issueFrame(RenderFrame *rq)
 
 	beginFrame();
 
-	m_frameWindow = rq->getTarget();
-	AX_ASSERT(m_frameWindow->isWindow());
+	m_curFrameWindow = rq->getTarget();
+	AX_ASSERT(m_curFrameWindow->isWindow());
 	// TODO: bind target
 
 	int view_count = rq->getSceneCount();
@@ -104,21 +103,21 @@ void RenderContext::drawScene_world(RenderScene *scene, const RenderClearer &cle
 {
 	BEGIN_PIX("DrawWorld");
 
-	m_technique = Technique::Main;
+	m_curTechnique = Technique::Main;
 
 	const Rect &rect = scene->camera.getViewRect();
 	int width = rect.width;
 	int height = rect.height;
 
 	if (1) {
-		m_geoBuffer = m_frameWindow->getGeoBuffer();
-		AX_ST(GeoBuffer, m_geoBuffer->getTexture());
+		m_curGeoBuffer = m_curFrameWindow->getGeoBuffer();
+		AX_ST(GeoBuffer, m_curGeoBuffer->getTexture());
 
-		m_lightBuffer = m_frameWindow->getLightBuffer();
-		AX_ST(LightBuffer, m_lightBuffer->getTexture());
+		m_curLightBuffer = m_curFrameWindow->getLightBuffer();
+		AX_ST(LightBuffer, m_curLightBuffer->getTexture());
 
 	} else {
-		m_worldRt = 0;
+		m_curWorldRt = 0;
 	}
 
 	// set exposure
@@ -164,9 +163,9 @@ void RenderContext::drawScene_world(RenderScene *scene, const RenderClearer &cle
 			drawPass_shadowGen(sub);
 		} else if (sub->sceneType == RenderScene::Reflection) {
 			BEGIN_PIX("ReflectionGen");
-			//			g_shaderMacro.setMacro(ShaderMacro::G_REFLECTION);
+			g_shaderMacro.setMacro(ShaderMacro::G_REFLECTION);
 			drawScene_worldSub(sub);
-			//			g_shaderMacro.resetMacro(ShaderMacro::G_REFLECTION);
+			g_shaderMacro.resetMacro(ShaderMacro::G_REFLECTION);
 			END_PIX();
 		} else if (sub->sceneType == RenderScene::RenderToTexture) {
 			BEGIN_PIX("RenderToTexture");
@@ -206,7 +205,7 @@ void RenderContext::drawScene_world(RenderScene *scene, const RenderClearer &cle
 void RenderContext::drawScene_noworld(RenderScene *scene, const RenderClearer &clearer)
 {
 	BEGIN_PIX("DrawNoworld");
-	m_technique = Technique::Main;
+	m_curTechnique = Technique::Main;
 
 	setupScene(scene, &clearer, scene->target);
 
@@ -235,13 +234,13 @@ void RenderContext::drawScene_noworld(RenderScene *scene, const RenderClearer &c
 
 void RenderContext::drawPass_gfill(RenderScene *scene)
 {
-	m_technique = Technique::Zpass;
+	m_curTechnique = Technique::Zpass;
 
 	RenderClearer clearer;
 	clearer.clearDepth(true);
 	clearer.clearColor(true, Rgba::Zero);
 
-	setupScene(scene, &clearer, m_geoBuffer);
+	setupScene(scene, &clearer, m_curGeoBuffer);
 
 	for (int i = 0; i < scene->numInteractions; i++) {
 		drawInteraction(scene->interactions[i]);
@@ -283,7 +282,7 @@ void RenderContext::drawPass_composite(RenderScene *scene)
 	}
 #endif
 
-	m_technique = Technique::Main;
+	m_curTechnique = Technique::Main;
 
 	setupScene(scene, 0, scene->target);
 
@@ -338,7 +337,7 @@ void RenderContext::drawPass_shadowGen(RenderScene *scene)
 		d3d9StateManager->SetRenderState(D3DRS_DEPTHBIAS, F2DW(units));
 		d3d9StateManager->SetRenderState(D3DRS_SLOPESCALEDEPTHBIAS, F2DW(factor));
 #endif
-		m_technique = Technique::ShadowGen;
+		m_curTechnique = Technique::ShadowGen;
 
 		RenderClearer clearer;
 		clearer.clearDepth(true);
@@ -385,9 +384,9 @@ void RenderContext::drawPass_lights(RenderScene *scene)
 	clearer.clearColor(true, Rgba::Zero);
 
 	if (r_showLightBuf.getBool())
-		m_lightBuffer = 0;
+		m_curLightBuffer = 0;
 
-	setupScene(m_worldScene, &clearer, m_lightBuffer);
+	setupScene(m_curWorldScene, &clearer, m_curLightBuffer);
 	clearer.clearColor(false);
 
 	for (int i = 0; i < scene->numLights; i++) {
@@ -410,7 +409,7 @@ void RenderContext::drawPass_postprocess(RenderScene *scene)
 
 void RenderContext::drawScene_worldSub(RenderScene *scene)
 {
-	m_technique = Technique::Main;
+	m_curTechnique = Technique::Main;
 
 	RenderClearer clear;
 	clear.clearDepth(true);
@@ -436,14 +435,14 @@ void RenderContext::drawScene_worldSub(RenderScene *scene)
 
 void RenderContext::drawPrimitive(Primitive *prim)
 {
-	m_ia = 0;
+	m_curInteraction = 0;
 
 	if (!prim)
 		return;
 
 	// check actor
-	if (m_entity) {
-		m_entity = 0;
+	if (m_curEntity) {
+		m_curEntity = 0;
 		AX_SU(g_modelMatrix, Matrix::getIdentity());
 	}
 
@@ -453,7 +452,7 @@ void RenderContext::drawPrimitive(Primitive *prim)
 void RenderContext::drawInteraction(Interaction *ia)
 {
 	static bool primMatrixSet = false;
-	m_ia = ia;
+	m_curInteraction = ia;
 
 	Primitive *prim = ia->primitive;
 
@@ -463,26 +462,26 @@ void RenderContext::drawInteraction(Interaction *ia)
 
 	// check actor
 	const RenderEntity *re = ia->entity;
-	if (re != m_entity || prim->isMatrixSet() || primMatrixSet) {
-		m_entity = re;
+	if (re != m_curEntity || prim->isMatrixSet() || primMatrixSet) {
+		m_curEntity = re;
 
-		if (m_entity) {
+		if (m_curEntity) {
 			if (prim->isMatrixSet()) {
 				primMatrixSet = true;
 			} else {
 				primMatrixSet = false;
 			}
 
-			AX_SU(g_modelMatrix, m_entity->getMatrix());
-			AX_SU(g_instanceParam, m_entity->getInstanceParam());
+			AX_SU(g_modelMatrix, m_curEntity->getMatrix());
+			AX_SU(g_instanceParam, m_curEntity->getInstanceParam());
 
 			if (prim->isMatrixSet()) {
 				Matrix mat = prim->getMatrix().getAffineMat();
-				mat = m_entity->getMatrix() * mat;
+				mat = m_curEntity->getMatrix() * mat;
 				AX_SU(g_modelMatrix, mat);
 			}
 
-			if (m_entity->getFlags() & RenderEntity::DepthHack) {
+			if (m_curEntity->getFlags() & RenderEntity::DepthHack) {
 				//glDepthRange(0, 0.3f);
 			} else {
 				//glDepthRange(0, 1);
@@ -492,7 +491,7 @@ void RenderContext::drawInteraction(Interaction *ia)
 			AX_SU(g_instanceParam, Vector4(0,0,0,1));
 		}
 	}
-	prim->draw(m_technique);
+	prim->draw(m_curTechnique);
 }
 
 void RenderContext::setupScene(RenderScene *scene, const RenderClearer *clearer /*= 0*/, RenderTarget *target /*= 0*/, RenderCamera *camera /*= 0*/)
@@ -694,14 +693,5 @@ void RenderContext::cacheScene(RenderScene *scene)
 		scene->overlayPrimitives[j]->sync();
 	}
 }
-
-void RenderContext::checkBufferSize(int width, int height)
-{
-	if (width <= m_bufferWidth && height <= m_bufferHeight)
-		return;
-
-
-}
-
 
 AX_END_NAMESPACE

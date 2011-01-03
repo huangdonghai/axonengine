@@ -21,7 +21,7 @@ public:
 	};
 
 	enum {
-		MAX_COLOR_ATTACHMENT = 3
+		MAX_COLOR_ATTACHMENT = 3,
 	};
 
 	RenderTarget(int width, int height, TexFormat format);
@@ -81,8 +81,6 @@ private:
 	RenderTarget *m_geoBuffer;
 	RenderTarget *m_lightBuffer; // reuse as copied SceneColor
 	RenderTarget *m_sceneBuffer;
-	RenderTarget *m_albodoBuffer;
-	RenderTarget *m_miscBuffer;
 };
 
 class RenderWorld;

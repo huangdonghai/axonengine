@@ -6,6 +6,10 @@ AX_BEGIN_NAMESPACE
 class RenderContext
 {
 public:
+	enum {
+		NUM_TONEMAP_TEXTURES = 4,
+		NUM_BLOOM_TEXTURES = 3,
+	};
 	RenderContext();
 	~RenderContext();
 
@@ -49,27 +53,29 @@ protected:
 	void setUniform(ConstBuffers::Item name, const Q &q)
 	{
 		//		g_apiWrap->setShaderConst(name, sizeof(Q), &q);
+		g_constBuffers.setField(name, sizeof(Q), reinterpret_cast<const float *>(&q));
 	}
 
 private:
 	// init
 	Material *m_defaultMat;
 	RenderThread *m_renderThread;
+	RenderTarget *m_bloomMap[NUM_BLOOM_TEXTURES];
+	RenderTarget *m_toneMap[NUM_TONEMAP_TEXTURES];
+
 
 	// runtime
-	int m_bufferWidth;
-	int m_bufferHeight;
-	RenderTarget *m_frameWindow;
-	RenderTarget *m_depthBuffer;
-	RenderTarget *m_geoBuffer;
-	RenderTarget *m_lightBuffer; // reuse as copied SceneColor
-	RenderTarget *m_sceneBuffer;
-	RenderTarget *m_worldRt;
-	RenderScene *m_worldScene;
-	Interaction *m_ia;
-	const RenderEntity *m_entity;
+	RenderTarget *m_curFrameWindow;
+	RenderTarget *m_curDepthBuffer;
+	RenderTarget *m_curGeoBuffer;
+	RenderTarget *m_curLightBuffer; // reuse as copied SceneColor
+	RenderTarget *m_curSceneBuffer;
+	RenderTarget *m_curWorldRt;
+	RenderScene *m_curWorldScene;
+	Interaction *m_curInteraction;
+	const RenderEntity *m_curEntity;
 	bool m_isStatistic;
-	Technique m_technique;
+	Technique m_curTechnique;
 
 	ShaderMacro m_shaderMacro;
 	RenderStateId m_renderStateId;

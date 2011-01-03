@@ -92,22 +92,6 @@ static inline int sCalcNumElements(D3DPRIMITIVETYPE mode, int numindexes)
 }
 
 
-bool CheckIfSupportHardwareMipmapGeneration(D3DFORMAT d3dformat, DWORD d3dusage)
-{
-	if (dx9_api->CheckDeviceFormat(
-		D3DADAPTER_DEFAULT,
-		D3DDEVTYPE_HAL,
-		D3DFMT_X8R8G8B8,
-		d3dusage | D3DUSAGE_AUTOGENMIPMAP,
-		D3DRTYPE_TEXTURE,
-		d3dformat) == S_OK)
-	{
-		return true;
-	}
-
-	return false;
-}
-
 
 void dx9CreateTextureFromFileInMemory(phandle_t h, AsioRequest *asioRequest)
 {
@@ -140,7 +124,7 @@ void dx9CreateTexture2D(phandle_t h, TexFormat format, int width, int height, in
 	if (flags & Texture::IF_AutoGenMipmap) {
 		d3dusage |= D3DUSAGE_AUTOGENMIPMAP;
 
-		bool m_hardwareGenMipmap = CheckIfSupportHardwareMipmapGeneration(d3dformat, d3dusage);
+		bool m_hardwareGenMipmap = g_renderDriverInfo.autogenMipmapSupports[d3dformat];
 
 		if (!m_hardwareGenMipmap) {
 			d3dusage &= ~D3DUSAGE_AUTOGENMIPMAP;
@@ -237,7 +221,7 @@ void dx9GenerateMipmap(phandle_t h)
 	V(obj->GetSurfaceLevel(0, &surface));
 	D3DSURFACE_DESC surfdesc;
 	obj->GetLevelDesc(0, &surfdesc);
-	bool hardwaremipmap = CheckIfSupportHardwareMipmapGeneration(surfdesc.Format, surfdesc.Usage);
+	bool hardwaremipmap = g_renderDriverInfo.autogenMipmapSupports[surfdesc.Format];
 
 	if (hardwaremipmap) {
 		obj->GenerateMipSubLevels();

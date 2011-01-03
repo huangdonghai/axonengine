@@ -35,6 +35,12 @@ public:
 
 	IDirect3DSurface9 *getDepthStencil(const Size &size);
 
+protected:
+	bool checkTextureFormatSupport(TexFormat format, D3DFORMAT d3dformat);
+	bool checkHardwareMipmapGenerationSupport(TexFormat format, D3DFORMAT d3dformat);
+	bool checkRenderTargetFormatSupport(TexFormat format, D3DFORMAT d3dformat);
+	void checkFormats();
+
 private:
 	bool m_initialized;
 };

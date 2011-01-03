@@ -120,16 +120,16 @@ IndexObject::~IndexObject()
 	clear();
 }
 
-void IndexObject::init(const ushort_t *p, int count, Primitive::Hint hint, int activeCount /*= 0*/)
+void IndexObject::init(const ushort_t *p, int count, Primitive::Hint hint, ElementType et, int activeCount /*= 0*/)
 {
 	clear();
 
 	m_hint = hint;
 	m_count = count;
+	m_elementType = et;
 	m_activeCount = activeCount;
-	if (!m_activeCount) {
+	if (!m_activeCount)
 		m_activeCount = count;
-	}
 
 	m_dataSize = m_activeCount * sizeof(ushort_t);
 

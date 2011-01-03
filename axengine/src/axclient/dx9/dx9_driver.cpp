@@ -97,6 +97,8 @@ void DX9_Driver::initialize()
 		Errorf("CreateDevice failed %s", D3DErrorString(hr));
 	}
 
+	checkFormats();
+
 #if 0
 	d3d9StateManager = new D3D9StateManager();
 	d3d9StateManager->DirtyCachedValues();
@@ -220,6 +222,87 @@ IDirect3DSurface9 * DX9_Driver::getDepthStencil(const Size &size)
 const ShaderInfo * DX9_Driver::findShaderInfo( const FixedString &key )
 {
 	return dx9_shaderManager->findShaderInfo(key);
+}
+
+
+bool DX9_Driver::checkTextureFormatSupport(TexFormat format, D3DFORMAT d3dformat)
+{
+	HRESULT hr;
+	if (format.isDepth() || format.isStencil()) {
+		hr = dx9_api->CheckDeviceFormat(D3DADAPTER_DEFAULT,
+			D3DDEVTYPE_HAL,
+			D3DFMT_X8R8G8B8,
+			0,
+			D3DRTYPE_TEXTURE,
+			d3dformat);
+	} else {
+		hr = dx9_api->CheckDeviceFormat(D3DADAPTER_DEFAULT,
+			D3DDEVTYPE_HAL,
+			D3DFMT_X8R8G8B8,
+			0,
+			D3DRTYPE_TEXTURE,
+			d3dformat);
+	}
+
+	return SUCCEEDED(hr);
+}
+
+bool DX9_Driver::checkHardwareMipmapGenerationSupport(TexFormat format, D3DFORMAT d3dformat)
+{
+	if (dx9_api->CheckDeviceFormat(
+		D3DADAPTER_DEFAULT,
+		D3DDEVTYPE_HAL,
+		D3DFMT_X8R8G8B8,
+		D3DUSAGE_AUTOGENMIPMAP,
+		D3DRTYPE_TEXTURE,
+		d3dformat) == S_OK)
+	{
+		return true;
+	} else {
+		return false;
+	}
+}
+
+
+bool DX9_Driver::checkRenderTargetFormatSupport(TexFormat format, D3DFORMAT d3dformat)
+{
+	HRESULT hr;
+	if (format.isDepth() || format.isStencil()) {
+		hr = dx9_api->CheckDeviceFormat(D3DADAPTER_DEFAULT,
+			D3DDEVTYPE_HAL,
+			D3DFMT_X8R8G8B8,
+			D3DUSAGE_DEPTHSTENCIL,
+			D3DRTYPE_TEXTURE,
+			d3dformat);
+	} else {
+		hr = dx9_api->CheckDeviceFormat(D3DADAPTER_DEFAULT,
+			D3DDEVTYPE_HAL,
+			D3DFMT_X8R8G8B8,
+			D3DUSAGE_RENDERTARGET,
+			D3DRTYPE_TEXTURE,
+			d3dformat);
+	}
+
+	return SUCCEEDED(hr);
+}
+
+
+void DX9_Driver::checkFormats()
+{
+	D3DFORMAT d3dformat;
+	for (int i=0; i<TexFormat::MAX_NUMBER; i++) {
+		trTexFormat(i, d3dformat);
+		g_renderDriverInfo.textureFormatSupports[i] = checkTextureFormatSupport(i, d3dformat);
+		g_renderDriverInfo.renderTargetFormatSupport[i] = checkRenderTargetFormatSupport(i, d3dformat);
+		g_renderDriverInfo.autogenMipmapSupports[i] = checkHardwareMipmapGenerationSupport(i, d3dformat);
+	}
+
+	g_renderDriverInfo.suggestFormats[RenderDriverInfo::SuggestedFormat_DepthStencil] = TexFormat::D24S8;
+	g_renderDriverInfo.suggestFormats[RenderDriverInfo::SuggestedFormat_DepthStencilTexture] = TexFormat::INTZ;
+	g_renderDriverInfo.suggestFormats[RenderDriverInfo::SuggestedFormat_SceneColor] = TexFormat::BGRA8;
+	g_renderDriverInfo.suggestFormats[RenderDriverInfo::SuggestedFormat_HdrLightBuffer] = TexFormat::RGBA16F;
+	g_renderDriverInfo.suggestFormats[RenderDriverInfo::SuggestedFormat_HdrSceneColor] = TexFormat::RGBA16F;
+	g_renderDriverInfo.suggestFormats[RenderDriverInfo::SuggestedFormat_ShadowMap] = TexFormat::D24S8;
 }
 
 AX_END_NAMESPACE

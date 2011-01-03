@@ -405,6 +405,8 @@ struct AX_API Color3
 	Color3 operator/(float rhs) const { return Color3(r/rhs, g/rhs, b/rhs); }
 	Color3& operator/=(float rhs) { r /= rhs; g /= rhs; b /= rhs; return *this; }
 
+	const float *c_ptr() const { return &r; }
+
 	std::string toString() const;
 	bool fromString(const char *str);
 };

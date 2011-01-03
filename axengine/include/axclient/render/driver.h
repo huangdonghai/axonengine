@@ -28,11 +28,14 @@ struct RenderDriverInfo {
 		UNKNOWN
 	};
 
-	enum SuggestFormat {
-		LDR_COLOR,
-		HDR_COLOR,
-		SHADOW_MAP,
-		SUGGEST_MAX
+	enum SuggestedFormat {
+		SuggestedFormat_DepthStencil,
+		SuggestedFormat_DepthStencilTexture,
+		SuggestedFormat_SceneColor,
+		SuggestedFormat_HdrLightBuffer,
+		SuggestedFormat_HdrSceneColor,
+		SuggestedFormat_ShadowMap,
+		SuggestedFormat_Max
 	};
 
 	DriverType driverType;	// opengl, d3d etc...
@@ -55,7 +58,7 @@ struct RenderDriverInfo {
 	bool renderTargetFormatSupport[TexFormat::MAX_NUMBER];
 	bool autogenMipmapSupports[TexFormat::MAX_NUMBER];
 
-	TexFormat suggestFormats[SUGGEST_MAX];
+	TexFormat suggestFormats[SuggestedFormat_Max];
 
 	bool transposeMatrix;
 };

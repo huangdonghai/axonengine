@@ -4,7 +4,6 @@
 AX_BEGIN_NAMESPACE
 
 bool trTexFormat(TexFormat texformat, D3DFORMAT &d3dformat);
-bool CheckIfSupportHardwareMipmapGeneration(D3DFORMAT d3dformat, DWORD d3dusage);
 
 // module private
 

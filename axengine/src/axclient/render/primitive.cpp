@@ -594,21 +594,24 @@ LinePrim *LinePrim::createWorldBoundingBox( Hint hint, const BoundingBox &bbox, 
 
 void LinePrim::draw(Technique tech)
 {
+	VertexObject *vert = m_vertexObject;
+	InstanceObject *inst = m_overloadInstanceObject;
+	IndexObject *index = m_overloadIndexObject ? m_overloadIndexObject : m_indexObject;
+	Material *mat = m_overloadMaterial ? m_overloadMaterial : m_material;
 
+	g_renderContext->draw(vert, inst, index, mat, tech);
 }
 
 void LinePrim::sync()
 {
-	if (!m_isDirty)
+	if (!m_isDirty && m_hint == Primitive::HintStatic)
 		return;
 
-	if (m_isVertexBufferDirty) {
+	if (m_isVertexBufferDirty)
 		m_vertexObject->init(m_vertexes, m_numVertexes, m_hint, VertexType::kDebug);
-	}
 
-	if (m_isIndexBufferDirty) {
-		m_indexObject->init(m_indexes, m_numIndexes, m_hint, m_activedIndexes);
-	}
+	if (m_isIndexBufferDirty)
+		m_indexObject->init(m_indexes, m_numIndexes, m_hint, ElementType_LineList, m_activedIndexes);
 
 	m_isDirty = m_isVertexBufferDirty = m_isIndexBufferDirty = 0;
 }
@@ -1136,14 +1139,19 @@ void MeshPrim::draw(Technique tech)
 
 void MeshPrim::sync()
 {
-	if (!m_isDirty)
+	if (!m_isDirty && m_hint == HintStatic)
 		return;
+
+	ElementType et = ElementType_TriList;
+
+	if (m_isStriped)
+		et = ElementType_TriStrip;
 
 	if (m_isVertexBufferDirty)
 		m_vertexObject->init(m_vertexes, m_numVertexes, m_hint, VertexType::kMesh);
 
 	if (m_isIndexBufferDirty)
-		m_indexObject->init(m_indexes, m_numIndexes, m_hint, m_activedIndexes);
+		m_indexObject->init(m_indexes, m_numIndexes, m_hint, et, m_activedIndexes);
 
 	m_isDirty = m_isVertexBufferDirty = m_isIndexBufferDirty = false;
 }
@@ -1169,7 +1177,8 @@ TextPrim::TextPrim(Hint hint) : Primitive(hint), m_horizonAlign(Center), m_verti
 	m_type = TextType;
 }
 
-TextPrim::~TextPrim() {
+TextPrim::~TextPrim()
+{
 }
 
 void TextPrim::init(const Rect &rect, Rgba color, float aspect, int format, Font *font, const std::string &text)
@@ -1422,14 +1431,14 @@ void ChunkPrim::draw(Technique tech)
 
 void ChunkPrim::sync()
 {
-	if (!m_isDirty)
+	if (!m_isDirty && m_hint == HintStatic)
 		return;
 
 	if (m_isVertexBufferDirty)
 		m_vertexObject->init(m_vertexes, m_numVertexes, m_hint, VertexType::kChunk);
 
 	if (m_isIndexBufferDirty)
-		m_indexObject->init(m_indexes, m_numIndexes, m_hint, m_activedIndexes);
+		m_indexObject->init(m_indexes, m_numIndexes, m_hint, ElementType_TriList, m_activedIndexes);
 
 	m_isDirty = m_isVertexBufferDirty = m_isIndexBufferDirty = 0;
 }
@@ -1559,10 +1568,12 @@ void RefPrim::sync()
 	if (!m_isDirty)
 		return;
 
-	if (m_isIndexBufferDirty && m_numIndexes)
-		m_indexObject->init(m_indexes, m_numIndexes, m_hint, m_activedIndexes);
-
 	m_refered->sync();
+
+	//IndexObject *indexObject = m_refered->m_indexObject;
+
+	if (m_isIndexBufferDirty && m_numIndexes)
+		m_indexObject->init(m_indexes, m_numIndexes, m_hint, ElementType_TriList, m_activedIndexes);
 
 	m_isDirty = m_isIndexBufferDirty = false;
 }
