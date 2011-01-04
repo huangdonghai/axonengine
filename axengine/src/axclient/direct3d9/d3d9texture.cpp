@@ -227,7 +227,7 @@ void D3D9Texture::initialize(TexFormat format, int width, int height, InitFlags 
 	D3DPOOL d3dpool = D3DPOOL_MANAGED;
 	DWORD d3dusage = 0;
 
-	if (flags.isSet(Texture::IF_RenderTarget)) {
+	if (flags.isSet(Texture::InitFlag_RenderTarget)) {
 		d3dpool = D3DPOOL_DEFAULT;
 		if (format.isDepth()) {
 			d3dusage = D3DUSAGE_DEPTHSTENCIL;
@@ -236,7 +236,7 @@ void D3D9Texture::initialize(TexFormat format, int width, int height, InitFlags 
 		}
 	}
 
-	if (flags.isSet(Texture::IF_AutoGenMipmap)) {
+	if (flags.isSet(Texture::InitFlag_AutoGenMipmap)) {
 		d3dusage |= D3DUSAGE_AUTOGENMIPMAP;
 
 		m_hardwareGenMipmap = checkIfSupportHardwareMipmapGeneration(d3dformat, d3dusage);
@@ -398,7 +398,7 @@ void D3D9Texture::generateMipmapIm()
 	V(m_object->UnlockRect(0));
 
 	D3D9Texture *dummy = new D3D9Texture();
-	dummy->initialize(TexFormat::BGRA8, m_width, m_height, Texture::IF_AutoGenMipmap);
+	dummy->initialize(TexFormat::BGRA8, m_width, m_height, Texture::InitFlag_AutoGenMipmap);
 	dummy->uploadSubTextureIm(Rect(0,0,m_width,m_height), lockedRect.pBits, m_format);
 //		dummy->saveToFile("test.dds");
 
@@ -486,11 +486,11 @@ bool D3D9Texture::loadFile2D(const std::string &filename)
 
 //	m_initFlags = 0;
 
-	if (m_initFlags.isSet(Texture::IF_RenderTarget)) {
+	if (m_initFlags.isSet(Texture::InitFlag_RenderTarget)) {
 		Errorf("Can't load render target from a file");
 	}
 
-	if (m_initFlags.isSet(Texture::IF_AutoGenMipmap)) {
+	if (m_initFlags.isSet(Texture::InitFlag_AutoGenMipmap)) {
 		d3dusage |= D3DUSAGE_AUTOGENMIPMAP;
 		m_isMipmaped = true;
 		m_hardwareGenMipmap = checkIfSupportHardwareMipmapGeneration(d3dformat, d3dusage);
@@ -538,12 +538,12 @@ bool D3D9Texture::loadFile2D(const std::string &filename)
 		if (width < 1) width = 1;
 		if (height < 1) height = 1;
 
-		if (m_initFlags.isSet(Texture::IF_AutoGenMipmap)) {
+		if (m_initFlags.isSet(Texture::InitFlag_AutoGenMipmap)) {
 //			break;
 		}
 	}
 
-	if (m_initFlags.isSet(Texture::IF_AutoGenMipmap)) {
+	if (m_initFlags.isSet(Texture::InitFlag_AutoGenMipmap)) {
 		generateMipmapIm();
 	}
 

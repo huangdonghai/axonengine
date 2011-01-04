@@ -87,14 +87,9 @@ struct MaterialTextureId {
 
 class TextureDef {
 public:
-	TextureDef();
 	std::string file;
-	bool clampToBorder;
-	bool clampToEdge;
-	bool filter;
+	SamplerDesc desc;
 };
-
-inline TextureDef::TextureDef() : clampToBorder(false), clampToEdge(false), filter(true) {}
 
 typedef std::vector<float> FloatSeq;
 typedef Dict<FixedString, FloatSeq> ShaderParams;
@@ -134,46 +129,6 @@ public:
 	float m_floatData[NUM_FLOATDATA];
 };
 
-struct RenderStateId
-{
-public:
-	enum StencilMode {
-		StencilMode_Disable,
-		StencilMode_Mark,
-		StencilMode_MarkVolume,
-		StencilMode_TestVolume
-	};
-
-	enum BlendMode {
-		BlendMode_Disabled,
-		BlendMode_Add,
-		BlendMode_Blend,
-		BlendMode_Modulate
-	};
-
-	union {
-		struct {
-			int depthWrite : 1;
-			int depthTest : 1;
-			int twoSided : 1;
-			int wireframed : 1;
-			int stencilMode : 2;
-			int blendMode : 2;
-		};
-
-		int intValue;
-	};
-
-	RenderStateId() : intValue(0) {}
-
-	size_t hash() const { return intValue; }
-	bool operator==(RenderStateId rhs) const { return intValue == rhs.intValue; }
-	operator size_t() const { return hash(); }
-};
-
-AX_STATIC_ASSERT(sizeof(RenderStateId)<=sizeof(int));
-
-
 class MaterialDecl
 {
 public:
@@ -210,14 +165,21 @@ public:
 		Flag_PhysicsHelper = 0x80000,
 	};
 
+	enum BlendMode {
+		BlendMode_Disabled,
+		BlendMode_Add,
+		BlendMode_Blend,
+		BlendMode_Modulate
+	};
+
 	typedef Flags_<Flag> Flags;
 
 	bool tryLoad(const std::string &name);
 
 	const std::string &getShaderName() { return m_shaderName; }
 	TextureDef *getTextureDef(MaterialTextureId maptype) { return m_textures[maptype]; }
-	bool isWireframed() const { return m_renderStateId.wireframed; }
-	bool isTwoSided() const { return m_renderStateId.twoSided; }
+	bool isWireframed() const { return m_wireframed; }
+	bool isTwoSided() const { return m_twoSided; }
 	Flags getFlags() const { return m_flags; }
 	void setFlags(Flags flags) { m_flags = flags; }
 	Rgba getDiffuse() const { return m_diffuse; }
@@ -244,13 +206,19 @@ private:
 	int m_shaderGenMask;
 	Flags m_flags;
 	SurfaceType m_surfaceType;
-	RenderStateId m_renderStateId;
 	TextureDef *m_textures[MaterialTextureId::MaxType];
 	FastParams *m_fastParams;
 	Rgba m_diffuse, m_specular, m_emission;
 	float m_specExp, m_specLevel;
 	float m_opacity;
 	float m_detailScale;
+
+	int m_depthWrite : 1;
+	int m_depthTest : 1;
+	int m_twoSided : 1;
+	int m_wireframed : 1;
+	int m_blendMode : 2;
+
 
 	// features and literals
 	bool m_features[MAX_FEATURES];

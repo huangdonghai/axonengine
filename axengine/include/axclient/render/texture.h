@@ -27,23 +27,25 @@ public:
 	friend class TextureManager;
 
 	enum InitFlag {
-		IF_AutoGenMipmap = 1,
-		IF_RenderTarget = 2
+		InitFlag_Default = 0,
+		InitFlag_AutoGenMipmap = 1,
+		InitFlag_RenderTarget = 2
 	};
 
 	typedef Flags_<InitFlag> InitFlags;
 
 	enum TexType {
-		TT_2D,
-		TT_3D,
-		TT_CUBE,
+		TexType_2D,
+		TexType_3D,
+		TexType_CUBE,
 	};
 
-	Texture(const std::string &name, InitFlags flags=0);
-	Texture(const std::string &debugname, TexFormat format, int width, int height, InitFlags flags = 0);
+	Texture(const std::string &name);
+	Texture(const std::string &name, InitFlags flags);
+	Texture(const std::string &debugname, TexFormat format, int width, int height, InitFlags flags);
 	~Texture();
 
-	void uploadSubTexture(const Rect &rect, const void *pixels, TexFormat format = TexFormat::AUTO);
+	void uploadSubTexture(const Rect &rect, const void *pixels, TexFormat format);
 	void generateMipmap();
 
 	// get some info

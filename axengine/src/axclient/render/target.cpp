@@ -29,7 +29,7 @@ RenderTarget::RenderTarget(int width, int height, TexFormat format)
 	std::string texname;
 	StringUtil::sprintf(texname, "_render_target_%d_%d_%d", m_width, m_height, g_system->generateId());
 
-	m_texture = new Texture(texname, format, width, height, Texture::IF_RenderTarget);
+	m_texture = new Texture(texname, format, width, height, Texture::InitFlag_RenderTarget);
 }
 
 RenderTarget::RenderTarget(Handle hwnd, const std::string &debugname)
