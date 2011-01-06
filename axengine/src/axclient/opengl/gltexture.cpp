@@ -13,11 +13,11 @@ AX_BEGIN_NAMESPACE
 
 inline GLenum trTexType(Texture::TexType type) {
 	switch (type) {
-	case Texture::TT_2D:
+	case Texture::TexType_2D:
 		return GL_TEXTURE_2D;
-	case Texture::TT_3D:
+	case Texture::TexType_3D:
 		return GL_TEXTURE_3D;
-	case Texture::TT_CUBE:
+	case Texture::TexType_CUBE:
 		return GL_TEXTURE_CUBE_MAP;
 	default:
 		Errorf("trTexType: bad enum");
@@ -520,7 +520,7 @@ void GLtexture::initialize(TexFormat format, int width, int height, InitFlags fl
 
 	bool mipmap = false;
 
-	if (m_createFlags.isSet(IF_AutoGenMipmap)) {
+	if (m_createFlags.isSet(InitFlag_AutoGenMipmap)) {
 		mipmap = false;
 	}
 

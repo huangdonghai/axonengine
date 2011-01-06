@@ -29,9 +29,6 @@ public:
 	bool isWireframe() const;
 	bool isPhysicsHelper() const;
 
-	RenderStateId getRenderStateId() const { return m_renderStateId; }
-	void setRenderStateId(RenderStateId id) { m_renderStateId = id; }
-
 	MaterialDecl::SortHint getSortHint() const { return m_sortHint; }
 
 	void setTextureSet(const std::string &texname);
@@ -95,7 +92,6 @@ public:
 private:
 	FixedString m_key;
 	MaterialDecl *m_decl;
-	RenderStateId m_renderStateId;
 	MaterialDecl::SortHint m_sortHint;
 
 	bool m_shaderMacroNeedRegen;
@@ -118,6 +114,13 @@ private:
 	Matrix4 m_baseTcMatrix;
 
 	bool m_features[MaterialDecl::MAX_FEATURES];
+
+	int m_depthWrite : 1;
+	int m_depthTest : 1;
+	int m_twoSided : 1;
+	int m_wireframed : 1;
+	int m_blendMode : 2;
+
 #if 0
 	int m_literals[MaterialDecl::MAX_LITERALS];
 

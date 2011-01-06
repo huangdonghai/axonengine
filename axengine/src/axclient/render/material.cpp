@@ -66,8 +66,9 @@ bool Material::init(const FixedString &key)
 			if (!texdef)
 				continue;
 
-			m_textures[i] = new Texture(texdef->file);
-
+			m_textures[i] = new Texture(texdef->file, Texture::InitFlag_Default);
+			m_textures[i]->setSamplerState(texdef->desc);
+#if 0
 			if (!m_textures[i])
 				continue;
 
@@ -82,6 +83,7 @@ bool Material::init(const FixedString &key)
 				desc.clampMode = SamplerDesc::ClampMode_Clamp;
 				m_textures[i]->setSamplerState(desc);
 			}
+#endif
 		}
 	}
 
@@ -97,8 +99,6 @@ bool Material::init(const FixedString &key)
 
 	m_shaderName = m_decl->getShaderName();
 	m_shaderInfo = g_renderDriver->findShaderInfo(m_shaderName);
-
-	m_renderStateId = m_decl->m_renderStateId;
 
 	return true;
 }

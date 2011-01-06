@@ -78,7 +78,6 @@ private:
 	Technique m_curTechnique;
 
 	ShaderMacro m_shaderMacro;
-	RenderStateId m_renderStateId;
 	bool m_forceWireframe;
 
 	DepthStencilDesc m_depthStencilDesc;

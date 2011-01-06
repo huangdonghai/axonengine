@@ -112,7 +112,7 @@ void dx9CreateTexture2D(phandle_t h, TexFormat format, int width, int height, in
 	D3DPOOL d3dpool = D3DPOOL_MANAGED;
 	DWORD d3dusage = 0;
 
-	if (flags & Texture::IF_RenderTarget) {
+	if (flags & Texture::InitFlag_RenderTarget) {
 		d3dpool = D3DPOOL_DEFAULT;
 		if (format.isDepth()) {
 			d3dusage = D3DUSAGE_DEPTHSTENCIL;
@@ -121,7 +121,7 @@ void dx9CreateTexture2D(phandle_t h, TexFormat format, int width, int height, in
 		}
 	}
 
-	if (flags & Texture::IF_AutoGenMipmap) {
+	if (flags & Texture::InitFlag_AutoGenMipmap) {
 		d3dusage |= D3DUSAGE_AUTOGENMIPMAP;
 
 		bool m_hardwareGenMipmap = g_renderDriverInfo.autogenMipmapSupports[d3dformat];
@@ -240,7 +240,7 @@ void dx9GenerateMipmap(phandle_t h)
 	V(obj->UnlockRect(0));
 
 	Handle dum;
-	dx9CreateTexture2D(&dum, TexFormat::BGRA8, surfdesc.Width, surfdesc.Height, Texture::IF_AutoGenMipmap);
+	dx9CreateTexture2D(&dum, TexFormat::BGRA8, surfdesc.Width, surfdesc.Height, Texture::InitFlag_AutoGenMipmap);
 	sUploadTexture(&dum, 0, lockedRect.pBits, surfdesc.Format, 0);
 
 	LPDIRECT3DTEXTURE9 dummyobj = dum.castTo<LPDIRECT3DTEXTURE9>();

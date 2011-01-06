@@ -111,9 +111,9 @@ bool MaterialDecl::tryLoad(const std::string &name)
 		} else if (attrname == "shader") {
 			m_shaderName = attr->Value();
 		} else if (attrname == "twosided") {
-			if (attr->IntValue()) m_renderStateId.twoSided = true;
+			if (attr->IntValue()) m_twoSided = true;
 		} else if (attrname == "wireframed") {
-			if (attr->IntValue()) m_renderStateId.wireframed = true;
+			if (attr->IntValue()) m_wireframed = true;
 		} else if (attrname == "physicsHelper") {
 			m_flags.set(Flag_PhysicsHelper, attr->IntValue() ? true : false);
 		} else if (attrname == "diffuse") {
@@ -150,9 +150,9 @@ bool MaterialDecl::tryLoad(const std::string &name)
 						Errorf("%s: map not set", __func__);
 					m_textures[maptype]->file = attr->Value();
 				} else if (attr->NameTStr() == "clamp") {
-					m_textures[maptype]->clampToBorder = !!attr->IntValue();
+					m_textures[maptype]->desc.clampMode = SamplerDesc::ClampMode_Border;
 				} else if (attr->NameTStr() == "clampToEdge") {
-					m_textures[maptype]->clampToEdge = !!attr->IntValue();
+					m_textures[maptype]->desc.clampMode = SamplerDesc::ClampMode_Clamp;
 				}
 			}
 

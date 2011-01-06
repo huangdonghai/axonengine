@@ -19,6 +19,12 @@ Texture::ExistDict Texture::m_existDict;
 // class Texture
 //--------------------------------------------------------------------------
 
+Texture::Texture(const std::string &name)
+{
+	FixedString key = normalizeKey(name);
+	m_resource = TextureResource::findResource(key, InitFlag_Default);
+}
+
 Texture::Texture(const std::string &name, InitFlags flags/*=0*/)
 {
 	FixedString key = normalizeKey(name);
