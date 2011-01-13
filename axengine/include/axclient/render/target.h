@@ -77,9 +77,9 @@ private:
 	Handle m_wndId;
 	std::string m_name;
 
+	RenderTarget *m_lightBuffer; // reuse as copied SceneColor
 	RenderTarget *m_depthBuffer;
 	RenderTarget *m_geoBuffer;
-	RenderTarget *m_lightBuffer; // reuse as copied SceneColor
 	RenderTarget *m_sceneBuffer;
 };
 
