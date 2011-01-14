@@ -376,8 +376,9 @@
 					>
 					<Tool
 						Name="build-axon-fx"
-						VPPROFILE="gp4vp"
-						FPPROFILE="gp4fp"
+						AdditionalOptions=""
+						VPPROFILE="glslv"
+						FPPROFILE="glslf"
 						VSPROFILE="vs_3_0"
 						PSPROFILE="ps_3_0"
 					/>

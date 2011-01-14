@@ -1422,6 +1422,58 @@
 				</FileConfiguration>
 			</File>
 		</Filter>
+		<Filter
+			Name="dx11"
+			>
+			<File
+				RelativePath="..\..\..\src\axclient\dx11\dx11_api.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\axclient\dx11\dx11_api.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\axclient\dx11\dx11_driver.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\axclient\dx11\dx11_driver.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\axclient\dx11\dx11_private.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\axclient\dx11\dx11_private.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\axclient\dx11\dx11_shader.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\axclient\dx11\dx11_shader.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\axclient\dx11\dx11_state.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\axclient\dx11\dx11_state.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\axclient\dx11\dx11_window.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\axclient\dx11\dx11_window.h"
+				>
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>
