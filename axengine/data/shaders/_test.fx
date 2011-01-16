@@ -34,9 +34,12 @@ VertexOut VP_main(VertexIn IN) {
     return OUT;
 }
 
+//Texture2DArray s_testArrayTex;
+sampler2DARRAY s_testArray;
+
 /********* pixel shaders ********/
 float4 FP_main(VertexOut IN) : COLOR0 {
-	return g_layerScale.xyxy;
+	return g_layerScale.xyxy * tex2DARRAY(s_testArray, g_layerScale.xyy);
 }
 
 //////////////////////////////////////////////////////////////////////
