@@ -412,11 +412,15 @@ void dx9DeleteRasterizerState(phandle_t h)
 }
 #endif
 
-static void dx9SetRenderTarget(int index, phandle_t h)
+inline static IDirect3DSurface9 *getSurface(phandle_t h)
 {
+	if (!h || !*h) return 0;
+
 	IUnknown *unknown = h->castTo<IUnknown *>();
 
-	if (!unknown) return;
+	if (!unknown)
+		return 0;
+
 	IDirect3DTexture9 *texture = 0;
 	unknown->QueryInterface(IID_IDirect3DBaseTexture9, (void **)&texture);
 
@@ -427,15 +431,29 @@ static void dx9SetRenderTarget(int index, phandle_t h)
 		DX9_Window *window = h->castTo<DX9_Window *>();
 		surface = window->getSurface();
 	}
-	AX_ASSERT(surface);
+
+	return surface;
+}
+
+static void dx9SetRenderTarget(int index, phandle_t h)
+{
+	IDirect3DSurface9 *surface = getSurface(h);
 	dx9_device->SetRenderTarget(index, surface);
 	SAFE_RELEASE(surface);
 }
 
 static void dx9SetDepthStencil(phandle_t h)
 {
-	if (*h) {
-//		dx9_device->SetDepthStencilSurface();
+	IDirect3DSurface9 *surface = getSurface(h);
+	dx9_device->SetDepthStencilSurface(surface);
+	SAFE_RELEASE(surface);
+}
+
+static void dx9SetTargetSet(phandle_t targetSet[RenderTargetSet::MaxTarget])
+{
+	dx9SetDepthStencil(targetSet[0]);
+	for (int i = 0; i < RenderTargetSet::MaxColorTarget; i++) {
+		dx9SetRenderTarget(i, targetSet[i-1]);
 	}
 }
 
@@ -646,6 +664,8 @@ void dx9AssignRenderApi()
 	RenderApi::createRasterizerState = &dx9CreateRasterizerState;
 	RenderApi::deleteRasterizerState = &dx9DeleteRasterizerState;
 #endif
+	RenderApi::setTargetSet = &dx9SetTargetSet;
+
 	RenderApi::setShader = &dx9SetShader;
 	RenderApi::setConstBuffer = &dx9SetConstBuffer;
 	RenderApi::setParameters = &dx9SetParameters;
