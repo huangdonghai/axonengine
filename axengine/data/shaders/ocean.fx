@@ -197,7 +197,7 @@ half4 FP_main(VertexOut IN) : COLOR {
 
 	IN.screenTc.xyz /= IN.screenTc.w;
 
-	float zscene = tex2D(g_geoBuffer, IN.screenTc.xy).w;
+	float zscene = tex2D(g_rt1, IN.screenTc.xy).w;
 
 	float3 deferredWorldPos = g_cameraPos.xyz + viewdir / IN.screenTc.w * zscene;
 
@@ -219,12 +219,12 @@ half4 FP_main(VertexOut IN) : COLOR {
 
 	float2 offsetTc = IN.screenTc.xy + offset.xy * factor2;
 
-	float offsetW = tex2D(g_geoBuffer, offsetTc).w;
+	float offsetW = tex2D(g_rt1, offsetTc).w;
 
 	half refrSoft = saturate((zscene - IN.screenTc.w) * 0.1 + 0.1);
 	float2 refrOffset = offset.xy * refrSoft;
 	float2 reflOffset = refrOffset;
-	float refrDepth = tex2D(g_geoBuffer, IN.screenTc.xy + refrOffset).w;
+	float refrDepth = tex2D(g_rt1, IN.screenTc.xy + refrOffset).w;
 
 	refrOffset *= refrDepth > IN.screenTc.w;
 

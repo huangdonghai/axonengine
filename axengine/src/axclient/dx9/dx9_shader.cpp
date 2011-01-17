@@ -43,8 +43,11 @@ static SamplerParam s_materialTextureNames[] = {
 };
 
 static SamplerParam s_globalTextureNames[] = {
-	GlobalTextureId::GeoBuffer, "g_geoBuffer",
-	GlobalTextureId::LightBuffer, "g_lightBuffer",
+	GlobalTextureId::RtDepth, "g_rtDepth",
+	GlobalTextureId::Rt0, "g_rt0",
+	GlobalTextureId::Rt1, "g_rt1",
+	GlobalTextureId::Rt2, "g_rt2",
+	GlobalTextureId::Rt3, "g_rt3",
 	GlobalTextureId::SceneColor, "g_sceneColor",
 };
 

@@ -33,9 +33,11 @@ void (*RenderApi::deleteDepthStencilState)(phandle_t h);
 
 void (*RenderApi::createRasterizerState)(phandle_t h, const RasterizerDesc &src);
 void (*RenderApi::deleteRasterizerState)(phandle_t h);
-#endif
 void (*RenderApi::setRenderTarget)(int index, phandle_t h);
 void (*RenderApi::setDepthStencil)(phandle_t h);
+#endif
+void (*RenderApi::setTargetSet)(phandle_t targetSet[RenderTargetSet::MaxTarget]);
+
 
 void (*RenderApi::setViewport)(const Rect &rect, const Vector2 & depthRange);
 void (*RenderApi::setScissorRect)(const Rect &scissorRect);
@@ -465,11 +467,29 @@ void ApiWrap::deleteRasterizerState(phandle_t h)
 	addObjectDeletion(RenderApi::deleteRasterizerState, h);
 }
 #endif
+
+void ApiWrap::setTargetSet(const RenderTargetSet &targetSet)
+{
+	phandle_t *handles = allocType<phandle_t>(RenderTargetSet::MaxTarget);
+
+	if (targetSet.m_depthTarget)
+		handles[0] = targetSet.m_depthTarget->getPHandle();
+	else
+		handles[0] = 0;
+
+	for (int i=0; i<RenderTargetSet::MaxColorTarget; i++) {
+		if (targetSet.m_colorTargets[i])
+			handles[i+1] = targetSet.m_colorTargets[i]->getPHandle();
+		else
+			handles[i+1] = 0;
+	}
+	sAllocCommand(RenderApi::setTargetSet).args(handles);
+}
+
 void ApiWrap::addObjectDeletion(delete_func_t func, phandle_t h)
 {
-	if (m_numObjectDeletions >= MAX_DELETE_COMMANDS) {
+	if (m_numObjectDeletions >= MAX_DELETE_COMMANDS)
 		Errorf("overflowed");
-	}
 
 	m_objectDeletions[m_numObjectDeletions].func = func;
 	m_objectDeletions[m_numObjectDeletions].handle = h;

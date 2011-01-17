@@ -22,21 +22,25 @@ RenderCamera::RenderCamera()
 	m_reflectionPlane.normal().normalize();
 }
 
-RenderCamera::~RenderCamera() {
+RenderCamera::~RenderCamera()
+{
 }
 
 
-void RenderCamera::setTarget(RenderTarget *target) {
+void RenderCamera::setTarget(RenderTarget *target)
+{
 	m_target = target;
 	calcViewPort();
 }
 
-RenderTarget *RenderCamera::getTarget() const {
+RenderTarget *RenderCamera::getTarget() const
+{
 	return m_target;
 }
 
 
-void RenderCamera::setOrigin(const Vector3 &view_org) {
+void RenderCamera::setOrigin(const Vector3 &view_org)
+{
 	if (m_viewOrg == view_org)
 		return;
 
@@ -46,11 +50,13 @@ void RenderCamera::setOrigin(const Vector3 &view_org) {
 	calcFrustum();
 }
 
-const Vector3 &RenderCamera::getOrigin() const {
+const Vector3 &RenderCamera::getOrigin() const
+{
 	return m_viewOrg;
 }
 
-void RenderCamera::setViewRect(const Rect &view_rect) {
+void RenderCamera::setViewRect(const Rect &view_rect)
+{
 	if (m_viewRect == view_rect)
 		return;
 
@@ -60,12 +66,14 @@ void RenderCamera::setViewRect(const Rect &view_rect) {
 	calcFrustum();
 }
 
-const Rect &RenderCamera::getViewRect() const {
+const Rect &RenderCamera::getViewRect() const
+{
 	return m_viewRect;
 }
 
 
-void RenderCamera::setViewAxis(const Matrix3 &axis) {
+void RenderCamera::setViewAxis(const Matrix3 &axis)
+{
 	if (m_viewAxis == axis)
 		return;
 
@@ -74,19 +82,22 @@ void RenderCamera::setViewAxis(const Matrix3 &axis) {
 	calcFrustum();
 }
 
-void RenderCamera::setViewAngles(const Angles &angles) {
+void RenderCamera::setViewAngles(const Angles &angles)
+{
 	m_viewAxis = angles.toMatrix3();
 	calcViewMatrix();
 	calcFrustum();
 }
 
 
-const Matrix3 &RenderCamera::getViewAxis() const {
+const Matrix3 &RenderCamera::getViewAxis() const
+{
 	return m_viewAxis;
 }
 
 
-void RenderCamera::setFov(float fov_x, float fov_y) {
+void RenderCamera::setFov(float fov_x, float fov_y)
+{
 	m_fovX = fov_x;
 	m_fovY = fov_y;
 	m_znear = r_znearMin.getFloat();
@@ -107,22 +118,26 @@ void RenderCamera::setFov(float fov_x, float fov_y, float znear, float zfar)
 	calcFrustum();
 }
 
-float RenderCamera::getFovX() const {
+float RenderCamera::getFovX() const
+{
 	return m_fovX;
 }
 
 
-void RenderCamera::setTime(double time) {
+void RenderCamera::setTime(double time)
+{
 	m_frameTime = time - m_time;
 	m_time = time;
 }
 
-double RenderCamera::getTime() const {
+double RenderCamera::getTime() const
+{
 	return m_time;
 }
 
 
-void RenderCamera::setOrtho(float width, float height, float depth) {
+void RenderCamera::setOrtho(float width, float height, float depth)
+{
 	m_isOrthoProjection = true;
 
 	m_left = -width * 0.5f;
@@ -136,7 +151,8 @@ void RenderCamera::setOrtho(float width, float height, float depth) {
 	calcFrustum();
 }
 
-void RenderCamera::setOrtho(float left, float right, float bottom, float top, float zNear, float zFar) {
+void RenderCamera::setOrtho(float left, float right, float bottom, float top, float zNear, float zFar)
+{
 	m_isOrthoProjection = true;
 	m_left = left;
 	m_right = right;
@@ -150,7 +166,8 @@ void RenderCamera::setOrtho(float left, float right, float bottom, float top, fl
 }
 
 
-void RenderCamera::setOverlay(float left, float top, float width, float height) {
+void RenderCamera::setOverlay(float left, float top, float width, float height)
+{
 	m_viewOrg.x = width * 0.5f;
 	m_viewOrg.y = height * 0.5f;
 	m_viewOrg.z = 0;
@@ -177,12 +194,14 @@ void RenderCamera::setOverlay(float left, float top, float width, float height) 
 	calcFrustum();
 }
 
-void RenderCamera::setOverlay(const Rect &rect) {
+void RenderCamera::setOverlay(const Rect &rect)
+{
 	setOverlay(rect.x, rect.y, rect.width, rect.height);
 }
 
 
-void RenderCamera::setPersOverlay(const Rect &rect, float fov) {
+void RenderCamera::setPersOverlay(const Rect &rect, float fov)
+{
 	m_viewOrg.x = rect.width * 0.5f;
 	m_viewOrg.y = rect.height * 0.5f;
 	m_viewOrg.z = - m_viewOrg.x * tan(fov * 0.5f * AX_D2R);
@@ -232,7 +251,7 @@ Vector3 RenderCamera::worldToScreen(const Vector3 &in) const
 
 	out.x = m_viewport[0] + (1 + out.x) * m_viewport[2] / 2;
 	out.y = m_viewport[1] + (1 + out.y) * m_viewport[3] / 2;
-	out.y = m_clientSize.y - out.y;
+	out.y = m_clientSize.height - out.y;
 
 	return out.xyz();
 }
@@ -241,7 +260,7 @@ Vector3 RenderCamera::screenToWorld(const Vector3 &in) const
 {
 	Vector4 vert(in, 1);
 
-	vert.y = m_clientSize.y - vert.y;
+	vert.y = m_clientSize.height - vert.y;
 
 	vert.x = (vert.x - m_viewport[0]) * 2 / m_viewport[2] - 1.0;
 	vert.y = (vert.y - m_viewport[1]) * 2 / m_viewport[3] - 1.0;
@@ -293,7 +312,8 @@ RenderCamera RenderCamera::createSelectionCamera(const Rect &region) const
 }
 
 
-void RenderCamera::calcViewMatrix() {
+void RenderCamera::calcViewMatrix()
+{
 	// calculate model view matrix
 	static Matrix4 transform(
 		0,  0, -1,  0,
@@ -314,7 +334,8 @@ void RenderCamera::calcViewMatrix() {
 	}
 }
 
-void RenderCamera::calcProjectionMatrix() {
+void RenderCamera::calcProjectionMatrix()
+{
 	static Matrix4 transform(
 		0,  0, -1,  0,
 		-1,  0,  0,  0,
@@ -357,26 +378,26 @@ void RenderCamera::calcProjectionMatrix() {
 	}
 }
 
-void RenderCamera::calcViewPort() {
+void RenderCamera::calcViewPort()
+{
 	// calculate viewport
-	Rect rect = m_target->getRect();
-
-	m_clientSize.set(rect.width, rect.height);
+	m_clientSize = m_target->getSize();
 	m_viewport[0] = m_viewRect.x;
 
 	if (m_viewRect.y < 0)
 		m_viewport[1] = - m_viewRect.y;
 	else
-		m_viewport[1] = m_clientSize.y - m_viewRect.y - m_viewRect.height;
+		m_viewport[1] = m_clientSize.height - m_viewRect.y - m_viewRect.height;
 
 	m_viewport[2] = m_viewRect.width;
 	m_viewport[3] = m_viewRect.height;
 
 	m_viewportDX = m_viewport;
-	m_viewportDX.y = m_clientSize.y - m_viewportDX.y - m_viewRect.height;
+	m_viewportDX.y = m_clientSize.height - m_viewportDX.y - m_viewRect.height;
 }
 
-void RenderCamera::calcFrustum() {
+void RenderCamera::calcFrustum()
+{
 	m_vp = m_projMatrix * m_viewMatrix;
 	m_vpInverse = m_vp.getInverse();
 
@@ -388,13 +409,15 @@ void RenderCamera::calcFrustum() {
 	return;
 }
 
-RenderCamera RenderCamera::createMirrorCamera(const Plane &mirror_plane) const {
+RenderCamera RenderCamera::createMirrorCamera(const Plane &mirror_plane) const
+{
 	RenderCamera result = *this;
 	result.enableReflection(mirror_plane);
 	return result;
 }
 
-void RenderCamera::enableReflection(const Plane &mirror_plane) {
+void RenderCamera::enableReflection(const Plane &mirror_plane)
+{
 	m_isReflection = true;
 	m_reflectionPlane = mirror_plane;
 
@@ -403,7 +426,8 @@ void RenderCamera::enableReflection(const Plane &mirror_plane) {
 	calcFrustum();
 }
 
-void RenderCamera::disableReflection() {
+void RenderCamera::disableReflection()
+{
 	m_isReflection = false;
 
 	// recalc matrix
@@ -413,7 +437,8 @@ void RenderCamera::disableReflection() {
 	calcFrustum();
 }
 
-bool RenderCamera::isReflectionEnabled() {
+bool RenderCamera::isReflectionEnabled()
+{
 	return m_isReflection;
 }
 
@@ -449,7 +474,8 @@ void RenderCamera::getTrapezoidalMatrix(Matrix4 &lightMatrix, Matrix4 &tsmMatrix
 //			0 2
 // order
 //
-void RenderCamera::calcPointsAlongZdist(Vector3 result[4], float zdist) const {
+void RenderCamera::calcPointsAlongZdist(Vector3 result[4], float zdist) const
+{
 	if (m_isOrthoProjection) {
 		Errorf("eee");
 	}
@@ -465,21 +491,25 @@ void RenderCamera::calcPointsAlongZdist(Vector3 result[4], float zdist) const {
 }
 
 
-float RenderCamera::calcPerspectiveZ(float cameraZ) const {
+float RenderCamera::calcPerspectiveZ(float cameraZ) const
+{
 	return (m_zfar + m_znear) / (m_zfar - m_znear) + 1 / cameraZ *(-2 * m_zfar * m_znear) /(m_zfar - m_znear);
 }
 
-inline float sgn(float a) {
+inline float sgn(float a)
+{
 	if (a > 0.0F) return (1.0F);
 	if (a < 0.0F) return (-1.0F);
 	return (0.0F);
 }
 
-inline float Dot(Vector4 v1, Vector4 v2) {
+inline float Dot(Vector4 v1, Vector4 v2)
+{
 	return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z + v1.w * v2.w;
 }
 
-static void ModifyProjectionMatrix(const Vector4 &clipPlane, float matrix[16]) {
+static void ModifyProjectionMatrix(const Vector4 &clipPlane, float matrix[16])
+{
 	//		float       matrix[16];
 	Vector4    q;
 

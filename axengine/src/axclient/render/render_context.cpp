@@ -9,11 +9,6 @@ RenderContext::RenderContext()
 
 	g_bufferManager = new BufferManager();
 	m_defaultMat = new Material("_debug");
-
-	m_curDepthBuffer = 0;
-	m_curGeoBuffer = 0;
-	m_curLightBuffer = 0; // reuse as copied SceneColor
-	m_curSceneBuffer = 0;
 }
 
 RenderContext::~RenderContext()
@@ -34,8 +29,8 @@ void RenderContext::issueFrame(RenderFrame *rq)
 
 	beginFrame();
 
-	m_curFrameWindow = rq->getTarget();
-	AX_ASSERT(m_curFrameWindow->isWindow());
+	m_curWindow = rq->getTarget();
+	AX_ASSERT(m_curWindow->isWindow());
 	// TODO: bind target
 
 	int view_count = rq->getSceneCount();
@@ -109,16 +104,8 @@ void RenderContext::drawScene_world(RenderScene *scene, const RenderClearer &cle
 	int width = rect.width;
 	int height = rect.height;
 
-	if (1) {
-		m_curGeoBuffer = m_curFrameWindow->getGeoBuffer();
-		AX_ST(GeoBuffer, m_curGeoBuffer->getTexture());
-
-		m_curLightBuffer = m_curFrameWindow->getLightBuffer();
-		AX_ST(LightBuffer, m_curLightBuffer->getTexture());
-
-	} else {
-		m_curWorldRt = 0;
-	}
+	AX_ST(RtDepth, m_curWindow->m_rtDepth->getTexture());
+	AX_ST(Rt0, m_curWindow->m_rt0->getTexture());
 
 	// set exposure
 	float exposure = scene->exposure;
@@ -207,7 +194,7 @@ void RenderContext::drawScene_noworld(RenderScene *scene, const RenderClearer &c
 	BEGIN_PIX("DrawNoworld");
 	m_curTechnique = Technique::Main;
 
-	setupScene(scene, &clearer, scene->target);
+	setupScene(scene, &clearer, 0);
 
 	for (int i = 0; i < scene->numInteractions; i++) {
 		drawInteraction(scene->interactions[i]);
@@ -240,7 +227,12 @@ void RenderContext::drawPass_gfill(RenderScene *scene)
 	clearer.clearDepth(true);
 	clearer.clearColor(true, Rgba::Zero);
 
-	setupScene(scene, &clearer, m_curGeoBuffer);
+	m_targetSet.m_depthTarget = 0;
+	m_targetSet.m_colorTargets[0] = m_curWindow->m_rt0;
+	m_targetSet.m_colorTargets[1] = m_curWindow->m_rt1;
+	m_targetSet.m_colorTargets[2] = m_curWindow->m_rt2;
+	m_targetSet.m_colorTargets[3] = m_curWindow->m_rt3;
+	setupScene(scene, &clearer, 0);
 
 	for (int i = 0; i < scene->numInteractions; i++) {
 		drawInteraction(scene->interactions[i]);
@@ -259,7 +251,13 @@ void RenderContext::drawPass_overlay(RenderScene *scene)
 	RenderCamera camera = scene->camera;
 	camera.setOverlay(camera.getViewRect());
 
-	setupScene(scene, nullptr, nullptr, &camera);
+	m_targetSet.m_depthTarget = 0;
+	m_targetSet.m_colorTargets[0] = m_curWindow->m_rt0;
+	m_targetSet.m_colorTargets[1] = 0;
+	m_targetSet.m_colorTargets[2] = 0;
+	m_targetSet.m_colorTargets[3] = 0;
+
+	setupScene(scene, 0, &camera);
 
 	for (int i = 0; i < scene->numOverlayPrimitives; i++) {
 		drawPrimitive(scene->overlayPrimitives[i]);
@@ -284,7 +282,13 @@ void RenderContext::drawPass_composite(RenderScene *scene)
 
 	m_curTechnique = Technique::Main;
 
-	setupScene(scene, 0, scene->target);
+	m_targetSet.m_depthTarget = m_curWindow->m_rtDepth;
+	m_targetSet.m_colorTargets[0] = m_curWindow->m_rt0;
+	m_targetSet.m_colorTargets[1] = 0;
+	m_targetSet.m_colorTargets[2] = 0;
+	m_targetSet.m_colorTargets[3] = 0;
+
+	setupScene(scene, 0, 0);
 
 	issueVisQuery();
 
@@ -342,7 +346,13 @@ void RenderContext::drawPass_shadowGen(RenderScene *scene)
 		RenderClearer clearer;
 		clearer.clearDepth(true);
 
-		setupScene(scene, 0);
+		m_targetSet.m_depthTarget = scene->target;
+		m_targetSet.m_colorTargets[0] = 0;
+		m_targetSet.m_colorTargets[1] = 0;
+		m_targetSet.m_colorTargets[2] = 0;
+		m_targetSet.m_colorTargets[3] = 0;
+
+		setupScene(scene, 0, 0);
 		g_apiWrap->clear(clearer);
 
 #if 0
@@ -383,10 +393,13 @@ void RenderContext::drawPass_lights(RenderScene *scene)
 
 	clearer.clearColor(true, Rgba::Zero);
 
-	if (r_showLightBuf.getBool())
-		m_curLightBuffer = 0;
+	m_targetSet.m_depthTarget = 0;
+	m_targetSet.m_colorTargets[0] = m_curWindow->m_rt0;
+	m_targetSet.m_colorTargets[1] = 0;
+	m_targetSet.m_colorTargets[2] = 0;
+	m_targetSet.m_colorTargets[3] = 0;
 
-	setupScene(m_curWorldScene, &clearer, m_curLightBuffer);
+	setupScene(m_curWorldScene, &clearer, 0);
 	clearer.clearColor(false);
 
 	for (int i = 0; i < scene->numLights; i++) {
@@ -416,7 +429,12 @@ void RenderContext::drawScene_worldSub(RenderScene *scene)
 	clear.clearColor(true, scene->clearColor);
 
 	// no shadow, no light, no fog etc. direct composite
-	setupScene(scene, &clear);
+	m_targetSet.m_depthTarget = 0;
+	m_targetSet.m_colorTargets[0] = scene->target;
+	m_targetSet.m_colorTargets[1] = 0;
+	m_targetSet.m_colorTargets[2] = 0;
+	m_targetSet.m_colorTargets[3] = 0;
+	setupScene(scene, &clear, 0);
 
 	for (int i = 0; i < scene->numInteractions; i++) {
 		drawInteraction(scene->interactions[i]);
@@ -494,7 +512,7 @@ void RenderContext::drawInteraction(Interaction *ia)
 	prim->draw(m_curTechnique);
 }
 
-void RenderContext::setupScene(RenderScene *scene, const RenderClearer *clearer /*= 0*/, RenderTarget *target /*= 0*/, RenderCamera *camera /*= 0*/)
+void RenderContext::setupScene(RenderScene *scene, const RenderClearer *clearer, RenderCamera *camera)
 {
 
 }

@@ -71,7 +71,7 @@ half4 FP_main(ShadowVertexOut IN) : COLOR {
 	half4 result = 0;
 
 	// get gbuffer
-	half4 gbuffer = tex2Dproj(g_geoBuffer, IN.screenTc);
+	half4 gbuffer = tex2Dproj(g_rt1, IN.screenTc);
 
 	float3 worldpos = g_cameraPos.xyz + IN.viewDir.xyz / IN.viewDir.w * gbuffer.a;
 

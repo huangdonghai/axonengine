@@ -26,8 +26,6 @@ EditorFrame::EditorFrame(QWidget *parent, View *view)
 	setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 	setFocusPolicy(Qt::ClickFocus);
 
-	m_oldWId = winId();
-
 	m_editorView->bindFrame(this);
 
 	m_keymap[Qt::Key_Escape]		= InputKey::Escape;                // misc keys
@@ -191,30 +189,26 @@ EditorFrame::~EditorFrame()
 	m_editorView->bindFrame(0);
 }
 
-RenderTarget *EditorFrame::getRenderTarget() {
+RenderTarget *EditorFrame::getRenderTarget()
+{
 	if (m_renderTarget == nullptr) {
-		WId wid = winId();
-		m_oldWId = wid;
-		m_renderTarget = new RenderTarget(Handle(winId()), "EditorFrame");
+		m_renderTarget = new RenderTarget(Handle(winId()), "EditorFrame", getSize());
+	} else {
+		m_renderTarget->updateWindowInfo(Handle(winId()), getSize());
 	}
-
-	WId wid = winId();
-
-	//if (wid != m_oldWId) {
-		m_renderTarget->setWindowHandle(Handle(wid));
-		m_oldWId = wid;
-	//}
 
 	return m_renderTarget;
 }
 
-Rect EditorFrame::getRect() {
+Size EditorFrame::getSize()
+{
 	QSize s = size();
 
-	return Rect(0, 0, s.width(), s.height());
+	return Size(s.width(), s.height());
 }
 
-void EditorFrame::setCursor(CursorType cursor_type) {
+void EditorFrame::setCursor(CursorType cursor_type)
+{
 	switch (cursor_type) {
 	case CursorType::Default:
 		unsetCursor();

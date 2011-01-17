@@ -31,9 +31,9 @@ Texture::Texture(const std::string &name, InitFlags flags/*=0*/)
 	m_resource = TextureResource::findResource(key, flags);
 }
 
-Texture::Texture(const std::string &debugname, TexFormat format, int width, int height, InitFlags flags /*= 0*/)
+Texture::Texture(const std::string &debugname, TexFormat format, const Size &size, InitFlags flags /*= 0*/)
 {
-	m_resource = TextureResource::createResource(debugname, format, width, height, flags);
+	m_resource = TextureResource::createResource(debugname, format, size, flags);
 }
 
 Texture::~Texture()

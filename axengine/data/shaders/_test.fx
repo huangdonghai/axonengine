@@ -36,6 +36,7 @@ VertexOut VP_main(VertexIn IN) {
 
 //Texture2DArray s_testArrayTex;
 sampler2DARRAY s_testArray;
+//StructuredBuffer<int> triIndexes;
 
 /********* pixel shaders ********/
 float4 FP_main(VertexOut IN) : COLOR0 {

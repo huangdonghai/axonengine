@@ -16,6 +16,8 @@ AX_BEGIN_NAMESPACE
 class AX_API RenderTarget
 {
 public:
+	friend class RenderContext;
+
 	enum Type {
 		kWindow, kTexture
 	};
@@ -24,35 +26,23 @@ public:
 		MAX_COLOR_ATTACHMENT = 3,
 	};
 
-	RenderTarget(int width, int height, TexFormat format);
-	RenderTarget(Handle hwnd, const std::string &debugname);
+	RenderTarget(TexFormat format, const Size &size);
+	RenderTarget(Handle hwnd, const std::string &debugname, const Size &size);
 	~RenderTarget();
 
 	Type getType() const { return m_type; }
-	Rect getRect() const;
+	Size getSize() const { return m_size; }
 	bool isWindow() const { return m_type == kWindow; }
 	bool isTexture() const { return m_type == kTexture; }
 	bool isColorFormat() const { return m_format.isColor(); }
 	bool isDepthFormat() const { return m_format.isDepth(); }
 	bool isStencilFormat() const { return m_format.isStencil(); }
 
-	// for render texture target
-	void attachDepth(RenderTarget *depth);
-	RenderTarget *getDepthAttached() const { return m_depthTarget; }
-
 	Texture *getTexture() { if (isTexture()) return m_texture; else return 0; }
 
-	void attachColor(int index, RenderTarget *c);
-	void detachColor(int index);
-	void detachAllColor();
-	RenderTarget *getColorAttached(int index) const;
-
 	// since qt maybe change window id, so we need this function
-	void setWindowHandle(Handle newId);
+	void updateWindowInfo(Handle newId, const Size &size);
 	Handle getWindowHandle() { return m_wndId; }
-
-	RenderTarget *getGeoBuffer() const { return m_geoBuffer; }
-	RenderTarget *getLightBuffer() const { return m_lightBuffer; }
 
 	phandle_t getPHandle()
 	{
@@ -66,21 +56,29 @@ private:
 	Texture *m_texture;
 
 	TexFormat m_format;
-	int m_width, m_height;
+	Size m_size;
 
 	int m_boundIndex;
-
-	RenderTarget *m_depthTarget;
-	RenderTarget *m_colorAttached[MAX_COLOR_ATTACHMENT];
 
 	// for window
 	Handle m_wndId;
 	std::string m_name;
 
-	RenderTarget *m_lightBuffer; // reuse as copied SceneColor
-	RenderTarget *m_depthBuffer;
-	RenderTarget *m_geoBuffer;
-	RenderTarget *m_sceneBuffer;
+	RenderTarget *m_rtDepth; // depth stencil
+	RenderTarget *m_rt0; // hdr color accum
+	RenderTarget *m_rt1; // normal.xyz, specular power
+	RenderTarget *m_rt2; // diffuse.xyz, specular color
+	RenderTarget *m_rt3; // motion.xy, ssao, skyAO
+};
+
+struct RenderTargetSet {
+	enum {
+		MaxColorTarget = 4,
+		MaxTarget = MaxColorTarget + 1
+	};
+
+	RenderTarget *m_depthTarget;
+	RenderTarget *m_colorTargets[MaxColorTarget];
 };
 
 class RenderWorld;
@@ -90,7 +88,7 @@ struct RenderScene;
 
 class AX_API ReflectionMap {
 public:
-	ReflectionMap(RenderWorld *world, RenderEntity *actor, Primitive *prim, int width, int height);
+	ReflectionMap(RenderWorld *world, RenderEntity *actor, Primitive *prim, const Size &size);
 	~ReflectionMap();
 
 	void update(RenderScene *qscene);

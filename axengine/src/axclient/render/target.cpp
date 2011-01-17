@@ -12,40 +12,35 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-RenderTarget::RenderTarget(int width, int height, TexFormat format)
+RenderTarget::RenderTarget(TexFormat format, const Size &size)
 {
 	m_type = kTexture;
 	m_boundIndex = -1;
-	m_depthTarget = nullptr;
-	TypeZeroArray(m_colorAttached);
 
-	m_width = width;
-	m_height = height;
+	m_size = size;
 	m_format = format;
 
-	m_geoBuffer = 0;
-	m_lightBuffer = 0;
+	m_rtDepth = m_rt0 = m_rt1 = m_rt2 = m_rt3 = 0;
 
 	std::string texname;
-	StringUtil::sprintf(texname, "_render_target_%d_%d_%d", m_width, m_height, g_system->generateId());
+	StringUtil::sprintf(texname, "_render_target_%d_%d_%d", m_size.width, m_size.height, g_system->generateId());
 
-	m_texture = new Texture(texname, format, width, height, Texture::InitFlag_RenderTarget);
+	m_texture = new Texture(texname, format, m_size, Texture::InitFlag_RenderTarget);
 }
 
-RenderTarget::RenderTarget(Handle hwnd, const std::string &debugname)
+RenderTarget::RenderTarget(Handle hwnd, const std::string &debugname, const Size &size)
 {
 	m_type = kWindow;
+	m_window = 0;
 	m_wndId = hwnd;
 	m_name = debugname;
 
-	m_width = -1;
-	m_height = -1;
+	m_size = size;
 	m_format = TexFormat::AUTO;
 
-	m_geoBuffer = 0;
-	m_lightBuffer = 0;
+	m_rtDepth = m_rt0 = m_rt1 = m_rt2 = m_rt3 = 0;
 
-	setWindowHandle(hwnd);
+	updateWindowInfo(hwnd, size);
 }
 
 RenderTarget::~RenderTarget()
@@ -54,76 +49,48 @@ RenderTarget::~RenderTarget()
 		g_apiWrap->deleteTexture2D(m_window);
 	} else {
 		g_apiWrap->deleteWindowTarget(m_window);
-		SafeDelete(m_geoBuffer);
-		SafeDelete(m_lightBuffer);
+		SafeDelete(m_rtDepth);
+		SafeDelete(m_rt0);
+		SafeDelete(m_rt1);
+		SafeDelete(m_rt2);
+		SafeDelete(m_rt3);
 	}
 }
 
-Rect RenderTarget::getRect() const
+void RenderTarget::updateWindowInfo(Handle newId, const Size &size)
 {
-	return Rect(0, 0, m_width, m_height);
-}
+	if (!m_window) {
+		g_apiWrap->createWindowTarget(m_window, newId, size.width, size.height);
+	} else {
+		g_apiWrap->updateWindowTarget(m_window, newId, size.width, size.height);
+	}
 
-void RenderTarget::attachDepth(RenderTarget *depth)
-{
-	AX_ASSERT(depth->isTexture());
-	AX_ASSERT(depth->isDepthFormat());
-	m_depthTarget = depth;
-}
-
-void RenderTarget::attachColor(int index, RenderTarget *c)
-{
-	AX_ASSERT(index < MAX_COLOR_ATTACHMENT);
-	m_colorAttached[index] = c;
-}
-
-void RenderTarget::detachColor(int index)
-{
-	AX_ASSERT(index < MAX_COLOR_ATTACHMENT);
-	m_colorAttached[index] = 0;
-}
-
-void RenderTarget::detachAllColor()
-{
-	TypeZeroArray(m_colorAttached);
-}
-
-RenderTarget *RenderTarget::getColorAttached(int index) const
-{
-	AX_ASSERT(index < MAX_COLOR_ATTACHMENT);
-	return m_colorAttached[index];
-}
-
-void RenderTarget::setWindowHandle(Handle newId)
-{
-	Rect rect = RenderSystem::getWindowRect(newId);
-
-	if (rect.width == m_width || rect.height == m_height || newId == m_wndId)
+	if (m_size == size)
 		return;
 
-	if (m_width == -1) {
-		g_apiWrap->createWindowTarget(m_window, newId, rect.width, rect.height);
-	} else {
-		g_apiWrap->updateWindowTarget(m_window, newId, rect.width, rect.height);
-	}
+	m_size = size;
 
-	SafeDelete(m_geoBuffer);
-	SafeDelete(m_lightBuffer);
-	m_geoBuffer = new RenderTarget(rect.width, rect.height, TexFormat::RGBA16F);
-	m_lightBuffer = new RenderTarget(rect.width, rect.height, TexFormat::BGRA8);
+	SafeDelete(m_rtDepth);
+	SafeDelete(m_rt0);
+	SafeDelete(m_rt1);
+	SafeDelete(m_rt2);
+	SafeDelete(m_rt3);
 
-	m_width = rect.width;
-	m_height = rect.height;
+	m_rtDepth = new RenderTarget(g_renderDriverInfo.suggestFormats[RenderDriverInfo::SuggestedFormat_DepthStencilTexture], m_size);
+	m_rt0 = new RenderTarget(g_renderDriverInfo.suggestFormats[RenderDriverInfo::SuggestedFormat_HdrSceneColor], m_size);
+	m_rt1 = new RenderTarget(g_renderDriverInfo.suggestFormats[RenderDriverInfo::SuggestedFormat_SceneColor], m_size);
+	m_rt2 = new RenderTarget(g_renderDriverInfo.suggestFormats[RenderDriverInfo::SuggestedFormat_SceneColor], m_size);
+	m_rt3 = new RenderTarget(g_renderDriverInfo.suggestFormats[RenderDriverInfo::SuggestedFormat_SceneColor], m_size);
 	m_wndId = newId;
 }
 
-ReflectionMap::ReflectionMap(RenderWorld *world, RenderEntity *actor, Primitive *prim, int width, int height)
+ReflectionMap::ReflectionMap(RenderWorld *world, RenderEntity *actor, Primitive *prim, const Size &size)
 {
 	m_world = world;
 	m_actor = actor;
 	m_prim = prim;
 	m_updateFrame = -1;
-	m_target = new RenderTarget(width, height, TexFormat::BGRA8);
+	m_target = new RenderTarget(g_renderDriverInfo.suggestFormats[RenderDriverInfo::SuggestedFormat_HdrSceneColor], size);
 }
 
 ReflectionMap::~ReflectionMap()

@@ -42,7 +42,7 @@ public:
 
 	Texture(const std::string &name);
 	Texture(const std::string &name, InitFlags flags);
-	Texture(const std::string &debugname, TexFormat format, int width, int height, InitFlags flags);
+	Texture(const std::string &debugname, TexFormat format, const Size &size, InitFlags flags);
 	~Texture();
 
 	void uploadSubTexture(const Rect &rect, const void *pixels, TexFormat format);

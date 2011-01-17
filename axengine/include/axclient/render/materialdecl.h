@@ -57,12 +57,8 @@ struct SurfaceType {
 
 struct GlobalTextureId {
 	enum Type {
-		DepthBuffer,
-		GeoBuffer,
-		LightBuffer,
-		SceneColor,
-		ShadowMap,
-
+		RtDepth, Rt0, Rt1, Rt2, Rt3,
+		SceneColor, ShadowMap,
 		MaxType
 	};
 	AX_DECLARE_ENUM(GlobalTextureId);

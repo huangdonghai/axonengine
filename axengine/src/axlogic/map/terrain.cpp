@@ -71,7 +71,7 @@ void MapAlphaBlock::updateTexture()
 		m_texture->initialize(TexFormat::A8, Map::ChunkPixels, Map::ChunkPixels);
 		g_assetManager->addAsset(Asset::kTexture, key, m_texture.get());
 #else
-		m_texture = new Texture(key, AlphaFormat, Map::ChunkPixels, Map::ChunkPixels, Texture::InitFlag_Default);
+		m_texture = new Texture(key, AlphaFormat, Size(Map::ChunkPixels, Map::ChunkPixels), Texture::InitFlag_Default);
 #endif
 		SamplerDesc desc;
 		desc.clampMode = SamplerDesc::ClampMode_Clamp;
@@ -1092,7 +1092,7 @@ void MapZone::initialize(MapTerrain *terrain, int x, int y)
 	m_normalTexture->initialize(TexFormat::BGRA8, Map::ZoneTiles, Map::ZoneTiles, Texture::IF_AutoGenMipmap);
 	g_assetManager->addAsset(Asset::kTexture, texname, m_normalTexture.get());
 #else
-	m_normalTexture = new Texture(texname, TexFormat::BGRA8, Map::ZoneTiles, Map::ZoneTiles, Texture::InitFlag_AutoGenMipmap);
+	m_normalTexture = new Texture(texname, TexFormat::BGRA8, Size(Map::ZoneTiles, Map::ZoneTiles), Texture::InitFlag_AutoGenMipmap);
 #endif
 	m_normalTexture->setClampMode(SamplerDesc::ClampMode_Clamp);
 	// create color texture
@@ -1102,7 +1102,7 @@ void MapZone::initialize(MapTerrain *terrain, int x, int y)
 	m_colorTexture->initialize(TexFormat::DXT1, Map::ZonePixels, Map::ZonePixels, Texture::IF_AutoGenMipmap);
 	g_assetManager->addAsset(Asset::kTexture, texname, m_colorTexture.get());
 #else
-	m_colorTexture = new Texture(texname, TexFormat::DXT1, Map::ZonePixels, Map::ZonePixels, Texture::InitFlag_AutoGenMipmap);
+	m_colorTexture = new Texture(texname, TexFormat::DXT1, Size(Map::ZonePixels, Map::ZonePixels), Texture::InitFlag_AutoGenMipmap);
 #endif
 	m_colorTexture->setClampMode(SamplerDesc::ClampMode_Clamp);
 	m_colorTexture->setFilterMode(SamplerDesc::FilterMode_LinearMipmap);

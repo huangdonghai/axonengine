@@ -205,7 +205,7 @@ private:
 	Matrix4 m_projMatrix;
 	Vector4 m_viewport;
 	Vector4 m_viewportDX;		// viewport for dx. origin at left-upper
-	Point m_clientSize;
+	Size m_clientSize;
 
 	// some cached matrix for fast computation
 	Matrix4 m_vp;				// view-projection matrix

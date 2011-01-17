@@ -93,7 +93,7 @@ void TextureAtlas::initialize(const std::string &name, int chunk_width, int chun
 		m_textures[i]->initialize(format, m_textureSize, m_textureSize);
 		g_assetManager->addAsset(Asset::kTexture, tex_name, m_textures[i]);
 #else
-		m_textures[i] = new Texture(tex_name, format, m_textureSize, m_textureSize, Texture::InitFlag_Default);
+		m_textures[i] = new Texture(tex_name, format, Size(m_textureSize, m_textureSize), Texture::InitFlag_Default);
 #endif
 	}
 

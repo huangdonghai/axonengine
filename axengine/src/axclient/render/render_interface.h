@@ -37,9 +37,11 @@ public:
 
 	static void (*createRasterizerState)(phandle_t h, const RasterizerDesc &src);
 	static void (*deleteRasterizerState)(phandle_t h);
-#endif
+
 	static void (*setRenderTarget)(int index, phandle_t h);
 	static void (*setDepthStencil)(phandle_t h);
+#endif
+	static void (*setTargetSet)(phandle_t targetSet[RenderTargetSet::MaxTarget]);
 
 	static void (*setViewport)(const Rect &rect, const Vector2 & depthRange);
 	static void (*setScissorRect)(const Rect &scissorRect);
@@ -118,9 +120,11 @@ public:
 
 	void createRasterizerState(phandle_t &h, const RasterizerDesc &desc);
 	void deleteRasterizerState(phandle_t h);
-#endif
+
 	void setRenderTarget(int index, phandle_t h);
 	void setDepthStencil(phandle_t h);
+#endif
+	void setTargetSet(const RenderTargetSet &target_set);
 
 	void setViewport(const Rect &rect, const Vector2 & depthRange);
 	void setScissorRect(const Rect &scissorRect);

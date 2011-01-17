@@ -31,7 +31,7 @@ DECL_SAMPLER(sampler2D, g_reflectionMap);
 DECL_SAMPLER(sampler2D, g_lightMap);
 DECL_SAMPLER(sampler2D, g_shadowMap);
 // global
-DECL_SAMPLER(sampler2D, g_geoBuffer);
+DECL_SAMPLER(sampler2D, g_rt1);
 DECL_SAMPLER(sampler2D, g_lightBuffer);
 DECL_SAMPLER(sampler2D, g_sceneColor);
 

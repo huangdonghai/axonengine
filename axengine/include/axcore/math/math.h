@@ -78,7 +78,8 @@ struct Bgr;
 struct Bgra;
 #endif
 
-struct AX_API Math {
+struct AX_API Math
+{
 	enum Constant {
 		IEEE_FLT_MANTISSA_BITS = 23,
 		IEEE_FLT_EXPONENT_BITS = 8,
@@ -137,7 +138,8 @@ struct AX_API Math {
 };
 
 // 1 / sqrt(x)
-inline float Math::rsqrt(float x) {
+inline float Math::rsqrt(float x)
+{
 	long i;
 	float y, r;
 
@@ -149,7 +151,8 @@ inline float Math::rsqrt(float x) {
 	return r;
 }
 
-inline void Math::sincos(float a, float &s, float &c) {
+inline void Math::sincos(float a, float &s, float &c)
+{
 #ifdef _WIN32
 	_asm {
 		fld a
@@ -165,7 +168,8 @@ inline void Math::sincos(float a, float &s, float &c) {
 #endif
 }
 
-inline void Math::sincos16(float a, float &s, float &c) {
+inline void Math::sincos16(float a, float &s, float &c)
+{
 	float t, d;
 
 	const float pi2 = AX_PI * 2.0f;
@@ -195,7 +199,8 @@ inline void Math::sincos16(float a, float &s, float &c) {
 	c = d * (((((-2.605e-07f * t + 2.47609e-05f) * t - 1.3888397e-03f) * t + 4.16666418e-02f) * t - 4.999999963e-01f) * t + 1.0f);
 }
 
-inline void Math::sincos64(float a, double &s, double &c) {
+inline void Math::sincos64(float a, double &s, double &c)
+{
 #ifdef _WIN32
 	_asm {
 		fld a
@@ -211,7 +216,8 @@ inline void Math::sincos64(float a, double &s, double &c) {
 #endif
 }
 
-inline int Math::mapToRange(int v, int l, int h) {
+inline int Math::mapToRange(int v, int l, int h)
+{
 	v = v - l;
 	int len = h - l;
 
@@ -221,11 +227,13 @@ inline int Math::mapToRange(int v, int l, int h) {
 	return len + mod;
 }
 
-inline float Math::d2r(float in) {
+inline float Math::d2r(float in)
+{
 	return in * AX_D2R;
 }
 
-inline float Math::r2d(float in) {
+inline float Math::r2d(float in)
+{
 	return in * AX_R2D;
 }
 
@@ -235,7 +243,8 @@ inline float Math::r2d(float in) {
 * @note isPowerOfTwo(x) == true -> nextPowerOfTwo(x) == x
 * @note nextPowerOfTwo(x) = 2 << log2(x-1)
 */
-inline int Math::nextPowerOfTwo(int x) {
+inline int Math::nextPowerOfTwo(int x)
+{
 	if(!x) return 1;
 	// On modern CPUs this is as fast as using the bsr instruction.
 	x--;
@@ -248,11 +257,13 @@ inline int Math::nextPowerOfTwo(int x) {
 }
 
 /// Return true if @a n is a power of two.
-inline bool Math::isPowerOfTwo(int n) {
+inline bool Math::isPowerOfTwo(int n)
+{
 	return (n & (n-1)) == 0;
 }
 
-inline int Math::countMipmaps(int w, int h, int d) {
+inline int Math::countMipmaps(int w, int h, int d)
+{
 	int mipmap = 0;
 
 	while (w != 1 || h != 1 || d != 1) {
@@ -266,11 +277,13 @@ inline int Math::countMipmaps(int w, int h, int d) {
 }
 
 // 1 -> 1, 2 -> 2, 3 -> 2, 4 -> 4, 5 -> 4, ...
-inline int Math::previousPowerOfTwo(const int v) {
+inline int Math::previousPowerOfTwo(const int v)
+{
 	return nextPowerOfTwo(v + 1) / 2;
 }
 
-inline int Math::nearestPowerOfTwo(const int v) {
+inline int Math::nearestPowerOfTwo(const int v)
+{
 	const int np2 = nextPowerOfTwo(v);
 	const int pp2 = previousPowerOfTwo(v);
 
@@ -282,7 +295,8 @@ inline int Math::nearestPowerOfTwo(const int v) {
 }
 
 // map a value to range [0, width)
-inline int Math::mapToBound(int n, int width) {
+inline int Math::mapToBound(int n, int width)
+{
 	n = n % width;
 	if (n < 0)
 		n += width;
@@ -290,34 +304,41 @@ inline int Math::mapToBound(int n, int width) {
 	return n;
 }
 
-inline int Math::clampByte(int n) {
+inline int Math::clampByte(int n)
+{
 	return clamp<int>(n, 0, 255);
 }
 
-inline int Math::clampSbyte(int n) {
+inline int Math::clampSbyte(int n)
+{
 	return clamp<int>(n, -128, 127);
 }
 
-inline int Math::clampUshort(int n) {
+inline int Math::clampUshort(int n)
+{
 	return clamp<int>(n, 0, 0xffff);
 }
 
-inline float Math::saturate(float f) {
+inline float Math::saturate(float f)
+{
 	return clamp(f, 0.0f, 1.0f);
 }
 
 template<typename T>
-T Math::abs(T x) {
+T Math::abs(T x)
+{
 	return x > 0 ? x : -x;
 }
 
 template<typename T>
-T Math::clamp(T v, T l, T h) {
+T Math::clamp(T v, T l, T h)
+{
 	return ((v) < (l) ? (l) : (v) > (h) ? (h) : (v));
 }
 
 template<typename T>
-T Math::sign(T x) {
+T Math::sign(T x)
+{
 	if (x > 0) return 1;
 	if (x < 0) return -1;
 	return 0;

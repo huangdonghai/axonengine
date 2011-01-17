@@ -27,7 +27,7 @@ public:
 
 	// implement IViewFrame
 	virtual RenderTarget *getRenderTarget();
-	virtual Rect getRect();
+	virtual Size getSize();
 	virtual void setCursor(CursorType cursor_type);
 	virtual void resetCursor();
 	virtual void setCursorPos(const Point &pos);
@@ -87,7 +87,6 @@ private:
 	InputSystem::CaptureMode m_captureMode;
 	InputSystem::MouseMode m_mouseMode;
 	Point m_mouseCenter;
-	WId m_oldWId;
 };
 
 #endif // EDITORFRAME_H

@@ -16,7 +16,7 @@ AX_BEGIN_NAMESPACE
 struct IViewFrame
 {
 	virtual RenderTarget *getRenderTarget() = 0;
-	virtual Rect getRect() = 0;
+	virtual Size getSize() = 0;
 	virtual void setCursor(CursorType cursor_type) = 0;
 	virtual void resetCursor() = 0;
 	virtual void setCursorPos(const Point &pos) = 0;

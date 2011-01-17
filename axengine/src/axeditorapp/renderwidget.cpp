@@ -47,11 +47,11 @@ void RenderWidget::paintEvent(QPaintEvent *pe)
 	if (m_updateStoped)
 		return;
 
-	if (m_renderTarget == nullptr)
-		m_renderTarget = new RenderTarget(Handle(winId()), "RenderWidget");
-
 	QSize s = size();
 	Rect rect(0, 0, s.width(), s.height());
+
+	if (m_renderTarget == nullptr)
+		m_renderTarget = new RenderTarget(Handle(winId()), "RenderWidget", Size(s.width(), s.height()));
 
 	m_renderCamera.setTarget(m_renderTarget);
 	m_renderCamera.setViewRect(rect);

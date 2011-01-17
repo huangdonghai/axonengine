@@ -553,7 +553,7 @@ AX_SHADERCONST(SHADERMACRO_VERSION, 2)
 
 #if 0
 #define AX_SAMPLER_UNIFORMS \
-	AX_TEXTURE_UNIFORM(sampler2D, g_geoBuffer) \
+	AX_TEXTURE_UNIFORM(sampler2D, g_rt1) \
 	AX_TEXTURE_UNIFORM(sampler2D, g_lightBuffer) \
 	AX_TEXTURE_UNIFORM(sampler2D, g_lightMap) \
 	AX_TEXTURE_UNIFORM(sampler2D, g_shadowMap) \

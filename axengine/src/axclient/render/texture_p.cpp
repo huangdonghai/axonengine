@@ -25,12 +25,12 @@ TextureResource::TextureResource(const FixedString &key, InitFlags flags)
 	ms_resources[key] = this;
 }
 
-TextureResource::TextureResource(const FixedString &key, TexFormat format, int width, int height, InitFlags flags)
+TextureResource::TextureResource(const FixedString &key, TexFormat format, const Size &size, InitFlags flags)
 {
 	m_isFileTexture = false;
 	m_fileLoaded = false;
 
-	g_apiWrap->createTexture2D(m_handle, format, width, height, flags);
+	g_apiWrap->createTexture2D(m_handle, format, size.width, size.height, flags);
 
 	setKey(key);
 	ms_resources[key] = this;
@@ -63,9 +63,9 @@ TextureResourcePtr TextureResource::findResource(const FixedString &name, int fl
 	return TextureResourcePtr(resource);
 }
 
-TextureResourcePtr TextureResource::createResource(const FixedString &debugname, TexFormat format, int width, int height, int flags)
+TextureResourcePtr TextureResource::createResource(const FixedString &debugname, TexFormat format, const Size &size, int flags)
 {
-	return new TextureResource(debugname, format, width, height, flags);
+	return new TextureResource(debugname, format, size, flags);
 }
 
 bool TextureResource::event(Event *e)

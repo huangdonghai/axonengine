@@ -68,7 +68,7 @@ void View::doUpdate()
 	preUpdate();
 
 	m_camera.setTarget(m_frame->getRenderTarget());
-	m_camera.setViewRect(m_frame->getRenderTarget()->getRect());
+	m_camera.setViewRect(Rect(m_frame->getRenderTarget()->getSize()));
 	m_camera.setOrigin(m_eyeMatrix.origin);
 	m_camera.setViewAxis(m_eyeMatrix.axis);
 	m_camera.setFov(0, 60);
@@ -218,8 +218,8 @@ bool View::traceWorld(int x, int y, Vector3 &result, int part)
 
 bool View::traceWorld(Vector3 &result)
 {
-	Point center = m_frame->getRect().getCenter();
-	return traceWorld(center.x, center.y, result, SelectPart::All);
+	Size size = m_frame->getSize() / 2;
+	return traceWorld(size.width, size.height, result, SelectPart::All);
 }
 
 void View::beginSelect(const Rect &r)

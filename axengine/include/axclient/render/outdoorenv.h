@@ -83,6 +83,7 @@ private:
 	Material *m_skyNishitaMat;
 	Material *m_skyNishitaGenMat;
 	RenderTarget *m_skyNishitaRt;		// render target for nishita sky
+	RenderTarget *m_mieRt;
 	NishitaParams m_lastNishitaParams;
 
 	bool m_dateTimeInited;

@@ -15,12 +15,15 @@ read the license and understand and accept it fully.
 AX_BEGIN_NAMESPACE
 
 // 2D screen coordinate rectangle
-struct AX_API Rect {
+struct AX_API Rect
+{
 	int x, y, width, height;				// x, y, width, height
 
 	Rect();
 	Rect(int ix, int iy, int iw, int ih);
 	Rect(const Rect &rect);
+	explicit Rect(const Size &size) { x=0; y=0; width=size.width; height=size.height; }
+	Rect(const Point &pos, const Size &size) { x=pos.x; y=pos.y; width=size.width; height=size.height; }
 	~Rect();
 
 	// add need function below

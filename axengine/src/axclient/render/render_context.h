@@ -24,7 +24,7 @@ protected:
 
 	void beginFrame();
 	void drawScene(RenderScene *scene, const RenderClearer &clearer);
-	void setupScene(RenderScene *scene, const RenderClearer *clearer = 0, RenderTarget *target = 0, RenderCamera *camera = 0);
+	void setupScene(RenderScene *scene, const RenderClearer *clearer, RenderCamera *camera);
 	//	void unsetScene(QueuedScene *scene, const RenderClearer *clearer = 0, RenderTarget *target = 0, RenderCamera *camera = 0);
 	void drawPrimitive(Primitive *prim);
 	void drawInteraction(Interaction *ia);
@@ -65,17 +65,14 @@ private:
 
 
 	// runtime
-	RenderTarget *m_curFrameWindow;
-	RenderTarget *m_curDepthBuffer;
-	RenderTarget *m_curGeoBuffer;
-	RenderTarget *m_curLightBuffer; // reuse as copied SceneColor
-	RenderTarget *m_curSceneBuffer;
+	RenderTarget *m_curWindow;
 	RenderTarget *m_curWorldRt;
 	RenderScene *m_curWorldScene;
 	Interaction *m_curInteraction;
 	const RenderEntity *m_curEntity;
 	bool m_isStatistic;
 	Technique m_curTechnique;
+	RenderTargetSet m_targetSet;
 
 	ShaderMacro m_shaderMacro;
 	bool m_forceWireframe;

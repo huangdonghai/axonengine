@@ -259,24 +259,23 @@ void OutdoorEnv::createSkyDome()
 	m_skydome->setMaterial(mat);
 #endif
 	// create nishita render target
-	m_skyNishitaRt = nullptr;
+	m_skyNishitaRt = 0;
+	m_mieRt = 0;
 
-	if (!g_renderDriverInfo.textureFormatSupports[TexFormat::RGBA16F]) {
+	if (!g_renderDriverInfo.textureFormatSupports[TexFormat::RGBA16F])
 		return;
-	}
 
-	m_skyNishitaRt = new RenderTarget(128, 64, TexFormat::RGBA16F);
-	RenderTarget *miert = new RenderTarget(128, 64, TexFormat::RGBA16F);
+	m_skyNishitaRt = new RenderTarget(TexFormat::RGBA16F, Size(128, 64));
+	m_mieRt = new RenderTarget(TexFormat::RGBA16F, Size(128, 64));
 
 	SamplerDesc desc;
 	desc.clampMode = SamplerDesc::ClampMode_Clamp;
 	m_skyNishitaRt->getTexture()->setSamplerState(desc);
-	miert->getTexture()->setSamplerState(desc);
-	m_skyNishitaRt->attachColor(0, miert);
+	m_mieRt->getTexture()->setSamplerState(desc);
 
 	m_skyNishitaMat = new Material("_skyNishita");
 	m_skyNishitaMat->setTexture(MaterialTextureId::Diffuse, m_skyNishitaRt->getTexture());
-	m_skyNishitaMat->setTexture(MaterialTextureId::Specular, miert->getTexture());
+	m_skyNishitaMat->setTexture(MaterialTextureId::Specular, m_mieRt->getTexture());
 	m_skyNishitaGenMat = 0; //Material::loadUnique("_skyNishitaGen");
 
 	m_skydome->setMaterial(m_skyNishitaMat);
