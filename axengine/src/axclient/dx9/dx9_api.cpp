@@ -281,7 +281,9 @@ void dx9CreateVertexBuffer(phandle_t h, int datasize, Primitive::Hint hint)
 		d3dusage = D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY;
 	}
 
-	V(dx9_device->CreateVertexBuffer(datasize, d3dusage, 0, d3dpool, (IDirect3DVertexBuffer9 **)h, 0));
+	IDirect3DVertexBuffer9 *vb;
+	V(dx9_device->CreateVertexBuffer(datasize, d3dusage, 0, d3dpool, &vb, 0));
+	*h = vb;
 
 	stat_numVertexBuffers.inc();
 	stat_vertexBufferMemory.add(datasize);
@@ -292,7 +294,7 @@ void dx9UploadVertexBuffer(phandle_t h, int datasize, const void *p, IEventHandl
 	IDirect3DVertexBuffer9 *obj = h->castTo<IDirect3DVertexBuffer9 *>();
 
 	void *dst = 0;
-	V(obj->Lock(0, datasize, &dst, D3DLOCK_DISCARD));
+	V(obj->Lock(0, datasize, &dst, 0));
 	memcpy(dst, p, datasize);
 	V(obj->Unlock());
 }
@@ -313,7 +315,7 @@ void dx9CreateIndexBuffer(phandle_t h, int datasize, Primitive::Hint hint)
 		d3dusage = D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY;
 	}
 
-	V(dx9_device->CreateIndexBuffer(datasize, d3dusage, D3DFMT_INDEX16, d3dpool, (IDirect3DIndexBuffer9 **)h, 0));
+	V(dx9_device->CreateIndexBuffer(datasize, d3dusage, D3DFMT_INDEX16, d3dpool, (IDirect3DIndexBuffer9 **)(h), 0));
 
 	stat_numIndexBuffers.inc();
 	stat_indexBufferMemory.add(datasize);
@@ -324,7 +326,7 @@ void dx9UploadIndexBuffer(phandle_t h, int datasize, const void *p, IEventHandle
 	IDirect3DIndexBuffer9 *obj = h->castTo<IDirect3DIndexBuffer9 *>();
 
 	void *dst = 0;
-	V(obj->Lock(0, datasize, &dst, D3DLOCK_DISCARD));
+	V(obj->Lock(0, datasize, &dst, 0/*D3DLOCK_DISCARD*/));
 	memcpy(dst, p, datasize);
 	V(obj->Unlock());
 }
@@ -477,6 +479,8 @@ static void dx9SetViewport(const Rect &rect, const Vector2 & depthRange)
 
 	d3dviewport.X = rect.x;
 	d3dviewport.Y = rect.y;
+	if (d3dviewport.Y < 0)
+		d3dviewport.Y = s_curRenderTargetSize.height + rect.y - rect.height;
 	d3dviewport.Width = rect.width;
 	d3dviewport.Height = rect.height;
 	d3dviewport.MinZ = depthRange.x;
@@ -490,6 +494,8 @@ static void dx9SetScissorRect(const Rect &scissorRect)
 	RECT d3dRect;
 	d3dRect.left = scissorRect.x;
 	d3dRect.top = scissorRect.y;
+	if (d3dRect.top < 0)
+		d3dRect.top = s_curRenderTargetSize.height + d3dRect.top - scissorRect.height;
 	d3dRect.right = scissorRect.xMax();
 	d3dRect.bottom = scissorRect.yMax();
 	V(dx9_device->SetScissorRect(&d3dRect));
@@ -604,9 +610,10 @@ static void dx9Draw()
 		s_curShader->beginPass(i);
 
 		if (s_curIndiceBufferUP && s_curVerticeBufferUP) {
-			dx9_device->DrawIndexedPrimitiveUP(s_curPrimitiveType, 0, s_curNumVertices, s_curPrimitiveCount, s_curIndiceBufferUP, D3DFMT_INDEX16, s_curVerticeBufferUP, s_curVertexType.stride());
+			V(dx9_device->DrawIndexedPrimitiveUP(s_curPrimitiveType, 0, s_curNumVertices, s_curPrimitiveCount, s_curIndiceBufferUP, D3DFMT_INDEX16, s_curVerticeBufferUP, s_curVertexType.stride()));
 		} else if (!s_curVerticeBufferUP && !s_curIndiceBufferUP) {
-			dx9_device->DrawIndexedPrimitive(s_curPrimitiveType, 0, 0, s_curNumVertices, s_curStartIndex, s_curPrimitiveCount);
+			HRESULT hr = dx9_device->DrawIndexedPrimitive(s_curPrimitiveType, 0, 0, s_curNumVertices, s_curStartIndex, s_curPrimitiveCount);
+			const char *err = D3DErrorString(hr);
 		} else {
 			AX_WRONGPLACE;
 			Errorf("wrong");
@@ -644,7 +651,12 @@ static void dx9Clear(const RenderClearer &clearer)
 	dx9_device->Clear(0, 0, d3dclear, d3dcolor, clearer.depth, clearer.stencil);
 }
 
-
+static void dx9Present(phandle_t window)
+{
+	AX_ASSERT(window);
+	DX9_Window *dx9window = window->castTo<DX9_Window *>();
+	dx9window->present();
+}
 
 void dx9AssignRenderApi()
 {
@@ -700,6 +712,8 @@ void dx9AssignRenderApi()
 	RenderApi::draw = &dx9Draw;
 
 	RenderApi::clear = &dx9Clear;
+
+	RenderApi::present = &dx9Present;
 }
 
 AX_END_NAMESPACE

@@ -22,8 +22,6 @@ public:
 
 	// implement RenderTarget
 	Size getSize();
-	void bind();
-	void unbind();
 	bool isWindow() { return true;}
 
 	void update(Handle newId, int width, int height);
@@ -32,7 +30,7 @@ public:
 	HWND getHandle() const { return m_wndId; }
 	void present();
 
-	IDirect3DSurface9 *getSurface() { return m_backbuffer; }
+	IDirect3DSurface9 *getSurface();
 
 protected:
 	void checkSwapChain();

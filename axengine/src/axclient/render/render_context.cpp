@@ -75,7 +75,7 @@ void RenderContext::beginFrame()
 
 void RenderContext::endFrame()
 {
-
+	g_apiWrap->present(m_curWindow);
 }
 
 void RenderContext::drawScene(RenderScene *scene, const RenderClearer &clearer)
@@ -96,6 +96,8 @@ void RenderContext::drawScene(RenderScene *scene, const RenderClearer &clearer)
 
 void RenderContext::drawScene_world(RenderScene *scene, const RenderClearer &clearer)
 {
+	return;
+
 	BEGIN_PIX("DrawWorld");
 
 	m_curTechnique = Technique::Main;
@@ -194,6 +196,12 @@ void RenderContext::drawScene_noworld(RenderScene *scene, const RenderClearer &c
 {
 	BEGIN_PIX("DrawNoworld");
 	m_curTechnique = Technique::Main;
+
+	m_targetSet.m_depthTarget = 0;
+	m_targetSet.m_colorTargets[0] = scene->target;
+	if (!m_targetSet.m_colorTargets[0])
+		m_targetSet.m_colorTargets[0] = scene->camera.getTarget();
+	m_targetSet.m_colorTargets[1] = m_targetSet.m_colorTargets[2] = m_targetSet.m_colorTargets[3] = 0;
 
 	setupScene(scene, &clearer, 0);
 

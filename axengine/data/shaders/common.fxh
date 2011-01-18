@@ -79,23 +79,32 @@ float ZR_getViewSpace(float zbuf) {
 
 
 
-// sturct
+// vertex struct
 /* data from application vertex buffer */
+struct SkinVertex {
+	float3 position		: POSITION;
+	float4 color		: COLOR0;
+	float2 streamTc		: TEXCOORD0;
+	float4 normal		: TEXCOORD1;
+	float3 tangent		: TEXCOORD2;
+	float3 oldPosition	: TEXCOORD3;
+};
+
 struct VertexIn {
     float3 position		: POSITION;
-    float4 streamTc		: TEXCOORD0;
 	float4 color		: COLOR0;
-	float4 normal		: NORMAL;
-	float4 tangent		: TEXCOORD6;
+    float4 streamTc		: TEXCOORD0;
+	float4 normal		: TEXCOORD1;
+	float4 tangent		: TEXCOORD2;
 
 	// instance
 #if G_GEOMETRY_INSTANCING
-	float4 matrixX		: TEXCOORD2;
-	float4 matrixY		: TEXCOORD3;
-	float4 matrixZ		: TEXCOORD4;
-	float4 userDefined	: TEXCOORD5;
+	float4 matrixX		: TEXCOORD4;
+	float4 matrixY		: TEXCOORD5;
+	float4 matrixZ		: TEXCOORD6;
+	float4 userDefined	: TEXCOORD7;
 #else
-	float3 oldPosition	: TEXCOORD2;
+	float3 oldPosition	: TEXCOORD3;
 #endif
 };
 
@@ -131,10 +140,10 @@ struct GpassOut {
 };
 
 struct Gbuffer {
-	half4 normalz		: COLOR0;
-	half4 accum			: COLOR1;
-	half4 diffuse		: COLOR2;
-	half4 specular		: COLOR3;
+	half4 accum			: COLOR0;
+	half4 normalz		: COLOR1;
+	half4 albedo		: COLOR2;
+	half4 misc			: COLOR3;
 };
 
 // debug vertex input

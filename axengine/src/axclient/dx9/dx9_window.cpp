@@ -96,6 +96,7 @@ Size DX9_Window::getSize()
 	return m_swapChainSize;
 }
 
+#if 0
 void DX9_Window::bind()
 {
 	checkSwapChain();
@@ -113,6 +114,7 @@ void DX9_Window::bind()
 void DX9_Window::unbind()
 {
 }
+#endif
 
 void DX9_Window::present()
 {
@@ -202,7 +204,14 @@ void DX9_Window::update(Handle newId, int width, int height)
 {
 	m_wndId = handle_cast<HWND>(newId);
 	m_updatedSize = Size(width, height);
+	checkSwapChain();
 }
+
+IDirect3DSurface9 * DX9_Window::getSurface()
+{
+	return m_backbuffer;
+}
+
 
 AX_END_NAMESPACE
 

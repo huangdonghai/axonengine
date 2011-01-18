@@ -67,6 +67,9 @@ public:
 
 	// actions
 	static void (*clear)(const RenderClearer &clearer);
+
+	// present to eye
+	static void (*present)(phandle_t window);
 };
 
 class ApiCommand
@@ -146,6 +149,7 @@ public:
 	void draw();
 
 	void clear(const RenderClearer &clearer);
+	void present(RenderTarget *window);
 
 	void issueDeletions() {}
 	byte_t *allocRingBuf(int size);

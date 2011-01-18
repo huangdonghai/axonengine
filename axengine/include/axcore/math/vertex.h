@@ -21,7 +21,7 @@ struct Joint {
 
 struct VertexType {
 	enum Type {
-		kMesh, kDebug, kBlend, kChunk, kNumber
+		kSkin, kMesh, kDebug, kBlend, kChunk, kNumber
 	};
 	AX_DECLARE_ENUM(VertexType);
 
@@ -56,8 +56,8 @@ struct DebugVertex {
 
 struct BlendVertex {
 	Vector3 position;
-	Vector2 streamTc;
 	Rgba color;
+	Vector2 streamTc;
 };
 
 struct ChunkVertex {
@@ -66,7 +66,7 @@ struct ChunkVertex {
 
 inline int VertexType::stride() const
 {
-	static int strides[] = { sizeof(MeshVertex), sizeof(DebugVertex), sizeof(BlendVertex), sizeof(ChunkVertex) };
+	static int strides[] = { sizeof(SkinVertex), sizeof(MeshVertex), sizeof(DebugVertex), sizeof(BlendVertex), sizeof(ChunkVertex) };
 	return strides[t];
 }
 

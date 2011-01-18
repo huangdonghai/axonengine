@@ -99,6 +99,7 @@ void DX9_Driver::initialize()
 
 	checkFormats();
 
+	createVertexDecl();
 #if 0
 	d3d9StateManager = new D3D9StateManager();
 	d3d9StateManager->DirtyCachedValues();
@@ -130,9 +131,9 @@ void DX9_Driver::initialize()
 	}
 
 	d3d9Draw = new D3D9Draw();
-#endif
 
 	dx9_internalWindow->bind();
+#endif
 
 	Printf("ok\n");
 }
@@ -303,6 +304,80 @@ void DX9_Driver::checkFormats()
 	g_renderDriverInfo.suggestFormats[RenderDriverInfo::SuggestedFormat_HdrLightBuffer] = TexFormat::RGBA16F;
 	g_renderDriverInfo.suggestFormats[RenderDriverInfo::SuggestedFormat_HdrSceneColor] = TexFormat::RGBA16F;
 	g_renderDriverInfo.suggestFormats[RenderDriverInfo::SuggestedFormat_ShadowMap] = TexFormat::D24S8;
+}
+
+namespace {
+	D3DVERTEXELEMENT9 s_veSkin[] = {
+		{0, 0,  D3DDECLTYPE_FLOAT3,   D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0},
+		{0, 12, D3DDECLTYPE_D3DCOLOR, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_COLOR,	0},
+		{0, 16,	D3DDECLTYPE_FLOAT2,   D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 0},
+		{0, 24, D3DDECLTYPE_FLOAT4,   D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD,	1},
+		{0, 40, D3DDECLTYPE_FLOAT3,   D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD,	2},
+		{0, 52, D3DDECLTYPE_FLOAT3,   D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD,	3},
+		D3DDECL_END()
+	};
+
+	D3DVERTEXELEMENT9 s_veMesh[] = {
+		{0, 0,  D3DDECLTYPE_FLOAT3,   D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0},
+		{0, 12, D3DDECLTYPE_D3DCOLOR, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_COLOR,	0},
+		{0, 16,	D3DDECLTYPE_FLOAT4,   D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 0},
+		{0, 32, D3DDECLTYPE_FLOAT4,   D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD,	1},
+		{0, 48, D3DDECLTYPE_FLOAT4,   D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD,	2},
+		D3DDECL_END()
+	};
+
+	D3DVERTEXELEMENT9 s_veDebug[] = {
+		{0, 0,  D3DDECLTYPE_FLOAT3,   D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0},
+		{0, 12, D3DDECLTYPE_D3DCOLOR, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_COLOR,	0},
+		D3DDECL_END()
+	};
+
+	D3DVERTEXELEMENT9 s_veBlend[] = {
+		{0, 0,  D3DDECLTYPE_FLOAT3,   D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0},
+		{0, 12, D3DDECLTYPE_D3DCOLOR, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_COLOR,	0},
+		{0, 16,	D3DDECLTYPE_FLOAT2,   D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 0},
+		D3DDECL_END()
+	};
+
+	D3DVERTEXELEMENT9 s_veChunk[] = {
+		{0, 0,  D3DDECLTYPE_FLOAT3,   D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0},
+		D3DDECL_END()
+	};
+
+	D3DVERTEXELEMENT9 s_veInstance[] = {
+		{1, 0,	D3DDECLTYPE_FLOAT4,   D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD,	4},
+		{1, 16, D3DDECLTYPE_FLOAT4,   D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 5},
+		{1, 32, D3DDECLTYPE_FLOAT4,   D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 6},
+		{1, 48, D3DDECLTYPE_FLOAT4,   D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 7},
+		D3DDECL_END()
+	};
+
+	D3DVERTEXELEMENT9 *s_veInfos[] = {
+		s_veSkin, s_veMesh, s_veBlend, s_veDebug, s_veChunk
+	};
+} // namespace
+
+void DX9_Driver::createVertexDecl()
+{
+	for (int i = 0; i < VertexType::kNumber; i++) {
+		D3DVERTEXELEMENT9 *veinfo = s_veInfos[i];
+
+		// apply offset
+		int c = 0;
+		std::vector<D3DVERTEXELEMENT9> veiseq;
+
+		for (D3DVERTEXELEMENT9 *ve = veinfo; ve->Stream != 0xff; ve++, c++) {
+			veiseq.push_back(*ve);
+		}
+
+		// add instanced vert elem to veInstanced
+		for (size_t j = 0; j < ArraySize(s_veInstance); j++) {
+			veiseq.push_back(s_veInstance[j]);
+		}
+
+		V(dx9_device->CreateVertexDeclaration(veinfo, &dx9_vertexDeclarations[i]));
+		V(dx9_device->CreateVertexDeclaration(&veiseq[0], &dx9_vertexDeclarationsInstanced[i]));
+	}
 }
 
 AX_END_NAMESPACE

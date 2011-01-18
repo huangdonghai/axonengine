@@ -40,6 +40,7 @@ protected:
 	bool checkHardwareMipmapGenerationSupport(TexFormat format, D3DFORMAT d3dformat);
 	bool checkRenderTargetFormatSupport(TexFormat format, D3DFORMAT d3dformat);
 	void checkFormats();
+	void createVertexDecl();
 
 private:
 	bool m_initialized;

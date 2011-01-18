@@ -38,7 +38,6 @@ void (*RenderApi::setDepthStencil)(phandle_t h);
 #endif
 void (*RenderApi::setTargetSet)(phandle_t targetSet[RenderTargetSet::MaxTarget]);
 
-
 void (*RenderApi::setViewport)(const Rect &rect, const Vector2 & depthRange);
 void (*RenderApi::setScissorRect)(const Rect &scissorRect);
 
@@ -59,8 +58,8 @@ void (*RenderApi::setMaterialTexture)(phandle_t texs[], SamplerDesc samplerState
 //	static void dip(ElementType et, int offset, int vertcount, int indices_count) = 0;
 void (*RenderApi::draw)();
 
-
 void (*RenderApi::clear)(const RenderClearer &clearer);
+void (*RenderApi::present)(phandle_t window);
 
 
 template <typename Signature>
@@ -606,6 +605,13 @@ void ApiWrap::draw()
 {
 	sAllocCommand(RenderApi::draw).args();
 }
+
+
+void ApiWrap::present( RenderTarget *window )
+{
+	sAllocCommand(RenderApi::present).args(window->getPHandle());
+}
+
 
 byte_t *ApiWrap::allocRingBuf(int size)
 {
