@@ -14,6 +14,7 @@ TextureResource::TextureResource(const FixedString &key, InitFlags flags)
 {
 	m_isFileTexture = true;
 	m_fileLoaded = false;
+	m_handle = 0;
 
 	std::string filename = key.toString() + ".dds";
 

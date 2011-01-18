@@ -29,7 +29,7 @@
 					Category="OpenGL Vertex Program"
 					Description="Profile(-profile name )"
 					Switch="-profile [value]"
-					DefaultValue="arbvp1"
+					DefaultValue="glslv"
 				/>
 				<StringProperty
 					Name="FPENTRY"
@@ -45,7 +45,7 @@
 					Category="OpenGL Fragment Program"
 					Description="Profile(-profile name)"
 					Switch="-profile [value]"
-					DefaultValue="arbfp1"
+					DefaultValue="glslf"
 				/>
 				<StringProperty
 					Name="VSENTRY"
@@ -59,7 +59,7 @@
 					DisplayName="Vertex Shader Profile"
 					Category="D3D Vertex Shader"
 					Switch="/T [value]"
-					DefaultValue="vs_2_0"
+					DefaultValue="vs_3_0"
 				/>
 				<StringProperty
 					Name="PSENTRY"
@@ -73,7 +73,7 @@
 					DisplayName="Pixel Shader Profile"
 					Category="D3D Pixel Shader"
 					Switch="/T [value]"
-					DefaultValue="ps_2_0"
+					DefaultValue="ps_3_0"
 				/>
 			</Properties>
 		</CustomBuildRule>

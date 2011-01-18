@@ -12,112 +12,114 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-static ID3DXEffectPool *s_effectPool = NULL;   // Effect pool for sharing parameters
+namespace {
+	static ID3DXEffectPool *s_effectPool = NULL;   // Effect pool for sharing parameters
 
-// cache system samplers
-struct SamplerParam {
-	int type;
-	const char *paramname;
-};
+	// cache system samplers
+	struct SamplerParam {
+		int type;
+		const char *paramname;
+	};
 
-static SamplerParam s_materialTextureNames[] = {
-	MaterialTextureId::Diffuse, "g_diffuseMap",
-	MaterialTextureId::Normal, "g_normalMap",
-	MaterialTextureId::Specular, "g_specularMap",
-	MaterialTextureId::Detail, "g_detailMap",
-	MaterialTextureId::DetailNormal, "g_detailNormalMap",
-	MaterialTextureId::Opacit, "g_opacitMap",
-	MaterialTextureId::Emission, "g_emissionMap",
-	MaterialTextureId::Displacement, "g_displacementMap",
-	MaterialTextureId::Env, "g_envMap",
+	static SamplerParam s_materialTextureNames[] = {
+		MaterialTextureId::Diffuse, "g_diffuseMap",
+		MaterialTextureId::Normal, "g_normalMap",
+		MaterialTextureId::Specular, "g_specularMap",
+		MaterialTextureId::Detail, "g_detailMap",
+		MaterialTextureId::DetailNormal, "g_detailNormalMap",
+		MaterialTextureId::Opacit, "g_opacitMap",
+		MaterialTextureId::Emission, "g_emissionMap",
+		MaterialTextureId::Displacement, "g_displacementMap",
+		MaterialTextureId::Env, "g_envMap",
 
-	// terrain sampler
-	MaterialTextureId::TerrainColor, "g_terrainColor",
-	MaterialTextureId::TerrainNormal, "g_terrainNormal",
-	MaterialTextureId::LayerAlpha, "g_layerAlpha",
+		// terrain sampler
+		MaterialTextureId::TerrainColor, "g_terrainColor",
+		MaterialTextureId::TerrainNormal, "g_terrainNormal",
+		MaterialTextureId::LayerAlpha, "g_layerAlpha",
 
-	// engine sampler
-	MaterialTextureId::Reflection, "g_reflectionMap",
-	MaterialTextureId::LightMap, "g_lightMap",
-	MaterialTextureId::ShadowMap, "g_shadowMap"
-};
+		// engine sampler
+		MaterialTextureId::Reflection, "g_reflectionMap",
+		MaterialTextureId::LightMap, "g_lightMap",
+		MaterialTextureId::ShadowMap, "g_shadowMap"
+	};
 
-static SamplerParam s_globalTextureNames[] = {
-	GlobalTextureId::RtDepth, "g_rtDepth",
-	GlobalTextureId::Rt0, "g_rt0",
-	GlobalTextureId::Rt1, "g_rt1",
-	GlobalTextureId::Rt2, "g_rt2",
-	GlobalTextureId::Rt3, "g_rt3",
-	GlobalTextureId::SceneColor, "g_sceneColor",
-};
+	static SamplerParam s_globalTextureNames[] = {
+		GlobalTextureId::RtDepth, "g_rtDepth",
+		GlobalTextureId::Rt0, "g_rt0",
+		GlobalTextureId::Rt1, "g_rt1",
+		GlobalTextureId::Rt2, "g_rt2",
+		GlobalTextureId::Rt3, "g_rt3",
+		GlobalTextureId::SceneColor, "g_sceneColor",
+	};
 
-class EffectHelper
-{
-public:
-	EffectHelper(ID3DXEffect *obj) : m_object(obj)
-	{}
-
-	std::string getString(D3DXHANDLE h)
+	class EffectHelper
 	{
-		const char *str;
+	public:
+		EffectHelper(ID3DXEffect *obj) : m_object(obj)
+		{}
 
-		HRESULT hr = m_object->GetString(h, &str);
-		if (SUCCEEDED(hr) && str && str[0]) {
-			return str;
+		std::string getString(D3DXHANDLE h)
+		{
+			const char *str;
+
+			HRESULT hr = m_object->GetString(h, &str);
+			if (SUCCEEDED(hr) && str && str[0]) {
+				return str;
+			}
+
+			return std::string();
 		}
 
-		return std::string();
-	}
+		int getInt(D3DXHANDLE h)
+		{
+			int result = 0;
 
-	int getInt(D3DXHANDLE h)
-	{
-		int result = 0;
+			HRESULT hr = m_object->GetInt(h, &result);
+			if (SUCCEEDED(hr)) {
+				return result;
+			}
 
-		HRESULT hr = m_object->GetInt(h, &result);
-		if (SUCCEEDED(hr)) {
-			return result;
+			return 0;
 		}
 
-		return 0;
-	}
+		std::string getAnno(D3DXHANDLE param, const char *anno_name)
+		{
+			std::string result;
+			D3DXHANDLE anno = m_object->GetAnnotationByName(param, anno_name);
 
-	std::string getAnno(D3DXHANDLE param, const char *anno_name)
-	{
-		std::string result;
-		D3DXHANDLE anno = m_object->GetAnnotationByName(param, anno_name);
+			if (!anno) {
+				return result;
+			}
 
-		if (!anno) {
-			return result;
+			return getString(anno);
 		}
 
-		return getString(anno);
-	}
+	private:
+		ID3DXEffect *m_object;
+	};
 
-private:
-	ID3DXEffect *m_object;
-};
-
-class DX9_Include : public ID3DXInclude
-{
-public:
-	STDMETHOD(Open)(THIS_ D3DXINCLUDE_TYPE IncludeType, LPCSTR pFileName, LPCVOID pParentData, LPCVOID *ppData, UINT *pBytes)
+	class DX9_Include : public ID3DXInclude
 	{
-		std::string filename = "shaders/";
-		filename += pFileName;
-		*pBytes = g_fileSystem->readFile(filename, (void**)ppData);
+	public:
+		STDMETHOD(Open)(THIS_ D3DXINCLUDE_TYPE IncludeType, LPCSTR pFileName, LPCVOID pParentData, LPCVOID *ppData, UINT *pBytes)
+		{
+			std::string filename = "shaders/";
+			filename += pFileName;
+			*pBytes = g_fileSystem->readFile(filename, (void**)ppData);
 
-		if (*ppData && *pBytes)
+			if (*ppData && *pBytes)
+				return S_OK;
+			else
+				return S_FALSE;
+		}
+
+		STDMETHOD(Close)(THIS_ LPCVOID pData)
+		{
+			g_fileSystem->freeFile((void**)pData);
 			return S_OK;
-		else
-			return S_FALSE;
-	}
-
-	STDMETHOD(Close)(THIS_ LPCVOID pData)
-	{
-		g_fileSystem->freeFile((void**)pData);
-		return S_OK;
-	}
-};
+		}
+	};
+} // namespace
 
 #if 0
 //--------------------------------------------------------------------------
@@ -284,6 +286,7 @@ DX9_Pass::DX9_Pass(DX9_Shader *shader, D3DXHANDLE d3dxhandle)
 	m_d3dxhandle = d3dxhandle;
 	m_setflag = 0;
 
+	memset(m_sysSamplers, -1, sizeof(m_sysSamplers));
 	memset(m_matSamplers, -1, sizeof(m_matSamplers));
 
 #if 0
@@ -557,17 +560,21 @@ void DX9_Pass::begin()
 
 	// set global textures
 	for (int i = 0; i < GlobalTextureId::MaxType; i++) {
-		if (m_sysSamplers[i] >= 0) {
+		if (m_sysSamplers[i] >= 0 && s_curGlobalTextures[i]) {
 			dx9_device->SetTexture(m_sysSamplers[i], s_curGlobalTextures[i]->castTo<IDirect3DBaseTexture9 *>());
 			DX9_SamplerState::find(m_sysSamplers[i], s_curGlobalTextureSamplerDescs[i])->apply();
+		} else {
+			dx9_device->SetTexture(m_sysSamplers[i], 0);
 		}
 	}
 
 	// set material textures
 	for (int i = 0; i < MaterialTextureId::MaxType; i++) {
-		if (m_matSamplers[i] >= 0) {
+		if (m_matSamplers[i] >= 0 && s_curMaterialTextures[i]) {
 			dx9_device->SetTexture(m_matSamplers[i], s_curMaterialTextures[i]->castTo<IDirect3DBaseTexture9 *>());
 			DX9_SamplerState::find(m_matSamplers[i], s_curMaterialTextureSamplerDescs[i])->apply();
+		} else {
+			dx9_device->SetTexture(m_matSamplers[i], 0);
 		}
 	}
 
@@ -703,10 +710,10 @@ DX9_Shader::DX9_Shader()
 DX9_Shader::~DX9_Shader()
 {}
 
-bool DX9_Shader::init(const std::string &name, const ShaderMacro &macro)
+bool DX9_Shader::init(const FixedString &name, const ShaderMacro &macro)
 {
-	m_keyString = name;
-	std::string fullname = "shaders/" + name + ".fx";
+	m_key = name;
+	std::string fullname = "shaders/" + name.toString() + ".fx";
 	std::string ospath = g_fileSystem->dataPathToOsPath(fullname);
 
 	std::string path = g_fileSystem->dataPathToOsPath("shaders/");
@@ -1141,6 +1148,9 @@ void DX9_Shader::initShaderInfo()
 
 	m_shaderInfo.m_needReflection = isMaterialTextureUsed(MaterialTextureId::Reflection);
 	m_shaderInfo.m_needSceneColor = isGlobalTextureUsed(GlobalTextureId::SceneColor);
+
+	// add to shader manager
+	dx9_shaderManager->addShaderInfo(m_key, &m_shaderInfo);
 }
 
 bool DX9_Shader::isGlobalTextureUsed(GlobalTextureId id) const
@@ -1189,8 +1199,12 @@ bool DX9_Shader::isMaterialTextureUsed(MaterialTextureId id) const
 
 DX9_ShaderManager::DX9_ShaderManager()
 {
+	// HACK
+	dx9_shaderManager = this;
+
 	V(D3DXCreateEffectPool( &s_effectPool ));
 	m_defaulted = new DX9_Shader();
+#if 0
 	bool v = m_defaulted->init("blend");
 	AX_ASSERT(v);
 
@@ -1199,7 +1213,6 @@ DX9_ShaderManager::DX9_ShaderManager()
 
 	AX_ASSERT(v);
 
-#if 0
 	blinn->checkGlobalStruct();
 #endif
 
@@ -1208,11 +1221,6 @@ DX9_ShaderManager::DX9_ShaderManager()
 
 DX9_ShaderManager::~DX9_ShaderManager()
 {}
-
-DX9_Shader *DX9_ShaderManager::findShader(const std::string &name, const ShaderMacro &macro)
-{
-	return findShader(FixedString(name), macro);
-}
 
 DX9_Shader *DX9_ShaderManager::findShader(const FixedString &nameId, const ShaderMacro &macro)
 {
@@ -1300,13 +1308,20 @@ void DX9_ShaderManager::applyShaderCache( const std::string &name )
 
 void DX9_ShaderManager::_initialize()
 {
-	StringSeq ss = g_fileSystem->fileListByExts("shaders/", ".fx", File::List_Nodirectory|File::List_Sorted);
+	TiXmlDocument doc;
+	doc.LoadAxonFile("shaders/shaderlist.xml");
+	AX_ASSURE(!doc.Error());
 
-	AX_FOREACH(const std::string &s, ss) {
-		std::string n = PathUtil::getName(s);
-		findShader(n);
+	TiXmlNode *root = doc.FirstChild("shaderlist");
+
+	// no root
+	AX_ASSERT(root);
+
+	TiXmlElement *section;
+	for (section = root->FirstChildElement("item"); section; section = section->NextSiblingElement("item")) {
+		findShader(section->GetText(), g_shaderMacro);
 	}
-
+#if 0
 	// add to ShaderInfoDict
 	ShaderDict::const_iterator it = m_shaders.begin();
 
@@ -1318,6 +1333,7 @@ void DX9_ShaderManager::_initialize()
 		if (it2 != it->second.end())
 			m_shaderInfoDict[name] = &it2->second->m_shaderInfo;
 	}
+#endif
 }
 
 const ShaderInfo *DX9_ShaderManager::findShaderInfo(const FixedString &key)
@@ -1329,6 +1345,14 @@ const ShaderInfo *DX9_ShaderManager::findShaderInfo(const FixedString &key)
 
 	Errorf("Can't found shader info for '%s'", key.c_str());
 	return 0;
+}
+
+void DX9_ShaderManager::addShaderInfo( const FixedString &key, ShaderInfo *shaderInfo )
+{
+	if (m_shaderInfoDict.find(key) != m_shaderInfoDict.end())
+		return;
+
+	m_shaderInfoDict[key] = shaderInfo;
 }
 
 AX_END_NAMESPACE

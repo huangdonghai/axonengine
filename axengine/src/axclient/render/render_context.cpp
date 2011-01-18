@@ -91,7 +91,7 @@ void RenderContext::drawScene(RenderScene *scene, const RenderClearer &clearer)
 
 #define BEGIN_PIX(x)
 #define END_PIX()
-#define AX_SU(a,b) setUniform(ConstBuffers::a, b);
+#define AX_SU(a,b) setUniform(ConstBuffer::a, b);
 #define AX_ST(a,b) g_apiWrap->setGlobalTexture(GlobalTextureId::a, b)
 
 void RenderContext::drawScene_world(RenderScene *scene, const RenderClearer &clearer)
@@ -99,6 +99,7 @@ void RenderContext::drawScene_world(RenderScene *scene, const RenderClearer &cle
 	BEGIN_PIX("DrawWorld");
 
 	m_curTechnique = Technique::Main;
+	m_curWorldScene = scene;
 
 	const Rect &rect = scene->camera.getViewRect();
 	int width = rect.width;
@@ -163,7 +164,7 @@ void RenderContext::drawScene_world(RenderScene *scene, const RenderClearer &cle
 
 	// fill z first
 	BEGIN_PIX("GfillPass");
-	drawPass_gfill(scene);
+	drawPass_geoFill(scene);
 	END_PIX();
 
 	BEGIN_PIX("DrawLights");
@@ -219,9 +220,9 @@ void RenderContext::drawScene_noworld(RenderScene *scene, const RenderClearer &c
 	END_PIX();
 }
 
-void RenderContext::drawPass_gfill(RenderScene *scene)
+void RenderContext::drawPass_geoFill(RenderScene *scene)
 {
-	m_curTechnique = Technique::Zpass;
+	m_curTechnique = Technique::GeoFill;
 
 	RenderClearer clearer;
 	clearer.clearDepth(true);
@@ -512,9 +513,113 @@ void RenderContext::drawInteraction(Interaction *ia)
 	prim->draw(m_curTechnique);
 }
 
+static Matrix4 GetConvertMatrix()
+{
+	Matrix4 mat;
+	mat.setIdentity();
+	mat.scale(1, 1, 0.5);
+	mat.translate(0, 0, 0.5);
+	return mat;
+}
+
+static void ConvertToD3D(Matrix4 &m)
+{
+	static Matrix4 conv = GetConvertMatrix();
+
+	if (g_renderDriverInfo.driverType == RenderDriverInfo::D3D) {
+		m = conv * m;
+	}
+}
+
 void RenderContext::setupScene(RenderScene *scene, const RenderClearer *clearer, RenderCamera *camera)
 {
+	if (!scene && !camera) {
+		Errorf("RenderContext::setupScene: parameter error");
+		return;
+	}
 
+	if (!camera)
+		camera = &scene->camera;
+
+//	m_curC = camera;
+#if 0
+	if (!target) {
+		target = camera->getTarget();
+	}
+
+	bindTarget(target);
+#else
+	g_apiWrap->setTargetSet(m_targetSet);
+#endif
+
+	// clear here, befor viewport and scissor set, so clear all rendertarget's area,
+	// if you want clear only viewport and scissor part, call clear after this function
+	if (clearer) {
+		//clearer->doClear();
+		g_apiWrap->clear(*clearer);
+	}
+
+#if 0
+	const Vector4 &vp = camera->getViewPortDX();
+	D3DVIEWPORT9 d3dviewport;
+	d3dviewport.X = vp.x;
+	d3dviewport.Y = vp.y;
+	d3dviewport.Width = vp.z;
+	d3dviewport.Height = vp.w;
+	d3dviewport.MinZ = 0;
+	d3dviewport.MaxZ = 1;
+	RECT d3dRect;
+	d3dRect.left = vp.x;
+	d3dRect.top = vp.y;
+	d3dRect.right = vp.x + vp.z;
+	d3dRect.bottom = vp.y + vp.w;
+	dx9_device->SetViewport(&d3dviewport);
+	dx9_device->SetScissorRect(&d3dRect);
+#else
+	g_apiWrap->setViewport(camera->getViewRect(), Vector2(0,1));
+	g_apiWrap->setScissorRect(camera->getViewRect());
+#endif
+
+	AX_SU(g_time, (float)camera->getTime());
+
+	Vector4 campos;
+	campos.xyz() = camera->getOrigin();
+	if (camera->isOrthoProjection()) {
+		campos.w = 0;
+	} else {
+		campos.w = 1;
+	}
+	AX_SU(g_cameraPos, campos);
+
+	Angles angles = camera->getViewAxis().toAngles();
+	angles *= AX_D2R;
+
+	AX_SU(g_cameraAngles, angles.toVector3());
+	AX_SU(g_cameraAxis, camera->getViewAxis().getTranspose());
+
+	Matrix4 temp = camera->getViewProjMatrix();
+	ConvertToD3D(temp);
+	AX_SU(g_viewProjMatrix, temp);
+	temp = camera->getViewProjNoTranslate();
+	ConvertToD3D(temp);
+	AX_SU(g_viewProjNoTranslate, temp);
+
+	m_curInteraction = 0;
+	m_curEntity = 0;
+
+	AX_SU(g_modelMatrix, Matrix::getIdentity());
+	AX_SU(g_instanceParam, Vector4(0,0,0,1));
+
+	RenderTarget *target = m_targetSet.getFirstUsed();
+	AX_ASSERT(target);
+	Size r = target->getSize();
+	AX_SU(g_sceneSize, Vector4(r.width,r.height,1.0f/r.width, 1.0f/r.height));
+
+	if (camera->isReflectionEnabled()) {
+		m_isReflecting = true;
+	} else {
+		m_isReflecting = false;
+	}
 }
 
 void RenderContext::issueVisQuery()

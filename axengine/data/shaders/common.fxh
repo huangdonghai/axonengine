@@ -35,7 +35,7 @@ DECL_SAMPLER(sampler2D, g_rt1);
 DECL_SAMPLER(sampler2D, g_lightBuffer);
 DECL_SAMPLER(sampler2D, g_sceneColor);
 
-#ifdef G_D3D
+#if G_D3D
 #	define for if (0) else for
 #	pragma warning(disable:3205) // warning X3205: conversion from larger type to smaller, possible loss of data
 #	pragma pack_matrix(row_major)

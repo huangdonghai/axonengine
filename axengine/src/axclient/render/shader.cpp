@@ -424,12 +424,15 @@ static inline bool isMatrix(ConstBuffer::ValueType vt)
 
 ConstBuffer::ConstBuffer(int type)
 {
-	if (type == ConstBuffers::GlobalConst)
+	m_dataSize = 0;
+	if (type == GlobalConst)
 		initSceneConst();
-	else if (type == ConstBuffers::InteractionConst)
+	else if (type == InteractionConst)
 		initInteractionConst();
 	else
 		AX_WRONGPLACE;
+
+	m_data.resize(m_dataSize);
 }
 
 ConstBuffer::~ConstBuffer()
@@ -441,13 +444,17 @@ void ConstBuffer::addField(const Field &field)
 	m_fields.push_back(field);
 }
 
-void ConstBuffer::addField(ValueType vt, const char *name, int offset)
+void ConstBuffer::addField(ValueType vt, Item name, int count, int reg)
 {
 	Field field;
 	field.m_valueType = vt;
 	field.m_name = name;
-	field.m_dataSizeOfFloat = getSizeByFloatOfValueType(vt);
-	field.m_offset = offset;
+	field.m_arrayCount = count;
+	field.m_dataSize = getSizeByFloatOfValueType(vt) * count;
+	field.m_offset = reg * 4;
+
+	int size = field.m_offset + field.m_dataSize;
+	m_dataSize = std::max(size, m_dataSize);
 
 	m_fields.push_back(field);
 }
@@ -470,8 +477,8 @@ void ConstBuffer::initSceneConst()
 {
 	clear();
 
-#define AX_ITEM(stype, atype, name, reg) addField(vt_##atype, #name, reg);
-#define AX_ARRAY(stype, atype, name, n, reg) addField(vt_##atype, #name, reg);
+#define AX_ITEM(stype, atype, name, reg) addField(vt_##atype, name, 1, reg);
+#define AX_ARRAY(stype, atype, name, n, reg) addField(vt_##atype, name, n, reg);
 #include "../../../data/shaders/sceneconst.fxh"
 #undef AX_ITEM
 #undef AX_ARRAY
@@ -481,8 +488,8 @@ void ConstBuffer::initInteractionConst()
 {
 	clear();
 
-#define AX_ITEM(stype, atype, name, reg) addField(vt_##atype, #name, reg);
-#define AX_ARRAY(stype, atype, name, n, reg) addField(vt_##atype, #name, reg);
+#define AX_ITEM(stype, atype, name, reg) addField(vt_##atype, name, 1, reg);
+#define AX_ARRAY(stype, atype, name, n, reg) addField(vt_##atype, name, n, reg);
 #include "../../../data/shaders/interactionconst.fxh"
 #undef AX_ITEM
 #undef AX_ARRAY
@@ -505,8 +512,16 @@ void ConstBuffer::setData(int numFloats, const float *datap)
 
 ConstBuffers::ConstBuffers()
 {
-	for (int i = 0; i < MaxType; i++) {
+	for (int i = 0; i < ConstBuffer::MaxType; i++) {
 		m_buffers[i] = new ConstBuffer(i);
+		std::vector<ConstBuffer::Field> &fields = m_buffers[i]->m_fields;
+
+		for (int j = 0; j < fields.size(); j++) {
+			FieldLink *fieldLink = new FieldLink();
+			fieldLink->m_buffer = m_buffers[i];
+			fieldLink->m_field = &fields[j];
+			m_fields[fields[j].m_name] = fieldLink;
+		}
 	}
 }
 
@@ -520,7 +535,7 @@ void ConstBuffers::setField(Item fieldName, int dataSize, const float *dataptr)
 	FieldLink *fl = m_fields[fieldName];
 
 	// check data size
-	if (dataSize != fl->m_field->m_dataSizeOfFloat)
+	if (dataSize != fl->m_field->m_dataSize * sizeof(float))
 		AX_WRONGPLACE;
 
 	// check matrix
@@ -528,7 +543,7 @@ void ConstBuffers::setField(Item fieldName, int dataSize, const float *dataptr)
 		switch (fl->m_field->m_valueType) {
 		case ConstBuffer::vt_Matrix3:
 			{
-				int n = fl->m_field->m_dataSizeOfFloat / Matrix3::NumFloats;
+				int n = fl->m_field->m_dataSize / Matrix3::NumFloats;
 				const Matrix3 *src = reinterpret_cast<const Matrix3 *>(dataptr);
 				Matrix3 *dst = reinterpret_cast<Matrix3 *>(&fl->m_buffer->m_data[fl->m_field->m_offset]);
 				for (int i = 0; i < n; i++) {
@@ -538,7 +553,7 @@ void ConstBuffers::setField(Item fieldName, int dataSize, const float *dataptr)
 			}
 		case ConstBuffer::vt_Matrix:
 			{
-				int n = fl->m_field->m_dataSizeOfFloat / Matrix::NumFloats;
+				int n = fl->m_field->m_dataSize / Matrix::NumFloats;
 				const Matrix *src = reinterpret_cast<const Matrix *>(dataptr);
 				Matrix *dst = reinterpret_cast<Matrix *>(&fl->m_buffer->m_data[fl->m_field->m_offset]);
 				for (int i = 0; i < n; i++) {
@@ -548,7 +563,7 @@ void ConstBuffers::setField(Item fieldName, int dataSize, const float *dataptr)
 			}
 		case ConstBuffer::vt_Matrix4:
 			{
-				int n = fl->m_field->m_dataSizeOfFloat / Matrix4::NumFloats;
+				int n = fl->m_field->m_dataSize / Matrix4::NumFloats;
 				const Matrix4 *src = reinterpret_cast<const Matrix4 *>(dataptr);
 				Matrix4 *dst = reinterpret_cast<Matrix4 *>(&fl->m_buffer->m_data[fl->m_field->m_offset]);
 				for (int i = 0; i < n; i++) {
@@ -560,7 +575,7 @@ void ConstBuffers::setField(Item fieldName, int dataSize, const float *dataptr)
 	}
 
 	// copy data
-	memcpy(&fl->m_buffer->m_data[fl->m_field->m_offset], dataptr, dataSize * sizeof(float));
+	memcpy(&fl->m_buffer->m_data[fl->m_field->m_offset], dataptr, dataSize);
 }
 
 void ConstBuffers::setData(Type type, int numFloats, const float *datap)

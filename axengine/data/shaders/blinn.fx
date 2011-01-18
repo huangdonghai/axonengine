@@ -18,7 +18,7 @@ read the license and understand and accept it fully.
 
 float Script : STANDARDSGLOBAL <
 	// technique
-	string TechniqueZpass = "zpass";
+	string TechniqueGeoFill = "zpass";
 #if S_DECAL
 	string TechniqueShadowGen = "";
 #else

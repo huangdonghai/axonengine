@@ -1396,6 +1396,8 @@ public:
 	bool SaveFile() const;
 	/// Load a file using the given filename. Returns true if successful.
 	bool LoadFile(const char * filename, TiXmlEncoding encoding = TIXML_DEFAULT_ENCODING);
+	/// load a axon engine file
+	bool LoadAxonFile(const std::string &filename);
 	/// Save a file using the given filename. Returns true if successful.
 	bool SaveFile(const char * filename) const;
 	/** Load a file using the given FILE*. Returns true if successful. Note that this method

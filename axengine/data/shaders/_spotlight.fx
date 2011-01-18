@@ -15,7 +15,7 @@ read the license and understand and accept it fully.
 
 float Script : STANDARDSGLOBAL <
 	// technique
-	string TechniqueZpass = "";
+	string TechniqueGeoFill = "";
 	string TechniqueShadowGen = "";
 	string TechniqueMain = "main";
 	string TechniqueGlow = "";
@@ -28,11 +28,12 @@ float Script : STANDARDSGLOBAL <
 #define F_PROJECTOR	G_FEATURE2
 #define F_SHADOWED	G_FEATURE3
 
-float4x4	s_shadowMatrix;
-
-float4x4	s_lightMatrix;
-float4		s_lightCenter;		// (xyz)*invR, invR
-float4		s_lightColor = float4(1,1,1,1);
+AX_BEGIN_PC
+float4x4	s_shadowMatrix : PREG0;
+float3x4	s_lightMatrix : PREG4;
+float4		s_lightCenter : PREG7;		// (xyz)*invR, invR
+float4		s_lightColor : PREG8 = float4(1,1,1,1);
+AX_END_PC
 
 float2 s_pixelOffsets[4] = {
 	{ -0.5, -0.5 },
@@ -109,7 +110,7 @@ half4 FP_main(ShadowVertexOut IN) : COLOR {
 
 	half3 worldpos = g_cameraPos.xyz + IN.viewDir.xyz / IN.viewDir.w * gbuffer.a;
 
-	half4 lightPos = mul(s_lightMatrix, worldpos);
+	half3 lightPos = mul(s_lightMatrix, float4(worldpos,1));
 
 	lightPos.xy /= lightPos.z;
 
@@ -140,6 +141,7 @@ technique main {
     pass p0 {
         VERTEXPROGRAM = compile VP_2_0 VP_main();
 		FRAGMENTPROGRAM = compile FP_2_0 FP_main();
+#if 0
 #if 0//F_MASKFRONT
 	    DEPTHTEST = true;
 		CULL_BACK;
@@ -150,6 +152,7 @@ technique main {
 		DEPTHMASK = false;
 
 		BLEND_ADD;
+#endif
     }
 }
 

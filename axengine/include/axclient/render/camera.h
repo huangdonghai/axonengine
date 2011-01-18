@@ -150,8 +150,6 @@ public:
 	const Matrix4 &getProjMatrix() const { return m_projMatrix; }
 	const Matrix4 &getViewProjMatrix() const { return m_vp; }
 	const Matrix4 &getViewProjNoTranslate() const { return m_vpNoTranslate; }
-	const Vector4 &getViewPort() const { return m_viewport; }
-	const Vector4 &getViewPortDX() const { return m_viewportDX; }
 
 	// horizon space trapezoidal shadow map for direction(sun) light
 	void getTrapezoidalMatrix(Matrix4 &lightMatrix, Matrix4 &tsmMatrix, const Vector3 &lightdir, float focusdistance) const;
@@ -171,7 +169,9 @@ protected:
 	//
 	void calcViewMatrix();
 	void calcProjectionMatrix();
+#if 0
 	void calcViewPort();
+#endif
 	void calcFrustum();
 	void adjustProjMatrixForReflection();
 
@@ -203,9 +203,6 @@ private:
 	// matrix and viewport
 	Matrix4 m_viewMatrix;
 	Matrix4 m_projMatrix;
-	Vector4 m_viewport;
-	Vector4 m_viewportDX;		// viewport for dx. origin at left-upper
-	Size m_clientSize;
 
 	// some cached matrix for fast computation
 	Matrix4 m_vp;				// view-projection matrix

@@ -11,9 +11,10 @@ read the license and understand and accept it fully.
 #include "common.fxh"
 #include "sky.fxh"
 
-float Script : STANDARDSGLOBAL <
+float Script : STANDARDSGLOBAL
+<
 	// technique
-	string TechniqueZpass = "";
+	string TechniqueGeoFill = "";
 	string TechniqueShadowGen = "";
 	string TechniqueMain = "Update";
 	string TechniqueGlow = "";
@@ -52,25 +53,29 @@ static const float g2 = G * G;
 static const float3 InvWavelength = { 5.60204554,9.473285,19.6438026 };
 static const float3 WavelengthMie = { 1.43599451,1.60348582,1.86886263 };
 
-struct VertOut {
+struct VertOut
+{
     float4 hpos		: POSITION;
     float4 screenTc	: TEXCOORD0;
 };
 
-struct FragOut {
+struct FragOut
+{
 	float4 RayLeigh : COLOR0;
 	float4 Mie		: COLOR1;
 };
 
 
-VertOut VP_main(VertexIn IN) {
+VertOut VP_main(VertexIn IN)
+{
     VertOut result = (VertOut)0;
     result.hpos = VP_worldToClip(IN.position);
 	result.screenTc = Clip2Screen(result.hpos);
 	return result;
 }
 
-float HitOuterSphere(float3 O, float3 Dir) {
+float HitOuterSphere(float3 O, float3 Dir)
+{
 	float3 L = -O;
 
 	float B = dot(L, Dir);
@@ -83,12 +88,14 @@ float HitOuterSphere(float3 O, float3 Dir) {
 	return t;
 }
 
-float2 GetDensityRatio(float fHeight) {
+float2 GetDensityRatio(float fHeight)
+{
 	const float fAltitude = (fHeight - InnerRadius) * fScale;
 	return exp(-fAltitude / v2dRayleighMieScaleHeight.xy);
 }
 
-float2 t(float3 P, float3 Px) {
+float2 t(float3 P, float3 Px)
+{
 	float2 OpticalDepth = 0;
 
 	float3 v3Vector =  Px - P;
@@ -111,7 +118,8 @@ float2 t(float3 P, float3 Px) {
 	return OpticalDepth;
 }
 
-FragOut FP_main(VertOut input) {
+FragOut FP_main(VertOut input)
+{
 	FragOut result = (FragOut)0;
 	
 	float2 screenTC = input.screenTc.xy / input.screenTc.w;
@@ -176,7 +184,8 @@ FragOut FP_main(VertOut input) {
 }
 
 
-technique Update {
+technique Update
+{
     pass Pass1 {
 		VertexShader = compile VP_3_0 VP_main();
 		PixelShader = compile FP_3_0 FP_main();

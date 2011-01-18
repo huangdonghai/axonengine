@@ -10,9 +10,10 @@ read the license and understand and accept it fully.
 
 #include "common.fxh"
 
-float Script : STANDARDSGLOBAL <
+float Script : STANDARDSGLOBAL
+<
 	// technique
-	string TechniqueZpass = "";
+	string TechniqueGeoFill = "";
 	string TechniqueShadowGen = "";
 	string TechniqueMain = "main";
 	string TechniqueGlow = "";
@@ -21,12 +22,14 @@ float Script : STANDARDSGLOBAL <
 
 /*********** Generic Vertex Shader ******/
 
-float4 VP_main(VertexIn IN) : POSITION {
+float4 VP_main(VertexIn IN) : POSITION
+{
 	return VP_worldToClip(IN.position);
 }
 
 /********* pixel shaders ********/
-half4 FP_main(float4 IN : POSITION) : COLOR {
+half4 FP_main(float4 IN : POSITION) : COLOR
+{
 	return half4(1,0,0,1);
 }
 

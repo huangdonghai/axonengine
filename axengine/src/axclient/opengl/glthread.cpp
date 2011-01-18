@@ -521,7 +521,7 @@ void GLdriver::runFrame() {
 }
 
 void GLthread::drawPass_zfill(RenderScene *scene) {
-	s_technique = Technique::Zpass;
+	s_technique = Technique::GeoFill;
 
 	Clearer clearer;
 	clearer.clearDepth(true);

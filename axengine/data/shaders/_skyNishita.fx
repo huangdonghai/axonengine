@@ -13,7 +13,7 @@ read the license and understand and accept it fully.
 
 float Script : STANDARDSGLOBAL <
 	// technique
-	string TechniqueZpass = "";
+	string TechniqueGeoFill = "";
 	string TechniqueShadowGen = "";
 	string TechniqueMain = "Render";
 	string TechniqueGlow = "";
@@ -22,8 +22,8 @@ float Script : STANDARDSGLOBAL <
 
 static const float G = -0.990;
 
-float	g = G;
-float	g2 = G * G;
+float g = G;
+float g2 = G * G;
 float fExposure = -2.0;
 
 float3 InvWavelength;
@@ -31,11 +31,13 @@ float3 WavelengthMie;
 
 float starIntensity = 0.5f;
 
-float getRayleighPhase(float fCos2) {
+float getRayleighPhase(float fCos2)
+{
 	return 0.75 * (1.0 + fCos2);
 }
 
-float getMiePhase(float fCos, float fCos2) {
+float getMiePhase(float fCos, float fCos2)
+{
 	float3 v3HG;
 	v3HG.x = 1.5f * ((1.0f - g2) / (2.0f + g2));
 	v3HG.y = 1.0f + g2;
@@ -70,7 +72,8 @@ struct FragmentOut {
 };
 
 
-FragmentOut FP_main(PS_INPUT input) {
+FragmentOut FP_main(PS_INPUT input)
+{
 	FragmentOut result;
 	float fCos = dot(g_globalLightPos.xyz, input.viewDir) / length(input.viewDir);
 	float fCos2 = fCos * fCos;

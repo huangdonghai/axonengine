@@ -79,6 +79,13 @@ struct RenderTargetSet {
 
 	RenderTarget *m_depthTarget;
 	RenderTarget *m_colorTargets[MaxColorTarget];
+
+	RenderTarget *getFirstUsed() const {
+		if (m_depthTarget) return m_depthTarget;
+		for (int i = 0; i < MaxColorTarget; i++)
+			if (m_colorTargets[i]) return m_colorTargets[i];
+		return 0;
+	}
 };
 
 class RenderWorld;

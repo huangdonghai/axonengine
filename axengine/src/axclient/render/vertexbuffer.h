@@ -66,7 +66,7 @@ struct DynamicBuf {
 
 struct VertexBufferTraits
 {
-	static void allocPage(phandle_t h, int size)
+	static void allocPage(phandle_t &h, int size)
 	{
 		g_apiWrap->createVertexBuffer(h, size, Primitive::HintDynamic);
 	}
@@ -82,7 +82,7 @@ struct VertexBufferTraits
 
 struct IndexBufferTraits
 {
-	static void allocPage(phandle_t h, int size)
+	static void allocPage(phandle_t &h, int size)
 	{
 		g_apiWrap->createIndexBuffer(h, size, Primitive::HintDynamic);
 	}

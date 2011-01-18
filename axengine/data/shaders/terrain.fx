@@ -13,7 +13,7 @@ read the license and understand and accept it fully.
 
 float Script : STANDARDSGLOBAL <
 	// technique
-	string TechniqueZpass = "zpass";
+	string TechniqueGeoFill = "zpass";
 	string TechniqueShadowGen = "shadowGen";
 	string TechniqueMain = "main";
 	string TechniqueGlow = "";

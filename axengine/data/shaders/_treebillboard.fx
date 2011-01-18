@@ -18,7 +18,7 @@ float Script : STANDARDSGLOBAL <
     string Script = "Technique=Technique?main;";
 
 	// technique
-	string TechniqueZpass = "";
+	string TechniqueGeoFill = "";
 	string TechniqueShadowGen = "";
 	string TechniqueMain = "main";
 	string TechniqueGlow = "";

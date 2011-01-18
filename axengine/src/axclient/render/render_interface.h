@@ -206,8 +206,8 @@ public:
 	}
 
 protected:
-	phandle_t allocHandle();
-	void freeHandle(phandle_t h);
+	phandle_t newHandle();
+	void deleteHandle(phandle_t h);
 
 	typedef void (*delete_func_t)(phandle_t);
 	void addObjectDeletion(delete_func_t func, phandle_t h);

@@ -496,7 +496,7 @@ void DX9_Driver::runFrame()
 
 void D3D9Thread::drawPass_zfill(RenderScene *scene)
 {
-	s_technique = Technique::Zpass;
+	s_technique = Technique::GeoFill;
 
 	D3D9clearer clearer;
 	clearer.clearDepth(true);

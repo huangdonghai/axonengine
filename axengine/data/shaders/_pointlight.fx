@@ -16,7 +16,7 @@ read the license and understand and accept it fully.
 
 float Script : STANDARDSGLOBAL <
 	// technique
-	string TechniqueZpass = "";
+	string TechniqueGeoFill = "";
 	string TechniqueShadowGen = "";
 	string TechniqueMain = "main";
 	string TechniqueGlow = "";
@@ -31,9 +31,11 @@ float Script : STANDARDSGLOBAL <
 #define F_SPOTLIGHT		G_FEATURE4
 #define F_BOXFALLOFF	G_FEATURE5
 
-float4x4	s_lightMatrix;
-float4		s_lightPos;		// (xyz)*invR, invR
-float4		s_lightColor = float4(1,1,1,1);
+AX_BEGIN_PC
+float3x4 s_lightMatrix : PREG0;
+float4 s_lightPos : PREG4;		// (xyz)*invR, invR
+float4 s_lightColor : PREG5 = float4(1,1,1,1);
+AX_END_PC
 
 struct ShadowVertexOut {
     float4	hpos	: POSITION;
@@ -76,7 +78,7 @@ half4 FP_main(ShadowVertexOut IN) : COLOR {
 	float3 worldpos = g_cameraPos.xyz + IN.viewDir.xyz / IN.viewDir.w * gbuffer.a;
 
 #if F_PROJECTOR || F_SPOTLIGHT
-	float4 projTc = mul(s_lightMatrix, float4(worldpos,1));
+	float3 projTc = mul(s_lightMatrix, float4(worldpos,1));
 	projTc.xy /= projTc.z;
 
 //	projTc.xyz = abs(projTc.xyz);

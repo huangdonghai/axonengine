@@ -1,4 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shaderlist>
-  <item></item>
+  <!--light-->
+  <item>_globallight</item>
+  <item>_pointlight</item>
+  <item>_spotlight</item>
+  <!--material effect-->
+  <item>_debug</item>
+  <item>_skyNishita</item>
+  <item>_skyNishitaGen</item>
+  <item>_terrainbrush</item>
+  <item>blend</item>
+  <item>blinn</item>
+  <item>font</item>
+  <item>ocean</item>
+  <item>sky</item>
+  <item>terrain</item>
 </shaderlist>

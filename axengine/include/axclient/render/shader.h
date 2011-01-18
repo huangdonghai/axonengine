@@ -75,15 +75,33 @@ class ConstBuffer
 public:
 	friend class ConstBuffers;
 
+	enum Item {
+#define AX_ITEM(stype, atype, name, reg) name,
+#define AX_ARRAY(stype, atype, name, n, reg) name,
+#include "../../../data/shaders/sceneconst.fxh"
+#include "../../../data/shaders/interactionconst.fxh"
+#undef AX_ITEM
+#undef AX_ARRAY
+
+		MaxItem
+	};
+
+	enum Type {
+		GlobalConst,
+		InteractionConst,
+		MaxType
+	};
+
 	enum ValueType {
 		vt_empty, vt_float, vt_Vector2, vt_Vector3, vt_Matrix3, vt_Vector4, vt_Matrix, vt_Matrix4
 	};
 
 	struct Field {
 		ValueType m_valueType;
-		FixedString m_name;
+		Item m_name;
+		int m_arrayCount;
 		int m_offset;
-		int m_dataSizeOfFloat;
+		int m_dataSize; // in floats
 	};
 
 	ConstBuffer(int type);
@@ -104,12 +122,13 @@ protected:
 	void initInteractionConst();
 
 	void clear();
-	void addField(ValueType vt, const char *name, int offset);
+	void addField(ValueType vt, Item name, int count, int reg);
 
 private:
 	bool m_dirty;
 	std::vector<Field> m_fields;
 	int m_index; // register index in dx9, buffer index in dx10,dx11
+	int m_dataSize; // in floats
 	FloatSeq m_data;
 	FloatSeq m_default;
 };
@@ -117,23 +136,8 @@ private:
 class ConstBuffers
 {
 public:
-	enum Item {
-#define AX_ITEM(stype, atype, name, reg) name,
-#define AX_ARRAY(stype, atype, name, n, reg) name,
-#include "../../../data/shaders/sceneconst.fxh"
-#include "../../../data/shaders/interactionconst.fxh"
-#undef AX_ITEM
-#undef AX_ARRAY
-
-		MaxItem
-	};
-
-	enum Type {
-		GlobalConst,
-		InteractionConst,
-		MaxType
-	};
-
+	typedef ConstBuffer::Type Type;
+	typedef ConstBuffer::Item Item;
 
 	ConstBuffers();
 	~ConstBuffers();
@@ -149,9 +153,8 @@ private:
 		ConstBuffer::Field *m_field;
 	};
 
-	ConstBuffer *m_buffers[MaxType];
-
-	FieldLink *m_fields[MaxItem];
+	ConstBuffer *m_buffers[ConstBuffer::MaxType];
+	FieldLink *m_fields[ConstBuffer::MaxItem];
 };
 
 
@@ -320,7 +323,7 @@ private:
 
 struct Technique {
 	enum Type {
-		Zpass, ShadowGen, Main, Layer, Glow, Reflection, MaxType
+		GeoFill, ShadowGen, Main, Layer, Glow, Reflection, MaxType
 	};
 
 	AX_DECLARE_ENUM(Technique);
@@ -336,7 +339,7 @@ inline std::string Technique::toString()
 
 #define ENUMDECL(t) case t: result += #t; break;
 	switch (t) {
-	ENUMDECL(Zpass)
+	ENUMDECL(GeoFill)
 	ENUMDECL(ShadowGen)
 	ENUMDECL(Main)
 	ENUMDECL(Layer)

@@ -26,6 +26,7 @@ struct VertexType {
 	AX_DECLARE_ENUM(VertexType);
 
 	int stride() const;
+	int calcSize(int c) const { return c * stride(); }
 };
 
 // 64 bytes

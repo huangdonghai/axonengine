@@ -20,7 +20,7 @@ float Script : STANDARDSGLOBAL <
 	string	MacroParameters = "P_TEST|P_TEST2";
 
 	// technique
-	string	TechniqueZpass = "";
+	string	TechniqueGeoFill = "";
 	string	TechniqueShadowGen = "";
 	string	TechniqueMain = "main";
 	string	TechniqueGlow = "";

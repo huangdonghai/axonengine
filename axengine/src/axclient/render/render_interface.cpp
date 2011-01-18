@@ -352,13 +352,13 @@ ApiWrap::~ApiWrap()
 
 void ApiWrap::createTextureFromFileInMemory(phandle_t &h, AsioRequest *asioRequest)
 {
-	h = allocHandle();
+	h = newHandle();
 	sAllocCommand(RenderApi::createTextureFromFileInMemory).args(h, asioRequest);
 }
 
 void ApiWrap::createTexture2D(phandle_t &h, TexFormat format, int width, int height, int flags /*= 0*/)
 {
-	h = allocHandle();
+	h = newHandle();
 	sAllocCommand(RenderApi::createTexture2D).args(h, format, width, height, flags);
 }
 
@@ -384,12 +384,15 @@ void ApiWrap::deleteTexture2D(phandle_t h)
 
 void ApiWrap::createVertexBuffer(phandle_t &h, int datasize, Primitive::Hint hint)
 {
-	h = allocHandle();
+	h = newHandle();
 	sAllocCommand(RenderApi::createVertexBuffer).args(h, datasize, hint);
 }
 
 void ApiWrap::uploadVertexBuffer(phandle_t h, int datasize, const void *p, IEventHandler *eventHandler)
 {
+#ifdef _DEBUG
+	AX_ASSERT((uint_t)h != 0xCDCDCDCD);
+#endif
 	void *newp = allocRingBuf(datasize);
 	memcpy(newp, p, datasize);
 	sAllocCommand(RenderApi::uploadVertexBuffer).args(h, datasize, newp, eventHandler);
@@ -402,7 +405,7 @@ void ApiWrap::deleteVertexBuffer(phandle_t h)
 
 void ApiWrap::createIndexBuffer(phandle_t &h, int datasize, Primitive::Hint hint)
 {
-	h = allocHandle();
+	h = newHandle();
 	sAllocCommand(RenderApi::createIndexBuffer).args(h, datasize, hint);
 }
 
@@ -499,7 +502,7 @@ void ApiWrap::addObjectDeletion(delete_func_t func, phandle_t h)
 
 void ApiWrap::createWindowTarget(phandle_t &h, Handle hwnd, int width, int height)
 {
-	h = allocHandle();
+	h = newHandle();
 	sAllocCommand(RenderApi::createWindowTarget).args(h, hwnd, width, height);
 }
 
@@ -546,13 +549,42 @@ void ApiWrap::setMaterialTexture(Texture * const tex[])
 	SamplerDesc *descs = allocType<SamplerDesc>(MaterialTextureId::MaxType);
 
 	for (int i = 0; i < MaterialTextureId::MaxType; i++) {
-		handles[i] = tex[i]->getPHandle();
-		descs[i] = tex[i]->getSamplerState();
+		if (tex[i]) {
+			handles[i] = tex[i]->getPHandle();
+			descs[i] = tex[i]->getSamplerState();
+		} else {
+			handles[i] = 0;
+		}
 	}
 
 	sAllocCommand(RenderApi::setMaterialTexture).args(handles, descs);
 }
 
+void ApiWrap::setVerticesUP(const void *vb, VertexType vt, int vertcount)
+{
+	int size = vt.calcSize(vertcount);
+	void *p = allocType<byte_t>(size);
+	::memcpy(p, vb, size);
+	sAllocCommand(RenderApi::setVerticesUP).args(p, vt, vertcount);
+}
+
+void ApiWrap::setIndicesUP(const void *ib, ElementType et, int indicescount)
+{
+	int size = indicescount * sizeof(ushort_t);
+	void *p = allocType<byte_t>(size);
+	::memcpy(p, ib, size);
+	sAllocCommand(RenderApi::setIndicesUP).args(p, et, indicescount);
+}
+
+void ApiWrap::setViewport(const Rect &rect, const Vector2 &depthRange)
+{
+	sAllocCommand(RenderApi::setViewport).args(rect, depthRange);
+}
+
+void ApiWrap::setScissorRect(const Rect &scissorRect)
+{
+	sAllocCommand(RenderApi::setScissorRect).args(scissorRect);
+}
 
 
 void ApiWrap::setVertices(phandle_t vb, VertexType vt, int offset)
@@ -652,24 +684,15 @@ int ApiWrap::runCommands()
 	return count;
 }
 
-phandle_t ApiWrap::allocHandle()
+phandle_t ApiWrap::newHandle()
 {
 	return new Handle;
 }
 
-void ApiWrap::freeHandle( phandle_t h )
+void ApiWrap::deleteHandle( phandle_t h )
 {
 	delete h;
 }
 
-void ApiWrap::setVerticesUP(const void *vb, VertexType vt, int vertcount)
-{
-
-}
-
-void ApiWrap::setIndicesUP(const void *ib, ElementType et, int indicescount)
-{
-
-}
 
 AX_END_NAMESPACE

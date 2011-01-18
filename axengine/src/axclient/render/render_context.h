@@ -33,7 +33,7 @@ protected:
 	void drawGlobalLight(RenderScene *scene, RenderLight *light);
 	void drawLocalLight(RenderScene *scene, RenderLight *light);
 
-	void drawPass_gfill(RenderScene *scene);
+	void drawPass_geoFill(RenderScene *scene);
 	void drawPass_overlay(RenderScene *scene);
 	void drawPass_composite(RenderScene *scene);
 	void drawPass_shadowGen(RenderScene *scene);
@@ -71,6 +71,7 @@ private:
 	Interaction *m_curInteraction;
 	const RenderEntity *m_curEntity;
 	bool m_isStatistic;
+	bool m_isReflecting;
 	Technique m_curTechnique;
 	RenderTargetSet m_targetSet;
 

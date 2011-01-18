@@ -16,7 +16,7 @@ read the license and understand and accept it fully.
 
 float Script : STANDARDSGLOBAL <
 	// technique
-	string TechniqueZpass = "";
+	string TechniqueGeoFill = "";
 	string TechniqueShadowGen = "";
 	string TechniqueMain = "main";
 	string TechniqueGlow = "";
@@ -107,11 +107,12 @@ technique main {
     pass p0 {
         VERTEXPROGRAM = compile VP_3_0 VP_main();
 		FRAGMENTPROGRAM = compile FP_3_0 FP_main();
-
+#if 0
 		DEPTHTEST = false;
 		CULL_FRONT;
 		DEPTHMASK = false;
 		BLEND_ADD;
+#endif
     }
 }
 

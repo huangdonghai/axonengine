@@ -34,6 +34,7 @@ DX9_Window::DX9_Window()
 	m_backbuffer = 0;
 	m_swapChainWnd = 0;
 	m_presentInterval = 0;
+	m_swapChainSize.set(-1,-1);
 
 	std::wstring ws = u2w("DX9_Window");
 	WNDCLASSEXW wcex;	
@@ -67,6 +68,8 @@ DX9_Window::DX9_Window()
 		, NULL, NULL
 		, (HINSTANCE)GetModuleHandleW(NULL)
 		, NULL);
+
+	m_updatedSize.set(640,480);
 }
 
 DX9_Window::DX9_Window(Handle wndId, int width, int height)
@@ -74,8 +77,11 @@ DX9_Window::DX9_Window(Handle wndId, int width, int height)
 	m_swapChain = 0;
 	m_backbuffer = 0;
 	m_swapChainWnd = 0;
+	m_presentInterval = 0;
+	m_swapChainSize.set(-1,-1);
 
 	m_wndId = (HWND)wndId.toVoidStar();
+	m_updatedSize.set(width,height);
 }
 
 DX9_Window::~DX9_Window()

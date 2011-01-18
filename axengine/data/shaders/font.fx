@@ -10,15 +10,10 @@ read the license and understand and accept it fully.
 
 #include "common.fxh"
 
-float Script : STANDARDSGLOBAL <
-    string UIWidget = "none";
-    string ScriptClass = "object";
-    string ScriptOrder = "standard";
-    string ScriptOutput = "color";
-    string Script = "Technique=Technique?main;";
-
+float Script : STANDARDSGLOBAL
+<
 	// technique
-	string TechniqueZpass = "";
+	string TechniqueGeoFill = "";
 	string TechniqueShadowGen = "";
 	string TechniqueMain = "main";
 	string TechniqueGlow = "";
@@ -42,12 +37,11 @@ static const half c_SampleWeight[13] = {
 							1.0 / 20.0,	
 };
 
-/*********** Generic Vertex Shader ******/
-
-VertexOut VP_main(VertexIn IN) {
+VertexOut VP_main(VertexIn IN)
+{
     VertexOut OUT = (VertexOut)0;
 
-	OUT.streamTc.xy = IN.st.xy;
+	OUT.streamTc.xy = IN.streamTc.xy;
 	OUT.color = IN.color;
 
 	OUT.hpos = VP_modelToClip(IN, IN.position);
@@ -56,7 +50,8 @@ VertexOut VP_main(VertexIn IN) {
 }
 
 /********* pixel shaders ********/
-half4 FP_main(VertexOut IN) : COLOR {
+half4 FP_main(VertexOut IN) : COLOR
+{
 #if !G_D3D
 	half4 c = IN.color.bgra;
 #else
@@ -78,7 +73,8 @@ half4 FP_main(VertexOut IN) : COLOR {
 	return c;
 }
 
-half4 FP_blur(VertexOut IN) : COLOR {
+half4 FP_blur(VertexOut IN) : COLOR
+{
 	half4 c;
 
 	c.rgb = 1 - IN.color.rgb;

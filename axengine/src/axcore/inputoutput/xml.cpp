@@ -973,6 +973,29 @@ bool TiXmlDocument::LoadFile(const char *_filename, TiXmlEncoding encoding)
 	}
 }
 
+
+bool TiXmlDocument::LoadAxonFile(const std::string &filename)
+{
+	char *buffer = 0;
+	size_t size = g_fileSystem->readFile(filename, (void**)&buffer);
+
+	if (!size || !buffer) {
+		SetError(TIXML_ERROR_OPENING_FILE, 0, 0, TIXML_ENCODING_UNKNOWN);
+		return false;
+	}
+
+	Parse(buffer, NULL, TIXML_ENCODING_UTF8);
+
+	g_fileSystem->freeFile(buffer);
+
+	if (Error())
+		return false;
+	else
+		return true;
+}
+
+
+
 bool TiXmlDocument::LoadFile(FILE *file, TiXmlEncoding encoding)
 {
 	if (!file) 

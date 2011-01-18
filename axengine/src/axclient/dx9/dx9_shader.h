@@ -189,7 +189,7 @@ public:
 	~DX9_Shader();
 
 	// implement Shader
-	bool init(const std::string &name, const ShaderMacro &macro = g_shaderMacro);
+	bool init(const FixedString &name, const ShaderMacro &macro = g_shaderMacro);
 	bool haveTechnique(Technique tech) const;
 	const ShaderInfo *getShaderInfo() const { return 0; }
 
@@ -228,7 +228,7 @@ protected:
 
 private:
 	LPD3DXEFFECT m_object;              // Effect object
-	std::string m_keyString;
+	FixedString m_key;
 
 	D3DXHANDLE m_d3dxTechniques[Technique::MaxType];
 	IDirect3DTexture9 *m_samplerBound[MaterialTextureId::MaxType];
@@ -251,10 +251,11 @@ private:
 class DX9_ShaderManager
 {
 public:
+	friend class DX9_Shader;
+
 	DX9_ShaderManager();
 	~DX9_ShaderManager();
 
-	DX9_Shader *findShader(const std::string &name, const ShaderMacro &macro = g_shaderMacro);
 	DX9_Shader *findShader(const FixedString &nameId, const ShaderMacro &macro);
 	void saveShaderCache(const std::string &name);
 	void applyShaderCache(const std::string &name);
@@ -263,6 +264,7 @@ public:
 
 protected:
 	void _initialize();
+	void addShaderInfo(const FixedString &key, ShaderInfo *shaderInfo);
 
 private:
 	typedef Dict<FixedString,Dict<ShaderMacro,DX9_Shader*> > ShaderDict;

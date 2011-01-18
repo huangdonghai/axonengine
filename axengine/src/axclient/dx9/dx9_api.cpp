@@ -23,12 +23,14 @@ static const void *s_curIndiceBufferUP;
 static DepthStencilDesc s_curDepthStencilDesc;
 static RasterizerDesc s_curRasterizerDesc;
 static BlendDesc s_curBlendDesc;
+static Size s_curRenderTargetSize;
 
 inline bool trTexFormat(TexFormat texformat, D3DFORMAT &d3dformat)
 {
 	d3dformat = D3DFMT_UNKNOWN;
 
 	switch (texformat) {
+	case TexFormat::AUTO: return false;
 	case TexFormat::NULLTARGET: d3dformat = (D3DFORMAT)MAKEFOURCC('N','U','L','L'); break;
 	case TexFormat::R5G6B5: d3dformat = D3DFMT_R5G6B5; break;
 	case TexFormat::RGB10A2: d3dformat = D3DFMT_A2R10G10B10; break;
@@ -435,10 +437,22 @@ inline static IDirect3DSurface9 *getSurface(phandle_t h)
 	return surface;
 }
 
+inline static void setRenderTargetSize(IDirect3DSurface9 *surface)
+{
+	AX_ASSERT(surface);
+	D3DSURFACE_DESC desc;
+	surface->GetDesc(&desc);
+	s_curRenderTargetSize.set(desc.Width, desc.Height);
+}
+
 static void dx9SetRenderTarget(int index, phandle_t h)
 {
 	IDirect3DSurface9 *surface = getSurface(h);
 	dx9_device->SetRenderTarget(index, surface);
+
+	if (index == 0 && surface)
+		setRenderTargetSize(surface);
+
 	SAFE_RELEASE(surface);
 }
 
@@ -453,7 +467,7 @@ static void dx9SetTargetSet(phandle_t targetSet[RenderTargetSet::MaxTarget])
 {
 	dx9SetDepthStencil(targetSet[0]);
 	for (int i = 0; i < RenderTargetSet::MaxColorTarget; i++) {
-		dx9SetRenderTarget(i, targetSet[i-1]);
+		dx9SetRenderTarget(i, targetSet[i+1]);
 	}
 }
 
@@ -665,6 +679,9 @@ void dx9AssignRenderApi()
 	RenderApi::deleteRasterizerState = &dx9DeleteRasterizerState;
 #endif
 	RenderApi::setTargetSet = &dx9SetTargetSet;
+
+	RenderApi::setViewport = &dx9SetViewport;
+	RenderApi::setScissorRect = &dx9SetScissorRect;
 
 	RenderApi::setShader = &dx9SetShader;
 	RenderApi::setConstBuffer = &dx9SetConstBuffer;
