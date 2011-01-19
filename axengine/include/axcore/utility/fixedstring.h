@@ -41,24 +41,43 @@ class AX_API FixedString
 {
 public:
 	FixedString()
-	{ m_handle = FixedStringManager::EMPTY_HANDLE; }
+	{
+		m_handle = FixedStringManager::EMPTY_HANDLE;
+#ifdef _DEBUG
+		m_string = 0;
+#endif
+	}
 
 	FixedString(int id)
-	{ m_handle = id; }
+	{
+		m_handle = id;
+#ifdef _DEBUG
+		m_string = &FixedStringManager::instance().getString(m_handle);
+#endif
+	}
 
 	FixedString(const FixedString &rhs)
 	{
 		m_handle = rhs.m_handle;
+#ifdef _DEBUG
+		m_string = rhs.m_string;
+#endif
 	}
 
 	FixedString(const std::string &str)
 	{
 		m_handle = FixedStringManager::instance().findString(str.c_str());
+#ifdef _DEBUG
+		m_string = &FixedStringManager::instance().getString(m_handle);
+#endif
 	}
 
 	FixedString(const char *lpcz)
 	{
 		m_handle = FixedStringManager::instance().findString(lpcz);
+#ifdef _DEBUG
+		m_string = &FixedStringManager::instance().getString(m_handle);
+#endif
 	}
 
 	~FixedString()
@@ -66,44 +85,59 @@ public:
 
 	int id() const { return m_handle; }
 
-	const std::string &toString() const {
+	const std::string &toString() const
+	{
 		return FixedStringManager::instance().getString(m_handle);
 	}
-#if 1
-	operator const std::string&() const {
-		return FixedStringManager::instance().getString(m_handle);
-	}
-#endif
-	const char *c_str() const {
+	const char *c_str() const
+	{
 		return FixedStringManager::instance().getString(m_handle).c_str();
 	}
 
-	FixedString &operator=(const FixedString &rhs) {
+	FixedString &operator=(const FixedString &rhs)
+	{
 		m_handle = rhs.m_handle;
+#ifdef _DEBUG
+		m_string = rhs.m_string;
+#endif
 		return *this;
 	}
 
-	FixedString &operator=(const std::string &rhs) {
+	FixedString &operator=(const std::string &rhs)
+	{
 		m_handle = FixedStringManager::instance().findString(rhs);
+#ifdef _DEBUG
+		m_string = &FixedStringManager::instance().getString(m_handle);
+#endif
 		return *this;
 	}
 
-	FixedString &operator=(const char *lpcz) {
+	FixedString &operator=(const char *lpcz)
+	{
 		m_handle = FixedStringManager::instance().findString(lpcz);
+#ifdef _DEBUG
+		m_string = &FixedStringManager::instance().getString(m_handle);
+#endif
 		return *this;
 	}
 
-	bool operator==(const FixedString &rhs) const {
+	bool operator==(const FixedString &rhs) const
+	{
 		return m_handle == rhs.m_handle;
 	}
 
-	size_t hash() const { return m_handle; }
+	size_t hash() const
+	{ return m_handle; }
 
-	bool empty() const { return m_handle == FixedStringManager::EMPTY_HANDLE; }
+	bool empty() const
+	{ return m_handle == FixedStringManager::EMPTY_HANDLE; }
 //		explicit operator size_t() const { return m_handle; }
 
 private:
 	int m_handle;
+#ifdef _DEBUG
+	const std::string *m_string;
+#endif
 };
 
 AX_END_NAMESPACE

@@ -253,7 +253,8 @@ void PropertyEditor::setProperHeight() {
 	return;
 }
 
-void PropertyEditor::initFromObject(Object *obj) {
+void PropertyEditor::initFromObject(Object *obj)
+{
 	if (!obj) {
 		setInitialInput(nullptr);
 		return;
@@ -266,7 +267,7 @@ void PropertyEditor::initFromObject(Object *obj) {
 
 	for (; typeinfo; typeinfo = typeinfo->getBase()) {
 		IProperty *p;
-		p = new SeparatorProperty("", u2q(typeinfo->getName())); collection->addProperty(p);
+		p = new SeparatorProperty("", u2q(typeinfo->getName().toString())); collection->addProperty(p);
 
 		const MemberSeq &members = typeinfo->getMembers();
 
@@ -284,22 +285,22 @@ void PropertyEditor::initFromObject(Object *obj) {
 			Variant::TypeId type = m->getPropType();
 			switch (type) {
 			case Variant::kBool:
-				p = new BoolProperty(m->getPropertyNoCheck(obj), u2q(m->getName()));
+				p = new BoolProperty(m->getPropertyNoCheck(obj), u2q(m->getName().toString()));
 				break;
 			case Variant::kInt:
-				p = new IntProperty(m->getPropertyNoCheck(obj), u2q(m->getName()));
+				p = new IntProperty(m->getPropertyNoCheck(obj), u2q(m->getName().toString()));
 				break;
 			case Variant::kFloat:
-				p = new DoubleProperty(m->getPropertyNoCheck(obj), u2q(m->getName()));
+				p = new DoubleProperty(m->getPropertyNoCheck(obj), u2q(m->getName().toString()));
 				break;
 			case Variant::kString:
-				p = new StringProperty(u2q(m->getPropertyNoCheck(obj)), u2q(m->getName()));
+				p = new StringProperty(u2q(m->getPropertyNoCheck(obj)), u2q(m->getName().toString()));
 				break;
 			case Variant::kVector3:
-				p = new VectorProperty(m->getPropertyNoCheck(obj), u2q(m->getName()));
+				p = new VectorProperty(m->getPropertyNoCheck(obj), u2q(m->getName().toString()));
 				break;
 			case Variant::kColor3:
-				p = new ColorProperty(x2q(m->getPropertyNoCheck(obj)), u2q(m->getName()));
+				p = new ColorProperty(x2q(m->getPropertyNoCheck(obj)), u2q(m->getName().toString()));
 				break;
 			}
 
@@ -394,54 +395,54 @@ bool PropertyEditor::initScriptProp(Object *obj) {
 		case Variant::kVoid:
 			break;
 		case Variant::kBool:
-			p = new BoolProperty(m->getPropertyNoCheck(obj), u2q(m->getName()));
+			p = new BoolProperty(m->getPropertyNoCheck(obj), u2q(m->getName().toString()));
 			break;
 		case Variant::kInt:
-			p = new IntProperty(m->getPropertyNoCheck(obj), u2q(m->getName()));
+			p = new IntProperty(m->getPropertyNoCheck(obj), u2q(m->getName().toString()));
 			break;
 		case Variant::kFloat:
-			p = new DoubleProperty(m->getPropertyNoCheck(obj), u2q(m->getName()));
+			p = new DoubleProperty(m->getPropertyNoCheck(obj), u2q(m->getName().toString()));
 			break;
 		case Variant::kString:
-			p = new StringProperty(u2q(m->getPropertyNoCheck(obj)), u2q(m->getName()));
+			p = new StringProperty(u2q(m->getPropertyNoCheck(obj)), u2q(m->getName().toString()));
 			break;
 		case Variant::kObject:
 			break;
 		case Variant::kVector3:
-			p = new VectorProperty(m->getPropertyNoCheck(obj), u2q(m->getName()));
+			p = new VectorProperty(m->getPropertyNoCheck(obj), u2q(m->getName().toString()));
 			break;
 		case Variant::kColor3:
-			p = new ColorProperty(x2q(m->getPropertyNoCheck(obj)), u2q(m->getName()));
+			p = new ColorProperty(x2q(m->getPropertyNoCheck(obj)), u2q(m->getName().toString()));
 			break;
 		case Variant::kPoint:
 		case Variant::kRect:
 			break;
 		case Member::kEnum:
-			p = new EnumProperty(m->getEnumItems(), m->getPropertyNoCheck(obj), u2q(m->getName()));
+			p = new EnumProperty(m->getEnumItems(), m->getPropertyNoCheck(obj), u2q(m->getName().toString()));
 			break;
 		case Member::kFlag:
-			p = new FlagsProperty(m->getEnumItems(), m->getPropertyNoCheck(obj), u2q(m->getName()));
+			p = new FlagsProperty(m->getEnumItems(), m->getPropertyNoCheck(obj), u2q(m->getName().toString()));
 			break;
 		case Member::kTexture:
-			p = new FileProperty(u2q(m->getPropertyNoCheck(obj)), u2q(m->getName()), "/textures", "*.dds");
+			p = new FileProperty(u2q(m->getPropertyNoCheck(obj)), u2q(m->getName().toString()), "/textures", "*.dds");
 			break;
 		case Member::kSound:
-			p = new FileProperty(u2q(m->getPropertyNoCheck(obj)), u2q(m->getName()), "/sounds", "*.ogg");
+			p = new FileProperty(u2q(m->getPropertyNoCheck(obj)), u2q(m->getName().toString()), "/sounds", "*.ogg");
 			break;
 		case Member::kModel:
-			p = new FileProperty(u2q(m->getPropertyNoCheck(obj)), u2q(m->getName()), "/models", "*.mesh");
+			p = new FileProperty(u2q(m->getPropertyNoCheck(obj)), u2q(m->getName().toString()), "/models", "*.mesh");
 			break;
 		case Member::kAnimation:
-			p = new FileProperty(u2q(m->getPropertyNoCheck(obj)), u2q(m->getName()), "/models", "*.anim");
+			p = new FileProperty(u2q(m->getPropertyNoCheck(obj)), u2q(m->getName().toString()), "/models", "*.anim");
 			break;
 		case Member::kSpeedTree:
-			p = new FileProperty(u2q(m->getPropertyNoCheck(obj)), u2q(m->getName()), "/speedtrees", "*.spt");
+			p = new FileProperty(u2q(m->getPropertyNoCheck(obj)), u2q(m->getName().toString()), "/speedtrees", "*.spt");
 			break;
 		case Member::kMaterial:
-			p = new FileProperty(u2q(m->getPropertyNoCheck(obj)), u2q(m->getName()), "/materials", "*.mtr");
+			p = new FileProperty(u2q(m->getPropertyNoCheck(obj)), u2q(m->getName().toString()), "/materials", "*.mtr");
 			break;
 		case Member::kGroup:
-			p = new SeparatorProperty("", u2q(m->getName()));
+			p = new SeparatorProperty("", u2q(m->getName().toString()));
 			break;
 		}
 

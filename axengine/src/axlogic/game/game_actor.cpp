@@ -59,7 +59,7 @@ void GameActor::autoGenerateName()
 	std::string objname = "entity";
 
 	if (getScriptClass())
-		objname = getScriptClass()->getName();
+		objname = getScriptClass()->getName().toString();
 
 	StringUtil::strlwr(&objname[0]);
 	objname = g_scriptSystem->generateObjectName(objname);

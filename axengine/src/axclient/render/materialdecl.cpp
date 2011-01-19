@@ -190,12 +190,12 @@ FixedString MaterialDecl::normalizeKey(const std::string &name)
 	else
 		key = name;
 
-	key = PathUtil::removeExt(key);
+	key = PathUtil::removeExt(key.toString());
 
 	return key;
 }
 
-MaterialDecl *MaterialDecl::load( const std::string &name )
+MaterialDecl *MaterialDecl::load(const std::string &name)
 {
 	// normalize key first
 	FixedString key = normalizeKey(name);
@@ -216,7 +216,7 @@ MaterialDecl *MaterialDecl::load( const std::string &name )
 
 	// try load
 	MaterialDecl *result = new MaterialDecl();
-	bool success = result->tryLoad(key);
+	bool success = result->tryLoad(key.toString());
 	if (success) {
 		ms_declDict[key] = result;
 	} else {

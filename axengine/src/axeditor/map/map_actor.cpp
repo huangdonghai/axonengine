@@ -71,7 +71,7 @@ MapAgent *MapActor::clone() const
 {
 	// create entity
 	GameWorld *gameworld = getMapContext()->getGameWorld();
-	MapActor *newent = new MapActor(m_gameEntity->getScriptClass()->getName());
+	MapActor *newent = new MapActor(m_gameEntity->getScriptClass()->getName().toString());
 
 	newent->m_gameEntity->copyPropertiesFrom(this->m_gameEntity);
 	newent->m_gameEntity->autoGenerateName();

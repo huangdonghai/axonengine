@@ -139,6 +139,8 @@ void DX9_Driver::initialize()
 	dx9_internalWindow->bind();
 #endif
 
+	dx9_device->BeginScene();
+
 	Printf("ok\n");
 }
 

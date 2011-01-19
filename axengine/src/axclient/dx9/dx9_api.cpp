@@ -338,7 +338,7 @@ void dx9UploadIndexBuffer(phandle_t h, int datasize, const void *p, IEventHandle
 		flag = D3DLOCK_DISCARD;
 
 	void *dst = 0;
-	V(obj->Lock(0, datasize, &dst, 0/*D3DLOCK_DISCARD*/));
+	V(obj->Lock(0, datasize, &dst, flag));
 	memcpy(dst, p, datasize);
 	V(obj->Unlock());
 }
@@ -498,9 +498,11 @@ static void dx9SetViewport(const Rect &rect, const Vector2 & depthRange)
 	D3DVIEWPORT9 d3dviewport;
 
 	d3dviewport.X = rect.x;
-	d3dviewport.Y = rect.y;
-	if (d3dviewport.Y < 0)
+	if (rect.y < 0)
 		d3dviewport.Y = s_curRenderTargetSize.height + rect.y - rect.height;
+	else
+		d3dviewport.Y = rect.y;
+
 	d3dviewport.Width = rect.width;
 	d3dviewport.Height = rect.height;
 	d3dviewport.MinZ = depthRange.x;
@@ -675,7 +677,9 @@ static void dx9Present(phandle_t window)
 {
 	AX_ASSERT(window);
 	DX9_Window *dx9window = window->castTo<DX9_Window *>();
+	dx9_device->EndScene();
 	dx9window->present();
+	dx9_device->BeginScene();
 }
 
 void dx9AssignRenderApi()

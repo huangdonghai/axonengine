@@ -55,10 +55,10 @@ bool Material::init(const FixedString &key)
 
 	TypeZeroArray(m_textures);
 
-	m_decl = MaterialDecl::load(m_key);
+	m_decl = MaterialDecl::load(m_key.toString());
 
 	if (m_decl->isDefaulted()) {
-		setTextureSet(m_key);
+		setTextureSet(m_key.toString());
 	} else {
 		for (int i = 0; i < MaterialTextureId::MaxType; i++) {
 			TextureDef *texdef = m_decl->getTextureDef(i);

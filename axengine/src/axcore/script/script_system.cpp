@@ -589,7 +589,7 @@ void ScriptSystem::getClassList(const char *prefix, bool sort, StringSeq &result
 
 			result.push_back(ci->m_name.c_str() + prefixlen);
 		} else {
-			result.push_back(ci->m_name);
+			result.push_back(ci->m_name.toString());
 		}
 	}
 

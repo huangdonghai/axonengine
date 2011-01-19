@@ -60,7 +60,7 @@ void ActorPanel::beNotified(IObservable *subject, int arg ) {
 		ui.objectColor->setColor(actor->getColor() );
 		const ScriptClass *ci = actor->getGameObject()->getScriptClass();
 		if (ci ) {
-			ui.scriptClass->setText(u2q(ci->getName()) );
+			ui.scriptClass->setText(u2q(ci->getName().toString()) );
 			QString filename = u2q(std::string("scripts/") + ci->getName().toString());
 
 			for (int i = 0; i < filename.size(); i++ ) {
@@ -70,7 +70,7 @@ void ActorPanel::beNotified(IObservable *subject, int arg ) {
 			}
 			ui.scriptFile->setText(filename + ".nut" );
 		}
-		ui.cppType->setText(u2q(actor->getGameObject()->getCppClass()->getName()));
+		ui.cppType->setText(u2q(actor->getGameObject()->getCppClass()->getName().toString()));
 	}
 
 	if (agentlist.empty() ) {

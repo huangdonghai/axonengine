@@ -209,6 +209,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\materials\_debug.mtr"
+				>
+			</File>
+			<File
 				RelativePath=".\materials\_decal.mtr"
 				>
 			</File>
