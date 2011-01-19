@@ -39,7 +39,7 @@ void RenderContext::issueFrame(RenderFrame *rq)
 	RenderClearer clearer;
 	clearer.clearDepth(true);
 	clearer.clearColor(true);
-	g_apiWrap->clear(clearer);
+	//g_apiWrap->clear(clearer);
 
 	float scenetime[16];
 	bool m_isStatistic = false;

@@ -17,6 +17,7 @@ struct Size {
 
 	friend inline bool operator==(const Size &, const Size &);
 	friend inline bool operator!=(const Size &, const Size &);
+	friend inline bool operator<=(const Size &, const Size &);
 	friend inline const Size operator+(const Size &, const Size &);
 	friend inline const Size operator-(const Size &, const Size &);
 	friend inline const Size operator*(const Size &, float);
@@ -28,6 +29,7 @@ struct Size {
 
 inline bool operator==(const Size &a, const Size &b) { return a.width == b.width && a.height == b.height; }
 inline bool operator!=(const Size &a, const Size &b) { return !(a == b); }
+inline bool operator<=(const Size &a, const Size &b) { return a.width <= b.width && a.height <= b.height; }
 inline const Size operator+(const Size &a, const Size &b) { return Size(a.width+b.width, a.height+b.height); }
 inline const Size operator-(const Size &a, const Size &b) { return Size(a.width-b.width, a.height-b.height); }
 inline const Size operator*(const Size &a, float f) { return Size(a.width * f, a.height * f); }

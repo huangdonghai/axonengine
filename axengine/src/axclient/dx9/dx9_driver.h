@@ -34,6 +34,7 @@ public:
 	void onDeviceLost();
 
 	IDirect3DSurface9 *getDepthStencil(const Size &size);
+	IDirect3DSurface9 *getNullTarget(const Size &size);
 
 protected:
 	bool checkTextureFormatSupport(TexFormat format, D3DFORMAT d3dformat);
@@ -44,6 +45,11 @@ protected:
 
 private:
 	bool m_initialized;
+
+	Size m_depthStencilSurfaceSize;
+	IDirect3DSurface9 *m_depthStencilSurface;
+	Size m_nullSurfaceSize;
+	IDirect3DSurface9 *m_nullSurface;
 };
 
 AX_END_NAMESPACE

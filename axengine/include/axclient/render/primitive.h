@@ -92,6 +92,7 @@ protected:
 	int m_cachedId;		// used by render driver
 	int m_cachedFrame;
 #endif
+	int m_syncFrame;
 
 	Type m_type;
 	Material *m_material;

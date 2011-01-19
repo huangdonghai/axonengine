@@ -22,6 +22,10 @@ AX_END_COMMAND_MAP()
 DX9_Driver::DX9_Driver()
 {
 	m_initialized = false;
+	m_depthStencilSurfaceSize.set(-1,-1);
+	m_nullSurfaceSize.set(-1,-1);
+	m_depthStencilSurface = 0;
+	m_nullSurface = 0;
 }
 
 DX9_Driver::~DX9_Driver()
@@ -215,9 +219,34 @@ bool D3D9Driver::isInRenderingThread()
 
 #endif
 
-IDirect3DSurface9 * DX9_Driver::getDepthStencil(const Size &size)
+IDirect3DSurface9 *DX9_Driver::getDepthStencil(const Size &size)
 {
-	return 0;
+	if (size <= m_depthStencilSurfaceSize)
+		return m_depthStencilSurface;
+
+	SAFE_RELEASE(m_depthStencilSurface);
+	V(dx9_device->CreateDepthStencilSurface(size.width, size.height, D3DFMT_D24S8, D3DMULTISAMPLE_NONE, 0, FALSE, &m_depthStencilSurface, 0));
+	m_depthStencilSurfaceSize = size;
+	return m_depthStencilSurface;
+}
+
+IDirect3DSurface9 *DX9_Driver::getNullTarget(const Size &size)
+{
+	if (size <= m_nullSurfaceSize)
+		return m_nullSurface;
+
+	SAFE_RELEASE(m_nullSurface);
+
+	TexFormat nullformat = TexFormat::NULLTARGET;
+	if (!g_renderDriverInfo.renderTargetFormatSupport[nullformat]) {
+		AX_ASSERT(g_renderDriverInfo.renderTargetFormatSupport[TexFormat::R5G6B5]);
+		nullformat = TexFormat::R5G6B5;
+	}
+	D3DFORMAT d3dfmt;
+	AX_ASSURE(trTexFormat(nullformat, d3dfmt));
+	V(dx9_device->CreateRenderTarget(size.width, size.height, d3dfmt, D3DMULTISAMPLE_NONE, 0, FALSE, &m_nullSurface, 0));
+	m_nullSurfaceSize = size;
+	return m_nullSurface;
 }
 
 const ShaderInfo * DX9_Driver::findShaderInfo( const FixedString &key )
@@ -353,7 +382,7 @@ namespace {
 	};
 
 	D3DVERTEXELEMENT9 *s_veInfos[] = {
-		s_veSkin, s_veMesh, s_veBlend, s_veDebug, s_veChunk
+		s_veSkin, s_veMesh, s_veDebug, s_veBlend, s_veChunk
 	};
 } // namespace
 

@@ -293,8 +293,14 @@ void dx9UploadVertexBuffer(phandle_t h, int datasize, const void *p, IEventHandl
 {
 	IDirect3DVertexBuffer9 *obj = h->castTo<IDirect3DVertexBuffer9 *>();
 
+	DWORD flag = 0;
+	D3DVERTEXBUFFER_DESC desc;
+	V(obj->GetDesc(&desc));
+	if (desc.Usage & D3DUSAGE_DYNAMIC)
+		flag = D3DLOCK_DISCARD;
+
 	void *dst = 0;
-	V(obj->Lock(0, datasize, &dst, 0));
+	V(obj->Lock(0, datasize, &dst, flag));
 	memcpy(dst, p, datasize);
 	V(obj->Unlock());
 }
@@ -324,6 +330,12 @@ void dx9CreateIndexBuffer(phandle_t h, int datasize, Primitive::Hint hint)
 void dx9UploadIndexBuffer(phandle_t h, int datasize, const void *p, IEventHandler *eventHandler)
 {
 	IDirect3DIndexBuffer9 *obj = h->castTo<IDirect3DIndexBuffer9 *>();
+
+	DWORD flag = 0;
+	D3DINDEXBUFFER_DESC desc;
+	V(obj->GetDesc(&desc));
+	if (desc.Usage & D3DUSAGE_DYNAMIC)
+		flag = D3DLOCK_DISCARD;
 
 	void *dst = 0;
 	V(obj->Lock(0, datasize, &dst, 0/*D3DLOCK_DISCARD*/));
@@ -447,29 +459,37 @@ inline static void setRenderTargetSize(IDirect3DSurface9 *surface)
 	s_curRenderTargetSize.set(desc.Width, desc.Height);
 }
 
-static void dx9SetRenderTarget(int index, phandle_t h)
-{
-	IDirect3DSurface9 *surface = getSurface(h);
-	dx9_device->SetRenderTarget(index, surface);
-
-	if (index == 0 && surface)
-		setRenderTargetSize(surface);
-
-	SAFE_RELEASE(surface);
-}
-
-static void dx9SetDepthStencil(phandle_t h)
-{
-	IDirect3DSurface9 *surface = getSurface(h);
-	dx9_device->SetDepthStencilSurface(surface);
-	SAFE_RELEASE(surface);
-}
-
 static void dx9SetTargetSet(phandle_t targetSet[RenderTargetSet::MaxTarget])
 {
-	dx9SetDepthStencil(targetSet[0]);
+	AX_ASSURE(targetSet[0] || targetSet[1]);
+
+	bool surfaceSizeIsSet = false;
+	IDirect3DSurface9 *surface = getSurface(targetSet[0]);
+	if (surface) {
+		setRenderTargetSize(surface);
+		surfaceSizeIsSet = true;
+		V(dx9_device->SetDepthStencilSurface(surface));
+		SAFE_RELEASE(surface);
+	}
+
 	for (int i = 0; i < RenderTargetSet::MaxColorTarget; i++) {
-		dx9SetRenderTarget(i, targetSet[i+1]);
+		surface = getSurface(targetSet[i+1]);
+		V(dx9_device->SetRenderTarget(i, surface));
+		if (surface && !surfaceSizeIsSet)
+			setRenderTargetSize(surface);
+		SAFE_RELEASE(surface);
+	}
+
+	// if no depth surface, we assign a default
+	if (!targetSet[0]) {
+		surface = dx9_driver->getDepthStencil(s_curRenderTargetSize);
+		V(dx9_device->SetDepthStencilSurface(surface));
+	}
+
+	// if no render target in 0, we assign a null target, let dx9 happy
+	if (!targetSet[1]) {
+		surface = dx9_driver->getNullTarget(s_curRenderTargetSize);
+		V(dx9_device->SetRenderTarget(0, surface))
 	}
 }
 
@@ -496,8 +516,8 @@ static void dx9SetScissorRect(const Rect &scissorRect)
 	d3dRect.top = scissorRect.y;
 	if (d3dRect.top < 0)
 		d3dRect.top = s_curRenderTargetSize.height + d3dRect.top - scissorRect.height;
-	d3dRect.right = scissorRect.xMax();
-	d3dRect.bottom = scissorRect.yMax();
+	d3dRect.right = d3dRect.left + scissorRect.width;
+	d3dRect.bottom = d3dRect.top + scissorRect.height;
 	V(dx9_device->SetScissorRect(&d3dRect));
 }
 

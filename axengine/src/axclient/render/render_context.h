@@ -63,7 +63,6 @@ private:
 	RenderTarget *m_bloomMap[NUM_BLOOM_TEXTURES];
 	RenderTarget *m_toneMap[NUM_TONEMAP_TEXTURES];
 
-
 	// runtime
 	RenderTarget *m_curWindow;
 	RenderTarget *m_curWorldRt;

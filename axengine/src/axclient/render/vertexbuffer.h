@@ -148,7 +148,7 @@ public:
 	void endFrame()
 	{
 		AX_ASSERT(m_isFrameAllocating);
-		if (m_curIndex>=0) {
+		if (m_curIndex>=0 && m_curOffset > 0) {
 			Traits::uploadPage(m_pages[m_curIndex], m_curOffset, m_pageCache);
 		}
 

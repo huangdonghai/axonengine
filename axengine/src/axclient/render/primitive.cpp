@@ -22,6 +22,7 @@ Primitive::Primitive(Hint hint)
 	, */m_hint(hint)
 	, m_type(NoneType)
 {
+	m_syncFrame = -1;
 	m_isWorldSpace = false;
 	m_material = 0;
 	m_lightMap = 0;
@@ -604,6 +605,9 @@ void LinePrim::draw(Technique tech)
 
 void LinePrim::sync()
 {
+	if (m_syncFrame == g_renderSystem->getFrameNum())
+		return;
+
 	if (!m_isDirty && m_hint == Primitive::HintStatic)
 		return;
 
@@ -614,6 +618,8 @@ void LinePrim::sync()
 		m_indexObject->init(m_indexes, m_numIndexes, m_hint, ElementType_LineList, m_activedIndexes);
 
 	m_isDirty = m_isVertexBufferDirty = m_isIndexBufferDirty = 0;
+
+	m_syncFrame = g_renderSystem->getFrameNum();
 }
 
 //------------------------------------------------------------------------------
@@ -1139,6 +1145,9 @@ void MeshPrim::draw(Technique tech)
 
 void MeshPrim::sync()
 {
+	if (m_syncFrame == g_renderSystem->getFrameNum())
+		return;
+
 	if (!m_isDirty && m_hint == HintStatic)
 		return;
 
@@ -1154,6 +1163,8 @@ void MeshPrim::sync()
 		m_indexObject->init(m_indexes, m_numIndexes, m_hint, et, m_activedIndexes);
 
 	m_isDirty = m_isVertexBufferDirty = m_isIndexBufferDirty = false;
+
+	m_syncFrame = g_renderSystem->getFrameNum();
 }
 
 #if 0
@@ -1434,6 +1445,9 @@ void ChunkPrim::sync()
 	if (!m_isDirty && m_hint == HintStatic)
 		return;
 
+	if (m_syncFrame == g_renderSystem->getFrameNum())
+		return;
+
 	if (m_isVertexBufferDirty)
 		m_vertexObject->init(m_vertexes, m_numVertexes, m_hint, VertexType::kChunk);
 
@@ -1441,6 +1455,7 @@ void ChunkPrim::sync()
 		m_indexObject->init(m_indexes, m_numIndexes, m_hint, ElementType_TriList, m_activedIndexes);
 
 	m_isDirty = m_isVertexBufferDirty = m_isIndexBufferDirty = 0;
+	m_syncFrame = g_renderSystem->getFrameNum();
 }
 
 //------------------------------------------------------------------------------
@@ -1492,8 +1507,13 @@ void GroupPrim::draw( Technique tech )
 
 void GroupPrim::sync()
 {
+	if (m_syncFrame == g_renderSystem->getFrameNum())
+		return;
+
 	for (size_t i = 0; i < m_primitives.size(); i++)
 		m_primitives[i]->sync();
+
+	m_syncFrame = g_renderSystem->getFrameNum();
 }
 
 //--------------------------------------------------------------------------
@@ -1568,6 +1588,9 @@ void RefPrim::sync()
 	if (!m_isDirty)
 		return;
 
+	if (m_syncFrame == g_renderSystem->getFrameNum())
+		return;
+
 	m_refered->sync();
 
 	//IndexObject *indexObject = m_refered->m_indexObject;
@@ -1576,6 +1599,8 @@ void RefPrim::sync()
 		m_indexObject->init(m_indexes, m_numIndexes, m_hint, ElementType_TriList, m_activedIndexes);
 
 	m_isDirty = m_isIndexBufferDirty = false;
+
+	m_syncFrame = g_renderSystem->getFrameNum();
 }
 
 //--------------------------------------------------------------------------
@@ -1650,9 +1675,14 @@ void InstancePrim::draw( Technique tech )
 
 void InstancePrim::sync()
 {
+	if (m_syncFrame == g_renderSystem->getFrameNum())
+		return;
+
 	m_instanced->sync();
 
 	m_instanceObject->init(m_numInstances, m_params);
+
+	m_syncFrame = g_renderSystem->getFrameNum();
 }
 
 #if 0

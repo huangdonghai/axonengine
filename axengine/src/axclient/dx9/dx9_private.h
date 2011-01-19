@@ -37,15 +37,8 @@ read the license and understand and accept it fully.
 #endif
 #endif
 
-#ifndef SAFE_DELETE
-#define SAFE_DELETE(p)       { if (p) { delete (p);     (p)=NULL; } }
-#endif    
-#ifndef SAFE_DELETE_ARRAY
-#define SAFE_DELETE_ARRAY(p) { if (p) { delete[] (p);   (p)=NULL; } }
-#endif    
-#ifndef SAFE_RELEASE
-#define SAFE_RELEASE(p)      { if (p) { (p)->Release(); (p)=NULL; } }
-#endif
+#define SAFE_ADDREF(p) { if (p) p->AddRef(); }
+#define SAFE_RELEASE(p) { if (p) { (p)->Release(); (p)=NULL; } }
 
 #if 0
 #define D3D9_SCOPELOCK ScopedLocker _autoLocker(d3d9Mutex)
