@@ -87,7 +87,7 @@ public:
 	};
 
 	enum Type {
-		GlobalConst,
+		SceneConst,
 		InteractionConst,
 		MaxType
 	};
@@ -100,19 +100,21 @@ public:
 		ValueType m_valueType;
 		Item m_name;
 		int m_arrayCount;
-		int m_offset;
-		int m_dataSize; // in floats
+		int m_byteOffset;
+		int m_byteSize;
 	};
 
-	ConstBuffer(int type);
+	ConstBuffer(Type type);
 	~ConstBuffer();
 
-	int getNumFloats() const { return m_data.size(); }
-	const float *getDataPointer() const { return &m_data[0]; }
+	Type getType() const { return m_type; }
+	int getByteSize() const { return m_data.size(); }
+	const void *getDataPointer() const { return &m_data[0]; }
 	bool isDirty() const { return m_dirty; }
+	void clearDirty() { m_dirty = false; }
 
-	void setData(int numFloats, const float *datap);
-	void setFieldData(const FixedString &fieldName, int datasize, float *datap);
+	void setData(int bytes, const void *datap);
+	void setFieldData(const FixedString &fieldName, int bytes, const void *datap);
 	const float *getFieldPointer(const FixedString &fieldName) const;
 
 	void addField(const Field &field);
@@ -125,25 +127,27 @@ protected:
 	void addField(ValueType vt, Item name, int count, int reg);
 
 private:
+	Type m_type;
 	bool m_dirty;
 	std::vector<Field> m_fields;
-	int m_index; // register index in dx9, buffer index in dx10,dx11
-	int m_dataSize; // in floats
-	FloatSeq m_data;
-	FloatSeq m_default;
+	int m_byteSize;
+	std::vector<byte_t> m_data;
+	std::vector<byte_t> m_default;
 };
 
 class ConstBuffers
 {
 public:
+	friend class RenderContext;
+
 	typedef ConstBuffer::Type Type;
 	typedef ConstBuffer::Item Item;
 
 	ConstBuffers();
 	~ConstBuffers();
 
-	void setData(Type type, int numFloats, const float *datap);
-	void setField(Item fieldName, int dataSize, const float *dataptr);
+	void setData(Type type, int bytes, const void *datap);
+	void setField(Item fieldName, int bytes, const void *dataptr);
 
 private:
 	class FieldLink

@@ -4,17 +4,17 @@ AX_BEGIN_NAMESPACE
 
 void (*RenderApi::createTextureFromFileInMemory)(phandle_t h, AsioRequest *asioRequest);
 void (*RenderApi::createTexture2D)(phandle_t h, TexFormat format, int width, int height, int flags) = 0;
-void (*RenderApi::uploadTexture)(phandle_t h, const void *pixels, TexFormat format, IEventHandler *uploadedEventSendTo = 0);
-void (*RenderApi::uploadSubTexture)(phandle_t h, const Rect &rect, const void *pixels, TexFormat format, IEventHandler *uploadedEventSendTo = 0);
+void (*RenderApi::uploadTexture)(phandle_t h, const void *pixels, TexFormat format);
+void (*RenderApi::uploadSubTexture)(phandle_t h, const Rect &rect, const void *pixels, TexFormat format);
 void (*RenderApi::generateMipmap)(phandle_t h);
 void (*RenderApi::deleteTexture2D)(phandle_t h);
 	  
 void (*RenderApi::createVertexBuffer)(phandle_t h, int datasize, Primitive::Hint hint);
-void (*RenderApi::uploadVertexBuffer)(phandle_t h, int datasize, const void *p, IEventHandler *uploadedEventSendTo = 0);
+void (*RenderApi::uploadVertexBuffer)(phandle_t h, int datasize, const void *p);
 void (*RenderApi::deleteVertexBuffer)(phandle_t h);
 	  
 void (*RenderApi::createIndexBuffer)(phandle_t h, int datasize, Primitive::Hint hint);
-void (*RenderApi::uploadIndexBuffer)(phandle_t h, int datasize, const void *p, IEventHandler *uploadedEventSendTo = 0);
+void (*RenderApi::uploadIndexBuffer)(phandle_t h, int datasize, const void *p);
 void (*RenderApi::deleteIndexBuffer)(phandle_t h);
 
 void (*RenderApi::createWindowTarget)(phandle_t h, Handle hwnd, int width, int height);
@@ -42,7 +42,7 @@ void (*RenderApi::setViewport)(const Rect &rect, const Vector2 & depthRange);
 void (*RenderApi::setScissorRect)(const Rect &scissorRect);
 
 void (*RenderApi::setShader)(const FixedString & name, const ShaderMacro &sm, Technique tech);
-void (*RenderApi::setConstBuffer)(ConstBuffers::Type type, int size, const float *data);
+void (*RenderApi::setConstBuffer)(ConstBuffers::Type type, int size, const void *data);
 void (*RenderApi::setParameters)(const FastParams *params1, const FastParams *param2);
 	  
 void (*RenderApi::setVertices)(phandle_t h, VertexType vt, int vertcount);
@@ -361,14 +361,14 @@ void ApiWrap::createTexture2D(phandle_t &h, TexFormat format, int width, int hei
 	sAllocCommand(RenderApi::createTexture2D).args(h, format, width, height, flags);
 }
 
-void ApiWrap::uploadTexture( phandle_t h, void *pixels, TexFormat format, IEventHandler *eventHandler)
+void ApiWrap::uploadTexture( phandle_t h, void *pixels, TexFormat format)
 {
-	sAllocCommand(RenderApi::uploadTexture).args(h, pixels, format, eventHandler);
+	sAllocCommand(RenderApi::uploadTexture).args(h, pixels, format);
 }
 
-void ApiWrap::uploadSubTexture(phandle_t h, const Rect &rect, const void *pixels, TexFormat format, IEventHandler *eventHandler)
+void ApiWrap::uploadSubTexture(phandle_t h, const Rect &rect, const void *pixels, TexFormat format)
 {
-	sAllocCommand(RenderApi::uploadSubTexture).args(h, rect, pixels, format, eventHandler);
+	sAllocCommand(RenderApi::uploadSubTexture).args(h, rect, pixels, format);
 }
 
 void ApiWrap::generateMipmap(phandle_t h)
@@ -387,14 +387,14 @@ void ApiWrap::createVertexBuffer(phandle_t &h, int datasize, Primitive::Hint hin
 	sAllocCommand(RenderApi::createVertexBuffer).args(h, datasize, hint);
 }
 
-void ApiWrap::uploadVertexBuffer(phandle_t h, int datasize, const void *p, IEventHandler *eventHandler)
+void ApiWrap::uploadVertexBuffer(phandle_t h, int datasize, const void *p)
 {
 #ifdef _DEBUG
 	AX_ASSERT((uint_t)h != 0xCDCDCDCD);
 #endif
 	void *newp = allocRingBuf(datasize);
 	memcpy(newp, p, datasize);
-	sAllocCommand(RenderApi::uploadVertexBuffer).args(h, datasize, newp, eventHandler);
+	sAllocCommand(RenderApi::uploadVertexBuffer).args(h, datasize, newp);
 }
 
 void ApiWrap::deleteVertexBuffer(phandle_t h)
@@ -408,11 +408,11 @@ void ApiWrap::createIndexBuffer(phandle_t &h, int datasize, Primitive::Hint hint
 	sAllocCommand(RenderApi::createIndexBuffer).args(h, datasize, hint);
 }
 
-void ApiWrap::uploadIndexBuffer(phandle_t h, int datasize, const void *p, IEventHandler *eventHandler)
+void ApiWrap::uploadIndexBuffer(phandle_t h, int datasize, const void *p)
 {
 	void *newp = allocRingBuf(datasize);
 	memcpy(newp, p, datasize);
-	sAllocCommand(RenderApi::uploadIndexBuffer).args(h, datasize, newp, eventHandler);
+	sAllocCommand(RenderApi::uploadIndexBuffer).args(h, datasize, newp);
 }
 
 void ApiWrap::deleteIndexBuffer(phandle_t h)
@@ -424,51 +424,6 @@ void ApiWrap::clear(const RenderClearer &clearer)
 {
 	sAllocCommand(RenderApi::clear).args(clearer);
 }
-#if 0
-void ApiWrap::createSamplerState(phandle_t &h, const SamplerDesc &desc)
-{
-	h = allocHandle();
-	sAllocCommand(RenderApi::createSamplerState).args(h, desc);
-}
-
-void ApiWrap::deleteSamplerState(phandle_t h)
-{
-	addObjectDeletion(RenderApi::deleteSamplerState, h);
-}
-
-void ApiWrap::createBlendState(phandle_t &h, const BlendDesc &desc)
-{
-	h = allocHandle();
-	sAllocCommand(RenderApi::createBlendState).args(h, desc);
-}
-
-void ApiWrap::deleteBlendState(phandle_t h)
-{
-	addObjectDeletion(RenderApi::deleteSamplerState, h);
-}
-
-void ApiWrap::createDepthStencilState(phandle_t &h, const DepthStencilDesc &desc)
-{
-	h = allocHandle();
-	sAllocCommand(RenderApi::createDepthStencilState).args(h, desc);
-}
-
-void ApiWrap::deleteDepthStencilState(phandle_t h)
-{
-	addObjectDeletion(RenderApi::deleteDepthStencilState, h);
-}
-
-void ApiWrap::createRasterizerState(phandle_t &h, const RasterizerDesc &desc)
-{
-	h = allocHandle();
-	sAllocCommand(RenderApi::createRasterizerState).args(h, desc);
-}
-
-void ApiWrap::deleteRasterizerState(phandle_t h)
-{
-	addObjectDeletion(RenderApi::deleteRasterizerState, h);
-}
-#endif
 
 void ApiWrap::setTargetSet(const RenderTargetSet &targetSet)
 {
@@ -535,6 +490,13 @@ void ApiWrap::setParameters(const FastParams *params1, const FastParams *params2
 void ApiWrap::setShader(const FixedString & name, const ShaderMacro &sm, Technique tech)
 {
 	sAllocCommand(RenderApi::setShader).args(name, sm, tech);
+}
+
+void ApiWrap::setConstBuffer(ConstBuffers::Type type, int size, const void *data)
+{
+	void *newData = allocRingBuf(size);
+	memcpy(newData, data, size);
+	sAllocCommand(RenderApi::setConstBuffer).args(type, size, data);
 }
 
 void ApiWrap::setGlobalTexture(GlobalTextureId gt, Texture *tex)

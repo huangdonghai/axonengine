@@ -152,10 +152,10 @@ struct DebugVertex {
 	float4 color		: COLOR0;
 
 	// instance
-	float4 matrixX		: TEXCOORD2;
-	float4 matrixY		: TEXCOORD3;
-	float4 matrixZ		: TEXCOORD4;
-	float4 userDefined	: TEXCOORD5;
+	float4 matrixX		: TEXCOORD4;
+	float4 matrixY		: TEXCOORD5;
+	float4 matrixZ		: TEXCOORD6;
+	float4 userDefined	: TEXCOORD7;
 };
 
 

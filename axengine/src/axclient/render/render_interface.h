@@ -9,45 +9,30 @@ public:
 	// resource management
 	static void (*createTextureFromFileInMemory)(phandle_t h, AsioRequest *asioRequest);
 	static void (*createTexture2D)(phandle_t h, TexFormat format, int width, int height, int flags);
-	static void (*uploadTexture)(phandle_t h, const void *pixels, TexFormat format, IEventHandler *uploadedEventSendTo);
-	static void (*uploadSubTexture)(phandle_t h, const Rect &rect, const void *pixels, TexFormat format, IEventHandler *uploadedEventSendTo);
+	static void (*uploadTexture)(phandle_t h, const void *pixels, TexFormat format);
+	static void (*uploadSubTexture)(phandle_t h, const Rect &rect, const void *pixels, TexFormat format);
 	static void (*generateMipmap)(phandle_t h);
 	static void (*deleteTexture2D)(phandle_t h);
 
 	static void (*createVertexBuffer)(phandle_t h, int datasize, Primitive::Hint hint);
-	static void (*uploadVertexBuffer)(phandle_t h, int datasize, const void *p, IEventHandler *uploadedEventSendTo);
+	static void (*uploadVertexBuffer)(phandle_t h, int datasize, const void *p);
 	static void (*deleteVertexBuffer)(phandle_t h);
 
 	static void (*createIndexBuffer)(phandle_t h, int datasize, Primitive::Hint hint);
-	static void (*uploadIndexBuffer)(phandle_t h, int datasize, const void *p, IEventHandler *uploadedEventSendTo);
+	static void (*uploadIndexBuffer)(phandle_t h, int datasize, const void *p);
 	static void (*deleteIndexBuffer)(phandle_t h);
 
 	static void (*createWindowTarget)(phandle_t h, Handle hwnd, int width, int height);
 	static void (*updateWindowTarget)(phandle_t h, Handle newHwnd, int width, int height);
 	static void (*deleteWindowTarget)(phandle_t h);
-#if 0
-	static void (*createSamplerState)(phandle_t h, const SamplerDesc &samplerState);
-	static void (*deleteSamplerState)(phandle_t h);
 
-	static void (*createBlendState)(phandle_t h, const BlendDesc &src);
-	static void (*deleteBlendState)(phandle_t h);
-
-	static void (*createDepthStencilState)(phandle_t h, const DepthStencilDesc &src);
-	static void (*deleteDepthStencilState)(phandle_t h);
-
-	static void (*createRasterizerState)(phandle_t h, const RasterizerDesc &src);
-	static void (*deleteRasterizerState)(phandle_t h);
-
-	static void (*setRenderTarget)(int index, phandle_t h);
-	static void (*setDepthStencil)(phandle_t h);
-#endif
 	static void (*setTargetSet)(phandle_t targetSet[RenderTargetSet::MaxTarget]);
 
 	static void (*setViewport)(const Rect &rect, const Vector2 & depthRange);
 	static void (*setScissorRect)(const Rect &scissorRect);
 
 	static void (*setShader)(const FixedString &name, const ShaderMacro &sm, Technique tech);
-	static void (*setConstBuffer)(ConstBuffers::Type type, int size, const float *data);
+	static void (*setConstBuffer)(ConstBuffers::Type type, int size, const void *data);
 	static void (*setParameters)(const FastParams *params1, const FastParams *params2);
 
 	static void (*setVertices)(phandle_t vb, VertexType vt, int offset);
@@ -62,7 +47,6 @@ public:
 
 	static void (*setRenderState)(const DepthStencilDesc &dsd, const RasterizerDesc &rd, const BlendDesc &bd);
 
-//	static void dip(ElementType et, int offset, int vertcount, int indices_count) = 0;
 	static void (*draw)();
 
 	// actions
@@ -91,17 +75,17 @@ public:
 	// api wrapper interface
 	void createTextureFromFileInMemory(phandle_t &h, AsioRequest *asioRequest);
 	void createTexture2D(phandle_t &h, TexFormat format, int width, int height, int flags = 0);
-	void uploadTexture(phandle_t h, void *pixels, TexFormat format, IEventHandler *eventHandler);
-	void uploadSubTexture(phandle_t h, const Rect &rect, const void *pixels, TexFormat format, IEventHandler *eventHandler);
+	void uploadTexture(phandle_t h, void *pixels, TexFormat format);
+	void uploadSubTexture(phandle_t h, const Rect &rect, const void *pixels, TexFormat format);
 	void generateMipmap(phandle_t h);
 	void deleteTexture2D(phandle_t h);
 
 	void createVertexBuffer(phandle_t &h, int datasize, Primitive::Hint hint);
-	void uploadVertexBuffer(phandle_t h, int datasize, const void *p, IEventHandler *eventHandler);
+	void uploadVertexBuffer(phandle_t h, int datasize, const void *p);
 	void deleteVertexBuffer(phandle_t h);
 
 	void createIndexBuffer(phandle_t &h, int datasize, Primitive::Hint hint);
-	void uploadIndexBuffer(phandle_t h, int datasize, const void *p, IEventHandler *eventHandler);
+	void uploadIndexBuffer(phandle_t h, int datasize, const void *p);
 	void deleteIndexBuffer(phandle_t h);
 
 	void createWindowTarget(phandle_t &h, Handle hwnd, int width, int height);
@@ -111,29 +95,14 @@ public:
 	void createQuery(phandle_t &h);
 	void issueQuery(phandle_t h, AsyncQuery *asioQuery);
 	void deleteQuery(phandle_t h);
-#if 0
-	void createSamplerState(phandle_t &h, const SamplerDesc &desc);
-	void deleteSamplerState(phandle_t h);
 
-	void createBlendState(phandle_t &h, const BlendDesc &desc);
-	void deleteBlendState(phandle_t h);
-
-	void createDepthStencilState(phandle_t &h, const DepthStencilDesc &desc);
-	void deleteDepthStencilState(phandle_t h);
-
-	void createRasterizerState(phandle_t &h, const RasterizerDesc &desc);
-	void deleteRasterizerState(phandle_t h);
-
-	void setRenderTarget(int index, phandle_t h);
-	void setDepthStencil(phandle_t h);
-#endif
 	void setTargetSet(const RenderTargetSet &target_set);
 
 	void setViewport(const Rect &rect, const Vector2 & depthRange);
 	void setScissorRect(const Rect &scissorRect);
 
 	void setShader(const FixedString & name, const ShaderMacro &sm, Technique tech);
-	void setConstBuffer(ConstBuffers::Type type, int size, const float *data);
+	void setConstBuffer(ConstBuffers::Type type, int size, const void *data);
 	void setParameters(const FastParams *params1, const FastParams *param2);
 
 	void setGlobalTexture(GlobalTextureId gt, Texture *tex);

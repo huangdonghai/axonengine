@@ -496,7 +496,7 @@ static void dx9SetTargetSet(phandle_t targetSet[RenderTargetSet::MaxTarget])
 static void dx9SetViewport(const Rect &rect, const Vector2 & depthRange)
 {
 	D3DVIEWPORT9 d3dviewport;
-
+#if 1
 	d3dviewport.X = rect.x;
 	if (rect.y < 0)
 		d3dviewport.Y = s_curRenderTargetSize.height + rect.y - rect.height;
@@ -505,21 +505,28 @@ static void dx9SetViewport(const Rect &rect, const Vector2 & depthRange)
 
 	d3dviewport.Width = rect.width;
 	d3dviewport.Height = rect.height;
+#else
+	d3dviewport.X = d3dviewport.Y = 0;
+	d3dviewport.Width = d3dviewport.Height = 512;
+#endif
 	d3dviewport.MinZ = depthRange.x;
 	d3dviewport.MaxZ = depthRange.y;
 
 	V(dx9_device->SetViewport(&d3dviewport));
 }
 
-static void dx9SetScissorRect(const Rect &scissorRect)
+static void dx9SetScissorRect(const Rect &rect)
 {
 	RECT d3dRect;
-	d3dRect.left = scissorRect.x;
-	d3dRect.top = scissorRect.y;
-	if (d3dRect.top < 0)
-		d3dRect.top = s_curRenderTargetSize.height + d3dRect.top - scissorRect.height;
-	d3dRect.right = d3dRect.left + scissorRect.width;
-	d3dRect.bottom = d3dRect.top + scissorRect.height;
+	d3dRect.left = rect.x;
+
+	if (rect.y < 0)
+		d3dRect.top = s_curRenderTargetSize.height + rect.y - rect.height;
+	else
+		d3dRect.top = rect.y;
+
+	d3dRect.right = d3dRect.left + rect.width;
+	d3dRect.bottom = d3dRect.top + rect.height;
 	V(dx9_device->SetScissorRect(&d3dRect));
 }
 
@@ -530,9 +537,20 @@ static void dx9SetShader(const FixedString &name, const ShaderMacro &sm, Techniq
 	s_curTechnique = tech;
 }
 
-static void dx9SetConstBuffer(ConstBuffers::Type type, int size, const float *data)
+static void dx9SetConstBuffer(ConstBuffers::Type type, int size, const void *data)
 {
 	s_curConstBuffer.setData(type, size, data);
+
+	int nreg = (size + 15) / 16;
+	if (type == ConstBuffer::SceneConst) {
+		dx9_device->SetVertexShaderConstantF(SCENECONST_REG, reinterpret_cast<const float *>(data), nreg);
+		dx9_device->SetPixelShaderConstantF(SCENECONST_REG, reinterpret_cast<const float *>(data), nreg);
+	} else if (type == ConstBuffer::InteractionConst) {
+		dx9_device->SetVertexShaderConstantF(INTERACTIONCONST_REG, reinterpret_cast<const float *>(data), nreg);
+		dx9_device->SetPixelShaderConstantF(INTERACTIONCONST_REG, reinterpret_cast<const float *>(data), nreg);
+	} else {
+		AX_WRONGPLACE;
+	}
 }
 
 static void dx9SetParameters(const FastParams *params1, const FastParams *params2)

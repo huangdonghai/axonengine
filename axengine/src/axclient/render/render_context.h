@@ -48,6 +48,7 @@ protected:
 	void issueShadowQuery();
 
 	void setMaterialUniforms(Material *mat);
+	void setConstBuffers();
 
 	template <class Q>
 	void setUniform(ConstBuffers::Item name, const Q &q)

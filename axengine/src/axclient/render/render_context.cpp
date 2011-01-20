@@ -707,6 +707,8 @@ void RenderContext::draw(VertexObject *vert, InstanceObject *inst, IndexObject *
 
 	setMaterialUniforms(mat);
 
+	setConstBuffers();
+
 	g_apiWrap->draw();
 }
 
@@ -754,6 +756,20 @@ void RenderContext::setMaterialUniforms(Material *mat)
 	// set material textures
 	g_apiWrap->setMaterialTexture(mat->getTextures());
 }
+
+
+void RenderContext::setConstBuffers()
+{
+	for (int i = 0; i < ConstBuffer::MaxType; i++) {
+		ConstBuffer *buffer = g_constBuffers.m_buffers[i];
+
+		if (buffer->isDirty()) {
+			g_apiWrap->setConstBuffer(buffer->getType(), buffer->getByteSize(), buffer->getDataPointer());
+			buffer->clearDirty();
+		}
+	}
+}
+
 
 void RenderContext::cacheFrame(RenderFrame *queue)
 {

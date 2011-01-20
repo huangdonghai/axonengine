@@ -42,7 +42,6 @@ VertexOut VP_main(VertexIn IN) {
 half4 FP_main(VertexOut IN) : COLOR {
 	half4 c = IN.color;
 
-
 	c *= FP_GetDiffuse(IN);
 	c.rgb *= g_matDiffuse.xyz;
 
