@@ -66,7 +66,7 @@ bool Material::init(const FixedString &key)
 			if (!texdef)
 				continue;
 
-			m_textures[i] = new Texture(texdef->file, Texture::InitFlag_Default);
+			m_textures[i] = new Texture(texdef->file);
 			m_textures[i]->setSamplerState(texdef->desc);
 #if 0
 			if (!m_textures[i])

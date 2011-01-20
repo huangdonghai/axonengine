@@ -95,14 +95,18 @@ static inline int sCalcNumElements(D3DPRIMITIVETYPE mode, int numindexes)
 
 
 
-void dx9CreateTextureFromFileInMemory(phandle_t h, AsioRequest *asioRequest)
+void dx9CreateTextureFromFileInMemory(phandle_t h, IoRequest *asioRequest)
 {
 	V(D3DXCreateTextureFromFileInMemory(dx9_device, asioRequest->fileData(), asioRequest->fileSize(), (LPDIRECT3DTEXTURE9*)h));
+	AX_ASSERT(h && *h);
 	delete asioRequest;
 }
 
+static int count = 0;
 void dx9CreateTexture2D(phandle_t h, TexFormat format, int width, int height, int flags)
 {
+	count++;
+
 	bool mipmap = false;
 	D3DFORMAT d3dformat;
 	trTexFormat(format, d3dformat);
@@ -114,7 +118,7 @@ void dx9CreateTexture2D(phandle_t h, TexFormat format, int width, int height, in
 	D3DPOOL d3dpool = D3DPOOL_MANAGED;
 	DWORD d3dusage = 0;
 
-	if (flags & Texture::InitFlag_RenderTarget) {
+	if (flags & Texture::RenderTarget) {
 		d3dpool = D3DPOOL_DEFAULT;
 		if (format.isDepth()) {
 			d3dusage = D3DUSAGE_DEPTHSTENCIL;
@@ -123,10 +127,10 @@ void dx9CreateTexture2D(phandle_t h, TexFormat format, int width, int height, in
 		}
 	}
 
-	if (flags & Texture::InitFlag_AutoGenMipmap) {
+	if (flags & Texture::AutoGenMipmap) {
 		d3dusage |= D3DUSAGE_AUTOGENMIPMAP;
 
-		bool m_hardwareGenMipmap = g_renderDriverInfo.autogenMipmapSupports[d3dformat];
+		bool m_hardwareGenMipmap = g_renderDriverInfo.autogenMipmapSupports[format];
 
 		if (!m_hardwareGenMipmap) {
 			d3dusage &= ~D3DUSAGE_AUTOGENMIPMAP;
@@ -136,11 +140,12 @@ void dx9CreateTexture2D(phandle_t h, TexFormat format, int width, int height, in
 	int m_videoMemoryUsed = format.calculateDataSize(width, height);
 
 	V(dx9_device->CreateTexture(width, height, 1, d3dusage, d3dformat, d3dpool, (LPDIRECT3DTEXTURE9*)h, 0));
+	AX_ASSERT(h && *h);
 
 	stat_textureMemory.add(m_videoMemoryUsed);
 }
 
-static void sUploadTexture(phandle_t h, int level, const void *pixels, TexFormat format, IEventHandler *eventHandler)
+static void sUploadTexture(phandle_t h, int level, const void *pixels, TexFormat format)
 {
 	LPDIRECT3DTEXTURE9 obj = h->castTo<LPDIRECT3DTEXTURE9>();
 	LPDIRECT3DSURFACE9 surface;
@@ -168,12 +173,12 @@ static void sUploadTexture(phandle_t h, int level, const void *pixels, TexFormat
 }
 
 
-void dx9UploadTexture(phandle_t h, const void *pixels, TexFormat format, IEventHandler *eventHandler)
+void dx9UploadTexture(phandle_t h, const void *pixels, TexFormat format)
 {
-	sUploadTexture(h, 0, pixels, format, eventHandler);
+	sUploadTexture(h, 0, pixels, format);
 }
 
-void dx9UploadSubTexture(phandle_t h, const Rect &rect, const void *pixels, TexFormat format, IEventHandler *eventHandler)
+void dx9UploadSubTexture(phandle_t h, const Rect &rect, const void *pixels, TexFormat format)
 {
 	if (rect.isEmpty())
 		return;
@@ -242,8 +247,8 @@ void dx9GenerateMipmap(phandle_t h)
 	V(obj->UnlockRect(0));
 
 	Handle dum;
-	dx9CreateTexture2D(&dum, TexFormat::BGRA8, surfdesc.Width, surfdesc.Height, Texture::InitFlag_AutoGenMipmap);
-	sUploadTexture(&dum, 0, lockedRect.pBits, surfdesc.Format, 0);
+	dx9CreateTexture2D(&dum, TexFormat::BGRA8, surfdesc.Width, surfdesc.Height, Texture::AutoGenMipmap);
+	sUploadTexture(&dum, 0, lockedRect.pBits, surfdesc.Format);
 
 	LPDIRECT3DTEXTURE9 dummyobj = dum.castTo<LPDIRECT3DTEXTURE9>();
 
@@ -261,7 +266,7 @@ void dx9GenerateMipmap(phandle_t h)
 		if (i >= (DWORD)image.getNumMipmapLevels()) {
 			break;
 		}
-		sUploadTexture(h, i, image.getData(i), TexFormat::BGR8, 0);
+		sUploadTexture(h, i, image.getData(i), TexFormat::BGR8);
 
 		width >>= 1;
 		height >>= 1;
@@ -289,7 +294,7 @@ void dx9CreateVertexBuffer(phandle_t h, int datasize, Primitive::Hint hint)
 	stat_vertexBufferMemory.add(datasize);
 }
 
-void dx9UploadVertexBuffer(phandle_t h, int datasize, const void *p, IEventHandler *eventHandler)
+void dx9UploadVertexBuffer(phandle_t h, int datasize, const void *p)
 {
 	IDirect3DVertexBuffer9 *obj = h->castTo<IDirect3DVertexBuffer9 *>();
 
@@ -327,7 +332,7 @@ void dx9CreateIndexBuffer(phandle_t h, int datasize, Primitive::Hint hint)
 	stat_indexBufferMemory.add(datasize);
 }
 
-void dx9UploadIndexBuffer(phandle_t h, int datasize, const void *p, IEventHandler *eventHandler)
+void dx9UploadIndexBuffer(phandle_t h, int datasize, const void *p)
 {
 	IDirect3DIndexBuffer9 *obj = h->castTo<IDirect3DIndexBuffer9 *>();
 

@@ -46,7 +46,7 @@ D3D9Target::D3D9Target(int width, int height, TexFormat format, bool pooled)
 		m_texture->initialize(format, width, height, Texture::IF_RenderTarget);
 		g_assetManager->addAsset(Asset::kTexture, texname, m_texture);
 #else
-		m_texture = new Texture(texname, format, m_width, m_height, Texture::InitFlag_RenderTarget);
+		m_texture = new Texture(texname, format, m_width, m_height, Texture::RenderTarget);
 		m_d3d9texture = static_cast<D3D9Texture*>(m_texture.get());
 #endif
 	} else {

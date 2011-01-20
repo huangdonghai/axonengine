@@ -27,9 +27,9 @@ public:
 	friend class TextureManager;
 
 	enum InitFlag {
-		InitFlag_Default = 0,
-		InitFlag_AutoGenMipmap = 1,
-		InitFlag_RenderTarget = 2
+		AutoGenMipmap = 1,
+		RenderTarget = 2,
+		Dynamic = 4
 	};
 
 	typedef Flags_<InitFlag> InitFlags;
@@ -70,14 +70,7 @@ public:
 
 private:
 	TextureResourcePtr m_resource;
-#if 0
-	SamplerStatePtr m_samplerState;
-#else
 	SamplerDesc m_samplerDesc;
-#endif
-	// for dynamic texture
-	int m_width, m_height;
-	TexFormat m_texformat;
 
 	typedef Dict<FixedString,bool> ExistDict;
 

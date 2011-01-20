@@ -15,12 +15,21 @@ TextureResource::TextureResource(const FixedString &key, InitFlags flags)
 	m_isFileTexture = true;
 	m_fileLoaded = false;
 	m_handle = 0;
+	m_initFlags = flags;
 
 	std::string filename = key.toString() + ".dds";
 
-	m_asioRequest = new AsioRequest(this, filename);
-	g_fileSystem->queAsioRead(m_asioRequest);
-
+	m_ioRequest = new IoRequest(this, filename);
+	if (m_initFlags.isSet(Texture::Dynamic)) {
+		// dynamic texture need sync upload
+		g_fileSystem->syncRead(m_ioRequest);
+		g_apiWrap->createTextureFromFileInMemory(m_handle, m_ioRequest);
+		m_ioRequest = 0;
+		m_fileLoaded = true;
+	} else {
+		// static texture can async upload
+		g_fileSystem->queAsioRead(m_ioRequest);
+	}
 	// add to dictionary
 	setKey(key);
 	ms_resources[key] = this;
@@ -30,6 +39,7 @@ TextureResource::TextureResource(const FixedString &key, TexFormat format, const
 {
 	m_isFileTexture = false;
 	m_fileLoaded = false;
+	m_initFlags = flags|Texture::Dynamic;
 
 	g_apiWrap->createTexture2D(m_handle, format, size.width, size.height, flags);
 
@@ -44,7 +54,8 @@ TextureResource::~TextureResource()
 
 void TextureResource::uploadSubTexture(const Rect &rect, const void *pixels, TexFormat format)
 {
-	g_apiWrap->uploadSubTexture(m_handle, rect, pixels, format, 0);
+	AX_ASSURE(m_initFlags.isSet(Texture::Dynamic));
+	g_apiWrap->uploadSubTexture(m_handle, rect, pixels, format);
 }
 
 void TextureResource::generateMipmap()
@@ -76,11 +87,11 @@ bool TextureResource::event(Event *e)
 	if (eventType == Event::AsioCompleted) {
 		AX_ASSERT(m_isFileTexture);
 		AsioCompletedEvent *ace = static_cast<AsioCompletedEvent *>(e);
-		AsioRequest *request = ace->asioRequest();
+		IoRequest *request = ace->asioRequest();
 		AX_ASSERT(request->eventHandler() == this);
-		AX_ASSERT(m_asioRequest == request);
+		AX_ASSERT(m_ioRequest == request);
 		g_apiWrap->createTextureFromFileInMemory(m_handle, request);
-		m_asioRequest = 0;
+		m_ioRequest = 0;
 		m_fileLoaded = true;
 		return true;
 	} else {

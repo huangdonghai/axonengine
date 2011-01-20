@@ -39,7 +39,9 @@ private:
 	bool m_isFileTexture;
 	bool m_fileLoaded;
 
-	AsioRequest *m_asioRequest;
+	InitFlags m_initFlags;
+
+	IoRequest *m_ioRequest;
 
 	typedef Dict<FixedString, TextureResource*> ResourceDict;
 	static ResourceDict ms_resources;

@@ -15,14 +15,16 @@ struct RHandle
 public:
 	RHandle() : m_phandle(0) {}
 
-	RHandle &operator=(void *p) { *m_phandle = p; }
+	void set(void *p) { *m_phandle = p; }
+	bool isValid() const { return *m_phandle != 0; }
 
 	template<class Q>
 	Q cast() { return m_phandle->castTo<Q>(); }
 	void alloc() { m_phandle = new Handle; }
 	void free() { delete m_phandle; }
 
-	Handle *m_phandle;
+private:
+	Handle * volatile m_phandle;
 };
 
 struct SamplerDesc {

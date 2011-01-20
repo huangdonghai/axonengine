@@ -2,7 +2,7 @@
 
 AX_BEGIN_NAMESPACE
 
-void (*RenderApi::createTextureFromFileInMemory)(phandle_t h, AsioRequest *asioRequest);
+void (*RenderApi::createTextureFromFileInMemory)(phandle_t h, IoRequest *asioRequest);
 void (*RenderApi::createTexture2D)(phandle_t h, TexFormat format, int width, int height, int flags) = 0;
 void (*RenderApi::uploadTexture)(phandle_t h, const void *pixels, TexFormat format);
 void (*RenderApi::uploadSubTexture)(phandle_t h, const Rect &rect, const void *pixels, TexFormat format);
@@ -349,26 +349,33 @@ ApiWrap::~ApiWrap()
 {}
 
 
-void ApiWrap::createTextureFromFileInMemory(phandle_t &h, AsioRequest *asioRequest)
+void ApiWrap::createTextureFromFileInMemory(phandle_t &h, IoRequest *asioRequest)
 {
 	h = newHandle();
 	sAllocCommand(RenderApi::createTextureFromFileInMemory).args(h, asioRequest);
 }
+static int numCreated = 0;
 
 void ApiWrap::createTexture2D(phandle_t &h, TexFormat format, int width, int height, int flags /*= 0*/)
 {
+	numCreated++;
 	h = newHandle();
 	sAllocCommand(RenderApi::createTexture2D).args(h, format, width, height, flags);
 }
 
-void ApiWrap::uploadTexture( phandle_t h, void *pixels, TexFormat format)
+void ApiWrap::uploadTexture(phandle_t h, void *pixels, TexFormat format)
 {
+	// TODO
+	AX_ASSERT(0);
 	sAllocCommand(RenderApi::uploadTexture).args(h, pixels, format);
 }
 
 void ApiWrap::uploadSubTexture(phandle_t h, const Rect &rect, const void *pixels, TexFormat format)
 {
-	sAllocCommand(RenderApi::uploadSubTexture).args(h, rect, pixels, format);
+	int datasize = format.calculateDataSize(rect.width, rect.height);
+	void *newp = allocRingBuf(datasize);
+	memcpy(newp, pixels, datasize);
+	sAllocCommand(RenderApi::uploadSubTexture).args(h, rect, newp, format);
 }
 
 void ApiWrap::generateMipmap(phandle_t h)
@@ -654,7 +661,7 @@ int ApiWrap::runCommands()
 
 phandle_t ApiWrap::newHandle()
 {
-	return new Handle;
+	return new Handle(0);
 }
 
 void ApiWrap::deleteHandle( phandle_t h )

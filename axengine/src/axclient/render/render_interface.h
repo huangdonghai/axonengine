@@ -7,7 +7,7 @@ class RenderApi
 {
 public:
 	// resource management
-	static void (*createTextureFromFileInMemory)(phandle_t h, AsioRequest *asioRequest);
+	static void (*createTextureFromFileInMemory)(phandle_t h, IoRequest *asioRequest);
 	static void (*createTexture2D)(phandle_t h, TexFormat format, int width, int height, int flags);
 	static void (*uploadTexture)(phandle_t h, const void *pixels, TexFormat format);
 	static void (*uploadSubTexture)(phandle_t h, const Rect &rect, const void *pixels, TexFormat format);
@@ -73,7 +73,7 @@ public:
 	~ApiWrap();
 
 	// api wrapper interface
-	void createTextureFromFileInMemory(phandle_t &h, AsioRequest *asioRequest);
+	void createTextureFromFileInMemory(phandle_t &h, IoRequest *asioRequest);
 	void createTexture2D(phandle_t &h, TexFormat format, int width, int height, int flags = 0);
 	void uploadTexture(phandle_t h, void *pixels, TexFormat format);
 	void uploadSubTexture(phandle_t h, const Rect &rect, const void *pixels, TexFormat format);

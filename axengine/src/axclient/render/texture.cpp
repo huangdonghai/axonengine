@@ -22,7 +22,7 @@ Texture::ExistDict Texture::m_existDict;
 Texture::Texture(const std::string &name)
 {
 	FixedString key = normalizeKey(name);
-	m_resource = TextureResource::findResource(key, InitFlag_Default);
+	m_resource = TextureResource::findResource(key, 0);
 }
 
 Texture::Texture(const std::string &name, InitFlags flags/*=0*/)

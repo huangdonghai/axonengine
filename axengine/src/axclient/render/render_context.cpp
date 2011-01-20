@@ -96,8 +96,6 @@ void RenderContext::drawScene(RenderScene *scene, const RenderClearer &clearer)
 
 void RenderContext::drawScene_world(RenderScene *scene, const RenderClearer &clearer)
 {
-	return;
-
 	BEGIN_PIX("DrawWorld");
 
 	m_curTechnique = Technique::Main;

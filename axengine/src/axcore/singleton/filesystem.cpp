@@ -68,19 +68,19 @@ namespace {
 } // anonymous namespace
 
 
-AsioRequest::AsioRequest(IEventHandler *handler, const std::string &filename)
+IoRequest::IoRequest(IEventHandler *handler, const std::string &filename)
 	: m_eventHandler(handler)
 	, m_filename(filename)
 	, m_filesize(0)
 	, m_filedata(0)
 {}
 
-AsioRequest::~AsioRequest()
+IoRequest::~IoRequest()
 {
 	freeData();
 }
 
-void AsioRequest::freeData()
+void IoRequest::freeData()
 {
 	if (m_filedata) {
 		g_fileSystem->freeFile(m_filedata); m_filesize = 0; m_filedata = 0;
@@ -100,7 +100,7 @@ void AsioThread::flush()
 Thread::RunningStatus AsioThread::doRun()
 {
 	while (1) {
-		AsioRequest *request = getFirstRequest();
+		IoRequest *request = getFirstRequest();
 
 		if (!request) {
 #if 0
@@ -120,26 +120,26 @@ Thread::RunningStatus AsioThread::doRun()
 	}
 }
 
-void AsioThread::queRequest( AsioRequest *request )
+void AsioThread::queRequest( IoRequest *request )
 {
 	SCOPED_LOCK;
 	m_readEntries.push_back(request);
 }
 
-AsioRequest * AsioThread::getFirstRequest()
+IoRequest * AsioThread::getFirstRequest()
 {
 	SCOPED_LOCK;
 	if (m_readEntries.empty())
 		return 0;
 
-	AsioRequest *result = m_readEntries.front();
+	IoRequest *result = m_readEntries.front();
 	m_readEntries.pop_front();
 
 	return result;
 }
 
 
-AsioCompletedEvent::AsioCompletedEvent(AsioRequest *asioRead)
+AsioCompletedEvent::AsioCompletedEvent(IoRequest *asioRead)
 	: Event(Event::AsioCompleted)
 	, m_asioRequest(asioRead)
 {}
@@ -1184,7 +1184,7 @@ void FileSystem::checkGamePath()
 	fclose(f);
 }
 
-void FileSystem::queAsioRead(AsioRequest *entry)
+void FileSystem::queAsioRead(IoRequest *entry)
 {
 	s_asioThread->queRequest(entry);
 }
@@ -1192,6 +1192,11 @@ void FileSystem::queAsioRead(AsioRequest *entry)
 void FileSystem::flushAsio()
 {
 	s_asioThread->flush();
+}
+
+void FileSystem::syncRead(IoRequest *entry)
+{
+	entry->m_filesize = readFile(entry->m_filename, &entry->m_filedata);
 }
 
 AX_END_NAMESPACE

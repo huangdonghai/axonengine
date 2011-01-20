@@ -520,7 +520,7 @@ void GLtexture::initialize(TexFormat format, int width, int height, InitFlags fl
 
 	bool mipmap = false;
 
-	if (m_createFlags.isSet(InitFlag_AutoGenMipmap)) {
+	if (m_createFlags.isSet(AutoGenMipmap)) {
 		mipmap = false;
 	}
 

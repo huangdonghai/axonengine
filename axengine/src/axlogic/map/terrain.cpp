@@ -24,6 +24,7 @@ MapAlphaBlock *const MapAlphaBlock::Zero = (MapAlphaBlock *const)Map::AlphaZeroI
 MapAlphaBlock::MapAlphaBlock()
 {
 	m_isDirty = false;
+	m_texture = 0;
 }
 
 MapAlphaBlock::~MapAlphaBlock()
@@ -66,15 +67,8 @@ void MapAlphaBlock::updateTexture()
 	if (!m_texture) {
 		std::string key;
 		StringUtil::sprintf(key, "_alphablock_%d", g_system->generateId());
-#if 0
-		m_texture << (Texture*)g_assetManager->createEmptyAsset(Asset::kTexture);
-		m_texture->initialize(TexFormat::A8, Map::ChunkPixels, Map::ChunkPixels);
-		g_assetManager->addAsset(Asset::kTexture, key, m_texture.get());
-#else
-		m_texture = new Texture(key, AlphaFormat, Size(Map::ChunkPixels, Map::ChunkPixels), Texture::InitFlag_Default);
-#endif
-		SamplerDesc desc;
-		desc.clampMode = SamplerDesc::ClampMode_Clamp;
+
+		m_texture = new Texture(key, AlphaFormat, Size(Map::ChunkPixels, Map::ChunkPixels), Texture::Dynamic);
 		m_texture->setClampMode(SamplerDesc::ClampMode_Clamp);
 	}
 
@@ -1087,23 +1081,13 @@ void MapZone::initialize(MapTerrain *terrain, int x, int y)
 	// create normal texture
 	std::string texname;
 	StringUtil::sprintf(texname, "_zone_normal_%d_%d_%d", g_renderSystem->getFrameNum(), m_index.x, m_index.y);
-#if 0
-	m_normalTexture << dynamic_cast<Texture*>(g_assetManager->createEmptyAsset(Asset::kTexture));
-	m_normalTexture->initialize(TexFormat::BGRA8, Map::ZoneTiles, Map::ZoneTiles, Texture::IF_AutoGenMipmap);
-	g_assetManager->addAsset(Asset::kTexture, texname, m_normalTexture.get());
-#else
-	m_normalTexture = new Texture(texname, TexFormat::BGRA8, Size(Map::ZoneTiles, Map::ZoneTiles), Texture::InitFlag_AutoGenMipmap);
-#endif
+	m_normalTexture = new Texture(texname, TexFormat::BGRA8, Size(Map::ZoneTiles, Map::ZoneTiles), Texture::AutoGenMipmap);
 	m_normalTexture->setClampMode(SamplerDesc::ClampMode_Clamp);
+
 	// create color texture
 	StringUtil::sprintf(texname, "_zone_color_%d_%d_%d", g_renderSystem->getFrameNum(), m_index.x, m_index.y);
-#if 0
-	m_colorTexture << dynamic_cast<Texture*>(g_assetManager->createEmptyAsset(Asset::kTexture));
-	m_colorTexture->initialize(TexFormat::DXT1, Map::ZonePixels, Map::ZonePixels, Texture::IF_AutoGenMipmap);
-	g_assetManager->addAsset(Asset::kTexture, texname, m_colorTexture.get());
-#else
-	m_colorTexture = new Texture(texname, TexFormat::DXT1, Size(Map::ZonePixels, Map::ZonePixels), Texture::InitFlag_AutoGenMipmap);
-#endif
+	m_colorTexture = new Texture(texname, TexFormat::DXT1, Size(Map::ZonePixels, Map::ZonePixels), Texture::AutoGenMipmap);
+
 	m_colorTexture->setClampMode(SamplerDesc::ClampMode_Clamp);
 	m_colorTexture->setFilterMode(SamplerDesc::FilterMode_LinearMipmap);
 
@@ -1759,7 +1743,7 @@ bool MapTerrain::loadColorTexture(const std::string &map_name)
 #if 0
 		Texture *tex = UniqueAsset_<Texture>(texname, Texture::IF_AutoGenMipmap);
 #else
-		Texture *tex = new Texture(texname, Texture::InitFlag_AutoGenMipmap);
+		Texture *tex = new Texture(texname, Texture::AutoGenMipmap);
 #endif
 		if (tex) {
 			z->setColorTexture(tex);
