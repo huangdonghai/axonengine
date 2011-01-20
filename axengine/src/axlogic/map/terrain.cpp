@@ -29,6 +29,7 @@ MapAlphaBlock::MapAlphaBlock()
 
 MapAlphaBlock::~MapAlphaBlock()
 {
+	SafeDelete(m_texture);
 }
 
 const MapAlphaBlock::Data &MapAlphaBlock::getData() const

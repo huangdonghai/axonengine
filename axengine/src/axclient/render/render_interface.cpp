@@ -21,21 +21,6 @@ void (*RenderApi::createWindowTarget)(phandle_t h, Handle hwnd, int width, int h
 void (*RenderApi::updateWindowTarget)(phandle_t h, Handle newHwnd, int width, int height);
 void (*RenderApi::deleteWindowTarget)(phandle_t h);
 
-#if 0
-void (*RenderApi::createSamplerState)(phandle_t h, const SamplerDesc &samplerState);
-void (*RenderApi::deleteSamplerState)(phandle_t h);
-
-void (*RenderApi::createBlendState)(phandle_t h, const BlendDesc &src);
-void (*RenderApi::deleteBlendState)(phandle_t h);
-
-void (*RenderApi::createDepthStencilState)(phandle_t h, const DepthStencilDesc &src);
-void (*RenderApi::deleteDepthStencilState)(phandle_t h);
-
-void (*RenderApi::createRasterizerState)(phandle_t h, const RasterizerDesc &src);
-void (*RenderApi::deleteRasterizerState)(phandle_t h);
-void (*RenderApi::setRenderTarget)(int index, phandle_t h);
-void (*RenderApi::setDepthStencil)(phandle_t h);
-#endif
 void (*RenderApi::setTargetSet)(phandle_t targetSet[RenderTargetSet::MaxTarget]);
 
 void (*RenderApi::setViewport)(const Rect &rect, const Vector2 & depthRange);
@@ -348,19 +333,24 @@ ApiWrap::ApiWrap()
 ApiWrap::~ApiWrap()
 {}
 
-
 void ApiWrap::createTextureFromFileInMemory(phandle_t &h, IoRequest *asioRequest)
 {
 	h = newHandle();
+#if AX_MTRENDER
 	sAllocCommand(RenderApi::createTextureFromFileInMemory).args(h, asioRequest);
+#else
+	RenderApi::createTextureFromFileInMemory(h, asioRequest);
+#endif
 }
-static int numCreated = 0;
 
 void ApiWrap::createTexture2D(phandle_t &h, TexFormat format, int width, int height, int flags /*= 0*/)
 {
-	numCreated++;
 	h = newHandle();
+#if AX_MTRENDER
 	sAllocCommand(RenderApi::createTexture2D).args(h, format, width, height, flags);
+#else
+	RenderApi::createTexture2D(h, format, width, height, flags);
+#endif
 }
 
 void ApiWrap::uploadTexture(phandle_t h, void *pixels, TexFormat format)
@@ -372,68 +362,104 @@ void ApiWrap::uploadTexture(phandle_t h, void *pixels, TexFormat format)
 
 void ApiWrap::uploadSubTexture(phandle_t h, const Rect &rect, const void *pixels, TexFormat format)
 {
+#if AX_MTRENDER
 	int datasize = format.calculateDataSize(rect.width, rect.height);
 	void *newp = allocRingBuf(datasize);
 	memcpy(newp, pixels, datasize);
 	sAllocCommand(RenderApi::uploadSubTexture).args(h, rect, newp, format);
+#else
+	RenderApi::uploadSubTexture(h, rect, pixels, format);
+#endif
 }
 
 void ApiWrap::generateMipmap(phandle_t h)
 {
+#if AX_MTRENDER
 	sAllocCommand(RenderApi::generateMipmap).args(h);
+#else
+	RenderApi::generateMipmap(h);
+#endif
 }
 
 void ApiWrap::deleteTexture2D(phandle_t h)
 {
+#if AX_MTRENDER
 	addObjectDeletion(RenderApi::deleteTexture2D, h);
+#else
+	addObjectDeletion(RenderApi::deleteTexture2D, h);
+#endif
 }
 
 void ApiWrap::createVertexBuffer(phandle_t &h, int datasize, Primitive::Hint hint)
 {
 	h = newHandle();
+#if AX_MTRENDER
 	sAllocCommand(RenderApi::createVertexBuffer).args(h, datasize, hint);
+#else
+	RenderApi::createVertexBuffer(h, datasize, hint);
+#endif
 }
 
 void ApiWrap::uploadVertexBuffer(phandle_t h, int datasize, const void *p)
 {
-#ifdef _DEBUG
-	AX_ASSERT((uint_t)h != 0xCDCDCDCD);
-#endif
+#if AX_MTRENDER
 	void *newp = allocRingBuf(datasize);
 	memcpy(newp, p, datasize);
 	sAllocCommand(RenderApi::uploadVertexBuffer).args(h, datasize, newp);
+#else
+	RenderApi::uploadVertexBuffer(h, datasize, p);
+#endif
 }
 
 void ApiWrap::deleteVertexBuffer(phandle_t h)
 {
+#if AX_MTRENDER
+#else
+#endif
 	addObjectDeletion(RenderApi::deleteVertexBuffer, h);
 }
 
 void ApiWrap::createIndexBuffer(phandle_t &h, int datasize, Primitive::Hint hint)
 {
 	h = newHandle();
+#if AX_MTRENDER
 	sAllocCommand(RenderApi::createIndexBuffer).args(h, datasize, hint);
+#else
+	RenderApi::createIndexBuffer(h, datasize, hint);
+#endif
 }
 
 void ApiWrap::uploadIndexBuffer(phandle_t h, int datasize, const void *p)
 {
+#if AX_MTRENDER
 	void *newp = allocRingBuf(datasize);
 	memcpy(newp, p, datasize);
 	sAllocCommand(RenderApi::uploadIndexBuffer).args(h, datasize, newp);
+#else
+	RenderApi::uploadIndexBuffer(h, datasize, p);
+#endif
 }
 
 void ApiWrap::deleteIndexBuffer(phandle_t h)
 {
+#if AX_MTRENDER
+#else
+#endif
 	addObjectDeletion(RenderApi::deleteVertexBuffer, h);
 }
 
 void ApiWrap::clear(const RenderClearer &clearer)
 {
+#if AX_MTRENDER
 	sAllocCommand(RenderApi::clear).args(clearer);
+#else
+	RenderApi::clear(clearer);
+#endif
 }
 
 void ApiWrap::setTargetSet(const RenderTargetSet &targetSet)
 {
+#if AX_MTRENDER
 	phandle_t *handles = allocType<phandle_t>(RenderTargetSet::MaxTarget);
 
 	if (targetSet.m_depthTarget)
@@ -448,10 +474,28 @@ void ApiWrap::setTargetSet(const RenderTargetSet &targetSet)
 			handles[i+1] = 0;
 	}
 	sAllocCommand(RenderApi::setTargetSet).args(handles);
+#else
+	static phandle_t handles[RenderTargetSet::MaxTarget];
+	if (targetSet.m_depthTarget)
+		handles[0] = targetSet.m_depthTarget->getPHandle();
+	else
+		handles[0] = 0;
+
+	for (int i=0; i<RenderTargetSet::MaxColorTarget; i++) {
+		if (targetSet.m_colorTargets[i])
+			handles[i+1] = targetSet.m_colorTargets[i]->getPHandle();
+		else
+			handles[i+1] = 0;
+	}
+	RenderApi::setTargetSet(handles);
+#endif
 }
 
 void ApiWrap::addObjectDeletion(delete_func_t func, phandle_t h)
 {
+#if AX_MTRENDER
+#else
+#endif
 	if (m_numObjectDeletions >= MAX_DELETE_COMMANDS)
 		Errorf("overflowed");
 
@@ -464,21 +508,33 @@ void ApiWrap::addObjectDeletion(delete_func_t func, phandle_t h)
 void ApiWrap::createWindowTarget(phandle_t &h, Handle hwnd, int width, int height)
 {
 	h = newHandle();
+#if AX_MTRENDER
 	sAllocCommand(RenderApi::createWindowTarget).args(h, hwnd, width, height);
+#else
+	RenderApi::createWindowTarget(h, hwnd, width, height);
+#endif
 }
 
 void ApiWrap::updateWindowTarget(phandle_t h, Handle newWndId, int width, int height)
 {
+#if AX_MTRENDER
 	sAllocCommand(RenderApi::updateWindowTarget).args(h, newWndId, width, height);
+#else
+	RenderApi::updateWindowTarget(h, newWndId, width, height);
+#endif
 }
 
 void ApiWrap::deleteWindowTarget(phandle_t h)
 {
+#if AX_MTRENDER
+#else
+#endif
 	addObjectDeletion(RenderApi::deleteWindowTarget, h);
 }
 
 void ApiWrap::setParameters(const FastParams *params1, const FastParams *params2)
 {
+#if AX_MTRENDER
 	FastParams *newp1 = 0;
 	FastParams *newp2 = 0;
 
@@ -493,26 +549,42 @@ void ApiWrap::setParameters(const FastParams *params1, const FastParams *params2
 	}
 
 	sAllocCommand(RenderApi::setParameters).args(newp1, newp2);
+#else
+	RenderApi::setParameters(params1, params2);
+#endif
 }
-void ApiWrap::setShader(const FixedString & name, const ShaderMacro &sm, Technique tech)
+void ApiWrap::setShader(const FixedString &name, const ShaderMacro &sm, Technique tech)
 {
+#if AX_MTRENDER
 	sAllocCommand(RenderApi::setShader).args(name, sm, tech);
+#else
+	RenderApi::setShader(name, sm, tech);
+#endif
 }
 
 void ApiWrap::setConstBuffer(ConstBuffers::Type type, int size, const void *data)
 {
+#if AX_MTRENDER
 	void *newData = allocRingBuf(size);
 	memcpy(newData, data, size);
-	sAllocCommand(RenderApi::setConstBuffer).args(type, size, data);
+	sAllocCommand(RenderApi::setConstBuffer).args(type, size, newData);
+#else
+	RenderApi::setConstBuffer(type, size, data);
+#endif
 }
 
 void ApiWrap::setGlobalTexture(GlobalTextureId gt, Texture *tex)
 {
+#if AX_MTRENDER
 	sAllocCommand(RenderApi::setGlobalTexture).args(gt, tex->getPHandle(), tex->getSamplerState());
+#else
+	RenderApi::setGlobalTexture(gt, tex->getPHandle(), tex->getSamplerState());
+#endif
 }
 
 void ApiWrap::setMaterialTexture(Texture * const tex[])
 {
+#if AX_MTRENDER
 	phandle_t *handles = allocType<phandle_t>(MaterialTextureId::MaxType);
 	SamplerDesc *descs = allocType<SamplerDesc>(MaterialTextureId::MaxType);
 
@@ -526,59 +598,110 @@ void ApiWrap::setMaterialTexture(Texture * const tex[])
 	}
 
 	sAllocCommand(RenderApi::setMaterialTexture).args(handles, descs);
+#else
+	static phandle_t handles[MaterialTextureId::MaxType];
+	static SamplerDesc descs[MaterialTextureId::MaxType];
+
+	for (int i = 0; i < MaterialTextureId::MaxType; i++) {
+		if (tex[i]) {
+			handles[i] = tex[i]->getPHandle();
+			descs[i] = tex[i]->getSamplerState();
+		} else {
+			handles[i] = 0;
+		}
+	}
+
+	RenderApi::setMaterialTexture(handles, descs);
+#endif
 }
 
 void ApiWrap::setVerticesUP(const void *vb, VertexType vt, int vertcount)
 {
+#if AX_MTRENDER
 	int size = vt.calcSize(vertcount);
 	void *p = allocType<byte_t>(size);
 	::memcpy(p, vb, size);
 	sAllocCommand(RenderApi::setVerticesUP).args(p, vt, vertcount);
+#else
+	RenderApi::setVerticesUP(vb, vt, vertcount);
+#endif
 }
 
 void ApiWrap::setIndicesUP(const void *ib, ElementType et, int indicescount)
 {
+#if AX_MTRENDER
 	int size = indicescount * sizeof(ushort_t);
 	void *p = allocType<byte_t>(size);
 	::memcpy(p, ib, size);
 	sAllocCommand(RenderApi::setIndicesUP).args(p, et, indicescount);
+#else
+	RenderApi::setIndicesUP(ib, et, indicescount);
+#endif
 }
 
 void ApiWrap::setViewport(const Rect &rect, const Vector2 &depthRange)
 {
+#if AX_MTRENDER
 	sAllocCommand(RenderApi::setViewport).args(rect, depthRange);
+#else
+	RenderApi::setViewport(rect, depthRange);
+#endif
 }
 
 void ApiWrap::setScissorRect(const Rect &scissorRect)
 {
+#if AX_MTRENDER
 	sAllocCommand(RenderApi::setScissorRect).args(scissorRect);
+#else
+	RenderApi::setScissorRect(scissorRect);
+#endif
 }
 
 
 void ApiWrap::setVertices(phandle_t vb, VertexType vt, int offset)
 {
+#if AX_MTRENDER
 	sAllocCommand(RenderApi::setVertices).args(vb, vt, offset);
+#else
+	RenderApi::setVertices(vb, vt, offset);
+#endif
 }
 
 void ApiWrap::setVerticesInstanced(phandle_t vb, VertexType vt, int offset, phandle_t inb, int inoffset, int incount)
 {
+#if AX_MTRENDER
 	sAllocCommand(RenderApi::setInstanceVertices).args(vb, vt, offset, inb, inoffset, incount);
+#else
+	RenderApi::setInstanceVertices(vb, vt, offset, inb, inoffset, incount);
+#endif
 }
 
 void ApiWrap::setIndices(phandle_t ib, ElementType et, int offset, int vertcount, int indicescount)
 {
+#if AX_MTRENDER
 	sAllocCommand(RenderApi::setIndices).args(ib, et, offset, vertcount, indicescount);
+#else
+	RenderApi::setIndices(ib, et, offset, vertcount, indicescount);
+#endif
 }
 
 void ApiWrap::draw()
 {
+#if AX_MTRENDER
 	sAllocCommand(RenderApi::draw).args();
+#else
+	RenderApi::draw();
+#endif
 }
 
 
 void ApiWrap::present( RenderTarget *window )
 {
+#if AX_MTRENDER
 	sAllocCommand(RenderApi::present).args(window->getPHandle());
+#else
+	RenderApi::present(window->getPHandle());
+#endif
 }
 
 

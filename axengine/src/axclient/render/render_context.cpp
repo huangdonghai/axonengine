@@ -4,9 +4,10 @@ AX_BEGIN_NAMESPACE
 
 RenderContext::RenderContext()
 {
+#if AX_MTRENDER
 	m_renderThread = new RenderThread();
 	m_renderThread->startThread();
-
+#endif
 	g_bufferManager = new BufferManager();
 	m_defaultMat = new Material("_debug");
 }

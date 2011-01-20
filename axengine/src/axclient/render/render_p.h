@@ -1,6 +1,8 @@
 #ifndef AX_RENDER_PRIVATE_H
 #define AX_RENDER_PRIVATE_H
 
+#define AX_MTRENDER 0
+
 #include "selection.h"
 #include "render_thread.h"
 #include "render_interface.h"
