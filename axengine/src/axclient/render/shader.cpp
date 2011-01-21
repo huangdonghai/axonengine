@@ -534,6 +534,7 @@ ConstBuffers::~ConstBuffers()
 
 void ConstBuffers::setField(Item fieldName, int bytes, const void *dataptr)
 {
+	static byte_t converted[sizeof(Matrix4)*4];
 	FieldLink *fl = m_fields[fieldName];
 
 	// check data size
@@ -542,36 +543,41 @@ void ConstBuffers::setField(Item fieldName, int bytes, const void *dataptr)
 
 	// check matrix
 	if (g_renderDriverInfo.transposeMatrix) {
+		AX_ASSURE(bytes <= sizeof(Matrix4)*4);
+
 		switch (fl->m_field->m_valueType) {
 		case ConstBuffer::vt_Matrix3:
 			{
 				int n = fl->m_field->m_arrayCount;
 				const Matrix3 *src = reinterpret_cast<const Matrix3 *>(dataptr);
-				Matrix3 *dst = reinterpret_cast<Matrix3 *>(&fl->m_buffer->m_data[fl->m_field->m_byteOffset]);
+				Matrix3 *dst = reinterpret_cast<Matrix3 *>(converted);
 				for (int i = 0; i < n; i++) {
 					dst[i] = src[i].getTranspose();
 				}
-				return;
+				dataptr = converted;
+				break;
 			}
 		case ConstBuffer::vt_Matrix:
 			{
 				int n = fl->m_field->m_arrayCount;
 				const Matrix *src = reinterpret_cast<const Matrix *>(dataptr);
-				Matrix *dst = reinterpret_cast<Matrix *>(&fl->m_buffer->m_data[fl->m_field->m_byteOffset]);
+				Matrix *dst = reinterpret_cast<Matrix *>(converted);
 				for (int i = 0; i < n; i++) {
 					dst[i] = src[i].getTranspose();
 				}
-				return;
+				dataptr = converted;
+				break;
 			}
 		case ConstBuffer::vt_Matrix4:
 			{
 				int n = fl->m_field->m_arrayCount;
 				const Matrix4 *src = reinterpret_cast<const Matrix4 *>(dataptr);
-				Matrix4 *dst = reinterpret_cast<Matrix4 *>(&fl->m_buffer->m_data[fl->m_field->m_byteOffset]);
+				Matrix4 *dst = reinterpret_cast<Matrix4 *>(converted);
 				for (int i = 0; i < n; i++) {
 					dst[i] = src[i].getTranspose();
 				}
-				return;
+				dataptr = converted;
+				break;
 			}
 		}
 	}

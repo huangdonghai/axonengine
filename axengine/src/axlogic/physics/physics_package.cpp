@@ -338,11 +338,10 @@ namespace { namespace Internal {
 				if (filename.empty())
 					continue;
 
-				Texture *tex = new Texture(filename);
-
-				if (!tex) {
+				if (!Texture::isExist(filename))
 					continue;
-				}
+
+				Texture *tex = new Texture(filename);
 
 				MaterialTextureId samplertype = MaterialTextureId::MaxType;
 				if (stage->m_tcoordChannel == 0) {
