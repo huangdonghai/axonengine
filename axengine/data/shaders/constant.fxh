@@ -167,7 +167,7 @@ AX_SAMPLER_UNIFORMS
 #define G_HAVE_LIGHTMAP	1
 #define G_DISABLE_SPECULAR 0
 #define G_FOG			1
-#define G_BASETC_ANIM	0
+#define G_TEXANIM	0
 #define G_MAIN_TEXGEN TexGen_vertex
 #define G_FEATURE0		1
 #define G_FEATURE1		1

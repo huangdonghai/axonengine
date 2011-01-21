@@ -53,10 +53,17 @@ Material::Material(const std::string &name)
 	m_shaderMacroNeedRegen = true;
 
 	// copy matfile's properties
-	m_diffuse = m_decl->getDiffuse();
+	m_diffuse = m_decl->m_diffuse;
+	m_specular = m_decl->m_specular;
+	m_emission = m_decl->m_emission;
+	m_shiness = m_decl->m_shiness;
+	m_detailScale = m_decl->m_detailScale;
 
-	ShaderMacro macro = getShaderMacro();
-	macro.mergeFrom(&g_shaderMacro);
+	m_depthWrite = m_decl->m_depthWrite;
+	m_depthTest = m_decl->m_depthTest;
+	m_twoSided = m_decl->m_twoSided;
+	m_wireframed = m_decl->m_wireframed;
+	m_blendMode = m_decl->m_blendMode;
 
 	m_shaderName = m_decl->getShaderName();
 	m_shaderInfo = g_renderDriver->findShaderInfo(m_shaderName);
@@ -154,7 +161,7 @@ const ShaderMacro &Material::getShaderMacro()
 			m_shaderMacro.setMacro(ShaderMacro::G_HAVE_LAYERALPHA);
 
 		if (m_isTexAnim) {
-			m_shaderMacro.setMacro(ShaderMacro::G_BASETC_ANIM);
+			m_shaderMacro.setMacro(ShaderMacro::G_TEXANIM);
 		}
 
 //		m_shaderMacro.setMacro(ShaderMacro::G_MAIN_TEXGEN, m_texgens[SamplerType::Diffuse].type);

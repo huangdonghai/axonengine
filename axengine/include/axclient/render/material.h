@@ -116,6 +116,8 @@ class MaterialDecl;
 class AX_API Material
 {
 public:
+	friend class RenderContext;
+
 	enum SortHint {
 		SortHint_Opacit,
 		SortHint_Decal,
@@ -215,6 +217,7 @@ private:
 
 	Color3 m_diffuse;
 	Color3 m_specular;
+	Color3 m_emission;
 	float m_shiness;
 	float m_detailScale;
 	bool m_haveDetail;

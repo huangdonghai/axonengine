@@ -121,6 +121,8 @@ public:
 	void setVerticesUP(const void *vb, VertexType vt, int vertcount);
 	void setIndicesUP(const void *ib, ElementType et, int indicescount);
 
+	void setRenderState(const DepthStencilDesc &dsd, const RasterizerDesc &rd, const BlendDesc &bd);
+
 	void draw();
 
 	void clear(const RenderClearer &clearer);

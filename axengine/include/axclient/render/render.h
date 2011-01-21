@@ -11,40 +11,6 @@ read the license and understand and accept it fully.
 #ifndef AX_RENDER_ALL_H
 #define AX_RENDER_ALL_H
 
-AX_BEGIN_NAMESPACE
-
-struct RenderClearer {
-	Rgba color;
-	float depth;
-	int stencil;
-	bool isClearColor : 1;
-	bool isClearDepth : 1;
-	bool isClearStencil : 1;
-
-	RenderClearer() : color(Rgba::Black), depth(1.0f), stencil(0), isClearColor(false), isClearDepth(false), isClearStencil(false)
-	{}
-
-	void clearDepth(bool enable, float ref = 1.0f)
-	{
-		isClearDepth = enable;
-		depth = ref;
-	}
-
-	void clearColor(bool enable, Rgba ref = Rgba::Zero)
-	{
-		isClearColor = enable;
-		color = ref;
-	}
-
-	void clearStencil(bool enable, int ref)
-	{
-		isClearStencil = enable;
-		stencil = ref;
-	}
-};
-
-AX_END_NAMESPACE
-
 #include "../../../data/shaders/shared.fxh"
 
 #include "render_state.h"
@@ -54,7 +20,6 @@ AX_END_NAMESPACE
 #include "textureatlas.h"
 #include "shader.h"
 #include "material.h"
-#include "materialdecl.h"
 #include "camera.h"
 #include "target.h"
 #include "interaction.h"

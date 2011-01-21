@@ -43,7 +43,7 @@ void (*RenderApi::setIndicesUP)(const void *ib, ElementType et, int indicescount
 void (*RenderApi::setGlobalTexture)(GlobalTextureId id, phandle_t h, const SamplerDesc &samplerState);
 void (*RenderApi::setMaterialTexture)(phandle_t texs[], SamplerDesc samplerStates[]);
 
-//	static void dip(ElementType et, int offset, int vertcount, int indices_count) = 0;
+void (*RenderApi::setRenderState)(const DepthStencilDesc &dsd, const RasterizerDesc &rd, const BlendDesc &bd);
 void (*RenderApi::draw)();
 
 void (*RenderApi::clear)(const RenderClearer &clearer);
@@ -703,6 +703,15 @@ void ApiWrap::setIndices(phandle_t ib, ElementType et, int offset, int vertcount
 	sAllocCommand(RenderApi::setIndices).args(ib, et, offset, vertcount, indicescount);
 #else
 	RenderApi::setIndices(ib, et, offset, vertcount, indicescount);
+#endif
+}
+
+void ApiWrap::setRenderState(const DepthStencilDesc &dsd, const RasterizerDesc &rd, const BlendDesc &bd)
+{
+#if AX_MTRENDER
+	sAllocCommand(RenderApi::setRenderState)(dsd, rd, bd);
+#else
+	RenderApi::setRenderState(dsd, rd, bd);
 #endif
 }
 

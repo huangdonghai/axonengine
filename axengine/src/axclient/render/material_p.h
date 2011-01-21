@@ -14,7 +14,6 @@ public:
 		SamplerDesc desc;
 	};
 
-
 	bool tryLoad(const std::string &name);
 
 	const std::string &getShaderName() { return m_shaderName; }
@@ -50,7 +49,7 @@ private:
 	TextureDef *m_textures[MaterialTextureId::MaxType];
 	FastParams *m_fastParams;
 	Color3 m_diffuse, m_specular, m_emission;
-	float m_specExp, m_specLevel;
+	float m_shiness;
 	float m_opacity;
 	float m_detailScale;
 

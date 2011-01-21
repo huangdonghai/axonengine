@@ -140,6 +140,7 @@ void DX9_Driver::initialize()
 #endif
 
 	dx9_device->BeginScene();
+	dx9InitState();
 
 	Printf("ok\n");
 }

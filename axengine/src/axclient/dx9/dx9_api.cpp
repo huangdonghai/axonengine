@@ -661,6 +661,10 @@ static void dx9Present(phandle_t window)
 
 void dx9AssignRenderApi()
 {
+	s_curDepthStencilDesc.intValue = -1;
+	s_curRasterizerDesc.intValue = -1;
+	s_curBlendDesc.intValue = -1;
+
 	RenderApi::createTextureFromFileInMemory = &dx9CreateTextureFromFileInMemory;
 	RenderApi::createTexture2D = &dx9CreateTexture2D;
 	RenderApi::uploadTexture = &dx9UploadTexture;
@@ -702,11 +706,17 @@ void dx9AssignRenderApi()
 	RenderApi::setGlobalTexture = &dx9SetGlobalTexture;
 	RenderApi::setMaterialTexture = &dx9SetMaterialTexture;
 
+	RenderApi::setRenderState = &dx9SetRenderState;
 	RenderApi::draw = &dx9Draw;
 
 	RenderApi::clear = &dx9Clear;
 
 	RenderApi::present = &dx9Present;
+}
+
+void dx9InitState()
+{
+	dx9SetRenderState(DepthStencilDesc(), RasterizerDesc(), BlendDesc());
 }
 
 AX_END_NAMESPACE

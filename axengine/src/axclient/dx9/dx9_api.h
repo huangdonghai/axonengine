@@ -43,6 +43,7 @@ void dx9DeleteRasterizerState(phandle_t h);
 #endif
 
 void dx9AssignRenderApi();
+void dx9InitState();
 
 AX_END_NAMESPACE
 

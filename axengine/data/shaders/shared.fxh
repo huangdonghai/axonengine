@@ -109,7 +109,7 @@ AX_SHADERCONST(SHADERMACRO_VERSION, 2)
 				/* fog */ \
 	AX_DECL_MACRO(G_FOG						, 1) \
 				/* texgen */ \
-	AX_DECL_MACRO(G_BASETC_ANIM				, 1) \
+	AX_DECL_MACRO(G_TEXANIM					, 1) \
 	\
 		/* user customize*/ \
 	AX_DECL_MACRO(G_FEATURE0				, 1) \

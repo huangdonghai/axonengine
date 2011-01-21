@@ -47,7 +47,7 @@ protected:
 	void issueVisQuery();
 	void issueShadowQuery();
 
-	void setMaterialUniforms(Material *mat);
+	void setMaterial(Material *mat);
 	void setConstBuffers();
 
 	template <class Q>

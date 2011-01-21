@@ -16,7 +16,7 @@ namespace {
 	typedef Dict<BlendDesc, DX9_BlendState *> DX9_BlendStateDict;
 	DX9_BlendStateDict s_blendStateDict;
 
-	inline D3DCMPFUNC trCompareFunc(DepthStencilDesc::CompareFunc func)
+	inline D3DCMPFUNC trCompareFunc(uint_t func)
 	{
 		switch (func) {
 		case DepthStencilDesc::CompareFunc_Never: return D3DCMP_NEVER;
@@ -31,7 +31,7 @@ namespace {
 		}
 	}
 
-	inline D3DSTENCILOP trStencilOp(DepthStencilDesc::StencilOp op)
+	inline D3DSTENCILOP trStencilOp(uint_t op)
 	{
 		switch (op) {
 		case DepthStencilDesc::StencilOp_Keep: return D3DSTENCILOP_KEEP;
@@ -46,7 +46,7 @@ namespace {
 		}
 	}
 
-	inline D3DFILLMODE trFillMode(RasterizerDesc::FillMode mode)
+	inline D3DFILLMODE trFillMode(uint_t mode)
 	{
 		switch (mode) {
 		case RasterizerDesc::FillMode_Point: return D3DFILL_POINT;
@@ -56,7 +56,7 @@ namespace {
 		}
 	}
 
-	inline D3DCULL trCullMode(bool frontCounterClockwise, RasterizerDesc::CullMode mode)
+	inline D3DCULL trCullMode(bool frontCounterClockwise, uint_t mode)
 	{
 		if (frontCounterClockwise) {
 			switch (mode) {
@@ -75,7 +75,7 @@ namespace {
 		}
 	}
 
-	inline D3DBLEND trBlendFactor(BlendDesc::BlendFactor factor)
+	inline D3DBLEND trBlendFactor(uint_t factor)
 	{
 		switch (factor) {
 		case BlendDesc::BlendFactor_Zero: return D3DBLEND_ZERO;
@@ -91,7 +91,7 @@ namespace {
 		}
 	}
 
-	inline D3DBLENDOP trBlendOp(BlendDesc::BlendOp op)
+	inline D3DBLENDOP trBlendOp(uint_t op)
 	{
 		switch (op) {
 		case BlendDesc::BlendOp_Add: return D3DBLENDOP_ADD;

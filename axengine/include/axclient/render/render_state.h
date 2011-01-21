@@ -3,6 +3,36 @@
 
 AX_BEGIN_NAMESPACE
 
+struct RenderClearer {
+	Rgba color;
+	float depth;
+	int stencil;
+	bool isClearColor : 1;
+	bool isClearDepth : 1;
+	bool isClearStencil : 1;
+
+	RenderClearer() : color(Rgba::Black), depth(1.0f), stencil(0), isClearColor(false), isClearDepth(false), isClearStencil(false)
+	{}
+
+	void clearDepth(bool enable, float ref = 1.0f)
+	{
+		isClearDepth = enable;
+		depth = ref;
+	}
+
+	void clearColor(bool enable, Rgba ref = Rgba::Zero)
+	{
+		isClearColor = enable;
+		color = ref;
+	}
+
+	void clearStencil(bool enable, int ref)
+	{
+		isClearStencil = enable;
+		stencil = ref;
+	}
+};
+
 enum ElementType {
 	ElementType_PointList,
 	ElementType_LineList,
@@ -69,12 +99,12 @@ struct SamplerDesc {
 
 	union {
 		struct {
-			ClampMode clampMode : 8;
-			FilterMode filterMode : 8;
-			BorderColor borderColor : 8;
-			int maxAnisotropy : 8;
+			uint_t clampMode : 8;
+			uint_t filterMode : 8;
+			uint_t borderColor : 8;
+			uint_t maxAnisotropy : 8;
 		};
-		int intValue;
+		uint_t intValue;
 	};
 };
 
@@ -143,29 +173,29 @@ struct DepthStencilDesc {
 
 	union {
 		struct {
-			int depthEnable : 1;
-			int depthWritable : 1;
-			int stencilEnable : 1;
+			uint_t depthEnable : 1;
+			uint_t depthWritable : 1;
+			uint_t stencilEnable : 1;
 
-			CompareFunc depthFunc : 3;
+			uint_t depthFunc : 3;
 
-			int stencilSkyMaskRead : 1;
-			int stencilSkyMaskWrite : 1;
+			uint_t stencilSkyMaskRead : 1;
+			uint_t stencilSkyMaskWrite : 1;
 #if 0
-			int stencilReadMask : 8;
-			int stencilWriteMask : 8;
+			uint_t stencilReadMask : 8;
+			uint_t stencilWriteMask : 8;
 #endif
-			StencilOp stencilFailOp : 3;
-			StencilOp stencilDepthFailOp : 3;
-			StencilOp stencilPassOp : 3;
-			CompareFunc stencilFunc : 3;
+			uint_t stencilFailOp : 3;
+			uint_t stencilDepthFailOp : 3;
+			uint_t stencilPassOp : 3;
+			uint_t stencilFunc : 3;
 
-			StencilOp stencilFailOpBackface : 3;
-			StencilOp stencilDepthFailOpBackface : 3;
-			StencilOp stencilPassOpBackface : 3;
-			CompareFunc stencilFuncBackface : 3;
+			uint_t stencilFailOpBackface : 3;
+			uint_t stencilDepthFailOpBackface : 3;
+			uint_t stencilPassOpBackface : 3;
+			uint_t stencilFuncBackface : 3;
 		};
-		int intValue;
+		uint_t intValue;
 	};
 };
 AX_STATIC_ASSERT(sizeof(DepthStencilDesc)<=sizeof(int));
@@ -211,16 +241,16 @@ struct RasterizerDesc {
 
 	union {
 		struct {
-			FillMode fillMode : 2;
-			CullMode cullMode : 2;
-			int frontCounterClockwise : 1;
-			int depthBias : 1;
-			int depthClipEnable : 1;
-			int scissorEnable : 1;
-			int multisampleEnable : 1;
-			int antialiasedLineEnable : 1;
+			uint_t fillMode : 2;
+			uint_t cullMode : 2;
+			uint_t frontCounterClockwise : 1;
+			uint_t depthBias : 1;
+			uint_t depthClipEnable : 1;
+			uint_t scissorEnable : 1;
+			uint_t multisampleEnable : 1;
+			uint_t antialiasedLineEnable : 1;
 		};
-		int intValue;
+		uint_t intValue;
 	};
 };
 
@@ -276,20 +306,20 @@ struct BlendDesc {
 
 	union {
 		struct {
-			int alphaToCoverageEnable : 1;
-			int independentBlendEnable : 1;
+			uint_t alphaToCoverageEnable : 1;
+			uint_t independentBlendEnable : 1;
 
-			int blendEnable : 1;
-			BlendFactor srcBlend : 4;
-			BlendFactor destBlend : 4;
-			BlendOp blendOp : 4;
-			BlendFactor srcBlendAlpha : 4;
-			BlendFactor destBlendAlpha : 4;
-			BlendOp blendOpAlpha : 4;
-			int renderTargetWriteMask : 4;
+			uint_t blendEnable : 1;
+			uint_t srcBlend : 4;
+			uint_t destBlend : 4;
+			uint_t blendOp : 4;
+			uint_t srcBlendAlpha : 4;
+			uint_t destBlendAlpha : 4;
+			uint_t blendOpAlpha : 4;
+			uint_t renderTargetWriteMask : 4;
 		};
 
-		int intValue;
+		uint_t intValue;
 	};
 };
 

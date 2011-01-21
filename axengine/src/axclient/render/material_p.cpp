@@ -35,17 +35,19 @@ MaterialDecl::MaterialDecl()
 	m_diffuse.set(1,1,1);
 	m_specular.set(0,0,0);
 	m_emission.set(0,0,0);
-	m_specExp = 10.f;
-	m_specLevel = 1.0f;
+	m_shiness = 10.f;
 	m_opacity = 1.0f;
 	m_detailScale = 20;
 
 	m_flags = 0;
 
+	m_depthWrite = true;
+	m_depthTest = true;
+	m_twoSided = false;
+	m_wireframed = false;
+	m_blendMode = Material::BlendMode_Disabled;
+
 	TypeZeroArray(m_features);
-#if 0
-	TypeZeroArray(m_literals);
-#endif
 }
 
 MaterialDecl::~MaterialDecl()

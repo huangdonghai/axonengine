@@ -32,9 +32,9 @@ float Script : STANDARDSGLOBAL <
 #define F_BOXFALLOFF	G_FEATURE5
 
 AX_BEGIN_PC
-float3x4 s_lightMatrix : PREG0;
-float4 s_lightPos : PREG4;		// (xyz)*invR, invR
-float4 s_lightColor : PREG5 = float4(1,1,1,1);
+	float3x4 s_lightMatrix : PREG0;
+	float4 s_lightPos : PREG4;		// (xyz)*invR, invR
+	float4 s_lightColor : PREG5 = float4(1,1,1,1);
 AX_END_PC
 
 struct ShadowVertexOut {

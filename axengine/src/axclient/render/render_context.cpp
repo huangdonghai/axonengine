@@ -677,9 +677,6 @@ void RenderContext::draw(VertexObject *vert, InstanceObject *inst, IndexObject *
 	stat_numDrawElements.inc();
 
 #if 0
-	if (mat->isWireframe() & !d3d9ForceWireframe) {
-		d3d9StateManager->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
-	}
 
 	draw(shader, tech, prim);
 
@@ -692,14 +689,22 @@ void RenderContext::draw(VertexObject *vert, InstanceObject *inst, IndexObject *
 
 	g_apiWrap->setShader(mat->getShaderName(), macro, tech);
 
-	setMaterialUniforms(mat);
+	setMaterial(mat);
 
 	setConstBuffers();
 
+	if (mat->isWireframe() & !m_forceWireframe) {
+		m_rasterizerDesc.fillMode = RasterizerDesc::FillMode_Wireframe;
+	}
+
 	g_apiWrap->draw();
+
+	if (mat->isWireframe()  & !m_forceWireframe) {
+		m_rasterizerDesc.fillMode = RasterizerDesc::FillMode_Solid;
+	}
 }
 
-void RenderContext::setMaterialUniforms(Material *mat)
+void RenderContext::setMaterial(Material *mat)
 {
 	if (!mat) {
 		AX_SU(g_matDiffuse, Vector3(1,1,1));
@@ -727,18 +732,37 @@ void RenderContext::setMaterialUniforms(Material *mat)
 		AX_SU(g_layerScale, scale2);
 	}
 
-#if 0
-	const ShaderParams &params = mat->getParameters();
+	m_depthStencilDesc.depthWritable = mat->m_depthWrite;
+	m_depthStencilDesc.depthEnable = mat->m_depthTest;
 
-	ShaderParams::const_iterator it = params.begin();
-	for (; it != params.end(); ++it) {
-		const FloatSeq &value = it->second;
-		g_apiWrap->setShaderConst(it->first, value.size() * sizeof(float),  &value[0]);
+	if (mat->m_twoSided)
+		m_rasterizerDesc.cullMode = RasterizerDesc::CullMode_None;
+	else
+		m_rasterizerDesc.cullMode = RasterizerDesc::CullMode_Back;
+
+	switch (mat->m_blendMode) {
+	case Material::BlendMode_Disabled:
+		m_blendDesc.blendEnable = false;
+		break;
+	case Material::BlendMode_Add:
+		m_blendDesc.blendEnable = true;
+		m_blendDesc.srcBlend = BlendDesc::BlendFactor_One;
+		m_blendDesc.destBlend = BlendDesc::BlendFactor_One;
+		break;
+	case Material::BlendMode_Blend:
+		m_blendDesc.blendEnable = true;
+		m_blendDesc.srcBlend = BlendDesc::BlendFactor_SrcAlpha;
+		m_blendDesc.destBlend = BlendDesc::BlendFactor_OneMinusSrcAlpha;
+		break;
+	case Material::BlendMode_Modulate:
+		m_blendDesc.blendEnable = true;
+		m_blendDesc.srcBlend = BlendDesc::BlendFactor_Zero;
+		m_blendDesc.destBlend = BlendDesc::BlendFactor_SrcColor;
+		break;
 	}
-#else
+
 	const FastParams *params = mat->getParameters();
 	g_apiWrap->setParameters(0, params);
-#endif
 
 	// set material textures
 	g_apiWrap->setMaterialTexture(mat->getTextures());
@@ -754,6 +778,13 @@ void RenderContext::setConstBuffers()
 			g_apiWrap->setConstBuffer(buffer->getType(), buffer->getByteSize(), buffer->getDataPointer());
 			buffer->clearDirty();
 		}
+	}
+
+	if (m_depthStencilDesc != m_depthStencilDescLast || m_rasterizerDesc != m_rasterizerDescLast || m_blendDesc != m_blendDescLast) {
+		g_apiWrap->setRenderState(m_depthStencilDesc, m_rasterizerDesc, m_blendDesc);
+		m_depthStencilDescLast = m_depthStencilDesc;
+		m_rasterizerDescLast = m_rasterizerDesc;
+		m_blendDescLast = m_blendDesc;
 	}
 }
 
