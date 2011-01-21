@@ -452,11 +452,7 @@ void OutdoorEnv::issueToQueue(RenderScene *qscene)
 		qscene->isEyeInWater = true;
 	}
 
-	float exposure = qscene->exposure;
-	if (exposure == 0) {
-		exposure = 1;
-	}
-	qscene->clearColor.xyz() = (m_oceanFog->getFogColor() / exposure).toVector3();
+	qscene->clearColor.xyz() = m_oceanFog->getFogColor().toVector3();
 
 	bool havesky = m_haveSky && r_sky.getBool();
 	bool haveocean = m_haveOcean && r_water.getBool();

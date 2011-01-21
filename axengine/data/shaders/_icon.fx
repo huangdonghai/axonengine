@@ -23,7 +23,7 @@ float4 s_iconparam;		// xyz is pos, w is scale
 
 /*********** Generic Vertex Shader ******/
 
-VertexOut VP_main(VertexIn IN) {
+VertexOut VP_main(MeshVertex IN) {
     VertexOut OUT = (VertexOut)0;
 
 	OUT.color = IN.color;

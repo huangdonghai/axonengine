@@ -4,19 +4,20 @@ AX_BEGIN_NAMESPACE
 
 RenderContext::RenderContext()
 {
+	g_bufferManager = new BufferManager();
+	m_defaultMat = new Material("_debug");
 #if AX_MTRENDER
 	m_renderThread = new RenderThread();
 	m_renderThread->startThread();
 #endif
-	g_bufferManager = new BufferManager();
-	m_defaultMat = new Material("_debug");
 }
 
 RenderContext::~RenderContext()
 {
+#if AX_MTRENDER
 	m_renderThread->stopThread();
 	SafeDelete(m_renderThread);
-
+#endif
 	SafeDelete(m_defaultMat);
 	SafeDelete(g_bufferManager);
 }
@@ -82,20 +83,20 @@ void RenderContext::endFrame()
 void RenderContext::drawScene(RenderScene *scene, const RenderClearer &clearer)
 {
 	if (scene->sceneType == RenderScene::WorldMain) {
-		drawScene_world(scene, clearer);
+		drawScene_World(scene, clearer);
 	} else if (scene->sceneType == RenderScene::Default) {
-		drawScene_noworld(scene, clearer);
+		drawScene_Noworld(scene, clearer);
 	} else {
 		Errorf("RenderContext::drawScene: error scene");
 	}
 }
 
-#define BEGIN_PIX(x)
-#define END_PIX()
+#define BEGIN_PIX(x) g_apiWrap->beginPix(x)
+#define END_PIX() g_apiWrap->endPix()
 #define AX_SU(a,b) setUniform(ConstBuffer::a, b);
 #define AX_ST(a,b) g_apiWrap->setGlobalTexture(GlobalTextureId::a, b)
 
-void RenderContext::drawScene_world(RenderScene *scene, const RenderClearer &clearer)
+void RenderContext::drawScene_World(RenderScene *scene, const RenderClearer &clearer)
 {
 	BEGIN_PIX("DrawWorld");
 
@@ -108,19 +109,6 @@ void RenderContext::drawScene_world(RenderScene *scene, const RenderClearer &cle
 
 	AX_ST(RtDepth, m_curWindow->m_rtDepth->getTexture());
 	AX_ST(Rt0, m_curWindow->m_rt0->getTexture());
-
-	// set exposure
-	float exposure = scene->exposure;
-	if (exposure == 0) {
-		g_shaderMacro.resetMacro(ShaderMacro::G_HDR);
-		exposure = 1;
-	} else {
-		g_shaderMacro.setMacro(ShaderMacro::G_HDR);
-	}
-
-	stat_exposure.setInt(exposure * 100);
-
-	AX_SU(g_exposure, Vector4(1.0f/exposure, exposure,0,0));
 
 	// set global light parameter
 	if (scene->globalLight) {
@@ -149,49 +137,49 @@ void RenderContext::drawScene_world(RenderScene *scene, const RenderClearer &cle
 		RenderScene *sub = scene->subScenes[i];
 
 		if (sub->sceneType == RenderScene::ShadowGen) {
-			drawPass_shadowGen(sub);
+			//drawPass_ShadowGen(sub);
 		} else if (sub->sceneType == RenderScene::Reflection) {
 			BEGIN_PIX("ReflectionGen");
 			g_shaderMacro.setMacro(ShaderMacro::G_REFLECTION);
-			drawScene_worldSub(sub);
+			//drawScene_WorldSub(sub);
 			g_shaderMacro.resetMacro(ShaderMacro::G_REFLECTION);
 			END_PIX();
 		} else if (sub->sceneType == RenderScene::RenderToTexture) {
 			BEGIN_PIX("RenderToTexture");
-			drawScene_worldSub(sub);
+			//drawScene_WorldSub(sub);
 			END_PIX();
 		}
 	}
 
 	// fill z first
 	BEGIN_PIX("GfillPass");
-	drawPass_geoFill(scene);
+	drawPass_GeoFill(scene);
 	END_PIX();
 
 	BEGIN_PIX("DrawLights");
-	drawPass_lights(scene);
+	//drawPass_Lights(scene);
 	END_PIX();
 
 	BEGIN_PIX("SceneComposite");
-	drawPass_composite(scene);
+	//drawPass_Composite(scene);
 	END_PIX();
 
 	// post process and render back to backbuffer
 	if (r_framebuffer.getBool()) {
 		BEGIN_PIX("PostProcess");
-		drawPass_postprocess(scene);
+		//drawPass_Postprocess(scene);
 		END_PIX();
 	}
 
 	// check if need draw overlay primitives
 	BEGIN_PIX("DrawOverlay");
-	drawPass_overlay(scene);
+	drawPass_Overlay(scene);
 	END_PIX();
 
 	END_PIX();
 }
 
-void RenderContext::drawScene_noworld(RenderScene *scene, const RenderClearer &clearer)
+void RenderContext::drawScene_Noworld(RenderScene *scene, const RenderClearer &clearer)
 {
 	BEGIN_PIX("DrawNoworld");
 	m_curTechnique = Technique::Main;
@@ -220,14 +208,14 @@ void RenderContext::drawScene_noworld(RenderScene *scene, const RenderClearer &c
 
 	//	unsetScene(scene, nullptr, scene->target);
 
-	drawPass_overlay(scene);
+	drawPass_Overlay(scene);
 
 	if (m_isStatistic)
 		stat_staticsTime.setInt((end - start) * 1000);
 	END_PIX();
 }
 
-void RenderContext::drawPass_geoFill(RenderScene *scene)
+void RenderContext::drawPass_GeoFill(RenderScene *scene)
 {
 	m_curTechnique = Technique::GeoFill;
 
@@ -235,8 +223,8 @@ void RenderContext::drawPass_geoFill(RenderScene *scene)
 	clearer.clearDepth(true);
 	clearer.clearColor(true, Rgba::Zero);
 
-	m_targetSet.m_depthTarget = 0;
-	m_targetSet.m_colorTargets[0] = m_curWindow->m_rt0;
+	m_targetSet.m_depthTarget = m_curWindow->m_rtDepth;
+	m_targetSet.m_colorTargets[0] = m_curWindow;
 	m_targetSet.m_colorTargets[1] = m_curWindow->m_rt1;
 	m_targetSet.m_colorTargets[2] = m_curWindow->m_rt2;
 	m_targetSet.m_colorTargets[3] = m_curWindow->m_rt3;
@@ -249,7 +237,7 @@ void RenderContext::drawPass_geoFill(RenderScene *scene)
 	//	unsetScene(scene, &clearer, s_gbuffer);
 }
 
-void RenderContext::drawPass_overlay(RenderScene *scene)
+void RenderContext::drawPass_Overlay(RenderScene *scene)
 {
 	if (!scene->numOverlayPrimitives) {
 		return;
@@ -274,7 +262,7 @@ void RenderContext::drawPass_overlay(RenderScene *scene)
 	//	unsetScene(scene, nullptr, nullptr, &camera);
 }
 
-void RenderContext::drawPass_composite(RenderScene *scene)
+void RenderContext::drawPass_Composite(RenderScene *scene)
 {
 #if 1
 	if (r_wireframe.getBool()) {
@@ -326,7 +314,7 @@ void RenderContext::drawPass_composite(RenderScene *scene)
 #endif
 }
 
-void RenderContext::drawPass_shadowGen(RenderScene *scene)
+void RenderContext::drawPass_ShadowGen(RenderScene *scene)
 {
 	if (!scene->numInteractions)
 		return;
@@ -395,7 +383,7 @@ void RenderContext::drawPass_shadowGen(RenderScene *scene)
 	scene->rendered = true;
 }
 
-void RenderContext::drawPass_lights(RenderScene *scene)
+void RenderContext::drawPass_Lights(RenderScene *scene)
 {
 	RenderClearer clearer;
 
@@ -423,12 +411,12 @@ void RenderContext::drawPass_lights(RenderScene *scene)
 	//unsetScene(d3d9WorldScene, nullptr, s_lbuffer);
 }
 
-void RenderContext::drawPass_postprocess(RenderScene *scene)
+void RenderContext::drawPass_Postprocess(RenderScene *scene)
 {
 
 }
 
-void RenderContext::drawScene_worldSub(RenderScene *scene)
+void RenderContext::drawScene_WorldSub(RenderScene *scene)
 {
 	m_curTechnique = Technique::Main;
 
@@ -721,17 +709,17 @@ void RenderContext::setMaterialUniforms(Material *mat)
 	}
 
 	// set texgen parameters
-	if (mat->isBaseTcAnim()) {
-		const Matrix4 *matrix = mat->getBaseTcMatrix();
+	if (mat->isTexAnim()) {
+		const Matrix4 *matrix = mat->getTexMatrix();
 		if (matrix) {
 			AX_SU(g_texMatrix, *matrix);
 		}
 	}
 
 	// set material parameter
-	AX_SU(g_matDiffuse, mat->getMatDiffuse());
-	AX_SU(g_matSpecular, mat->getMatSpecular());
-	AX_SU(g_matShiness, mat->getMatShiness());
+	AX_SU(g_matDiffuse, mat->getDiffuse());
+	AX_SU(g_matSpecular, mat->getSpecular());
+	AX_SU(g_matShiness, mat->getShiness());
 
 	if (mat->haveDetail()) {
 		float scale = mat->getDetailScale();

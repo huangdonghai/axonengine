@@ -59,8 +59,8 @@ public:
 	float *getWindMatrix(unsigned int uiIndex) const;
 	unsigned int getNumLeafAngleMatrices(void) const;
 	float *getLeafAngleMatrix(unsigned int uiIndex) const;
-	bool getRustleAngles(FloatSeq &vAngles) const;  // assumes vector is already appropriately sized
-	bool getRockAngles(FloatSeq &vAngles) const;    // assumes vector is already appropriately sized
+	bool getRustleAngles(std::vector<float> &vAngles) const;  // assumes vector is already appropriately sized
+	bool getRockAngles(std::vector<float> &vAngles) const;    // assumes vector is already appropriately sized
 	void getWindMatrix(Matrix4 output[]) const;
 	void getLeafAngles(Vector4 output[]) const;
 
@@ -79,7 +79,7 @@ protected:
 		float m_lowSpeed;                    // The speed of movement at 0.0m wind strength
 		float m_highSpeed;                   // The speed of movement at 1.0 wind strength
 		float m_adjustedTime;                    // Internal concept of time
-		FloatSeq m_outputs;                         // Output angles for this oscillator
+		std::vector<float> m_outputs;                         // Output angles for this oscillator
 	};
 
 	class WindController {

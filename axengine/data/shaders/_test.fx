@@ -27,20 +27,23 @@ float Script : STANDARDSGLOBAL <
 #define A_ITEM(t, n, i) t n = i;
 G_DECL
 
-VertexOut VP_main(VertexIn IN) {
+VertexOut VP_main(MeshVertex IN) {
     VertexOut OUT = (VertexOut)0;
 
 	OUT.hpos = v_T;
     return OUT;
 }
 
-//Texture2DArray s_testArrayTex;
-sampler2DARRAY s_testArray;
-//StructuredBuffer<int> triIndexes;
 
 /********* pixel shaders ********/
 float4 FP_main(VertexOut IN) : COLOR0 {
-	return g_layerScale.xyxy * tex2DARRAY(s_testArray, g_layerScale.xyy);
+	while (1) for (int i = 0; i < 4; i++) {
+
+	}
+	while (1) for (int i = 0; i < 4; i++) {
+
+	}
+	return 0;
 }
 
 //////////////////////////////////////////////////////////////////////

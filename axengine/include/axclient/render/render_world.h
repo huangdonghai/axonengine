@@ -100,18 +100,11 @@ protected:
 	// mark visible
 	void markVisible_r(RenderScene *queued, QuadNode *node, Plane::Side parentSide);
 
-	void updateExposure(RenderScene *qscene);
-
 private:
 	float m_worldSize;
 	QuadNode *m_rootNode;
 	RenderTerrain *m_terrain;
 	OutdoorEnv *m_outdoorEnv;
-
-	int m_histogram[HISTOGRAM_WIDTH];
-	int m_histogramAccumed[HISTOGRAM_WIDTH];
-	int m_curHistogramIndex;
-	float m_lastExposure;
 
 	bool m_updateShadowVis;
 

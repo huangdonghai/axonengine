@@ -21,6 +21,9 @@ void (*RenderApi::createWindowTarget)(phandle_t h, Handle hwnd, int width, int h
 void (*RenderApi::updateWindowTarget)(phandle_t h, Handle newHwnd, int width, int height);
 void (*RenderApi::deleteWindowTarget)(phandle_t h);
 
+void (*RenderApi::beginPix)(const std::string &pixname);
+void (*RenderApi::endPix)();
+
 void (*RenderApi::setTargetSet)(phandle_t targetSet[RenderTargetSet::MaxTarget]);
 
 void (*RenderApi::setViewport)(const Rect &rect, const Vector2 & depthRange);
@@ -454,6 +457,24 @@ void ApiWrap::clear(const RenderClearer &clearer)
 	sAllocCommand(RenderApi::clear).args(clearer);
 #else
 	RenderApi::clear(clearer);
+#endif
+}
+
+void ApiWrap::beginPix(const std::string &pixname)
+{
+#if AX_MTRENDER
+	sAllocCommand(RenderApi::beginPix).args(pixname);
+#else
+	RenderApi::beginPix(pixname);
+#endif
+}
+
+void ApiWrap::endPix()
+{
+#if AX_MTRENDER
+	sAllocCommand(RenderApi::endPix).args();
+#else
+	RenderApi::endPix();
 #endif
 }
 

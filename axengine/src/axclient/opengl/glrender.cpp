@@ -27,8 +27,8 @@ static inline void setTextureParameter(CGparameter param, GLtexture *tex) {
 void GLrender::setMaterialParameter(Material *mat)
 {
 	// set texgen parameters
-	if (mat->isBaseTcAnim()) {
-		const Matrix4 *matrix = mat->getBaseTcMatrix();
+	if (mat->isTexAnim()) {
+		const Matrix4 *matrix = mat->getTexMatrix();
 		if (matrix) {
 			AX_SU(g_baseTcMatrix, *matrix);
 		}
@@ -88,9 +88,9 @@ void GLrender::draw(Material *mat, Technique tech, GLgeometry *prim)
 	}
 #endif
 	// set material parameter
-	AX_SU(g_matDiffuse, mat->getMatDiffuse());
-	AX_SU(g_matSpecular, mat->getMatSpecular());
-	AX_SU(g_matShiness, mat->getMatShiness());
+	AX_SU(g_matDiffuse, mat->getDiffuse());
+	AX_SU(g_matSpecular, mat->getSpecular());
+	AX_SU(g_matShiness, mat->getShiness());
 
 	double begin = OsUtil::seconds();
 #if 0

@@ -178,7 +178,7 @@ void TerrainRaiseTool::updatePrim(const Vector3 &from)
 	matrix.setTranslate(-(from.x-radius), -(from.y-radius), 0);
 	matrix.scale(0.5f/radius, 0.5f/radius, 1);
 #if 1
-	m_brushMat->setBaseTcMatrix(matrix);
+	m_brushMat->setTexMatrix(matrix);
 #else
 	TexGen texgen;
 	texgen.type = SHADER::TexGen_vertex;

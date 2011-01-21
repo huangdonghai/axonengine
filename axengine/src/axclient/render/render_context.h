@@ -33,16 +33,16 @@ protected:
 	void drawGlobalLight(RenderScene *scene, RenderLight *light);
 	void drawLocalLight(RenderScene *scene, RenderLight *light);
 
-	void drawPass_geoFill(RenderScene *scene);
-	void drawPass_overlay(RenderScene *scene);
-	void drawPass_composite(RenderScene *scene);
-	void drawPass_shadowGen(RenderScene *scene);
-	void drawPass_lights(RenderScene *scene);
-	void drawPass_postprocess(RenderScene *scene);
+	void drawPass_GeoFill(RenderScene *scene);
+	void drawPass_Overlay(RenderScene *scene);
+	void drawPass_Composite(RenderScene *scene);
+	void drawPass_ShadowGen(RenderScene *scene);
+	void drawPass_Lights(RenderScene *scene);
+	void drawPass_Postprocess(RenderScene *scene);
 
-	void drawScene_world(RenderScene *scene, const RenderClearer &clearer);
-	void drawScene_worldSub(RenderScene *scene);
-	void drawScene_noworld(RenderScene *scene, const RenderClearer &clearer);
+	void drawScene_World(RenderScene *scene, const RenderClearer &clearer);
+	void drawScene_WorldSub(RenderScene *scene);
+	void drawScene_Noworld(RenderScene *scene, const RenderClearer &clearer);
 
 	void issueVisQuery();
 	void issueShadowQuery();
@@ -53,7 +53,7 @@ protected:
 	template <class Q>
 	void setUniform(ConstBuffers::Item name, const Q &q)
 	{
-		//		g_apiWrap->setShaderConst(name, sizeof(Q), &q);
+		//g_apiWrap->setShaderConst(name, sizeof(Q), &q);
 		g_constBuffers.setField(name, sizeof(Q), reinterpret_cast<const float *>(&q));
 	}
 

@@ -186,6 +186,7 @@ void MapLayerGen::update()
 #endif
 		std::string fn = PathUtil::removeExt(l->detailMat);
 
+#if 0
 		Texture *diffuse = new Texture(fn);
 		Texture *normal = new Texture(fn+"_n");
 		Texture *specular = new Texture(fn+"_s");
@@ -197,7 +198,9 @@ void MapLayerGen::update()
 //			if (!specular->isDefaulted()) {
 			m_detailMat->setTexture(MaterialTextureId::Specular, specular);
 //			}
-
+#else
+		m_detailMat->setTextureSet(fn);
+#endif
 #if 0
 		SafeRelease(diffuse);
 		SafeRelease(normal);

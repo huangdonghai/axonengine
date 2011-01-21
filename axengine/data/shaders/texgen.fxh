@@ -17,7 +17,7 @@ float FOG_compute(float4 hpos) {
 	return exp(- g_fogParams.w * hpos.w);
 }
 
-float4 VP_computeStreamTc(VertexIn a2v) {
+float4 VP_computeStreamTc(MeshVertex a2v) {
 	float4 result;
 #if G_BASETC_ANIM
 	result.xy = mul(g_baseTcMatrix, float4(a2v.streamTc.xy, 0, 1)).xy;
@@ -28,7 +28,7 @@ float4 VP_computeStreamTc(VertexIn a2v) {
 	return result;
 }
 
-void VP_final(VertexIn a2v, inout VertexOut v2f) {
+void VP_final(MeshVertex a2v, inout VertexOut v2f) {
 #if G_BASETC_ANIM
 	v2f.streamTc.xy = mul(g_baseTcMatrix, float4(a2v.streamTc.xy, 0, 1)).xy;
 	v2f.streamTc.zw = a2v.streamTc.zw;

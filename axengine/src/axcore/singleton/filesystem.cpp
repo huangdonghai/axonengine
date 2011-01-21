@@ -1197,6 +1197,7 @@ void FileSystem::flushAsio()
 void FileSystem::syncRead(IoRequest *entry)
 {
 	entry->m_filesize = readFile(entry->m_filename, &entry->m_filedata);
+	AX_ASSERT(entry->m_filesize);
 }
 
 AX_END_NAMESPACE

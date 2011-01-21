@@ -54,7 +54,6 @@ AX_STATDECL(stat_worldGlobalLights , "World Number Global Lights", Stat::F_Int);
 AX_STATDECL(stat_worldLights , "World Number Lights", Stat::F_Int);
 AX_STATDECL(stat_worldActors , "World Number Actors", Stat::F_Int);
 AX_STATDECL(stat_worldInteractions , "World Number Interactions", Stat::F_Int);
-AX_STATDECL(stat_exposure , "Exposure", Stat::F_Int);
 AX_STATDECL(stat_csmSplit0Dist , "Cascade Shadowmap Dist 0", Stat::F_Int);
 AX_STATDECL(stat_csmSplit1Dist , "Cascade Shadowmap Dist 1", Stat::F_Int);
 AX_STATDECL(stat_csmSplit2Dist , "Cascade Shadowmap Dist 2", Stat::F_Int);

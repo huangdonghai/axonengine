@@ -11,37 +11,55 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-// static member
-Material::MaterialDict Material::ms_materialDict;
-IntrusiveList<Material, &Material::m_needDeleteLink> ms_needDeleteLinkHead;
-
 Material::Material(const std::string &name)
 {
 	size_t s = sizeof(Material);
-	m_baseTcAnim = false;
+	m_isTexAnim = false;
 	m_shaderMacroNeedRegen = true;
-	m_diffuse = Vector3::One;
-	m_specular = Vector3::One;
+	m_diffuse.set(1,1,1);
+	m_specular.set(1,1,1);
 	m_shiness = 10;
 	m_detailScale = 20;
 	m_haveDetail = false;
 
 	m_shaderInfo = 0;
 
-#if 0
-	m_p2tEnabled = false;
-	m_p2tWidth = 1;
-	m_p2tHeight = 1;
-#endif
 	TypeZeroArray(m_features);
-#if 0
-	TypeZeroArray(m_literals);
-#endif
-	FixedString key = normalizeKey(name);
+
+	m_name = normalizeKey(name);
 
 	m_shaderParams = 0;
 
-	init(key);
+	TypeZeroArray(m_textures);
+
+	m_decl = MaterialDecl::load(m_name);
+
+	if (m_decl->isDefaulted()) {
+		setTextureSet(m_name);
+	} else {
+		for (int i = 0; i < MaterialTextureId::MaxType; i++) {
+			MaterialDecl::TextureDef *texdef = m_decl->getTextureDef(i);
+
+			if (!texdef)
+				continue;
+
+			m_textures[i] = new Texture(texdef->file);
+			m_textures[i]->setSamplerState(texdef->desc);
+		}
+	}
+
+	memcpy(m_features, m_decl->getFeatures(), sizeof(m_features));
+
+	m_shaderMacroNeedRegen = true;
+
+	// copy matfile's properties
+	m_diffuse = m_decl->getDiffuse();
+
+	ShaderMacro macro = getShaderMacro();
+	macro.mergeFrom(&g_shaderMacro);
+
+	m_shaderName = m_decl->getShaderName();
+	m_shaderInfo = g_renderDriver->findShaderInfo(m_shaderName);
 }
 
 Material::~Material()
@@ -51,54 +69,6 @@ Material::~Material()
 
 bool Material::init(const FixedString &key)
 {
-	m_key = key;
-
-	TypeZeroArray(m_textures);
-
-	m_decl = MaterialDecl::load(m_key.toString());
-
-	if (m_decl->isDefaulted()) {
-		setTextureSet(m_key.toString());
-	} else {
-		for (int i = 0; i < MaterialTextureId::MaxType; i++) {
-			TextureDef *texdef = m_decl->getTextureDef(i);
-
-			if (!texdef)
-				continue;
-
-			m_textures[i] = new Texture(texdef->file);
-			m_textures[i]->setSamplerState(texdef->desc);
-#if 0
-			if (!m_textures[i])
-				continue;
-
-			SamplerDesc desc = m_textures[i]->getSamplerState();
-
-			if (texdef->clampToBorder && m_textures[i]) {
-				desc.clampMode = SamplerDesc::ClampMode_Border;
-				m_textures[i]->setSamplerState(desc);
-			}
-
-			if (texdef->clampToEdge && m_textures[i]) {
-				desc.clampMode = SamplerDesc::ClampMode_Clamp;
-				m_textures[i]->setSamplerState(desc);
-			}
-#endif
-		}
-	}
-
-	memcpy(m_features, m_decl->getFeatures(), sizeof(m_features));
-
-	m_shaderMacroNeedRegen = true;
-
-	// copy matfile's properties
-	m_diffuse = m_decl->getDiffuse().rgb().toVector();
-
-	ShaderMacro macro = getShaderMacro();
-	macro.mergeFrom(&g_shaderMacro);
-
-	m_shaderName = m_decl->getShaderName();
-	m_shaderInfo = g_renderDriver->findShaderInfo(m_shaderName);
 
 	return true;
 }
@@ -183,7 +153,7 @@ const ShaderMacro &Material::getShaderMacro()
 		if (m_textures[MaterialTextureId::LayerAlpha])
 			m_shaderMacro.setMacro(ShaderMacro::G_HAVE_LAYERALPHA);
 
-		if (m_baseTcAnim) {
+		if (m_isTexAnim) {
 			m_shaderMacro.setMacro(ShaderMacro::G_BASETC_ANIM);
 		}
 
@@ -191,29 +161,22 @@ const ShaderMacro &Material::getShaderMacro()
 //		m_shaderMacro.setMacro(ShaderMacro::G_SPECULAR_TEXGEN, m_texgens[SamplerType::Specular].type);
 //		m_shaderMacro.setMacro(ShaderMacro::G_NORMAL_TEXGEN, m_texgens[SamplerType::Normal].type);
 
-		for (int i = 0; i < MaterialDecl::MAX_FEATURES; i++) {
+		for (int i = 0; i < MAX_FEATURES; i++) {
 			if (m_features[i]) {
 				m_shaderMacro.setMacro(ShaderMacro::Flag(ShaderMacro::G_FEATURE0 + i));
 			}
 		}
-#if 0
-		for (int i = 0; i < MaterialDecl::MAX_LITERALS; i++) {
-			if (m_literals[i]) {
-				m_shaderMacro.setMacro(ShaderMacro::Flag(ShaderMacro::G_LITERAL0 + i), m_literals[i]);
-			}
-		}
-#endif
 	}
 
 	return m_shaderMacro;
 }
 
 
-void Material::setBaseTcMatrix(const Matrix4 &matrix)
+void Material::setTexMatrix(const Matrix4 &matrix)
 {
 	m_shaderMacroNeedRegen = true;
-	m_baseTcAnim = true;
-	m_baseTcMatrix = matrix;
+	m_isTexAnim = true;
+	m_texMatrix = matrix;
 }
 
 bool Material::isWireframe() const
@@ -231,144 +194,36 @@ bool Material::isPhysicsHelper() const
 		return true;
 	}
 
-	return m_decl->getFlags().isSet(MaterialDecl::Flag_PhysicsHelper);
+	return m_decl->getFlags().isSet(Flag_PhysicsHelper);
 }
 
 void Material::setTextureSet( const std::string &texname )
 {
-	Texture *texture = new Texture(texname);
-	m_textures[MaterialTextureId::Diffuse] = texture;
+	if (Texture::isExist(texname)) {
+		m_textures[MaterialTextureId::Diffuse] = new Texture(texname);
+	}
 
-	texture = new Texture(texname + "_n");
-	m_textures[MaterialTextureId::Normal] = texture;
+	if (Texture::isExist(texname + "_n")) {
+		m_textures[MaterialTextureId::Normal] = new Texture(texname + "_n");
+	}
 
-	texture = new Texture(texname + "_s");
-	m_textures[MaterialTextureId::Specular] = texture;
+	if (Texture::isExist(texname + "_s")) {
+		m_textures[MaterialTextureId::Specular] = new Texture(texname + "_s");
+	}
 
-	texture = new Texture(texname + "_g");
-	m_textures[MaterialTextureId::Emission] = texture;
+	if (Texture::isExist(texname + "_g")) {
+		m_textures[MaterialTextureId::Emission] = new Texture(texname + "_g");
+	}
 
 	m_shaderMacroNeedRegen = true;
 }
 
-FixedString Material::normalizeKey(const std::string &name)
+std::string Material::normalizeKey(const std::string &name)
 {
 	if (!PathUtil::haveDir(name))
 		return "materials/" + name;
 	else
 		return name;
-}
-
-#if 0
-Material *new Material(const String &name)
-{
-	FixedString key = normalizeKey(name);
-	MaterialDict::const_iterator it = ms_materialDict.find(key);
-
-	if (it != ms_materialDict.end()) {
-		Material *mat = it->second;
-		if (mat->m_needDeleteLink.isLinked())
-			ms_needDeleteLinkHead.erase(mat);
-		mat->incref();
-		return mat;
-	}
-
-	Material *result = new Material();
-	result->init(key);
-	ms_materialDict[key] = result;
-
-	return result;
-}
-
-Material *Material::loadUnique(const String &name)
-{
-	std::stringstream ss;
-	ss << name << "$" << g_system->generateId();
-	FixedString key = normalizeKey(name);
-	FixedString uniqueKey = normalizeKey(ss.str());
-
-	Material *result = new Material();
-	result->init(key);
-	result->m_key = uniqueKey;
-	ms_materialDict[uniqueKey] = result;
-	return result;
-}
-
-void Material::initManager()
-{
-
-}
-
-void Material::finalizeManager()
-{
-
-}
-#endif
-
-void Material::_deleteMaterial( Material *mat )
-{
-#if 0
-	mat->m_needDeleteLink.addToEnd(ms_needDeleteLinkHead);
-#else
-	ms_needDeleteLinkHead.push_back(mat);
-#endif
-}
-
-#if 0
-void Material::syncFrame()
-{
-#if 0
-	Link<Material>* node = ms_needDeleteLinkHead.getNextNode();
-
-	while (node) {
-		Material *owner = node->getOwner();
-		Link<Material>* next = node->getNextNode();
-
-		node->removeFromList();
-		ms_materialDict.erase(owner->getKey());
-		delete owner;
-
-		node = next;
-	}
-
-	ms_needDeleteLinkHead.clearList();
-#else
-	IntrusiveList<Material, &Material::m_needDeleteLink>::iterator it = ms_needDeleteLinkHead.begin();
-
-	while (it != ms_needDeleteLinkHead.end()) {
-		IntrusiveList<Material, &Material::m_needDeleteLink>::iterator oldIt = it;
-		++it;
-		Material *mat = &*oldIt;
-		ms_materialDict.erase(mat->m_key);
-		ms_needDeleteLinkHead.erase(oldIt);
-		delete mat;
-	}
-#endif
-}
-#endif
-
-void Material::deleteThis()
-{
-	_deleteMaterial(this);
-}
-
-void Material::matlist_f(const CmdArgs &args)
-{
-	Printf("std::list material(s):\n");
-
-	int count = 0;
-	MaterialDict::const_iterator it = ms_materialDict.begin();
-	for (; it != ms_materialDict.end(); ++it) {
-		Material *mtr = it->second;
-		if (!mtr) {
-			continue;
-		}
-
-		Printf("%s\n", mtr->m_key.c_str());
-		count++;
-	}
-
-	Printf("total %d material(s)\n", count);
 }
 
 AX_END_NAMESPACE

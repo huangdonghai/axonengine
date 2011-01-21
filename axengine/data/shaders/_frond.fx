@@ -34,7 +34,7 @@ struct FrondVertexOut {
 	float2 diffuseTc	: TEXCOORD0;
 };
 
-FrondVertexOut VP_zpass(VertexIn IN) {
+FrondVertexOut VP_zpass(MeshVertex IN) {
 	FrondVertexOut OUT;
 
 	float3 offset = VP_modelRotateScale(IN, IN.position);
@@ -53,7 +53,7 @@ half4 FP_zpass(FrondVertexOut IN) : COLOR {
 	return 1;
 }
 
-GpassOut VP_gpass(VertexIn IN) {
+GpassOut VP_gpass(MeshVertex IN) {
 	GpassOut OUT = (GpassOut)0;
 
 	// transform tangent space vector to world space
@@ -97,7 +97,7 @@ half4 FP_gpass(GpassOut IN) : COLOR {
 
 /*********** Generic Vertex Shader ******/
 
-VertexOut VP_main(VertexIn IN) {
+VertexOut VP_main(MeshVertex IN) {
 	VertexOut OUT = (VertexOut)0;
 
 	// transform tangent space vector to world space

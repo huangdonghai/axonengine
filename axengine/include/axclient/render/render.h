@@ -45,14 +45,16 @@ struct RenderClearer {
 
 AX_END_NAMESPACE
 
+#include "../../../data/shaders/shared.fxh"
+
 #include "render_state.h"
 #include "query.h"
 #include "sampler.h"
 #include "texture.h"
 #include "textureatlas.h"
-#include "materialdecl.h"
 #include "shader.h"
 #include "material.h"
+#include "materialdecl.h"
 #include "camera.h"
 #include "target.h"
 #include "interaction.h"

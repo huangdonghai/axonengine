@@ -562,7 +562,7 @@ void RenderWind::getLeafRustling(float &fLowWindAngle, float &fHighWindAngle, fl
 /////////////////////////////////////////////////////////////////////////////
 // RenderWind::GetRustleAngles
 
-bool RenderWind::getRustleAngles(FloatSeq &vAngles) const {
+bool RenderWind::getRustleAngles(std::vector<float> &vAngles) const {
 	bool bSuccess = false;
 
 	if (vAngles.size() == m_leafRustling.m_outputs.size())
@@ -578,7 +578,7 @@ bool RenderWind::getRustleAngles(FloatSeq &vAngles) const {
 /////////////////////////////////////////////////////////////////////////////
 // RenderWind::GetRockAngles
 
-bool RenderWind::getRockAngles(FloatSeq &vAngles) const {
+bool RenderWind::getRockAngles(std::vector<float> &vAngles) const {
 	bool bSuccess = false;
 
 	if (vAngles.size() == m_leafRocking.m_outputs.size())

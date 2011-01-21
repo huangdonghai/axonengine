@@ -26,6 +26,9 @@ public:
 	static void (*updateWindowTarget)(phandle_t h, Handle newHwnd, int width, int height);
 	static void (*deleteWindowTarget)(phandle_t h);
 
+	static void (*beginPix)(const std::string &pixname);
+	static void (*endPix)();
+
 	static void (*setTargetSet)(phandle_t targetSet[RenderTargetSet::MaxTarget]);
 
 	static void (*setViewport)(const Rect &rect, const Vector2 & depthRange);
@@ -95,6 +98,9 @@ public:
 	void createQuery(phandle_t &h);
 	void issueQuery(phandle_t h, AsyncQuery *asioQuery);
 	void deleteQuery(phandle_t h);
+
+	void beginPix(const std::string &pixname);
+	void endPix();
 
 	void setTargetSet(const RenderTargetSet &target_set);
 

@@ -12,17 +12,17 @@ read the license and understand and accept it fully.
 AX_BEGIN_NAMESPACE
 
 static int eyeInWaterSort[] = {
-	MaterialDecl::SortHint_Opacit,
-	MaterialDecl::SortHint_Decal,
-	MaterialDecl::SortHint_AboveWater,
-	MaterialDecl::SortHint_Water,
-	MaterialDecl::SortHint_UnderWater,
+	Material::SortHint_Opacit,
+	Material::SortHint_Decal,
+	Material::SortHint_AboveWater,
+	Material::SortHint_Water,
+	Material::SortHint_UnderWater,
 };
 
 
 void Interaction::calcSort(bool eyeInWater)
 {
-	sortkey = MaterialDecl::SortHint_Opacit << 28;
+	sortkey = Material::SortHint_Opacit << 28;
 
 	Material *mat = primitive->getMaterial();
 

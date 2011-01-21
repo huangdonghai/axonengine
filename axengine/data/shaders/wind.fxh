@@ -29,7 +29,7 @@ read the license and understand and accept it fully.
 #define NUM_WIND_MATRICES	3
 
 
-float3 WindEffect(VertexIn IN, float3 vPosition, float2 vWindInfo) {
+float3 WindEffect(MeshVertex IN, float3 vPosition, float2 vWindInfo) {
 	// decode both wind weights and matrix indices at the same time in order to save
 	// vertex instructions
 

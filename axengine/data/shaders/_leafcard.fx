@@ -31,7 +31,7 @@ float Script : STANDARDSGLOBAL <
 
 static const float c_alpharef = 0.3;
 
-float3 ComputeWorldpos(VertexIn IN, bool extrude = false) {
+float3 ComputeWorldpos(MeshVertex IN, bool extrude = false) {
 	float3 posWorld;
 	float3 pivot = VP_modelToWorld(IN, IN.tangent);
 	float3 corner = (IN.tangent - IN.position) * VP_getInstanceParam(IN)[SCALE];
@@ -78,7 +78,7 @@ struct FrondVertexOut {
 	float2 diffuseTc	: TEXCOORD0;
 };
 
-FrondVertexOut VP_zpass(VertexIn IN) {
+FrondVertexOut VP_zpass(MeshVertex IN) {
 	FrondVertexOut OUT;
 
 	float3 posWorld = ComputeWorldpos(IN);
@@ -95,7 +95,7 @@ half4 FP_zpass(FrondVertexOut IN) : COLOR {
 	return 1;
 }
 
-GpassOut VP_gpass(VertexIn IN) {
+GpassOut VP_gpass(MeshVertex IN) {
 	GpassOut OUT = (GpassOut)0;
 
 	// transform tangent space vector to world space
@@ -123,7 +123,7 @@ half4 FP_gpass(GpassOut IN) : COLOR {
 }
 
 
-FrondVertexOut VP_shadowgen(VertexIn IN) {
+FrondVertexOut VP_shadowgen(MeshVertex IN) {
 	FrondVertexOut OUT;
 	float3 posWorld = ComputeWorldpos(IN, true);
 
@@ -144,7 +144,7 @@ half4 FP_shadowgen(FrondVertexOut IN) : COLOR {
 
 /*********** Generic Vertex Shader ******/
 
-VertexOut VP_main(VertexIn IN) {
+VertexOut VP_main(MeshVertex IN) {
 	VertexOut OUT = (VertexOut)0;
 
 	OUT.color = IN.color.a;

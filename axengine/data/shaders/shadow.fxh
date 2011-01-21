@@ -84,7 +84,7 @@ half SampleShadowCsmAtlas(float3 worldpos, float depth)
 	half shadow = 0;
 
 	UNROLL
-	for(int i = 0; i < 2; i++) {
+	for (int i = 0; i < 2; i++) {
 		float4 tc = float4(shadowPos.xy + g_shadowTexelOffsets[i].xy, shadowPos.zw);
 		shadow += tex2Dproj(g_shadowMap, tc).r;
 		tc = float4(shadowPos.xy + g_shadowTexelOffsets[i].zw, shadowPos.zw);

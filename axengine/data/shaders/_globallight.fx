@@ -49,7 +49,7 @@ half getShadow(float3 worldpos, float depth)
 #endif
 }
 
-ShadowVertexOut VP_main(VertexIn IN) {
+ShadowVertexOut VP_main(MeshVertex IN) {
 	ShadowVertexOut OUT;
 
 	float3 worldpos = VP_modelToWorld(IN, IN.position);

@@ -53,7 +53,7 @@ struct PS_INPUT
 	float3 viewDir : TEXCOORD1;
 };
 
-PS_INPUT VP_main(VertexIn IN)
+PS_INPUT VP_main(MeshVertex IN)
 {
 	PS_INPUT result = (PS_INPUT)0;
 	result.hpos =  VP_modelToClip(IN, IN.position);

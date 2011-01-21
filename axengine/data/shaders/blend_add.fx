@@ -23,7 +23,7 @@ float Script : STANDARDSGLOBAL <
 
 /*********** Generic Vertex Shader ******/
 
-VertexOut VP_main(VertexIn IN) {
+VertexOut VP_main(MeshVertex IN) {
 	VertexOut OUT = (VertexOut)0;
 
 #if !G_D3D

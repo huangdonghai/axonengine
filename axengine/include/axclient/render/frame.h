@@ -55,11 +55,6 @@ struct AX_API RenderScene
 	Matrix4 windMatrices[RenderWind::NUM_WIND_MATRIXES];
 	Vector4 leafAngles[RenderWind::NUM_LEAF_ANGLES];
 
-	int m_histogramIndex; // which histogram need to query
-	int m_histogramQueryId;
-
-	float exposure;
-
 	int numSubScenes;
 	RenderScene *subScenes[MAX_SUB_SCENES];
 

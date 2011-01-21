@@ -18,7 +18,8 @@ AX_BEGIN_NAMESPACE
 	TextureAtlas for small same size texture pieces management like font textures
 	and terrain alpha textures.
 */
-class AX_API TextureAtlas {
+class AX_API TextureAtlas
+{
 public:
 	TextureAtlas();
 	~TextureAtlas();

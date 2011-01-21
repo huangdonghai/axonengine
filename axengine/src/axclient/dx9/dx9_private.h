@@ -7,8 +7,8 @@ By continuing to use, modify, or distribute this file you indicate that you have
 read the license and understand and accept it fully.
 */
 
-#ifndef AX_DIRECT9_PRIVATE_H
-#define AX_DIRECT9_PRIVATE_H
+#ifndef AX_DX9_PRIVATE_H
+#define AX_DX9_PRIVATE_H
 
 #include "../private.h"
 

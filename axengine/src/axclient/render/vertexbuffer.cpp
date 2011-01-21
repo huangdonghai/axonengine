@@ -2,11 +2,6 @@
 
 AX_BEGIN_NAMESPACE
 
-static UINT s_strides[] = {
-	sizeof(MeshVertex), sizeof(BlendVertex), sizeof(DebugVertex), sizeof(ChunkVertex)
-};
-
-
 VertexObject::VertexObject()
 {
 	m_localHandle = 0;
@@ -31,7 +26,7 @@ void VertexObject::init(const void *p, int count, Primitive::Hint hint, VertexTy
 	m_count = count;
 	m_hint = hint;
 	m_vt = vt;
-	m_dataSize = count * s_strides[vt];
+	m_dataSize = count * vt.stride();
 
 	if (hint != Primitive::HintStatic) {
 		DynamicBuf db = g_bufferManager->allocVb(m_dataSize);

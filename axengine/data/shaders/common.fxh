@@ -36,8 +36,9 @@ DECL_SAMPLER(sampler2D, g_lightBuffer);
 DECL_SAMPLER(sampler2D, g_sceneColor);
 
 #if G_D3D
-#	define for if (0) else for
+//#	define for if (0) else for
 #	pragma warning(disable:3205) // warning X3205: conversion from larger type to smaller, possible loss of data
+#	pragma warning(disable:3078) // warning X3078: loop control variable conflicts with a previous declaration in the outer scope; most recent declaration will be used
 #	pragma pack_matrix(row_major)
 #endif
 
@@ -90,7 +91,7 @@ struct SkinVertex {
 	float3 oldPosition	: TEXCOORD3;
 };
 
-struct VertexIn {
+struct MeshVertex {
     float3 position		: POSITION;
 	float4 color		: COLOR0;
     float4 streamTc		: TEXCOORD0;
@@ -106,6 +107,25 @@ struct VertexIn {
 #else
 	float3 oldPosition	: TEXCOORD3;
 #endif
+};
+
+// debug vertex input
+struct DebugVertex {
+    float3 xyz			: POSITION;
+	float4 color		: COLOR0;
+
+	// instance
+	float4 matrixX		: TEXCOORD4;
+	float4 matrixY		: TEXCOORD5;
+	float4 matrixZ		: TEXCOORD6;
+	float4 userDefined	: TEXCOORD7;
+};
+
+// blend vertex
+struct BlendVertex {
+	float3 position		: POSITION;
+	float4 color		: COLOR0;
+	float2 streamTc		: TEXCOORD0;
 };
 
 /* data passed from vertex shader to pixel shader */
@@ -127,35 +147,11 @@ struct VertexOut {
 #endif
 };
 
-struct GpassOut {
-	float4 hpos			: POSITION;
-	float4 screenTc		: TEXCOORD0;
-	float3 normal		: TEXCOORD1;
-	float4 streamTc		: TEXCOORD2;
-
-#if !NO_NORMALMAPPING
-	float3 tangent		: TEXCOORD3;
-	float3 binormal		: TEXCOORD4;
-#endif
-};
-
 struct Gbuffer {
 	half4 accum			: COLOR0;
-	half4 normalz		: COLOR1;
+	half4 normal		: COLOR1;
 	half4 albedo		: COLOR2;
 	half4 misc			: COLOR3;
-};
-
-// debug vertex input
-struct DebugVertex {
-    float3 xyz			: POSITION;
-	float4 color		: COLOR0;
-
-	// instance
-	float4 matrixX		: TEXCOORD4;
-	float4 matrixY		: TEXCOORD5;
-	float4 matrixZ		: TEXCOORD6;
-	float4 userDefined	: TEXCOORD7;
 };
 
 

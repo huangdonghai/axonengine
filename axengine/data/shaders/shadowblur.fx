@@ -51,7 +51,7 @@ struct PostVertexOut {
 };
 
 
-PostVertexOut VP_main(VertexIn IN) {
+PostVertexOut VP_main(MeshVertex IN) {
 	PostVertexOut OUT;
 
 	float4 p = VP_modelToClip(IN, IN.position);

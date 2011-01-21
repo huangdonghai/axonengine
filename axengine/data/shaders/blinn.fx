@@ -18,7 +18,7 @@ read the license and understand and accept it fully.
 
 float Script : STANDARDSGLOBAL <
 	// technique
-	string TechniqueGeoFill = "zpass";
+	string TechniqueGeoFill = "gfill";
 #if S_DECAL
 	string TechniqueShadowGen = "";
 #else
@@ -36,8 +36,7 @@ struct ShadowVertexOut {
 	float2 diffuseTc	: TEXCOORD0;
 };
 
-
-ShadowVertexOut VP_zpass(VertexIn IN)
+ShadowVertexOut VP_zpass(MeshVertex IN)
 {
 	ShadowVertexOut OUT;
 	OUT.hpos = VP_modelToClip(IN, IN.position);
@@ -61,37 +60,22 @@ half4 FP_zpass(ShadowVertexOut IN) : COLOR
 #endif
 }
 
-GpassOut VP_gpass(VertexIn IN)
+Gbuffer FP_gpass(VertexOut IN)
 {
-	GpassOut OUT = (GpassOut)0;
+	Gbuffer OUT=(Gbuffer)0;
 
-	// transform tangent space vector to world space
-	OUT.normal = N_modelToWorld(IN, IN.normal.xyz);
-#if !NO_NORMALMAPPING
-	OUT.tangent = N_modelToWorld(IN, IN.tangent.xyz);
-	OUT.binormal = cross(OUT.normal, OUT.tangent);
+	half3 detail = 0;
+#if G_HAVE_DETAIL
+	detail = tex2D(g_detailMap, IN.streamTc.xy * g_layerScale).xyz - 0.5;
 #endif
-	float3 posWorld = VP_modelToWorld(IN, IN.position);
 
-	float4 posClip = VP_worldToClip(posWorld);
-	OUT.hpos = posClip;
-
-	OUT.screenTc = Clip2Screen(posClip);
-
-	OUT.streamTc = VP_computeStreamTc(IN);
-
-	return OUT;
-}
-
-half4 FP_gpass(GpassOut IN) : COLOR
-{
-	half3 N;
-
-#if NO_NORMALMAPPING
-	N = normalize(IN.normal);
+#if G_HAVE_DIFFUSE
+    OUT.albedo.xyz = tex2D(g_diffuseMap, IN.streamTc.xy).xyz;
 #else
-	N = FP_GetNormal(IN.normal, IN.tangent, IN.binormal, IN.streamTc.xy);
+	OUT.albedo.xyz = half3(1, 1, 1);
 #endif
+	OUT.albedo.xyz += detail;
+	OUT.albedo.xyz *= IN.color.rgb;
 
 #if S_DECAL || S_ALPHATEST
 #if G_HAVE_DIFFUSE
@@ -99,46 +83,51 @@ half4 FP_gpass(GpassOut IN) : COLOR
 #else
 	half alpha = 1;
 #endif
+#endif
+#if S_ALPHATEST
 	if (alpha < 0.5)
 		discard;
 #endif
-	return half4(N,IN.screenTc.w);
-}
 
-/*********** Generic Vertex Shader ******/
+	half3 N;
 
-VertexOut VP_main(VertexIn IN)
-{
-    VertexOut OUT = (VertexOut)0;
-
-	// transform tangent space vector to world space
-	OUT.normal = N_modelToWorld(IN, IN.normal.xyz);
-#if !NO_NORMALMAPPING
-	OUT.tangent = N_modelToWorld(IN, IN.tangent.xyz);
-	OUT.binormal = cross(OUT.normal, OUT.tangent);
-#endif
-	float3 posWorld = VP_modelToWorld(IN, IN.position);
-	OUT.worldPos = posWorld;
-
-	float4 posClip = VP_worldToClip(posWorld);
-	OUT.hpos = posClip;
-
-	OUT.screenTc = Clip2Screen(posClip);
-
-#if G_OPENGL
-	OUT.color = IN.color;
+#if NO_NORMALMAPPING
+	OUT.normal.xyz = normalize(IN.normal);
 #else
-	OUT.color = IN.color.bgra;
+	OUT.normal.xyz = FP_GetNormal(IN.normal, IN.tangent, IN.binormal, IN.streamTc.xy);
 #endif
-	OUT.color.rgb *= VP_getInstanceParam(IN).rgb;
 
-	VP_final(IN, OUT);
+	OUT.normal.w = g_matShiness;
 
-    return OUT;
+	half3 spec;
+#if G_HAVE_SPECULAR
+	spec = tex2D(g_specularMap, IN.streamTc.xy).xyz + detail;
+#else
+#if G_HAVE_NORMAL
+	spec = tex2D(g_normalMap, IN.streamTc.xy).a + detail;
+#else
+	spec = OUT.albedo.xyz;
+#endif
+#endif
+	OUT.albedo.w = Rgb2Lum(spec);
+
+#if G_HAVE_EMISSION
+	OUT.accum.xyz = tex2D(g_emissionMap, IN.streamTc.xy).xyz;
+#endif
+
+#if S_DECAL || S_ALPHATEST
+	OUT.accum.a = alpha;
+#else
+	OUT.accum.a = 1;
+#endif
+
+	OUT.accum = OUT.albedo;
+
+	return OUT;
 }
 
 /********* pixel shaders ********/
-half4 FP_main(VertexOut IN) : COLOR
+half4 FP_main(VertexOut IN) : COLOR0
 {
 #if 0 && G_HAVE_DETAIL_NORMAL
 	return tex2D(g_detailNormalMap, IN.streamTc.xy);
@@ -248,20 +237,10 @@ half4 FP_main(VertexOut IN) : COLOR
 // TECHNIQUES
 //------------------------------------------------------------------------------
 
-technique zpass {
+technique gfill {
     pass p0 {
-        VertexShader = compile VP_2_0 VP_gpass();
+        VertexShader = compile VP_2_0 OutputMeshVertex();
 		PixelShader = compile FP_2_0 FP_gpass();
-#if 0
-	    DEPTHTEST = true;
-#if S_DECAL
-		DEPTHMASK = false;
-#else
-		DEPTHMASK = true;
-#endif
-		CULL_ENABLED;
-		BLEND_NONE;
-#endif
     }
 }
 
@@ -269,20 +248,13 @@ technique shadowgen {
     pass p0 {
         VertexShader = compile VP_2_0 VP_zpass();
 		PixelShader = compile FP_2_0 FP_zpass();
-
-#if 0
-	    DEPTHTEST = true;
-		DEPTHMASK = true;
-		CULL_ENABLED;
-		BLEND_NONE;
-#endif
     }
 }
 
 
 technique main {
     pass p0 {
-        VertexShader = compile VP_2_0 VP_main();
+        VertexShader = compile VP_2_0 OutputMeshVertex();
         PixelShader = compile FP_2_0 FP_main();
 
 #if 0

@@ -69,25 +69,29 @@ SyncMutex::SyncMutex()
 	InitializeCriticalSection((LPCRITICAL_SECTION)m_object);
 }
 
-SyncMutex::~SyncMutex() {
+SyncMutex::~SyncMutex()
+{
 	DeleteCriticalSection((LPCRITICAL_SECTION)m_object);
 	SafeFree(m_object);
 }
 
-bool SyncMutex::lock(uint_t) {
+bool SyncMutex::lock(uint_t)
+{
 	EnterCriticalSection((LPCRITICAL_SECTION)m_object);
 	stat_lockTimes.inc();
 	return true;
 }
 
-bool SyncMutex::unlock() {
+bool SyncMutex::unlock()
+{
 	LeaveCriticalSection((LPCRITICAL_SECTION)m_object);
 	return true;
 }
 
 #if 0
 Handle
-SyncMutex::GetHandle() {
+SyncMutex::GetHandle()
+{
 	return mMutex;
 }
 #endif
@@ -95,16 +99,19 @@ SyncMutex::GetHandle() {
 // class SyncEvent
 //--------------------------------------------------------------------------
 
-SyncEvent::SyncEvent() : m_object(NULL) {
+SyncEvent::SyncEvent() : m_object(NULL)
+{
 	m_object = ::CreateEvent(NULL, FALSE, FALSE, NULL);
 	AX_ASSERT(m_object);
 }
 
-SyncEvent::~SyncEvent() {
+SyncEvent::~SyncEvent()
+{
 	::CloseHandle(m_object);
 }
 
-bool SyncEvent::lock(uint_t timeout) {
+bool SyncEvent::lock(uint_t timeout)
+{
 	DWORD dwRet = ::WaitForSingleObject(m_object, timeout);
 	if (dwRet == WAIT_OBJECT_0 || dwRet == WAIT_ABANDONED)
 		return TRUE;
@@ -112,7 +119,8 @@ bool SyncEvent::lock(uint_t timeout) {
 		return FALSE;
 }
 
-bool SyncEvent::unlock() {
+bool SyncEvent::unlock()
+{
 	return true;
 }
 #if 0
@@ -121,13 +129,16 @@ SyncEvent::GetHandle() {
 	return mEventHandle;
 }
 #endif
-bool SyncEvent::setEvent() {
+bool SyncEvent::setEvent()
+{
 	return ::SetEvent(m_object) ? true : false;
 }
-bool SyncEvent::pulseEvent() {
+bool SyncEvent::pulseEvent()
+{
 	return ::PulseEvent(m_object) ? true : false;
 }
-bool SyncEvent::resetEvent() {
+bool SyncEvent::resetEvent()
+{
 	return ::ResetEvent(m_object) ? true : false;
 }
 

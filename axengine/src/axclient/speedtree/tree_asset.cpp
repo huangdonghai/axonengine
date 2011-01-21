@@ -145,10 +145,10 @@ Primitives TreeAsset::getAllPrimitives(float lod) const
 
 static inline void setMaterialColor(Material *mat, const float *f, float scaler, float ambientscaler)
 {
-	Vector3 diffuse(f[0], f[1], f[2]);
-	Vector3 ambient(f[3], f[4], f[5]);
-	Vector3 specular(f[6], f[7], f[8]);
-	Vector3 emissive(f[9], f[10], f[11]);
+	Color3 diffuse(f[0], f[1], f[2]);
+	Color3 ambient(f[3], f[4], f[5]);
+	Color3 specular(f[6], f[7], f[8]);
+	Color3 emissive(f[9], f[10], f[11]);
 	float shiness = f[12];
 
 	mat->setDiffuse(diffuse * scaler);

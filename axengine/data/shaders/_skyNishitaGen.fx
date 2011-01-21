@@ -66,7 +66,7 @@ struct FragOut
 };
 
 
-VertOut VP_main(VertexIn IN)
+VertOut VP_main(MeshVertex IN)
 {
     VertOut result = (VertOut)0;
     result.hpos = VP_worldToClip(IN.position);

@@ -8,8 +8,8 @@ read the license and understand and accept it fully.
 */
 
 
-#ifndef AX_D3D9DRIVER_H
-#define AX_D3D9DRIVER_H
+#ifndef AX_DX9_DRIVER_H
+#define AX_DX9_DRIVER_H
 
 AX_BEGIN_NAMESPACE
 

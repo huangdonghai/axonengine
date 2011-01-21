@@ -35,7 +35,7 @@ struct fragOut {
 	float	depth		: DEPTH;
 };
 
-v2f VP_main(VertexIn IN) {
+v2f VP_main(MeshVertex IN) {
 	v2f OUT;
 
 	OUT.hpos = VP_modelToClip(IN, IN.position);

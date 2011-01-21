@@ -22,7 +22,7 @@ float Script : STANDARDSGLOBAL <
 > = 0.8;
 
 
-VertexOut VP_main(VertexIn IN) {
+VertexOut VP_main(MeshVertex IN) {
     VertexOut OUT = (VertexOut)0;
 
 	OUT.hpos = g_waterFogParams + g_leafAngles[7] + g_instanceParam;

@@ -69,6 +69,7 @@ private:
 	};
 };
 #endif
+class ConstBuffers;
 
 class ConstBuffer
 {

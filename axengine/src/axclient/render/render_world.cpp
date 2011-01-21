@@ -23,9 +23,6 @@ int RenderWorld::m_frameNum = 0;
 RenderWorld::RenderWorld()
 {
 	m_outdoorEnv = nullptr;
-	TypeZeroArray(m_histogram);
-	m_curHistogramIndex = 0;
-	m_lastExposure = 1;
 
 	m_visFrameId = 1;
 	m_shadowFrameId = 1;
@@ -112,7 +109,7 @@ void RenderWorld::renderTo(RenderScene *qscene)
 
 	qscene->worldFrameId = m_frameNum;
 
-	s_drawTerrain = true;
+	s_drawTerrain = false;
 	s_drawActor = true;
 
 	m_updateShadowVis = qscene->isLastCsmSplits();
@@ -148,10 +145,7 @@ void RenderWorld::renderTo(RenderScene *qscene)
 	// outdoor environment
 	if (m_outdoorEnv) {
 		if (qscene->sceneType == RenderScene::WorldMain) {
-			updateExposure(qscene);
 			m_outdoorEnv->update(qscene, Plane::Cross);
-		} else {
-			qscene->exposure = m_lastExposure;
 		}
 
 		qscene->addEntity(m_outdoorEnv);
@@ -307,10 +301,7 @@ void RenderWorld::renderTo( RenderScene *qscene, QuadNode *node )
 	// outdoor environment
 	if (m_outdoorEnv) {
 		if (qscene->sceneType == RenderScene::WorldMain) {
-			updateExposure(qscene);
 			m_outdoorEnv->update(qscene, Plane::Cross);
-		} else {
-			qscene->exposure = m_lastExposure;
 		}
 
 		qscene->addEntity(m_outdoorEnv);
@@ -580,110 +571,6 @@ void RenderWorld::unlinkEntity(RenderEntity *la)
 	node->linkHead.erase(la);
 #endif
 }
-
-void RenderWorld::updateExposure(RenderScene *qscene)
-{
-	if (1 || !r_hdr.getBool()) {
-		qscene->m_histogramIndex = -1;
-		qscene->m_histogramQueryId = 0;
-		return;
-	}
-
-#if 0
-	Target *lasttarget = gRenderQueue->getQueryResultTarget();
-	if (lasttarget != qscene->camera.getTarget()) {
-		qscene->exposure = m_lastExposure;
-		return;
-	}
-#endif
-	m_curHistogramIndex++;
-	qscene->m_histogramIndex = m_curHistogramIndex % HISTOGRAM_WIDTH;
-//		qscene->m_histogramQueryId = m_histogramQueryId;
-
-	if (m_curHistogramIndex < HISTOGRAM_WIDTH + 3) {
-		return;
-	}
-
-	int resultIndex = (m_curHistogramIndex - 2) % HISTOGRAM_WIDTH;
-	int queryResult = -1; // gRenderQueue->getQueryResult(m_histogramQueryId);
-
-	if (queryResult >= 0) {
-		m_histogram[resultIndex] = queryResult;
-	} else {
-		qscene->exposure = m_lastExposure;
-		return;
-	}
-
-	int totalsamplers = 0;
-	for (int i = 0; i < HISTOGRAM_WIDTH; i++) {
-		totalsamplers += m_histogram[i];
-		m_histogramAccumed[i] = totalsamplers;
-	}
-
-	if (totalsamplers == 0) {
-		return;
-	}
-
-	float midexposure = 0;
-	float overexposure = 0;
-
-	int halfsamplers = totalsamplers / 2;
-	int s, e;
-	for (s = 0; s < HISTOGRAM_WIDTH; s++) {
-		if (m_histogramAccumed[s] > halfsamplers) {
-			break;
-		}
-	}
-	for (e = HISTOGRAM_WIDTH-1; e >= 0; e--) {
-		if (m_histogramAccumed[e] < halfsamplers) {
-			break;
-		}
-	}
-
-	float scale = float(s + e + 2) / HISTOGRAM_WIDTH;
-
-	midexposure = m_lastExposure * scale;
-
-	int overbrightsamplers = totalsamplers * 0.95f;
-
-	int i;
-	for (i = 0; i < HISTOGRAM_WIDTH; i++) {
-		if (m_histogramAccumed[i] > overbrightsamplers) {
-			break;
-		}
-	}
-
-	if (i >= HISTOGRAM_WIDTH - 1) {
-		scale = (float)m_histogram[HISTOGRAM_WIDTH - 1] / totalsamplers;
-		scale *= 20.0f;
-		if (scale > 1) {
-			scale = 1 + logf(scale);
-		}
-	} else {
-		scale = float(i+1) / HISTOGRAM_WIDTH;
-	}
-
-
-//		scale = float(i+1) / HISTOGRAM_WIDTH * 1.2f;
-
-	overexposure = m_lastExposure * scale;
-
-//		float disired = std::max(midexposure, overexposure);
-	float disired = midexposure;
-
-	disired = Math::clamp(disired, 0.25f, 4.0f);
-
-	if (r_exposure.getFloat()) {
-		disired = r_exposure.getFloat();
-	}
-
-	float frametime = qscene->camera.getFrameTime();
-	float delta = fabs(disired - m_lastExposure) * frametime;
-	float exposure = Math::clamp(disired, m_lastExposure * (1-delta), m_lastExposure * (1+delta));
-	qscene->exposure = exposure;
-	m_lastExposure = qscene->exposure;
-}
-
 
 AX_END_NAMESPACE
 

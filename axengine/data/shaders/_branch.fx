@@ -31,7 +31,7 @@ float Script : STANDARDSGLOBAL <
 
 const int TESTCONST = 1;
 
-float4 VP_zpass(VertexIn IN) : POSITION {
+float4 VP_zpass(MeshVertex IN) : POSITION {
 	float3 offset = VP_modelRotateScale(IN, IN.position);
 	offset = WindEffect(IN, offset, IN.st2);
 	float3 posWorld = offset + VP_getModelPos(IN);
@@ -43,7 +43,7 @@ half4 FP_zpass(float4 IN : POSITION) : COLOR {
 	return 1;
 }
 
-GpassOut VP_gpass(VertexIn IN) {
+GpassOut VP_gpass(MeshVertex IN) {
 	GpassOut OUT = (GpassOut)0;
 
 	// transform tangent space vector to world space
@@ -84,7 +84,7 @@ half4 FP_gpass(GpassOut IN) : COLOR {
 
 /*********** Generic Vertex Shader ******/
 
-VertexOut VP_main(VertexIn IN) {
+VertexOut VP_main(MeshVertex IN) {
 	VertexOut OUT = (VertexOut)0;
 
 	// transform tangent space vector to world space

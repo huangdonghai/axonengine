@@ -20,7 +20,7 @@ float Script : STANDARDSGLOBAL <
 
 /*********** Generic Vertex Shader ******/
 
-VertexOut VP_main(VertexIn IN) {
+VertexOut VP_main(MeshVertex IN) {
     VertexOut OUT = (VertexOut)0;
 
 	OUT.color = IN.color;
@@ -38,7 +38,7 @@ VertexOut VP_main(VertexIn IN) {
     return OUT;
 }
 
-half4 FP_gpass(GpassOut IN) : COLOR {
+half4 FP_gpass(VertexOut IN) : COLOR {
 	return half4(0,0,0,2000);
 }
 

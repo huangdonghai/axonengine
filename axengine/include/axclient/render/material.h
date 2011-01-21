@@ -12,14 +12,148 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
+#define AX_DECL_SURFACETYPE \
+	AX_ENUM(Dust) \
+	AX_ENUM(Metal) \
+	AX_ENUM(Sand) \
+	AX_ENUM(Wood) \
+	AX_ENUM(Grass) \
+	AX_ENUM(Snow) \
+	AX_ENUM(Glass) \
+	AX_ENUM(Water) \
+	AX_ENUM(MaxType)
+
+struct SurfaceType {
+	enum Type {
+#define AX_ENUM(x) x,
+		AX_DECL_SURFACETYPE
+#undef AX_ENUM
+		// Dust, Metal, Sand, Wood, Grass, Snow, Glass, Water
+	};
+	AX_DECLARE_ENUM(SurfaceType);
+
+	const char *toString() {
+		switch (t) {
+#define AX_ENUM(x) case x: return #x;
+			AX_DECL_SURFACETYPE
+#undef AX_ENUM
+		}
+
+		return "INVALID";
+	}
+
+	static int fromString(const char *str) {
+#define AX_ENUM(x) if (Strequ(str, #x)) { return x; }
+		AX_DECL_SURFACETYPE
+#undef AX_ENUM
+			return 0;
+	}
+};
+
+struct GlobalTextureId {
+	enum Type {
+		RtDepth, Rt0, Rt1, Rt2, Rt3,
+		SceneColor, ShadowMap,
+		MaxType
+	};
+	AX_DECLARE_ENUM(GlobalTextureId);
+};
+
+struct MaterialTextureId {
+	enum Type {
+		// material sampler
+		Diffuse, Normal, Specular, Detail, DetailNormal, Opacit, Emission,
+		Displacement, Env,
+
+		// terrain sampler
+		TerrainColor, TerrainNormal, LayerAlpha,
+
+		// engine sampler
+		Reflection, LightMap, ShadowMap,
+
+		MaxType
+	};
+	AX_DECLARE_ENUM(MaterialTextureId);
+};
+
+class FastParams
+{
+public:
+	FastParams() { m_numItems = 0; }
+	~FastParams() {}
+
+	void clear() { m_numItems = 0; }
+	void addParam(const FixedString &name, int num, const float *data)
+	{
+		AX_ASSURE(m_numItems < NUM_ITEMS);
+		Item &item = m_items[m_numItems];
+		item.nameId = name.id();
+		item.count = num;
+		if (m_numItems == 0) {
+			item.offset = 0;
+		} else {
+			Item &preItem = m_items[m_numItems - 1];
+			item.offset = preItem.offset + preItem.count;
+		}
+		::memcpy(m_floatData+item.offset, data, num * sizeof(float));
+		m_numItems++;
+	}
+
+public:
+	enum { NUM_ITEMS = 16, NUM_FLOATDATA = 256 };
+	struct Item {
+		int nameId;
+		int offset;
+		int count;
+	};
+	int m_numItems;
+	Item m_items[NUM_ITEMS];
+	float m_floatData[NUM_FLOATDATA];
+};
+
+class MaterialDecl;
+
 class AX_API Material
 {
 public:
+	enum SortHint {
+		SortHint_Opacit,
+		SortHint_Decal,
+		SortHint_UnderWater,
+		SortHint_Water,
+		SortHint_AboveWater
+	};
+
+	enum {
+		MAX_FEATURES = 8,
+	};
+
+	// defined in material
+	enum WaveType {
+		WaveNone,
+		WaveSin,
+		WaveSquare,
+		WaveTriangle,
+		WaveSawtooth,
+		WaveInversesawtooth,
+		WaveNoise
+	};
+
+	enum Flag {
+		Flag_NoDraw = 1,
+		Flag_PhysicsHelper = 0x80000,
+	};
+
+	enum BlendMode {
+		BlendMode_Disabled,
+		BlendMode_Add,
+		BlendMode_Blend,
+		BlendMode_Modulate
+	};
+
+	typedef Flags_<Flag> Flags;
 	Material(const std::string &name);
 	~Material();
-
-	// implement RefObject
-	virtual void deleteThis();
 
 	// must be success
 	bool init(const FixedString &name);
@@ -29,20 +163,20 @@ public:
 	bool isWireframe() const;
 	bool isPhysicsHelper() const;
 
-	MaterialDecl::SortHint getSortHint() const { return m_sortHint; }
+	SortHint getSortHint() const { return m_sortHint; }
 
 	void setTextureSet(const std::string &texname);
 
-	void setDiffuse(const Vector3 &v);
-	void setSpecular(const Vector3 &v);
+	void setDiffuse(const Color3 &v);
+	void setSpecular(const Color3 &v);
 	void setShiness(float shiness) { m_shiness = shiness; }
 	void setDetailScale(float scale) { m_detailScale = scale; }
 	float getDetailScale() const { return m_detailScale; }
 	bool haveDetail() const { return m_haveDetail; }
 
-	Vector3 getMatDiffuse() const;
-	Vector3 getMatSpecular() const;
-	float getMatShiness() const;
+	Color3 getDiffuse() const;
+	Color3 getSpecular() const;
+	float getShiness() const;
 
 	// features and shader parameter
 	void setFeature(int index, bool enabled);
@@ -65,40 +199,22 @@ public:
 	// shader macro
 	const ShaderMacro &getShaderMacro();
 
-	void setBaseTcMatrix(const Matrix4 &matrix);
-	bool isBaseTcAnim() const { return m_baseTcAnim; }
-	const Matrix4 *getBaseTcMatrix() const { return &m_baseTcMatrix; }
+	void setTexMatrix(const Matrix4 &matrix);
+	bool isTexAnim() const { return m_isTexAnim; }
+	const Matrix4 *getTexMatrix() const { return &m_texMatrix; }
 
-#if 0
-	// pixel to texel
-	void setPixelToTexel(int width, int height);
-	bool isPixelToTexelEnabled() const { return m_p2tEnabled; }
-	int getPixelToTexelWidth() const { return m_p2tWidth; }
-	int getPixelToTexelHeight() const { return m_p2tHeight; }
-
-	// management
-	static Material *load(const String &name);
-	static Material *loadUnique(const String &name);
-	static void initManager();
-	static void finalizeManager();
-#endif
-	static FixedString normalizeKey(const std::string &name);
-#if 0
-	static void syncFrame();
-#endif
-	static void matlist_f(const CmdArgs &args);
-	// end management
+	static std::string normalizeKey(const std::string &name);
 
 private:
-	FixedString m_key;
+	std::string m_name;
 	MaterialDecl *m_decl;
-	MaterialDecl::SortHint m_sortHint;
+	SortHint m_sortHint;
 
 	bool m_shaderMacroNeedRegen;
 	ShaderMacro m_shaderMacro;
 
-	Vector3 m_diffuse;
-	Vector3 m_specular;
+	Color3 m_diffuse;
+	Color3 m_specular;
 	float m_shiness;
 	float m_detailScale;
 	bool m_haveDetail;
@@ -110,67 +226,47 @@ private:
 	ConstBuffer *m_localUniforms;
 
 	// texgen etc...
-	bool m_baseTcAnim;
-	Matrix4 m_baseTcMatrix;
+	bool m_isTexAnim;
+	Matrix4 m_texMatrix;
 
-	bool m_features[MaterialDecl::MAX_FEATURES];
+	bool m_features[MAX_FEATURES];
 
 	int m_depthWrite : 1;
 	int m_depthTest : 1;
 	int m_twoSided : 1;
 	int m_wireframed : 1;
 	int m_blendMode : 2;
-
-#if 0
-	int m_literals[MaterialDecl::MAX_LITERALS];
-
-	// pixel to texel conversion
-	bool m_p2tEnabled;
-	int m_p2tWidth, m_p2tHeight;
-#endif
-
-private:
-	// management
-	typedef Dict<FixedString, Material*> MaterialDict;
-	static MaterialDict ms_materialDict;
-//	static IntrusiveList<Material, &Material::m_needDeleteLink> ms_needDeleteLinkHead;
-
-	static void _deleteMaterial(Material *mat);
-
-public:
-	// delete link
-	IntrusiveLink<Material> m_needDeleteLink;
 };
 
-inline void Material::setDiffuse(const Vector3 &v)
+inline void Material::setDiffuse(const Color3 &v)
 {
 	m_diffuse = v;
 }
 
-inline void Material::setSpecular(const Vector3 &v)
+inline void Material::setSpecular(const Color3 &v)
 {
 	m_specular = v;
 }
 
 
-inline Vector3 Material::getMatDiffuse() const
+inline Color3 Material::getDiffuse() const
 {
 	return m_diffuse;
 }
 
-inline Vector3 Material::getMatSpecular() const
+inline Color3 Material::getSpecular() const
 {
 	return m_specular;
 }
 
-inline float Material::getMatShiness() const
+inline float Material::getShiness() const
 {
 	return m_shiness;
 }
 
 inline void Material::setFeature(int index, bool enabled)
 {
-	AX_ASSERT(index >= 0 && index < MaterialDecl::MAX_FEATURES);
+	AX_ASSERT(index >= 0 && index < MAX_FEATURES);
 	if (m_features[index] != enabled) {
 		m_shaderMacroNeedRegen = true;
 		m_features[index] = enabled;
@@ -179,7 +275,7 @@ inline void Material::setFeature(int index, bool enabled)
 
 inline bool Material::isFeatureEnabled(int index) const
 {
-	AX_ASSERT(index >= 0 && index < MaterialDecl::MAX_FEATURES);
+	AX_ASSERT(index >= 0 && index < MAX_FEATURES);
 	return m_features[index];
 }
 #if 0

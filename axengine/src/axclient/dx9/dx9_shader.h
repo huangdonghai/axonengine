@@ -8,8 +8,8 @@ read the license and understand and accept it fully.
 */
 
 
-#ifndef AX_D3D9SHADER_H
-#define AX_D3D9SHADER_H
+#ifndef AX_DX9_SHADER_H
+#define AX_DX9_SHADER_H
 
 #define AX_SU(x, y) DX9_Uniform::setUniform(Uniforms::x,y);
 

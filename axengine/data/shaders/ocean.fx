@@ -105,7 +105,7 @@ half Fresnel(half NdotE, half bias, half power) {
 
 /*********** Generic Vertex Shader ******/
 
-VertexOut VP_main(VertexIn IN) {
+VertexOut VP_main(MeshVertex IN) {
 	VertexOut OUT = (VertexOut)0;
 
 	OUT.color = IN.color;
@@ -229,9 +229,6 @@ half4 FP_main(VertexOut IN) : COLOR {
 	refrOffset *= refrDepth > IN.screenTc.w;
 
 	half3 refr = tex2D(s_refractionMap, IN.screenTc.xy + refrOffset).xyz;
-#if G_HDR
-	refr.xyz *= g_exposure.y;
-#endif
 
 	refr = lerp(g_waterFogParams.xyz, refr, refrfog);
 	half3 refl = tex2D(s_reflectionMap, IN.screenTc.xy + reflOffset.yx).xyz;// * g_exposure.y;

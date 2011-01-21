@@ -1,5 +1,5 @@
-#ifndef AX_D3D9API_H
-#define AX_D3D9API_H
+#ifndef AX_DX9_API_H
+#define AX_DX9_API_H
 
 AX_BEGIN_NAMESPACE
 

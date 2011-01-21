@@ -377,63 +377,15 @@ void dx9DeleteWindowTarget(phandle_t h)
 	delete h;
 }
 
-#if 0
-void dx9CreateSamplerState( phandle_t h, const SamplerDesc &desc )
+void dx9BeginPix(const std::string &pixname)
 {
-	*h = new DX9_SamplerState(desc);
+	D3DPERF_BeginEvent(D3DCOLOR_RGBA(0,0,0,255), u2w(pixname).c_str());
 }
 
-void dx9DeleteSamplerState( phandle_t h )
+void dx9EndPix()
 {
-	DX9_SamplerState *obj = handle_cast<DX9_SamplerState*>(*h);
-	SAFE_RELEASE(obj);
+	D3DPERF_EndEvent();
 }
-
-void dx9CreateBlendState( phandle_t h, const BlendDesc &src )
-{
-	IDirect3DStateBlock9 *stateblock;
-	dx9_device->BeginStateBlock();
-	dx9_device->EndStateBlock(&stateblock);
-
-	*h = stateblock;
-}
-
-void dx9DeleteBlendState( phandle_t h )
-{
-	IDirect3DStateBlock9 *stateblock = handle_cast<IDirect3DStateBlock9 *>(*h);
-	SAFE_RELEASE(stateblock);
-}
-
-void dx9CreateDepthStencilState( phandle_t h, const DepthStencilDesc &src )
-{
-	IDirect3DStateBlock9 *stateblock;
-	dx9_device->BeginStateBlock();
-	dx9_device->EndStateBlock(&stateblock);
-
-	*h = stateblock;
-}
-
-void dx9DeleteDepthStencilState(phandle_t h)
-{
-	IDirect3DStateBlock9 *stateblock = handle_cast<IDirect3DStateBlock9 *>(*h);
-	SAFE_RELEASE(stateblock);
-}
-
-void dx9CreateRasterizerState(phandle_t h, const RasterizerDesc &src)
-{
-	IDirect3DStateBlock9 *stateblock;
-	dx9_device->BeginStateBlock();
-	dx9_device->EndStateBlock(&stateblock);
-
-	*h = stateblock;
-}
-
-void dx9DeleteRasterizerState(phandle_t h)
-{
-	IDirect3DStateBlock9 *stateblock = handle_cast<IDirect3DStateBlock9 *>(*h);
-	SAFE_RELEASE(stateblock);
-}
-#endif
 
 inline static IDirect3DSurface9 *getSurface(phandle_t h)
 {
@@ -709,6 +661,7 @@ static void dx9Present(phandle_t window)
 
 void dx9AssignRenderApi()
 {
+	RenderApi::createTextureFromFileInMemory = &dx9CreateTextureFromFileInMemory;
 	RenderApi::createTexture2D = &dx9CreateTexture2D;
 	RenderApi::uploadTexture = &dx9UploadTexture;
 	RenderApi::uploadSubTexture = &dx9UploadSubTexture;
@@ -726,19 +679,10 @@ void dx9AssignRenderApi()
 	RenderApi::createWindowTarget = &dx9CreateWindowTarget;
 	RenderApi::updateWindowTarget = &dx9UpdateWindowTarget;
 	RenderApi::deleteWindowTarget = &dx9DeleteWindowTarget;
-#if 0
-	RenderApi::createSamplerState = &dx9CreateSamplerState;
-	RenderApi::deleteSamplerState = &dx9DeleteSamplerState;
 
-	RenderApi::createBlendState = &dx9CreateBlendState;
-	RenderApi::deleteBlendState = &dx9DeleteBlendState;
+	RenderApi::beginPix = &dx9BeginPix;
+	RenderApi::endPix = &dx9EndPix;
 
-	RenderApi::createDepthStencilState = &dx9CreateDepthStencilState;
-	RenderApi::deleteDepthStencilState = &dx9DeleteDepthStencilState;
-
-	RenderApi::createRasterizerState = &dx9CreateRasterizerState;
-	RenderApi::deleteRasterizerState = &dx9DeleteRasterizerState;
-#endif
 	RenderApi::setTargetSet = &dx9SetTargetSet;
 
 	RenderApi::setViewport = &dx9SetViewport;

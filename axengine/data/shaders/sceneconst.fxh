@@ -17,5 +17,4 @@ AX_BEGIN_CBUFFER(cbSceneConst, 0)
 	AX_ITEM(float4,		Vector3,	g_globalLightColor,			SREG38)
 	AX_ITEM(float4x4,	Matrix4,	g_csmOffsetScales,			SREG39)
 	AX_ITEM(float4,		Vector3,	g_skyColor,					SREG43)
-	AX_ITEM(float4,		Vector4,	g_exposure,					SREG44)
 AX_END_CBUFFER

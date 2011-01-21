@@ -1266,10 +1266,16 @@ ChunkPrim::ChunkPrim(Hint hint)
 	m_type = ChunkType;
 	m_layerVisible = false;
 	m_isZonePrim = false;
+
+	m_vertexObject = new VertexObject();
+	m_indexObject = new IndexObject();
 }
 
 ChunkPrim::~ChunkPrim()
 {
+	SafeDelete(m_indexObject);
+	SafeDelete(m_vertexObject);
+
 	clear();
 }
 
@@ -1437,7 +1443,12 @@ bool ChunkPrim::isLayerVerticalProjection(int index) const
 
 void ChunkPrim::draw(Technique tech)
 {
+	VertexObject *vert = m_vertexObject;
+	InstanceObject *inst = m_overloadInstanceObject;
+	IndexObject *index = m_overloadIndexObject ? m_overloadIndexObject : m_indexObject;
+	Material *mat = m_overloadMaterial ? m_overloadMaterial : m_material;
 
+	g_renderContext->draw(vert, inst, index, mat, tech);
 }
 
 void ChunkPrim::sync()

@@ -34,7 +34,7 @@ struct ZpassVertexOut {
 	float2 diffuseTc	: TEXCOORD0;
 };
 
-ZpassVertexOut VP_zpass(VertexIn IN) {
+ZpassVertexOut VP_zpass(MeshVertex IN) {
 	ZpassVertexOut OUT;
 
 #if G_OPENGL
@@ -67,7 +67,7 @@ half4 FP_zpass(ZpassVertexOut IN) : COLOR {
 	return Cd;
 }
 
-GpassOut VP_gpass(VertexIn IN) {
+GpassOut VP_gpass(MeshVertex IN) {
 	GpassOut OUT = (GpassOut)0;
 
 	// transform tangent space vector to world space
@@ -126,7 +126,7 @@ half4 FP_gpass(GpassOut IN) : COLOR {
 
 /*********** Generic Vertex Shader ******/
 
-VertexOut VP_main(VertexIn IN) {
+VertexOut VP_main(MeshVertex IN) {
 	VertexOut OUT = (VertexOut)0;
 
 	OUT.color = IN.color.a;

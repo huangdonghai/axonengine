@@ -37,7 +37,7 @@ static const half c_SampleWeight[13] = {
 							1.0 / 20.0,	
 };
 
-VertexOut VP_main(VertexIn IN)
+VertexOut VP_main(MeshVertex IN)
 {
     VertexOut OUT = (VertexOut)0;
 

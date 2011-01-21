@@ -84,7 +84,7 @@ half3 FinalOutput(half3 input) {
 	return input;
 #endif
 
-	return input * g_exposure.x;
+	return input;
 //	return input * 0.25;
 //	half3 c = input * g_exposure.y;
 //	return c / (1 + c);
