@@ -96,8 +96,9 @@ Gbuffer FP_gpass(VertexOut IN)
 #else
 	OUT.normal.xyz = FP_GetNormal(IN.normal, IN.tangent, IN.binormal, IN.streamTc.xy);
 #endif
+	OUT.normal.xyz = OUT.normal.xyz * 0.5f + 0.5f;
 
-	OUT.normal.w = g_matShiness;
+	OUT.misc.w = g_matShiness;
 
 	half3 spec;
 #if G_HAVE_SPECULAR
@@ -121,7 +122,7 @@ Gbuffer FP_gpass(VertexOut IN)
 	OUT.accum.a = 1;
 #endif
 
-	OUT.accum = OUT.albedo;
+	OUT.accum = OUT.normal;
 
 	return OUT;
 }

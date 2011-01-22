@@ -34,7 +34,8 @@ float4 s_lightColor;// = float4(1,1,1,1);
 float4 s_skyColor;// = float4(0.5,0.5,0.5,0.5);
 float4 s_envColor;// = float4(0,0,0,0);
 
-struct ShadowVertexOut {
+struct LightVertexOut
+{
     float4	hpos	: POSITION;
 	float4	screenTc: TEXCOORD0;
 	float4	viewDir	: TEXCOORD1;
@@ -49,8 +50,9 @@ half getShadow(float3 worldpos, float depth)
 #endif
 }
 
-ShadowVertexOut VP_main(MeshVertex IN) {
-	ShadowVertexOut OUT;
+LightVertexOut VP_main(MeshVertex IN)
+{
+	LightVertexOut OUT;
 
 	float3 worldpos = VP_modelToWorld(IN, IN.position);
 
@@ -66,8 +68,9 @@ ShadowVertexOut VP_main(MeshVertex IN) {
 	return OUT;
 }
 
-half4 FP_main(ShadowVertexOut IN) : COLOR {
-	half4 result = 0;
+half4 FP_main(LightVertexOut IN) : COLOR
+{
+	half4 OUT = 0;
 
 	// get gbuffer
 	half4 gbuffer = tex2Dproj(g_rt1, IN.screenTc);
@@ -85,25 +88,26 @@ half4 FP_main(ShadowVertexOut IN) : COLOR {
 	half RdotE = saturate(dot(E, R));
 
 #if F_DIRECTION_LIGHT
-	result.xyz = s_lightColor.xyz * NdotL;
-	result.w = pow(RdotE, 10) * NdotL * s_lightColor.w;
-	result *= getShadow(worldpos, gbuffer.a);
+	OUT.xyz = s_lightColor.xyz * NdotL;
+	OUT.w = pow(RdotE, 10) * NdotL * s_lightColor.w;
+	OUT *= getShadow(worldpos, gbuffer.a);
 #endif
 
 #if F_SKY_LIGHT
-	result.xyz += lerp(s_skyColor.xyz * 0.5, s_skyColor.xyz, N.z*0.5+0.5);
+	OUT.xyz += lerp(s_skyColor.xyz * 0.5, s_skyColor.xyz, N.z*0.5+0.5);
 #endif
 
 #if F_ENV_LIGHT
-	result.xyz += s_envColor.xyz;
+	OUT.xyz += s_envColor.xyz;
 #endif
 
-	return result * 0.25;
+	return OUT * 0.25;
 }
 
 
 
-technique main {
+technique main
+{
     pass p0 {
         VERTEXPROGRAM = compile VP_3_0 VP_main();
 		FRAGMENTPROGRAM = compile FP_3_0 FP_main();

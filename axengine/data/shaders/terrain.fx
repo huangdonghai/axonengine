@@ -103,10 +103,10 @@ Gbuffer FP_gpass(LayerVertexOut IN)
 
 	half3 N = GetNormal(g_terrainNormal, IN.streamTc.xy).rgb;
 
-	OUT.normal.xyz = N;
+	OUT.normal.xyz = N * 0.5 + 0.5;
 	OUT.albedo.xyz = tex2D(g_terrainColor, IN.streamTc.xy).xyz;
 
-	OUT.normal.w = g_matShiness;
+	OUT.misc.w = g_matShiness;
 
 	half3 spec;
 #if G_HAVE_SPECULAR
@@ -116,7 +116,7 @@ Gbuffer FP_gpass(LayerVertexOut IN)
 #endif
 	OUT.albedo.w = Rgb2Lum(spec);
 
-	OUT.accum.xyz = OUT.albedo.xyz;
+	OUT.accum.xyz = OUT.normal.xyz;
 
 	return OUT;
 }
