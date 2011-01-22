@@ -45,10 +45,7 @@ public:
 	virtual ~Primitive() = 0;
 
 	inline Hint getHint() const { return m_hint; }
-#if 0
-	inline int getCachedFrame() const { return m_cachedFrame; }
-	inline void setCachedFrame(int frame) { m_cachedFrame = frame; }
-#endif
+	inline bool isStatic() const { return m_hint == HintStatic; }
 	inline Type getType() const { return m_type; }
 
 	inline bool isDirty() const { return m_isDirty; }
@@ -88,10 +85,6 @@ protected:
 	bool m_isIndexBufferDirty;
 	bool m_isWorldSpace; // primitive already in world space, so don't need model transform
 
-#if 0
-	int m_cachedId;		// used by render driver
-	int m_cachedFrame;
-#endif
 	int m_syncFrame;
 
 	Type m_type;
@@ -138,11 +131,16 @@ inline Material *Primitive::getMaterial() const
 
 inline void Primitive::setMaterial(Material *material)
 {
+	if (m_material == material)
+		return;
+
+	SafeDelete(m_material);
 	m_material = material;
 }
 
 inline void Primitive::setLightMap(Texture *lm)
 {
+	SafeDelete(m_lightMap);
 	m_lightMap = lm;
 }
 

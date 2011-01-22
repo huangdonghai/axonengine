@@ -78,7 +78,7 @@ void RenderTarget::updateWindowInfo(Handle newId, const Size &size)
 
 	m_rtDepth = new RenderTarget(g_renderDriverInfo.suggestFormats[RenderDriverInfo::SuggestedFormat_DepthStencilTexture], m_size);
 	m_rt0 = new RenderTarget(g_renderDriverInfo.suggestFormats[RenderDriverInfo::SuggestedFormat_HdrSceneColor], m_size);
-	m_rt1 = new RenderTarget(g_renderDriverInfo.suggestFormats[RenderDriverInfo::SuggestedFormat_SceneColor], m_size);
+	m_rt1 = new RenderTarget(g_renderDriverInfo.suggestFormats[RenderDriverInfo::SuggestedFormat_NormalBuffer], m_size);
 	m_rt2 = new RenderTarget(g_renderDriverInfo.suggestFormats[RenderDriverInfo::SuggestedFormat_SceneColor], m_size);
 	m_rt3 = new RenderTarget(g_renderDriverInfo.suggestFormats[RenderDriverInfo::SuggestedFormat_SceneColor], m_size);
 	m_wndId = newId;

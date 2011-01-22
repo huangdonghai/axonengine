@@ -1,10 +1,6 @@
 /*
-Copyright (c) 2009 AxonEngine Team
-
-This file is part of the AxonEngine project, and may only be used, modified, 
-and distributed under the terms of the AxonEngine project license, license.txt.  
-By continuing to use, modify, or distribute this file you indicate that you have
-read the license and understand and accept it fully.
+Copyright (c) 2008-2009 Huang Donghai
+Copyright (c) 2010-2011 NetEase.com, Inc.
 */
 
 #include "../private.h"
@@ -611,10 +607,10 @@ void LinePrim::sync()
 	if (!m_isDirty && m_hint == Primitive::HintStatic)
 		return;
 
-	if (m_isVertexBufferDirty)
+	if (m_isVertexBufferDirty || !isStatic())
 		m_vertexObject->init(m_vertexes, m_numVertexes, m_hint, VertexType::kDebug);
 
-	if (m_isIndexBufferDirty)
+	if (m_isIndexBufferDirty || !isStatic())
 		m_indexObject->init(m_indexes, m_numIndexes, m_hint, ElementType_LineList, m_activedIndexes);
 
 	m_isDirty = m_isVertexBufferDirty = m_isIndexBufferDirty = 0;
@@ -1156,10 +1152,10 @@ void MeshPrim::sync()
 	if (m_isStriped)
 		et = ElementType_TriStrip;
 
-	if (m_isVertexBufferDirty)
+	if (m_isVertexBufferDirty || !isStatic())
 		m_vertexObject->init(m_vertexes, m_numVertexes, m_hint, VertexType::kMesh);
 
-	if (m_isIndexBufferDirty)
+	if (m_isIndexBufferDirty || !isStatic())
 		m_indexObject->init(m_indexes, m_numIndexes, m_hint, et, m_activedIndexes);
 
 	m_isDirty = m_isVertexBufferDirty = m_isIndexBufferDirty = false;
@@ -1343,6 +1339,7 @@ void ChunkPrim::unlockIndexes()
 void ChunkPrim::setTerrainRect(const Vector4 &rect)
 {
 	m_terrainRect = rect;
+	m_isDirty = true;
 }
 
 Vector4 ChunkPrim::getTerrainRect() const
@@ -1353,6 +1350,7 @@ Vector4 ChunkPrim::getTerrainRect() const
 void  ChunkPrim::setColorTexture(Texture *color_texture)
 {
 	m_colorTexture = color_texture;
+	m_isDirty = true;
 }
 
 Texture *ChunkPrim::getColorTexture()
@@ -1363,6 +1361,7 @@ Texture *ChunkPrim::getColorTexture()
 void ChunkPrim::setNormalTexture(Texture *dsdt)
 {
 	m_normalTexture = dsdt;
+	m_isDirty = true;
 }
 
 Texture *ChunkPrim::getNormalTexture()
@@ -1373,6 +1372,7 @@ Texture *ChunkPrim::getNormalTexture()
 void ChunkPrim::setChunkRect(const Vector4 &rect)
 {
 	m_chunkRect = rect;
+	m_isDirty = true;
 }
 
 Vector4 ChunkPrim::getChunkRect() const
@@ -1402,6 +1402,7 @@ void ChunkPrim::setLayers(int index, Texture *alpha, Material *detail, const Vec
 	m_layers[index].detailMat = detail;
 	m_layers[index].scale = scale;
 	m_layers[index].isVerticalProjection = isVerticalProjection;
+	m_isDirty = true;
 }
 
 Texture *ChunkPrim::getLayerAlpha(int index) const
@@ -1433,7 +1434,6 @@ Vector2 ChunkPrim::getLayerScale(int index) const
 
 bool ChunkPrim::isLayerVerticalProjection(int index) const
 {
-
 	if (index >= ChunkPrim::MAX_LAYERS) {
 		return false;
 	}
@@ -1448,7 +1448,52 @@ void ChunkPrim::draw(Technique tech)
 	IndexObject *index = m_overloadIndexObject ? m_overloadIndexObject : m_indexObject;
 	Material *mat = m_overloadMaterial ? m_overloadMaterial : m_material;
 
+#if 0
 	g_renderContext->draw(vert, inst, index, mat, tech);
+#else
+	stat_numTerrainDrawElements.inc();
+
+	if (m_overloadMaterial) {
+		g_renderContext->draw(vert, inst, index, mat, tech);
+		return;
+	}
+
+	bool combine = r_terrainLayerCombine.getBool();
+	bool drawlayer = true;
+
+	if (!r_detail.getBool() || !m_layerVisible) {
+		drawlayer = false;
+	}
+
+	if (m_numLayers == 0)
+		drawlayer = false;
+
+	if (g_renderContext->isReflecting())
+		drawlayer = false;
+
+	if (tech != Technique::GeoFill)
+		drawlayer = false;
+
+	if (1/*!drawlayer || !combine*/) {
+		//D3D9geometry::draw(tech);
+		g_renderContext->draw(vert, inst, index, mat, tech);
+
+		if (!drawlayer) {
+			return;
+		}
+	}
+return;
+	// draw layer
+	for (int i = 0; i < m_numLayers; i++) {
+		stat_numTerrainLayeredDrawElements.inc();
+
+		ChunkPrim::Layer &l = m_layers[i];
+
+		AX_SU(g_layerScale, l.scale);
+		g_renderContext->draw(vert, inst, index, l.detailMat, Technique::Layer);
+	}
+
+#endif
 }
 
 void ChunkPrim::sync()
@@ -1459,11 +1504,39 @@ void ChunkPrim::sync()
 	if (m_syncFrame == g_renderSystem->getFrameNum())
 		return;
 
-	if (m_isVertexBufferDirty)
+	if (m_isVertexBufferDirty || m_hint != HintStatic)
 		m_vertexObject->init(m_vertexes, m_numVertexes, m_hint, VertexType::kChunk);
 
-	if (m_isIndexBufferDirty)
+	if (m_isIndexBufferDirty || m_hint != HintStatic)
 		m_indexObject->init(m_indexes, m_numIndexes, m_hint, ElementType_TriList, m_activedIndexes);
+
+	if (!m_isDirty)
+		return;
+
+	bool combine = r_terrainLayerCombine.getBool();
+
+	m_material->setTexture(MaterialTextureId::TerrainColor, m_colorTexture->clone());
+	m_material->setTexture(MaterialTextureId::TerrainNormal, m_normalTexture->clone());
+
+	m_material->clearParameters();
+	m_material->addParameter("g_zoneRect", 4, m_zoneRect.c_ptr());
+	m_material->addParameter("g_chunkRect", 4, m_chunkRect.c_ptr());
+
+	// draw layer
+	for (int i = 0; i < m_numLayers; i++) {
+		stat_numTerrainLayeredDrawElements.inc();
+
+		ChunkPrim::Layer &l = m_layers[i];
+		l.detailMat->setTexture(MaterialTextureId::TerrainColor, m_colorTexture->clone());
+		l.detailMat->setTexture(MaterialTextureId::TerrainNormal, m_normalTexture->clone());
+		if (l.alphaTex)
+			l.detailMat->setTexture(MaterialTextureId::LayerAlpha, l.alphaTex->clone());
+		else
+			l.detailMat->setTexture(MaterialTextureId::LayerAlpha, 0);
+
+		l.detailMat->setFeature(0, l.isVerticalProjection);
+		l.detailMat->setFeature(1, combine && (i == 0)); // if is first layer, set first layer flag
+	}
 
 	m_isDirty = m_isVertexBufferDirty = m_isIndexBufferDirty = 0;
 	m_syncFrame = g_renderSystem->getFrameNum();

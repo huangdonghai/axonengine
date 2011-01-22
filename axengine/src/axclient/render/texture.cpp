@@ -36,6 +36,10 @@ Texture::Texture(const std::string &debugname, TexFormat format, const Size &siz
 	m_resource = TextureResource::createResource(debugname, format, size, flags);
 }
 
+Texture::Texture(const TextureResourcePtr &resource, const SamplerDesc &desc) : m_resource(resource), m_samplerDesc(desc)
+{}
+
+
 Texture::~Texture()
 {}
 
@@ -130,11 +134,18 @@ void Texture::saveToFile(const std::string &filename)
 
 }
 
-
 phandle_t Texture::getPHandle() const
 {
 	return m_resource->getPHandle();
 }
+
+
+Texture * Texture::clone() const
+{
+	return new Texture(m_resource, m_samplerDesc);
+}
+
+
 
 #if 0
 void Texture::texlist_f(const CmdArgs &args)

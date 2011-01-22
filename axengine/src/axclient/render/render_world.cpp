@@ -12,7 +12,7 @@ read the license and understand and accept it fully.
 AX_BEGIN_NAMESPACE
 
 static bool s_drawTerrain = true;
-static bool s_drawActor = true;
+static bool s_drawEntity = true;
 
 enum {
 	MininumNodeSize = 32
@@ -109,8 +109,8 @@ void RenderWorld::renderTo(RenderScene *qscene)
 
 	qscene->worldFrameId = m_frameNum;
 
-	s_drawTerrain = false;
-	s_drawActor = true;
+	s_drawTerrain = true;
+	s_drawEntity = true;
 
 	m_updateShadowVis = qscene->isLastCsmSplits();
 
@@ -118,11 +118,11 @@ void RenderWorld::renderTo(RenderScene *qscene)
 		int ref = r_reflection.getInteger();
 
 		s_drawTerrain = false;
-		s_drawActor = false;
+		s_drawEntity = false;
 
 		switch (ref) {
 			case 2:
-				s_drawActor = true;
+				s_drawEntity = true;
 			case 1:
 				s_drawTerrain = true;
 		}
@@ -137,7 +137,7 @@ void RenderWorld::renderTo(RenderScene *qscene)
 	}
 
 	if (!r_actor.getBool()) {
-		s_drawActor = false;
+		s_drawEntity = false;
 	}
 
 	const RenderCamera &cam = qscene->camera;
@@ -182,7 +182,7 @@ void RenderWorld::renderTo(RenderScene *qscene)
 		side = Plane::Front;
 	}
 
-	if (s_drawActor) {
+	if (s_drawEntity) {
 		markVisible_r(qscene, m_rootNode, side);
 	}
 
@@ -266,7 +266,7 @@ void RenderWorld::renderTo( RenderScene *qscene, QuadNode *node )
 	qscene->worldFrameId = m_frameNum;
 
 	s_drawTerrain = true;
-	s_drawActor = true;
+	s_drawEntity = true;
 
 	m_updateShadowVis = qscene->isLastCsmSplits();
 
@@ -274,11 +274,11 @@ void RenderWorld::renderTo( RenderScene *qscene, QuadNode *node )
 		int ref = r_reflection.getInteger();
 
 		s_drawTerrain = false;
-		s_drawActor = false;
+		s_drawEntity = false;
 
 		switch (ref) {
 		case 2:
-			s_drawActor = true;
+			s_drawEntity = true;
 		case 1:
 			s_drawTerrain = true;
 		}
@@ -293,7 +293,7 @@ void RenderWorld::renderTo( RenderScene *qscene, QuadNode *node )
 	}
 
 	if (!r_actor.getBool()) {
-		s_drawActor = false;
+		s_drawEntity = false;
 	}
 
 	const RenderCamera &cam = qscene->camera;
@@ -338,7 +338,7 @@ void RenderWorld::renderTo( RenderScene *qscene, QuadNode *node )
 		side = Plane::Front;
 	}
 
-	if (s_drawActor)
+	if (s_drawEntity)
 		markVisible_r(qscene, node, side);
 
 	// issue entity manager
@@ -413,10 +413,10 @@ void RenderWorld::markVisible_r(RenderScene *qscene, QuadNode *node, Plane::Side
 			continue;
 
 		// check if is light
-		if (entity->getKind() == RenderEntity::kLight || s_drawActor)
+		if (entity->getKind() == RenderEntity::kLight || s_drawEntity)
 			qscene->addEntity(entity);
 
-		if (!s_drawActor)
+		if (!s_drawEntity)
 			continue;
 
 #if 0

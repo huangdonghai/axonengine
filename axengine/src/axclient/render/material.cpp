@@ -72,6 +72,10 @@ Material::Material(const std::string &name)
 Material::~Material()
 {
 	SafeDelete(m_shaderParams);
+
+	for (int i = 0; i < ArraySize(m_textures); i++) {
+		SafeDelete(m_textures[i]);
+	}
 }
 
 bool Material::init(const FixedString &key)

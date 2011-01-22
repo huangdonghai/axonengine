@@ -335,6 +335,7 @@ void DX9_Driver::checkFormats()
 	g_renderDriverInfo.suggestFormats[RenderDriverInfo::SuggestedFormat_SceneColor] = TexFormat::BGRA8;
 	g_renderDriverInfo.suggestFormats[RenderDriverInfo::SuggestedFormat_HdrLightBuffer] = TexFormat::RGBA16F;
 	g_renderDriverInfo.suggestFormats[RenderDriverInfo::SuggestedFormat_HdrSceneColor] = TexFormat::RGBA16F;
+	g_renderDriverInfo.suggestFormats[RenderDriverInfo::SuggestedFormat_NormalBuffer] = TexFormat::RGB10A2;
 	g_renderDriverInfo.suggestFormats[RenderDriverInfo::SuggestedFormat_ShadowMap] = TexFormat::D24S8;
 }
 

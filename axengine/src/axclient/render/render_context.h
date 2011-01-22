@@ -3,6 +3,9 @@
 
 AX_BEGIN_NAMESPACE
 
+#define AX_SU(a,b) g_renderContext->setUniform(ConstBuffer::a, b);
+#define AX_ST(a,b) g_apiWrap->setGlobalTexture(GlobalTextureId::a, b)
+
 class RenderContext
 {
 public:
@@ -16,6 +19,14 @@ public:
 	void issueFrame(RenderFrame *rq);
 
 	void draw(VertexObject *vert, InstanceObject *inst, IndexObject *index, Material *mat, Technique tech);
+	bool isReflecting() const { return m_isReflecting; }
+
+	template <class Q>
+	void setUniform(ConstBuffers::Item name, const Q &q)
+	{
+		//g_apiWrap->setShaderConst(name, sizeof(Q), &q);
+		g_constBuffers.setField(name, sizeof(Q), reinterpret_cast<const float *>(&q));
+	}
 
 protected:
 	void checkBufferSize(int width, int height);
@@ -49,13 +60,6 @@ protected:
 
 	void setMaterial(Material *mat);
 	void setConstBuffers();
-
-	template <class Q>
-	void setUniform(ConstBuffers::Item name, const Q &q)
-	{
-		//g_apiWrap->setShaderConst(name, sizeof(Q), &q);
-		g_constBuffers.setField(name, sizeof(Q), reinterpret_cast<const float *>(&q));
-	}
 
 private:
 	// init

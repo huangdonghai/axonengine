@@ -11,8 +11,6 @@ read the license and understand and accept it fully.
 #ifndef AX_DX9_SHADER_H
 #define AX_DX9_SHADER_H
 
-#define AX_SU(x, y) DX9_Uniform::setUniform(Uniforms::x,y);
-
 AX_BEGIN_NAMESPACE
 
 class Unknown : public IUnknown

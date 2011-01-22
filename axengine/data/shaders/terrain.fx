@@ -49,25 +49,6 @@ struct LayerVertexOut {
 	float	fog			: TEXCOORD4;
 };
 
-
-#if 0
-// terrain parameter
-float4	g_terrainRect;
-float4	g_zoneRect;		// zone x, y, w, h
-float4	g_chunkRect;
-float2	g_layerScale;
-
-struct TerrainConst {
-	float4	zoneRect;		// zone x, y, w, h
-	float4	chunkRect;
-};
-
-//AX_DECL_PRIMITIVECONST(TerrainConst);
-TerrainConst g_pc;
-#define g_zoneRect g_pc.zoneRect
-#define g_chunkRect g_pc.chunkRect
-#endif
-
 AX_BEGIN_PC
 	float4 g_zoneRect : PREG0;
 	float4 g_chunkRect : PREG1;
@@ -116,14 +97,28 @@ TerrainGpassOut VP_gpass(TerrainVertexIn IN)
 // FP_gpass
 //------------------------------------------------------------------------------
 
-half4 FP_gpass(TerrainGpassOut IN) : COLOR
+Gbuffer FP_gpass(LayerVertexOut IN)
 {
-	half4 result;
+	Gbuffer OUT=(Gbuffer)0;
 
-	result.xyz = GetNormal(g_terrainNormal, IN.zoneTc.xy).xyz;
-	result.w = IN.screenTc.w;
+	half3 N = GetNormal(g_terrainNormal, IN.streamTc.xy).rgb;
 
-	return result;
+	OUT.normal.xyz = N;
+	OUT.albedo.xyz = tex2D(g_terrainColor, IN.streamTc.xy).xyz;
+
+	OUT.normal.w = g_matShiness;
+
+	half3 spec;
+#if G_HAVE_SPECULAR
+	spec = tex2D(g_specularMap, IN.streamTc.xy).xyz;
+#else
+	spec = OUT.albedo;
+#endif
+	OUT.albedo.w = Rgb2Lum(spec);
+
+	OUT.accum.xyz = OUT.albedo.xyz;
+
+	return OUT;
 }
 
 
@@ -240,8 +235,10 @@ half4 getSampler(sampler2D smpl, float3 worldpos, half3 normal)
 // FP_layer
 //------------------------------------------------------------------------------
 
-half4 FP_layer(LayerVertexOut IN) : COLOR
+Gbuffer FP_layer(LayerVertexOut IN)
 {
+	Gbuffer OUT=(Gbuffer)0;
+
 	half3 N = GetNormal(g_terrainNormal, IN.streamTc.xy).rgb;
 //	return tex2D(g_terrainNormal, IN.streamTc.xy);
 
@@ -256,22 +253,15 @@ half4 FP_layer(LayerVertexOut IN) : COLOR
 	float dist = IN.viewDir.w;
 	alpha *= HardStep(256, 224, dist);
 
-	LightParams lps = (LightParams)0;
-	lps.worldpos = IN.worldPos;
-	lps.normal = N;
-	lps.Cd = basecolor.xyz + detail.xyz - 0.5;
+	OUT.normal.xyz = N;
+	OUT.albedo.xyz = basecolor.xyz + detail.xyz - 0.5;
 
 #if S_FIRST_LAYER
-	lps.Cd = lerp(basecolor.xyz, lps.Cd, alpha);
+	OUT.albedo.xyz = lerp(basecolor.xyz, OUT.albedo.xyz, alpha);
 #endif
 
-	lps.Ca.xyz = lps.Cd;
-	lps.Ca.w = 0.2f;
-	lps.calcSpecular = false;
-	lps.screenTc = IN.screenTc;
-
 #if NO_NORMALMAPPING
-	lps.normal = N;
+	OUT.normal.xyz = N;
 #else
 	half3 T = half3(N.z, -N.y, -N.x);
 	half3 B = half3(-N.x, N.z, -N.y);
@@ -279,44 +269,34 @@ half4 FP_layer(LayerVertexOut IN) : COLOR
 
 	half3 normal = getSampler(g_normalMap, IN.worldPos, N).rgb * 2 - 1;
 
-	lps.normal = mul(normal, axis);
+	OUT.normal.xyz = mul(normal, axis);
 #if S_FIRST_LAYER
-	lps.normal = lerp(N, lps.normal, alpha);
+	OUT.normal.xyz = lerp(N, OUT.normal.xyz, alpha);
 //	normalize(lps.normal);
 #endif
 
-#endif
+#endif // NO_NORMALMAPPING
 
-#if !G_DISABLE_SPECULAR
-	lps.calcSpecular = true;
-	lps.viewDir = normalize(IN.viewDir.xyz);
-	lps.shiness = 20;
+	OUT.normal.z = g_matShiness;
+	half3 spec;
 #if G_HAVE_SPECULAR
-	lps.Cs = getSampler(g_specularMap, IN.worldPos, N).xyz;
+	spec = getSampler(g_specularMap, IN.worldPos, N).xyz;
 #else
-	lps.Cs = Dif2Spec(lps.Cd);
+	spec = OUT.albedo.xyz;
 #endif
 
 #if S_FIRST_LAYER
-	lps.Cs = lerp((half3)(Dif2Spec(basecolor.xyz)), lps.Cs, alpha);
+	spec = lerp((half3)(Dif2Spec(basecolor.xyz)), spec, alpha);
 #endif
-
-#else
-	lps.calcSpecular = false;
-#endif
-
-	lps.fog = IN.fog;
-
-	half4 result;
-	result.xyz = LT_calcAllLights(lps);
+	OUT.albedo.a = Rgb2Lum(spec);
 
 #if S_FIRST_LAYER
-	result.a = 1;
+	OUT.accum.a = 1;
 #else
-	result.a = alpha;
+	OUT.accum.a = alpha;
 #endif
 
-	return result;
+	return OUT;
 }
 
 
@@ -327,7 +307,7 @@ half4 FP_layer(LayerVertexOut IN) : COLOR
 
 technique zpass {
 	pass p0 {
-		VERTEXPROGRAM = compile VP_2_0 VP_gpass();
+		VERTEXPROGRAM = compile VP_2_0 VP_layer();
 		FRAGMENTPROGRAM = compile FP_2_0 FP_gpass();
 	}
 }

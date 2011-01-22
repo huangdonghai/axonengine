@@ -181,7 +181,6 @@ private:
 	BoundingRange m_heightRange;
 	BoundingRange m_slopeRange;
 	bool m_heightChanged;
-	Material *m_material;
 
 	// lod
 	float m_maxerror;
@@ -266,7 +265,6 @@ private:
 	Point m_index;
 	Rect m_tilerect;
 	BoundingBox m_bbox;
-	Material *m_material;
 	ChunkPrim *m_prim;
 
 	Point m_chunkIndexOffset;

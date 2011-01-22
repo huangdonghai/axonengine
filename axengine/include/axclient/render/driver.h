@@ -34,6 +34,7 @@ struct RenderDriverInfo {
 		SuggestedFormat_SceneColor,
 		SuggestedFormat_HdrLightBuffer,
 		SuggestedFormat_HdrSceneColor,
+		SuggestedFormat_NormalBuffer,
 		SuggestedFormat_ShadowMap,
 		SuggestedFormat_Max
 	};

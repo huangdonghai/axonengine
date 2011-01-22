@@ -93,8 +93,6 @@ void RenderContext::drawScene(RenderScene *scene, const RenderClearer &clearer)
 
 #define BEGIN_PIX(x) g_apiWrap->beginPix(x)
 #define END_PIX() g_apiWrap->endPix()
-#define AX_SU(a,b) setUniform(ConstBuffer::a, b);
-#define AX_ST(a,b) g_apiWrap->setGlobalTexture(GlobalTextureId::a, b)
 
 void RenderContext::drawScene_World(RenderScene *scene, const RenderClearer &clearer)
 {

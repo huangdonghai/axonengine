@@ -325,8 +325,12 @@ inline Texture *Material::getTexture(int sampler) const
 
 inline void Material::setTexture(int sampler, Texture *tex)
 {
+	if (m_textures[sampler] == tex)
+		return;
+
 	m_shaderMacroNeedRegen = true;
 	AX_ASSERT(sampler >= 0 && sampler < MaterialTextureId::MaxType);
+	SafeDelete(m_textures[sampler]);
 	m_textures[sampler] = tex;
 }
 

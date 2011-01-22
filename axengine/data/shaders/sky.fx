@@ -20,7 +20,8 @@ float Script : STANDARDSGLOBAL <
 
 /*********** Generic Vertex Shader ******/
 
-VertexOut VP_main(MeshVertex IN) {
+VertexOut VP_main(MeshVertex IN)
+{
     VertexOut OUT = (VertexOut)0;
 
 	OUT.color = IN.color;
@@ -38,12 +39,20 @@ VertexOut VP_main(MeshVertex IN) {
     return OUT;
 }
 
-half4 FP_gpass(VertexOut IN) : COLOR {
-	return half4(0,0,0,2000);
+Gbuffer FP_gpass(VertexOut IN)
+{
+	Gbuffer OUT = (Gbuffer)0;
+	OUT.accum.xyz = IN.color;
+#if G_HAVE_DIFFUSE
+	OUT.accum.xyz *= tex2D(g_diffuseMap, IN.streamTc.xy);
+#endif
+
+	return OUT;
 }
 
 /********* pixel shaders ********/
-half4 FP_main(VertexOut IN) : COLOR {
+half4 FP_main(VertexOut IN) : COLOR
+{
 	half4 result;
 	result = IN.color;
 
@@ -68,7 +77,8 @@ half4 FP_main(VertexOut IN) : COLOR {
 // TECHNIQUES ////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
 
-technique gpass {
+technique gpass
+{
 	pass p0 {
 		VERTEXPROGRAM = compile VP_2_0 VP_main();
 		FRAGMENTPROGRAM = compile FP_2_0 FP_gpass();
@@ -76,7 +86,8 @@ technique gpass {
 }
 
 
-technique main {
+technique main
+{
     pass p0 {
         VERTEXPROGRAM = compile VP_2_0 VP_main();
 		FRAGMENTPROGRAM = compile FP_2_0 FP_main();

@@ -57,6 +57,8 @@ public:
 	void setClampMode(SamplerDesc::ClampMode clampMode);
 	void setFilterMode(SamplerDesc::FilterMode filterMode);
 
+	Texture *clone() const;
+
 	void saveToFile(const std::string &filename);
 
 	// management
@@ -69,6 +71,7 @@ public:
 	phandle_t getPHandle() const;
 
 private:
+	Texture(const TextureResourcePtr &resource, const SamplerDesc &desc);
 	TextureResourcePtr m_resource;
 	SamplerDesc m_samplerDesc;
 

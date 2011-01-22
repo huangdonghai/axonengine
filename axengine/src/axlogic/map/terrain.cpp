@@ -513,7 +513,6 @@ MapChunk::MapChunk() {
 	m_terrain = nullptr;
 	m_zone = nullptr;
 	m_prim = nullptr;
-	m_material = nullptr;
 	m_lod = -1;
 	m_lastLod = -1;
 	m_neighborLod.i = -1;
@@ -547,21 +546,19 @@ void MapChunk::initialize(MapZone *zone, int x, int y)
 	m_tilerect.width = Map::ChunkTiles;
 	m_tilerect.height = Map::ChunkTiles;
 
-	m_material = new Material("materials/terrain");
-//		AX_ASSERT(!m_material->isDefaulted());
-
 	allocatePrimitive();
 }
 
-void MapChunk::finalize() {
+void MapChunk::finalize()
+{
 	m_lod = -1;
 	m_neighborLod.i = -1;
 
 	SafeDelete(m_prim);
-	SafeDelete(m_material);
 }
 
-void MapChunk::onHeightChanged() {
+void MapChunk::onHeightChanged()
+{
 	const Rect rect = m_tilerect;
 
 	// calculate boundingbox and slope range
@@ -736,7 +733,7 @@ void MapChunk::updatePrimitive()
 	stat_terrainVerts.add(num_verts - m_prim->getNumVertexes());
 #endif
 	m_prim->init(num_verts, num_tris * 3);
-	m_prim->setMaterial(m_material);
+	m_prim->setMaterial(new Material("materials/terrain"));
 	m_prim->setTerrainRect(m_terrain->getTerrainRect());
 	m_prim->setColorTexture(m_zone->getColorTexture());
 	m_prim->setNormalTexture(m_zone->getNormalTexture());
@@ -1039,7 +1036,6 @@ MapZone::MapZone() : m_terrain(nullptr)
 	m_lod = -1;
 	m_zonePrimLod = 2;			// 129 * 129
 	m_prim = nullptr;
-	m_material = nullptr;
 	m_normalTexture = nullptr;
 	m_colorTexture = nullptr;
 
@@ -1080,8 +1076,6 @@ void MapZone::initialize(MapTerrain *terrain, int x, int y)
 		}
 	}
 
-	m_material = new Material("materials/terrain");
-
 	// create normal texture
 	std::string texname;
 	StringUtil::sprintf(texname, "_zone_normal_%d_%d_%d", g_renderSystem->getFrameNum(), m_index.x, m_index.y);
@@ -1102,7 +1096,7 @@ void MapZone::initialize(MapTerrain *terrain, int x, int y)
 	int primidxes = (Map::ZoneTiles >> m_zonePrimLod);
 	primidxes = primidxes * primidxes * 2 * 3;
 	m_prim->init(primverts, primidxes);
-	m_prim->setMaterial(m_material);
+	m_prim->setMaterial(new Material("materials/terrain"));
 	m_prim->setTerrainRect(m_terrain->getTerrainRect());
 	m_prim->setColorTexture(getColorTexture());
 	m_prim->setNormalTexture(getNormalTexture());
