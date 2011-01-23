@@ -407,6 +407,9 @@ struct AX_API Color3
 
 	const float *c_ptr() const { return &r; }
 
+	// bool
+	bool isZero() const { return r == 0 && g == 0 && b == 0; }
+
 	std::string toString() const;
 	bool fromString(const char *str);
 };

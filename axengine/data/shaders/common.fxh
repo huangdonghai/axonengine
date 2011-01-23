@@ -31,7 +31,11 @@ DECL_SAMPLER(sampler2D, g_reflectionMap);
 DECL_SAMPLER(sampler2D, g_lightMap);
 DECL_SAMPLER(sampler2D, g_shadowMap);
 // global
+DECL_SAMPLER(sampler2D, g_rtDepth);
+DECL_SAMPLER(sampler2D, g_rt0);
 DECL_SAMPLER(sampler2D, g_rt1);
+DECL_SAMPLER(sampler2D, g_rt2);
+DECL_SAMPLER(sampler2D, g_rt3);
 DECL_SAMPLER(sampler2D, g_lightBuffer);
 DECL_SAMPLER(sampler2D, g_sceneColor);
 
@@ -46,12 +50,6 @@ DECL_SAMPLER(sampler2D, g_sceneColor);
 #include "constant.fxh"
 #include "mathlib.fxh"
 
-// use DXSAS 0.8 standard
-// see http://msdn.microsoft.com/archive/default.asp?url=/archive/en-us/directx9_c_Summer_04/directx/graphics/reference/EffectFileReference/EffectFileFormat/StandardAnnotations/tandardAnnotationScriptingSyntax.asp
-// NOTE: up link is broken
-// NOTE: not compatibility to dxsas 0.8 now
-
-
 // zparam, for recover view space z, Zview = 2*f*n/((f+n)-Zbuf(f-n)), where Zbuf is [-1,1]
 // if Zbuf is [0,1], acultly we use, the equation should be
 //
@@ -62,23 +60,13 @@ DECL_SAMPLER(sampler2D, g_sceneColor);
 
 #if 0
 struct ZrecoverParam {
-	float near, far, farXnear, farSUBnear;
+	float near, far, farXnear, nearSUBfar;
 };
-
-float ZR_getViewSpace(float zbuf) {
-	return g_zrecoverParam.z / (g_zrecoverParam.y - zbuf * g_zrecoverParam.w);
-}
-//#else
-//struct ZrecoverParam {
-//	float near, far, -(f-n)/fn, (1/n);
-//};
-
-float ZR_getViewSpace(float zbuf) {
-	return 1.0 / (zbuf * g_zrecoverParam.z + g_zrecoverParam.w);
-}
 #endif
 
-
+float ZR_GetViewSpace(float zbuf) {
+	return g_zrecoverParam.z / (g_zrecoverParam.y + zbuf * g_zrecoverParam.w);
+}
 
 // vertex struct
 /* data from application vertex buffer */

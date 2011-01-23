@@ -13,15 +13,15 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-struct PostMesh {
-	PostMesh();
-	~PostMesh();
+struct MeshUP {
+	MeshUP();
+	~MeshUP();
 
 	void init(int num_vertices, int num_indices);
 
-	static bool setupScreenQuad(PostMesh*& mesh, const Rect &rect);
-	static bool setupHexahedron(PostMesh*& mesh, Vector3 vertes[8]);
-	static bool setupBoundingBox(PostMesh*& mesh, const BoundingBox &bbox);
+	static bool setupScreenQuad(MeshUP*& mesh, const Rect &rect);
+	static bool setupHexahedron(MeshUP*& mesh, Vector3 vertes[8]);
+	static bool setupBoundingBox(MeshUP*& mesh, const BoundingBox &bbox);
 
 	int m_numVertices;
 	Vector3 *m_vertices;
@@ -72,8 +72,8 @@ protected:
 	DX9_Shader *getShader(const std::string &name);
 
 private:
-	PostMesh *m_screenQuad;
-	PostMesh *m_hexahedron;
+	MeshUP *m_screenQuad;
+	MeshUP *m_hexahedron;
 
 	Material *m_mtrDrawQuad;
 	Material *m_mtrMaskVolume;

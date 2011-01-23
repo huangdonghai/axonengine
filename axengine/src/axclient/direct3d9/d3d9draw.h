@@ -15,7 +15,7 @@ AX_BEGIN_NAMESPACE
 
 class D3D9geometry;
 
-struct PostMesh;
+struct MeshUP;
 
 class D3D9Draw {
 public:
@@ -31,8 +31,8 @@ public:
 	static void draw(DX9_Shader *shader, Technique tech, D3D9geometry *prim);
 
 	void drawPrimitiveUP(Material *mat, Technique tech, void *vertices, int numverts);
-	void drawPostUP(Material *mat, PostMesh *mesh);
-	void drawPostUP(DX9_Shader *shader, PostMesh *mesh);
+	void drawPostUP(Material *mat, MeshUP *mesh);
+	void drawPostUP(DX9_Shader *shader, MeshUP *mesh);
 
 	Vector2 drawString(Font *font, Rgba color, const TextQuad &tq, const Vector2 &xy, const wchar_t *str, size_t len, const Vector2 &scale, bool italic = false);
 

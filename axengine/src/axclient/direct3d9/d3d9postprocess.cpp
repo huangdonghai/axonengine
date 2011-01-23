@@ -12,7 +12,7 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-PostMesh::PostMesh()
+MeshUP::MeshUP()
 {
 	m_numVertices = 0;
 	m_vertices = nullptr;
@@ -20,13 +20,13 @@ PostMesh::PostMesh()
 	m_indices = nullptr;
 }
 
-PostMesh::~PostMesh()
+MeshUP::~MeshUP()
 {
 	TypeFree(m_vertices);
 	TypeFree(m_indices);
 }
 
-void PostMesh::init(int num_vertices, int num_indices)
+void MeshUP::init(int num_vertices, int num_indices)
 {
 	if (m_numVertices || m_numIndices) {
 		Errorf("mesh already initilized");
@@ -38,12 +38,12 @@ void PostMesh::init(int num_vertices, int num_indices)
 	m_indices = TypeAlloc<ushort_t>(m_numIndices);
 }
 
-bool PostMesh::setupScreenQuad(PostMesh*& mesh, const Rect &rect)
+bool MeshUP::setupScreenQuad(MeshUP*& mesh, const Rect &rect)
 {
 	bool result = false;
 
 	if (!mesh) {
-		mesh = new PostMesh();
+		mesh = new MeshUP();
 		mesh->init(4, 6);
 		mesh->m_indices[0] = 0;
 		mesh->m_indices[1] = 1;
@@ -61,7 +61,7 @@ bool PostMesh::setupScreenQuad(PostMesh*& mesh, const Rect &rect)
 	return result;
 }
 
-bool PostMesh::setupHexahedron(PostMesh*& mesh, Vector3 vertes[8])
+bool MeshUP::setupHexahedron(MeshUP*& mesh, Vector3 vertes[8])
 {
 	bool result = false;
 	int numverts = 8;
@@ -69,7 +69,7 @@ bool PostMesh::setupHexahedron(PostMesh*& mesh, Vector3 vertes[8])
 
 	if (!mesh) {
 		result = true;
-		mesh = new PostMesh();
+		mesh = new MeshUP();
 		mesh->init(numverts, numindexes);
 
 		// triangles
@@ -90,7 +90,7 @@ bool PostMesh::setupHexahedron(PostMesh*& mesh, Vector3 vertes[8])
 	return result;
 }
 
-bool PostMesh::setupBoundingBox( PostMesh*& mesh, const BoundingBox &bbox )
+bool MeshUP::setupBoundingBox( MeshUP*& mesh, const BoundingBox &bbox )
 {
 	bool result = false;
 	int numverts = 8;
@@ -98,7 +98,7 @@ bool PostMesh::setupBoundingBox( PostMesh*& mesh, const BoundingBox &bbox )
 
 	if (!mesh) {
 		result = true;
-		mesh = new PostMesh();
+		mesh = new MeshUP();
 		mesh->init(numverts, numindexes);
 
 		// triangles
@@ -260,7 +260,7 @@ void D3D9Postprocess::drawQuad(D3D9Texture *texture) {
 	m_shaderDrawQuad->setSU();
 #endif
 	const Rect &r = d3d9Camera->getViewRect();
-	PostMesh::setupScreenQuad(m_screenQuad, r);
+	MeshUP::setupScreenQuad(m_screenQuad, r);
 #endif
 }
 
@@ -281,7 +281,7 @@ void D3D9Postprocess::measureHistogram(D3D9Texture *tex, int index) {
 #endif
 
 	const Rect &r = d3d9Camera->getViewRect();
-	PostMesh::setupScreenQuad(m_screenQuad, r);
+	MeshUP::setupScreenQuad(m_screenQuad, r);
 }
 
 void D3D9Postprocess::maskVolume(Vector3 volume[8]) {
@@ -292,7 +292,7 @@ void D3D9Postprocess::maskVolume(Vector3 volume[8]) {
 	d3d9StateManager->SetRenderState(D3DRS_STENCILZFAIL, D3DSTENCILOP_REPLACE);
 	d3d9StateManager->SetRenderState(D3DRS_STENCILPASS, D3DSTENCILOP_ZERO);
 
-	PostMesh::setupHexahedron(m_hexahedron, volume);
+	MeshUP::setupHexahedron(m_hexahedron, volume);
 	m_mtrMaskVolume->setFeature(0, false);
 	d3d9Draw->drawPostUP(m_mtrMaskVolume.get(), m_hexahedron);
 
@@ -317,7 +317,7 @@ void D3D9Postprocess::maskVolumeTwoSides(Vector3 volume[8])
 	d3d9StateManager->SetRenderState(D3DRS_CCW_STENCILZFAIL, D3DSTENCILOP_DECR);
 
 	m_mtrMaskVolume->setFeature(0, true);
-	PostMesh::setupHexahedron(m_hexahedron, volume);
+	MeshUP::setupHexahedron(m_hexahedron, volume);
 	d3d9Draw->drawPostUP(m_mtrMaskVolume.get(), m_hexahedron);
 
 	d3d9StateManager->SetRenderState(D3DRS_TWOSIDEDSTENCILMODE, FALSE);
@@ -356,7 +356,7 @@ void D3D9postprocess::maskShadow(Vector3 volume[8], const Matrix4 &matrix, D3D9t
 
 void D3D9Postprocess::maskShadow(Vector3 volume[8], const Matrix4 &matrix, D3D9Texture *tex, const Vector4 &minrange, const Vector4 &maxrange, const Matrix4 &scaleoffset, bool front /*= false */)
 {
-	PostMesh::setupHexahedron(m_hexahedron, volume);
+	MeshUP::setupHexahedron(m_hexahedron, volume);
 
 	float range = r_csmRange->getFloat();
 	Vector2 zrange(range * 0.5f, range);
@@ -408,7 +408,7 @@ void D3D9Postprocess::shadowBlur(D3D9Texture *texture, bool is_du) {
 	m_mtrShadowBlur->setParameter("g_sampleWeights", 32, sSampleWeights);
 
 	const Rect &r = d3d9Camera->getViewRect();
-	PostMesh::setupScreenQuad(m_screenQuad, r);
+	MeshUP::setupScreenQuad(m_screenQuad, r);
 }
 #endif
 
@@ -434,7 +434,7 @@ void D3D9Postprocess::downscale4x4(D3D9Texture *tex, const Rect &rect) {
 //		m_shaderDownscale4x4->setParameter("g_sampleOffsets", param, 4);
 
 	const Rect &r = d3d9Camera->getViewRect();
-	PostMesh::setupScreenQuad(m_screenQuad, r);
+	MeshUP::setupScreenQuad(m_screenQuad, r);
 }
 
 DX9_Shader *D3D9Postprocess::getShader(const std::string &name) {
@@ -468,7 +468,7 @@ void D3D9Postprocess::genericPP(const std::string &shadername, D3D9Texture *src)
 	shader->setPixelToTexel(width, height);
 
 	const Rect &r = Rect(0, 0, width, height);
-	PostMesh::setupScreenQuad(m_screenQuad, r);
+	MeshUP::setupScreenQuad(m_screenQuad, r);
 }
 
 void D3D9Postprocess::genericPP(const std::string &shadername, RenderTarget *target, D3D9Texture *src) {
@@ -492,7 +492,7 @@ void D3D9Postprocess::genericPP(const std::string &shadername, RenderTarget *tar
 //		shader->setParameter("s_invTextureSize", Vector2(1.0f/width, 1.0f/height));
 
 	const Rect &r = camera.getViewRect();
-	PostMesh::setupScreenQuad(m_screenQuad, r);
+	MeshUP::setupScreenQuad(m_screenQuad, r);
 
 	d3d9Thread->unsetScene(0, 0, 0, &camera);
 }
@@ -529,7 +529,7 @@ void D3D9Postprocess::genericPP(const std::string &shadername, RenderTarget *tar
 	} else {
 		r = d3d9Camera->getViewRect();
 	}
-	PostMesh::setupScreenQuad(m_screenQuad, r);
+	MeshUP::setupScreenQuad(m_screenQuad, r);
 
 //		m_screenQuadGeo->bindVertexBuffer();
 //		D3D9draw::draw(shader, Technique::Main, m_screenQuadGeo);
@@ -548,7 +548,7 @@ void D3D9Postprocess::genericPP(const std::string &shadername, RenderTarget *tar
 
 void D3D9Postprocess::drawLight(Vector3 volume[8], QueuedLight *light)
 {
-	PostMesh::setupHexahedron(m_hexahedron, volume);
+	MeshUP::setupHexahedron(m_hexahedron, volume);
 
 	Vector4 lightpos = light->matrix.origin;
 	lightpos.w = 1.0f / light->radius;
@@ -568,7 +568,7 @@ void D3D9Postprocess::drawLight(Vector3 volume[8], QueuedLight *light)
 
 void D3D9Postprocess::drawLightShadowed(Vector3 volume[8], QueuedLight *light, const RenderCamera &shadowCamera)
 {
-	PostMesh::setupHexahedron(m_hexahedron, volume);
+	MeshUP::setupHexahedron(m_hexahedron, volume);
 
 	Vector4 lightpos = light->matrix.origin;
 	lightpos.w = 1.0f / light->radius;
@@ -669,7 +669,7 @@ void D3D9Postprocess::drawGlobalLight( Vector3 volume[8], QueuedLight *light )
 		m_mtrGlobalLight->setPixelToTexel(width, height);
 	}
 
-	PostMesh::setupHexahedron(m_hexahedron, volume);
+	MeshUP::setupHexahedron(m_hexahedron, volume);
 
 	Vector4 lightpos = light->matrix.origin;
 	lightpos.xyz().normalize();
@@ -693,7 +693,7 @@ void D3D9Postprocess::drawGlobalLight( Vector3 volume[8], QueuedLight *light )
 
 void D3D9Postprocess::issueBboxQuery( const BoundingBox &bbox )
 {
-	PostMesh::setupBoundingBox(m_hexahedron, bbox);
+	MeshUP::setupBoundingBox(m_hexahedron, bbox);
 	d3d9Draw->drawPostUP(m_shaderQuery, m_hexahedron);
 }
 
@@ -724,7 +724,7 @@ void D3D9Postprocess::issueQueryList( const std::list<D3D9querymanager::ActiveQu
 			if (!query->beginQuery())
 				continue;
 
-			PostMesh::setupBoundingBox(m_hexahedron, active->bbox);
+			MeshUP::setupBoundingBox(m_hexahedron, active->bbox);
 			dx9_device->DrawIndexedPrimitiveUP(D3DPT_TRIANGLELIST, 0, m_hexahedron->m_numVertices, m_hexahedron->m_numIndices/3, m_hexahedron->m_indices, D3DFMT_INDEX16, m_hexahedron->m_vertices, sizeof(Vector3));
 
 			query->endQuery();

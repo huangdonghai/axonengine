@@ -6,6 +6,23 @@ AX_BEGIN_NAMESPACE
 #define AX_SU(a,b) g_renderContext->setUniform(ConstBuffer::a, b);
 #define AX_ST(a,b) g_apiWrap->setGlobalTexture(GlobalTextureId::a, b)
 
+struct MeshUP {
+	MeshUP();
+	~MeshUP();
+
+	void init(int num_vertices, int num_indices);
+
+	static bool setupScreenQuad(MeshUP*& mesh, const Rect &rect);
+	static bool setupHexahedron(MeshUP*& mesh, Vector3 vertes[8]);
+	static bool setupBoundingBox(MeshUP*& mesh, const BoundingBox &bbox);
+
+	int m_numVertices;
+	Vector3 *m_vertices;
+	int m_numIndices;
+	ushort_t *m_indices;
+};
+
+
 class RenderContext
 {
 public:
@@ -41,6 +58,8 @@ protected:
 	void drawInteraction(Interaction *ia);
 	void endFrame();
 
+	void drawMeshUP(Material *material, MeshUP *mesh);
+
 	void drawGlobalLight(RenderScene *scene, RenderLight *light);
 	void drawLocalLight(RenderScene *scene, RenderLight *light);
 
@@ -64,6 +83,7 @@ protected:
 private:
 	// init
 	Material *m_defaultMat;
+	Material *m_mtrGlobalLight;
 	RenderThread *m_renderThread;
 	RenderTarget *m_bloomMap[NUM_BLOOM_TEXTURES];
 	RenderTarget *m_toneMap[NUM_TONEMAP_TEXTURES];

@@ -2,6 +2,124 @@
 
 AX_BEGIN_NAMESPACE
 
+MeshUP::MeshUP()
+{
+	m_numVertices = 0;
+	m_vertices = nullptr;
+	m_numIndices = 0;
+	m_indices = nullptr;
+}
+
+MeshUP::~MeshUP()
+{
+	TypeFree(m_vertices);
+	TypeFree(m_indices);
+}
+
+void MeshUP::init(int num_vertices, int num_indices)
+{
+	if (m_numVertices || m_numIndices) {
+		Errorf("mesh already initilized");
+	}
+
+	m_numVertices = num_vertices;
+	m_vertices = TypeAlloc<Vector3>(m_numVertices);
+	m_numIndices = num_indices;
+	m_indices = TypeAlloc<ushort_t>(m_numIndices);
+}
+
+bool MeshUP::setupScreenQuad(MeshUP*& mesh, const Rect &rect)
+{
+	bool result = false;
+
+	if (!mesh) {
+		mesh = new MeshUP();
+		mesh->init(4, 6);
+		mesh->m_indices[0] = 0;
+		mesh->m_indices[1] = 1;
+		mesh->m_indices[2] = 2;
+		mesh->m_indices[3] = 2;
+		mesh->m_indices[4] = 1;
+		mesh->m_indices[5] = 3;
+	}
+
+	mesh->m_vertices[0].set(rect.x, rect.y, 0.0f);
+	mesh->m_vertices[1].set(rect.x + rect.width, rect.y, 0.0f);
+	mesh->m_vertices[2].set(rect.x, rect.y + rect.height, 0.0f);
+	mesh->m_vertices[3].set(rect.x + rect.width, rect.y + rect.height, 0.0f);
+
+	return result;
+}
+
+bool MeshUP::setupHexahedron(MeshUP*& mesh, Vector3 vertes[8])
+{
+	bool result = false;
+	int numverts = 8;
+	int numindexes = 6 * 2 * 3;
+
+	if (!mesh) {
+		result = true;
+		mesh = new MeshUP();
+		mesh->init(numverts, numindexes);
+
+		// triangles
+		static ushort_t s_idxes[] = {
+			0, 2, 1, 1, 2, 3,
+			2, 6, 3, 3, 6, 7,
+			6, 4, 7, 7, 4, 5,
+			4, 0, 5, 5, 0, 1,
+			1, 3, 5, 5, 3, 7,
+			0, 4, 2, 2, 4, 6
+		};
+
+		memcpy(mesh->m_indices, s_idxes, numindexes * sizeof(ushort_t));
+	}
+
+	memcpy(mesh->m_vertices, vertes, 8 * sizeof(Vector3));
+
+	return result;
+}
+
+bool MeshUP::setupBoundingBox( MeshUP*& mesh, const BoundingBox &bbox )
+{
+	bool result = false;
+	int numverts = 8;
+	int numindexes = 6 * 2 * 3;
+
+	if (!mesh) {
+		result = true;
+		mesh = new MeshUP();
+		mesh->init(numverts, numindexes);
+
+		// triangles
+		static ushort_t s_idxes[] = {
+			0, 2, 1, 1, 2, 3,
+			2, 6, 3, 3, 6, 7,
+			6, 4, 7, 7, 4, 5,
+			4, 0, 5, 5, 0, 1,
+			1, 3, 5, 5, 3, 7,
+			0, 4, 2, 2, 4, 6
+		};
+
+		memcpy(mesh->m_indices, s_idxes, numindexes * sizeof(ushort_t));
+	}
+
+	Vector3 *verts = mesh->m_vertices;
+	for (int i = 0; i < 2; i++) {
+		for (int j = 0; j < 2; j++) {
+			for (int k = 0; k < 2; k++) {
+				verts[i*4+j*2+k].x = i == 0 ? bbox.min.x : bbox.max.x; 
+				verts[i*4+j*2+k].y = j == 0 ? bbox.min.y : bbox.max.y; 
+				verts[i*4+j*2+k].z = k == 0 ? bbox.min.z : bbox.max.z; 
+			}
+		}
+	}
+
+	return result;
+}
+
+MeshUP *m_hexahedron;
+
 RenderContext::RenderContext()
 {
 	g_bufferManager = new BufferManager();
@@ -129,6 +247,10 @@ void RenderContext::drawScene_World(RenderScene *scene, const RenderClearer &cle
 
 	AX_SU(g_windMatrices, scene->windMatrices);
 	AX_SU(g_leafAngles, scene->leafAngles);
+
+	float znear = scene->camera.getZnear();
+	float zfar = scene->camera.getZfar();
+	AX_SU(g_zrecoverParam, Vector4(znear, zfar, znear * zfar, znear - zfar));
 
 	// draw subscene first
 	for (int i = 0; i < scene->numSubScenes; i++) {
@@ -625,10 +747,90 @@ void RenderContext::issueShadowQuery()
 
 }
 
-void RenderContext::drawGlobalLight(RenderScene *scene, RenderLight *light)
+
+void RenderContext::drawMeshUP(Material *material, MeshUP *mesh)
 {
 
 }
+
+
+
+#define F_SHADOWED 0
+#define F_DIRECTION_LIGHT 1
+#define F_SKY_LIGHT 2
+#define F_ENV_LIGHT 3
+void RenderContext::drawGlobalLight(RenderScene *scene, RenderLight *light)
+{
+	QueuedShadow *qshadow = light->shadowInfo;
+
+	if (qshadow) {
+		Texture *tex = qshadow->splitCameras[0].getTarget()->getTexture();
+		Matrix4 matrix = qshadow->splitCameras[0].getViewProjMatrix();
+		matrix.scale(0.5f, -0.5f, 0.5f);
+		matrix.translate(0.5f, 0.5f, 0.5f);
+
+		AX_ST(ShadowMap, tex);
+		AX_SU(g_texMatrix, matrix);
+
+		int width, height, depth;
+		tex->getSize(width, height, depth);
+		Matrix4 fixmtx = *(Matrix4*)qshadow->splitScaleOffsets;
+
+		float fixWidth = 0.5f / width;
+		float fixHeight = 0.5f / height;
+
+		fixmtx[0][2] += fixWidth;
+		fixmtx[1][2] += fixWidth;
+		fixmtx[2][2] += fixWidth;
+		fixmtx[3][2] += fixWidth;
+		fixmtx[0][3] = 1.0f - fixmtx[0][1] - fixmtx[0][3] + fixHeight;
+		fixmtx[1][3] = 1.0f - fixmtx[1][1] - fixmtx[1][3] + fixHeight;
+		fixmtx[2][3] = 1.0f - fixmtx[2][1] - fixmtx[2][3] + fixHeight;
+		fixmtx[3][3] = 1.0f - fixmtx[3][1] - fixmtx[3][3] + fixHeight;
+		AX_SU(g_csmOffsetScales, fixmtx.getTranspose());
+
+		fixWidth *= 2;
+		fixHeight *= 2;
+
+		Matrix4 g_splitRanges = Matrix4(
+			0,		0.5,	0.5,	1,
+			0.5,	0.5,	1,		1,
+			0,		0,		0.5,	0.5,
+			0.5,	0,		1,		0.5
+			);
+
+		for (int i = 0; i < 4; i++) {
+			g_splitRanges[i].xy() += Vector2(fixWidth, fixHeight);
+			g_splitRanges[i].zw() -= Vector2(fixWidth*2, fixHeight*2);
+			g_splitRanges[i] = (g_splitRanges[i] - fixmtx[i].zw()) / fixmtx[i].xy();
+		}
+
+		m_mtrGlobalLight->addParameter("s_splitRanges", 16, g_splitRanges.getTranspose().c_ptr());
+
+		//m_mtrGlobalLight->setPixelToTexel(width, height);
+	}
+
+	MeshUP::setupHexahedron(m_hexahedron, light->lightVolume);
+
+	Vector3 lightpos = light->m_affineMat.origin;
+	lightpos.normalize();
+
+	m_mtrGlobalLight->clearFeatures();
+	m_mtrGlobalLight->setFeature(F_SHADOWED, light->shadowInfo != 0);
+	m_mtrGlobalLight->setFeature(F_DIRECTION_LIGHT, !light->m_color.isZero());
+	m_mtrGlobalLight->setFeature(F_SKY_LIGHT, !light->m_skyColor.isZero());
+	m_mtrGlobalLight->setFeature(F_ENV_LIGHT, !light->m_envColor.isZero());
+	m_mtrGlobalLight->addParameter("s_lightColor", 4, light->m_color.c_ptr());
+	m_mtrGlobalLight->addParameter("s_skyColor", 3, light->m_skyColor.c_ptr());
+	m_mtrGlobalLight->addParameter("s_envColor", 3, light->m_envColor.c_ptr());
+	m_mtrGlobalLight->addParameter("s_lightPos", 4, lightpos.c_ptr());
+
+	drawMeshUP(m_mtrGlobalLight, m_hexahedron);
+}
+#undef F_SHADOWED
+#undef F_DIRECTION_LIGHT
+#undef F_SKY_LIGHT
+#undef F_ENV_LIGHT
 
 void RenderContext::drawLocalLight(RenderScene *scene, RenderLight *light)
 {

@@ -29,10 +29,12 @@ float Script : STANDARDSGLOBAL <
 #define F_SKY_LIGHT			G_FEATURE2
 #define F_ENV_LIGHT			G_FEATURE3
 
-float4 s_lightPos;		// (xyz)*invR, invR
-float4 s_lightColor;// = float4(1,1,1,1);
-float4 s_skyColor;// = float4(0.5,0.5,0.5,0.5);
-float4 s_envColor;// = float4(0,0,0,0);
+AX_BEGIN_PC
+	float4 s_lightPos : PREG0; // (xyz)*invR, invR
+	float4 s_lightColor : PREG1; // = float4(1,1,1,1);
+	float4 s_skyColor : PREG2; // = float4(0.5,0.5,0.5,0.5);
+	float4 s_envColor : PREG3; // = float4(0,0,0,0);
+AX_END_PC
 
 struct LightVertexOut
 {
@@ -73,12 +75,14 @@ half4 FP_main(LightVertexOut IN) : COLOR
 	half4 OUT = 0;
 
 	// get gbuffer
+	float depth = tex2Dproj(g_rtDepth, IN.screenTc).r;
+	float viewDepth = ZR_GetViewSpace(depth);
 	half4 gbuffer = tex2Dproj(g_rt1, IN.screenTc);
 
-	float3 worldpos = g_cameraPos.xyz + IN.viewDir.xyz / IN.viewDir.w * gbuffer.a;
+	float3 worldpos = g_cameraPos.xyz + IN.viewDir.xyz / IN.viewDir.w * viewDepth;
 
 	half3 L = s_lightPos.xyz;
-	half3 N = gbuffer.xyz;
+	half3 N = gbuffer.xyz * 2 - 1;
 	half3 E = normalize(-IN.viewDir.xyz);
 
 	half NdotL = saturate(dot(N, L));
@@ -90,7 +94,7 @@ half4 FP_main(LightVertexOut IN) : COLOR
 #if F_DIRECTION_LIGHT
 	OUT.xyz = s_lightColor.xyz * NdotL;
 	OUT.w = pow(RdotE, 10) * NdotL * s_lightColor.w;
-	OUT *= getShadow(worldpos, gbuffer.a);
+	OUT *= getShadow(worldpos, viewDepth);
 #endif
 
 #if F_SKY_LIGHT
@@ -101,7 +105,7 @@ half4 FP_main(LightVertexOut IN) : COLOR
 	OUT.xyz += s_envColor.xyz;
 #endif
 
-	return OUT * 0.25;
+	return OUT;
 }
 
 

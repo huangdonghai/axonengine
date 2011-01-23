@@ -266,7 +266,7 @@ void D3D9Draw::drawPrimitiveUP(Material *mat, Technique tech, void *vertices, in
 
 }
 
-void D3D9Draw::drawPostUP(Material *mat, PostMesh *mesh)
+void D3D9Draw::drawPostUP(Material *mat, MeshUP *mesh)
 {
 	DX9_Shader *shader = findShader(mat);
 
@@ -277,7 +277,7 @@ void D3D9Draw::drawPostUP(Material *mat, PostMesh *mesh)
 	drawPostUP(shader, mesh);
 }
 
-void D3D9Draw::drawPostUP(DX9_Shader *shader, PostMesh *mesh)
+void D3D9Draw::drawPostUP(DX9_Shader *shader, MeshUP *mesh)
 {
 	d3d9StateManager->setVertexDeclaration(m_postVertDecl->getObject());
 

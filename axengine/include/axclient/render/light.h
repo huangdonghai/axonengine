@@ -23,6 +23,7 @@ class AX_API RenderLight : public RenderEntity
 {
 	friend struct RenderScene;
 	friend class RenderWorld;
+	friend class RenderContext;
 
 public:
 	enum Type {
