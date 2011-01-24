@@ -11,12 +11,12 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-class RenderLight::ShadowInfo
+class RenderLight::ShadowGenerator
 {
 public:
 	class SplitInfo {
 	public:
-		SplitInfo(RenderLight::ShadowInfo *shadowInfo, int shadowSize)
+		SplitInfo(RenderLight::ShadowGenerator *shadowInfo, int shadowSize)
 		{
 			m_shadowMap = 0;
 			m_updateFrame = -1;
@@ -35,7 +35,6 @@ public:
 		}
 
 	public:
-		RenderLight::ShadowInfo *m_shadowInfo;
 		ShadowMap *m_shadowMap;
 		RenderCamera m_camera;
 		Vector3 m_volume[8];
@@ -44,7 +43,7 @@ public:
 		BoundingBox m_csmBbox;	// calc scale and offset
 	};
 
-	ShadowInfo(RenderLight *light, int numSplits, int shadowSize)
+	ShadowGenerator(RenderLight *light, int numSplits, int shadowSize)
 	{
 		m_light = light;
 		m_shadowMapSize = Math::nearestPowerOfTwo(shadowSize);
@@ -77,7 +76,7 @@ public:
 		init();
 	}
 
-	~ShadowInfo()
+	~ShadowGenerator()
 	{
 		for (int i = 0; i < m_numSplits; i++) {
 			SafeDelete(m_splits[i]);
@@ -102,15 +101,15 @@ public:
 	void update(RenderScene *qscene)
 	{
 		switch (m_light->getLightType()) {
-			case RenderLight::kGlobal:
-				updateGlobal(qscene);
-				break;
-			case RenderLight::kPoint:
-				updatePoint(qscene);
-				break;
-			case RenderLight::kSpot:
-				updateSpot(qscene);
-				break;
+		case RenderLight::kGlobal:
+			updateGlobal(qscene);
+			break;
+		case RenderLight::kPoint:
+			updatePoint(qscene);
+			break;
+		case RenderLight::kSpot:
+			updateSpot(qscene);
+			break;
 		}
 	}
 
@@ -119,8 +118,8 @@ public:
 		if (m_updateFrame < 0)
 			return;
 
-		QueuedShadow *qshadow = g_renderFrame->allocType<QueuedShadow>(1);
-		m_light->setQueuedShadow(qshadow);
+		ShadowData *qshadow = g_renderFrame->allocType<ShadowData>(1);
+		m_light->m_shadowData = qshadow;
 
 		if (m_light->isGlobal()) {
 			qshadow->numSplitCamera = m_numCsmSplits;
@@ -613,11 +612,11 @@ RenderLight::RenderLight() : RenderEntity(kLight)
 	m_hdrStops = 0;
 
 //	m_shadowLink.setOwner(this);
-	m_shadowInfo = 0;
+	m_shadowGen = 0;
 #if 0
 	m_queuedLight = 0;
 #else
-	shadowInfo = 0;
+	m_shadowData = 0;
 #endif
 	m_preferShadowMapSize = 256;
 }
@@ -635,11 +634,11 @@ RenderLight::RenderLight(Type t, const Vector3 &pos, Rgb color) : RenderEntity(k
 	m_hdrStops = 0;
 
 //	m_shadowLink.setOwner(this);
-	m_shadowInfo = 0;
+	m_shadowGen = 0;
 #if 0
 	m_queuedLight = 0;
 #else
-	shadowInfo = 0;
+	m_shadowData = 0;
 #endif
 	m_preferShadowMapSize = 256;
 }
@@ -657,11 +656,11 @@ RenderLight::RenderLight(Type t, const Vector3 &pos, Rgb color, float radius) : 
 	m_hdrStops = 0;
 
 //	m_shadowLink.setOwner(this);
-	m_shadowInfo = 0;
+	m_shadowGen = 0;
 #if 0
 	m_queuedLight = 0;
 #else
-	shadowInfo = 0;
+	m_shadowData = 0;
 #endif
 
 	m_preferShadowMapSize = 256;
@@ -823,8 +822,8 @@ void RenderLight::prepareLightBuffer_Global( RenderScene *scene )
 	float znear = camera.getZnear();
 	float zfar = camera.getZfar();
 
-	camera.calcPointsAlongZdist(lightVolume, znear);
-	camera.calcPointsAlongZdist(&lightVolume[4], zfar * 0.9f);
+	camera.calcPointsAlongZdist(m_lightVolume, znear * 1.1);
+	camera.calcPointsAlongZdist(&m_lightVolume[4], zfar * 0.9f);
 }
 
 void RenderLight::prepareLightBuffer_Point(RenderScene *scene)
@@ -840,20 +839,20 @@ void RenderLight::prepareLightBuffer_Point(RenderScene *scene)
 			for (int k = 0; k < 2; k++) {
 				Vector3 down_up = viewaxis[2] *((k==0) ? -1.0f : 1.0f);
 
-				lightVolume[i*4+j*2+k] = origin +(back_forward+left_right+down_up) * m_radius;
+				m_lightVolume[i*4+j*2+k] = origin +(back_forward+left_right+down_up) * m_radius;
 			}
 		}
 	}
 
 	// calculate texture projection matrix
-	projMatrix.fromAxisInverse(m_affineMat.axis, m_affineMat.origin);
-	projMatrix.scale(1.0f/m_radius, 1.0f/m_radius, 1.0f/m_radius);
+	m_projMatrix.fromAxisInverse(m_affineMat.axis, m_affineMat.origin);
+	m_projMatrix.scale(1.0f/m_radius, 1.0f/m_radius, 1.0f/m_radius);
 
 	// check if intersert near clip plane
 	if (m_linkedBbox.pointDistance(scene->camera.getOrigin()) > scene->camera.getZnear() * 4.0f) {
-		isIntersectsNearPlane = false;
+		m_isIntersectsNearPlane = false;
 	} else {
-		isIntersectsNearPlane = true;
+		m_isIntersectsNearPlane = true;
 	}
 }
 
@@ -866,40 +865,40 @@ void RenderLight::prepareLightBuffer_Spot(RenderScene *scene)
 
 	float extend = m_radius * atanf(Math::d2r(m_spotAngle*0.5f));
 
-	lightVolume[0] = origin;
-	lightVolume[1] = origin;
-	lightVolume[2] = origin;
-	lightVolume[3] = origin;
+	m_lightVolume[0] = origin;
+	m_lightVolume[1] = origin;
+	m_lightVolume[2] = origin;
+	m_lightVolume[3] = origin;
 
 	for (int j = 0; j < 2; j++) {
 		Vector3 left_right = viewaxis[0] *((j==0) ? 1.0f : -1.0f);
 		for (int k = 0; k < 2; k++) {
 			Vector3 down_up = viewaxis[1] *((k==0) ? -1.0f : 1.0f);
 
-			lightVolume[4+j*2+k] = origin + back_forward + (left_right+down_up) * extend;
+			m_lightVolume[4+j*2+k] = origin + back_forward + (left_right+down_up) * extend;
 		}
 	}
 
 	// calculate texture projection matrix
-	projMatrix.fromAxisInverse(m_affineMat.axis, m_affineMat.origin);
-	projMatrix.scale(1.0f/extend, 1.0f/extend, 1.0f/m_radius);
+	m_projMatrix.fromAxisInverse(m_affineMat.axis, m_affineMat.origin);
+	m_projMatrix.scale(1.0f/extend, 1.0f/extend, 1.0f/m_radius);
 
-	const Matrix4 &m = projMatrix;
+	const Matrix4 &m = m_projMatrix;
 	Vector3 p1 = origin;
-	Vector3 p2 = lightVolume[4];
+	Vector3 p2 = m_lightVolume[4];
 
 	p1 = m * p1;
 	p2 = m * p2;
 
 	// check if intersect near clip plane
 	if (m_linkedBbox.pointDistance(scene->camera.getOrigin()) > scene->camera.getZnear() * 4.0f) {
-		isIntersectsNearPlane = false;
+		m_isIntersectsNearPlane = false;
 	} else {
-		isIntersectsNearPlane = true;
+		m_isIntersectsNearPlane = true;
 	}
 }
 
-void RenderLight::initShadowInfo()
+void RenderLight::initShadowGenerator()
 {
 	if (!m_castShadowMap)
 		return;
@@ -910,27 +909,27 @@ void RenderLight::initShadowInfo()
 	int localShadowSize = Math::nearestPowerOfTwo(m_preferShadowMapSize);
 
 	if (m_type == kGlobal) {
-		m_shadowInfo = new ShadowInfo(this, 4, csmSize);
+		m_shadowGen = new ShadowGenerator(this, 4, csmSize);
 	} else if (m_type == kPoint) {
-		m_shadowInfo = new ShadowInfo(this, 6, localShadowSize);
+		m_shadowGen = new ShadowGenerator(this, 6, localShadowSize);
 	} else {
-		m_shadowInfo = new ShadowInfo(this, 1, localShadowSize);
+		m_shadowGen = new ShadowGenerator(this, 1, localShadowSize);
 	}
 }
 
-void RenderLight::clearShadowInfo()
+void RenderLight::clearShadowGenerator()
 {
-	SafeDelete(m_shadowInfo);
+	SafeDelete(m_shadowGen);
 }
 
-bool RenderLight::checkShadow( RenderScene *qscene )
+bool RenderLight::checkShadow(RenderScene *qscene)
 {
 	if (!m_castShadowMap) {
 		return false;
 	}
 
-	if (!m_shadowInfo) {
-		initShadowInfo();
+	if (!m_shadowGen) {
+		initShadowGenerator();
 	}
 
 	if (isGlobal()) {
@@ -965,17 +964,17 @@ RenderLight *RenderLight::unlinkShadow()
 
 void RenderLight::freeShadowMap()
 {
-	AX_ASSERT(m_shadowInfo);
+	AX_ASSERT(m_shadowGen);
 
-	m_shadowInfo->unuseShadowMap();
+	m_shadowGen->unuseShadowMap();
 }
 
 bool RenderLight::genShadowMap(RenderScene *qscene)
 {
-	AX_ASSERT(m_shadowInfo);
+	AX_ASSERT(m_shadowGen);
 
 	if (isVisable() || isGlobal()) {
-		m_shadowInfo->update(qscene);
+		m_shadowGen->update(qscene);
 		return true;
 	}
 
@@ -984,7 +983,7 @@ bool RenderLight::genShadowMap(RenderScene *qscene)
 
 int RenderLight::getShadowMemoryUsed() const
 {
-	if (!m_shadowInfo)
+	if (!m_shadowGen)
 		return 0;
 
 	return m_shadowMemoryUsed;

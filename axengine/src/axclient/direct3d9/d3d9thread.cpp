@@ -575,7 +575,7 @@ void D3D9Thread::drawPass_shadowGen(RenderScene *scene)
 	D3D9Texture *tex = (D3D9Texture*)scene->camera.getTarget()->getTexture();
 
 	QueuedLight *qlight = scene->sourceLight;
-	QueuedShadow *qshadow = qlight->shadowInfo;
+	ShadowData *qshadow = qlight->shadowInfo;
 
 	if (r_shadowGen.getBool()) {
 		BEGIN_PIX("ShadowGen");
@@ -656,7 +656,7 @@ void D3D9Thread::drawGlobalLight( RenderScene *scene, QueuedLight *light )
 
 void D3D9Thread::drawLocalLight(RenderScene *scene, QueuedLight *light)
 {
-	QueuedShadow *qshadow = light->shadowInfo;
+	ShadowData *qshadow = light->shadowInfo;
 
 	if (qshadow) {
 		for (int i=0; i<qshadow->numSplitCamera; i++) {

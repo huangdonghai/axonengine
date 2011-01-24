@@ -272,11 +272,7 @@ void RenderScene::checkLights()
 		return;
 
 	// copy shadowed light
-#if 0
-	QueuedLight** shadowed = g_renderQueue->allocType<QueuedLight*>(numLights);
-#else
 	RenderLight **shadowed = g_renderFrame->allocType<RenderLight*>(numLights);
-#endif
 	int numShadowed = 0;
 	for (int i = 0; i < numLights; i++) {}
 

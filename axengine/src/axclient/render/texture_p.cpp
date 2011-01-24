@@ -16,6 +16,7 @@ TextureResource::TextureResource(const FixedString &key, InitFlags flags)
 	m_fileLoaded = false;
 	m_handle = 0;
 	m_initFlags = flags;
+	m_size.set(0, 0);
 
 	std::string filename = key.toString() + ".dds";
 
@@ -40,6 +41,7 @@ TextureResource::TextureResource(const FixedString &key, TexFormat format, const
 	m_isFileTexture = false;
 	m_fileLoaded = false;
 	m_initFlags = flags|Texture::Dynamic;
+	m_size = size;
 
 	g_apiWrap->createTexture2D(m_handle, format, size.width, size.height, flags);
 
@@ -111,6 +113,12 @@ bool TextureResource::canBeDeletedNow()
 		return false;
 	else
 		return true;
+}
+
+Size TextureResource::size() const
+{
+	AX_ASSURE(!m_isFileTexture);
+	return m_size;
 }
 
 AX_END_NAMESPACE

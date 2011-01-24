@@ -72,7 +72,7 @@ half3 FP_GetNormal(float3 n, float3 t, float3 b, float2 tc) {
 	half3 N = half3(0,0,1);
 #endif
 #if G_HAVE_DETAIL_NORMAL
-	N.rgb += GetNormal(g_detailNormalMap, tc * g_layerScale).rgb;
+	N.rgb += GetNormal(g_detailNormalMap, tc * g_detailScale).rgb;
 #endif
 	N.rgb = normalize(mul(N.rgb, axis));
 	return N;

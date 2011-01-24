@@ -52,7 +52,8 @@ half getShadow(float3 worldpos, float depth)
 #endif
 }
 
-ShadowVertexOut VP_main(MeshVertex IN) {
+ShadowVertexOut VP_main(MeshVertex IN)
+{
 	ShadowVertexOut OUT;
 
 	float3 worldpos = VP_modelToWorld(IN, IN.position);
@@ -69,7 +70,8 @@ ShadowVertexOut VP_main(MeshVertex IN) {
 	return OUT;
 }
 
-half4 FP_main(ShadowVertexOut IN) : COLOR {
+half4 FP_main(ShadowVertexOut IN) : COLOR
+{
 	half4 result = 0;
 
 	// get gbuffer

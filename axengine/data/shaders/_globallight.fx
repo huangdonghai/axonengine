@@ -34,7 +34,12 @@ AX_BEGIN_PC
 	float4 s_lightColor : PREG1; // = float4(1,1,1,1);
 	float4 s_skyColor : PREG2; // = float4(0.5,0.5,0.5,0.5);
 	float4 s_envColor : PREG3; // = float4(0,0,0,0);
+	float4x4 s_splitRanges : PREG4;
 AX_END_PC
+
+float4x4 GetSplitRanges()
+{ return s_splitRanges; }
+
 
 struct LightVertexOut
 {
@@ -76,8 +81,10 @@ half4 FP_main(LightVertexOut IN) : COLOR
 
 	// get gbuffer
 	float depth = tex2Dproj(g_rtDepth, IN.screenTc).r;
+
 	float viewDepth = ZR_GetViewSpace(depth);
 	half4 gbuffer = tex2Dproj(g_rt1, IN.screenTc);
+	half4 albedo = tex2Dproj(g_rt2, IN.screenTc);
 
 	float3 worldpos = g_cameraPos.xyz + IN.viewDir.xyz / IN.viewDir.w * viewDepth;
 
@@ -93,7 +100,7 @@ half4 FP_main(LightVertexOut IN) : COLOR
 
 #if F_DIRECTION_LIGHT
 	OUT.xyz = s_lightColor.xyz * NdotL;
-	OUT.w = pow(RdotE, 10) * NdotL * s_lightColor.w;
+	OUT.w = pow(RdotE, 10) * NdotL/* * s_lightColor.w*/;
 	OUT *= getShadow(worldpos, viewDepth);
 #endif
 
@@ -105,6 +112,7 @@ half4 FP_main(LightVertexOut IN) : COLOR
 	OUT.xyz += s_envColor.xyz;
 #endif
 
+	OUT.xyz = OUT.xyz * albedo.xyz + OUT.w * albedo.w;
 	return OUT;
 }
 

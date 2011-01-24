@@ -118,12 +118,16 @@ bool MeshUP::setupBoundingBox( MeshUP*& mesh, const BoundingBox &bbox )
 	return result;
 }
 
-MeshUP *m_hexahedron;
-
 RenderContext::RenderContext()
 {
 	g_bufferManager = new BufferManager();
 	m_defaultMat = new Material("_debug");
+	m_mtrGlobalLight = new Material("_globallight");
+	m_mtrGlobalLight->m_depthTest = true;
+	m_mtrGlobalLight->m_depthWrite = false;
+	//m_mtrGlobalLight->m
+	m_hexahedron = 0;
+
 #if AX_MTRENDER
 	m_renderThread = new RenderThread();
 	m_renderThread->startThread();
@@ -225,6 +229,9 @@ void RenderContext::drawScene_World(RenderScene *scene, const RenderClearer &cle
 
 	AX_ST(RtDepth, m_curWindow->m_rtDepth->getTexture());
 	AX_ST(Rt0, m_curWindow->m_rt0->getTexture());
+	AX_ST(Rt1, m_curWindow->m_rt1->getTexture());
+	AX_ST(Rt2, m_curWindow->m_rt2->getTexture());
+	AX_ST(Rt3, m_curWindow->m_rt3->getTexture());
 
 	// set global light parameter
 	if (scene->globalLight) {
@@ -277,7 +284,7 @@ void RenderContext::drawScene_World(RenderScene *scene, const RenderClearer &cle
 	END_PIX();
 
 	BEGIN_PIX("DrawLights");
-	//drawPass_Lights(scene);
+	drawPass_Lights(scene);
 	END_PIX();
 
 	BEGIN_PIX("SceneComposite");
@@ -444,7 +451,7 @@ void RenderContext::drawPass_ShadowGen(RenderScene *scene)
 	Texture *tex = target->getTexture();
 
 	RenderLight *qlight = scene->sourceLight;
-	QueuedShadow *qshadow = qlight->getQueuedShadow();
+	ShadowData *qshadow = qlight->m_shadowData;
 
 	if (r_shadowGen.getBool()) {
 		BEGIN_PIX("ShadowGen");
@@ -509,8 +516,8 @@ void RenderContext::drawPass_Lights(RenderScene *scene)
 
 	clearer.clearColor(true, Rgba::Zero);
 
-	m_targetSet.m_depthTarget = 0;
-	m_targetSet.m_colorTargets[0] = m_curWindow->m_rt0;
+	m_targetSet.m_depthTarget = m_curWindow->m_rtDepth;
+	m_targetSet.m_colorTargets[0] = m_curWindow;
 	m_targetSet.m_colorTargets[1] = 0;
 	m_targetSet.m_colorTargets[2] = 0;
 	m_targetSet.m_colorTargets[3] = 0;
@@ -524,7 +531,7 @@ void RenderContext::drawPass_Lights(RenderScene *scene)
 		if (ql->getLightType() == RenderLight::kGlobal) {
 			drawGlobalLight(scene, ql);
 		} else {
-			drawLocalLight(scene, ql);
+			//drawLocalLight(scene, ql);
 		}
 	}
 
@@ -750,7 +757,7 @@ void RenderContext::issueShadowQuery()
 
 void RenderContext::drawMeshUP(Material *material, MeshUP *mesh)
 {
-
+	drawUP(mesh->m_vertices, VertexType::kChunk, mesh->m_numVertices, mesh->m_indices, ElementType_TriList, mesh->m_numIndices, material, Technique::Main);
 }
 
 
@@ -761,9 +768,11 @@ void RenderContext::drawMeshUP(Material *material, MeshUP *mesh)
 #define F_ENV_LIGHT 3
 void RenderContext::drawGlobalLight(RenderScene *scene, RenderLight *light)
 {
-	QueuedShadow *qshadow = light->shadowInfo;
+	ShadowData *qshadow = light->m_shadowData;
 
-	if (qshadow) {
+	m_mtrGlobalLight->clearParameters();
+
+	if (0 && qshadow) {
 		Texture *tex = qshadow->splitCameras[0].getTarget()->getTexture();
 		Matrix4 matrix = qshadow->splitCameras[0].getViewProjMatrix();
 		matrix.scale(0.5f, -0.5f, 0.5f);
@@ -772,12 +781,11 @@ void RenderContext::drawGlobalLight(RenderScene *scene, RenderLight *light)
 		AX_ST(ShadowMap, tex);
 		AX_SU(g_texMatrix, matrix);
 
-		int width, height, depth;
-		tex->getSize(width, height, depth);
+		Size size = tex->size();
 		Matrix4 fixmtx = *(Matrix4*)qshadow->splitScaleOffsets;
 
-		float fixWidth = 0.5f / width;
-		float fixHeight = 0.5f / height;
+		float fixWidth = 0.5f / size.width;
+		float fixHeight = 0.5f / size.height;
 
 		fixmtx[0][2] += fixWidth;
 		fixmtx[1][2] += fixWidth;
@@ -806,17 +814,18 @@ void RenderContext::drawGlobalLight(RenderScene *scene, RenderLight *light)
 		}
 
 		m_mtrGlobalLight->addParameter("s_splitRanges", 16, g_splitRanges.getTranspose().c_ptr());
+		AX_SU(g_textureSize, Vector4(size.width, size.height, 1.0f/size.width, 1.0f/size.height));
 
 		//m_mtrGlobalLight->setPixelToTexel(width, height);
 	}
 
-	MeshUP::setupHexahedron(m_hexahedron, light->lightVolume);
+	MeshUP::setupHexahedron(m_hexahedron, light->m_lightVolume);
 
 	Vector3 lightpos = light->m_affineMat.origin;
 	lightpos.normalize();
 
 	m_mtrGlobalLight->clearFeatures();
-	m_mtrGlobalLight->setFeature(F_SHADOWED, light->shadowInfo != 0);
+	m_mtrGlobalLight->setFeature(F_SHADOWED, light->m_shadowData != 0);
 	m_mtrGlobalLight->setFeature(F_DIRECTION_LIGHT, !light->m_color.isZero());
 	m_mtrGlobalLight->setFeature(F_SKY_LIGHT, !light->m_skyColor.isZero());
 	m_mtrGlobalLight->setFeature(F_ENV_LIGHT, !light->m_envColor.isZero());
@@ -835,6 +844,38 @@ void RenderContext::drawGlobalLight(RenderScene *scene, RenderLight *light)
 void RenderContext::drawLocalLight(RenderScene *scene, RenderLight *light)
 {
 
+}
+
+
+void RenderContext::drawUP( const void *vb, VertexType vt, int vertcount, const void *ib, ElementType et, int indicescount, Material *mat, Technique tech )
+{
+	if (!mat)
+		mat = m_defaultMat;
+
+	if (!mat->getShaderInfo()->m_haveTechnique[tech])
+		return;
+
+	ShaderMacro macro = g_shaderMacro;
+	const ShaderMacro &matmacro = mat->getShaderMacro();
+	macro.mergeFrom(&matmacro);
+	stat_numDrawElements.inc();
+
+	g_apiWrap->setVerticesUP(vb, vt, vertcount);
+	g_apiWrap->setIndicesUP(ib, et, indicescount);
+
+	g_apiWrap->setShader(mat->getShaderName(), macro, tech);
+
+	setMaterial(mat);
+
+	setConstBuffers();
+
+	if (mat->isWireframe() & !m_forceWireframe)
+		m_rasterizerDesc.fillMode = RasterizerDesc::FillMode_Wireframe;
+
+	g_apiWrap->draw();
+
+	if (mat->isWireframe()  & !m_forceWireframe)
+		m_rasterizerDesc.fillMode = RasterizerDesc::FillMode_Solid;
 }
 
 void RenderContext::draw(VertexObject *vert, InstanceObject *inst, IndexObject *index, Material *mat, Technique tech)
@@ -885,7 +926,7 @@ void RenderContext::draw(VertexObject *vert, InstanceObject *inst, IndexObject *
 	}
 #endif
 
-	g_apiWrap->setIndices(index->m_h, index->m_elementType, index->m_offset, vert->m_count, index->m_count);
+	g_apiWrap->setIndices(index->m_h, index->m_elementType, index->m_offset, vert->m_count, index->m_activeCount);
 
 	g_apiWrap->setShader(mat->getShaderName(), macro, tech);
 
@@ -929,7 +970,7 @@ void RenderContext::setMaterial(Material *mat)
 	if (mat->haveDetail()) {
 		float scale = mat->getDetailScale();
 		Vector2 scale2(scale, scale);
-		AX_SU(g_layerScale, scale2);
+		AX_SU(g_detailScale, scale2);
 	}
 
 	m_depthStencilDesc.depthWritable = mat->m_depthWrite;

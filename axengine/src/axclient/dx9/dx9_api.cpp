@@ -561,6 +561,7 @@ static void dx9SetVerticesUP(const void *vb, VertexType vt, int vertcount)
 	s_curVerticeBufferUP = vb;
 	s_curVertexType = vt;
 	s_curNumVertices = vertcount;
+	V(dx9_device->SetVertexDeclaration(dx9_vertexDeclarations[vt]));
 }
 
 static void dx9SetIndicesUP(const void *ib, ElementType et, int indicescount)

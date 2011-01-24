@@ -66,7 +66,7 @@ Gbuffer FP_gpass(VertexOut IN)
 
 	half3 detail = 0;
 #if G_HAVE_DETAIL
-	detail = tex2D(g_detailMap, IN.streamTc.xy * g_layerScale).xyz - 0.5;
+	detail = tex2D(g_detailMap, IN.streamTc.xy * g_detailScale).xyz - 0.5;
 #endif
 
 #if G_HAVE_DIFFUSE
@@ -147,7 +147,7 @@ half4 FP_main(VertexOut IN) : COLOR0
 
 	half3 detail = 0;
 #if G_HAVE_DETAIL
-	detail = tex2D(g_detailMap, IN.streamTc.xy * g_layerScale) - 0.5;
+	detail = tex2D(g_detailMap, IN.streamTc.xy * g_detailScale) - 0.5;
 #endif
 
 #if G_HAVE_DIFFUSE

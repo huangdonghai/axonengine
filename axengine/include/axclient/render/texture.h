@@ -49,7 +49,7 @@ public:
 	void generateMipmap();
 
 	// get some info
-	void getSize(int &width, int &height, int &depth);
+	Size size() const;
 	TexFormat getFormat();
 
 	void setSamplerState(const SamplerDesc &desc);

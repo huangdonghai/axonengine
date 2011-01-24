@@ -32,7 +32,7 @@ VertexOut VP_main(MeshVertex IN) {
 /********* pixel shaders ********/
 float4 FP_main(VertexOut IN) : COLOR0 {
 
-	return g_waterFogParams + g_exposure + g_layerScale.xyxy;
+	return g_waterFogParams + g_exposure + g_detailScale.xyxy;
 }
 
 //////////////////////////////////////////////////////////////////////

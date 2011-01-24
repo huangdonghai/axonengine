@@ -47,7 +47,7 @@ void PerspectiveView::updateMove()
 
 	int accel = m_moving & Accel;
 	accel *= 2;
-	float dist = mapState->moveSpeed * (accel + 1) * (m_frameTime * 0.001f);
+	float dist = mapState->moveSpeed * (accel + 1) * m_frameTime;
 
 	Vector3 dir(0,0,0);
 	if (m_moving & Front) {

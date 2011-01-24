@@ -64,6 +64,7 @@ Material::Material(const std::string &name)
 	m_twoSided = m_decl->m_twoSided;
 	m_wireframed = m_decl->m_wireframed;
 	m_blendMode = m_decl->m_blendMode;
+	m_sortHint = m_decl->m_sortHint;
 
 	m_shaderName = m_decl->getShaderName();
 	m_shaderInfo = g_renderDriver->findShaderInfo(m_shaderName);

@@ -615,7 +615,7 @@ void D3D9Postprocess::drawLightShadowed(Vector3 volume[8], QueuedLight *light, c
 #define F_ENV_LIGHT 3
 void D3D9Postprocess::drawGlobalLight( Vector3 volume[8], QueuedLight *light )
 {
-	QueuedShadow *qshadow = light->shadowInfo;
+	ShadowData *qshadow = light->shadowInfo;
 
 	if (qshadow) {
 		D3D9Texture *tex = (D3D9Texture*)qshadow->splitCameras[0].getTarget()->getTexture();

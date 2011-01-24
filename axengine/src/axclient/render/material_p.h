@@ -59,7 +59,6 @@ private:
 	int m_wireframed : 1;
 	int m_blendMode : 2;
 
-
 	// features and literals
 	bool m_features[Material::MAX_FEATURES];
 

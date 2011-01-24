@@ -173,7 +173,7 @@ ReflectionMap *RenderTargetManager::findReflection(RenderWorld *world, RenderEnt
 #endif
 
 
-ShadowMap::ShadowMap( int width, int height )
+ShadowMap::ShadowMap(int width, int height)
 {
 	m_width = width; m_height = height;
 	m_renderTarget = 0;
@@ -186,12 +186,12 @@ ShadowMap::~ShadowMap()
 
 void ShadowMap::allocReal()
 {
-	
+	m_renderTarget = new RenderTarget(TexFormat::D16, Size(m_width, m_height));
 }
 
 void ShadowMap::freeReal()
 {
-
+	SafeDelete(m_renderTarget);
 }
 
 AX_END_NAMESPACE

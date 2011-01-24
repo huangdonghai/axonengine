@@ -35,6 +35,7 @@ public:
 
 	void issueFrame(RenderFrame *rq);
 
+	void drawUP(const void *vb, VertexType vt, int vertcount, const void *ib, ElementType et, int indicescount, Material *mat, Technique tech);
 	void draw(VertexObject *vert, InstanceObject *inst, IndexObject *index, Material *mat, Technique tech);
 	bool isReflecting() const { return m_isReflecting; }
 
@@ -109,6 +110,8 @@ private:
 	DepthStencilDesc m_depthStencilDescLast;
 	RasterizerDesc m_rasterizerDescLast;
 	BlendDesc m_blendDescLast;
+
+	MeshUP *m_hexahedron;
 };
 
 extern RenderContext *g_renderContext;

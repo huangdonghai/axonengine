@@ -46,6 +46,7 @@ MaterialDecl::MaterialDecl()
 	m_twoSided = false;
 	m_wireframed = false;
 	m_blendMode = Material::BlendMode_Disabled;
+	m_sortHint = Material::SortHint_Opacit;
 
 	TypeZeroArray(m_features);
 }

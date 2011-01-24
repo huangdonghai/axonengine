@@ -145,7 +145,10 @@ Texture * Texture::clone() const
 	return new Texture(m_resource, m_samplerDesc);
 }
 
-
+Size Texture::size() const
+{
+	return m_resource->size();
+}
 
 #if 0
 void Texture::texlist_f(const CmdArgs &args)

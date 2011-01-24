@@ -588,7 +588,7 @@ AX_SHADERCONST(SHADERMACRO_VERSION, 2)
 	AX_UNIFORM(float4,		Vector4,	g_globalLightColor,			0, 10)		\
 	AX_UNIFORM(float4,		Vector4,	g_skyColor,					0, 11)		\
 	AX_UNIFORM(float4,		Vector4,	g_exposure,					0, 12)		\
-	AX_UNIFORM(float2,		Vector2,	g_layerScale,				0, 13)		\
+	AX_UNIFORM(float2,		Vector2,	g_detailScale,				0, 13)		\
 	/*shadow parameter*/ \
 	AX_UNIFORM(float4x4,	Matrix4,	g_shadowMatrix,				0, 18)		\
 	AX_UNIFORM(float4x4,	Matrix4,	g_csmOffsetScales,			0, 22)		\

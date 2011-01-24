@@ -214,11 +214,11 @@ LayerVertexOut VP_layer(TerrainVertexIn IN)
 half4 getSampler(sampler2D smpl, float3 worldpos, half3 normal)
 {
 #if !S_VERTICAL_PROJECTION	// horizon projection
-	float2 tc = worldpos.xy * g_layerScale;
+	float2 tc = worldpos.xy * g_detailScale;
 	half4 result = tex2D(smpl, tc);
 	return result;
 #else
-	float4 tc = worldpos.xzyz * g_layerScale.xyxy;
+	float4 tc = worldpos.xzyz * g_detailScale.xyxy;
 	half4 xproj = tex2D(smpl, tc.xy);
 	half4 yproj = tex2D(smpl, tc.zw);
 

@@ -12,18 +12,14 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-#if 0
-struct QueuedScene;
-struct QueuedLight;
-#else
-struct QueuedShadow;
-#endif
+struct ShadowData;
 
 class AX_API RenderLight : public RenderEntity
 {
 	friend struct RenderScene;
 	friend class RenderWorld;
 	friend class RenderContext;
+	friend class ShadowGenerator;
 
 public:
 	enum Type {
@@ -68,17 +64,10 @@ public:
 	void setSkyColor(const Color3 &color, float skyIntensity = 1.0f);
 	void setEnvColor(const Color3 &color, float envIntensity = 1.0f);
 	Vector3 getGlobalLightDirection() const { return m_affineMat.origin.getNormalized(); }
-#if 0
-	void fillQueued(QueuedLight *queued);
-#endif
+
 	// shadow
 	bool checkShadow(RenderScene *qscene);
-	QueuedShadow *getQueuedShadow() const { return shadowInfo; }
-	void setQueuedShadow(QueuedShadow *qshadow) { shadowInfo = qshadow; }
-#if 0
-	void linkShadow();
-	RenderLight *unlinkShadow();
-#endif
+
 	void freeShadowMap();
 	bool genShadowMap(RenderScene *qscene);
 
@@ -90,8 +79,8 @@ public:
 	virtual void issueToQueue(RenderScene *qscene);
 
 protected:
-	void initShadowInfo();
-	void clearShadowInfo();
+	void initShadowGenerator();
+	void clearShadowGenerator();
 
 	// for light buffer drawing
 	void prepareLightBuffer(RenderScene *scene);
@@ -100,7 +89,7 @@ protected:
 	void prepareLightBuffer_Spot(RenderScene *scene);
 
 private:
-	class ShadowInfo;
+	class ShadowGenerator;
 
 	Type m_type;
 	bool m_castShadowMap;
@@ -114,24 +103,20 @@ private:
 	int m_preferShadowMapSize;
 
 	// shadow info
-	ShadowInfo *m_shadowInfo;
+	ShadowGenerator *m_shadowGen;
 	IntrusiveLink<RenderLight> m_shadowLink;
 	int m_shadowMemoryUsed;
 
 	// runtime
-	VolumeVertexes lightVolume;
+	VolumeVertexes m_lightVolume;
 	// if not intersect neap clip plane, we can use volume's front face to draw light buffer
-	bool isIntersectsNearPlane;
-	Matrix4 projMatrix;
+	bool m_isIntersectsNearPlane;
+	Matrix4 m_projMatrix;
 
-	QueuedShadow *shadowInfo;
-#if 0
-	// for shadow map
-	QueuedLight *m_queuedLight;
-#endif
+	ShadowData *m_shadowData;
 };
 
-struct QueuedShadow {
+struct ShadowData {
 	typedef Vector3 VolumeVertexes[RenderLight::NUM_VOLUME_VERTEXES];
 	int numSplitCamera;
 	RenderCamera splitCameras[RenderLight::MAX_SPLITS];
@@ -139,36 +124,6 @@ struct QueuedShadow {
 
 	Vector4 splitScaleOffsets[RenderLight::MAX_CSM_SPLITS];
 };
-
-#if 0
-struct QueuedLight {
-	typedef Vector3 VolumeVertexes[RenderLight::NUM_VOLUME_VERTEXES];
-
-	QueuedEntity *queuedEntity;
-	RenderLight *preQueued;
-
-	// queued struct
-	Matrix matrix;
-	RenderLight::Type type;
-	float radius;
-	Vector4 pos;
-	Vector4 color;
-	Vector3 skyColor;
-	Vector3 envColor;
-
-	//
-	// lightbuffer rendering
-	//
-	VolumeVertexes lightVolume;
-	// if not intersect neap clip plane, we can use volume's front face to draw light buffer
-	bool isIntersectsNearPlane;
-	Matrix4 projMatrix;
-
-	QueuedShadow *shadowInfo;
-};
-
-typedef std::vector<RenderLight*> LightSeq;
-#endif
 
 AX_END_NAMESPACE
 

@@ -1489,7 +1489,7 @@ return;
 
 		ChunkPrim::Layer &l = m_layers[i];
 
-		AX_SU(g_layerScale, l.scale);
+		AX_SU(g_detailScale, l.scale);
 		g_renderContext->draw(vert, inst, index, l.detailMat, Technique::Layer);
 	}
 

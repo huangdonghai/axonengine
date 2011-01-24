@@ -582,7 +582,7 @@ void GLthread::drawPass_shadowGen(RenderScene *scene) {
 	}
 
 	QueuedLight *qlight = scene->sourceLight;
-	QueuedShadow *qshadow = qlight->shadowInfo;
+	ShadowData *qshadow = qlight->shadowInfo;
 
 	GLtexture *tex = (GLtexture*)scene->camera.getTarget()->getTexture();
 	if (r_shadowGen.getBool()) {
