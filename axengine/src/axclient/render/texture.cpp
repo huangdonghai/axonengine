@@ -122,16 +122,19 @@ void Texture::setClampMode(SamplerDesc::ClampMode clampMode)
 	m_samplerDesc.clampMode = clampMode;
 }
 
-
 void Texture::setFilterMode(SamplerDesc::FilterMode filterMode)
 {
 	m_samplerDesc.filterMode = filterMode;
 }
 
+void Texture::setBorderColor( SamplerDesc::BorderColor borderColor )
+{
+	m_samplerDesc.borderColor = borderColor;
+}
 
 void Texture::saveToFile(const std::string &filename)
 {
-
+	// TODO
 }
 
 phandle_t Texture::getPHandle() const

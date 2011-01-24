@@ -56,6 +56,7 @@ public:
 	const SamplerDesc &getSamplerState() const;
 	void setClampMode(SamplerDesc::ClampMode clampMode);
 	void setFilterMode(SamplerDesc::FilterMode filterMode);
+	void setBorderColor(SamplerDesc::BorderColor borderColor);
 
 	Texture *clone() const;
 

@@ -57,6 +57,7 @@ public:
 			int csmSize = m_shadowMapSize * 2;
 
 			m_csmTarget = new ShadowMap(csmSize, csmSize);
+			m_csmTarget->allocReal();
 		} else {
 			m_csmTarget = 0;
 		}
@@ -131,6 +132,7 @@ public:
 		for (int i = 0; i < qshadow->numSplitCamera; i++) {
 			SplitInfo *si = m_splits[i];
 			qshadow->splitCameras[i] = si->m_camera;
+			qshadow->splitCameras[i].setTarget(si->m_shadowMap->m_renderTarget);
 			memcpy(qshadow->splitVolumes[i], si->m_volume, sizeof(qshadow->splitVolumes[i]));
 		}
 
@@ -455,6 +457,7 @@ public:
 
 		for (int i = 0; i < 4; i++) {
 			SplitInfo *si = m_splits[i];
+			si->m_shadowMap = m_csmTarget;
 			si->m_camera.setTarget(m_csmTarget->m_renderTarget);
 			si->m_camera.setOrigin(origin);
 			si->m_camera.setViewAxis(Matrix3(forward, left, up));
@@ -480,6 +483,7 @@ public:
 
 			for (int i = 0; i < 4; i++) {
 				SplitInfo *si = m_splits[i];
+				si->m_shadowMap = m_csmTarget;
 				si->m_camera.setTarget(m_csmTarget->m_renderTarget);
 			}
 		}

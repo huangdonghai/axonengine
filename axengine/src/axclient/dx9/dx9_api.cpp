@@ -431,7 +431,20 @@ static void dx9SetTargetSet(phandle_t targetSet[RenderTargetSet::MaxTarget])
 		SAFE_RELEASE(surface);
 	}
 
-	for (int i = 0; i < RenderTargetSet::MaxColorTarget; i++) {
+	if (!targetSet[1]) {
+		AX_ASSURE(surfaceSizeIsSet)
+		surface = dx9_driver->getNullTarget(s_curRenderTargetSize);
+		V(dx9_device->SetRenderTarget(0, surface))
+	} else {
+		surface = getSurface(targetSet[1]);
+		AX_ASSURE(surface);
+		V(dx9_device->SetRenderTarget(0, surface));
+		if (surface && !surfaceSizeIsSet)
+			setRenderTargetSize(surface);
+		SAFE_RELEASE(surface);
+	}
+
+	for (int i = 1; i < RenderTargetSet::MaxColorTarget; i++) {
 		surface = getSurface(targetSet[i+1]);
 		V(dx9_device->SetRenderTarget(i, surface));
 		if (surface && !surfaceSizeIsSet)
@@ -443,12 +456,6 @@ static void dx9SetTargetSet(phandle_t targetSet[RenderTargetSet::MaxTarget])
 	if (!targetSet[0]) {
 		surface = dx9_driver->getDepthStencil(s_curRenderTargetSize);
 		V(dx9_device->SetDepthStencilSurface(surface));
-	}
-
-	// if no render target in 0, we assign a null target, let dx9 happy
-	if (!targetSet[1]) {
-		surface = dx9_driver->getNullTarget(s_curRenderTargetSize);
-		V(dx9_device->SetRenderTarget(0, surface))
 	}
 }
 

@@ -22,10 +22,6 @@ public:
 		kWindow, kTexture
 	};
 
-	enum {
-		MAX_COLOR_ATTACHMENT = 3,
-	};
-
 	RenderTarget(TexFormat format, const Size &size);
 	RenderTarget(Handle hwnd, const std::string &debugname, const Size &size);
 	~RenderTarget();

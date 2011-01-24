@@ -264,7 +264,7 @@ void RenderContext::drawScene_World(RenderScene *scene, const RenderClearer &cle
 		RenderScene *sub = scene->subScenes[i];
 
 		if (sub->sceneType == RenderScene::ShadowGen) {
-			//drawPass_ShadowGen(sub);
+			drawPass_ShadowGen(sub);
 		} else if (sub->sceneType == RenderScene::Reflection) {
 			BEGIN_PIX("ReflectionGen");
 			g_shaderMacro.setMacro(ShaderMacro::G_REFLECTION);
@@ -455,21 +455,23 @@ void RenderContext::drawPass_ShadowGen(RenderScene *scene)
 
 	if (r_shadowGen.getBool()) {
 		BEGIN_PIX("ShadowGen");
+#if 0
 		// offset the geometry slightly to prevent z-fighting
 		// note that this introduces some light-leakage artifacts
 		float factor = gl_shadowOffsetFactor.getFloat();
 		float units = gl_shadowOffsetUnits.getFloat() / 0x10000;
 
-#if 0
 		d3d9StateManager->SetRenderState(D3DRS_DEPTHBIAS, F2DW(units));
 		d3d9StateManager->SetRenderState(D3DRS_SLOPESCALEDEPTHBIAS, F2DW(factor));
+#else
+		m_rasterizerDesc.depthBias = true;
 #endif
 		m_curTechnique = Technique::ShadowGen;
 
 		RenderClearer clearer;
 		clearer.clearDepth(true);
 
-		m_targetSet.m_depthTarget = scene->target;
+		m_targetSet.m_depthTarget = target;
 		m_targetSet.m_colorTargets[0] = 0;
 		m_targetSet.m_colorTargets[1] = 0;
 		m_targetSet.m_colorTargets[2] = 0;
@@ -480,12 +482,16 @@ void RenderContext::drawPass_ShadowGen(RenderScene *scene)
 
 #if 0
 		d3d9StateManager->SetRenderState(D3DRS_COLORWRITEENABLE, 0);
+#else
+		m_blendDesc.renderTargetWriteMask = 0;
 #endif
 		for (int i = 0; i < scene->numInteractions; i++) {
 			drawInteraction(scene->interactions[i]);
 		}
 #if 0
 		d3d9StateManager->SetRenderState(D3DRS_COLORWRITEENABLE, 0xf);
+#else
+		m_blendDesc.renderTargetWriteMask = 0xf;
 #endif
 		if (scene->isLastCsmSplits())
 			issueShadowQuery();
@@ -496,6 +502,8 @@ void RenderContext::drawPass_ShadowGen(RenderScene *scene)
 #if 0
 		d3d9StateManager->SetRenderState(D3DRS_DEPTHBIAS, 0);
 		d3d9StateManager->SetRenderState(D3DRS_SLOPESCALEDEPTHBIAS, 0);
+#else
+		m_rasterizerDesc.depthBias = false;
 #endif
 		END_PIX();
 	}
@@ -772,7 +780,7 @@ void RenderContext::drawGlobalLight(RenderScene *scene, RenderLight *light)
 
 	m_mtrGlobalLight->clearParameters();
 
-	if (0 && qshadow) {
+	if (qshadow) {
 		Texture *tex = qshadow->splitCameras[0].getTarget()->getTexture();
 		Matrix4 matrix = qshadow->splitCameras[0].getViewProjMatrix();
 		matrix.scale(0.5f, -0.5f, 0.5f);

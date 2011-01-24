@@ -187,6 +187,11 @@ ShadowMap::~ShadowMap()
 void ShadowMap::allocReal()
 {
 	m_renderTarget = new RenderTarget(TexFormat::D16, Size(m_width, m_height));
+	Texture *tex = m_renderTarget->getTexture();
+
+	tex->setFilterMode(SamplerDesc::FilterMode_Linear);
+	tex->setClampMode(SamplerDesc::ClampMode_Border);
+	tex->setBorderColor(SamplerDesc::BorderColor_One);
 }
 
 void ShadowMap::freeReal()
