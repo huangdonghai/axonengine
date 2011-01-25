@@ -281,6 +281,8 @@ Gbuffer FP_layer(LayerVertexOut IN)
 	OUT.accum.a = 1;
 #else
 	OUT.accum.a = alpha;
+	OUT.normal.a = alpha;
+	OUT.albedo.a = alpha;
 #endif
 
 	OUT.accum.rgb = OUT.normal.rgb;
