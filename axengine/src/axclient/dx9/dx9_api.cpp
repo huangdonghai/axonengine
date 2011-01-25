@@ -623,7 +623,6 @@ static void dx9Draw()
 			const char *err = D3DErrorString(hr);
 		} else {
 			AX_WRONGPLACE;
-			Errorf("wrong");
 		}
 
 		s_curShader->endPass();

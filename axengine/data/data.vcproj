@@ -438,7 +438,9 @@
 						Name="build-axon-fx"
 						VPPROFILE="gp4vp"
 						FPPROFILE="gp4fp"
+						VSENTRY="VP_layer"
 						VSPROFILE="vs_3_0"
+						PSENTRY="FP_layer"
 						PSPROFILE="ps_3_0"
 					/>
 				</FileConfiguration>

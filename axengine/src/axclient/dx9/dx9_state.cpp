@@ -280,36 +280,43 @@ DX9_BlendState::DX9_BlendState(const BlendDesc &desc)
 	m_desc = desc;
 
 	dx9_device->BeginStateBlock();
-	dx9_device->EndStateBlock(&m_stateBlock);
+#if 1
+	if (!m_desc.blendEnable) {
+		dx9_device->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
+#if 0
+		dx9_device->SetRenderState(D3DRS_SEPARATEALPHABLENDENABLE, FALSE);
 
+		dx9_device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE);
+		dx9_device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ZERO);
+		dx9_device->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
+#endif
+	} else {
+		dx9_device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+
+		dx9_device->SetRenderState(D3DRS_SRCBLEND, trBlendFactor(m_desc.srcBlend));
+		dx9_device->SetRenderState(D3DRS_DESTBLEND, trBlendFactor(m_desc.destBlend));
+		dx9_device->SetRenderState(D3DRS_BLENDOP, trBlendOp(m_desc.blendOp));
+
+		if (desc.separateAlphaBlendEnable) {
+			dx9_device->SetRenderState(D3DRS_SEPARATEALPHABLENDENABLE, TRUE);
+			dx9_device->SetRenderState(D3DRS_SRCBLENDALPHA, trBlendFactor(m_desc.srcBlendAlpha));
+			dx9_device->SetRenderState(D3DRS_DESTBLENDALPHA, trBlendFactor(m_desc.destBlendAlpha));
+			dx9_device->SetRenderState(D3DRS_BLENDOPALPHA, trBlendOp(m_desc.blendOpAlpha));
+		} else {
+			dx9_device->SetRenderState(D3DRS_SEPARATEALPHABLENDENABLE, FALSE);
+		}
+	}
+
+	dx9_device->SetRenderState(D3DRS_COLORWRITEENABLE, m_desc.renderTargetWriteMask);
+#endif
+
+	dx9_device->EndStateBlock(&m_stateBlock);
 	s_blendStateDict[m_desc] = this;
 }
 
 DX9_BlendState::~DX9_BlendState()
 {
 	s_blendStateDict.erase(m_desc);
-
-	if (!m_desc.blendEnable) {
-		dx9_device->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
-		dx9_device->SetRenderState(D3DRS_SEPARATEALPHABLENDENABLE, FALSE);
-
-		dx9_device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE);
-		dx9_device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ZERO);
-		dx9_device->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
-	} else {
-		dx9_device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
-		dx9_device->SetRenderState(D3DRS_SEPARATEALPHABLENDENABLE, FALSE);
-
-		dx9_device->SetRenderState(D3DRS_SRCBLEND, trBlendFactor(m_desc.srcBlend));
-		dx9_device->SetRenderState(D3DRS_DESTBLEND, trBlendFactor(m_desc.destBlend));
-		dx9_device->SetRenderState(D3DRS_BLENDOP, trBlendOp(m_desc.blendOp));
-
-		dx9_device->SetRenderState(D3DRS_SRCBLENDALPHA, trBlendFactor(m_desc.srcBlendAlpha));
-		dx9_device->SetRenderState(D3DRS_DESTBLENDALPHA, trBlendFactor(m_desc.destBlendAlpha));
-		dx9_device->SetRenderState(D3DRS_BLENDOPALPHA, trBlendOp(m_desc.blendOpAlpha));
-	}
-
-	dx9_device->SetRenderState(D3DRS_COLORWRITEENABLE, m_desc.renderTargetWriteMask);
 
 	SAFE_RELEASE(m_stateBlock);
 }

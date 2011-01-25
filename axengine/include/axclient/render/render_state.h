@@ -277,7 +277,7 @@ struct BlendDesc {
 	BlendDesc()
 	{
 		intValue = 0;
-		alphaToCoverageEnable = false;
+		separateAlphaBlendEnable = false;
 		independentBlendEnable = false;
 
 		blendEnable = false;
@@ -306,7 +306,7 @@ struct BlendDesc {
 
 	union {
 		struct {
-			uint_t alphaToCoverageEnable : 1;
+			uint_t separateAlphaBlendEnable : 1;
 			uint_t independentBlendEnable : 1;
 
 			uint_t blendEnable : 1;

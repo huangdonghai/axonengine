@@ -275,12 +275,15 @@ Gbuffer FP_layer(LayerVertexOut IN)
 #endif
 	OUT.albedo.a = Rgb2Lum(spec);
 
+	OUT.normal.xyz = OUT.normal.xyz * 0.5 + 0.5;
+
 #if S_FIRST_LAYER
 	OUT.accum.a = 1;
 #else
 	OUT.accum.a = alpha;
 #endif
 
+	OUT.accum.rgb = OUT.normal.rgb;
 	return OUT;
 }
 
