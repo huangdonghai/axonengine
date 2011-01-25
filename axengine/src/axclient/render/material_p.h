@@ -53,11 +53,11 @@ private:
 	float m_opacity;
 	float m_detailScale;
 
-	int m_depthWrite : 1;
-	int m_depthTest : 1;
-	int m_twoSided : 1;
-	int m_wireframed : 1;
-	int m_blendMode : 2;
+	bool m_depthWrite : 1;
+	bool m_depthTest : 1;
+	bool m_twoSided : 1;
+	bool m_wireframed : 1;
+	Material::BlendMode m_blendMode : 2;
 
 	// features and literals
 	bool m_features[Material::MAX_FEATURES];

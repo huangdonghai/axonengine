@@ -54,6 +54,7 @@ struct GlobalTextureId {
 	enum Type {
 		RtDepth, Rt0, Rt1, Rt2, Rt3,
 		SceneColor, ShadowMap,
+
 		MaxType
 	};
 	AX_DECLARE_ENUM(GlobalTextureId);
@@ -68,8 +69,8 @@ struct MaterialTextureId {
 		// terrain sampler
 		TerrainColor, TerrainNormal, LayerAlpha,
 
-		// engine sampler
-		Reflection, LightMap, ShadowMap,
+		// other
+		Reflection, LightMap,
 
 		MaxType
 	};
@@ -115,9 +116,10 @@ class MaterialDecl;
 
 class AX_API Material
 {
-public:
 	friend class RenderContext;
+	friend class ChunkPrim;
 
+public:
 	enum SortHint {
 		SortHint_Opacit,
 		SortHint_Decal,
@@ -212,7 +214,6 @@ private:
 	MaterialDecl *m_decl;
 	SortHint m_sortHint;
 
-	bool m_shaderMacroNeedRegen;
 	ShaderMacro m_shaderMacro;
 
 	Color3 m_diffuse;
@@ -220,7 +221,6 @@ private:
 	Color3 m_emission;
 	float m_shiness;
 	float m_detailScale;
-	bool m_haveDetail;
 
 	const ShaderInfo *m_shaderInfo;
 	FixedString m_shaderName;
@@ -228,17 +228,21 @@ private:
 	FastParams *m_shaderParams;
 	ConstBuffer *m_localUniforms;
 
-	// texgen etc...
-	bool m_isTexAnim;
+	// tex anim etc...
 	Matrix4 m_texMatrix;
 
 	bool m_features[MAX_FEATURES];
 
-	int m_depthWrite : 1;
-	int m_depthTest : 1;
-	int m_twoSided : 1;
-	int m_wireframed : 1;
-	int m_blendMode : 2;
+	bool m_isTexAnim : 1;
+	bool m_shaderMacroNeedRegen : 1;
+	bool m_haveDetail : 1;
+
+	// render state
+	bool m_depthWrite : 1;
+	bool m_depthTest : 1;
+	bool m_twoSided : 1;
+	bool m_wireframed : 1;
+	BlendMode m_blendMode : 8;
 };
 
 inline void Material::setDiffuse(const Color3 &v)
@@ -281,41 +285,12 @@ inline bool Material::isFeatureEnabled(int index) const
 	AX_ASSERT(index >= 0 && index < MAX_FEATURES);
 	return m_features[index];
 }
-#if 0
-inline void Material::setLiteral(int index, int value)
-{
-	AX_ASSERT(index >= 0 && index < MaterialDecl::MAX_LITERALS);
-	if (m_literals[index] != value) {
-		m_literals[index] = value;
-		m_shaderMacroNeedRegen = true;
-	}
-}
-inline int Material::getLiteral(int index) const
-{
-	AX_ASSERT(index >= 0 && index < MaterialDecl::MAX_LITERALS);
-	return m_literals[index];
-}
-#endif
+
 inline void Material::clearFeatures()
 {
 	m_shaderMacroNeedRegen = true;
 	TypeZeroArray(m_features);
 }
-
-#if 0
-inline void Material::clearLiterals()
-{
-	m_shaderMacroNeedRegen = true;
-	TypeZeroArray(m_literals);
-}
-
-inline void Material::setPixelToTexel(int width, int height)
-{
-	m_p2tEnabled = true;
-	m_p2tWidth = width;
-	m_p2tHeight = height;
-}
-#endif
 
 inline Texture *Material::getTexture(int sampler) const
 {

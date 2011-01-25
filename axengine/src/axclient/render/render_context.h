@@ -51,13 +51,11 @@ protected:
 	void cacheScene(RenderScene *scene);
 	void cacheFrame(RenderFrame *queue);
 
-	void beginFrame();
 	void drawScene(RenderScene *scene, const RenderClearer &clearer);
 	void setupScene(RenderScene *scene, const RenderClearer *clearer, RenderCamera *camera);
 	//	void unsetScene(QueuedScene *scene, const RenderClearer *clearer = 0, RenderTarget *target = 0, RenderCamera *camera = 0);
 	void drawPrimitive(Primitive *prim);
 	void drawInteraction(Interaction *ia);
-	void endFrame();
 
 	void drawMeshUP(Material *material, MeshUP *mesh);
 

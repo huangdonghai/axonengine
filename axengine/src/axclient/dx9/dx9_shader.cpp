@@ -37,10 +37,9 @@ namespace {
 		MaterialTextureId::TerrainNormal, "g_terrainNormal",
 		MaterialTextureId::LayerAlpha, "g_layerAlpha",
 
-		// engine sampler
+		// other
 		MaterialTextureId::Reflection, "g_reflectionMap",
 		MaterialTextureId::LightMap, "g_lightMap",
-		MaterialTextureId::ShadowMap, "g_shadowMap"
 	};
 
 	static SamplerParam s_globalTextureNames[] = {
@@ -50,6 +49,7 @@ namespace {
 		GlobalTextureId::Rt2, "g_rt2",
 		GlobalTextureId::Rt3, "g_rt3",
 		GlobalTextureId::SceneColor, "g_sceneColor",
+		GlobalTextureId::ShadowMap, "g_shadowMap",
 	};
 
 	class EffectHelper

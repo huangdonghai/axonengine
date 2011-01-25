@@ -709,7 +709,7 @@ void ApiWrap::setIndices(phandle_t ib, ElementType et, int offset, int vertcount
 void ApiWrap::setRenderState(const DepthStencilDesc &dsd, const RasterizerDesc &rd, const BlendDesc &bd)
 {
 #if AX_MTRENDER
-	sAllocCommand(RenderApi::setRenderState)(dsd, rd, bd);
+	sAllocCommand(RenderApi::setRenderState).args(dsd, rd, bd);
 #else
 	RenderApi::setRenderState(dsd, rd, bd);
 #endif
@@ -817,9 +817,24 @@ phandle_t ApiWrap::newHandle()
 	return new Handle(0);
 }
 
-void ApiWrap::deleteHandle( phandle_t h )
+void ApiWrap::deleteHandle(phandle_t h)
 {
 	delete h;
+}
+
+void ApiWrap::issueDeletions()
+{
+#if AX_MTRENDER
+	for (int i = 0; i < m_numObjectDeletions; i++) {
+		sAllocCommand(m_objectDeletions[i].func).args(m_objectDeletions[i].handle);
+	}
+#else
+	for (int i = 0; i < m_numObjectDeletions; i++) {
+		m_objectDeletions[i].func(m_objectDeletions[i].handle);
+	}
+#endif
+
+	m_numObjectDeletions = 0;
 }
 
 

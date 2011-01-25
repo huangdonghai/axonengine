@@ -12,7 +12,7 @@ read the license and understand and accept it fully.
 AX_BEGIN_NAMESPACE
 
 //--------------------------------------------------------------------------
-// class Actor
+// class RenderEntity
 //--------------------------------------------------------------------------
 
 RenderEntity::RenderEntity(Kind k)
@@ -86,7 +86,6 @@ void RenderEntity::setMatrix(const Matrix &mat)
 	m_instanceParam.w = m_affineMat.axis[0].getLength();
 }
 
-
 void RenderEntity::refresh()
 {
 	if (!isInWorld()) {
@@ -115,22 +114,6 @@ bool RenderEntity::isFlagSet(Flag flag)
 {
 	return(m_flags & flag) != 0;
 }
-
-#if 0
-void RenderEntity::setQueued(QueuedEntity *queued)
-{
-	m_queued = queued;
-	m_queued->matrix = m_affineMat;
-	m_queued->instanceParam = m_instanceParam;
-	m_queued->flags = m_flags;
-	m_queued->distance = m_distance;
-}
-
-QueuedEntity *RenderEntity::getQueued() const
-{
-	return m_queued;
-}
-#endif
 
 // read only
 Matrix4 RenderEntity::getModelMatrix() const

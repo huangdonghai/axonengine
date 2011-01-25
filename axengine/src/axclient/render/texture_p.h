@@ -47,7 +47,7 @@ private:
 
 	typedef Dict<FixedString, TextureResource*> ResourceDict;
 	static ResourceDict ms_resources;
-	static std::list<TextureResource*> ms_asioList;
+	static TextureResourcePtr ms_default;
 };
 
 AX_END_NAMESPACE

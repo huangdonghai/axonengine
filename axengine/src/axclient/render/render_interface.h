@@ -128,7 +128,7 @@ public:
 	void clear(const RenderClearer &clearer);
 	void present(RenderTarget *window);
 
-	void issueDeletions() {}
+	void issueDeletions();
 	byte_t *allocRingBuf(int size);
 
 	// wait all commands executed

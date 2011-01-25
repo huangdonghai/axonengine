@@ -7,8 +7,7 @@ AX_BEGIN_NAMESPACE
 //--------------------------------------------------------------------------
 
 TextureResource::ResourceDict TextureResource::ms_resources;
-std::list<TextureResource*> TextureResource::ms_asioList;
-
+TextureResourcePtr TextureResource::ms_default;
 
 TextureResource::TextureResource(const FixedString &key, InitFlags flags)
 {
@@ -67,6 +66,11 @@ void TextureResource::generateMipmap()
 
 TextureResourcePtr TextureResource::findResource(const FixedString &name, int flags)
 {
+	if (!ms_default) {
+		FixedString defaultName = "textures/default";
+		ms_default = new TextureResource(defaultName, 0);
+	}
+
 	ResourceDict::iterator it = ms_resources.find(name);
 
 	if (it != ms_resources.end())

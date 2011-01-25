@@ -151,7 +151,11 @@ void RenderContext::issueFrame(RenderFrame *rq)
 
 	cacheFrame(rq);
 
-	beginFrame();
+	if (!r_specular.getBool()) {
+		g_shaderMacro.setMacro(ShaderMacro::G_DISABLE_SPECULAR);
+	} else {
+		g_shaderMacro.resetMacro(ShaderMacro::G_DISABLE_SPECULAR);
+	}
 
 	m_curWindow = rq->getTarget();
 	AX_ASSERT(m_curWindow->isWindow());
@@ -181,25 +185,11 @@ void RenderContext::issueFrame(RenderFrame *rq)
 		scenetime[i] = OsUtil::seconds() - s;
 	}
 
-	endFrame();
+	g_apiWrap->present(m_curWindow);
 
 	g_apiWrap->issueDeletions();
 
 	rq->clear();
-}
-
-void RenderContext::beginFrame()
-{
-	if (!r_specular.getBool()) {
-		g_shaderMacro.setMacro(ShaderMacro::G_DISABLE_SPECULAR);
-	} else {
-		g_shaderMacro.resetMacro(ShaderMacro::G_DISABLE_SPECULAR);
-	}
-}
-
-void RenderContext::endFrame()
-{
-	g_apiWrap->present(m_curWindow);
 }
 
 void RenderContext::drawScene(RenderScene *scene, const RenderClearer &clearer)
@@ -455,17 +445,9 @@ void RenderContext::drawPass_ShadowGen(RenderScene *scene)
 
 	if (r_shadowGen.getBool()) {
 		BEGIN_PIX("ShadowGen");
-#if 0
-		// offset the geometry slightly to prevent z-fighting
-		// note that this introduces some light-leakage artifacts
-		float factor = gl_shadowOffsetFactor.getFloat();
-		float units = gl_shadowOffsetUnits.getFloat() / 0x10000;
 
-		d3d9StateManager->SetRenderState(D3DRS_DEPTHBIAS, F2DW(units));
-		d3d9StateManager->SetRenderState(D3DRS_SLOPESCALEDEPTHBIAS, F2DW(factor));
-#else
 		m_rasterizerDesc.depthBias = true;
-#endif
+
 		m_curTechnique = Technique::ShadowGen;
 
 		RenderClearer clearer;
@@ -480,40 +462,25 @@ void RenderContext::drawPass_ShadowGen(RenderScene *scene)
 		setupScene(scene, 0, 0);
 		g_apiWrap->clear(clearer);
 
-#if 0
-		d3d9StateManager->SetRenderState(D3DRS_COLORWRITEENABLE, 0);
-#else
 		m_blendDesc.renderTargetWriteMask = 0;
-#endif
+
 		for (int i = 0; i < scene->numInteractions; i++) {
 			drawInteraction(scene->interactions[i]);
 		}
-#if 0
-		d3d9StateManager->SetRenderState(D3DRS_COLORWRITEENABLE, 0xf);
-#else
+
 		m_blendDesc.renderTargetWriteMask = 0xf;
-#endif
+
 		if (scene->isLastCsmSplits())
 			issueShadowQuery();
 
 		//unsetScene(scene);
 
 		// disable depth biase
-#if 0
-		d3d9StateManager->SetRenderState(D3DRS_DEPTHBIAS, 0);
-		d3d9StateManager->SetRenderState(D3DRS_SLOPESCALEDEPTHBIAS, 0);
-#else
+
 		m_rasterizerDesc.depthBias = false;
-#endif
+
 		END_PIX();
 	}
-
-#if 0
-	tex->setHardwareShadowMap(true);
-	tex->setFilterMode(Texture::FM_Linear);
-	tex->setClampMode(Texture::CM_Clamp);
-	tex->setBorderColor(Rgba::White);
-#endif
 
 	scene->rendered = true;
 }
@@ -542,8 +509,6 @@ void RenderContext::drawPass_Lights(RenderScene *scene)
 			//drawLocalLight(scene, ql);
 		}
 	}
-
-	//unsetScene(d3d9WorldScene, nullptr, s_lbuffer);
 }
 
 void RenderContext::drawPass_Postprocess(RenderScene *scene)
@@ -578,8 +543,6 @@ void RenderContext::drawScene_WorldSub(RenderScene *scene)
 	for (int i = 0; i < scene->numPrimitives; i++) {
 		drawPrimitive(scene->primtives[i]);
 	}
-
-	//	unsetScene(scene, &clear);
 }
 
 void RenderContext::drawPrimitive(Primitive *prim)
@@ -682,33 +645,15 @@ void RenderContext::setupScene(RenderScene *scene, const RenderClearer *clearer,
 	g_apiWrap->setTargetSet(m_targetSet);
 #endif
 
-	// clear here, befor viewport and scissor set, so clear all rendertarget's area,
+	// clear here, before viewport and scissor set, so clear all render target's area,
 	// if you want clear only viewport and scissor part, call clear after this function
 	if (clearer) {
 		//clearer->doClear();
 		g_apiWrap->clear(*clearer);
 	}
 
-#if 0
-	const Vector4 &vp = camera->getViewPortDX();
-	D3DVIEWPORT9 d3dviewport;
-	d3dviewport.X = vp.x;
-	d3dviewport.Y = vp.y;
-	d3dviewport.Width = vp.z;
-	d3dviewport.Height = vp.w;
-	d3dviewport.MinZ = 0;
-	d3dviewport.MaxZ = 1;
-	RECT d3dRect;
-	d3dRect.left = vp.x;
-	d3dRect.top = vp.y;
-	d3dRect.right = vp.x + vp.z;
-	d3dRect.bottom = vp.y + vp.w;
-	dx9_device->SetViewport(&d3dviewport);
-	dx9_device->SetScissorRect(&d3dRect);
-#else
 	g_apiWrap->setViewport(camera->getViewRect(), Vector2(0,1));
 	g_apiWrap->setScissorRect(camera->getViewRect());
-#endif
 
 	AX_SU(g_time, (float)camera->getTime());
 
@@ -915,24 +860,7 @@ void RenderContext::draw(VertexObject *vert, InstanceObject *inst, IndexObject *
 		macro.resetMacro(ShaderMacro::G_HAVE_NORMAL);
 	}
 
-#if 0
-	AX_SU(g_lightMap,  prim->m_lightmap);
-	if (prim->m_lightmap && r_lightmap.getBool()) {
-		macro.setMacro(ShaderMacro::G_HAVE_LIGHTMAP);
-	} else {
-		macro.resetMacro(ShaderMacro::G_HAVE_LIGHTMAP);
-	}
-#endif
 	stat_numDrawElements.inc();
-
-#if 0
-
-	draw(shader, tech, prim);
-
-	if (mat->isWireframe()  & !d3d9ForceWireframe) {
-		d3d9StateManager->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
-	}
-#endif
 
 	g_apiWrap->setIndices(index->m_h, index->m_elementType, index->m_offset, vert->m_count, index->m_activeCount);
 

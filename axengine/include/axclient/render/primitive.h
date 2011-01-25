@@ -89,7 +89,6 @@ protected:
 
 	Type m_type;
 	Material *m_material;
-	Texture *m_lightMap;
 
 	bool m_isMatrixSet;
 	Matrix4 m_matrix;
@@ -140,13 +139,14 @@ inline void Primitive::setMaterial(Material *material)
 
 inline void Primitive::setLightMap(Texture *lm)
 {
-	SafeDelete(m_lightMap);
-	m_lightMap = lm;
+	AX_ASSURE(m_material);
+	m_material->setTexture(MaterialTextureId::LightMap, lm);
 }
 
 inline Texture *Primitive::getLightMap() const
 {
-	return m_lightMap;
+	AX_ASSURE(m_material);
+	return m_material->getTexture(MaterialTextureId::LightMap);
 }
 
 

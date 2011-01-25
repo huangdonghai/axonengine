@@ -13,15 +13,12 @@ AX_BEGIN_NAMESPACE
 //------------------------------------------------------------------------------
 
 Primitive::Primitive(Hint hint)
-	: /*m_cachedId(0)
-	, m_cachedFrame(-1)
-	, */m_hint(hint)
+	: m_hint(hint)
 	, m_type(NoneType)
 {
 	m_syncFrame = -1;
 	m_isWorldSpace = false;
 	m_material = 0;
-	m_lightMap = 0;
 	m_isMatrixSet = false;
 	m_matrix.setIdentity();
 
@@ -38,7 +35,6 @@ Primitive::Primitive(Hint hint)
 Primitive::~Primitive()
 {
 	SafeDelete(m_material);
-	SafeDelete(m_lightMap);
 }
 
 //------------------------------------------------------------------------------
@@ -1458,7 +1454,7 @@ void ChunkPrim::draw(Technique tech)
 		return;
 	}
 
-	bool combine = r_terrainLayerCombine.getBool();
+	bool combine = false; // r_terrainLayerCombine.getBool();
 	bool drawlayer = true;
 
 	if (!r_detail.getBool() || !m_layerVisible) {
@@ -1474,15 +1470,14 @@ void ChunkPrim::draw(Technique tech)
 	if (tech != Technique::GeoFill)
 		drawlayer = false;
 
-	if (1/*!drawlayer || !combine*/) {
-		//D3D9geometry::draw(tech);
+	if (!drawlayer || !combine) {
 		g_renderContext->draw(vert, inst, index, mat, tech);
 
 		if (!drawlayer) {
 			return;
 		}
 	}
-return;
+
 	// draw layer
 	for (int i = 0; i < m_numLayers; i++) {
 		stat_numTerrainLayeredDrawElements.inc();
@@ -1490,6 +1485,23 @@ return;
 		ChunkPrim::Layer &l = m_layers[i];
 
 		AX_SU(g_detailScale, l.scale);
+		l.detailMat->setTexture(MaterialTextureId::TerrainColor, m_colorTexture->clone());
+		l.detailMat->setTexture(MaterialTextureId::TerrainNormal, m_normalTexture->clone());
+		if (l.alphaTex)
+			l.detailMat->setTexture(MaterialTextureId::LayerAlpha, l.alphaTex->clone());
+		else
+			l.detailMat->setTexture(MaterialTextureId::LayerAlpha, 0);
+
+		l.detailMat->setFeature(0, l.isVerticalProjection);
+
+		bool firstLayer = combine && (i == 0);
+		l.detailMat->setFeature(1, firstLayer); // if is first layer, set first layer flag
+		if (!firstLayer)
+			l.detailMat->m_blendMode = Material::BlendMode_Blend;
+
+		l.detailMat->clearParameters();
+		l.detailMat->addParameter("g_zoneRect", 4, m_zoneRect.c_ptr());
+		l.detailMat->addParameter("g_chunkRect", 4, m_chunkRect.c_ptr());
 		g_renderContext->draw(vert, inst, index, l.detailMat, Technique::Layer);
 	}
 
@@ -1513,8 +1525,6 @@ void ChunkPrim::sync()
 	if (!m_isDirty)
 		return;
 
-	bool combine = r_terrainLayerCombine.getBool();
-
 	m_material->setTexture(MaterialTextureId::TerrainColor, m_colorTexture->clone());
 	m_material->setTexture(MaterialTextureId::TerrainNormal, m_normalTexture->clone());
 
@@ -1522,6 +1532,8 @@ void ChunkPrim::sync()
 	m_material->addParameter("g_zoneRect", 4, m_zoneRect.c_ptr());
 	m_material->addParameter("g_chunkRect", 4, m_chunkRect.c_ptr());
 
+#if 0
+	bool combine = false; // r_terrainLayerCombine.getBool();
 	// draw layer
 	for (int i = 0; i < m_numLayers; i++) {
 		stat_numTerrainLayeredDrawElements.inc();
@@ -1535,9 +1547,17 @@ void ChunkPrim::sync()
 			l.detailMat->setTexture(MaterialTextureId::LayerAlpha, 0);
 
 		l.detailMat->setFeature(0, l.isVerticalProjection);
-		l.detailMat->setFeature(1, combine && (i == 0)); // if is first layer, set first layer flag
-	}
 
+		bool firstLayer = combine && (i == 0);
+		l.detailMat->setFeature(1, firstLayer); // if is first layer, set first layer flag
+		if (!firstLayer)
+			l.detailMat->m_blendMode = Material::BlendMode_Blend;
+
+		l.detailMat->clearParameters();
+		l.detailMat->addParameter("g_zoneRect", 4, m_zoneRect.c_ptr());
+		l.detailMat->addParameter("g_chunkRect", 4, m_chunkRect.c_ptr());
+	}
+#endif
 	m_isDirty = m_isVertexBufferDirty = m_isIndexBufferDirty = 0;
 	m_syncFrame = g_renderSystem->getFrameNum();
 }

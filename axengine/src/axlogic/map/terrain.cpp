@@ -694,6 +694,7 @@ void MapChunk::onLayerPainted()
 void MapChunk::allocatePrimitive()
 {
 	m_prim = new ChunkPrim(Primitive::HintDynamic);
+	m_prim->setMaterial(new Material("materials/terrain"));
 }
 
 void MapChunk::updatePrimitive()
@@ -733,7 +734,6 @@ void MapChunk::updatePrimitive()
 	stat_terrainVerts.add(num_verts - m_prim->getNumVertexes());
 #endif
 	m_prim->init(num_verts, num_tris * 3);
-	m_prim->setMaterial(new Material("materials/terrain"));
 	m_prim->setTerrainRect(m_terrain->getTerrainRect());
 	m_prim->setColorTexture(m_zone->getColorTexture());
 	m_prim->setNormalTexture(m_zone->getNormalTexture());

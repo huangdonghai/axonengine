@@ -55,8 +55,6 @@ AX_BEGIN_PC
 AX_END_PC
 
 //------------------------------------------------------------------------------
-// VP_zpass
-//------------------------------------------------------------------------------
 
 float4 VP_zpass(TerrainVertexIn IN) : POSITION
 {
@@ -64,16 +62,12 @@ float4 VP_zpass(TerrainVertexIn IN) : POSITION
 }
 
 //------------------------------------------------------------------------------
-// FP_zpass
-//------------------------------------------------------------------------------
 
 half4 FP_zpass(float4 hpos : POSITION) : COLOR
 {
 	return 0;
 }
 
-//------------------------------------------------------------------------------
-// VP_gpass
 //------------------------------------------------------------------------------
 
 struct TerrainGpassOut {
@@ -93,8 +87,6 @@ TerrainGpassOut VP_gpass(TerrainVertexIn IN)
 	return OUT;
 }
 
-//------------------------------------------------------------------------------
-// FP_gpass
 //------------------------------------------------------------------------------
 
 Gbuffer FP_gpass(LayerVertexOut IN)
@@ -123,8 +115,6 @@ Gbuffer FP_gpass(LayerVertexOut IN)
 
 
 //------------------------------------------------------------------------------
-// VP_main
-//------------------------------------------------------------------------------
 
 TerrainVertexOut VP_main(TerrainVertexIn IN)
 {
@@ -143,8 +133,6 @@ TerrainVertexOut VP_main(TerrainVertexIn IN)
 	return OUT;
 }
 
-//------------------------------------------------------------------------------
-// FP_main
 //------------------------------------------------------------------------------
 
 half4 FP_main(LayerVertexOut IN) : COLOR
@@ -190,8 +178,6 @@ half4 FP_main(LayerVertexOut IN) : COLOR
 }
 
 //------------------------------------------------------------------------------
-// VP_layer
-//------------------------------------------------------------------------------
 
 LayerVertexOut VP_layer(TerrainVertexIn IN)
 {
@@ -213,7 +199,8 @@ LayerVertexOut VP_layer(TerrainVertexIn IN)
 
 half4 getSampler(sampler2D smpl, float3 worldpos, half3 normal)
 {
-#if !S_VERTICAL_PROJECTION	// horizon projection
+#if !S_VERTICAL_PROJECTION
+	// horizon projection
 	float2 tc = worldpos.xy * g_detailScale;
 	half4 result = tex2D(smpl, tc);
 	return result;
@@ -232,8 +219,6 @@ half4 getSampler(sampler2D smpl, float3 worldpos, half3 normal)
 }
 
 //------------------------------------------------------------------------------
-// FP_layer
-//------------------------------------------------------------------------------
 
 Gbuffer FP_layer(LayerVertexOut IN)
 {
@@ -251,7 +236,7 @@ Gbuffer FP_layer(LayerVertexOut IN)
 	half alpha = 1;
 #endif
 	float dist = IN.viewDir.w;
-	alpha *= HardStep(256, 224, dist);
+//	alpha *= HardStep(256, 224, dist);
 
 	OUT.normal.xyz = N;
 	OUT.albedo.xyz = basecolor.xyz + detail.xyz - 0.5;
@@ -331,16 +316,6 @@ technique layer {
 	pass p0 {
 		VERTEXPROGRAM = compile VP_2_0 VP_layer();
 		FRAGMENTPROGRAM = compile FP_2_0 FP_layer();
-#if 0
-		DEPTHTEST = true;
-		DEPTHMASK = false;
-		CULL_ENABLED;
-#if !S_FIRST_LAYER
-		BLEND_BLEND;
-#else
-		BLEND_NONE;
-#endif
-#endif
 	}
 }
 

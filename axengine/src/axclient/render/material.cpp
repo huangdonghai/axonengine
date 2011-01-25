@@ -169,10 +169,6 @@ const ShaderMacro &Material::getShaderMacro()
 			m_shaderMacro.setMacro(ShaderMacro::G_TEXANIM);
 		}
 
-//		m_shaderMacro.setMacro(ShaderMacro::G_MAIN_TEXGEN, m_texgens[SamplerType::Diffuse].type);
-//		m_shaderMacro.setMacro(ShaderMacro::G_SPECULAR_TEXGEN, m_texgens[SamplerType::Specular].type);
-//		m_shaderMacro.setMacro(ShaderMacro::G_NORMAL_TEXGEN, m_texgens[SamplerType::Normal].type);
-
 		for (int i = 0; i < MAX_FEATURES; i++) {
 			if (m_features[i]) {
 				m_shaderMacro.setMacro(ShaderMacro::Flag(ShaderMacro::G_FEATURE0 + i));

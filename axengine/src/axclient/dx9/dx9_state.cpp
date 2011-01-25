@@ -297,8 +297,8 @@ DX9_BlendState::~DX9_BlendState()
 		dx9_device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ZERO);
 		dx9_device->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
 	} else {
-		dx9_device->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
-		dx9_device->SetRenderState(D3DRS_SEPARATEALPHABLENDENABLE, TRUE);
+		dx9_device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+		dx9_device->SetRenderState(D3DRS_SEPARATEALPHABLENDENABLE, FALSE);
 
 		dx9_device->SetRenderState(D3DRS_SRCBLEND, trBlendFactor(m_desc.srcBlend));
 		dx9_device->SetRenderState(D3DRS_DESTBLEND, trBlendFactor(m_desc.destBlend));

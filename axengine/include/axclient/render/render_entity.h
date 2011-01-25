@@ -15,40 +15,6 @@ AX_BEGIN_NAMESPACE
 // forward declaration
 struct RenderScene;
 
-#if 0
-struct QueuedEntity {
-	enum {
-		MAX_TARGETS = 8
-	};
-
-	Matrix matrix;
-	Vector4 instanceParam;
-	int flags;			// Actor::Flag
-
-	float distance;
-
-	// used by interaction
-	int m_chainId;
-	Interaction *m_headInteraction;
-
-	void interactionChain(Interaction *last, int chainId);
-};
-
-struct QueuedLight;
-
-inline void QueuedEntity::interactionChain(Interaction *last, int chainId)
-{
-	if (m_chainId != chainId) {
-		m_headInteraction = last;
-		m_chainId = chainId;
-		return;
-	}
-
-	last->actorNext = m_headInteraction;
-	m_headInteraction = last;
-}
-#endif
-
 class QuadNode;
 
 class AX_API RenderEntity
@@ -96,12 +62,6 @@ public:
 	bool isLight() const { return m_kind == kLight; }
 	float getVisSize() const { return m_visSize; }
 	float getDistance() const { return m_distance; }
-
-#if 0
-	// queued
-	void setQueued(QueuedEntity *queued);
-	QueuedEntity *getQueued() const;
-#endif
 
 	// read only
 	Matrix4 getModelMatrix() const;
