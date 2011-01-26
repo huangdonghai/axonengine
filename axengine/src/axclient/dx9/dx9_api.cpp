@@ -180,12 +180,8 @@ void dx9UploadTexture(phandle_t h, const void *pixels, TexFormat format)
 void dx9UploadSubTexture(phandle_t h, const Rect &rect, const void *pixels, TexFormat format)
 {
 	AX_ASSERT(h && *h);
-
-	if (rect.isEmpty())
-		return;
-
-	if (!format)
-		return;
+	AX_ASSERT(format);
+	AX_ASSERT(!rect.isEmpty());
 
 	D3DFORMAT d3dformat;
 	trTexFormat(format, d3dformat);

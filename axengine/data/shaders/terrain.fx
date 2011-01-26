@@ -13,7 +13,7 @@ read the license and understand and accept it fully.
 
 float Script : STANDARDSGLOBAL <
 	// technique
-	string TechniqueGeoFill = "zpass";
+	string TechniqueGeoFill = "gpass";
 	string TechniqueShadowGen = "shadowGen";
 	string TechniqueMain = "main";
 	string TechniqueGlow = "";
@@ -247,6 +247,8 @@ Gbuffer FP_layer(LayerVertexOut IN)
 		if (m_layeralpha[i]) {
 			alpha = tex2D(m_layerMaps[i], IN.streamTc.zw).a;
 		}
+		float dist = IN.viewDir.w;
+		alpha *= smoothstep(256, 224, dist);
 
 		if (m_details[i]) {
 			half3 detail = getSampler(m_detailMaps[i], IN.worldPos, N, i).rgb;
@@ -259,7 +261,7 @@ Gbuffer FP_layer(LayerVertexOut IN)
 			half3 T = half3(N.z, -N.y, -N.x);
 			half3 B = half3(-N.x, N.z, -N.y);
 			half3x3 axis = half3x3(T, B, N);
-			detailNormal = mul(axis, detailNormal);
+			detailNormal = mul(detailNormal, axis);
 			normal = lerp(normal, detailNormal, alpha);
 		}
 #endif
@@ -278,7 +280,7 @@ Gbuffer FP_layer(LayerVertexOut IN)
 // TECHNIQUES
 //------------------------------------------------------------------------------
 
-technique zpass {
+technique gpass {
 	pass p0 {
 		VERTEXPROGRAM = compile VP_2_0 VP_layer();
 		FRAGMENTPROGRAM = compile FP_2_0 FP_layer();

@@ -7,10 +7,8 @@ Copyright (c) 2010-2011 NetEase.com, Inc.
 
 AX_BEGIN_NAMESPACE
 
-
 //------------------------------------------------------------------------------
-// class Primitive
-//------------------------------------------------------------------------------
+std::list<Primitive *> Primitive::ms_framePrim;
 
 Primitive::Primitive(Hint hint)
 	: m_hint(hint)
@@ -28,8 +26,8 @@ Primitive::Primitive(Hint hint)
 	m_overloadMaterial = 0;
 	m_overloadIndexObject = 0;
 
-	m_vertexObject = 0;
-	m_indexObject = 0;
+	if (hint == HintFrame)
+		ms_framePrim.push_back(this);
 }
 
 Primitive::~Primitive()
@@ -38,13 +36,11 @@ Primitive::~Primitive()
 }
 
 //------------------------------------------------------------------------------
-// class PointPrim
-//------------------------------------------------------------------------------
 
 PointPrim::PointPrim(Hint hint) : Primitive(hint)
 {
 	m_type = PointType;
-	m_points = NULL;
+	m_points = 0;
 }
 
 PointPrim::~PointPrim()
@@ -108,15 +104,13 @@ int PointPrim::getDrawCount()
 }
 
 //------------------------------------------------------------------------------
-// class LinePrim
-//------------------------------------------------------------------------------
 
 LinePrim::LinePrim(Hint hint)
 	: Primitive(hint)
 	, m_numVertexes(0)
 	, m_numIndexes(0)
-	, m_vertexes(NULL)
-	, m_indexes(NULL)
+	, m_vertexes(0)
+	, m_indexes(0)
 	, m_lineWidth(1.0f)
 {
 	m_type = LineType;
@@ -127,6 +121,8 @@ LinePrim::LinePrim(Hint hint)
 
 LinePrim::~LinePrim()
 {
+	SafeDelete(m_indexObject);
+	SafeDelete(m_vertexObject);
 	clear();
 }
 
@@ -614,8 +610,6 @@ void LinePrim::sync()
 	m_syncFrame = g_renderSystem->getFrameNum();
 }
 
-//------------------------------------------------------------------------------
-// class MeshPrim
 //------------------------------------------------------------------------------
 
 MeshPrim::MeshPrim(Hint hint)
@@ -1172,8 +1166,6 @@ int Mesh::getCurrentIndexNum() const
 #endif
 
 //------------------------------------------------------------------------------
-// class TextPrim
-//------------------------------------------------------------------------------
 
 TextPrim::TextPrim(Hint hint) : Primitive(hint), m_horizonAlign(Center), m_verticalAlign(VCenter)
 {
@@ -1243,9 +1235,122 @@ TextPrim *TextPrim::createText(Hint hint, const Rect &rect, Font *font, const st
 	return rp_text;
 }
 
+#define BLINK_DIVISOR 0.075
+void TextPrim::draw( Technique tech )
+{
+	if (!r_font.getBool()) {
+		return;
+	}
 
-//------------------------------------------------------------------------------
-// class ChunkPrim
+	stat_numTextDrawElements.inc();
+
+	if (tech != Technique::Main)
+		return;
+
+	TextQuad tq;
+	float width, height;
+
+	if (m_isSimpleText) {
+		width = 1.0f; height = 1.0f;
+
+		const Matrix3 &axis = g_renderContext->getCurCamera()->getViewAxis();
+		tq.s_vector = -axis[1];
+		tq.t_vector = -axis[2];
+		tq.origin = m_position - tq.s_vector * width * 0.5f - tq.t_vector * height * 0.5f;
+		tq.width = width;
+		tq.height = height;
+	} else {
+		tq.s_vector = Vector3(1, 0, 0);
+		tq.t_vector = Vector3(0, 1, 0);
+		tq.origin = Vector3(m_rect.x+0.5f, m_rect.y+0.5f, 0);
+		tq.width = m_rect.width;
+		tq.height = m_rect.height;
+	}
+
+	std::wstring wstr = u2w(m_text);
+	const wchar_t *pStr = wstr.c_str();
+	size_t total_len = wstr.length();
+	Vector2 scale, offset;
+	Vector2 startpos;
+
+	scale.x = m_aspect;
+	scale.y = 1.0;
+
+	float textwidth = scale.x * m_font->getStringWidth(wstr);
+	float textheight = scale.y * m_font->getHeight();
+
+	if (m_format & TextPrim::ScaleByVertical) {
+		scale.y = tq.height / textheight;
+		scale.x = m_aspect * scale.y;
+	}
+
+	if (m_format & TextPrim::ScaleByHorizon) {
+		scale.x = tq.width / textwidth;
+		scale.y = scale.x / m_aspect;
+	}
+
+	width = tq.width / scale.x;
+	height = tq.height / scale.y;
+
+	bool italic = m_format & TextPrim::Italic ? true : false;
+
+	if (m_horizonAlign == TextPrim::Left) {
+		startpos.x = 0;
+	} else if (m_horizonAlign == TextPrim::Center) {
+		startpos.x =(width - textwidth) * 0.5f;
+	} else if (m_horizonAlign == TextPrim::Right) {
+		startpos.x = width - textwidth;
+	} else {
+		startpos.x = 0;
+	}
+
+	if (m_verticalAlign == TextPrim::Top) {
+		startpos.y = 0;
+	} else if (m_verticalAlign == TextPrim::VCenter) {
+		startpos.y =(height - textheight) * 0.5f;
+	} else if (m_verticalAlign == TextPrim::Bottom) {
+		startpos.y = height - textheight;
+	} else {
+		startpos.y = 0;
+	}
+
+	while (total_len) {
+		// ulonglong_t t0 = OsUtil::microseconds();
+
+		size_t len = m_font->updateTexture(pStr);
+
+		// for error string, cann't upload or cann't render char
+
+		// ulonglong_t t1 = OsUtil::microseconds();
+
+		if (m_format & TextPrim::Blink) {
+			Rgba color = m_color;
+			color.a = 128+127*sinf(g_renderContext->getCurCamera()->getTime() / BLINK_DIVISOR);
+			offset = g_renderContext->drawString(m_font, color, tq, startpos, pStr, len, scale, italic);
+			goto next;
+		}
+
+		// ulonglong_t t2 = OsUtil::microseconds();
+
+		// common
+		offset = g_renderContext->drawString(m_font, m_color, tq, startpos, pStr, len, scale, italic);
+
+		// ulonglong_t t3 = OsUtil::microseconds();
+		if (m_format & TextPrim::Bold) {
+			g_renderContext->drawString(m_font, m_color, tq, startpos+scale, pStr, len, scale, italic);
+		}
+
+next:
+		total_len -= len;
+		pStr += len;
+		startpos += offset;
+	}
+}
+
+void TextPrim::sync()
+{
+}
+
 //------------------------------------------------------------------------------
 
 ChunkPrim::ChunkPrim(Hint hint)
@@ -1564,8 +1669,6 @@ void ChunkPrim::sync()
 }
 
 //------------------------------------------------------------------------------
-// class GroupPrim
-//------------------------------------------------------------------------------
 
 GroupPrim::GroupPrim(Hint hint) : Primitive(hint)
 {
@@ -1622,8 +1725,6 @@ void GroupPrim::sync()
 }
 
 //--------------------------------------------------------------------------
-// class RefPrim
-//--------------------------------------------------------------------------
 
 RefPrim::RefPrim(Hint hint) : Primitive(hint)
 {
@@ -1637,6 +1738,8 @@ RefPrim::RefPrim(Hint hint) : Primitive(hint)
 
 RefPrim::~RefPrim()
 {
+	SafeDelete(m_indexObject);
+
 	TypeFree(m_indexes);
 }
 
@@ -1708,10 +1811,6 @@ void RefPrim::sync()
 	m_syncFrame = g_renderSystem->getFrameNum();
 }
 
-//--------------------------------------------------------------------------
-// class InstancePrim
-//
-// geometry instance primitive
 //--------------------------------------------------------------------------
 
 InstancePrim::InstancePrim(Hint hint) : Primitive(hint)
@@ -1789,32 +1888,5 @@ void InstancePrim::sync()
 
 	m_syncFrame = g_renderSystem->getFrameNum();
 }
-
-#if 0
-//--------------------------------------------------------------------------
-// class PrimitiveManager
-//--------------------------------------------------------------------------
-
-PrimitiveManager::PrimitiveManager()
-{
-}
-
-PrimitiveManager::~PrimitiveManager()
-{
-}
-
-void PrimitiveManager::hintUncache(Primitive *prim)
-{
-	int id = prim->getCachedId();
-
-	if (!id)
-		return;
-
-	if (isFrameHandle(id))
-		return;
-
-	m_waitUncache.push_back(id-1);
-}
-#endif
 
 AX_END_NAMESPACE

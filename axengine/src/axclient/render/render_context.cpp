@@ -121,12 +121,29 @@ bool MeshUP::setupBoundingBox( MeshUP*& mesh, const BoundingBox &bbox )
 RenderContext::RenderContext()
 {
 	g_bufferManager = new BufferManager();
+
 	m_defaultMat = new Material("_debug");
+
 	m_mtrGlobalLight = new Material("_globallight");
 	m_mtrGlobalLight->m_depthTest = true;
 	m_mtrGlobalLight->m_depthWrite = false;
-	//m_mtrGlobalLight->m
+
+	m_mtrFont = new Material("font");
+	m_mtrFont->m_blendMode = Material::BlendMode_Blend;
+	m_mtrFont->m_depthWrite = false;
+	m_mtrFont->m_depthTest = false;
+	m_mtrFont->m_twoSided = true;
+
 	m_hexahedron = 0;
+
+	for (int i = 0; i < NUM_CHARS_PER_BATCH; i++) {
+		m_fontIndices[i*6] = i*4;
+		m_fontIndices[i*6+1] = i*4 + 1;
+		m_fontIndices[i*6+2] = i*4 + 2;
+		m_fontIndices[i*6+3] = i*4 + 2;
+		m_fontIndices[i*6+4] = i*4 + 3;
+		m_fontIndices[i*6+5] = i*4 + 0;
+	}
 
 #if AX_MTRENDER
 	m_renderThread = new RenderThread();
@@ -188,6 +205,12 @@ void RenderContext::issueFrame(RenderFrame *rq)
 	g_apiWrap->present(m_curWindow);
 
 	g_apiWrap->issueDeletions();
+
+	std::list<Primitive *>::iterator it = Primitive::ms_framePrim.begin();
+	for (; it != Primitive::ms_framePrim.end(); ++it)
+		SafeDelete(*it);
+
+	Primitive::ms_framePrim.clear();
 
 	rq->clear();
 }
@@ -299,6 +322,15 @@ void RenderContext::drawScene_World(RenderScene *scene, const RenderClearer &cle
 void RenderContext::drawScene_Noworld(RenderScene *scene, const RenderClearer &clearer)
 {
 	BEGIN_PIX("DrawNoworld");
+
+	if (r_wireframe.getBool()) {
+		m_rasterizerDesc.fillMode = RasterizerDesc::FillMode_Wireframe;
+		m_forceWireframe = true;
+	} else {
+		m_rasterizerDesc.fillMode = RasterizerDesc::FillMode_Solid;
+		m_forceWireframe = false;
+	}
+
 	m_curTechnique = Technique::Main;
 
 	m_targetSet.m_depthTarget = 0;
@@ -329,6 +361,10 @@ void RenderContext::drawScene_Noworld(RenderScene *scene, const RenderClearer &c
 
 	if (m_isStatistic)
 		stat_staticsTime.setInt((end - start) * 1000);
+
+	m_rasterizerDesc.fillMode = RasterizerDesc::FillMode_Solid;
+	m_forceWireframe = false;
+
 	END_PIX();
 }
 
@@ -381,17 +417,13 @@ void RenderContext::drawPass_Overlay(RenderScene *scene)
 
 void RenderContext::drawPass_Composite(RenderScene *scene)
 {
-#if 1
 	if (r_wireframe.getBool()) {
-		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		//d3d9StateManager->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
+		m_rasterizerDesc.fillMode = RasterizerDesc::FillMode_Wireframe;
 		m_forceWireframe = true;
 	} else {
-		//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		//d3d9StateManager->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
+		m_rasterizerDesc.fillMode = RasterizerDesc::FillMode_Solid;
 		m_forceWireframe = false;
 	}
-#endif
 
 	m_curTechnique = Technique::Main;
 
@@ -425,10 +457,8 @@ void RenderContext::drawPass_Composite(RenderScene *scene)
 	}
 	//unsetScene(scene, 0, scene->target);
 
-#if 1
-	//d3d9StateManager->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
+	m_rasterizerDesc.fillMode = RasterizerDesc::FillMode_Solid;
 	m_forceWireframe = false;
-#endif
 }
 
 void RenderContext::drawPass_ShadowGen(RenderScene *scene)
@@ -634,16 +664,9 @@ void RenderContext::setupScene(RenderScene *scene, const RenderClearer *clearer,
 	if (!camera)
 		camera = &scene->camera;
 
-//	m_curC = camera;
-#if 0
-	if (!target) {
-		target = camera->getTarget();
-	}
+	m_curCamera = camera;
 
-	bindTarget(target);
-#else
 	g_apiWrap->setTargetSet(m_targetSet);
-#endif
 
 	// clear here, before viewport and scissor set, so clear all render target's area,
 	// if you want clear only viewport and scissor part, call clear after this function
@@ -1025,5 +1048,90 @@ void RenderContext::cacheScene(RenderScene *scene)
 		scene->overlayPrimitives[j]->sync();
 	}
 }
+
+Vector2 RenderContext::drawString(Font *font, Rgba color, const TextQuad &tq, const Vector2 &offset, const wchar_t *str, size_t len, const Vector2 &scale, bool italic)
+{
+	//	ulonglong_t t0 = OsUtil::microseconds();
+	size_t i;
+	uint_t count;
+	Texture *tex = nullptr;
+	Texture *newtex = nullptr;
+	Vector4 tc;
+	float fontheight = font->getHeight();
+	float fontitalic;
+	Vector2 pos = offset;
+
+	if (italic) {
+		fontitalic = fontheight * 0.2f;
+	} else {
+		fontitalic = 0;
+	}
+
+	font->newFrame();
+
+	count = 0;
+	font->getCharInfo(str[0], tex, tc);
+
+	BlendVertex *data = m_fontVerts;
+
+	//	ulonglong_t t1 = OsUtil::microseconds();
+	for (i = 0; i < len; i++) {
+		font->getCharInfo(str[i], newtex, tc);
+
+		// check if need render
+		if ((tex && newtex != tex) || (count == NUM_CHARS_PER_BATCH)) {
+			m_mtrFont->setTexture(MaterialTextureId::Diffuse, tex->clone());
+
+			drawChars(count);
+
+			count = 0;
+			tex = newtex;
+			data = m_fontVerts;
+		}
+
+		// get glyph info
+		const GlyphInfo &glyphinfo = font->getGlyphInfo(str[i]);
+
+		// adjust tc to char glyph width
+		tc[2] = tc[0] +(tc[2] - tc[0]) * (float)(glyphinfo.width + 4 * Font::ATLAS_PAD) / font->getWidth();
+
+		// set vertex buffer
+		// set vertex buffer
+		data[count*4+0].position = tq.getPos(pos.x + glyphinfo.bearing - 1 * Font::ATLAS_PAD, pos.y + fontheight, scale);
+		data[count*4+0].streamTc.set(tc[0], tc[3]);
+		data[count*4+0].color = color;
+
+		data[count*4+1].position = tq.getPos(pos.x + glyphinfo.bearing - 1 * Font::ATLAS_PAD + fontitalic, pos.y, scale);
+		data[count*4+1].streamTc.set(tc[0], tc[1]);
+		data[count*4+1].color = color;
+
+		data[count*4+2].position = tq.getPos(pos.x +(glyphinfo.bearing + glyphinfo.width + 3 * Font::ATLAS_PAD) + fontitalic, pos.y, scale);
+		data[count*4+2].streamTc.set(tc[2], tc[1]);
+		data[count*4+2].color = color;
+
+		data[count*4+3].position = tq.getPos(pos.x +(glyphinfo.bearing + glyphinfo.width + 3 * Font::ATLAS_PAD), pos.y + fontheight, scale);
+		data[count*4+3].streamTc.set(tc[2], tc[3]);
+		data[count*4+3].color = color;
+
+		count++;
+
+		pos.x += glyphinfo.advance;
+	}
+
+	m_mtrFont->setTexture(MaterialTextureId::Diffuse, tex->clone());
+
+	//	ulonglong_t t2 = OsUtil::microseconds();
+	drawChars(count);
+
+	//	ulonglong_t t3 = OsUtil::microseconds();
+	return pos - offset;
+}
+
+void RenderContext::drawChars(int count)
+{
+	drawUP(m_fontVerts, VertexType::kBlend, count * 4, m_fontIndices, ElementType_TriList, count * 6, m_mtrFont, Technique::Main);
+}
+
+
 
 AX_END_NAMESPACE

@@ -524,7 +524,7 @@ bool Font::uploadCharGlyph(wchar_t c, byte_t *data)
 		m_fontFaces[m_glyphInfos[c].face]->getCharBitmap(c, m_width, m_height, data);
 	}
 
-	return m_texAtlas->updateChunk(c, data);
+	return m_texAtlas->updateChunk(c, data, TexFormat::A8);
 }
 
 void Font::newFrame()

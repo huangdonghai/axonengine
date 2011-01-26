@@ -29,7 +29,7 @@ public:
 	uint_t newFrame();
 	bool isChunkResident(int id);
 	// if texture pool is full, return false
-	bool updateChunk(int id, byte_t *data, TexFormat format = TexFormat::AUTO);
+	bool updateChunk(int id, byte_t *data, TexFormat format);
 	void getChunkInfo(int id, Texture*& tex, Vector4 &tc);
 
 	void setTextureFilterMode(SamplerDesc::FilterMode mode);

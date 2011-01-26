@@ -37,7 +37,9 @@ public:
 
 	void drawUP(const void *vb, VertexType vt, int vertcount, const void *ib, ElementType et, int indicescount, Material *mat, Technique tech);
 	void draw(VertexObject *vert, InstanceObject *inst, IndexObject *index, Material *mat, Technique tech);
+	Vector2 drawString(Font *font, Rgba color, const TextQuad &tq, const Vector2 &xy, const wchar_t *str, size_t len, const Vector2 &scale, bool italic);
 	bool isReflecting() const { return m_isReflecting; }
+	RenderCamera *getCurCamera() const { return m_curCamera; }
 
 	template <class Q>
 	void setUniform(ConstBuffers::Item name, const Q &q)
@@ -79,10 +81,19 @@ protected:
 	void setMaterial(Material *mat);
 	void setConstBuffers();
 
+	void drawChars(int count);
+
 private:
+	enum {
+		NUM_CHARS_PER_BATCH = 64
+	};
+	BlendVertex m_fontVerts[NUM_CHARS_PER_BATCH*4];
+	ushort_t m_fontIndices[NUM_CHARS_PER_BATCH*6];
+
 	// init
 	Material *m_defaultMat;
 	Material *m_mtrGlobalLight;
+	Material *m_mtrFont;
 	RenderThread *m_renderThread;
 	RenderTarget *m_bloomMap[NUM_BLOOM_TEXTURES];
 	RenderTarget *m_toneMap[NUM_TONEMAP_TEXTURES];
@@ -92,6 +103,7 @@ private:
 	RenderTarget *m_curWorldRt;
 	RenderScene *m_curWorldScene;
 	Interaction *m_curInteraction;
+	RenderCamera *m_curCamera;
 	const RenderEntity *m_curEntity;
 	bool m_isStatistic;
 	bool m_isReflecting;

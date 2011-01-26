@@ -21,6 +21,8 @@ class IndexObject;
 // virtual base, can't create an instance for this
 class AX_API Primitive
 {
+	friend class RenderContext;
+
 public:
 	enum Type {
 		NoneType = 0,		// for error checks
@@ -104,9 +106,7 @@ protected:
 	Material *m_overloadMaterial;
 	IndexObject *m_overloadIndexObject;
 
-	// geometry data
-	VertexObject *m_vertexObject;
-	IndexObject *m_indexObject;
+	static std::list<Primitive *> ms_framePrim;
 };
 
 inline void Primitive::interactionChain(Interaction *last, int chainId)
@@ -153,8 +153,6 @@ inline Texture *Primitive::getLightMap() const
 typedef std::vector<Primitive*> Primitives;
 
 //--------------------------------------------------------------------------
-// class PointPrim
-//--------------------------------------------------------------------------
 
 class AX_API PointPrim : public Primitive
 {
@@ -189,8 +187,6 @@ private:
 	int m_pointDrawCount;
 };
 
-//--------------------------------------------------------------------------
-// class LinePrim
 //--------------------------------------------------------------------------
 
 class AX_API LinePrim : public Primitive
@@ -250,6 +246,10 @@ private:
 	int m_numIndexes;
 	ushort_t *m_indexes;
 	float m_lineWidth;
+
+	// geometry data
+	VertexObject *m_vertexObject;
+	IndexObject *m_indexObject;
 };
 
 //--------------------------------------------------------------------------
@@ -309,6 +309,10 @@ private:
 	int m_numIndexes;
 	ushort_t *m_indexes;
 	bool m_isStriped;
+
+	// geometry data
+	VertexObject *m_vertexObject;
+	IndexObject *m_indexObject;
 };
 
 //--------------------------------------------------------------------------
@@ -359,8 +363,8 @@ public:
 	void setHorizonAlign(HorizonAlign align) { m_horizonAlign = align; }
 	void setVerticalAlign(VerticalAlign align) { m_verticalAlign = align; }
 
-	virtual void draw(Technique tech) {}
-	virtual void sync() {}
+	virtual void draw(Technique tech);
+	virtual void sync();
 
 	// static helper function
 	static TextPrim *createSimpleText(Hint hint, const Vector3 &xyz, const Rgba &color, const std::string &text, bool fixedWidth = true);
@@ -459,6 +463,10 @@ private:
 	Layer m_layers[MAX_LAYERS];
 	bool m_layerVisible;
 	bool m_isZonePrim;
+
+	// geometry data
+	VertexObject *m_vertexObject;
+	IndexObject *m_indexObject;
 };
 
 inline void ChunkPrim::setZoneRect(const Vector4 &rect)
@@ -470,10 +478,6 @@ inline Vector4 ChunkPrim::getZoneRect() const
 	return m_zoneRect;
 }
 
-//--------------------------------------------------------------------------
-// class GroupPrim
-//
-// this prim will not free grouped primitives
 //--------------------------------------------------------------------------
 
 class AX_API GroupPrim : public Primitive
@@ -496,10 +500,6 @@ private:
 	BoolSeq m_needFrees;
 };
 
-//--------------------------------------------------------------------------
-// class RefPrim
-//
-// this prim will not free refered primitive
 //--------------------------------------------------------------------------
 
 class AX_API RefPrim : public Primitive
@@ -527,13 +527,12 @@ private:
 	// override refered primitive's indexes
 	int m_numIndexes;
 	ushort_t *m_indexes;
+
+	IndexObject *m_indexObject;
 };
 
 //--------------------------------------------------------------------------
-// class GeoInstancing
-//
 // geometry instance primitive. this primitive will not free instanced primitive
-//--------------------------------------------------------------------------
 
 class AX_API InstancePrim : public Primitive
 {
@@ -565,32 +564,6 @@ private:
 	Param* m_params;
 	InstanceObject *m_instanceObject;
 };
-
-#if 0
-//--------------------------------------------------------------------------
-// class PrimitiveManager
-//--------------------------------------------------------------------------
-
-class AX_API PrimitiveManager
-{
-public:
-	PrimitiveManager();
-	virtual ~PrimitiveManager();
-
-	void hintUncache(Primitive *prim);
-
-protected:
-	bool isStatic(int id) { return(size_t(id) & FRAME_FLAG) == 0; }
-	bool isFrameHandle(int id) { return !isStatic(id); }
-
-protected:
-	enum {
-		FRAME_FLAG = 0x80000000,
-		INDEX_MASK = ~FRAME_FLAG,
-	};
-	std::list<int> m_waitUncache;
-};
-#endif
 
 AX_END_NAMESPACE
 
