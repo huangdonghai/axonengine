@@ -986,6 +986,10 @@ void RenderContext::cacheFrame(RenderFrame *queue)
 	for (int i = 0; i < queue->getSceneCount(); i++) {
 		RenderScene *scene = queue->getScene(i);
 		cacheScene(scene);
+
+		for (int j = 0; j < scene->numSubScenes; j++) {
+			cacheScene(scene->subScenes[j]);
+		}
 	}
 
 	g_bufferManager->endAlloc();

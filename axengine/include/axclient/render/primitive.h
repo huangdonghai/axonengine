@@ -22,6 +22,7 @@ class IndexObject;
 class AX_API Primitive
 {
 	friend class RenderContext;
+	friend class InstancePrim;
 
 public:
 	enum Type {

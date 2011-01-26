@@ -1819,10 +1819,13 @@ InstancePrim::InstancePrim(Hint hint) : Primitive(hint)
 	m_instanced = 0;
 	m_numInstances = 0;
 	m_params = 0;
+
+	m_instanceObject = new InstanceObject();
 }
 
 InstancePrim::~InstancePrim()
 {
+	SafeDelete(m_instanceObject);
 	SafeDeleteArray(m_params);
 }
 
@@ -1835,7 +1838,6 @@ void InstancePrim::init(Primitive *instanced, int numInstances)
 {
 	m_instanced = instanced;
 	m_isDirty = true;
-	setMaterial(instanced->getMaterial());
 
 	m_numInstances = numInstances;
 	m_params = new Param[numInstances];
@@ -1872,9 +1874,11 @@ const InstancePrim::Param *InstancePrim::getAllInstances() const
 	return m_params;
 }
 
-void InstancePrim::draw( Technique tech )
+void InstancePrim::draw(Technique tech)
 {
-
+	m_instanced->m_overloadInstanceObject = m_instanceObject;
+	m_instanced->draw(tech);
+	m_instanced->m_overloadInstanceObject = 0;
 }
 
 void InstancePrim::sync()

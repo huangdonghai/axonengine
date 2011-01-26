@@ -198,9 +198,6 @@ void RenderScene::finalProcess()
 
 void RenderScene::findInstance()
 {
-	// HACK
-	return;
-
 	if (r_geoInstancing.getInteger() < 2)
 		return;
 

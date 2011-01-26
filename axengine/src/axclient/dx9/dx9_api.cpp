@@ -543,7 +543,7 @@ static void dx9SetInstanceVertices(phandle_t vb, VertexType vt, int offset, phan
 	V(dx9_device->SetStreamSource(0, vb->castTo<IDirect3DVertexBuffer9 *>(), offset, vt.stride()));
 	V(dx9_device->SetStreamSourceFreq(0, D3DSTREAMSOURCE_INDEXEDDATA | incount));
 
-	V(dx9_device->SetStreamSource(1, inb->castTo<IDirect3DVertexBuffer9 *>(), inoffset, incount));
+	V(dx9_device->SetStreamSource(1, inb->castTo<IDirect3DVertexBuffer9 *>(), inoffset, 64));
 	V(dx9_device->SetStreamSourceFreq(1, D3DSTREAMSOURCE_INSTANCEDATA | 1ul));
 	V(dx9_device->SetVertexDeclaration(dx9_vertexDeclarationsInstanced[vt]));
 }

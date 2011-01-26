@@ -8,7 +8,8 @@ read the license and understand and accept it fully.
 */
 
 
-float3x4 VP_getModelMatrix(MeshVertex input) {
+float3x4 VP_getModelMatrix(MeshVertex input)
+{
 #if G_GEOMETRY_INSTANCING
 	return float3x4(input.matrixX, input.matrixY, input.matrixZ);
 #else
@@ -16,7 +17,8 @@ float3x4 VP_getModelMatrix(MeshVertex input) {
 #endif
 }
 
-float4 VP_getInstanceParam(MeshVertex input) {
+float4 VP_getInstanceParam(MeshVertex input)
+{
 #if G_GEOMETRY_INSTANCING
 	return input.userDefined;
 #else
