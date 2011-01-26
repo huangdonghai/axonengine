@@ -181,7 +181,7 @@ void RenderSystem::endFrame()
 	double frontEndStart = OsUtil::seconds();
 
 	int shaderdebug = r_shaderDebug.getInteger();
-	g_shaderMacro.setMacro(ShaderMacro::G_DEBUG, shaderdebug);
+	g_globalMacro.setMacro(GlobalMacro::G_DEBUG, shaderdebug);
 
 	int show_performer = r_showStat.getInteger();
 	bool show_memoryinfo = r_showMemoryInfo.getBool();

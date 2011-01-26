@@ -43,7 +43,7 @@ Gbuffer FP_gpass(VertexOut IN)
 {
 	Gbuffer OUT = (Gbuffer)0;
 	OUT.accum.xyz = IN.color;
-#if G_HAVE_DIFFUSE
+#if M_DIFFUSE
 	OUT.accum.xyz *= tex2D(g_diffuseMap, IN.streamTc.xy);
 #endif
 
@@ -56,7 +56,7 @@ half4 FP_main(VertexOut IN) : COLOR
 	half4 result;
 	result = IN.color;
 
-#if G_HAVE_DIFFUSE
+#if M_DIFFUSE
 	result *= tex2D(g_diffuseMap, IN.streamTc.xy);
 #endif
 

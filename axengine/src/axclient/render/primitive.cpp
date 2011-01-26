@@ -1387,7 +1387,7 @@ int ChunkPrim::getNumLayers() const
 	return m_numLayers;
 }
 
-void ChunkPrim::setLayers(int index, Texture *alpha, Material *detail, const Vector2 &scale, bool isVerticalProjection)
+void ChunkPrim::setLayers(int index, Texture *alpha, Material *detail, float scale, bool isVerticalProjection)
 {
 	if (index >= ChunkPrim::MAX_LAYERS) {
 		Debugf("MAX_LAYERS exceeded\n");
@@ -1419,15 +1419,6 @@ Material *ChunkPrim::getLayerDetail(int index) const
 	return m_layers[index].detailMat;
 }
 
-Vector2 ChunkPrim::getLayerScale(int index) const
-{
-	if (index >= ChunkPrim::MAX_LAYERS) {
-		return Vector2(1,1);
-	}
-
-	return m_layers[index].scale;
-}
-
 bool ChunkPrim::isLayerVerticalProjection(int index) const
 {
 	if (index >= ChunkPrim::MAX_LAYERS) {
@@ -1444,9 +1435,6 @@ void ChunkPrim::draw(Technique tech)
 	IndexObject *index = m_overloadIndexObject ? m_overloadIndexObject : m_indexObject;
 	Material *mat = m_overloadMaterial ? m_overloadMaterial : m_material;
 
-#if 0
-	g_renderContext->draw(vert, inst, index, mat, tech);
-#else
 	stat_numTerrainDrawElements.inc();
 
 	if (m_overloadMaterial) {
@@ -1454,7 +1442,6 @@ void ChunkPrim::draw(Technique tech)
 		return;
 	}
 
-	bool combine = false; // r_terrainLayerCombine.getBool();
 	bool drawlayer = true;
 
 	if (!r_detail.getBool() || !m_layerVisible) {
@@ -1470,14 +1457,9 @@ void ChunkPrim::draw(Technique tech)
 	if (tech != Technique::GeoFill)
 		drawlayer = false;
 
-	if (!drawlayer || !combine) {
-		g_renderContext->draw(vert, inst, index, mat, tech);
+	g_renderContext->draw(vert, inst, index, mat, tech);
 
-		if (!drawlayer) {
-			return;
-		}
-	}
-
+#if 0
 	// draw layer
 	for (int i = 0; i < m_numLayers; i++) {
 		stat_numTerrainLayeredDrawElements.inc();
@@ -1504,7 +1486,6 @@ void ChunkPrim::draw(Technique tech)
 		l.detailMat->addParameter("g_chunkRect", 4, m_chunkRect.c_ptr());
 		g_renderContext->draw(vert, inst, index, l.detailMat, Technique::Layer);
 	}
-
 #endif
 }
 
@@ -1527,6 +1508,26 @@ void ChunkPrim::sync()
 
 	m_material->setTexture(MaterialTextureId::TerrainColor, m_colorTexture->clone());
 	m_material->setTexture(MaterialTextureId::TerrainNormal, m_normalTexture->clone());
+
+	for (int i = 0; i < m_numLayers; i++) {
+		ChunkPrim::Layer &l = m_layers[i];
+
+		Texture *tex = l.detailMat->getTexture(MaterialTextureId::Diffuse);
+		if (tex) m_material->setTexture(MaterialTextureId::Detail + i, tex->clone());
+		else m_material->setTexture(MaterialTextureId::Detail + i, 0);
+
+		tex = l.detailMat->getTexture(MaterialTextureId::Normal);
+		if (tex) m_material->setTexture(MaterialTextureId::DetailNormal+i, tex->clone());
+		else m_material->setTexture(MaterialTextureId::DetailNormal+i, 0);
+
+		tex = l.alphaTex;
+		if (tex) m_material->setTexture(MaterialTextureId::LayerAlpha+i, tex->clone());
+		else m_material->setTexture(MaterialTextureId::LayerAlpha+i, 0);
+
+		m_material->setFeature(i, l.isVerticalProjection);
+
+		m_material->setDetailScale(i, l.scale);
+	}
 
 	m_material->clearParameters();
 	m_material->addParameter("g_zoneRect", 4, m_zoneRect.c_ptr());

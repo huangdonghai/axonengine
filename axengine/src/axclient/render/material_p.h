@@ -51,7 +51,7 @@ private:
 	Color3 m_diffuse, m_specular, m_emission;
 	float m_shiness;
 	float m_opacity;
-	float m_detailScale;
+	Vector4 m_detailScale;
 
 	bool m_depthWrite : 1;
 	bool m_depthTest : 1;

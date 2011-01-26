@@ -20,8 +20,10 @@ float Script : STANDARDSGLOBAL <
 	string TechniqueLayer = "layer";
 > = 0.8;
 
-#define S_VERTICAL_PROJECTION	G_FEATURE0
-#define S_FIRST_LAYER			G_FEATURE1
+#define S_VERTICAL_PROJECTION	M_FEATURE0
+#define S_VERTICAL_PROJECTION1	M_FEATURE1
+#define S_VERTICAL_PROJECTION2	M_FEATURE2
+#define S_VERTICAL_PROJECTION3	M_FEATURE3
 
 struct TerrainVertexIn {
 	float3 position		: POSITION;
@@ -101,7 +103,7 @@ Gbuffer FP_gpass(LayerVertexOut IN)
 	OUT.misc.w = g_matShiness;
 
 	half3 spec;
-#if G_HAVE_SPECULAR
+#if M_SPECULAR
 	spec = tex2D(g_specularMap, IN.streamTc.xy).xyz;
 #else
 	spec = OUT.albedo;
@@ -109,6 +111,8 @@ Gbuffer FP_gpass(LayerVertexOut IN)
 	OUT.albedo.w = Rgb2Lum(spec);
 
 	OUT.accum.xyz = OUT.normal.xyz;
+
+	for (int i = 0; i < M_NUM_LAYERS; i++) {}
 
 	return OUT;
 }
@@ -158,7 +162,7 @@ half4 FP_main(LayerVertexOut IN) : COLOR
 	lps.calcSpecular = false;
 #endif
 
-#if G_HAVE_SPECULAR
+#if M_SPECULAR
 	lps.Cs = tex2D(g_specularMap, IN.streamTc.xy).xyz;
 #else
 	lps.Cs = Dif2Spec(lps.Cd);
@@ -197,25 +201,25 @@ LayerVertexOut VP_layer(TerrainVertexIn IN)
 	return OUT;
 }
 
-half4 getSampler(sampler2D smpl, float3 worldpos, half3 normal)
+half4 getSampler(sampler2D smpl, float3 worldpos, half3 normal, int layer = 0)
 {
-#if !S_VERTICAL_PROJECTION
-	// horizon projection
-	float2 tc = worldpos.xy * g_detailScale;
-	half4 result = tex2D(smpl, tc);
-	return result;
-#else
-	float4 tc = worldpos.xzyz * g_detailScale.xyxy;
-	half4 xproj = tex2D(smpl, tc.xy);
-	half4 yproj = tex2D(smpl, tc.zw);
+	bool4 verticalProjection = {M_FEATURE0,M_FEATURE1,M_FEATURE2,M_FEATURE3};
 
-	half2 absnormal = abs(normal.xy);
-	half factor = absnormal.x / (absnormal.x + absnormal.y);
-//	factor = smoothstep(0, 1, factor);
+	if (!verticalProjection[layer]) {
+		// horizon projection
+		float2 tc = worldpos.xy * g_detailScale[layer];
+		half4 result = tex2D(smpl, tc);
+		return result;
+	} else {
+		float4 tc = worldpos.xzyz * g_detailScale[layer];
+		half4 xproj = tex2D(smpl, tc.xy);
+		half4 yproj = tex2D(smpl, tc.zw);
 
-	return lerp(xproj, yproj, factor);
+		half2 absnormal = abs(normal.xy);
+		half factor = absnormal.x / (absnormal.x + absnormal.y);
 
-#endif
+		return lerp(xproj, yproj, factor);
+	}
 }
 
 //------------------------------------------------------------------------------
@@ -225,67 +229,46 @@ Gbuffer FP_layer(LayerVertexOut IN)
 	Gbuffer OUT=(Gbuffer)0;
 
 	half3 N = GetNormal(g_terrainNormal, IN.streamTc.xy).rgb;
-//	return tex2D(g_terrainNormal, IN.streamTc.xy);
+	half3 basecolor = tex2D(g_terrainColor, IN.streamTc.xy).rgb;
+	half3 diffuse = basecolor;
+	half3 normal = N;
 
-	half4 basecolor = tex2D(g_terrainColor, IN.streamTc.xy);
-	half4 detail = getSampler(g_diffuseMap, IN.worldPos, N);
+	bool4 m_details = bool4(M_DETAIL, M_DETAIL1, M_DETAIL2, M_DETAIL3);
+	bool4 m_detailnormals = bool4(M_DETAIL_NORMAL, M_DETAIL_NORMAL1, M_DETAIL_NORMAL2, M_DETAIL_NORMAL3);
+	bool4 m_layeralpha = bool4(M_LAYERALPHA, M_LAYERALPHA1, M_LAYERALPHA2, M_LAYERALPHA3);
 
-#if G_HAVE_LAYERALPHA
-	half alpha = tex2D(g_layerAlpha, IN.streamTc.zw).a;
-#else
-	half alpha = 1;
+	sampler2D m_detailMaps[4] = {g_detailMap,g_detailMap1,g_detailMap2,g_detailMap3};
+	sampler2D m_detailNormalMaps[4] = {g_detailNormalMap,g_detailNormalMap1,g_detailNormalMap2,g_detailNormalMap3};
+	sampler2D m_layerMaps[4] = {g_layerAlpha, g_layerAlpha1, g_layerAlpha2, g_layerAlpha3};
+
+	UNROLL
+	for (int i = 0; i < M_NUM_LAYERS; i++) {
+		half alpha = 1;
+		if (m_layeralpha[i]) {
+			alpha = tex2D(m_layerMaps[i], IN.streamTc.zw).a;
+		}
+
+		if (m_details[i]) {
+			half3 detail = getSampler(m_detailMaps[i], IN.worldPos, N, i).rgb;
+			detail = basecolor.xyz + detail.xyz - 0.5;
+			diffuse = lerp(diffuse, detail, alpha);
+		}
+#if !NO_NORMALMAPPING
+		if (m_detailnormals[i]) {
+			half3 detailNormal = getSampler(m_detailNormalMaps[i], IN.worldPos, N, i).rgb * 2 - 1;
+			half3 T = half3(N.z, -N.y, -N.x);
+			half3 B = half3(-N.x, N.z, -N.y);
+			half3x3 axis = half3x3(T, B, N);
+			detailNormal = mul(axis, detailNormal);
+			normal = lerp(normal, detailNormal, alpha);
+		}
 #endif
-	float dist = IN.viewDir.w;
-//	alpha *= HardStep(256, 224, dist);
+	}
 
-	OUT.normal.xyz = N;
-	OUT.albedo.xyz = basecolor.xyz + detail.xyz - 0.5;
+	OUT.normal.xyz = normal * 0.5 + 0.5;
+	OUT.albedo.xyz = diffuse;
+	OUT.albedo.w = Rgb2Lum(diffuse);
 
-#if S_FIRST_LAYER
-	OUT.albedo.xyz = lerp(basecolor.xyz, OUT.albedo.xyz, alpha);
-#endif
-
-#if NO_NORMALMAPPING
-	OUT.normal.xyz = N;
-#else
-	half3 T = half3(N.z, -N.y, -N.x);
-	half3 B = half3(-N.x, N.z, -N.y);
-	half3x3 axis = half3x3(T, B, N);
-
-	half3 normal = getSampler(g_normalMap, IN.worldPos, N).rgb * 2 - 1;
-
-	OUT.normal.xyz = mul(normal, axis);
-#if S_FIRST_LAYER
-	OUT.normal.xyz = lerp(N, OUT.normal.xyz, alpha);
-//	normalize(lps.normal);
-#endif
-
-#endif // NO_NORMALMAPPING
-
-	OUT.normal.z = g_matShiness;
-	half3 spec;
-#if G_HAVE_SPECULAR
-	spec = getSampler(g_specularMap, IN.worldPos, N).xyz;
-#else
-	spec = OUT.albedo.xyz;
-#endif
-
-#if S_FIRST_LAYER
-	spec = lerp((half3)(Dif2Spec(basecolor.xyz)), spec, alpha);
-#endif
-	OUT.albedo.a = Rgb2Lum(spec);
-
-	OUT.normal.xyz = OUT.normal.xyz * 0.5 + 0.5;
-
-#if S_FIRST_LAYER
-	OUT.accum.a = 1;
-#else
-	OUT.accum.a = alpha;
-	OUT.normal.a = alpha;
-	OUT.albedo.a = alpha;
-#endif
-
-	OUT.accum.rgb = OUT.normal.rgb;
 	return OUT;
 }
 
@@ -298,7 +281,7 @@ Gbuffer FP_layer(LayerVertexOut IN)
 technique zpass {
 	pass p0 {
 		VERTEXPROGRAM = compile VP_2_0 VP_layer();
-		FRAGMENTPROGRAM = compile FP_2_0 FP_gpass();
+		FRAGMENTPROGRAM = compile FP_2_0 FP_layer();
 	}
 }
 

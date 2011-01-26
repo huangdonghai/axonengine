@@ -181,9 +181,9 @@ void D3D9Thread::runFrame(bool isInThread)
 void D3D9Thread::beginFrame()
 {
 	if (!r_specular.getBool()) {
-		g_shaderMacro.setMacro(ShaderMacro::G_DISABLE_SPECULAR);
+		g_globalMacro.setMacro(ShaderMacro::G_DISABLE_SPECULAR);
 	} else {
-		g_shaderMacro.resetMacro(ShaderMacro::G_DISABLE_SPECULAR);
+		g_globalMacro.resetMacro(ShaderMacro::G_DISABLE_SPECULAR);
 	}
 }
 
@@ -728,10 +728,10 @@ void D3D9Thread::drawScene_world(RenderScene *scene, const D3D9clearer &clearer)
 	// set exposure
 	float exposure = scene->exposure;
 	if (exposure == 0) {
-		g_shaderMacro.resetMacro(ShaderMacro::G_HDR);
+		g_globalMacro.resetMacro(ShaderMacro::G_HDR);
 		exposure = 1;
 	} else {
-		g_shaderMacro.setMacro(ShaderMacro::G_HDR);
+		g_globalMacro.setMacro(ShaderMacro::G_HDR);
 	}
 
 #if 0
@@ -750,10 +750,10 @@ void D3D9Thread::drawScene_world(RenderScene *scene, const D3D9clearer &clearer)
 
 	// set global fog
 	if (scene->globalFog && r_fog.getBool()) {
-		g_shaderMacro.setMacro(ShaderMacro::G_FOG);
+		g_globalMacro.setMacro(ShaderMacro::G_FOG);
 		AX_SU(g_fogParams, scene->globalFog->m_fogParams);
 	} else {
-		g_shaderMacro.resetMacro(ShaderMacro::G_FOG);
+		g_globalMacro.resetMacro(ShaderMacro::G_FOG);
 	}
 
 	if (scene->waterFog && r_fog.getBool()) {

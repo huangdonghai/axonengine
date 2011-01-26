@@ -81,7 +81,7 @@ public:
 	virtual ~GLshader();
 
 	// implement Shader
-	virtual bool doInit(const std::string &name, const ShaderMacro &macro = g_shaderMacro);
+	virtual bool doInit(const std::string &name, const ShaderMacro &macro = g_globalMacro);
 	virtual bool isDepthWrite() const;
 	virtual bool haveTextureTarget() const;
 	virtual int getNumSampler() const;
@@ -171,12 +171,12 @@ public:
 	GLshadermanager();
 	virtual ~GLshadermanager();
 
-	virtual Shader*findShader(const std::string &name, const ShaderMacro &macro = g_shaderMacro);
+	virtual Shader*findShader(const std::string &name, const ShaderMacro &macro = g_globalMacro);
 	virtual Shader *findShader(const FixedString &nameId, const ShaderMacro &macro);
 	virtual void saveShaderCache(const std::string &name);
 	virtual void applyShaderCache(const std::string &name);
 
-	GLshader *findShaderGL(const std::string &name, const ShaderMacro &macro = g_shaderMacro);
+	GLshader *findShaderGL(const std::string &name, const ShaderMacro &macro = g_globalMacro);
 
 private:
 	typedef Dict<std::string,Dict<ShaderMacro,GLshader*> > ShaderPool;

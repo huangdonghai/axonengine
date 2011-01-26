@@ -152,9 +152,9 @@ void RenderContext::issueFrame(RenderFrame *rq)
 	cacheFrame(rq);
 
 	if (!r_specular.getBool()) {
-		g_shaderMacro.setMacro(ShaderMacro::G_DISABLE_SPECULAR);
+		g_globalMacro.setMacro(GlobalMacro::G_DISABLE_SPECULAR);
 	} else {
-		g_shaderMacro.resetMacro(ShaderMacro::G_DISABLE_SPECULAR);
+		g_globalMacro.resetMacro(GlobalMacro::G_DISABLE_SPECULAR);
 	}
 
 	m_curWindow = rq->getTarget();
@@ -232,10 +232,10 @@ void RenderContext::drawScene_World(RenderScene *scene, const RenderClearer &cle
 
 	// set global fog
 	if (scene->globalFog && r_fog.getBool()) {
-		g_shaderMacro.setMacro(ShaderMacro::G_FOG);
+		g_globalMacro.setMacro(GlobalMacro::G_FOG);
 		AX_SU(g_fogParams, scene->globalFog->getFogParams());
 	} else {
-		g_shaderMacro.resetMacro(ShaderMacro::G_FOG);
+		g_globalMacro.resetMacro(GlobalMacro::G_FOG);
 	}
 
 	if (scene->waterFog && r_fog.getBool()) {
@@ -257,9 +257,9 @@ void RenderContext::drawScene_World(RenderScene *scene, const RenderClearer &cle
 			drawPass_ShadowGen(sub);
 		} else if (sub->sceneType == RenderScene::Reflection) {
 			BEGIN_PIX("ReflectionGen");
-			g_shaderMacro.setMacro(ShaderMacro::G_REFLECTION);
+			g_globalMacro.setMacro(GlobalMacro::G_REFLECTION);
 			//drawScene_WorldSub(sub);
-			g_shaderMacro.resetMacro(ShaderMacro::G_REFLECTION);
+			g_globalMacro.resetMacro(GlobalMacro::G_REFLECTION);
 			END_PIX();
 		} else if (sub->sceneType == RenderScene::RenderToTexture) {
 			BEGIN_PIX("RenderToTexture");
@@ -808,9 +808,7 @@ void RenderContext::drawUP( const void *vb, VertexType vt, int vertcount, const 
 	if (!mat->getShaderInfo()->m_haveTechnique[tech])
 		return;
 
-	ShaderMacro macro = g_shaderMacro;
-	const ShaderMacro &matmacro = mat->getShaderMacro();
-	macro.mergeFrom(&matmacro);
+	const MaterialMacro &macro = mat->getShaderMacro();
 	stat_numDrawElements.inc();
 
 	g_apiWrap->setVerticesUP(vb, vt, vertcount);
@@ -839,25 +837,22 @@ void RenderContext::draw(VertexObject *vert, InstanceObject *inst, IndexObject *
 	if (!mat->getShaderInfo()->m_haveTechnique[tech])
 		return;
 
-	ShaderMacro macro = g_shaderMacro;
-	const ShaderMacro &matmacro = mat->getShaderMacro();
-	macro.mergeFrom(&matmacro);
+	MaterialMacro macro = mat->getShaderMacro();
 
 	if (!inst) {
 		g_apiWrap->setVertices(vert->m_h, vert->m_vt, vert->m_offset);
-		macro.resetMacro(ShaderMacro::G_GEOMETRY_INSTANCING);
+		g_globalMacro.resetMacro(GlobalMacro::G_GEOMETRY_INSTANCING);
 	} else {
 		g_apiWrap->setVerticesInstanced(vert->m_h, vert->m_vt, vert->m_offset, inst->m_h, inst->m_offset, inst->m_count);
-		macro.setMacro(ShaderMacro::G_GEOMETRY_INSTANCING);
+		g_globalMacro.setMacro(GlobalMacro::G_GEOMETRY_INSTANCING);
 	}
 
-	if (!r_detail.getBool() && mat->haveDetail()) {
-		macro.resetMacro(ShaderMacro::G_HAVE_DETAIL);
-		macro.resetMacro(ShaderMacro::G_HAVE_DETAIL_NORMAL);
+	if (!r_detail.getBool()) {
+		// TODO
 	}
 
 	if (!r_bumpmap.getBool()) {
-		macro.resetMacro(ShaderMacro::G_HAVE_NORMAL);
+		macro.resetMacro(MaterialMacro::M_NORMAL);
 	}
 
 	stat_numDrawElements.inc();
@@ -902,12 +897,7 @@ void RenderContext::setMaterial(Material *mat)
 	AX_SU(g_matDiffuse, mat->getDiffuse());
 	AX_SU(g_matSpecular, mat->getSpecular());
 	AX_SU(g_matShiness, mat->getShiness());
-
-	if (mat->haveDetail()) {
-		float scale = mat->getDetailScale();
-		Vector2 scale2(scale, scale);
-		AX_SU(g_detailScale, scale2);
-	}
+	AX_SU(g_detailScale, mat->getDetailScale());
 
 	m_depthStencilDesc.depthWritable = mat->m_depthWrite;
 	m_depthStencilDesc.depthEnable = mat->m_depthTest;
@@ -942,7 +932,7 @@ void RenderContext::setMaterial(Material *mat)
 	g_apiWrap->setParameters(0, params);
 
 	// set material textures
-	g_apiWrap->setMaterialTexture(mat->getTextures());
+	g_apiWrap->setMaterialTexture(mat->getTextureParams());
 }
 
 

@@ -137,7 +137,7 @@ void GLgeometry::draw(Technique tech) {
 	bindVertexBuffer();
 
 	if (m_instanceParams) {
-		g_shaderMacro.setMacro(ShaderMacro::G_GEOMETRY_INSTANCING);
+		g_globalMacro.setMacro(ShaderMacro::G_GEOMETRY_INSTANCING);
 	}
 
 	if (m_overloadMaterial)
@@ -146,7 +146,7 @@ void GLgeometry::draw(Technique tech) {
 		GLrender::draw(m_material, tech, this);
 
 	if (m_instanceParams) {
-		g_shaderMacro.resetMacro(ShaderMacro::G_GEOMETRY_INSTANCING);
+		g_globalMacro.resetMacro(ShaderMacro::G_GEOMETRY_INSTANCING);
 	}
 }
 

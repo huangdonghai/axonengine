@@ -120,7 +120,7 @@ void DX9_Driver::initialize()
 	d3d9TargetManager = new D3D9TargetManager();
 	g_targetManager = d3d9TargetManager;
 #endif
-	g_shaderMacro.setMacro(ShaderMacro::G_D3D);
+	g_globalMacro.setMacro(GlobalMacro::G_D3D);
 	dx9_shaderManager = new DX9_ShaderManager;
 #if 0
 	g_shaderManager = d3d9ShaderManager;

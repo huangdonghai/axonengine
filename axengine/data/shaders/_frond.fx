@@ -133,7 +133,7 @@ half4 FP_main(VertexOut IN) : COLOR {
 	lps.calcSpecular = false;
 	lps.screenTc = IN.screenTc;
 
-#if G_HAVE_DIFFUSE
+#if M_DIFFUSE
 	half4 Cd = tex2D(g_diffuseMap, IN.streamTc.xy);
 	clip(Cd.a - 0.5);
 	lps.Cd = Cd.xyz;
@@ -155,7 +155,7 @@ half4 FP_main(VertexOut IN) : COLOR {
 	lps.normal = normalize(N);
 #endif
 
-#if G_HAVE_SPECULAR && !G_DISABLE_SPECULAR
+#if M_SPECULAR && !G_DISABLE_SPECULAR
 	lps.calcSpecular = true;
 	lps.viewDir = normalize(g_cameraPos - IN.worldPos);
 	lps.shiness = 20;

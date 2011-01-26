@@ -862,7 +862,7 @@ void MapChunk::updateLayers()
 			detaillayers[count].alphaTex = block->getTexture();
 		}
 		detaillayers[count].detailMat = detail;
-		detaillayers[count].scale = l->getDetailScale();
+		detaillayers[count].scale = l->getDetailScale().x;
 		detaillayers[count].isVerticalProjection = l->isVerticalProjection();
 
 		count++;

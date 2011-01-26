@@ -25,7 +25,7 @@ float Script : STANDARDSGLOBAL <
 	string TechniqueLayer = "";
 > = 0.8;
 
-#define F_TWOSIDES	G_FEATURE0
+#define F_TWOSIDES	M_FEATURE0
 
 float4 VP_main(float3 IN : POSITION) : POSITION {
 #if 0

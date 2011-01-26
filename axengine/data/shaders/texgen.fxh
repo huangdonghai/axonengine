@@ -19,7 +19,7 @@ float FOG_compute(float4 hpos) {
 
 float4 VP_computeStreamTc(MeshVertex a2v) {
 	float4 result;
-#if G_TEXANIM
+#if M_TEXANIM
 	result.xy = mul(g_baseTcMatrix, float4(a2v.streamTc.xy, 0, 1)).xy;
 	result.zw = a2v.streamTc.zw;
 #else
@@ -29,7 +29,7 @@ float4 VP_computeStreamTc(MeshVertex a2v) {
 }
 
 void VP_final(MeshVertex a2v, inout VertexOut v2f) {
-#if G_TEXANIM
+#if M_TEXANIM
 	v2f.streamTc.xy = mul(g_baseTcMatrix, float4(a2v.streamTc.xy, 0, 1)).xy;
 	v2f.streamTc.zw = a2v.streamTc.zw;
 #else

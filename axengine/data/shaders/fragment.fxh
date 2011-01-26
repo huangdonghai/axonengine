@@ -54,7 +54,7 @@ struct FragParams {
 };
 
 half4 FP_GetDiffuse(VertexOut vo) {
-#if !G_HAVE_DIFFUSE
+#if !M_DIFFUSE
 	return 1;
 #else
 	return tex2D(g_diffuseMap, vo.streamTc.xy);
@@ -66,13 +66,13 @@ half3 FP_GetNormal(float3 n, float3 t, float3 b, float2 tc) {
 	return normalize(n);
 #else
 	half3x3 axis = half3x3(t, b, n);
-#if G_HAVE_NORMAL
+#if M_NORMAL
 	half3 N = GetNormal(g_normalMap, tc).rgb;
 #else
 	half3 N = half3(0,0,1);
 #endif
-#if G_HAVE_DETAIL_NORMAL
-	N.rgb += GetNormal(g_detailNormalMap, tc * g_detailScale).rgb;
+#if M_DETAIL_NORMAL
+	N.rgb += GetNormal(g_detailNormalMap, tc * g_detailScale.x).rgb;
 #endif
 	N.rgb = normalize(mul(N.rgb, axis));
 	return N;

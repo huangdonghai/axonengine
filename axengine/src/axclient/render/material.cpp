@@ -15,20 +15,17 @@ Material::Material(const std::string &name)
 {
 	size_t s = sizeof(Material);
 	m_isTexAnim = false;
-	m_shaderMacroNeedRegen = true;
+	m_macroNeedRegen = true;
 	m_diffuse.set(1,1,1);
 	m_specular.set(1,1,1);
 	m_shiness = 10;
-	m_detailScale = 20;
-	m_haveDetail = false;
+	m_detailScale.set(20,20,20,20);
 
 	m_shaderInfo = 0;
 
 	TypeZeroArray(m_features);
 
 	m_name = normalizeKey(name);
-
-	m_shaderParams = 0;
 
 	TypeZeroArray(m_textures);
 
@@ -50,7 +47,7 @@ Material::Material(const std::string &name)
 
 	memcpy(m_features, m_decl->getFeatures(), sizeof(m_features));
 
-	m_shaderMacroNeedRegen = true;
+	m_macroNeedRegen = true;
 
 	// copy matfile's properties
 	m_diffuse = m_decl->m_diffuse;
@@ -72,8 +69,6 @@ Material::Material(const std::string &name)
 
 Material::~Material()
 {
-	SafeDelete(m_shaderParams);
-
 	for (int i = 0; i < ArraySize(m_textures); i++) {
 		SafeDelete(m_textures[i]);
 	}
@@ -105,8 +100,7 @@ void Material::setMacroParameter(const String &name, int value) {
 
 void Material::clearParameters()
 {
-	if (m_shaderParams)
-		m_shaderParams->clear();
+	m_shaderParams.clear();
 }
 
 
@@ -120,59 +114,97 @@ void Material::addParameter(const FixedString &name, int count, const float *ptr
 		return;
 	}
 
-	if (!m_shaderParams)
-		m_shaderParams = new FastParams();
-
-	m_shaderParams->addParam(name, count, ptr);
+	m_shaderParams.addParam(name, count, ptr);
 }
 
 const FastParams *Material::getParameters() const
 {
-	return m_shaderParams;
+	return &m_shaderParams;
 }
 
 
-const ShaderMacro &Material::getShaderMacro()
+const MaterialMacro &Material::getShaderMacro()
 {
-	if (m_shaderMacroNeedRegen  || r_forceUpdateMaterialMacro.getBool()) {
-		m_shaderMacroNeedRegen = false;
-		m_haveDetail = false;
+	struct MapMacro {
+		MaterialTextureId id;
+		int macro;
+		int layers;
+	};
+
+	static MapMacro mapmacros[] = {
+		MaterialTextureId::Diffuse, MaterialMacro::M_DIFFUSE, 0,
+		MaterialTextureId::Normal, MaterialMacro::M_NORMAL, 0,
+		MaterialTextureId::Specular, MaterialMacro::M_SPECULAR, 0,
+		MaterialTextureId::Emission, MaterialMacro::M_EMISSION, 0,
+
+		MaterialTextureId::Detail, MaterialMacro::M_DETAIL, 1,
+		MaterialTextureId::DetailNormal, MaterialMacro::M_DETAIL_NORMAL, 1,
+		MaterialTextureId::LayerAlpha, MaterialMacro::M_LAYERALPHA, 1,
+
+		MaterialTextureId::Detail1, MaterialMacro::M_DETAIL1, 2,
+		MaterialTextureId::DetailNormal1, MaterialMacro::M_DETAIL_NORMAL1, 2,
+		MaterialTextureId::LayerAlpha1, MaterialMacro::M_LAYERALPHA1, 2,
+
+		MaterialTextureId::Detail2, MaterialMacro::M_DETAIL2, 3,
+		MaterialTextureId::DetailNormal2, MaterialMacro::M_DETAIL_NORMAL2, 3,
+		MaterialTextureId::LayerAlpha2, MaterialMacro::M_LAYERALPHA2, 3,
+
+		MaterialTextureId::Detail3, MaterialMacro::M_DETAIL3, 4,
+		MaterialTextureId::DetailNormal3, MaterialMacro::M_DETAIL_NORMAL3, 4,
+		MaterialTextureId::LayerAlpha3, MaterialMacro::M_LAYERALPHA3, 4,
+	};
+
+	if (m_macroNeedRegen || r_forceUpdateMaterialMacro.getBool()) {
+		m_macroNeedRegen = false;
+		int numDetailLayers = 0;
 
 		m_shaderMacro.clear();
-
+#if 0
 		if (m_textures[MaterialTextureId::Diffuse])
-			m_shaderMacro.setMacro(ShaderMacro::G_HAVE_DIFFUSE);
+			m_shaderMacro.setMacro(MaterialMacro::M_DIFFUSE);
 
 		if (m_textures[MaterialTextureId::Normal])
-			m_shaderMacro.setMacro(ShaderMacro::G_HAVE_NORMAL);
+			m_shaderMacro.setMacro(MaterialMacro::M_NORMAL);
 
 		if (m_textures[MaterialTextureId::Specular])
-			m_shaderMacro.setMacro(ShaderMacro::G_HAVE_SPECULAR);
+			m_shaderMacro.setMacro(MaterialMacro::M_SPECULAR);
+
+		if (m_textures[MaterialTextureId::Emission])
+			m_shaderMacro.setMacro(MaterialMacro::M_EMISSION);
 
 		if (m_textures[MaterialTextureId::Detail]) {
-			m_shaderMacro.setMacro(ShaderMacro::G_HAVE_DETAIL);
-			m_haveDetail = true;
+			m_shaderMacro.setMacro(MaterialMacro::M_DETAIL);
 		}
 
 		if (m_textures[MaterialTextureId::DetailNormal]) {
-			m_shaderMacro.setMacro(ShaderMacro::G_HAVE_DETAIL_NORMAL);
-			m_haveDetail = true;
+			m_shaderMacro.setMacro(MaterialMacro::M_DETAIL_NORMAL);
 		}
-
-		if (m_textures[MaterialTextureId::Emission])
-			m_shaderMacro.setMacro(ShaderMacro::G_HAVE_EMISSION);
 
 		if (m_textures[MaterialTextureId::LayerAlpha])
-			m_shaderMacro.setMacro(ShaderMacro::G_HAVE_LAYERALPHA);
-
-		if (m_isTexAnim) {
-			m_shaderMacro.setMacro(ShaderMacro::G_TEXANIM);
+			m_shaderMacro.setMacro(MaterialMacro::M_LAYERALPHA);
+#else
+		for (int i = 0; i < ArraySize(mapmacros); i++) {
+			if (m_textures[mapmacros[i].id]) {
+				m_shaderMacro.setMacro(mapmacros[i].macro);
+				numDetailLayers = std::max(numDetailLayers, mapmacros[i].layers);
+			}
 		}
+#endif
+		m_shaderMacro.setMacro(MaterialMacro::M_NUM_LAYERS, numDetailLayers);
+
+		if (m_isTexAnim) m_shaderMacro.setMacro(MaterialMacro::M_TEXANIM);
 
 		for (int i = 0; i < MAX_FEATURES; i++) {
 			if (m_features[i]) {
-				m_shaderMacro.setMacro(ShaderMacro::Flag(ShaderMacro::G_FEATURE0 + i));
+				m_shaderMacro.setMacro(MaterialMacro::Flag(MaterialMacro::M_FEATURE0 + i));
 			}
+		}
+
+		m_fastSamplerParams.clear();
+		for (int i = 0; i < MaterialTextureId::MaxType; i++) {
+			Texture *tex = m_textures[i];
+			if (!tex) continue;
+			m_fastSamplerParams.addSampler(i, tex->getPHandle(), tex->getSamplerState());
 		}
 	}
 
@@ -182,7 +214,7 @@ const ShaderMacro &Material::getShaderMacro()
 
 void Material::setTexMatrix(const Matrix4 &matrix)
 {
-	m_shaderMacroNeedRegen = true;
+	m_macroNeedRegen = true;
 	m_isTexAnim = true;
 	m_texMatrix = matrix;
 }
@@ -223,7 +255,7 @@ void Material::setTextureSet( const std::string &texname )
 		m_textures[MaterialTextureId::Emission] = new Texture(texname + "_g");
 	}
 
-	m_shaderMacroNeedRegen = true;
+	m_macroNeedRegen = true;
 }
 
 std::string Material::normalizeKey(const std::string &name)

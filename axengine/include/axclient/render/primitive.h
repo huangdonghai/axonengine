@@ -392,7 +392,7 @@ public:
 	struct Layer {
 		Texture *alphaTex;
 		Material *detailMat;
-		Vector2 scale;
+		float scale;
 		bool isVerticalProjection;
 	};
 
@@ -429,10 +429,9 @@ public:
 	Vector4 getChunkRect() const;
 	void setNumLayers(int n);
 	int getNumLayers() const;
-	void setLayers(int index, Texture *alpha, Material *detail, const Vector2 &scale, bool isVerticalProjection = false);
+	void setLayers(int index, Texture *alpha, Material *detail, float scale, bool isVerticalProjection = false);
 	Texture *getLayerAlpha(int index) const;
 	Material *getLayerDetail(int index) const;
-	Vector2 getLayerScale(int index) const;
 	void setLayerVisible(bool visible) { m_layerVisible = visible; m_isDirty = true; }
 	bool getLayerVisible() const { return m_layerVisible; }
 	bool isLayerVerticalProjection(int index) const;

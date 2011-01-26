@@ -47,7 +47,7 @@ void GLrender::draw(Material *mat, Technique tech, GLgeometry *prim)
 
 	setMaterialParameter(mat);
 
-	ShaderMacro macro = g_shaderMacro;
+	ShaderMacro macro = g_globalMacro;
 
 	// bind sample
 	GLtexture *diffuse = (GLtexture*)(mat->getTexture(MaterialTextureId::Diffuse));
@@ -82,9 +82,9 @@ void GLrender::draw(Material *mat, Technique tech, GLgeometry *prim)
 #if 1
 	AX_SU(g_lightMap,  prim->m_lightmap);
 	if (prim->m_lightmap && r_lightmap.getBool()) {
-		macro.setMacro(ShaderMacro::G_HAVE_LIGHTMAP);
+		macro.setMacro(ShaderMacro::M_LIGHTMAP);
 	} else {
-		macro.resetMacro(ShaderMacro::G_HAVE_LIGHTMAP);
+		macro.resetMacro(ShaderMacro::M_LIGHTMAP);
 	}
 #endif
 	// set material parameter
@@ -508,7 +508,7 @@ void GLfontrender::initialize() {
 #if 0
 	m_shader = (GLshader*)FindAsset_<Shader>("font");
 #else
-	m_shader = glShaderManager->findShaderGL("font", g_shaderMacro);
+	m_shader = glShaderManager->findShaderGL("font", g_globalMacro);
 #endif
 	m_posOffset = (float)(Font::ATLAS_PAD) / Font::TEXTURE_SIZE;
 #if 0

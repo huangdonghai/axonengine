@@ -476,7 +476,7 @@ namespace { namespace Internal {
 				if (pair.first == "ds" || pair.first == "detailscale") {
 					float dt = atof(pair.second.c_str());
 
-					mat->setDetailScale(dt);
+					mat->setDetailScale(0, dt);
 				}
 			}
 

@@ -17,7 +17,7 @@
 AX_BEGIN_NAMESPACE
 
 extern RenderFrame *g_renderFrame;
-extern ShaderMacro g_shaderMacro;
+extern GlobalMacro g_globalMacro;
 extern ConstBuffers g_constBuffers;
 extern IRenderDriver *g_renderDriver;
 

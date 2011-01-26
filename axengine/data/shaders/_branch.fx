@@ -119,7 +119,7 @@ half4 FP_main(VertexOut IN) : COLOR {
 	lps.calcSpecular = false;
 	lps.screenTc = IN.screenTc;
 
-#if G_HAVE_DIFFUSE
+#if M_DIFFUSE
 	lps.Cd = tex2D(g_diffuseMap, IN.streamTc.xy).xyz;
 #else
 	lps.Cd = half3(1, 1, 1);
@@ -148,7 +148,7 @@ half4 FP_main(VertexOut IN) : COLOR {
 	lps.calcSpecular = false;
 #endif
 
-#if G_HAVE_SPECULAR
+#if M_SPECULAR
 	lps.Cs = tex2D(g_specularMap, IN.streamTc.xy).xyz;
 #else
 	lps.Cs = Dif2Spec(lps.Cd);

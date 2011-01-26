@@ -54,7 +54,7 @@ float4 FP_main(VertexOut IN) : COLOR0 {
 technique main {
     pass p0 <
 		string state = "blend=blend;depthwrites=true"
-#if G_FEATURE0
+#if M_FEATURE0
 		"cull=none;"
 #else
 		"cull=enable;"

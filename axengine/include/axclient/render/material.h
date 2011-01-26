@@ -63,11 +63,14 @@ struct GlobalTextureId {
 struct MaterialTextureId {
 	enum Type {
 		// material sampler
-		Diffuse, Normal, Specular, Detail, DetailNormal, Opacit, Emission,
-		Displacement, Env,
+		Diffuse, Normal, Specular, Opacit, Emission, Displacement, Env,
 
 		// terrain sampler
-		TerrainColor, TerrainNormal, LayerAlpha,
+		TerrainColor, TerrainNormal,
+
+		Detail, Detail1, Detail2, Detail3, 
+		DetailNormal, DetailNormal1, DetailNormal2, DetailNormal3, 
+		LayerAlpha, LayerAlpha1, LayerAlpha2, LayerAlpha3,
 
 		// other
 		Reflection, LightMap,
@@ -110,6 +113,33 @@ public:
 	int m_numItems;
 	Item m_items[NUM_ITEMS];
 	float m_floatData[NUM_FLOATDATA];
+};
+
+class FastTextureParams
+{
+public:
+	FastTextureParams() { m_numItems = 0; }
+	~FastTextureParams() {}
+
+	void clear() { m_numItems = 0; }
+	void addSampler(MaterialTextureId id, phandle_t handle, SamplerDesc state)
+	{
+		AX_ASSURE(m_numItems < NUM_ITEMS);
+		Item &item = m_items[m_numItems];
+		item.id = id;
+		item.handle = handle;
+		item.samplerState = state;
+		m_numItems++;
+	}
+public:
+	enum { NUM_ITEMS = 16 };
+	struct Item {
+		MaterialTextureId id;
+		phandle_t handle;
+		SamplerDesc samplerState;
+	};
+	int m_numItems;
+	Item m_items[NUM_ITEMS];
 };
 
 class MaterialDecl;
@@ -174,9 +204,9 @@ public:
 	void setDiffuse(const Color3 &v);
 	void setSpecular(const Color3 &v);
 	void setShiness(float shiness) { m_shiness = shiness; }
-	void setDetailScale(float scale) { m_detailScale = scale; }
-	float getDetailScale() const { return m_detailScale; }
-	bool haveDetail() const { return m_haveDetail; }
+	void setDetailScale(int index, float value) { m_detailScale[index] = value; }
+	void setDetailScale(Vector4 scale) { m_detailScale = scale; }
+	Vector4 getDetailScale() const { return m_detailScale; }
 
 	Color3 getDiffuse() const;
 	Color3 getSpecular() const;
@@ -193,7 +223,7 @@ public:
 	// texture setting and getting
 	Texture *getTexture(int sample) const;
 	void setTexture(int sampler, Texture *tex);
-	Texture * const * getTextures() const { return m_textures; }
+	const FastTextureParams *getTextureParams() const { return &m_fastSamplerParams; }
 
 	// parameter setting and getting
 	void clearParameters();
@@ -201,7 +231,7 @@ public:
 	const FastParams *getParameters() const;
 
 	// shader macro
-	const ShaderMacro &getShaderMacro();
+	const MaterialMacro &getShaderMacro();
 
 	void setTexMatrix(const Matrix4 &matrix);
 	bool isTexAnim() const { return m_isTexAnim; }
@@ -214,19 +244,19 @@ private:
 	MaterialDecl *m_decl;
 	SortHint m_sortHint;
 
-	ShaderMacro m_shaderMacro;
+	MaterialMacro m_shaderMacro;
 
 	Color3 m_diffuse;
 	Color3 m_specular;
 	Color3 m_emission;
 	float m_shiness;
-	float m_detailScale;
+	Vector4 m_detailScale;
 
 	const ShaderInfo *m_shaderInfo;
 	FixedString m_shaderName;
 	Texture *m_textures[MaterialTextureId::MaxType];
-	FastParams *m_shaderParams;
-	ConstBuffer *m_localUniforms;
+	FastParams m_shaderParams;
+	FastTextureParams m_fastSamplerParams;
 
 	// tex anim etc...
 	Matrix4 m_texMatrix;
@@ -234,8 +264,7 @@ private:
 	bool m_features[MAX_FEATURES];
 
 	bool m_isTexAnim : 1;
-	bool m_shaderMacroNeedRegen : 1;
-	bool m_haveDetail : 1;
+	bool m_macroNeedRegen : 1;
 
 	// render state
 	bool m_depthWrite : 1;
@@ -275,7 +304,7 @@ inline void Material::setFeature(int index, bool enabled)
 {
 	AX_ASSERT(index >= 0 && index < MAX_FEATURES);
 	if (m_features[index] != enabled) {
-		m_shaderMacroNeedRegen = true;
+		m_macroNeedRegen = true;
 		m_features[index] = enabled;
 	}
 }
@@ -288,7 +317,7 @@ inline bool Material::isFeatureEnabled(int index) const
 
 inline void Material::clearFeatures()
 {
-	m_shaderMacroNeedRegen = true;
+	m_macroNeedRegen = true;
 	TypeZeroArray(m_features);
 }
 
@@ -303,7 +332,7 @@ inline void Material::setTexture(int sampler, Texture *tex)
 	if (m_textures[sampler] == tex)
 		return;
 
-	m_shaderMacroNeedRegen = true;
+	m_macroNeedRegen = true;
 	AX_ASSERT(sampler >= 0 && sampler < MaterialTextureId::MaxType);
 	SafeDelete(m_textures[sampler]);
 	m_textures[sampler] = tex;

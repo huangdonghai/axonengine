@@ -150,36 +150,48 @@ AX_SAMPLER_UNIFORMS
 // G_D3D
 // G_SHADER_QUALITY
 #define G_GEOMETRY_INSTANCING	0
-#define G_HAVE_DIFFUSE	1
-#define G_HAVE_NORMAL	1
-#define G_HAVE_SPECULAR	1
-#define G_HAVE_ENVMAP	1
-#define G_HAVE_DETAIL	1
-#define G_HAVE_EMISSION	1
-// G_HAVE_SSS
-// G_HAVE_OPACIT
-// G_HAVE_SELFILLUM
-// G_HAVE_DISPLACEMENT
-// G_HAVE_CUSTOM1
-// G_HAVE_CUSTOM2
 #define G_REFLECTION 0
-#define G_HAVE_LAYERALPHA	1
-#define G_HAVE_LIGHTMAP	1
 #define G_DISABLE_SPECULAR 0
 #define G_FOG			1
-#define G_TEXANIM	0
 #define G_MAIN_TEXGEN TexGen_vertex
-#define G_FEATURE0		1
-#define G_FEATURE1		1
-#define G_FEATURE2		1
-#define G_FEATURE3		1
-#define G_FEATURE4		0
-#define G_FEATURE5		0
-#define G_FEATURE6		0
-#define G_FEATURE7		0
+
+#define M_NUM_LAYERS	4
+#define M_DIFFUSE		1
+#define M_NORMAL		1
+#define M_SPECULAR		1
+#define M_ENVMAP		1
+#define M_EMISSION		1
+#define M_DETAIL		1
+#define M_DETAIL_NORMAL	1
+#define M_LAYERALPHA	1
+#define M_DETAIL1		1
+#define M_DETAIL_NORMAL1	1
+#define M_LAYERALPHA1	1
+#define M_DETAIL2		1
+#define M_DETAIL_NORMAL2	1
+#define M_LAYERALPHA2	1
+#define M_DETAIL3		1
+#define M_DETAIL_NORMAL3	1
+#define M_LAYERALPHA3	1
+// M_SSS
+// M_OPACIT
+// M_SELFILLUM
+// M_DISPLACEMENT
+// M_CUSTOM1
+// M_CUSTOM2
+#define M_LIGHTMAP	1
+#define M_TEXANIM	0
+#define M_FEATURE0		1
+#define M_FEATURE1		1
+#define M_FEATURE2		1
+#define M_FEATURE3		1
+#define M_FEATURE4		0
+#define M_FEATURE5		0
+#define M_FEATURE6		0
+#define M_FEATURE7		0
 #endif
 
-#if (!G_HAVE_NORMAL && !G_HAVE_DETAIL_NORMAL)
+#if (!M_NORMAL && !M_DETAIL_NORMAL)
 #	define NO_NORMALMAPPING	1
 #else
 #	define NO_NORMALMAPPING	0

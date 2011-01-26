@@ -98,7 +98,6 @@ private:
 	Technique m_curTechnique;
 	RenderTargetSet m_targetSet;
 
-	ShaderMacro m_shaderMacro;
 	bool m_forceWireframe;
 
 	DepthStencilDesc m_depthStencilDesc;

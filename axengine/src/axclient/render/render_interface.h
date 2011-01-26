@@ -34,7 +34,7 @@ public:
 	static void (*setViewport)(const Rect &rect, const Vector2 & depthRange);
 	static void (*setScissorRect)(const Rect &scissorRect);
 
-	static void (*setShader)(const FixedString &name, const ShaderMacro &sm, Technique tech);
+	static void (*setShader)(const FixedString &name, const GlobalMacro &gm, const MaterialMacro &mm, Technique tech);
 	static void (*setConstBuffer)(ConstBuffers::Type type, int size, const void *data);
 	static void (*setParameters)(const FastParams *params1, const FastParams *params2);
 
@@ -46,7 +46,7 @@ public:
 	static void (*setIndicesUP)(const void *ib, ElementType et, int indicescount);
 
 	static void (*setGlobalTexture)(GlobalTextureId id, phandle_t h, const SamplerDesc &samplerState);
-	static void (*setMaterialTexture)(phandle_t texs[], SamplerDesc states[]);
+	static void (*setMaterialTexture)(const FastTextureParams *textures);
 
 	static void (*setRenderState)(const DepthStencilDesc &dsd, const RasterizerDesc &rd, const BlendDesc &bd);
 
@@ -107,12 +107,12 @@ public:
 	void setViewport(const Rect &rect, const Vector2 & depthRange);
 	void setScissorRect(const Rect &scissorRect);
 
-	void setShader(const FixedString & name, const ShaderMacro &sm, Technique tech);
+	void setShader(const FixedString & name, const MaterialMacro &mm, Technique tech);
 	void setConstBuffer(ConstBuffers::Type type, int size, const void *data);
 	void setParameters(const FastParams *params1, const FastParams *param2);
 
 	void setGlobalTexture(GlobalTextureId gt, Texture *tex);
-	void setMaterialTexture(Texture * const tex[]);
+	void setMaterialTexture(const FastTextureParams *textures);
 
 	void setVertices(phandle_t vb, VertexType vt, int offset);
 	void setVerticesInstanced(phandle_t vb, VertexType vt, int offset, phandle_t inb, int inoffset, int incount);

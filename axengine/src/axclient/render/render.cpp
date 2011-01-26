@@ -8,7 +8,7 @@ FontPtr g_miniFont;
 
 RenderDriverInfo g_renderDriverInfo;
 RenderFrame *g_renderFrame;
-ShaderMacro g_shaderMacro;
+GlobalMacro g_globalMacro;
 ConstBuffers g_constBuffers;
 IRenderDriver *g_renderDriver;
 

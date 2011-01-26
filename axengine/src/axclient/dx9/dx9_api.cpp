@@ -6,8 +6,7 @@ FastParams s_curParams1;
 FastParams s_curParams2;
 phandle_t s_curGlobalTextures[GlobalTextureId::MaxType];
 SamplerDesc s_curGlobalTextureSamplerDescs[GlobalTextureId::MaxType];
-phandle_t s_curMaterialTextures[MaterialTextureId::MaxType];
-SamplerDesc s_curMaterialTextureSamplerDescs[MaterialTextureId::MaxType];
+FastTextureParams s_curMaterialTextures;
 
 static DX9_Shader *s_curShader;
 static Technique s_curTechnique;
@@ -497,9 +496,9 @@ static void dx9SetScissorRect(const Rect &rect)
 }
 
 
-static void dx9SetShader(const FixedString &name, const ShaderMacro &sm, Technique tech)
+static void dx9SetShader(const FixedString &name, const GlobalMacro &gm, const MaterialMacro &mm, Technique tech)
 {
-	s_curShader = dx9_shaderManager->findShader(name, sm);
+	s_curShader = dx9_shaderManager->findShader(name, gm, mm);
 	s_curTechnique = tech;
 }
 
@@ -584,10 +583,9 @@ static void dx9SetGlobalTexture(GlobalTextureId id, phandle_t h, const SamplerDe
 	s_curGlobalTextureSamplerDescs[id] = desc;
 }
 
-static void dx9SetMaterialTexture(phandle_t texs[], SamplerDesc descs[])
+static void dx9SetMaterialTexture(const FastTextureParams *textures)
 {
-	::memcpy(s_curMaterialTextures, texs, sizeof(phandle_t) * MaterialTextureId::MaxType);
-	::memcpy(s_curMaterialTextureSamplerDescs, descs, sizeof(SamplerDesc) * MaterialTextureId::MaxType);
+	s_curMaterialTextures = *textures;
 }
 
 static void dx9SetRenderState(const DepthStencilDesc &dsd, const RasterizerDesc &rd, const BlendDesc &bd)

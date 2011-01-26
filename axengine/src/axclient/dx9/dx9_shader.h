@@ -187,7 +187,7 @@ public:
 	~DX9_Shader();
 
 	// implement Shader
-	bool init(const FixedString &name, const ShaderMacro &macro = g_shaderMacro);
+	bool init(const FixedString &name, const GlobalMacro &gm, const MaterialMacro &mm);
 	bool haveTechnique(Technique tech) const;
 	const ShaderInfo *getShaderInfo() const { return 0; }
 
@@ -254,7 +254,7 @@ public:
 	DX9_ShaderManager();
 	~DX9_ShaderManager();
 
-	DX9_Shader *findShader(const FixedString &nameId, const ShaderMacro &macro);
+	DX9_Shader *findShader(const FixedString &nameId, const GlobalMacro &gm, const MaterialMacro &mm);
 	void saveShaderCache(const std::string &name);
 	void applyShaderCache(const std::string &name);
 
@@ -265,7 +265,14 @@ protected:
 	void addShaderInfo(const FixedString &key, ShaderInfo *shaderInfo);
 
 private:
-	typedef Dict<FixedString,Dict<ShaderMacro,DX9_Shader*> > ShaderDict;
+	struct ShaderKey {
+		int nameId;
+		int gm;
+		int mm;
+
+		operator size_t() const { size_t result = nameId; hash_combine(result, gm); hash_combine(result, mm); return result; }
+	};
+	typedef Dict<ShaderKey, DX9_Shader*> ShaderDict;
 	ShaderDict m_shaders;
 	DX9_Shader *m_defaulted;
 	ShaderInfoDict m_shaderInfoDict;

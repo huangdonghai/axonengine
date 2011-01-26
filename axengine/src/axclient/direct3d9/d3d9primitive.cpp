@@ -124,7 +124,7 @@ void D3D9geometry::draw(Technique tech)
 	bindVertexBuffer();
 
 	if (m_instanceBuffer) {
-		g_shaderMacro.setMacro(ShaderMacro::G_GEOMETRY_INSTANCING);
+		g_globalMacro.setMacro(ShaderMacro::G_GEOMETRY_INSTANCING);
 	}
 
 	if (m_overloadMaterial)
@@ -133,7 +133,7 @@ void D3D9geometry::draw(Technique tech)
 		D3D9Draw::draw(m_material, tech, this);
 
 	if (m_instanceBuffer) {
-		g_shaderMacro.resetMacro(ShaderMacro::G_GEOMETRY_INSTANCING);
+		g_globalMacro.resetMacro(ShaderMacro::G_GEOMETRY_INSTANCING);
 	}
 
 	unbindVertexBuffer();

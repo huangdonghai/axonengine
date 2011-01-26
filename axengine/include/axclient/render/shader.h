@@ -69,8 +69,8 @@ private:
 	};
 };
 #endif
-class ConstBuffers;
 
+class ConstBuffers;
 class ConstBuffer
 {
 public:
@@ -280,6 +280,62 @@ struct ShaderQuality {
 class ShaderMacro
 {
 public:
+	enum Type {
+		kGlobalMacro, kMaterialMacro
+	};
+
+#if 0
+	enum Flag {
+#define AX_DECL_MACRO(m, s) m, 
+		AX_SHADERMACRO_DEFS
+#undef AX_DECL_MACRO
+
+		NUM_FLAGS,
+	};
+#endif
+	enum { VERSION = SHADER::SHADERMACRO_VERSION };
+
+	ShaderMacro(Type type);
+	ShaderMacro(const ShaderMacro &rhs);
+	~ShaderMacro();
+
+	bool isGlobal() const { return m_data >= 0; }
+
+	void clear();
+
+	void setMacro(int f, int value);
+	void setMacro(int f);
+	int getMacro(int f) const;
+	void resetMacro(int f);
+	bool isSet(int f) const;
+
+	StringSeq getCgDefine() const;
+	StringPairSeq getDefines() const;
+
+	// for hash_map use
+	int id() const { return m_data; }
+	size_t hash() const;
+	bool operator==(const ShaderMacro &rhs) const;
+
+	std::string toString() const;
+	void fromString(const std::string &str);
+
+	const char *getMacroName(int f) const;
+
+protected:
+	class ShaderMacroDef;
+	const ShaderMacroDef *def() const;
+
+private:
+	static ShaderMacroDef *ms_globalDefs;
+	static ShaderMacroDef *ms_materialDefs;
+	enum { TYPEBIT = 0x80000000, DATABITS = 0x7fffffff };
+	int m_data;
+};
+
+class GlobalMacro : public ShaderMacro
+{
+public:
 	enum Flag {
 #define AX_DECL_MACRO(m, s) m, 
 		AX_SHADERMACRO_DEFS
@@ -288,40 +344,21 @@ public:
 		NUM_FLAGS,
 	};
 
-	enum { VERSION = SHADER::SHADERMACRO_VERSION };
+	GlobalMacro() : ShaderMacro(kGlobalMacro) {}
+};
 
-	ShaderMacro();
-	ShaderMacro(const ShaderMacro &rhs);
-	~ShaderMacro();
+class MaterialMacro : public ShaderMacro
+{
+public:
+	enum Flag {
+#define AX_DECL_MACRO(m, s) m, 
+		AX_MATERIALMACRO_DEFS
+#undef AX_DECL_MACRO
 
-	void clear();
+		NUM_FLAGS,
+	};
 
-	void setMacro(int f, int value);
-	void setMacro(Flag f, int value);
-	void setMacro(Flag f);
-	int getMacro(Flag f) const;
-	void resetMacro(Flag f);
-	bool isSet(Flag f) const;
-
-	StringSeq getCgDefine() const;
-	StringPairSeq getDefines() const;
-
-	void mergeFrom(const ShaderMacro *from);
-
-	// for hash_map use
-	size_t hash() const;
-	bool operator==(const ShaderMacro &rhs) const;
-
-	std::string toString() const;
-	void fromString(const std::string &str);
-
-	static void initDefs();
-	static const char *getMacroName(int f);
-
-private:
-	class ShaderMacroDefs;
-	static ShaderMacroDefs *m_defs;
-	int m_data[1];
+	MaterialMacro() : ShaderMacro(kMaterialMacro) {}
 };
 
 //-------------------------------------------------------------------------
@@ -410,7 +447,8 @@ public:
 
 AX_END_NAMESPACE
 
-AX_DECLARE_HASH_FUNCTION(ShaderMacro);
+AX_DECLARE_HASH_FUNCTION(GlobalMacro);
+AX_DECLARE_HASH_FUNCTION(MaterialMacro);
 
 #endif // end guardian
 

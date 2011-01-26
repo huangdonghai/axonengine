@@ -54,7 +54,7 @@ FragmentOut FP_main(VertexOut IN) {
 	FragmentOut result;
 	result.color = IN.color;
 
-#if G_HAVE_DIFFUSE
+#if M_DIFFUSE
 	result.color *= tex2D(g_diffuseMap, IN.streamTc.xy);
 #endif
 

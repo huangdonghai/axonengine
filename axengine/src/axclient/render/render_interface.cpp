@@ -29,7 +29,7 @@ void (*RenderApi::setTargetSet)(phandle_t targetSet[RenderTargetSet::MaxTarget])
 void (*RenderApi::setViewport)(const Rect &rect, const Vector2 & depthRange);
 void (*RenderApi::setScissorRect)(const Rect &scissorRect);
 
-void (*RenderApi::setShader)(const FixedString & name, const ShaderMacro &sm, Technique tech);
+void (*RenderApi::setShader)(const FixedString & name, const GlobalMacro &gm, const MaterialMacro &mm, Technique tech);
 void (*RenderApi::setConstBuffer)(ConstBuffers::Type type, int size, const void *data);
 void (*RenderApi::setParameters)(const FastParams *params1, const FastParams *param2);
 	  
@@ -41,7 +41,7 @@ void (*RenderApi::setVerticesUP)(const void *vb, VertexType vt, int vertcount);
 void (*RenderApi::setIndicesUP)(const void *ib, ElementType et, int indicescount);
 
 void (*RenderApi::setGlobalTexture)(GlobalTextureId id, phandle_t h, const SamplerDesc &samplerState);
-void (*RenderApi::setMaterialTexture)(phandle_t texs[], SamplerDesc samplerStates[]);
+void (*RenderApi::setMaterialTexture)(const FastTextureParams *textures);
 
 void (*RenderApi::setRenderState)(const DepthStencilDesc &dsd, const RasterizerDesc &rd, const BlendDesc &bd);
 void (*RenderApi::draw)();
@@ -574,12 +574,12 @@ void ApiWrap::setParameters(const FastParams *params1, const FastParams *params2
 	RenderApi::setParameters(params1, params2);
 #endif
 }
-void ApiWrap::setShader(const FixedString &name, const ShaderMacro &sm, Technique tech)
+void ApiWrap::setShader(const FixedString &name, const MaterialMacro &mm, Technique tech)
 {
 #if AX_MTRENDER
-	sAllocCommand(RenderApi::setShader).args(name, sm, tech);
+	sAllocCommand(RenderApi::setShader).args(name, g_globalMacro, mm, tech);
 #else
-	RenderApi::setShader(name, sm, tech);
+	RenderApi::setShader(name, g_globalMacro, mm, tech);
 #endif
 }
 
@@ -603,36 +603,14 @@ void ApiWrap::setGlobalTexture(GlobalTextureId gt, Texture *tex)
 #endif
 }
 
-void ApiWrap::setMaterialTexture(Texture * const tex[])
+void ApiWrap::setMaterialTexture(const FastTextureParams *textures)
 {
 #if AX_MTRENDER
-	phandle_t *handles = allocType<phandle_t>(MaterialTextureId::MaxType);
-	SamplerDesc *descs = allocType<SamplerDesc>(MaterialTextureId::MaxType);
-
-	for (int i = 0; i < MaterialTextureId::MaxType; i++) {
-		if (tex[i]) {
-			handles[i] = tex[i]->getPHandle();
-			descs[i] = tex[i]->getSamplerState();
-		} else {
-			handles[i] = 0;
-		}
-	}
-
-	sAllocCommand(RenderApi::setMaterialTexture).args(handles, descs);
+	FastTextureParams *newp = allocType<FastTextureParams>(1);
+	*newp = *textures;
+	sAllocCommand(RenderApi::setMaterialTexture).args(newp);
 #else
-	static phandle_t handles[MaterialTextureId::MaxType];
-	static SamplerDesc descs[MaterialTextureId::MaxType];
-
-	for (int i = 0; i < MaterialTextureId::MaxType; i++) {
-		if (tex[i]) {
-			handles[i] = tex[i]->getPHandle();
-			descs[i] = tex[i]->getSamplerState();
-		} else {
-			handles[i] = 0;
-		}
-	}
-
-	RenderApi::setMaterialTexture(handles, descs);
+	RenderApi::setMaterialTexture(textures);
 #endif
 }
 

@@ -17,15 +17,26 @@ DECL_SAMPLER(sampler2D, g_diffuseMap);
 DECL_SAMPLER(sampler2D, g_normalMap);
 DECL_SAMPLER(sampler2D, g_specularMap);
 DECL_SAMPLER(sampler2D, g_emissionMap);
-DECL_SAMPLER(sampler2D, g_detailMap);
-DECL_SAMPLER(sampler2D, g_detailNormalMap);
 DECL_SAMPLER(sampler2D, g_opacitMap);
 DECL_SAMPLER(sampler2D, g_displacementMap);
 DECL_SAMPLER(sampler2D, g_envMap);
 // terrain
 DECL_SAMPLER(sampler2D, g_terrainColor);
 DECL_SAMPLER(sampler2D, g_terrainNormal);
+
+DECL_SAMPLER(sampler2D, g_detailMap);
+DECL_SAMPLER(sampler2D, g_detailMap1);
+DECL_SAMPLER(sampler2D, g_detailMap2);
+DECL_SAMPLER(sampler2D, g_detailMap3);
+DECL_SAMPLER(sampler2D, g_detailNormalMap);
+DECL_SAMPLER(sampler2D, g_detailNormalMap1);
+DECL_SAMPLER(sampler2D, g_detailNormalMap2);
+DECL_SAMPLER(sampler2D, g_detailNormalMap3);
 DECL_SAMPLER(sampler2D, g_layerAlpha);
+DECL_SAMPLER(sampler2D, g_layerAlpha1);
+DECL_SAMPLER(sampler2D, g_layerAlpha2);
+DECL_SAMPLER(sampler2D, g_layerAlpha3);
+
 // engine
 DECL_SAMPLER(sampler2D, g_reflectionMap);
 DECL_SAMPLER(sampler2D, g_lightMap);

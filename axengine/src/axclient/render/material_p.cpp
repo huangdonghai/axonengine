@@ -37,7 +37,7 @@ MaterialDecl::MaterialDecl()
 	m_emission.set(0,0,0);
 	m_shiness = 10.f;
 	m_opacity = 1.0f;
-	m_detailScale = 20;
+	m_detailScale.set(20,20,20,20);
 
 	m_flags = 0;
 

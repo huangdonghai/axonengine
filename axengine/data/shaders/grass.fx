@@ -38,7 +38,7 @@ VertexOut VP_main(MeshVertex IN) {
 half4 FP_main(VertexOut IN) : COLOR {
 	half4 c = IN.color;
 
-#if G_HAVE_DIFFUSE
+#if M_DIFFUSE
 	c *= tex2D(g_diffuseMap, IN.streamTc.xy);
 #endif
 	if (c.a < 0.5)

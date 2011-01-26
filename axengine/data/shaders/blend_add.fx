@@ -19,7 +19,7 @@ float Script : STANDARDSGLOBAL <
 	string TechniqueLayer = "";
 > = 0.8;
 
-#define S_GLOW G_FEATURE0
+#define S_GLOW M_FEATURE0
 
 /*********** Generic Vertex Shader ******/
 
@@ -57,7 +57,7 @@ half4 FP_main(VertexOut IN) : COLOR {
 	half4 c = IN.color;
 	c.rgb *= c.a;
 
-#if G_HAVE_DIFFUSE
+#if M_DIFFUSE
 	c *= tex2D(g_diffuseMap, IN.streamTc.xy);
 #endif
 

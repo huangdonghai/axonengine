@@ -824,7 +824,7 @@ CGstate GLshadermanager::m_textureState;
 
 GLshadermanager::GLshadermanager()
 {
-	g_shaderMacro.setMacro(ShaderMacro::G_OPENGL);
+	g_globalMacro.setMacro(ShaderMacro::G_OPENGL);
 
 	m_textureState = cgGetFirstSamplerState(glCgContext);
 	while (m_textureState) {

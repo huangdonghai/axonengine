@@ -12,9 +12,9 @@ read the license and understand and accept it fully.
 #include "light.fxh"
 #include "fog.fxh"
 
-#define S_DECAL G_FEATURE0
-#define S_ALPHATEST G_FEATURE1
-#define S_TWOSIDES G_FEATURE2
+#define S_DECAL M_FEATURE0
+#define S_ALPHATEST M_FEATURE1
+#define S_TWOSIDES M_FEATURE2
 
 float Script : STANDARDSGLOBAL <
 	// technique
@@ -49,7 +49,7 @@ half4 FP_zpass(ShadowVertexOut IN) : COLOR
 #if !S_ALPHATEST
 	return 1;
 #else
-#if G_HAVE_DIFFUSE
+#if M_DIFFUSE
 	half alpha = tex2D(g_diffuseMap, IN.diffuseTc).a;
 #else
 	half alpha = 1;
@@ -65,11 +65,11 @@ Gbuffer FP_gpass(VertexOut IN)
 	Gbuffer OUT=(Gbuffer)0;
 
 	half3 detail = 0;
-#if G_HAVE_DETAIL
-	detail = tex2D(g_detailMap, IN.streamTc.xy * g_detailScale).xyz - 0.5;
+#if M_DETAIL
+	detail = tex2D(g_detailMap, IN.streamTc.xy * g_detailScale.xx).xyz - 0.5;
 #endif
 
-#if G_HAVE_DIFFUSE
+#if M_DIFFUSE
     OUT.albedo.xyz = tex2D(g_diffuseMap, IN.streamTc.xy).xyz;
 #else
 	OUT.albedo.xyz = half3(1, 1, 1);
@@ -78,7 +78,7 @@ Gbuffer FP_gpass(VertexOut IN)
 	OUT.albedo.xyz *= IN.color.rgb;
 
 #if S_DECAL || S_ALPHATEST
-#if G_HAVE_DIFFUSE
+#if M_DIFFUSE
 	half alpha = tex2D(g_diffuseMap, IN.streamTc.xy).a;
 #else
 	half alpha = 1;
@@ -101,10 +101,10 @@ Gbuffer FP_gpass(VertexOut IN)
 	OUT.misc.w = g_matShiness;
 
 	half3 spec;
-#if G_HAVE_SPECULAR
+#if M_SPECULAR
 	spec = tex2D(g_specularMap, IN.streamTc.xy).xyz + detail;
 #else
-#if G_HAVE_NORMAL
+#if M_NORMAL
 	spec = tex2D(g_normalMap, IN.streamTc.xy).a + detail;
 #else
 	spec = OUT.albedo.xyz;
@@ -112,7 +112,7 @@ Gbuffer FP_gpass(VertexOut IN)
 #endif
 	OUT.albedo.w = Rgb2Lum(spec);
 
-#if G_HAVE_EMISSION
+#if M_EMISSION
 	OUT.accum.xyz = tex2D(g_emissionMap, IN.streamTc.xy).xyz;
 #endif
 
@@ -130,7 +130,7 @@ Gbuffer FP_gpass(VertexOut IN)
 /********* pixel shaders ********/
 half4 FP_main(VertexOut IN) : COLOR0
 {
-#if 0 && G_HAVE_DETAIL_NORMAL
+#if 0 && M_DETAIL_NORMAL
 	return tex2D(g_detailNormalMap, IN.streamTc.xy);
 #endif
 
@@ -146,11 +146,11 @@ half4 FP_main(VertexOut IN) : COLOR0
 	lps.screenTc = IN.screenTc;
 
 	half3 detail = 0;
-#if G_HAVE_DETAIL
-	detail = tex2D(g_detailMap, IN.streamTc.xy * g_detailScale) - 0.5;
+#if M_DETAIL
+	detail = tex2D(g_detailMap, IN.streamTc.xy * g_detailScale.xx) - 0.5;
 #endif
 
-#if G_HAVE_DIFFUSE
+#if M_DIFFUSE
     lps.Cd = tex2D(g_diffuseMap, IN.streamTc.xy).xyz;
 #else
 	lps.Cd = half3(1, 1, 1);
@@ -159,7 +159,7 @@ half4 FP_main(VertexOut IN) : COLOR0
 	lps.Cd *= IN.color.rgb;
 
 #if S_DECAL || S_ALPHATEST
-#if G_HAVE_DIFFUSE
+#if M_DIFFUSE
 	half alpha = tex2D(g_diffuseMap, IN.streamTc.xy).a;
 #else
 	half alpha = 1;
@@ -170,7 +170,7 @@ half4 FP_main(VertexOut IN) : COLOR0
 		discard;
 #endif
 
-#if G_HAVE_LIGHTMAP
+#if M_LIGHTMAP
 	lps.Cd *= saturate(tex2D(g_lightMap, IN.streamTc.zw).x);
 //	return tex2D(g_lightMap, IN.streamTc.zw);
 #endif
@@ -201,10 +201,10 @@ half4 FP_main(VertexOut IN) : COLOR0
 	lps.calcSpecular = false;
 #endif
 
-#if G_HAVE_SPECULAR
+#if M_SPECULAR
 	lps.Cs = tex2D(g_specularMap, IN.streamTc.xy).xyz + detail;
 #else
-#if G_HAVE_NORMAL
+#if M_NORMAL
 	lps.Cs = tex2D(g_normalMap, IN.streamTc.xy).a + detail;
 #else
 	lps.Cs = Dif2Spec(lps.Cd);
@@ -220,7 +220,7 @@ half4 FP_main(VertexOut IN) : COLOR0
 	half4 final;
 	final.rgb = LT_calcAllLights(lps);
 
-#if G_HAVE_EMISSION
+#if M_EMISSION
 	final.rgb += tex2D(g_emissionMap, IN.streamTc.xy).xyz;
 #endif
 

@@ -27,8 +27,8 @@ float Script : STANDARDSGLOBAL <
 > = 0.8;
 
 // features typedef
-#define F_MASKFRONT G_FEATURE0
-#define F_CSMATLAS	G_FEATURE1
+#define F_MASKFRONT M_FEATURE0
+#define F_CSMATLAS	M_FEATURE1
 
 float2		s_shadowRange;		// blur out if out of range
 

@@ -63,27 +63,27 @@ void D3D9Draw::draw(Material *mat, Technique tech, D3D9geometry *prim)
 
 	setMaterialUniforms(mat);
 
-	ShaderMacro macro = g_shaderMacro;
+	ShaderMacro macro = g_globalMacro;
 
 	const ShaderMacro &matmacro = mat->getShaderMacro();
 
 	macro.mergeFrom(&matmacro);
 	if (!r_detail.getBool() && mat->haveDetail()) {
-		macro.resetMacro(ShaderMacro::G_HAVE_DETAIL);
-		macro.resetMacro(ShaderMacro::G_HAVE_DETAIL_NORMAL);
+		macro.resetMacro(ShaderMacro::M_DETAIL);
+		macro.resetMacro(ShaderMacro::M_DETAIL_NORMAL);
 	}
 
 	if (!r_bumpmap.getBool()) {
-		g_shaderMacro.resetMacro(ShaderMacro::G_HAVE_NORMAL);
+		g_globalMacro.resetMacro(ShaderMacro::M_NORMAL);
 	}
 
 
 #if 1
 	AX_SU(g_lightMap,  prim->m_lightmap);
 	if (prim->m_lightmap && r_lightmap.getBool()) {
-		macro.setMacro(ShaderMacro::G_HAVE_LIGHTMAP);
+		macro.setMacro(ShaderMacro::M_LIGHTMAP);
 	} else {
-		macro.resetMacro(ShaderMacro::G_HAVE_LIGHTMAP);
+		macro.resetMacro(ShaderMacro::M_LIGHTMAP);
 	}
 #endif
 
@@ -127,7 +127,7 @@ void D3D9Draw::draw(DX9_Shader *shader, Technique tech, D3D9geometry *prim)
 
 D3D9Draw::D3D9Draw()
 {
-	m_fontShader = dx9_shaderManager->findShaderDX("font", g_shaderMacro);
+	m_fontShader = dx9_shaderManager->findShaderDX("font", g_globalMacro);
 	m_vertDecl = d3d9VertexBufferManager->getVertDecl(D3D9VertexObject::VertexBlend);
 	m_postVertDecl = d3d9VertexBufferManager->getVertDecl(D3D9VertexObject::VertexChunk);
 }
@@ -303,7 +303,7 @@ DX9_Shader *D3D9Draw::findShader(Material *mat, Technique tech)
 
 	setMaterialUniforms(mat);
 
-	ShaderMacro macro = g_shaderMacro;
+	ShaderMacro macro = g_globalMacro;
 	const ShaderMacro &matmacro = mat->getShaderMacro();
 	macro.mergeFrom(&matmacro);
 

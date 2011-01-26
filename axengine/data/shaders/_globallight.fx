@@ -24,10 +24,10 @@ float Script : STANDARDSGLOBAL <
 > = 0.8;
 
 // features typedef
-#define F_SHADOWED			G_FEATURE0
-#define F_DIRECTION_LIGHT	G_FEATURE1
-#define F_SKY_LIGHT			G_FEATURE2
-#define F_ENV_LIGHT			G_FEATURE3
+#define F_SHADOWED			M_FEATURE0
+#define F_DIRECTION_LIGHT	M_FEATURE1
+#define F_SKY_LIGHT			M_FEATURE2
+#define F_ENV_LIGHT			M_FEATURE3
 
 AX_BEGIN_PC
 	float4 s_lightPos : PREG0; // (xyz)*invR, invR

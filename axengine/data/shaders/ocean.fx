@@ -47,8 +47,8 @@ float FresnelPow <
 	float UIStep = 0.05;
 > = 5;
 
-#define S_ENABLE_FOME		G_FEATURE0
-#define S_ENABLE_SPECULAR	G_FEATURE1
+#define S_ENABLE_FOME		M_FEATURE0
+#define S_ENABLE_SPECULAR	M_FEATURE1
 
 //------------------------------------------------------------------------------
 // untweakable parameter

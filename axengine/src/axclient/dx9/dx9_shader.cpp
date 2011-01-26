@@ -25,8 +25,6 @@ namespace {
 		MaterialTextureId::Diffuse, "g_diffuseMap",
 		MaterialTextureId::Normal, "g_normalMap",
 		MaterialTextureId::Specular, "g_specularMap",
-		MaterialTextureId::Detail, "g_detailMap",
-		MaterialTextureId::DetailNormal, "g_detailNormalMap",
 		MaterialTextureId::Opacit, "g_opacitMap",
 		MaterialTextureId::Emission, "g_emissionMap",
 		MaterialTextureId::Displacement, "g_displacementMap",
@@ -35,7 +33,21 @@ namespace {
 		// terrain sampler
 		MaterialTextureId::TerrainColor, "g_terrainColor",
 		MaterialTextureId::TerrainNormal, "g_terrainNormal",
+
+		MaterialTextureId::Detail, "g_detailMap",
+		MaterialTextureId::Detail1, "g_detailMap1",
+		MaterialTextureId::Detail2, "g_detailMap2",
+		MaterialTextureId::Detail3, "g_detailMap3",
+
+		MaterialTextureId::DetailNormal, "g_detailNormalMap",
+		MaterialTextureId::DetailNormal1, "g_detailNormalMap1",
+		MaterialTextureId::DetailNormal2, "g_detailNormalMap2",
+		MaterialTextureId::DetailNormal3, "g_detailNormalMap3",
+
 		MaterialTextureId::LayerAlpha, "g_layerAlpha",
+		MaterialTextureId::LayerAlpha1, "g_layerAlpha1",
+		MaterialTextureId::LayerAlpha2, "g_layerAlpha2",
+		MaterialTextureId::LayerAlpha3, "g_layerAlpha3",
 
 		// other
 		MaterialTextureId::Reflection, "g_reflectionMap",
@@ -121,139 +133,6 @@ namespace {
 	};
 } // namespace
 
-#if 0
-//--------------------------------------------------------------------------
-// class UniformCache
-//--------------------------------------------------------------------------
-
-DX9_Uniform::DX9_Uniform(UniformItem &item, D3DXHANDLE param)
-	: UniformItem(item)
-{
-	m_src = &item;
-	m_param = param;
-}
-
-DX9_Uniform::~DX9_Uniform()
-{}
-
-bool DX9_Uniform::isCached() const
-{
-	return memcmp(m_datap, m_src->m_datap, m_dataSize) == 0;
-}
-
-void DX9_Uniform::cache()
-{
-	memcpy(m_datap, m_src->m_datap, m_dataSize);
-}
-
-void DX9_Uniform::setUniform(UniformItem &item, const void *q)
-{
-		// direct set
-	HRESULT hr;
-
-	switch (item.m_valueType) {
-	case UniformItem::vt_empty:
-		break;
-	case UniformItem::vt_float:
-	case UniformItem::vt_Vector3:
-	case UniformItem::vt_Vector4:
-		{
-			int n = (item.m_dataSize + 15) / 16;
-			const float *data = (const float*)q;
-			if (item.m_vsregister) {
-				V(dx9_device->SetVertexShaderConstantF(item.m_vsregister, data, n));
-			}
-
-			if (item.m_psregister) {
-				V(dx9_device->SetPixelShaderConstantF(item.m_psregister, data, n));
-			}
-		}
-		break;
-	case UniformItem::vt_Vector2:
-		if (item.m_arraySize == 1 ) {
-			const float *data = (const float*)q;
-			if (item.m_vsregister) {
-				V(dx9_device->SetVertexShaderConstantF(item.m_vsregister, data, 1));
-			}
-
-			if (item.m_psregister) {
-				V(dx9_device->SetPixelShaderConstantF(item.m_psregister, data, 1));
-			}
-		} else {
-			Vector4 vec4[8];
-			const Vector2 *vec2 = (const Vector2*)q;
-			for (int i = 0; i < item.m_arraySize; i++) {
-				vec4[i].set(vec2[i].x, vec2[i].y, 0, 0);
-			}
-			if (item.m_vsregister) {
-				V(dx9_device->SetVertexShaderConstantF(item.m_vsregister, vec4[0].c_ptr(), item.m_arraySize));
-			}
-
-			if (item.m_psregister) {
-				V(dx9_device->SetPixelShaderConstantF(item.m_psregister, vec4[0].c_ptr(), item.m_arraySize));
-			}
-		}
-		break;
-	case UniformItem::vt_Matrix3:
-		{
-			Matrix3 &axis = *(Matrix3*)q;
-			Matrix4 matrix(axis, Vector3::Zero);
-			if (item.m_vsregister) {
-				V(dx9_device->SetVertexShaderConstantF(item.m_vsregister, matrix.c_ptr(), 1));
-			}
-
-			if (item.m_psregister) {
-				V(dx9_device->SetPixelShaderConstantF(item.m_psregister, matrix.c_ptr(), 1));
-			}
-		}
-		break;
-	case UniformItem::vt_Matrix:
-		if (item.m_arraySize == 1) {
-			Matrix &am = *(Matrix*)q;
-			Matrix4 matrix = am.toMatrix4().getTranspose();
-
-			if (item.m_vsregister) {
-				V(dx9_device->SetVertexShaderConstantF(item.m_vsregister, matrix.c_ptr(), 3));
-			}
-
-			if (item.m_psregister) {
-				V(dx9_device->SetPixelShaderConstantF(item.m_psregister, matrix.c_ptr(), 3));
-			}
-		} else {
-			Errorf("not support");
-		}
-		break;
-	case UniformItem::vt_Matrix4:
-		if (item.m_arraySize == 1) {
-			Matrix4 matrix = ((const Matrix4*)item.m_datap)->getTranspose();
-			if (item.m_vsregister) {
-				V(dx9_device->SetVertexShaderConstantF(item.m_vsregister, matrix.c_ptr(), 4));
-			}
-
-			if (item.m_psregister) {
-				V(dx9_device->SetPixelShaderConstantF(item.m_psregister, matrix.c_ptr(), 4));
-			}
-		} else {
-			const Matrix4 *old = (const Matrix4*)q;
-			Matrix4 matrix[8];
-			for (int i = 0; i < item.m_arraySize; i++) {
-				matrix[i] = old[i].getTranspose();
-			}
-
-			if (item.m_vsregister) {
-				V(dx9_device->SetVertexShaderConstantF(item.m_vsregister, matrix[0].c_ptr(), 4 * item.m_arraySize));
-			}
-
-			if (item.m_psregister) {
-				V(dx9_device->SetPixelShaderConstantF(item.m_psregister, matrix[0].c_ptr(), 4 * item.m_arraySize));
-			}
-		}
-		break;
-	case UniformItem::vt_Texture:
-		break;
-	}
-}
-#endif
 DX9_Technique::DX9_Technique(DX9_Shader *shader, D3DXHANDLE d3dxhandle)
 {
 	m_shader = shader;
@@ -345,15 +224,8 @@ void DX9_Pass::initPs()
 
 	LPD3DXCONSTANTTABLE constTable;
 
-#if 1
 	V(D3DXGetShaderConstantTable(desc.pPixelShaderFunction, &constTable));
-#else
-	DWORD func[4*1024];
-	UINT funcSize;
-	m_ps->GetFunction(&func, &funcSize);
-	AX_ASSERT(funcSize < 4*1024);
-	V(D3DXGetShaderConstantTable(func, &constTable));
-#endif
+
 	D3DXCONSTANTTABLE_DESC tableDesc;
 	V(constTable->GetDesc(&tableDesc));
 
@@ -381,45 +253,6 @@ void DX9_Pass::initPs()
 	}
 }
 
-#if 0
-const DX9_Pixel2Texel*  DX9_Pass::findPixel2Texel(const String &name)
-{
-	DX9_Pixel2Texels::const_iterator it = m_shader->pixel2Texels.begin();
-
-	for (; it != m_shader->pixel2Texels.end(); ++it) {
-		if (it->m_name == name)
-			return &*it;
-	}
-
-	return 0;
-}
-#endif
-
-#if 0
-void DX9_Pass::initState()
-{
-	HRESULT hr;
-	V(d3d9Device->GetVertexShader(&m_vs));
-	V(d3d9Device->GetPixelShader(&m_ps));
-
-	V(d3d9Device->GetRenderState(D3DRS_ZENABLE, &m_depthTest));
-	V(d3d9Device->GetRenderState(D3DRS_ZWRITEENABLE, &m_depthWrite));
-	V(d3d9Device->GetRenderState(D3DRS_CULLMODE, &m_cullMode));
-	V(d3d9Device->GetRenderState(D3DRS_ALPHABLENDENABLE, &m_blendEnable));
-	V(d3d9Device->GetRenderState(D3DRS_SRCBLEND, &m_blendSrc));
-	V(d3d9Device->GetRenderState(D3DRS_DESTBLEND, &m_blendDst));
-	//#else
-	m_vs = d3d9StateManager->getVertexShader();
-	m_ps = d3d9StateManager->getPixelShader();
-	m_depthTest = d3d9StateManager->getRenderState(D3DRS_ZENABLE);
-	m_depthWrite = d3d9StateManager->getRenderState(D3DRS_ZWRITEENABLE);
-	m_cullMode = d3d9StateManager->getRenderState(D3DRS_CULLMODE);
-	m_blendEnable = d3d9StateManager->getRenderState(D3DRS_ALPHABLENDENABLE);
-	m_blendSrc = d3d9StateManager->getRenderState(D3DRS_SRCBLEND);
-	m_blendDst = d3d9StateManager->getRenderState(D3DRS_DESTBLEND);
-}
-#endif
-
 void DX9_Pass::initSampler(const D3DXCONSTANT_DESC &desc)
 {
 	// check global sampler
@@ -437,20 +270,7 @@ void DX9_Pass::initSampler(const D3DXCONSTANT_DESC &desc)
 			return;
 		}
 	}
-#if 0
-	// check system sampler
-	for (int i = 0; i < Uniforms::NUM_UNIFORM_ITEMS; i++) {
-		UniformItem &item = g_uniforms.getItem(i);
 
-		if (item.m_valueType != UniformItem::vt_Texture)
-			continue;
-
-		if (Strequ(item.m_name, desc.Name)) {
-			m_sysSamplers[i] = desc.RegisterIndex;
-			return;
-		}
-	}
-#endif
 	// check batch sampler
 	for (int i = 0; i < s2i(m_shader->m_samplerInfos.size()); i++) {
 		DX9_SamplerInfo *bs = m_shader->m_samplerInfos[i];
@@ -462,101 +282,14 @@ void DX9_Pass::initSampler(const D3DXCONSTANT_DESC &desc)
 			return;
 		}
 	}
-
-	// local sampler
-	//	m_psParameters[desc.Name] = desc;
 }
 
 extern phandle_t s_curGlobalTextures[GlobalTextureId::MaxType];
 extern SamplerDesc s_curGlobalTextureSamplerDescs[GlobalTextureId::MaxType];
-extern DX9_SamplerState *s_curGlobalSamplerState[GlobalTextureId::MaxType];
-extern phandle_t s_curMaterialTextures[MaterialTextureId::MaxType];
-extern SamplerDesc s_curMaterialTextureSamplerDescs[MaterialTextureId::MaxType];
-extern DX9_SamplerState *s_curMaterialSamplerState[MaterialTextureId::MaxType];
+extern FastTextureParams s_curMaterialTextures;
 
 void DX9_Pass::begin()
 {
-#if 0
-	Material *mtr = m_shader->m_coupled;
-
-	// set shader
-	d3d9StateManager->SetVertexShader(m_vs);
-	d3d9StateManager->SetPixelShader(m_ps);
-
-	// set render state
-	d3d9StateManager->SetRenderState(D3DRS_ZENABLE, m_depthTest);
-	d3d9StateManager->SetRenderState(D3DRS_ZWRITEENABLE, m_depthWrite);
-	d3d9StateManager->SetRenderState(D3DRS_CULLMODE, m_cullMode);
-	d3d9StateManager->SetRenderState(D3DRS_ALPHABLENDENABLE, m_blendEnable);
-
-	if (m_blendEnable) {
-		d3d9StateManager->SetRenderState(D3DRS_SRCBLEND, m_blendSrc);
-		d3d9StateManager->SetRenderState(D3DRS_DESTBLEND, m_blendDst);
-	}
-
-	setParameters();
-
-	// set mtr sampler
-	if (mtr) {
-		for (int i = 0; i < SamplerType::NUMBER_ALL; i++) {
-			if (m_matSamplers[i] == -1)
-				continue;
-
-			//			IDirect3DTexture9 *tex = mtr->getTexture(i);
-			//			d3d9StateManager->setTexture(m_matSamplers[i], tex);
-		}
-	} else {
-		for (int i = 0; i < SamplerType::NUMBER_ALL; i++) {
-			if (m_matSamplers[i] == -1)
-				continue;
-
-			IDirect3DTexture9 *tex = m_shader->m_samplerBound[i];
-			d3d9StateManager->setTexture(m_matSamplers[i], tex);
-		}
-	}
-
-	// set sys sampler
-	Dict<int,int>::const_iterator it = m_sysSamplers.begin();
-	for (; it != m_sysSamplers.end(); ++it) {
-		int f = it->first;
-		int s = it->second;
-		UniformItem &item = g_uniforms.getItem(f);
-		IDirect3DTexture9 *tex = *(IDirect3DTexture9**)item.m_datap;
-		d3d9StateManager->setTexture(s, tex);
-	}
-
-	// set batch sampler
-	int count = 0;
-	for (size_t i = 0; i < m_batchSamplers.size(); i++) {
-		DX9_SamplerInfo *sa = m_batchSamplers[i];
-		if (sa->m_renderType == SamplerInfo::Reflection) {
-			if (!d3d9Interaction) {
-				continue;
-			}
-
-			if (d3d9Interaction->numTargets < count) {
-				continue;
-			}
-
-			Interaction *ia = d3d9Interaction;
-
-			RenderTarget *target = ia->targets[count];
-			D3D9Target *textarget = (D3D9Target*)target;
-			IDirect3DTexture9 *tex = textarget->getTextureDX();
-			tex->setClampMode(Texture::CM_ClampToEdge);
-
-			d3d9StateManager->setTexture(sa->m_register, tex);
-		} else if (sa->m_renderType == SamplerInfo::SceneColor) {
-			Rect r = d3d9BoundTarget->getRect();
-
-			D3D9Target *target = d3d9TargetManager->allocTargetDX(RenderTarget::TemporalAlloc, r.width, r.height, TexFormat::BGRA8);
-			IDirect3DTexture9 *tex = target->getTextureDX();
-			tex->setClampMode(Texture::CM_ClampToEdge);
-			target->copyFramebuffer(r);
-			d3d9StateManager->setTexture(sa->m_register, tex);
-		}
-	}
-#else
 	// set shader
 	V(dx9_device->SetVertexShader(m_vs));
 	V(dx9_device->SetPixelShader(m_ps));
@@ -574,19 +307,14 @@ void DX9_Pass::begin()
 		}
 	}
 
-	// set material textures
-	for (int i = 0; i < MaterialTextureId::MaxType; i++) {
-		if (m_matSamplers[i] >= 0 && s_curMaterialTextures[i]) {
-			V(dx9_device->SetTexture(m_matSamplers[i], s_curMaterialTextures[i]->castTo<IDirect3DBaseTexture9 *>()));
-			DX9_SamplerState::find(m_matSamplers[i], s_curMaterialTextureSamplerDescs[i])->apply();
-		} else {
-			//dx9_device->SetTexture(m_matSamplers[i], 0);
+	for (int i = 0; i < s_curMaterialTextures.m_numItems; i++) {
+		FastTextureParams::Item &item = s_curMaterialTextures.m_items[i];
+		int index = item.id;
+		if (m_matSamplers[index] >= 0) {
+			V(dx9_device->SetTexture(m_matSamplers[index], item.handle->castTo<IDirect3DBaseTexture9 *>()));
+			DX9_SamplerState::find(m_matSamplers[index], item.samplerState)->apply();
 		}
 	}
-
-	// set batch texture
-	// TODO
-#endif
 }
 
 extern FastParams s_curParams1;
@@ -594,44 +322,6 @@ extern FastParams s_curParams2;
 
 void DX9_Pass::setPrimitiveParameters()
 {
-#if 0
-	const ShaderParams *mtrparams = 0;
-	if (m_shader->m_coupled) {
-		mtrparams = &m_shader->m_coupled->getParameters();
-
-		if (mtrparams->empty())
-			mtrparams = 0;
-	}
-
-	// set constant
-	for (Dict<String,ParamDesc>::const_iterator it = m_vsParameters.begin(); it != m_vsParameters.end(); ++it) {
-		const ParamDesc &desc = it->second;
-		const float *value = 0;
-
-		if (mtrparams) {
-			ShaderParams::const_iterator it2 = mtrparams->find(it->first);
-			if (it2 != mtrparams->end()) {
-				value = &it2->second[0];
-			}
-		}
-
-		setParameter(desc, value, false);
-	}
-
-	for (Dict<String,ParamDesc>::const_iterator it = m_psParameters.begin(); it != m_psParameters.end(); ++it) {
-		const ParamDesc &desc = it->second;
-		const float *value = 0;
-
-		if (mtrparams) {
-			ShaderParams::const_iterator it2 = mtrparams->find(it->first);
-			if (it2 != mtrparams->end()) {
-				value = &it2->second[0];
-			}
-		}
-
-		setParameter(desc, value, true);
-	}
-#else
 	m_setflag++;
 	// set params1
 	for (int i = 0; i < s_curParams1.m_numItems; i++) {
@@ -659,31 +349,10 @@ void DX9_Pass::setPrimitiveParameters()
 		dx9_device->SetPixelShaderConstantF(param.d3dDesc.RegisterIndex, (const float*)param.d3dDesc.DefaultValue, param.d3dDesc.RegisterCount);
 		dx9_device->SetVertexShaderConstantF(param.d3dDesc.RegisterIndex, (const float*)param.d3dDesc.DefaultValue, param.d3dDesc.RegisterCount);
 	}
-#endif
 }
 
 void DX9_Pass::setParameter(const ParamDesc &param, const float *value, bool isPixelShader)
 {
-#if 0
-	const float *realvalue = (const float*)param.d3dDesc.DefaultValue;
-
-	if (value)
-		realvalue = value;
-
-	// check p2t first
-	if (param.p2t && isPixelShader) {
-		realvalue = &param.p2t->m_scaledValue[0];
-	}
-
-	if (!realvalue)
-		return;
-
-	if (isPixelShader) {
-		d3d9Device->SetPixelShaderConstantF(param.d3dDesc.RegisterIndex, realvalue, param.d3dDesc.RegisterCount);
-	} else {
-		d3d9Device->SetVertexShaderConstantF(param.d3dDesc.RegisterIndex, realvalue, param.d3dDesc.RegisterCount);
-	}
-#endif
 }
 
 void DX9_Pass::setParameter(const FixedString &name, int numFloats, const float *data)
@@ -716,7 +385,7 @@ DX9_Shader::DX9_Shader()
 DX9_Shader::~DX9_Shader()
 {}
 
-bool DX9_Shader::init(const FixedString &name, const ShaderMacro &macro)
+bool DX9_Shader::init(const FixedString &name, const GlobalMacro &gm, const MaterialMacro &mm)
 {
 	m_key = name;
 	std::string fullname = "shaders/" + name.toString() + ".fx";
@@ -727,12 +396,19 @@ bool DX9_Shader::init(const FixedString &name, const ShaderMacro &macro)
 
 	std::vector<D3DXMACRO> d3dxmacros;
 
-	StringPairSeq defines;
 	D3DXMACRO d3dxmacro;
-	defines  = macro.getDefines();
-	for (size_t i = 0; i < defines.size(); i++) {
-		d3dxmacro.Name = defines[i].first.c_str();
-		d3dxmacro.Definition = defines[i].second.c_str();
+
+	StringPairSeq definesG  = gm.getDefines();
+	for (size_t i = 0; i < definesG.size(); i++) {
+		d3dxmacro.Name = definesG[i].first.c_str();
+		d3dxmacro.Definition = definesG[i].second.c_str();
+		d3dxmacros.push_back(d3dxmacro);
+	}
+
+	StringPairSeq definesM  = mm.getDefines();
+	for (size_t i = 0; i < definesM.size(); i++) {
+		d3dxmacro.Name = definesM[i].first.c_str();
+		d3dxmacro.Definition = definesM[i].second.c_str();
 		d3dxmacros.push_back(d3dxmacro);
 	}
 
@@ -950,67 +626,6 @@ void DX9_Shader::setSystemMap(MaterialTextureId maptype, IDirect3DTexture9 *tex)
 	m_samplerBound[maptype] = tex;
 }
 
-#if 0
-void DX9_Shader::initPixelToTexel(D3DXHANDLE param)
-{
-	if (!isParameterUsed(param)) {
-		return;
-	}
-
-	EffectHelper helper(m_object);
-
-	String pixel_param_name = helper.getAnno(param, "pixelToTexel");
-	if (pixel_param_name.empty()) {
-		return;
-	}
-
-	D3DXHANDLE pixel_param = m_object->GetParameterByName(0, pixel_param_name.c_str());
-
-	if (!pixel_param) {
-		Errorf("not found pixel parameter for texel parameter");
-	}
-
-	D3DXPARAMETER_DESC texelDesc;
-	D3DXPARAMETER_DESC pixelDesc;
-	m_object->GetParameterDesc(param, &texelDesc);
-	m_object->GetParameterDesc(pixel_param, &pixelDesc);
-
-	DX9_Pixel2Texel p2t;
-	p2t.m_name = texelDesc.Name;
-	p2t.m_param = param;
-	p2t.m_pixelValue.resize(pixelDesc.Bytes / sizeof(float));
-	m_object->GetValue(pixel_param, &p2t.m_pixelValue[0], (UINT)p2t.m_pixelValue.size()*sizeof(float));
-
-	pixel2Texels.push_back(p2t);
-}
-
-void DX9_Shader::setPixelToTexel(int width, int height)
-{
-	if (width == m_p2tWidth && height == m_p2tHeight) {
-		return;
-	}
-
-	float invwidth = 1.0f / width;
-	float invheight = 1.0f / height;
-
-	for (size_t i = 0; i < pixel2Texels.size(); i++) {
-		DX9_Pixel2Texel &p2t = pixel2Texels[i]; 
-		FloatSeq &data = p2t.m_scaledValue = p2t.m_pixelValue;
-
-		int numvalue = s2i(data.size()) / 2;
-		for (int j = 0; j < numvalue; j++) {
-			data[j*2] *= invwidth;
-			data[j*2+1] *= invheight;
-		}
-
-		m_object->SetValue(p2t.m_param, &data[0], numvalue * 2 * sizeof(float));
-	}
-
-	m_p2tWidth = width;
-	m_p2tHeight = height;
-}
-#endif
-
 bool DX9_Shader::isParameterUsed(D3DXHANDLE param)
 {
 	if (!param)
@@ -1063,89 +678,6 @@ void DX9_Shader::endPass()
 
 void DX9_Shader::end()
 {}
-
-#if 0
-void DX9_Shader::checkGlobalStruct()
-{
-	D3DXHANDLE param = m_object->GetParameterByName(0, "g_gc");
-
-	AX_ASSERT(param);
-	D3DXPARAMETER_DESC paramDesc;
-	V(m_object->GetParameterDesc(param, &paramDesc));
-
-	DX9_Technique *tech = m_techniques[Technique::Main];
-	if (!tech) return;
-
-	DX9_Pass *pass = tech->m_passes[0];
-
-	D3DXPASS_DESC desc;
-	V(m_object->GetPassDesc(pass->m_d3dxhandle, &desc));
-
-	LPD3DXCONSTANTTABLE constTable;
-	D3DXGetShaderConstantTable(desc.pVertexShaderFunction, &constTable);
-
-	dx9_uniformStructs[0] = parseStruct(constTable, "g_gc");
-	dx9_uniformStructs[1] = parseStruct(constTable, "g_vgc");
-	dx9_uniformStructs[3] = parseStruct(constTable, "g_vic");
-
-	D3DXGetShaderConstantTable(desc.pPixelShaderFunction, &constTable);
-	dx9_uniformStructs[2] = parseStruct(constTable, "g_pgc");
-	dx9_uniformStructs[4] = parseStruct(constTable, "g_pic");
-	for (int i = 0; i < ConstBuffer::NUMBER_STRUCT; i++) {
-		g_constBuffers[i] = dx9_uniformStructs[i]->clone();
-		AX_ASSURE(g_constBuffers[i]);
-	}
-}
-#endif
-
-#if 0
-ConstBuffer *DX9_Shader::mergeStruct(const char *paramName)
-{
-	int vsReg = 0;
-	int psReg = 0;
-	int numFloags = 0;
-
-	return 0;
-}
-
-
-ConstBuffer *DX9_Shader::parseStruct(LPD3DXCONSTANTTABLE constTable, const char *paramName)
-{
-	D3DXHANDLE param = constTable->GetConstantByName(0, paramName);
-	if (!param)
-		return 0;
-
-	D3DXCONSTANT_DESC constDesc, memberDesc;
-	UINT count;
-	constTable->GetConstantDesc(param, &constDesc, &count);
-
-	if (constDesc.RegisterSet != D3DXRS_FLOAT4)
-		return 0;
-
-	if (constDesc.Class != D3DXPC_STRUCT)
-		return 0;
-
-	int regIndex = constDesc.RegisterIndex;
-	int numFloats = constDesc.RegisterCount * 4;
-
-	ConstBuffer *us = new ConstBuffer();
-
-	for (int i=0; i<constDesc.StructMembers; i++) {
-		D3DXHANDLE member = constTable->GetConstant(param, i);
-		constTable->GetConstantDesc(member, &memberDesc, &count);
-
-		ConstBuffer::Field field;
-		field.m_name = memberDesc.Name;
-		field.m_offset = (memberDesc.RegisterIndex - regIndex) * 4;
-		field.m_dataSizeOfFloat = memberDesc.RegisterCount * 4;
-
-		us->addField(field);
-	}
-
-	return us;
-	return 0;
-}
-#endif
 
 void DX9_Shader::initShaderInfo()
 {
@@ -1228,13 +760,18 @@ DX9_ShaderManager::DX9_ShaderManager()
 DX9_ShaderManager::~DX9_ShaderManager()
 {}
 
-DX9_Shader *DX9_ShaderManager::findShader(const FixedString &nameId, const ShaderMacro &macro)
+DX9_Shader *DX9_ShaderManager::findShader(const FixedString &nameId, const GlobalMacro &gm, const MaterialMacro &mm)
 {
-	DX9_Shader*& shader = m_shaders[nameId][macro];
+	ShaderKey key;
+	key.nameId = nameId.id();
+	key.gm = gm.id();
+	key.mm = mm.id();
+
+	DX9_Shader*& shader = m_shaders[key];
 
 	if (!shader) {
 		shader = new DX9_Shader();
-		bool v = shader->init(nameId, macro);
+		bool v = shader->init(nameId, gm, mm);
 		if (!v) {
 			delete shader;
 			shader = m_defaulted;
@@ -1247,6 +784,7 @@ DX9_Shader *DX9_ShaderManager::findShader(const FixedString &nameId, const Shade
 
 void DX9_ShaderManager::saveShaderCache(const std::string &name)
 {
+#if 0
 	std::string filename;
 	if (filename.empty())
 		filename = "shaders/shaderCaches.xml";
@@ -1279,10 +817,12 @@ void DX9_ShaderManager::saveShaderCache(const std::string &name)
 	}
 
 	doc.SaveFile(filename);
+#endif
 }
 
-void DX9_ShaderManager::applyShaderCache( const std::string &name )
+void DX9_ShaderManager::applyShaderCache(const std::string &name)
 {
+#if 0
 	std::string filename;
 	if (filename.empty())
 		filename = "shaders/shaderCaches.xml";
@@ -1310,6 +850,7 @@ void DX9_ShaderManager::applyShaderCache( const std::string &name )
 
 		findShader(shadername, macro);
 	}
+#endif
 }
 
 void DX9_ShaderManager::_initialize()
@@ -1325,7 +866,7 @@ void DX9_ShaderManager::_initialize()
 
 	TiXmlElement *section;
 	for (section = root->FirstChildElement("item"); section; section = section->NextSiblingElement("item")) {
-		findShader(section->GetText(), g_shaderMacro);
+		findShader(section->GetText(), g_globalMacro, MaterialMacro());
 	}
 #if 0
 	// add to ShaderInfoDict

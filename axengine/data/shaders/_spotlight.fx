@@ -23,10 +23,10 @@ float Script : STANDARDSGLOBAL <
 > = 0.8;
 
 // features typedef
-#define F_MASKFRONT G_FEATURE0
-#define F_SPECULAR	G_FEATURE1
-#define F_PROJECTOR	G_FEATURE2
-#define F_SHADOWED	G_FEATURE3
+#define F_MASKFRONT M_FEATURE0
+#define F_SPECULAR	M_FEATURE1
+#define F_PROJECTOR	M_FEATURE2
+#define F_SHADOWED	M_FEATURE3
 
 AX_BEGIN_PC
 float4x4	s_shadowMatrix : PREG0;
