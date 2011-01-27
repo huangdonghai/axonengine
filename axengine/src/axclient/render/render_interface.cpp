@@ -718,6 +718,12 @@ size_t ApiWrap::calcPos(size_t size)
 	return size & (RING_BUFFER_SIZE - 1);
 }
 
+size_t distant(size_t a, size_t b)
+{
+	if (b >= a) return b - a;
+	return ~b + a + 1;
+}
+
 byte_t *ApiWrap::allocRingBuf(int size)
 {
 	// 4 bytes align
@@ -782,8 +788,13 @@ void ApiWrap::waitToPos(size_t pos)
 
 		return;
 	} else {
-		while (calcPos(m_bufReadPos) < newpos)
-			OsUtil::sleep(0);
+		if (newpos > newWritePos) {
+			while (m_bufReadPos - readstop < newpos)
+				OsUtil::sleep(0);
+		} else {
+			while (m_bufReadPos - readstop < newpos + RING_BUFFER_SIZE)
+				OsUtil::sleep(0);
+		}
 	}
 
 #if 0

@@ -72,6 +72,13 @@ public:
 class ApiWrap
 {
 public:
+	enum {
+		RING_BUFFER_SIZE = 4 * 1024 * 1024,
+		MAX_COMMANDS = 64 * 1024,
+		MAX_DELETE_COMMANDS = 8 * 1024,
+		MAX_POS = 0x70000000
+	};
+
 	ApiWrap();
 	~ApiWrap();
 
@@ -177,12 +184,6 @@ protected:
 	bool isEmpty() const { return m_cmdReadPos == m_cmdWritePos; }
 
 private:
-	enum {
-		RING_BUFFER_SIZE = 4 * 1024 * 1024,
-		MAX_COMMANDS = 64 * 1024,
-		MAX_DELETE_COMMANDS = 8 * 1024,
-		MAX_POS = 0x70000000
-	};
 
 	struct ObjectDeletion {
 		delete_func_t func;
