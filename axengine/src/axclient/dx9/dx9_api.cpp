@@ -8,6 +8,10 @@ phandle_t s_curGlobalTextures[GlobalTextureId::MaxType];
 SamplerDesc s_curGlobalTextureSamplerDescs[GlobalTextureId::MaxType];
 FastTextureParams s_curMaterialTextures;
 
+enum {
+	Size_VerticeUP = 64 * 1024,
+	Size_IndiceUP = 64 * 1024,
+};
 static DX9_Shader *s_curShader;
 static Technique s_curTechnique;
 static ConstBuffers s_curConstBuffer;
@@ -15,10 +19,12 @@ static D3DPRIMITIVETYPE s_curPrimitiveType;
 static int s_curNumVertices;
 static int s_curStartIndex;
 static int s_curPrimitiveCount;
-static const void *s_curVerticeBufferUP;
+static byte_t *s_curVerticeBufferUP[Size_VerticeUP];
+static bool s_curVerticeUP = false;
 static VertexType s_curVertexType;
 static int s_curVertexOffset;
-static const void *s_curIndiceBufferUP;
+static byte_t *s_curIndiceBufferUP[Size_IndiceUP];
+static bool s_curIndiceUP = false;
 static DepthStencilDesc s_curDepthStencilDesc;
 static RasterizerDesc s_curRasterizerDesc;
 static BlendDesc s_curBlendDesc;
@@ -372,7 +378,7 @@ void dx9DeleteWindowTarget(phandle_t h)
 	delete h;
 }
 
-void dx9BeginPix(const std::string &pixname)
+void dx9BeginPix(const char *pixname)
 {
 	D3DPERF_BeginEvent(D3DCOLOR_RGBA(0,0,0,255), u2w(pixname).c_str());
 }
@@ -529,7 +535,7 @@ static void dx9SetParameters(const FastParams *params1, const FastParams *params
 
 static void dx9SetVertices(phandle_t vb, VertexType vt, int offset)
 {
-	s_curVerticeBufferUP = 0;
+	s_curVerticeUP = false;
 	V(dx9_device->SetStreamSource(0, vb->castTo<IDirect3DVertexBuffer9 *>(), offset, vt.stride()));
 	V(dx9_device->SetVertexDeclaration(dx9_vertexDeclarations[vt]));
 
@@ -539,7 +545,7 @@ static void dx9SetVertices(phandle_t vb, VertexType vt, int offset)
 
 static void dx9SetInstanceVertices(phandle_t vb, VertexType vt, int offset, phandle_t inb, int inoffset, int incount)
 {
-	s_curVerticeBufferUP = 0;
+	s_curVerticeUP = false;
 	V(dx9_device->SetStreamSource(0, vb->castTo<IDirect3DVertexBuffer9 *>(), offset, vt.stride()));
 	V(dx9_device->SetStreamSourceFreq(0, D3DSTREAMSOURCE_INDEXEDDATA | incount));
 
@@ -550,7 +556,7 @@ static void dx9SetInstanceVertices(phandle_t vb, VertexType vt, int offset, phan
 
 static void dx9SetIndices(phandle_t ib, ElementType et, int offset, int vertcount, int indicescount)
 {
-	s_curIndiceBufferUP = 0;
+	s_curIndiceUP = false;
 	V(dx9_device->SetIndices(ib->castTo<IDirect3DIndexBuffer9 *>()));
 	s_curPrimitiveType = trElementType(et);
 	s_curNumVertices = vertcount;
@@ -560,7 +566,10 @@ static void dx9SetIndices(phandle_t ib, ElementType et, int offset, int vertcoun
 
 static void dx9SetVerticesUP(const void *vb, VertexType vt, int vertcount)
 {
-	s_curVerticeBufferUP = vb;
+	int datasize = vt.calcSize(vertcount);
+	AX_ASSERT(datasize <= Size_VerticeUP);
+	memcpy(s_curVerticeBufferUP, vb, datasize);
+	s_curVerticeUP = true;
 	s_curVertexType = vt;
 	s_curNumVertices = vertcount;
 	V(dx9_device->SetVertexDeclaration(dx9_vertexDeclarations[vt]));
@@ -568,7 +577,10 @@ static void dx9SetVerticesUP(const void *vb, VertexType vt, int vertcount)
 
 static void dx9SetIndicesUP(const void *ib, ElementType et, int indicescount)
 {
-	s_curIndiceBufferUP = ib;
+	int datasize = indicescount * sizeof(ushort_t);
+	AX_ASSERT(datasize <= Size_IndiceUP);
+	memcpy(s_curIndiceBufferUP, ib, datasize);
+	s_curIndiceUP = true;
 	s_curPrimitiveType = trElementType(et);
 	s_curPrimitiveCount = sCalcNumElements(s_curPrimitiveType, indicescount);
 }
@@ -610,9 +622,9 @@ static void dx9Draw()
 	for (int i = 0; i < npass; i++) {
 		s_curShader->beginPass(i);
 
-		if (s_curIndiceBufferUP && s_curVerticeBufferUP) {
+		if (s_curIndiceUP && s_curVerticeUP) {
 			V(dx9_device->DrawIndexedPrimitiveUP(s_curPrimitiveType, 0, s_curNumVertices, s_curPrimitiveCount, s_curIndiceBufferUP, D3DFMT_INDEX16, s_curVerticeBufferUP, s_curVertexType.stride()));
-		} else if (!s_curVerticeBufferUP && !s_curIndiceBufferUP) {
+		} else if (!s_curVerticeUP && !s_curIndiceUP) {
 			HRESULT hr = dx9_device->DrawIndexedPrimitive(s_curPrimitiveType, 0, 0, s_curNumVertices, s_curStartIndex, s_curPrimitiveCount);
 			const char *err = D3DErrorString(hr);
 		} else {

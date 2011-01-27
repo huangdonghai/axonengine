@@ -26,7 +26,7 @@ public:
 	static void (*updateWindowTarget)(phandle_t h, Handle newHwnd, int width, int height);
 	static void (*deleteWindowTarget)(phandle_t h);
 
-	static void (*beginPix)(const std::string &pixname);
+	static void (*beginPix)(const char *pixname);
 	static void (*endPix)();
 
 	static void (*setTargetSet)(phandle_t targetSet[RenderTargetSet::MaxTarget]);
@@ -99,7 +99,7 @@ public:
 	void issueQuery(phandle_t h, AsyncQuery *asioQuery);
 	void deleteQuery(phandle_t h);
 
-	void beginPix(const std::string &pixname);
+	void beginPix(const char *pixname);
 	void endPix();
 
 	void setTargetSet(const RenderTargetSet &target_set);
@@ -132,12 +132,7 @@ public:
 	byte_t *allocRingBuf(int size);
 
 	// wait all commands executed
-	void finish()
-	{
-		while (m_cmdWritePos != m_cmdReadPos) {
-			OsUtil::sleep(0);
-		}
-	}
+	void finish();
 
 	// called in render thread, return number commands executed
 	int runCommands();
@@ -163,28 +158,9 @@ public:
 		return ptr;
 	}
 
-	ApiCommand *fetchCommand()
-	{
-		if (isEmpty())
-			return 0;
-		return m_ringCommand[m_cmdReadPos];
-	}
-
-	void popCommand()
-	{
-		ApiCommand *cmd = m_ringCommand[m_cmdReadPos];
-		int bufpos = cmd->m_bufPos;
-		cmd->~ApiCommand();
-		m_bufReadPos = bufpos;
-		m_cmdReadPos = (m_cmdReadPos + 1) % MAX_COMMANDS;
-	}
-
-	void pushCommand(ApiCommand *cmd)
-	{
-		cmd->m_bufPos = m_bufWritePos;
-		m_ringCommand[m_cmdWritePos] = cmd;
-		m_cmdWritePos = (m_cmdWritePos + 1) % MAX_COMMANDS;
-	}
+	void pushCommand(ApiCommand *cmd);
+	ApiCommand *fetchCommand();
+	void popCommand();
 
 protected:
 	phandle_t newHandle();
@@ -195,9 +171,8 @@ protected:
 
 	void waitToPos(int pos);
 
-	bool isFull() const { return normalizeRange(m_cmdReadPos - m_cmdWritePos) == 1; }
+	bool isFull() const;
 	bool isEmpty() const { return m_cmdReadPos == m_cmdWritePos; }
-	static int normalizeRange(int a) { return (a + MAX_COMMANDS) % MAX_COMMANDS; }
 
 private:
 	enum {
@@ -215,8 +190,8 @@ private:
 	byte_t m_ringBuffer[RING_BUFFER_SIZE];
 	ApiCommand *m_ringCommand[MAX_COMMANDS];
 
-	volatile int m_bufReadPos, m_bufWritePos;
-	volatile int m_cmdReadPos, m_cmdWritePos;
+	volatile size_t m_bufReadPos, m_bufWritePos;
+	volatile size_t m_cmdReadPos, m_cmdWritePos;
 
 	int m_numObjectDeletions;
 	ObjectDeletion m_objectDeletions[MAX_DELETE_COMMANDS];

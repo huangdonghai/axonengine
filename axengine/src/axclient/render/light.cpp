@@ -617,11 +617,8 @@ RenderLight::RenderLight() : RenderEntity(kLight)
 
 //	m_shadowLink.setOwner(this);
 	m_shadowGen = 0;
-#if 0
-	m_queuedLight = 0;
-#else
 	m_shadowData = 0;
-#endif
+
 	m_preferShadowMapSize = 256;
 }
 
@@ -639,11 +636,8 @@ RenderLight::RenderLight(Type t, const Vector3 &pos, Rgb color) : RenderEntity(k
 
 //	m_shadowLink.setOwner(this);
 	m_shadowGen = 0;
-#if 0
-	m_queuedLight = 0;
-#else
 	m_shadowData = 0;
-#endif
+
 	m_preferShadowMapSize = 256;
 }
 
@@ -661,11 +655,7 @@ RenderLight::RenderLight(Type t, const Vector3 &pos, Rgb color, float radius) : 
 
 //	m_shadowLink.setOwner(this);
 	m_shadowGen = 0;
-#if 0
-	m_queuedLight = 0;
-#else
 	m_shadowData = 0;
-#endif
 
 	m_preferShadowMapSize = 256;
 }

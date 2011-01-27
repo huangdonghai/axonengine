@@ -1,7 +1,7 @@
 #ifndef AX_RENDER_PRIVATE_H
 #define AX_RENDER_PRIVATE_H
 
-#define AX_MTRENDER 0
+#define AX_MTRENDER 1
 
 #include "selection.h"
 #include "render_thread.h"
