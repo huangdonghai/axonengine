@@ -169,7 +169,9 @@ protected:
 	typedef void (*delete_func_t)(phandle_t);
 	void addObjectDeletion(delete_func_t func, phandle_t h);
 
-	void waitToPos(int pos);
+	size_t calcStop(size_t size);
+	size_t calcPos(size_t size);
+	void waitToPos(size_t pos);
 
 	bool isFull() const;
 	bool isEmpty() const { return m_cmdReadPos == m_cmdWritePos; }

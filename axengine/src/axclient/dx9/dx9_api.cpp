@@ -107,11 +107,8 @@ void dx9CreateTextureFromFileInMemory(phandle_t h, IoRequest *asioRequest)
 	delete asioRequest;
 }
 
-static int count = 0;
 void dx9CreateTexture2D(phandle_t h, TexFormat format, int width, int height, int flags)
 {
-	count++;
-
 	bool mipmap = false;
 	D3DFORMAT d3dformat;
 	trTexFormat(format, d3dformat);

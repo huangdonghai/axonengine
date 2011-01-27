@@ -708,6 +708,15 @@ void ApiWrap::present(RenderTarget *window)
 #endif
 }
 
+size_t ApiWrap::calcStop( size_t size )
+{
+	return size & ~(RING_BUFFER_SIZE - 1);
+}
+
+size_t ApiWrap::calcPos(size_t size)
+{
+	return size & (RING_BUFFER_SIZE - 1);
+}
 
 byte_t *ApiWrap::allocRingBuf(int size)
 {
@@ -716,20 +725,39 @@ byte_t *ApiWrap::allocRingBuf(int size)
 
 	byte_t *result = 0;
 
+	size_t prevstop = calcStop(m_bufWritePos);
+	size_t nextstop = prevstop + RING_BUFFER_SIZE;
+
+	if (calcStop(m_bufWritePos + size) == prevstop) {
+		waitToPos(m_bufWritePos + size);
+		result = m_ringBuffer + calcPos(m_bufWritePos);
+		m_bufWritePos += size;
+	} else {
+		if (size > calcPos(m_bufWritePos)) {
+			Errorf("size is too large");
+		}
+
+		waitToPos(nextstop + size);
+		result = m_ringBuffer;
+		m_bufWritePos = nextstop + size;
+	}
+	size_t oldbufreadpos = m_bufReadPos;
+	int dist = m_bufWritePos - oldbufreadpos;
+	AX_ASSERT(dist < RING_BUFFER_SIZE);
+
+#if 0
 	if (m_bufWritePos + size <= RING_BUFFER_SIZE) {
 		waitToPos(m_bufWritePos + size);
 		result = m_ringBuffer + m_bufWritePos;
 		m_bufWritePos += size;
-
-		return result;
-	}
-
-	// wrap to begin
-	if (m_bufWritePos > size) {
+	} else if (m_bufWritePos > size) {	// wrap to begin
 		waitToPos(size);
 		result = m_ringBuffer;
 		m_bufWritePos = size;
-
+	}
+#endif
+	if (result) {
+		memset(result, 0, size);
 		return result;
 	}
 
@@ -738,8 +766,27 @@ byte_t *ApiWrap::allocRingBuf(int size)
 	return 0;
 }
 
-void ApiWrap::waitToPos(int pos)
+void ApiWrap::waitToPos(size_t pos)
 {
+	size_t readstop = (m_bufReadPos / RING_BUFFER_SIZE) * RING_BUFFER_SIZE;
+	size_t writestop = (m_bufWritePos / RING_BUFFER_SIZE) * RING_BUFFER_SIZE;
+	size_t newpos = calcPos(pos);
+	size_t newWritePos = calcPos(m_bufWritePos);
+
+	if (readstop == writestop) {
+		if (newpos > newWritePos)
+			return;
+
+		while (calcPos(m_bufReadPos) < newpos)
+			OsUtil::sleep(0);
+
+		return;
+	} else {
+		while (calcPos(m_bufReadPos) < newpos)
+			OsUtil::sleep(0);
+	}
+
+#if 0
 	if (m_bufWritePos >= m_bufReadPos) {
 		if (pos < m_bufReadPos)
 			return;
@@ -761,6 +808,7 @@ void ApiWrap::waitToPos(int pos)
 				OsUtil::sleep(0);
 		}
 	}
+#endif
 }
 
 void ApiWrap::pushCommand(ApiCommand *cmd)
@@ -782,6 +830,7 @@ ApiCommand *ApiWrap::fetchCommand()
 void ApiWrap::popCommand()
 {
 	ApiCommand *cmd = m_ringCommand[m_cmdReadPos % MAX_COMMANDS];
+	m_ringCommand[m_cmdReadPos % MAX_COMMANDS] = 0;
 	int bufpos = cmd->m_bufPos;
 	cmd->~ApiCommand();
 	m_bufReadPos = bufpos;
@@ -801,6 +850,10 @@ int ApiWrap::runCommands()
 
 	while (1) {
 		ApiCommand *cmd = fetchCommand();
+
+		if (cmd->m_bufPos == 16456) {
+			printf("out");
+		}
 
 		cmd->exec();
 
