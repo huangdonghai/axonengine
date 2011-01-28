@@ -718,10 +718,10 @@ size_t ApiWrap::calcPos(size_t size)
 	return size & (RING_BUFFER_SIZE - 1);
 }
 
-size_t distant(size_t a, size_t b)
+size_t distant(size_t baseline, size_t pos)
 {
-	if (b >= a) return b - a;
-	return ~b + a + 1;
+	if (pos >= baseline) return pos - baseline;
+	return ~pos + baseline + 1;
 }
 
 byte_t *ApiWrap::allocRingBuf(int size)
@@ -731,11 +731,19 @@ byte_t *ApiWrap::allocRingBuf(int size)
 
 	byte_t *result = 0;
 
-	size_t prevstop = calcStop(m_bufWritePos);
-	size_t nextstop = prevstop + RING_BUFFER_SIZE;
+	size_t oldReadPos = m_bufReadPos;
+	size_t readStop = calcStop(oldReadPos);
+	size_t writeStop = calcStop(m_bufWritePos);
+	size_t nextstop = writeStop + RING_BUFFER_SIZE;
 
-	if (calcStop(m_bufWritePos + size) == prevstop) {
-		waitToPos(m_bufWritePos + size);
+	if (calcStop(m_bufWritePos + size) == writeStop) {
+		if (readStop == writeStop) {
+			// do nothing
+		} else {
+			while (distant(readStop, m_bufReadPos) < distant(writeStop, m_bufWritePos + size)) {
+				OsUtil::sleep(0);
+			}
+		}
 		result = m_ringBuffer + calcPos(m_bufWritePos);
 		m_bufWritePos += size;
 	} else {
@@ -743,13 +751,21 @@ byte_t *ApiWrap::allocRingBuf(int size)
 			Errorf("size is too large");
 		}
 
-		waitToPos(nextstop + size);
+		if (readStop == writeStop) {
+			while (distant(readStop, m_bufReadPos) < size) {
+				OsUtil::sleep(0);
+			}
+		} else {
+			while (distant(readStop, m_bufReadPos) < distant(writeStop, nextstop + size)) {
+				OsUtil::sleep(0);
+			}
+		}
+
 		result = m_ringBuffer;
 		m_bufWritePos = nextstop + size;
 	}
-	size_t oldbufreadpos = m_bufReadPos;
-	int dist = m_bufWritePos - oldbufreadpos;
-	AX_ASSERT(dist < RING_BUFFER_SIZE);
+	int dist = distant(oldReadPos, m_bufWritePos);
+//	AX_ASSERT(dist <= RING_BUFFER_SIZE);
 
 #if 0
 	if (m_bufWritePos + size <= RING_BUFFER_SIZE) {
