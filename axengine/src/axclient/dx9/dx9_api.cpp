@@ -21,13 +21,11 @@ static int s_curStartIndex;
 static int s_curPrimitiveCount;
 static byte_t *s_curVerticeBufferUP[Size_VerticeUP];
 static bool s_curVerticeUP = false;
+static bool s_curInstanced = false;
 static VertexType s_curVertexType;
 static int s_curVertexOffset;
 static byte_t *s_curIndiceBufferUP[Size_IndiceUP];
 static bool s_curIndiceUP = false;
-static DepthStencilDesc s_curDepthStencilDesc;
-static RasterizerDesc s_curRasterizerDesc;
-static BlendDesc s_curBlendDesc;
 static Size s_curRenderTargetSize;
 
 inline bool trTexFormat(TexFormat texformat, D3DFORMAT &d3dformat)
@@ -102,8 +100,10 @@ static inline int sCalcNumElements(D3DPRIMITIVETYPE mode, int numindexes)
 
 void dx9CreateTextureFromFileInMemory(phandle_t h, IoRequest *asioRequest)
 {
-	V(D3DXCreateTextureFromFileInMemory(dx9_device, asioRequest->fileData(), asioRequest->fileSize(), (LPDIRECT3DTEXTURE9*)h));
-	AX_ASSERT(h && *h);
+	IDirect3DTexture9 *texture;
+	V(D3DXCreateTextureFromFileInMemory(dx9_device, asioRequest->fileData(), asioRequest->fileSize(), &texture));
+	DX9_Resource *resource = new DX9_Resource(DX9_Resource::kTexture, texture);
+	*h = resource;
 	delete asioRequest;
 }
 
@@ -141,15 +141,22 @@ void dx9CreateTexture2D(phandle_t h, TexFormat format, int width, int height, in
 
 	int m_videoMemoryUsed = format.calculateDataSize(width, height);
 
-	V(dx9_device->CreateTexture(width, height, 1, d3dusage, d3dformat, d3dpool, (LPDIRECT3DTEXTURE9*)h, 0));
-	AX_ASSERT(h && *h);
+	IDirect3DTexture9 *texture;
+	V(dx9_device->CreateTexture(width, height, 1, d3dusage, d3dformat, d3dpool, &texture, 0));
+	DX9_Resource *resource = new DX9_Resource(DX9_Resource::kTexture, texture);
+	V(texture->GetSurfaceLevel(0, &resource->m_level0));
+	resource->width = width; resource->height = height;
+	*h = resource;
 
 	stat_textureMemory.add(m_videoMemoryUsed);
 }
 
 static void sUploadTexture(phandle_t h, int level, const void *pixels, TexFormat format)
 {
-	LPDIRECT3DTEXTURE9 obj = h->castTo<LPDIRECT3DTEXTURE9>();
+	DX9_Resource *resource = h->castTo<DX9_Resource *>();
+	AX_ASSERT(resource->m_type == DX9_Resource::kTexture);
+	IDirect3DTexture9 *obj = resource->m_texture;
+
 	LPDIRECT3DSURFACE9 surface;
 
 	V(obj->GetSurfaceLevel(level, &surface));
@@ -193,8 +200,11 @@ void dx9UploadSubTexture(phandle_t h, const Rect &rect, const void *pixels, TexF
 		return;
 	}
 
-	LPDIRECT3DSURFACE9 surface;
-	LPDIRECT3DTEXTURE9 obj = h->castTo<LPDIRECT3DTEXTURE9>();
+	DX9_Resource *resource = h->castTo<DX9_Resource *>();
+	AX_ASSERT(resource->m_type == DX9_Resource::kTexture);
+	IDirect3DTexture9 *obj = resource->m_texture;
+
+	IDirect3DSurface9 *surface;
 	V(obj->GetSurfaceLevel(0, &surface));
 
 	RECT d3drect;
@@ -213,17 +223,20 @@ void dx9UploadSubTexture(phandle_t h, const Rect &rect, const void *pixels, TexF
 
 void dx9DeleteTexture2D(phandle_t h)
 {
-	LPDIRECT3DTEXTURE9 obj = h->castTo<LPDIRECT3DTEXTURE9>();
+	DX9_Resource *resource = h->castTo<DX9_Resource *>();
+	AX_ASSERT(resource->m_type == DX9_Resource::kTexture);
 
-	SAFE_RELEASE(obj);
-
+	delete resource;
 	delete h;
 }
 
 void dx9GenerateMipmap(phandle_t h)
 {
-	LPDIRECT3DTEXTURE9 obj = h->castTo<LPDIRECT3DTEXTURE9>();
-	LPDIRECT3DSURFACE9 surface;
+	DX9_Resource *resource = h->castTo<DX9_Resource *>();
+	AX_ASSERT(resource->m_type == DX9_Resource::kTexture);
+	IDirect3DTexture9 *obj = resource->m_texture;
+
+	IDirect3DSurface9 *surface;
 
 	V(obj->GetSurfaceLevel(0, &surface));
 	D3DSURFACE_DESC surfdesc;
@@ -288,7 +301,9 @@ void dx9CreateVertexBuffer(phandle_t h, int datasize, Primitive::Hint hint)
 
 	IDirect3DVertexBuffer9 *vb;
 	V(dx9_device->CreateVertexBuffer(datasize, d3dusage, 0, d3dpool, &vb, 0));
-	*h = vb;
+	DX9_Resource *resource = new DX9_Resource(DX9_Resource::kVertexBuffer, vb);
+	resource->m_isDynamic = hint != Primitive::HintStatic;
+	*h = resource;
 
 	stat_numVertexBuffers.inc();
 	stat_vertexBufferMemory.add(datasize);
@@ -296,12 +311,12 @@ void dx9CreateVertexBuffer(phandle_t h, int datasize, Primitive::Hint hint)
 
 void dx9UploadVertexBuffer(phandle_t h, int datasize, const void *p)
 {
-	IDirect3DVertexBuffer9 *obj = h->castTo<IDirect3DVertexBuffer9 *>();
+	DX9_Resource *resource = h->castTo<DX9_Resource *>();
+	AX_ASSERT(resource->m_type = DX9_Resource::kVertexBuffer);
+	IDirect3DVertexBuffer9 *obj = resource->m_vertexBuffer;
 
 	DWORD flag = 0;
-	D3DVERTEXBUFFER_DESC desc;
-	V(obj->GetDesc(&desc));
-	if (desc.Usage & D3DUSAGE_DYNAMIC)
+	if (resource->m_isDynamic)
 		flag = D3DLOCK_DISCARD;
 
 	void *dst = 0;
@@ -312,9 +327,11 @@ void dx9UploadVertexBuffer(phandle_t h, int datasize, const void *p)
 
 void dx9DeleteVertexBuffer(phandle_t h)
 {
-	IDirect3DVertexBuffer9 *obj = h->castTo<IDirect3DVertexBuffer9 *>();
+	DX9_Resource *resource = h->castTo<DX9_Resource *>();
+	AX_ASSERT(resource->m_type = DX9_Resource::kVertexBuffer);
 
-	SAFE_RELEASE(obj);
+	delete resource;
+	delete h;
 }
 
 void dx9CreateIndexBuffer(phandle_t h, int datasize, Primitive::Hint hint)
@@ -326,7 +343,11 @@ void dx9CreateIndexBuffer(phandle_t h, int datasize, Primitive::Hint hint)
 		d3dusage = D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY;
 	}
 
-	V(dx9_device->CreateIndexBuffer(datasize, d3dusage, D3DFMT_INDEX16, d3dpool, (IDirect3DIndexBuffer9 **)(h), 0));
+	IDirect3DIndexBuffer9 *ib;
+	V(dx9_device->CreateIndexBuffer(datasize, d3dusage, D3DFMT_INDEX16, d3dpool, &ib, 0));
+	DX9_Resource *resource = new DX9_Resource(DX9_Resource::kIndexBuffer, ib);
+	resource->m_isDynamic = hint != Primitive::HintStatic;
+	*h = resource;
 
 	stat_numIndexBuffers.inc();
 	stat_indexBufferMemory.add(datasize);
@@ -334,12 +355,12 @@ void dx9CreateIndexBuffer(phandle_t h, int datasize, Primitive::Hint hint)
 
 void dx9UploadIndexBuffer(phandle_t h, int datasize, const void *p)
 {
-	IDirect3DIndexBuffer9 *obj = h->castTo<IDirect3DIndexBuffer9 *>();
+	DX9_Resource *resource = h->castTo<DX9_Resource *>();
+	AX_ASSERT(resource->m_type == DX9_Resource::kIndexBuffer);
+	IDirect3DIndexBuffer9 *obj = resource->m_indexBuffer;
 
 	DWORD flag = 0;
-	D3DINDEXBUFFER_DESC desc;
-	V(obj->GetDesc(&desc));
-	if (desc.Usage & D3DUSAGE_DYNAMIC)
+	if (resource->m_isDynamic)
 		flag = D3DLOCK_DISCARD;
 
 	void *dst = 0;
@@ -350,28 +371,33 @@ void dx9UploadIndexBuffer(phandle_t h, int datasize, const void *p)
 
 void dx9DeleteIndexBuffer(phandle_t h)
 {
-	IDirect3DIndexBuffer9 *obj = h->castTo<IDirect3DIndexBuffer9 *>();
-	SAFE_RELEASE(obj);
+	DX9_Resource *resource = h->castTo<DX9_Resource *>();
+	AX_ASSERT(resource->m_type == DX9_Resource::kIndexBuffer);
+	delete resource;
 	delete h;
 }
 
 void dx9CreateWindowTarget(phandle_t h, Handle hwnd, int width, int height)
 {
 	DX9_Window *window = new DX9_Window(hwnd, width, height);
-	*h = window;
+	DX9_Resource *resource = new DX9_Resource(DX9_Resource::kWindow, window);
+	*h = resource;
 }
 
 void dx9UpdateWindowTarget(phandle_t h, Handle newHwnd, int width, int height)
 {
-	DX9_Window *window = h->castTo<DX9_Window *>();
+	DX9_Resource *resource = h->castTo<DX9_Resource *>();
+	AX_ASSERT(resource->m_type == DX9_Resource::kWindow);
+	DX9_Window *window = resource->m_window;
 
 	window->update(newHwnd, width, height);
 }
 
 void dx9DeleteWindowTarget(phandle_t h)
 {
-	DX9_Window *window = handle_cast<DX9_Window*>(*h);
-	SAFE_RELEASE(window);
+	DX9_Resource *resource = h->castTo<DX9_Resource *>();
+	AX_ASSERT(resource->m_type == DX9_Resource::kWindow);
+	delete resource;
 	delete h;
 }
 
@@ -385,48 +411,37 @@ void dx9EndPix()
 	D3DPERF_EndEvent();
 }
 
-inline static IDirect3DSurface9 *getSurface(phandle_t h)
+static bool surfaceSizeIsSet = false;
+inline static IDirect3DSurface9 *getSurface(phandle_t h, bool setSize)
 {
 	if (!h || !*h) return 0;
 
-	IUnknown *unknown = h->castTo<IUnknown *>();
+	DX9_Resource *resource = h->castTo<DX9_Resource *>();
 
-	if (!unknown)
-		return 0;
-
-	IDirect3DTexture9 *texture = 0;
-	unknown->QueryInterface(IID_IDirect3DBaseTexture9, (void **)&texture);
-
-	IDirect3DSurface9 *surface = 0;
-	if (texture) {
-		texture->GetSurfaceLevel(0, &surface);
+	if (resource->m_type == DX9_Resource::kTexture) {
+		AX_ASSERT(resource->m_level0);
+		if (setSize) {
+			s_curRenderTargetSize.set(resource->width, resource->height);
+			surfaceSizeIsSet = true;
+		}
+		return resource->m_level0;
 	} else {
-		DX9_Window *window = h->castTo<DX9_Window *>();
-		surface = window->getSurface();
+		if (setSize) {
+			s_curRenderTargetSize = resource->m_window->getSize();
+			surfaceSizeIsSet = true;
+		}
+		return resource->m_window->getSurface();
 	}
-
-	return surface;
-}
-
-inline static void setRenderTargetSize(IDirect3DSurface9 *surface)
-{
-	AX_ASSERT(surface);
-	D3DSURFACE_DESC desc;
-	surface->GetDesc(&desc);
-	s_curRenderTargetSize.set(desc.Width, desc.Height);
 }
 
 static void dx9SetTargetSet(phandle_t targetSet[RenderTargetSet::MaxTarget])
 {
 	AX_ASSURE(targetSet[0] || targetSet[1]);
 
-	bool surfaceSizeIsSet = false;
-	IDirect3DSurface9 *surface = getSurface(targetSet[0]);
+	surfaceSizeIsSet = false;
+	IDirect3DSurface9 *surface = getSurface(targetSet[0], true);
 	if (surface) {
-		setRenderTargetSize(surface);
-		surfaceSizeIsSet = true;
 		V(dx9_device->SetDepthStencilSurface(surface));
-		SAFE_RELEASE(surface);
 	}
 
 	if (!targetSet[1]) {
@@ -434,20 +449,14 @@ static void dx9SetTargetSet(phandle_t targetSet[RenderTargetSet::MaxTarget])
 		surface = dx9_driver->getNullTarget(s_curRenderTargetSize);
 		V(dx9_device->SetRenderTarget(0, surface))
 	} else {
-		surface = getSurface(targetSet[1]);
+		surface = getSurface(targetSet[1], true);
 		AX_ASSURE(surface);
 		V(dx9_device->SetRenderTarget(0, surface));
-		if (surface && !surfaceSizeIsSet)
-			setRenderTargetSize(surface);
-		SAFE_RELEASE(surface);
 	}
 
 	for (int i = 1; i < RenderTargetSet::MaxColorTarget; i++) {
-		surface = getSurface(targetSet[i+1]);
+		surface = getSurface(targetSet[i+1], false);
 		V(dx9_device->SetRenderTarget(i, surface));
-		if (surface && !surfaceSizeIsSet)
-			setRenderTargetSize(surface);
-		SAFE_RELEASE(surface);
 	}
 
 	// if no depth surface, we assign a default
@@ -532,29 +541,44 @@ static void dx9SetParameters(const FastParams *params1, const FastParams *params
 
 static void dx9SetVertices(phandle_t vb, VertexType vt, int offset)
 {
-	s_curVerticeUP = false;
-	V(dx9_device->SetStreamSource(0, vb->castTo<IDirect3DVertexBuffer9 *>(), offset, vt.stride()));
-	V(dx9_device->SetVertexDeclaration(dx9_vertexDeclarations[vt]));
+	DX9_Resource *resource = vb->castTo<DX9_Resource *>();
+	AX_ASSERT(resource->m_type == DX9_Resource::kVertexBuffer);
 
-	V(dx9_device->SetStreamSourceFreq(0, 1));
-	V(dx9_device->SetStreamSourceFreq(1, 1));
+	s_curVerticeUP = false;
+	V(dx9_device->SetStreamSource(0, resource->m_vertexBuffer, offset, vt.stride()));
+	dx9_stateManager->setVertexDeclaration(dx9_vertexDeclarations[vt]);
+
+	if (s_curInstanced) {
+		V(dx9_device->SetStreamSourceFreq(0, 1));
+		V(dx9_device->SetStreamSourceFreq(1, 1));
+		s_curInstanced = false;
+	}
 }
 
 static void dx9SetInstanceVertices(phandle_t vb, VertexType vt, int offset, phandle_t inb, int inoffset, int incount)
 {
+	DX9_Resource *resV = vb->castTo<DX9_Resource *>();
+	AX_ASSERT(resV->m_type == DX9_Resource::kVertexBuffer);
+	DX9_Resource *resI = inb->castTo<DX9_Resource *>();
+	AX_ASSERT(resI->m_type == DX9_Resource::kVertexBuffer);
+
 	s_curVerticeUP = false;
-	V(dx9_device->SetStreamSource(0, vb->castTo<IDirect3DVertexBuffer9 *>(), offset, vt.stride()));
+	s_curInstanced = true;
+	V(dx9_device->SetStreamSource(0, resV->m_vertexBuffer, offset, vt.stride()));
 	V(dx9_device->SetStreamSourceFreq(0, D3DSTREAMSOURCE_INDEXEDDATA | incount));
 
-	V(dx9_device->SetStreamSource(1, inb->castTo<IDirect3DVertexBuffer9 *>(), inoffset, 64));
+	V(dx9_device->SetStreamSource(1, resI->m_vertexBuffer, inoffset, 64));
 	V(dx9_device->SetStreamSourceFreq(1, D3DSTREAMSOURCE_INSTANCEDATA | 1ul));
-	V(dx9_device->SetVertexDeclaration(dx9_vertexDeclarationsInstanced[vt]));
+	dx9_stateManager->setVertexDeclaration(dx9_vertexDeclarationsInstanced[vt]);
 }
 
 static void dx9SetIndices(phandle_t ib, ElementType et, int offset, int vertcount, int indicescount)
 {
+	DX9_Resource *resource = ib->castTo<DX9_Resource *>();
+	AX_ASSERT(resource->m_type == DX9_Resource::kIndexBuffer);
+
 	s_curIndiceUP = false;
-	V(dx9_device->SetIndices(ib->castTo<IDirect3DIndexBuffer9 *>()));
+	V(dx9_device->SetIndices(resource->m_indexBuffer));
 	s_curPrimitiveType = trElementType(et);
 	s_curNumVertices = vertcount;
 	s_curStartIndex = offset;
@@ -569,7 +593,7 @@ static void dx9SetVerticesUP(const void *vb, VertexType vt, int vertcount)
 	s_curVerticeUP = true;
 	s_curVertexType = vt;
 	s_curNumVertices = vertcount;
-	V(dx9_device->SetVertexDeclaration(dx9_vertexDeclarations[vt]));
+	dx9_stateManager->setVertexDeclaration(dx9_vertexDeclarations[vt]);
 }
 
 static void dx9SetIndicesUP(const void *ib, ElementType et, int indicescount)
@@ -595,6 +619,10 @@ static void dx9SetMaterialTexture(const FastTextureParams *textures)
 
 static void dx9SetRenderState(const DepthStencilDesc &dsd, const RasterizerDesc &rd, const BlendDesc &bd)
 {
+	dx9_stateManager->setDepthStencilState(dsd);
+	dx9_stateManager->setRasterizerState(rd);
+	dx9_stateManager->setBlendState(bd);
+#if 0
 	if (dsd != s_curDepthStencilDesc) {
 		s_curDepthStencilDesc = dsd;
 		DX9_DepthStencilState::find(dsd)->apply();
@@ -609,6 +637,7 @@ static void dx9SetRenderState(const DepthStencilDesc &dsd, const RasterizerDesc 
 		s_curBlendDesc = bd;
 		DX9_BlendState::find(bd)->apply();
 	}
+#endif
 }
 
 
@@ -663,18 +692,15 @@ static void dx9Clear(const RenderClearer &clearer)
 static void dx9Present(phandle_t window)
 {
 	AX_ASSERT(window);
-	DX9_Window *dx9window = window->castTo<DX9_Window *>();
+	DX9_Resource *resrouce = window->castTo<DX9_Resource *>();
+	AX_ASSERT(resrouce->m_type == DX9_Resource::kWindow);
 	dx9_device->EndScene();
-	dx9window->present();
+	resrouce->m_window->present();
 	dx9_device->BeginScene();
 }
 
 void dx9AssignRenderApi()
 {
-	s_curDepthStencilDesc.intValue = -1;
-	s_curRasterizerDesc.intValue = -1;
-	s_curBlendDesc.intValue = -1;
-
 	RenderApi::createTextureFromFileInMemory = &dx9CreateTextureFromFileInMemory;
 	RenderApi::createTexture2D = &dx9CreateTexture2D;
 	RenderApi::uploadTexture = &dx9UploadTexture;

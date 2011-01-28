@@ -17,9 +17,9 @@ AX_BEGIN_NAMESPACE
 #define AX_INFINITE 0xFFFFFFFF
 
 //------------------------------------------------------------------------------
-// class SyncObject
-//------------------------------------------------------------------------------
-struct AX_API SyncObject {
+class AX_API SyncObject
+{
+public:
 	virtual ~SyncObject() {}
 
 	virtual bool lock(uint_t timeout = AX_INFINITE) = 0;
@@ -27,9 +27,8 @@ struct AX_API SyncObject {
 };
 
 //------------------------------------------------------------------------------
-// class SyncMutex
-//------------------------------------------------------------------------------
-class AX_API SyncMutex {
+class AX_API SyncMutex
+{
 public:
 	SyncMutex();
 	virtual ~SyncMutex();
@@ -42,17 +41,17 @@ private:
 };
 
 //------------------------------------------------------------------------------
-// class auto lock
-//------------------------------------------------------------------------------
 
 #define SCOPED_LOCK ScopedLocker __scopeLocker(m_mutex);
 
-class AX_API ThreadSafe {
+class AX_API ThreadSafe
+{
 public:
 	mutable SyncMutex m_mutex;
 };
 
-class ScopedLocker {
+class ScopedLocker
+{
 public:
 	ScopedLocker(SyncMutex &syncobject) : m_mutex(syncobject) { m_mutex.lock(); }
 	~ScopedLocker() { m_mutex.unlock(); }
@@ -61,9 +60,9 @@ private:
 };
 
 //------------------------------------------------------------------------------
-// class SyncEvent
-//------------------------------------------------------------------------------
-class AX_API SyncEvent {
+
+class AX_API SyncEvent
+{
 public:
 	SyncEvent();
 	virtual ~SyncEvent();
@@ -80,11 +79,10 @@ private:
 };
 
 //------------------------------------------------------------------------------
-// class Thread
-//------------------------------------------------------------------------------
 
 class INotifyHandler;
-class AX_API Thread {
+class AX_API Thread
+{
 public:
 	enum RunningStatus {
 		RS_Exit, RS_Continue

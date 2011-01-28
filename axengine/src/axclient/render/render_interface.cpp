@@ -721,13 +721,16 @@ size_t ApiWrap::calcPos(size_t size)
 size_t distant(size_t baseline, size_t pos)
 {
 	if (pos >= baseline) return pos - baseline;
-	return ~pos + baseline + 1;
+	return pos + ~baseline + 1;
 }
 
 byte_t *ApiWrap::allocRingBuf(int size)
 {
 	// 4 bytes align
 	size = (size + 3) & (~3);
+
+	size_t d0 = distant(87, 104);
+	size_t d1 = distant(0xffffffff, 501);
 
 	byte_t *result = 0;
 

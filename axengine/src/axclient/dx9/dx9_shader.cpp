@@ -288,11 +288,18 @@ extern phandle_t s_curGlobalTextures[GlobalTextureId::MaxType];
 extern SamplerDesc s_curGlobalTextureSamplerDescs[GlobalTextureId::MaxType];
 extern FastTextureParams s_curMaterialTextures;
 
+static inline IDirect3DBaseTexture9 *H2T(phandle_t h)
+{
+	DX9_Resource *res = h->castTo<DX9_Resource *>();
+	AX_ASSERT(res->m_type == DX9_Resource::kTexture);
+	return res->m_texture;
+}
+
 void DX9_Pass::begin()
 {
 	// set shader
-	V(dx9_device->SetVertexShader(m_vs));
-	V(dx9_device->SetPixelShader(m_ps));
+	dx9_stateManager->setVertexShader(m_vs);
+	dx9_stateManager->setPixelShader(m_ps);
 
 	// set primitive parameters
 	setPrimitiveParameters();
@@ -300,10 +307,10 @@ void DX9_Pass::begin()
 	// set global textures
 	for (int i = 0; i < GlobalTextureId::MaxType; i++) {
 		if (m_sysSamplers[i] >= 0 && s_curGlobalTextures[i]) {
-			V(dx9_device->SetTexture(m_sysSamplers[i], s_curGlobalTextures[i]->castTo<IDirect3DBaseTexture9 *>()));
-			DX9_SamplerState::find(m_sysSamplers[i], s_curGlobalTextureSamplerDescs[i])->apply();
+			dx9_stateManager->setTexture(m_sysSamplers[i], H2T(s_curGlobalTextures[i]));
+			dx9_stateManager->setSamplerState(m_sysSamplers[i], s_curGlobalTextureSamplerDescs[i]);
 		} else {
-			//dx9_device->SetTexture(m_sysSamplers[i], 0);
+			//dx9_stateManager->setTexture(m_sysSamplers[i], 0);
 		}
 	}
 
@@ -311,8 +318,8 @@ void DX9_Pass::begin()
 		FastTextureParams::Item &item = s_curMaterialTextures.m_items[i];
 		int index = item.id;
 		if (m_matSamplers[index] >= 0) {
-			V(dx9_device->SetTexture(m_matSamplers[index], item.handle->castTo<IDirect3DBaseTexture9 *>()));
-			DX9_SamplerState::find(m_matSamplers[index], item.samplerState)->apply();
+			dx9_stateManager->setTexture(m_matSamplers[index], H2T(item.handle));
+			dx9_stateManager->setSamplerState(m_matSamplers[index], item.samplerState);
 		}
 	}
 }

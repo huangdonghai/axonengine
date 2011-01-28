@@ -5,23 +5,38 @@ AX_BEGIN_NAMESPACE
 
 struct DX9_Resource {
 	enum Type {
-		kRenderTarget, kVertexBuffer, kIndexBuffer, kWindow
+		kTexture, kVertexBuffer, kIndexBuffer, kWindow
 	};
 
-	Type type;
-	IUnknown *obj;
+	DX9_Resource(Type type, IUnknown *obj) : m_type(type), m_obj(obj), m_level0(0)
+	{}
+
+	~DX9_Resource()
+	{
+		SAFE_RELEASE(m_level0);
+		SAFE_RELEASE(m_obj);
+	}
+
+	Type m_type;
 
 	union {
-		// for texture use
-		struct {
-			int width, height;
-		};
-		// for vertex and index buffer
-		struct {
-			bool isDynamic;
-		};
+		IUnknown *m_obj;
+		IDirect3DTexture9 *m_texture;
+		IDirect3DVertexBuffer9 *m_vertexBuffer;
+		IDirect3DIndexBuffer9 *m_indexBuffer;
+		DX9_Window *m_window;
 	};
+
+	IDirect3DSurface9 *m_level0;
+	int width, height;
+	bool m_isDynamic;
 };
+
+template <class Q>
+Q CastDX9(phandle_t h)
+{
+	DX9_Resource *resource = h->castTo<DX9_Resource *>();
+}
 
 bool trTexFormat(TexFormat texformat, D3DFORMAT &d3dformat);
 

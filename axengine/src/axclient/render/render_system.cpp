@@ -178,6 +178,7 @@ void RenderSystem::endScene()
 
 void RenderSystem::endFrame()
 {
+	static double lastTime = 0;
 	double frontEndStart = OsUtil::seconds();
 
 	int shaderdebug = r_shaderDebug.getInteger();
@@ -204,13 +205,18 @@ void RenderSystem::endFrame()
 
 			std::list<Stat *>::const_iterator it = stats.begin();
 
-			std::string msg;
+			static char msg[1024];
 			for (; it != stats.end(); ++it) {
 				Stat *index = *it;
 				const std::string &name = index->getName();
-				int value = index->getInt();
+				
+				double value = index->getDouble();
+				if (value - int(value) == 0.0) {
+					_snprintf(msg, ArraySize(msg), "%32s: %d", name.c_str(), (int)value);
+				} else {
+					_snprintf(msg, ArraySize(msg), "%32s: %f", name.c_str(), value);
+				}
 
-				StringUtil::sprintf(msg, "%32s: %d", name.c_str(), value);
 
 				if (rect.y > screen_rect.height - 2 * line_height)
 				{
@@ -302,12 +308,14 @@ void RenderSystem::endFrame()
 	}
 #endif
 
-	float frontEndTime = OsUtil::seconds() - frontEndStart;
-
-	//g_statistic->setValue(stat_frontendTime, frontEndTime * 1000);
-	stat_frontendTime.setInt(frontEndTime * 1000);
-
 	g_renderContext->issueFrame(g_renderFrame);
+
+	float frontEndTime = OsUtil::seconds();
+
+	stat_frameTime.setDouble((frontEndTime - lastTime) * 1000.0);
+	stat_frontendTime.setInt((frontEndTime - frontEndStart) * 1000);
+
+	lastTime = frontEndTime;
 
 	m_curTarget = 0;
 

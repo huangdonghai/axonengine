@@ -179,7 +179,6 @@ void RenderContext::issueFrame(RenderFrame *rq)
 	// TODO: bind target
 
 	int view_count = rq->getSceneCount();
-	float frametime = rq->getScene(0)->camera.getFrameTime();
 
 	RenderClearer clearer;
 	clearer.clearDepth(true);
@@ -213,6 +212,8 @@ void RenderContext::issueFrame(RenderFrame *rq)
 	Primitive::ms_framePrim.clear();
 
 	rq->clear();
+
+	double endTime = OsUtil::seconds();
 }
 
 void RenderContext::drawScene(RenderScene *scene, const RenderClearer &clearer)
@@ -598,9 +599,7 @@ void RenderContext::drawInteraction(Interaction *ia)
 
 	Primitive *prim = ia->primitive;
 
-	if (!prim) {
-		return;
-	}
+	AX_ASSERT(prim);
 
 	// check actor
 	const RenderEntity *re = ia->entity;
@@ -1135,7 +1134,5 @@ void RenderContext::drawChars(int count)
 {
 	drawUP(m_fontVerts, VertexType::kBlend, count * 4, m_fontIndices, ElementType_TriList, count * 6, m_mtrFont, Technique::Main);
 }
-
-
 
 AX_END_NAMESPACE

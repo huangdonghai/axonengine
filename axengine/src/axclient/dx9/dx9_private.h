@@ -98,6 +98,7 @@ extern IDirect3D9 *dx9_api;
 extern IDirect3DDevice9 *dx9_device;
 
 extern DX9_ShaderManager *dx9_shaderManager;
+extern DX9_StateManager *dx9_stateManager;
 extern ConstBuffers *dx9_constBuffers;
 
 extern IDirect3DVertexDeclaration9 *dx9_vertexDeclarations[VertexType::kNumber];
