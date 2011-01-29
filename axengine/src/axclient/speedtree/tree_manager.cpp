@@ -86,7 +86,7 @@ void TreeManager::updateForFrame(RenderScene *qscene)
 	// do nothing
 }
 
-void TreeManager::issueToQueue(RenderScene *qscene)
+void TreeManager::issueToScene(RenderScene *qscene)
 {
 #if 0
 	if (!r_geoInstancing->getInteger()) {

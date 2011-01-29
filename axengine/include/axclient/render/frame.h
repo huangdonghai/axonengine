@@ -117,7 +117,7 @@ inline bool RenderScene::isLastCsmSplits() const
 	if (!sourceLight)
 		return false;
 
-	if (sourceLight->getLightType() != RenderLight::kGlobal)
+	if (sourceLight->lightType() != RenderLight::kGlobal)
 		return false;
 
 	if (splitIndex != sourceLight->m_shadowData->numSplitCamera-1)

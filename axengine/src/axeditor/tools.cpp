@@ -117,7 +117,7 @@ void SelectTool::doDrag(int x, int y, int flags, float pressure) {
 	LinePrim::setupScreenRect(m_linePrim, r, Rgba::Red);
 
 #if 1
-	int part = SelectPart::All - SelectPart::kTerrain;
+	SelectPart part = (SelectPart::Type)(SelectPart::All - SelectPart::kTerrain);
 
 	AgentList l;
 	Vector3 pos;
@@ -185,7 +185,7 @@ void SelectTool::pointSelect()
 
 	clearAsset();
 
-	int part = SelectPart::All - SelectPart::kTerrain;
+	SelectPart part = (SelectPart::Type)(SelectPart::All - SelectPart::kTerrain);
 
 	AgentList l;
 	Vector3 pos;
@@ -239,7 +239,7 @@ void SelectTool::areaSelect()
 
 	clearAsset();
 
-	int part = SelectPart::All - SelectPart::kTerrain;
+	SelectPart part = (SelectPart::Type)(SelectPart::All - SelectPart::kTerrain);
 
 	AgentList l;
 	Vector3 pos;

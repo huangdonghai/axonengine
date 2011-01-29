@@ -28,7 +28,7 @@ DisplaySettingPanel::DisplaySettingPanel(QWidget *parent)
 	ui.r_nospecular->setChecked(!r_specular.getBool());
 	ui.r_sky->setChecked(!r_sky.getBool());
 	ui.r_water->setChecked(!r_water.getBool());
-	ui.r_actor->setChecked(!r_actor.getBool());
+	ui.r_actor->setChecked(!r_entity.getBool());
 	ui.r_speedtree->setChecked(!r_speedtree.getBool());
 	ui.r_shadow_2->setChecked(!r_shadow.getBool());
 	ui.r_fog->setChecked(!r_fog.getBool());
@@ -86,7 +86,7 @@ void DisplaySettingPanel::on_r_water_toggled(bool checked) {
 }
 
 void DisplaySettingPanel::on_r_actor_toggled(bool checked) {
-	r_actor.setInt(!checked);
+	r_entity.setInt(!checked);
 }
 
 void DisplaySettingPanel::on_r_speedtree_toggled(bool checked) {

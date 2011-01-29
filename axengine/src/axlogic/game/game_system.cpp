@@ -128,7 +128,7 @@ void GameSystem::stopRunning()
 	notifyObservers(ObserveFlag_StopRunning);
 }
 
-const UserInput *GameSystem::getUserInput(ActorNum clientNum)
+const UserInput *GameSystem::getUserInput(int clientNum)
 {
 	return &m_userInputs;
 }

@@ -28,7 +28,8 @@ struct DX9_Resource {
 	};
 
 	IDirect3DSurface9 *m_level0;
-	int width, height;
+	TexType texType;
+	int width, height, depth;
 	bool m_isDynamic;
 };
 

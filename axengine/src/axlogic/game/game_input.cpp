@@ -208,7 +208,7 @@ void GameInput::genButtons(UserInput &userInput)
 }
 
 
-void GameInput::buttonDown(int bt, InputKey key, int msec)
+void GameInput::buttonDown(int bt, int key, int msec)
 {
 	Button &b = m_buttons[bt];
 
@@ -236,14 +236,14 @@ void GameInput::buttonDown(int bt, InputKey key, int msec)
 	b.wasPressed = true;
 }
 
-void GameInput::buttonUp(int bt, InputKey key, int msec)
+void GameInput::buttonUp(int bt, int key, int msec)
 {
 	Button &b = m_buttons[bt];
 
 	if (b.keys[0] == key) {
-		b.keys[0] = 0;
+		b.keys[0] = InputKey::Invalid;
 	} else if (b.keys[1] == key) {
-		b.keys[1] = 0;
+		b.keys[1] = InputKey::Invalid;
 	} else {
 		return;		// key up without corresponding down (menu pass through)
 	}

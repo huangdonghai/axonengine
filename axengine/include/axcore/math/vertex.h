@@ -67,7 +67,7 @@ struct ChunkVertex {
 inline int VertexType::stride() const
 {
 	static int strides[] = { sizeof(SkinVertex), sizeof(MeshVertex), sizeof(DebugVertex), sizeof(BlendVertex), sizeof(ChunkVertex) };
-	return strides[t];
+	return strides[m_t];
 }
 
 AX_END_NAMESPACE

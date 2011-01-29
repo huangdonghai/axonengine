@@ -136,7 +136,7 @@ void RenderWorld::renderTo(RenderScene *qscene)
 		m_visFrameId++;
 	}
 
-	if (!r_actor.getBool()) {
+	if (!r_entity.getBool()) {
 		s_drawEntity = false;
 	}
 
@@ -149,10 +149,10 @@ void RenderWorld::renderTo(RenderScene *qscene)
 		}
 
 		qscene->addEntity(m_outdoorEnv);
-		m_outdoorEnv->issueToQueue(qscene);
+		m_outdoorEnv->issueToScene(qscene);
 
-		if (m_shadowDir != m_outdoorEnv->getGlobalLight()->getGlobalLightDirection()) {
-			m_shadowDir = m_outdoorEnv->getGlobalLight()->getGlobalLightDirection();
+		if (m_shadowDir != m_outdoorEnv->getGlobalLight()->lightDirection()) {
+			m_shadowDir = m_outdoorEnv->getGlobalLight()->lightDirection();
 			m_shadowFrameId++;
 		}
 	}
@@ -162,15 +162,8 @@ void RenderWorld::renderTo(RenderScene *qscene)
 		if (qscene->sceneType == RenderScene::WorldMain) {
 			m_terrain->update(qscene, Plane::Cross);
 		}
-#if 0
-		Primitives prims = m_terrain->getViewedPrimitives();
 
-		for (size_t i = 0; i < prims.size(); i++) {
-			qscene->addInteraction(0, prims[i]);
-		}
-#else
-		m_terrain->issueToQueue(qscene);
-#endif
+		m_terrain->issueToScene(qscene);
 	}
 
 	bool frustumCull = r_frustumCull.getBool();
@@ -191,7 +184,7 @@ void RenderWorld::renderTo(RenderScene *qscene)
 		IEntityManager *am = g_renderSystem->getEntityManager(i);
 		AX_ASSERT(am);
 
-		am->issueToQueue(qscene);
+		am->issueToScene(qscene);
 	}
 
 	qscene->finalProcess();
@@ -200,17 +193,10 @@ void RenderWorld::renderTo(RenderScene *qscene)
 		return;
 	}
 
-#if 0
-	g_statistic->setValue(stat_worldGlobalLights, qscene->globalLight ? 1 : 0);
-	g_statistic->setValue(stat_worldLights, qscene->numLights);
-	g_statistic->setValue(stat_worldActors, qscene->numEntities);
-	g_statistic->setValue(stat_worldInteractions, qscene->numInteractions);
-#else
 	stat_worldGlobalLights.setInt(qscene->globalLight ? 1 : 0);
 	stat_worldLights.setInt(qscene->numLights);
 	stat_worldActors.setInt(qscene->numEntities);
 	stat_worldInteractions.setInt(qscene->numInteractions);
-#endif
 
 	// check interactions, if need subscene
 	for (int i = 0; i < qscene->numInteractions; i++) {
@@ -231,7 +217,7 @@ void RenderWorld::renderTo(RenderScene *qscene)
 		refl->update(qscene);
 
 		if (refl->m_target)
-			mat->setTexture(MaterialTextureId::Reflection, refl->m_target->getTexture());
+			mat->setTexture(MaterialTextureId::Reflection, refl->m_target);
 
 		if (qscene->numSubScenes == RenderScene::MAX_SUB_SCENES) {
 			Errorf("MAX_SUB_SCENES exceeds");
@@ -251,7 +237,7 @@ void RenderWorld::renderTo(RenderScene *qscene)
 		if (subscene->sceneType == RenderScene::ShadowGen) {
 			RenderLight *light = subscene->sourceLight;
 
-			if (light->getLightType() != RenderLight::kGlobal) {
+			if (light->lightType() != RenderLight::kGlobal) {
 				node = light->m_linkedNode;
 			}
 		}
@@ -259,7 +245,7 @@ void RenderWorld::renderTo(RenderScene *qscene)
 	}
 }
 
-void RenderWorld::renderTo( RenderScene *qscene, QuadNode *node )
+void RenderWorld::renderTo(RenderScene *qscene, QuadNode *node)
 {
 	m_frameNum++;
 
@@ -292,7 +278,7 @@ void RenderWorld::renderTo( RenderScene *qscene, QuadNode *node )
 		m_visFrameId++;
 	}
 
-	if (!r_actor.getBool()) {
+	if (!r_entity.getBool()) {
 		s_drawEntity = false;
 	}
 
@@ -305,10 +291,10 @@ void RenderWorld::renderTo( RenderScene *qscene, QuadNode *node )
 		}
 
 		qscene->addEntity(m_outdoorEnv);
-		m_outdoorEnv->issueToQueue(qscene);
+		m_outdoorEnv->issueToScene(qscene);
 
-		if (m_shadowDir != m_outdoorEnv->getGlobalLight()->getGlobalLightDirection()) {
-			m_shadowDir = m_outdoorEnv->getGlobalLight()->getGlobalLightDirection();
+		if (m_shadowDir != m_outdoorEnv->getGlobalLight()->lightDirection()) {
+			m_shadowDir = m_outdoorEnv->getGlobalLight()->lightDirection();
 			m_shadowFrameId++;
 		}
 	}
@@ -318,15 +304,7 @@ void RenderWorld::renderTo( RenderScene *qscene, QuadNode *node )
 		if (qscene->sceneType == RenderScene::WorldMain) {
 			m_terrain->update(qscene, Plane::Cross);
 		}
-#if 0
-		Primitives prims = m_terrain->getViewedPrimitives();
-
-		for (size_t i = 0; i < prims.size(); i++) {
-			qscene->addInteraction(0, prims[i]);
-		}
-#else
-		m_terrain->issueToQueue(qscene);
-#endif
+		m_terrain->issueToScene(qscene);
 	}
 
 	bool frustumCull = r_frustumCull.getBool();
@@ -346,7 +324,7 @@ void RenderWorld::renderTo( RenderScene *qscene, QuadNode *node )
 		IEntityManager *am = g_renderSystem->getEntityManager(i);
 		AX_ASSERT(am);
 
-		am->issueToQueue(qscene);
+		am->issueToScene(qscene);
 	}
 
 	qscene->finalProcess();
@@ -374,7 +352,7 @@ void RenderWorld::markVisible_r(RenderScene *qscene, QuadNode *node, Plane::Side
 
 	for (IntrusiveList<RenderEntity>::iterator it = node->linkHead.begin(); it != node->linkHead.end(); ++it) {
 		RenderEntity *entity = &*it;
-		if (qscene->sceneType == RenderScene::ShadowGen && qscene->sourceLight->getLightType() == RenderLight::kGlobal) {
+		if (qscene->sceneType == RenderScene::ShadowGen && qscene->sourceLight->lightType() == RenderLight::kGlobal) {
 			if (entity->isCsmCulled()) {
 #if 0
 				g_statistic->incValue(stat_csmCulled);
@@ -426,7 +404,7 @@ void RenderWorld::markVisible_r(RenderScene *qscene, QuadNode *node, Plane::Side
 			qscene->addInteraction(la->queued, prims[i]);
 		}
 #endif
-		entity->issueToQueue(qscene);
+		entity->issueToScene(qscene);
 	}
 
 	if (node->children[0]) {

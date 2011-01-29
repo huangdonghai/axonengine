@@ -13,11 +13,11 @@ read the license and understand and accept it fully.
 #define AX_ENUM_H
 
 #define AX_DECLARE_ENUM(type)	\
-	type::Type t; \
+	type::Type m_t; \
 	inline type() {}	\
-	inline type(Type e) { t = e; } \
-	inline type(int i) { t = (Type)i; } \
-	inline operator Type() const { return t; }
+	inline type(Type e) { m_t = e; } \
+	inline type(const type &i) { m_t = i.m_t; } \
+	inline operator Type() const { return m_t; }
 //	inline operator int() const { return (int)t; } \
 
 AX_BEGIN_NAMESPACE

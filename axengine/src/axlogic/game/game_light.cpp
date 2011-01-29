@@ -102,7 +102,7 @@ void GameLight::onMatrixChanged()
 #endif
 void GameLight::setupHelper()
 {
-	if (m_renderLight->getLightType() == RenderLight::kSpot) {
+	if (m_renderLight->lightType() == RenderLight::kSpot) {
 		setupSpotPrim();
 	} else {
 		setupPointPrim();
@@ -125,7 +125,7 @@ void GameLight::setupPointPrim()
 		m_pointPrim->unlockIndexes();
 	}
 
-	Rgb color = m_renderLight->getLightColor();
+	Rgb color = m_renderLight->lightColor();
 	const float size = 0.5f;
 	const float height = size * AX_SQRT1_2;
 
@@ -172,8 +172,8 @@ void GameLight::setupSpotPrim()
 		m_spotPrim->unlockIndexes();
 	}
 
-	Rgb color = m_renderLight->getLightColor();
-	const float spotangle = Math::d2r(m_renderLight->getSpotAngle());
+	Rgb color = m_renderLight->lightColor();
+	const float spotangle = Math::d2r(m_renderLight->spotAngle());
 	const float size = 0.5f;
 	float len, height;
 	Math::sincos(spotangle * 0.5f, len, height);

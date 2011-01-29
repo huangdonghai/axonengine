@@ -33,11 +33,21 @@ Texture::Texture(const std::string &name, InitFlags flags/*=0*/)
 
 Texture::Texture(const std::string &debugname, TexFormat format, const Size &size, InitFlags flags /*= 0*/)
 {
-	m_resource = TextureResource::createResource(debugname, format, size, flags);
+	m_resource = new TextureResource(debugname, format, size, flags);
 }
 
 Texture::Texture(const TextureResourcePtr &resource, const SamplerDesc &desc) : m_resource(resource), m_samplerDesc(desc)
 {}
+
+Texture::Texture(const std::string &debugname, TexType textype, TexFormat format, const Size &size, float depth, InitFlags flags)
+{
+	_init(debugname, textype, format, size, depth, flags);
+}
+
+Texture::Texture()
+{}
+
+
 
 
 Texture::~Texture()
@@ -152,6 +162,14 @@ Size Texture::size() const
 {
 	return m_resource->size();
 }
+
+
+void Texture::_init(const std::string &debugname, TexType textype, TexFormat format, const Size &size, float depth, InitFlags flags)
+{
+	m_resource = new TextureResource(debugname, textype, format, size.width, size.height, depth, flags);
+}
+
+
 
 #if 0
 void Texture::texlist_f(const CmdArgs &args)

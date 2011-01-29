@@ -3,11 +3,11 @@
 AX_BEGIN_NAMESPACE
 
 void (*RenderApi::createTextureFromFileInMemory)(phandle_t h, IoRequest *asioRequest);
-void (*RenderApi::createTexture2D)(phandle_t h, TexFormat format, int width, int height, int flags) = 0;
+void (*RenderApi::createTexture)(phandle_t h, TexType type, TexFormat format, int width, int height, int depth, int flags);
 void (*RenderApi::uploadTexture)(phandle_t h, const void *pixels, TexFormat format);
 void (*RenderApi::uploadSubTexture)(phandle_t h, const Rect &rect, const void *pixels, TexFormat format);
 void (*RenderApi::generateMipmap)(phandle_t h);
-void (*RenderApi::deleteTexture2D)(phandle_t h);
+void (*RenderApi::deleteTexture)(phandle_t h);
 	  
 void (*RenderApi::createVertexBuffer)(phandle_t h, int datasize, Primitive::Hint hint);
 void (*RenderApi::uploadVertexBuffer)(phandle_t h, int datasize, const void *p);
@@ -108,7 +108,8 @@ private:
 };
 
 template <typename Arg0, typename Arg1>
-class ApiCommand_<void (*)(Arg0,Arg1)> : public ApiCommand {
+class ApiCommand_<void (*)(Arg0,Arg1)> : public ApiCommand
+{
 public:
 	typedef void (*FunctionType)(Arg0,Arg1);
 
@@ -135,7 +136,8 @@ private:
 };
 
 template <typename Arg0, typename Arg1, typename Arg2>
-class ApiCommand_<void (*)(Arg0,Arg1,Arg2)> : public ApiCommand {
+class ApiCommand_<void (*)(Arg0,Arg1,Arg2)> : public ApiCommand
+{
 public:
 	typedef void (*FunctionType)(Arg0,Arg1,Arg2);
 
@@ -164,7 +166,8 @@ private:
 };
 
 template <typename Arg0, typename Arg1, typename Arg2, typename Arg3>
-class ApiCommand_<void (*)(Arg0,Arg1,Arg2,Arg3)> : public ApiCommand {
+class ApiCommand_<void (*)(Arg0,Arg1,Arg2,Arg3)> : public ApiCommand
+{
 public:
 	typedef void (*FunctionType)(Arg0,Arg1,Arg2,Arg3);
 
@@ -196,7 +199,8 @@ private:
 
 
 template <typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4>
-class ApiCommand_<void (*)(Arg0,Arg1,Arg2,Arg3,Arg4)> : public ApiCommand {
+class ApiCommand_<void (*)(Arg0,Arg1,Arg2,Arg3,Arg4)> : public ApiCommand
+{
 public:
 	typedef void (*FunctionType)(Arg0,Arg1,Arg2,Arg3,Arg4);
 
@@ -229,7 +233,8 @@ private:
 };
 
 template <typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4, typename Arg5>
-class ApiCommand_<void (*)(Arg0,Arg1,Arg2,Arg3,Arg4,Arg5)> : public ApiCommand {
+class ApiCommand_<void (*)(Arg0,Arg1,Arg2,Arg3,Arg4,Arg5)> : public ApiCommand
+{
 public:
 	typedef void (*FunctionType)(Arg0,Arg1,Arg2,Arg3,Arg4,Arg5);
 
@@ -262,6 +267,46 @@ private:
 	typename remove_const_reference<Arg4>::type m_arg4;
 	typename remove_const_reference<Arg5>::type m_arg5;
 };
+
+template <typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4, typename Arg5, typename Arg6>
+class ApiCommand_<void (*)(Arg0,Arg1,Arg2,Arg3,Arg4,Arg5,Arg6)> : public ApiCommand
+{
+public:
+	typedef void (*FunctionType)(Arg0,Arg1,Arg2,Arg3,Arg4,Arg5,Arg6);
+
+	ApiCommand_(FunctionType m)
+		: m_m(m)
+	{ AX_ASSERT(m); }
+
+	void args(Arg0 arg0, Arg1 arg1, Arg2 arg2, Arg3 arg3, Arg4 arg4,Arg5 arg5,Arg6 arg6)
+	{
+		m_arg0 = arg0;
+		m_arg1 = arg1;
+		m_arg2 = arg2;
+		m_arg3 = arg3;
+		m_arg4 = arg4;
+		m_arg5 = arg5;
+		m_arg6 = arg6;
+		g_apiWrap->pushCommand(this);
+	}
+
+	virtual void exec()
+	{
+		(m_m)(m_arg0, m_arg1, m_arg2, m_arg3, m_arg4, m_arg5, m_arg6);
+	}
+
+private:
+	FunctionType m_m;
+	typename remove_const_reference<Arg0>::type m_arg0;
+	typename remove_const_reference<Arg1>::type m_arg1;
+	typename remove_const_reference<Arg2>::type m_arg2;
+	typename remove_const_reference<Arg3>::type m_arg3;
+	typename remove_const_reference<Arg4>::type m_arg4;
+	typename remove_const_reference<Arg5>::type m_arg5;
+	typename remove_const_reference<Arg5>::type m_arg6;
+};
+
+
 
 static ApiCommand_<void (*)()> &AllocCommand_(void (*method)())
 {
@@ -325,6 +370,16 @@ static ApiCommand_<void (*)(Arg0,Arg1,Arg2,Arg3,Arg4,Arg5)> &AllocCommand_(void 
 	return *result;
 }
 
+template <typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4, typename Arg5, typename Arg6>
+static ApiCommand_<void (*)(Arg0,Arg1,Arg2,Arg3,Arg4,Arg5,Arg6)> &AllocCommand_(void (*method)(Arg0,Arg1,Arg2,Arg3,Arg4,Arg5,Arg6))
+{
+	typedef ApiCommand_<void (*)(Arg0,Arg1,Arg2,Arg3,Arg4,Arg5,Arg6)> ResultType;
+	ResultType *result = g_apiWrap->allocCommand<ResultType>();
+	new (result) ResultType(method);
+	return *result;
+}
+
+
 ApiWrap::ApiWrap()
 {
 	m_bufReadPos = m_bufWritePos = 0;
@@ -346,13 +401,13 @@ void ApiWrap::createTextureFromFileInMemory(phandle_t &h, IoRequest *asioRequest
 #endif
 }
 
-void ApiWrap::createTexture2D(phandle_t &h, TexFormat format, int width, int height, int flags /*= 0*/)
+void ApiWrap::createTexture(phandle_t &h, TexType type, TexFormat format, int width, int height, int depth, int flags)
 {
 	h = newHandle();
 #if AX_MTRENDER
-	AllocCommand_(RenderApi::createTexture2D).args(h, format, width, height, flags);
+	AllocCommand_(RenderApi::createTexture).args(h, type, format, width, height, depth, flags);
 #else
-	RenderApi::createTexture2D(h, format, width, height, flags);
+	RenderApi::createTexture(h, type, format, width, height, depth, flags);
 #endif
 }
 
@@ -386,12 +441,12 @@ void ApiWrap::generateMipmap(phandle_t h)
 #endif
 }
 
-void ApiWrap::deleteTexture2D(phandle_t h)
+void ApiWrap::deleteTexture(phandle_t h)
 {
 #if AX_MTRENDER
-	addObjectDeletion(RenderApi::deleteTexture2D, h);
+	addObjectDeletion(RenderApi::deleteTexture, h);
 #else
-	addObjectDeletion(RenderApi::deleteTexture2D, h);
+	addObjectDeletion(RenderApi::deleteTexture, h);
 #endif
 }
 

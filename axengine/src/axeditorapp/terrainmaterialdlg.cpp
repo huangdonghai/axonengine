@@ -82,7 +82,7 @@ void TerrainMaterialDlg::writeToDef(QTreeWidgetItem *item)
 
 	QColor qc = ui.colorView->color();
 	l->color.set(qc.red(), qc.green(), qc.blue());
-	l->surfaceType = ui.surfaceType->currentIndex();
+	l->surfaceType = (SurfaceType::Type)ui.surfaceType->currentIndex();
 	l->baseImage = m_baseImage;
 	l->isAutoGen = ui.autoGen->isChecked();
 	l->altitudeRange.x = ui.altitudeLow->value();

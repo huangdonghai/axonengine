@@ -284,9 +284,9 @@ void DX9_Pass::initSampler(const D3DXCONSTANT_DESC &desc)
 	}
 }
 
-extern phandle_t s_curGlobalTextures[GlobalTextureId::MaxType];
-extern SamplerDesc s_curGlobalTextureSamplerDescs[GlobalTextureId::MaxType];
-extern FastTextureParams s_curMaterialTextures;
+extern phandle_t dx9_curGlobalTextures[GlobalTextureId::MaxType];
+extern SamplerDesc dx9_curGlobalTextureSamplerDescs[GlobalTextureId::MaxType];
+extern FastTextureParams dx9_curMaterialTextures;
 
 static inline IDirect3DBaseTexture9 *H2T(phandle_t h)
 {
@@ -306,16 +306,16 @@ void DX9_Pass::begin()
 
 	// set global textures
 	for (int i = 0; i < GlobalTextureId::MaxType; i++) {
-		if (m_sysSamplers[i] >= 0 && s_curGlobalTextures[i]) {
-			dx9_stateManager->setTexture(m_sysSamplers[i], H2T(s_curGlobalTextures[i]));
-			dx9_stateManager->setSamplerState(m_sysSamplers[i], s_curGlobalTextureSamplerDescs[i]);
+		if (m_sysSamplers[i] >= 0 && dx9_curGlobalTextures[i]) {
+			dx9_stateManager->setTexture(m_sysSamplers[i], H2T(dx9_curGlobalTextures[i]));
+			dx9_stateManager->setSamplerState(m_sysSamplers[i], dx9_curGlobalTextureSamplerDescs[i]);
 		} else {
 			//dx9_stateManager->setTexture(m_sysSamplers[i], 0);
 		}
 	}
 
-	for (int i = 0; i < s_curMaterialTextures.m_numItems; i++) {
-		FastTextureParams::Item &item = s_curMaterialTextures.m_items[i];
+	for (int i = 0; i < dx9_curMaterialTextures.m_numItems; i++) {
+		FastTextureParams::Item &item = dx9_curMaterialTextures.m_items[i];
 		int index = item.id;
 		if (m_matSamplers[index] >= 0) {
 			dx9_stateManager->setTexture(m_matSamplers[index], H2T(item.handle));
@@ -324,22 +324,22 @@ void DX9_Pass::begin()
 	}
 }
 
-extern FastParams s_curParams1;
-extern FastParams s_curParams2;
+extern FastParams dx9_curParams1;
+extern FastParams dx9_curParams2;
 
 void DX9_Pass::setPrimitiveParameters()
 {
 	m_setflag++;
 	// set params1
-	for (int i = 0; i < s_curParams1.m_numItems; i++) {
-		FixedString name(s_curParams1.m_items[i].nameId);
-		setParameter(name, s_curParams1.m_items[i].count, &s_curParams1.m_floatData[s_curParams1.m_items[i].offset]);
+	for (int i = 0; i < dx9_curParams1.m_numItems; i++) {
+		FixedString name(dx9_curParams1.m_items[i].nameId);
+		setParameter(name, dx9_curParams1.m_items[i].count, &dx9_curParams1.m_floatData[dx9_curParams1.m_items[i].offset]);
 	}
 
 	// set params2
-	for (int i = 0; i < s_curParams2.m_numItems; i++) {
-		FixedString name(s_curParams2.m_items[i].nameId);
-		setParameter(name, s_curParams2.m_items[i].count, &s_curParams2.m_floatData[s_curParams2.m_items[i].offset]);
+	for (int i = 0; i < dx9_curParams2.m_numItems; i++) {
+		FixedString name(dx9_curParams2.m_items[i].nameId);
+		setParameter(name, dx9_curParams2.m_items[i].count, &dx9_curParams2.m_floatData[dx9_curParams2.m_items[i].offset]);
 	}
 
 	// if not set by material parameter, set it to default value
@@ -483,7 +483,7 @@ bool DX9_Shader::haveTechnique(Technique tech) const
 void DX9_Shader::initTechniques()
 {
 	for (int i = 0; i < Technique::MaxType; i++) {
-		m_d3dxTechniques[i] = findTechnique(i);
+		m_d3dxTechniques[i] = findTechnique((Technique::Type)i);
 	}
 }
 

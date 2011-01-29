@@ -217,7 +217,7 @@ public:
 	virtual BoundingBox getBoundingBox();
 	virtual Primitives getHitTestPrims();
 
-	virtual void issueToQueue(RenderScene *qscene);
+	virtual void issueToScene(RenderScene *qscene);
 
 	// SkeletalMesh
 	virtual HavokRig *findRig() const;

@@ -25,6 +25,7 @@ AX_BEGIN_NAMESPACE
 
 struct SurfaceType {
 	enum Type {
+		Unknown,
 #define AX_ENUM(x) x,
 		AX_DECL_SURFACETYPE
 #undef AX_ENUM
@@ -33,7 +34,7 @@ struct SurfaceType {
 	AX_DECLARE_ENUM(SurfaceType);
 
 	const char *toString() {
-		switch (t) {
+		switch (m_t) {
 #define AX_ENUM(x) case x: return #x;
 			AX_DECL_SURFACETYPE
 #undef AX_ENUM
@@ -42,11 +43,11 @@ struct SurfaceType {
 		return "INVALID";
 	}
 
-	static int fromString(const char *str) {
+	static SurfaceType fromString(const char *str) {
 #define AX_ENUM(x) if (Strequ(str, #x)) { return x; }
 		AX_DECL_SURFACETYPE
 #undef AX_ENUM
-			return 0;
+			return Unknown;
 	}
 };
 

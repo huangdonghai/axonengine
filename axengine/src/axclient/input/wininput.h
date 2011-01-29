@@ -33,7 +33,7 @@ AX_BEGIN_NAMESPACE
 		HWND m_hwnd;
 		WNDPROC m_oldWndProc;
 
-		int m_mapVkey[256];
+		InputKey m_mapVkey[256];
 	};
 
 AX_END_NAMESPACE

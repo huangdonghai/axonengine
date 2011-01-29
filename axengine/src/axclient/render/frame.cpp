@@ -20,7 +20,7 @@ void RenderScene::addLight(RenderLight *light)
 #endif
 	}
 
-	if (light->getLightType() != RenderLight::kGlobal && !r_lightBuf.getBool()) {
+	if (light->lightType() != RenderLight::kGlobal && !r_lightBuf.getBool()) {
 #if 0
 		light->fillQueued(nullptr);
 //			return 0;
@@ -39,7 +39,7 @@ void RenderScene::addLight(RenderLight *light)
 #endif
 	lights[numLights++] = ql;
 
-	if (light->getLightType() == RenderLight::kGlobal) {
+	if (light->lightType() == RenderLight::kGlobal) {
 		globalLight = ql;
 	}
 }

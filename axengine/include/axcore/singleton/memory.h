@@ -199,12 +199,14 @@ AX_API void *Malloc16(size_t size);
 AX_API void Free16(void *ptr);
 
 template<typename T>
-T *TypeAlloc(size_t count = 1) {
+T *TypeAlloc(size_t count = 1)
+{
 	return (T*)Malloc(count * sizeof(T));
 }
 
 template<typename T>
-void TypeFree(T*& ptr) {
+void TypeFree(T*& ptr)
+{
 	if (!ptr) {
 		return;
 	}
@@ -213,7 +215,8 @@ void TypeFree(T*& ptr) {
 }
 
 template<typename T>
-T *TypeNew() {
+T *TypeNew()
+{
 	T *p = TypeAlloc<T>(1);
 
 	new(p) T;
@@ -222,7 +225,8 @@ T *TypeNew() {
 }
 
 template<typename T, typename Arg0>
-T *TypeNew(Arg0 arg1) {
+T *TypeNew(Arg0 arg1)
+{
 	T *p = TypeAlloc<T>(1);
 
 	new(p) T(arg1);
@@ -231,7 +235,8 @@ T *TypeNew(Arg0 arg1) {
 }
 
 template<typename T>
-void TypeDelete(T*& ptr) {
+void TypeDelete(T*& ptr)
+{
 	if (ptr) {
 		ptr->~T();
 		TypeFree(ptr);
@@ -239,12 +244,14 @@ void TypeDelete(T*& ptr) {
 }
 
 template<typename T>
-T *TypeAlloc16(size_t count = 1) {
+T *TypeAlloc16(size_t count = 1)
+{
 	return (T*)Malloc16(count * sizeof(T));
 }
 
 template<typename T>
-void TypeFree16(T*& ptr) {
+void TypeFree16(T*& ptr)
+{
 	if (!ptr)
 		return;
 
@@ -253,7 +260,8 @@ void TypeFree16(T*& ptr) {
 }
 
 template<typename T>
-void TypeFreeContainer(T &t) {
+void TypeFreeContainer(T &t)
+{
 	T::iterator it = t.begin();
 	for (; it != t.end(); ++it) {
 		TypeFree(*it);
@@ -261,12 +269,14 @@ void TypeFreeContainer(T &t) {
 }
 
 template<typename T>
-void TypeZero(T *type) {
+void TypeZero(T *type)
+{
 	memset(type, 0, sizeof(T));
 }
 
 template<typename T, size_t size>
-void TypeZeroArray(T (&type)[size]) {
+void TypeZeroArray(T (&type)[size])
+{
 	memset(type, 0, sizeof(T)*size);
 }
 
@@ -278,7 +288,8 @@ void TypeZeroArray(T (&type)[size]) {
 // position. between SetMark and PopMark, you can just alloc like a heap
 //------------------------------------------------------------------------------
 
-class AX_API MemoryStack {
+class AX_API MemoryStack
+{
 public:
 	struct Mark;
 
@@ -334,31 +345,39 @@ public:
 	typedef typename _base::difference_type difference_type;
 	
 	template<class _Other>
-	struct rebind {	// convert an Allocator<T> to an Allocator <_Other>
+	struct rebind
+	{	// convert an Allocator<T> to an Allocator <_Other>
 		typedef Allocator<_Other> other;
 	};
 
-	Allocator() {}
+	Allocator()
+	{}
 
-	Allocator(const Allocator<T>&) {}
+	Allocator(const Allocator<T>&)
+	{}
 
 	template<class _Other>
-	Allocator(const Allocator<_Other>&) {}
+	Allocator(const Allocator<_Other>&)
+	{}
 
 	template<class _Other>
-	Allocator<T>& operator=(const Allocator<_Other>&) {
+	Allocator<T>& operator=(const Allocator<_Other>&)
+	{
 		return (*this);
 	}
 
-	void deallocate(pointer _Ptr, size_type) {	// deallocate object at _Ptr, ignore size
+	void deallocate(pointer _Ptr, size_type)
+	{	// deallocate object at _Ptr, ignore size
 		Free(_Ptr);
 	}
 
-	pointer allocate(size_type _Count) {	// allocate array of _Count elements
+	pointer allocate(size_type _Count)
+	{	// allocate array of _Count elements
 		return (pointer)(Malloc(_Count*sizeof(T)));
 	}
 
-	pointer allocate(size_type _Count, const void  *) {	// allocate array of _Count elements, ignore hint
+	pointer allocate(size_type _Count, const void  *)
+	{	// allocate array of _Count elements, ignore hint
 		return (allocate(_Count));
 	}
 };
@@ -381,14 +400,16 @@ private:
 };
 
 template< class T >
-void FreeList<T>::add(T &t) {
+void FreeList<T>::add(T &t)
+{
 	void** p = (void**)&t;
 	*p = m_head;
 	m_head = p;
 }
 
 template< class T >
-T *FreeList<T>::get() {
+T *FreeList<T>::get()
+{
 	if (m_head == nullptr) {
 		return 0;
 	}
@@ -403,7 +424,8 @@ T *FreeList<T>::get() {
 //------------------------------------------------------------------------------
 
 template<class T, int blockSize=32>
-class BlockAlloc {
+class BlockAlloc
+{
 public:
 	BlockAlloc(void);
 	~BlockAlloc(void);
@@ -435,19 +457,22 @@ private:
 };
 
 template<class T, int blockSize>
-BlockAlloc<T,blockSize>::BlockAlloc(void) {
+BlockAlloc<T,blockSize>::BlockAlloc(void)
+{
 	blocks = NULL;
 	freelist = NULL;
 	total = active = 0;
 }
 
 template<class T, int blockSize>
-BlockAlloc<T,blockSize>::~BlockAlloc(void) {
+BlockAlloc<T,blockSize>::~BlockAlloc(void)
+{
 	clear();
 }
 
 template<class T, int blockSize>
-T *BlockAlloc<T,blockSize>::alloc(void) {
+T *BlockAlloc<T,blockSize>::alloc(void)
+{
 	if (!freelist) {
 		Block *block = TypeAlloc<Block>();
 		block->next = blocks;
@@ -469,7 +494,8 @@ T *BlockAlloc<T,blockSize>::alloc(void) {
 }
 
 template<class T, int blockSize>
-void BlockAlloc<T,blockSize>::free(T *t) {
+void BlockAlloc<T,blockSize>::free(T *t)
+{
 	t->~T();
 
 	Element *element = (Element *)(((unsigned char *) t) - ((int) &((Element *)0)->t));
@@ -479,7 +505,8 @@ void BlockAlloc<T,blockSize>::free(T *t) {
 }
 
 template<class T, int blockSize>
-void BlockAlloc<T,blockSize>::clear(void) {
+void BlockAlloc<T,blockSize>::clear(void)
+{
 	while (blocks) {
 		Block *block = blocks;
 		blocks = blocks->next;
@@ -500,19 +527,23 @@ AX_END_NAMESPACE
 // memory stack don't need delete
 //------------------------------------------------------------------------------
 
-inline void *operator new(size_t count, AX_NAMESPACE::MemoryStack *stack) {
+inline void *operator new(size_t count, AX_NAMESPACE::MemoryStack *stack)
+{
 	return stack->alloc((AX_NAMESPACE::uint_t)count);
 }
 
-inline void *operator new[](size_t count, AX_NAMESPACE::MemoryStack *stack) {
+inline void *operator new[](size_t count, AX_NAMESPACE::MemoryStack *stack)
+{
 	return stack->alloc((AX_NAMESPACE::uint_t)count);
 }
 
-inline void operator delete(void *p, AX_NAMESPACE::MemoryStack *stack) {
+inline void operator delete(void *p, AX_NAMESPACE::MemoryStack *stack)
+{
 	// do nothing
 }
 
-inline void operator delete[](void *p, AX_NAMESPACE::MemoryStack *stack) {
+inline void operator delete[](void *p, AX_NAMESPACE::MemoryStack *stack)
+{
 	// do nothing
 }
 
@@ -525,19 +556,23 @@ void operator delete[](void *p);
 
 #else
 
-inline void *operator new(size_t count) {
+inline void *operator new(size_t count)
+{
 	return AX_NAMESPACE::Malloc(count);
 }
 
-inline void *operator new[](size_t count) {
+inline void *operator new[](size_t count)
+{
 	return AX_NAMESPACE::Malloc(count);
 }
 
-inline void operator delete(void *p) {
+inline void operator delete(void *p)
+{
 	return AX_NAMESPACE::Free(p);
 }
 
-inline void operator delete[](void *p) {
+inline void operator delete[](void *p)
+{
 	return AX_NAMESPACE::Free(p);
 }
 

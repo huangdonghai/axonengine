@@ -25,7 +25,7 @@ public:
 	void setTransformState(bool editable, bool clear, const Vector3 &parameter);
 
 	float moveSpeed;
-	SelectPart selectionPart;
+	int selectionPart;
 
 	// transform, app->dll
 	int cursorSelectSize;

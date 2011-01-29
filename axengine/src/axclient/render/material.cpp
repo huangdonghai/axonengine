@@ -35,7 +35,7 @@ Material::Material(const std::string &name)
 		setTextureSet(m_name);
 	} else {
 		for (int i = 0; i < MaterialTextureId::MaxType; i++) {
-			MaterialDecl::TextureDef *texdef = m_decl->getTextureDef(i);
+			MaterialDecl::TextureDef *texdef = m_decl->getTextureDef((MaterialTextureId::Type)i);
 
 			if (!texdef)
 				continue;
@@ -204,7 +204,7 @@ const MaterialMacro &Material::getShaderMacro()
 		for (int i = 0; i < MaterialTextureId::MaxType; i++) {
 			Texture *tex = m_textures[i];
 			if (!tex) continue;
-			m_fastSamplerParams.addSampler(i, tex->getPHandle(), tex->getSamplerState());
+			m_fastSamplerParams.addSampler((MaterialTextureId::Type)i, tex->getPHandle(), tex->getSamplerState());
 		}
 	}
 

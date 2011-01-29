@@ -255,7 +255,7 @@ Vector3 RenderCamera::worldToScreen(const Vector3 &in) const
 		return out.xyz();
 	}
 
-	Size targetSize = m_target->getSize();
+	Size targetSize = m_target->size();
 
 	out /= out.w;
 
@@ -270,7 +270,7 @@ Vector3 RenderCamera::screenToWorld(const Vector3 &in) const
 {
 	Vector4 vert(in, 1);
 
-	Size targetSize = m_target->getSize();
+	Size targetSize = m_target->size();
 
 	vert.y = targetSize.height - vert.y;
 

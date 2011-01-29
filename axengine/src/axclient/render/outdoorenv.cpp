@@ -270,12 +270,12 @@ void OutdoorEnv::createSkyDome()
 
 	SamplerDesc desc;
 	desc.clampMode = SamplerDesc::ClampMode_Clamp;
-	m_skyNishitaRt->getTexture()->setSamplerState(desc);
-	m_mieRt->getTexture()->setSamplerState(desc);
+	m_skyNishitaRt->setSamplerState(desc);
+	m_mieRt->setSamplerState(desc);
 
 	m_skyNishitaMat = new Material("_skyNishita");
-	m_skyNishitaMat->setTexture(MaterialTextureId::Diffuse, m_skyNishitaRt->getTexture());
-	m_skyNishitaMat->setTexture(MaterialTextureId::Specular, m_mieRt->getTexture());
+	m_skyNishitaMat->setTexture(MaterialTextureId::Diffuse, m_skyNishitaRt);
+	m_skyNishitaMat->setTexture(MaterialTextureId::Specular, m_mieRt);
 	m_skyNishitaGenMat = 0; //Material::loadUnique("_skyNishitaGen");
 
 	m_skydome->setMaterial(m_skyNishitaMat);
@@ -432,11 +432,11 @@ void OutdoorEnv::frameUpdate(RenderScene *qscene)
 }
 
 
-void OutdoorEnv::issueToQueue(RenderScene *qscene)
+void OutdoorEnv::issueToScene(RenderScene *qscene)
 {
 	if (m_haveGlobalLight) {
 		qscene->addEntity(this->getGlobalLight());
-		getGlobalLight()->issueToQueue(qscene);
+		getGlobalLight()->issueToScene(qscene);
 	}
 
 	qscene->addEntity(m_globalFog);

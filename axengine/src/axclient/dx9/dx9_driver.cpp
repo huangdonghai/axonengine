@@ -325,10 +325,10 @@ void DX9_Driver::checkFormats()
 {
 	D3DFORMAT d3dformat;
 	for (int i=0; i<TexFormat::MAX_NUMBER; i++) {
-		trTexFormat(i, d3dformat);
-		g_renderDriverInfo.textureFormatSupports[i] = checkTextureFormatSupport(i, d3dformat);
-		g_renderDriverInfo.renderTargetFormatSupport[i] = checkRenderTargetFormatSupport(i, d3dformat);
-		g_renderDriverInfo.autogenMipmapSupports[i] = checkHardwareMipmapGenerationSupport(i, d3dformat);
+		trTexFormat((TexFormat::Type)i, d3dformat);
+		g_renderDriverInfo.textureFormatSupports[i] = checkTextureFormatSupport((TexFormat::Type)i, d3dformat);
+		g_renderDriverInfo.renderTargetFormatSupport[i] = checkRenderTargetFormatSupport((TexFormat::Type)i, d3dformat);
+		g_renderDriverInfo.autogenMipmapSupports[i] = checkHardwareMipmapGenerationSupport((TexFormat::Type)i, d3dformat);
 	}
 
 	g_renderDriverInfo.suggestFormats[RenderDriverInfo::SuggestedFormat_DepthStencil] = TexFormat::D24S8;

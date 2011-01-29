@@ -29,7 +29,7 @@ public:
 	virtual bool isSupportExt(const std::string &ext) const;
 	virtual RenderEntity *create(const std::string &name, intptr_t arg = 0);
 	virtual void updateForFrame(RenderScene *qscene );
-	virtual void issueToQueue(RenderScene *qscene);
+	virtual void issueToScene(RenderScene *qscene);
 
 private:
 	typedef Dict<std::string, TreeAsset*>	TreeAssetDict;

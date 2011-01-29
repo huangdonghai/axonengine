@@ -1471,7 +1471,7 @@ Primitives HavokModel::getHitTestPrims()
 	return result;
 }
 
-void HavokModel::issueToQueue(RenderScene *qscene)
+void HavokModel::issueToScene(RenderScene *qscene)
 {
 	if (!m_package)
 		return;

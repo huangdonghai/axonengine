@@ -26,7 +26,7 @@ AX_BEGIN_NAMESPACE
 
 	private:
 		bool m_isInCapture;
-		Dict<int,int>	m_keymap;
+		Dict<int,InputKey>	m_keymap;
 	};
 
 AX_END_NAMESPACE

@@ -17,6 +17,7 @@ public:
 
 	TextureResource(const FixedString &key, InitFlags flags);
 	TextureResource(const FixedString &key, TexFormat format, const Size &size, InitFlags flags);
+	TextureResource(const FixedString &key, TexType textype, TexFormat format, int width, int height, float depth, InitFlags flags);
 	virtual ~TextureResource();
 
 	void uploadSubTexture(const Rect &rect, const void *pixels, TexFormat format);
@@ -33,13 +34,16 @@ public:
 	virtual bool canBeDeletedNow();
 
 	static TextureResourcePtr findResource(const FixedString &name, int flags);
-	static TextureResourcePtr createResource(const FixedString &debugname, TexFormat format, const Size &size, int flags);
+
+protected:
+	void _init(const FixedString &key, TexType textype, TexFormat format, int width, int height, float depth, InitFlags flags);
 
 private:
 	phandle_t m_handle;
 	bool m_isFileTexture;
 	bool m_fileLoaded;
-	Size m_size;
+	TexType m_texType;
+	int m_width, m_height, m_depth;
 
 	InitFlags m_initFlags;
 

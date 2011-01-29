@@ -11,7 +11,7 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-inline GLenum trTexType(Texture::TexType type) {
+inline GLenum trTexType(TexType type) {
 	switch (type) {
 	case Texture::TexType_2D:
 		return GL_TEXTURE_2D;

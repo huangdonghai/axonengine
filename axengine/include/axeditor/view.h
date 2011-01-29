@@ -62,8 +62,8 @@ public:
 	void beginSelect(const Rect &r);
 	int endSelect();
 
-	bool selectRegion(const Rect &rect, SelectPart part, OUT Vector3 &pos, OUT AgentList &retlist, bool onlynearest = false);
-	bool selectRegion(const Rect &rect, SelectPart part, OUT Vector3 &pos);
+	bool selectRegion(const Rect &rect, int parts, OUT Vector3 &pos, OUT AgentList &retlist, bool onlynearest = false);
+	bool selectRegion(const Rect &rect, int parts, OUT Vector3 &pos);
 
 	const RenderCamera &getCamera() const { return m_camera; }
 

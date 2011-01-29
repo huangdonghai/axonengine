@@ -91,7 +91,7 @@ public:
 	void setGameWorld(GameWorld *gameworld);
 
 	// player
-	const UserInput *getUserInput(ActorNum clientNum);
+	const UserInput *getUserInput(int clientNum);
 
 protected:
 

@@ -61,8 +61,8 @@ AX_BEGIN_NAMESPACE
 		m_mapVkey[VK_MBUTTON] = InputKey::MouseMiddle;
 
 #if (_WIN32_WINNT >= 0x0500)
-		m_mapVkey[VK_XBUTTON1] = 0;
-		m_mapVkey[VK_XBUTTON2] = 0;
+		m_mapVkey[VK_XBUTTON1] = InputKey::Invalid;
+		m_mapVkey[VK_XBUTTON2] = InputKey::Invalid;
 #endif /* _WIN32_WINNT >= 0x0500 */
 
 				/*
@@ -84,34 +84,34 @@ AX_BEGIN_NAMESPACE
 		m_mapVkey[VK_PAUSE] = InputKey::Pause;
 		m_mapVkey[VK_CAPITAL] = InputKey::Capslock;
 
-		m_mapVkey[VK_KANA] = 0;
-		m_mapVkey[VK_HANGEUL] = 0;
-		m_mapVkey[VK_HANGUL] = 0;
-		m_mapVkey[VK_JUNJA] = 0;
-		m_mapVkey[VK_FINAL] = 0;
-		m_mapVkey[VK_HANJA] = 0;
-		m_mapVkey[VK_KANJI] = 0;
+		m_mapVkey[VK_KANA] = InputKey::Invalid;
+		m_mapVkey[VK_HANGEUL] = InputKey::Invalid;
+		m_mapVkey[VK_HANGUL] = InputKey::Invalid;
+		m_mapVkey[VK_JUNJA] = InputKey::Invalid;
+		m_mapVkey[VK_FINAL] = InputKey::Invalid;
+		m_mapVkey[VK_HANJA] = InputKey::Invalid;
+		m_mapVkey[VK_KANJI] = InputKey::Invalid;
 
 		m_mapVkey[VK_ESCAPE] = InputKey::Escape;
 
-		m_mapVkey[VK_CONVERT] = 0;
-		m_mapVkey[VK_NONCONVERT] = 0;
-		m_mapVkey[VK_ACCEPT] = 0;
-		m_mapVkey[VK_MODECHANGE] = 0;
+		m_mapVkey[VK_CONVERT] = InputKey::Invalid;
+		m_mapVkey[VK_NONCONVERT] = InputKey::Invalid;
+		m_mapVkey[VK_ACCEPT] = InputKey::Invalid;
+		m_mapVkey[VK_MODECHANGE] = InputKey::Invalid;
 
 		m_mapVkey[VK_SPACE] = InputKey::Space;
-		m_mapVkey[VK_PRIOR] = 0;
-		m_mapVkey[VK_NEXT] = 0;
+		m_mapVkey[VK_PRIOR] = InputKey::Invalid;
+		m_mapVkey[VK_NEXT] = InputKey::Invalid;
 		m_mapVkey[VK_END] = InputKey::End;
 		m_mapVkey[VK_HOME] = InputKey::Home;
 		m_mapVkey[VK_LEFT] = InputKey::Left;
 		m_mapVkey[VK_UP] = InputKey::Up;
 		m_mapVkey[VK_RIGHT] = InputKey::Right;
 		m_mapVkey[VK_DOWN] = InputKey::Down;
-		m_mapVkey[VK_SELECT] = 0;
+		m_mapVkey[VK_SELECT] = InputKey::Invalid;
 		m_mapVkey[VK_PRINT] = InputKey::Print;
-		m_mapVkey[VK_EXECUTE] = 0;
-		m_mapVkey[VK_SNAPSHOT] = 0;
+		m_mapVkey[VK_EXECUTE] = InputKey::Invalid;
+		m_mapVkey[VK_SNAPSHOT] = InputKey::Invalid;
 		m_mapVkey[VK_INSERT] = InputKey::Insert;
 		m_mapVkey[VK_DELETE] = InputKey::Delete;
 		m_mapVkey[VK_HELP] = InputKey::Help;
@@ -122,22 +122,22 @@ AX_BEGIN_NAMESPACE
 				* VK_A - VK_Z are the same as ASCII 'A' - 'Z' (0x41 - 0x5A)
 				*/
 		for (int i = '0'; i <= '9'; i++) {
-			m_mapVkey[i] = i;
+			m_mapVkey[i] = (InputKey::Type)i;
 		}
 
 		for (int i = 'A'; i < 'Z'; i++) {
-			m_mapVkey[i] = i + 'a' - 'A';
+			m_mapVkey[i] = (InputKey::Type)(i + 'a' - 'A');
 		}
 
-		m_mapVkey[VK_LWIN] = 0;
-		m_mapVkey[VK_RWIN] = 0;
-		m_mapVkey[VK_APPS] = 0;
+		m_mapVkey[VK_LWIN] = InputKey::Invalid;
+		m_mapVkey[VK_RWIN] = InputKey::Invalid;
+		m_mapVkey[VK_APPS] = InputKey::Invalid;
 
 				/*
 				* 0x5E : reserved
 				*/
 
-		m_mapVkey[VK_SLEEP] = 0;
+		m_mapVkey[VK_SLEEP] = InputKey::Invalid;
 
 		m_mapVkey[VK_NUMPAD0] = InputKey::NP_Insert;
 		m_mapVkey[VK_NUMPAD1] = InputKey::NP_End;
@@ -149,12 +149,12 @@ AX_BEGIN_NAMESPACE
 		m_mapVkey[VK_NUMPAD7] = InputKey::NP_Home;
 		m_mapVkey[VK_NUMPAD8] = InputKey::NP_Up;
 		m_mapVkey[VK_NUMPAD9] = InputKey::NP_Pageup;
-		m_mapVkey[VK_MULTIPLY] = '*';
-		m_mapVkey[VK_ADD] = '+';
+		m_mapVkey[VK_MULTIPLY] = (InputKey::Type)'*';
+		m_mapVkey[VK_ADD] = (InputKey::Type)'+';
 		m_mapVkey[VK_SEPARATOR] = InputKey::Invalid;
-		m_mapVkey[VK_SUBTRACT] = '-';
+		m_mapVkey[VK_SUBTRACT] = (InputKey::Type)'-';
 		m_mapVkey[VK_DECIMAL] = InputKey::Invalid;
-		m_mapVkey[VK_DIVIDE] = '/';
+		m_mapVkey[VK_DIVIDE] = (InputKey::Type)'/';
 		m_mapVkey[VK_F1] = InputKey::F1;
 		m_mapVkey[VK_F2] = InputKey::F2;
 		m_mapVkey[VK_F3] = InputKey::F3;

@@ -39,7 +39,7 @@ public:
 
 	// new interface
 	virtual void frameUpdate( RenderScene *qscene );
-	virtual void issueToQueue(RenderScene *qscene);
+	virtual void issueToScene(RenderScene *qscene);
 
 
 private:

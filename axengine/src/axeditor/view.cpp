@@ -68,7 +68,7 @@ void View::doUpdate()
 	preUpdate();
 
 	m_camera.setTarget(m_frame->getRenderTarget());
-	m_camera.setViewRect(Rect(m_frame->getRenderTarget()->getSize()));
+	m_camera.setViewRect(Rect(m_frame->getRenderTarget()->size()));
 	m_camera.setOrigin(m_eyeMatrix.origin);
 	m_camera.setViewAxis(m_eyeMatrix.axis);
 	m_camera.setFov(0, 60);
@@ -250,7 +250,7 @@ int View::endSelect()
 	return nearest;
 }
 
-bool View::selectRegion(const Rect &rect, SelectPart part, OUT Vector3 &pos, OUT AgentList &retlist, bool onlynearest)
+bool View::selectRegion(const Rect &rect, int part, OUT Vector3 &pos, OUT AgentList &retlist, bool onlynearest)
 {
 	retlist.clear();
 
@@ -295,7 +295,7 @@ bool View::selectRegion(const Rect &rect, SelectPart part, OUT Vector3 &pos, OUT
 	return true;
 }
 
-bool View::selectRegion(const Rect &rect, SelectPart part, OUT Vector3 &pos)
+bool View::selectRegion(const Rect &rect, int part, OUT Vector3 &pos)
 {
 	RenderCamera cam = m_camera.createSelectionCamera(rect);
 

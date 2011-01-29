@@ -70,10 +70,11 @@ public:
 	int getNumEntityManager() const;
 	IEntityManager *getEntityManager(int index) const;
 
+#if 0
 	// resource management
 	ShadowMap *allocShadowMap(int width, int height);
 	void freeShadowMap(ShadowMap *target);
-
+#endif
 	ReflectionMap *findReflection(RenderWorld *world, RenderEntity *actor, Primitive *prim, int width, int height);
 
 	static Rect getWindowRect(Handle hwnd);

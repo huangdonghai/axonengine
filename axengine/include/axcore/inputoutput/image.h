@@ -13,7 +13,30 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-struct TexFormat {
+struct TexType
+{
+	enum Type {
+		Unknown,
+		_2D,
+		_3D,
+		CUBE,
+		MaxType
+	};
+	AX_DECLARE_ENUM(TexType);
+};
+
+struct CubeMapFace
+{
+	enum Type {
+		PX, NX, PY, NY, PZ, NZ,
+
+		MaxType
+	};
+	AX_DECLARE_ENUM(CubeMapFace);
+};
+
+struct TexFormat
+{
 	enum Type {
 		AUTO,			// auto specify format for file data
 
@@ -56,9 +79,9 @@ struct TexFormat {
 	bool isDXTC() const;
 	bool isFloat() const;
 	bool isHalf() const;
-	bool isColor() const { return t >= L8 && t <= RGBA32F; }
-	bool isDepth() const { return t >= D16 && t <= INTZ; }
-	bool isStencil() const { return t == D24S8; }
+	bool isColor() const { return m_t >= L8 && m_t <= RGBA32F; }
+	bool isDepth() const { return m_t >= D16 && m_t <= INTZ; }
+	bool isStencil() const { return m_t == D24S8; }
 	bool isCompressed() const;
 	int getNumComponents() const;
 	int getBitsPerPixel() const;
@@ -69,32 +92,39 @@ struct TexFormat {
 	const char *toString() const;
 };
 
-inline bool TexFormat::isByte() const {
-	return t >= L8 && t <= BGRX8;
+inline bool TexFormat::isByte() const
+{
+	return m_t >= L8 && m_t <= BGRX8;
 }
 
-inline bool TexFormat::isUShort() const {
-	return t == L16 || t == RG16;
+inline bool TexFormat::isUShort() const
+{
+	return m_t == L16 || m_t == RG16;
 }
 
-inline bool TexFormat::isDXTC() const {
-	return ((t == DXT1) || (t == DXT3) || (t == DXT5));
+inline bool TexFormat::isDXTC() const
+{
+	return ((m_t == DXT1) || (m_t == DXT3) || (m_t == DXT5));
 }
 
-inline bool TexFormat::isFloat() const {
-	return t >= R32F && t <= RGBA32F;
+inline bool TexFormat::isFloat() const
+{
+	return m_t >= R32F && m_t <= RGBA32F;
 }
 
-inline bool TexFormat::isHalf() const {
-	return t >= R16F && t <= RGBA16F;
+inline bool TexFormat::isHalf() const
+{
+	return m_t >= R16F && m_t <= RGBA16F;
 }
 
-inline bool TexFormat::isCompressed() const {
+inline bool TexFormat::isCompressed() const
+{
 	return isDXTC();
 }
 
-inline int TexFormat::getNumComponents() const {
-	switch (t) {
+inline int TexFormat::getNumComponents() const
+{
+	switch (m_t) {
 	case RG16:
 		return 2;
 	case L8:				// 8 bits luminance: alpha is always 1.0, Uint8
@@ -156,9 +186,10 @@ inline int TexFormat::getNumComponents() const {
 }
 
 // get image's bits per pixel
-inline int TexFormat::getBitsPerPixel() const {
+inline int TexFormat::getBitsPerPixel() const
+{
 	if (isDXTC()) {
-		switch (t) {
+		switch (m_t) {
 		case DXT1:
 			return 4;
 		case DXT3:
@@ -176,13 +207,13 @@ inline int TexFormat::getBitsPerPixel() const {
 	if (isFloat())
 		return getNumComponents() * 32;
 
-	if (t == NULLTARGET) return 0;
-	if (t == R5G6B5) return 16;
-	if (t == RGB10A2) return 32;
-	if (t == D16 || t == DF16) return 16;
-	if (t == D24) return 24;
-	if (t == D32) return 32;
-	if (t == D24S8 || t == DF24 || t == RAWZ || t == INTZ) return 32;
+	if (m_t == NULLTARGET) return 0;
+	if (m_t == R5G6B5) return 16;
+	if (m_t == RGB10A2) return 32;
+	if (m_t == D16 || m_t == DF16) return 16;
+	if (m_t == D24) return 24;
+	if (m_t == D32) return 32;
+	if (m_t == D24S8 || m_t == DF24 || m_t == RAWZ || m_t == INTZ) return 32;
 
 	Errorf(_("getBitsPerPixel: unknown type"));
 
@@ -191,10 +222,11 @@ inline int TexFormat::getBitsPerPixel() const {
 
 
 // return number bytes
-inline int TexFormat::calculateDataSize(int width, int height) const {
+inline int TexFormat::calculateDataSize(int width, int height) const
+{
 
 	if (isDXTC()) {
-		switch (t) {
+		switch (m_t) {
 		case DXT1:
 			return ((width+3)/4)*((height+3)/4)* 8;		// dxt1's block size is 8
 		case DXT3:
@@ -207,7 +239,8 @@ inline int TexFormat::calculateDataSize(int width, int height) const {
 	return num_pixels * getBitsPerPixel() >> 3;
 }
 
-inline int TexFormat::getBlockSize() const {
+inline int TexFormat::getBlockSize() const
+{
 	if (isDXTC()) {
 		return 4;
 	} else {
@@ -215,9 +248,10 @@ inline int TexFormat::getBlockSize() const {
 	}
 }
 
-inline int TexFormat::getBlockDataSize() const {
+inline int TexFormat::getBlockDataSize() const
+{
 	if (isDXTC()) {
-		switch (t) {
+		switch (m_t) {
 		case DXT1:
 			return 8;
 		case DXT3:
@@ -229,12 +263,13 @@ inline int TexFormat::getBlockDataSize() const {
 	return getBitsPerPixel() >> 3;
 }
 
-inline int TexFormat::getDepthBits() const {
+inline int TexFormat::getDepthBits() const
+{
 	if (!isDepth()) {
 		return 0;
 	}
 
-	switch (t) {
+	switch (m_t) {
 	case D16:
 	case DF16:
 		return 16;
@@ -251,8 +286,9 @@ inline int TexFormat::getDepthBits() const {
 	}
 }
 
-inline const char *TexFormat::toString() const {
-	switch (t) {
+inline const char *TexFormat::toString() const
+{
+	switch (m_t) {
 	case NULLTARGET:
 		return "NULL";
 	case R5G6B5:
@@ -329,18 +365,9 @@ inline const char *TexFormat::toString() const {
 }
 
 
-class AX_API Image {
+class AX_API Image
+{
 public:
-	enum CubeMapFace {
-		CubeMap_PX,
-		CubeMap_NX,
-		CubeMap_PY,
-		CubeMap_NY,
-		CubeMap_PZ,
-		CubeMap_NZ,
-
-		CubeMap_Number
-	};
 
 	enum LoadFlag {
 		NoCompressed = 2,		// don't load compressed file

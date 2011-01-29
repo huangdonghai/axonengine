@@ -15,7 +15,8 @@ TextureResource::TextureResource(const FixedString &key, InitFlags flags)
 	m_fileLoaded = false;
 	m_handle = 0;
 	m_initFlags = flags;
-	m_size.set(0, 0);
+	m_texType = TexType::Unknown;
+	m_width = m_height = m_depth = 0;
 
 	std::string filename = key.toString() + ".dds";
 
@@ -36,21 +37,15 @@ TextureResource::TextureResource(const FixedString &key, InitFlags flags)
 }
 
 TextureResource::TextureResource(const FixedString &key, TexFormat format, const Size &size, InitFlags flags)
-{
-	m_isFileTexture = false;
-	m_fileLoaded = false;
-	m_initFlags = flags|Texture::Dynamic;
-	m_size = size;
+{ _init(key, TexType::_2D, format, size.width, size.height, 1, flags); }
 
-	g_apiWrap->createTexture2D(m_handle, format, size.width, size.height, flags);
+TextureResource::TextureResource(const FixedString &key, TexType textype, TexFormat format, int width, int height, float depth, InitFlags flags)
+{ _init(key, textype, format, width, height, depth, flags); }
 
-	setKey(key);
-	ms_resources[key] = this;
-}
 
 TextureResource::~TextureResource()
 {
-	g_apiWrap->deleteTexture2D(m_handle);
+	g_apiWrap->deleteTexture(m_handle);
 }
 
 void TextureResource::uploadSubTexture(const Rect &rect, const void *pixels, TexFormat format)
@@ -79,11 +74,6 @@ TextureResourcePtr TextureResource::findResource(const FixedString &name, int fl
 	TextureResource *resource = new TextureResource(name, flags);
 
 	return TextureResourcePtr(resource);
-}
-
-TextureResourcePtr TextureResource::createResource(const FixedString &debugname, TexFormat format, const Size &size, int flags)
-{
-	return new TextureResource(debugname, format, size, flags);
 }
 
 bool TextureResource::event(Event *e)
@@ -122,7 +112,24 @@ bool TextureResource::canBeDeletedNow()
 Size TextureResource::size() const
 {
 	AX_ASSURE(!m_isFileTexture);
-	return m_size;
+	return Size(m_width, m_height);
 }
+
+void TextureResource::_init(const FixedString &key, TexType textype, TexFormat format, int width, int height, float depth, InitFlags flags)
+{
+	m_isFileTexture = false;
+	m_fileLoaded = false;
+	m_initFlags = flags|Texture::Dynamic;
+	m_texType = textype;
+	m_width = width;
+	m_height = height;
+	m_depth = depth;
+
+	g_apiWrap->createTexture(m_handle, textype, format, width, height, depth, flags);
+
+	setKey(key);
+	ms_resources[key] = this;
+}
+
 
 AX_END_NAMESPACE

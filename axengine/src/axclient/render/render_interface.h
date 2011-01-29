@@ -8,11 +8,11 @@ class RenderApi
 public:
 	// resource management
 	static void (*createTextureFromFileInMemory)(phandle_t h, IoRequest *asioRequest);
-	static void (*createTexture2D)(phandle_t h, TexFormat format, int width, int height, int flags);
+	static void (*createTexture)(phandle_t h, TexType type, TexFormat format, int width, int height, int depth, int flags);
 	static void (*uploadTexture)(phandle_t h, const void *pixels, TexFormat format);
 	static void (*uploadSubTexture)(phandle_t h, const Rect &rect, const void *pixels, TexFormat format);
 	static void (*generateMipmap)(phandle_t h);
-	static void (*deleteTexture2D)(phandle_t h);
+	static void (*deleteTexture)(phandle_t h);
 
 	static void (*createVertexBuffer)(phandle_t h, int datasize, Primitive::Hint hint);
 	static void (*uploadVertexBuffer)(phandle_t h, int datasize, const void *p);
@@ -84,11 +84,11 @@ public:
 
 	// api wrapper interface
 	void createTextureFromFileInMemory(phandle_t &h, IoRequest *asioRequest);
-	void createTexture2D(phandle_t &h, TexFormat format, int width, int height, int flags = 0);
+	void createTexture(phandle_t &h, TexType type, TexFormat format, int width, int height, int depth, int flags);
 	void uploadTexture(phandle_t h, void *pixels, TexFormat format);
 	void uploadSubTexture(phandle_t h, const Rect &rect, const void *pixels, TexFormat format);
 	void generateMipmap(phandle_t h);
-	void deleteTexture2D(phandle_t h);
+	void deleteTexture(phandle_t h);
 
 	void createVertexBuffer(phandle_t &h, int datasize, Primitive::Hint hint);
 	void uploadVertexBuffer(phandle_t h, int datasize, const void *p);

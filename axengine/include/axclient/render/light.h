@@ -40,30 +40,30 @@ public:
 	RenderLight(Type t, const Vector3 &pos, Rgb color, float radius);
 	virtual ~RenderLight();
 
-	Type getLightType() const { return m_type; }
+	Type lightType() const { return m_type; }
 	void setLightType(Type t) { m_type = t; }
 	bool isGlobal() const { return m_type == kGlobal; }
 	bool isPoint() const { return m_type == kPoint; }
 	bool isSpot() const { return m_type == kSpot; }
 
 	// get and set attributes
-	bool getCastShadowMap() const { return m_castShadowMap; }
+	bool isCastShadowMap() const { return m_castShadowMap; }
 	void setCastShadowMap(bool val) { m_castShadowMap = val; }
 
 	void setShadowMapSize(int val) { m_preferShadowMapSize = val; }
 
-	float getRadius() const { return m_radius; }
+	float radius() const { return m_radius; }
 	void setRadius(float val) { m_radius = val; }
 
-	float getSpotAngle() const { return m_spotAngle; }
+	float spotAngle() const { return m_spotAngle; }
 	void setSpotAngle(float val) { m_spotAngle = val; }
 
+	Color3 lightColor() const { return m_color; }
 	void setLightColor(const Color3 &color, float intensity = 1.0f, float specularX = 1.0f);
-	Color3 getLightColor() const { return m_color; }
-	Color3 getSkyColor() const { return m_skyColor; }
+	Color3 skyColor() const { return m_skyColor; }
 	void setSkyColor(const Color3 &color, float skyIntensity = 1.0f);
 	void setEnvColor(const Color3 &color, float envIntensity = 1.0f);
-	Vector3 getGlobalLightDirection() const { return m_affineMat.origin.getNormalized(); }
+	Vector3 lightDirection() const { return m_affineMat.origin.getNormalized(); }
 
 	// shadow
 	bool checkShadow(RenderScene *qscene);
@@ -76,7 +76,7 @@ public:
 	// implement Actor
 	virtual BoundingBox getLocalBoundingBox();
 	virtual BoundingBox getBoundingBox();
-	virtual void issueToQueue(RenderScene *qscene);
+	virtual void issueToScene(RenderScene *qscene);
 
 protected:
 	void initShadowGenerator();

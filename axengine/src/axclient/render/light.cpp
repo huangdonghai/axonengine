@@ -11,6 +11,78 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
+namespace {
+	Dict<int, std::list<RenderTarget *>> s_shadowMapPool[TexType::MaxType];
+
+	class ShadowMap
+	{
+	public:
+		ShadowMap(TexType texType, int size);
+		~ShadowMap();
+
+		void allocReal();
+		void freeReal();
+
+		static RenderTarget *findShadowMap(TexType texType, int size)
+		{
+			std::list<RenderTarget *> &rtlist = s_shadowMapPool[texType][size];
+			RenderTarget *rt = 0;
+			if (rtlist.empty()) {
+				if (texType == TexType::_2D) {
+					TexFormat format = g_renderDriverInfo.suggestFormats[RenderDriverInfo::SuggestedFormat_ShadowMap];
+					rt = new RenderTarget(format, Size(size, size));
+				} else if (texType == TexType::CUBE) {
+					TexFormat format = g_renderDriverInfo.suggestFormats[RenderDriverInfo::SuggestedFormat_CubeShadowMap];
+					rt = new RenderTarget(texType, format, size, size, 1);
+				} else {
+					AX_WRONGPLACE;
+				}
+			} else {
+				rt = rtlist.front();
+				rtlist.pop_front();
+			}
+			return rt;
+		}
+
+		static void freeShadowMap(TexType texType, int size, RenderTarget *rt)
+		{
+			s_shadowMapPool[texType][size].push_front(rt);
+		}
+
+	public:
+		TexType m_texType;
+		int m_size;
+		RenderTarget *m_renderTarget;
+	};
+
+	ShadowMap::ShadowMap(TexType texType, int size)
+	{
+		m_texType = texType;
+		m_size = size;
+		m_renderTarget = 0;
+	}
+
+	ShadowMap::~ShadowMap()
+	{
+		freeReal();
+	}
+
+	void ShadowMap::allocReal()
+	{
+		m_renderTarget = findShadowMap(m_texType, m_size);
+		m_renderTarget->setFilterMode(SamplerDesc::FilterMode_Linear);
+		m_renderTarget->setClampMode(SamplerDesc::ClampMode_Border);
+		m_renderTarget->setBorderColor(SamplerDesc::BorderColor_One);
+	}
+
+	void ShadowMap::freeReal()
+	{
+		freeShadowMap(m_texType, m_size, m_renderTarget);
+		m_renderTarget = 0;
+	}
+
+} // namespace
+
 class RenderLight::ShadowGenerator
 {
 public:
@@ -18,24 +90,14 @@ public:
 	public:
 		SplitInfo(RenderLight::ShadowGenerator *shadowInfo, int shadowSize)
 		{
-			m_shadowMap = 0;
 			m_updateFrame = -1;
-
-			if (shadowInfo->m_light->getLightType() != RenderLight::kGlobal)
-				m_shadowMap = new ShadowMap(shadowSize, shadowSize);
 		}
 
 		~SplitInfo()
 		{
-#if 0
-			if (m_target)
-				g_targetManager->freeTarget(m_target);
-#endif
-			SafeDelete(m_shadowMap);
 		}
 
 	public:
-		ShadowMap *m_shadowMap;
 		RenderCamera m_camera;
 		Vector3 m_volume[8];
 		int m_updateFrame;
@@ -48,7 +110,7 @@ public:
 		m_light = light;
 		m_shadowMapSize = Math::nearestPowerOfTwo(shadowSize);
 
-		if (m_light->getLightType() == kGlobal) {
+		if (m_light->lightType() == kGlobal) {
 			int maxsize = g_renderDriverInfo.maxTextureSize;
 
 			if (m_shadowMapSize > maxsize / 2) {
@@ -56,10 +118,10 @@ public:
 			}
 			int csmSize = m_shadowMapSize * 2;
 
-			m_csmTarget = new ShadowMap(csmSize, csmSize);
-			m_csmTarget->allocReal();
+			m_shadowMap = new ShadowMap(TexType::_2D, csmSize);
+			m_shadowMap->allocReal();
 		} else {
-			m_csmTarget = 0;
+			m_shadowMap = 0;
 		}
 
 		TypeZeroArray(m_splits);
@@ -86,7 +148,7 @@ public:
 
 	bool init()
 	{
-		Type t = m_light->getLightType();
+		Type t = m_light->lightType();
 
 		if (t == RenderLight::kGlobal) {
 			return initGlobal();
@@ -101,7 +163,7 @@ public:
 
 	void update(RenderScene *qscene)
 	{
-		switch (m_light->getLightType()) {
+		switch (m_light->lightType()) {
 		case RenderLight::kGlobal:
 			updateGlobal(qscene);
 			break;
@@ -132,7 +194,7 @@ public:
 		for (int i = 0; i < qshadow->numSplitCamera; i++) {
 			SplitInfo *si = m_splits[i];
 			qshadow->splitCameras[i] = si->m_camera;
-			qshadow->splitCameras[i].setTarget(si->m_shadowMap->m_renderTarget);
+			qshadow->splitCameras[i].setTarget(m_shadowMap->m_renderTarget);
 			memcpy(qshadow->splitVolumes[i], si->m_volume, sizeof(qshadow->splitVolumes[i]));
 		}
 
@@ -246,7 +308,7 @@ public:
 
 	bool checkIfNeedUpdateSplit(int index)
 	{
-		static int d[] = {1,3,9,27,16,32};
+		static int d[] = {1,3,8,23,16,32};
 
 		SplitInfo *si = m_splits[index];
 
@@ -373,15 +435,6 @@ public:
 		// calculate split dist
 		m_numCsmSplits = updateSplitDist(f, neard, fard);
 
-#if 0
-		int statindexes[4] = {
-			stat_csmSplit0Dist, stat_csmSplit1Dist, stat_csmSplit2Dist, stat_csmSplit3Dist,
-		};
-
-		for (int i = 0; i < m_numCsmSplits; i++) {
-			g_statistic->setValue(statindexes[i], f[i+1]);
-		}
-#else
 		Stat *statindexes[4] = {
 			&stat_csmSplit0Dist, &stat_csmSplit1Dist, &stat_csmSplit2Dist, &stat_csmSplit3Dist,
 		};
@@ -389,7 +442,7 @@ public:
 		for (int i = 0; i < m_numCsmSplits; i++) {
 			statindexes[i]->setInt(f[i+1]);
 		}
-#endif
+
 		checkCsmTarget();
 
 		bool allupdate = true;
@@ -435,14 +488,14 @@ public:
 
 	bool initGlobal()
 	{
-		Vector3 origin = m_light->getGlobalLightDirection();
+		Vector3 origin = m_light->lightDirection();
 
 		if (m_origin == origin)
 			return false;
 
 		m_origin = origin;
 
-		Vector3 forward = -m_light->getGlobalLightDirection();
+		Vector3 forward = -m_light->lightDirection();
 		Vector3 up(0, 0, 1);
 
 		if (forward.x == 0.0f) {
@@ -457,8 +510,7 @@ public:
 
 		for (int i = 0; i < 4; i++) {
 			SplitInfo *si = m_splits[i];
-			si->m_shadowMap = m_csmTarget;
-			si->m_camera.setTarget(m_csmTarget->m_renderTarget);
+			si->m_camera.setTarget(m_shadowMap->m_renderTarget);
 			si->m_camera.setOrigin(origin);
 			si->m_camera.setViewAxis(Matrix3(forward, left, up));
 			si->m_updateFrame = -1;
@@ -478,18 +530,17 @@ public:
 		int csmSize = desiredSize * 2;
 
 		if (desiredSize != m_shadowMapSize) {
-			SafeDelete(m_csmTarget);
-			m_csmTarget = new ShadowMap(csmSize, csmSize);
+			SafeDelete(m_shadowMap);
+			m_shadowMap = new ShadowMap(TexType::_2D, csmSize);
 
 			for (int i = 0; i < 4; i++) {
 				SplitInfo *si = m_splits[i];
-				si->m_shadowMap = m_csmTarget;
-				si->m_camera.setTarget(m_csmTarget->m_renderTarget);
+				si->m_camera.setTarget(m_shadowMap->m_renderTarget);
 			}
 		}
 
-		if (!m_csmTarget->m_renderTarget) {
-			m_csmTarget->allocReal();
+		if (!m_shadowMap->m_renderTarget) {
+			m_shadowMap->allocReal();
 			for (int i = 0; i < 4; i++) {
 				m_splits[i]->m_updateFrame = -1;
 			}
@@ -500,16 +551,16 @@ public:
 	{
 		const Matrix &mtx = m_light->getMatrix();
 
-		if (m_origin == mtx.origin && m_radius == m_light->getRadius()) {
+		if (m_origin == mtx.origin && m_radius == m_light->radius()) {
 			return false;
 		}
 
 		m_origin = mtx.origin;
-		m_radius = m_light->getRadius();
+		m_radius = m_light->radius();
 
 		// create camera
 		RenderCamera cameras[6];
-		RenderCamera::createCubemapCameras(mtx, cameras, 0.5f, m_light->getRadius());
+		RenderCamera::createCubemapCameras(mtx, cameras, 0.5f, m_light->radius());
 
 		// calculate volumes
 		for (int i=0; i<6; i++) {
@@ -522,8 +573,8 @@ public:
 
 			// TODO: fix this
 			si->m_camera = cameras[i];
-			si->m_camera.calcPointsAlongZdist(&si->m_volume[4], m_light->getRadius());
-			si->m_camera.setTarget(si->m_shadowMap->m_renderTarget);
+			si->m_camera.calcPointsAlongZdist(&si->m_volume[4], m_light->radius());
+			si->m_camera.setTarget(m_shadowMap->m_renderTarget);
 			si->m_camera.setViewRect(Rect(0,0,m_shadowMapSize,m_shadowMapSize));
 		}
 
@@ -534,13 +585,13 @@ public:
 	{
 		const Matrix &mtx = m_light->getMatrix();
 
-		if (m_origin == mtx.origin && m_axis == mtx.axis && m_radius == m_light->getRadius()) {
+		if (m_origin == mtx.origin && m_axis == mtx.axis && m_radius == m_light->radius()) {
 			return false;
 		}
 
 		m_origin = mtx.origin;
 		m_axis = mtx.axis;
-		m_radius = m_light->getRadius();
+		m_radius = m_light->radius();
 
 		RenderCamera &camera = m_splits[0]->m_camera;
 		SplitInfo *si = m_splits[0];
@@ -551,7 +602,7 @@ public:
 		const Vector3 up = -mtx.axis[1];
 		Matrix3 axis(forward,left,up);
 		camera.setViewAxis(axis);
-		camera.setFov(m_light->getSpotAngle(), m_light->getSpotAngle(), 0.5f, m_light->getRadius());
+		camera.setFov(m_light->spotAngle(), m_light->spotAngle(), 0.5f, m_light->radius());
 
 		// calculate volumes
 		si->m_volume[0] = mtx.origin;
@@ -560,23 +611,23 @@ public:
 		si->m_volume[3] = mtx.origin;
 
 		// TODO: fix this
-		camera.calcPointsAlongZdist(&si->m_volume[4], m_light->getRadius());
+		camera.calcPointsAlongZdist(&si->m_volume[4], m_light->radius());
 
-		si->m_camera.setTarget(si->m_shadowMap->m_renderTarget);
+		si->m_camera.setTarget(m_shadowMap->m_renderTarget);
 		si->m_camera.setViewRect(Rect(0,0,m_shadowMapSize,m_shadowMapSize));
 
 		return true;
 	}
 
-	void useShadowMap() {
-		for (int i = 0; i < m_numSplits; i++) {
-			m_splits[i]->m_shadowMap->allocReal();
-		}
+	void useShadowMap()
+	{
+		m_shadowMap->allocReal();
 	}
 
-	void unuseShadowMap() {
+	void unuseShadowMap()
+	{
+		m_shadowMap->freeReal();
 		for (int i = 0; i < m_numSplits; i++) {
-			m_splits[i]->m_shadowMap->freeReal();
 			m_splits[i]->m_updateFrame = -1;
 			m_updateFrame = -1;
 		}
@@ -588,7 +639,7 @@ public:
 	SplitInfo *m_splits[RenderLight::MAX_SPLITS];
 	int m_updateFrame;
 	int m_shadowMapSize;
-	ShadowMap *m_csmTarget;
+	ShadowMap *m_shadowMap;
 
 	// some cached info for check if need update
 	Vector3 m_origin;
@@ -615,7 +666,6 @@ RenderLight::RenderLight() : RenderEntity(kLight)
 	m_envColor = Color3(0,0,0);
 	m_hdrStops = 0;
 
-//	m_shadowLink.setOwner(this);
 	m_shadowGen = 0;
 	m_shadowData = 0;
 
@@ -634,7 +684,6 @@ RenderLight::RenderLight(Type t, const Vector3 &pos, Rgb color) : RenderEntity(k
 	m_radius = 0;
 	m_hdrStops = 0;
 
-//	m_shadowLink.setOwner(this);
 	m_shadowGen = 0;
 	m_shadowData = 0;
 
@@ -653,7 +702,6 @@ RenderLight::RenderLight(Type t, const Vector3 &pos, Rgb color, float radius) : 
 	m_radius = radius;
 	m_hdrStops = 0;
 
-//	m_shadowLink.setOwner(this);
 	m_shadowGen = 0;
 	m_shadowData = 0;
 
@@ -729,7 +777,7 @@ void RenderLight::fillQueued(QueuedLight *queued)
 }
 #endif
 
-void RenderLight::issueToQueue(RenderScene *qscene)
+void RenderLight::issueToScene(RenderScene *qscene)
 {
 #if 0
 	if (!m_queuedLight) {

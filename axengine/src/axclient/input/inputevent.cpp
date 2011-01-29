@@ -15,17 +15,17 @@ read the license and understand and accept it fully.
 AX_BEGIN_NAMESPACE
 
 std::string InputKey::getName() const {
-	if (t < 32) {
+	if (m_t < 32) {
 		Errorf("Error InputKey");
 	}
 
-	if (t >= 32 && t < 128) {
-		return std::string(1,char(t));
+	if (m_t >= 32 && m_t < 128) {
+		return std::string(1,char(m_t));
 	}
 
 #define KEYITEM(key) case key: return #key; break;
 
-	switch (t) {
+	switch (m_t) {
 		AX_KEYITEMS
 	}
 #undef KEYITEM
@@ -33,26 +33,26 @@ std::string InputKey::getName() const {
 	return std::string();
 }
 
-int InputKey::getKey(const std::string &keyname)
+InputKey::Type InputKey::getKey(const std::string &keyname)
 {
 	if (keyname.empty()) {
 		Errorf("error keyname");
 	}
 
 	if (keyname.size() == 1) {
-		return keyname[0];
+		return (InputKey::Type)keyname[0];
 	}
 
-	static Dict<std::string,int> nameDict;
+	static Dict<std::string,InputKey> nameDict;
 	if (nameDict.empty()) {
 #define KEYITEM(key) nameDict[#key] = key;
 		AX_KEYITEMS
 #undef KEYITEM
 	}
 
-	Dict<std::string,int>::const_iterator it = nameDict.find(keyname);
+	Dict<std::string,InputKey>::const_iterator it = nameDict.find(keyname);
 	if (it == nameDict.end()) {
-		return 0;
+		return InputKey::Invalid;
 	}
 
 	return it->second;

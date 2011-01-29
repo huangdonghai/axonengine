@@ -80,7 +80,7 @@ AX_CVARDECL(r_reflection, "0", Cvar::Archive);
 AX_CVARDECL(r_refraction, "1", Cvar::Archive);
 AX_CVARDECL(r_sky, "1", Cvar::Cheat);
 AX_CVARDECL(r_water, "1", Cvar::Cheat);
-AX_CVARDECL(r_actor, "1", Cvar::Cheat);
+AX_CVARDECL(r_entity, "1", Cvar::Cheat);
 AX_CVARDECL(r_speedtree, "1", Cvar::Cheat);
 AX_CVARDECL(r_font, "1", Cvar::Cheat);
 AX_CVARDECL(r_nearLod, "50", Cvar::Archive);

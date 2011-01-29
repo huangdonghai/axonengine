@@ -2,11 +2,11 @@
 
 AX_BEGIN_NAMESPACE
 
-FastParams s_curParams1;
-FastParams s_curParams2;
-phandle_t s_curGlobalTextures[GlobalTextureId::MaxType];
-SamplerDesc s_curGlobalTextureSamplerDescs[GlobalTextureId::MaxType];
-FastTextureParams s_curMaterialTextures;
+FastParams dx9_curParams1;
+FastParams dx9_curParams2;
+phandle_t dx9_curGlobalTextures[GlobalTextureId::MaxType];
+SamplerDesc dx9_curGlobalTextureSamplerDescs[GlobalTextureId::MaxType];
+FastTextureParams dx9_curMaterialTextures;
 
 enum {
 	Size_VerticeUP = 64 * 1024,
@@ -98,7 +98,7 @@ static inline int sCalcNumElements(D3DPRIMITIVETYPE mode, int numindexes)
 
 
 
-void dx9CreateTextureFromFileInMemory(phandle_t h, IoRequest *asioRequest)
+static void dx9CreateTextureFromFileInMemory(phandle_t h, IoRequest *asioRequest)
 {
 	IDirect3DTexture9 *texture;
 	V(D3DXCreateTextureFromFileInMemory(dx9_device, asioRequest->fileData(), asioRequest->fileSize(), &texture));
@@ -107,7 +107,7 @@ void dx9CreateTextureFromFileInMemory(phandle_t h, IoRequest *asioRequest)
 	delete asioRequest;
 }
 
-void dx9CreateTexture2D(phandle_t h, TexFormat format, int width, int height, int flags)
+static void dx9CreateTexture(phandle_t h, TexType textype, TexFormat format, int width, int height, int depth, int flags)
 {
 	bool mipmap = false;
 	D3DFORMAT d3dformat;
@@ -139,13 +139,32 @@ void dx9CreateTexture2D(phandle_t h, TexFormat format, int width, int height, in
 		}
 	}
 
+	IDirect3DBaseTexture9 *texture = 0;
+	IDirect3DTexture9 *tex2D = 0;
+	IDirect3DVolumeTexture9 *tex3D = 0;
+	IDirect3DCubeTexture9 *texCube = 0;
+
 	int m_videoMemoryUsed = format.calculateDataSize(width, height);
 
-	IDirect3DTexture9 *texture;
-	V(dx9_device->CreateTexture(width, height, 1, d3dusage, d3dformat, d3dpool, &texture, 0));
+	if (textype == TexType::_2D) {
+		V(dx9_device->CreateTexture(width, height, 1, d3dusage, d3dformat, d3dpool, &tex2D, 0));
+		texture = tex2D;
+	} else if (textype == TexType::_3D) {
+		V(dx9_device->CreateVolumeTexture(width, height, depth, 1, d3dusage, d3dformat, d3dpool, &tex3D, 0));
+		texture = tex3D;
+	} else if (textype == TexType::CUBE) {
+		V(dx9_device->CreateCubeTexture(width, 1, d3dusage, d3dformat, d3dpool, &texCube, 0));
+		texture = texCube;
+	} else {
+		AX_WRONGPLACE;
+	}
+
 	DX9_Resource *resource = new DX9_Resource(DX9_Resource::kTexture, texture);
-	V(texture->GetSurfaceLevel(0, &resource->m_level0));
-	resource->width = width; resource->height = height;
+	if (tex2D) {
+		V(tex2D->GetSurfaceLevel(0, &resource->m_level0));
+	}
+	resource->texType = textype;
+	resource->width = width; resource->height = height; resource->depth = depth;
 	*h = resource;
 
 	stat_textureMemory.add(m_videoMemoryUsed);
@@ -180,7 +199,6 @@ static void sUploadTexture(phandle_t h, int level, const void *pixels, TexFormat
 	V(D3DXLoadSurfaceFromMemory(surface, 0, 0, pixels, d3dformat, srcpitch, 0, &srcrect, 0, 0));
 	SAFE_RELEASE(surface);
 }
-
 
 void dx9UploadTexture(phandle_t h, const void *pixels, TexFormat format)
 {
@@ -221,7 +239,7 @@ void dx9UploadSubTexture(phandle_t h, const Rect &rect, const void *pixels, TexF
 	SAFE_RELEASE(surface);
 }
 
-void dx9DeleteTexture2D(phandle_t h)
+void dx9DeleteTexture(phandle_t h)
 {
 	DX9_Resource *resource = h->castTo<DX9_Resource *>();
 	AX_ASSERT(resource->m_type == DX9_Resource::kTexture);
@@ -260,8 +278,9 @@ void dx9GenerateMipmap(phandle_t h)
 	V(obj->UnlockRect(0));
 
 	Handle dum;
-	dx9CreateTexture2D(&dum, TexFormat::BGRA8, surfdesc.Width, surfdesc.Height, Texture::AutoGenMipmap);
-	sUploadTexture(&dum, 0, lockedRect.pBits, surfdesc.Format);
+	dx9CreateTexture(&dum, TexType::_2D, TexFormat::BGRA8, surfdesc.Width, surfdesc.Height, 1, Texture::AutoGenMipmap);
+	// TODO: sUploadTexture(&dum, 0, lockedRect.pBits, surfdesc.Format);
+	AX_ASSERT(0);
 
 	LPDIRECT3DTEXTURE9 dummyobj = dum.castTo<LPDIRECT3DTEXTURE9>();
 
@@ -287,7 +306,7 @@ void dx9GenerateMipmap(phandle_t h)
 		if (height < 1) height = 1;
 	}
 
-	dx9DeleteTexture2D(&dum);
+	dx9DeleteTexture(&dum);
 }
 
 void dx9CreateVertexBuffer(phandle_t h, int datasize, Primitive::Hint hint)
@@ -529,14 +548,14 @@ static void dx9SetConstBuffer(ConstBuffers::Type type, int size, const void *dat
 static void dx9SetParameters(const FastParams *params1, const FastParams *params2)
 {
 	if (params1)
-		s_curParams1 = *params1;
+		dx9_curParams1 = *params1;
 	else
-		s_curParams1.clear();
+		dx9_curParams1.clear();
 
 	if (params2)
-		s_curParams2 = *params2;
+		dx9_curParams2 = *params2;
 	else
-		s_curParams2.clear();
+		dx9_curParams2.clear();
 }
 
 static void dx9SetVertices(phandle_t vb, VertexType vt, int offset)
@@ -608,13 +627,13 @@ static void dx9SetIndicesUP(const void *ib, ElementType et, int indicescount)
 
 static void dx9SetGlobalTexture(GlobalTextureId id, phandle_t h, const SamplerDesc &desc)
 {
-	s_curGlobalTextures[id] = h;
-	s_curGlobalTextureSamplerDescs[id] = desc;
+	dx9_curGlobalTextures[id] = h;
+	dx9_curGlobalTextureSamplerDescs[id] = desc;
 }
 
 static void dx9SetMaterialTexture(const FastTextureParams *textures)
 {
-	s_curMaterialTextures = *textures;
+	dx9_curMaterialTextures = *textures;
 }
 
 static void dx9SetRenderState(const DepthStencilDesc &dsd, const RasterizerDesc &rd, const BlendDesc &bd)
@@ -702,11 +721,11 @@ static void dx9Present(phandle_t window)
 void dx9AssignRenderApi()
 {
 	RenderApi::createTextureFromFileInMemory = &dx9CreateTextureFromFileInMemory;
-	RenderApi::createTexture2D = &dx9CreateTexture2D;
+	RenderApi::createTexture = &dx9CreateTexture;
 	RenderApi::uploadTexture = &dx9UploadTexture;
 	RenderApi::uploadSubTexture = &dx9UploadSubTexture;
 	RenderApi::generateMipmap = &dx9GenerateMipmap;
-	RenderApi::deleteTexture2D = &dx9DeleteTexture2D;
+	RenderApi::deleteTexture = &dx9DeleteTexture;
 
 	RenderApi::createVertexBuffer = &dx9CreateVertexBuffer;
 	RenderApi::uploadVertexBuffer = &dx9UploadVertexBuffer;

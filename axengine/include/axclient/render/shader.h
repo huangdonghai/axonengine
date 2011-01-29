@@ -380,7 +380,7 @@ inline std::string Technique::toString()
 	std::string result("Technique");
 
 #define ENUMDECL(t) case t: result += #t; break;
-	switch (t) {
+	switch (m_t) {
 	ENUMDECL(GeoFill)
 	ENUMDECL(ShadowGen)
 	ENUMDECL(Main)

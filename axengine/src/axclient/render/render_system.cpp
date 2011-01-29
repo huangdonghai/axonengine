@@ -190,7 +190,7 @@ void RenderSystem::endFrame()
 	if (show_performer || show_memoryinfo) {
 		RenderCamera camera;
 
-		Rect screen_rect(m_curTarget->getSize());
+		Rect screen_rect(m_curTarget->size());
 		camera.setTarget(m_curTarget);
 		camera.setOverlay(screen_rect);
 

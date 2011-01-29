@@ -12,11 +12,11 @@ read the license and understand and accept it fully.
 #ifndef AX_CORE_HASH_H
 #define AX_CORE_HASH_H
 
-#define AX_DECLARE_HASH_FUNCTION(Type) \
+#define AX_DECLARE_HASH_FUNCTION(TexType) \
 namespace std { namespace tr1 { \
 	template<> \
-	struct hash<AX_NAMESPACE::Type> { \
-		size_t operator()(const AX_NAMESPACE::Type &obj) const { return obj.hash(); } \
+	struct hash<AX_NAMESPACE::TexType> { \
+		size_t operator()(const AX_NAMESPACE::TexType &obj) const { return obj.hash(); } \
 	}; \
 }} \
 

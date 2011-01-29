@@ -14,40 +14,54 @@ AX_BEGIN_NAMESPACE
 
 RenderTarget::RenderTarget(TexFormat format, const Size &size)
 {
-	m_type = kTexture;
-	m_boundIndex = -1;
-
+	m_isWindow = false;
 	m_size = size;
-	m_format = format;
-
+	m_slice = 0;
 	m_rtDepth = m_rt0 = m_rt1 = m_rt2 = m_rt3 = 0;
 
 	std::string texname;
 	StringUtil::sprintf(texname, "_render_target_%d_%d_%d", m_size.width, m_size.height, g_system->generateId());
 
-	m_texture = new Texture(texname, format, m_size, Texture::RenderTarget);
+	Texture::_init(texname, TexType::_2D, format, m_size, 1, Texture::RenderTarget);
+}
+
+RenderTarget::RenderTarget(TexType texType, TexFormat format, int width, int height, int depth)
+{
+	m_isWindow = false;
+	m_size.set(width, height);
+	m_slice = 0;
+	m_rtDepth = m_rt0 = m_rt1 = m_rt2 = m_rt3 = 0;
+
+	std::string texname;
+	StringUtil::sprintf(texname, "_render_target_%d_%d_%d", m_size.width, m_size.height, g_system->generateId());
+
+	Texture::_init(texname, texType, format, Size(width, height), depth, Texture::RenderTarget);
 }
 
 RenderTarget::RenderTarget(Handle hwnd, const std::string &debugname, const Size &size)
 {
-	m_type = kWindow;
+	m_isWindow = true;
 	m_window = 0;
 	m_wndId = hwnd;
 	m_name = debugname;
 
 	m_size = size;
-	m_format = TexFormat::AUTO;
 
 	m_rtDepth = m_rt0 = m_rt1 = m_rt2 = m_rt3 = 0;
 
 	updateWindowInfo(hwnd, size);
 }
 
+RenderTarget::RenderTarget(const RenderTarget &rhs)
+{
+	AX_ASSERT(isTexture());
+	*this = rhs;
+}
+
+
 RenderTarget::~RenderTarget()
 {
-	if (isTexture()) {
-		g_apiWrap->deleteTexture2D(m_window);
-	} else {
+	if (isWindow()) {
 		g_apiWrap->deleteWindowTarget(m_window);
 		SafeDelete(m_rtDepth);
 		SafeDelete(m_rt0);
@@ -83,6 +97,14 @@ void RenderTarget::updateWindowInfo(Handle newId, const Size &size)
 	m_rt3 = new RenderTarget(g_renderDriverInfo.suggestFormats[RenderDriverInfo::SuggestedFormat_SceneColor], m_size);
 	m_wndId = newId;
 }
+
+RenderTarget * RenderTarget::cloneSlice( int slice ) const
+{
+	RenderTarget *result = new RenderTarget(*this);
+	result->setSlice(slice);
+	return result;
+}
+
 
 ReflectionMap::ReflectionMap(RenderWorld *world, RenderEntity *actor, Primitive *prim, const Size &size)
 {
@@ -172,32 +194,6 @@ ReflectionMap *RenderTargetManager::findReflection(RenderWorld *world, RenderEnt
 }
 #endif
 
-
-ShadowMap::ShadowMap(int width, int height)
-{
-	m_width = width; m_height = height;
-	m_renderTarget = 0;
-}
-
-ShadowMap::~ShadowMap()
-{
-	freeReal();
-}
-
-void ShadowMap::allocReal()
-{
-	m_renderTarget = new RenderTarget(TexFormat::D16, Size(m_width, m_height));
-	Texture *tex = m_renderTarget->getTexture();
-
-	tex->setFilterMode(SamplerDesc::FilterMode_Linear);
-	tex->setClampMode(SamplerDesc::ClampMode_Border);
-	tex->setBorderColor(SamplerDesc::BorderColor_One);
-}
-
-void ShadowMap::freeReal()
-{
-	SafeDelete(m_renderTarget);
-}
 
 AX_END_NAMESPACE
 

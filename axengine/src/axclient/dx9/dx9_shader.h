@@ -106,9 +106,9 @@ typedef std::vector<DX9_SamplerInfo*>	DX9_SamplerInfos;
 
 class DX9_Pass
 {
-public:
 	friend class DX9_Shader;
-	
+
+public:
 	struct ParamDesc {
 		int setflag;
 		D3DXCONSTANT_DESC d3dDesc;
@@ -157,9 +157,9 @@ private:
 
 class DX9_Technique
 {
-public:
 	friend class DX9_Shader;
 
+public:
 	DX9_Technique(DX9_Shader *shader, D3DXHANDLE d3dxhandle);
 	~DX9_Technique();
 
@@ -178,11 +178,11 @@ private:
 
 class DX9_Shader : public Unknown
 {
-public:
 	friend class DX9_Pass;
 	friend class DX9_Technique;
 	friend class DX9_ShaderManager;
 
+public:
 	DX9_Shader();
 	~DX9_Shader();
 
@@ -248,9 +248,9 @@ private:
 
 class DX9_ShaderManager
 {
-public:
 	friend class DX9_Shader;
 
+public:
 	DX9_ShaderManager();
 	~DX9_ShaderManager();
 

@@ -204,7 +204,7 @@ void MapMaterialDef::parseXml(const TiXmlElement *node) {
 		const char *attr;
 
 		l->name = child->Attribute("name");
-		l->surfaceType = atoi(child->Attribute("surfaceType"));
+		l->surfaceType = (SurfaceType::Type)atoi(child->Attribute("surfaceType"));
 		l->color.parseRgb(child->Attribute("color"));
 
 		l->baseImage = xgetAttr(child, "baseImage", "default.tga");

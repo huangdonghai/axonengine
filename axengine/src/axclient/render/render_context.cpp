@@ -241,17 +241,17 @@ void RenderContext::drawScene_World(RenderScene *scene, const RenderClearer &cle
 	int width = rect.width;
 	int height = rect.height;
 
-	AX_ST(RtDepth, m_curWindow->m_rtDepth->getTexture());
-	AX_ST(Rt0, m_curWindow->m_rt0->getTexture());
-	AX_ST(Rt1, m_curWindow->m_rt1->getTexture());
-	AX_ST(Rt2, m_curWindow->m_rt2->getTexture());
-	AX_ST(Rt3, m_curWindow->m_rt3->getTexture());
+	AX_ST(RtDepth, m_curWindow->m_rtDepth);
+	AX_ST(Rt0, m_curWindow->m_rt0);
+	AX_ST(Rt1, m_curWindow->m_rt1);
+	AX_ST(Rt2, m_curWindow->m_rt2);
+	AX_ST(Rt3, m_curWindow->m_rt3);
 
 	// set global light parameter
 	if (scene->globalLight) {
 		AX_SU(g_globalLightPos, scene->globalLight->getOrigin());
-		AX_SU(g_globalLightColor, scene->globalLight->getLightColor());
-		AX_SU(g_skyColor, scene->globalLight->getSkyColor());
+		AX_SU(g_globalLightColor, scene->globalLight->lightColor());
+		AX_SU(g_skyColor, scene->globalLight->skyColor());
 	}
 
 	// set global fog
@@ -469,8 +469,6 @@ void RenderContext::drawPass_ShadowGen(RenderScene *scene)
 
 	RenderTarget *target = scene->camera.getTarget();
 
-	Texture *tex = target->getTexture();
-
 	RenderLight *qlight = scene->sourceLight;
 	ShadowData *qshadow = qlight->m_shadowData;
 
@@ -534,7 +532,7 @@ void RenderContext::drawPass_Lights(RenderScene *scene)
 	for (int i = 0; i < scene->numLights; i++) {
 		RenderLight *ql = scene->lights[i];
 
-		if (ql->getLightType() == RenderLight::kGlobal) {
+		if (ql->lightType() == RenderLight::kGlobal) {
 			drawGlobalLight(scene, ql);
 		} else {
 			//drawLocalLight(scene, ql);
@@ -709,7 +707,7 @@ void RenderContext::setupScene(RenderScene *scene, const RenderClearer *clearer,
 
 	RenderTarget *target = m_targetSet.getFirstUsed();
 	AX_ASSERT(target);
-	Size r = target->getSize();
+	Size r = target->size();
 	AX_SU(g_sceneSize, Vector4(r.width,r.height,1.0f/r.width, 1.0f/r.height));
 
 	if (camera->isReflectionEnabled()) {
@@ -748,7 +746,8 @@ void RenderContext::drawGlobalLight(RenderScene *scene, RenderLight *light)
 	m_mtrGlobalLight->clearParameters();
 
 	if (qshadow) {
-		Texture *tex = qshadow->splitCameras[0].getTarget()->getTexture();
+		RenderTarget *tex = qshadow->splitCameras[0].getTarget();
+		AX_ASSERT(tex->isTexture());
 		Matrix4 matrix = qshadow->splitCameras[0].getViewProjMatrix();
 		matrix.scale(0.5f, -0.5f, 0.5f);
 		matrix.translate(0.5f, 0.5f, 0.5f);

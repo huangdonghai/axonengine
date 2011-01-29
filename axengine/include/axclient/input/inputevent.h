@@ -145,7 +145,7 @@ struct AX_API InputKey
 	AX_DECLARE_ENUM(InputKey)
 
 	std::string getName() const;
-	static int getKey(const std::string &keyname);
+	static Type getKey(const std::string &keyname);
 };
 
 //--------------------------------------------------------------------------

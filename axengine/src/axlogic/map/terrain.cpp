@@ -69,11 +69,11 @@ void MapAlphaBlock::updateTexture()
 		std::string key;
 		StringUtil::sprintf(key, "_alphablock_%d", g_system->generateId());
 
-		m_texture = new Texture(key, AlphaFormat, Size(Map::ChunkPixels, Map::ChunkPixels), Texture::Dynamic);
+		m_texture = new Texture(key, (TexFormat::Type)AlphaFormat, Size(Map::ChunkPixels, Map::ChunkPixels), Texture::Dynamic);
 		m_texture->setClampMode(SamplerDesc::ClampMode_Clamp);
 	}
 
-	m_texture->uploadSubTexture(Rect(0,0,Map::ChunkPixels,Map::ChunkPixels), &m_data[0][0], AlphaFormat);
+	m_texture->uploadSubTexture(Rect(0,0,Map::ChunkPixels,Map::ChunkPixels), &m_data[0][0], (TexFormat::Type)AlphaFormat);
 }
 
 MapLayerGen::MapLayerGen(MapTerrain *terrain, int layerId)
@@ -2160,7 +2160,7 @@ RenderPrims Terrain::getViewedPrimitives()
 }
 #endif
 
-void MapTerrain::issueToQueue(RenderScene *qscene)
+void MapTerrain::issueToScene(RenderScene *qscene)
 {
 	double start = OsUtil::seconds();
 	MapEvent e;

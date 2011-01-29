@@ -97,7 +97,7 @@ protected:
 
 
 protected:
-	ActorNum m_actorNum;
+	int m_actorNum;
 	GameWorld *m_world;			// world the entity has added to
 
 private:

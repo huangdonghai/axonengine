@@ -13,28 +13,23 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-class AX_API RenderTarget
+class AX_API RenderTarget : public Texture
 {
-public:
 	friend class RenderContext;
 
-	enum Type {
-		kWindow, kTexture
-	};
-
+public:
 	RenderTarget(TexFormat format, const Size &size);
+	RenderTarget(TexType texType, TexFormat format, int width, int height, int depth);
 	RenderTarget(Handle hwnd, const std::string &debugname, const Size &size);
 	~RenderTarget();
 
-	Type getType() const { return m_type; }
-	Size getSize() const { return m_size; }
-	bool isWindow() const { return m_type == kWindow; }
-	bool isTexture() const { return m_type == kTexture; }
-	bool isColorFormat() const { return m_format.isColor(); }
-	bool isDepthFormat() const { return m_format.isDepth(); }
-	bool isStencilFormat() const { return m_format.isStencil(); }
+	Size size() const { if (isTexture()) return Texture::size(); else return m_size; }
+	bool isWindow() const { return m_isWindow; }
+	bool isTexture() const { return !m_isWindow; }
+	void setSlice(int slice) { m_slice = slice; }
+	int slice() const { return m_slice; }
 
-	Texture *getTexture() { if (isTexture()) return m_texture; else return 0; }
+	RenderTarget *cloneSlice(int slice) const;
 
 	// since qt maybe change window id, so we need this function
 	void updateWindowInfo(Handle newId, const Size &size);
@@ -42,22 +37,23 @@ public:
 
 	phandle_t getPHandle()
 	{
-		if (isTexture()) return m_texture->getPHandle();
+		if (isTexture()) return Texture::getPHandle();
 		else return m_window;
 	}
 
+protected:
+	RenderTarget(const RenderTarget &rhs);
+
 private:
-	Type m_type;
+	bool m_isWindow; // is window, or texture
 	phandle_t m_window;
-	Texture *m_texture;
 
-	TexFormat m_format;
-	Size m_size;
-
-	int m_boundIndex;
+	// for texture target
+	int m_slice;
 
 	// for window
 	Handle m_wndId;
+	Size m_size;
 	std::string m_name;
 
 	RenderTarget *m_rtDepth; // depth stencil
@@ -103,19 +99,6 @@ public:
 	RenderCamera m_camera;
 	RenderTarget *m_target;
 	int m_updateFrame;
-};
-
-class AX_API ShadowMap {
-public:
-	ShadowMap(int width, int height);
-	~ShadowMap();
-
-	void allocReal();
-	void freeReal();
-
-public:
-	int m_width, m_height;
-	RenderTarget *m_renderTarget;
 };
 
 #if 0

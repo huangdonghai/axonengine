@@ -60,8 +60,8 @@ public:
 	void stopRunning();
 
 protected:
-	void buttonDown(int bt, InputKey key, int msec);
-	void buttonUp(int bt, InputKey key, int msec);
+	void buttonDown(int bt, int key, int msec);
+	void buttonUp(int bt, int key, int msec);
 	float buttonState(int bt);
 
 	// generate user input
@@ -89,7 +89,7 @@ protected:
 
 private:
 	struct Button {
-		InputKey keys[2];		// key holding it down
+		int keys[2];		// key holding it down
 		int downtime;		// msec timestamp
 		int msec;			// msec down this frame if both a down and up happened
 		bool isActive;		// current state

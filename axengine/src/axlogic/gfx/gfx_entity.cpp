@@ -54,7 +54,7 @@ void GfxEntity::frameUpdate(RenderScene *qscene)
 	}
 }
 
-void GfxEntity::issueToQueue(RenderScene *qscene)
+void GfxEntity::issueToScene(RenderScene *qscene)
 {
 	std::list<GfxObject*>::iterator it = m_objects.begin();
 	for (; it != m_objects.end(); ++it) {

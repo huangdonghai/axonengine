@@ -50,7 +50,7 @@ Primitives TreeEntity::getHitTestPrims()
 	return m_treeAsset->getAllPrimitives(m_lod);
 }
 
-void TreeEntity::issueToQueue(RenderScene *qscene)
+void TreeEntity::issueToScene(RenderScene *qscene)
 {
 	if (!r_speedtree.getBool()) {
 		return;

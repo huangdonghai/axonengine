@@ -26,7 +26,7 @@ public:
 	virtual BoundingBox getBoundingBox();
 	virtual Primitives getHitTestPrims();
 	virtual void frameUpdate(RenderScene *qscene);
-	virtual void issueToQueue(RenderScene *qscene);
+	virtual void issueToScene(RenderScene *qscene);
 
 	// internal use
 	void addObject(GfxObject *obj);

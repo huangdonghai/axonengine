@@ -391,7 +391,7 @@ public:
 	virtual Kind getType() const { return RenderEntity::kTerrain; }
 	virtual void frameUpdate(RenderScene *qscene);
 
-	virtual void issueToQueue(RenderScene *qscene);
+	virtual void issueToScene(RenderScene *qscene);
 
 #if 0
 	virtual Primitives getAllPrimitives();

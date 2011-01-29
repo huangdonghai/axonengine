@@ -16,9 +16,6 @@ AX_BEGIN_NAMESPACE
 
 AX_DECLARE_REFPTR(TextureResource);
 
-
-//--------------------------------------------------------------------------
-// class Texture
 //--------------------------------------------------------------------------
 
 class Texture
@@ -34,15 +31,10 @@ public:
 
 	typedef Flags_<InitFlag> InitFlags;
 
-	enum TexType {
-		TexType_2D,
-		TexType_3D,
-		TexType_CUBE,
-	};
-
 	Texture(const std::string &name);
 	Texture(const std::string &name, InitFlags flags);
 	Texture(const std::string &debugname, TexFormat format, const Size &size, InitFlags flags);
+	Texture(const std::string &debugname, TexType textype, TexFormat format, const Size &size, float depth, InitFlags flags);
 	~Texture();
 
 	void uploadSubTexture(const Rect &rect, const void *pixels, TexFormat format);
@@ -70,6 +62,10 @@ public:
 #endif
 
 	phandle_t getPHandle() const;
+
+protected:
+	Texture();
+	void _init(const std::string &debugname, TexType textype, TexFormat format, const Size &size, float depth, InitFlags flags);
 
 private:
 	Texture(const TextureResourcePtr &resource, const SamplerDesc &desc);

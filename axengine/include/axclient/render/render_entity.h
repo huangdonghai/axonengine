@@ -80,8 +80,8 @@ public:
 	virtual BoundingBox getLocalBoundingBox() = 0;
 	virtual BoundingBox getBoundingBox() = 0;
 	virtual Primitives getHitTestPrims() { return Primitives(); }
-	virtual void frameUpdate(RenderScene *qscene);
-	virtual void issueToQueue(RenderScene *qscene) {}
+	virtual void frameUpdate(RenderScene *scene);
+	virtual void issueToScene(RenderScene *scene) {}
 
 protected:
 	// only called by RenderWorld
@@ -95,10 +95,6 @@ protected:
 	Matrix m_affineMat;
 	int m_flags;
 	Vector4 m_instanceParam;
-
-#if 0
-	QueuedEntity *m_queued;
-#endif
 
 	int m_visFrameId;
 	BoundingBox m_linkedBbox;
@@ -166,7 +162,7 @@ public:
 	virtual bool isSupportExt(const std::string &ext) const = 0;
 	virtual RenderEntity *create(const std::string &name, intptr_t arg = 0) = 0;
 	virtual void updateForFrame(RenderScene *qscene ) {}
-	virtual void issueToQueue(RenderScene *qscene) {}
+	virtual void issueToScene(RenderScene *qscene) {}
 };
 
 AX_END_NAMESPACE
