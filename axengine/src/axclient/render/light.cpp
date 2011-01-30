@@ -110,7 +110,7 @@ public:
 		m_light = light;
 		m_shadowMapSize = Math::nearestPowerOfTwo(shadowSize);
 
-		if (m_light->lightType() == kGlobal) {
+		if (m_light->isGlobal()) {
 			int maxsize = g_renderDriverInfo.maxTextureSize;
 
 			if (m_shadowMapSize > maxsize / 2) {
@@ -120,6 +120,12 @@ public:
 
 			m_shadowMap = new ShadowMap(TexType::_2D, csmSize);
 			m_shadowMap->allocReal();
+		} else if (m_light->isPoint()) {
+			m_shadowMapSize = std::min(m_shadowMapSize, g_renderDriverInfo.maxCubeMapTextureSize);
+			m_shadowMap = new ShadowMap(TexType::CUBE, m_shadowMapSize);
+		} else if (m_light->isSpot()) {
+			m_shadowMapSize = std::min(m_shadowMapSize, g_renderDriverInfo.maxTextureSize);
+			m_shadowMap = new ShadowMap(TexType::_2D, m_shadowMapSize);
 		} else {
 			m_shadowMap = 0;
 		}
