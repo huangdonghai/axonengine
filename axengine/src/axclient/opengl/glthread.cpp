@@ -123,7 +123,7 @@ void GLthread::runFrame(bool isInThread) {
 	double cacheend = OsUtil::seconds();
 
 	int view_count = g_renderFrame->getSceneCount();
-	float frametime = g_renderFrame->getScene(0)->camera.getFrameTime();
+	float frametime = g_renderFrame->getScene(0)->camera.frameTime();
 
 	Clearer clearer;
 	clearer.clearDepth(true);
@@ -255,7 +255,7 @@ void GLthread::setupScene(RenderScene *scene, const Clearer *clearer, RenderTarg
 	gCamera = camera;
 
 	if (!target) {
-		target = camera->getTarget();
+		target = camera->target();
 	}
 
 #if 0
@@ -269,14 +269,14 @@ void GLthread::setupScene(RenderScene *scene, const Clearer *clearer, RenderTarg
 	glViewport(viewport.x, viewport.y, viewport.z, viewport.w);
 	glScissor(viewport.x, viewport.y, viewport.z, viewport.w);
 
-	AX_SU(g_time, camera->getTime());
-	AX_SU(g_cameraPos, camera->getOrigin());
+	AX_SU(g_time, camera->time());
+	AX_SU(g_cameraPos, camera->origin());
 
-	Angles angles = camera->getViewAxis().toAngles();
+	Angles angles = camera->viewAxis().toAngles();
 	angles *= AX_D2R;
 
 	AX_SU(g_cameraAngles, angles.toVector3());
-	AX_SU(g_cameraAxis, camera->getViewAxis());
+	AX_SU(g_cameraAxis, camera->viewAxis());
 
 	AX_SU(g_viewProjMatrix, camera->getViewProjMatrix());
 	AX_SU(g_viewProjNoTranslate, camera->getViewProjNoTranslate());
@@ -313,7 +313,7 @@ void GLthread::unsetScene(RenderScene *scene, const Clearer *clearer, RenderTarg
 	}
 
 	if (!target) {
-		target = camera->getTarget();
+		target = camera->target();
 	}
 #if 0
 	if (target->isTexture()) {
@@ -584,7 +584,7 @@ void GLthread::drawPass_shadowGen(RenderScene *scene) {
 	QueuedLight *qlight = scene->sourceLight;
 	ShadowData *qshadow = qlight->shadowInfo;
 
-	GLtexture *tex = (GLtexture*)scene->camera.getTarget()->getTexture();
+	GLtexture *tex = (GLtexture*)scene->camera.target()->getTexture();
 	if (r_shadowGen.getBool()) {
 		// offset the geometry slightly to prevent z-fighting
 		// note that this introduces some light-leakage artifacts
@@ -774,7 +774,7 @@ void GLthread::drawPass_shadowBlur(RenderScene *scene) {
 
 	// draw overlay
 	RenderCamera camera = scene->camera;
-	camera.setOverlay(camera.getViewRect());
+	camera.setOverlay(camera.viewRect());
 	s_technique = Technique::Main;
 
 	for (int i = 0; i < blurtimes; i++) {
@@ -793,7 +793,7 @@ void GLthread::drawPass_postprocess(RenderScene *scene) {
 	GLtarget *downscale2 = 0;
 
 	if (r_bloom.getBool()) {
-		const Rect &r = scene->camera.getViewRect();
+		const Rect &r = scene->camera.viewRect();
 		int width = r.width / 4;
 		int height = r.height / 4;
 
@@ -806,7 +806,7 @@ void GLthread::drawPass_postprocess(RenderScene *scene) {
 	}
 
 	RenderCamera camera = scene->camera;
-	camera.setOverlay(camera.getViewRect());
+	camera.setOverlay(camera.viewRect());
 
 	GLtexture *tex = (GLtexture*)gWorldTarget->getTexture();
 
@@ -847,7 +847,7 @@ void GLthread::drawPass_overlay(RenderScene *scene) {
 
 	// draw overlay
 	RenderCamera camera = scene->camera;
-	camera.setOverlay(camera.getViewRect());
+	camera.setOverlay(camera.viewRect());
 
 	setupScene(scene, nullptr, nullptr, &camera);
 

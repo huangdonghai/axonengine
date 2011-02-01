@@ -3,7 +3,7 @@
 
 AX_BEGIN_NAMESPACE
 
-class MaterialDecl
+class MaterialDecl : public KeyedObject
 {
 public:
 	friend class Material;
@@ -40,7 +40,6 @@ protected:
 	static FixedString normalizeKey(const std::string &name);
 
 private:
-	FixedString m_key;
 	Material::SortHint m_sortHint;
 	std::string m_shaderName;
 	int m_shaderGenMask;

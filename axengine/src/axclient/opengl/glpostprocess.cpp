@@ -216,7 +216,7 @@ void GLpostprocess::drawQuad(GLtexture *texture) {
 	m_shaderDrawQuad->setSystemMap(MaterialTextureId::Diffuse, texture);
 	m_shaderDrawQuad->setSU();
 
-	const Rect &r = gCamera->getViewRect();
+	const Rect &r = gCamera->viewRect();
 	updateScreenQuad(r);
 
 	m_screenQuadGeo->bindVertexBuffer();
@@ -238,7 +238,7 @@ void GLpostprocess::measureHistogram(GLtexture *tex, int index) {
 	m_shaderHistogram->setSystemMap(MaterialTextureId::Diffuse, tex);
 	m_shaderHistogram->setSU();
 
-	const Rect &r = gCamera->getViewRect();
+	const Rect &r = gCamera->viewRect();
 	updateScreenQuad(r);
 
 	m_screenQuadGeo->bindVertexBuffer();
@@ -322,7 +322,7 @@ void GLpostprocess::shadowBlur(GLtexture *texture, bool is_du) {
 
 	m_screenQuad->setMaterial(m_matShadowBlur.get());
 
-	const Rect &r = gCamera->getViewRect();
+	const Rect &r = gCamera->viewRect();
 	updateScreenQuad(r);
 
 	glThread->drawPrimitive(m_screenQuad->getCachedId());
@@ -348,7 +348,7 @@ void GLpostprocess::downscale4x4(GLtexture *tex, const Rect &rect) {
 
 	m_shaderDownscale4x4->setParameter("g_sampleOffsets", param, 4);
 
-	const Rect &r = gCamera->getViewRect();
+	const Rect &r = gCamera->viewRect();
 	updateScreenQuad(r);
 
 	m_screenQuadGeo->bindVertexBuffer();
@@ -411,7 +411,7 @@ void GLpostprocess::genericPP(const std::string &shadername, RenderTarget *targe
 
 	shader->setParameter("s_invTextureSize", Vector2(1.0f/width, 1.0f/height));
 
-	const Rect &r = camera.getViewRect();
+	const Rect &r = camera.viewRect();
 	updateScreenQuad(r);
 
 	m_screenQuadGeo->bindVertexBuffer();
@@ -447,9 +447,9 @@ void GLpostprocess::genericPP(const std::string &shadername, RenderTarget *targe
 	Rect r;
 
 	if (target) {
-		r = camera.getViewRect();
+		r = camera.viewRect();
 	} else {
-		r = gCamera->getViewRect();
+		r = gCamera->viewRect();
 	}
 	updateScreenQuad(r);
 

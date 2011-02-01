@@ -632,7 +632,7 @@ void MapChunk::onCalculateLOD(MapEvent *e)
 		return;
 
 #if 1
-	const MapChunk *eyechunk = m_terrain->getPosChunk(e->camera->getOrigin());
+	const MapChunk *eyechunk = m_terrain->getPosChunk(e->camera->origin());
 
 	if (eyechunk == this) {
 		AX_ASSERT(eyechunk);
@@ -644,8 +644,8 @@ void MapChunk::onCalculateLOD(MapEvent *e)
 	const RenderCamera &camera = *e->camera;
 
 	Vector3 center = m_bbox.getCenter();
-	float dist = m_bbox.pointDistance(camera.getOrigin()); // (center - camera.getOrigin()).getLength();
-	float factor = camera.getZnear() * camera.getViewRect().height / (dist * camera.getTop());
+	float dist = m_bbox.pointDistance(camera.origin()); // (center - camera.getOrigin()).getLength();
+	float factor = camera.znear() * camera.viewRect().height / (dist * camera.top());
 
 	int i;
 	for (i = Map::NumChunkLod - 1; i >= 0; i--) {
@@ -940,7 +940,7 @@ void MapChunk::updateColorTexture()
 void MapChunk::onGetViewedPrims(MapEvent *e)
 {
 #if _DEBUG
-	const MapChunk *eyechunk = m_terrain->getPosChunk(e->camera->getOrigin());
+	const MapChunk *eyechunk = m_terrain->getPosChunk(e->camera->origin());
 
 	if (eyechunk == this) {
 		AX_ASSERT(eyechunk);
@@ -2104,7 +2104,7 @@ void MapTerrain::generateLayerAlpha(bool doprogress, int id)
 
 void MapTerrain::frameUpdate(RenderScene *qscene)
 {
-	const Vector3 &org = qscene->camera.getOrigin();
+	const Vector3 &org = qscene->camera.origin();
 	if ((org - m_lastViewOrigin).getLength() < 32 && !m_heightDirtyLastView) {
 		return;
 	}

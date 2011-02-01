@@ -340,7 +340,7 @@ void TransformTool::doRender(const RenderCamera &camera) {
 
 		const RenderCamera &camera = m_view->getCamera();
 		Vector3 wpos = camera.worldToScreen(pos);
-		Vector3 upos = pos + camera.getViewAxis()[2];
+		Vector3 upos = pos + camera.viewAxis()[2];
 		upos = camera.worldToScreen(upos);
 		float dist = (upos - wpos).getLength();
 #if 1
@@ -387,7 +387,7 @@ void TransformTool::updateMode() {
 		m_gizmoAxis.setIdentity();
 		break;
 	case ViewSpace:
-		m_gizmoAxis = m_view->getCamera().getViewAxis();
+		m_gizmoAxis = m_view->getCamera().viewAxis();
 		break;
 	case ObjectSpace:
 		m_gizmoAxis = actorlist.getBackAxis();
@@ -625,7 +625,7 @@ void MoveTool::doEnd(int x, int y, Action *his) {
 }
 
 void MoveTool::selectClipPlane() {
-	const Vector3 &forward = m_view->getCamera().getViewAxis()[0];
+	const Vector3 &forward = m_view->getCamera().viewAxis()[0];
 
 	AX_ASSERT(m_highlit != -1);
 
@@ -681,7 +681,7 @@ void MoveTool::selectClipPlane() {
 }
 
 bool MoveTool::clipTest(int x, int y, Vector3 &result) {
-	Vector3 start = m_view->getCamera().getOrigin();
+	Vector3 start = m_view->getCamera().origin();
 	Vector3 end(x, y, 1);
 
 	end = m_view->getCamera().screenToWorld(end);
@@ -856,7 +856,7 @@ Vector3 RotateTool::getRotate(float angle) const {
 }
 
 void RotateTool::selectClipPlane() {
-	const Matrix3 &viewAxis = m_view->getCamera().getViewAxis();
+	const Matrix3 &viewAxis = m_view->getCamera().viewAxis();
 
 	AX_ASSERT(m_highlit != -1);
 
@@ -886,7 +886,7 @@ void RotateTool::selectClipPlane() {
 }
 
 bool RotateTool::clipTest(int x, int y, float &result) {
-	Vector3 start = m_view->getCamera().getOrigin();
+	Vector3 start = m_view->getCamera().origin();
 	Vector3 end(x, y, 1);
 
 	end = m_view->getCamera().screenToWorld(end);
@@ -1052,7 +1052,7 @@ void ScaleTool::doEnd(int x, int y, Action *his) {
 }
 
 void ScaleTool::selectClipPlane() {
-	const Vector3 &forward = m_view->getCamera().getViewAxis()[0];
+	const Vector3 &forward = m_view->getCamera().viewAxis()[0];
 
 	AX_ASSERT(m_highlit != -1);
 
@@ -1098,7 +1098,7 @@ void ScaleTool::selectClipPlane() {
 }
 
 bool ScaleTool::clipTest(int x, int y, Vector3 &result) {
-	Vector3 start = m_view->getCamera().getOrigin();
+	Vector3 start = m_view->getCamera().origin();
 	Vector3 end(x, y, 1);
 
 	end = m_view->getCamera().screenToWorld(end);

@@ -67,14 +67,14 @@ void View::doUpdate()
 
 	preUpdate();
 
-	m_camera.setTarget(m_frame->getRenderTarget());
-	m_camera.setViewRect(Rect(m_frame->getRenderTarget()->size()));
+	m_camera.setTarget(m_frame->renderTarget());
+	m_camera.setViewRect(Rect(m_frame->renderTarget()->size()));
 	m_camera.setOrigin(m_eyeMatrix.origin);
 	m_camera.setViewAxis(m_eyeMatrix.axis);
 	m_camera.setFov(0, 60);
 	m_camera.setTime(now);
 
-	g_renderSystem->beginFrame(m_camera.getTarget());
+	g_renderSystem->beginFrame(m_camera.target());
 #if 0
 	gRenderSystem->beginScene(m_camera);
 #endif
@@ -99,9 +99,9 @@ void View::drawAxis()
 	float line_length = 1.0f;
 	float view_size = line_length * 2.0f + 1.0f;
 
-	rv.setTarget(m_frame->getRenderTarget());
+	rv.setTarget(m_frame->renderTarget());
 	rv.setOrigin(Vector3(0,0,0));
-	rv.setViewAxis(m_camera.getViewAxis());
+	rv.setViewAxis(m_camera.viewAxis());
 	rv.setOrtho(view_size, view_size, view_size);
 	rv.setViewRect(Rect(0, -12, 60, 60));
 
@@ -131,8 +131,8 @@ void View::drawFrameNum()
 {
 	RenderCamera rv;
 
-	rv.setTarget(m_frame->getRenderTarget());
-	rv.setOverlay(m_camera.getViewRect());
+	rv.setTarget(m_frame->renderTarget());
+	rv.setOverlay(m_camera.viewRect());
 
 	Rect rect;
 	std::string text;
@@ -160,7 +160,7 @@ void View::drawFrameNum()
 	StringUtil::sprintf(text, "FPS:%3.1f FT:%3.1f FE:%d BE:%d", m_fps, m_frameTime*1000, stat_frontendTime.getInt(), stat_backendTime.getInt());
 
 	rect.x = 10;
-	rect.y = m_camera.getViewRect().height - 24;
+	rect.y = m_camera.viewRect().height - 24;
 	rect.width = 120;
 	rect.height = 24;
 	TextPrim *prim = TextPrim::createText(Primitive::HintFrame, rect, m_font, text, Rgba::Green, TextPrim::Left);
@@ -218,7 +218,7 @@ bool View::traceWorld(int x, int y, Vector3 &result, int part)
 
 bool View::traceWorld(Vector3 &result)
 {
-	Size size = m_frame->getSize() / 2;
+	Size size = m_frame->size() / 2;
 	return traceWorld(size.width, size.height, result, SelectPart::All);
 }
 

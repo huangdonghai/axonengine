@@ -491,7 +491,7 @@ void D3D9Postprocess::genericPP(const std::string &shadername, RenderTarget *tar
 
 //		shader->setParameter("s_invTextureSize", Vector2(1.0f/width, 1.0f/height));
 
-	const Rect &r = camera.getViewRect();
+	const Rect &r = camera.viewRect();
 	MeshUP::setupScreenQuad(m_screenQuad, r);
 
 	d3d9Thread->unsetScene(0, 0, 0, &camera);
@@ -525,7 +525,7 @@ void D3D9Postprocess::genericPP(const std::string &shadername, RenderTarget *tar
 	Rect r;
 
 	if (target) {
-		r = camera.getViewRect();
+		r = camera.viewRect();
 	} else {
 		r = d3d9Camera->getViewRect();
 	}
@@ -574,7 +574,7 @@ void D3D9Postprocess::drawLightShadowed(Vector3 volume[8], QueuedLight *light, c
 	lightpos.w = 1.0f / light->radius;
 
 	Matrix4 matrix = shadowCamera.getViewProjMatrix();
-	D3D9Texture *tex = (D3D9Texture*)shadowCamera.getTarget()->getTexture();
+	D3D9Texture *tex = (D3D9Texture*)shadowCamera.target()->getTexture();
 	int width, height;
 	tex->getSize(width, height);
 	matrix.scale(0.5f, -0.5f, 0.5f);
@@ -618,7 +618,7 @@ void D3D9Postprocess::drawGlobalLight( Vector3 volume[8], QueuedLight *light )
 	ShadowData *qshadow = light->shadowInfo;
 
 	if (qshadow) {
-		D3D9Texture *tex = (D3D9Texture*)qshadow->splitCameras[0].getTarget()->getTexture();
+		D3D9Texture *tex = (D3D9Texture*)qshadow->splitCameras[0].target()->getTexture();
 		Matrix4 matrix = qshadow->splitCameras[0].getViewProjMatrix();
 		matrix.scale(0.5f, -0.5f, 0.5f);
 		matrix.translate(0.5f, 0.5f, 0.5f);

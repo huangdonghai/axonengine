@@ -163,6 +163,10 @@ Size Texture::size() const
 	return m_resource->size();
 }
 
+TexFormat Texture::format() const
+{
+	return m_resource->format();
+}
 
 void Texture::_init(const std::string &debugname, TexType textype, TexFormat format, const Size &size, float depth, InitFlags flags)
 {

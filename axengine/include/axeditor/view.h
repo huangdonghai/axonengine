@@ -15,8 +15,8 @@ AX_BEGIN_NAMESPACE
 // view frame is a widget/window can contain a View
 struct IViewFrame
 {
-	virtual RenderTarget *getRenderTarget() = 0;
-	virtual Size getSize() = 0;
+	virtual RenderTarget *renderTarget() = 0;
+	virtual Size size() = 0;
 	virtual void setCursor(CursorType cursor_type) = 0;
 	virtual void resetCursor() = 0;
 	virtual void setCursorPos(const Point &pos) = 0;

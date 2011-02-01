@@ -431,19 +431,18 @@ void dx9EndPix()
 }
 
 static bool surfaceSizeIsSet = false;
-inline static IDirect3DSurface9 *getSurface(phandle_t h, bool setSize)
+inline static IDirect3DSurface9 *getSurface(phandle_t h, int slice, bool setSize)
 {
 	if (!h || !*h) return 0;
 
 	DX9_Resource *resource = h->castTo<DX9_Resource *>();
 
 	if (resource->m_type == DX9_Resource::kTexture) {
-		AX_ASSERT(resource->m_level0);
 		if (setSize) {
 			s_curRenderTargetSize.set(resource->width, resource->height);
 			surfaceSizeIsSet = true;
 		}
-		return resource->m_level0;
+		return resource->getSliceSurface(slice);
 	} else {
 		if (setSize) {
 			s_curRenderTargetSize = resource->m_window->getSize();
@@ -453,14 +452,15 @@ inline static IDirect3DSurface9 *getSurface(phandle_t h, bool setSize)
 	}
 }
 
-static void dx9SetTargetSet(phandle_t targetSet[RenderTargetSet::MaxTarget])
+static void dx9SetTargetSet(phandle_t targetSet[RenderTargetSet::MaxTarget], int slices[RenderTargetSet::MaxTarget])
 {
 	AX_ASSURE(targetSet[0] || targetSet[1]);
 
 	surfaceSizeIsSet = false;
-	IDirect3DSurface9 *surface = getSurface(targetSet[0], true);
+	IDirect3DSurface9 *surface = getSurface(targetSet[0], 0, true);
 	if (surface) {
 		V(dx9_device->SetDepthStencilSurface(surface));
+		SAFE_RELEASE(surface);
 	}
 
 	if (!targetSet[1]) {
@@ -468,14 +468,16 @@ static void dx9SetTargetSet(phandle_t targetSet[RenderTargetSet::MaxTarget])
 		surface = dx9_driver->getNullTarget(s_curRenderTargetSize);
 		V(dx9_device->SetRenderTarget(0, surface))
 	} else {
-		surface = getSurface(targetSet[1], true);
+		surface = getSurface(targetSet[1], slices[1], true);
 		AX_ASSURE(surface);
 		V(dx9_device->SetRenderTarget(0, surface));
+		SAFE_RELEASE(surface);
 	}
 
 	for (int i = 1; i < RenderTargetSet::MaxColorTarget; i++) {
-		surface = getSurface(targetSet[i+1], false);
+		surface = getSurface(targetSet[i+1], slices[i+1], false);
 		V(dx9_device->SetRenderTarget(i, surface));
+		SAFE_RELEASE(surface);
 	}
 
 	// if no depth surface, we assign a default

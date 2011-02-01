@@ -84,8 +84,8 @@ void Selection::beginSelect(const RenderCamera &view)
 
 	m_selectionCamera = view;
 
-	zFar = view.getZfar();
-	zNear = view.getZnear();
+	zFar = view.zfar();
+	zNear = view.znear();
 
 	m_isSelectMode = true;
 

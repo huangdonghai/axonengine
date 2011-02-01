@@ -71,7 +71,7 @@ void PerspectiveView::updateMove()
 
 	MapTerrain *terrain = m_context->getTerrain();
 	if (mapState->followTerrain && terrain && terrain->isInWorld()) {
-		float h = terrain->getHeightByPos(m_eyeMatrix.origin) + m_camera.getZnear() * 2.0f;
+		float h = terrain->getHeightByPos(m_eyeMatrix.origin) + m_camera.znear() * 2.0f;
 		if (origin.z < h) origin.z = h;
 	}
 
@@ -103,7 +103,7 @@ void PerspectiveView::bindFrame(IViewFrame *container)
 
 	// post bind
 	if (m_frame) {
-		((MapContext*)m_context)->getGameWorld()->setWindow(m_frame->getRenderTarget());
+		((MapContext*)m_context)->getGameWorld()->setWindow(m_frame->renderTarget());
 		g_system->registerTickable(System::TickGame, this);
 		m_frame->registerEventSource();
 		m_context->notifyObservers(Context::EverythingChanged);

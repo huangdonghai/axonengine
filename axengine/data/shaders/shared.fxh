@@ -93,34 +93,10 @@ AX_SHADERCONST(SHADERMACRO_VERSION, 2)
 				/* enable flags */ \
 	AX_DECL_MACRO(G_DISABLE_SPECULAR		, 1) \
 				/* fog */ \
-	AX_DECL_MACRO(G_FOG						, 1)
-#if 0
-				/* sampler */ \
-	AX_DECL_MACRO(M_DIFFUSE			, 1) \
-	AX_DECL_MACRO(M_NORMAL				, 1) \
-	AX_DECL_MACRO(M_SPECULAR			, 1) \
-	AX_DECL_MACRO(M_ENVMAP				, 1) \
-	AX_DECL_MACRO(M_DETAIL				, 1) \
-	AX_DECL_MACRO(M_DETAIL_NORMAL		, 1) \
-	AX_DECL_MACRO(M_EMISSION			, 1) \
-	AX_DECL_MACRO(M_DISPLACEMENT		, 1) \
-	\
-	AX_DECL_MACRO(M_LAYERALPHA			, 1) \
-	AX_DECL_MACRO(M_LIGHTMAP			, 1) \
-	\
-				/* texgen */ \
-	AX_DECL_MACRO(M_TEXANIM					, 1) \
-	\
-		/* user customize*/ \
-	AX_DECL_MACRO(M_FEATURE0				, 1) \
-	AX_DECL_MACRO(M_FEATURE1				, 1) \
-	AX_DECL_MACRO(M_FEATURE2				, 1) \
-	AX_DECL_MACRO(M_FEATURE3				, 1) \
-	AX_DECL_MACRO(M_FEATURE4				, 1) \
-	AX_DECL_MACRO(M_FEATURE5				, 1) \
-	AX_DECL_MACRO(M_FEATURE6				, 1) \
-	AX_DECL_MACRO(M_FEATURE7				, 1)
-#endif
+	AX_DECL_MACRO(G_FOG						, 1) \
+	AX_DECL_MACRO(G_CUBE_SHADOWMAP			, 1)
+
+
 // declare shader macro AX_DECL_MACRO(name, bits)
 #define AX_MATERIALMACRO_DEFS \
 	AX_DECL_MACRO(M_NUM_LAYERS				, 3) \
@@ -589,59 +565,3 @@ AX_SHADERCONST(SHADERMACRO_VERSION, 2)
 
 #endif
 
-#if 0
-#define AX_SAMPLER_UNIFORMS \
-	AX_TEXTURE_UNIFORM(sampler2D, g_rt1) \
-	AX_TEXTURE_UNIFORM(sampler2D, g_lightBuffer) \
-	AX_TEXTURE_UNIFORM(sampler2D, g_lightMap) \
-	AX_TEXTURE_UNIFORM(sampler2D, g_shadowMap) \
-
-#define AX_UNIFORM_DEFS															\
-	/* both vs and ps use */ \
-	AX_UNIFORM(float,		float,		g_time,						1, 1)		\
-	AX_UNIFORM(float4,		Vector4,	g_cameraPos,				2, 2)		\
-	AX_UNIFORM(float4,		Vector4,	g_fogParams,				3, 3)		\
-	AX_UNIFORM(float4,		Vector4,	g_waterFogParams,			4, 4)		\
-	\
-	/* vs use */ \
-	AX_UNIFORM(float3x4,	Matrix,		g_modelMatrix,				8, 0)		\
-	AX_UNIFORM(float4,		Vector4,	g_instanceParam,			11, 0)		\
-	AX_UNIFORM(float4x4,	Matrix4,	g_viewProjMatrix,			12, 0)		\
-	AX_UNIFORM(float4x4,	Matrix4,	g_viewProjNoTranslate,		16, 0)		\
-	AX_UNIFORM(float3x3,	Matrix3,	g_cameraAxis,				20, 0)		\
-	AX_UNIFORM(float3,		Vector3,	g_cameraAngles,				24, 0)		\
-	AX_UNIFORM(float4,		Vector4,	g_terrainRect,				25, 0)		\
-	AX_UNIFORM(float4,		Vector4,	g_zoneRect,					26, 0)		\
-	AX_UNIFORM(float4,		Vector4,	g_chunkRect,				27, 0)		\
-	AX_UNIFORM(float4,		Vector4,	g_sceneSize,				28, 0)		\
-	AX_UNIFORM(float4x4,	Matrix4,	g_baseTcMatrix,				32, 0)		\
-	AX_ARRAY_UNIFORM(float4x4,	Matrix4, g_windMatrices,	3,		36, 0)		\
-	AX_ARRAY_UNIFORM(float4,	Vector4, g_leafAngles,		8,		48, 0)		\
-	\
-	/* ps use */ \
-	AX_UNIFORM(float3,		Vector3,	g_matDiffuse,				0, 6)		\
-	AX_UNIFORM(float3,		Vector3,	g_matSpecular,				0, 7)		\
-	AX_UNIFORM(float,		float,		g_matShiness,				0, 8)		\
-	AX_UNIFORM(float4,		Vector4,	g_globalLightPos,			0, 9)		\
-	AX_UNIFORM(float4,		Vector4,	g_globalLightColor,			0, 10)		\
-	AX_UNIFORM(float4,		Vector4,	g_skyColor,					0, 11)		\
-	AX_UNIFORM(float4,		Vector4,	g_exposure,					0, 12)		\
-	AX_UNIFORM(float2,		Vector2,	g_detailScale,				0, 13)		\
-	/*shadow parameter*/ \
-	AX_UNIFORM(float4x4,	Matrix4,	g_shadowMatrix,				0, 18)		\
-	AX_UNIFORM(float4x4,	Matrix4,	g_csmOffsetScales,			0, 22)		\
-	\
-	\
-	AX_TEXTURE_UNIFORM(sampler2D,	g_sceneDepth)		\
-	AX_TEXTURE_UNIFORM(sampler2D,	g_lightBuffer)		\
-	AX_TEXTURE_UNIFORM(sampler2D,	g_lightMap)			\
-	AX_TEXTURE_UNIFORM(sampler2D,	g_shadowMap)		\
-
-#endif
-
-// float4x4    g_amWindMatrices[NUM_WIND_MATRICES] REG(21);// houses all of the wind matrices shared by all geometry types
-// float4      g_avLeafAngles[MAX_NUM_LEAF_ANGLES]; // each element: .x = rock angle, .y = rustle angle
-// each element is a float4, even though only a float2 is needed, to facilitate
-// fast uploads on all platforms (one call to upload whole array)
-// float4      g_vLeafAngleScalars;                 // each tree model has unique scalar values: .x = rock scalar, .y = rustle scalar
-// float       g_fWindMatrixOffset REG(6);                 // keeps two instances of the same tree model from using the same wind matrix (range: [0,NUM_WIND_MATRICES])

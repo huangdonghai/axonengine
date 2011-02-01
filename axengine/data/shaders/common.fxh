@@ -7,6 +7,18 @@ By continuing to use, modify, or distribute this file you indicate that you have
 read the license and understand and accept it fully.
 */
 
+
+#if G_D3D
+//#	define for if (0) else for
+#	pragma warning(disable:3205) // warning X3205: conversion from larger type to smaller, possible loss of data
+#	pragma warning(disable:3078) // warning X3078: loop control variable conflicts with a previous declaration in the outer scope; most recent declaration will be used
+#	pragma pack_matrix(row_major)
+#endif
+
+#include "shared.fxh"
+#include "constant.fxh"
+#include "mathlib.fxh"
+
 // material samplers
 #define DECL_SAMPLER(type, name) \
 	texture name##_tex; \
@@ -40,7 +52,6 @@ DECL_SAMPLER(sampler2D, g_layerAlpha3);
 // engine
 DECL_SAMPLER(sampler2D, g_reflectionMap);
 DECL_SAMPLER(sampler2D, g_lightMap);
-DECL_SAMPLER(sampler2D, g_shadowMap);
 // global
 DECL_SAMPLER(sampler2D, g_rtDepth);
 DECL_SAMPLER(sampler2D, g_rt0);
@@ -50,16 +61,12 @@ DECL_SAMPLER(sampler2D, g_rt3);
 DECL_SAMPLER(sampler2D, g_lightBuffer);
 DECL_SAMPLER(sampler2D, g_sceneColor);
 
-#if G_D3D
-//#	define for if (0) else for
-#	pragma warning(disable:3205) // warning X3205: conversion from larger type to smaller, possible loss of data
-#	pragma warning(disable:3078) // warning X3078: loop control variable conflicts with a previous declaration in the outer scope; most recent declaration will be used
-#	pragma pack_matrix(row_major)
+#if G_CUBE_SHADOWMAP
+DECL_SAMPLER(samplerCUBE, g_shadowMap);
+#else
+DECL_SAMPLER(sampler2D, g_shadowMap);
 #endif
 
-#include "shared.fxh"
-#include "constant.fxh"
-#include "mathlib.fxh"
 
 // zparam, for recover view space z, Zview = 2*f*n/((f+n)-Zbuf(f-n)), where Zbuf is [-1,1]
 // if Zbuf is [0,1], acultly we use, the equation should be
@@ -75,7 +82,8 @@ struct ZrecoverParam {
 };
 #endif
 
-float ZR_GetViewSpace(float zbuf) {
+float ZR_GetViewSpace(float zbuf)
+{
 	return g_zrecoverParam.z / (g_zrecoverParam.y + zbuf * g_zrecoverParam.w);
 }
 

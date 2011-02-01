@@ -24,12 +24,7 @@ float Script : STANDARDSGLOBAL <
 > = 0.8;
 
 // features typedef
-#define F_MASKFRONT		M_FEATURE0
-#define F_SPECULAR		M_FEATURE1
-#define F_PROJECTOR		M_FEATURE2
-#define F_SHADOWED		M_FEATURE3
-#define F_SPOTLIGHT		M_FEATURE4
-#define F_BOXFALLOFF	M_FEATURE5
+#define F_SHADOWED		M_FEATURE0
 
 AX_BEGIN_PC
 	float3x4 s_lightMatrix : PREG0;
@@ -75,44 +70,31 @@ half4 FP_main(ShadowVertexOut IN) : COLOR
 	half4 result = 0;
 
 	// get gbuffer
+	float depth = tex2Dproj(g_rtDepth, IN.screenTc).r;
+
+	float viewDepth = ZR_GetViewSpace(depth);
 	half4 gbuffer = tex2Dproj(g_rt1, IN.screenTc);
+	half4 albedo = tex2Dproj(g_rt2, IN.screenTc);
 
-	float3 worldpos = g_cameraPos.xyz + IN.viewDir.xyz / IN.viewDir.w * gbuffer.a;
+	float3 worldpos = g_cameraPos.xyz + IN.viewDir.xyz / IN.viewDir.w * viewDepth;
 
-#if F_PROJECTOR || F_SPOTLIGHT
-	float3 projTc = mul(s_lightMatrix, float4(worldpos,1));
-	projTc.xy /= projTc.z;
-
-//	projTc.xyz = abs(projTc.xyz);
-//	projTc.xy *= projTc.xy > projTc.yx;
-
-	half falloff = saturate(1.0f - dot(projTc.xyz,projTc.xyz));
-//	return falloff;
-
-	float3 lightPos = s_lightPos.xyz - worldpos;
-#else
 	float3 lightPos = (s_lightPos.xyz - worldpos.xyz) * s_lightPos.w;
 	half falloff = saturate(1.0f - dot(lightPos.xyz, lightPos.xyz));
-#endif
 
 	half3 L = normalize(lightPos.xyz);
 	half3 N = gbuffer.xyz;
 	half3 E = normalize(-IN.viewDir.xyz);
 
 	half NdotL = saturate(dot(N, L));
-//	return NdotL.xxxx;
 
 	half3 R = 2 * NdotL * N - L;
-//	half3 R = reflect(L, N);
 	half RdotE = saturate(dot(E, R));
 
 	result.xyz = s_lightColor.xyz * NdotL;
 
-#if 1//F_SPECULAR
 	result.w = pow(RdotE, 10) * NdotL * s_lightColor.w;
-#endif
 
-	return result * falloff * getShadow(worldpos, gbuffer.a) * 0.25;
+	return result * falloff;
 }
 
 

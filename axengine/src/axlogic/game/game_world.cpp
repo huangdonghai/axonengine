@@ -85,7 +85,7 @@ void GameWorld::drawFrame()
 		m_lastCamera.setViewAxis(player3rd.axis);
 	}
 
-	g_renderSystem->beginFrame(m_lastCamera.getTarget());
+	g_renderSystem->beginFrame(m_lastCamera.target());
 	drawScene(m_lastCamera);
 	g_renderSystem->endFrame();
 }
@@ -94,12 +94,12 @@ void GameWorld::drawScene(const RenderCamera &camera)
 {
 	m_lastCamera = camera;
 
-	m_soundWorld->setListener(Matrix(camera.getViewAxis(), camera.getOrigin()), Vector3(0,0,0));
+	m_soundWorld->setListener(Matrix(camera.viewAxis(), camera.origin()), Vector3(0,0,0));
 	g_soundSystem->setWorld(m_soundWorld);
 
 	if (m_actors[0] && !g_gameSystem->isRunning()) {
 		Player *player = static_cast<Player*>(m_actors[0]);
-		player->setMatrix(Matrix(camera.getViewAxis(), camera.getOrigin()));
+		player->setMatrix(Matrix(camera.viewAxis(), camera.origin()));
 	}
 
 	g_renderSystem->beginScene(camera);
@@ -264,7 +264,7 @@ void GameWorld::removeObject(GameObject *node)
 
 Matrix GameWorld::getLastViewMatrix() const
 {
-	return Matrix(m_lastCamera.getViewAxis(), m_lastCamera.getOrigin());
+	return Matrix(m_lastCamera.viewAxis(), m_lastCamera.origin());
 }
 
 AX_END_NAMESPACE

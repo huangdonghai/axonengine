@@ -142,7 +142,7 @@ void RenderEntity::calculateLod(RenderScene *qscene)
 	if (!m_world)
 		return;
 
-	const Vector3 &org = qscene->camera.getOrigin();
+	const Vector3 &org = qscene->camera.origin();
 	m_distance = m_linkedBbox.pointDistance(org);
 
 	if (m_distance < 1) {
@@ -163,7 +163,7 @@ void RenderEntity::calculateLod(RenderScene *qscene)
 	}
 
 	float extands = m_linkedExtends;
-	float ratio = extands / m_distance / qscene->camera.getFovX() * 90 * 1024;
+	float ratio = extands / m_distance / qscene->camera.fovX() * 90 * 1024;
 
 	if (ratio < r_viewDistCull.getFloat())
 		m_viewDistCulled = true;

@@ -402,7 +402,7 @@ void GLtext::draw(Technique tech)
 	if (m_isSimpleText) {
 		width = 1.0f; height = 1.0f;
 
-		const Matrix3 &axis = gCamera->getViewAxis();
+		const Matrix3 &axis = gCamera->viewAxis();
 		tq.s_vector = -axis[1];
 		tq.t_vector = -axis[2];
 		tq.origin = m_position - tq.s_vector * width * 0.5f - tq.t_vector * height * 0.5f;
@@ -471,7 +471,7 @@ void GLtext::draw(Technique tech)
 
 		if (m_format & TextPrim::Blink) {
 			Rgba color = m_color;
-			color.a = 128+127*sinf(gCamera->getTime() / BLINK_DIVISOR);
+			color.a = 128+127*sinf(gCamera->time() / BLINK_DIVISOR);
 			offset = glFontRender->drawString(m_font, color, tq, startpos, pStr, len, scale, italic);
 			goto next;
 		}

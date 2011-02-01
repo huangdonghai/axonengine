@@ -24,7 +24,7 @@ void (*RenderApi::deleteWindowTarget)(phandle_t h);
 void (*RenderApi::beginPix)(const char *pixname);
 void (*RenderApi::endPix)();
 
-void (*RenderApi::setTargetSet)(phandle_t targetSet[RenderTargetSet::MaxTarget]);
+void (*RenderApi::setTargetSet)(phandle_t targetSet[RenderTargetSet::MaxTarget], int slices[RenderTargetSet::MaxTarget]);
 
 void (*RenderApi::setViewport)(const Rect &rect, const Vector2 & depthRange);
 void (*RenderApi::setScissorRect)(const Rect &scissorRect);
@@ -539,33 +539,34 @@ void ApiWrap::setTargetSet(const RenderTargetSet &targetSet)
 {
 #if AX_MTRENDER
 	phandle_t *handles = allocType<phandle_t>(RenderTargetSet::MaxTarget);
-
-	if (targetSet.m_depthTarget)
-		handles[0] = targetSet.m_depthTarget->getPHandle();
-	else
-		handles[0] = 0;
-
-	for (int i=0; i<RenderTargetSet::MaxColorTarget; i++) {
-		if (targetSet.m_colorTargets[i])
-			handles[i+1] = targetSet.m_colorTargets[i]->getPHandle();
-		else
-			handles[i+1] = 0;
-	}
-	AllocCommand_(RenderApi::setTargetSet).args(handles);
+	int *newSlices = allocType<int>(RenderTargetSet::MaxTarget);
 #else
 	static phandle_t handles[RenderTargetSet::MaxTarget];
-	if (targetSet.m_depthTarget)
-		handles[0] = targetSet.m_depthTarget->getPHandle();
-	else
+	static int newSlices[RenderTargetSet::MaxTarget];
+#endif
+
+	if (targetSet.m_depthTarget) {
+		handles[0] = targetSet.m_depthTarget.target->getPHandle();
+		newSlices[0] = targetSet.m_depthTarget.slice;
+	} else {
 		handles[0] = 0;
+		newSlices[0] = 0;
+	}
 
 	for (int i=0; i<RenderTargetSet::MaxColorTarget; i++) {
-		if (targetSet.m_colorTargets[i])
-			handles[i+1] = targetSet.m_colorTargets[i]->getPHandle();
-		else
+		if (targetSet.m_colorTargets[i]) {
+			handles[i+1] = targetSet.m_colorTargets[i].target->getPHandle();
+			newSlices[i+1] = targetSet.m_colorTargets[i].slice;
+		} else {
 			handles[i+1] = 0;
+			newSlices[i+1] = 0;
+		}
 	}
-	RenderApi::setTargetSet(handles);
+
+#if AX_MTRENDER
+	AllocCommand_(RenderApi::setTargetSet).args(handles, newSlices);
+#else
+	RenderApi::setTargetSet(handles, newSlices);
 #endif
 }
 

@@ -189,20 +189,20 @@ EditorFrame::~EditorFrame()
 	m_editorView->bindFrame(0);
 }
 
-RenderTarget *EditorFrame::getRenderTarget()
+RenderTarget *EditorFrame::renderTarget()
 {
 	if (m_renderTarget == nullptr) {
-		m_renderTarget = new RenderTarget(Handle(winId()), "EditorFrame", getSize());
+		m_renderTarget = new RenderTarget(Handle(winId()), "EditorFrame", size());
 	} else {
-		m_renderTarget->updateWindowInfo(Handle(winId()), getSize());
+		m_renderTarget->updateWindowInfo(Handle(winId()), size());
 	}
 
 	return m_renderTarget;
 }
 
-Size EditorFrame::getSize()
+Size EditorFrame::size()
 {
-	QSize s = size();
+	QSize s = QWidget::size();
 
 	return Size(s.width(), s.height());
 }
@@ -740,7 +740,7 @@ void EditorFrame::setMouseMode(InputSystem::MouseMode mode)
 	if (m_mouseMode == InputSystem::Normal_Mode) {
 		setCursor(CursorType::Default);
 	} else {
-		QSize s = size();
+		QSize s = QWidget::size();
 		m_mouseCenter.set(s.width()/2, s.height()/2);
 		setCursorPos(m_mouseCenter);
 	}

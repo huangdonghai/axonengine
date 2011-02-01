@@ -115,12 +115,19 @@ Size TextureResource::size() const
 	return Size(m_width, m_height);
 }
 
+TexFormat TextureResource::format() const
+{
+	AX_ASSURE(!m_isFileTexture);
+	return m_format;
+}
+
 void TextureResource::_init(const FixedString &key, TexType textype, TexFormat format, int width, int height, float depth, InitFlags flags)
 {
 	m_isFileTexture = false;
 	m_fileLoaded = false;
 	m_initFlags = flags|Texture::Dynamic;
 	m_texType = textype;
+	m_format = format;
 	m_width = width;
 	m_height = height;
 	m_depth = depth;
@@ -130,6 +137,5 @@ void TextureResource::_init(const FixedString &key, TexType textype, TexFormat f
 	setKey(key);
 	ms_resources[key] = this;
 }
-
 
 AX_END_NAMESPACE

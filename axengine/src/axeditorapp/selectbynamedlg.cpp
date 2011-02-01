@@ -469,7 +469,7 @@ void SelectByNameDlg::resetCamera()
 		{
 			Matrix mat;
 
-			mat.axis = (g_mapContext->getActiveView()->getCamera().getViewAxis());
+			mat.axis = (g_mapContext->getActiveView()->getCamera().viewAxis());
 			mat.origin = (actor->getOrigin() - mat.axis[0] * 10);
 
 			g_mapContext->getActiveView()->setEyeMatrix(mat);

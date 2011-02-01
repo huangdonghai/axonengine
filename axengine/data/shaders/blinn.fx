@@ -33,31 +33,31 @@ float Script : STANDARDSGLOBAL <
 
 struct ShadowVertexOut {
 	float4 hpos			: POSITION;
-	float2 diffuseTc	: TEXCOORD0;
+	float4 diffuseTc	: TEXCOORD0;
 };
 
 ShadowVertexOut VP_zpass(MeshVertex IN)
 {
 	ShadowVertexOut OUT;
 	OUT.hpos = VP_modelToClip(IN, IN.position);
-	OUT.diffuseTc = IN.streamTc.xy;
+	OUT.diffuseTc.xy = IN.streamTc.xy;
+	OUT.diffuseTc.zw = OUT.hpos.zw / g_zrecoverParam.y;
 	return OUT;
 }
 
-half4 FP_zpass(ShadowVertexOut IN) : COLOR
+float4 FP_zpass(ShadowVertexOut IN) : COLOR
 {
-#if !S_ALPHATEST
-	return 1;
-#else
-#if M_DIFFUSE
-	half alpha = tex2D(g_diffuseMap, IN.diffuseTc).a;
-#else
-	half alpha = 1;
-#endif
+	float4 OUT;
+	OUT.rgb = IN.diffuseTc.w;
+	OUT.a = 1;
+
+#if S_ALPHATEST && M_DIFFUSE
+	half alpha = tex2D(g_diffuseMap, IN.diffuseTc.xy).a;
+
 	if (alpha < 0.5)
 		discard;
-	return 1;
 #endif
+	return OUT;
 }
 
 Gbuffer FP_gpass(VertexOut IN)

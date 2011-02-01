@@ -397,9 +397,9 @@
 					<Tool
 						Name="build-axon-fx"
 						VPENTRY="OutputMeshVertex"
-						VSENTRY="OutputMeshVertex"
+						VSENTRY="VP_zpass"
 						VSPROFILE="vs_3_0"
-						PSENTRY="FP_gpass"
+						PSENTRY="FP_zpass"
 						PSPROFILE="ps_3_0"
 					/>
 				</FileConfiguration>

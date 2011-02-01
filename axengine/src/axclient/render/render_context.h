@@ -62,7 +62,8 @@ protected:
 	void drawMeshUP(Material *material, MeshUP *mesh);
 
 	void drawGlobalLight(RenderScene *scene, RenderLight *light);
-	void drawLocalLight(RenderScene *scene, RenderLight *light);
+	void drawPointLight(RenderScene *scene, RenderLight *light);
+	void drawSpotLight(RenderScene *scene, RenderLight *light);
 
 	void drawPass_GeoFill(RenderScene *scene);
 	void drawPass_Overlay(RenderScene *scene);
@@ -93,6 +94,8 @@ private:
 	// init
 	Material *m_defaultMat;
 	Material *m_mtrGlobalLight;
+	Material *m_mtrPointLight;
+	Material *m_mtrSpotLight;
 	Material *m_mtrFont;
 	RenderThread *m_renderThread;
 	RenderTarget *m_bloomMap[NUM_BLOOM_TEXTURES];

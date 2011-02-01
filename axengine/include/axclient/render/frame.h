@@ -58,7 +58,6 @@ struct AX_API RenderScene
 	int numSubScenes;
 	RenderScene *subScenes[MAX_SUB_SCENES];
 
-	RenderScene *source;
 	RenderCamera camera;
 	RenderTarget *target; // main scene maybe have a render target
 	RenderWorld *world;

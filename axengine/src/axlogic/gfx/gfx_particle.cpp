@@ -183,7 +183,7 @@ void ParticleEmitter::frameUpdate(RenderScene *qscene)
 	m_objToWorld = m_entity->getMatrix() * m_tm;
 
 	// spawn new particles
-	float dt = qscene->camera.getFrameTime();
+	float dt = qscene->camera.frameTime();
 	dt = 0.02f;
 
 	float ftospawn = (dt * m_EmissionRate / m_Lifespan) + m_remain;
@@ -246,7 +246,7 @@ void ParticleEmitter::frameUpdate(RenderScene *qscene)
 	int numVerts = m_particles.size() * 4;
 	int numIndexes = m_particles.size() * 6;
 	checkMesh(numVerts, numIndexes);
-	const Matrix3& viewaxis = qscene->camera.getViewAxis();
+	const Matrix3& viewaxis = qscene->camera.viewAxis();
 
 	const Vector3& right = viewaxis[1];
 	const Vector3& up = viewaxis[2];

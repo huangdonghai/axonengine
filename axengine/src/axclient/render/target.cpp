@@ -16,7 +16,6 @@ RenderTarget::RenderTarget(TexFormat format, const Size &size)
 {
 	m_isWindow = false;
 	m_size = size;
-	m_slice = 0;
 	m_rtDepth = m_rt0 = m_rt1 = m_rt2 = m_rt3 = 0;
 
 	std::string texname;
@@ -29,7 +28,6 @@ RenderTarget::RenderTarget(TexType texType, TexFormat format, int width, int hei
 {
 	m_isWindow = false;
 	m_size.set(width, height);
-	m_slice = 0;
 	m_rtDepth = m_rt0 = m_rt1 = m_rt2 = m_rt3 = 0;
 
 	std::string texname;
@@ -97,14 +95,6 @@ void RenderTarget::updateWindowInfo(Handle newId, const Size &size)
 	m_rt3 = new RenderTarget(g_renderDriverInfo.suggestFormats[RenderDriverInfo::SuggestedFormat_SceneColor], m_size);
 	m_wndId = newId;
 }
-
-RenderTarget * RenderTarget::cloneSlice( int slice ) const
-{
-	RenderTarget *result = new RenderTarget(*this);
-	result->setSlice(slice);
-	return result;
-}
-
 
 ReflectionMap::ReflectionMap(RenderWorld *world, RenderEntity *actor, Primitive *prim, const Size &size)
 {

@@ -213,7 +213,7 @@ void D3D9Thread::setupScene(RenderScene *scene, const D3D9clearer *clearer, Rend
 	d3d9Camera = camera;
 
 	if (!target) {
-		target = camera->getTarget();
+		target = camera->target();
 	}
 
 	bindTarget(target);
@@ -240,9 +240,9 @@ void D3D9Thread::setupScene(RenderScene *scene, const D3D9clearer *clearer, Rend
 	dx9_device->SetViewport(&d3dviewport);
 	dx9_device->SetScissorRect(&d3dRect);
 
-	AX_SU(g_time, (float)camera->getTime());
+	AX_SU(g_time, (float)camera->time());
 
-	Vector4 campos = camera->getOrigin();
+	Vector4 campos = camera->origin();
 	if (camera->isOrthoProjection()) {
 		campos.w = 0;
 	} else {
@@ -250,11 +250,11 @@ void D3D9Thread::setupScene(RenderScene *scene, const D3D9clearer *clearer, Rend
 	}
 	AX_SU(g_cameraPos, campos);
 
-	Angles angles = camera->getViewAxis().toAngles();
+	Angles angles = camera->viewAxis().toAngles();
 	angles *= AX_D2R;
 
 	AX_SU(g_cameraAngles, angles.toVector3());
-	AX_SU(g_cameraAxis, camera->getViewAxis().getTranspose());
+	AX_SU(g_cameraAxis, camera->viewAxis().getTranspose());
 
 	Matrix4 temp = camera->getViewProjMatrix();
 	ConvertToD3D(temp);
@@ -291,7 +291,7 @@ void D3D9Thread::unsetScene(RenderScene *scene, const D3D9clearer *clearer, Rend
 	}
 
 	if (!target) {
-		target = camera->getTarget();
+		target = camera->target();
 	}
 }
 
@@ -568,11 +568,11 @@ void D3D9Thread::drawPass_shadowGen(RenderScene *scene)
 	if (!scene->numInteractions)
 		return;
 
-	D3D9Target *target = (D3D9Target*)scene->camera.getTarget();
+	D3D9Target *target = (D3D9Target*)scene->camera.target();
 	if (target->isPooled() && !target->alreadyAllocatedRealTarget() )
 		return;
 
-	D3D9Texture *tex = (D3D9Texture*)scene->camera.getTarget()->getTexture();
+	D3D9Texture *tex = (D3D9Texture*)scene->camera.target()->getTexture();
 
 	QueuedLight *qlight = scene->sourceLight;
 	ShadowData *qshadow = qlight->shadowInfo;
@@ -692,7 +692,7 @@ void D3D9Thread::drawPass_overlay(RenderScene *scene)
 
 	// draw overlay
 	RenderCamera camera = scene->camera;
-	camera.setOverlay(camera.getViewRect());
+	camera.setOverlay(camera.viewRect());
 
 	setupScene(scene, nullptr, nullptr, &camera);
 
@@ -710,7 +710,7 @@ void D3D9Thread::drawScene_world(RenderScene *scene, const D3D9clearer &clearer)
 	s_technique = Technique::Main;
 	d3d9WorldScene = scene;
 
-	const Rect &rect = scene->camera.getViewRect();
+	const Rect &rect = scene->camera.viewRect();
 	int width = rect.width;
 	int height = rect.height;
 

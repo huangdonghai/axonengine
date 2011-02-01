@@ -29,7 +29,7 @@ public:
 	static void (*beginPix)(const char *pixname);
 	static void (*endPix)();
 
-	static void (*setTargetSet)(phandle_t targetSet[RenderTargetSet::MaxTarget]);
+	static void (*setTargetSet)(phandle_t targetSet[RenderTargetSet::MaxTarget], int slices[RenderTargetSet::MaxTarget]);
 
 	static void (*setViewport)(const Rect &rect, const Vector2 & depthRange);
 	static void (*setScissorRect)(const Rect &scissorRect);

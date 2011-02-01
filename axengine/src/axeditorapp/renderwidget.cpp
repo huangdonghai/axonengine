@@ -145,7 +145,7 @@ void RenderWidget::drawAxis()
 
 	camera.setTarget(m_renderTarget);
 	camera.setOrigin(Vector3(0,0,0));
-	camera.setViewAxis(m_renderCamera.getViewAxis());
+	camera.setViewAxis(m_renderCamera.viewAxis());
 	camera.setOrtho(view_size, view_size, view_size);
 	camera.setViewRect(Rect(0, -12, 60, 60));
 
@@ -195,7 +195,7 @@ void RenderWidget::drawFrameNum()
 	text = l2u("中华人民共和国");
 #endif
 	rect.x = 0;
-	rect.y = rv.getViewRect().height - 24;
+	rect.y = rv.viewRect().height - 24;
 	rect.width = 120;
 	rect.height = g_consoleFont->getHeight();
 	TextPrim *prim = TextPrim::createText(Primitive::HintFrame, rect, g_consoleFont.get(), text, Rgba::Green);

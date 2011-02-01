@@ -13,6 +13,20 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
+class RenderTarget;
+
+struct RenderSurface {
+	RenderSurface() : target(0), slice(0) {}
+	RenderSurface(RenderTarget *t, int s) : target(t), slice(s) {}
+
+	inline operator bool() const { return target != 0; }
+	void clear() { target = 0; slice = 0; }
+	void set(RenderTarget *t, int s) { target = t; slice = s; }
+
+	RenderTarget *target;
+	int slice;
+};
+
 class AX_API RenderTarget : public Texture
 {
 	friend class RenderContext;
@@ -26,19 +40,20 @@ public:
 	Size size() const { if (isTexture()) return Texture::size(); else return m_size; }
 	bool isWindow() const { return m_isWindow; }
 	bool isTexture() const { return !m_isWindow; }
-	void setSlice(int slice) { m_slice = slice; }
-	int slice() const { return m_slice; }
-
-	RenderTarget *cloneSlice(int slice) const;
 
 	// since qt maybe change window id, so we need this function
 	void updateWindowInfo(Handle newId, const Size &size);
 	Handle getWindowHandle() { return m_wndId; }
 
-	phandle_t getPHandle()
+	phandle_t getPHandle() const
 	{
 		if (isTexture()) return Texture::getPHandle();
 		else return m_window;
+	}
+
+	RenderSurface slice(int s)
+	{
+		return RenderSurface(this, s);
 	}
 
 protected:
@@ -47,9 +62,6 @@ protected:
 private:
 	bool m_isWindow; // is window, or texture
 	phandle_t m_window;
-
-	// for texture target
-	int m_slice;
 
 	// for window
 	Handle m_wndId;
@@ -69,15 +81,23 @@ struct RenderTargetSet {
 		MaxTarget = MaxColorTarget + 1
 	};
 
-	RenderTarget *m_depthTarget;
-	RenderTarget *m_colorTargets[MaxColorTarget];
+	RenderSurface m_depthTarget;
+	RenderSurface m_colorTargets[MaxColorTarget];
 
 	RenderTarget *getFirstUsed() const
 	{
-		if (m_depthTarget) return m_depthTarget;
+		if (m_depthTarget.target) return m_depthTarget.target;
 		for (int i = 0; i < MaxColorTarget; i++)
-			if (m_colorTargets[i]) return m_colorTargets[i];
+			if (m_colorTargets[i].target) return m_colorTargets[i].target;
 		return 0;
+	}
+
+	void clear()
+	{
+		m_depthTarget.clear();
+		for (int i = 0; i < MaxColorTarget; i++) {
+			m_colorTargets[i].clear();
+		}
 	}
 };
 

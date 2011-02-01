@@ -5,7 +5,7 @@ AX_BEGIN_NAMESPACE
 
 struct DX9_Resource {
 	enum Type {
-		kTexture, kVertexBuffer, kIndexBuffer, kWindow
+		kTexture, kRenderTarget, kVertexBuffer, kIndexBuffer, kWindow
 	};
 
 	DX9_Resource(Type type, IUnknown *obj) : m_type(type), m_obj(obj), m_level0(0)
@@ -22,10 +22,32 @@ struct DX9_Resource {
 	union {
 		IUnknown *m_obj;
 		IDirect3DTexture9 *m_texture;
+		IDirect3DVolumeTexture9 *m_texture3D;
+		IDirect3DCubeTexture9 *m_textureCube;
 		IDirect3DVertexBuffer9 *m_vertexBuffer;
 		IDirect3DIndexBuffer9 *m_indexBuffer;
 		DX9_Window *m_window;
 	};
+
+	IDirect3DSurface9 *getSliceSurface(int slice)
+	{
+		if (texType == TexType::_2D) {
+			AX_ASSERT(slice == 0);
+			m_level0->AddRef();
+			return m_level0;
+		} else if (texType == TexType::_3D) {
+			// direct3d 9 can't render to a volume texture
+			// but opengl and d3d10 can do this
+			AX_WRONGPLACE;
+		} else if (texType == TexType::CUBE) {
+			AX_ASSERT(slice < CubeMapFace::MaxType);
+			IDirect3DSurface9 *surface;
+			V(m_textureCube->GetCubeMapSurface(D3DCUBEMAP_FACES(D3DCUBEMAP_FACE_POSITIVE_X+slice), 0, &surface));
+			return surface;
+		}
+		AX_WRONGPLACE;
+		return 0;
+	}
 
 	IDirect3DSurface9 *m_level0;
 	TexType texType;

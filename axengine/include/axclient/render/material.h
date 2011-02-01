@@ -216,10 +216,7 @@ public:
 	// features and shader parameter
 	void setFeature(int index, bool enabled);
 	bool isFeatureEnabled(int index) const;
-	void setLiteral(int index, int value);
-	int getLiteral(int index) const;
 	void clearFeatures();
-	void clearLiterals();
 
 	// texture setting and getting
 	Texture *getTexture(int sample) const;

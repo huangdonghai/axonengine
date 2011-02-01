@@ -128,6 +128,10 @@ RenderContext::RenderContext()
 	m_mtrGlobalLight->m_depthTest = true;
 	m_mtrGlobalLight->m_depthWrite = false;
 
+	m_mtrPointLight = new Material("_pointlight");
+	m_mtrPointLight->m_depthTest = true;
+	m_mtrPointLight->m_depthWrite = false;
+
 	m_mtrFont = new Material("font");
 	m_mtrFont->m_blendMode = Material::BlendMode_Blend;
 	m_mtrFont->m_depthWrite = false;
@@ -237,7 +241,7 @@ void RenderContext::drawScene_World(RenderScene *scene, const RenderClearer &cle
 	m_curTechnique = Technique::Main;
 	m_curWorldScene = scene;
 
-	const Rect &rect = scene->camera.getViewRect();
+	const Rect &rect = scene->camera.viewRect();
 	int width = rect.width;
 	int height = rect.height;
 
@@ -268,10 +272,6 @@ void RenderContext::drawScene_World(RenderScene *scene, const RenderClearer &cle
 
 	AX_SU(g_windMatrices, scene->windMatrices);
 	AX_SU(g_leafAngles, scene->leafAngles);
-
-	float znear = scene->camera.getZnear();
-	float zfar = scene->camera.getZfar();
-	AX_SU(g_zrecoverParam, Vector4(znear, zfar, znear * zfar, znear - zfar));
 
 	// draw subscene first
 	for (int i = 0; i < scene->numSubScenes; i++) {
@@ -334,11 +334,10 @@ void RenderContext::drawScene_Noworld(RenderScene *scene, const RenderClearer &c
 
 	m_curTechnique = Technique::Main;
 
-	m_targetSet.m_depthTarget = 0;
-	m_targetSet.m_colorTargets[0] = scene->target;
+	m_targetSet.clear();
+	m_targetSet.m_colorTargets[0].set(scene->target, 0);
 	if (!m_targetSet.m_colorTargets[0])
-		m_targetSet.m_colorTargets[0] = scene->camera.getTarget();
-	m_targetSet.m_colorTargets[1] = m_targetSet.m_colorTargets[2] = m_targetSet.m_colorTargets[3] = 0;
+		m_targetSet.m_colorTargets[0].set(scene->camera.target(), scene->camera.targetSlice());
 
 	setupScene(scene, &clearer, 0);
 
@@ -377,11 +376,11 @@ void RenderContext::drawPass_GeoFill(RenderScene *scene)
 	clearer.clearDepth(true);
 	clearer.clearColor(true, Rgba::Zero);
 
-	m_targetSet.m_depthTarget = m_curWindow->m_rtDepth;
-	m_targetSet.m_colorTargets[0] = m_curWindow;
-	m_targetSet.m_colorTargets[1] = m_curWindow->m_rt1;
-	m_targetSet.m_colorTargets[2] = m_curWindow->m_rt2;
-	m_targetSet.m_colorTargets[3] = m_curWindow->m_rt3;
+	m_targetSet.m_depthTarget = m_curWindow->m_rtDepth->slice(0);
+	m_targetSet.m_colorTargets[0] = m_curWindow->slice(0);
+	m_targetSet.m_colorTargets[1] = m_curWindow->m_rt1->slice(0);
+	m_targetSet.m_colorTargets[2] = m_curWindow->m_rt2->slice(0);
+	m_targetSet.m_colorTargets[3] = m_curWindow->m_rt3->slice(0);
 	setupScene(scene, &clearer, 0);
 
 	for (int i = 0; i < scene->numInteractions; i++) {
@@ -399,13 +398,10 @@ void RenderContext::drawPass_Overlay(RenderScene *scene)
 
 	// draw overlay
 	RenderCamera camera = scene->camera;
-	camera.setOverlay(camera.getViewRect());
+	camera.setOverlay(camera.viewRect());
 
-	m_targetSet.m_depthTarget = 0;
-	m_targetSet.m_colorTargets[0] = m_curWindow->m_rt0;
-	m_targetSet.m_colorTargets[1] = 0;
-	m_targetSet.m_colorTargets[2] = 0;
-	m_targetSet.m_colorTargets[3] = 0;
+	m_targetSet.clear();
+	m_targetSet.m_colorTargets[0] = m_curWindow->m_rt0->slice(0);
 
 	setupScene(scene, 0, &camera);
 
@@ -428,11 +424,9 @@ void RenderContext::drawPass_Composite(RenderScene *scene)
 
 	m_curTechnique = Technique::Main;
 
-	m_targetSet.m_depthTarget = m_curWindow->m_rtDepth;
-	m_targetSet.m_colorTargets[0] = m_curWindow->m_rt0;
-	m_targetSet.m_colorTargets[1] = 0;
-	m_targetSet.m_colorTargets[2] = 0;
-	m_targetSet.m_colorTargets[3] = 0;
+	m_targetSet.clear();
+	m_targetSet.m_depthTarget = m_curWindow->m_rtDepth->slice(0);
+	m_targetSet.m_colorTargets[0] = m_curWindow->m_rt0->slice(0);
 
 	setupScene(scene, 0, 0);
 
@@ -467,7 +461,8 @@ void RenderContext::drawPass_ShadowGen(RenderScene *scene)
 	if (!scene->numInteractions)
 		return;
 
-	RenderTarget *target = scene->camera.getTarget();
+	RenderTarget *target = scene->camera.target();
+	int slice = scene->camera.targetSlice();
 
 	RenderLight *qlight = scene->sourceLight;
 	ShadowData *qshadow = qlight->m_shadowData;
@@ -482,16 +477,20 @@ void RenderContext::drawPass_ShadowGen(RenderScene *scene)
 		RenderClearer clearer;
 		clearer.clearDepth(true);
 
-		m_targetSet.m_depthTarget = target;
-		m_targetSet.m_colorTargets[0] = 0;
-		m_targetSet.m_colorTargets[1] = 0;
-		m_targetSet.m_colorTargets[2] = 0;
-		m_targetSet.m_colorTargets[3] = 0;
+		m_targetSet.clear();
+		if (target->format().isDepth()) {
+			m_targetSet.m_depthTarget.target = target;
+			m_targetSet.m_depthTarget.slice = slice;
+			m_blendDesc.renderTargetWriteMask = 0;
+		} else {
+			m_targetSet.m_colorTargets[0].target = target;
+			m_targetSet.m_colorTargets[0].slice = slice;
+			m_blendDesc.renderTargetWriteMask = 0xf;
+			clearer.clearColor(true, Rgba::White);
+		}
 
 		setupScene(scene, 0, 0);
 		g_apiWrap->clear(clearer);
-
-		m_blendDesc.renderTargetWriteMask = 0;
 
 		for (int i = 0; i < scene->numInteractions; i++) {
 			drawInteraction(scene->interactions[i]);
@@ -520,11 +519,9 @@ void RenderContext::drawPass_Lights(RenderScene *scene)
 
 	clearer.clearColor(true, Rgba::Zero);
 
-	m_targetSet.m_depthTarget = m_curWindow->m_rtDepth;
-	m_targetSet.m_colorTargets[0] = m_curWindow;
-	m_targetSet.m_colorTargets[1] = 0;
-	m_targetSet.m_colorTargets[2] = 0;
-	m_targetSet.m_colorTargets[3] = 0;
+	m_targetSet.clear();
+	m_targetSet.m_depthTarget = m_curWindow->m_rtDepth->slice(0);
+	m_targetSet.m_colorTargets[0] = m_curWindow->slice(0);
 
 	setupScene(m_curWorldScene, &clearer, 0);
 	clearer.clearColor(false);
@@ -532,10 +529,13 @@ void RenderContext::drawPass_Lights(RenderScene *scene)
 	for (int i = 0; i < scene->numLights; i++) {
 		RenderLight *ql = scene->lights[i];
 
-		if (ql->lightType() == RenderLight::kGlobal) {
-			drawGlobalLight(scene, ql);
+		if (ql->isGlobal()) {
+			//drawGlobalLight(scene, ql);
+		} else if (ql->isPoint()) {
+			drawPointLight(scene, ql);
+		} else if (ql->isSpot()) {
 		} else {
-			//drawLocalLight(scene, ql);
+			AX_WRONGPLACE;
 		}
 	}
 }
@@ -554,11 +554,8 @@ void RenderContext::drawScene_WorldSub(RenderScene *scene)
 	clear.clearColor(true, scene->clearColor);
 
 	// no shadow, no light, no fog etc. direct composite
-	m_targetSet.m_depthTarget = 0;
-	m_targetSet.m_colorTargets[0] = scene->target;
-	m_targetSet.m_colorTargets[1] = 0;
-	m_targetSet.m_colorTargets[2] = 0;
-	m_targetSet.m_colorTargets[3] = 0;
+	m_targetSet.clear();
+	m_targetSet.m_colorTargets[0] = scene->target->slice(0);
 	setupScene(scene, &clear, 0);
 
 	for (int i = 0; i < scene->numInteractions; i++) {
@@ -672,13 +669,13 @@ void RenderContext::setupScene(RenderScene *scene, const RenderClearer *clearer,
 		g_apiWrap->clear(*clearer);
 	}
 
-	g_apiWrap->setViewport(camera->getViewRect(), Vector2(0,1));
-	g_apiWrap->setScissorRect(camera->getViewRect());
+	g_apiWrap->setViewport(camera->viewRect(), Vector2(0,1));
+	g_apiWrap->setScissorRect(camera->viewRect());
 
-	AX_SU(g_time, (float)camera->getTime());
+	AX_SU(g_time, (float)camera->time());
 
 	Vector4 campos;
-	campos.xyz() = camera->getOrigin();
+	campos.xyz() = camera->origin();
 	if (camera->isOrthoProjection()) {
 		campos.w = 0;
 	} else {
@@ -686,11 +683,15 @@ void RenderContext::setupScene(RenderScene *scene, const RenderClearer *clearer,
 	}
 	AX_SU(g_cameraPos, campos);
 
-	Angles angles = camera->getViewAxis().toAngles();
+	Angles angles = camera->viewAxis().toAngles();
 	angles *= AX_D2R;
 
 	AX_SU(g_cameraAngles, angles.toVector3());
-	AX_SU(g_cameraAxis, camera->getViewAxis().getTranspose());
+	AX_SU(g_cameraAxis, camera->viewAxis().getTranspose());
+
+	float znear = camera->znear();
+	float zfar = camera->zfar();
+	AX_SU(g_zrecoverParam, Vector4(znear, zfar, znear * zfar, znear - zfar));
 
 	Matrix4 temp = camera->getViewProjMatrix();
 	ConvertToD3D(temp);
@@ -746,7 +747,7 @@ void RenderContext::drawGlobalLight(RenderScene *scene, RenderLight *light)
 	m_mtrGlobalLight->clearParameters();
 
 	if (qshadow) {
-		RenderTarget *tex = qshadow->splitCameras[0].getTarget();
+		RenderTarget *tex = qshadow->splitCameras[0].target();
 		AX_ASSERT(tex->isTexture());
 		Matrix4 matrix = qshadow->splitCameras[0].getViewProjMatrix();
 		matrix.scale(0.5f, -0.5f, 0.5f);
@@ -815,11 +816,40 @@ void RenderContext::drawGlobalLight(RenderScene *scene, RenderLight *light)
 #undef F_SKY_LIGHT
 #undef F_ENV_LIGHT
 
-void RenderContext::drawLocalLight(RenderScene *scene, RenderLight *light)
+#define F_SHADOWED 0
+void RenderContext::drawPointLight(RenderScene *scene, RenderLight *light)
+{
+	ShadowData *qshadow = light->m_shadowData;
+
+	if (qshadow) {
+		RenderTarget *target = qshadow->splitCameras[0].target();
+		Size size = target->size();
+		AX_SU(g_textureSize, Vector4(size.width, size.height, 1.0f/size.width, 1.0f/size.height));
+	}
+
+	MeshUP::setupHexahedron(m_hexahedron, light->m_lightVolume);
+
+	Vector4 lightpos(light->getOrigin(), 1.0f / light->radius());
+
+
+	m_mtrPointLight->clearParameters();
+	m_mtrPointLight->clearFeatures();
+
+	m_mtrPointLight->setFeature(F_SHADOWED, true);
+
+	m_mtrPointLight->addParameter("s_lightColor", 4, light->lightColor().c_ptr());
+	m_mtrPointLight->addParameter("s_lightPos", 4, lightpos.c_ptr());
+
+//	AX_SU(g_shadowMap,tex);
+
+	drawMeshUP(m_mtrPointLight, m_hexahedron);
+}
+#undef F_SHADOWED
+
+void RenderContext::drawSpotLight( RenderScene *scene, RenderLight *light )
 {
 
 }
-
 
 void RenderContext::drawUP( const void *vb, VertexType vt, int vertcount, const void *ib, ElementType et, int indicescount, Material *mat, Technique tech )
 {

@@ -253,7 +253,7 @@ IDirect3DSurface9 *DX9_Driver::getNullTarget(const Size &size)
 	return m_nullSurface;
 }
 
-const ShaderInfo * DX9_Driver::findShaderInfo( const FixedString &key )
+const ShaderInfo * DX9_Driver::findShaderInfo(const FixedString &key)
 {
 	return dx9_shaderManager->findShaderInfo(key);
 }

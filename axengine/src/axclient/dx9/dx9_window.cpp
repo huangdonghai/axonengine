@@ -209,6 +209,7 @@ void DX9_Window::update(Handle newId, int width, int height)
 
 IDirect3DSurface9 * DX9_Window::getSurface()
 {
+	SAFE_ADDREF(m_backbuffer);
 	return m_backbuffer;
 }
 

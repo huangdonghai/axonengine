@@ -15,6 +15,7 @@ RenderCamera::RenderCamera()
 	: m_isOrthoProjection(false)
 	, m_flags(0)
 {
+	m_targetSlice = 0;
 	m_fovX = 90;
 	m_fovY = 0;
 	m_isReflection = false;
@@ -35,7 +36,7 @@ void RenderCamera::setTarget(RenderTarget *target)
 #endif
 }
 
-RenderTarget *RenderCamera::getTarget() const
+RenderTarget *RenderCamera::target() const
 {
 	return m_target;
 }
@@ -52,7 +53,7 @@ void RenderCamera::setOrigin(const Vector3 &view_org)
 	calcFrustum();
 }
 
-const Vector3 &RenderCamera::getOrigin() const
+const Vector3 &RenderCamera::origin() const
 {
 	return m_viewOrg;
 }
@@ -70,7 +71,7 @@ void RenderCamera::setViewRect(const Rect &view_rect)
 	calcFrustum();
 }
 
-const Rect &RenderCamera::getViewRect() const
+const Rect &RenderCamera::viewRect() const
 {
 	return m_viewRect;
 }
@@ -94,7 +95,7 @@ void RenderCamera::setViewAngles(const Angles &angles)
 }
 
 
-const Matrix3 &RenderCamera::getViewAxis() const
+const Matrix3 &RenderCamera::viewAxis() const
 {
 	return m_viewAxis;
 }
@@ -122,7 +123,7 @@ void RenderCamera::setFov(float fov_x, float fov_y, float znear, float zfar)
 	calcFrustum();
 }
 
-float RenderCamera::getFovX() const
+float RenderCamera::fovX() const
 {
 	return m_fovX;
 }
@@ -134,7 +135,7 @@ void RenderCamera::setTime(double time)
 	m_time = time;
 }
 
-double RenderCamera::getTime() const
+double RenderCamera::time() const
 {
 	return m_time;
 }
@@ -301,7 +302,7 @@ RenderCamera RenderCamera::createSelectionCamera(const Rect &region) const
 	dx = width / 2;
 	dy = height / 2;
 	cx = (float)region.x + dx;
-	cy = (float)(getViewRect().height - region.height - region.y) + dy;
+	cy = (float)(viewRect().height - region.height - region.y) + dy;
 
 	sx = m_viewRect.width / width;
 	sy = m_viewRect.height / height;
@@ -675,7 +676,7 @@ void Convex::initFromCamera( const RenderCamera &shadowCamera, const RenderCamer
 		return;
 
 	if (shadowCamera.isOrthoProjection()) {
-		const Vector3 &forward = shadowCamera.getViewAxis()[0];
+		const Vector3 &forward = shadowCamera.viewAxis()[0];
 		bool planevis[MAX_PLANES];
 
 		for (int i = 0; i < visConvex.m_numPlanes; i++) {

@@ -69,6 +69,9 @@ namespace {
 
 	void ShadowMap::allocReal()
 	{
+		if (m_renderTarget)
+			return;
+
 		m_renderTarget = findShadowMap(m_texType, m_size);
 		m_renderTarget->setFilterMode(SamplerDesc::FilterMode_Linear);
 		m_renderTarget->setClampMode(SamplerDesc::ClampMode_Border);
@@ -203,14 +206,13 @@ public:
 			qshadow->splitCameras[i].setTarget(m_shadowMap->m_renderTarget);
 			memcpy(qshadow->splitVolumes[i], si->m_volume, sizeof(qshadow->splitVolumes[i]));
 		}
-
 	}
 
 	void updatePoint(RenderScene *qscene)
 	{
 		bool needRegen = initPoint();
 
-		if (!needRegen && m_light->m_linkedNode->lastUpdateFrame < m_updateFrame) {
+		if (0 && !needRegen && m_light->m_linkedNode->lastUpdateFrame < m_updateFrame) {
 			issueQueuedShadow(qscene);
 			return;
 		}
@@ -345,7 +347,7 @@ public:
 
 		bbox.clear();
 
-		si->m_camera.setTime(visCamera.getTime());
+		si->m_camera.setTime(visCamera.time());
 
 		const Matrix4 &lightmatrix = si->m_camera.getViewMatrix();
 
@@ -408,7 +410,7 @@ public:
 
 		bbox.clear();
 
-		si->m_camera.setTime(visCamera.getTime());
+		si->m_camera.setTime(visCamera.time());
 
 		const Matrix4 &lightmatrix = si->m_camera.getViewMatrix();
 
@@ -432,7 +434,7 @@ public:
 
 		initGlobal();
 
-		float neard = scene->camera.getZnear();
+		float neard = scene->camera.znear();
 		neard = std::max(neard, 1.0f);
 		float fard = r_csmRange.getFloat();
 
@@ -581,6 +583,7 @@ public:
 			si->m_camera = cameras[i];
 			si->m_camera.calcPointsAlongZdist(&si->m_volume[4], m_light->radius());
 			si->m_camera.setTarget(m_shadowMap->m_renderTarget);
+			si->m_camera.setTargetSlice(i);
 			si->m_camera.setViewRect(Rect(0,0,m_shadowMapSize,m_shadowMapSize));
 		}
 
@@ -628,6 +631,9 @@ public:
 	void useShadowMap()
 	{
 		m_shadowMap->allocReal();
+		for (int i = 0; i < m_numSplits; i++) {
+			m_splits[i]->m_camera.setTarget(m_shadowMap->m_renderTarget);
+		}
 	}
 
 	void unuseShadowMap()
@@ -867,8 +873,8 @@ void RenderLight::prepareLightBuffer(RenderScene *scene)
 void RenderLight::prepareLightBuffer_Global( RenderScene *scene )
 {
 	const RenderCamera &camera = scene->camera;
-	float znear = camera.getZnear();
-	float zfar = camera.getZfar();
+	float znear = camera.znear();
+	float zfar = camera.zfar();
 
 	camera.calcPointsAlongZdist(m_lightVolume, znear * 1.1);
 	camera.calcPointsAlongZdist(&m_lightVolume[4], zfar * 0.9f);
@@ -897,7 +903,7 @@ void RenderLight::prepareLightBuffer_Point(RenderScene *scene)
 	m_projMatrix.scale(1.0f/m_radius, 1.0f/m_radius, 1.0f/m_radius);
 
 	// check if intersert near clip plane
-	if (m_linkedBbox.pointDistance(scene->camera.getOrigin()) > scene->camera.getZnear() * 4.0f) {
+	if (m_linkedBbox.pointDistance(scene->camera.origin()) > scene->camera.znear() * 4.0f) {
 		m_isIntersectsNearPlane = false;
 	} else {
 		m_isIntersectsNearPlane = true;
@@ -939,7 +945,7 @@ void RenderLight::prepareLightBuffer_Spot(RenderScene *scene)
 	p2 = m * p2;
 
 	// check if intersect near clip plane
-	if (m_linkedBbox.pointDistance(scene->camera.getOrigin()) > scene->camera.getZnear() * 4.0f) {
+	if (m_linkedBbox.pointDistance(scene->camera.origin()) > scene->camera.znear() * 4.0f) {
 		m_isIntersectsNearPlane = false;
 	} else {
 		m_isIntersectsNearPlane = true;

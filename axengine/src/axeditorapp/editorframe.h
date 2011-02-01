@@ -26,8 +26,8 @@ public:
 	View *getView() { return m_editorView; }
 
 	// implement IViewFrame
-	virtual RenderTarget *getRenderTarget();
-	virtual Size getSize();
+	virtual RenderTarget *renderTarget();
+	virtual Size size();
 	virtual void setCursor(CursorType cursor_type);
 	virtual void resetCursor();
 	virtual void setCursorPos(const Point &pos);

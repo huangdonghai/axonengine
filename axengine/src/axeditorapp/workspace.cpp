@@ -552,8 +552,8 @@ void Workspace::on_bookmarkAdd_released()
 	
 	Matrix viewMatrix;
 
-	viewMatrix.origin = (camera.getOrigin());
-	viewMatrix.axis = (camera.getViewAxis());
+	viewMatrix.origin = (camera.origin());
+	viewMatrix.axis = (camera.viewAxis());
 
 	/*
 	int index = ui.bookmarkList->currentIndex();

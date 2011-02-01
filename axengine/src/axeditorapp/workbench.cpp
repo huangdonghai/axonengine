@@ -105,7 +105,7 @@ void Workbench::beNotified(IObservable *subjest, int arg) {
 
 	if (arg & Context::StatusChanged) {
 		Vector3 viewpos = g_mapContext->getViewPos();
-		Vector3 viedir = g_mapContext->getActiveView()->getCamera().getViewAxis()[0];
+		Vector3 viedir = g_mapContext->getActiveView()->getCamera().viewAxis()[0];
 
 		QString pos;
 		QString dir;

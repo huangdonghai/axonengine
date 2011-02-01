@@ -23,6 +23,7 @@ public:
 	void uploadSubTexture(const Rect &rect, const void *pixels, TexFormat format);
 	void generateMipmap();
 	Size size() const;
+	TexFormat format() const;
 
 	phandle_t getPHandle() { return m_handle; }
 
@@ -43,6 +44,7 @@ private:
 	bool m_isFileTexture;
 	bool m_fileLoaded;
 	TexType m_texType;
+	TexFormat m_format;
 	int m_width, m_height, m_depth;
 
 	InitFlags m_initFlags;

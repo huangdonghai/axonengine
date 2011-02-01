@@ -42,7 +42,7 @@ public:
 
 	// get some info
 	Size size() const;
-	TexFormat getFormat();
+	TexFormat format() const;
 
 	void setSamplerState(const SamplerDesc &desc);
 	const SamplerDesc &getSamplerState() const;

@@ -76,29 +76,31 @@ public:
 
 	// provide a system window handle
 	void setTarget(RenderTarget *target);
-	RenderTarget *getTarget() const;
+	RenderTarget *target() const;
+	void setTargetSlice(int slice) { m_targetSlice = slice; }
+	int targetSlice() const { return m_targetSlice; }
 
 	void setOrigin(const Vector3 &vieworg);
-	const Vector3 &getOrigin() const;
+	const Vector3 &origin() const;
 	void setViewRect(const Rect &viewrect);
-	const Rect &getViewRect() const;
+	const Rect &viewRect() const;
 
 	void setViewAxis(const Matrix3 &axis);
 	void setViewAngles(const Angles &angles);
-	const Matrix3 &getViewAxis() const;
+	const Matrix3 &viewAxis() const;
 
 	void setFov(float fov_x, float fov_y = 0);
 	void setFov(float fov_x, float fov_y, float znear, float zfar);
-	float getFovX() const;
+	float fovX() const;
 
 	bool isOrthoProjection() const;
-	float getTop() const;
-	float getZnear() const;
-	float getZfar() const;
+	float top() const;
+	float znear() const;
+	float zfar() const;
 
 	void setTime(double time);
-	double getTime() const;
-	float getFrameTime() const { return m_frameTime; }
+	double time() const;
+	float frameTime() const { return m_frameTime; }
 
 	void setOrtho(float width, float height, float depth);
 	void setOrtho(float left, float right, float bottom, float top, float zNear, float zFar);
@@ -119,7 +121,7 @@ public:
 
 	// clearcolor
 	void setClearColor(Rgba color) { m_clearColor = color; addFlag(ClearColor); }
-	Rgba getClearColor() { return m_clearColor; }
+	Rgba clearColor() { return m_clearColor; }
 
 	// check box intersect frustum
 	Plane::Side checkBox(const BoundingBox &bbox) const;
@@ -178,6 +180,7 @@ protected:
 private:
 	// window handle
 	RenderTarget *m_target;
+	int m_targetSlice;
 
 	Rect m_viewRect;
 	float m_fovX, m_fovY;
@@ -214,19 +217,23 @@ private:
 	Convex m_convex;
 };
 
-inline float RenderCamera::getTop() const {
+inline float RenderCamera::top() const
+{
 	return m_top;
 }
 
-inline float RenderCamera::getZnear() const {
+inline float RenderCamera::znear() const
+{
 	return m_znear;
 }
 
-inline float RenderCamera::getZfar() const {
+inline float RenderCamera::zfar() const
+{
 	return m_zfar;
 }
 
-inline bool RenderCamera::isOrthoProjection() const {
+inline bool RenderCamera::isOrthoProjection() const
+{
 	return m_isOrthoProjection;
 }
 

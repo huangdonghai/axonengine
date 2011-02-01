@@ -343,7 +343,7 @@ void MoveGizmo::setupXYZ(const RenderCamera &camera) {
 		line->unlockIndexes();
 	}
 
-	const Matrix3 &axis = camera.getViewAxis();
+	const Matrix3 &axis = camera.viewAxis();
 	DebugVertex *verts = line->lockVertexes();
 	verts[0].position = m_pos - axis[1] * len - axis[2] * len;
 	verts[0].color = color;
@@ -388,7 +388,7 @@ void RotateGizmo::setup(const RenderCamera &camera, const Vector3 &pos, const Ma
 	m_scale = scale;
 	m_length = GIZMO_SIZE * scale;
 
-	const Matrix3 &camaxis = camera.getViewAxis();
+	const Matrix3 &camaxis = camera.viewAxis();
 	Plane plane(pos, camaxis[0]);
 
 	float length = m_length;
@@ -484,7 +484,7 @@ void RotateGizmo::setupCrank(const RenderCamera &camera) {
 
 	Vector3 left, up;
 	Rgba color;
-	const Matrix3 &camaxis = camera.getViewAxis();
+	const Matrix3 &camaxis = camera.viewAxis();
 
 	switch (m_highlit) {
 	case X:
@@ -672,7 +672,7 @@ void ScaleGizmo::setupScreenQuad(const RenderCamera &camera, MeshPrim*& mesh, co
 	}
 
 	float len = 6.0f * m_scale;
-	const Matrix3 &axis = camera.getViewAxis();
+	const Matrix3 &axis = camera.viewAxis();
 	MeshVertex *vert = mesh->lockVertexes();
 	vert[0].position = pos + axis[1] * len - axis[2] * len;
 	vert[0].color = color;

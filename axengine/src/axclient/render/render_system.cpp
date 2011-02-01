@@ -143,7 +143,7 @@ void RenderSystem::beginScene(const RenderCamera &camera)
 	if (m_curScene)
 		Errorf("already in a scene");
 
-	if (camera.getTarget() != m_curTarget)
+	if (camera.target() != m_curTarget)
 		Errorf("camera's target != current target");
 
 	m_curScene = g_renderFrame->allocScene();

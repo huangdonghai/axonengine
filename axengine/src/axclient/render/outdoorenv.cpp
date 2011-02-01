@@ -413,16 +413,16 @@ Primitives OutdoorEnv::getAllPrimitives()
 void OutdoorEnv::frameUpdate(RenderScene *qscene)
 {
 	if (!m_dateTimeInited) {
-		m_dateTime.initSystemTime(qscene->camera.getTime() * 1000);
+		m_dateTime.initSystemTime(qscene->camera.time() * 1000);
 		m_dateTimeInited = true;
 	} else {
-		m_dateTime.update(qscene->camera.getTime() * 1000);
+		m_dateTime.update(qscene->camera.time() * 1000);
 	}
 
 	DateTime::Data data = m_dateTime.getData();
 
-	Vector3 viewdir = qscene->camera.getViewAxis()[0];
-	m_wind.advance(qscene->camera.getTime(), true, false, viewdir.x, viewdir.y, viewdir.z);
+	Vector3 viewdir = qscene->camera.viewAxis()[0];
+	m_wind.advance(qscene->camera.time(), true, false, viewdir.x, viewdir.y, viewdir.z);
 
 	m_wind.getWindMatrix(qscene->windMatrices);
 	m_wind.getLeafAngles(qscene->leafAngles);
@@ -447,7 +447,7 @@ void OutdoorEnv::issueToScene(RenderScene *qscene)
 		qscene->waterFog = m_oceanFog;
 	}
 
-	if (qscene->camera.getOrigin().z <= 0) {
+	if (qscene->camera.origin().z <= 0) {
 		qscene->globalFog = qscene->waterFog;
 		qscene->isEyeInWater = true;
 	}
