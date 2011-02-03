@@ -261,6 +261,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\materials\_spotlight.mtr"
+				>
+			</File>
+			<File
 				RelativePath=".\materials\animation.mtr"
 				>
 			</File>

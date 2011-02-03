@@ -1,17 +1,7 @@
-/*
-Copyright (c) 2009 AxonEngine Team
-
-This file is part of the AxonEngine project, and may only be used, modified, 
-and distributed under the terms of the AxonEngine project license, license.txt.  
-By continuing to use, modify, or distribute this file you indicate that you have
-read the license and understand and accept it fully.
-*/
-
-
-
 // draw point light to light buffer
 
 #include "common.fxh"
+#include "shadow.fxh"
 
 float Script : STANDARDSGLOBAL <
 	// technique
@@ -23,29 +13,13 @@ float Script : STANDARDSGLOBAL <
 > = 0.8;
 
 // features typedef
-#define F_MASKFRONT M_FEATURE0
-#define F_SPECULAR	M_FEATURE1
-#define F_PROJECTOR	M_FEATURE2
-#define F_SHADOWED	M_FEATURE3
+#define F_SHADOWED		M_FEATURE0
 
 AX_BEGIN_PC
-float4x4	s_shadowMatrix : PREG0;
-float3x4	s_lightMatrix : PREG4;
-float4		s_lightCenter : PREG7;		// (xyz)*invR, invR
-float4		s_lightColor : PREG8 = float4(1,1,1,1);
+	float4x4 s_lightMatrix : PREG0;
+	float4 s_lightPos : PREG4;		// (xyz)*invR, invR
+	float4 s_lightColor : PREG5 = float4(1,1,1,1);
 AX_END_PC
-
-float2 s_pixelOffsets[4] = {
-	{ -0.5, -0.5 },
-	{ -0.5, 0.5 },
-	{ 0.5, -0.5 },
-	{ 0.5, 0.5 },
-};
-
-float2 s_texelOffsets[4]
-<
-	string pixelToTexel = "s_pixelOffsets";
->;
 
 struct ShadowVertexOut {
     float4	hpos	: POSITION;
@@ -56,36 +30,14 @@ struct ShadowVertexOut {
 half getShadow(float3 worldpos, float depth)
 {
 #if F_SHADOWED
-	static const float bias = 2.0 / 65536.0;
-	static const float delta = 0.000001;
-
-	float4 shadowPos = mul(s_shadowMatrix, float4(worldpos,1));
-
-	shadowPos /= shadowPos.w;
-
-	// fix alias, sub a viewspace bias
-	shadowPos.z -= depth * delta;
-
-	half shadow = 0;
-
-#if 0
-	shadow = Shadow2D(g_diffuseMap, shadowPos);
-	return shadow;
-#endif
-
-	UNROLL
-	for(int i = 0; i < 4; i++) {
-		float4 tc = float4(shadowPos.xy + s_texelOffsets[i], shadowPos.zw);
-		shadow += tex2Dproj(g_diffuseMap, tc).r;
-	}
-	shadow *= 0.25f;
-	return shadow;
+	return SampleShadow(worldpos,depth);
 #else
 	return 1;
 #endif
 }
 
-ShadowVertexOut VP_main(MeshVertex IN) {
+ShadowVertexOut VP_main(MeshVertex IN)
+{
 	ShadowVertexOut OUT;
 
 	float3 worldpos = VP_modelToWorld(IN, IN.position);
@@ -102,57 +54,48 @@ ShadowVertexOut VP_main(MeshVertex IN) {
 	return OUT;
 }
 
-half4 FP_main(ShadowVertexOut IN) : COLOR {
-	half4 result = 0;
+half4 FP_main(ShadowVertexOut IN) : COLOR
+{
+	half4 OUT = 0;
 
 	// get gbuffer
+	float depth = tex2Dproj(g_rtDepth, IN.screenTc).r;
+
+	float viewDepth = ZR_GetViewSpace(depth);
 	half4 gbuffer = tex2Dproj(g_rt1, IN.screenTc);
+	half4 albedo = tex2Dproj(g_rt2, IN.screenTc);
 
-	half3 worldpos = g_cameraPos.xyz + IN.viewDir.xyz / IN.viewDir.w * gbuffer.a;
+	float3 worldpos = g_cameraPos.xyz + IN.viewDir.xyz / IN.viewDir.w * viewDepth;
 
-	half3 lightPos = mul(s_lightMatrix, float4(worldpos,1));
+	float4 projTc = mul(s_lightMatrix, float4(worldpos,1));
+	projTc.xy /= projTc.z;
 
-	lightPos.xy /= lightPos.z;
+	half falloff = saturate(1.0f - dot(projTc.xyz,projTc.xyz));
 
-	half3 L = s_lightCenter.xyz - worldpos.xyz;
+	float3 lightPos = s_lightPos.xyz - worldpos;
 
-	L = normalize(L);
+	half3 L = normalize(lightPos.xyz);
 	half3 N = gbuffer.xyz;
 	half3 E = normalize(-IN.viewDir.xyz);
 
 	half NdotL = saturate(dot(N, L));
-//	return NdotL.xxxx;
 
 	half3 R = 2 * NdotL * N - L;
 	half RdotE = saturate(dot(E, R));
 
-	result.xyz = NdotL;;
+	OUT.xyz = s_lightColor.xyz * NdotL;
 
-#if 1//F_SPECULAR
-	result.w = pow(RdotE, 10) * NdotL;
-#endif
+	OUT.w = pow(RdotE, 10) * NdotL * s_lightColor.w;
 
-	return result * getShadow(worldpos, gbuffer.a);
+	return OUT * falloff * getShadow(worldpos, viewDepth);
 }
 
 
 
 technique main {
     pass p0 {
-        VERTEXPROGRAM = compile VP_2_0 VP_main();
-		FRAGMENTPROGRAM = compile FP_2_0 FP_main();
-#if 0
-#if 0//F_MASKFRONT
-	    DEPTHTEST = true;
-		CULL_BACK;
-#else
-		DEPTHTEST = false;
-		CULL_FRONT;
-#endif
-		DEPTHMASK = false;
-
-		BLEND_ADD;
-#endif
+        VERTEXPROGRAM = compile VP_3_0 VP_main();
+		FRAGMENTPROGRAM = compile FP_3_0 FP_main();
     }
 }
 

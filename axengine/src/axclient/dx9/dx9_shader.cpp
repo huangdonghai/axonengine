@@ -62,6 +62,7 @@ namespace {
 		GlobalTextureId::Rt3, "g_rt3",
 		GlobalTextureId::SceneColor, "g_sceneColor",
 		GlobalTextureId::ShadowMap, "g_shadowMap",
+		GlobalTextureId::ShadowMapCube, "g_shadowMapCube",
 	};
 
 	class EffectHelper

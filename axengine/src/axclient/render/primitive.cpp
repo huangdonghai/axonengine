@@ -1251,6 +1251,12 @@ void TextPrim::draw( Technique tech )
 	float width, height;
 
 	if (m_isSimpleText) {
+		if (m_isSimpleText) {
+			m_format = TextPrim::ScaleByVertical;
+			m_horizonAlign = TextPrim::Center;
+			m_verticalAlign = TextPrim::VCenter;
+		}
+
 		width = 1.0f; height = 1.0f;
 
 		const Matrix3 &axis = g_renderContext->getCurCamera()->viewAxis();

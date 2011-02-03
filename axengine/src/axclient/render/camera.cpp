@@ -568,17 +568,17 @@ void RenderCamera::adjustProjMatrixForReflection()
 	ModifyProjectionMatrix(cplane, &m_projMatrix[0][0]);
 }
 
+static float s_cubemapViewAxis[6][3] = {
+	{  1,  3, -2 },		// PX
+	{ -1, -3, -2 },		// NX
+	{ -2, -1, -3 },		// NY
+	{  2, -1,  3 },		// PY
+	{  3, -1, -2 },		// PZ
+	{ -3,  1, -2 },		// NZ
+};
+
 void RenderCamera::createCubemapCameras(const RenderCamera &main, const Matrix &mtx, RenderCamera result[6], float znear/*=0.5f*/, float zfar/*=16.0f */)
 {
-	static float faces[6][3] = {
-		{ 1,2,3 },		// PX
-		{ -1,-2,3 },	// NX
-		{ 2,-1,3 },		// PY
-		{ -2,1,3 },		// NY
-		{ 3,1,2 },		// PZ
-		{ -3,-1,2 },	// NZ
-	};
-
 	const Matrix3 &axis = mtx.axis;
 
 	for (int i=0; i<6; i++) {
@@ -586,9 +586,9 @@ void RenderCamera::createCubemapCameras(const RenderCamera &main, const Matrix &
 		result[i].setOrigin(mtx.origin);
 
 		Matrix3 myaxis(
-			axis[abs(faces[i][0])-1] * Math::sign(faces[i][0]),
-			axis[abs(faces[i][1])-1] * Math::sign(faces[i][1]),
-			axis[abs(faces[i][2])-1] * Math::sign(faces[i][2])
+			axis[abs(s_cubemapViewAxis[i][0])-1] * Math::sign(s_cubemapViewAxis[i][0]),
+			axis[abs(s_cubemapViewAxis[i][1])-1] * Math::sign(s_cubemapViewAxis[i][1]),
+			axis[abs(s_cubemapViewAxis[i][2])-1] * Math::sign(s_cubemapViewAxis[i][2])
 			);
 
 		result[i].setViewAxis(myaxis);
@@ -598,26 +598,17 @@ void RenderCamera::createCubemapCameras(const RenderCamera &main, const Matrix &
 }
 
 
-void RenderCamera::createCubemapCameras( const Matrix &mtx, RenderCamera result[6], float znear/*=0.5f*/, float zfar/*=16.0f*/ )
+void RenderCamera::createCubemapCameras(const Matrix &mtx, RenderCamera result[6], float znear/*=0.5f*/, float zfar/*=16.0f*/)
 {
-	static float faces[6][3] = {
-		{ 1,2,3 },		// PX
-		{ -1,-2,3 },	// NX
-		{ 2,-1,3 },		// PY
-		{ -2,1,3 },		// NY
-		{ 3,1,2 },		// PZ
-		{ -3,-1,2 },	// NZ
-	};
-
 	const Matrix3 &axis = mtx.axis;
 
 	for (int i=0; i<6; i++) {
 		result[i].setOrigin(mtx.origin);
 
 		Matrix3 myaxis(
-			axis[abs(faces[i][0])-1] * Math::sign(faces[i][0]),
-			axis[abs(faces[i][1])-1] * Math::sign(faces[i][1]),
-			axis[abs(faces[i][2])-1] * Math::sign(faces[i][2])
+			axis[abs(s_cubemapViewAxis[i][0])-1] * Math::sign(s_cubemapViewAxis[i][0]),
+			axis[abs(s_cubemapViewAxis[i][1])-1] * Math::sign(s_cubemapViewAxis[i][1]),
+			axis[abs(s_cubemapViewAxis[i][2])-1] * Math::sign(s_cubemapViewAxis[i][2])
 			);
 
 		result[i].setViewAxis(myaxis);

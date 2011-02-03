@@ -94,7 +94,6 @@ AX_SHADERCONST(SHADERMACRO_VERSION, 2)
 	AX_DECL_MACRO(G_DISABLE_SPECULAR		, 1) \
 				/* fog */ \
 	AX_DECL_MACRO(G_FOG						, 1) \
-	AX_DECL_MACRO(G_CUBE_SHADOWMAP			, 1)
 
 
 // declare shader macro AX_DECL_MACRO(name, bits)

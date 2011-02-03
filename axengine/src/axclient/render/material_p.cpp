@@ -43,7 +43,7 @@ MaterialDecl::MaterialDecl()
 
 	m_depthWrite = true;
 	m_depthTest = true;
-	m_twoSided = false;
+	m_cullMode = RasterizerDesc::CullMode_Back;
 	m_wireframed = false;
 	m_blendMode = Material::BlendMode_Disabled;
 	m_sortHint = Material::SortHint_Opacit;
@@ -103,7 +103,7 @@ bool MaterialDecl::tryLoad(const std::string &name)
 		} else if (attrname == "shader") {
 			m_shaderName = attr->Value();
 		} else if (attrname == "twosided") {
-			if (attr->IntValue()) m_twoSided = true;
+			if (attr->IntValue()) m_cullMode = RasterizerDesc::CullMode_None;
 		} else if (attrname == "wireframed") {
 			if (attr->IntValue()) m_wireframed = true;
 		} else if (attrname == "physicsHelper") {

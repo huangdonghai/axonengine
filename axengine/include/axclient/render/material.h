@@ -54,7 +54,7 @@ struct SurfaceType {
 struct GlobalTextureId {
 	enum Type {
 		RtDepth, Rt0, Rt1, Rt2, Rt3,
-		SceneColor, ShadowMap,
+		SceneColor, ShadowMap, ShadowMapCube,
 
 		MaxType
 	};
@@ -267,9 +267,9 @@ private:
 	// render state
 	bool m_depthWrite : 1;
 	bool m_depthTest : 1;
-	bool m_twoSided : 1;
 	bool m_wireframed : 1;
-	BlendMode m_blendMode : 8;
+	BlendMode m_blendMode : 4;
+	RasterizerDesc::CullMode m_cullMode : 4;
 };
 
 inline void Material::setDiffuse(const Color3 &v)

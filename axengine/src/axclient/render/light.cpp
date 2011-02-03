@@ -31,9 +31,15 @@ namespace {
 				if (texType == TexType::_2D) {
 					TexFormat format = g_renderDriverInfo.suggestFormats[RenderDriverInfo::SuggestedFormat_ShadowMap];
 					rt = new RenderTarget(format, Size(size, size));
+					rt->setFilterMode(SamplerDesc::FilterMode_Linear);
+					rt->setClampMode(SamplerDesc::ClampMode_Border);
+					rt->setBorderColor(SamplerDesc::BorderColor_One);
 				} else if (texType == TexType::CUBE) {
 					TexFormat format = g_renderDriverInfo.suggestFormats[RenderDriverInfo::SuggestedFormat_CubeShadowMap];
 					rt = new RenderTarget(texType, format, size, size, 1);
+					rt->setFilterMode(SamplerDesc::FilterMode_Nearest);
+					rt->setClampMode(SamplerDesc::ClampMode_Clamp);
+					rt->setBorderColor(SamplerDesc::BorderColor_One);
 				} else {
 					AX_WRONGPLACE;
 				}
@@ -73,9 +79,6 @@ namespace {
 			return;
 
 		m_renderTarget = findShadowMap(m_texType, m_size);
-		m_renderTarget->setFilterMode(SamplerDesc::FilterMode_Linear);
-		m_renderTarget->setClampMode(SamplerDesc::ClampMode_Border);
-		m_renderTarget->setBorderColor(SamplerDesc::BorderColor_One);
 	}
 
 	void ShadowMap::freeReal()
@@ -212,7 +215,7 @@ public:
 	{
 		bool needRegen = initPoint();
 
-		if (0 && !needRegen && m_light->m_linkedNode->lastUpdateFrame < m_updateFrame) {
+		if (!needRegen && m_light->m_linkedNode->lastUpdateFrame < m_updateFrame) {
 			issueQueuedShadow(qscene);
 			return;
 		}
@@ -791,14 +794,10 @@ void RenderLight::fillQueued(QueuedLight *queued)
 
 void RenderLight::issueToScene(RenderScene *qscene)
 {
-#if 0
-	if (!m_queuedLight) {
-		return;
-	}
-#endif
 	if (qscene->sceneType != RenderScene::WorldMain)
 		return;
 
+	m_shadowData = 0;
 	prepareLightBuffer(qscene);
 
 #if 0

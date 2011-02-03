@@ -58,7 +58,7 @@ Material::Material(const std::string &name)
 
 	m_depthWrite = m_decl->m_depthWrite;
 	m_depthTest = m_decl->m_depthTest;
-	m_twoSided = m_decl->m_twoSided;
+	m_cullMode = m_decl->m_cullMode;
 	m_wireframed = m_decl->m_wireframed;
 	m_blendMode = m_decl->m_blendMode;
 	m_sortHint = m_decl->m_sortHint;

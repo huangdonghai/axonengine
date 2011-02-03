@@ -154,6 +154,7 @@ AX_SAMPLER_UNIFORMS
 #define G_DISABLE_SPECULAR 0
 #define G_FOG			1
 #define G_MAIN_TEXGEN TexGen_vertex
+#define G_CUBE_SHADOWMAP	1
 
 #define M_NUM_LAYERS	4
 #define M_DIFFUSE		1

@@ -127,16 +127,23 @@ RenderContext::RenderContext()
 	m_mtrGlobalLight = new Material("_globallight");
 	m_mtrGlobalLight->m_depthTest = true;
 	m_mtrGlobalLight->m_depthWrite = false;
+	m_mtrGlobalLight->m_blendMode = Material::BlendMode_Add;
 
 	m_mtrPointLight = new Material("_pointlight");
 	m_mtrPointLight->m_depthTest = true;
 	m_mtrPointLight->m_depthWrite = false;
+	m_mtrPointLight->m_blendMode = Material::BlendMode_Add;
+
+	m_mtrSpotLight = new Material("_spotlight");
+	m_mtrSpotLight->m_depthTest = true;
+	m_mtrSpotLight->m_depthWrite = false;
+	m_mtrSpotLight->m_blendMode = Material::BlendMode_Add;
 
 	m_mtrFont = new Material("font");
 	m_mtrFont->m_blendMode = Material::BlendMode_Blend;
 	m_mtrFont->m_depthWrite = false;
 	m_mtrFont->m_depthTest = false;
-	m_mtrFont->m_twoSided = true;
+	m_mtrFont->m_cullMode = RasterizerDesc::CullMode_None;
 
 	m_hexahedron = 0;
 
@@ -506,13 +513,11 @@ void RenderContext::drawPass_ShadowGen(RenderScene *scene)
 		// disable depth biase
 
 		m_rasterizerDesc.depthBias = false;
-
 		END_PIX();
 	}
 
 	scene->rendered = true;
 }
-
 void RenderContext::drawPass_Lights(RenderScene *scene)
 {
 	RenderClearer clearer;
@@ -527,13 +532,14 @@ void RenderContext::drawPass_Lights(RenderScene *scene)
 	clearer.clearColor(false);
 
 	for (int i = 0; i < scene->numLights; i++) {
-		RenderLight *ql = scene->lights[i];
+		RenderLight *light = scene->lights[i];
 
-		if (ql->isGlobal()) {
-			//drawGlobalLight(scene, ql);
-		} else if (ql->isPoint()) {
-			drawPointLight(scene, ql);
-		} else if (ql->isSpot()) {
+		if (light->isGlobal()) {
+			drawGlobalLight(scene, light);
+		} else if (light->isPoint()) {
+			drawPointLight(scene, light);
+		} else if (light->isSpot()) {
+			//drawSpotLight(scene, light);
 		} else {
 			AX_WRONGPLACE;
 		}
@@ -821,35 +827,76 @@ void RenderContext::drawPointLight(RenderScene *scene, RenderLight *light)
 {
 	ShadowData *qshadow = light->m_shadowData;
 
+	m_mtrPointLight->clearParameters();
+	m_mtrPointLight->clearFeatures();
+
 	if (qshadow) {
 		RenderTarget *target = qshadow->splitCameras[0].target();
 		Size size = target->size();
+
 		AX_SU(g_textureSize, Vector4(size.width, size.height, 1.0f/size.width, 1.0f/size.height));
+		AX_ST(ShadowMapCube, target);
+
+		m_mtrPointLight->setFeature(F_SHADOWED, true);
 	}
 
 	MeshUP::setupHexahedron(m_hexahedron, light->m_lightVolume);
 
 	Vector4 lightpos(light->getOrigin(), 1.0f / light->radius());
 
-
-	m_mtrPointLight->clearParameters();
-	m_mtrPointLight->clearFeatures();
-
-	m_mtrPointLight->setFeature(F_SHADOWED, true);
-
 	m_mtrPointLight->addParameter("s_lightColor", 4, light->lightColor().c_ptr());
 	m_mtrPointLight->addParameter("s_lightPos", 4, lightpos.c_ptr());
 
-//	AX_SU(g_shadowMap,tex);
+	if (light->m_isIntersectsNearPlane) {
+		m_mtrPointLight->m_depthTest = false;
+		m_mtrPointLight->m_cullMode = RasterizerDesc::CullMode_Front;
+	} else {
+		m_mtrPointLight->m_depthTest = true;
+		m_mtrPointLight->m_cullMode = RasterizerDesc::CullMode_Back;
+	}
 
 	drawMeshUP(m_mtrPointLight, m_hexahedron);
 }
-#undef F_SHADOWED
 
 void RenderContext::drawSpotLight( RenderScene *scene, RenderLight *light )
 {
+	MeshUP::setupHexahedron(m_hexahedron, light->m_lightVolume);
+	m_mtrSpotLight->clearParameters();
+	m_mtrSpotLight->clearFeatures();
 
+	ShadowData *qshadow = light->m_shadowData;
+
+	Vector4 lightpos(light->getOrigin(), 1.0f / light->radius());
+
+	if (qshadow) {
+		Matrix4 matrix = qshadow->splitCameras[0].getViewProjMatrix();
+		RenderTarget* target = qshadow->splitCameras[0].target();
+		Size size = target->size();
+		matrix.scale(0.5f, -0.5f, 0.5f);
+		matrix.translate(0.5f+0.5f/size.width, 0.5f+0.5f/size.height, 0.5f);
+
+		m_mtrSpotLight->setFeature(F_SHADOWED, true);
+
+		AX_SU(g_textureSize, Vector4(size.width, size.height, 1.0f/size.width, 1.0f/size.height));
+		AX_ST(ShadowMap, target);
+		AX_SU(g_texMatrix, matrix);
+	}
+
+	m_mtrSpotLight->addParameter("s_lightColor", 4, light->lightColor().c_ptr());
+	m_mtrSpotLight->addParameter("s_lightPos", 4, lightpos.c_ptr());
+	m_mtrSpotLight->addParameter("s_lightMatrix", 16, light->m_projMatrix.getTranspose().c_ptr());
+
+	if (light->m_isIntersectsNearPlane) {
+		m_mtrSpotLight->m_depthTest = false;
+		m_mtrSpotLight->m_cullMode = RasterizerDesc::CullMode_Front;
+	} else {
+		m_mtrSpotLight->m_depthTest = true;
+		m_mtrSpotLight->m_cullMode = RasterizerDesc::CullMode_Back;
+	}
+
+	drawMeshUP(m_mtrSpotLight, m_hexahedron);
 }
+#undef F_SHADOWED
 
 void RenderContext::drawUP( const void *vb, VertexType vt, int vertcount, const void *ib, ElementType et, int indicescount, Material *mat, Technique tech )
 {
@@ -953,10 +1000,7 @@ void RenderContext::setMaterial(Material *mat)
 	m_depthStencilDesc.depthWritable = mat->m_depthWrite;
 	m_depthStencilDesc.depthEnable = mat->m_depthTest;
 
-	if (mat->m_twoSided)
-		m_rasterizerDesc.cullMode = RasterizerDesc::CullMode_None;
-	else
-		m_rasterizerDesc.cullMode = RasterizerDesc::CullMode_Back;
+	m_rasterizerDesc.cullMode = mat->m_cullMode;
 
 	switch (mat->m_blendMode) {
 	case Material::BlendMode_Disabled:

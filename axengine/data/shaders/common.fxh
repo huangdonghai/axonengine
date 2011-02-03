@@ -61,11 +61,8 @@ DECL_SAMPLER(sampler2D, g_rt3);
 DECL_SAMPLER(sampler2D, g_lightBuffer);
 DECL_SAMPLER(sampler2D, g_sceneColor);
 
-#if G_CUBE_SHADOWMAP
-DECL_SAMPLER(samplerCUBE, g_shadowMap);
-#else
+DECL_SAMPLER(samplerCUBE, g_shadowMapCube);
 DECL_SAMPLER(sampler2D, g_shadowMap);
-#endif
 
 
 // zparam, for recover view space z, Zview = 2*f*n/((f+n)-Zbuf(f-n)), where Zbuf is [-1,1]
@@ -134,6 +131,11 @@ struct BlendVertex {
 	float4 color		: COLOR0;
 	float2 streamTc		: TEXCOORD0;
 };
+
+struct ChunkVertex {
+	float3 position		: POSITION;
+};
+
 
 /* data passed from vertex shader to pixel shader */
 struct VertexOut {

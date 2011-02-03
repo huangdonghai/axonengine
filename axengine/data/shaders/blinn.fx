@@ -34,12 +34,14 @@ float Script : STANDARDSGLOBAL <
 struct ShadowVertexOut {
 	float4 hpos			: POSITION;
 	float4 diffuseTc	: TEXCOORD0;
+	float3 worldPos		: TEXCOORD1;
 };
 
 ShadowVertexOut VP_zpass(MeshVertex IN)
 {
 	ShadowVertexOut OUT;
-	OUT.hpos = VP_modelToClip(IN, IN.position);
+	OUT.worldPos = VP_modelToWorld(IN, IN.position);
+	OUT.hpos = VP_worldToClip(OUT.worldPos);
 	OUT.diffuseTc.xy = IN.streamTc.xy;
 	OUT.diffuseTc.zw = OUT.hpos.zw / g_zrecoverParam.y;
 	return OUT;
@@ -48,8 +50,7 @@ ShadowVertexOut VP_zpass(MeshVertex IN)
 float4 FP_zpass(ShadowVertexOut IN) : COLOR
 {
 	float4 OUT;
-	OUT.rgb = IN.diffuseTc.w;
-	OUT.a = 1;
+	OUT = length(IN.worldPos - g_cameraPos.xyz) / g_zrecoverParam.y;
 
 #if S_ALPHATEST && M_DIFFUSE
 	half alpha = tex2D(g_diffuseMap, IN.diffuseTc.xy).a;
@@ -257,17 +258,6 @@ technique main {
     pass p0 {
         VertexShader = compile VP_2_0 OutputMeshVertex();
         PixelShader = compile FP_2_0 FP_main();
-
-#if 0
-	    DEPTHTEST = true;
-		DEPTHMASK_MAIN;
-		CULL_ENABLED;
-#if S_DECAL
-		BLEND_BLEND;
-#else
-		BLEND_NONE;
-#endif
-#endif
     }
 }
 

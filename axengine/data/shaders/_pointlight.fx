@@ -1,14 +1,3 @@
-/*
-Copyright (c) 2009 AxonEngine Team
-
-This file is part of the AxonEngine project, and may only be used, modified, 
-and distributed under the terms of the AxonEngine project license, license.txt.  
-By continuing to use, modify, or distribute this file you indicate that you have
-read the license and understand and accept it fully.
-*/
-
-
-
 // draw point light to light buffer
 
 #include "common.fxh"
@@ -41,7 +30,9 @@ struct ShadowVertexOut {
 half getShadow(float3 worldpos, float depth)
 {
 #if F_SHADOWED
-	return SampleShadow(worldpos,depth);
+	float3 l = worldpos - s_lightPos.xyz;
+	l.y = -l.y;
+	return texCUBE(g_shadowMapCube, l).r > (length(l) * s_lightPos.w);
 #else
 	return 1;
 #endif
@@ -67,7 +58,7 @@ ShadowVertexOut VP_main(MeshVertex IN)
 
 half4 FP_main(ShadowVertexOut IN) : COLOR
 {
-	half4 result = 0;
+	half4 OUT = 0;
 
 	// get gbuffer
 	float depth = tex2Dproj(g_rtDepth, IN.screenTc).r;
@@ -90,11 +81,11 @@ half4 FP_main(ShadowVertexOut IN) : COLOR
 	half3 R = 2 * NdotL * N - L;
 	half RdotE = saturate(dot(E, R));
 
-	result.xyz = s_lightColor.xyz * NdotL;
+	OUT.xyz = s_lightColor.xyz * NdotL;
 
-	result.w = pow(RdotE, 10) * NdotL * s_lightColor.w;
-
-	return result * falloff;
+	OUT.w = pow(RdotE, 10) * NdotL * s_lightColor.w;
+return falloff * getShadow(worldpos, viewDepth);
+	return OUT * falloff * getShadow(worldpos, viewDepth);
 }
 
 

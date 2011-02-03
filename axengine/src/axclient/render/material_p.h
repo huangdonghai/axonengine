@@ -19,7 +19,6 @@ public:
 	const std::string &getShaderName() { return m_shaderName; }
 	TextureDef *getTextureDef(MaterialTextureId maptype) { return m_textures[maptype]; }
 	bool isWireframed() const { return m_wireframed; }
-	bool isTwoSided() const { return m_twoSided; }
 	Material::Flags getFlags() const { return m_flags; }
 	void setFlags(Material::Flags flags) { m_flags = flags; }
 	Color3 getDiffuse() const { return m_diffuse; }
@@ -54,9 +53,9 @@ private:
 
 	bool m_depthWrite : 1;
 	bool m_depthTest : 1;
-	bool m_twoSided : 1;
 	bool m_wireframed : 1;
-	Material::BlendMode m_blendMode : 2;
+	Material::BlendMode m_blendMode : 4;
+	RasterizerDesc::CullMode m_cullMode : 4;
 
 	// features and literals
 	bool m_features[Material::MAX_FEATURES];
