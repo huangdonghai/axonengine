@@ -62,6 +62,8 @@ public:
 
 	Matrix getLastViewMatrix() const;
 
+	void buildKdTree();
+
 	// static function
 	static GameActor *createActor(const char *clsname);
 

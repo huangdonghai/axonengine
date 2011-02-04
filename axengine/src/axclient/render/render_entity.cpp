@@ -110,7 +110,7 @@ void RenderEntity::addFlags(int flags)
 	m_flags |= flags;
 }
 
-bool RenderEntity::isFlagSet(Flag flag)
+bool RenderEntity::isFlagSet(Flag flag) const
 {
 	return(m_flags & flag) != 0;
 }
@@ -121,14 +121,13 @@ Matrix4 RenderEntity::getModelMatrix() const
 	return m_affineMat.toMatrix4();
 }
 
-void RenderEntity::update(RenderScene *qscene, Plane::Side side)
+void RenderEntity::update(RenderScene *qscene)
 {
-	m_cullSide = side;
 	calculateLod(qscene);
 
 	frameUpdate(qscene);
 
-	if (!m_viewDistCulled && !m_queryCulled && m_world)
+	if (r_lockPvs.getBool() || (!m_viewDistCulled && !m_queryCulled && m_world))
 		m_visFrameId = m_world->getVisFrameId();
 }
 
@@ -212,7 +211,7 @@ void RenderEntity::calculateLod(RenderScene *qscene)
 	}
 }
 
-bool RenderEntity::isVisable() const
+bool RenderEntity::isVisible() const
 {
 	if (!m_world)
 		return true;
@@ -220,16 +219,12 @@ bool RenderEntity::isVisable() const
 	return m_visFrameId == m_world->getVisFrameId();
 }
 
-void RenderEntity::updateCsm(RenderScene *qscene, Plane::Side side)
+void RenderEntity::updateCsm(RenderScene *qscene)
 {
 	if (!r_csmCull.getBool())
 		return;
 
-	if (m_shadowQuery->m_resultFrame == m_world->getShadowFrameId()) {
-		return;
-	}
-
-	if (side != Plane::Front)
+	if (m_shadowQuery->m_resultFrame == m_world->getShadowFrameId())
 		return;
 
 	m_shadowQuery->issueQuery(m_world->getShadowFrameId(), m_linkedBbox);

@@ -22,22 +22,26 @@ MapAgent::MapAgent() : Agent(g_mapContext)
 	m_bboxLine = nullptr;
 }
 
-MapAgent::~MapAgent() {
+MapAgent::~MapAgent()
+{
 	SafeDelete(m_gameObj);
 	SafeDelete(m_bboxLine);
 }
 
-void MapAgent::doHitTest() {
+void MapAgent::doHitTest()
+{
 	g_renderSystem->loadHitId(m_id);
 	m_gameObj->doHitTest();
 }
 
 
-void MapAgent::setMatrix(const Matrix &matrix) {
+void MapAgent::setMatrix(const Matrix &matrix)
+{
 	m_gameObj->setMatrix_p(matrix);
 }
 
-void MapAgent::drawHelper() {
+void MapAgent::drawHelper()
+{
 	if (!r_helper.getBool()) {
 		return;
 	}
@@ -50,12 +54,14 @@ void MapAgent::drawHelper() {
 	m_gameObj->doDebugRender();
 }
 
-MapAgent *MapAgent::clone() const {
+MapAgent *MapAgent::clone() const
+{
 	return nullptr;
 }
 
 
-void MapAgent::writeXml(File *f, int indent) const {
+void MapAgent::writeXml(File *f, int indent) const
+{
 	std::string indstr(indent*2, ' ');
 #define INDENT if (indent) f->printf("%s", indstr.c_str());
 
@@ -71,11 +77,13 @@ void MapAgent::writeXml(File *f, int indent) const {
 #undef INDENT
 }
 
-void MapAgent::readXml(const TiXmlElement *node) {
+void MapAgent::readXml(const TiXmlElement *node)
+{
 
 }
 
-const char *MapAgent::typeToString(Type t) {
+const char *MapAgent::typeToString(Type t)
+{
 #define AX_ENUM_ITEM(e) case e: return #e;
 	switch (t) {
 		AX_ENUM_ITEM(kNone)
@@ -89,7 +97,8 @@ const char *MapAgent::typeToString(Type t) {
 	return nullptr;
 }
 
-MapAgent::Type MapAgent::stringToType(const char *str) {
+MapAgent::Type MapAgent::stringToType(const char *str)
+{
 #define AX_ENUM_ITEM(e) { #e, e },
 
 	static struct {
@@ -165,7 +174,8 @@ void MapAgent::setColor( Rgb val )
 // class MapStatic
 //--------------------------------------------------------------------------
 
-MapStatic::MapStatic() {
+MapStatic::MapStatic()
+{
 	MapContext *mapContext = static_cast<MapContext*>(m_context);
 	MapState *mapState = mapContext->getMapState();
 
@@ -175,17 +185,20 @@ MapStatic::MapStatic() {
 	m_gameFixed->set_objectName(g_scriptSystem->generateObjectName(PathUtil::getName(mapState->staticModelName)));
 }
 
-MapStatic::MapStatic(const std::string &nametemplate) {
+MapStatic::MapStatic(const std::string &nametemplate)
+{
 	m_gameFixed = new StaticFixed();
 	m_gameObj = m_gameFixed;
 
 	m_gameFixed->set_objectName(g_scriptSystem->generateObjectName(PathUtil::getName(nametemplate)));
 }
 
-MapStatic::~MapStatic() {
+MapStatic::~MapStatic()
+{
 }
 
-void MapStatic::drawHelper() {
+void MapStatic::drawHelper()
+{
 	if (m_isDeleted)
 		return;
 
@@ -199,7 +212,8 @@ void MapStatic::drawHelper() {
 	m_actorDirty = false;
 }
 
-MapAgent *MapStatic::clone() const {
+MapAgent *MapStatic::clone() const
+{
 	MapStatic *result = new MapStatic();
 
 	AX_ASSERT(result);
@@ -217,7 +231,8 @@ MapAgent *MapStatic::clone() const {
 //--------------------------------------------------------------------------
 
 #ifdef AX_CONFIG_OPTION_USE_SPEEDTREE_40
-MapSpeedTree::MapSpeedTree() {
+MapSpeedTree::MapSpeedTree()
+{
 	MapContext *mapContext = static_cast<MapContext*>(m_context);
 	MapState *mapState = mapContext->getMapState();
 
@@ -227,17 +242,20 @@ MapSpeedTree::MapSpeedTree() {
 	m_gameFixed->set_objectName(g_scriptSystem->generateObjectName(PathUtil::getName(mapState->treeFilename)));
 }
 
-MapSpeedTree::MapSpeedTree(const std::string &nametemplate) {
+MapSpeedTree::MapSpeedTree(const std::string &nametemplate)
+{
 	m_gameFixed = new TreeFixed();
 	m_gameObj = m_gameFixed;
 
 	m_gameFixed->set_objectName(g_scriptSystem->generateObjectName(PathUtil::getName(nametemplate)));
 }
 
-MapSpeedTree::~MapSpeedTree() {
+MapSpeedTree::~MapSpeedTree()
+{
 }
 
-void MapSpeedTree::drawHelper() {
+void MapSpeedTree::drawHelper()
+{
 	if (m_isDeleted)
 		return;
 
@@ -251,7 +269,8 @@ void MapSpeedTree::drawHelper() {
 	m_actorDirty = false;
 }
 
-MapAgent *MapSpeedTree::clone() const {
+MapAgent *MapSpeedTree::clone() const
+{
 	MapSpeedTree *result = new MapSpeedTree();
 
 	AX_ASSERT(result);

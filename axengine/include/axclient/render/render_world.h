@@ -28,7 +28,8 @@ public:
 	IntrusiveList<RenderEntity> linkHead;
 	int lastUpdateFrame;
 
-	QuadNode() {
+	QuadNode()
+	{
 		dist[0] = dist[1] = 0;
 		parent = 0;
 		memset(children, 0, sizeof(children));
@@ -38,7 +39,8 @@ public:
 		lastUpdateFrame = 0;
 	}
 
-	void expandBbox(const BoundingBox &rhs) {
+	void expandBbox(const BoundingBox &rhs)
+	{
 		if (bbox.contains(rhs))
 			return;
 
@@ -48,7 +50,8 @@ public:
 			parent->expandBbox(rhs);
 	}
 
-	void frameUpdated(int frameId) {
+	void frameUpdated(int frameId)
+	{
 		if (lastUpdateFrame < frameId) {
 			lastUpdateFrame = frameId;
 			if (parent)
@@ -59,9 +62,9 @@ public:
 
 class AX_API RenderWorld
 {
-public:
 	friend class RenderSystem;
 
+public:
 	enum {
 		HISTOGRAM_WIDTH = 32
 	};
@@ -80,9 +83,9 @@ public:
 	int getVisFrameId() const { return m_visFrameId; }
 	int getShadowFrameId() const { return m_shadowFrameId; }
 
-protected:
-	struct FrameData;
+	void buildKdTree();
 
+protected:
 	void updateEntity(RenderEntity *entity);
 
 	// add light, visarea, portal, occluder

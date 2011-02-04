@@ -73,7 +73,8 @@ DebugVertex *PointPrim::lock()
 	return m_points;
 }
 
-void PointPrim::unlock() {
+void PointPrim::unlock()
+{
 	m_isDirty = true;
 	m_isVertexBufferDirty = true;
 }
@@ -1153,17 +1154,27 @@ void MeshPrim::sync()
 	m_syncFrame = g_renderSystem->getFrameNum();
 }
 
-#if 0
-void Mesh::setCurrentIndexNum(int currentIndexNum)
+static float CalcArea(const Vector3 &v1, const Vector3 &v2, const Vector3 &v3)
 {
-	m_currentIndexNum = currentIndexNum;
+	float a = (v1 - v2).getLength();
+	float b = (v2 - v3).getLength();
+	float c = (v1 - v3).getLength();
+	float s = (a + b + c) * 0.5f;
+	return sqrt(s * (s - a) * (s - b) * (s - c));
 }
 
-int Mesh::getCurrentIndexNum() const
+float MeshPrim::calcArea() const
 {
-	return m_currentIndexNum;
+	if (isStriped()) return 0;
+
+	float result = 0;
+	for (int i = 0; i < m_numIndexes/3; i++) {
+		result += CalcArea(m_vertexes[m_indexes[i*3]].position,m_vertexes[m_indexes[i*3+1]].position,m_vertexes[m_indexes[i*3+2]].position);
+	}
+	return result;
 }
-#endif
+
+
 
 //------------------------------------------------------------------------------
 

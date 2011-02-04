@@ -13,7 +13,8 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-class AX_API Agent {
+class AX_API Agent
+{
 public:
 	Agent(Context *ctx);
 	virtual ~Agent();
@@ -76,7 +77,8 @@ protected:
 // class AgentList
 //--------------------------------------------------------------------------
 
-class AX_API AgentList : public std::list<Agent*> {
+class AX_API AgentList : public std::list<Agent*>
+{
 public:
 	bool containsOne() const;	// if contains one object, return true
 	void beginTransform() const;
@@ -100,37 +102,43 @@ public:
 	void setDeleted(bool deleted) const;
 };
 
-inline bool AgentList::containsOne() const {
+inline bool AgentList::containsOne() const
+{
 	if (empty()) return false;
 	return front() == back();
 }
 
-inline void AgentList::beginTransform() const {
+inline void AgentList::beginTransform() const
+{
 	std::for_each(begin(), end(), std::mem_fun(&Agent::beginTransform));
 }
 
-inline void AgentList::doTransform(const Matrix &mat, bool local) const {
+inline void AgentList::doTransform(const Matrix &mat, bool local) const
+{
 	AgentList::const_iterator it = begin();
 	for (; it != end(); ++it) {
 		(*it)->doTransform(mat, local);
 	}
 }
 
-inline void AgentList::setOrigin(int index, float f) const {
+inline void AgentList::setOrigin(int index, float f) const
+{
 	AgentList::const_iterator it = begin();
 	for (; it != end(); ++it) {
 		(*it)->setOrigin(index, f);
 	}
 }
 
-inline void AgentList::setRotate(int index, float f) const {
+inline void AgentList::setRotate(int index, float f) const
+{
 	AgentList::const_iterator it = begin();
 	for (; it != end(); ++it) {
 		(*it)->setRotate(index, f);
 	}
 }
 
-inline BoundingBox AgentList::getBoundingBox() const {
+inline BoundingBox AgentList::getBoundingBox() const
+{
 	BoundingBox result;
 	result.clear();
 
@@ -142,7 +150,8 @@ inline BoundingBox AgentList::getBoundingBox() const {
 	return result;
 }
 
-inline Vector3 AgentList::getCenter() const {
+inline Vector3 AgentList::getCenter() const
+{
 	Vector3 result;
 	result.clear();
 	int count = 0;
@@ -159,36 +168,43 @@ inline Vector3 AgentList::getCenter() const {
 	return result;
 }
 
-inline void AgentList::doSelect() const {}
+inline void AgentList::doSelect() const
+{}
 
-inline Vector3 AgentList::getBackOrigin() const {
+inline Vector3 AgentList::getBackOrigin() const
+{
 	AX_ASSERT(!empty());
 	return back()->getMatrix().origin;
 }
 
-inline const Matrix3 &AgentList::getBackAxis() const {
+inline const Matrix3 &AgentList::getBackAxis() const
+{
 	AX_ASSERT(!empty());
 	return back()->getMatrix().axis;
 }
 
-inline Vector3 AgentList::getFrontOrigin() const {
+inline Vector3 AgentList::getFrontOrigin() const
+{
 	AX_ASSERT(!empty());
 	return front()->getMatrix().origin;
 }
 
-inline const Matrix3 &AgentList::getFrontAxis() const {
+inline const Matrix3 &AgentList::getFrontAxis() const
+{
 	AX_ASSERT(!empty());
 	return front()->getMatrix().axis;
 }
 
-inline void AgentList::doPropertyChanged() const {
+inline void AgentList::doPropertyChanged() const
+{
 	AgentList::const_iterator it = begin();
 	for (; it != end(); ++it) {
 		(*it)->doPropertyChanged();
 	}
 }
 
-inline AgentList AgentList::clone() const {
+inline AgentList AgentList::clone() const
+{
 	AgentList result;
 
 	AgentList::const_iterator it = begin();
@@ -199,21 +215,24 @@ inline AgentList AgentList::clone() const {
 	return result;
 }
 
-inline void AgentList::setSelected(bool selected) const {
+inline void AgentList::setSelected(bool selected) const
+{
 	AgentList::const_iterator it = begin();
 	for (; it != end(); ++it) {
 		(*it)->setSelected(selected);
 	}
 }
 
-inline void AgentList::setDeleted(bool deleted) const {
+inline void AgentList::setDeleted(bool deleted) const
+{
 	AgentList::const_iterator it = begin();
 	for (; it != end(); ++it) {
 		(*it)->setSelected(deleted);
 	}
 }
 
-inline void AgentList::setColor(Rgb val) const {
+inline void AgentList::setColor(Rgb val) const
+{
 	AgentList::const_iterator it = begin();
 	for (; it != end(); ++it) {
 		(*it)->setColor(val);

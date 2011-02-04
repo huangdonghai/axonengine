@@ -12,27 +12,28 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-	//--------------------------------------------------------------------------
-	// class MapActor, Editor MapActor
-	//--------------------------------------------------------------------------
+//--------------------------------------------------------------------------
+// class MapActor, Editor MapActor
+//--------------------------------------------------------------------------
 
-	class AX_API MapActor : public MapAgent {
-	public:
-		MapActor();
-		MapActor(const std::string &type);
-		virtual ~MapActor();
+class AX_API MapActor : public MapAgent
+{
+public:
+	MapActor();
+	MapActor(const std::string &type);
+	virtual ~MapActor();
 
-		// implement Actor
-		virtual void drawHelper();
-		virtual Type getType() const { return kEntity; }
-		virtual MapAgent *clone() const;
+	// implement Actor
+	virtual void drawHelper();
+	virtual Type getType() const { return kEntity; }
+	virtual MapAgent *clone() const;
 
-		GameActor *getGameEntity() const { return m_gameEntity; }
+	GameActor *getGameEntity() const { return m_gameEntity; }
 
-	protected:
-		GameActor *m_gameEntity;
-		MeshPrim *m_iconPrim;
-	};
+protected:
+	GameActor *m_gameEntity;
+	MeshPrim *m_iconPrim;
+};
 
 AX_END_NAMESPACE
 

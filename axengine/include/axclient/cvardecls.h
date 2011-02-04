@@ -28,9 +28,10 @@ AX_CVARDECL(r_specular, "1", Cvar::Archive);
 AX_CVARDECL(r_detail, "1", Cvar::Archive);
 AX_CVARDECL(r_lightmap, "1", Cvar::Archive);
 AX_CVARDECL(r_lockLOD, "0", Cvar::Cheat);
+AX_CVARDECL(r_lockPvs, "0", Cvar::Cheat);
 AX_CVARDECL(r_viewDistCull, "24", Cvar::Archive);
 AX_CVARDECL(r_hardwareQuery, "2", Cvar::Archive);
-AX_CVARDECL(r_cullActor, "1", Cvar::Cheat);
+AX_CVARDECL(r_cullEntity, "1", Cvar::Cheat);
 AX_CVARDECL(image_mip, "0", Cvar::Archive);
 
 AX_CVARDECL(r_terrain, "1", Cvar::Cheat);

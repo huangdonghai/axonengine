@@ -25,10 +25,9 @@ AX_DECLARE_REFPTR(HavokPackage);
 class PhysicsRagdoll;
 
 //--------------------------------------------------------------------------
-// class HavokPackable
-//--------------------------------------------------------------------------
 
-class HavokPackable {
+class HavokPackable
+{
 public:
 	HavokPackable() {}
 	HavokPackable(const HavokPackagePtr &package) : m_package(package) {}
@@ -39,10 +38,9 @@ protected:
 };
 
 //--------------------------------------------------------------------------
-// class HavokAnimator
-//--------------------------------------------------------------------------
 
-class HavokAnimator {
+class HavokAnimator
+{
 public:
 	HavokAnimator(HavokRig *rig);
 	~HavokAnimator();
@@ -62,10 +60,9 @@ public:
 };
 
 //--------------------------------------------------------------------------
-// class HavokAnimation
-//--------------------------------------------------------------------------
 
-class HavokAnimation : HavokPackable {
+class HavokAnimation : HavokPackable
+{
 public:
 	HavokAnimation(const std::string &name);
 	virtual ~HavokAnimation();
@@ -85,10 +82,9 @@ public:
 };
 
 //--------------------------------------------------------------------------
-// class HavokRig
-//--------------------------------------------------------------------------
 
-class HavokRig : public HavokPackable {
+class HavokRig : public HavokPackable
+{
 public:
 	HavokRig(const std::string &name);
 	HavokRig(const HavokPackagePtr &package);
@@ -108,10 +104,9 @@ public:
 };
 
 //--------------------------------------------------------------------------
-// class HavokPose
-//--------------------------------------------------------------------------
 
-class HavokPose {
+class HavokPose
+{
 public:
 	HavokPose(HavokRig *rig);
 	~HavokPose();
@@ -123,10 +118,9 @@ public:
 };
 
 //--------------------------------------------------------------------------
-// class HavokPackage
-//--------------------------------------------------------------------------
 
-class HavokPackage : public RefObject {
+class HavokPackage : public RefObject
+{
 public:
 	class MeshData;
 	typedef std::list<MeshData*>	MeshDataList;
@@ -203,25 +197,23 @@ private:
 };
 
 //--------------------------------------------------------------------------
-// class HavokModel
-//--------------------------------------------------------------------------
 
-class AX_API HavokModel : public RenderEntity {
+class AX_API HavokModel : public RenderEntity
+{
 public:
 	HavokModel(const std::string &name);
 	HavokModel(HavokPackage *package);
 	virtual ~HavokModel();
 
-	// implement Render::Actor
+	// implement RenderEntity
 	virtual BoundingBox getLocalBoundingBox();
 	virtual BoundingBox getBoundingBox();
 	virtual Primitives getHitTestPrims();
-
 	virtual void issueToScene(RenderScene *qscene);
 
-	// SkeletalMesh
-	virtual HavokRig *findRig() const;
-	virtual void setPose(const HavokPose *pose, int linkBoneIndex = -1);
+	HavokRig *findRig() const;
+	void setPose(const HavokPose *pose, int linkBoneIndex = -1);
+	Primitives getStaticPrims();
 
 protected:
 	void applyPose();
@@ -237,10 +229,9 @@ private:
 
 
 //--------------------------------------------------------------------------
-// class HavokPackageManager
-//--------------------------------------------------------------------------
 
-class HavokPackageManager {
+class HavokPackageManager
+{
 public:
 	HavokPackageManager();
 	~HavokPackageManager();

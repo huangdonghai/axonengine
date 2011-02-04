@@ -617,7 +617,7 @@ void RenderCamera::createCubemapCameras(const Matrix &mtx, RenderCamera result[6
 	}
 }
 
-void Convex::initFromCamera( const RenderCamera &camera )
+void Convex::initFromCamera(const RenderCamera &camera)
 {
 	Vector3 p;
 
@@ -656,7 +656,7 @@ void Convex::initFromCamera( const RenderCamera &camera )
 	m_planes[5].fitThroughPoint(p);
 }
 
-void Convex::initFromCamera( const RenderCamera &shadowCamera, const RenderCamera &visCamera )
+void Convex::initFromCamera(const RenderCamera &shadowCamera, const RenderCamera &visCamera)
 {
 	const Convex &visConvex = visCamera.m_convex;
 

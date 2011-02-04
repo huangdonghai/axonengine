@@ -33,7 +33,8 @@ public:
 };
 
 
-inline Plane::Side Convex::checkBox(const BoundingBox &bbox) const {
+inline Plane::Side Convex::checkBox(const BoundingBox &bbox) const
+{
 	bool cross = false;
 	for (int i = 0; i < m_numPlanes; i++) {
 		Plane::Side side = m_planes[i].side(bbox);
@@ -50,13 +51,11 @@ inline Plane::Side Convex::checkBox(const BoundingBox &bbox) const {
 	return Plane::Front;
 }
 
-inline bool Convex::cullBox(const BoundingBox &bbox) const {
+inline bool Convex::cullBox(const BoundingBox &bbox) const
+{
 	return checkBox(bbox) == Plane::Back;
 }
 
-
-//------------------------------------------------------------------------------
-// class RenderCamera
 //------------------------------------------------------------------------------
 
 class RenderTarget;
@@ -171,9 +170,6 @@ protected:
 	//
 	void calcViewMatrix();
 	void calcProjectionMatrix();
-#if 0
-	void calcViewPort();
-#endif
 	void calcFrustum();
 	void adjustProjMatrixForReflection();
 

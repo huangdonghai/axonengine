@@ -107,7 +107,7 @@ void GameObject::doHitTest() const
 		return;
 	}
 
-	if (!m_renderEntity->isVisable())
+	if (!m_renderEntity->isVisible())
 		return;
 
 	g_renderSystem->hitTest(m_renderEntity);

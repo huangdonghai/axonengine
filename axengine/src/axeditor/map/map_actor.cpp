@@ -13,10 +13,9 @@ read the license and understand and accept it fully.
 AX_BEGIN_NAMESPACE
 
 //--------------------------------------------------------------------------
-// class Entity, Editor Entity
-//--------------------------------------------------------------------------
 
-MapActor::MapActor(const std::string &type) {
+MapActor::MapActor(const std::string &type)
+{
 	m_iconPrim = 0;
 	GameWorld *gameworld = getMapContext()->getGameWorld();
 	m_gameEntity = gameworld->createActor(type.c_str());
@@ -49,7 +48,8 @@ MapActor::MapActor(const std::string &type) {
 #endif
 }
 
-MapActor::~MapActor() {
+MapActor::~MapActor()
+{
 }
 
 

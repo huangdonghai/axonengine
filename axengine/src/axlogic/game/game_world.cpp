@@ -267,5 +267,11 @@ Matrix GameWorld::getLastViewMatrix() const
 	return Matrix(m_lastCamera.viewAxis(), m_lastCamera.origin());
 }
 
+void GameWorld::buildKdTree()
+{
+	getLandscape()->buildKdTree();
+}
+
+
 AX_END_NAMESPACE
 

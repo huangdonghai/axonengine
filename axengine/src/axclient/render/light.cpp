@@ -1026,7 +1026,7 @@ bool RenderLight::genShadowMap(RenderScene *qscene)
 {
 	AX_ASSERT(m_shadowGen);
 
-	if (isVisable() || isGlobal()) {
+	if (isVisible() || isGlobal()) {
 		m_shadowGen->update(qscene);
 		return true;
 	}

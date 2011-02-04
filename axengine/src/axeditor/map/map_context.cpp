@@ -184,9 +184,10 @@ bool MapContext::load(const std::string &filename)
 			m_gameWorld->addObject(m_terrainFixed);
 //				gEditorActiveAreaMgr->setTerrain(m_terrain);
 		} else if (value == "actor") {
+			actorRead++;
 			progress = 10 + (float)actorRead / numActors * 90;
 			char msg[200];
-			StringUtil::snprintf(msg, ArraySize(msg), "Loading actor #%d...", actorRead++);
+			StringUtil::snprintf(msg, ArraySize(msg), "Loading actor #%d...", actorRead);
 			g_system->showProgress(progress, msg);
 			readActor(elem);
 		} else if (value == "area") {
@@ -204,6 +205,8 @@ bool MapContext::load(const std::string &filename)
 	g_system->endProgress();
 
 	m_gameWorld->updateEnvdef();
+
+	m_gameWorld->buildKdTree();
 
 	notifyObservers(EverythingChanged);
 
@@ -243,6 +246,7 @@ bool MapContext::saveAs(const std::string &filename)
 void MapContext::writeToFile(File *f)
 {
 	int numActors = s2i(m_agentDict.size());
+	int actorWritten = 0;
 
 	f->printf("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n");
 	f->printf("<map haveTerrain=\"%d\" numActors=\"%d\">\n", m_terrain ? 1 : 0, numActors);
@@ -264,11 +268,14 @@ void MapContext::writeToFile(File *f)
 	for (; it != m_agentDict.end(); ++it) {
 		MapAgent *actor = (MapAgent*)it->second;
 
-		if (!actor) continue;
+		if (!actor)
+			continue;
 
 		if (actor->isDeleted()) {
 			continue;
 		}
+
+		actorWritten++;
 		actor->writeXml(f, 1);
 	}
 	f->printf("</map>\n");
@@ -476,25 +483,19 @@ void MapContext::addBookmark(const Matrix &viewMatrix, const std::string &name, 
 {
 	Bookmark bookmark;
 
-	if (id == -1)
-	{
+	if (id == -1) {
 		bookmark.id = m_bookmarkIndex;
-	}
-	else
-	{
+	} else {
 		bookmark.id = id;
 	}
 	
-	if (name == "")
-	{
+	if (name == "") {
 		char ch[100];
 
 		_itoa(bookmark.id, ch, 10);
 
 		bookmark.name = std::string("bookmark ") + ch;
-	}
-	else
-	{
+	} else {
 		bookmark.name = name;
 	}
 	
@@ -682,24 +683,20 @@ void MapContext::loadBookmarkInfo(const TiXmlElement *elem)
 	Bookmark bookmark;
 	const char *v(NULL);
 
-	for (bookmarkNode = elem->FirstChildElement(); bookmarkNode; bookmarkNode = bookmarkNode->NextSiblingElement()) 
-	{
+	for (bookmarkNode = elem->FirstChildElement(); bookmarkNode; bookmarkNode = bookmarkNode->NextSiblingElement()) {
 		v = bookmarkNode->Attribute("id", &bookmark.id);
-		if (!v)
-		{
+		if (!v) {
 			return ;
 		}
 
 		v = bookmarkNode->Attribute("name");
-		if (!v)
-		{
+		if (!v) {
 			return ;
 		}
 		bookmark.name = v;
 
 		v = bookmarkNode->Attribute("viewmatrix");
-		if (!v)
-		{
+		if (!v) {
 			return ;
 		}
 		bookmark.viewMatrix.fromString(v);

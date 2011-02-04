@@ -18,7 +18,8 @@ class MapContext;
 // class Agent
 //--------------------------------------------------------------------------
 
-class AX_API MapAgent : public Agent {
+class AX_API MapAgent : public Agent
+{
 public:
 	enum Type {
 		kNone, kStatic, kSpeedTree, kBrush, kEntity
@@ -74,7 +75,8 @@ private:
 // class MapStatic
 //--------------------------------------------------------------------------
 
-class AX_API MapStatic : public MapAgent {
+class AX_API MapStatic : public MapAgent
+{
 public:
 	MapStatic();
 	MapStatic(const std::string &nametemplate);
@@ -95,7 +97,8 @@ private:
 //--------------------------------------------------------------------------
 
 #ifdef AX_CONFIG_OPTION_USE_SPEEDTREE_40
-class AX_API MapSpeedTree : public MapAgent {
+class AX_API MapSpeedTree : public MapAgent
+{
 public:
 	MapSpeedTree();
 	MapSpeedTree(const std::string &nametemplate);

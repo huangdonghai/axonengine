@@ -24,7 +24,7 @@ class AX_API RenderEntity
 
 public:
 	enum Flag {
-		DepthHack = 1, OutsideOnly = 2
+		DepthHack = 1, OutsideOnly = 2, Static = 4
 	};
 
 	enum Kind {
@@ -32,7 +32,7 @@ public:
 		kLight, kFog, kVisArea, kPortal, kOccluder, kTerrain, kOutdoorEnv
 	};
 
-	RenderEntity(Kind type );
+	RenderEntity(Kind type);
 	virtual ~RenderEntity();
 
 	Kind getKind() const { return m_kind; }
@@ -56,9 +56,11 @@ public:
 	int getFlags() const;
 	void setFlags(int flags);
 	void addFlags(int flags);
-	bool isFlagSet(Flag flag);
+	bool isFlagSet(Flag flag) const;
+	void setStatic(bool value) { addFlags(Static); }
+	bool isStatic() const { return isFlagSet(Static); }
 
-	bool isVisable() const;
+	bool isVisible() const;
 	bool isLight() const { return m_kind == kLight; }
 	float getVisSize() const { return m_visSize; }
 	float getDistance() const { return m_distance; }
@@ -85,8 +87,8 @@ public:
 
 protected:
 	// only called by RenderWorld
-	void update(RenderScene *qscene, Plane::Side side);
-	void updateCsm(RenderScene *qscene, Plane::Side side);
+	void update(RenderScene *qscene);
+	void updateCsm(RenderScene *qscene);
 	bool isCsmCulled() const;
 	void calculateLod(RenderScene *qscene);
 
@@ -118,7 +120,6 @@ protected:
 	RenderWorld *m_world;
 	Query *m_visQuery;
 	Query *m_shadowQuery;
-	Plane::Side m_cullSide;
 
 	// used by interaction
 	int m_chainId;

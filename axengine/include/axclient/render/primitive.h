@@ -285,6 +285,9 @@ public:
 	bool isStriped() const { return m_isStriped; }
 	void setStriped(bool val) { m_isStriped = val; }
 
+	int numElements() const { if (m_isStriped) return m_numIndexes - 2; else return m_numIndexes / 3; }
+	float calcArea() const;
+
 	virtual void draw(Technique tech);
 	virtual void sync();
 

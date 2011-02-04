@@ -33,11 +33,13 @@ Context::~Context()
 {
 }
 
-int Context::genAgentId() {
+int Context::genAgentId()
+{
 	return ++m_maxId;
 }
 
-void Context::addToHash(Agent *actor) {
+void Context::addToHash(Agent *actor)
+{
 	int id = actor->getId();
 	AgentDict::iterator it = m_agentDict.find(id);
 
@@ -48,7 +50,8 @@ void Context::addToHash(Agent *actor) {
 	m_agentDict[id] = actor;
 }
 
-void Context::removeFromHash(Agent *actor) {
+void Context::removeFromHash(Agent *actor)
+{
 	int id = actor->getId();
 	AgentDict::iterator it = m_agentDict.find(id);
 
@@ -59,7 +62,8 @@ void Context::removeFromHash(Agent *actor) {
 	it->second = 0;
 }
 
-Agent *Context::findAgent(int id) {
+Agent *Context::findAgent(int id)
+{
 	AgentDict::iterator it = m_agentDict.find(id);
 
 	if (it == m_agentDict.end() || it->second == nullptr) {
@@ -70,21 +74,24 @@ Agent *Context::findAgent(int id) {
 	return it->second;
 }
 
-Action *Context::createAction(int type) {
+Action *Context::createAction(int type)
+{
 	if (m_actionFactories[type] == nullptr)
 		return nullptr;
 
 	return m_actionFactories[type]->create(this);
 }
 
-Tool *Context::createTool(int type) {
+Tool *Context::createTool(int type)
+{
 	if (m_toolFactories[type] == nullptr)
 		return nullptr;
 
 	return m_toolFactories[type]->create(this);
 }
 
-void Context::doAction(int a) {
+void Context::doAction(int a)
+{
 	Action *action = createAction(a);
 	if (!action)
 		return;
@@ -97,7 +104,8 @@ void Context::doAction(int a) {
 		delete action;
 }
 
-void Context::doTool(int tool) {
+void Context::doTool(int tool)
+{
 	SafeDelete(m_tool);
 
 	m_tool = createTool(tool);
@@ -126,7 +134,8 @@ History *Context::setSelectionHistoried( const AgentList &elist )
 	return new SelectHis(this, oldlist, m_selections);
 }
 
-void Context::setSelection(const AgentList &elist, bool undoable) {
+void Context::setSelection(const AgentList &elist, bool undoable)
+{
 	AgentList oldlist = m_selections;
 
 	m_selections.setSelected(false);
@@ -144,7 +153,7 @@ void Context::setSelection(const AgentList &elist, bool undoable) {
 	notifyObservers(SelectionChanged);
 }
 
-void Context::addSelection( const AgentList &elist, bool undoable/*=true*/ )
+void Context::addSelection(const AgentList &elist, bool undoable/*=true*/)
 {
 	AgentList newlist = m_selections;
 	AgentList rhs = elist;
@@ -154,7 +163,8 @@ void Context::addSelection( const AgentList &elist, bool undoable/*=true*/ )
 	setSelection(newlist, undoable);
 }
 
-void Context::setSelection(Agent *actor, bool undoable) {
+void Context::setSelection(Agent *actor, bool undoable)
+{
 	AgentList oldlist = m_selections;
 
 	m_selections.setSelected(false);
@@ -171,7 +181,8 @@ void Context::setSelection(Agent *actor, bool undoable) {
 	notifyObservers(SelectionChanged);
 }
 
-void Context::selectNone(bool undoable) {
+void Context::selectNone(bool undoable)
+{
 	AgentList oldlist = m_selections;
 
 	m_selections.setSelected(false);
@@ -185,7 +196,8 @@ void Context::selectNone(bool undoable) {
 	notifyObservers(SelectionChanged);
 }
 
-void Context::selectAll(bool undoable) {
+void Context::selectAll(bool undoable)
+{
 	AgentList oldlist = m_selections;
 
 	m_selections.setSelected(false);
@@ -212,7 +224,8 @@ void Context::selectAll(bool undoable) {
 	notifyObservers(SelectionChanged);
 }
 
-void Context::selectInvert(bool undoable) {
+void Context::selectInvert(bool undoable)
+{
 	AgentDict::iterator it;
 
 	AgentList newsel;
@@ -230,28 +243,33 @@ void Context::selectInvert(bool undoable) {
 	setSelection(newsel, undoable);
 }
 
-void Context::addHistory(Action *his) {
+void Context::addHistory(Action *his)
+{
 	m_isDirty = true;
 	m_historyManager.addHistory(his);
 
 	notifyObservers(HistoryChanged);
 }
 
-void Context::undo() {
+void Context::undo()
+{
 	m_historyManager.undo(1);
 	notifyObservers(HistoryChanged);
 }
 
-void Context::redo() {
+void Context::redo()
+{
 	m_historyManager.redo(1);
 	notifyObservers(HistoryChanged);
 }
 
-HistoryManager *Context::getHistory() {
+HistoryManager *Context::getHistory()
+{
 	return &m_historyManager;
 }
 
-View *Context::getView(int index) {
+View *Context::getView(int index)
+{
 	AX_ASSERT(index >= 0 && index < View::MaxView);
 
 	return m_indexedViews[index];

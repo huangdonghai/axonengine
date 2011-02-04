@@ -50,7 +50,12 @@ ShadowVertexOut VP_zpass(MeshVertex IN)
 float4 FP_zpass(ShadowVertexOut IN) : COLOR
 {
 	float4 OUT;
-	OUT = length(IN.worldPos - g_cameraPos.xyz) / g_zrecoverParam.y;
+	float depth = length(IN.worldPos - g_cameraPos.xyz) / g_zrecoverParam.y;
+
+	// depth bias
+	depth += abs(ddx(depth)) + abs(ddy(depth));
+	depth += 1.0 / 10000;
+	OUT = depth;
 
 #if S_ALPHATEST && M_DIFFUSE
 	half alpha = tex2D(g_diffuseMap, IN.diffuseTc.xy).a;

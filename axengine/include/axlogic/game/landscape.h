@@ -17,8 +17,6 @@ AX_BEGIN_NAMESPACE
 class GameWorld;
 
 //--------------------------------------------------------------------------
-// class Fixed
-//--------------------------------------------------------------------------
 
 class AX_API Fixed : public GameObject
 {
@@ -44,14 +42,15 @@ protected:
 };
 
 //--------------------------------------------------------------------------
-// class StaticFixed
-//--------------------------------------------------------------------------
 
 class AX_API StaticFixed : public Fixed
 {
 	AX_DECLARE_CLASS(StaticFixed, Fixed)
 		AX_PROP(model)
 	AX_END_CLASS()
+
+	friend class Landscape;
+
 public:
 	StaticFixed();
 	virtual ~StaticFixed();
@@ -70,8 +69,6 @@ protected:
 	PhysicsRigid *m_rigid;
 };
 
-//--------------------------------------------------------------------------
-// class TerrainFixed
 //--------------------------------------------------------------------------
 
 class AX_API TerrainFixed : public Fixed, public IObserver
@@ -96,8 +93,6 @@ private:
 	PhysicsTerrain *m_physicsTerrain;
 };
 
-//--------------------------------------------------------------------------
-// class TreeFixed
 //--------------------------------------------------------------------------
 
 #ifdef AX_CONFIG_OPTION_USE_SPEEDTREE_40
@@ -125,8 +120,6 @@ protected:
 #endif // AX_CONFIG_OPTION_USE_SPEEDTREE_40
 
 //--------------------------------------------------------------------------
-// class Landscape
-//--------------------------------------------------------------------------
 
 class AX_API Landscape : public GameActor
 {
@@ -134,7 +127,7 @@ class AX_API Landscape : public GameActor
 	AX_END_CLASS()
 
 public:
-	enum { MaxFixed = 1024 };
+	enum { MaxFixed = 8192 };
 
 	Landscape() {}
 	Landscape(GameWorld *world);
@@ -147,12 +140,14 @@ public:
 
 	GameWorld *getGameWorld() const { return m_world; }
 
+	void buildKdTree();
+
 private:
 	Fixed *m_fixeds[MaxFixed];
-	FreeList<Fixed*>	m_freeList;
 };
 
-inline Fixed *Landscape::getFixed(int num) const{
+inline Fixed *Landscape::getFixed(int num) const
+{
 	AX_ASSERT(num >= 0 && num < MaxFixed);
 	return m_fixeds[num];
 }

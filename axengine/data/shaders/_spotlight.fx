@@ -75,7 +75,7 @@ half4 FP_main(ShadowVertexOut IN) : COLOR
 	float3 lightPos = s_lightPos.xyz - worldpos;
 
 	half3 L = normalize(lightPos.xyz);
-	half3 N = gbuffer.xyz;
+	half3 N = gbuffer.xyz * 2 - 1;
 	half3 E = normalize(-IN.viewDir.xyz);
 
 	half NdotL = saturate(dot(N, L));

@@ -132,8 +132,10 @@ void RenderWorld::renderTo(RenderScene *qscene)
 		} else {
 			s_drawTerrain = false;
 		}
-	} else {
+	} else if(qscene->sceneType == RenderScene::WorldMain) {
 		m_visFrameId++;
+	} else {
+		AX_WRONGPLACE;
 	}
 
 	if (!r_entity.getBool()) {
@@ -145,7 +147,7 @@ void RenderWorld::renderTo(RenderScene *qscene)
 	// outdoor environment
 	if (m_outdoorEnv) {
 		if (qscene->sceneType == RenderScene::WorldMain) {
-			m_outdoorEnv->update(qscene, Plane::Cross);
+			m_outdoorEnv->update(qscene);
 		}
 
 		qscene->addEntity(m_outdoorEnv);
@@ -160,7 +162,7 @@ void RenderWorld::renderTo(RenderScene *qscene)
 	// terrain
 	if (m_terrain && r_terrain.getBool() && s_drawTerrain) {
 		if (qscene->sceneType == RenderScene::WorldMain) {
-			m_terrain->update(qscene, Plane::Cross);
+			m_terrain->update(qscene);
 		}
 
 		m_terrain->issueToScene(qscene);
@@ -274,8 +276,10 @@ void RenderWorld::renderTo(RenderScene *qscene, QuadNode *node)
 		} else {
 			s_drawTerrain = false;
 		}
-	} else {
+	} else if(qscene->sceneType == RenderScene::WorldMain) {
 		m_visFrameId++;
+	} else {
+		AX_WRONGPLACE;
 	}
 
 	if (!r_entity.getBool()) {
@@ -287,7 +291,7 @@ void RenderWorld::renderTo(RenderScene *qscene, QuadNode *node)
 	// outdoor environment
 	if (m_outdoorEnv) {
 		if (qscene->sceneType == RenderScene::WorldMain) {
-			m_outdoorEnv->update(qscene, Plane::Cross);
+			m_outdoorEnv->update(qscene);
 		}
 
 		qscene->addEntity(m_outdoorEnv);
@@ -302,7 +306,7 @@ void RenderWorld::renderTo(RenderScene *qscene, QuadNode *node)
 	// terrain
 	if (m_terrain && r_terrain.getBool() && s_drawTerrain) {
 		if (qscene->sceneType == RenderScene::WorldMain) {
-			m_terrain->update(qscene, Plane::Cross);
+			m_terrain->update(qscene);
 		}
 		m_terrain->issueToScene(qscene);
 	}
@@ -354,11 +358,7 @@ void RenderWorld::markVisible_r(RenderScene *qscene, QuadNode *node, Plane::Side
 		RenderEntity *entity = &*it;
 		if (qscene->sceneType == RenderScene::ShadowGen && qscene->sourceLight->lightType() == RenderLight::kGlobal) {
 			if (entity->isCsmCulled()) {
-#if 0
-				g_statistic->incValue(stat_csmCulled);
-#else
 				stat_csmCulled.inc();
-#endif
 				continue;
 			} else {
 				// g_statistic->incValue(stat_csmPassed);
@@ -367,29 +367,35 @@ void RenderWorld::markVisible_r(RenderScene *qscene, QuadNode *node, Plane::Side
 		}
 
 		const BoundingBox &bbox = entity->m_linkedBbox;
-		// if node is cross frustum, we check entity's bbox
-		Plane::Side actorSide = side;
-		if (side == Plane::Cross && r_cullActor.getBool()) {
-			actorSide = cam.checkBox(bbox);
-			if ( actorSide == Plane::Back) {
+
+		if (r_lockPvs.getBool() && qscene->sceneType == RenderScene::WorldMain) {
+			if (entity->m_visFrameId != m_visFrameId - 1)
 				continue;
+		} else {
+			// if node is cross frustum, we check entity's bbox
+			Plane::Side actorSide = side;
+			if (side == Plane::Cross && r_cullEntity.getBool()) {
+				actorSide = cam.checkBox(bbox);
+				if (actorSide == Plane::Back) {
+					continue;
+				}
 			}
 		}
 
 		if (qscene->sceneType == RenderScene::WorldMain) {
-			entity->update(qscene, actorSide);
+			entity->update(qscene);
 
 			if (entity->m_queryCulled)
 				continue;
 		}
 
-		if (m_updateShadowVis) {
-			entity->updateCsm(qscene, actorSide);
-		}
+		if (m_updateShadowVis)
+			entity->updateCsm(qscene);
 
+#if 0
 		if (entity->m_viewDistCulled)
 			continue;
-
+#endif
 		// check if is light
 		if (entity->getKind() == RenderEntity::kLight || s_drawEntity)
 			qscene->addEntity(entity);
@@ -397,13 +403,6 @@ void RenderWorld::markVisible_r(RenderScene *qscene, QuadNode *node, Plane::Side
 		if (!s_drawEntity)
 			continue;
 
-#if 0
- 		Primitives prims = la->actor->getViewedPrimitives();
-
-		for (size_t i = 0; i < prims.size(); i++) {
-			qscene->addInteraction(la->queued, prims[i]);
-		}
-#endif
 		entity->issueToScene(qscene);
 	}
 
@@ -549,6 +548,12 @@ void RenderWorld::unlinkEntity(RenderEntity *la)
 	node->linkHead.erase(la);
 #endif
 }
+
+void RenderWorld::buildKdTree()
+{
+
+}
+
 
 AX_END_NAMESPACE
 

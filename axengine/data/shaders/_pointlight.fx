@@ -64,7 +64,7 @@ half4 FP_main(ShadowVertexOut IN) : COLOR
 	float depth = tex2Dproj(g_rtDepth, IN.screenTc).r;
 
 	float viewDepth = ZR_GetViewSpace(depth);
-	half4 gbuffer = tex2Dproj(g_rt1, IN.screenTc);
+	half4 normal = tex2Dproj(g_rt1, IN.screenTc);
 	half4 albedo = tex2Dproj(g_rt2, IN.screenTc);
 
 	float3 worldpos = g_cameraPos.xyz + IN.viewDir.xyz / IN.viewDir.w * viewDepth;
@@ -73,7 +73,7 @@ half4 FP_main(ShadowVertexOut IN) : COLOR
 	half falloff = saturate(1.0f - dot(lightPos.xyz, lightPos.xyz));
 
 	half3 L = normalize(lightPos.xyz);
-	half3 N = gbuffer.xyz;
+	half3 N = normal.xyz * 2 - 1;
 	half3 E = normalize(-IN.viewDir.xyz);
 
 	half NdotL = saturate(dot(N, L));
@@ -84,7 +84,7 @@ half4 FP_main(ShadowVertexOut IN) : COLOR
 	OUT.xyz = s_lightColor.xyz * NdotL;
 
 	OUT.w = pow(RdotE, 10) * NdotL * s_lightColor.w;
-return falloff * getShadow(worldpos, viewDepth);
+return NdotL * falloff * getShadow(worldpos, viewDepth);
 	return OUT * falloff * getShadow(worldpos, viewDepth);
 }
 

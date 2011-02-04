@@ -520,7 +520,7 @@ namespace { namespace Internal {
 				return stage;
 			}
 
-			return nullptr;
+			return 0;
 		}
 
 		std::string getTextureFilename(hkxMaterial::TextureStage *stage)
@@ -631,7 +631,8 @@ void HavokAnimator::renderToPose(HavokPose *pose)
 	m_animator->sampleAndCombineAnimations(hkapose->accessUnsyncedPoseLocalSpace().begin(), hkapose->getFloatSlotValues().begin() );
 }
 
-void HavokAnimator::step(int frametime) {
+void HavokAnimator::step(int frametime)
+{
 	m_animator->stepDeltaTime(frametime * 0.001f);
 }
 
@@ -661,7 +662,8 @@ HavokAnimation::HavokAnimation(const std::string &name)
 }
 
 
-HavokAnimation::~HavokAnimation() {
+HavokAnimation::~HavokAnimation()
+{
 	if (m_controler)
 		m_controler->removeReference();
 }
@@ -784,11 +786,9 @@ HavokPose::~HavokPose()
 
 bool HavokPose::isValid() const
 {
-	return m_havokPose != nullptr;
+	return m_havokPose != 0;
 }
 
-//--------------------------------------------------------------------------
-// class HavokPackage::MeshData
 //--------------------------------------------------------------------------
 
 class HavokPackage::MeshData
@@ -809,12 +809,12 @@ public:
 	MeshData(HavokPackage *package)
 	{
 		m_package = package;
-		m_name = nullptr;
-		m_havokMesh = nullptr;
-		m_binding = nullptr;
-		m_boneAttachment = nullptr;
-		m_section = nullptr;
-		m_renderMesh = nullptr;
+		m_name = 0;
+		m_havokMesh = 0;
+		m_binding = 0;
+		m_boneAttachment = 0;
+		m_section = 0;
+		m_renderMesh = 0;
 		m_lod = -1;
 		m_needFreeRenderMesh = true;
 		m_haveLocalTransform = false;
@@ -904,12 +904,12 @@ public:
 
 HavokPackage::HavokPackage(const std::string &filename)
 {
-	m_loader = nullptr;
-	m_root = nullptr;
-	m_physicsData = nullptr;
-	m_animationContainer = nullptr;
-	m_sceneData = nullptr;
-	m_ragdoll = nullptr;
+	m_loader = 0;
+	m_root = 0;
+	m_physicsData = 0;
+	m_animationContainer = 0;
+	m_sceneData = 0;
+	m_ragdoll = 0;
 
 	m_isMeshDataGenerated = false;
 	m_isBboxGenerated = false;
@@ -973,19 +973,16 @@ HavokPackage::~HavokPackage()
 
 PhysicsRigid *HavokPackage::getRigidBody()
 {
-	if (!m_physicsData) {
-		return nullptr;
-	}
+	if (!m_physicsData)
+		return 0;
 
 	const hkArray<hkpPhysicsSystem*>& systems = m_physicsData->getPhysicsSystems();
-	if (systems.getSize() == 0) {
-		return nullptr;
-	}
+	if (systems.getSize() == 0)
+		return 0;
 
 	const hkArray<hkpRigidBody*>& rigids = systems[0]->getRigidBodies();
-	if (rigids.getSize() == 0) {
-		return nullptr;
-	}
+	if (rigids.getSize() == 0)
+		return 0;
 
 	hkpRigidBody *rigid = rigids[0]->clone();
 	return new PhysicsRigid(this, rigid);
@@ -1114,7 +1111,7 @@ void HavokPackage::initDynamicMeshes(MeshDataList &result)
 
 		if (newdata->m_binding || newdata->m_boneAttachment) {
 			newdata->m_needFreeRenderMesh = true;
-			newdata->m_renderMesh = nullptr;
+			newdata->m_renderMesh = 0;
 			newdata->generateStaticMesh(Primitive::HintDynamic);
 			result.push_back(newdata);
 		} else {
@@ -1130,9 +1127,8 @@ void HavokPackage::clearDynamicMeshes( MeshDataList &result )
 
 void HavokPackage::generateStaticMesh()
 {
-	if (m_isStaticMeshGenerated) {
+	if (m_isStaticMeshGenerated)
 		return;
-	}
 
 	generateMeshData();
 
@@ -1146,13 +1142,11 @@ void HavokPackage::generateStaticMesh()
 
 inline const char *findMesh_r(hkxNode *node, hkxMesh *mesh)
 {
-	if (!node) {
-		return nullptr;
-	}
+	if (!node)
+		return 0;
 
-	if (node->m_object.m_object == mesh) {
+	if (node->m_object.m_object == mesh)
 		return node->m_name;
-	}
 
 	for (int i = 0; i < node->m_numChildren; i++) {
 		const char *result = findMesh_r(node->m_children[i], mesh);
@@ -1161,23 +1155,21 @@ inline const char *findMesh_r(hkxNode *node, hkxMesh *mesh)
 		}
 	}
 
-	return nullptr;
+	return 0;
 }
 
 const char *HavokPackage::getMeshName(hkxMesh *mesh)
 {
-	if (!m_sceneData) {
-		return nullptr;
-	}
+	if (!m_sceneData)
+		return 0;
 
 	return findMesh_r(m_sceneData->m_rootNode, mesh);
 }
 
 hkaMeshBinding *HavokPackage::findBinding(hkxMesh *mesh)
 {
-	if (!m_animationContainer) {
-		return nullptr;
-	}
+	if (!m_animationContainer)
+		return 0;
 
 	for (int i = 0; i < m_animationContainer->m_numSkins; i++) {
 		if (m_animationContainer->m_skins[i]->m_mesh == mesh) {
@@ -1185,7 +1177,7 @@ hkaMeshBinding *HavokPackage::findBinding(hkxMesh *mesh)
 		}
 	}
 
-	return nullptr;
+	return 0;
 }
 
 Primitives HavokPackage::getPrimitives()
@@ -1215,35 +1207,30 @@ void HavokPackage::issueToQueue(RenderEntity *qactor, RenderScene *qscene )
 
 hkaSkeleton *HavokPackage::getSkeleton()
 {
-	if (!m_animationContainer) {
+	if (!m_animationContainer)
 		return 0;
-	}
 
-	if (!m_animationContainer->m_numSkeletons) {
+	if (!m_animationContainer->m_numSkeletons)
 		return 0;
-	}
 
 	return m_animationContainer->m_skeletons[0];
 }
 
 int HavokPackage::getAnimationCount()
 {
-	if (!m_animationContainer) {
+	if (!m_animationContainer)
 		return 0;
-	}
 
 	return m_animationContainer->m_numBindings;
 }
 
 hkaAnimationBinding *HavokPackage::getAnimation(int Index)
 {
-	if (!m_animationContainer) {
-		return nullptr;
-	}
+	if (!m_animationContainer)
+		return 0;
 
-	if (!m_animationContainer->m_numBindings) {
-		return nullptr;
-	}
+	if (!m_animationContainer->m_numBindings)
+		return 0;
 
 	return m_animationContainer->m_bindings[Index];
 }
@@ -1255,9 +1242,8 @@ hkaRagdollInstance *HavokPackage::getRagdoll() const
 
 hkaSkeletonMapper *HavokPackage::getMapper(hkaSkeletonMapper *current) const
 {
-	if (!m_root) {
-		return nullptr;
-	}
+	if (!m_root)
+		return 0;
 
 	void *objectFound = m_root->findObjectByType(hkaSkeletonMapperClass.getName(), current);
 	return reinterpret_cast<hkaSkeletonMapper*> (objectFound);
@@ -1287,17 +1273,17 @@ const HavokPackage::MaterialMap *HavokPackage::findMaterialMap(hkxMaterial *hkma
 hkpRigidBody *HavokPackage::getRigidBodyHk() const
 {
 	if (!m_physicsData) {
-		return nullptr;
+		return 0;
 	}
 
 	const hkArray<hkpPhysicsSystem*>& systems = m_physicsData->getPhysicsSystems();
 	if (systems.getSize() == 0) {
-		return nullptr;
+		return 0;
 	}
 
 	const hkArray<hkpRigidBody*>& rigids = systems[0]->getRigidBodies();
 	if (rigids.getSize() == 0) {
-		return nullptr;
+		return 0;
 	}
 
 	return rigids[0]->clone();
@@ -1305,8 +1291,6 @@ hkpRigidBody *HavokPackage::getRigidBodyHk() const
 
 void HavokPackage::findNodeTransform()
 {
-//		return;
-
 	if (!m_sceneData)
 		return;
 
@@ -1407,14 +1391,14 @@ void HavokPackageManager::removePackage(const std::string &name)
 HavokModel::HavokModel(HavokPackage *package) : RenderEntity(kModel)
 {
 	m_package = package;
-	m_pose = nullptr;
+	m_pose = 0;
 	m_isMeshDataInited = false;
 }
 
 HavokModel::HavokModel(const std::string &name) : RenderEntity(kModel)
 {
 	m_package = g_havokPackageManager->findPackage(name);
-	m_pose = nullptr;
+	m_pose = 0;
 	m_isMeshDataInited = false;
 }
 
@@ -1471,6 +1455,12 @@ Primitives HavokModel::getHitTestPrims()
 	return result;
 }
 
+Primitives HavokModel::getStaticPrims()
+{
+	return getHitTestPrims();
+}
+
+
 void HavokModel::issueToScene(RenderScene *qscene)
 {
 	if (!m_package)
@@ -1517,7 +1507,7 @@ void HavokModel::applyPose()
 
 	const hkArray<hkQsTransform>& poseInWorld = m_pose->m_havokPose->getSyncedPoseModelSpace();
 
-	hkaMeshBinding *meshbinding = nullptr;
+	hkaMeshBinding *meshbinding = 0;
 	AX_FOREACH(HavokPackage::MeshData *data, m_mestDataList) {
 		if (data->m_binding) {
 			if (meshbinding != data->m_binding) {
@@ -1561,8 +1551,7 @@ void HavokModel::applyPose()
 			hkaFPUSkinningDeformer::deform(compositeWorldInverse.begin(), binding);
 
 			data->m_renderMesh->unlockVertexes();
-		}
-		else if (data->m_boneAttachment) {
+		} else if (data->m_boneAttachment) {
 			HK_ALIGN(float f[16], 16);
 
 			hkaBoneAttachment *ba = data->m_boneAttachment;

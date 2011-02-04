@@ -16,7 +16,7 @@ AX_BEGIN_NAMESPACE
 Fixed::Fixed()
 {
 	m_num = -1;
-	m_landscape = nullptr;
+	m_landscape = 0;
 }
 
 Fixed::~Fixed()
@@ -29,8 +29,8 @@ Fixed::~Fixed()
 
 StaticFixed::StaticFixed()
 {
-	m_model = nullptr;
-	m_rigid = nullptr;
+	m_model = 0;
+	m_rigid = 0;
 }
 
 StaticFixed::~StaticFixed()
@@ -51,6 +51,7 @@ void StaticFixed::onReload()
 		return;
 
 	m_model = new HavokModel(m_modelName);
+	m_model->setStatic(true);
 	m_rigid = new PhysicsRigid(m_modelName);
 
 	m_model->setMatrix(m_matrix_p);
@@ -81,7 +82,8 @@ void StaticFixed::onReset()
 TerrainFixed::TerrainFixed(RenderTerrain *terr)
 {
 	m_renderTerrain = terr;
-	m_physicsTerrain = nullptr;
+	terr->setStatic(true);
+	m_physicsTerrain = 0;
 
 	m_renderTerrain->addObserver(this);
 }
@@ -144,7 +146,7 @@ void TerrainFixed::beNotified(IObservable *subject, int arg)
 #ifdef AX_CONFIG_OPTION_USE_SPEEDTREE_40
 TreeFixed::TreeFixed()
 {
-	m_renderTree = nullptr;
+	m_renderTree = 0;
 }
 
 TreeFixed::~TreeFixed()
@@ -203,15 +205,17 @@ void Landscape::addFixed(Fixed *fixed)
 	if (!free) {
 		return;
 	}*/
-	int num = 0;
-	for (int i = 0;i < MaxFixed;++ i){
-		if (m_fixeds[i] == nullptr) {
+	int num = -1;
+	for (int i = 0; i < MaxFixed;++ i){
+		if (m_fixeds[i] == 0) {
 			num = i;
 			break;
 		}
 	}
 
-	//int num = free - m_fixeds;
+	if (num == -1) {
+		Errorf("MaxFixed exceeded");
+	}
 
 	m_fixeds[num] = fixed;
 	fixed->m_num = num;
@@ -228,14 +232,57 @@ void Landscape::removeFixed(Fixed *fixed)
 
 	//Fixed*& befree = m_fixeds[num];
 	//AX_ASSERT(fixed == befree);
-	//befree = nullptr;
-	m_fixeds[num] = nullptr;
+	//befree = 0;
+	m_fixeds[num] = 0;
 
 	//m_freeList.add(befree);
 	fixed->doRemove();
 	fixed->m_num = -1;
-	fixed->m_landscape = nullptr;
+	fixed->m_landscape = 0;
 }
+
+void Landscape::buildKdTree()
+{
+	int numFixed = 0;
+	int numStaticModel = 0;
+	int numVertices = 0;
+	int numElements = 0;
+	float area = 0;
+
+	for (int i = 0; i < MaxFixed; i++) {
+		Fixed *fixed = m_fixeds[i];
+		if (!fixed)
+			continue;
+
+		numFixed++;
+		StaticFixed *staticFixed = object_cast<StaticFixed *>(fixed);
+		if (!staticFixed)
+			continue;
+
+		numStaticModel++;
+		if (!staticFixed->m_model)
+			continue;
+
+		Primitives prims = staticFixed->m_model->getStaticPrims();
+		Primitives::const_iterator it = prims.begin();
+		float curArea = 0;
+		for (; it != prims.end(); ++it) {
+			Primitive *prim = *it;
+			if (prim->getType() != Primitive::MeshType)
+				continue;
+			MeshPrim *mesh = static_cast<MeshPrim *>(prim);
+
+			numVertices += mesh->getNumVertexes();
+			numElements += mesh->numElements();
+			curArea += mesh->calcArea();
+		}
+		float scale = staticFixed->m_model->getMatrix().getScales();
+		if (scale != 1.0f)
+			curArea *= scale * scale;
+		area += curArea;
+	}
+}
+
 
 
 

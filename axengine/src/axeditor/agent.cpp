@@ -141,7 +141,8 @@ void Agent::setAxis( const Matrix3 &axis )
 // class AgentList
 //--------------------------------------------------------------------------
 
-Action *AgentList::endTransform() const {
+Action *AgentList::endTransform() const
+{
 	if (empty()) return nullptr;
 
 	Context *ctx = front()->getContext();
