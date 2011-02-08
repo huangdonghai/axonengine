@@ -135,6 +135,13 @@ struct AX_API Math
 
 	template<typename T>
 	static T sign(T x);
+
+	static size_t distant(size_t baseline, size_t pos)
+	{
+		if (pos >= baseline) return pos - baseline;
+		return pos + ~baseline + 1;
+	}
+
 };
 
 // 1 / sqrt(x)

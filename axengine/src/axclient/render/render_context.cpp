@@ -125,7 +125,7 @@ RenderContext::RenderContext()
 	m_defaultMat = new Material("_debug");
 
 	m_mtrGlobalLight = new Material("_globallight");
-	m_mtrGlobalLight->m_depthTest = true;
+	m_mtrGlobalLight->m_depthTest = false;
 	m_mtrGlobalLight->m_depthWrite = false;
 	m_mtrGlobalLight->m_blendMode = Material::BlendMode_Add;
 
@@ -175,7 +175,8 @@ RenderContext::~RenderContext()
 
 void RenderContext::issueFrame(RenderFrame *rq)
 {
-	double startTime = OsUtil::seconds();
+	size_t startNumCmds = g_apiWrap->m_cmdWritePos;
+	size_t startBufPos = g_apiWrap->m_bufWritePos;
 
 	cacheFrame(rq);
 
@@ -224,7 +225,8 @@ void RenderContext::issueFrame(RenderFrame *rq)
 
 	rq->clear();
 
-	double endTime = OsUtil::seconds();
+	stat_frameRenderCommand.setInt(Math::distant(startNumCmds, g_apiWrap->m_cmdWritePos));
+	stat_frameRingBufferSize.setInt(Math::distant(startBufPos, g_apiWrap->m_bufWritePos));
 }
 
 void RenderContext::drawScene(RenderScene *scene, const RenderClearer &clearer)

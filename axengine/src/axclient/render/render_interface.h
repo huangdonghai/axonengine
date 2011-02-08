@@ -71,6 +71,8 @@ public:
 
 class ApiWrap
 {
+	friend class RenderContext;
+
 public:
 	enum {
 		RING_BUFFER_SIZE = 4 * 1024 * 1024,

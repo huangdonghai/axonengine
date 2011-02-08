@@ -386,13 +386,13 @@ public:
 // FreeList
 //------------------------------------------------------------------------------
 
-template< class T >
+template<class T>
 class FreeList {
 public:
-	FreeList() { m_head = nullptr; }
+	FreeList() { m_head = 0; }
 	~FreeList() {}
 
-	void add(T &t);
+	void add(T *t);
 	T *get();
 
 private:
@@ -400,9 +400,9 @@ private:
 };
 
 template< class T >
-void FreeList<T>::add(T &t)
+void FreeList<T>::add(T *t)
 {
-	void** p = (void**)&t;
+	void** p = (void**)t;
 	*p = m_head;
 	m_head = p;
 }
@@ -410,13 +410,12 @@ void FreeList<T>::add(T &t)
 template< class T >
 T *FreeList<T>::get()
 {
-	if (m_head == nullptr) {
+	if (!m_head)
 		return 0;
-	}
 
 	T *result = (T*)m_head;
 	m_head = *(intptr_t**)m_head;
-	return (T*)result;
+	return result;
 }
 
 //------------------------------------------------------------------------------

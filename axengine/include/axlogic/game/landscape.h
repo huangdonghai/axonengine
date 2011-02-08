@@ -144,6 +144,7 @@ public:
 
 private:
 	Fixed *m_fixeds[MaxFixed];
+	std::list<int> m_freeList;
 };
 
 inline Fixed *Landscape::getFixed(int num) const

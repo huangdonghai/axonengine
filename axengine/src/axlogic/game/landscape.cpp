@@ -72,7 +72,7 @@ void StaticFixed::onReset()
 	setPhysicsEntity(0);
 
 	SafeDelete(m_model);
-	SafeDelete (m_rigid);
+	SafeDelete(m_rigid);
 }
 
 //--------------------------------------------------------------------------
@@ -189,9 +189,9 @@ Landscape::Landscape(GameWorld *world)
 	m_world = world;
 
 	TypeZeroArray(m_fixeds);
-/* for (int i = MaxFixed - 1; i >= 0; i--) {
-		m_freeList.add(m_fixeds[i]);
-	}*/
+	for (int i = 0; i < MaxFixed; i++) {
+		m_freeList.push_back(i);
+	}
 }
 
 Landscape::~Landscape()
@@ -201,21 +201,13 @@ void Landscape::addFixed(Fixed *fixed)
 {
 	AX_ASSERT(fixed->m_num == -1);
 
-	/*Fixed** free = m_freeList.get();
-	if (!free) {
+	if (m_freeList.empty()) {
+		Errorf("MaxFixed exceeded");
 		return;
-	}*/
-	int num = -1;
-	for (int i = 0; i < MaxFixed;++ i){
-		if (m_fixeds[i] == 0) {
-			num = i;
-			break;
-		}
 	}
 
-	if (num == -1) {
-		Errorf("MaxFixed exceeded");
-	}
+	int num = m_freeList.front();
+	m_freeList.pop_front();
 
 	m_fixeds[num] = fixed;
 	fixed->m_num = num;
@@ -227,15 +219,13 @@ void Landscape::removeFixed(Fixed *fixed)
 {
 	int num = fixed->m_num;
 	if (num < 0) {
+		Errorf("Not a landscape fixed");
 		return;
 	}
 
-	//Fixed*& befree = m_fixeds[num];
-	//AX_ASSERT(fixed == befree);
-	//befree = 0;
 	m_fixeds[num] = 0;
 
-	//m_freeList.add(befree);
+	m_freeList.push_front(num);
 	fixed->doRemove();
 	fixed->m_num = -1;
 	fixed->m_landscape = 0;
@@ -245,9 +235,19 @@ void Landscape::buildKdTree()
 {
 	int numFixed = 0;
 	int numStaticModel = 0;
+	int numScaled = 0;
 	int numVertices = 0;
 	int numElements = 0;
+	int numScaledVertices = 0;
+	int numScaledElements = 0;
+	int numMaterials = 0;
+	int numPrimitives = 0;
+	int numSmallVertices = 0;
+	int numSmallElements = 0;
 	float area = 0;
+	float smallArea = 0;
+
+	Vector2 minmaxTc(0,0);
 
 	for (int i = 0; i < MaxFixed; i++) {
 		Fixed *fixed = m_fixeds[i];
@@ -263,22 +263,43 @@ void Landscape::buildKdTree()
 		if (!staticFixed->m_model)
 			continue;
 
+		numMaterials += staticFixed->m_model->numMaterials();
 		Primitives prims = staticFixed->m_model->getStaticPrims();
+		numPrimitives += prims.size();
+
 		Primitives::const_iterator it = prims.begin();
 		float curArea = 0;
+		int curVertices = 0;
+		int curElements = 0;
+		float scale = staticFixed->m_model->getMatrix().getScales();
+		bool scaled = fabsf(scale - 1.0f) > 1e-6;
+		if (scaled) {
+			numScaled++;
+		}
+		scale *= scale;
+
 		for (; it != prims.end(); ++it) {
 			Primitive *prim = *it;
 			if (prim->getType() != Primitive::MeshType)
 				continue;
 			MeshPrim *mesh = static_cast<MeshPrim *>(prim);
 
-			numVertices += mesh->getNumVertexes();
-			numElements += mesh->numElements();
-			curArea += mesh->calcArea();
+			curVertices += mesh->getNumVertexes();
+			curElements += mesh->numElements();
+			curArea += mesh->calcArea() * scale;
+			mesh->minmaxTc(minmaxTc);
 		}
-		float scale = staticFixed->m_model->getMatrix().getScales();
-		if (scale != 1.0f)
-			curArea *= scale * scale;
+		if (scaled) {
+			numScaledVertices += curVertices;
+			numScaledElements += curElements;
+		}
+		if (curArea / curElements < (1.0f / 16.0f)) {
+			numSmallVertices += curVertices;
+			numSmallElements += curElements;
+			smallArea += curArea;
+		}
+		numVertices += curVertices;
+		numElements += curElements;
 		area += curArea;
 	}
 }

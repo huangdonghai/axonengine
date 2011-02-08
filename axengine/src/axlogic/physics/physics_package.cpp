@@ -580,7 +580,7 @@ namespace { namespace Internal {
 		size_t m_size;
 	};
 
-}} // namespace anynomus::Internal
+}} // namespace anonymous::Internal
 
 using namespace Internal;
 

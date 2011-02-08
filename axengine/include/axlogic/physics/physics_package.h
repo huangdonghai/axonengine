@@ -121,16 +121,18 @@ public:
 
 class HavokPackage : public RefObject
 {
+	friend class HavokModel;
+
 public:
 	class MeshData;
-	typedef std::list<MeshData*>	MeshDataList;
+	typedef std::list<MeshData*> MeshDataList;
 
 	struct MaterialMap {
 		hkxMaterial *m_hkMat;
 		Material *m_axMat;
 		Texture *m_lightMap;
 	};
-	typedef std::vector<MaterialMap*>	MaterialMaps;
+	typedef std::vector<MaterialMap*> MaterialMaps;
 
 	HavokPackage(const std::string &filename);
 	~HavokPackage();
@@ -214,6 +216,7 @@ public:
 	HavokRig *findRig() const;
 	void setPose(const HavokPose *pose, int linkBoneIndex = -1);
 	Primitives getStaticPrims();
+	int numMaterials() const { if (m_package) return m_package->m_materialMaps.size(); else return 0; }
 
 protected:
 	void applyPose();

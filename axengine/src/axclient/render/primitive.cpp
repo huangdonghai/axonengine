@@ -1160,7 +1160,9 @@ static float CalcArea(const Vector3 &v1, const Vector3 &v2, const Vector3 &v3)
 	float b = (v2 - v3).getLength();
 	float c = (v1 - v3).getLength();
 	float s = (a + b + c) * 0.5f;
-	return sqrt(s * (s - a) * (s - b) * (s - c));
+	float result = s * (s - a) * (s - b) * (s - c);
+	if (result <= 0.0f) return 0;
+	return sqrt(result);
 }
 
 float MeshPrim::calcArea() const
@@ -1173,6 +1175,18 @@ float MeshPrim::calcArea() const
 	}
 	return result;
 }
+
+void MeshPrim::minmaxTc(Vector2 &result) const
+{
+	for (int i = 0; i < m_numVertexes; i++)
+	{
+		result.x = std::min(m_vertexes[i].streamTc.x, result.x);
+		result.x = std::min(m_vertexes[i].streamTc.y, result.x);
+		result.y = std::max(m_vertexes[i].streamTc.x, result.y);
+		result.y = std::max(m_vertexes[i].streamTc.y, result.y);
+	}
+}
+
 
 
 

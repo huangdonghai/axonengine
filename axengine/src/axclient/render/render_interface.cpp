@@ -774,19 +774,13 @@ size_t ApiWrap::calcPos(size_t size)
 	return size & (RING_BUFFER_SIZE - 1);
 }
 
-size_t distant(size_t baseline, size_t pos)
-{
-	if (pos >= baseline) return pos - baseline;
-	return pos + ~baseline + 1;
-}
-
 byte_t *ApiWrap::allocRingBuf(int size)
 {
 	// 4 bytes align
 	size = (size + 3) & (~3);
 
-	size_t d0 = distant(87, 104);
-	size_t d1 = distant(0xffffffff, 501);
+	size_t d0 = Math::distant(87, 104);
+	size_t d1 = Math::distant(0xffffffff, 501);
 
 	byte_t *result = 0;
 
@@ -799,7 +793,7 @@ byte_t *ApiWrap::allocRingBuf(int size)
 		if (readStop == writeStop) {
 			// do nothing
 		} else {
-			while (distant(readStop, m_bufReadPos) < distant(writeStop, m_bufWritePos + size)) {
+			while (Math::distant(readStop, m_bufReadPos) < Math::distant(writeStop, m_bufWritePos + size)) {
 				OsUtil::sleep(0);
 			}
 		}
@@ -811,11 +805,11 @@ byte_t *ApiWrap::allocRingBuf(int size)
 		}
 
 		if (readStop == writeStop) {
-			while (distant(readStop, m_bufReadPos) < size) {
+			while (Math::distant(readStop, m_bufReadPos) < size) {
 				OsUtil::sleep(0);
 			}
 		} else {
-			while (distant(readStop, m_bufReadPos) < distant(writeStop, nextstop + size)) {
+			while (Math::distant(readStop, m_bufReadPos) < Math::distant(writeStop, nextstop + size)) {
 				OsUtil::sleep(0);
 			}
 		}
@@ -823,7 +817,7 @@ byte_t *ApiWrap::allocRingBuf(int size)
 		result = m_ringBuffer;
 		m_bufWritePos = nextstop + size;
 	}
-	int dist = distant(oldReadPos, m_bufWritePos);
+	int dist = Math::distant(oldReadPos, m_bufWritePos);
 //	AX_ASSERT(dist <= RING_BUFFER_SIZE);
 
 #if 0

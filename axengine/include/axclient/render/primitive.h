@@ -287,6 +287,7 @@ public:
 
 	int numElements() const { if (m_isStriped) return m_numIndexes - 2; else return m_numIndexes / 3; }
 	float calcArea() const;
+	void minmaxTc(Vector2 &) const;
 
 	virtual void draw(Technique tech);
 	virtual void sync();
