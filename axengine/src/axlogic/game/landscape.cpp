@@ -244,6 +244,10 @@ void Landscape::buildKdTree()
 	int numPrimitives = 0;
 	int numSmallVertices = 0;
 	int numSmallElements = 0;
+	int numSmallModel = 0;
+	int numLargeVertices = 0;
+	int numLargeElements = 0;
+	int numLargeModel = 0;
 	float area = 0;
 	float smallArea = 0;
 
@@ -297,7 +301,25 @@ void Landscape::buildKdTree()
 			numSmallVertices += curVertices;
 			numSmallElements += curElements;
 			smallArea += curArea;
+			numSmallModel++;
 		}
+
+		BoundingBox bbox = staticFixed->m_model->getLocalBoundingBox();
+		Vector3 extends = bbox.getExtends();
+		float maxface = 0;
+		if (extends.x < extends.y && extends.x < extends.z)
+			maxface = extends.y * extends.z;
+		else if (extends.y < extends.x && extends.y < extends.z)
+			maxface = extends.x * extends.z;
+		else
+			maxface = extends.x * extends.y;
+
+		if (maxface > 20 && curArea > 40) {
+			numLargeVertices += curVertices;
+			numLargeElements += curElements;
+			numLargeModel++;
+		}
+
 		numVertices += curVertices;
 		numElements += curElements;
 		area += curArea;

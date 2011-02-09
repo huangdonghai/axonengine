@@ -20,7 +20,8 @@ struct AsyncQuery {
 	int m_result;
 };
 
-class AX_API Query {
+class AX_API Query
+{
 public:
 	enum QueryType {
 		QueryType_Vis,
