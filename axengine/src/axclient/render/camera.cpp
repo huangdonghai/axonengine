@@ -233,14 +233,14 @@ void RenderCamera::setPersOverlay(const Rect &rect, float fov)
 
 
 Plane::Side RenderCamera::checkBox(const BoundingBox &bbox) const
-{
+{ return Plane::Front;
 	// g_statistic->incValue(stat_frustumCullCall);
 	stat_frustumCullCall.inc();
 	return m_convex.checkBox(bbox);
 }
 
 bool RenderCamera::cullBox(const BoundingBox &bbox) const
-{
+{ return false;
 	//g_statistic->incValue(stat_frustumCullCall);
 	stat_frustumCullCall.inc();
 	return m_convex.cullBox(bbox);

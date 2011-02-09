@@ -849,7 +849,7 @@ void RenderContext::drawPointLight(RenderScene *scene, RenderLight *light)
 	m_mtrPointLight->addParameter("s_lightColor", 4, light->lightColor().c_ptr());
 	m_mtrPointLight->addParameter("s_lightPos", 4, lightpos.c_ptr());
 
-	if (light->m_isIntersectsNearPlane) {
+	if (1 || light->m_isIntersectsNearPlane) {
 		m_mtrPointLight->m_depthTest = false;
 		m_mtrPointLight->m_cullMode = RasterizerDesc::CullMode_Front;
 	} else {
