@@ -89,7 +89,6 @@ public:
 	std::string name;
 
 private:
-	bool m_isMTrendering;
 	bool m_initialized;
 	bool m_isSelectMode;
 	int m_frameNum;

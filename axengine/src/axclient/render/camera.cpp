@@ -490,18 +490,15 @@ void RenderCamera::getTrapezoidalMatrix(Matrix4 &lightMatrix, Matrix4 &tsmMatrix
 //
 void RenderCamera::calcPointsAlongZdist(Vector3 result[4], float zdist) const
 {
-	if (m_isOrthoProjection) {
-		Errorf("eee");
-	}
-	AX_ASSERT(!m_isOrthoProjection);
+	AX_ASSURE(!m_isOrthoProjection);
 
 	Vector3 center = m_viewAxis[0] * m_znear;
 	float scale = zdist / m_znear;
 
-	result[0] = m_viewOrg +(center + m_viewAxis[1] * m_left - m_viewAxis[2] * m_top) * scale;
-	result[1] = m_viewOrg +(center + m_viewAxis[1] * m_left + m_viewAxis[2] * m_top) * scale;
-	result[2] = m_viewOrg +(center - m_viewAxis[1] * m_left - m_viewAxis[2] * m_top) * scale;
-	result[3] = m_viewOrg +(center - m_viewAxis[1] * m_left + m_viewAxis[2] * m_top) * scale;
+	result[0] = m_viewOrg + (center + m_viewAxis[1] * m_left - m_viewAxis[2] * m_top) * scale;
+	result[1] = m_viewOrg + (center + m_viewAxis[1] * m_left + m_viewAxis[2] * m_top) * scale;
+	result[2] = m_viewOrg + (center - m_viewAxis[1] * m_left - m_viewAxis[2] * m_top) * scale;
+	result[3] = m_viewOrg + (center - m_viewAxis[1] * m_left + m_viewAxis[2] * m_top) * scale;
 }
 
 

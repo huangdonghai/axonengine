@@ -28,37 +28,46 @@ struct AX_API Vector3
 	inline ~Vector3() {}
 
 	// algo
-	inline Vector3 operator+(const Vector3 &v) const {
+	inline Vector3 operator+(const Vector3 &v) const
+	{
 		return Vector3(x + v.x, y + v.y, z + v.z);
 	}
 	// negative vector
-	inline Vector3 operator-() const {
+	inline Vector3 operator-() const
+	{
 		return Vector3(-x, -y, -z);
 	}
-	inline Vector3 operator-(const Vector3 &v) const {
+	inline Vector3 operator-(const Vector3 &v) const
+	{
 		return Vector3(x - v.x, y - v.y, z - v.z);
 	}
 	// scale the vector
-	inline Vector3 operator*(const float scale) const {
+	inline Vector3 operator*(const float scale) const
+	{
 		return Vector3(x*scale, y*scale, z*scale);
 	}
 	// scale
-	inline Vector3 operator*(const Vector3 &v) const {
+	inline Vector3 operator*(const Vector3 &v) const
+	{
 		return Vector3(x*v.x, y*v.y, z*v.z);
 	}
-	inline Vector3 operator/(const Vector3 &v) const {
+	inline Vector3 operator/(const Vector3 &v) const
+	{
 		return Vector3(x/v.x, y/v.y, z/v.z);
 	}
 	// inverse scale
-	inline Vector3 operator/(float scale) const {
+	inline Vector3 operator/(float scale) const
+	{
 		return operator*(1.f / scale);
 	}
 	// Dot Product
-	inline float operator|(const Vector3 &v) const {
+	inline float operator|(const Vector3 &v) const
+	{
 		return x*v.x + y*v.y + z*v.z;
 	}
 	// Cross Product
-	inline Vector3 operator^(const Vector3 &v) const {
+	inline Vector3 operator^(const Vector3 &v) const
+	{
 		return Vector3(
 			y * v.z - z * v.y,
 			z * v.x - x * v.z,
@@ -66,82 +75,103 @@ struct AX_API Vector3
 			);
 	}
 	// compare
-	inline bool operator==(const Vector3 &v) const {
+	inline bool operator==(const Vector3 &v) const
+	{
 		return x==v.x && y==v.y && z==v.z;
 	}
-	inline bool operator!=(const Vector3 &v) const {
+	inline bool operator!=(const Vector3 &v) const
+	{
 		return x!=v.x || y!=v.y || z!=v.z;
 	}
-	inline bool operator<(const Vector3 &rhs) const {
+	inline bool operator<(const Vector3 &rhs) const
+	{
 		return x < rhs.x && y < rhs.y && z < rhs.z;
 	}
-	inline bool operator<=(const Vector3 &rhs) const {
+	inline bool operator<=(const Vector3 &rhs) const
+	{
 		return x <= rhs.x && y <= rhs.y && z <= rhs.z;
 	}
-	inline bool operator>(const Vector3 &rhs) const {
-		return !operator<=(rhs);
+	inline bool operator>(const Vector3 &rhs) const
+	{
+		return x > rhs.x && y > rhs.y && z > rhs.z;
 	}
-	inline bool operator>=(const Vector3 &rhs) const {
-		return !operator<(rhs);
+	inline bool operator>=(const Vector3 &rhs) const
+	{
+		return x >= rhs.x && y >= rhs.y && z >= rhs.z;
 	}
 
 	// assign operator
-	inline Vector3 operator+=(const Vector3 &v) {
+	inline Vector3 operator+=(const Vector3 &v)
+	{
 		x += v.x; y += v.y; z += v.z;
 		return *this;
 	}
-	inline Vector3 operator-=(const Vector3 &v) {
+	inline Vector3 operator-=(const Vector3 &v)
+	{
 		x -= v.x; y -= v.y; z -= v.z;
 		return *this;
 	}
-	inline Vector3 operator*=(float scale) {
+	inline Vector3 operator*=(float scale)
+	{
 		x *= scale; y *= scale; z *= scale;
 		return *this;
 	}
-	inline Vector3 operator/=(float v) {
+	inline Vector3 operator/=(float v)
+	{
 		v = 1.f/v;
 		x *= v; y *= v; z *= v;
 		return *this;
 	}
-	inline Vector3 operator*=(const Vector3 &v) {
+	inline Vector3 operator*=(const Vector3 &v)
+	{
 		x *= v.x; y *= v.y; z *= v.z;
 		return *this;
 	}
-	inline Vector3 operator/=(const Vector3 &v) {
+	inline Vector3 operator/=(const Vector3 &v)
+	{
 		x /= v.x; y /= v.y; z /= v.z;
 		return *this;
 	}
-	inline float &operator[](int index) {
+	inline float &operator[](int index)
+	{
 		AX_STRICT_ASSERT(index >= 0 && index < 3);
 		return *(&x+index);
 	}
 
-	inline const float &operator[](int index) const {
+	inline const float &operator[](int index) const
+	{
 		AX_STRICT_ASSERT(index >= 0 && index < 3);
 		return *(&x+index);
 	}
 
 	// Simple functions.
-	inline float getMax() const {
+	inline float getMax() const
+	{
 		return std::max(std::max(x,y), z);
 	}
-	inline float getAbsMax() const {
+	inline float getAbsMax() const
+	{
 		return std::max(std::max(Math::abs(x), Math::abs(y)), Math::abs(z));
 	}
-	inline float getMin() const {
+	inline float getMin() const
+	{
 		return std::min(std::min(x,y),z);
 	}
-	inline float getLength() const {
+	inline float getLength() const
+	{
 		return (float)sqrt(x*x + y*y + z*z);
 	}
-	inline float getLengthSquared() const {
+	inline float getLengthSquared() const
+	{
 		return x*x + y*y + z*z;
 	}
-	inline bool isZero() const {
+	inline bool isZero() const
+	{
 		return x==0.f && y==0.f && z==0.f;
 	}
 	// return length
-	inline float normalize() {
+	inline float normalize()
+	{
 		float len = getLength();
 		if (len >= 1.0e-16f) {
 			float scale = 1.f/len;
@@ -153,7 +183,8 @@ struct AX_API Vector3
 		}
 	}
 	// return self value
-	inline Vector3 getNormalized() const {
+	inline Vector3 getNormalized() const
+	{
 		float s = x*x+y*y+z*z;
 		if (s >= 1.0e-16f) {
 			float scale = 1.f/sqrt(s);
@@ -163,29 +194,35 @@ struct AX_API Vector3
 		}
 	}
 	// Clear self
-	inline void clear() {
-		x=0.0f;y=0.0f;z=0.0f;
+	inline void clear()
+	{
+		x=0.0f; y=0.0f; z=0.0f;
 	}
 	// Set value
-	inline Vector3 &set(float ix, float iy, float iz) {
+	inline Vector3 &set(float ix, float iy, float iz)
+	{
 		x = ix; y = iy; z = iz;
 		return *this;
 	}
 
-	inline Vector3 &set(const float *p) {
+	inline Vector3 &set(const float *p)
+	{
 		x = p[0]; y = p[1]; z = p[2];
 		return *this;
 	}
 
-	inline const float* c_ptr() const {
+	inline const float* c_ptr() const
+	{
 		return &x;
 	}
 
-	inline operator Vector2 () const {
+	inline operator Vector2 () const
+	{
 		return Vector2(x,y);
 	}
 
-	inline Vector2 xy() const {
+	inline Vector2 xy() const
+	{
 		return Vector2(x, y);
 	}
 

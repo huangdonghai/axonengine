@@ -801,8 +801,6 @@ void RenderContext::drawGlobalLight(RenderScene *scene, RenderLight *light)
 
 		m_mtrGlobalLight->addParameter("s_splitRanges", 16, g_splitRanges.getTranspose().c_ptr());
 		AX_SU(g_textureSize, Vector4(size.width, size.height, 1.0f/size.width, 1.0f/size.height));
-
-		//m_mtrGlobalLight->setPixelToTexel(width, height);
 	}
 
 	MeshUP::setupHexahedron(m_hexahedron, light->m_lightVolume);
@@ -977,6 +975,8 @@ void RenderContext::draw(VertexObject *vert, InstanceObject *inst, IndexObject *
 	if (mat->isWireframe()  & !m_forceWireframe) {
 		m_rasterizerDesc.fillMode = RasterizerDesc::FillMode_Solid;
 	}
+
+	if (inst) g_globalMacro.resetMacro(GlobalMacro::G_GEOMETRY_INSTANCING);
 }
 
 void RenderContext::setMaterial(Material *mat)

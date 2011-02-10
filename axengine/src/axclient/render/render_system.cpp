@@ -55,20 +55,19 @@ void RenderSystem::initialize()
 		drivername = d3d9name;
 	}
 
+	SyncEvent syncEvent;
 	g_renderDriver = (IRenderDriver*)(g_classFactory->createInstance(drivername));
-	g_renderDriver->initialize();
+	g_renderDriver->initialize(syncEvent);
+
+	g_apiWrap = new ApiWrap();
+	g_renderContext = new RenderContext();
 
 	set_objectName("gRenderSystem");
-
-	m_isMTrendering = r_multiThread.getBool();
 
 	m_selection = new Selection();
 
 	Font::initManager();
 	MaterialDecl::initManager();
-
-	g_apiWrap = new ApiWrap();
-	g_renderContext = new RenderContext();
 
 	g_defaultFont = Font::load("fonts/default", 14,14);
 	g_consoleFont = Font::load("fonts/console", 14,14);

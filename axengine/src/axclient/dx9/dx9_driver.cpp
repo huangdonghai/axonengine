@@ -31,7 +31,7 @@ DX9_Driver::DX9_Driver()
 DX9_Driver::~DX9_Driver()
 {}
 
-void DX9_Driver::initialize()
+void DX9_Driver::initialize(SyncEvent &syncEvent)
 {
 	if (m_initialized)
 		return;
@@ -144,6 +144,8 @@ void DX9_Driver::initialize()
 	dx9InitState();
 
 	Printf("ok\n");
+
+	syncEvent.setEvent();
 }
 
 void DX9_Driver::finalize()

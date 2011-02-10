@@ -23,7 +23,7 @@ public:
 	virtual ~DX9_Driver();
 
 	// implement IRenderDriver
-	virtual void initialize();
+	virtual void initialize(SyncEvent &syncEvent);
 	virtual void finalize();
 
 	virtual const ShaderInfo *findShaderInfo(const FixedString &key);

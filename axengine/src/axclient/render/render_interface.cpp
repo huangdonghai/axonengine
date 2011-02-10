@@ -931,10 +931,6 @@ int ApiWrap::runCommands()
 	while (1) {
 		ApiCommand *cmd = fetchCommand();
 
-		if (cmd->m_bufPos == 16456) {
-			printf("out");
-		}
-
 		cmd->exec();
 
 		popCommand();
