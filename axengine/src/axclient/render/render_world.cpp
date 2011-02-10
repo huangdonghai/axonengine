@@ -346,14 +346,14 @@ void RenderWorld::markVisible_r(RenderScene *qscene, QuadNode *node, Plane::Side
 	const RenderCamera &cam = qscene->camera;
 
 	Plane::Side side = parentSide;
-	
+#if 1
 	if (side == Plane::Cross) {
 		side = cam.checkBox(node->bbox);
 		if (side == Plane::Back) {
 			return;
 		}
 	}
-
+#endif
 	for (IntrusiveList<RenderEntity>::iterator it = node->linkHead.begin(); it != node->linkHead.end(); ++it) {
 		RenderEntity *entity = &*it;
 		if (qscene->sceneType == RenderScene::ShadowGen && qscene->sourceLight->lightType() == RenderLight::kGlobal) {
@@ -521,11 +521,7 @@ void RenderWorld::linkEntity(RenderEntity *entity)
 	}
 
 	// link to it
-#if 0
-	entity->m_link.addToEnd(node->linkHead);
-#else
 	node->linkHead.push_back(entity);
-#endif
 	entity->m_linkedNode = node;
 
 	// expand node's boundingbox

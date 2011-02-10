@@ -115,9 +115,9 @@ void Agent::setRotate(int index, float f)
 void Agent::setDeleted(bool deleted)
 {
 	if (!m_isDeleted && deleted)
-		addToContext();
-	else if (m_isDeleted && !deleted)
 		removeFromContext();
+	else if (m_isDeleted && !deleted)
+		addToContext();
 
 	m_isDeleted = deleted;
 	m_actorDirty = true;

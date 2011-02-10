@@ -11,19 +11,20 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-Plane::Side Plane::side(const BoundingBox &bbox) const {
+Plane::Side Plane::side(const BoundingBox &bbox) const
+{
 	int i;
 	float dist1, dist2;
 	int sides;
 	static Vector3 corners[2];
-#if 0
+#if 1
 	for (i=0 ; i<3 ; i++) {
 		if (*(&a + i) < 0) {
-			corners[0][i] = bbox.low[i];
-			corners[1][i] = bbox.high[i];
+			corners[0][i] = bbox.min[i];
+			corners[1][i] = bbox.max[i];
 		} else {
-			corners[1][i] = bbox.low[i];
-			corners[0][i] = bbox.high[i];
+			corners[1][i] = bbox.min[i];
+			corners[0][i] = bbox.max[i];
 		}
 	}
 #else

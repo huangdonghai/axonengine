@@ -23,7 +23,6 @@ public:
 	Convex() { m_numPlanes = 0; }
 
 	void initFromCamera(const RenderCamera &camera);
-	void initFromCamera(const RenderCamera &shadowCamera, const RenderCamera &visCamera);
 
 	Plane::Side checkBox(const BoundingBox &bbox) const;
 	bool cullBox(const BoundingBox &bbox) const;

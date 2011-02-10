@@ -311,7 +311,7 @@ void RenderContext::drawScene_World(RenderScene *scene, const RenderClearer &cle
 	END_PIX();
 
 	BEGIN_PIX("SceneComposite");
-	//drawPass_Composite(scene);
+	drawPass_Composite(scene);
 	END_PIX();
 
 	// post process and render back to backbuffer
@@ -423,6 +423,7 @@ void RenderContext::drawPass_Overlay(RenderScene *scene)
 
 void RenderContext::drawPass_Composite(RenderScene *scene)
 {
+#if 0
 	if (r_wireframe.getBool()) {
 		m_rasterizerDesc.fillMode = RasterizerDesc::FillMode_Wireframe;
 		m_forceWireframe = true;
@@ -430,15 +431,16 @@ void RenderContext::drawPass_Composite(RenderScene *scene)
 		m_rasterizerDesc.fillMode = RasterizerDesc::FillMode_Solid;
 		m_forceWireframe = false;
 	}
-
+#endif
 	m_curTechnique = Technique::Main;
 
 	m_targetSet.clear();
 	m_targetSet.m_depthTarget = m_curWindow->m_rtDepth->slice(0);
-	m_targetSet.m_colorTargets[0] = m_curWindow->m_rt0->slice(0);
+	//m_targetSet.m_colorTargets[0] = m_curWindow->m_rt0->slice(0);
+	m_targetSet.m_colorTargets[0] = m_curWindow->slice(0);
 
 	setupScene(scene, 0, 0);
-
+#if 0
 	issueVisQuery();
 
 	if (!r_showLightBuf.getBool()) {
@@ -451,7 +453,7 @@ void RenderContext::drawPass_Composite(RenderScene *scene)
 			drawInteraction(scene->interactions[i]);
 		}
 	}
-
+#endif
 	for (int i = 0; i < scene->numDebugInteractions; i++) {
 		drawInteraction(scene->debugInteractions[i]);
 	}
@@ -460,9 +462,10 @@ void RenderContext::drawPass_Composite(RenderScene *scene)
 		drawPrimitive(scene->primtives[i]);
 	}
 	//unsetScene(scene, 0, scene->target);
-
+#if 0
 	m_rasterizerDesc.fillMode = RasterizerDesc::FillMode_Solid;
 	m_forceWireframe = false;
+#endif
 }
 
 void RenderContext::drawPass_ShadowGen(RenderScene *scene)

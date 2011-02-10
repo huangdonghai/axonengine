@@ -233,15 +233,13 @@ void RenderCamera::setPersOverlay(const Rect &rect, float fov)
 
 
 Plane::Side RenderCamera::checkBox(const BoundingBox &bbox) const
-{ return Plane::Front;
-	// g_statistic->incValue(stat_frustumCullCall);
+{
 	stat_frustumCullCall.inc();
 	return m_convex.checkBox(bbox);
 }
 
 bool RenderCamera::cullBox(const BoundingBox &bbox) const
-{ return false;
-	//g_statistic->incValue(stat_frustumCullCall);
+{
 	stat_frustumCullCall.inc();
 	return m_convex.cullBox(bbox);
 }
@@ -621,7 +619,7 @@ void Convex::initFromCamera(const RenderCamera &camera)
 {
 	Vector3 p;
 
-	m_numPlanes = 6;
+	m_numPlanes = 4;
 	Matrix4 m_vpInverseNormal= camera.m_vp.getTranspose();
 
 	// init planes
@@ -654,35 +652,18 @@ void Convex::initFromCamera(const RenderCamera &camera)
 	m_planes[5].normal().normalize();
 	p = camera.m_vpInverse * Vector3(0, 0, -1);
 	m_planes[5].fitThroughPoint(p);
-}
 
-void Convex::initFromCamera(const RenderCamera &shadowCamera, const RenderCamera &visCamera)
-{
-	const Convex &visConvex = visCamera.m_convex;
-
-	initFromCamera(shadowCamera);
-	return;
-
-	if (!r_csmClipCamera.getBool())
+	if (camera.isOrthoProjection())
 		return;
 
-	if (shadowCamera.isOrthoProjection()) {
-		const Vector3 &forward = shadowCamera.viewAxis()[0];
-		bool planevis[MAX_PLANES];
-
-		for (int i = 0; i < visConvex.m_numPlanes; i++) {
-			float dot = forward | visConvex.m_planes[i].getNormal();
-			if (dot > 0) {
-				planevis[i] = false;
-				continue;
-			}
-			planevis[i] = true;
-			m_planes[m_numPlanes++] = visConvex.m_planes[i];
-		}
-	} else {
-		initFromCamera(shadowCamera);
+	p = camera.origin();
+	float d = 0;
+	for (int i = 0; i < 4; i++) {
+		d = std::max(d, m_planes[i].distance(p));
 	}
-
+	if (fabsf(d) > 1e-3) {
+//		Errorf("check error");
+	}
 }
 
 AX_END_NAMESPACE

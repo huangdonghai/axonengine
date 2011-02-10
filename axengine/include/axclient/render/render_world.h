@@ -41,8 +41,8 @@ public:
 
 	void expandBbox(const BoundingBox &rhs)
 	{
-		if (bbox.contains(rhs))
-			return;
+//		if (bbox.contains(rhs))
+//			return;
 
 		bbox.unite(rhs);
 
