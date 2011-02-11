@@ -5,7 +5,7 @@ AX_BEGIN_NAMESPACE
 
 struct DX9_Resource {
 	enum Type {
-		kTexture, kRenderTarget, kVertexBuffer, kIndexBuffer, kWindow
+		kTexture, kRenderTarget, kVertexBuffer, kIndexBuffer, kWindow, kOcclusionQuery
 	};
 
 	DX9_Resource(Type type, IUnknown *obj) : m_type(type), m_obj(obj), m_level0(0)
@@ -26,6 +26,7 @@ struct DX9_Resource {
 		IDirect3DCubeTexture9 *m_textureCube;
 		IDirect3DVertexBuffer9 *m_vertexBuffer;
 		IDirect3DIndexBuffer9 *m_indexBuffer;
+		IDirect3DQuery9 *m_query;
 		DX9_Window *m_window;
 	};
 

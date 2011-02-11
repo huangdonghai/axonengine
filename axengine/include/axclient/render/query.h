@@ -13,38 +13,25 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-struct AsyncQuery {
-	AtomicInt m_atomic;
-	int m_queryFrame;
-	int m_resultFrame;
-	int m_result;
-};
-
 class AX_API Query
 {
+	friend class RenderContext;
+
 public:
-	enum QueryType {
-		QueryType_Vis,
-		QueryType_Shadow,
-		QueryType_Number
-	};
+	bool isWaitingResult() const { return m_result == -1; }
+	void issueVisQuery(int frameId, const BoundingBox &bbox);
+	void issueCsmQuery(int frameId, const BoundingBox &bbox);
 
-	friend class BlockAlloc<Query>;
-
+private:
+	// only create and delete by RenderContext
 	Query();
 	virtual ~Query();
 
-	void setType(QueryType type) { m_type = type; }
-	QueryType getType() const { return m_type; }
-	void issueQuery(int frameId, const BoundingBox &bbox);
-
-protected:
-	QueryType m_type;
-
 public:
+	phandle_t m_handle;
 	int m_queryFrame;
-	int m_resultFrame;
-	int m_result;
+	BoundingBox m_bbox;
+	volatile int m_result;
 };
 
 #if 0

@@ -26,10 +26,8 @@ RenderEntity::RenderEntity(Kind k)
 	m_affineMat.setIdentity();
 	m_instanceParam.set(1,1,1,1);
 
-	m_visQuery = new Query();
-	m_visQuery->setType(Query::QueryType_Vis);
-	m_shadowQuery = new Query();
-	m_shadowQuery->setType(Query::QueryType_Shadow);
+	m_visQuery = g_renderContext->createOcclusionQuery();
+	m_shadowQuery = g_renderContext->createOcclusionQuery();
 
 	m_viewDistCulled = false;
 	m_queryCulled = false;
@@ -40,8 +38,8 @@ RenderEntity::RenderEntity(Kind k)
 
 RenderEntity::~RenderEntity()
 {
-	delete(m_shadowQuery);
-	delete(m_visQuery);
+	g_renderContext->freeOcclusionQuery(m_shadowQuery);
+	g_renderContext->freeOcclusionQuery(m_visQuery);
 
 	if (m_world) {
 		m_world->removeEntity(this);
@@ -191,12 +189,12 @@ void RenderEntity::calculateLod(RenderScene *qscene)
 
 	int worldframe = m_world->getVisFrameId();
 
-	if (m_visQuery->m_resultFrame < 0) {
-		m_visQuery->issueQuery(worldframe, m_linkedBbox);
+	if (!m_visQuery->isWaitingResult()) {
+		m_visQuery->issueVisQuery(worldframe, m_linkedBbox);
 		return;
 	}
 
-	if (worldframe - m_visQuery->m_resultFrame < 20) {
+	if (worldframe - m_visQuery->m_queryFrame < 20) {
 		if (m_visQuery->m_result == 0) {
 			// if is occluded, query every frame to avoid flick
 			m_queryCulled = true;
@@ -206,8 +204,8 @@ void RenderEntity::calculateLod(RenderScene *qscene)
 
 	updateframe = Math::clamp(updateframe, 0, 20);
 
-	if (worldframe - m_visQuery->m_resultFrame >= updateframe) {
-		m_visQuery->issueQuery(worldframe, m_linkedBbox);
+	if (worldframe - m_visQuery->m_queryFrame >= updateframe) {
+		m_visQuery->issueVisQuery(worldframe, m_linkedBbox);
 	}
 }
 
@@ -224,10 +222,10 @@ void RenderEntity::updateCsm(RenderScene *qscene)
 	if (!r_csmCull.getBool())
 		return;
 
-	if (m_shadowQuery->m_resultFrame == m_world->getShadowFrameId())
+	if (m_shadowQuery->m_queryFrame == m_world->getShadowFrameId())
 		return;
 
-	m_shadowQuery->issueQuery(m_world->getShadowFrameId(), m_linkedBbox);
+	m_shadowQuery->issueCsmQuery(m_world->getShadowFrameId(), m_linkedBbox);
 }
 
 bool RenderEntity::isCsmCulled() const
@@ -235,10 +233,10 @@ bool RenderEntity::isCsmCulled() const
 	if (!r_csmCull.getBool())
 		return false;
 
-	if (m_shadowQuery->m_resultFrame < 0)
+	if (m_shadowQuery->isWaitingResult())
 		return false;
 
-	if (m_shadowQuery->m_resultFrame != m_world->getShadowFrameId())
+	if (m_shadowQuery->m_queryFrame != m_world->getShadowFrameId())
 		return false;
 
 	return m_shadowQuery->m_result == 0;

@@ -392,10 +392,9 @@ void RenderWorld::markVisible_r(RenderScene *qscene, QuadNode *node, Plane::Side
 		if (m_updateShadowVis)
 			entity->updateCsm(qscene);
 
-#if 0
 		if (entity->m_viewDistCulled)
 			continue;
-#endif
+
 		// check if is light
 		if (entity->getKind() == RenderEntity::kLight || s_drawEntity)
 			qscene->addEntity(entity);

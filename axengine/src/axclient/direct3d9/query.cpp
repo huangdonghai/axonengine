@@ -14,20 +14,32 @@ AX_BEGIN_NAMESPACE
 
 Query::Query()
 {
-	m_queryFrame = -1;
-	m_resultFrame = -1;
+	m_queryFrame = 0;
 	m_result = 0;
+	g_apiWrap->createQuery(m_handle);
 }
 
 Query::~Query()
 {
+	g_apiWrap->deleteQuery(m_handle);
 }
 
-void Query::issueQuery(int frameId, const BoundingBox &bbox)
+void Query::issueVisQuery(int frameId, const BoundingBox &bbox)
 {
-	// TODO
-//	g_queryManager->issueQuery(this, frameId, bbox);
+	m_queryFrame = frameId;
+	m_bbox = bbox;
+	m_result = -1;
+	g_renderContext->addVisQuery(this);
 }
+
+void Query::issueCsmQuery( int frameId, const BoundingBox &bbox )
+{
+	m_queryFrame = frameId;
+	m_bbox = bbox;
+	m_result = -1;
+	g_renderContext->addCsmQuery(this);
+}
+
 
 #if 0
 QueryManager::QueryManager()

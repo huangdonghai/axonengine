@@ -21,8 +21,12 @@ void (*RenderApi::createWindowTarget)(phandle_t h, Handle hwnd, int width, int h
 void (*RenderApi::updateWindowTarget)(phandle_t h, Handle newHwnd, int width, int height);
 void (*RenderApi::deleteWindowTarget)(phandle_t h);
 
-void (*RenderApi::beginPix)(const char *pixname);
-void (*RenderApi::endPix)();
+void (*RenderApi::createQuery)(phandle_t &h);
+void (*RenderApi::issueQueries)(int n, Query *queries[]);
+void (*RenderApi::deleteQuery)(phandle_t h);
+
+void (*RenderApi::beginPerfEvent)(const char *pixname);
+void (*RenderApi::endPerfEvent)();
 
 void (*RenderApi::setTargetSet)(phandle_t targetSet[RenderTargetSet::MaxTarget], int slices[RenderTargetSet::MaxTarget]);
 
@@ -517,21 +521,47 @@ void ApiWrap::clear(const RenderClearer &clearer)
 #endif
 }
 
-void ApiWrap::beginPix(const char *pixname)
+void ApiWrap::createQuery(phandle_t &h)
 {
+	h = newHandle();
 #if AX_MTRENDER
-	AllocCommand_(RenderApi::beginPix).args(pixname);
+	AllocCommand_(RenderApi::createQuery).args(h);
 #else
-	RenderApi::beginPix(pixname);
+	RenderApi::createQuery(h);
 #endif
 }
 
-void ApiWrap::endPix()
+void ApiWrap::issueQueries(int n, Query *queries[])
 {
 #if AX_MTRENDER
-	AllocCommand_(RenderApi::endPix).args();
+	Query **newData = allocType<Query *>(n);
+	memcpy(newData, queries, n * sizeof(Query));
+	AllocCommand_(RenderApi::issueQueries).args(n, newData);
 #else
-	RenderApi::endPix();
+	RenderApi::issueQueries(n, queries);
+#endif
+}
+
+void ApiWrap::deleteQuery(phandle_t h)
+{
+	addObjectDeletion(RenderApi::deleteQuery, h);
+}
+
+void ApiWrap::beginPerfEvent(const char *pixname)
+{
+#if AX_MTRENDER
+	AllocCommand_(RenderApi::beginPerfEvent).args(pixname);
+#else
+	RenderApi::beginPerfEvent(pixname);
+#endif
+}
+
+void ApiWrap::endPerfEvent()
+{
+#if AX_MTRENDER
+	AllocCommand_(RenderApi::endPerfEvent).args();
+#else
+	RenderApi::endPerfEvent();
 #endif
 }
 

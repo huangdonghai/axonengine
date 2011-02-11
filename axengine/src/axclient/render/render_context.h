@@ -26,10 +26,6 @@ struct MeshUP {
 class RenderContext
 {
 public:
-	enum {
-		NUM_TONEMAP_TEXTURES = 4,
-		NUM_BLOOM_TEXTURES = 3,
-	};
 	RenderContext();
 	~RenderContext();
 
@@ -48,7 +44,15 @@ public:
 		g_constBuffers.setField(name, sizeof(Q), reinterpret_cast<const float *>(&q));
 	}
 
+	// occlusion query
+	Query *createOcclusionQuery();
+	void freeOcclusionQuery(Query *);
+	void addVisQuery(Query *);
+	void addCsmQuery(Query *);
+
 protected:
+	void issueVisQueries();
+	void issueCsmQueries();
 	void checkBufferSize(int width, int height);
 	void cacheScene(RenderScene *scene);
 	void cacheFrame(RenderFrame *queue);
@@ -76,9 +80,6 @@ protected:
 	void drawScene_WorldSub(RenderScene *scene);
 	void drawScene_Noworld(RenderScene *scene, const RenderClearer &clearer);
 
-	void issueVisQuery();
-	void issueShadowQuery();
-
 	void setMaterial(Material *mat);
 	void setConstBuffers();
 
@@ -86,7 +87,10 @@ protected:
 
 private:
 	enum {
-		NUM_CHARS_PER_BATCH = 64
+		NUM_TONEMAP_TEXTURES = 4,
+		NUM_BLOOM_TEXTURES = 3,
+		NUM_CHARS_PER_BATCH = 64,
+		NUM_QUERIES = 1024 * 8
 	};
 	BlendVertex m_fontVerts[NUM_CHARS_PER_BATCH*4];
 	ushort_t m_fontIndices[NUM_CHARS_PER_BATCH*6];
@@ -100,6 +104,13 @@ private:
 	RenderThread *m_renderThread;
 	RenderTarget *m_bloomMap[NUM_BLOOM_TEXTURES];
 	RenderTarget *m_toneMap[NUM_TONEMAP_TEXTURES];
+
+	// occlusion query
+	int m_numVisQueries;
+	Query *m_visQueries[NUM_QUERIES];
+	int m_numCsmQueries;
+	Query *m_csmQueries[NUM_QUERIES];
+	std::list<Query *> m_deferredDeleteQueries;
 
 	// runtime
 	RenderTarget *m_curWindow;

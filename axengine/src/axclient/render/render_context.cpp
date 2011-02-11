@@ -240,8 +240,8 @@ void RenderContext::drawScene(RenderScene *scene, const RenderClearer &clearer)
 	}
 }
 
-#define BEGIN_PIX(x) g_apiWrap->beginPix(x)
-#define END_PIX() g_apiWrap->endPix()
+#define BEGIN_PIX(x) g_apiWrap->beginPerfEvent(x)
+#define END_PIX() g_apiWrap->endPerfEvent()
 
 void RenderContext::drawScene_World(RenderScene *scene, const RenderClearer &clearer)
 {
@@ -511,7 +511,7 @@ void RenderContext::drawPass_ShadowGen(RenderScene *scene)
 		m_blendDesc.renderTargetWriteMask = 0xf;
 
 		if (scene->isLastCsmSplits())
-			issueShadowQuery();
+			issueCsmQueries();
 
 		//unsetScene(scene);
 
@@ -727,16 +727,6 @@ void RenderContext::setupScene(RenderScene *scene, const RenderClearer *clearer,
 	} else {
 		m_isReflecting = false;
 	}
-}
-
-void RenderContext::issueVisQuery()
-{
-
-}
-
-void RenderContext::issueShadowQuery()
-{
-
 }
 
 
@@ -1212,5 +1202,45 @@ void RenderContext::drawChars(int count)
 {
 	drawUP(m_fontVerts, VertexType::kBlend, count * 4, m_fontIndices, ElementType_TriList, count * 6, m_mtrFont, Technique::Main);
 }
+
+Query * RenderContext::createOcclusionQuery()
+{
+	return new Query();
+}
+
+void RenderContext::freeOcclusionQuery(Query *query)
+{
+	if (!query->isWaitingResult()) {
+		delete query;
+		return;
+	}
+	m_deferredDeleteQueries.push_back(query);
+}
+
+
+void RenderContext::addVisQuery(Query *query)
+{
+	AX_ASSERT(m_numVisQueries < NUM_QUERIES);
+	m_visQueries[m_numVisQueries] = query;
+	m_numVisQueries++;
+}
+
+void RenderContext::addCsmQuery(Query *query)
+{
+	AX_ASSERT(m_numCsmQueries < NUM_QUERIES);
+	m_csmQueries[m_numCsmQueries] = query;
+	m_numCsmQueries++;
+}
+
+void RenderContext::issueVisQueries()
+{
+	g_apiWrap->issueQueries(m_numVisQueries, m_visQueries);
+}
+
+void RenderContext::issueCsmQueries()
+{
+	g_apiWrap->issueQueries(m_numCsmQueries, m_csmQueries);
+}
+
 
 AX_END_NAMESPACE

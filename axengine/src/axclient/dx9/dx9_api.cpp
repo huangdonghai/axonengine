@@ -200,12 +200,12 @@ static void sUploadTexture(phandle_t h, int level, const void *pixels, TexFormat
 	SAFE_RELEASE(surface);
 }
 
-void dx9UploadTexture(phandle_t h, const void *pixels, TexFormat format)
+static void dx9UploadTexture(phandle_t h, const void *pixels, TexFormat format)
 {
 	sUploadTexture(h, 0, pixels, format);
 }
 
-void dx9UploadSubTexture(phandle_t h, const Rect &rect, const void *pixels, TexFormat format)
+static void dx9UploadSubTexture(phandle_t h, const Rect &rect, const void *pixels, TexFormat format)
 {
 	AX_ASSERT(h && *h);
 	AX_ASSERT(format);
@@ -239,7 +239,7 @@ void dx9UploadSubTexture(phandle_t h, const Rect &rect, const void *pixels, TexF
 	SAFE_RELEASE(surface);
 }
 
-void dx9DeleteTexture(phandle_t h)
+static void dx9DeleteTexture(phandle_t h)
 {
 	DX9_Resource *resource = h->castTo<DX9_Resource *>();
 	AX_ASSERT(resource->m_type == DX9_Resource::kTexture);
@@ -248,7 +248,7 @@ void dx9DeleteTexture(phandle_t h)
 	delete h;
 }
 
-void dx9GenerateMipmap(phandle_t h)
+static void dx9GenerateMipmap(phandle_t h)
 {
 	DX9_Resource *resource = h->castTo<DX9_Resource *>();
 	AX_ASSERT(resource->m_type == DX9_Resource::kTexture);
@@ -309,7 +309,7 @@ void dx9GenerateMipmap(phandle_t h)
 	dx9DeleteTexture(&dum);
 }
 
-void dx9CreateVertexBuffer(phandle_t h, int datasize, Primitive::Hint hint)
+static void dx9CreateVertexBuffer(phandle_t h, int datasize, Primitive::Hint hint)
 {
 	DWORD d3dusage = D3DUSAGE_WRITEONLY;
 	D3DPOOL d3dpool = D3DPOOL_DEFAULT;
@@ -328,7 +328,7 @@ void dx9CreateVertexBuffer(phandle_t h, int datasize, Primitive::Hint hint)
 	stat_vertexBufferMemory.add(datasize);
 }
 
-void dx9UploadVertexBuffer(phandle_t h, int datasize, const void *p)
+static void dx9UploadVertexBuffer(phandle_t h, int datasize, const void *p)
 {
 	DX9_Resource *resource = h->castTo<DX9_Resource *>();
 	AX_ASSERT(resource->m_type = DX9_Resource::kVertexBuffer);
@@ -344,7 +344,7 @@ void dx9UploadVertexBuffer(phandle_t h, int datasize, const void *p)
 	V(obj->Unlock());
 }
 
-void dx9DeleteVertexBuffer(phandle_t h)
+static void dx9DeleteVertexBuffer(phandle_t h)
 {
 	DX9_Resource *resource = h->castTo<DX9_Resource *>();
 	AX_ASSERT(resource->m_type = DX9_Resource::kVertexBuffer);
@@ -353,7 +353,7 @@ void dx9DeleteVertexBuffer(phandle_t h)
 	delete h;
 }
 
-void dx9CreateIndexBuffer(phandle_t h, int datasize, Primitive::Hint hint)
+static void dx9CreateIndexBuffer(phandle_t h, int datasize, Primitive::Hint hint)
 {
 	DWORD d3dusage = D3DUSAGE_WRITEONLY;
 	D3DPOOL d3dpool = D3DPOOL_DEFAULT;
@@ -372,7 +372,7 @@ void dx9CreateIndexBuffer(phandle_t h, int datasize, Primitive::Hint hint)
 	stat_indexBufferMemory.add(datasize);
 }
 
-void dx9UploadIndexBuffer(phandle_t h, int datasize, const void *p)
+static void dx9UploadIndexBuffer(phandle_t h, int datasize, const void *p)
 {
 	DX9_Resource *resource = h->castTo<DX9_Resource *>();
 	AX_ASSERT(resource->m_type == DX9_Resource::kIndexBuffer);
@@ -388,7 +388,7 @@ void dx9UploadIndexBuffer(phandle_t h, int datasize, const void *p)
 	V(obj->Unlock());
 }
 
-void dx9DeleteIndexBuffer(phandle_t h)
+static void dx9DeleteIndexBuffer(phandle_t h)
 {
 	DX9_Resource *resource = h->castTo<DX9_Resource *>();
 	AX_ASSERT(resource->m_type == DX9_Resource::kIndexBuffer);
@@ -396,14 +396,14 @@ void dx9DeleteIndexBuffer(phandle_t h)
 	delete h;
 }
 
-void dx9CreateWindowTarget(phandle_t h, Handle hwnd, int width, int height)
+static void dx9CreateWindowTarget(phandle_t h, Handle hwnd, int width, int height)
 {
 	DX9_Window *window = new DX9_Window(hwnd, width, height);
 	DX9_Resource *resource = new DX9_Resource(DX9_Resource::kWindow, window);
 	*h = resource;
 }
 
-void dx9UpdateWindowTarget(phandle_t h, Handle newHwnd, int width, int height)
+static void dx9UpdateWindowTarget(phandle_t h, Handle newHwnd, int width, int height)
 {
 	DX9_Resource *resource = h->castTo<DX9_Resource *>();
 	AX_ASSERT(resource->m_type == DX9_Resource::kWindow);
@@ -412,7 +412,7 @@ void dx9UpdateWindowTarget(phandle_t h, Handle newHwnd, int width, int height)
 	window->update(newHwnd, width, height);
 }
 
-void dx9DeleteWindowTarget(phandle_t h)
+static void dx9DeleteWindowTarget(phandle_t h)
 {
 	DX9_Resource *resource = h->castTo<DX9_Resource *>();
 	AX_ASSERT(resource->m_type == DX9_Resource::kWindow);
@@ -420,12 +420,49 @@ void dx9DeleteWindowTarget(phandle_t h)
 	delete h;
 }
 
-void dx9BeginPix(const char *pixname)
+static void dx9CreateQuery(phandle_t &h)
+{
+	IDirect3DQuery9 *query = 0;
+	V(dx9_device->CreateQuery(D3DQUERYTYPE_OCCLUSION, &query));
+	DX9_Resource *resource = new DX9_Resource(DX9_Resource::kOcclusionQuery, query);
+	*h = resource;
+}
+
+static void dx9SetShader(const FixedString &name, const GlobalMacro &gm, const MaterialMacro &mm, Technique tech);
+static void dx9SetRenderState(const DepthStencilDesc &dsd, const RasterizerDesc &rd, const BlendDesc &bd);
+
+static void dx9IssueQueries(int n, Query *queries[])
+{
+	return;
+
+	dx9SetShader("_query", GlobalMacro(), MaterialMacro(), Technique::Main);
+	dx9_stateManager->setVertexDeclaration(dx9_vertexDeclarations[VertexType::kChunk]);
+	//dx9SetRenderState();
+
+	s_curShader->begin(s_curTechnique);
+	s_curShader->beginPass(0);
+
+	// setup vertice
+
+	// draw
+	V(dx9_device->DrawIndexedPrimitiveUP(D3DPT_TRIANGLELIST, 0, 8, 12, s_curIndiceBufferUP, D3DFMT_INDEX16, s_curVerticeBufferUP, sizeof(ChunkVertex)));
+
+}
+
+static void dx9DeleteQuery(phandle_t h)
+{
+	DX9_Resource *resource = h->castTo<DX9_Resource *>();
+	AX_ASSERT(resource->m_type == DX9_Resource::kOcclusionQuery);
+	delete resource;
+	delete h;
+}
+
+static void dx9BeginPix(const char *pixname)
 {
 	D3DPERF_BeginEvent(D3DCOLOR_RGBA(0,0,0,255), u2w(pixname).c_str());
 }
 
-void dx9EndPix()
+static void dx9EndPix()
 {
 	D3DPERF_EndEvent();
 }
@@ -643,22 +680,6 @@ static void dx9SetRenderState(const DepthStencilDesc &dsd, const RasterizerDesc 
 	dx9_stateManager->setDepthStencilState(dsd);
 	dx9_stateManager->setRasterizerState(rd);
 	dx9_stateManager->setBlendState(bd);
-#if 0
-	if (dsd != s_curDepthStencilDesc) {
-		s_curDepthStencilDesc = dsd;
-		DX9_DepthStencilState::find(dsd)->apply();
-	}
-
-	if (rd != s_curRasterizerDesc) {
-		s_curRasterizerDesc = rd;
-		DX9_RasterizerState::find(rd)->apply();
-	}
-
-	if (bd != s_curBlendDesc) {
-		s_curBlendDesc = bd;
-		DX9_BlendState::find(bd)->apply();
-	}
-#endif
 }
 
 
@@ -741,8 +762,12 @@ void dx9AssignRenderApi()
 	RenderApi::updateWindowTarget = &dx9UpdateWindowTarget;
 	RenderApi::deleteWindowTarget = &dx9DeleteWindowTarget;
 
-	RenderApi::beginPix = &dx9BeginPix;
-	RenderApi::endPix = &dx9EndPix;
+	RenderApi::createQuery = &dx9CreateQuery;
+	RenderApi::issueQueries = &dx9IssueQueries;
+	RenderApi::deleteQuery = &dx9DeleteQuery;
+
+	RenderApi::beginPerfEvent = &dx9BeginPix;
+	RenderApi::endPerfEvent = &dx9EndPix;
 
 	RenderApi::setTargetSet = &dx9SetTargetSet;
 

@@ -26,8 +26,12 @@ public:
 	static void (*updateWindowTarget)(phandle_t h, Handle newHwnd, int width, int height);
 	static void (*deleteWindowTarget)(phandle_t h);
 
-	static void (*beginPix)(const char *pixname);
-	static void (*endPix)();
+	static void (*createQuery)(phandle_t &h);
+	static void (*issueQueries)(int n, Query *queries[]);
+	static void (*deleteQuery)(phandle_t h);
+
+	static void (*beginPerfEvent)(const char *pixname);
+	static void (*endPerfEvent)();
 
 	static void (*setTargetSet)(phandle_t targetSet[RenderTargetSet::MaxTarget], int slices[RenderTargetSet::MaxTarget]);
 
@@ -105,11 +109,11 @@ public:
 	void deleteWindowTarget(phandle_t h);
 
 	void createQuery(phandle_t &h);
-	void issueQuery(phandle_t h, AsyncQuery *asioQuery);
+	void issueQueries(int n, Query *queries[]);
 	void deleteQuery(phandle_t h);
 
-	void beginPix(const char *pixname);
-	void endPix();
+	void beginPerfEvent(const char *pixname);
+	void endPerfEvent();
 
 	void setTargetSet(const RenderTargetSet &target_set);
 
