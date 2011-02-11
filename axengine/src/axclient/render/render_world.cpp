@@ -147,7 +147,7 @@ void RenderWorld::renderTo(RenderScene *qscene)
 	// outdoor environment
 	if (m_outdoorEnv) {
 		if (qscene->sceneType == RenderScene::WorldMain) {
-			m_outdoorEnv->update(qscene);
+			m_outdoorEnv->update(qscene, false);
 		}
 
 		qscene->addEntity(m_outdoorEnv);
@@ -162,7 +162,7 @@ void RenderWorld::renderTo(RenderScene *qscene)
 	// terrain
 	if (m_terrain && r_terrain.getBool() && s_drawTerrain) {
 		if (qscene->sceneType == RenderScene::WorldMain) {
-			m_terrain->update(qscene);
+			m_terrain->update(qscene, false);
 		}
 
 		m_terrain->issueToScene(qscene);
@@ -177,9 +177,8 @@ void RenderWorld::renderTo(RenderScene *qscene)
 		side = Plane::Front;
 	}
 
-	if (s_drawEntity) {
+	if (s_drawEntity)
 		markVisible_r(qscene, m_rootNode, side);
-	}
 
 	// issue entity manager
 	for (int i = 0; i < g_renderSystem->getNumEntityManager(); i++) {
@@ -191,9 +190,8 @@ void RenderWorld::renderTo(RenderScene *qscene)
 
 	qscene->finalProcess();
 
-	if (qscene->sceneType != RenderScene::WorldMain) {
+	if (qscene->sceneType != RenderScene::WorldMain)
 		return;
-	}
 
 	stat_worldGlobalLights.setInt(qscene->globalLight ? 1 : 0);
 	stat_worldLights.setInt(qscene->numLights);
@@ -230,9 +228,8 @@ void RenderWorld::renderTo(RenderScene *qscene)
 	for (int i = 0; i < qscene->numSubScenes; i++) {
 		// render to texture no world
 		RenderScene *subscene = qscene->subScenes[i];
-		if (subscene->sceneType == RenderScene::RenderToTexture) {
+		if (subscene->sceneType == RenderScene::RenderToTexture)
 			continue;
-		}
 
 		QuadNode *node = m_rootNode;
 
@@ -291,7 +288,7 @@ void RenderWorld::renderTo(RenderScene *qscene, QuadNode *node)
 	// outdoor environment
 	if (m_outdoorEnv) {
 		if (qscene->sceneType == RenderScene::WorldMain) {
-			m_outdoorEnv->update(qscene);
+			m_outdoorEnv->update(qscene, false);
 		}
 
 		qscene->addEntity(m_outdoorEnv);
@@ -306,7 +303,7 @@ void RenderWorld::renderTo(RenderScene *qscene, QuadNode *node)
 	// terrain
 	if (m_terrain && r_terrain.getBool() && s_drawTerrain) {
 		if (qscene->sceneType == RenderScene::WorldMain) {
-			m_terrain->update(qscene);
+			m_terrain->update(qscene, false);
 		}
 		m_terrain->issueToScene(qscene);
 	}
@@ -337,7 +334,7 @@ void RenderWorld::renderTo(RenderScene *qscene, QuadNode *node)
 // mark visible
 void RenderWorld::markVisible_r(RenderScene *qscene, QuadNode *node, Plane::Side parentSide)
 {
-	if (node == NULL)
+	if (!node)
 		return;
 
 	if (node->bbox.empty())
@@ -356,24 +353,23 @@ void RenderWorld::markVisible_r(RenderScene *qscene, QuadNode *node, Plane::Side
 #endif
 	for (IntrusiveList<RenderEntity>::iterator it = node->linkHead.begin(); it != node->linkHead.end(); ++it) {
 		RenderEntity *entity = &*it;
-		if (qscene->sceneType == RenderScene::ShadowGen && qscene->sourceLight->lightType() == RenderLight::kGlobal) {
+		if (qscene->sceneType == RenderScene::ShadowGen && qscene->sourceLight->isGlobal()) {
 			if (entity->isCsmCulled()) {
 				stat_csmCulled.inc();
 				continue;
 			} else {
-				// g_statistic->incValue(stat_csmPassed);
 				stat_csmPassed.inc();
 			}
 		}
 
 		const BoundingBox &bbox = entity->m_linkedBbox;
 
+		Plane::Side actorSide = side;
 		if (r_lockPvs.getBool() && qscene->sceneType == RenderScene::WorldMain) {
 			if (entity->m_visFrameId != m_visFrameId - 1)
 				continue;
 		} else {
 			// if node is cross frustum, we check entity's bbox
-			Plane::Side actorSide = side;
 			if (side == Plane::Cross && r_cullEntity.getBool()) {
 				actorSide = cam.checkBox(bbox);
 				if (actorSide == Plane::Back) {
@@ -382,15 +378,18 @@ void RenderWorld::markVisible_r(RenderScene *qscene, QuadNode *node, Plane::Side
 			}
 		}
 
+		bool allInFrustum = actorSide == Plane::Front;
 		if (qscene->sceneType == RenderScene::WorldMain) {
-			entity->update(qscene);
+			entity->update(qscene, allInFrustum);
 
-			if (entity->m_queryCulled)
+			if (entity->m_queryCulled) {
+				stat_numVisQueryCulled.inc();
 				continue;
+			}
 		}
 
 		if (m_updateShadowVis)
-			entity->updateCsm(qscene);
+			entity->updateCsm(qscene, allInFrustum);
 
 		if (entity->m_viewDistCulled)
 			continue;

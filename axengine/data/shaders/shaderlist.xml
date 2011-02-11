@@ -5,6 +5,7 @@
   <item>_pointlight</item>
   <item>_spotlight</item>
   <!--material effect-->
+  <item>_query</item>
   <item>_debug</item>
   <item>_skyNishita</item>
   <item>_skyNishitaGen</item>

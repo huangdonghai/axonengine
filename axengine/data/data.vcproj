@@ -249,6 +249,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\materials\_query.mtr"
+				>
+			</File>
+			<File
 				RelativePath=".\materials\_skybox.mtr"
 				>
 			</File>

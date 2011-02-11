@@ -101,6 +101,7 @@ private:
 	Material *m_mtrPointLight;
 	Material *m_mtrSpotLight;
 	Material *m_mtrFont;
+	Material *m_mtrQuery;
 	RenderThread *m_renderThread;
 	RenderTarget *m_bloomMap[NUM_BLOOM_TEXTURES];
 	RenderTarget *m_toneMap[NUM_TONEMAP_TEXTURES];

@@ -535,7 +535,7 @@ void ApiWrap::issueQueries(int n, Query *queries[])
 {
 #if AX_MTRENDER
 	Query **newData = allocType<Query *>(n);
-	memcpy(newData, queries, n * sizeof(Query));
+	memcpy(newData, queries, n * sizeof(Query *));
 	AllocCommand_(RenderApi::issueQueries).args(n, newData);
 #else
 	RenderApi::issueQueries(n, queries);

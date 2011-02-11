@@ -119,9 +119,9 @@ Matrix4 RenderEntity::getModelMatrix() const
 	return m_affineMat.toMatrix4();
 }
 
-void RenderEntity::update(RenderScene *qscene)
+void RenderEntity::update(RenderScene *qscene, bool allInFrustum)
 {
-	calculateLod(qscene);
+	calculateLod(qscene, allInFrustum);
 
 	frameUpdate(qscene);
 
@@ -134,7 +134,7 @@ void RenderEntity::frameUpdate(RenderScene *qscene)
 	// do nothing
 }
 
-void RenderEntity::calculateLod(RenderScene *qscene)
+void RenderEntity::calculateLod(RenderScene *qscene, bool allInFrustum)
 {
 	if (!m_world)
 		return;
@@ -169,28 +169,27 @@ void RenderEntity::calculateLod(RenderScene *qscene)
 
 	int hardwareQuery = r_hardwareQuery.getInteger();
 
-	if (hardwareQuery == 1) {
+	if (hardwareQuery == 1)
 		return;
-	}
 
 	m_queryCulled = false;
-	if (!hardwareQuery) {
+	if (!hardwareQuery)
 		return;
-	}
 
 	if (m_viewDistCulled)
 		return;
 
-	if (m_distance < 5) {
+	if (m_distance < 5)
 		return;
-	}
 
 	int updateframe = 1024 / ratio;
 
 	int worldframe = m_world->getVisFrameId();
 
-	if (!m_visQuery->isWaitingResult()) {
-		m_visQuery->issueVisQuery(worldframe, m_linkedBbox);
+	// if never queried, issue query
+	if (!m_visQuery->m_queryFrame) {
+		if (allInFrustum)
+			m_visQuery->issueVisQuery(worldframe, m_linkedBbox);
 		return;
 	}
 
@@ -202,10 +201,14 @@ void RenderEntity::calculateLod(RenderScene *qscene)
 		}
 	}
 
+	if (m_visQuery->isWaitingResult())
+		return;
+
 	updateframe = Math::clamp(updateframe, 0, 20);
 
 	if (worldframe - m_visQuery->m_queryFrame >= updateframe) {
-		m_visQuery->issueVisQuery(worldframe, m_linkedBbox);
+		if (allInFrustum)
+			m_visQuery->issueVisQuery(worldframe, m_linkedBbox);
 	}
 }
 
@@ -217,7 +220,7 @@ bool RenderEntity::isVisible() const
 	return m_visFrameId == m_world->getVisFrameId();
 }
 
-void RenderEntity::updateCsm(RenderScene *qscene)
+void RenderEntity::updateCsm(RenderScene *qscene, bool allInFrustum)
 {
 	if (!r_csmCull.getBool())
 		return;

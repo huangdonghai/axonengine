@@ -914,7 +914,7 @@ void D3D9Thread::issueShadowQuery()
 #if 0
 	g_statistic->setValue(stat_numShadowQuery, count);
 #else
-	stat_numShadowQuery.setInt(count);
+	stat_numCsmQuery.setInt(count);
 #endif
 }
 

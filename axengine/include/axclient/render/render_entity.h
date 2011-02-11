@@ -87,10 +87,10 @@ public:
 
 protected:
 	// only called by RenderWorld
-	void update(RenderScene *qscene);
-	void updateCsm(RenderScene *qscene);
+	void update(RenderScene *qscene, bool allInFrustum);
+	void updateCsm(RenderScene *qscene, bool allInFrustum);
 	bool isCsmCulled() const;
-	void calculateLod(RenderScene *qscene);
+	void calculateLod(RenderScene *qscene, bool allInFrustum);
 
 protected:
 	const Kind m_kind;

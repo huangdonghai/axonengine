@@ -145,6 +145,10 @@ RenderContext::RenderContext()
 	m_mtrFont->m_depthTest = false;
 	m_mtrFont->m_cullMode = RasterizerDesc::CullMode_None;
 
+	m_mtrQuery = new Material("_query");
+	m_mtrQuery->m_depthWrite = false;
+
+
 	m_hexahedron = 0;
 
 	for (int i = 0; i < NUM_CHARS_PER_BATCH; i++) {
@@ -155,6 +159,9 @@ RenderContext::RenderContext()
 		m_fontIndices[i*6+4] = i*4 + 3;
 		m_fontIndices[i*6+5] = i*4 + 0;
 	}
+
+	m_numVisQueries = 0;
+	m_numCsmQueries = 0;
 
 #if AX_MTRENDER
 	m_renderThread = new RenderThread();
@@ -227,6 +234,9 @@ void RenderContext::issueFrame(RenderFrame *rq)
 
 	stat_frameRenderCommand.setInt(Math::distant(startNumCmds, g_apiWrap->m_cmdWritePos));
 	stat_frameRingBufferSize.setInt(Math::distant(startBufPos, g_apiWrap->m_bufWritePos));
+
+	m_numVisQueries = 0;
+	m_numCsmQueries = 0;
 }
 
 void RenderContext::drawScene(RenderScene *scene, const RenderClearer &clearer)
@@ -396,7 +406,7 @@ void RenderContext::drawPass_GeoFill(RenderScene *scene)
 		drawInteraction(scene->interactions[i]);
 	}
 
-	//	unsetScene(scene, &clearer, s_gbuffer);
+	issueVisQueries();
 }
 
 void RenderContext::drawPass_Overlay(RenderScene *scene)
@@ -1234,12 +1244,39 @@ void RenderContext::addCsmQuery(Query *query)
 
 void RenderContext::issueVisQueries()
 {
+	stat_numVisQuery.setInt(m_numVisQueries);
+
+	g_apiWrap->beginPerfEvent("VisQueries");
+	g_apiWrap->setShader(m_mtrQuery->getShaderName(), m_mtrQuery->getShaderMacro(), Technique::Main);
+
+	setMaterial(m_mtrQuery);
+	uint_t oldWriteMask = m_blendDesc.renderTargetWriteMask;
+	m_blendDesc.renderTargetWriteMask = 0;
+	setConstBuffers();
+
 	g_apiWrap->issueQueries(m_numVisQueries, m_visQueries);
+
+	m_blendDesc.renderTargetWriteMask = oldWriteMask;
+
+	g_apiWrap->endPerfEvent();
 }
 
 void RenderContext::issueCsmQueries()
 {
+	stat_numCsmQuery.setInt(m_numCsmQueries);
+
+	g_apiWrap->beginPerfEvent("CsmQueries");
+	g_apiWrap->setShader(m_mtrQuery->getShaderName(), m_mtrQuery->getShaderMacro(), Technique::Main);
+
+	setMaterial(m_mtrQuery);
+	uint_t oldWriteMask = m_blendDesc.renderTargetWriteMask;
+	m_blendDesc.renderTargetWriteMask = 0;
+	setConstBuffers();
+
 	g_apiWrap->issueQueries(m_numCsmQueries, m_csmQueries);
+
+	m_blendDesc.renderTargetWriteMask = oldWriteMask;
+	g_apiWrap->endPerfEvent();
 }
 
 

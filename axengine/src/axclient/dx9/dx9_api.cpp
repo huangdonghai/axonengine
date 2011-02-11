@@ -431,21 +431,57 @@ static void dx9CreateQuery(phandle_t &h)
 static void dx9SetShader(const FixedString &name, const GlobalMacro &gm, const MaterialMacro &mm, Technique tech);
 static void dx9SetRenderState(const DepthStencilDesc &dsd, const RasterizerDesc &rd, const BlendDesc &bd);
 
+static void setupBoundingBoxIndices()
+{
+	static ushort_t s_idxes[] = {
+		0, 2, 1, 1, 2, 3,
+		2, 6, 3, 3, 6, 7,
+		6, 4, 7, 7, 4, 5,
+		4, 0, 5, 5, 0, 1,
+		1, 3, 5, 5, 3, 7,
+		0, 4, 2, 2, 4, 6
+	};
+
+	memcpy(s_curIndiceBufferUP, s_idxes, ArraySize(s_idxes) * sizeof(ushort_t));
+}
+
+static void setupBoundingBoxVertices(const BoundingBox &bbox)
+{
+	Vector3 *verts = (Vector3 *)s_curVerticeBufferUP;
+	for (int i = 0; i < 2; i++) {
+		for (int j = 0; j < 2; j++) {
+			for (int k = 0; k < 2; k++) {
+				verts[i*4+j*2+k].x = i == 0 ? bbox.min.x : bbox.max.x; 
+				verts[i*4+j*2+k].y = j == 0 ? bbox.min.y : bbox.max.y; 
+				verts[i*4+j*2+k].z = k == 0 ? bbox.min.z : bbox.max.z; 
+			}
+		}
+	}
+}
+static std::list<Query *> s_activeQueries;
+
 static void dx9IssueQueries(int n, Query *queries[])
 {
-	return;
-
-	dx9SetShader("_query", GlobalMacro(), MaterialMacro(), Technique::Main);
 	dx9_stateManager->setVertexDeclaration(dx9_vertexDeclarations[VertexType::kChunk]);
-	//dx9SetRenderState();
 
 	s_curShader->begin(s_curTechnique);
 	s_curShader->beginPass(0);
 
-	// setup vertice
+	setupBoundingBoxIndices();
+	for (int i = 0; i < n; i++) {
+		Query *query = queries[i];
+		DX9_Resource *resource = query->m_handle->castTo<DX9_Resource *>();
+		// setup vertice
+		setupBoundingBoxVertices(queries[i]->m_bbox);
 
-	// draw
-	V(dx9_device->DrawIndexedPrimitiveUP(D3DPT_TRIANGLELIST, 0, 8, 12, s_curIndiceBufferUP, D3DFMT_INDEX16, s_curVerticeBufferUP, sizeof(ChunkVertex)));
+		V(resource->m_query->Issue(D3DISSUE_BEGIN));
+		// draw
+		V(dx9_device->DrawIndexedPrimitiveUP(D3DPT_TRIANGLELIST, 0, 8, 12, s_curIndiceBufferUP, D3DFMT_INDEX16, s_curVerticeBufferUP, sizeof(ChunkVertex)));
+
+		V(resource->m_query->Issue(D3DISSUE_END));
+
+		s_activeQueries.push_back(query);
+	}
 
 }
 
@@ -731,6 +767,31 @@ static void dx9Clear(const RenderClearer &clearer)
 	dx9_device->Clear(0, 0, d3dclear, d3dcolor, clearer.depth, clearer.stencil);
 }
 
+static void dx9CheckQueryResult()
+{
+	dx9BeginPix("CheckQueryResult");
+
+	std::list<Query *>::iterator it = s_activeQueries.begin();
+
+	while (it != s_activeQueries.end()) {
+		Query *query = *it;
+		DX9_Resource *resource = query->m_handle->castTo<DX9_Resource *>();
+
+		DWORD numberOfPixelsDrawn;
+		HRESULT hr = resource->m_query->GetData(&numberOfPixelsDrawn, sizeof(numberOfPixelsDrawn), 0);
+
+		if (hr == S_OK) {
+			it = s_activeQueries.erase(it);
+			query->m_result = numberOfPixelsDrawn;
+			continue;
+		}
+
+		++it;
+	}
+
+	dx9EndPix();
+}
+
 static void dx9Present(phandle_t window)
 {
 	AX_ASSERT(window);
@@ -738,6 +799,7 @@ static void dx9Present(phandle_t window)
 	AX_ASSERT(resrouce->m_type == DX9_Resource::kWindow);
 	dx9_device->EndScene();
 	resrouce->m_window->present();
+	dx9CheckQueryResult();
 	dx9_device->BeginScene();
 }
 
