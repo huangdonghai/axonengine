@@ -185,7 +185,9 @@ template< class type >
 void Link<type>::setOwner( type *object ) {
 	m_owner = object;
 }
+#endif
 
+#if 0
 // Copyright 2009 Netease Inc. All Rights Reserved.
 // Author: tangxiliu@corp.netease.com (Tang Xi Liu)
 
@@ -513,7 +515,8 @@ private:
 	IntrusiveList(const IntrusiveList<T,link_ptr> &x);
 	IntrusiveList<T,link_ptr>& operator=(const IntrusiveList<T,link_ptr> &x);
 };
-#endif
+
+#else
 
 template <class type>
 class IntrusiveLink {
@@ -641,6 +644,8 @@ public:
 	// Insertion routines.
 	iterator insert(T *position, T *obj)
 	{
+		if (position == obj)
+			return iterator(obj);
 		IntrusiveLink<T> *objLink = obj2node(obj);
 		IntrusiveLink<T> *posLink = obj2node(position);
 		objLink->unlink();
@@ -657,11 +662,14 @@ public:
 		return insert(position.obj, obj);
 	}
 
-	void push_front(T *obj) { insert(front(), obj); }
-	void push_back(T *obj) { insert(end_obj(), obj); }
+	void push_front(T *obj)
+	{ insert(front(), obj); }
+	void push_back(T *obj)
+	{ insert(end_obj(), obj); }
 
 	// Removal routines.
-	iterator erase(T *obj) {
+	iterator erase(T *obj)
+	{
 		IntrusiveLink<T> *link = &(obj->*link_ptr);
 		IntrusiveLink<T> *next = link->next;
 		link->prev->next = link->next;
@@ -675,7 +683,8 @@ public:
 	void pop_back() { erase(back()); }
 
 	// Utility routines.
-	void clear() {
+	void clear()
+	{
 		iterator it = begin();
 		while (it != end())
 			it = erase(it);
@@ -691,6 +700,7 @@ private:
 	IntrusiveList(const IntrusiveList<T,link_ptr> &x);
 	IntrusiveList<T,link_ptr>& operator=(const IntrusiveList<T,link_ptr> &x);
 };
+#endif
 
 AX_END_NAMESPACE
 

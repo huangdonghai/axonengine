@@ -343,14 +343,14 @@ void RenderWorld::markVisible_r(RenderScene *qscene, QuadNode *node, Plane::Side
 	const RenderCamera &cam = qscene->camera;
 
 	Plane::Side side = parentSide;
-#if 1
+
 	if (side == Plane::Cross) {
 		side = cam.checkBox(node->bbox);
 		if (side == Plane::Back) {
 			return;
 		}
 	}
-#endif
+
 	for (IntrusiveList<RenderEntity>::iterator it = node->linkHead.begin(); it != node->linkHead.end(); ++it) {
 		RenderEntity *entity = &*it;
 		if (qscene->sceneType == RenderScene::ShadowGen && qscene->sourceLight->isGlobal()) {
@@ -364,21 +364,21 @@ void RenderWorld::markVisible_r(RenderScene *qscene, QuadNode *node, Plane::Side
 
 		const BoundingBox &bbox = entity->m_linkedBbox;
 
-		Plane::Side actorSide = side;
+		Plane::Side entitySide = side;
 		if (r_lockPvs.getBool() && qscene->sceneType == RenderScene::WorldMain) {
 			if (entity->m_visFrameId != m_visFrameId - 1)
 				continue;
 		} else {
 			// if node is cross frustum, we check entity's bbox
 			if (side == Plane::Cross && r_cullEntity.getBool()) {
-				actorSide = cam.checkBox(bbox);
-				if (actorSide == Plane::Back) {
+				entitySide = cam.checkBox(bbox);
+				if (entitySide == Plane::Back) {
 					continue;
 				}
 			}
 		}
 
-		bool allInFrustum = actorSide == Plane::Front;
+		bool allInFrustum = entitySide == Plane::Front;
 		if (qscene->sceneType == RenderScene::WorldMain) {
 			entity->update(qscene, allInFrustum);
 

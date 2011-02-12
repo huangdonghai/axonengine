@@ -7,25 +7,10 @@ By continuing to use, modify, or distribute this file you indicate that you have
 read the license and understand and accept it fully.
 */
 
-#ifndef AX_RENDER_QUEUE_H
-#define AX_RENDER_QUEUE_H
+#ifndef AX_RENDER_FRAME_H
+#define AX_RENDER_FRAME_H
 
 AX_BEGIN_NAMESPACE
-
-#if 0
-struct RenderScene {
-	RenderCamera camera;
-	RenderWorld *world;
-
-	Primitives primitives;
-
-	// overlay
-	Primitives overlays;
-};
-
-typedef shared_ptr<RenderScene> ScenePtr;
-typedef std::vector<ScenePtr> SceneSeq;
-#endif
 
 struct AX_API RenderScene
 {
@@ -72,7 +57,7 @@ struct AX_API RenderScene
 	bool isEyeInWater;
 
 	int numEntities;
-	RenderEntity *queuedEntities[MAX_ENTITIES];
+	RenderEntity *entities[MAX_ENTITIES];
 
 	int numPrimitives;
 	Primitive *primtives[MAX_PRIMITIVES];
@@ -142,54 +127,25 @@ public:
 
 	RenderTarget *getTarget();
 
-	// for providing thread
-#if 0
-	void beginProviding();
-#endif
 	MemoryStack *getMemoryStack();
 	void setTarget(RenderTarget *target);
 	RenderScene *allocScene();
 	void addScene(RenderScene *scene);
 	Interaction *allocInteraction();
-	Interaction **allocInteractionPointer(int num);
-#if 0
-	QueuedLight *allocQueuedLight();
-	QueuedEntity *allocQueuedActor(int num = 1);
-	int *allocPrimitives(int num);
-	void addDeferredDeleteResource(RenderData *rfr) { m_deferredDeleteResources.push_back(rfr); }
-	void addDeferredCommand(SyncMethod *cmd) { m_deferredCommand.push_back(cmd); }
-	void endProviding();
-#endif
 
 	template <class T>
 	T *allocType(int num = 1);
 
-	// for consuming thread
-#if 0
-	void beginConsuming();
-	void endSync();
-#endif
 	int getSceneCount() { return m_sceneCount; }
 	RenderScene *getScene(int index);
 	void clear();
-#if 0
-	void endConsuming();
-#endif
+
 private:
 	MemoryStack *m_stack;
 	RenderTarget *m_target;
 	int m_sceneCount;
 	RenderScene *m_queuedScenes[MAX_VIEW];
 	int m_sourceSceneCount;
-#if 0
-	RenderScene *m_sourceScenes[MAX_VIEW];
-	SyncEvent *m_providingEvent;
-	SyncEvent *m_consumingEvent;
-	SyncEvent *m_cacheEndEvent;
-
-	std::list<SyncMethod*> m_deferredCommand;
-	std::list<RenderData*> m_deferredDeleteResources;
-#endif
 };
 
 template <class T>
@@ -214,4 +170,4 @@ inline RenderTarget *RenderFrame::getTarget()
 
 AX_END_NAMESPACE
 
-#endif // AX_RENDER_QUEUE_H
+#endif // AX_RENDER_FRAME_H

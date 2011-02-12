@@ -226,6 +226,9 @@ void RenderEntity::updateCsm(RenderScene *qscene, bool allInFrustum)
 		return;
 
 	if (m_shadowQuery->m_queryFrame == m_world->getShadowFrameId())
+ 		return;
+
+	if (!allInFrustum)
 		return;
 
 	m_shadowQuery->issueCsmQuery(m_world->getShadowFrameId(), m_linkedBbox);

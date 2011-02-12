@@ -13,50 +13,18 @@ AX_BEGIN_NAMESPACE
 
 void RenderScene::addLight(RenderLight *light)
 {
-	if (numLights >= MAX_LIGHTS) {
-		Errorf("MAX_LIGHTS exceeded");
-#if 0
-		light->fillQueued(nullptr);
-#endif
-	}
+	AX_ASSURE(numLights < MAX_LIGHTS);
+	lights[numLights++] = light;
 
-	if (light->lightType() != RenderLight::kGlobal && !r_lightBuf.getBool()) {
-#if 0
-		light->fillQueued(nullptr);
-//			return 0;
-#endif
-	}
-#if 0
-	QueuedLight *ql = g_renderQueue->allocQueuedLight();
-#else
-	RenderLight *ql = light;
-#endif
-
-#if 0
-	ql->queuedEntity = light->getQueued();
-
-	light->fillQueued(ql);
-#endif
-	lights[numLights++] = ql;
-
-	if (light->lightType() == RenderLight::kGlobal) {
-		globalLight = ql;
-	}
+	if (light->isGlobal())
+		globalLight = light;
 }
 
 void RenderScene::addEntity(RenderEntity *entity)
 {
-	if (numEntities >= MAX_ENTITIES) {
-		Errorf("MAX_ENTITIES exceeded");
-	}
+	AX_ASSURE(numEntities < MAX_ENTITIES);
 
-#if 0
-	QueuedEntity *qe = g_renderQueue->allocQueuedActor();
-	entity->setQueued(qe);
-#endif
-
-	RenderEntity *qe = entity;
-	queuedEntities[numEntities++] = qe;
+	entities[numEntities++] = entity;
 
 	addHelperPrims(entity);
 
@@ -77,10 +45,7 @@ void RenderScene::addEntity(RenderEntity *entity)
 
 Interaction *RenderScene::addInteraction(RenderEntity *entity, Primitive *prim, bool chain)
 {
-	if (numInteractions == MAX_INTERACTIONS) {
-		Errorf("MAX_INTERACTIONS exceeded");
-		return 0;
-	}
+	AX_ASSURE(numInteractions < MAX_INTERACTIONS);
 
 	Interaction *ia = g_renderFrame->allocInteraction();
 	ia->primitive = prim;
@@ -107,11 +72,7 @@ Interaction *RenderScene::addInteraction(RenderEntity *entity, Primitive *prim, 
 bool RenderScene::addInteraction(Interaction *ia)
 {
 	interactions[numInteractions++] = ia;
-#if 0
-	if (globalLight) {
-		ia->addLight(globalLight);
-	}
-#endif
+
 	Material *mat = ia->primitive->getMaterial();
 	if (!mat) {
 		return true;
@@ -140,11 +101,6 @@ bool RenderScene::addInteraction(Interaction *ia)
 		return false;
 	}
 
-#if 0
-	ia->calcSort(isEyeInWater);
-
-	ia->setupShader();
-#endif
 	return true;
 }
 
@@ -162,10 +118,7 @@ void RenderScene::addHelperPrims(RenderEntity *entity)
 
 void RenderScene::addHelperInteraction(RenderEntity *entity, Primitive *prim)
 {
-	if (numDebugInteractions >= MAX_DEBUG_INTERACTIONS) {
-		Errorf("MAX_DEBUG_INTERACTIONS exceeded");
-		return;
-	}
+	AX_ASSURE(numDebugInteractions < MAX_DEBUG_INTERACTIONS);
 
 	Interaction *ia = g_renderFrame->allocInteraction();
 	ia->primitive = prim;
@@ -247,7 +200,6 @@ void RenderScene::findInstance()
 		addInteraction(0, geoins, false);
 	}
 
-	//g_statistic->addValue(stat_instancedIA, numInstancedIA);
 	stat_instancedIA.add(numInstancedIA);
 }
 
@@ -290,11 +242,7 @@ void RenderScene::checkLights()
 
 	// add to world's shadow link
 	for (int i = 0; i < numShadowed; i++) {
-#if 0
-		shadowed[i]->preQueued->linkShadow();
-#else
 		world->m_shadowLink.push_front(shadowed[i]);
-#endif
 	}
 
 	// check shadow map memory used
@@ -328,9 +276,7 @@ void RenderScene::checkLights()
 
 RenderScene *RenderScene::addSubScene()
 {
-	if (numSubScenes >= MAX_SUB_SCENES) {
-		return 0;
-	}
+	AX_ASSURE(numSubScenes < MAX_SUB_SCENES);
 
 	RenderScene *result = g_renderFrame->allocScene();
 	subScenes[numSubScenes++] = result;
@@ -339,16 +285,14 @@ RenderScene *RenderScene::addSubScene()
 
 void RenderScene::addPrimitive( Primitive *prim )
 {
-	if (numPrimitives >= MAX_PRIMITIVES)
-		return;
+	AX_ASSURE(numPrimitives < MAX_PRIMITIVES);
 
 	primtives[numPrimitives++] = prim;
 }
 
 void RenderScene::addOverlayPrimitive( Primitive *prim )
 {
-	if (numOverlayPrimitives >= MAX_OVERLAY_PRIMITIVES)
-		return;
+	AX_ASSURE(numOverlayPrimitives < MAX_OVERLAY_PRIMITIVES);
 
 	overlayPrimitives[numOverlayPrimitives++] = prim;
 }
@@ -386,10 +330,7 @@ RenderScene *RenderFrame::allocScene()
 
 void RenderFrame::addScene(RenderScene *scene)
 {
-	if (m_sceneCount >= MAX_VIEW) {
-		Errorf("RenderQueue::allocQueuedScene: MAX_VIEW exceeds");
-		return;
-	}
+	AX_ASSURE(m_sceneCount < MAX_VIEW);
 
 	m_queuedScenes[m_sceneCount++] = scene;
 }
@@ -397,11 +338,6 @@ void RenderFrame::addScene(RenderScene *scene)
 Interaction *RenderFrame::allocInteraction()
 {
 	return new(m_stack) Interaction;
-}
-
-Interaction** RenderFrame::allocInteractionPointer(int num)
-{
-	return new(m_stack) Interaction*[num];
 }
 
 RenderScene *RenderFrame::getScene(int index)

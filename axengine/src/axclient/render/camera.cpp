@@ -616,7 +616,7 @@ void Convex::initFromCamera(const RenderCamera &camera)
 {
 	Vector3 p;
 
-	m_numPlanes = 4;
+	m_numPlanes = 6;
 	Matrix4 m_vpInverseNormal= camera.m_vp.getTranspose();
 
 	// init planes

@@ -523,10 +523,6 @@ void RenderContext::drawPass_ShadowGen(RenderScene *scene)
 		if (scene->isLastCsmSplits())
 			issueCsmQueries();
 
-		//unsetScene(scene);
-
-		// disable depth biase
-
 		m_rasterizerDesc.depthBias = false;
 		END_PIX();
 	}
@@ -1244,6 +1240,9 @@ void RenderContext::addCsmQuery(Query *query)
 
 void RenderContext::issueVisQueries()
 {
+	if (!m_numVisQueries)
+		return;
+
 	stat_numVisQuery.setInt(m_numVisQueries);
 
 	g_apiWrap->beginPerfEvent("VisQueries");
@@ -1263,6 +1262,9 @@ void RenderContext::issueVisQueries()
 
 void RenderContext::issueCsmQueries()
 {
+	if (!m_numCsmQueries)
+		return;
+
 	stat_numCsmQuery.setInt(m_numCsmQueries);
 
 	g_apiWrap->beginPerfEvent("CsmQueries");
