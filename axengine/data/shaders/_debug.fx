@@ -33,8 +33,6 @@ VertexOut VP_main(MeshVertex IN) {
 	OUT.worldPos = VP_modelToWorld(IN, IN.position);
 	OUT.hpos = VP_worldToClip(OUT.worldPos);
 
-//	VP_final(IN, OUT);
-
     return OUT;
 }
 
