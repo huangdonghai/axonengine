@@ -391,7 +391,7 @@ void RenderWorld::markVisible_r(RenderScene *qscene, QuadNode *node, Plane::Side
 		if (m_updateShadowVis)
 			entity->updateCsm(qscene, allInFrustum);
 
-		if (entity->m_viewDistCulled)
+		if (entity->m_viewDistCulled && (qscene->sceneType != RenderScene::ShadowGen))
 			continue;
 
 		// check if is light

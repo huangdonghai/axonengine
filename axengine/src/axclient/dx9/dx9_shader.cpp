@@ -434,9 +434,6 @@ bool DX9_Shader::init(const FixedString &name, const GlobalMacro &gm, const Mate
 //		dwFlags |= D3DXSHADER_DEBUG;
 #endif
 
-#if 0
-	(hr = D3DXCreateEffectFromFile(d3d9Device, u2w(ospath).c_str(), &d3dxmacros[0], NULL, dwFlags, 0, &m_object, &errbuf));
-#else
 	void *filebuf;
 	size_t filesize;
 
@@ -445,8 +442,11 @@ bool DX9_Shader::init(const FixedString &name, const GlobalMacro &gm, const Mate
 		return false;
 	DX9_Include d3d9Inc;
 
+	double t0 = OsUtil::seconds();
 	hr = D3DXCreateEffect(dx9_device, filebuf, filesize, &d3dxmacros[0], &d3d9Inc, dwFlags, 0, &m_object, &errbuf);
-#endif
+	double t1 = OsUtil::seconds();
+	double t = t1 - t0;
+
 	if (FAILED(hr)) {
 		if (errbuf) {
 			Errorf("%s", errbuf->GetBufferPointer());
