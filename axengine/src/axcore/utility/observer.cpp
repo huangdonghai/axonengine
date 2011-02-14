@@ -12,13 +12,16 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-IObservable::~IObservable() {}
+IObservable::~IObservable()
+{}
 
-void IObservable::addObserver(IObserver *observer) {
+void IObservable::addObserver(IObserver *observer)
+{
 	m_observers.push_back(observer);
 }
 
-void IObservable::removeObserver(IObserver *observer) {
+void IObservable::removeObserver(IObserver *observer)
+{
 #if 0
 	std::list<IObserver*>::iterator it = m_observers.begin();
 
@@ -35,7 +38,8 @@ void IObservable::removeObserver(IObserver *observer) {
 #endif
 }
 
-void IObservable::notifyObservers(int arg) {
+void IObservable::notifyObservers(int arg)
+{
 	std::list<IObserver*>::iterator it = m_observers.begin();
 
 	for (; it != m_observers.end(); ++it) {

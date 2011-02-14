@@ -254,17 +254,21 @@ static const ulonglong_t __msOfMinute = 60 * 1000;
 static const ulonglong_t __msOfSecond = 1000;
 
 
-DateTime::DateTime() {
+DateTime::DateTime()
+{
 }
 
-DateTime::~DateTime() {
+DateTime::~DateTime()
+{
 }
 
-void DateTime::initSystemTime() {
+void DateTime::initSystemTime()
+{
 	initSystemTime(OsUtil::seconds() * 1000);
 }
 
-void DateTime::initSystemTime(uint_t start_time) {
+void DateTime::initSystemTime(uint_t start_time)
+{
 	time_t systime;
 	::time(&systime);
 
@@ -288,7 +292,8 @@ void DateTime::initSystemTime(uint_t start_time) {
 	update(0);
 }
 
-void DateTime::init(ushort_t year, ushort_t month, ushort_t day, ushort_t hour, ushort_t minute, ushort_t second, uint_t start_time) {
+void DateTime::init(ushort_t year, ushort_t month, ushort_t day, ushort_t hour, ushort_t minute, ushort_t second, uint_t start_time)
+{
 	m_startData.year = year;
 	m_startData.month = month;
 	m_startData.day = day;
@@ -307,11 +312,13 @@ void DateTime::init(ushort_t year, ushort_t month, ushort_t day, ushort_t hour, 
 	update(0);
 }
 
-void DateTime::init(ushort_t year, ushort_t month, ushort_t day, ushort_t hour, ushort_t minute, ushort_t second) {
+void DateTime::init(ushort_t year, ushort_t month, ushort_t day, ushort_t hour, ushort_t minute, ushort_t second)
+{
 	init(year, month, day, hour, minute, second, OsUtil::seconds()*1000);
 }
 
-void DateTime::init(ushort_t hour, ushort_t minute, ushort_t second, uint_t startTime) {
+void DateTime::init(ushort_t hour, ushort_t minute, ushort_t second, uint_t startTime)
+{
 	time_t systime;
 	::time(&systime);
 
@@ -324,7 +331,8 @@ void DateTime::init(ushort_t hour, ushort_t minute, ushort_t second, uint_t star
 	init(year, month, day, hour, minute, second, startTime);
 }
 
-void DateTime::init(ushort_t hour, ushort_t minute, ushort_t second) {
+void DateTime::init(ushort_t hour, ushort_t minute, ushort_t second)
+{
 	init(hour, minute, second, OsUtil::seconds()*1000);
 }
 
@@ -333,7 +341,8 @@ DateTime::Data DateTime::getData() {
 }
 
 #if 0
-DateTime::Data DateTime::getData(uint_t now_time) {
+DateTime::Data DateTime::getData(uint_t now_time)
+{
 	Data data;
 
 	// get total time
@@ -382,7 +391,8 @@ DateTime::Data DateTime::getData(uint_t now_time) {
 }
 #endif
 
-void DateTime::update(int curtime) {
+void DateTime::update(int curtime)
+{
 	Data &data = m_curData;
 
 	m_curMilliseconds = curtime;
@@ -431,12 +441,14 @@ void DateTime::update(int curtime) {
 }
 
 
-bool DateTime::isLeapYear(ushort_t year) {
+bool DateTime::isLeapYear(ushort_t year)
+{
 	return !(year % 4) && (year % 100) || !(year % 400);
 }
 
 
-ushort_t DateTime::weekDay(ushort_t year, ushort_t month, ushort_t day) {
+ushort_t DateTime::weekDay(ushort_t year, ushort_t month, ushort_t day)
+{
 	// month day mod 7  
 	ushort_t monthday[]={ 0, 3, 3, 6, 1, 4, 6, 2, 5, 0, 3, 5 };
 
@@ -452,7 +464,8 @@ ushort_t DateTime::weekDay(ushort_t year, ushort_t month, ushort_t day) {
 }
  
 
-ushort_t DateTime::monthDays(ushort_t year, ushort_t month) {
+ushort_t DateTime::monthDays(ushort_t year, ushort_t month)
+{
 	switch (month) {  
 	case 1:
 	case 3:
@@ -480,19 +493,23 @@ ushort_t DateTime::monthDays(ushort_t year, ushort_t month) {
 	return 0;  
 }
 
-inline int MakeInt32(ushort_t low, ushort_t hi) {
+inline int MakeInt32(ushort_t low, ushort_t hi)
+{
 	return (hi << 16) + low;
 }
 
-inline ushort_t HighUint16(int tmp) {
+inline ushort_t HighUint16(int tmp)
+{
 	return tmp >> 16;
 }
 
-inline ushort_t LowUint16(int tmp) {
+inline ushort_t LowUint16(int tmp)
+{
 	return tmp & 0xFFFF;
 }
 
-int DateTime::lunarMonthDays(ushort_t lunarYear, ushort_t lunarMonth) {
+int DateTime::lunarMonthDays(ushort_t lunarYear, ushort_t lunarMonth)
+{
 	if (lunarYear < START_YEAR) 
 		return 30; 
 
@@ -515,7 +532,8 @@ int DateTime::lunarMonthDays(ushort_t lunarYear, ushort_t lunarMonth) {
 }
   
 
-ushort_t DateTime::lunarYearDays(ushort_t lunarYear) {
+ushort_t DateTime::lunarYearDays(ushort_t lunarYear)
+{
 	ushort_t days =0; 
 	for (ushort_t i=1; i<=12; i++) { 
 		int tmp = lunarMonthDays(lunarYear, i); 
@@ -525,7 +543,8 @@ ushort_t DateTime::lunarYearDays(ushort_t lunarYear) {
 	return days; 
 }
 
-void DateTime::lunarYearToTianganDizhi(ushort_t lunarYear, ushort_t &tiangan, ushort_t &dizhi) {
+void DateTime::lunarYearToTianganDizhi(ushort_t lunarYear, ushort_t &tiangan, ushort_t &dizhi)
+{
 	tiangan = (lunarYear - 4) % 10;
 	dizhi = (lunarYear - 4) % 12;
 }
@@ -536,7 +555,8 @@ ushort_t DateTime::getLeapMonth(ushort_t lunarYear) {
 }
   
 
-std::string DateTime::formatLunarYear(ushort_t year) {
+std::string DateTime::formatLunarYear(ushort_t year)
+{
 	wchar_t szText1[] = { 0x7532, 0x4e59, 0x4e19, 0x4e01, 0x620a, 0x5df1, 0x5e9a, 0x8f9b, 0x58ec, 0x7678 }; // 甲乙丙丁戊己庚辛壬癸
 	wchar_t szText2[] = { 0x5b50, 0x4e11, 0x5bc5, 0x536f, 0x8fb0, 0x5df3, 0x5348, 0x672a, 0x7533, 0x9149, 0x620c, 0x4ea5}; // 子丑寅卯辰巳午未申酉戌亥
 
@@ -551,17 +571,20 @@ std::string DateTime::formatLunarYear(ushort_t year) {
 }
  
 
-std::string DateTime::formatMonth(ushort_t month, bool lunar) {
+std::string DateTime::formatMonth(ushort_t month, bool lunar)
+{
 	return std::string();
 }
   
 
-std::string DateTime::formatLunarDay(ushort_t  day) {
+std::string DateTime::formatLunarDay(ushort_t  day)
+{
 	return std::string();
 }
   
 
-int DateTime::calcDateDiff(ushort_t endYear, ushort_t endMonth, ushort_t endDay, ushort_t startYear, ushort_t startMonth, ushort_t startDay) {
+int DateTime::calcDateDiff(ushort_t endYear, ushort_t endMonth, ushort_t endDay, ushort_t startYear, ushort_t startMonth, ushort_t startDay)
+{
 	ushort_t monthday[]={ 0, 31, 59 ,90, 120, 151, 181, 212, 243, 273, 304, 334 };
 
 	// calculate two years' Jun 1 days
@@ -583,13 +606,15 @@ int DateTime::calcDateDiff(ushort_t endYear, ushort_t endMonth, ushort_t endDay,
 }
   
 
-ushort_t DateTime::getLunarDate(ushort_t year, ushort_t month, ushort_t day, ushort_t &lunarYear, ushort_t &lunarMonth, ushort_t &lunarDay, bool &leapMonth) {
+ushort_t DateTime::getLunarDate(ushort_t year, ushort_t month, ushort_t day, ushort_t &lunarYear, ushort_t &lunarMonth, ushort_t &lunarDay, bool &leapMonth)
+{
 	l_calcLunarDate(lunarYear, lunarMonth, lunarDay, leapMonth, calcDateDiff(year, month, day)); 
 
 	return l_getLunarHolDay(year, month, day); 
 }
   
-void DateTime::l_calcLunarDate(ushort_t &year, ushort_t &month, ushort_t &day, bool &leapMonth, int span_days) {
+void DateTime::l_calcLunarDate(ushort_t &year, ushort_t &month, ushort_t &day, bool &leapMonth, int span_days)
+{
 	// 阳历1901年2月19日为阴历1901年正月初一
 	// 阳历1901年1月1日到2月19日共有49天
 	if (span_days < 49) {
@@ -637,7 +662,8 @@ void DateTime::l_calcLunarDate(ushort_t &year, ushort_t &month, ushort_t &day, b
 	day += ushort_t(span_days); 
 }
 
-void DateTime::l_calcDate(ushort_t &year, ushort_t &month ,ushort_t &day, int span_days) {
+void DateTime::l_calcDate(ushort_t &year, ushort_t &month ,ushort_t &day, int span_days)
+{
 	year = START_YEAR;
 	month = 1;
 	day = 1;
@@ -663,7 +689,8 @@ void DateTime::l_calcDate(ushort_t &year, ushort_t &month ,ushort_t &day, int sp
 	day += span_days;
 }
 
-ushort_t DateTime::l_getLunarHolDay(ushort_t year, ushort_t month, ushort_t day) {
+ushort_t DateTime::l_getLunarHolDay(ushort_t year, ushort_t month, ushort_t day)
+{
 	byte_t &flag = gLunarHolDay[(year - START_YEAR)*12+month -1];
 	ushort_t _day;
 

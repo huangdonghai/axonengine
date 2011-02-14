@@ -63,23 +63,12 @@ bool MaterialDecl::tryLoad(const std::string &name)
 
 	std::string filename = m_key.toString() + ".mtr";
 
-	char *buffer;
-	size_t size;
-
-	size = g_fileSystem->readFile(filename, (void**)&buffer);
-
-	if (!size || !buffer) {
-		//		Debugf("%s: cann't open material file %s\n", __func__, filename.c_str());
-		return false;
-	}
-
 	TiXmlDocument doc;
 
-	doc.Parse(buffer, NULL, TIXML_ENCODING_UTF8);
-	g_fileSystem->freeFile(buffer);
+	doc.LoadAxonFile(filename);
 
 	if (doc.Error()) {
-		Errorf("%s: error parse %s in line %d - %s"
+		Printf("%s: error parse %s in line %d - %s"
 			, __func__
 			, filename.c_str()
 			, doc.ErrorRow()
@@ -104,6 +93,20 @@ bool MaterialDecl::tryLoad(const std::string &name)
 			m_shaderName = attr->Value();
 		} else if (attrname == "twosided") {
 			if (attr->IntValue()) m_cullMode = RasterizerDesc::CullMode_None;
+		} else if (attrname == "depthTest") {
+			m_depthTest = attr->IntValue();
+		} else if (attrname == "depthWrite") {
+			m_depthWrite = attr->IntValue();
+		} else if (attrname == "blendMode") {
+			if (attr->ValueStr() == "add") {
+				m_blendMode = Material::BlendMode_Add;
+			} else if (attr->ValueStr() == "blend") {
+				m_blendMode = Material::BlendMode_Blend;
+			} else if (attr->ValueStr() == "modulate") {
+				m_blendMode = Material::BlendMode_Modulate;
+			} else {
+				m_blendMode = Material::BlendMode_Disabled;
+			}
 		} else if (attrname == "wireframed") {
 			if (attr->IntValue()) m_wireframed = true;
 		} else if (attrname == "physicsHelper") {

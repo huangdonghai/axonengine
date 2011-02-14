@@ -14,6 +14,8 @@ Primitive::Primitive(Hint hint)
 	: m_hint(hint)
 	, m_type(NoneType)
 {
+	m_isDepthHack = false;
+
 	m_syncFrame = -1;
 	m_isWorldSpace = false;
 	m_material = 0;

@@ -25,7 +25,7 @@ MoveGizmo::MoveGizmo()
 	TypeZeroArray(m_lines);
 	TypeZeroArray(m_meshs);
 	m_highlit = None;
-	m_material = new Material("depthhack");
+	m_material = new Material("_blend");
 }
 
 MoveGizmo::~MoveGizmo()
@@ -65,6 +65,11 @@ void MoveGizmo::setup(const RenderCamera &camera, const Vector3 &pos, const Matr
 	setupPlane(XZ);
 
 	setupXYZ(camera);
+
+	for (int i = 0; i < NumberId; i++) {
+//		m_lines[i]->setDepthHack(true);
+//		m_meshs[i]->setDepthHack(true);
+	}
 }
 
 void MoveGizmo::clear()
@@ -380,7 +385,7 @@ RotateGizmo::RotateGizmo()
 	m_crank = nullptr;
 
 	m_highlit = None;
-	m_material = new Material("depthhack");
+	m_material = new Material("_blend");
 
 	m_enabledCrank = false;
 }
@@ -580,7 +585,7 @@ ScaleGizmo::ScaleGizmo()
 	TypeZeroArray(m_lines);
 	TypeZeroArray(m_meshs);
 	m_highlit = None;
-	m_material = new Material("depthhack");
+	m_material = new Material("_blend");
 }
 
 ScaleGizmo::~ScaleGizmo()

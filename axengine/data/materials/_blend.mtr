@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
 -->
-<material flags="0" shader="blend" features="0" surfaceType="metal" opacity="1.0" glow="0">
+<material flags="0" shader="blend" features="0" surfaceType="metal" opacity="1.0" glow="0" depthWrite="0" blendMode="blend">
   <shaderParam name="paramvalue"/>
 </material>

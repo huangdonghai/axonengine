@@ -51,6 +51,9 @@ public:
 	inline bool isStatic() const { return m_hint == HintStatic; }
 	inline Type getType() const { return m_type; }
 
+	inline bool isDepthHack() const { return m_isDepthHack; }
+	inline void setDepthHack(bool v) { m_isDepthHack = v; }
+
 	inline bool isDirty() const { return m_isDirty; }
 	inline bool isVertexBufferDirty() const { return m_isVertexBufferDirty; }
 	inline bool isIndexBufferDirty() const { return m_isIndexBufferDirty; }
@@ -83,14 +86,16 @@ public:
 
 protected:
 	const Hint m_hint;
+	Type m_type;
+
 	bool m_isDirty;		// dirty
 	bool m_isVertexBufferDirty;
 	bool m_isIndexBufferDirty;
 	bool m_isWorldSpace; // primitive already in world space, so don't need model transform
+	bool m_isDepthHack; // depth range [0~0.3]
 
 	int m_syncFrame;
 
-	Type m_type;
 	Material *m_material;
 
 	bool m_isMatrixSet;

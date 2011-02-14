@@ -5,9 +5,9 @@ AX_BEGIN_NAMESPACE
 
 class MaterialDecl : public KeyedObject
 {
-public:
 	friend class Material;
 
+public:
 	class TextureDef {
 	public:
 		std::string file;
