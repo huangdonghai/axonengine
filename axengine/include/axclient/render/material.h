@@ -190,9 +190,6 @@ public:
 	Material(const std::string &name);
 	~Material();
 
-	// must be success
-	bool init(const FixedString &name);
-
 	const ShaderInfo *getShaderInfo() const { return m_shaderInfo; }
 	const FixedString &getShaderName() const { return m_shaderName; }
 	bool isWireframe() const;
@@ -256,7 +253,7 @@ private:
 	FastParams m_shaderParams;
 	FastTextureParams m_fastSamplerParams;
 
-	// tex anim etc...
+	// tex animation etc...
 	Matrix4 m_texMatrix;
 
 	bool m_features[MAX_FEATURES];

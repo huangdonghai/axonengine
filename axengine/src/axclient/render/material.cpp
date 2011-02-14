@@ -74,13 +74,13 @@ Material::~Material()
 	}
 }
 
+#if 0
 bool Material::init(const FixedString &key)
 {
 
 	return true;
 }
 
-#if 0
 void Material::enableFeature(const String &name) {
 	m_shaderMacroNeedRegen = true;
 	m_features.setValue(name, 1);

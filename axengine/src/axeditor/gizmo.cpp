@@ -20,24 +20,28 @@ enum {
 // class MoveGizmo, editor manipulator
 //--------------------------------------------------------------------------
 
-MoveGizmo::MoveGizmo() {
+MoveGizmo::MoveGizmo()
+{
 	TypeZeroArray(m_lines);
 	TypeZeroArray(m_meshs);
 	m_highlit = None;
 	m_material = new Material("depthhack");
 }
 
-MoveGizmo::~MoveGizmo() {
+MoveGizmo::~MoveGizmo()
+{
 	clear();
 }
 
-inline Rgba MoveGizmo::getColor(int axis, Rgba c) {
+inline Rgba MoveGizmo::getColor(int axis, Rgba c)
+{
 	if (axis == m_highlit)
 		return Rgba::Yellow;
 	return c;
 }
 
-void MoveGizmo::setup(const RenderCamera &camera, const Vector3 &pos, const Matrix3 &axis, float scale) {
+void MoveGizmo::setup(const RenderCamera &camera, const Vector3 &pos, const Matrix3 &axis, float scale)
+{
 	m_pos = pos;
 	m_axis = axis;
 	m_scale = scale;
@@ -63,14 +67,16 @@ void MoveGizmo::setup(const RenderCamera &camera, const Vector3 &pos, const Matr
 	setupXYZ(camera);
 }
 
-void MoveGizmo::clear() {
+void MoveGizmo::clear()
+{
 	for (int i = 0; i < NumberId; i++) {
 		SafeDelete(m_lines[i]);
 		SafeDelete(m_meshs[i]);
 	}
 }
 
-void MoveGizmo::doRender() {
+void MoveGizmo::doRender()
+{
 	for (int i = 0; i < NumberId; i++) {
 		if (m_meshs[i]) {
 			m_meshs[i]->setMaterial(m_material);
@@ -139,7 +145,8 @@ int MoveGizmo::doSelect(RenderCamera *camera, int x, int y,int selectedSize)
 	return nearest;
 }
 
-int MoveGizmo::doSelect(View *view, int x, int y) {
+int MoveGizmo::doSelect(View *view, int x, int y)
+{
 	if (!m_lines[0])
 		return -1;
 
@@ -178,11 +185,13 @@ int MoveGizmo::doSelect(View *view, int x, int y) {
 	return axis;
 }
 
-void MoveGizmo::setHighlight(int axis) {
+void MoveGizmo::setHighlight(int axis)
+{
 	m_highlit = (SelectId)axis;
 }
 
-void MoveGizmo::setupAxis(int axis) {
+void MoveGizmo::setupAxis(int axis)
+{
 	Vector3 p0, p1, p2;
 	Rgba color;
 
@@ -233,7 +242,8 @@ void MoveGizmo::setupAxis(int axis) {
 }
 
 
-void MoveGizmo::setupPlane(int axis) {
+void MoveGizmo::setupPlane(int axis)
+{
 	Vector3 v0;
 	Vector3 v1;
 	Rgba color0, color1;
@@ -319,7 +329,8 @@ void MoveGizmo::setupPlane(int axis) {
 	mesh->unlockVertexes();
 }
 
-void MoveGizmo::setupXYZ(const RenderCamera &camera) {
+void MoveGizmo::setupXYZ(const RenderCamera &camera)
+{
 	float len = 6.0f * m_scale;
 	Rgba color = Rgba::LtGrey;
 
@@ -360,7 +371,8 @@ void MoveGizmo::setupXYZ(const RenderCamera &camera) {
 // class RotateGizmo, rotate gizmo
 //--------------------------------------------------------------------------
 
-RotateGizmo::RotateGizmo() {
+RotateGizmo::RotateGizmo()
+{
 	m_centerLine = nullptr;
 	TypeZeroArray(m_circles);
 	m_innerBound = nullptr;
@@ -373,7 +385,8 @@ RotateGizmo::RotateGizmo() {
 	m_enabledCrank = false;
 }
 
-RotateGizmo::~RotateGizmo() {
+RotateGizmo::~RotateGizmo()
+{
 	SafeDelete(m_centerLine);
 	SafeDelete(m_circles[0]);
 	SafeDelete(m_circles[1]);
@@ -382,7 +395,8 @@ RotateGizmo::~RotateGizmo() {
 	SafeDelete(m_outerBound);
 }
 
-void RotateGizmo::setup(const RenderCamera &camera, const Vector3 &pos, const Matrix3 &axis, float scale) {
+void RotateGizmo::setup(const RenderCamera &camera, const Vector3 &pos, const Matrix3 &axis, float scale)
+{
 	m_pos = pos;
 	m_axis = axis;
 	m_scale = scale;
@@ -419,7 +433,8 @@ void RotateGizmo::setup(const RenderCamera &camera, const Vector3 &pos, const Ma
 	setupCrank(camera);
 }
 
-void RotateGizmo::doRender() {
+void RotateGizmo::doRender()
+{
 	if (m_centerLine)
 		g_renderSystem->addToScene(m_centerLine);
 	if (m_circles[0])
@@ -436,7 +451,8 @@ void RotateGizmo::doRender() {
 		g_renderSystem->addToScene(m_crank);
 }
 
-int RotateGizmo::doSelect(View *view, int x, int y) {
+int RotateGizmo::doSelect(View *view, int x, int y)
+{
 	// check if initialized
 	if (!m_circles[0])
 		return -1;
@@ -464,21 +480,25 @@ int RotateGizmo::doSelect(View *view, int x, int y) {
 	return axis;
 }
 
-void RotateGizmo::setHighlight(int id) {
+void RotateGizmo::setHighlight(int id)
+{
 	m_highlit = (SelectId)id;
 }
 
-void RotateGizmo::setCrank(float start, float end) {
+void RotateGizmo::setCrank(float start, float end)
+{
 	m_enabledCrank = true;
 	m_crankStart = start;
 	m_crankEnd = end;
 }
 
-void RotateGizmo::disableCrank() {
+void RotateGizmo::disableCrank()
+{
 	m_enabledCrank = false;
 }
 
-void RotateGizmo::setupCrank(const RenderCamera &camera) {
+void RotateGizmo::setupCrank(const RenderCamera &camera)
+{
 	if (m_highlit == None)
 		return;
 
@@ -514,7 +534,8 @@ void RotateGizmo::setupCrank(const RenderCamera &camera) {
 	MeshPrim::setupFan(m_crank, m_pos, left, up, m_crankStart, m_crankEnd, color, CrankSubdivided, m_material);
 }
 
-Rgba RotateGizmo::getColor(int id) {
+Rgba RotateGizmo::getColor(int id)
+{
 	if (m_highlit == id)
 		return Rgba::Yellow;
 
@@ -531,7 +552,8 @@ Rgba RotateGizmo::getColor(int id) {
 	return Rgba::White;
 }
 
-Rgba RotateGizmo::getCenterColor(int id) {
+Rgba RotateGizmo::getCenterColor(int id)
+{
 	if (m_highlit != id)
 		return Rgba::MdGrey;
 
@@ -553,21 +575,24 @@ Rgba RotateGizmo::getCenterColor(int id) {
 // class ScaleGizmo, rotate gizmo
 //--------------------------------------------------------------------------
 
-ScaleGizmo::ScaleGizmo() {
+ScaleGizmo::ScaleGizmo()
+{
 	TypeZeroArray(m_lines);
 	TypeZeroArray(m_meshs);
 	m_highlit = None;
 	m_material = new Material("depthhack");
 }
 
-ScaleGizmo::~ScaleGizmo() {
+ScaleGizmo::~ScaleGizmo()
+{
 	for (int i = 0; i < NumberId; i++) {
 		SafeDelete(m_lines[i]);
 		SafeDelete(m_meshs[i]);
 	}
 }
 
-void ScaleGizmo::setup(const RenderCamera &camera, const Vector3 &pos, const Matrix3 &axis, float scale) {
+void ScaleGizmo::setup(const RenderCamera &camera, const Vector3 &pos, const Matrix3 &axis, float scale)
+{
 	m_pos = pos;
 	m_axis = axis;
 	m_scale = scale;
@@ -585,7 +610,8 @@ void ScaleGizmo::setup(const RenderCamera &camera, const Vector3 &pos, const Mat
 	setupScreenQuad(camera, m_meshs[XYZ], pos, getColor(XYZ));
 }
 
-int ScaleGizmo::doSelect(View *view, int x, int y) {
+int ScaleGizmo::doSelect(View *view, int x, int y)
+{
 	// check if initialized
 	if (!m_lines[0])
 		return -1;
@@ -624,7 +650,8 @@ int ScaleGizmo::doSelect(View *view, int x, int y) {
 	return axis;
 }
 
-void ScaleGizmo::doRender() {
+void ScaleGizmo::doRender()
+{
 	for (int i = 0; i < NumberId; i++) {
 		if (m_meshs[i]) {
 			m_meshs[i]->setMaterial(m_material);
@@ -638,11 +665,13 @@ void ScaleGizmo::doRender() {
 }
 
 
-void ScaleGizmo::setHighlight(int id) {
+void ScaleGizmo::setHighlight(int id)
+{
 	m_highlit = (SelectId)id;
 }
 
-Rgba ScaleGizmo::getColor(int id) {
+Rgba ScaleGizmo::getColor(int id)
+{
 	if (m_highlit == id)
 		return Rgba::Yellow;
 
@@ -658,7 +687,8 @@ Rgba ScaleGizmo::getColor(int id) {
 
 	return Rgba::White;
 }
-void ScaleGizmo::setupScreenQuad(const RenderCamera &camera, MeshPrim*& mesh, const Vector3 &pos, Rgba color) {
+void ScaleGizmo::setupScreenQuad(const RenderCamera &camera, MeshPrim*& mesh, const Vector3 &pos, Rgba color)
+{
 	if (!mesh) {
 		mesh = new MeshPrim(Primitive::HintDynamic);
 		mesh->init(4, 6);
