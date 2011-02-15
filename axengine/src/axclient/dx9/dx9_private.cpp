@@ -26,28 +26,5 @@ ConstBuffers *dx9_constBuffers;
 IDirect3DVertexDeclaration9 *dx9_vertexDeclarations[VertexType::kNumber];
 IDirect3DVertexDeclaration9 *dx9_vertexDeclarationsInstanced[VertexType::kNumber];
 
-
-
-#if 0
-RenderQueue *d3d9Queue;
-SyncMutex d3d9Mutex;
-
-D3D9TargetManager *d3d9TargetManager;
-D3D9querymanager *d3d9QueryManager;
-D3D9primitivemanager *d3d9PrimitiveManager;
-D3D9Thread *d3d9Thread;
-D3D9VertexBufferManager *d3d9VertexBufferManager;
-D3D9Postprocess *d3d9Postprocess;
-D3D9StateManager *d3d9StateManager;
-D3D9Draw *d3d9Draw;
-// {92F6401F-2E38-4ac6-8F10-3B28A89079EA}
-const GUID d3d9ResGuid = { 0x92f6401f, 0x2e38, 0x4ac6, { 0x8f, 0x10, 0x3b, 0x28, 0xa8, 0x90, 0x79, 0xea } };
-
-bool d3d9NULL;
-bool d3d9NVDB;
-
-RenderCamera *d3d9Camera;
-#endif
-
 AX_END_NAMESPACE
 

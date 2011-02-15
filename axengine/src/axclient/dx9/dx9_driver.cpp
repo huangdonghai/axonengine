@@ -41,7 +41,7 @@ void DX9_Driver::initialize(SyncEvent &syncEvent)
 
 	dx9AssignRenderApi();
 
-	Printf("..Initializing D3D9Driver...\n");
+	Printf("..Initializing DX9_Driver...\n");
 
 	dx9_internalWindow = new DX9_Window();
 	g_renderDriverInfo.driverType = RenderDriverInfo::D3D;
@@ -104,41 +104,10 @@ void DX9_Driver::initialize(SyncEvent &syncEvent)
 	checkFormats();
 
 	createVertexDecl();
-#if 0
-	d3d9StateManager = new D3D9StateManager();
-	d3d9StateManager->DirtyCachedValues();
 
-	V(d3d9StateManager->SetRenderState(D3DRS_ZFUNC, D3DCMP_LESSEQUAL));
-
-	d3d9QueryManager = new D3D9querymanager();
-	g_queryManager = d3d9QueryManager;
-
-	d3d9VertexBufferManager = new D3D9VertexBufferManager();
-
-	d3d9PrimitiveManager = new D3D9primitivemanager();
-	g_primitiveManager = d3d9PrimitiveManager;
-	d3d9TargetManager = new D3D9TargetManager();
-	g_targetManager = d3d9TargetManager;
-#endif
 	g_globalMacro.setMacro(GlobalMacro::G_D3D);
 	dx9_shaderManager = new DX9_ShaderManager;
 	dx9_stateManager = new DX9_StateManager;
-#if 0
-	g_shaderManager = d3d9ShaderManager;
-
-	d3d9TextureManager = new D3D9texturemanager();
-	g_textureManager = d3d9TextureManager;
-//#else
-	D3D9Texture::initManager();
-	d3d9Thread = new D3D9Thread();
-	if (r_multiThread.getInteger()) {
-		d3d9Thread->startThread();
-	}
-
-	d3d9Draw = new D3D9Draw();
-
-	dx9_internalWindow->bind();
-#endif
 
 	dx9_device->BeginScene();
 	dx9InitState();
@@ -151,50 +120,6 @@ void DX9_Driver::initialize(SyncEvent &syncEvent)
 void DX9_Driver::finalize()
 {}
 
-#if 0
-void D3D9Driver::postInit()
-{
-	d3d9Postprocess = new D3D9Postprocess();
-}
-#endif
-
-#if 0
-bool D3D9Driver::isHDRRendering()
-{ return false; }
-
-RenderTarget *D3D9Driver::createWindowTarget(Handle wndId, const String &name)
-{
-	DX9_Window *state = new DX9_Window(wndId, name);
-	AX_ASSERT(state);
-	return state;
-}
-
-const RenderDriverInfo *DX9_Driver::getDriverInfo()
-{
-	return dx9_driverInfo;
-}
-#endif
-
-#if 0
-uint_t D3D9Driver::getBackendCaps() {
-	return 0;
-}
-void D3D9driver::preFrame() {
-	d3d9Thread->preFrame();
-}
-
-void D3D9driver::beginSelect(const RenderCamera &view) {}
-
-void D3D9driver::loadSelectId(int id) {}
-
-void D3D9driver::testActor(Actor *re) {}
-
-void D3D9driver::testPrimitive(Primitive *prim) {}
-
-SelectRecordSeq D3D9driver::endSelect() {
-	return SelectRecordSeq();
-}
-#endif
 void DX9_Driver::reset(int width, int height, bool fullscreen)
 {
 	onDeviceLost();

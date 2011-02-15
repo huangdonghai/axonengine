@@ -15,10 +15,10 @@ AX_BEGIN_NAMESPACE
 
 class DX9_Driver : public IRenderDriver, public ICmdHandler
 {
-public:
 	AX_DECLARE_FACTORY();
 	AX_DECLARE_COMMAND_HANDLER(DX9_Driver);
 
+public:
 	DX9_Driver();
 	virtual ~DX9_Driver();
 
@@ -27,7 +27,6 @@ public:
 	virtual void finalize();
 
 	virtual const ShaderInfo *findShaderInfo(const FixedString &key);
-
 
 	void reset(int width, int height, bool fullscreen);
 	void onReset();
