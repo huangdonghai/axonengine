@@ -25,7 +25,7 @@ MoveGizmo::MoveGizmo()
 	TypeZeroArray(m_lines);
 	TypeZeroArray(m_meshs);
 	m_highlit = None;
-	m_material = new Material("_blend");
+	m_material = new Material("depthhack");
 }
 
 MoveGizmo::~MoveGizmo()
@@ -84,11 +84,11 @@ void MoveGizmo::doRender()
 {
 	for (int i = 0; i < NumberId; i++) {
 		if (m_meshs[i]) {
-			m_meshs[i]->setMaterial(m_material);
+			m_meshs[i]->setMaterial(m_material->clone());
 			g_renderSystem->addToScene(m_meshs[i]);
 		}
 		if (m_lines[i]) {
-			m_lines[i]->setMaterial(m_material);
+			m_lines[i]->setMaterial(m_material->clone());
 			g_renderSystem->addToScene(m_lines[i]);
 		}
 	}
@@ -385,7 +385,7 @@ RotateGizmo::RotateGizmo()
 	m_crank = nullptr;
 
 	m_highlit = None;
-	m_material = new Material("_blend");
+	m_material = new Material("depthhack");
 
 	m_enabledCrank = false;
 }
@@ -412,24 +412,24 @@ void RotateGizmo::setup(const RenderCamera &camera, const Vector3 &pos, const Ma
 
 	float length = m_length;
 	if (LinePrim::setupAxis(m_centerLine, pos, axis, length * 0.5f, getCenterColor(X), getCenterColor(Y), getCenterColor(Z))) {
-		m_centerLine->setMaterial(m_material);
+		m_centerLine->setMaterial(m_material->clone());
 	}
 
 	if (LinePrim::setupCircle(m_circles[0], pos, axis[1] * length, axis[2] * length, getColor(X), CirculSubdivided, plane)) {
-		m_circles[0]->setMaterial(m_material);
+		m_circles[0]->setMaterial(m_material->clone());
 	}
 	if (LinePrim::setupCircle(m_circles[1], pos, axis[0] * length, axis[2] * length, getColor(Y), CirculSubdivided, plane)) {
-		m_circles[1]->setMaterial(m_material);
+		m_circles[1]->setMaterial(m_material->clone());
 	}
 	if (LinePrim::setupCircle(m_circles[2], pos, axis[0] * length, axis[1] * length, getColor(Z), CirculSubdivided, plane)) {
-		m_circles[2]->setMaterial(m_material);
+		m_circles[2]->setMaterial(m_material->clone());
 	}
 
 	if (LinePrim::setupCircle(m_innerBound, pos, camaxis[1] * length, camaxis[2] * length, Rgba::DkGrey, CirculSubdivided)) {
-		m_innerBound->setMaterial(m_material);
+		m_innerBound->setMaterial(m_material->clone());
 	}
 	if (LinePrim::setupCircle(m_outerBound, pos, camaxis[1] * length * 1.3f, camaxis[2] * length * 1.3f, getColor(Screen), CirculSubdivided)) {
-		m_outerBound->setMaterial(m_material);
+		m_outerBound->setMaterial(m_material->clone());
 	}
 
 	if (!m_enabledCrank)
@@ -585,7 +585,7 @@ ScaleGizmo::ScaleGizmo()
 	TypeZeroArray(m_lines);
 	TypeZeroArray(m_meshs);
 	m_highlit = None;
-	m_material = new Material("_blend");
+	m_material = new Material("depthhack");
 }
 
 ScaleGizmo::~ScaleGizmo()
@@ -659,11 +659,11 @@ void ScaleGizmo::doRender()
 {
 	for (int i = 0; i < NumberId; i++) {
 		if (m_meshs[i]) {
-			m_meshs[i]->setMaterial(m_material);
+			m_meshs[i]->setMaterial(m_material->clone());
 			g_renderSystem->addToScene(m_meshs[i]);
 		}
 		if (m_lines[i]) {
-			m_lines[i]->setMaterial(m_material);
+			m_lines[i]->setMaterial(m_material->clone());
 			g_renderSystem->addToScene(m_lines[i]);
 		}
 	}

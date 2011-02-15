@@ -730,7 +730,7 @@ static void dx9Draw()
 			V(dx9_device->DrawIndexedPrimitiveUP(s_curPrimitiveType, 0, s_curNumVertices, s_curPrimitiveCount, s_curIndiceBufferUP, D3DFMT_INDEX16, s_curVerticeBufferUP, s_curVertexType.stride()));
 		} else if (!s_curVerticeUP && !s_curIndiceUP) {
 			HRESULT hr = dx9_device->DrawIndexedPrimitive(s_curPrimitiveType, 0, 0, s_curNumVertices, s_curStartIndex, s_curPrimitiveCount);
-			const char *err = D3DErrorString(hr);
+			const char *err = DX9_ErrorString(hr);
 		} else {
 			AX_WRONGPLACE;
 		}

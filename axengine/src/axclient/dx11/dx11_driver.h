@@ -1,0 +1,10 @@
+#ifndef AX_DX11_DRIVER_H
+#define AX_DX11_DRIVER_H
+
+AX_BEGIN_NAMESPACE
+
+class DX11_Driver {};
+
+AX_END_NAMESPACE
+
+#endif // AX_DX11_DRIVER_H

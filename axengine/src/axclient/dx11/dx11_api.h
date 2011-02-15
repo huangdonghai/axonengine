@@ -1,0 +1,7 @@
+#ifndef AX_DX11_API_H
+#define AX_DX11_API_H
+
+AX_BEGIN_NAMESPACE
+AX_END_NAMESPACE
+
+#endif // AX_DX11_API_H

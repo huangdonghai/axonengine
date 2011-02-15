@@ -65,10 +65,14 @@ Material::Material(const std::string &name)
 
 	m_shaderName = m_decl->getShaderName();
 	m_shaderInfo = g_renderDriver->findShaderInfo(m_shaderName);
+
+	stat_numMaterials.inc();
 }
 
 Material::~Material()
 {
+	stat_numMaterials.dec();
+
 	for (int i = 0; i < ArraySize(m_textures); i++) {
 		SafeDelete(m_textures[i]);
 	}
@@ -264,6 +268,13 @@ std::string Material::normalizeKey(const std::string &name)
 		return "materials/" + name;
 	else
 		return name;
+}
+
+Material * Material::clone() const
+{
+	Material *result = new Material();
+	*result = *this;
+	return result;
 }
 
 AX_END_NAMESPACE

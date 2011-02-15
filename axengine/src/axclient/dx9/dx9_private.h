@@ -20,32 +20,16 @@ read the license and understand and accept it fully.
 #include <d3dx9.h>
 #include <dxerr.h>
 
-#if 1 || defined(DEBUG) || defined(_DEBUG)
-#ifndef V
+#if defined(DEBUG) || defined(_DEBUG)
 #define V(x)           { HRESULT hr = (x); if (FAILED(hr)) { Errorf("%s(%d): %s", __FILE__, __LINE__, #x); } }
-//#define V(x)           { hr = (x); if (FAILED(hr)) { DXTrace(__FILE__, __LINE__, hr, L#x, true); } }
-#endif
-#ifndef V_RETURN
-#define V_RETURN(x)    { hr = (x); if (FAILED(hr)) { Errorf("%s(%d): %s in %s", __FILE__, __LINE__, D3DErrorString(hr), #x); return hr; } }
-#endif
+#define V_RETURN(x)    { hr = (x); if (FAILED(hr)) { Errorf("%s(%d): %s in %s", __FILE__, __LINE__, DX9_ErrorString(hr), #x); return hr; } }
 #else
-#ifndef V
 #define V(x)           { hr = (x); }
-#endif
-#ifndef V_RETURN
 #define V_RETURN(x)    { hr = (x); if (FAILED(hr)) { return hr; } }
-#endif
 #endif
 
 #define SAFE_ADDREF(p) { if (p) p->AddRef(); }
 #define SAFE_RELEASE(p) { if (p) { (p)->Release(); (p)=NULL; } }
-
-#if 0
-#define D3D9_SCOPELOCK ScopedLocker _autoLocker(d3d9Mutex)
-#endif
-
-#define BEGIN_PIX(x) D3DPERF_BeginEvent(D3DCOLOR_RGBA(0,0,0,255), L##x)
-#define END_PIX() D3DPERF_EndEvent()
 
 #include "dx9_shader.h"
 #include "dx9_window.h"
@@ -55,7 +39,7 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-inline const char *D3DErrorString(HRESULT hr)
+inline const char *DX9_ErrorString(HRESULT hr)
 {
 #define D3DERR(x) case x: return #x;
 	switch (hr) {
@@ -89,11 +73,6 @@ inline const char *D3DErrorString(HRESULT hr)
 
 extern DX9_Window *dx9_internalWindow;
 extern DX9_Driver *dx9_driver;
-#if 0
-extern RenderDriverInfo *dx9_driverInfo;
-extern RenderQueue *d3d9Queue;
-extern SyncMutex d3d9Mutex;
-#endif
 extern IDirect3D9 *dx9_api;
 extern IDirect3DDevice9 *dx9_device;
 
@@ -103,40 +82,6 @@ extern ConstBuffers *dx9_constBuffers;
 
 extern IDirect3DVertexDeclaration9 *dx9_vertexDeclarations[VertexType::kNumber];
 extern IDirect3DVertexDeclaration9 *dx9_vertexDeclarationsInstanced[VertexType::kNumber];
-
-#if 0
-//extern D3D9TargetManager *d3d9TargetManager;
-extern D3D9querymanager *d3d9QueryManager;
-extern D3D9primitivemanager *d3d9PrimitiveManager;
-extern D3D9Thread *d3d9Thread;
-extern D3D9VertexBufferManager *d3d9VertexBufferManager;
-extern D3D9Postprocess *d3d9Postprocess;
-extern D3D9StateManager *d3d9StateManager;
-extern D3D9Draw *d3d9Draw;
-extern const GUID d3d9ResGuid;
-
-// vendor specified FOURCC caps
-extern bool d3d9NVDB;
-extern bool d3d9NULL;
-
-extern RenderCamera *d3d9Camera;
-
-// thread state
-extern QueuedScene *d3d9Scene;
-
-extern DX9_Window *d3d9FrameWnd;
-extern bool d3d9IsReflecting;
-extern bool d3d9ForceWireframe;
-
-extern QueuedScene *d3d9WorldScene;
-//extern D3D9Target *d3d9WorldTarget;
-#if 0
-extern D3D9target *d3d9ShadowMaskTarget;
-#endif
-extern const QueuedEntity *d3d9Actor;
-extern Interaction *d3d9Interaction;
-extern RenderTarget *d3d9BoundTarget;
-#endif
 
 AX_END_NAMESPACE
 

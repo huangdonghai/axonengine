@@ -100,12 +100,13 @@ public:
 			Item &preItem = m_items[m_numItems - 1];
 			item.offset = preItem.offset + preItem.count;
 		}
+		AX_ASSURE(item.offset + num < NUM_FLOATDATA);
 		::memcpy(m_floatData+item.offset, data, num * sizeof(float));
 		m_numItems++;
 	}
 
 public:
-	enum { NUM_ITEMS = 16, NUM_FLOATDATA = 256 };
+	enum { NUM_ITEMS = 16, NUM_FLOATDATA = 64 };
 	struct Item {
 		int nameId;
 		int offset;
@@ -190,6 +191,8 @@ public:
 	Material(const std::string &name);
 	~Material();
 
+	Material *clone() const;
+
 	const ShaderInfo *getShaderInfo() const { return m_shaderInfo; }
 	const FixedString &getShaderName() const { return m_shaderName; }
 	bool isWireframe() const;
@@ -235,6 +238,7 @@ public:
 	static std::string normalizeKey(const std::string &name);
 
 private:
+	Material() {}
 	std::string m_name;
 	MaterialDecl *m_decl;
 	SortHint m_sortHint;

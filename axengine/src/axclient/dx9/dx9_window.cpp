@@ -140,7 +140,7 @@ void DX9_Window::present()
 	}
 
 	if (FAILED(hr)) {
-		Errorf("%s(%d): %s", __FILE__, __LINE__, D3DErrorString(hr));
+		Errorf("%s(%d): %s", __FILE__, __LINE__, DX9_ErrorString(hr));
 	}
 }
 

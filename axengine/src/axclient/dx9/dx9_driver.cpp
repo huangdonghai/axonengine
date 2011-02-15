@@ -62,7 +62,7 @@ void DX9_Driver::initialize(SyncEvent &syncEvent)
 
 	HRESULT hr = dx9_api->GetDeviceCaps(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, &caps);
 	if (FAILED(hr)) {
-		Errorf("D3D9Driver::initialize: GetDeviceCaps failed %s", D3DErrorString(hr));
+		Errorf("D3D9Driver::initialize: GetDeviceCaps failed %s", DX9_ErrorString(hr));
 	}
 
 	g_renderDriverInfo.maxTextureUnits = caps.MaxTextureBlendStages;
@@ -76,7 +76,7 @@ void DX9_Driver::initialize(SyncEvent &syncEvent)
 	D3DDISPLAYMODE dispmode;
 	hr = dx9_api->GetAdapterDisplayMode(D3DADAPTER_DEFAULT, &dispmode);
 	if (FAILED(hr)) {
-		Errorf("GetAdapterDisplayMode failed %s", D3DErrorString(hr));
+		Errorf("GetAdapterDisplayMode failed %s", DX9_ErrorString(hr));
 	}
 
 	// create d3d9 device
@@ -98,7 +98,7 @@ void DX9_Driver::initialize(SyncEvent &syncEvent)
 
 	hr = dx9_api->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL,(HWND)dx9_internalWindow->getHandle(), BehaviorFlags, &d3dpp, &dx9_device);
 	if (FAILED(hr)) {
-		Errorf("CreateDevice failed %s", D3DErrorString(hr));
+		Errorf("CreateDevice failed %s", DX9_ErrorString(hr));
 	}
 
 	checkFormats();

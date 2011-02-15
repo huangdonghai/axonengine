@@ -195,7 +195,7 @@ void RenderWorld::renderTo(RenderScene *qscene)
 
 	stat_worldGlobalLights.setInt(qscene->globalLight ? 1 : 0);
 	stat_worldLights.setInt(qscene->numLights);
-	stat_worldActors.setInt(qscene->numEntities);
+	stat_worldEntities.setInt(qscene->numEntities);
 	stat_worldInteractions.setInt(qscene->numInteractions);
 
 	// check interactions, if need subscene

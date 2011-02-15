@@ -22,7 +22,8 @@ static const float OCEAN_RADIUS = 4096;
 static const int OCEAN_SUBDIVIDE = 32 * 4;
 static const float OCEAN_MULTIPLY = 1.3f;
 
-OutdoorEnv::OutdoorEnv(RenderWorld *world) : RenderEntity(kOutdoorEnv) {
+OutdoorEnv::OutdoorEnv(RenderWorld *world) : RenderEntity(kOutdoorEnv)
+{
 	m_world = world;
 
 	m_haveSky = false;
@@ -59,7 +60,8 @@ OutdoorEnv::OutdoorEnv(RenderWorld *world) : RenderEntity(kOutdoorEnv) {
 OutdoorEnv::~OutdoorEnv()
 {}
 
-void OutdoorEnv::createSkyBox() {
+void OutdoorEnv::createSkyBox()
+{
 	// create box face 12
 	static float l_verts12[20][5] = {
 		// box12

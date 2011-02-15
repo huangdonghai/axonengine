@@ -702,7 +702,6 @@ void MapChunk::updatePrimitive()
 	if (!m_heightChanged && (m_lod == m_lastLod) && (m_neighborLod.i == m_lastNeighborLod.i))
 		return;
 
-	//g_statistic->incValue(stat_chunkUpdated);
 	stat_chunkUpdated.inc();
 
 	m_lastLod = m_lod;
@@ -726,13 +725,10 @@ void MapChunk::updatePrimitive()
 	}
 
 	int c = m_prim->getNumIndexes() / 3;
-#if 0
-	g_statistic->addValue(stat_terrainTris, num_tris - c);
-	g_statistic->addValue(stat_terrainVerts, num_verts - m_prim->getNumVertexes());
-#else
+
 	stat_terrainTris.add(num_tris - c);
 	stat_terrainVerts.add(num_verts - m_prim->getNumVertexes());
-#endif
+
 	m_prim->init(num_verts, num_tris * 3);
 	m_prim->setTerrainRect(m_terrain->getTerrainRect());
 	m_prim->setColorTexture(m_zone->getColorTexture());
@@ -2109,6 +2105,8 @@ void MapTerrain::frameUpdate(RenderScene *qscene)
 		return;
 	}
 
+	double start = OsUtil::seconds();
+
 	MapEvent e;
 	e.rect = m_tilerect;
 	e.camera = &qscene->camera;
@@ -2121,48 +2119,13 @@ void MapTerrain::frameUpdate(RenderScene *qscene)
 
 	m_lastViewOrigin = org;
 	m_heightDirtyLastView = false;
+
+	double end = OsUtil::seconds();
+	stat_terrainUpdateTime.setDouble((end - start) * 1000);
 }
-
-#if 0
-Primitives Terrain::getAllPrimitives()
-{
-	Primitives result;
-
-	return result;
-}
-
-RenderPrims Terrain::getViewedPrimitives()
-{
-	ulonglong_t start = OsUtil::microseconds();
-	TerrainEvent e;
-	e.rect = m_tilerect;
-
-	e.type = TerrainEvent::GetViewed;
-	doEvent(&e);
-
-	ulonglong_t end = OsUtil::microseconds();
-	gStatistic->addValue(stat_terrainGenPrimsTime, end - start);
-
-	// timlly add
-	if (m_grassManager && r_grass->getBool())
-	{
-		//m_grassMgr->update();
-		m_grassManager->uploadRenderData(&(e.primSeq));
-	}
-
-	if (m_riverManager/* && r_river->getBool()*/)
-	{
-		//m_riverMgr->update();
-		m_riverManager->uploadRenderData(&(e.primSeq));
-	}
-
-	return e.primSeq;
-}
-#endif
 
 void MapTerrain::issueToScene(RenderScene *qscene)
 {
-	double start = OsUtil::seconds();
 	MapEvent e;
 	e.rect = m_tilerect;
 	e.camera = &qscene->camera;
@@ -2170,23 +2133,9 @@ void MapTerrain::issueToScene(RenderScene *qscene)
 
 	doEvent(&e);
 
-	double end = OsUtil::seconds();
-	//g_statistic->addValue(stat_terrainGenPrimsTime, (end - start) * 1000);
-	stat_terrainGenPrimsTime.add((end - start) * 1000);
-
-	for (size_t i = 0; i < e.primSeq.size(); i++) {
+	for (size_t i = 0; i < e.primSeq.size(); i++)
 		qscene->addInteraction(0, e.primSeq[i]);
-	}
 }
-
-#if 0
-RenderPrims Terrain::getLightedPrimitives(Render::QueuedLight *light)
-{
-	RenderPrims result;
-
-	return result;
-}
-#endif
 
 void MapTerrain::getHeightinfo(ushort_t*& datap, int &size, float &tilemeters)
 {
