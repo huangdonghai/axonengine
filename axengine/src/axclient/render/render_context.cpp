@@ -647,20 +647,26 @@ void RenderContext::drawInteraction(Interaction *ia)
 	prim->draw(m_curTechnique);
 }
 
-static Matrix4 GetConvertMatrix()
+static Matrix4 GetConvertMatrix(const Size &windowSize)
 {
 	Matrix4 mat;
 	mat.setIdentity();
-	mat.scale(1, 1, 0.5);
-	mat.translate(0, 0, 0.5);
+
+	if (g_renderDriverInfo.driverType == RenderDriverInfo::D3D9) {
+		mat.scale(1, 1, 0.5);
+		mat.translate(-0.5/windowSize.width, -0.5/windowSize.height, 0.5);
+	} else if (g_renderDriverInfo.driverType == RenderDriverInfo::D3D11) {
+		mat.scale(1, 1, 0.5);
+		mat.translate(0, 0, 0.5);
+	}
 	return mat;
 }
 
-static void ConvertToD3D(Matrix4 &m)
+static void ConvertToD3D(Matrix4 &m, const Size &windowSize)
 {
-	static Matrix4 conv = GetConvertMatrix();
+	Matrix4 conv = GetConvertMatrix(windowSize);
 
-	if (g_renderDriverInfo.driverType == RenderDriverInfo::D3D) {
+	if (g_renderDriverInfo.driverType == RenderDriverInfo::D3D9) {
 		m = conv * m;
 	}
 }
@@ -710,11 +716,16 @@ void RenderContext::setupScene(RenderScene *scene, const RenderClearer *clearer,
 	float zfar = camera->zfar();
 	AX_SU(g_zrecoverParam, Vector4(znear, zfar, znear * zfar, znear - zfar));
 
+	RenderTarget *target = m_targetSet.getFirstUsed();
+	AX_ASSERT(target);
+	Size windowSize = target->size();
+	AX_SU(g_sceneSize, Vector4(windowSize.width,windowSize.height,1.0f/windowSize.width, 1.0f/windowSize.height));
+
 	Matrix4 temp = camera->getViewProjMatrix();
-	ConvertToD3D(temp);
+	ConvertToD3D(temp, windowSize);
 	AX_SU(g_viewProjMatrix, temp);
 	temp = camera->getViewProjNoTranslate();
-	ConvertToD3D(temp);
+	ConvertToD3D(temp, windowSize);
 	AX_SU(g_viewProjNoTranslate, temp);
 
 	m_curInteraction = 0;
@@ -722,11 +733,6 @@ void RenderContext::setupScene(RenderScene *scene, const RenderClearer *clearer,
 
 	AX_SU(g_modelMatrix, Matrix::getIdentity());
 	AX_SU(g_instanceParam, Vector4(0,0,0,1));
-
-	RenderTarget *target = m_targetSet.getFirstUsed();
-	AX_ASSERT(target);
-	Size r = target->size();
-	AX_SU(g_sceneSize, Vector4(r.width,r.height,1.0f/r.width, 1.0f/r.height));
 
 	if (camera->isReflectionEnabled()) {
 		m_isReflecting = true;

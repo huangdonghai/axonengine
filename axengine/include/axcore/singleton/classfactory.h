@@ -22,7 +22,7 @@ read the license and understand and accept it fully.
 		{ NULL, NULL } }; return classentries; }
 
 #define AX_DECLARE_FACTORY()									\
-	static void *_CreateInstance();
+	public: static void *_CreateInstance();
 
 #define AX_IMPLEMENT_FACTORY(class_name)						\
 	void *class_name::_CreateInstance() {						\

@@ -13,7 +13,7 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-class DX9_Window : public Unknown
+class DX9_Window : public DX9_Unknown
 {
 public:
 	DX9_Window();

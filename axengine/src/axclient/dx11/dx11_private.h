@@ -8,7 +8,9 @@
 #endif
 
 #include <d3d11.h>
+#include <d3d11shader.h>
 #include <d3dx11.h>
+#include <D3DX11async.h>
 #include <dxerr.h>
 
 #if defined(DEBUG) || defined(_DEBUG)

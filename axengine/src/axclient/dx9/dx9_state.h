@@ -3,7 +3,7 @@
 
 AX_BEGIN_NAMESPACE
 
-class DX9_SamplerState : public Unknown
+class DX9_SamplerState : public DX9_Unknown
 {
 	friend class DX9_StateManager;
 
@@ -21,7 +21,7 @@ private:
 	IDirect3DStateBlock9 *m_stateBlock;
 };
 
-class DX9_DepthStencilState : public Unknown
+class DX9_DepthStencilState : public DX9_Unknown
 {
 	friend class DX9_StateManager;
 public:
@@ -36,7 +36,7 @@ private:
 	IDirect3DStateBlock9 *m_stateBlock;
 };
 
-class DX9_RasterizerState : public Unknown
+class DX9_RasterizerState : public DX9_Unknown
 {
 	friend class DX9_StateManager;
 public:
@@ -51,7 +51,7 @@ private:
 	IDirect3DStateBlock9 *m_stateBlock;
 };
 
-class DX9_BlendState : public Unknown
+class DX9_BlendState : public DX9_Unknown
 {
 	friend class DX9_StateManager;
 public:

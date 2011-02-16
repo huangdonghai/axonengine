@@ -23,8 +23,7 @@ typedef std::vector<HitRecord> HitRecords;
 
 struct RenderDriverInfo {
 	enum DriverType {
-		OpenGL,
-		D3D,
+		OpenGL, D3D9, D3D11,
 		UNKNOWN
 	};
 

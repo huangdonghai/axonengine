@@ -34,7 +34,7 @@ void DX11_Driver::initialize(SyncEvent &syncEvent)
 		return;
 
 	D3D_FEATURE_LEVEL featureLevel;
-	HRESULT hr = s_DynamicD3D11CreateDevice(0, D3D_DRIVER_TYPE_HARDWARE, 0, 0, 0, 0, &dx11_device, &featureLevel, &dx11_context);
+	HRESULT hr = s_DynamicD3D11CreateDevice(0, D3D_DRIVER_TYPE_HARDWARE, 0, 0, 0, 0, 0, &dx11_device, &featureLevel, &dx11_context);
 }
 
 void DX11_Driver::finalize()

@@ -3,7 +3,7 @@
 
 AX_BEGIN_NAMESPACE
 
-class DX11_Window {};
+class DX11_Window : public Unknown {};
 
 AX_END_NAMESPACE
 

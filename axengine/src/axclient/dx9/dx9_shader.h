@@ -13,11 +13,11 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-class Unknown : public IUnknown
+class DX9_Unknown : public IUnknown
 {
 public:
-	Unknown() {}
-	virtual ~Unknown() {}
+	DX9_Unknown() {}
+	virtual ~DX9_Unknown() {}
 
 	// methods inherited from ID3DXEffectStateManager
 	STDMETHOD(QueryInterface)(THIS_ REFIID iid, LPVOID *ppv)
@@ -52,46 +52,6 @@ private:
 
 class DX9_Shader;
 
-#if 0
-//--------------------------------------------------------------------------
-// class UniformCache
-//--------------------------------------------------------------------------
-
-class DX9_Uniform : public UniformItem
-{
-public:
-	DX9_Uniform(UniformItem &item, D3DXHANDLE param);
-	virtual ~DX9_Uniform();
-
-	bool isCached() const;
-	void cache();
-
-	template< class Q >
-	static void setUniform(Uniforms::ItemName itemname, const Q &q) {
-		UniformItem &item = g_uniforms.getItem(itemname);
-
-		if (item.m_valueType == UniformItem::vt_Texture) {
-			item.set(q);
-			return;
-		}
-
-		if (memcmp(&q, item.m_datap, item.m_dataSize) == 0)
-			return;
-
-		item.set(q);
-
-		setUniform(item, &q);
-	}
-
-	static void setUniform(UniformItem &item, const void *q);
-
-public:
-	UniformItem *m_src;
-	D3DXHANDLE m_param;
-};
-#endif
-//--------------------------------------------------------------------------
-// class DX9_SamplerInfo
 //--------------------------------------------------------------------------
 
 class DX9_SamplerInfo
@@ -122,13 +82,7 @@ public:
 protected:
 	void initVs();
 	void initPs();
-#if 0
-	void initState();
-#endif
 	void initSampler(const D3DXCONSTANT_DESC &desc);
-#if 0
-	const DX9_Pixel2Texel *findPixel2Texel(const String &name);
-#endif
 	void setPrimitiveParameters();
 	void setParameter(const ParamDesc &param, const float *value, bool isPixelShader);
 	void setParameter(const FixedString &name, int numFloats, const float *data);
@@ -173,10 +127,8 @@ private:
 };
 
 //--------------------------------------------------------------------------
-// class DX9_Shader
-//--------------------------------------------------------------------------
 
-class DX9_Shader : public Unknown
+class DX9_Shader : public DX9_Unknown
 {
 	friend class DX9_Pass;
 	friend class DX9_Technique;
@@ -204,10 +156,6 @@ public:
 	static bool isPrimitiveReg(int reg) { return reg >= PRIMITIVECONST_REG; }
 
 protected:
-#if 0
-	ConstBuffer *parseStruct(LPD3DXCONSTANTTABLE constTable, const char *paramName);
-	ConstBuffer *mergeStruct(const char *paramName);
-#endif
 	void initTechniques();
 	void initFeatures();
 
@@ -242,8 +190,6 @@ private:
 	ShaderInfo m_shaderInfo;
 };
 
-//--------------------------------------------------------------------------
-// class DX9_ShaderManager
 //--------------------------------------------------------------------------
 
 class DX9_ShaderManager

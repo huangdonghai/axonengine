@@ -127,6 +127,35 @@ ID3D11DepthStencilState * DX11_StateManager::findDepthStencilState(const DepthSt
 	return state;
 }
 
+static inline D3D11_FILL_MODE trFillMode(uint_t fillMode)
+{
+	switch (fillMode) {
+	case RasterizerDesc::FillMode_Point: return D3D11_FILL_WIREFRAME;
+	case RasterizerDesc::FillMode_Wireframe: return D3D11_FILL_WIREFRAME;
+	case RasterizerDesc::FillMode_Solid: return D3D11_FILL_SOLID;
+	default: AX_WRONGPLACE; return D3D11_FILL_SOLID;
+	}
+}
+
+static inline D3D11_CULL_MODE trCullMode(bool frontCounterClockwise, uint_t mode)
+{
+	if (frontCounterClockwise) {
+		switch (mode) {
+			case RasterizerDesc::CullMode_Front: return D3D11_CULL_BACK;
+			case RasterizerDesc::CullMode_Back: return D3D11_CULL_FRONT;
+			case RasterizerDesc::CullMode_None: return D3D11_CULL_NONE;
+			default: AX_WRONGPLACE; return D3D11_CULL_NONE;
+		}
+	} else {
+		switch (mode) {
+			case RasterizerDesc::CullMode_Front: return D3D11_CULL_FRONT;
+			case RasterizerDesc::CullMode_Back: return D3D11_CULL_BACK;
+			case RasterizerDesc::CullMode_None: return D3D11_CULL_NONE;
+			default: AX_WRONGPLACE; return D3D11_CULL_NONE;
+		}
+	}
+}
+
 ID3D11RasterizerState * DX11_StateManager::findRasterizerState(const RasterizerDesc &desc)
 {
 	Dict<RasterizerDesc, ID3D11RasterizerState *>::const_iterator it = m_rasterizerStateDict.find(desc);
@@ -135,10 +164,52 @@ ID3D11RasterizerState * DX11_StateManager::findRasterizerState(const RasterizerD
 
 	CD3D11_RASTERIZER_DESC d3ddesc;
 
+	d3ddesc.FillMode = trFillMode(desc.fillMode);
+	d3ddesc.CullMode = trCullMode(desc.frontCounterClockwise, desc.cullMode);
+	d3ddesc.FrontCounterClockwise = false;
+	
+	if (desc.depthBias) {
+		float factor = gl_shadowOffsetFactor.getFloat();
+		float units = gl_shadowOffsetUnits.getFloat() / 0x10000;
+
+		d3ddesc.DepthBias = factor;
+		d3ddesc.SlopeScaledDepthBias = units;
+	}
+
+	d3ddesc.ScissorEnable = desc.scissorEnable;
+
 	ID3D11RasterizerState *state = 0;
 	V(dx11_device->CreateRasterizerState(&d3ddesc, &state));
 	m_rasterizerStateDict[desc] = state;
 	return state;
+}
+
+static inline D3D11_BLEND trBlendFactor(uint_t factor)
+{
+	switch (factor) {
+	case BlendDesc::BlendFactor_Zero: return D3D11_BLEND_ZERO;
+	case BlendDesc::BlendFactor_One: return D3D11_BLEND_ONE;
+	case BlendDesc::BlendFactor_SrcColor: return D3D11_BLEND_SRC_COLOR;
+	case BlendDesc::BlendFactor_OneMinusSrcColor: return D3D11_BLEND_INV_SRC_COLOR;
+	case BlendDesc::BlendFactor_DstColor: return D3D11_BLEND_DEST_COLOR;
+	case BlendDesc::BlendFactor_OneMinusDstColor: return D3D11_BLEND_INV_DEST_COLOR;
+	case BlendDesc::BlendFactor_SrcAlpha: return D3D11_BLEND_SRC_ALPHA;
+	case BlendDesc::BlendFactor_OneMinusSrcAlpha: return D3D11_BLEND_INV_SRC_ALPHA;
+	case BlendDesc::BlendFactor_SrcAlphaSaturate: return D3D11_BLEND_SRC_ALPHA_SAT;
+	default: AX_WRONGPLACE; return D3D11_BLEND_ZERO;
+	}
+}
+
+static inline D3D11_BLEND_OP trBlendOp(uint_t op)
+{
+	switch (op) {
+	case BlendDesc::BlendOp_Add: return D3D11_BLEND_OP_ADD;
+	case BlendDesc::BlendOp_Subtract: return D3D11_BLEND_OP_SUBTRACT;
+	case BlendDesc::BlendOp_RevSubtract: return D3D11_BLEND_OP_REV_SUBTRACT;
+	case BlendDesc::BlendOp_Min: return D3D11_BLEND_OP_MIN;
+	case BlendDesc::BlendOp_Max: return D3D11_BLEND_OP_MAX;
+	default: AX_WRONGPLACE; return D3D11_BLEND_OP_ADD;
+	}
 }
 
 ID3D11BlendState * DX11_StateManager::findBlendState(const BlendDesc &desc)
@@ -148,6 +219,27 @@ ID3D11BlendState * DX11_StateManager::findBlendState(const BlendDesc &desc)
 		return it->second;
 
 	CD3D11_BLEND_DESC d3ddesc;
+
+	d3ddesc.AlphaToCoverageEnable = false;
+	d3ddesc.IndependentBlendEnable = false;
+
+	d3ddesc.RenderTarget[0].BlendEnable = desc.blendEnable;
+	d3ddesc.RenderTarget[0].SrcBlend = trBlendFactor(desc.srcBlend);
+	d3ddesc.RenderTarget[0].DestBlend = trBlendFactor(desc.destBlend);
+	d3ddesc.RenderTarget[0].BlendOp = trBlendOp(desc.blendOp);
+	if (desc.separateAlphaBlendEnable) {
+		d3ddesc.RenderTarget[0].SrcBlendAlpha = trBlendFactor(desc.srcBlendAlpha);
+		d3ddesc.RenderTarget[0].DestBlendAlpha = trBlendFactor(desc.destBlendAlpha);
+		d3ddesc.RenderTarget[0].BlendOpAlpha = trBlendOp(desc.blendOpAlpha);
+	} else {
+		d3ddesc.RenderTarget[0].SrcBlendAlpha = d3ddesc.RenderTarget[0].SrcBlend;
+		d3ddesc.RenderTarget[0].DestBlendAlpha = d3ddesc.RenderTarget[0].DestBlend;
+		d3ddesc.RenderTarget[0].BlendOpAlpha = d3ddesc.RenderTarget[0].BlendOp;
+	}
+	d3ddesc.RenderTarget[0].RenderTargetWriteMask = desc.renderTargetWriteMask;
+
+	for (UINT i = 1; i < D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT; ++i)
+		d3ddesc.RenderTarget[i] = d3ddesc.RenderTarget[0];
 
 	ID3D11BlendState *state = 0;
 	V(dx11_device->CreateBlendState(&d3ddesc, &state));

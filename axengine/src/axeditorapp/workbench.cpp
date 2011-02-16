@@ -319,7 +319,7 @@ void Workbench::createStatusBar() {
 
 	ui.engineBuild->setText(build);
 
-	if (g_renderDriverInfo.driverType == RenderDriverInfo::D3D) {
+	if (g_renderDriverInfo.driverType == RenderDriverInfo::D3D9) {
 		ui.renderDriver->setText("DX9");
 	} else {
 		ui.renderDriver->setText("GL2");
