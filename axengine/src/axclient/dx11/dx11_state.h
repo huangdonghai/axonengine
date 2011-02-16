@@ -3,17 +3,116 @@
 
 AX_BEGIN_NAMESPACE
 
+extern ID3D11DeviceContext *dx11_context;
+
 class DX11_StateManager
 {
+	enum ShaderDomain {
+		VS, HS, DS, GS, PS, CS, MAX
+	};
+	enum { MAX_STAGES = 16 };
+
 public:
+	DX11_StateManager()
+	{
+		TypeZero(this);
+	}
+
+	void setTexture(int stage, ID3D11ShaderResourceView *texture)
+	{
+		if (m_textures[stage] == texture) return;
+		dx11_context->PSSetShaderResources(stage, 1, &texture);
+		m_textures[stage] = texture;
+	}
+
+	void setSamplerState(int stage, const SamplerDesc &desc)
+	{
+		if (m_samplerDescs[stage] == desc) {
+			return;
+		}
+		ID3D11SamplerState *state = findSamplerState(desc);
+		dx11_context->PSSetSamplers(stage, 1, &state);
+		m_samplerDescs[stage] = desc;
+	}
+
+	void setDepthStencilState(const DepthStencilDesc &desc)
+	{
+		if (m_depthStencilDesc == desc)
+			return;
+
+		ID3D11DepthStencilState *state = findDepthStencilState(desc);
+		dx11_context->OMSetDepthStencilState(state, 0);
+		m_depthStencilDesc = desc;
+	}
+
+	void setRasterizerState(const RasterizerDesc &desc)
+	{
+		if (m_rasterizerDesc == desc)
+			return;
+
+		ID3D11RasterizerState *state = findRasterizerState(desc);
+		dx11_context->RSSetState(state);
+		m_rasterizerDesc = desc;
+	}
+
+	void setBlendState(const BlendDesc &desc)
+	{
+		if (m_blendDesc == desc)
+			return;
+
+		ID3D11BlendState *state = findBlendState(desc);
+		FLOAT blendFactor[4] = { 0,0,0,0 };
+		dx11_context->OMSetBlendState(state, blendFactor, 0xFFFFFFFF);
+		m_blendDesc = desc;
+	}
+
+	void setVertexShader(ID3D11VertexShader *vs)
+	{
+		if (m_vertexShader == vs)
+			return;
+
+		dx11_context->VSSetShader(vs, 0, 0);
+		m_vertexShader = vs;
+	}
+
+	void setPixelShader(ID3D11PixelShader *ps)
+	{
+		if (m_pixelShader == ps)
+			return;
+		dx11_context->PSSetShader(ps, 0, 0);
+		m_pixelShader = ps;
+	}
+
+	void setInputLayout(ID3D11InputLayout *il)
+	{
+		if (m_inputLayout == il)
+			return;
+
+		dx11_context->IASetInputLayout(il);
+		m_inputLayout = il;
+	}
+
+protected:
+	ID3D11SamplerState *findSamplerState(const SamplerDesc &desc);
+	ID3D11DepthStencilState *findDepthStencilState(const DepthStencilDesc &desc);
+	ID3D11RasterizerState *findRasterizerState(const RasterizerDesc &desc);
+	ID3D11BlendState *findBlendState(const BlendDesc &desc);
+
 private:
+	ID3D11ShaderResourceView *m_textures[MAX_STAGES];
+	SamplerDesc m_samplerDescs[MAX_STAGES];
 	DepthStencilDesc m_depthStencilDesc;
 	RasterizerDesc m_rasterizerDesc;
 	BlendDesc m_blendDesc;
 
+	Dict<SamplerDesc, ID3D11SamplerState *> m_samplerStateDict;
 	Dict<DepthStencilDesc, ID3D11DepthStencilState *> m_depthStencilStateDict;
 	Dict<RasterizerDesc, ID3D11RasterizerState *> m_rasterizerStateDict;
 	Dict<BlendDesc, ID3D11BlendState *> m_blendStateDict;
+
+	ID3D11VertexShader *m_vertexShader;
+	ID3D11PixelShader *m_pixelShader;
+	ID3D11InputLayout *m_inputLayout;
 };
 
 AX_END_NAMESPACE
