@@ -140,11 +140,6 @@ public:
 
 	// implement Shader
 	bool init(const FixedString &name, const GlobalMacro &gm, const MaterialMacro &mm);
-	bool haveTechnique(Technique tech) const;
-	const ShaderInfo *getShaderInfo() const { return 0; }
-
-	void setSystemMap(MaterialTextureId maptype, IDirect3DTexture9 *tex);
-
 	ID3DXEffect *getObject() const { return m_object; }
 
 	UINT begin(Technique tech);
@@ -177,7 +172,6 @@ private:
 	FixedString m_key;
 
 	D3DXHANDLE m_d3dxTechniques[Technique::MaxType];
-	IDirect3DTexture9 *m_samplerBound[MaterialTextureId::MaxType];
 	D3DXHANDLE m_curTechnique;
 
 	DX9_SamplerInfos m_samplerInfos;

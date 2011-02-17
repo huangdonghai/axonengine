@@ -8,10 +8,8 @@
 #endif
 
 #include <d3d11.h>
-#include <d3d11shader.h>
 #include <d3dx11.h>
-#include <D3DX11async.h>
-#include <dxerr.h>
+#include <d3dx11effect.h>
 
 #if defined(DEBUG) || defined(_DEBUG)
 #define V(x)           { HRESULT hr = (x); if (FAILED(hr)) { Errorf("%s(%d): %s", __FILE__, __LINE__, #x); } }

@@ -397,13 +397,8 @@ bool DX9_Shader::init(const FixedString &name, const GlobalMacro &gm, const Mate
 {
 	m_key = name;
 	std::string fullname = "shaders/" + name.toString() + ".fx";
-	std::string ospath = g_fileSystem->dataPathToOsPath(fullname);
-
-	std::string path = g_fileSystem->dataPathToOsPath("shaders/");
-	path = "-I" + path;
 
 	std::vector<D3DXMACRO> d3dxmacros;
-
 	D3DXMACRO d3dxmacro;
 
 	StringPairSeq definesG  = gm.getDefines();
@@ -474,11 +469,6 @@ bool DX9_Shader::init(const FixedString &name, const GlobalMacro &gm, const Mate
 	initShaderInfo();
 
 	return true;
-}
-
-bool DX9_Shader::haveTechnique(Technique tech) const
-{
-	return m_techniques[tech] != 0;
 }
 
 void DX9_Shader::initTechniques()
@@ -625,13 +615,6 @@ D3DXHANDLE DX9_Shader::getUsedParameter(const char *name)
 	} else {
 		return param;
 	}
-}
-
-void DX9_Shader::setSystemMap(MaterialTextureId maptype, IDirect3DTexture9 *tex)
-{
-	AX_ASSERT(maptype >= 0 && maptype < MaterialTextureId::MaxType);
-
-	m_samplerBound[maptype] = tex;
 }
 
 bool DX9_Shader::isParameterUsed(D3DXHANDLE param)

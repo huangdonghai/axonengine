@@ -71,18 +71,18 @@ public:
 protected:
 	void initVs();
 	void initPs();
-	void initSampler(const D3DXCONSTANT_DESC &desc);
+	void initSampler(const D3D11_SHADER_VARIABLE_DESC &desc);
 	void setPrimitiveParameters();
 	void setParameter(const ParamDesc &param, const float *value, bool isPixelShader);
 	void setParameter(const FixedString &name, int numFloats, const float *data);
 
 private:
 	DX11_Shader *m_shader;
-	ID3DX11EffectPass m_d3dxhandle;
+	ID3DX11EffectPass *m_d3dxhandle;
 
 	// shader
-	IDirect3DVertexShader9 *m_vs;
-	IDirect3DPixelShader9 *m_ps;
+	ID3D11VertexShader *m_vs;
+	ID3D11PixelShader *m_ps;
 
 	// sys sampler
 	int m_sysSamplers[GlobalTextureId::MaxType];
@@ -91,7 +91,7 @@ private:
 	int m_matSamplers[MaterialTextureId::MaxType];
 
 	// batch sampler
-	DX9_SamplerInfos m_batchSamplers;
+	DX11_SamplerInfos m_batchSamplers;
 
 	// local parameter
 	int m_setflag;
@@ -103,13 +103,13 @@ class DX11_Technique
 	friend class DX11_Shader;
 
 public:
-	DX11_Technique(DX11_Shader *shader, D3DXHANDLE d3dxhandle);
+	DX11_Technique(DX11_Shader *shader, ID3DX11EffectTechnique *d3dxhandle);
 	~DX11_Technique();
 
 private:
 	enum {MAX_PASSES = 8};
 	DX11_Shader *m_shader;
-	D3DXHANDLE m_d3dxhandle;
+	ID3DX11EffectTechnique *m_d3dxhandle;
 
 	int m_numPasses;
 	DX11_Pass *m_passes[MAX_PASSES];
@@ -124,17 +124,16 @@ class DX11_Shader : public DX11_Unknown
 	friend class DX11_ShaderManager;
 
 public:
-	DX11_Shader();
+	DX11_Shader(const FixedString &name, const GlobalMacro &gm, const MaterialMacro &mm);
 	~DX11_Shader();
 
 	// implement Shader
-	bool init(const FixedString &name, const GlobalMacro &gm, const MaterialMacro &mm);
 	bool haveTechnique(Technique tech) const;
 	const ShaderInfo *getShaderInfo() const { return 0; }
 
-	void setSystemMap(MaterialTextureId maptype, IDirect3DTexture9 *tex);
+	void setSystemMap(MaterialTextureId maptype, ID3D11ShaderResourceView *tex);
 
-	ID3DXEffect *getObject() const { return m_object; }
+	ID3DX11Effect *getObject() const { return m_object; }
 
 	UINT begin(Technique tech);
 	void beginPass(UINT pass);
@@ -149,29 +148,28 @@ protected:
 	void initFeatures();
 
 	void initAnnotation();
-	void initSamplerAnn(D3DXHANDLE param);
-	void initParameterAnn(D3DXHANDLE param);
+	void initSamplerAnn(D3D11_SHADER_VARIABLE_DESC *param);
+	void initParameterAnn(D3D11_SHADER_VARIABLE_DESC *param);
 	void initAxonObject();
 
 	void initShaderInfo();
 
-	D3DXHANDLE findTechnique(Technique tech);
-	D3DXHANDLE getUsedParameter(const char *name);
-	bool isParameterUsed(D3DXHANDLE param);
+	ID3DX11EffectTechnique *findTechnique(Technique tech);
+//	D3DXHANDLE getUsedParameter(const char *name);
+//	bool isParameterUsed(D3DXHANDLE param);
 	bool isGlobalTextureUsed(GlobalTextureId id) const;
 	bool isMaterialTextureUsed(MaterialTextureId id) const;
 
 private:
-	LPD3DXEFFECT m_object;              // Effect object
+	ID3DX11Effect *m_object;              // Effect object
 	FixedString m_key;
 
-	D3DXHANDLE m_d3dxTechniques[Technique::MaxType];
-	IDirect3DTexture9 *m_samplerBound[MaterialTextureId::MaxType];
-	D3DXHANDLE m_curTechnique;
+	ID3DX11EffectTechnique *m_d3dxTechniques[Technique::MaxType];
+	ID3D11ShaderResourceView *m_samplerBound[MaterialTextureId::MaxType];
+	ID3DX11EffectTechnique *m_curTechnique;
 
-	DX9_SamplerInfos m_samplerInfos;
+	DX11_SamplerInfos m_samplerInfos;
 
-	// pixel2texel
 	DX11_Technique *m_techniques[Technique::MaxType];
 	DX11_Technique *m_curTech;
 
@@ -190,9 +188,6 @@ public:
 	~DX11_ShaderManager();
 
 	DX11_Shader *findShader(const FixedString &nameId, const GlobalMacro &gm, const MaterialMacro &mm);
-	void saveShaderCache(const std::string &name);
-	void applyShaderCache(const std::string &name);
-
 	const ShaderInfo *findShaderInfo(const FixedString &key);
 
 protected:
@@ -209,7 +204,6 @@ private:
 	};
 	typedef Dict<ShaderKey, DX11_Shader*> ShaderDict;
 	ShaderDict m_shaders;
-	DX11_Shader *m_defaulted;
 	ShaderInfoDict m_shaderInfoDict;
 };
 
