@@ -63,7 +63,7 @@ public:
 		D3D11_SHADER_VARIABLE_DESC d3dDesc;
 	};
 
-	DX11_Pass(DX11_Shader *shader/*, D3DXHANDLE d3dxhandle*/);
+	DX11_Pass(DX11_Shader *shader, ID3DX11EffectPass *d3dxpass);
 	~DX11_Pass();
 
 	void begin();
@@ -107,7 +107,7 @@ public:
 	~DX11_Technique();
 
 private:
-	enum {MAX_PASSES = 8};
+	enum { MAX_PASSES = 8 };
 	DX11_Shader *m_shader;
 	ID3DX11EffectTechnique *m_d3dxhandle;
 
@@ -128,11 +128,6 @@ public:
 	~DX11_Shader();
 
 	// implement Shader
-	bool haveTechnique(Technique tech) const;
-	const ShaderInfo *getShaderInfo() const { return 0; }
-
-	void setSystemMap(MaterialTextureId maptype, ID3D11ShaderResourceView *tex);
-
 	ID3DX11Effect *getObject() const { return m_object; }
 
 	UINT begin(Technique tech);
@@ -146,12 +141,7 @@ public:
 protected:
 	void initTechniques();
 	void initFeatures();
-
-	void initAnnotation();
-	void initSamplerAnn(D3D11_SHADER_VARIABLE_DESC *param);
-	void initParameterAnn(D3D11_SHADER_VARIABLE_DESC *param);
 	void initAxonObject();
-
 	void initShaderInfo();
 
 	ID3DX11EffectTechnique *findTechnique(Technique tech);

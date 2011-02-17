@@ -134,32 +134,6 @@ namespace {
 	};
 } // namespace
 
-DX9_Technique::DX9_Technique(DX9_Shader *shader, D3DXHANDLE d3dxhandle)
-{
-	m_shader = shader;
-	m_d3dxhandle = d3dxhandle;
-
-	HRESULT hr;
-
-	D3DXTECHNIQUE_DESC desc;
-	V(shader->m_object->GetTechniqueDesc(d3dxhandle, &desc));
-
-	m_numPasses = desc.Passes;
-
-	UINT checkpass;
-	shader->m_object->Begin(&checkpass, D3DXFX_DONOTSAVESTATE);
-	AX_ASSURE(checkpass == m_numPasses);
-	for (int i = 0; i < m_numPasses; i++) {
-		shader->m_object->BeginPass(i);
-		m_passes[i] = new DX9_Pass(shader, shader->m_object->GetPass(d3dxhandle, i));
-		shader->m_object->EndPass();
-	}
-	shader->m_object->End();
-}
-
-DX9_Technique::~DX9_Technique()
-{}
-
 DX9_Pass::DX9_Pass(DX9_Shader *shader, D3DXHANDLE d3dxhandle)
 {
 	m_shader = shader;
@@ -378,10 +352,35 @@ void DX9_Pass::setParameter(const FixedString &name, int numFloats, const float 
 	dx9_device->SetVertexShaderConstantF(param.d3dDesc.RegisterIndex, data, param.d3dDesc.RegisterCount);
 }
 
-
-
 //--------------------------------------------------------------------------
-// class D3D9Shader
+
+DX9_Technique::DX9_Technique(DX9_Shader *shader, D3DXHANDLE d3dxhandle)
+{
+	m_shader = shader;
+	m_d3dxhandle = d3dxhandle;
+
+	HRESULT hr;
+
+	D3DXTECHNIQUE_DESC desc;
+	V(shader->m_object->GetTechniqueDesc(d3dxhandle, &desc));
+
+	m_numPasses = desc.Passes;
+
+	UINT checkpass;
+	shader->m_object->Begin(&checkpass, D3DXFX_DONOTSAVESTATE);
+	AX_ASSURE(checkpass == m_numPasses);
+	for (int i = 0; i < m_numPasses; i++) {
+		shader->m_object->BeginPass(i);
+		m_passes[i] = new DX9_Pass(shader, shader->m_object->GetPass(d3dxhandle, i));
+		shader->m_object->EndPass();
+	}
+	shader->m_object->End();
+}
+
+DX9_Technique::~DX9_Technique()
+{}
+
+
 //--------------------------------------------------------------------------
 
 DX9_Shader::DX9_Shader()
@@ -498,8 +497,6 @@ void DX9_Shader::initAnnotation()
 
 		if (paramDesc.Type >= D3DXPT_SAMPLER && paramDesc.Type <= D3DXPT_SAMPLERCUBE) {
 			initSamplerAnn(param);
-		} else {
-			initParameterAnn(param);
 		}
 	}
 }
@@ -549,13 +546,6 @@ void DX9_Shader::initSamplerAnn(D3DXHANDLE param)
 
 		m_shaderInfo.m_needReflection = true;
 	}
-}
-
-void DX9_Shader::initParameterAnn(D3DXHANDLE param)
-{
-#if 0
-	initPixelToTexel(param);
-#endif
 }
 
 D3DXHANDLE DX9_Shader::findTechnique(Technique tech)

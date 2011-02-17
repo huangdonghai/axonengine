@@ -2,6 +2,63 @@
 
 AX_BEGIN_NAMESPACE
 
+
+DX11_Pass::DX11_Pass(DX11_Shader *shader, ID3DX11EffectPass *d3dxpass)
+{
+	m_shader = shader;
+	m_d3dxhandle = d3dxpass;
+	m_setflag = 0;
+
+	memset(m_sysSamplers, -1, sizeof(m_sysSamplers));
+	memset(m_matSamplers, -1, sizeof(m_matSamplers));
+
+	initVs();
+	initPs();
+}
+
+DX11_Pass::~DX11_Pass()
+{
+
+}
+
+void DX11_Pass::initVs()
+{
+
+}
+
+void DX11_Pass::initPs()
+{
+
+}
+
+
+
+
+
+DX11_Technique::DX11_Technique(DX11_Shader *shader, ID3DX11EffectTechnique *d3dxhandle)
+{
+	m_shader = shader;
+	m_d3dxhandle = d3dxhandle;
+
+	HRESULT hr;
+
+	D3DX11_TECHNIQUE_DESC desc;
+	V(d3dxhandle->GetDesc(&desc));
+
+	m_numPasses = desc.Passes;
+
+	for (int i = 0; i < m_numPasses; i++) {
+		m_passes[i] = new DX11_Pass(shader, d3dxhandle->GetPassByIndex(i));
+	}
+}
+
+DX11_Technique::~DX11_Technique()
+{
+
+}
+
+
+
 extern LPD3DX11COMPILEFROMMEMORY dx11_D3DX11CompileFromMemory;
 
 DX11_Shader::DX11_Shader(const FixedString &name, const GlobalMacro &gm, const MaterialMacro &mm)
@@ -77,12 +134,86 @@ DX11_Shader::DX11_Shader(const FixedString &name, const GlobalMacro &gm, const M
 	}
 
 	// D3DX11CreateEffectFromMemory
+	hr = D3DX11CreateEffectFromMemory(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), 0, dx11_device, &m_object);
+	if (FAILED(hr)) {
+		Errorf("can't create effect");
+		return;
+	}
+
+	// init techniques
+	initTechniques();
+
+	// init shader features
+	initFeatures();
+
+	// init axon object
+	initAxonObject();
+
+	// init shader info
+	initShaderInfo();
 }
 
 DX11_Shader::~DX11_Shader()
+{}
+
+void DX11_Shader::initTechniques()
+{
+	for (int i = 0; i < Technique::MaxType; i++) {
+		m_d3dxTechniques[i] = findTechnique((Technique::Type)i);
+	}
+}
+
+void DX11_Shader::initFeatures()
 {
 
 }
+
+void DX11_Shader::initAxonObject()
+{
+	for (int i = 0; i < Technique::MaxType; i++) {
+		if (!m_d3dxTechniques[i]) {
+			m_techniques[i] = 0;
+			continue;
+		}
+
+		m_techniques[i] = new DX11_Technique(this, m_d3dxTechniques[i]);
+	}
+}
+
+void DX11_Shader::initShaderInfo()
+{
+	for (int i = 0; i < Technique::MaxType; i++)
+		m_shaderInfo.m_haveTechnique[i] = m_techniques[i] != 0;
+
+	m_shaderInfo.m_needReflection = isMaterialTextureUsed(MaterialTextureId::Reflection);
+	m_shaderInfo.m_needSceneColor = isGlobalTextureUsed(GlobalTextureId::SceneColor);
+
+	// add to shader manager
+	dx11_shaderManager->addShaderInfo(m_key, &m_shaderInfo);
+}
+
+ID3DX11EffectTechnique *DX11_Shader::findTechnique(Technique tech)
+{
+	ID3DX11EffectVariable *var = m_object->GetVariableByName("Script");
+
+	if (!var) return 0;
+
+	ID3DX11EffectVariable *anno = var->GetAnnotationByName(tech.toString().c_str());
+	if (!var) return 0;
+
+	const char *techName;
+	V(var->AsString()->GetString(&techName));
+
+	if (!techName) return 0;
+
+	ID3DX11EffectTechnique *result = m_object->GetTechniqueByName(techName);
+	return result;
+}
+
+
+
+
+
 
 DX11_ShaderManager::DX11_ShaderManager()
 {

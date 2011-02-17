@@ -92,6 +92,15 @@ void DX11_Driver::initialize(SyncEvent &syncEvent)
 
 	D3D_FEATURE_LEVEL featureLevel;
 	HRESULT hr = dx11_D3D11CreateDevice(0, D3D_DRIVER_TYPE_HARDWARE, 0, 0, 0, 0, 0, &dx11_device, &featureLevel, &dx11_context);
+
+	IDXGIDevice * pDXGIDevice;
+	hr = dx11_device->QueryInterface(__uuidof(IDXGIDevice), (void **)&pDXGIDevice);
+
+	IDXGIAdapter * pDXGIAdapter;
+	hr = pDXGIDevice->GetParent(__uuidof(IDXGIAdapter), (void **)&pDXGIAdapter);
+
+	IDXGIFactory * pIDXGIFactory;
+	pDXGIAdapter->GetParent(__uuidof(IDXGIFactory), (void **)&pIDXGIFactory);
 }
 
 void DX11_Driver::finalize()

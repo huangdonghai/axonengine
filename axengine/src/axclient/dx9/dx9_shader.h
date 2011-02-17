@@ -156,7 +156,6 @@ protected:
 
 	void initAnnotation();
 	void initSamplerAnn(D3DXHANDLE param);
-	void initParameterAnn(D3DXHANDLE param);
 	void initAxonObject();
 
 	void initShaderInfo();

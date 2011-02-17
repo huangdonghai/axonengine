@@ -22,7 +22,6 @@ public:
 
 	// implement RenderTarget
 	Size getSize();
-	bool isWindow() { return true;}
 
 	void update(Handle newId, int width, int height);
 	Handle getWindowHandle() { return Handle(m_wndId); }
