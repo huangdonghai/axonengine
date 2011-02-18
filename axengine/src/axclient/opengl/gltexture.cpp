@@ -150,7 +150,7 @@ inline void trTexFormat(TexFormat tex_format, GLenum &dataformat, GLenum &dataty
 		internal_format = GL_DEPTH_COMPONENT24;
 		break;
 
-	case TexFormat::D32:
+	case TexFormat::D32F:
 		dataformat = GL_DEPTH_COMPONENT;
 		datatype = GL_UNSIGNED_INT;
 		internal_format = GL_DEPTH_COMPONENT32;

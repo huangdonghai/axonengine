@@ -25,6 +25,8 @@ public:
 
 	virtual const ShaderInfo *findShaderInfo(const FixedString &key);
 
+	static DXGI_FORMAT trTexFormat(TexFormat texFormat);
+
 protected:
 	void createInputLayouts();
 

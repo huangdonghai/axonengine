@@ -62,7 +62,7 @@ struct TexFormat
 		R32F, RG32F, RGB32F, RGBA32F,
 
 		// depth texture
-		D16, D24, D32,
+		D16, D24, D32F,
 
 		// depth-stencil
 		D24S8,
@@ -171,7 +171,7 @@ inline int TexFormat::getNumComponents() const
 
 	case D16:
 	case D24:
-	case D32:
+	case D32F:
 	case D24S8:
 	case DF16:
 	case DF24:
@@ -212,7 +212,7 @@ inline int TexFormat::getBitsPerPixel() const
 	if (m_t == RGB10A2) return 32;
 	if (m_t == D16 || m_t == DF16) return 16;
 	if (m_t == D24) return 24;
-	if (m_t == D32) return 32;
+	if (m_t == D32F) return 32;
 	if (m_t == D24S8 || m_t == DF24 || m_t == RAWZ || m_t == INTZ) return 32;
 
 	Errorf(_("getBitsPerPixel: unknown type"));
@@ -279,7 +279,7 @@ inline int TexFormat::getDepthBits() const
 	case RAWZ:
 	case INTZ:
 		return 24;
-	case D32:
+	case D32F:
 		return 32;
 	default:
 		return 0;
@@ -344,8 +344,8 @@ inline const char *TexFormat::toString() const
 		return "D16";
 	case D24:
 		return "D24";
-	case D32:
-		return "D32";
+	case D32F:
+		return "D32F";
 	case D24S8:
 		return "D24S8";
 

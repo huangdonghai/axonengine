@@ -166,4 +166,46 @@ void DX11_Driver::createInputLayouts()
 
 }
 
+DXGI_FORMAT DX11_Driver::trTexFormat(TexFormat texformat)
+{
+	DXGI_FORMAT d3dformat = DXGI_FORMAT_UNKNOWN;
+
+	switch (texformat) {
+	case TexFormat::AUTO: break;
+	case TexFormat::NULLTARGET: break;
+	case TexFormat::R5G6B5: d3dformat = DXGI_FORMAT_B5G6R5_UNORM; break;
+	case TexFormat::RGB10A2: d3dformat = DXGI_FORMAT_R10G10B10A2_UNORM; break;
+	case TexFormat::RG16: d3dformat = DXGI_FORMAT_R16G16_UNORM; break;
+	case TexFormat::L8: d3dformat = DXGI_FORMAT_R8_UNORM; break;
+	case TexFormat::LA8: break;
+	case TexFormat::A8: d3dformat = DXGI_FORMAT_A8_UNORM; break;
+	case TexFormat::BGR8: break;
+	case TexFormat::BGRA8: d3dformat = DXGI_FORMAT_B8G8R8A8_UNORM; break;
+	case TexFormat::BGRX8: d3dformat = DXGI_FORMAT_B8G8R8X8_UNORM; break;
+	case TexFormat::DXT1: d3dformat = DXGI_FORMAT_BC1_UNORM; break;
+	case TexFormat::DXT3: d3dformat = DXGI_FORMAT_BC2_UNORM; break;
+	case TexFormat::DXT5: d3dformat = DXGI_FORMAT_BC3_UNORM; break;
+	case TexFormat::L16: d3dformat = DXGI_FORMAT_R16_UNORM; break;
+	case TexFormat::R16F: d3dformat = DXGI_FORMAT_R16_FLOAT; break;
+	case TexFormat::RG16F: d3dformat = DXGI_FORMAT_R16G16_FLOAT; break;
+	case TexFormat::RGB16F: break;
+	case TexFormat::RGBA16F: d3dformat = DXGI_FORMAT_R16G16B16A16_FLOAT; break;
+	case TexFormat::R32F: d3dformat = DXGI_FORMAT_R32_FLOAT; break;
+	case TexFormat::RG32F: d3dformat = DXGI_FORMAT_R32G32_FLOAT; break;
+	case TexFormat::RGB32F: d3dformat = DXGI_FORMAT_R32G32B32_FLOAT; break;
+	case TexFormat::RGBA32F: d3dformat = D3DFMT_A32B32G32R32F; break;
+	case TexFormat::D16: d3dformat = DXGI_FORMAT_D16_UNORM; break;
+	case TexFormat::D24: d3dformat = DXGI_FORMAT_R24_UNORM_X8_TYPELESS; break;
+	case TexFormat::D32F: d3dformat = DXGI_FORMAT_D32_FLOAT; break;
+	case TexFormat::D24S8: d3dformat = DXGI_FORMAT_D24_UNORM_S8_UINT; break;
+	case TexFormat::DF16: break;
+	case TexFormat::DF24: break;
+	case TexFormat::RAWZ: break;
+	case TexFormat::INTZ: break;
+	default: AX_WRONGPLACE;
+	}
+
+	return d3dformat;
+}
+
 AX_END_NAMESPACE

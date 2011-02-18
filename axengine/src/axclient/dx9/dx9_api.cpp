@@ -58,7 +58,7 @@ inline bool trTexFormat(TexFormat texformat, D3DFORMAT &d3dformat)
 	case TexFormat::RGBA32F: d3dformat = D3DFMT_A32B32G32R32F; break;
 	case TexFormat::D16: d3dformat = D3DFMT_D16; break;
 	case TexFormat::D24: d3dformat = D3DFMT_D24X8; break;
-	case TexFormat::D32: d3dformat = D3DFMT_D32; break;
+	case TexFormat::D32F: d3dformat = D3DFMT_D32F_LOCKABLE; break;
 	case TexFormat::D24S8: d3dformat = D3DFMT_D24S8; break;
 	case TexFormat::DF16: d3dformat = (D3DFORMAT)MAKEFOURCC('D','F','1','6'); break;
 	case TexFormat::DF24: d3dformat = (D3DFORMAT)MAKEFOURCC('D','F','2','4'); break;

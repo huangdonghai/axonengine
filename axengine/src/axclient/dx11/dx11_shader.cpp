@@ -210,6 +210,16 @@ ID3DX11EffectTechnique *DX11_Shader::findTechnique(Technique tech)
 	return result;
 }
 
+bool DX11_Shader::isGlobalTextureUsed(GlobalTextureId id) const
+{
+	return false;
+}
+
+bool DX11_Shader::isMaterialTextureUsed(MaterialTextureId id) const
+{
+	return false;
+}
+
 
 
 
