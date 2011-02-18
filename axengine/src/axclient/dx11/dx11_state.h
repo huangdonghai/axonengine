@@ -13,10 +13,7 @@ class DX11_StateManager
 	enum { MAX_STAGES = 16 };
 
 public:
-	DX11_StateManager()
-	{
-		TypeZero(this);
-	}
+	DX11_StateManager();
 
 	void setTexture(int stage, ID3D11ShaderResourceView *texture)
 	{
@@ -92,6 +89,8 @@ public:
 		m_inputLayout = il;
 	}
 
+	ID3D11InputLayout *findInputLayout(VertexType vt, bool isInstanced, const void *bytecode, int bytecodeLength);
+
 protected:
 	ID3D11SamplerState *findSamplerState(const SamplerDesc &desc);
 	ID3D11DepthStencilState *findDepthStencilState(const DepthStencilDesc &desc);
@@ -105,14 +104,31 @@ private:
 	RasterizerDesc m_rasterizerDesc;
 	BlendDesc m_blendDesc;
 
+	ID3D11VertexShader *m_vertexShader;
+	ID3D11PixelShader *m_pixelShader;
+	ID3D11InputLayout *m_inputLayout;
+
 	Dict<SamplerDesc, ID3D11SamplerState *> m_samplerStateDict;
 	Dict<DepthStencilDesc, ID3D11DepthStencilState *> m_depthStencilStateDict;
 	Dict<RasterizerDesc, ID3D11RasterizerState *> m_rasterizerStateDict;
 	Dict<BlendDesc, ID3D11BlendState *> m_blendStateDict;
 
-	ID3D11VertexShader *m_vertexShader;
-	ID3D11PixelShader *m_pixelShader;
-	ID3D11InputLayout *m_inputLayout;
+	struct InputLayoutKey {
+		VertexType vt;
+		bool isInstanced;
+		std::vector<byte_t> bytecode;
+
+		operator size_t() const
+		{
+			size_t result = vt;
+			hash_combine(result, isInstanced);
+			for (std::vector<byte_t>::const_iterator it = bytecode.begin(); it != bytecode.end(); ++it) {
+				hash_combine(result, *it);
+			}
+			return result;
+		}
+	};
+	Dict<InputLayoutKey, ID3D11InputLayout *> m_inputLayoutDict;
 };
 
 AX_END_NAMESPACE

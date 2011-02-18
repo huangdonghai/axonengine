@@ -68,7 +68,7 @@ struct VertexBufferTraits
 {
 	static void allocPage(phandle_t &h, int size)
 	{
-		g_apiWrap->createVertexBuffer(h, size, Primitive::HintDynamic);
+		g_apiWrap->createVertexBuffer(h, size, Primitive::HintDynamic, 0);
 	}
 	static void uploadPage(phandle_t h, int size, const void *p)
 	{
@@ -84,7 +84,7 @@ struct IndexBufferTraits
 {
 	static void allocPage(phandle_t &h, int size)
 	{
-		g_apiWrap->createIndexBuffer(h, size, Primitive::HintDynamic);
+		g_apiWrap->createIndexBuffer(h, size, Primitive::HintDynamic, 0);
 	}
 	static void uploadPage(phandle_t h, int size, const void *p)
 	{

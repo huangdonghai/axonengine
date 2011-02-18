@@ -24,7 +24,7 @@ read the license and understand and accept it fully.
 #define V(x)           { HRESULT hr = (x); if (FAILED(hr)) { Errorf("%s(%d): %s", __FILE__, __LINE__, #x); } }
 #define V_RETURN(x)    { hr = (x); if (FAILED(hr)) { Errorf("%s(%d): %s in %s", __FILE__, __LINE__, DX9_ErrorString(hr), #x); return hr; } }
 #else
-#define V(x)           { hr = (x); }
+#define V(x)           { HRESULT hr = (x); }
 #define V_RETURN(x)    { hr = (x); if (FAILED(hr)) { return hr; } }
 #endif
 

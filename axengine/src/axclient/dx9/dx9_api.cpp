@@ -309,7 +309,7 @@ static void dx9GenerateMipmap(phandle_t h)
 	dx9DeleteTexture(&dum);
 }
 
-static void dx9CreateVertexBuffer(phandle_t h, int datasize, Primitive::Hint hint)
+static void dx9CreateVertexBuffer(phandle_t h, int datasize, Primitive::Hint hint, const void *p)
 {
 	DWORD d3dusage = D3DUSAGE_WRITEONLY;
 	D3DPOOL d3dpool = D3DPOOL_DEFAULT;
@@ -323,6 +323,13 @@ static void dx9CreateVertexBuffer(phandle_t h, int datasize, Primitive::Hint hin
 	DX9_Resource *resource = new DX9_Resource(DX9_Resource::kVertexBuffer, vb);
 	resource->m_isDynamic = hint != Primitive::HintStatic;
 	*h = resource;
+
+	if (p) {
+		void *dst = 0;
+		V(vb->Lock(0, datasize, &dst, 0));
+		memcpy(dst, p, datasize);
+		V(vb->Unlock());
+	}
 
 	stat_numVertexBuffers.inc();
 	stat_vertexBufferMemory.add(datasize);
@@ -353,7 +360,7 @@ static void dx9DeleteVertexBuffer(phandle_t h)
 	delete h;
 }
 
-static void dx9CreateIndexBuffer(phandle_t h, int datasize, Primitive::Hint hint)
+static void dx9CreateIndexBuffer(phandle_t h, int datasize, Primitive::Hint hint, const void *p)
 {
 	DWORD d3dusage = D3DUSAGE_WRITEONLY;
 	D3DPOOL d3dpool = D3DPOOL_DEFAULT;
@@ -368,6 +375,12 @@ static void dx9CreateIndexBuffer(phandle_t h, int datasize, Primitive::Hint hint
 	resource->m_isDynamic = hint != Primitive::HintStatic;
 	*h = resource;
 
+	if (p) {
+		void *dst = 0;
+		V(ib->Lock(0, datasize, &dst, 0));
+		memcpy(dst, p, datasize);
+		V(ib->Unlock());
+	}
 	stat_numIndexBuffers.inc();
 	stat_indexBufferMemory.add(datasize);
 }
@@ -807,7 +820,6 @@ void dx9AssignRenderApi()
 {
 	RenderApi::createTextureFromFileInMemory = &dx9CreateTextureFromFileInMemory;
 	RenderApi::createTexture = &dx9CreateTexture;
-	RenderApi::uploadTexture = &dx9UploadTexture;
 	RenderApi::uploadSubTexture = &dx9UploadSubTexture;
 	RenderApi::generateMipmap = &dx9GenerateMipmap;
 	RenderApi::deleteTexture = &dx9DeleteTexture;

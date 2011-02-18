@@ -9,16 +9,15 @@ public:
 	// resource management
 	static void (*createTextureFromFileInMemory)(phandle_t h, IoRequest *asioRequest);
 	static void (*createTexture)(phandle_t h, TexType type, TexFormat format, int width, int height, int depth, int flags);
-	static void (*uploadTexture)(phandle_t h, const void *pixels, TexFormat format);
 	static void (*uploadSubTexture)(phandle_t h, const Rect &rect, const void *pixels, TexFormat format);
 	static void (*generateMipmap)(phandle_t h);
 	static void (*deleteTexture)(phandle_t h);
 
-	static void (*createVertexBuffer)(phandle_t h, int datasize, Primitive::Hint hint);
+	static void (*createVertexBuffer)(phandle_t h, int datasize, Primitive::Hint hint, const void *p);
 	static void (*uploadVertexBuffer)(phandle_t h, int datasize, const void *p);
 	static void (*deleteVertexBuffer)(phandle_t h);
 
-	static void (*createIndexBuffer)(phandle_t h, int datasize, Primitive::Hint hint);
+	static void (*createIndexBuffer)(phandle_t h, int datasize, Primitive::Hint hint, const void *p);
 	static void (*uploadIndexBuffer)(phandle_t h, int datasize, const void *p);
 	static void (*deleteIndexBuffer)(phandle_t h);
 
@@ -91,16 +90,15 @@ public:
 	// api wrapper interface
 	void createTextureFromFileInMemory(phandle_t &h, IoRequest *asioRequest);
 	void createTexture(phandle_t &h, TexType type, TexFormat format, int width, int height, int depth, int flags);
-	void uploadTexture(phandle_t h, void *pixels, TexFormat format);
 	void uploadSubTexture(phandle_t h, const Rect &rect, const void *pixels, TexFormat format);
 	void generateMipmap(phandle_t h);
 	void deleteTexture(phandle_t h);
 
-	void createVertexBuffer(phandle_t &h, int datasize, Primitive::Hint hint);
+	void createVertexBuffer(phandle_t &h, int datasize, Primitive::Hint hint, const void *p);
 	void uploadVertexBuffer(phandle_t h, int datasize, const void *p);
 	void deleteVertexBuffer(phandle_t h);
 
-	void createIndexBuffer(phandle_t &h, int datasize, Primitive::Hint hint);
+	void createIndexBuffer(phandle_t &h, int datasize, Primitive::Hint hint, const void *p);
 	void uploadIndexBuffer(phandle_t h, int datasize, const void *p);
 	void deleteIndexBuffer(phandle_t h);
 

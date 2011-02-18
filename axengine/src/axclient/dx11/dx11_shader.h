@@ -130,10 +130,10 @@ public:
 	// implement Shader
 	ID3DX11Effect *getObject() const { return m_object; }
 
-	UINT begin(Technique tech);
-	void beginPass(UINT pass);
-	void endPass();
-	void end();
+	UINT begin(Technique tech) { return 0; }
+	void beginPass(UINT pass) {}
+	void endPass() {}
+	void end() {}
 
 	static bool isGlobalReg(int reg) { return reg >= SCENECONST_REG && reg < PRIMITIVECONST_REG; }
 	static bool isPrimitiveReg(int reg) { return reg >= PRIMITIVECONST_REG; }

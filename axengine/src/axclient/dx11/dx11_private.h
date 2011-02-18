@@ -13,10 +13,8 @@
 
 #if defined(DEBUG) || defined(_DEBUG)
 #define V(x)           { HRESULT hr = (x); if (FAILED(hr)) { Errorf("%s(%d): %s", __FILE__, __LINE__, #x); } }
-#define V_RETURN(x)    { hr = (x); if (FAILED(hr)) { Errorf("%s(%d): %s in %s", __FILE__, __LINE__, D3DErrorString(hr), #x); return hr; } }
 #else
-#define V(x)           { hr = (x); }
-#define V_RETURN(x)    { hr = (x); if (FAILED(hr)) { return hr; } }
+#define V(x)           { HRESULT hr = (x); }
 #endif
 
 #define SAFE_ADDREF(p) { if (p) p->AddRef(); }

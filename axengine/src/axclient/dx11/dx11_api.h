@@ -5,15 +5,18 @@ AX_BEGIN_NAMESPACE
 
 struct DX11_Resource {
 	enum Type {
-		kTexture, kRenderTarget, kVertexBuffer, kIndexBuffer, kWindow, kOcclusionQuery
+		kImmutableTexture, kDynamicTexture, kVertexBuffer, kIndexBuffer, kWindow, kOcclusionQuery
 	};
 
-	DX11_Resource(Type type, IUnknown *obj) : m_type(type), m_obj(obj), m_renderTargetData(0)
-	{}
+	DX11_Resource(Type type, IUnknown *obj) : m_type(type), m_obj(obj), m_dynamicTextureData(0)
+	{
+		if (type == kDynamicTexture)
+			m_dynamicTextureData = new DynamicTextureData();
+	}
 
 	~DX11_Resource()
 	{
-		SafeDelete(m_renderTargetData);
+		SafeDelete(m_dynamicTextureData);
 		SAFE_RELEASE(m_obj);
 	}
 
@@ -33,6 +36,7 @@ struct DX11_Resource {
 
 	struct DynamicTextureData {
 		TexType texType;
+		TexFormat texFormat;
 		int width, height, depth;
 
 		// render target view
@@ -40,7 +44,7 @@ struct DX11_Resource {
 		std::vector<ID3D11RenderTargetView *> m_renderTargetViews;
 	};
 
-	DynamicTextureData *m_renderTargetData;
+	DynamicTextureData *m_dynamicTextureData;
 
 	// shader resource view
 	ID3D11ShaderResourceView *m_shaderResourceView;

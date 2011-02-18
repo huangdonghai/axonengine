@@ -2,6 +2,21 @@
 
 AX_BEGIN_NAMESPACE
 
+
+DX11_StateManager::DX11_StateManager()
+{
+	TypeZeroArray(m_textures);
+	TypeZeroArray(m_samplerDescs);
+	m_depthStencilDesc.intValue = 0;
+	m_rasterizerDesc.intValue = 0;
+	m_blendDesc.intValue = 0;;
+
+	m_vertexShader = 0;
+	m_pixelShader = 0;
+	m_inputLayout = 0;
+}
+
+
 ID3D11SamplerState * DX11_StateManager::findSamplerState(const SamplerDesc &desc)
 {
 	Dict<SamplerDesc, ID3D11SamplerState *>::const_iterator it = m_samplerStateDict.find(desc);
@@ -246,5 +261,155 @@ ID3D11BlendState * DX11_StateManager::findBlendState(const BlendDesc &desc)
 	m_blendStateDict[desc] = state;
 	return state;
 }
+
+namespace {
+	const D3D11_INPUT_ELEMENT_DESC s_ilSkin[] =
+	{
+		{"POSITION",  0, DXGI_FORMAT_R32G32B32_FLOAT,    0, 0,  D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"COLOR",     0, DXGI_FORMAT_R8G8B8A8_UNORM,     0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"TEXCOORD",  0, DXGI_FORMAT_R32G32_FLOAT,       0, 16, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"TEXCOORD",  1, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"TEXCOORD",  2, DXGI_FORMAT_R32G32B32_FLOAT,    0, 40, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"TEXCOORD",  3, DXGI_FORMAT_R32G32B32_FLOAT,    0, 52, D3D11_INPUT_PER_VERTEX_DATA, 0},
+	};
+
+	const D3D11_INPUT_ELEMENT_DESC s_ilMesh[] =
+	{
+		{"POSITION",  0, DXGI_FORMAT_R32G32B32_FLOAT,    0, 0,  D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"COLOR",     0, DXGI_FORMAT_R8G8B8A8_UNORM,     0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"TEXCOORD",  0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 16, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"TEXCOORD",  1, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 32, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"TEXCOORD",  2, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 48, D3D11_INPUT_PER_VERTEX_DATA, 0},
+	};
+
+	const D3D11_INPUT_ELEMENT_DESC s_ilDebug[] =
+	{
+		{"POSITION",  0, DXGI_FORMAT_R32G32B32_FLOAT,    0, 0,  D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"COLOR",     0, DXGI_FORMAT_R8G8B8A8_UNORM,     0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
+	};
+
+	const D3D11_INPUT_ELEMENT_DESC s_ilBlend[] =
+	{
+		{"POSITION",  0, DXGI_FORMAT_R32G32B32_FLOAT,    0, 0,  D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"COLOR",     0, DXGI_FORMAT_R8G8B8A8_UNORM,     0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"TEXCOORD",  0, DXGI_FORMAT_R32G32_FLOAT,       0, 16, D3D11_INPUT_PER_VERTEX_DATA, 0},
+	};
+
+	const D3D11_INPUT_ELEMENT_DESC s_ilChunk[] =
+	{
+		{"POSITION",  0, DXGI_FORMAT_R32G32B32_FLOAT,    0, 0,  D3D11_INPUT_PER_VERTEX_DATA, 0},
+	};
+
+	const D3D11_INPUT_ELEMENT_DESC s_ilSkinInstanced[] =
+	{
+		{"POSITION",  0, DXGI_FORMAT_R32G32B32_FLOAT,    0, 0,  D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"COLOR",     0, DXGI_FORMAT_R8G8B8A8_UNORM,     0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"TEXCOORD",  0, DXGI_FORMAT_R32G32_FLOAT,       0, 16, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"TEXCOORD",  1, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"TEXCOORD",  2, DXGI_FORMAT_R32G32B32_FLOAT,    0, 40, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"TEXCOORD",  3, DXGI_FORMAT_R32G32B32_FLOAT,    0, 52, D3D11_INPUT_PER_VERTEX_DATA, 0},
+
+		{"TEXCOORD",  4, DXGI_FORMAT_R32G32_FLOAT,       1, 0,  D3D11_INPUT_PER_INSTANCE_DATA, 1},
+		{"TEXCOORD",  5, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 16, D3D11_INPUT_PER_INSTANCE_DATA, 1},
+		{"TEXCOORD",  6, DXGI_FORMAT_R32G32B32_FLOAT,    1, 32, D3D11_INPUT_PER_INSTANCE_DATA, 1},
+		{"TEXCOORD",  7, DXGI_FORMAT_R32G32B32_FLOAT,    1, 48, D3D11_INPUT_PER_INSTANCE_DATA, 1},
+	};
+
+	const D3D11_INPUT_ELEMENT_DESC s_ilMeshInstanced[] =
+	{
+		{"POSITION",  0, DXGI_FORMAT_R32G32B32_FLOAT,    0, 0,  D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"COLOR",     0, DXGI_FORMAT_R8G8B8A8_UNORM,     0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"TEXCOORD",  0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 16, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"TEXCOORD",  1, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 32, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"TEXCOORD",  2, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 48, D3D11_INPUT_PER_VERTEX_DATA, 0},
+
+		{"TEXCOORD",  4, DXGI_FORMAT_R32G32_FLOAT,       1, 0,  D3D11_INPUT_PER_INSTANCE_DATA, 1},
+		{"TEXCOORD",  5, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 16, D3D11_INPUT_PER_INSTANCE_DATA, 1},
+		{"TEXCOORD",  6, DXGI_FORMAT_R32G32B32_FLOAT,    1, 32, D3D11_INPUT_PER_INSTANCE_DATA, 1},
+		{"TEXCOORD",  7, DXGI_FORMAT_R32G32B32_FLOAT,    1, 48, D3D11_INPUT_PER_INSTANCE_DATA, 1},
+	};
+
+	const D3D11_INPUT_ELEMENT_DESC s_ilDebugInstanced[] =
+	{
+		{"POSITION",  0, DXGI_FORMAT_R32G32B32_FLOAT,    0, 0,  D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"COLOR",     0, DXGI_FORMAT_R8G8B8A8_UNORM,     0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
+
+		{"TEXCOORD",  4, DXGI_FORMAT_R32G32_FLOAT,       1, 0,  D3D11_INPUT_PER_INSTANCE_DATA, 1},
+		{"TEXCOORD",  5, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 16, D3D11_INPUT_PER_INSTANCE_DATA, 1},
+		{"TEXCOORD",  6, DXGI_FORMAT_R32G32B32_FLOAT,    1, 32, D3D11_INPUT_PER_INSTANCE_DATA, 1},
+		{"TEXCOORD",  7, DXGI_FORMAT_R32G32B32_FLOAT,    1, 48, D3D11_INPUT_PER_INSTANCE_DATA, 1},
+	};
+
+	const D3D11_INPUT_ELEMENT_DESC s_ilBlendInstanced[] =
+	{
+		{"POSITION",  0, DXGI_FORMAT_R32G32B32_FLOAT,    0, 0,  D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"COLOR",     0, DXGI_FORMAT_R8G8B8A8_UNORM,     0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"TEXCOORD",  0, DXGI_FORMAT_R32G32_FLOAT,       0, 16, D3D11_INPUT_PER_VERTEX_DATA, 0},
+
+		{"TEXCOORD",  4, DXGI_FORMAT_R32G32_FLOAT,       1, 0,  D3D11_INPUT_PER_INSTANCE_DATA, 1},
+		{"TEXCOORD",  5, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 16, D3D11_INPUT_PER_INSTANCE_DATA, 1},
+		{"TEXCOORD",  6, DXGI_FORMAT_R32G32B32_FLOAT,    1, 32, D3D11_INPUT_PER_INSTANCE_DATA, 1},
+		{"TEXCOORD",  7, DXGI_FORMAT_R32G32B32_FLOAT,    1, 48, D3D11_INPUT_PER_INSTANCE_DATA, 1},
+	};
+
+	const D3D11_INPUT_ELEMENT_DESC s_ilChunkInstanced[] =
+	{
+		{"POSITION",  0, DXGI_FORMAT_R32G32B32_FLOAT,    0, 0,  D3D11_INPUT_PER_VERTEX_DATA, 0},
+
+		{"TEXCOORD",  4, DXGI_FORMAT_R32G32_FLOAT,       1, 0,  D3D11_INPUT_PER_INSTANCE_DATA, 1},
+		{"TEXCOORD",  5, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 16, D3D11_INPUT_PER_INSTANCE_DATA, 1},
+		{"TEXCOORD",  6, DXGI_FORMAT_R32G32B32_FLOAT,    1, 32, D3D11_INPUT_PER_INSTANCE_DATA, 1},
+		{"TEXCOORD",  7, DXGI_FORMAT_R32G32B32_FLOAT,    1, 48, D3D11_INPUT_PER_INSTANCE_DATA, 1},
+	};
+
+	const D3D11_INPUT_ELEMENT_DESC s_ilInstance[] =
+	{
+		{"TEXCOORD",  4, DXGI_FORMAT_R32G32_FLOAT,       1, 0,  D3D11_INPUT_PER_INSTANCE_DATA, 1},
+		{"TEXCOORD",  5, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 16, D3D11_INPUT_PER_INSTANCE_DATA, 1},
+		{"TEXCOORD",  6, DXGI_FORMAT_R32G32B32_FLOAT,    1, 32, D3D11_INPUT_PER_INSTANCE_DATA, 1},
+		{"TEXCOORD",  7, DXGI_FORMAT_R32G32B32_FLOAT,    1, 48, D3D11_INPUT_PER_INSTANCE_DATA, 1},
+	};
+
+	const D3D11_INPUT_ELEMENT_DESC *s_ilDesc[] = {
+		s_ilSkin, s_ilMesh, s_ilDebug, s_ilBlend, s_ilChunk
+	};
+
+	const int s_ilDescNumElements[] = {
+		ArraySize(s_ilSkin), ArraySize(s_ilMesh), ArraySize(s_ilDebug), ArraySize(s_ilBlend), ArraySize(s_ilChunk)
+	};
+
+	const D3D11_INPUT_ELEMENT_DESC *s_ilDescInstanced[] = {
+		s_ilSkinInstanced, s_ilMeshInstanced, s_ilDebugInstanced, s_ilBlendInstanced, s_ilChunkInstanced
+	};
+
+	const int s_ilDescInstancedNumElements[] = {
+		ArraySize(s_ilSkinInstanced), ArraySize(s_ilMeshInstanced), ArraySize(s_ilDebugInstanced), ArraySize(s_ilBlendInstanced), ArraySize(s_ilChunkInstanced)
+	};
+
+}
+
+ID3D11InputLayout *DX11_StateManager::findInputLayout(VertexType vt, bool isInstanced, const void *bytecode, int bytecodeLength)
+{
+	InputLayoutKey key;
+	key.vt = vt;
+	key.isInstanced = isInstanced;
+	key.bytecode.resize(bytecodeLength);
+	memcpy(&key.bytecode[0], bytecode, bytecodeLength);
+	Dict<InputLayoutKey, ID3D11InputLayout *>::const_iterator it = m_inputLayoutDict.find(key);
+
+	if (it != m_inputLayoutDict.end())
+		return it->second;
+
+	ID3D11InputLayout *il = 0;
+	if (!isInstanced) {
+		dx11_device->CreateInputLayout(s_ilDesc[vt], s_ilDescNumElements[vt], bytecode, bytecodeLength, &il);
+	} else {
+		dx11_device->CreateInputLayout(s_ilDescInstanced[vt], s_ilDescInstancedNumElements[vt], bytecode, bytecodeLength, &il);
+	}
+
+	m_inputLayoutDict[key] = il;
+	return il;
+}
+
 
 AX_END_NAMESPACE

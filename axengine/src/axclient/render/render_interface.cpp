@@ -4,16 +4,15 @@ AX_BEGIN_NAMESPACE
 
 void (*RenderApi::createTextureFromFileInMemory)(phandle_t h, IoRequest *asioRequest);
 void (*RenderApi::createTexture)(phandle_t h, TexType type, TexFormat format, int width, int height, int depth, int flags);
-void (*RenderApi::uploadTexture)(phandle_t h, const void *pixels, TexFormat format);
 void (*RenderApi::uploadSubTexture)(phandle_t h, const Rect &rect, const void *pixels, TexFormat format);
 void (*RenderApi::generateMipmap)(phandle_t h);
 void (*RenderApi::deleteTexture)(phandle_t h);
 	  
-void (*RenderApi::createVertexBuffer)(phandle_t h, int datasize, Primitive::Hint hint);
+void (*RenderApi::createVertexBuffer)(phandle_t h, int datasize, Primitive::Hint hint, const void *p);
 void (*RenderApi::uploadVertexBuffer)(phandle_t h, int datasize, const void *p);
 void (*RenderApi::deleteVertexBuffer)(phandle_t h);
 	  
-void (*RenderApi::createIndexBuffer)(phandle_t h, int datasize, Primitive::Hint hint);
+void (*RenderApi::createIndexBuffer)(phandle_t h, int datasize, Primitive::Hint hint, const void *p);
 void (*RenderApi::uploadIndexBuffer)(phandle_t h, int datasize, const void *p);
 void (*RenderApi::deleteIndexBuffer)(phandle_t h);
 
@@ -415,13 +414,6 @@ void ApiWrap::createTexture(phandle_t &h, TexType type, TexFormat format, int wi
 #endif
 }
 
-void ApiWrap::uploadTexture(phandle_t h, void *pixels, TexFormat format)
-{
-	// TODO
-	AX_ASSERT(0);
-	AllocCommand_(RenderApi::uploadTexture).args(h, pixels, format);
-}
-
 void ApiWrap::uploadSubTexture(phandle_t h, const Rect &rect, const void *pixels, TexFormat format)
 {
 #if AX_MTRENDER
@@ -454,13 +446,18 @@ void ApiWrap::deleteTexture(phandle_t h)
 #endif
 }
 
-void ApiWrap::createVertexBuffer(phandle_t &h, int datasize, Primitive::Hint hint)
+void ApiWrap::createVertexBuffer(phandle_t &h, int datasize, Primitive::Hint hint, const void *p)
 {
 	h = newHandle();
 #if AX_MTRENDER
-	AllocCommand_(RenderApi::createVertexBuffer).args(h, datasize, hint);
+	void *newP = 0;
+	if (p) {
+		newP = allocRingBuf(datasize);
+		memcpy(newP, p, datasize);
+	}
+	AllocCommand_(RenderApi::createVertexBuffer).args(h, datasize, hint, newP);
 #else
-	RenderApi::createVertexBuffer(h, datasize, hint);
+	RenderApi::createVertexBuffer(h, datasize, hint, p);
 #endif
 }
 
@@ -477,19 +474,21 @@ void ApiWrap::uploadVertexBuffer(phandle_t h, int datasize, const void *p)
 
 void ApiWrap::deleteVertexBuffer(phandle_t h)
 {
-#if AX_MTRENDER
-#else
-#endif
 	addObjectDeletion(RenderApi::deleteVertexBuffer, h);
 }
 
-void ApiWrap::createIndexBuffer(phandle_t &h, int datasize, Primitive::Hint hint)
+void ApiWrap::createIndexBuffer(phandle_t &h, int datasize, Primitive::Hint hint, const void *p)
 {
 	h = newHandle();
 #if AX_MTRENDER
-	AllocCommand_(RenderApi::createIndexBuffer).args(h, datasize, hint);
+	void *newP = 0;
+	if (p) {
+		newP = allocRingBuf(datasize);
+		memcpy(newP, p, datasize);
+	}
+	AllocCommand_(RenderApi::createIndexBuffer).args(h, datasize, hint, p);
 #else
-	RenderApi::createIndexBuffer(h, datasize, hint);
+	RenderApi::createIndexBuffer(h, datasize, hint, p);
 #endif
 }
 

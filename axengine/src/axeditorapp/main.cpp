@@ -64,6 +64,31 @@ static void setCurrentDir()
     SetCurrentDirectory(pathname);
 }
 
+void profileHash()
+{
+	int loop = 1000000;
+
+	std::map<int, int> intMap;
+	Dict<int, int> intDict;
+	for (int i = 0; i < loop; i++) {
+		intMap[i] = rand();
+		intDict[i] = rand();
+	}
+
+	double t0 = OsUtil::seconds();
+	for (int i = 0; i < loop; i++) {
+		intMap.find(i);
+	}
+	double t1 = OsUtil::seconds();
+	for (int i = 0; i < loop; i++) {
+		intDict.find(i);
+	}
+	double t2 = OsUtil::seconds();
+	double timeMap = t1 - t0;
+	double timeHash = t2 - t1;
+	Printf("timeMap: %f; timeHash: %f\n", timeMap, timeHash);
+}
+
 int main(int argc, char *argv[])
 {
 	setCurrentDir();
@@ -104,6 +129,7 @@ int main(int argc, char *argv[])
 	axEditorInit();
 
 	testArgs();
+	profileHash();
 
 	splash->showMessage(QObject::tr("Initializing axEditor..."), align, Qt::black);
 
