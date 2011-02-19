@@ -3,18 +3,18 @@
 
 #include "../private.h"
 
-#if defined(_DEBUG) || defined(DEBUG)
-#define D3D_DEBUG_INFO
-#endif
-
 #include <d3d11.h>
 #include <d3dx11.h>
 #include <d3dx11effect.h>
+#include <D3Dcompiler.h>
+
+#define AX_DX11_BEGIN_NAMESPACE AX_BEGIN_NAMESPACE namespace DX11 {
+#define AX_DX11_END_NAMESPACE } AX_END_NAMESPACE
 
 #if defined(DEBUG) || defined(_DEBUG)
-#define V(x)           { HRESULT hr = (x); if (FAILED(hr)) { Errorf("%s(%d): %s", __FILE__, __LINE__, #x); } }
+#define V(x) { HRESULT hr = (x); if (FAILED(hr)) { Errorf("%s(%d): %s", __FILE__, __LINE__, #x); } }
 #else
-#define V(x)           { HRESULT hr = (x); }
+#define V(x) { HRESULT hr = (x); }
 #endif
 
 #define SAFE_ADDREF(p) { if (p) p->AddRef(); }
@@ -26,7 +26,7 @@
 #include "dx11_state.h"
 #include "dx11_api.h"
 
-AX_BEGIN_NAMESPACE
+AX_DX11_BEGIN_NAMESPACE
 
 inline const char *DX11_ErrorString(HRESULT hr)
 {
@@ -46,18 +46,16 @@ inline const char *DX11_ErrorString(HRESULT hr)
 #undef D3DERR
 }
 
-extern DX11_Window *dx11_internalWindow;
-extern DX11_Driver *dx11_driver;
-extern ID3D11Device *dx11_device;
-extern ID3D11DeviceContext *dx11_context;
+extern DX11_Driver *g_driver;
+extern ID3D11Device *g_device;
+extern ID3D11DeviceContext *g_context;
+extern IDXGIFactory * g_dxgiFactory;
 
-extern DX11_ShaderManager *dx11_shaderManager;
-extern DX11_StateManager *dx11_stateManager;
-extern ConstBuffers *dx11_constBuffers;
+extern DX11_ShaderManager *g_shaderManager;
+extern DX11_StateManager *g_stateManager;
+extern ConstBuffers *g_appConstBuffers;
+extern ID3D11Buffer *g_d3dConstBuffers[ConstBuffer::MaxType+1]; // +1 for primitive const
 
-extern ID3D11InputLayout *dx11_inputLayouts[VertexType::kNumber];
-extern ID3D11InputLayout *dx11_inputLayoutInstanced[VertexType::kNumber];
-
-AX_END_NAMESPACE
+AX_DX11_END_NAMESPACE
 
 #endif // AX_DX11_PRIVATE_H

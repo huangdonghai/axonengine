@@ -80,8 +80,8 @@ extern DX9_ShaderManager *dx9_shaderManager;
 extern DX9_StateManager *dx9_stateManager;
 extern ConstBuffers *dx9_constBuffers;
 
-extern IDirect3DVertexDeclaration9 *dx9_vertexDeclarations[VertexType::kNumber];
-extern IDirect3DVertexDeclaration9 *dx9_vertexDeclarationsInstanced[VertexType::kNumber];
+extern IDirect3DVertexDeclaration9 *dx9_vertexDeclarations[VertexType::MaxType];
+extern IDirect3DVertexDeclaration9 *dx9_vertexDeclarationsInstanced[VertexType::MaxType];
 
 AX_END_NAMESPACE
 

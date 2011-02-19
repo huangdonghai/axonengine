@@ -8,10 +8,13 @@ phandle_t dx9_curGlobalTextures[GlobalTextureId::MaxType];
 SamplerDesc dx9_curGlobalTextureSamplerDescs[GlobalTextureId::MaxType];
 FastTextureParams dx9_curMaterialTextures;
 
-enum {
-	Size_VerticeUP = 64 * 1024,
-	Size_IndiceUP = 64 * 1024,
-};
+namespace {
+	enum {
+		Size_VerticeUP = 64 * 1024,
+		Size_IndiceUP = 64 * 1024,
+	};
+}
+
 static DX9_Shader *s_curShader;
 static Technique s_curTechnique;
 static ConstBuffers s_curConstBuffer;
@@ -335,18 +338,20 @@ static void dx9CreateVertexBuffer(phandle_t h, int datasize, Primitive::Hint hin
 	stat_vertexBufferMemory.add(datasize);
 }
 
-static void dx9UploadVertexBuffer(phandle_t h, int datasize, const void *p)
+static void dx9UploadVertexBuffer(phandle_t h, int offset, int datasize, const void *p)
 {
 	DX9_Resource *resource = h->castTo<DX9_Resource *>();
 	AX_ASSERT(resource->m_type = DX9_Resource::kVertexBuffer);
+	AX_ASSERT(resource->m_isDynamic)
+
 	IDirect3DVertexBuffer9 *obj = resource->m_vertexBuffer;
 
-	DWORD flag = 0;
-	if (resource->m_isDynamic)
-		flag = D3DLOCK_DISCARD;
+	DWORD flag = D3DLOCK_DISCARD | D3DLOCK_NOSYSLOCK;
+	if (offset != 0)
+		flag = D3DLOCK_NOOVERWRITE | D3DLOCK_NOSYSLOCK;
 
 	void *dst = 0;
-	V(obj->Lock(0, datasize, &dst, flag));
+	V(obj->Lock(offset, datasize, &dst, flag));
 	memcpy(dst, p, datasize);
 	V(obj->Unlock());
 }
@@ -385,18 +390,19 @@ static void dx9CreateIndexBuffer(phandle_t h, int datasize, Primitive::Hint hint
 	stat_indexBufferMemory.add(datasize);
 }
 
-static void dx9UploadIndexBuffer(phandle_t h, int datasize, const void *p)
+static void dx9UploadIndexBuffer(phandle_t h, int offset, int datasize, const void *p)
 {
 	DX9_Resource *resource = h->castTo<DX9_Resource *>();
 	AX_ASSERT(resource->m_type == DX9_Resource::kIndexBuffer);
+	AX_ASSERT(resource->m_isDynamic)
 	IDirect3DIndexBuffer9 *obj = resource->m_indexBuffer;
 
-	DWORD flag = 0;
-	if (resource->m_isDynamic)
-		flag = D3DLOCK_DISCARD;
+	DWORD flag = D3DLOCK_DISCARD | D3DLOCK_NOSYSLOCK;
+	if (offset != 0)
+		flag = D3DLOCK_NOOVERWRITE | D3DLOCK_NOSYSLOCK;
 
 	void *dst = 0;
-	V(obj->Lock(0, datasize, &dst, flag));
+	V(obj->Lock(offset, datasize, &dst, flag));
 	memcpy(dst, p, datasize);
 	V(obj->Unlock());
 }
@@ -496,6 +502,8 @@ static void dx9IssueQueries(int n, Query *queries[])
 		s_activeQueries.push_back(query);
 	}
 
+	s_curShader->endPass();
+	s_curShader->end();
 }
 
 static void dx9DeleteQuery(phandle_t h)
@@ -646,12 +654,13 @@ static void dx9SetParameters(const FastParams *params1, const FastParams *params
 		dx9_curParams2.clear();
 }
 
-static void dx9SetVertices(phandle_t vb, VertexType vt, int offset)
+static void dx9SetVertices(phandle_t vb, VertexType vt, int offset, int vertcount)
 {
 	DX9_Resource *resource = vb->castTo<DX9_Resource *>();
 	AX_ASSERT(resource->m_type == DX9_Resource::kVertexBuffer);
 
 	s_curVerticeUP = false;
+	s_curNumVertices = vertcount;
 	V(dx9_device->SetStreamSource(0, resource->m_vertexBuffer, offset, vt.stride()));
 	dx9_stateManager->setVertexDeclaration(dx9_vertexDeclarations[vt]);
 
@@ -662,7 +671,7 @@ static void dx9SetVertices(phandle_t vb, VertexType vt, int offset)
 	}
 }
 
-static void dx9SetInstanceVertices(phandle_t vb, VertexType vt, int offset, phandle_t inb, int inoffset, int incount)
+static void dx9SetInstanceVertices(phandle_t vb, VertexType vt, int offset, int vertcount, phandle_t inb, int inoffset, int incount)
 {
 	DX9_Resource *resV = vb->castTo<DX9_Resource *>();
 	AX_ASSERT(resV->m_type == DX9_Resource::kVertexBuffer);
@@ -671,6 +680,7 @@ static void dx9SetInstanceVertices(phandle_t vb, VertexType vt, int offset, phan
 
 	s_curVerticeUP = false;
 	s_curInstanced = true;
+	s_curNumVertices = vertcount;
 	V(dx9_device->SetStreamSource(0, resV->m_vertexBuffer, offset, vt.stride()));
 	V(dx9_device->SetStreamSourceFreq(0, D3DSTREAMSOURCE_INDEXEDDATA | incount));
 
@@ -679,7 +689,7 @@ static void dx9SetInstanceVertices(phandle_t vb, VertexType vt, int offset, phan
 	dx9_stateManager->setVertexDeclaration(dx9_vertexDeclarationsInstanced[vt]);
 }
 
-static void dx9SetIndices(phandle_t ib, ElementType et, int offset, int vertcount, int indicescount)
+static void dx9SetIndices(phandle_t ib, ElementType et, int offset, int indicescount)
 {
 	DX9_Resource *resource = ib->castTo<DX9_Resource *>();
 	AX_ASSERT(resource->m_type == DX9_Resource::kIndexBuffer);
@@ -687,8 +697,8 @@ static void dx9SetIndices(phandle_t ib, ElementType et, int offset, int vertcoun
 	s_curIndiceUP = false;
 	V(dx9_device->SetIndices(resource->m_indexBuffer));
 	s_curPrimitiveType = trElementType(et);
-	s_curNumVertices = vertcount;
-	s_curStartIndex = offset;
+	AX_ASSERT(offset % sizeof(ushort_t) == 0);
+	s_curStartIndex = offset / sizeof(ushort_t);
 	s_curPrimitiveCount = sCalcNumElements(s_curPrimitiveType, indicescount);
 }
 
@@ -846,7 +856,6 @@ void dx9AssignRenderApi()
 	RenderApi::setTargetSet = &dx9SetTargetSet;
 
 	RenderApi::setViewport = &dx9SetViewport;
-	RenderApi::setScissorRect = &dx9SetScissorRect;
 
 	RenderApi::setShader = &dx9SetShader;
 	RenderApi::setConstBuffer = &dx9SetConstBuffer;

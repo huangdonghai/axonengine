@@ -1,7 +1,6 @@
 #include "dx11_private.h"
 
-AX_BEGIN_NAMESPACE
-
+AX_DX11_BEGIN_NAMESPACE
 
 DX11_StateManager::DX11_StateManager()
 {
@@ -69,7 +68,7 @@ ID3D11SamplerState * DX11_StateManager::findSamplerState(const SamplerDesc &desc
 	}
 
 	ID3D11SamplerState *state = 0;
-	V(dx11_device->CreateSamplerState(&d3ddesc, &state));
+	V(g_device->CreateSamplerState(&d3ddesc, &state));
 	m_samplerStateDict[desc] = state;
 	return state;
 }
@@ -137,7 +136,7 @@ ID3D11DepthStencilState * DX11_StateManager::findDepthStencilState(const DepthSt
 	d3ddesc.BackFace.StencilFunc = trCompareFunc(desc.stencilFuncBackface);
 
 	ID3D11DepthStencilState *state = 0;
-	V(dx11_device->CreateDepthStencilState(&d3ddesc, &state));
+	V(g_device->CreateDepthStencilState(&d3ddesc, &state));
 	m_depthStencilStateDict[desc] = state;
 	return state;
 }
@@ -194,7 +193,7 @@ ID3D11RasterizerState * DX11_StateManager::findRasterizerState(const RasterizerD
 	d3ddesc.ScissorEnable = desc.scissorEnable;
 
 	ID3D11RasterizerState *state = 0;
-	V(dx11_device->CreateRasterizerState(&d3ddesc, &state));
+	V(g_device->CreateRasterizerState(&d3ddesc, &state));
 	m_rasterizerStateDict[desc] = state;
 	return state;
 }
@@ -257,7 +256,7 @@ ID3D11BlendState * DX11_StateManager::findBlendState(const BlendDesc &desc)
 		d3ddesc.RenderTarget[i] = d3ddesc.RenderTarget[0];
 
 	ID3D11BlendState *state = 0;
-	V(dx11_device->CreateBlendState(&d3ddesc, &state));
+	V(g_device->CreateBlendState(&d3ddesc, &state));
 	m_blendStateDict[desc] = state;
 	return state;
 }
@@ -402,14 +401,13 @@ ID3D11InputLayout *DX11_StateManager::findInputLayout(VertexType vt, bool isInst
 
 	ID3D11InputLayout *il = 0;
 	if (!isInstanced) {
-		dx11_device->CreateInputLayout(s_ilDesc[vt], s_ilDescNumElements[vt], bytecode, bytecodeLength, &il);
+		g_device->CreateInputLayout(s_ilDesc[vt], s_ilDescNumElements[vt], bytecode, bytecodeLength, &il);
 	} else {
-		dx11_device->CreateInputLayout(s_ilDescInstanced[vt], s_ilDescInstancedNumElements[vt], bytecode, bytecodeLength, &il);
+		g_device->CreateInputLayout(s_ilDescInstanced[vt], s_ilDescInstancedNumElements[vt], bytecode, bytecodeLength, &il);
 	}
 
 	m_inputLayoutDict[key] = il;
 	return il;
 }
 
-
-AX_END_NAMESPACE
+AX_DX11_END_NAMESPACE

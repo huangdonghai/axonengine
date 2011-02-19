@@ -21,7 +21,7 @@ struct Joint {
 
 struct VertexType {
 	enum Type {
-		kSkin, kMesh, kDebug, kBlend, kChunk, kNumber
+		kSkin, kMesh, kDebug, kBlend, kChunk, MaxType
 	};
 	AX_DECLARE_ENUM(VertexType);
 

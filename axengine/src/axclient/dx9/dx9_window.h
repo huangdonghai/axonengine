@@ -35,7 +35,6 @@ protected:
 	void checkSwapChain();
 
 private:
-	LONG m_ref;
 	HWND m_wndId;
 	Size m_swapChainSize;
 	Size m_updatedSize;

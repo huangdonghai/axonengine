@@ -106,7 +106,7 @@ public:
 	}
 
 public:
-	enum { NUM_ITEMS = 16, NUM_FLOATDATA = 64 };
+	enum { NUM_ITEMS = PRIMITIVECONST_COUNT, NUM_FLOATDATA = PRIMITIVECONST_COUNT * 4 };
 	struct Item {
 		int nameId;
 		int offset;

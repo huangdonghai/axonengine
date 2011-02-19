@@ -9,11 +9,11 @@ void (*RenderApi::generateMipmap)(phandle_t h);
 void (*RenderApi::deleteTexture)(phandle_t h);
 	  
 void (*RenderApi::createVertexBuffer)(phandle_t h, int datasize, Primitive::Hint hint, const void *p);
-void (*RenderApi::uploadVertexBuffer)(phandle_t h, int datasize, const void *p);
+void (*RenderApi::uploadVertexBuffer)(phandle_t h, int offset, int datasize, const void *p);
 void (*RenderApi::deleteVertexBuffer)(phandle_t h);
 	  
 void (*RenderApi::createIndexBuffer)(phandle_t h, int datasize, Primitive::Hint hint, const void *p);
-void (*RenderApi::uploadIndexBuffer)(phandle_t h, int datasize, const void *p);
+void (*RenderApi::uploadIndexBuffer)(phandle_t h, int offset, int datasize, const void *p);
 void (*RenderApi::deleteIndexBuffer)(phandle_t h);
 
 void (*RenderApi::createWindowTarget)(phandle_t h, Handle hwnd, int width, int height);
@@ -30,15 +30,14 @@ void (*RenderApi::endPerfEvent)();
 void (*RenderApi::setTargetSet)(phandle_t targetSet[RenderTargetSet::MaxTarget], int slices[RenderTargetSet::MaxTarget]);
 
 void (*RenderApi::setViewport)(const Rect &rect, const Vector2 & depthRange);
-void (*RenderApi::setScissorRect)(const Rect &scissorRect);
 
 void (*RenderApi::setShader)(const FixedString & name, const GlobalMacro &gm, const MaterialMacro &mm, Technique tech);
 void (*RenderApi::setConstBuffer)(ConstBuffers::Type type, int size, const void *data);
 void (*RenderApi::setParameters)(const FastParams *params1, const FastParams *param2);
 	  
-void (*RenderApi::setVertices)(phandle_t h, VertexType vt, int vertcount);
-void (*RenderApi::setInstanceVertices)(phandle_t h, VertexType vt, int vertcount, phandle_t inb, int inoffset, int incount);
-void (*RenderApi::setIndices)(phandle_t h, ElementType et, int offset, int vertcount, int indicescount);
+void (*RenderApi::setVertices)(phandle_t h, VertexType vt, int offset, int vertcount);
+void (*RenderApi::setInstanceVertices)(phandle_t h, VertexType vt, int offset, int vertcount, phandle_t inb, int inoffset, int incount);
+void (*RenderApi::setIndices)(phandle_t h, ElementType et, int offset, int indicescount);
 
 void (*RenderApi::setVerticesUP)(const void *vb, VertexType vt, int vertcount);
 void (*RenderApi::setIndicesUP)(const void *ib, ElementType et, int indicescount);
@@ -461,14 +460,14 @@ void ApiWrap::createVertexBuffer(phandle_t &h, int datasize, Primitive::Hint hin
 #endif
 }
 
-void ApiWrap::uploadVertexBuffer(phandle_t h, int datasize, const void *p)
+void ApiWrap::uploadVertexBuffer(phandle_t h, int offset, int datasize, const void *p)
 {
 #if AX_MTRENDER
 	void *newp = allocRingBuf(datasize);
 	memcpy(newp, p, datasize);
-	AllocCommand_(RenderApi::uploadVertexBuffer).args(h, datasize, newp);
+	AllocCommand_(RenderApi::uploadVertexBuffer).args(h, offset, datasize, newp);
 #else
-	RenderApi::uploadVertexBuffer(h, datasize, p);
+	RenderApi::uploadVertexBuffer(h, offset, datasize, p);
 #endif
 }
 
@@ -492,14 +491,14 @@ void ApiWrap::createIndexBuffer(phandle_t &h, int datasize, Primitive::Hint hint
 #endif
 }
 
-void ApiWrap::uploadIndexBuffer(phandle_t h, int datasize, const void *p)
+void ApiWrap::uploadIndexBuffer(phandle_t h, int offset, int datasize, const void *p)
 {
 #if AX_MTRENDER
 	void *newp = allocRingBuf(datasize);
 	memcpy(newp, p, datasize);
-	AllocCommand_(RenderApi::uploadIndexBuffer).args(h, datasize, newp);
+	AllocCommand_(RenderApi::uploadIndexBuffer).args(h, offset, datasize, newp);
 #else
-	RenderApi::uploadIndexBuffer(h, datasize, p);
+	RenderApi::uploadIndexBuffer(h, offset, datasize, p);
 #endif
 }
 
@@ -728,40 +727,30 @@ void ApiWrap::setViewport(const Rect &rect, const Vector2 &depthRange)
 #endif
 }
 
-void ApiWrap::setScissorRect(const Rect &scissorRect)
+void ApiWrap::setVertices(phandle_t vb, VertexType vt, int offset, int vert_count)
 {
 #if AX_MTRENDER
-	AllocCommand_(RenderApi::setScissorRect).args(scissorRect);
+	AllocCommand_(RenderApi::setVertices).args(vb, vt, offset, vert_count);
 #else
-	RenderApi::setScissorRect(scissorRect);
+	RenderApi::setVertices(vb, vt, offset, vert_count);
 #endif
 }
 
-
-void ApiWrap::setVertices(phandle_t vb, VertexType vt, int offset)
+void ApiWrap::setVerticesInstanced(phandle_t vb, VertexType vt, int offset, int vertcount, phandle_t inb, int inoffset, int incount)
 {
 #if AX_MTRENDER
-	AllocCommand_(RenderApi::setVertices).args(vb, vt, offset);
+	AllocCommand_(RenderApi::setInstanceVertices).args(vb, vt, offset, vertcount, inb, inoffset, incount);
 #else
-	RenderApi::setVertices(vb, vt, offset);
+	RenderApi::setInstanceVertices(vb, vt, offset, vertcount, inb, inoffset, incount);
 #endif
 }
 
-void ApiWrap::setVerticesInstanced(phandle_t vb, VertexType vt, int offset, phandle_t inb, int inoffset, int incount)
+void ApiWrap::setIndices(phandle_t ib, ElementType et, int offset, int indicescount)
 {
 #if AX_MTRENDER
-	AllocCommand_(RenderApi::setInstanceVertices).args(vb, vt, offset, inb, inoffset, incount);
+	AllocCommand_(RenderApi::setIndices).args(ib, et, offset, indicescount);
 #else
-	RenderApi::setInstanceVertices(vb, vt, offset, inb, inoffset, incount);
-#endif
-}
-
-void ApiWrap::setIndices(phandle_t ib, ElementType et, int offset, int vertcount, int indicescount)
-{
-#if AX_MTRENDER
-	AllocCommand_(RenderApi::setIndices).args(ib, et, offset, vertcount, indicescount);
-#else
-	RenderApi::setIndices(ib, et, offset, vertcount, indicescount);
+	RenderApi::setIndices(ib, et, offset, indicescount);
 #endif
 }
 

@@ -1,9 +1,9 @@
 #ifndef AX_DX11_STATE_H
 #define AX_DX11_STATE_H
 
-AX_BEGIN_NAMESPACE
+AX_DX11_BEGIN_NAMESPACE
 
-extern ID3D11DeviceContext *dx11_context;
+extern ID3D11DeviceContext *g_context;
 
 class DX11_StateManager
 {
@@ -18,7 +18,7 @@ public:
 	void setTexture(int stage, ID3D11ShaderResourceView *texture)
 	{
 		if (m_textures[stage] == texture) return;
-		dx11_context->PSSetShaderResources(stage, 1, &texture);
+		g_context->PSSetShaderResources(stage, 1, &texture);
 		m_textures[stage] = texture;
 	}
 
@@ -28,7 +28,7 @@ public:
 			return;
 		}
 		ID3D11SamplerState *state = findSamplerState(desc);
-		dx11_context->PSSetSamplers(stage, 1, &state);
+		g_context->PSSetSamplers(stage, 1, &state);
 		m_samplerDescs[stage] = desc;
 	}
 
@@ -38,7 +38,7 @@ public:
 			return;
 
 		ID3D11DepthStencilState *state = findDepthStencilState(desc);
-		dx11_context->OMSetDepthStencilState(state, 0);
+		g_context->OMSetDepthStencilState(state, 0);
 		m_depthStencilDesc = desc;
 	}
 
@@ -48,7 +48,7 @@ public:
 			return;
 
 		ID3D11RasterizerState *state = findRasterizerState(desc);
-		dx11_context->RSSetState(state);
+		g_context->RSSetState(state);
 		m_rasterizerDesc = desc;
 	}
 
@@ -59,7 +59,7 @@ public:
 
 		ID3D11BlendState *state = findBlendState(desc);
 		FLOAT blendFactor[4] = { 0,0,0,0 };
-		dx11_context->OMSetBlendState(state, blendFactor, 0xFFFFFFFF);
+		g_context->OMSetBlendState(state, blendFactor, 0xFFFFFFFF);
 		m_blendDesc = desc;
 	}
 
@@ -68,7 +68,7 @@ public:
 		if (m_vertexShader == vs)
 			return;
 
-		dx11_context->VSSetShader(vs, 0, 0);
+		g_context->VSSetShader(vs, 0, 0);
 		m_vertexShader = vs;
 	}
 
@@ -76,7 +76,7 @@ public:
 	{
 		if (m_pixelShader == ps)
 			return;
-		dx11_context->PSSetShader(ps, 0, 0);
+		g_context->PSSetShader(ps, 0, 0);
 		m_pixelShader = ps;
 	}
 
@@ -85,7 +85,7 @@ public:
 		if (m_inputLayout == il)
 			return;
 
-		dx11_context->IASetInputLayout(il);
+		g_context->IASetInputLayout(il);
 		m_inputLayout = il;
 	}
 
@@ -131,6 +131,6 @@ private:
 	Dict<InputLayoutKey, ID3D11InputLayout *> m_inputLayoutDict;
 };
 
-AX_END_NAMESPACE
+AX_DX11_END_NAMESPACE
 
 #endif // AX_DX11_STATE_H

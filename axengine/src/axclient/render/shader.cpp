@@ -298,11 +298,6 @@ ConstBuffer::~ConstBuffer()
 {
 }
 
-void ConstBuffer::addField(const Field &field)
-{
-	m_fields.push_back(field);
-}
-
 void ConstBuffer::addField(ValueType vt, Item name, int count, int reg)
 {
 	Field field;

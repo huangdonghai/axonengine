@@ -1,7 +1,15 @@
 #ifndef AX_DX11_API_H
 #define AX_DX11_API_H
 
-AX_BEGIN_NAMESPACE
+AX_DX11_BEGIN_NAMESPACE
+
+extern FastParams g_curParams1;
+extern FastParams g_curParams2;
+extern phandle_t g_curGlobalTextures[GlobalTextureId::MaxType];
+extern SamplerDesc g_curGlobalTextureSamplerDescs[GlobalTextureId::MaxType];
+extern FastTextureParams g_curMaterialTextures;
+extern bool g_curInstanced;
+extern VertexType g_curVertexType;
 
 struct DX11_Resource {
 	enum Type {
@@ -51,6 +59,8 @@ struct DX11_Resource {
 	bool m_isDynamic;
 };
 
-AX_END_NAMESPACE
+void dx11InitApi();
+
+AX_DX11_END_NAMESPACE
 
 #endif // AX_DX11_API_H

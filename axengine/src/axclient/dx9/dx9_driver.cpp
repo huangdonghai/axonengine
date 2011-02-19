@@ -90,13 +90,13 @@ void DX9_Driver::initialize(SyncEvent &syncEvent)
 	d3dpp.AutoDepthStencilFormat= D3DFMT_D24S8;
 	d3dpp.Flags = 0;
 	d3dpp.Windowed = TRUE;
-	d3dpp.hDeviceWindow = (HWND)dx9_internalWindow->getHandle();
+	d3dpp.hDeviceWindow = dx9_internalWindow->getHandle();
 	d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;
 	d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_IMMEDIATE;
 
 	DWORD BehaviorFlags = D3DCREATE_HARDWARE_VERTEXPROCESSING|D3DCREATE_PUREDEVICE;
 
-	hr = dx9_api->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL,(HWND)dx9_internalWindow->getHandle(), BehaviorFlags, &d3dpp, &dx9_device);
+	hr = dx9_api->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, dx9_internalWindow->getHandle(), BehaviorFlags, &d3dpp, &dx9_device);
 	if (FAILED(hr)) {
 		Errorf("CreateDevice failed %s", DX9_ErrorString(hr));
 	}
@@ -321,7 +321,7 @@ namespace {
 
 void DX9_Driver::createVertexDecl()
 {
-	for (int i = 0; i < VertexType::kNumber; i++) {
+	for (int i = 0; i < VertexType::MaxType; i++) {
 		D3DVERTEXELEMENT9 *veinfo = s_veInfos[i];
 
 		// apply offset

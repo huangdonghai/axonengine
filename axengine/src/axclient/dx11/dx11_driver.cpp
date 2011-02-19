@@ -1,6 +1,6 @@
 #include "dx11_private.h"
 
-AX_BEGIN_NAMESPACE
+AX_DX11_BEGIN_NAMESPACE
 
 AX_IMPLEMENT_FACTORY(DX11_Driver)
 
@@ -8,13 +8,13 @@ AX_IMPLEMENT_FACTORY(DX11_Driver)
 AX_BEGIN_COMMAND_MAP(DX11_Driver)
 AX_END_COMMAND_MAP()
 
-static HMODULE                              s_hModDXGI = NULL;
-static HMODULE                              s_hModD3D11 = NULL;
-static HMODULE                              s_hModD3DX11 = NULL;
-static LPCREATEDXGIFACTORY                  dx11_CreateDXGIFactory = NULL;
-static LPD3D11CREATEDEVICE                  dx11_D3D11CreateDevice = NULL;
-static LPD3D11CREATEDEVICEANDSWAPCHAIN      dx11_D3D11CreateDeviceAndSwapChain = NULL;
-LPD3DX11COMPILEFROMMEMORY            dx11_D3DX11CompileFromMemory = NULL;
+static HMODULE s_hModDXGI = NULL;
+static HMODULE s_hModD3D11 = NULL;
+static HMODULE s_hModD3DX11 = NULL;
+static LPCREATEDXGIFACTORY dx11_CreateDXGIFactory = NULL;
+static LPD3D11CREATEDEVICE dx11_D3D11CreateDevice = NULL;
+static LPD3D11CREATEDEVICEANDSWAPCHAIN dx11_D3D11CreateDeviceAndSwapChain = NULL;
+LPD3DX11COMPILEFROMMEMORY dx11_D3DX11CompileFromMemory = NULL;
 
 // unload the D3D11 DLLs
 static bool dynlinkUnloadD3D11API( void )
@@ -91,16 +91,15 @@ void DX11_Driver::initialize(SyncEvent &syncEvent)
 	dynlinkLoadD3D11API();
 
 	D3D_FEATURE_LEVEL featureLevel;
-	HRESULT hr = dx11_D3D11CreateDevice(0, D3D_DRIVER_TYPE_HARDWARE, 0, 0, 0, 0, 0, &dx11_device, &featureLevel, &dx11_context);
+	HRESULT hr = dx11_D3D11CreateDevice(0, D3D_DRIVER_TYPE_HARDWARE, 0, 0, 0, 0, 0, &g_device, &featureLevel, &g_context);
 
 	IDXGIDevice * pDXGIDevice;
-	hr = dx11_device->QueryInterface(__uuidof(IDXGIDevice), (void **)&pDXGIDevice);
+	hr = g_device->QueryInterface(__uuidof(IDXGIDevice), (void **)&pDXGIDevice);
 
 	IDXGIAdapter * pDXGIAdapter;
 	hr = pDXGIDevice->GetParent(__uuidof(IDXGIAdapter), (void **)&pDXGIAdapter);
 
-	IDXGIFactory * pIDXGIFactory;
-	pDXGIAdapter->GetParent(__uuidof(IDXGIFactory), (void **)&pIDXGIFactory);
+	pDXGIAdapter->GetParent(__uuidof(IDXGIFactory), (void **)&g_dxgiFactory);
 }
 
 void DX11_Driver::finalize()
@@ -161,4 +160,4 @@ DXGI_FORMAT DX11_Driver::trTexFormat(TexFormat texformat)
 	return d3dformat;
 }
 
-AX_END_NAMESPACE
+AX_DX11_END_NAMESPACE

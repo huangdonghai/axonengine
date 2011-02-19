@@ -1,16 +1,19 @@
 #include "dx11_private.h"
 
-AX_BEGIN_NAMESPACE
+AX_DX11_BEGIN_NAMESPACE
 
 
 DX11_Pass::DX11_Pass(DX11_Shader *shader, ID3DX11EffectPass *d3dxpass)
 {
 	m_shader = shader;
-	m_d3dxhandle = d3dxpass;
+	m_d3dxpass = d3dxpass;
 	m_setflag = 0;
 
 	memset(m_sysSamplers, -1, sizeof(m_sysSamplers));
 	memset(m_matSamplers, -1, sizeof(m_matSamplers));
+
+	TypeZeroArray(m_inputLayouts);
+	TypeZeroArray(m_inputLayoutsInstanced);
 
 	initVs();
 	initPs();
@@ -18,18 +21,46 @@ DX11_Pass::DX11_Pass(DX11_Shader *shader, ID3DX11EffectPass *d3dxpass)
 
 DX11_Pass::~DX11_Pass()
 {
-
 }
 
 void DX11_Pass::initVs()
 {
+	D3DX11_PASS_SHADER_DESC psd;
 
+	V(m_d3dxpass->GetVertexShaderDesc(&psd));
+	AX_ASSERT(desc.ShaderIndex);
+
+	D3DX11_EFFECT_SHADER_DESC esd;
+	ID3D11ShaderReflection *reflection = 0;
+	V(psd.pShaderVariable->GetShaderDesc(0, &esd));
+	V(D3DReflect(esd.pBytecode, esd.BytecodeLength, IID_ID3D11ShaderReflection, (void **)&reflection));
 }
 
 void DX11_Pass::initPs()
 {
 
 }
+
+void DX11_Pass::setInputLayout()
+{
+	ID3D11InputLayout **ils = m_inputLayouts;
+
+	if (g_curInstanced)
+		ils = m_inputLayoutsInstanced;
+
+	ID3D11InputLayout *il = 0;
+	if (ils[g_curVertexType]) {
+		il = ils[g_curVertexType];
+	} else {
+		D3DX11_PASS_DESC desc;
+		m_d3dxpass->GetDesc(&desc);
+		il = g_stateManager->findInputLayout(g_curVertexType, g_curInstanced, desc.pIAInputSignature, desc.IAInputSignatureSize);
+		ils[g_curVertexType] = il;
+	}
+
+	g_context->IASetInputLayout(il);
+}
+
 
 
 
@@ -134,7 +165,7 @@ DX11_Shader::DX11_Shader(const FixedString &name, const GlobalMacro &gm, const M
 	}
 
 	// D3DX11CreateEffectFromMemory
-	hr = D3DX11CreateEffectFromMemory(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), 0, dx11_device, &m_object);
+	hr = D3DX11CreateEffectFromMemory(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), 0, g_device, &m_object);
 	if (FAILED(hr)) {
 		Errorf("can't create effect");
 		return;
@@ -189,7 +220,7 @@ void DX11_Shader::initShaderInfo()
 	m_shaderInfo.m_needSceneColor = isGlobalTextureUsed(GlobalTextureId::SceneColor);
 
 	// add to shader manager
-	dx11_shaderManager->addShaderInfo(m_key, &m_shaderInfo);
+	g_shaderManager->addShaderInfo(m_key, &m_shaderInfo);
 }
 
 ID3DX11EffectTechnique *DX11_Shader::findTechnique(Technique tech)
@@ -227,7 +258,7 @@ bool DX11_Shader::isMaterialTextureUsed(MaterialTextureId id) const
 
 DX11_ShaderManager::DX11_ShaderManager()
 {
-	dx11_shaderManager = this;
+	g_shaderManager = this;
 	_initialize();
 }
 
@@ -286,4 +317,4 @@ void DX11_ShaderManager::addShaderInfo( const FixedString &key, ShaderInfo *shad
 	m_shaderInfoDict[key] = shaderInfo;
 }
 
-AX_END_NAMESPACE
+AX_DX11_END_NAMESPACE

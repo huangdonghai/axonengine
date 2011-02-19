@@ -14,11 +14,11 @@ public:
 	static void (*deleteTexture)(phandle_t h);
 
 	static void (*createVertexBuffer)(phandle_t h, int datasize, Primitive::Hint hint, const void *p);
-	static void (*uploadVertexBuffer)(phandle_t h, int datasize, const void *p);
+	static void (*uploadVertexBuffer)(phandle_t h, int offset, int datasize, const void *p);
 	static void (*deleteVertexBuffer)(phandle_t h);
 
 	static void (*createIndexBuffer)(phandle_t h, int datasize, Primitive::Hint hint, const void *p);
-	static void (*uploadIndexBuffer)(phandle_t h, int datasize, const void *p);
+	static void (*uploadIndexBuffer)(phandle_t h, int offset, int datasize, const void *p);
 	static void (*deleteIndexBuffer)(phandle_t h);
 
 	static void (*createWindowTarget)(phandle_t h, Handle hwnd, int width, int height);
@@ -35,15 +35,14 @@ public:
 	static void (*setTargetSet)(phandle_t targetSet[RenderTargetSet::MaxTarget], int slices[RenderTargetSet::MaxTarget]);
 
 	static void (*setViewport)(const Rect &rect, const Vector2 & depthRange);
-	static void (*setScissorRect)(const Rect &scissorRect);
 
 	static void (*setShader)(const FixedString &name, const GlobalMacro &gm, const MaterialMacro &mm, Technique tech);
 	static void (*setConstBuffer)(ConstBuffers::Type type, int size, const void *data);
 	static void (*setParameters)(const FastParams *params1, const FastParams *params2);
 
-	static void (*setVertices)(phandle_t vb, VertexType vt, int offset);
-	static void (*setInstanceVertices)(phandle_t vb, VertexType vt, int offset, phandle_t inb, int inoffset, int incount);
-	static void (*setIndices)(phandle_t ib, ElementType et, int offset, int vertcount, int indicescount);
+	static void (*setVertices)(phandle_t vb, VertexType vt, int offset, int vertcount);
+	static void (*setInstanceVertices)(phandle_t vb, VertexType vt, int offset, int vertcount, phandle_t inb, int inoffset, int incount);
+	static void (*setIndices)(phandle_t ib, ElementType et, int offset, int indicescount);
 
 	static void (*setVerticesUP)(const void *vb, VertexType vt, int vertcount);
 	static void (*setIndicesUP)(const void *ib, ElementType et, int indicescount);
@@ -95,11 +94,11 @@ public:
 	void deleteTexture(phandle_t h);
 
 	void createVertexBuffer(phandle_t &h, int datasize, Primitive::Hint hint, const void *p);
-	void uploadVertexBuffer(phandle_t h, int datasize, const void *p);
+	void uploadVertexBuffer(phandle_t h, int offset, int datasize, const void *p);
 	void deleteVertexBuffer(phandle_t h);
 
 	void createIndexBuffer(phandle_t &h, int datasize, Primitive::Hint hint, const void *p);
-	void uploadIndexBuffer(phandle_t h, int datasize, const void *p);
+	void uploadIndexBuffer(phandle_t h, int offset, int datasize, const void *p);
 	void deleteIndexBuffer(phandle_t h);
 
 	void createWindowTarget(phandle_t &h, Handle hwnd, int width, int height);
@@ -116,7 +115,6 @@ public:
 	void setTargetSet(const RenderTargetSet &target_set);
 
 	void setViewport(const Rect &rect, const Vector2 & depthRange);
-	void setScissorRect(const Rect &scissorRect);
 
 	void setShader(const FixedString & name, const MaterialMacro &mm, Technique tech);
 	void setConstBuffer(ConstBuffers::Type type, int size, const void *data);
@@ -125,9 +123,9 @@ public:
 	void setGlobalTexture(GlobalTextureId gt, Texture *tex);
 	void setMaterialTexture(const FastTextureParams *textures);
 
-	void setVertices(phandle_t vb, VertexType vt, int offset);
-	void setVerticesInstanced(phandle_t vb, VertexType vt, int offset, phandle_t inb, int inoffset, int incount);
-	void setIndices(phandle_t ib, ElementType et, int offset, int vertcount, int indicescount);
+	void setVertices(phandle_t vb, VertexType vt, int offset, int vertcount);
+	void setVerticesInstanced(phandle_t vb, VertexType vt, int offset, int vertcount, phandle_t inb, int inoffset, int incount);
+	void setIndices(phandle_t ib, ElementType et, int offset, int indicescount);
 
 	void setVerticesUP(const void *vb, VertexType vt, int vertcount);
 	void setIndicesUP(const void *ib, ElementType et, int indicescount);

@@ -20,7 +20,6 @@ public:
 	int m_dataSize;
 	int m_count;
 	bool m_chained;
-	Handle m_localHandle;
 };
 
 class InstanceObject
@@ -53,9 +52,8 @@ public:
 	int m_dataSize;
 	int m_count;
 	int m_activeCount;
-	int m_offset;		// index offset, not byte offset
+	int m_offset;		// byte offset
 	bool m_chained;
-	Handle m_localHandle;
 };
 
 struct DynamicBuf {
@@ -72,7 +70,7 @@ struct VertexBufferTraits
 	}
 	static void uploadPage(phandle_t h, int size, const void *p)
 	{
-		g_apiWrap->uploadVertexBuffer(h, size, p);
+		g_apiWrap->uploadVertexBuffer(h, 0, size, p);
 	}
 	static void releasePage(phandle_t h)
 	{
@@ -88,7 +86,7 @@ struct IndexBufferTraits
 	}
 	static void uploadPage(phandle_t h, int size, const void *p)
 	{
-		g_apiWrap->uploadIndexBuffer(h, size, p);
+		g_apiWrap->uploadIndexBuffer(h, 0, size, p);
 	}
 	static void releasePage(phandle_t h)
 	{

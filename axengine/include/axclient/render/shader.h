@@ -118,8 +118,6 @@ public:
 	void setFieldData(const FixedString &fieldName, int bytes, const void *datap);
 	const float *getFieldPointer(const FixedString &fieldName) const;
 
-	void addField(const Field &field);
-
 protected:
 	void initSceneConst();
 	void initInteractionConst();
@@ -149,6 +147,8 @@ public:
 
 	void setData(Type type, int bytes, const void *datap);
 	void setField(Item fieldName, int bytes, const void *dataptr);
+
+	ConstBuffer *getBuffer(int type) const { return m_buffers[type]; }
 
 private:
 	class FieldLink

@@ -4,8 +4,7 @@ AX_BEGIN_NAMESPACE
 
 VertexObject::VertexObject()
 {
-	m_localHandle = 0;
-	m_h = &m_localHandle;
+	m_h = 0;
 	m_hint = Primitive::HintStatic;
 	m_vt = VertexType::kMesh;
 	m_offset = 0;		// byte offset
@@ -54,7 +53,7 @@ void VertexObject::clear()
 		stat_vertexBufferMemory.sub(m_dataSize);
 	}
 
-	m_h = &m_localHandle;
+	m_h = 0;
 	m_hint = Primitive::HintStatic;
 	m_vt = VertexType::kMesh;
 	m_offset = 0;		// byte offset
@@ -98,15 +97,14 @@ void InstanceObject::init(int numInstances, const InstancePrim::Param* params)
 
 IndexObject::IndexObject()
 {
-	m_h = &m_localHandle;
+	m_h = 0;
 	m_hint = Primitive::HintStatic;
 	m_elementType = ElementType_PointList;
 	m_dataSize = 0;
 	m_count = 0;
 	m_activeCount = 0;
-	m_offset = 0;		// index offset, not byte offset
+	m_offset = 0;		// byte offset
 	m_chained = false;
-	m_localHandle = 0;
 }
 
 IndexObject::~IndexObject()
@@ -131,7 +129,7 @@ void IndexObject::init(const ushort_t *p, int count, Primitive::Hint hint, Eleme
 
 		DynamicBuf db = g_bufferManager->allocIb(m_dataSize);
 		m_h = db.phandle;
-		m_offset = db.offset / sizeof(ushort_t);
+		m_offset = db.offset;
 
 		ushort_t *dst = (ushort_t*)db.writePtr;
 		memcpy(dst, p, m_dataSize);
@@ -154,7 +152,7 @@ void IndexObject::clear()
 		stat_indexBufferMemory.sub(m_dataSize);
 	}
 
-	m_h = &m_localHandle;
+	m_h = 0;
 	m_hint = Primitive::HintStatic;
 	m_elementType = ElementType_PointList;
 	m_dataSize = 0;

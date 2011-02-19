@@ -1,7 +1,7 @@
 #ifndef AX_DX11_SHADER_H
 #define AX_DX11_SHADER_H
 
-AX_BEGIN_NAMESPACE
+AX_DX11_BEGIN_NAMESPACE
 
 class DX11_Unknown : public IUnknown
 {
@@ -72,13 +72,14 @@ protected:
 	void initVs();
 	void initPs();
 	void initSampler(const D3D11_SHADER_VARIABLE_DESC &desc);
+	void setInputLayout();
 	void setPrimitiveParameters();
 	void setParameter(const ParamDesc &param, const float *value, bool isPixelShader);
 	void setParameter(const FixedString &name, int numFloats, const float *data);
 
 private:
 	DX11_Shader *m_shader;
-	ID3DX11EffectPass *m_d3dxhandle;
+	ID3DX11EffectPass *m_d3dxpass;
 
 	// shader
 	ID3D11VertexShader *m_vs;
@@ -96,6 +97,10 @@ private:
 	// local parameter
 	int m_setflag;
 	Dict<FixedString, ParamDesc> m_parameters;
+
+	// input layout
+	ID3D11InputLayout *m_inputLayouts[VertexType::MaxType];
+	ID3D11InputLayout *m_inputLayoutsInstanced[VertexType::MaxType];
 };
 
 class DX11_Technique
@@ -197,6 +202,6 @@ private:
 	ShaderInfoDict m_shaderInfoDict;
 };
 
-AX_END_NAMESPACE
+AX_DX11_END_NAMESPACE
 
 #endif // AX_DX11_SHADER_H

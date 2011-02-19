@@ -96,26 +96,6 @@ Size DX9_Window::getSize()
 	return m_swapChainSize;
 }
 
-#if 0
-void DX9_Window::bind()
-{
-	checkSwapChain();
-
-	IDirect3DSurface9 *ds = dx9_driver->getDepthStencil(m_swapChainSize);
-
-	V(dx9_device->SetRenderTarget(0, m_backbuffer));
-#if 0
-	V(d3d9StateManager->setDepthStencilSurface(ds, TexFormat::D24S8));
-#endif
-	// depth stencil
-//	D3D9target *m_depthStencil = d3d9TargetManager->allocTargetDX(RenderTarget::PermanentAlloc, m_swapChainSize.x, m_swapChainSize.y, TexFormat::D24S8);
-}
-
-void DX9_Window::unbind()
-{
-}
-#endif
-
 void DX9_Window::present()
 {
 	HRESULT hr = m_swapChain->Present(0, 0, 0, 0, D3DPRESENT_DONOTWAIT);
@@ -178,26 +158,6 @@ void DX9_Window::checkSwapChain()
 	m_swapChainSize = m_updatedSize;
 	m_swapChainWnd = m_wndId;
 	m_presentInterval = flags;
-
-#if 0
-	if (m_gbuffer) {
-		dx9DeleteTexture2D(&m_gbuffer);
-		m_gbuffer.clear();
-	}
-
-	if (m_lightBuffer) {
-		dx9DeleteTexture2D(&m_lightBuffer);
-		m_lightBuffer.clear();
-	}
-
-	dx9CreateTexture2D(&m_gbuffer, r.right, r.bottom, TexFormat::RGBA16F, Texture::IF_RenderTarget);
-//	m_gbuffer->getTexture()->setFilterMode(Texture::FM_Nearest);
-//	m_gbuffer->getTexture()->setClampMode(Texture::CM_ClampToEdge);
-
-	dx9CreateTexture2D(&m_lightBuffer, r.right, r.bottom, TexFormat::BGRA8, Texture::IF_RenderTarget);
-//	m_lightBuffer->getTexture()->setFilterMode(Texture::FM_Nearest);
-//	m_lightBuffer->getTexture()->setClampMode(Texture::CM_ClampToEdge);
-#endif
 }
 
 void DX9_Window::update(Handle newId, int width, int height)

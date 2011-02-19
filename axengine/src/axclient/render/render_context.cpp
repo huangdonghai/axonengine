@@ -693,7 +693,6 @@ void RenderContext::setupScene(RenderScene *scene, const RenderClearer *clearer,
 	}
 
 	g_apiWrap->setViewport(camera->viewRect(), Vector2(0,1));
-	g_apiWrap->setScissorRect(camera->viewRect());
 
 	AX_SU(g_time, (float)camera->time());
 
@@ -943,10 +942,10 @@ void RenderContext::draw(VertexObject *vert, InstanceObject *inst, IndexObject *
 	MaterialMacro macro = mat->getShaderMacro();
 
 	if (!inst) {
-		g_apiWrap->setVertices(vert->m_h, vert->m_vt, vert->m_offset);
+		g_apiWrap->setVertices(vert->m_h, vert->m_vt, vert->m_offset, vert->m_count);
 		g_globalMacro.resetMacro(GlobalMacro::G_GEOMETRY_INSTANCING);
 	} else {
-		g_apiWrap->setVerticesInstanced(vert->m_h, vert->m_vt, vert->m_offset, inst->m_h, inst->m_offset, inst->m_count);
+		g_apiWrap->setVerticesInstanced(vert->m_h, vert->m_vt, vert->m_offset, vert->m_count, inst->m_h, inst->m_offset, inst->m_count);
 		g_globalMacro.setMacro(GlobalMacro::G_GEOMETRY_INSTANCING);
 	}
 
@@ -960,7 +959,7 @@ void RenderContext::draw(VertexObject *vert, InstanceObject *inst, IndexObject *
 
 	stat_numDrawElements.inc();
 
-	g_apiWrap->setIndices(index->m_h, index->m_elementType, index->m_offset, vert->m_count, index->m_activeCount);
+	g_apiWrap->setIndices(index->m_h, index->m_elementType, index->m_offset, index->m_activeCount);
 
 	g_apiWrap->setShader(mat->getShaderName(), macro, tech);
 

@@ -23,8 +23,8 @@ IDirect3DDevice9 *dx9_device;
 DX9_ShaderManager *dx9_shaderManager;
 DX9_StateManager *dx9_stateManager;
 ConstBuffers *dx9_constBuffers;
-IDirect3DVertexDeclaration9 *dx9_vertexDeclarations[VertexType::kNumber];
-IDirect3DVertexDeclaration9 *dx9_vertexDeclarationsInstanced[VertexType::kNumber];
+IDirect3DVertexDeclaration9 *dx9_vertexDeclarations[VertexType::MaxType];
+IDirect3DVertexDeclaration9 *dx9_vertexDeclarationsInstanced[VertexType::MaxType];
 
 AX_END_NAMESPACE
 
