@@ -13,8 +13,9 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-static const char *glname = "axopengl.driver";
+static const char *glname = "AxGL.Driver";
 static const char *d3d9name = "AxDX9.Driver";
+static const char *d3d11name = "AxDX11.Driver";
 
 AX_BEGIN_COMMAND_MAP(RenderSystem)
 	AX_COMMAND_ENTRY("texlist",	texlist_f)
@@ -54,6 +55,8 @@ void RenderSystem::initialize()
 	} else if (rd == "d3d9") {
 		drivername = d3d9name;
 	}
+
+	drivername = d3d11name;
 
 	SyncEvent syncEvent;
 	g_renderDriver = (IRenderDriver*)(g_classFactory->createInstance(drivername));
@@ -105,7 +108,6 @@ void RenderSystem::info()
 	Printf("max 2D texture size      : %d\n", info->maxTextureSize);
 	Printf("max 3D texture size      : %d\n", info->max3DTextureSize);
 	Printf("max cubemap texture size : %d\n", info->maxCubeMapTextureSize);
-	Printf("max texture units        : %d\n", info->maxTextureUnits);
 	Printf("max texture coords       : %d\n", info->maxTextureCoords);
 	Printf("max texture image units  : %d\n", info->maxTextureImageUnits);
 

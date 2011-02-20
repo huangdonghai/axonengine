@@ -38,28 +38,31 @@ struct CubeMapFace
 struct TexFormat
 {
 	enum Type {
-		AUTO,			// auto specify format for file data
+		AUTO, // auto specify format for file data
 
 		NULLTARGET, R5G6B5,	// for directx shadow map null color target
 
-		RGB10A2,		// just for render target
+		RGB10A2, // just for render target
 
-		RG16,			// for indirect texture
+		RG16, // for indirect texture
 
 		// 8 bits image
 		L8, LA8, A8, BGR8, BGRA8, BGRX8,
 
 		// compressed image
-		DXT1, DXT3, DXT5,
+		BC1, BC2, BC3, BC4, BC5, BC6H, BC7,
 
 		// 16 bits fixed image
-		L16,				// 16 bits int texture, terrain heightmap use this
+		L16, // 16 bits int texture, terrain heightmap use this
 
 		// 16 bits float image
 		R16F, RG16F, RGB16F, RGBA16F,
 
 		// 32 bits float image
 		R32F, RG32F, RGB32F, RGBA32F,
+
+		// DX11, 32 bits hdr
+		R11G11B10F,
 
 		// depth texture
 		D16, D24, D32F,
@@ -79,7 +82,7 @@ struct TexFormat
 	bool isDXTC() const;
 	bool isFloat() const;
 	bool isHalf() const;
-	bool isColor() const { return m_t >= L8 && m_t <= RGBA32F; }
+	bool isColor() const { return m_t >= L8 && m_t < D16; }
 	bool isDepth() const { return m_t >= D16 && m_t <= INTZ; }
 	bool isStencil() const { return m_t == D24S8; }
 	bool isCompressed() const;
@@ -104,7 +107,7 @@ inline bool TexFormat::isUShort() const
 
 inline bool TexFormat::isDXTC() const
 {
-	return ((m_t == DXT1) || (m_t == DXT3) || (m_t == DXT5));
+	return ((m_t == BC1) || (m_t == BC2) || (m_t == BC3));
 }
 
 inline bool TexFormat::isFloat() const
@@ -119,7 +122,7 @@ inline bool TexFormat::isHalf() const
 
 inline bool TexFormat::isCompressed() const
 {
-	return isDXTC();
+	return m_t >= BC1 && m_t <= BC7;
 }
 
 inline int TexFormat::getNumComponents() const
@@ -140,11 +143,16 @@ inline int TexFormat::getNumComponents() const
 	case BGRX8:
 		return 4;
 
-	case DXT1:
+	case BC1:
 		return 3;
-	case DXT3:
-	case DXT5:
+	case BC2:
+	case BC3:
 		return 4;
+	case BC4:
+		return 1;
+	case BC5: return 2;
+	case BC6H: return 3;
+	case BC7: return 4;
 
 	case L16:
 		return 1;					// 16 bits short int, for terrain or other use, UShort
@@ -168,6 +176,8 @@ inline int TexFormat::getNumComponents() const
 		return 3;
 	case RGBA32F:
 		return 4;
+	case R11G11B10F:
+		return 3;
 
 	case D16:
 	case D24:
@@ -179,24 +189,27 @@ inline int TexFormat::getNumComponents() const
 	case INTZ:
 		return 1;
 
-	default:
-		Errorf(_("getNumComponents: unknown type"));
-		return 0;
+	default: AX_WRONGPLACE; return 0;
 	};
 }
 
 // get image's bits per pixel
 inline int TexFormat::getBitsPerPixel() const
 {
-	if (isDXTC()) {
+	if (isCompressed()) {
 		switch (m_t) {
-		case DXT1:
-			return 4;
-		case DXT3:
-		case DXT5:
-			return 8;
+		case BC1: return 4;
+		case BC2: return 8;
+		case BC3: return 8;
+		case BC4: return 4;
+		case BC5: return 8;
+		case BC6H: return 8;
+		case BC7: return 8;
 		}
 	}
+
+	if (m_t == R11G11B10F)
+		return 32;
 
 	if (isByte())
 		return getNumComponents() * 8;
@@ -225,15 +238,8 @@ inline int TexFormat::getBitsPerPixel() const
 inline int TexFormat::calculateDataSize(int width, int height) const
 {
 
-	if (isDXTC()) {
-		switch (m_t) {
-		case DXT1:
-			return ((width+3)/4)*((height+3)/4)* 8;		// dxt1's block size is 8
-		case DXT3:
-		case DXT5:
-			return ((width+3)/4)*((height+3)/4)* 16;	// dxt3,dxt5's block size is 16
-		}
-	}
+	if (isCompressed())
+		return ((width+3)/4)*((height+3)/4) * getBlockDataSize();
 
 	int num_pixels = width * height;
 	return num_pixels * getBitsPerPixel() >> 3;
@@ -241,7 +247,7 @@ inline int TexFormat::calculateDataSize(int width, int height) const
 
 inline int TexFormat::getBlockSize() const
 {
-	if (isDXTC()) {
+	if (isCompressed()) {
 		return 4;
 	} else {
 		return 1;
@@ -250,15 +256,8 @@ inline int TexFormat::getBlockSize() const
 
 inline int TexFormat::getBlockDataSize() const
 {
-	if (isDXTC()) {
-		switch (m_t) {
-		case DXT1:
-			return 8;
-		case DXT3:
-		case DXT5:
-			return 16;	// dxt3,dxt5's block size is 16
-		}
-	}
+	if (isCompressed())
+		return getBitsPerPixel() * 16 / 8;
 
 	return getBitsPerPixel() >> 3;
 }
@@ -289,78 +288,52 @@ inline int TexFormat::getDepthBits() const
 inline const char *TexFormat::toString() const
 {
 	switch (m_t) {
-	case NULLTARGET:
-		return "NULL";
-	case R5G6B5:
-		return "R5G6B5";
-	case RGB10A2:
-		return "RGB10A2";
-	case RG16:
-		return "RG16";
-	case L8:				// 8 bits luminance: alpha is always 1.0, Uint8
-		return "L8";
-	case LA8:				// 8 bits luminance & alpha
-		return "LA8";
-	case A8:				// 8 bits alpha: font texture use this
-		return "A8";
-	case BGR8:
-		return "BGR8";
-	case BGRA8:
-		return "BGRA8";
-	case BGRX8:
-		return "BGRX8";
+	case NULLTARGET: return "NULL";
+	case R5G6B5: return "R5G6B5";
+	case RGB10A2: return "RGB10A2";
+	case RG16: return "RG16";
+	case L8: return "L8"; // 8 bits luminance: alpha is always 1.0, Uint8
+	case LA8: return "LA8"; // 8 bits luminance & alpha
+	case A8: return "A8"; // 8 bits alpha: font texture use this
+	case BGR8: return "BGR8";
+	case BGRA8: return "BGRA8";
+	case BGRX8: return "BGRX8";
 
-	case DXT1:
-		return "DXT1";
-	case DXT3:
-		return "DXT3";
-	case DXT5:
-		return "DXT5";
+	case BC1: return "BC1";
+	case BC2: return "BC2";
+	case BC3: return "BC3";
+	case BC4: return "BC4";
+	case BC5: return "BC5";
+	case BC6H: return "BC6H";
+	case BC7: return "BC7";
 
-	case L16:
-		return "L16";					// 16 bits short int, for terrain or other use, UShort
+	case L16: return "L16";					// 16 bits short int, for terrain or other use, UShort
 
-		// 16 bits float image
-	case R16F:			// 16 bits float luminance: alpha is always 1.0
-		return "R16F";
-	case RG16F:
-		return "RG16F";
-	case RGB16F:
-		return "RGB16F";
-	case RGBA16F:
-		return "RGBA16F";
+	// 16 bits float image
+	case R16F: return "R16F"; // 16 bits float luminance: alpha is always 1.0
+	case RG16F: return "RG16F";
+	case RGB16F: return "RGB16F";
+	case RGBA16F: return "RGBA16F";
 
-		// 32 bits float image
-	case R32F:			// 32 bits float luminance: alpha is always 1.0
-		return "R32F";
-	case RG32F:
-		return "RG32F";
-	case RGB32F:
-		return "RGB32F";
-	case RGBA32F:
-		return "RGBA32F";
+	// 32 bits float image
+	case R32F: return "R32F"; // 32 bits float luminance: alpha is always 1.0
+	case RG32F: return "RG32F";
+	case RGB32F: return "RGB32F";
+	case RGBA32F: return "RGBA32F";
 
-	case D16:
-		return "D16";
-	case D24:
-		return "D24";
-	case D32F:
-		return "D32F";
-	case D24S8:
-		return "D24S8";
+	case R11G11B10F: return "R11G11B10F";
 
-	case DF16:
-		return "DF16";
-	case DF24:
-		return "DF24";
-	case RAWZ:
-		return "RAWZ";
-	case INTZ:
-		return "INTZ";
+	case D16: return "D16";
+	case D24: return "D24";
+	case D32F: return "D32F";
+	case D24S8: return "D24S8";
 
-	default:
-		Errorf(_("toString: unknown type"));
-		return "NONAME";
+	case DF16: return "DF16";
+	case DF24: return "DF24";
+	case RAWZ: return "RAWZ";
+	case INTZ: return "INTZ";
+
+	default: AX_WRONGPLACE; return "NONAME";
 	};
 }
 

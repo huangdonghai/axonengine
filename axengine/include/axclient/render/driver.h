@@ -51,7 +51,6 @@ struct RenderDriverInfo {
 	int max3DTextureSize;
 	int maxCubeMapTextureSize;	// queried from GL
 
-	int maxTextureUnits;		// arb_multitexture
 	int maxTextureCoords;		// arb_fragment_program
 	int maxTextureImageUnits;	// arb_fragment_program
 

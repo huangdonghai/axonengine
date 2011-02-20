@@ -2,7 +2,6 @@
 
 AX_DX11_BEGIN_NAMESPACE
 
-
 DX11_Pass::DX11_Pass(DX11_Shader *shader, ID3DX11EffectPass *d3dxpass)
 {
 	m_shader = shader;
@@ -28,7 +27,7 @@ void DX11_Pass::initVs()
 	D3DX11_PASS_SHADER_DESC psd;
 
 	V(m_d3dxpass->GetVertexShaderDesc(&psd));
-	AX_ASSERT(desc.ShaderIndex);
+	AX_ASSERT(psd.ShaderIndex);
 
 	D3DX11_EFFECT_SHADER_DESC esd;
 	ID3D11ShaderReflection *reflection = 0;
@@ -90,7 +89,7 @@ DX11_Technique::~DX11_Technique()
 
 
 
-extern LPD3DX11COMPILEFROMMEMORY dx11_D3DX11CompileFromMemory;
+//extern LPD3DX11COMPILEFROMMEMORY dx11_D3DX11CompileFromMemory;
 
 DX11_Shader::DX11_Shader(const FixedString &name, const GlobalMacro &gm, const MaterialMacro &mm)
 {
@@ -153,7 +152,7 @@ DX11_Shader::DX11_Shader(const FixedString &name, const GlobalMacro &gm, const M
 	ID3D10Blob *errMsgBlob = 0;
 
 	HRESULT hr;
-	dx11_D3DX11CompileFromMemory((LPCSTR)ioRequest.fileData(),
+	D3DX11CompileFromMemory((LPCSTR)ioRequest.fileData(),
 		ioRequest.fileSize(), fullname.c_str(), &d3dxmacros[0], &d3dInc,
 		0, "fx_5_0", shaderFlags, effectFlags, 0, &shaderBlob, &errMsgBlob, &hr);
 

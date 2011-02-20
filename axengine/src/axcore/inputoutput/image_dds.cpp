@@ -421,17 +421,17 @@ namespace {
 			uint_t size2 = pHeader->Width * pHeader->Height * pHeader->Depth;
 			switch (pHeader->FourCC){
 			case AX_MAKEFOURCC('D','X','T','1'):
-				readParams->format = TexFormat::DXT1;
+				readParams->format = TexFormat::BC1;
 				readParams->formatType = DDS_TYPE_DXT;
 				readParams->inDataSize = size1 * 8;
 				break;
 			case AX_MAKEFOURCC('D','X','T','3'):
-				readParams->format = TexFormat::DXT3;
+				readParams->format = TexFormat::BC2;
 				readParams->formatType = DDS_TYPE_DXT;
 				readParams->inDataSize = size1 * 16;
 				break;
 			case AX_MAKEFOURCC('D','X','T','5'):
-				readParams->format = TexFormat::DXT5;
+				readParams->format = TexFormat::BC3;
 				readParams->formatType = DDS_TYPE_DXT;
 				readParams->inDataSize = size1 * 16;
 				break;
@@ -521,12 +521,12 @@ namespace {
 		//}
 		switch (format){
 		//This is officially 6, we have 8 here because DXT1 may contain alpha
-		case TexFormat::DXT1:
+		case TexFormat::BC1:
 			return 8;
 		//case PF_DXT2:
-		case TexFormat::DXT3:
+		case TexFormat::BC2:
 		//case PF_DXT4:
-		case TexFormat::DXT5:
+		case TexFormat::BC3:
 			return 4;
 		//This is officially 4 for 3dc, but that's bullshit :) There's no alpha data in 3dc images
 		//case PF_RXGB:
@@ -552,12 +552,12 @@ namespace {
 			readParams->linearSize = std::max<uint_t>(1,readParams->width) * std::max<uint_t>(1,readParams->height) * (pHeader->RGBBitCount / 8);
 			break;
 
-		case TexFormat::DXT1:
+		case TexFormat::BC1:
 			readParams->linearSize = ((readParams->width+3)/4) * ((readParams->height+3)/4) * 8;
 			break;
 
-		case TexFormat::DXT3:
-		case TexFormat::DXT5:
+		case TexFormat::BC2:
+		case TexFormat::BC3:
 		//case PF_RXGB:
 			readParams->linearSize = ((readParams->width+3)/4) * ((readParams->height+3)/4) * 16;
 			break;
@@ -709,7 +709,7 @@ namespace {
 		case TexFormat::L8:
 		case TexFormat::LA8:
 			return DecompressARGB(pHeader, readParams);
-		case TexFormat::DXT1:
+		case TexFormat::BC1:
 			if (readParams->loadFlag & Image::NoCompressed)
 				return DecompressDXT1(readParams);
 			else{
@@ -721,12 +721,12 @@ namespace {
 				readParams->inData += readParams->outDataSize;
 			}
 			break;
-		case TexFormat::DXT3:
-		case TexFormat::DXT5:
+		case TexFormat::BC2:
+		case TexFormat::BC3:
 			if (readParams->loadFlag & Image::NoCompressed) {
 				switch (readParams->format){
-				case TexFormat::DXT3:	return DecompressDXT3(readParams);
-				case TexFormat::DXT5:	return DecompressDXT5(readParams);
+				case TexFormat::BC2:	return DecompressDXT3(readParams);
+				case TexFormat::BC3:	return DecompressDXT5(readParams);
 				default: AX_WRONGPLACE; return true;
 				}
 			} else {
@@ -795,9 +795,9 @@ namespace {
 				readParams->outbpp = 4;
 			} else {
 				switch (readParams->format){
-				case TexFormat::DXT1:	readParams->outFormat = TexFormat::DXT1;	break;
-				case TexFormat::DXT3:	readParams->outFormat = TexFormat::DXT3;	break;
-				case TexFormat::DXT5:	readParams->outFormat = TexFormat::DXT5;	break;
+				case TexFormat::BC1:	readParams->outFormat = TexFormat::BC1;	break;
+				case TexFormat::BC2:	readParams->outFormat = TexFormat::BC2;	break;
+				case TexFormat::BC3:	readParams->outFormat = TexFormat::BC3;	break;
 				default: AX_WRONGPLACE; break;
 				}
 			}
@@ -982,12 +982,12 @@ namespace {
 
 		TexFormat outFormat;
 		switch (format) {
-		case TexFormat::DXT1: pHeader->FourCC = AX_MAKEFOURCC('D','X','T','1'); outFormat = TexFormat::DXT1; break;
-		case TexFormat::DXT3: pHeader->FourCC = AX_MAKEFOURCC('D','X','T','3'); outFormat = TexFormat::DXT3; break;
-		case TexFormat::DXT5: pHeader->FourCC = AX_MAKEFOURCC('D','X','T','5'); outFormat = TexFormat::DXT5; break;
-		case TexFormat::BGR8: pHeader->FourCC = AX_MAKEFOURCC('D','X','T','1'); outFormat = TexFormat::DXT1; writeParams->needCompress = true; break;
-		case TexFormat::BGRA8: pHeader->FourCC = AX_MAKEFOURCC('D','X','T','5'); outFormat = TexFormat::DXT5; writeParams->needCompress = true; break;
-		case TexFormat::BGRX8: pHeader->FourCC = AX_MAKEFOURCC('D','X','T','1'); outFormat = TexFormat::DXT1; writeParams->needCompress = true; break;
+		case TexFormat::BC1: pHeader->FourCC = AX_MAKEFOURCC('D','X','T','1'); outFormat = TexFormat::BC1; break;
+		case TexFormat::BC2: pHeader->FourCC = AX_MAKEFOURCC('D','X','T','3'); outFormat = TexFormat::BC2; break;
+		case TexFormat::BC3: pHeader->FourCC = AX_MAKEFOURCC('D','X','T','5'); outFormat = TexFormat::BC3; break;
+		case TexFormat::BGR8: pHeader->FourCC = AX_MAKEFOURCC('D','X','T','1'); outFormat = TexFormat::BC1; writeParams->needCompress = true; break;
+		case TexFormat::BGRA8: pHeader->FourCC = AX_MAKEFOURCC('D','X','T','5'); outFormat = TexFormat::BC3; writeParams->needCompress = true; break;
+		case TexFormat::BGRX8: pHeader->FourCC = AX_MAKEFOURCC('D','X','T','1'); outFormat = TexFormat::BC1; writeParams->needCompress = true; break;
 
 		case TexFormat::R16F: pHeader->FourCC = AX_MAKEFOURCC('o', '\0', '\0', '\0'); outFormat = TexFormat::R16F; break;
 		case TexFormat::RG16F: pHeader->FourCC = AX_MAKEFOURCC('p', '\0', '\0', '\0'); outFormat = TexFormat::RG16F; break;
@@ -1017,12 +1017,12 @@ namespace {
 		}
 
 		switch (outFormat) {
-		case TexFormat::DXT1:
+		case TexFormat::BC1:
 			pHeader->LinearSize = (((pHeader->Width + 3)/4) * ((pHeader->Height + 3)/4)) * 8 * pHeader->Depth;	pHeader->RGBBitCount = 4;
 			writeParams->formatType = DDS_TYPE_DXT;
 			break;
-		case TexFormat::DXT3:
-		case TexFormat::DXT5:
+		case TexFormat::BC2:
+		case TexFormat::BC3:
 			pHeader->LinearSize = (((pHeader->Width + 3)/4) * ((pHeader->Height + 3)/4)) * 16 * pHeader->Depth; pHeader->RGBBitCount = 8;
 			writeParams->formatType = DDS_TYPE_DXT;
 			break;
@@ -1484,13 +1484,13 @@ namespace {
 
 		if (1 || writeParams->bFast) {
 			switch (writeParams->outFormat) {
-			case TexFormat::DXT1:
+			case TexFormat::BC1:
 				MyDxt1Compress(writeParams);
 				break;
-			case TexFormat::DXT3:
+			case TexFormat::BC2:
 				MyDxt3Compress(writeParams);
 				break;
-			case TexFormat::DXT5:
+			case TexFormat::BC3:
 				MyDxt5Compress(writeParams);
 				break;
 			default: AX_WRONGPLACE; break;
@@ -1509,15 +1509,15 @@ namespace {
 	void CopyData(DdsWriteParams *writeParams)
 	{
 		switch (writeParams->outFormat) {
-		case TexFormat::DXT1:
+		case TexFormat::BC1:
 			for (uint_t i=0; i<writeParams->linearSize; i+=8) {
 				*(ushort_t*)(writeParams->outData + i)		= LittleShort(*(ushort_t*)(writeParams->inData + i));
 				*(ushort_t*)(writeParams->outData + i + 2)	= LittleShort(*(ushort_t*)(writeParams->inData + i + 2));
 				*(uint_t*)(writeParams->outData + i + 4)	= LittleInt(*(uint_t*)(writeParams->inData + i + 4));
 			}
 			break;
-		case TexFormat::DXT3:
-		case TexFormat::DXT5:		
+		case TexFormat::BC2:
+		case TexFormat::BC3:		
 			for (uint_t i=0; i<writeParams->linearSize; i+=16) {
 				*(uint_t*)(writeParams->outData + i + 0)	= *(uint_t*)(writeParams->inData + i + 0);
 				*(uint_t*)(writeParams->outData + i + 4)	= *(uint_t*)(writeParams->inData + i + 4);

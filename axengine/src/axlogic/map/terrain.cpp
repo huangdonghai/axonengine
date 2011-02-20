@@ -1080,7 +1080,7 @@ void MapZone::initialize(MapTerrain *terrain, int x, int y)
 
 	// create color texture
 	StringUtil::sprintf(texname, "_zone_color_%d_%d_%d", g_renderSystem->getFrameNum(), m_index.x, m_index.y);
-	m_colorTexture = new Texture(texname, TexFormat::DXT1, Size(Map::ZonePixels, Map::ZonePixels), Texture::AutoGenMipmap);
+	m_colorTexture = new Texture(texname, TexFormat::BC1, Size(Map::ZonePixels, Map::ZonePixels), Texture::AutoGenMipmap);
 
 	m_colorTexture->setClampMode(SamplerDesc::ClampMode_Clamp);
 	m_colorTexture->setFilterMode(SamplerDesc::FilterMode_LinearMipmap);

@@ -62,19 +62,19 @@ inline void trTexFormat(TexFormat tex_format, GLenum &dataformat, GLenum &dataty
 		datatype = GL_UNSIGNED_BYTE;
 		internal_format = GL_RGBA8;
 		break;
-	case TexFormat::DXT1:
+	case TexFormat::BC1:
 		dataformat = GL_COMPRESSED_RGBA_S3TC_DXT1_EXT;
 		datatype = GL_UNSIGNED_BYTE;
 		internal_format = GL_COMPRESSED_RGBA_S3TC_DXT1_EXT;
 		break;
 
-	case TexFormat::DXT3:
+	case TexFormat::BC2:
 		dataformat = GL_COMPRESSED_RGBA_S3TC_DXT3_EXT;
 		datatype = GL_UNSIGNED_BYTE;
 		internal_format = GL_COMPRESSED_RGBA_S3TC_DXT3_EXT;
 		break;
 
-	case TexFormat::DXT5:
+	case TexFormat::BC3:
 		dataformat = GL_COMPRESSED_RGBA_S3TC_DXT5_EXT;
 		datatype = GL_UNSIGNED_BYTE;
 		internal_format = GL_COMPRESSED_RGBA_S3TC_DXT5_EXT;
@@ -174,11 +174,11 @@ inline void trTexFormat(TexFormat tex_format, GLenum &dataformat, GLenum &dataty
 inline TexFormat trInternalFormat(GLenum internalformat) {
 	switch (internalformat) {
 	case GL_COMPRESSED_RGBA_S3TC_DXT1_EXT:
-		return TexFormat::DXT1;
+		return TexFormat::BC1;
 	case GL_COMPRESSED_RGBA_S3TC_DXT3_EXT:
-		return TexFormat::DXT3;
+		return TexFormat::BC2;
 	case GL_COMPRESSED_RGBA_S3TC_DXT5_EXT:
-		return TexFormat::DXT5;
+		return TexFormat::BC3;
 	default:
 		return TexFormat::BGRA8;
 	}

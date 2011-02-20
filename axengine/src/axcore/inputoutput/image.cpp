@@ -811,9 +811,9 @@ int Image::convertFormatTo(TexFormat format, int level, byte_t *pBuf) const
 						src += 4;
 						break;
 						// compressed image
-					case TexFormat::DXT1:
-					case TexFormat::DXT3:
-					case TexFormat::DXT5:
+					case TexFormat::BC1:
+					case TexFormat::BC2:
+					case TexFormat::BC3:
 						Errorf("If need DDS format, please use flag IFLF_no_compressed.");
 						break;
 						// 16 bits fixed image
@@ -843,9 +843,9 @@ int Image::convertFormatTo(TexFormat format, int level, byte_t *pBuf) const
 		break;
 	case TexFormat::BGRX8:				// bgr: x is reserved not use: 32 bits
 	// compressed image
-	case TexFormat::DXT1:
-	case TexFormat::DXT3:
-	case TexFormat::DXT5:
+	case TexFormat::BC1:
+	case TexFormat::BC2:
+	case TexFormat::BC3:
 	// 16 bits fixed image
 	case TexFormat::L16:				// 16 bits int texture: terrain heightmap use this
 	// 16 bits float image

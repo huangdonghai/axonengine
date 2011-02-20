@@ -12,7 +12,7 @@
 #define AX_DX11_END_NAMESPACE } AX_END_NAMESPACE
 
 #if defined(DEBUG) || defined(_DEBUG)
-#define V(x) { HRESULT hr = (x); if (FAILED(hr)) { Errorf("%s(%d): %s", __FILE__, __LINE__, #x); } }
+#define V(x) { HRESULT hr = (x); if (FAILED(hr)) { Errorf("%s(%d): %s=%s", __FILE__, __LINE__, DX11_ErrorString(hr), #x); } }
 #else
 #define V(x) { HRESULT hr = (x); }
 #endif

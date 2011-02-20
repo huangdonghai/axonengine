@@ -65,7 +65,6 @@ void DX9_Driver::initialize(SyncEvent &syncEvent)
 		Errorf("D3D9Driver::initialize: GetDeviceCaps failed %s", DX9_ErrorString(hr));
 	}
 
-	g_renderDriverInfo.maxTextureUnits = caps.MaxTextureBlendStages;
 	g_renderDriverInfo.maxTextureSize = std::min(caps.MaxTextureWidth, caps.MaxTextureHeight);
 	g_renderDriverInfo.max3DTextureSize = caps.MaxVolumeExtent;
 	g_renderDriverInfo.maxCubeMapTextureSize = g_renderDriverInfo.maxTextureSize;

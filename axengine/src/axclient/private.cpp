@@ -11,8 +11,9 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-AX_DECLARE_MODULE(axopengl);
+AX_DECLARE_MODULE(AxGL);
 AX_DECLARE_MODULE(AxDX9);
+AX_DECLARE_MODULE(AxDX11);
 
 // console variable
 #define AX_CVARDECL(name, defaultstring, flags) \
@@ -60,8 +61,9 @@ void axClientInit()
 #endif
 
 #if 1 // _LIB
-//	AX_REGISTER_MODULE(axopengl);
+//	AX_REGISTER_MODULE(AxGL);
 	AX_REGISTER_MODULE(AxDX9);
+	AX_REGISTER_MODULE(AxDX11);
 #endif
 
 	g_renderSystem = new RenderSystem;

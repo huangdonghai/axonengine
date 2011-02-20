@@ -47,9 +47,9 @@ inline bool trTexFormat(TexFormat texformat, D3DFORMAT &d3dformat)
 	case TexFormat::BGR8: d3dformat = D3DFMT_R8G8B8; break;
 	case TexFormat::BGRA8: d3dformat = D3DFMT_A8R8G8B8; break;
 	case TexFormat::BGRX8: d3dformat = D3DFMT_X8R8G8B8; break;
-	case TexFormat::DXT1: d3dformat = D3DFMT_DXT1; break;
-	case TexFormat::DXT3: d3dformat = D3DFMT_DXT3; break;
-	case TexFormat::DXT5: d3dformat = D3DFMT_DXT5; break;
+	case TexFormat::BC1: d3dformat = D3DFMT_DXT1; break;
+	case TexFormat::BC2: d3dformat = D3DFMT_DXT3; break;
+	case TexFormat::BC3: d3dformat = D3DFMT_DXT5; break;
 	case TexFormat::L16: d3dformat = D3DFMT_L16; break;
 	case TexFormat::R16F: d3dformat = D3DFMT_R16F; break;
 	case TexFormat::RG16F: d3dformat = D3DFMT_G16R16F; break;
@@ -342,7 +342,7 @@ static void dx9UploadVertexBuffer(phandle_t h, int offset, int datasize, const v
 {
 	DX9_Resource *resource = h->castTo<DX9_Resource *>();
 	AX_ASSERT(resource->m_type = DX9_Resource::kVertexBuffer);
-	AX_ASSERT(resource->m_isDynamic)
+	AX_ASSERT(resource->m_isDynamic);
 
 	IDirect3DVertexBuffer9 *obj = resource->m_vertexBuffer;
 
@@ -394,7 +394,7 @@ static void dx9UploadIndexBuffer(phandle_t h, int offset, int datasize, const vo
 {
 	DX9_Resource *resource = h->castTo<DX9_Resource *>();
 	AX_ASSERT(resource->m_type == DX9_Resource::kIndexBuffer);
-	AX_ASSERT(resource->m_isDynamic)
+	AX_ASSERT(resource->m_isDynamic);
 	IDirect3DIndexBuffer9 *obj = resource->m_indexBuffer;
 
 	DWORD flag = D3DLOCK_DISCARD | D3DLOCK_NOSYSLOCK;
