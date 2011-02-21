@@ -22,20 +22,17 @@ void CDECL Errorf(const char *fmt, ...)
 	int len;
 	char buffer[4096];
 
-	std::string err_msg = "Occurred critical error. There are error message:\n\n";
-
 	va_start(argptr, fmt);
 	len = StringUtil::vsnprintf(buffer, ArraySize(buffer), fmt, argptr);
 	va_end(argptr);
 
-	err_msg += buffer;
 	std::wstring wstr = u2w(buffer);
 	std::string lstr = w2l(wstr);
 	wprintf(L"%s", wstr.c_str());
 	OutputDebugStringW(wstr.c_str());
 
 	fprintf(g_logFile, "\n====================================================\n");
-	fprintf(g_logFile, "%s\n", err_msg.c_str());
+	fprintf(g_logFile, "%s\n", buffer);
 	fprintf(g_logFile, "====================================================\n");
 
 #if 0
@@ -60,7 +57,7 @@ void CDECL Errorf(const char *fmt, ...)
 	throw err_msg.c_str();
 	throw err_msg.c_str();
 #endif
-	throw err_msg.c_str();
+	throw buffer;
 
 	*(int*)0 = 0;
 

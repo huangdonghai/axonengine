@@ -50,8 +50,8 @@ inline bool trTexFormat(TexFormat texformat, D3DFORMAT &d3dformat)
 	case TexFormat::BC1: d3dformat = D3DFMT_DXT1; break;
 	case TexFormat::BC2: d3dformat = D3DFMT_DXT3; break;
 	case TexFormat::BC3: d3dformat = D3DFMT_DXT5; break;
-	case TexFormat::BC4: d3dformat = (D3DFORMAT)MAKEFOURCC('A','T','N','1'); break;
-	case TexFormat::BC5: d3dformat = (D3DFORMAT)MAKEFOURCC('A','T','N','2'); break;
+	case TexFormat::BC4: d3dformat = (D3DFORMAT)MAKEFOURCC('A','T','I','1'); break;
+	case TexFormat::BC5: d3dformat = (D3DFORMAT)MAKEFOURCC('A','T','I','2'); break;
 	case TexFormat::BC6H: break;
 	case TexFormat::BC7: break;
 	case TexFormat::L16: d3dformat = D3DFMT_L16; break;

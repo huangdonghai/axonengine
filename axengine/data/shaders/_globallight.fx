@@ -121,8 +121,8 @@ half4 FP_main(LightVertexOut IN) : COLOR
 technique main
 {
     pass p0 {
-        VertexShader = compile vs_3_0 VP_main();
-		PixelShader = compile ps_3_0 FP_main();
+        VertexShader = compile VS_3_0 VP_main();
+		PixelShader = compile PS_3_0 FP_main();
     }
 }
 
