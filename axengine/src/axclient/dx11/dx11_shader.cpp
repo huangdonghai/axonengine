@@ -24,20 +24,128 @@ DX11_Pass::~DX11_Pass()
 
 void DX11_Pass::initVs()
 {
-	D3DX11_PASS_SHADER_DESC psd;
+	D3DX11_PASS_SHADER_DESC pass_shader_desc;
 
-	V(m_d3dxpass->GetVertexShaderDesc(&psd));
-	AX_ASSERT(psd.ShaderIndex);
+	V(m_d3dxpass->GetVertexShaderDesc(&pass_shader_desc));
+	AX_ASSERT(pass_shader_desc.pShaderVariable && pass_shader_desc.pShaderVariable->IsValid());
 
-	D3DX11_EFFECT_SHADER_DESC esd;
+	V(pass_shader_desc.pShaderVariable->GetVertexShader(pass_shader_desc.ShaderIndex, &m_vs));
+
+	D3DX11_EFFECT_SHADER_DESC effect_shader_desc;
 	ID3D11ShaderReflection *reflection = 0;
-	V(psd.pShaderVariable->GetShaderDesc(0, &esd));
-	V(D3DReflect(esd.pBytecode, esd.BytecodeLength, IID_ID3D11ShaderReflection, (void **)&reflection));
+	V(pass_shader_desc.pShaderVariable->GetShaderDesc(0, &effect_shader_desc));
+	V(D3DReflect(effect_shader_desc.pBytecode, effect_shader_desc.BytecodeLength, IID_ID3D11ShaderReflection, (void **)&reflection));
+
+	D3D11_SHADER_DESC shader_desc;
+	V(reflection->GetDesc(&shader_desc));
+
+	for (int i = 0; i < shader_desc.BoundResources; i++) {
+		D3D11_SHADER_INPUT_BIND_DESC shader_input_bind_desc;
+		reflection->GetResourceBindingDesc(i, &shader_input_bind_desc);
+
+		switch (shader_input_bind_desc.Type) {
+		case D3D10_SIT_CBUFFER:
+			{
+				if (shader_input_bind_desc.BindPoint != ConstBuffer::PrimitiveConst)
+					continue;
+
+				ID3D11ShaderReflectionConstantBuffer *const_buffer = reflection->GetConstantBufferByName(shader_input_bind_desc.Name);
+				D3D11_SHADER_BUFFER_DESC buffer_desc;
+				V(const_buffer->GetDesc(&buffer_desc));
+				for (int i = 0; i < buffer_desc.Variables; i++) {
+					ParamDesc paramDesc;
+					ID3D11ShaderReflectionVariable *var = const_buffer->GetVariableByIndex(i);
+					V(var->GetDesc(&paramDesc.d3dDesc));
+					paramDesc.setflag = 0;
+					m_parameters[paramDesc.d3dDesc.Name] = paramDesc;
+				}
+				break;
+			}
+
+		case D3D10_SIT_TEXTURE: 
+		case D3D10_SIT_SAMPLER:
+			break;
+
+		case D3D10_SIT_TBUFFER:
+		case D3D11_SIT_STRUCTURED:
+		case D3D11_SIT_BYTEADDRESS:
+		case D3D11_SIT_UAV_RWTYPED:
+		case D3D11_SIT_UAV_RWSTRUCTURED:
+		case D3D11_SIT_UAV_RWBYTEADDRESS:
+		case D3D11_SIT_UAV_APPEND_STRUCTURED:
+		case D3D11_SIT_UAV_CONSUME_STRUCTURED:
+		case D3D11_SIT_UAV_RWSTRUCTURED_WITH_COUNTER:
+			break;
+		default: break;
+		}
+	}
+
+// 	ID3D11ShaderReflectionConstantBuffer *srcb = reflection->GetConstantBufferByIndex(ConstBuffer::PrimitiveConst);
+// 	if (!srcb) return;
+// 
+// 	D3D11_SHADER_BUFFER_DESC sbd;
+// 	V(srcb->GetDesc(&sbd));
+// 
 }
 
 void DX11_Pass::initPs()
 {
+	D3DX11_PASS_SHADER_DESC pass_shader_desc;
 
+	V(m_d3dxpass->GetPixelShaderDesc(&pass_shader_desc));
+	AX_ASSERT(pass_shader_desc.pShaderVariable && pass_shader_desc.pShaderVariable->IsValid());
+
+	V(pass_shader_desc.pShaderVariable->GetPixelShader(pass_shader_desc.ShaderIndex, &m_ps));
+
+	D3DX11_EFFECT_SHADER_DESC effect_shader_desc;
+	ID3D11ShaderReflection *reflection = 0;
+	V(pass_shader_desc.pShaderVariable->GetShaderDesc(0, &effect_shader_desc));
+	V(D3DReflect(effect_shader_desc.pBytecode, effect_shader_desc.BytecodeLength, IID_ID3D11ShaderReflection, (void **)&reflection));
+
+	D3D11_SHADER_DESC shader_desc;
+	V(reflection->GetDesc(&shader_desc));
+
+	for (int i = 0; i < shader_desc.BoundResources; i++) {
+		D3D11_SHADER_INPUT_BIND_DESC shader_input_bind_desc;
+		reflection->GetResourceBindingDesc(i, &shader_input_bind_desc);
+
+		switch (shader_input_bind_desc.Type) {
+		case D3D10_SIT_CBUFFER:
+			{
+				if (shader_input_bind_desc.BindPoint != ConstBuffer::PrimitiveConst)
+					continue;
+
+				ID3D11ShaderReflectionConstantBuffer *const_buffer = reflection->GetConstantBufferByName(shader_input_bind_desc.Name);
+				D3D11_SHADER_BUFFER_DESC buffer_desc;
+				V(const_buffer->GetDesc(&buffer_desc));
+				for (int i = 0; i < buffer_desc.Variables; i++) {
+					ParamDesc paramDesc;
+					ID3D11ShaderReflectionVariable *var = const_buffer->GetVariableByIndex(i);
+					V(var->GetDesc(&paramDesc.d3dDesc));
+					paramDesc.setflag = 0;
+					m_parameters[paramDesc.d3dDesc.Name] = paramDesc;
+				}
+				break;
+			}
+			break;
+
+		case D3D10_SIT_TEXTURE: 
+		case D3D10_SIT_SAMPLER:
+			break;
+
+		case D3D10_SIT_TBUFFER:
+		case D3D11_SIT_STRUCTURED:
+		case D3D11_SIT_BYTEADDRESS:
+		case D3D11_SIT_UAV_RWTYPED:
+		case D3D11_SIT_UAV_RWSTRUCTURED:
+		case D3D11_SIT_UAV_RWBYTEADDRESS:
+		case D3D11_SIT_UAV_APPEND_STRUCTURED:
+		case D3D11_SIT_UAV_CONSUME_STRUCTURED:
+		case D3D11_SIT_UAV_RWSTRUCTURED_WITH_COUNTER:
+			break;
+		default: break;
+		}
+	}
 }
 
 void DX11_Pass::setInputLayout()
@@ -169,6 +277,12 @@ DX11_Shader::DX11_Shader(const FixedString &name, const GlobalMacro &gm, const M
 		Errorf("can't create effect");
 		return;
 	}
+
+	ID3DX11EffectConstantBuffer *effect_const_buffer = m_object->GetConstantBufferByIndex(0);
+	ID3D11Buffer *buffer = 0;
+	effect_const_buffer->GetConstantBuffer(&buffer);
+
+	ID3DX11EffectVariable * var = m_object->GetVariableByName("g_texMatrix");
 
 	// init techniques
 	initTechniques();

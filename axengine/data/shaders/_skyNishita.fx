@@ -99,11 +99,5 @@ technique Render
 	{
 		VertexShader = compile VS_3_0 VP_main();
 		PixelShader = compile PS_3_0 FP_main();
-#if 0
-		DEPTHTEST = true;
-		DEPTHMASK = true;
-		CULL_ENABLED;
-		BLEND_NONE;
-#endif
 	}
 }

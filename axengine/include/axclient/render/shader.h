@@ -13,63 +13,6 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-#if 0
-class UniformData
-{
-public:
-	enum DataType {
-		kFloat, kInteger, kSampler
-	};
-
-	UniformData()
-	{
-		m_dataType = kFloat;
-		m_count = 0;
-		m_floatValue = 0;
-	}
-
-	~UniformData()
-	{
-		if (m_dataType != kSampler) {
-			SafeDeleteArray(m_floatValue);
-		}
-	}
-
-	void setFloat(int count, float *value)
-	{
-		m_dataType = kFloat;
-		m_count = count;
-		m_floatValue = new float[count];
-		memcpy(m_floatValue, value, count * sizeof(float));
-	}
-
-	void setInteger(int count, int *value)
-	{
-		m_dataType = kInteger;
-		m_count = count;
-		m_intValue = new int[count];
-		memcpy(m_intValue, value, count * sizeof(int));
-	}
-
-	void setTexture(Handle *phandle)
-	{
-		m_dataType = kSampler;
-		m_count = 1;
-		m_textureHandle = phandle;
-	}
-
-private:
-	DataType m_dataType;
-
-	int m_count;
-	union {
-		float *m_floatValue;
-		int *m_intValue;
-		Handle *m_textureHandle;
-	};
-};
-#endif
-
 class ConstBuffers;
 class ConstBuffer
 {
@@ -92,6 +35,8 @@ public:
 		InteractionConst,
 		MaxType
 	};
+
+	enum { PrimitiveConst = 2 };
 
 	enum ValueType {
 		vt_empty, vt_float, vt_Vector2, vt_Vector3, vt_Matrix3, vt_Vector4, vt_Matrix, vt_Matrix4
