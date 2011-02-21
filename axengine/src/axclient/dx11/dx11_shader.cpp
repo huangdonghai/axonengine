@@ -226,17 +226,19 @@ ID3DX11EffectTechnique *DX11_Shader::findTechnique(Technique tech)
 {
 	ID3DX11EffectVariable *var = m_object->GetVariableByName("Script");
 
-	if (!var) return 0;
+	if (!var || !var->IsValid()) return 0;
 
 	ID3DX11EffectVariable *anno = var->GetAnnotationByName(tech.toString().c_str());
-	if (!var) return 0;
+	if (!anno || !anno->IsValid()) return 0;
 
-	const char *techName;
-	V(var->AsString()->GetString(&techName));
+	const char *techName = 0;
+	V(anno->AsString()->GetString(&techName));
 
-	if (!techName) return 0;
+	if (!techName || !techName[0]) return 0;
 
 	ID3DX11EffectTechnique *result = m_object->GetTechniqueByName(techName);
+
+	if (!result || !result->IsValid()) return 0;
 	return result;
 }
 
@@ -249,9 +251,6 @@ bool DX11_Shader::isMaterialTextureUsed(MaterialTextureId id) const
 {
 	return false;
 }
-
-
-
 
 
 

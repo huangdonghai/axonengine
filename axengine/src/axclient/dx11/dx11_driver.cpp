@@ -130,6 +130,13 @@ void DX11_Driver::initialize(SyncEvent &syncEvent)
 	g_renderDriverInfo.transposeMatrix = true;
 
 	checkFormats();
+
+	dx11InitApi();
+
+	g_globalMacro.setMacro(GlobalMacro::G_D3D);
+	g_globalMacro.setMacro(GlobalMacro::G_DX11);
+	g_shaderManager = new DX11_ShaderManager;
+	g_stateManager = new DX11_StateManager;
 }
 
 void DX11_Driver::finalize()
@@ -180,9 +187,6 @@ DXGI_FORMAT DX11_Driver::trTexFormat(TexFormat texformat)
 	case TexFormat::D24: d3dformat = DXGI_FORMAT_R24_UNORM_X8_TYPELESS; break;
 	case TexFormat::D32F: d3dformat = DXGI_FORMAT_D32_FLOAT; break;
 	case TexFormat::D24S8: d3dformat = DXGI_FORMAT_D24_UNORM_S8_UINT; break;
-	case TexFormat::DF16: break;
-	case TexFormat::DF24: break;
-	case TexFormat::RAWZ: break;
 	case TexFormat::INTZ: break;
 	default: AX_WRONGPLACE;
 	}

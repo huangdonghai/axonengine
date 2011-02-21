@@ -50,6 +50,10 @@ inline bool trTexFormat(TexFormat texformat, D3DFORMAT &d3dformat)
 	case TexFormat::BC1: d3dformat = D3DFMT_DXT1; break;
 	case TexFormat::BC2: d3dformat = D3DFMT_DXT3; break;
 	case TexFormat::BC3: d3dformat = D3DFMT_DXT5; break;
+	case TexFormat::BC4: d3dformat = (D3DFORMAT)MAKEFOURCC('A','T','N','1'); break;
+	case TexFormat::BC5: d3dformat = (D3DFORMAT)MAKEFOURCC('A','T','N','2'); break;
+	case TexFormat::BC6H: break;
+	case TexFormat::BC7: break;
 	case TexFormat::L16: d3dformat = D3DFMT_L16; break;
 	case TexFormat::R16F: d3dformat = D3DFMT_R16F; break;
 	case TexFormat::RG16F: d3dformat = D3DFMT_G16R16F; break;
@@ -59,13 +63,11 @@ inline bool trTexFormat(TexFormat texformat, D3DFORMAT &d3dformat)
 	case TexFormat::RG32F: d3dformat = D3DFMT_G32R32F; break;
 	case TexFormat::RGB32F: break;
 	case TexFormat::RGBA32F: d3dformat = D3DFMT_A32B32G32R32F; break;
+	case TexFormat::R11G11B10F: break;
 	case TexFormat::D16: d3dformat = D3DFMT_D16; break;
 	case TexFormat::D24: d3dformat = D3DFMT_D24X8; break;
 	case TexFormat::D32F: d3dformat = D3DFMT_D32F_LOCKABLE; break;
 	case TexFormat::D24S8: d3dformat = D3DFMT_D24S8; break;
-	case TexFormat::DF16: d3dformat = (D3DFORMAT)MAKEFOURCC('D','F','1','6'); break;
-	case TexFormat::DF24: d3dformat = (D3DFORMAT)MAKEFOURCC('D','F','2','4'); break;
-	case TexFormat::RAWZ: d3dformat = (D3DFORMAT)MAKEFOURCC('R','A','W','Z'); break;
 	case TexFormat::INTZ: d3dformat = (D3DFORMAT)MAKEFOURCC('I','N','T','Z'); break;
 	default: AX_WRONGPLACE;
 	}

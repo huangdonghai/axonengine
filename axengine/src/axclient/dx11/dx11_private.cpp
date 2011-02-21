@@ -14,7 +14,6 @@ IDXGIFactory *g_dxgiFactory;
 
 DX11_ShaderManager *g_shaderManager;
 DX11_StateManager *g_stateManager;
-ConstBuffers *g_appConstBuffers;
 ID3D11Buffer *g_d3dConstBuffers[ConstBuffer::MaxType+1]; // +1 for primitive const
 
 AX_DX11_END_NAMESPACE

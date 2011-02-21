@@ -95,8 +95,8 @@ half4 FP_blur(VertexOut IN) : COLOR
 technique main {
 #if 0
 	pass p0 {
-		VERTEXPROGRAM = compile VP_2_0 VP_main();
-		FRAGMENTPROGRAM = compile FP_2_0 FP_blur();
+		VertexShader = compile VS_3_0 VP_main();
+		PixelShader = compile PS_3_0 FP_blur();
 
 		DEPTHTEST = false;
 		DEPTHMASK = false;
@@ -105,8 +105,8 @@ technique main {
 	}
 #endif
     pass p1 {
-        VERTEXPROGRAM = compile VP_2_0 VP_main();
-		FRAGMENTPROGRAM = compile FP_2_0 FP_main();
+        VertexShader = compile VS_3_0 VP_main();
+		PixelShader = compile PS_3_0 FP_main();
 #if 0
 	    DEPTHTEST = false;
 		DEPTHMASK = false;

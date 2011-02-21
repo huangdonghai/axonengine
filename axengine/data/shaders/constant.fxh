@@ -10,106 +10,20 @@ read the license and understand and accept it fully.
 
 #define IS_SET(x) defined(x) && (x != 0)
 
-#if !G_OPENGL
-#	define VP_2_0	vs_3_0
-#	define FP_2_0	ps_3_0
-#	define VP_3_0	vs_3_0
-#	define FP_3_0	ps_3_0
-#else	// D3D
-#	define VP_2_0	arbvp1
-#	define FP_2_0	arbfp1
-#	define VP_3_0	glslv
-#	define FP_3_0	glslf
-#endif
-
-// let hlsl use Cg/GLSL like matrix mode
-#if G_D3D
-#endif
-
 // effect state for d3d/opengl portability
 #if G_D3D
-#	define VERTEXPROGRAM		VertexShader
-#	define FRAGMENTPROGRAM		PixelShader
-/*
-#	define DEPTHTEST			ZEnable
-#	define DEPTHMASK			ZWriteEnable
-#	define BLEND_NONE			AlphaBlendEnable = false
-#	define BLEND_ADD			AlphaBlendEnable = true; SrcBlend = ONE; DestBlend = ONE
-#	define BLEND_FILTER			AlphaBlendEnable = true; SrcBlend = ZERO; DestBlend = SRCCOLOR
-#	define BLEND_BLEND			AlphaBlendEnable = true; SrcBlend = SRCALPHA; DestBlend = INVSRCALPHA
-#	define CULL_NONE			CullMode = NONE
-//#	define CULL_FRONT			CullMode = CW;
-//#	define CULL_BACK			CullMode = CCW;
-#	define CULL_ENABLED			CULL_BACK
-
-#	if G_REFLECTION
-#		define DEPTHMASK_MAIN	ZWriteEnable = true
-#		define CULL_FRONT		CullMode = CCW
-#		define CULL_BACK		CullMode = CW
-#	else
-#		define DEPTHMASK_MAIN	ZWriteEnable = true
-#		define CULL_FRONT		CullMode = CW
-#		define CULL_BACK		CullMode = CCW
+#	if G_DX11
+#		define technique technique11
+#		define VS_3_0	vs_4_0
+#		define PS_3_0	ps_4_0
+#	else // not dx11
+#		define VS_3_0	vs_3_0
+#		define PS_3_0	ps_3_0
 #	endif
-
-#if 0
-#	define DEPTHFUNC_LEQUAL
-#	define DEPTHFUNC_EQUAL
-#	define DEPTHFUNC_GREATER
-#	define DEPTHFUNC_LESS
-#endif
-*/
-#else // G_D3D
-#	define VERTEXPROGRAM		VertexProgram
-#	define FRAGMENTPROGRAM		FragmentProgram
-/*
-#	define DEPTHTEST			DepthTestEnable
-#	define DEPTHMASK			DepthMask
-#	define BLEND_NONE			BlendEnable = false
-#	define BLEND_ADD			BlendEnable = true; BlendFunc = { One, One }
-#	define BLEND_FILTER			BlendEnable = true; BlendFunc = { Zero, SrcColor }
-#	define BLEND_BLEND			BlendEnable = true; BlendFunc = { SrcAlpha, OneMinusSrcAlpha }
-#	define CULL_NONE			CullFaceEnable = false
-#	define CULL_FRONT			CullFaceEnable = true; FrontFace = CW
-#	define CULL_BACK			CullFaceEnable = true 
-#	define CULL_ENABLED			CullFaceEnable = true
-
-#	if G_REFLECTION
-#		define DEPTHMASK_MAIN DepthMask = true
-#	else
-#		define DEPTHMASK_MAIN DepthMask = true
-#	endif
-*/
+#else // not G_D3D
+#	define VS_3_0	glslv
+#	define PS_3_0	glslf
 #endif // G_D3D
-
-/*
-	custom state
-
-	depthWrites = true | false;
-	depthTest = true | false;
-*/
-
-
-// sampler state
-#if G_D3D
-#	define FILTER_POINT				MinFilter = POINT; MagFilter = POINT; MipFilter = NONE
-#	define FILTER_LINEAR			MinFilter = LINEAR; MagFilter = LINEAR; MipFilter = NONE
-#	define FILTER_MIPMAP_POINT		MinFilter = POINT; MagFilter = POINT; MipFilter = POINT
-#	define FILTER_MIPMAP_LINEAR		MinFilter = LINEAR; MagFilter = LINEAR; MipFilter = POINT
-#	define FILTER_TRILINEAR			MinFilter = LINEAR; MagFilter = LINEAR; MipFilter = LINEAR
-#	define CLAMP_REPEAT				AddressU = WRAP;	AddressV = WRAP
-#	define CLAMP_EDGE				AddressU = CLAMP;	AddressV = CLAMP
-#	define CLAMP_BORDER				AddressU = BORDER;	AddressV = BORDER
-#else
-#	define FILTER_POINT				MinFilter = NEAREST; MagFilter = NEAREST
-#	define FILTER_LINEAR			MinFilter = LINEAR; MagFilter = LINEAR
-#	define FILTER_MIPMAP_POINT		MinFilter = NEAREST_MIPMAP_NEAREST; MagFilter = NEAREST
-#	define FILTER_MIPMAP_LINEAR		MinFilter = LINEAR_MIPMAP_NEAREST; MagFilter = LINEAR
-#	define FILTER_TRILINEAR			MinFilter = LINEAR_MIPMAP_LINEAR; MagFilter = LINEAR
-#	define CLAMP_REPEAT				WrapS = REPEAT;	WrapT = REPEAT
-#	define CLAMP_EDGE				WrapS = ClampToEdge;	WrapT = ClampToEdge
-#	define CLAMP_BORDER				WrapS = ClampToBorder;	WrapT = ClampToBorder
-#endif
 
 // pragma
 #if G_D3D
@@ -132,9 +46,7 @@ read the license and understand and accept it fully.
 
 #include "sceneconst.fxh"
 #include "interactionconst.fxh"
-#if 0
-AX_SAMPLER_UNIFORMS
-#endif
+
 // shader debug mode
 #define DEBUG_NONE			0
 #define DEBUG_DIFFUSEMAP	1

@@ -121,14 +121,8 @@ half4 FP_main(LightVertexOut IN) : COLOR
 technique main
 {
     pass p0 {
-        VERTEXPROGRAM = compile VP_3_0 VP_main();
-		FRAGMENTPROGRAM = compile FP_3_0 FP_main();
-#if 0
-		DEPTHTEST = false;
-		CULL_FRONT;
-		DEPTHMASK = false;
-		BLEND_ADD;
-#endif
+        VertexShader = compile vs_3_0 VP_main();
+		PixelShader = compile ps_3_0 FP_main();
     }
 }
 

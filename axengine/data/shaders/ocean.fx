@@ -62,9 +62,6 @@ texture s_reflectionMap_tex <
 sampler2D s_reflectionMap = sampler_state
 {
 	texture = <s_reflectionMap_tex>;
-
-	FILTER_LINEAR;
-	CLAMP_EDGE;
 };
 
 texture s_refractionMap_tex <
@@ -74,9 +71,6 @@ texture s_refractionMap_tex <
 sampler2D s_refractionMap = sampler_state
 {
 	texture = <s_refractionMap_tex>;
-
-	FILTER_LINEAR;
-	CLAMP_EDGE;
 };
 
 texture s_foamMap_tex <
@@ -85,9 +79,6 @@ texture s_foamMap_tex <
 
 sampler2D s_foamMap = sampler_state {
 	texture = <s_foamMap_tex>;
-
-	FILTER_TRILINEAR;
-	CLAMP_REPEAT;
 };
 
 // wavelength, freq, amplitude, phase
@@ -267,8 +258,8 @@ half4 FP_main(VertexOut IN) : COLOR {
 
 technique main {
 	pass p0 {
-		VERTEXPROGRAM = compile VP_3_0 VP_main();
-		FRAGMENTPROGRAM = compile FP_3_0 FP_main();
+		VertexShader = compile VS_3_0 VP_main();
+		PixelShader = compile PS_3_0 FP_main();
 
 #if 0
 		DEPTHTEST = true;

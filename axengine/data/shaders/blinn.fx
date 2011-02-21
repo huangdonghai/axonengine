@@ -240,29 +240,27 @@ half4 FP_main(VertexOut IN) : COLOR0
 }
 
 
-//------------------------------------------------------------------------------
-// TECHNIQUES
-//------------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 
 technique gfill {
     pass p0 {
-        VertexShader = compile VP_2_0 OutputMeshVertex();
-		PixelShader = compile FP_2_0 FP_gpass();
+        VertexShader = compile VS_3_0 OutputMeshVertex();
+		PixelShader = compile PS_3_0 FP_gpass();
     }
 }
 
 technique shadowgen {
     pass p0 {
-        VertexShader = compile VP_2_0 VP_zpass();
-		PixelShader = compile FP_2_0 FP_zpass();
+        VertexShader = compile VS_3_0 VP_zpass();
+		PixelShader = compile PS_3_0 FP_zpass();
     }
 }
 
 
 technique main {
     pass p0 {
-        VertexShader = compile VP_2_0 OutputMeshVertex();
-        PixelShader = compile FP_2_0 FP_main();
+        VertexShader = compile VS_3_0 OutputMeshVertex();
+        PixelShader = compile PS_3_0 FP_main();
     }
 }
 

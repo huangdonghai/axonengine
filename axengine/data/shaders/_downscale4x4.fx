@@ -78,8 +78,8 @@ half4 FP_main(PostVertexOut IN) : COLOR {
 
 technique main {
     pass p0 {
-        VertexShader = compile VP_2_0 VP_main();
-		FRAGMENTPROGRAM = compile FP_2_0 FP_main();
+        VertexShader = compile VS_3_0 VP_main();
+		PixelShader = compile PS_3_0 FP_main();
 
 	    DEPTHTEST = false;
 		DEPTHMASK = false;

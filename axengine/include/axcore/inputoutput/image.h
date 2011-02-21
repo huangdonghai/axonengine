@@ -71,7 +71,7 @@ struct TexFormat
 		D24S8,
 
 		// vendor specified
-		DF16, DF24, RAWZ, INTZ,
+		INTZ,
 
 		MAX_NUMBER
 	};
@@ -183,9 +183,6 @@ inline int TexFormat::getNumComponents() const
 	case D24:
 	case D32F:
 	case D24S8:
-	case DF16:
-	case DF24:
-	case RAWZ:
 	case INTZ:
 		return 1;
 
@@ -223,10 +220,10 @@ inline int TexFormat::getBitsPerPixel() const
 	if (m_t == NULLTARGET) return 0;
 	if (m_t == R5G6B5) return 16;
 	if (m_t == RGB10A2) return 32;
-	if (m_t == D16 || m_t == DF16) return 16;
+	if (m_t == D16) return 16;
 	if (m_t == D24) return 24;
 	if (m_t == D32F) return 32;
-	if (m_t == D24S8 || m_t == DF24 || m_t == RAWZ || m_t == INTZ) return 32;
+	if (m_t == D24S8 || m_t == INTZ) return 32;
 
 	Errorf(_("getBitsPerPixel: unknown type"));
 
@@ -270,12 +267,9 @@ inline int TexFormat::getDepthBits() const
 
 	switch (m_t) {
 	case D16:
-	case DF16:
 		return 16;
 	case D24:
 	case D24S8:
-	case DF24:
-	case RAWZ:
 	case INTZ:
 		return 24;
 	case D32F:
@@ -328,9 +322,6 @@ inline const char *TexFormat::toString() const
 	case D32F: return "D32F";
 	case D24S8: return "D24S8";
 
-	case DF16: return "DF16";
-	case DF24: return "DF24";
-	case RAWZ: return "RAWZ";
 	case INTZ: return "INTZ";
 
 	default: AX_WRONGPLACE; return "NONAME";

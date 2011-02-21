@@ -57,7 +57,11 @@ void dx11CreateTexture(phandle_t h, TexType type, TexFormat format, int width, i
 	int miplevels = 1;
 
 	if (flags & Texture::RenderTarget) {
-		bindflags |= D3D11_BIND_RENDER_TARGET;
+		if (format.isDepth()) {
+			bindflags |= D3D11_BIND_DEPTH_STENCIL;
+		} else {
+			bindflags |= D3D11_BIND_RENDER_TARGET;
+		}
 	} else {
 		usage = D3D11_USAGE_DYNAMIC;
 	}
@@ -85,7 +89,7 @@ void dx11CreateTexture(phandle_t h, TexType type, TexFormat format, int width, i
 		desc.ArraySize = 1;
 		desc.Format = d3dformat;
 		desc.SampleDesc.Count = 1;
-		desc.SampleDesc.Quality = 1;
+		desc.SampleDesc.Quality = 0;
 		desc.Usage = usage;
 		desc.BindFlags = bindflags;
 		desc.CPUAccessFlags = cpuAccessFlags;
@@ -640,10 +644,10 @@ void dx11InitApi()
 	desc.MiscFlags = 0;
 	desc.StructureByteStride = 0;
 
-	desc.ByteWidth = g_appConstBuffers->getBuffer(0)->getByteSize();
+	desc.ByteWidth = g_constBuffers.getBuffer(0)->getByteSize();
 	g_device->CreateBuffer(&desc, 0, &g_d3dConstBuffers[0]);
 
-	desc.ByteWidth = g_appConstBuffers->getBuffer(1)->getByteSize();
+	desc.ByteWidth = g_constBuffers.getBuffer(1)->getByteSize();
 	g_device->CreateBuffer(&desc, 0, &g_d3dConstBuffers[1]);
 
 	desc.ByteWidth = PRIMITIVECONST_COUNT * 16;

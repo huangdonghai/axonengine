@@ -171,8 +171,8 @@ half4 FP_main(VertexOut IN) : COLOR {
 
 technique gpass {
 	pass p0 {
-		VERTEXPROGRAM = compile VP_2_0 VP_gpass();
-		FRAGMENTPROGRAM = compile FP_2_0 FP_gpass();
+		VertexShader = compile VS_3_0 VP_gpass();
+		PixelShader = compile PS_3_0 FP_gpass();
 #if 0
 		DEPTHTEST = true;
 		DEPTHMASK = true;
@@ -184,8 +184,8 @@ technique gpass {
 
 technique shadowgen {
 	pass p0 {
-		VERTEXPROGRAM = compile VP_2_0 VP_zpass();
-		FRAGMENTPROGRAM = compile FP_2_0 FP_zpass();
+		VertexShader = compile VS_3_0 VP_zpass();
+		PixelShader = compile PS_3_0 FP_zpass();
 #if 0
 		DEPTHTEST = true;
 		DEPTHMASK = true;
@@ -197,8 +197,8 @@ technique shadowgen {
 
 technique main {
 	pass p0 {
-		VERTEXPROGRAM = compile VP_2_0 VP_main();
-		FRAGMENTPROGRAM = compile FP_2_0 FP_main();
+		VertexShader = compile VS_3_0 VP_main();
+		PixelShader = compile PS_3_0 FP_main();
 #if 0
 		DEPTHTEST = true;
 		DEPTHMASK_MAIN;

@@ -94,8 +94,8 @@ half4 FP_main(ShadowVertexOut IN) : COLOR
 
 technique main {
     pass p0 {
-        VERTEXPROGRAM = compile VP_3_0 VP_main();
-		FRAGMENTPROGRAM = compile FP_3_0 FP_main();
+        VertexShader = compile VS_3_0 VP_main();
+		PixelShader = compile PS_3_0 FP_main();
     }
 }
 
