@@ -84,7 +84,6 @@ protected:
 	void initPs();
 	void initSampler(const D3DXCONSTANT_DESC &desc);
 	void setPrimitiveParameters();
-	void setParameter(const ParamDesc &param, const float *value, bool isPixelShader);
 	void setParameter(const FixedString &name, int numFloats, const float *data);
 
 private:

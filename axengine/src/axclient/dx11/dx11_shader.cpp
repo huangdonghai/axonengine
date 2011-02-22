@@ -7,6 +7,7 @@ DX11_Pass::DX11_Pass(DX11_Shader *shader, ID3DX11EffectPass *d3dxpass)
 	m_shader = shader;
 	m_d3dxpass = d3dxpass;
 	m_setflag = 0;
+	m_primitiveConstBufferSize = 0;
 
 	memset(m_sysSamplers, -1, sizeof(m_sysSamplers));
 	memset(m_matSamplers, -1, sizeof(m_matSamplers));
@@ -50,15 +51,7 @@ void DX11_Pass::initVs()
 					continue;
 
 				ID3D11ShaderReflectionConstantBuffer *const_buffer = reflection->GetConstantBufferByName(shader_input_bind_desc.Name);
-				D3D11_SHADER_BUFFER_DESC buffer_desc;
-				V(const_buffer->GetDesc(&buffer_desc));
-				for (int i = 0; i < buffer_desc.Variables; i++) {
-					ParamDesc paramDesc;
-					ID3D11ShaderReflectionVariable *var = const_buffer->GetVariableByIndex(i);
-					V(var->GetDesc(&paramDesc.d3dDesc));
-					paramDesc.setflag = 0;
-					m_parameters[paramDesc.d3dDesc.Name] = paramDesc;
-				}
+				initPrimitiveConstBuffer(const_buffer);
 				break;
 			}
 
@@ -79,13 +72,6 @@ void DX11_Pass::initVs()
 		default: break;
 		}
 	}
-
-// 	ID3D11ShaderReflectionConstantBuffer *srcb = reflection->GetConstantBufferByIndex(ConstBuffer::PrimitiveConst);
-// 	if (!srcb) return;
-// 
-// 	D3D11_SHADER_BUFFER_DESC sbd;
-// 	V(srcb->GetDesc(&sbd));
-// 
 }
 
 void DX11_Pass::initPs()
@@ -116,21 +102,41 @@ void DX11_Pass::initPs()
 					continue;
 
 				ID3D11ShaderReflectionConstantBuffer *const_buffer = reflection->GetConstantBufferByName(shader_input_bind_desc.Name);
-				D3D11_SHADER_BUFFER_DESC buffer_desc;
-				V(const_buffer->GetDesc(&buffer_desc));
-				for (int i = 0; i < buffer_desc.Variables; i++) {
-					ParamDesc paramDesc;
-					ID3D11ShaderReflectionVariable *var = const_buffer->GetVariableByIndex(i);
-					V(var->GetDesc(&paramDesc.d3dDesc));
-					paramDesc.setflag = 0;
-					m_parameters[paramDesc.d3dDesc.Name] = paramDesc;
-				}
-				break;
+				initPrimitiveConstBuffer(const_buffer);
 			}
 			break;
 
 		case D3D10_SIT_TEXTURE: 
 		case D3D10_SIT_SAMPLER:
+			{
+				// check global sampler
+				for (int i = 0; i < GlobalTextureId::MaxType; i++) {
+					GlobalTextureId id = (GlobalTextureId::Type)i;
+					if (Strequ(id.textureName(), shader_input_bind_desc.Name)) {
+						// check is equal texture and sampler bind point
+						if (m_sysSamplers[i] != -1) {
+							AX_ASSURE(m_sysSamplers[i] == shader_input_bind_desc.BindPoint);
+						} else {
+							m_sysSamplers[i] = shader_input_bind_desc.BindPoint;
+						}
+						continue;
+					}
+				}
+
+				// check material sampler
+				for (int i = 0; i < MaterialTextureId::MaxType; i++) {
+					MaterialTextureId id = (MaterialTextureId::Type)i;
+					if (Strequ(id.textureName(), shader_input_bind_desc.Name)) {
+						// check is equal texture and sampler bind point
+						if (m_matSamplers[i] != -1) {
+							AX_ASSURE(m_matSamplers[i] == shader_input_bind_desc.BindPoint);
+						} else {
+							m_matSamplers[i] = shader_input_bind_desc.BindPoint;
+						}
+						continue;
+					}
+				}
+			}
 			break;
 
 		case D3D10_SIT_TBUFFER:
@@ -147,6 +153,41 @@ void DX11_Pass::initPs()
 		}
 	}
 }
+
+
+void DX11_Pass::initPrimitiveConstBuffer(ID3D11ShaderReflectionConstantBuffer *const_buffer)
+{
+	D3D11_SHADER_BUFFER_DESC buffer_desc;
+	V(const_buffer->GetDesc(&buffer_desc));
+
+	if (!buffer_desc.Size)
+		return;
+
+	// check const buffer size
+	if (m_primitiveConstBufferSize && m_primitiveConstBufferSize != buffer_desc.Size) {
+		Printf("not same size const buffer in vertex shader and pixel shader");
+	}
+
+	m_primitiveConstBufferSize = std::max<int>(m_primitiveConstBufferSize, buffer_desc.Size);
+
+	for (int i = 0; i < buffer_desc.Variables; i++) {
+		ParamDesc paramDesc;
+		ID3D11ShaderReflectionVariable *var = const_buffer->GetVariableByIndex(i);
+		V(var->GetDesc(&paramDesc.d3dDesc));
+		paramDesc.setflag = 0;
+
+		// check compatibility between different shader stage
+		Dict<FixedString, ParamDesc>::const_iterator it = m_parameters.find(paramDesc.d3dDesc.Name);
+		if (it != m_parameters.end()) {
+			const ParamDesc &oldDesc = it->second;
+			AX_ASSERT(oldDesc.d3dDesc.StartOffset == paramDesc.d3dDesc.StartOffset);
+			AX_ASSERT(oldDesc.d3dDesc.Size == paramDesc.d3dDesc.Size);
+		}
+
+		m_parameters[paramDesc.d3dDesc.Name] = paramDesc;
+	}
+}
+
 
 void DX11_Pass::setInputLayout()
 {
@@ -168,9 +209,70 @@ void DX11_Pass::setInputLayout()
 	g_context->IASetInputLayout(il);
 }
 
+void DX11_Pass::apply()
+{
+	// set shaders
+	g_stateManager->setVertexShader(m_vs);
+	g_stateManager->setPixelShader(m_ps);
 
+	// set input layout
+	setInputLayout();
 
+	// set primitive const buffer
+	setPrimitiveConstBuffer();
 
+	// set sampler state and textures
+	setTextures();
+}
+
+void DX11_Pass::setParameter(const FixedString &name, int numFloats, const float *data)
+{
+	Dict<FixedString, ParamDesc>::iterator it = m_parameters.find(name);
+
+	if (it == m_parameters.end()) {
+		return;
+	}
+
+	ParamDesc &param = it->second;
+	param.setflag = m_setflag;
+}
+
+void DX11_Pass::setPrimitiveConstBuffer()
+{
+	if (!m_primitiveConstBufferSize)
+		return;
+
+	m_setflag++;
+
+	// set params1
+	for (int i = 0; i < g_curParams1.m_numItems; i++) {
+		FixedString name(g_curParams1.m_items[i].nameId);
+		setParameter(name, g_curParams1.m_items[i].count, &g_curParams1.m_floatData[g_curParams1.m_items[i].offset]);
+	}
+
+	// set params2
+	for (int i = 0; i < g_curParams2.m_numItems; i++) {
+		FixedString name(g_curParams2.m_items[i].nameId);
+		setParameter(name, g_curParams2.m_items[i].count, &g_curParams2.m_floatData[g_curParams2.m_items[i].offset]);
+	}
+
+	// if not set by material parameter, set it to default value
+	Dict<FixedString, ParamDesc>::iterator it = m_parameters.begin();
+	for (; it != m_parameters.end(); ++it) {
+		ParamDesc &param = it->second;
+
+		if (param.setflag == m_setflag)
+			continue;
+
+		if (!param.d3dDesc.DefaultValue)
+			continue;
+	}
+}
+
+void DX11_Pass::setTextures()
+{
+
+}
 
 
 DX11_Technique::DX11_Technique(DX11_Shader *shader, ID3DX11EffectTechnique *d3dxhandle)

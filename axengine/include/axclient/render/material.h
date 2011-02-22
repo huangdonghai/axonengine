@@ -59,6 +59,8 @@ struct GlobalTextureId {
 		MaxType
 	};
 	AX_DECLARE_ENUM(GlobalTextureId);
+
+	const char *textureName() const;
 };
 
 struct MaterialTextureId {
@@ -79,6 +81,8 @@ struct MaterialTextureId {
 		MaxType
 	};
 	AX_DECLARE_ENUM(MaterialTextureId);
+
+	const char *textureName() const;
 };
 
 class FastParams

@@ -66,16 +66,17 @@ public:
 	DX11_Pass(DX11_Shader *shader, ID3DX11EffectPass *d3dxpass);
 	~DX11_Pass();
 
-	void begin();
+	void apply();
 
 protected:
 	void initVs();
 	void initPs();
+	void initPrimitiveConstBuffer(ID3D11ShaderReflectionConstantBuffer *const_buffer);
 	void initSampler(const D3D11_SHADER_VARIABLE_DESC &desc);
 	void setInputLayout();
-	void setPrimitiveParameters();
-	void setParameter(const ParamDesc &param, const float *value, bool isPixelShader);
+	void setPrimitiveConstBuffer();
 	void setParameter(const FixedString &name, int numFloats, const float *data);
+	void setTextures();
 
 private:
 	DX11_Shader *m_shader;
@@ -96,6 +97,7 @@ private:
 
 	// local parameter
 	int m_setflag;
+	int m_primitiveConstBufferSize;
 	Dict<FixedString, ParamDesc> m_parameters;
 
 	// input layout

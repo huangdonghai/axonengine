@@ -15,6 +15,7 @@ AX_BEGIN_NAMESPACE
 namespace {
 	static ID3DXEffectPool *s_effectPool = NULL;   // Effect pool for sharing parameters
 
+#if 0
 	// cache system samplers
 	struct SamplerParam {
 		int type;
@@ -64,7 +65,7 @@ namespace {
 		GlobalTextureId::ShadowMap, "g_shadowMap",
 		GlobalTextureId::ShadowMapCube, "g_shadowMapCube",
 	};
-
+#endif
 	class EffectHelper
 	{
 	public:
@@ -231,17 +232,19 @@ void DX9_Pass::initPs()
 void DX9_Pass::initSampler(const D3DXCONSTANT_DESC &desc)
 {
 	// check global sampler
-	for (int i = 0; i < ArraySize(s_globalTextureNames); i++) {
-		if (Strequ(s_globalTextureNames[i].paramname, desc.Name)) {
-			m_sysSamplers[s_globalTextureNames[i].type] = desc.RegisterIndex;
+	for (int i = 0; i < GlobalTextureId::MaxType; i++) {
+		GlobalTextureId id = (GlobalTextureId::Type)i;
+		if (Strequ(id.textureName(), desc.Name)) {
+			m_sysSamplers[i] = desc.RegisterIndex;
 			return;
 		}
 	}
 
 	// check material sampler
-	for (int i = 0; i < ArraySize(s_materialTextureNames); i++) {
-		if (Strequ(s_materialTextureNames[i].paramname, desc.Name)) {
-			m_matSamplers[s_materialTextureNames[i].type] = desc.RegisterIndex;
+	for (int i = 0; i < MaterialTextureId::MaxType; i++) {
+		MaterialTextureId id = (MaterialTextureId::Type)i;
+		if (Strequ(id.textureName(), desc.Name)) {
+			m_matSamplers[i] = desc.RegisterIndex;
 			return;
 		}
 	}
@@ -331,10 +334,6 @@ void DX9_Pass::setPrimitiveParameters()
 		dx9_device->SetPixelShaderConstantF(param.d3dDesc.RegisterIndex, (const float*)param.d3dDesc.DefaultValue, param.d3dDesc.RegisterCount);
 		dx9_device->SetVertexShaderConstantF(param.d3dDesc.RegisterIndex, (const float*)param.d3dDesc.DefaultValue, param.d3dDesc.RegisterCount);
 	}
-}
-
-void DX9_Pass::setParameter(const ParamDesc &param, const float *value, bool isPixelShader)
-{
 }
 
 void DX9_Pass::setParameter(const FixedString &name, int numFloats, const float *data)

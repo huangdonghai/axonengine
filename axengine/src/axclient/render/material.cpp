@@ -11,6 +11,38 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
+
+const char *GlobalTextureId::textureName() const
+{
+	static const char *s_globalTextureNames[] = {
+		"g_rtDepth", "g_rt0","g_rt1", "g_rt2", "g_rt3",
+		"g_sceneColor", "g_shadowMap", "g_shadowMapCube"
+	};
+	AX_ASSERT(MaxType == ArraySize(s_globalTextureNames));
+	AX_ASSERT(m_t < MaxType && m_t >= 0);
+
+	return s_globalTextureNames[m_t];
+}
+
+const char *MaterialTextureId::textureName() const
+{
+	static const char *s_materialTextureNames[] = {
+		"g_diffuseMap", "g_normalMap", "g_specularMap", "g_opacitMap", "g_emissionMap", "g_displacementMap", "g_envMap",
+
+		"g_terrainColor", "g_terrainNormal",
+
+		"g_detailMap", "g_detailMap1", "g_detailMap2", "g_detailMap3",
+		"g_detailNormalMap", "g_detailNormalMap1", "g_detailNormalMap2", "g_detailNormalMap3",
+		"g_layerAlpha", "g_layerAlpha1", "g_layerAlpha2", "g_layerAlpha3",
+
+		"g_reflectionMap", "g_lightMap"
+	};
+	AX_ASSERT(MaxType == ArraySize(s_materialTextureNames));
+	AX_ASSERT(m_t < MaxType && m_t >= 0);
+
+	return s_materialTextureNames[m_t];
+}
+
 Material::Material(const std::string &name)
 {
 	size_t s = sizeof(Material);

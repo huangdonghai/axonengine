@@ -53,7 +53,8 @@ extern IDXGIFactory * g_dxgiFactory;
 
 extern DX11_ShaderManager *g_shaderManager;
 extern DX11_StateManager *g_stateManager;
-extern ID3D11Buffer *g_d3dConstBuffers[ConstBuffer::MaxType+1]; // +1 for primitive const
+extern ID3D11Buffer *g_d3dConstBuffers[ConstBuffer::MaxType];
+extern ID3D11Buffer *g_primConstBuffers[PRIMITIVECONST_COUNT]; // for different size primitive const buffers
 
 AX_DX11_END_NAMESPACE
 

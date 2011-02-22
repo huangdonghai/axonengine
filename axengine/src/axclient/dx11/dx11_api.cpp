@@ -650,8 +650,10 @@ void dx11InitApi()
 	desc.ByteWidth = g_constBuffers.getBuffer(1)->getByteSize();
 	g_device->CreateBuffer(&desc, 0, &g_d3dConstBuffers[1]);
 
-	desc.ByteWidth = PRIMITIVECONST_COUNT * 16;
-	g_device->CreateBuffer(&desc, 0, &g_d3dConstBuffers[2]);
+	for (int i = 0; i < PRIMITIVECONST_COUNT; i++) {
+		desc.ByteWidth = (i+1) * 16;
+		g_device->CreateBuffer(&desc, 0, &g_primConstBuffers[i]);
+	}
 
 	dx11AssignRenderApi();
 }
