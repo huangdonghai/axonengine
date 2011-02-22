@@ -8,15 +8,23 @@ DX11_Pass::DX11_Pass(DX11_Shader *shader, ID3DX11EffectPass *d3dxpass)
 	m_d3dxpass = d3dxpass;
 	m_setflag = 0;
 	m_primitiveConstBufferSize = 0;
+	m_primitiveConstBuffer = 0;
 
 	memset(m_sysSamplers, -1, sizeof(m_sysSamplers));
+	memset(m_sysTextures, -1, sizeof(m_sysSamplers));
 	memset(m_matSamplers, -1, sizeof(m_matSamplers));
+	memset(m_matTextures, -1, sizeof(m_matSamplers));
 
 	TypeZeroArray(m_inputLayouts);
 	TypeZeroArray(m_inputLayoutsInstanced);
 
 	initVs();
 	initPs();
+
+	if (m_primitiveConstBufferSize) {
+		int slot = (m_primitiveConstBufferSize + 15) / 16;
+		m_primitiveConstBuffer = g_primConstBuffers[slot];
+	}
 }
 
 DX11_Pass::~DX11_Pass()
@@ -107,33 +115,57 @@ void DX11_Pass::initPs()
 			break;
 
 		case D3D10_SIT_TEXTURE: 
+			{
+				bool found = false;
+				// check global sampler
+				for (int i = 0; i < GlobalTextureId::MaxType; i++) {
+					GlobalTextureId id = (GlobalTextureId::Type)i;
+					std::string texName = id.textureName();
+					std::string texName2 = texName + "_tex";
+					if (texName == shader_input_bind_desc.Name || texName2 == shader_input_bind_desc.Name) {
+						m_sysTextures[i] = shader_input_bind_desc.BindPoint;
+						found = true;
+						break;
+					}
+				}
+
+				if (found) break;
+
+				// check material sampler
+				for (int i = 0; i < MaterialTextureId::MaxType; i++) {
+					MaterialTextureId id = (MaterialTextureId::Type)i;
+					std::string texName = id.textureName();
+					std::string texName2 = texName + "_tex";
+					if (texName == shader_input_bind_desc.Name || texName2 == shader_input_bind_desc.Name) {
+						m_matTextures[i] = shader_input_bind_desc.BindPoint;
+						break;
+					}
+				}
+			}
+			break;
+
 		case D3D10_SIT_SAMPLER:
 			{
+				bool found = false;
+
 				// check global sampler
 				for (int i = 0; i < GlobalTextureId::MaxType; i++) {
 					GlobalTextureId id = (GlobalTextureId::Type)i;
 					if (Strequ(id.textureName(), shader_input_bind_desc.Name)) {
-						// check is equal texture and sampler bind point
-						if (m_sysSamplers[i] != -1) {
-							AX_ASSURE(m_sysSamplers[i] == shader_input_bind_desc.BindPoint);
-						} else {
-							m_sysSamplers[i] = shader_input_bind_desc.BindPoint;
-						}
-						continue;
+						m_sysSamplers[i] = shader_input_bind_desc.BindPoint;
+						found = true;
+						break;
 					}
 				}
+
+				if (found) break;
 
 				// check material sampler
 				for (int i = 0; i < MaterialTextureId::MaxType; i++) {
 					MaterialTextureId id = (MaterialTextureId::Type)i;
 					if (Strequ(id.textureName(), shader_input_bind_desc.Name)) {
-						// check is equal texture and sampler bind point
-						if (m_matSamplers[i] != -1) {
-							AX_ASSURE(m_matSamplers[i] == shader_input_bind_desc.BindPoint);
-						} else {
-							m_matSamplers[i] = shader_input_bind_desc.BindPoint;
-						}
-						continue;
+						m_matSamplers[i] = shader_input_bind_desc.BindPoint;
+						break;
 					}
 				}
 			}
@@ -225,7 +257,7 @@ void DX11_Pass::apply()
 	setTextures();
 }
 
-void DX11_Pass::setParameter(const FixedString &name, int numFloats, const float *data)
+void DX11_Pass::setParameter(D3D11_MAPPED_SUBRESOURCE *mapped, const FixedString &name, int numFloats, const float *data)
 {
 	Dict<FixedString, ParamDesc>::iterator it = m_parameters.find(name);
 
@@ -235,25 +267,31 @@ void DX11_Pass::setParameter(const FixedString &name, int numFloats, const float
 
 	ParamDesc &param = it->second;
 	param.setflag = m_setflag;
+	int size = numFloats * sizeof(float);
+	AX_RELEASE_ASSERT(size <= param.d3dDesc.Size);
+	memcpy((byte_t *)mapped->pData + param.d3dDesc.StartOffset, data, size);
 }
 
 void DX11_Pass::setPrimitiveConstBuffer()
 {
-	if (!m_primitiveConstBufferSize)
+	if (!m_primitiveConstBuffer)
 		return;
 
 	m_setflag++;
 
+	D3D11_MAPPED_SUBRESOURCE mapped;
+	g_context->Map(m_primitiveConstBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped);
+
 	// set params1
 	for (int i = 0; i < g_curParams1.m_numItems; i++) {
 		FixedString name(g_curParams1.m_items[i].nameId);
-		setParameter(name, g_curParams1.m_items[i].count, &g_curParams1.m_floatData[g_curParams1.m_items[i].offset]);
+		setParameter(&mapped, name, g_curParams1.m_items[i].count, &g_curParams1.m_floatData[g_curParams1.m_items[i].offset]);
 	}
 
 	// set params2
 	for (int i = 0; i < g_curParams2.m_numItems; i++) {
 		FixedString name(g_curParams2.m_items[i].nameId);
-		setParameter(name, g_curParams2.m_items[i].count, &g_curParams2.m_floatData[g_curParams2.m_items[i].offset]);
+		setParameter(&mapped, name, g_curParams2.m_items[i].count, &g_curParams2.m_floatData[g_curParams2.m_items[i].offset]);
 	}
 
 	// if not set by material parameter, set it to default value
@@ -266,12 +304,43 @@ void DX11_Pass::setPrimitiveConstBuffer()
 
 		if (!param.d3dDesc.DefaultValue)
 			continue;
+
+		memcpy((byte_t *)mapped.pData + param.d3dDesc.StartOffset, param.d3dDesc.DefaultValue, param.d3dDesc.Size);
 	}
+
+	g_context->Unmap(m_primitiveConstBuffer, 0);
+	g_context->VSSetConstantBuffers(ConstBuffer::PrimitiveConst, 1, &m_primitiveConstBuffer);
+	g_context->PSSetConstantBuffers(ConstBuffer::PrimitiveConst, 1, &m_primitiveConstBuffer);
+}
+
+static inline ID3D11ShaderResourceView *H2T(phandle_t h)
+{
+	DX11_Resource *res = h->castTo<DX11_Resource *>();
+	AX_ASSERT(res->m_type == DX11_Resource::kImmutableTexture || res->m_type == DX11_Resource::kDynamicTexture);
+	return res->m_shaderResourceView;
 }
 
 void DX11_Pass::setTextures()
 {
+	// set global textures
+	for (int i = 0; i < GlobalTextureId::MaxType; i++) {
+		if (m_sysSamplers[i] >= 0 && g_curGlobalTextures[i]) {
+			g_stateManager->setTexture(m_sysTextures[i], H2T(g_curGlobalTextures[i]));
+			g_stateManager->setSamplerState(m_sysSamplers[i], g_curGlobalTextureSamplerDescs[i]);
+		} else {
+			//g_stateManager->setTexture(m_sysSamplers[i], 0);
+		}
+	}
 
+	// set material textures
+	for (int i = 0; i < g_curMaterialTextures.m_numItems; i++) {
+		FastTextureParams::Item &item = g_curMaterialTextures.m_items[i];
+		int index = item.id;
+		if (m_matSamplers[index] >= 0) {
+			g_stateManager->setTexture(m_matTextures[index], H2T(item.handle));
+			g_stateManager->setSamplerState(m_matSamplers[index], item.samplerState);
+		}
+	}
 }
 
 
@@ -353,7 +422,7 @@ DX11_Shader::DX11_Shader(const FixedString &name, const GlobalMacro &gm, const M
 	IoRequest ioRequest(0, fullname);
 	g_fileSystem->syncRead(&ioRequest);
 
-	AX_ASSURE(ioRequest.fileData() && ioRequest.fileSize());
+	AX_RELEASE_ASSERT(ioRequest.fileData() && ioRequest.fileSize());
 
 	DX11_Include d3dInc;
 	UINT shaderFlags = D3D10_SHADER_ENABLE_BACKWARDS_COMPATIBILITY | D3D10_SHADER_NO_PRESHADER;
@@ -468,6 +537,22 @@ bool DX11_Shader::isMaterialTextureUsed(MaterialTextureId id) const
 	return false;
 }
 
+UINT DX11_Shader::begin(Technique tech)
+{
+	if (m_techniques[tech]) {
+		m_curTech = m_techniques[tech];
+		return m_curTech->m_numPasses;
+	}
+	return 0;
+}
+
+void DX11_Shader::beginPass(UINT pass)
+{
+	m_curTech->m_passes[pass]->apply();
+}
+
+
+
 
 
 DX11_ShaderManager::DX11_ShaderManager()
@@ -510,7 +595,7 @@ void DX11_ShaderManager::_initialize()
 {
 	TiXmlDocument doc;
 	doc.LoadAxonFile("shaders/shaderlist.xml");
-	AX_ASSURE(!doc.Error());
+	AX_RELEASE_ASSERT(!doc.Error());
 
 	TiXmlNode *root = doc.FirstChild("shaderlist");
 

@@ -293,7 +293,7 @@ void ScriptProp::init()
 	int valuetype = lua_type(L,-1);
 	switch (valuetype) {
 		case LUA_TBOOLEAN:
-			AX_ASSURE(kindFromName == Variant::kVoid || kindFromName == Variant::kBool);
+			AX_RELEASE_ASSERT(kindFromName == Variant::kVoid || kindFromName == Variant::kBool);
 			m_propKind = Variant::kBool;
 			m_defaultValue = (lua_toboolean(L,-1) ? true : false);
 			break;

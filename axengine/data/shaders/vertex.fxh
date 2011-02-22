@@ -33,6 +33,12 @@ float3 VP_modelToWorld(MeshVertex input, float3 ms)
 	return mul(VP_getModelMatrix(input), posMS);
 }
 
+float3 VP_modelToWorld(float3 ms)
+{
+	float4 posMS = float4(ms,1);
+	return mul(g_modelMatrix, posMS).xyz;
+}
+
 // transform from world space to clip space
 float4 VP_worldToClip(float3 ws)
 {
@@ -42,6 +48,11 @@ float4 VP_worldToClip(float3 ws)
 float4 VP_modelToClip(MeshVertex input, float3 ms)
 {
 	return VP_worldToClip(VP_modelToWorld(input, ms));
+}
+
+float4 VP_modelToClip(float3 ms)
+{
+	return VP_worldToClip(VP_modelToWorld(ms));
 }
 
 float3 VP_getModelPos(MeshVertex input)

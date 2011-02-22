@@ -105,7 +105,7 @@ void DX11_Driver::initialize(SyncEvent &syncEvent)
 	g_renderDriverInfo.version = "unknown";
 	g_renderDriverInfo.extension = "unknown";
 
-	AX_ASSURE(featureLevel >= D3D_FEATURE_LEVEL_9_3);
+	AX_RELEASE_ASSERT(featureLevel >= D3D_FEATURE_LEVEL_9_3);
 
 	if (featureLevel == D3D_FEATURE_LEVEL_9_3) {
 		g_renderDriverInfo.maxTextureSize = 4096;
@@ -152,46 +152,73 @@ const ShaderInfo * DX11_Driver::findShaderInfo(const FixedString &key)
 
 DXGI_FORMAT DX11_Driver::trTexFormat(TexFormat texformat)
 {
-	DXGI_FORMAT d3dformat = DXGI_FORMAT_UNKNOWN;
-
 	switch (texformat) {
 	case TexFormat::AUTO: break;
 	case TexFormat::NULLTARGET: break;
-	case TexFormat::R5G6B5: d3dformat = DXGI_FORMAT_B5G6R5_UNORM; break;
-	case TexFormat::RGB10A2: d3dformat = DXGI_FORMAT_R10G10B10A2_UNORM; break;
-	case TexFormat::RG16: d3dformat = DXGI_FORMAT_R16G16_UNORM; break;
-	case TexFormat::L8: d3dformat = DXGI_FORMAT_R8_UNORM; break;
+	case TexFormat::R5G6B5: return DXGI_FORMAT_B5G6R5_UNORM;
+	case TexFormat::RGB10A2: return DXGI_FORMAT_R10G10B10A2_UNORM;
+	case TexFormat::RG16: return DXGI_FORMAT_R16G16_UNORM;
+	case TexFormat::L8: return DXGI_FORMAT_R8_UNORM;
 	case TexFormat::LA8: break;
-	case TexFormat::A8: d3dformat = DXGI_FORMAT_A8_UNORM; break;
+	case TexFormat::A8: return DXGI_FORMAT_A8_UNORM;
 	case TexFormat::BGR8: break;
-	case TexFormat::BGRA8: d3dformat = DXGI_FORMAT_B8G8R8A8_UNORM; break;
-	case TexFormat::BGRX8: d3dformat = DXGI_FORMAT_B8G8R8X8_UNORM; break;
-	case TexFormat::BC1: d3dformat = DXGI_FORMAT_BC1_UNORM; break;
-	case TexFormat::BC2: d3dformat = DXGI_FORMAT_BC2_UNORM; break;
-	case TexFormat::BC3: d3dformat = DXGI_FORMAT_BC3_UNORM; break;
-	case TexFormat::BC4: d3dformat = DXGI_FORMAT_BC4_UNORM; break;
-	case TexFormat::BC5: d3dformat = DXGI_FORMAT_BC5_UNORM; break;
-	case TexFormat::BC6H: d3dformat = DXGI_FORMAT_BC6H_UF16; break;
-	case TexFormat::BC7: d3dformat = DXGI_FORMAT_BC7_UNORM; break;
-	case TexFormat::L16: d3dformat = DXGI_FORMAT_R16_UNORM; break;
-	case TexFormat::R16F: d3dformat = DXGI_FORMAT_R16_FLOAT; break;
-	case TexFormat::RG16F: d3dformat = DXGI_FORMAT_R16G16_FLOAT; break;
+	case TexFormat::BGRA8: return DXGI_FORMAT_B8G8R8A8_UNORM;
+	case TexFormat::BGRX8: return DXGI_FORMAT_B8G8R8X8_UNORM;
+	case TexFormat::BC1: return DXGI_FORMAT_BC1_UNORM;
+	case TexFormat::BC2: return DXGI_FORMAT_BC2_UNORM;
+	case TexFormat::BC3: return DXGI_FORMAT_BC3_UNORM;
+	case TexFormat::BC4: return DXGI_FORMAT_BC4_UNORM;
+	case TexFormat::BC5: return DXGI_FORMAT_BC5_UNORM;
+	case TexFormat::BC6H: return DXGI_FORMAT_BC6H_UF16;
+	case TexFormat::BC7: return DXGI_FORMAT_BC7_UNORM;
+	case TexFormat::L16: return DXGI_FORMAT_R16_UNORM;
+	case TexFormat::R16F: return DXGI_FORMAT_R16_FLOAT;
+	case TexFormat::RG16F: return DXGI_FORMAT_R16G16_FLOAT;
 	case TexFormat::RGB16F: break;
-	case TexFormat::RGBA16F: d3dformat = DXGI_FORMAT_R16G16B16A16_FLOAT; break;
-	case TexFormat::R32F: d3dformat = DXGI_FORMAT_R32_FLOAT; break;
-	case TexFormat::RG32F: d3dformat = DXGI_FORMAT_R32G32_FLOAT; break;
-	case TexFormat::RGB32F: d3dformat = DXGI_FORMAT_R32G32B32_FLOAT; break;
-	case TexFormat::RGBA32F: d3dformat = DXGI_FORMAT_R32G32B32A32_FLOAT; break;
-	case TexFormat::R11G11B10F: d3dformat = DXGI_FORMAT_R11G11B10_FLOAT; break;
-	case TexFormat::D16: d3dformat = DXGI_FORMAT_D16_UNORM; break;
-	case TexFormat::D24: d3dformat = DXGI_FORMAT_R24_UNORM_X8_TYPELESS; break;
-	case TexFormat::D32F: d3dformat = DXGI_FORMAT_D32_FLOAT; break;
-	case TexFormat::D24S8: d3dformat = DXGI_FORMAT_D24_UNORM_S8_UINT; break;
+	case TexFormat::RGBA16F: return DXGI_FORMAT_R16G16B16A16_FLOAT;
+	case TexFormat::R32F: return DXGI_FORMAT_R32_FLOAT;
+	case TexFormat::RG32F: return DXGI_FORMAT_R32G32_FLOAT;
+	case TexFormat::RGB32F: return DXGI_FORMAT_R32G32B32_FLOAT;
+	case TexFormat::RGBA32F: return DXGI_FORMAT_R32G32B32A32_FLOAT;
+	case TexFormat::R11G11B10F: return DXGI_FORMAT_R11G11B10_FLOAT;
+	case TexFormat::D16: return DXGI_FORMAT_R16_TYPELESS;
+	case TexFormat::D24: break;
+	case TexFormat::D32F: return DXGI_FORMAT_R32_TYPELESS;
+	case TexFormat::D24S8: return DXGI_FORMAT_R24G8_TYPELESS;
 	case TexFormat::INTZ: break;
 	default: AX_WRONGPLACE;
 	}
 
-	return d3dformat;
+	return DXGI_FORMAT_UNKNOWN;
+}
+
+DXGI_FORMAT DX11_Driver::trShaderResourceViewFormat(TexFormat texFormat)
+{
+	if (!texFormat.isDepth())
+		return trTexFormat(texFormat);
+
+
+	switch (texFormat) {
+	case TexFormat::D16: return DXGI_FORMAT_R16_UNORM;
+	case TexFormat::D32F: return DXGI_FORMAT_R32_FLOAT;
+	case TexFormat::D24S8: return DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
+	}
+
+	return DXGI_FORMAT_UNKNOWN;
+}
+
+DXGI_FORMAT DX11_Driver::trRenderTargetFormat(TexFormat texFormat)
+{
+	if (!texFormat.isDepth())
+		return trTexFormat(texFormat);
+
+	switch (texFormat) {
+	case TexFormat::D16: return DXGI_FORMAT_D16_UNORM;
+	case TexFormat::D32F: return DXGI_FORMAT_D32_FLOAT;
+	case TexFormat::D24S8: return DXGI_FORMAT_D24_UNORM_S8_UINT;
+	}
+
+	return DXGI_FORMAT_UNKNOWN;
 }
 
 void DX11_Driver::checkFormats()
@@ -207,8 +234,8 @@ void DX11_Driver::checkFormats()
 			continue;
 		}
 
-		UINT format_support;
-		HRESULT hr = g_device->CheckFormatSupport(dxgi_format, &format_support);
+		UINT tex_support, render_target_support;
+		HRESULT hr = g_device->CheckFormatSupport(dxgi_format, &tex_support);
 		if (FAILED(hr)) {
 			g_renderDriverInfo.textureFormatSupports[i] = false;
 			g_renderDriverInfo.renderTargetFormatSupport[i] = false;
@@ -216,13 +243,15 @@ void DX11_Driver::checkFormats()
 			continue;
 		}
 
-		g_renderDriverInfo.textureFormatSupports[i] = format_support & D3D11_FORMAT_SUPPORT_TEXTURE2D;
+		g_device->CheckFormatSupport(trRenderTargetFormat(tex_format), &render_target_support);
+
+		g_renderDriverInfo.textureFormatSupports[i] = tex_support & D3D11_FORMAT_SUPPORT_TEXTURE2D;
 		if (tex_format.isDepth()) {
-			g_renderDriverInfo.renderTargetFormatSupport[i] = format_support & D3D11_FORMAT_SUPPORT_DEPTH_STENCIL;
+			g_renderDriverInfo.renderTargetFormatSupport[i] = render_target_support & D3D11_FORMAT_SUPPORT_DEPTH_STENCIL;
 		} else {
-			g_renderDriverInfo.renderTargetFormatSupport[i] = format_support & D3D11_FORMAT_SUPPORT_RENDER_TARGET;
+			g_renderDriverInfo.renderTargetFormatSupport[i] = render_target_support & D3D11_FORMAT_SUPPORT_RENDER_TARGET;
 		}
-		g_renderDriverInfo.autogenMipmapSupports[i] = format_support & D3D11_FORMAT_SUPPORT_MIP_AUTOGEN;
+		g_renderDriverInfo.autogenMipmapSupports[i] = tex_support & D3D11_FORMAT_SUPPORT_MIP_AUTOGEN;
 	}
 
 	g_renderDriverInfo.suggestFormats[RenderDriverInfo::SuggestedFormat_DepthStencil] = TexFormat::D24S8;
@@ -234,6 +263,5 @@ void DX11_Driver::checkFormats()
 	g_renderDriverInfo.suggestFormats[RenderDriverInfo::SuggestedFormat_ShadowMap] = TexFormat::D24S8;
 	g_renderDriverInfo.suggestFormats[RenderDriverInfo::SuggestedFormat_CubeShadowMap] = TexFormat::D24S8;
 }
-
 
 AX_DX11_END_NAMESPACE

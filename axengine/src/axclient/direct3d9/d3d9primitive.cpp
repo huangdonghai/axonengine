@@ -901,7 +901,7 @@ void D3D9primitivemanager::linkId(int id, D3D9Primitive *glprim)
 		Errorf("D3D9primitivemanager::linkId: error id");
 
 	int index =(id & INDEX_MASK) - 1;
-	AX_ASSURE(index < MAX_PRIMITIVES);
+	AX_RELEASE_ASSERT(index < MAX_PRIMITIVES);
 
 	if (isStatic(id)) {
 		m_staticPrims[index] = glprim;

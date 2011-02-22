@@ -173,7 +173,7 @@ IDirect3DSurface9 *DX9_Driver::getNullTarget(const Size &size)
 		nullformat = TexFormat::R5G6B5;
 	}
 	D3DFORMAT d3dfmt;
-	AX_ASSURE(trTexFormat(nullformat, d3dfmt));
+	AX_RELEASE_ASSERT(trTexFormat(nullformat, d3dfmt));
 	V(dx9_device->CreateRenderTarget(size.width, size.height, d3dfmt, D3DMULTISAMPLE_NONE, 0, FALSE, &m_nullSurface, 0));
 	m_nullSurfaceSize = size;
 	return m_nullSurface;

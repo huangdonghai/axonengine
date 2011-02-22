@@ -108,19 +108,19 @@ struct AX_API Vector4 {
 		return *this;
 	}
 	inline float &operator[](int index) {
-		AX_STRICT_ASSERT(index>=0 && index<4);
+		AX_ASSERT(index>=0 && index<4);
 		return *(&x+index);
 	}
 	inline const float &operator[](int index) const {
-		AX_STRICT_ASSERT(index>=0 && index<4);
+		AX_ASSERT(index>=0 && index<4);
 		return *(&x+index);
 	}
 	inline float &operator[](size_t index) {
-		AX_STRICT_ASSERT(index>=0 && index<4);
+		AX_ASSERT(index>=0 && index<4);
 		return *(&x+index);
 	}
 	inline const float &operator[](size_t index) const {
-		AX_STRICT_ASSERT(index>=0 && index<4);
+		AX_ASSERT(index>=0 && index<4);
 		return *(&x+index);
 	}
 	inline void set(float ix, float iy, float iz, float iw)

@@ -367,7 +367,7 @@ DX9_Technique::DX9_Technique(DX9_Shader *shader, D3DXHANDLE d3dxhandle)
 
 	UINT checkpass;
 	shader->m_object->Begin(&checkpass, D3DXFX_DONOTSAVESTATE);
-	AX_ASSURE(checkpass == m_numPasses);
+	AX_RELEASE_ASSERT(checkpass == m_numPasses);
 	for (int i = 0; i < m_numPasses; i++) {
 		shader->m_object->BeginPass(i);
 		m_passes[i] = new DX9_Pass(shader, shader->m_object->GetPass(d3dxhandle, i));
@@ -837,7 +837,7 @@ void DX9_ShaderManager::_initialize()
 {
 	TiXmlDocument doc;
 	doc.LoadAxonFile("shaders/shaderlist.xml");
-	AX_ASSURE(!doc.Error());
+	AX_RELEASE_ASSERT(!doc.Error());
 
 	TiXmlNode *root = doc.FirstChild("shaderlist");
 

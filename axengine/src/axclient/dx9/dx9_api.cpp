@@ -550,7 +550,7 @@ inline static IDirect3DSurface9 *getSurface(phandle_t h, int slice, bool setSize
 
 static void dx9SetTargetSet(phandle_t targetSet[RenderTargetSet::MaxTarget], int slices[RenderTargetSet::MaxTarget])
 {
-	AX_ASSURE(targetSet[0] || targetSet[1]);
+	AX_RELEASE_ASSERT(targetSet[0] || targetSet[1]);
 
 	surfaceSizeIsSet = false;
 	IDirect3DSurface9 *surface = getSurface(targetSet[0], 0, true);
@@ -560,12 +560,12 @@ static void dx9SetTargetSet(phandle_t targetSet[RenderTargetSet::MaxTarget], int
 	}
 
 	if (!targetSet[1]) {
-		AX_ASSURE(surfaceSizeIsSet)
+		AX_RELEASE_ASSERT(surfaceSizeIsSet)
 		surface = dx9_driver->getNullTarget(s_curRenderTargetSize);
 		V(dx9_device->SetRenderTarget(0, surface))
 	} else {
 		surface = getSurface(targetSet[1], slices[1], true);
-		AX_ASSURE(surface);
+		AX_RELEASE_ASSERT(surface);
 		V(dx9_device->SetRenderTarget(0, surface));
 		SAFE_RELEASE(surface);
 	}

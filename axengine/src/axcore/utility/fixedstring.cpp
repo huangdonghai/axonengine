@@ -48,7 +48,7 @@ int FixedStringManager::findString(const std::string &str)
 		m_strings.push_back(newsz);
 		int handle = m_strings.size() - 1;
 		m_dict[newsz->c_str()] = handle;
-		AX_ASSURE(handle < MAX_HANDLES);
+		AX_RELEASE_ASSERT(handle < MAX_HANDLES);
 		return handle;
 	} else {
 		return it->second;
@@ -69,7 +69,7 @@ int FixedStringManager::findString(const char *lpcz)
 		m_strings.push_back(newsz);
 		int handle = m_strings.size() - 1;
 		m_dict[newsz->c_str()] = handle;
-		AX_ASSURE(handle < MAX_HANDLES);
+		AX_RELEASE_ASSERT(handle < MAX_HANDLES);
 		return handle;
 	} else {
 		return it->second;

@@ -94,7 +94,7 @@ public:
 	void clear() { m_numItems = 0; }
 	void addParam(const FixedString &name, int num, const float *data)
 	{
-		AX_ASSURE(m_numItems < NUM_ITEMS);
+		AX_RELEASE_ASSERT(m_numItems < NUM_ITEMS);
 		Item &item = m_items[m_numItems];
 		item.nameId = name.id();
 		item.count = num;
@@ -104,7 +104,7 @@ public:
 			Item &preItem = m_items[m_numItems - 1];
 			item.offset = preItem.offset + preItem.count;
 		}
-		AX_ASSURE(item.offset + num < NUM_FLOATDATA);
+		AX_RELEASE_ASSERT(item.offset + num < NUM_FLOATDATA);
 		::memcpy(m_floatData+item.offset, data, num * sizeof(float));
 		m_numItems++;
 	}
@@ -130,7 +130,7 @@ public:
 	void clear() { m_numItems = 0; }
 	void addSampler(MaterialTextureId id, phandle_t handle, SamplerDesc state)
 	{
-		AX_ASSURE(m_numItems < NUM_ITEMS);
+		AX_RELEASE_ASSERT(m_numItems < NUM_ITEMS);
 		Item &item = m_items[m_numItems];
 		item.id = id;
 		item.handle = handle;

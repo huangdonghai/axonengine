@@ -45,7 +45,7 @@ void ShaderMacro::ShaderMacroDef::initGlobalMacros()
 	int bitoffset = 0;
 
 #define AX_DECL_MACRO(m, s) \
-	AX_ASSURE (bitoffset + s <= 31); \
+	AX_RELEASE_ASSERT (bitoffset + s <= 31); \
 	m_items[GlobalMacro::m].name = #m; \
 	m_items[GlobalMacro::m].offset = bitoffset; \
 	m_items[GlobalMacro::m].numbits = s; \
@@ -61,7 +61,7 @@ void ShaderMacro::ShaderMacroDef::initMaterialMacros()
 	int bitoffset = 0;
 
 #define AX_DECL_MACRO(m, s) \
-	AX_ASSURE (bitoffset + s <= 31); \
+	AX_RELEASE_ASSERT (bitoffset + s <= 31); \
 	m_items[MaterialMacro::m].name = #m; \
 	m_items[MaterialMacro::m].offset = bitoffset; \
 	m_items[MaterialMacro::m].numbits = s; \
@@ -395,7 +395,7 @@ void ConstBuffers::setField(Item fieldName, int bytes, const void *dataptr)
 
 	// check matrix
 	if (g_renderDriverInfo.transposeMatrix) {
-		AX_ASSURE(bytes <= sizeof(Matrix4)*4);
+		AX_RELEASE_ASSERT(bytes <= sizeof(Matrix4)*4);
 
 		switch (fl->m_field->m_valueType) {
 		case ConstBuffer::vt_Matrix3:

@@ -139,12 +139,12 @@ inline Rgb& Rgb::operator+=(const Rgb &other) {
 }
 
 inline byte_t &Rgb::operator[](int index) {
-	AX_STRICT_ASSERT(index>=0 && index < 3);
+	AX_ASSERT(index>=0 && index < 3);
 	return *(&r+index);
 }
 
 inline byte_t Rgb::operator[](int index) const {
-	AX_STRICT_ASSERT(index>=0 && index < 3);
+	AX_ASSERT(index>=0 && index < 3);
 	return *(&r+index);
 }
 
@@ -332,14 +332,14 @@ inline Vector4 Rgba::toVector4() const {
 }
 
 inline byte_t &Rgba::operator[](int index) {
-	AX_STRICT_ASSERT(index>=0);
-	AX_STRICT_ASSERT(index<4);
+	AX_ASSERT(index>=0);
+	AX_ASSERT(index<4);
 	return *(&r+index);
 }
 
 inline byte_t Rgba::operator[](int index) const {
-	AX_STRICT_ASSERT(index>=0);
-	AX_STRICT_ASSERT(index<4);
+	AX_ASSERT(index>=0);
+	AX_ASSERT(index<4);
 	return *(&r+index);
 }
 
@@ -354,7 +354,7 @@ inline std::string Rgba::toStringRgb() const {
 inline void Rgba::parseRgb(const char *text) {
 	int _r, _g, _b;
 	int v = sscanf(text, "%d,%d,%d", &_r, &_g, &_b);
-	AX_STRICT_ASSERT(v = 3);
+	AX_ASSERT(v = 3);
 	r = _r; g = _g; b = _b; a = 255;
 }
 

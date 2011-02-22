@@ -290,12 +290,12 @@ inline void CompactQuat::set(float x, float y, float z) {
 }
 
 inline float CompactQuat::operator[](int index) const {
-	AX_STRICT_ASSERT((index >= 0) && (index < 3));
+	AX_ASSERT((index >= 0) && (index < 3));
 	return (&x)[ index ];
 }
 
 inline float &CompactQuat::operator[](int index) {
-	AX_STRICT_ASSERT((index >= 0) && (index < 3));
+	AX_ASSERT((index >= 0) && (index < 3));
 	return (&x)[ index ];
 }
 

@@ -62,8 +62,15 @@ DECL_SAMPLER(sampler2D, g_lightBuffer);
 DECL_SAMPLER(sampler2D, g_sceneColor);
 
 DECL_SAMPLER(samplerCUBE, g_shadowMapCube);
-DECL_SAMPLER(sampler2D, g_shadowMap);
 
+#if G_DX11
+Texture2D g_shadowMap_tex;
+SamplerComparisonState g_shadowMap;
+#define tex2DShadow(sampler, tc) sampler##_tex.SampleCmpLevelZero(sampler, tc.xy, tc.z)
+#else
+DECL_SAMPLER(sampler2D, g_shadowMap);
+#define tex2DShadow(sampler, tc) tex2Dproj(sampler, tc)
+#endif
 
 // zparam, for recover view space z, Zview = 2*f*n/((f+n)-Zbuf(f-n)), where Zbuf is [-1,1]
 // if Zbuf is [0,1], acultly we use, the equation should be
@@ -108,21 +115,21 @@ struct MeshVertex {
 	float4 matrixY		: TEXCOORD5;
 	float4 matrixZ		: TEXCOORD6;
 	float4 userDefined	: TEXCOORD7;
-#else
-	float3 oldPosition	: TEXCOORD3;
 #endif
 };
 
 // debug vertex input
 struct DebugVertex {
-    float3 xyz			: POSITION;
+    float3 position		: POSITION;
 	float4 color		: COLOR0;
 
+#if G_GEOMETRY_INSTANCING
 	// instance
 	float4 matrixX		: TEXCOORD4;
 	float4 matrixY		: TEXCOORD5;
 	float4 matrixZ		: TEXCOORD6;
 	float4 userDefined	: TEXCOORD7;
+#endif
 };
 
 // blend vertex

@@ -26,6 +26,8 @@ public:
 	virtual const ShaderInfo *findShaderInfo(const FixedString &key);
 
 	static DXGI_FORMAT trTexFormat(TexFormat texFormat);
+	static DXGI_FORMAT trShaderResourceViewFormat(TexFormat texFormat);
+	static DXGI_FORMAT trRenderTargetFormat(TexFormat texFormat);
 
 protected:
 	void checkFormats();

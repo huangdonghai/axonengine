@@ -138,15 +138,15 @@ struct AX_API Point {
 
 	inline int &operator[](int index)
 	{
-		AX_STRICT_ASSERT(index >= 0);
-		AX_STRICT_ASSERT(index < 2);
+		AX_ASSERT(index >= 0);
+		AX_ASSERT(index < 2);
 		return *(&x + index);
 	}
 
 	inline int operator[](int index) const
 	{
-		AX_STRICT_ASSERT(index >= 0);
-		AX_STRICT_ASSERT(index < 2);
+		AX_ASSERT(index >= 0);
+		AX_ASSERT(index < 2);
 		return *(&x + index);
 	}
 

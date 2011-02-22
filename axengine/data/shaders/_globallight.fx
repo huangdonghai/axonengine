@@ -57,11 +57,11 @@ half getShadow(float3 worldpos, float depth)
 #endif
 }
 
-LightVertexOut VP_main(MeshVertex IN)
+LightVertexOut VP_main(ChunkVertex IN)
 {
 	LightVertexOut OUT;
 
-	float3 worldpos = VP_modelToWorld(IN, IN.position);
+	float3 worldpos = VP_modelToWorld(IN.position);
 
 	OUT.hpos = VP_worldToClip(worldpos);
 

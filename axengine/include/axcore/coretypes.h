@@ -147,10 +147,7 @@ __GNUG__
 #	define AX_ASSERT(x) assert(x)
 #endif
 
-// only assert when AX_STRICT is defined
-#define AX_STRICT_ASSERT(x)
-
-#define AX_ASSURE(x) if (!(x)) Errorf("%s: ASSURE \'%s\' FAILURE", __func__, #x);
+#define AX_RELEASE_ASSERT(x) if (!(x)) Errorf("%s: ASSURE \'%s\' FAILURE", __func__, #x);
 
 #define AX_WRONGPLACE AX_ASSERT(0)
 

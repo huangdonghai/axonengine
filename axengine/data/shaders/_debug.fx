@@ -21,7 +21,7 @@ float Script : STANDARDSGLOBAL <
 
 /*********** Generic Vertex Shader ******/
 
-VertexOut VP_main(MeshVertex IN) {
+VertexOut VP_main(DebugVertex IN) {
     VertexOut OUT = (VertexOut)0;
 
 #if !G_D3D
@@ -30,7 +30,7 @@ VertexOut VP_main(MeshVertex IN) {
 	OUT.color = IN.color;
 #endif
 
-	OUT.worldPos = VP_modelToWorld(IN, IN.position);
+	OUT.worldPos = VP_modelToWorld(IN.position);
 	OUT.hpos = VP_worldToClip(OUT.worldPos);
 
     return OUT;

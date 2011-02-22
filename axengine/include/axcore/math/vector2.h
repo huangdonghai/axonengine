@@ -63,102 +63,127 @@ inline Vector2::Vector2(float ix, float iy) : x(ix), y(iy) {}
 inline Vector2::~Vector2(){}
 
 // algo
-inline Vector2 Vector2::operator+(const Vector2 &v) const {
+inline Vector2 Vector2::operator+(const Vector2 &v) const
+{
 	return Vector2(x + v.x, y + v.y);
 }
 // negative vector
-inline Vector2 Vector2::operator-() const {
+inline Vector2 Vector2::operator-() const
+{
 	return Vector2(-x, -y);
 }
-inline Vector2 Vector2::operator-(const Vector2 &v) const {
+inline Vector2 Vector2::operator-(const Vector2 &v) const
+{
 	return Vector2(x - v.x, y - v.y);
 }
 // scale the vector
-inline Vector2 Vector2::operator*(const float scale) const {
+inline Vector2 Vector2::operator*(const float scale) const
+{
 	return Vector2(x*scale, y*scale);
 }
 // multiply
-inline Vector2 Vector2::operator*(const Vector2 &v) const {
+inline Vector2 Vector2::operator*(const Vector2 &v) const
+{
 	return Vector2(x*v.x, y*v.y);
 }
 // div
-inline Vector2 Vector2::operator/(const Vector2 &v) const {
+inline Vector2 Vector2::operator/(const Vector2 &v) const
+{
 	return Vector2(x/v.x, y/v.y);
 }
 // inverse scale
-inline Vector2 Vector2::operator/(float scale) const {
+inline Vector2 Vector2::operator/(float scale) const
+{
 	return Vector2(x/scale, y/scale);
 }
 // Dot Product
-inline float Vector2::operator|(const Vector2 &v) const {
+inline float Vector2::operator|(const Vector2 &v) const
+{
 	return x*v.x + y*v.y;
 }
 // compare
-inline bool Vector2::operator==(const Vector2 &v) const {
+inline bool Vector2::operator==(const Vector2 &v) const
+{
 	return x==v.x && y==v.y;
 }
-inline bool Vector2::operator!=(const Vector2 &v) const {
+inline bool Vector2::operator!=(const Vector2 &v) const
+{
 	return x!=v.x || y!=v.y;
 }
 
 // assign operator
-inline Vector2 Vector2::operator+=(const Vector2 &v) {
+inline Vector2 Vector2::operator+=(const Vector2 &v)
+{
 	x += v.x; y += v.y;
 	return *this;
 }
-inline Vector2 Vector2::operator-=(const Vector2 &v) {
+inline Vector2 Vector2::operator-=(const Vector2 &v)
+{
 	x -= v.x; y -= v.y;
 	return *this;
 }
-inline Vector2 Vector2::operator*=(float scale) {
+inline Vector2 Vector2::operator*=(float scale)
+{
 	x *= scale; y *= scale;
 	return *this;
 }
-inline Vector2 Vector2::operator/=(float v) {
+inline Vector2 Vector2::operator/=(float v)
+{
 	x /= v; y /= v;
 	return *this;
 }
-inline Vector2 Vector2::operator*=(const Vector2 &v) {
+inline Vector2 Vector2::operator*=(const Vector2 &v)
+{
 	x *= v.x; y *= v.y;
 	return *this;
 }
-inline Vector2 Vector2::operator/=(const Vector2 &v) {
+inline Vector2 Vector2::operator/=(const Vector2 &v)
+{
 	x /= v.x; y /= v.y;
 	return *this;
 }
-inline float &Vector2::operator[](int index) {
-	AX_STRICT_ASSERT(index >= 0);
-	AX_STRICT_ASSERT(index < 2);
+inline float &Vector2::operator[](int index)
+{
+	AX_ASSERT(index >= 0);
+	AX_ASSERT(index < 2);
 	return *(&x + index);
 }
 
-inline const float &Vector2::operator[](int index) const {
-	AX_STRICT_ASSERT(index >= 0);
-	AX_STRICT_ASSERT(index < 2);
+inline const float &Vector2::operator[](int index) const
+{
+	AX_ASSERT(index >= 0);
+	AX_ASSERT(index < 2);
 	return *(&x + index);
 }
 
 // Simple functions.
-inline float Vector2::getMax() const {
+inline float Vector2::getMax() const
+{
 	return std::max(x,y);
 }
-inline float Vector2::getAbsMax() const {
+inline float Vector2::getAbsMax() const
+{
 	return std::max(Math::abs(x), Math::abs(y));
 }
-inline float Vector2::getMin() const {
+inline float Vector2::getMin() const
+{
 	return std::min(x,y);
 }
-inline float Vector2::getLength() const {
+inline float Vector2::getLength() const
+{
 	return (float)sqrt((double)(x*x + y*y));
 }
-inline float Vector2::getLengthSquared() const {
+inline float Vector2::getLengthSquared() const
+{
 	return x*x + y*y;
 }
-inline bool Vector2::isZero() const {
+inline bool Vector2::isZero() const
+{
 	return x==0.f && y==0.f;
 }
 // return length
-inline float Vector2::normalize() {
+inline float Vector2::normalize()
+{
 	float s = x*x+y*y;
 	if (s >= 1.0e-8f) {
 		float scale = 1.f/sqrt(s);
@@ -170,7 +195,8 @@ inline float Vector2::normalize() {
 	}
 }
 // return self value
-inline Vector2 Vector2::getNormalized() {
+inline Vector2 Vector2::getNormalized()
+{
 	float s = x*x+y*y;
 	if (s >= 1.0e-8f) {
 		float scale = 1.f/sqrt(s);
@@ -180,29 +206,35 @@ inline Vector2 Vector2::getNormalized() {
 	}
 }
 // Clear self
-inline void Vector2::clear() {
+inline void Vector2::clear()
+{
 	x=0.0f;y=0.0f;
 }
 // Set value
-inline Vector2 &Vector2::set(float ix, float iy) {
+inline Vector2 &Vector2::set(float ix, float iy)
+{
 	x = ix; y = iy;
 	return *this;
 }
-inline const float *Vector2::c_ptr() const {
+inline const float *Vector2::c_ptr() const
+{
 	return &x;
 }
 
-inline std::string Vector2::toString() const {
+inline std::string Vector2::toString() const
+{
 	std::string result;
 	StringUtil::sprintf(result, "%f,%f", x, y);
 	return result;
 }
 
-inline bool Vector2::parse(const std::string &str) {
+inline bool Vector2::parse(const std::string &str)
+{
 	return parse(str.c_str());
 }
 
-inline bool Vector2::parse(const char *text) {
+inline bool Vector2::parse(const char *text)
+{
 	float tx, ty;
 	int v = sscanf(text, "%f,%f", &tx, &ty);
 	if (v != 2)

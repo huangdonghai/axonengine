@@ -13,7 +13,7 @@ AX_BEGIN_NAMESPACE
 
 void RenderScene::addLight(RenderLight *light)
 {
-	AX_ASSURE(numLights < MAX_LIGHTS);
+	AX_RELEASE_ASSERT(numLights < MAX_LIGHTS);
 	lights[numLights++] = light;
 
 	if (light->isGlobal())
@@ -22,7 +22,7 @@ void RenderScene::addLight(RenderLight *light)
 
 void RenderScene::addEntity(RenderEntity *entity)
 {
-	AX_ASSURE(numEntities < MAX_ENTITIES);
+	AX_RELEASE_ASSERT(numEntities < MAX_ENTITIES);
 
 	entities[numEntities++] = entity;
 
@@ -45,7 +45,7 @@ void RenderScene::addEntity(RenderEntity *entity)
 
 Interaction *RenderScene::addInteraction(RenderEntity *entity, Primitive *prim, bool chain)
 {
-	AX_ASSURE(numInteractions < MAX_INTERACTIONS);
+	AX_RELEASE_ASSERT(numInteractions < MAX_INTERACTIONS);
 
 	Interaction *ia = g_renderFrame->allocInteraction();
 	ia->primitive = prim;
@@ -118,7 +118,7 @@ void RenderScene::addHelperPrims(RenderEntity *entity)
 
 void RenderScene::addHelperInteraction(RenderEntity *entity, Primitive *prim)
 {
-	AX_ASSURE(numDebugInteractions < MAX_DEBUG_INTERACTIONS);
+	AX_RELEASE_ASSERT(numDebugInteractions < MAX_DEBUG_INTERACTIONS);
 
 	Interaction *ia = g_renderFrame->allocInteraction();
 	ia->primitive = prim;
@@ -276,7 +276,7 @@ void RenderScene::checkLights()
 
 RenderScene *RenderScene::addSubScene()
 {
-	AX_ASSURE(numSubScenes < MAX_SUB_SCENES);
+	AX_RELEASE_ASSERT(numSubScenes < MAX_SUB_SCENES);
 
 	RenderScene *result = g_renderFrame->allocScene();
 	subScenes[numSubScenes++] = result;
@@ -285,14 +285,14 @@ RenderScene *RenderScene::addSubScene()
 
 void RenderScene::addPrimitive( Primitive *prim )
 {
-	AX_ASSURE(numPrimitives < MAX_PRIMITIVES);
+	AX_RELEASE_ASSERT(numPrimitives < MAX_PRIMITIVES);
 
 	primtives[numPrimitives++] = prim;
 }
 
 void RenderScene::addOverlayPrimitive( Primitive *prim )
 {
-	AX_ASSURE(numOverlayPrimitives < MAX_OVERLAY_PRIMITIVES);
+	AX_RELEASE_ASSERT(numOverlayPrimitives < MAX_OVERLAY_PRIMITIVES);
 
 	overlayPrimitives[numOverlayPrimitives++] = prim;
 }
@@ -330,7 +330,7 @@ RenderScene *RenderFrame::allocScene()
 
 void RenderFrame::addScene(RenderScene *scene)
 {
-	AX_ASSURE(m_sceneCount < MAX_VIEW);
+	AX_RELEASE_ASSERT(m_sceneCount < MAX_VIEW);
 
 	m_queuedScenes[m_sceneCount++] = scene;
 }

@@ -112,19 +112,19 @@ inline Matrix3::~Matrix3()
 // operator
 inline Vector3 &Matrix3::operator[] (int index)
 {
-	AX_STRICT_ASSERT(index>=0 && index<3);
+	AX_ASSERT(index>=0 && index<3);
 	return m[index];
 }
 
 inline const Vector3 &Matrix3::operator[] (int index) const
 {
-	AX_STRICT_ASSERT(index>=0 && index<3);
+	AX_ASSERT(index>=0 && index<3);
 	return m[index];
 }
 
 inline Vector3 Matrix3::getRow(int index) const
 {
-	AX_STRICT_ASSERT(index>=0 && index<3);
+	AX_ASSERT(index>=0 && index<3);
 	return Vector3(m[0][index], m[1][index], m[2][index]);
 }
 

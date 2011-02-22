@@ -37,14 +37,14 @@ static const half c_SampleWeight[13] = {
 							1.0 / 20.0,	
 };
 
-VertexOut VP_main(MeshVertex IN)
+VertexOut VP_main(BlendVertex IN)
 {
     VertexOut OUT = (VertexOut)0;
 
 	OUT.streamTc.xy = IN.streamTc.xy;
 	OUT.color = IN.color;
 
-	OUT.hpos = VP_modelToClip(IN, IN.position);
+	OUT.hpos = VP_modelToClip(IN.position);
 
 	return OUT;
 }

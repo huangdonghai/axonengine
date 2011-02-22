@@ -31,9 +31,9 @@ half SampleShadow(float3 worldpos, float depth)
 	UNROLL
 	for (int i = 0; i < 2; i++) {
 		float4 tc = float4(shadowPos.xy + g_shadowOffsets[i].xy * g_textureSize.zw, shadowPos.zw);
-		shadow += tex2Dproj(g_shadowMap, tc).r;
+		shadow += tex2DShadow(g_shadowMap, tc).r;
 		tc = float4(shadowPos.xy + g_shadowOffsets[i].zw * g_textureSize.zw, shadowPos.zw);
-		shadow += tex2Dproj(g_shadowMap, tc).r;
+		shadow += tex2DShadow(g_shadowMap, tc).r;
 	}
 	shadow *= 0.25f;
 	return shadow;
@@ -76,9 +76,9 @@ half SampleShadowCsmAtlas(float3 worldpos, float depth)
 	UNROLL
 	for (int i = 0; i < 2; i++) {
 		float4 tc = float4(shadowPos.xy + g_shadowOffsets[i].xy * g_textureSize.zw, shadowPos.zw);
-		shadow += tex2Dproj(g_shadowMap, tc).r;
+		shadow += tex2DShadow(g_shadowMap, tc).r;
 		tc = float4(shadowPos.xy + g_shadowOffsets[i].zw * g_textureSize.zw, shadowPos.zw);
-		shadow += tex2Dproj(g_shadowMap, tc).r;
+		shadow += tex2DShadow(g_shadowMap, tc).r;
 	}
 	shadow *= 0.25f;
 

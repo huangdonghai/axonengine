@@ -82,7 +82,7 @@ struct TexFormat
 	bool isDXTC() const;
 	bool isFloat() const;
 	bool isHalf() const;
-	bool isColor() const { return m_t >= L8 && m_t < D16; }
+	bool isColor() const { return !isDepth(); }
 	bool isDepth() const { return m_t >= D16 && m_t <= INTZ; }
 	bool isStencil() const { return m_t == D24S8; }
 	bool isCompressed() const;

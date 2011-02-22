@@ -148,14 +148,14 @@ void MapAgent::doPropertyChanged()
 
 void MapAgent::addToContext()
 {
-	AX_ASSURE(!m_isInGame);
+	AX_RELEASE_ASSERT(!m_isInGame);
 	getMapContext()->getGameWorld()->addObject(m_gameObj);
 	m_isInGame = true;
 }
 
 void MapAgent::removeFromContext()
 {
-	AX_ASSURE(m_isInGame);
+	AX_RELEASE_ASSERT(m_isInGame);
 	getMapContext()->getGameWorld()->removeObject(m_gameObj);
 	m_isInGame = false;
 }

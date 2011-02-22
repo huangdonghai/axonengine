@@ -134,13 +134,13 @@ struct AX_API Vector3
 	}
 	inline float &operator[](int index)
 	{
-		AX_STRICT_ASSERT(index >= 0 && index < 3);
+		AX_ASSERT(index >= 0 && index < 3);
 		return *(&x+index);
 	}
 
 	inline const float &operator[](int index) const
 	{
-		AX_STRICT_ASSERT(index >= 0 && index < 3);
+		AX_ASSERT(index >= 0 && index < 3);
 		return *(&x+index);
 	}
 

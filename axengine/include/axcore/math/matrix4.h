@@ -389,13 +389,13 @@ inline bool Matrix4::operator!=(Matrix4 &other) const
 
 inline Vector4 &Matrix4::operator[](int index)
 {
-	AX_STRICT_ASSERT(index>=0 && index<4);
+	AX_ASSERT(index>=0 && index<4);
 	return m[index];
 }
 
 inline const Vector4 &Matrix4::operator[](int index) const
 {
-	AX_STRICT_ASSERT(index>=0 && index<4);
+	AX_ASSERT(index>=0 && index<4);
 	return m[index];
 }
 

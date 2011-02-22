@@ -50,7 +50,7 @@ TextureResource::~TextureResource()
 
 void TextureResource::uploadSubTexture(const Rect &rect, const void *pixels, TexFormat format)
 {
-	AX_ASSURE(m_initFlags.isSet(Texture::Dynamic));
+	AX_RELEASE_ASSERT(m_initFlags.isSet(Texture::Dynamic));
 	g_apiWrap->uploadSubTexture(m_handle, rect, pixels, format);
 }
 
@@ -111,13 +111,13 @@ bool TextureResource::canBeDeletedNow()
 
 Size TextureResource::size() const
 {
-	AX_ASSURE(!m_isFileTexture);
+	AX_RELEASE_ASSERT(!m_isFileTexture);
 	return Size(m_width, m_height);
 }
 
 TexFormat TextureResource::format() const
 {
-	AX_ASSURE(!m_isFileTexture);
+	AX_RELEASE_ASSERT(!m_isFileTexture);
 	return m_format;
 }
 

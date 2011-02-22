@@ -29,12 +29,12 @@ struct AX_API Matrix2 {
 
 	// operator
 	inline Vector2 &operator[] (int index) {
-		AX_STRICT_ASSERT(index>=0 && index<2);
+		AX_ASSERT(index>=0 && index<2);
 		return *(Vector2*)m[index];
 	}
 
 	inline const Vector2 &operator[] (int index) const {
-		AX_STRICT_ASSERT(index>=0 && index<2);
+		AX_ASSERT(index>=0 && index<2);
 		return *(Vector2*)m[index];
 	}
 

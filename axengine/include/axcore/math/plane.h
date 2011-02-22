@@ -144,22 +144,22 @@ inline Plane Plane::operator/=(float p)
 }
 inline float &Plane::operator[](int index)
 {
-	AX_STRICT_ASSERT(index>=0 && index<4);
+	AX_ASSERT(index>=0 && index<4);
 	return *(&a+index);
 }
 inline float Plane::operator[](int index) const
 {
-	AX_STRICT_ASSERT(index>=0 && index<4);
+	AX_ASSERT(index>=0 && index<4);
 	return *(&a+index);
 }
 inline float &Plane::operator[](size_t index)
 {
-	AX_STRICT_ASSERT(index>=0 && index<4);
+	AX_ASSERT(index>=0 && index<4);
 	return *(&a+index);
 }
 inline float Plane::operator[](size_t index) const
 {
-	AX_STRICT_ASSERT(index>=0 && index<4);
+	AX_ASSERT(index>=0 && index<4);
 	return *(&a+index);
 }
 inline Plane &Plane::set(float ix, float iy, float iz, float iw)

@@ -61,7 +61,7 @@ void AnimationChannel::initAnimations()
 	for (size_t i = 0; i < anim_names.size(); i++) {
 		m_animations[i] = new HavokAnimation(anim_names[i]);
 
-		AX_ASSURE(m_animations[i]->isValid())
+		AX_RELEASE_ASSERT(m_animations[i]->isValid())
 
 		m_animations[i]->setMasterWeight(0.0f);
 		m_animator->addAnimation(m_animations[i]);
@@ -284,7 +284,7 @@ void AnimationContext::initChannel(const LuaTable &table)
 void AnimationContext::initBoneChannelMap()
 {
 	int numbones = m_rig->m_havokSkeleton->m_numBones;
-	AX_ASSURE(numbones < MAX_BONES);
+	AX_RELEASE_ASSERT(numbones < MAX_BONES);
 
 	// init to -1 first
 	for (int i = 0; i < numbones; i++) {

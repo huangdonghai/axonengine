@@ -75,7 +75,7 @@ protected:
 	void initSampler(const D3D11_SHADER_VARIABLE_DESC &desc);
 	void setInputLayout();
 	void setPrimitiveConstBuffer();
-	void setParameter(const FixedString &name, int numFloats, const float *data);
+	void setParameter(D3D11_MAPPED_SUBRESOURCE *mapped, const FixedString &name, int numFloats, const float *data);
 	void setTextures();
 
 private:
@@ -88,9 +88,11 @@ private:
 
 	// sys sampler
 	int m_sysSamplers[GlobalTextureId::MaxType];
+	int m_sysTextures[GlobalTextureId::MaxType];
 
 	// material sampler
 	int m_matSamplers[MaterialTextureId::MaxType];
+	int m_matTextures[MaterialTextureId::MaxType];
 
 	// batch sampler
 	DX11_SamplerInfos m_batchSamplers;
@@ -99,6 +101,7 @@ private:
 	int m_setflag;
 	int m_primitiveConstBufferSize;
 	Dict<FixedString, ParamDesc> m_parameters;
+	ID3D11Buffer *m_primitiveConstBuffer;
 
 	// input layout
 	ID3D11InputLayout *m_inputLayouts[VertexType::MaxType];
@@ -137,8 +140,8 @@ public:
 	// implement Shader
 	ID3DX11Effect *getObject() const { return m_object; }
 
-	UINT begin(Technique tech) { return 0; }
-	void beginPass(UINT pass) {}
+	UINT begin(Technique tech);
+	void beginPass(UINT pass);
 	void endPass() {}
 	void end() {}
 
@@ -163,7 +166,6 @@ private:
 
 	ID3DX11EffectTechnique *m_d3dxTechniques[Technique::MaxType];
 	ID3D11ShaderResourceView *m_samplerBound[MaterialTextureId::MaxType];
-	ID3DX11EffectTechnique *m_curTechnique;
 
 	DX11_SamplerInfos m_samplerInfos;
 

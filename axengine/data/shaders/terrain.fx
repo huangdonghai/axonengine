@@ -237,9 +237,9 @@ Gbuffer FP_layer(LayerVertexOut IN)
 	bool4 m_detailnormals = bool4(M_DETAIL_NORMAL, M_DETAIL_NORMAL1, M_DETAIL_NORMAL2, M_DETAIL_NORMAL3);
 	bool4 m_layeralpha = bool4(M_LAYERALPHA, M_LAYERALPHA1, M_LAYERALPHA2, M_LAYERALPHA3);
 
-	sampler2D m_detailMaps[4] = {g_detailMap,g_detailMap1,g_detailMap2,g_detailMap3};
-	sampler2D m_detailNormalMaps[4] = {g_detailNormalMap,g_detailNormalMap1,g_detailNormalMap2,g_detailNormalMap3};
-	sampler2D m_layerMaps[4] = {g_layerAlpha, g_layerAlpha1, g_layerAlpha2, g_layerAlpha3};
+	static const sampler2D m_detailMaps[4] = { g_detailMap, g_detailMap1, g_detailMap2, g_detailMap3 };
+	static const sampler2D m_detailNormalMaps[4] = { g_detailNormalMap, g_detailNormalMap1, g_detailNormalMap2, g_detailNormalMap3 };
+	static const sampler2D m_layerMaps[4] = { g_layerAlpha, g_layerAlpha1, g_layerAlpha2, g_layerAlpha3 };
 
 	UNROLL
 	for (int i = 0; i < M_NUM_LAYERS; i++) {

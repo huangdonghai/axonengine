@@ -490,7 +490,7 @@ void RenderCamera::getTrapezoidalMatrix(Matrix4 &lightMatrix, Matrix4 &tsmMatrix
 //
 void RenderCamera::calcPointsAlongZdist(Vector3 result[4], float zdist) const
 {
-	AX_ASSURE(!m_isOrthoProjection);
+	AX_RELEASE_ASSERT(!m_isOrthoProjection);
 
 	Vector3 center = m_viewAxis[0] * m_znear;
 	float scale = zdist / m_znear;

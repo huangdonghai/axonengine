@@ -41,6 +41,7 @@ void dx11CreateTextureFromFileInMemory(phandle_t h, IoRequest *asioRequest)
 	ID3D11Resource *texture;
 	V(D3DX11CreateTextureFromMemory(g_device, asioRequest->fileData(), asioRequest->fileSize(), 0, 0, &texture, 0));
 	DX11_Resource *resource = new DX11_Resource(DX11_Resource::kImmutableTexture, texture);
+	V(g_device->CreateShaderResourceView(texture, 0, &resource->m_shaderResourceView));
 	*h = resource;
 	delete asioRequest;
 }
@@ -48,7 +49,8 @@ void dx11CreateTextureFromFileInMemory(phandle_t h, IoRequest *asioRequest)
 void dx11CreateTexture(phandle_t h, TexType type, TexFormat format, int width, int height, int depth, int flags)
 {
 	DXGI_FORMAT d3dformat = DX11_Driver::trTexFormat(format);
-	AX_ASSURE(d3dformat != DXGI_FORMAT_UNKNOWN);
+	AX_RELEASE_ASSERT(d3dformat != DXGI_FORMAT_UNKNOWN);
+	AX_RELEASE_ASSERT(g_renderDriverInfo.textureFormatSupports[format]);
 
 	D3D11_USAGE usage = D3D11_USAGE_DEFAULT;
 	UINT bindflags = D3D11_BIND_SHADER_RESOURCE;
@@ -57,6 +59,7 @@ void dx11CreateTexture(phandle_t h, TexType type, TexFormat format, int width, i
 	int miplevels = 1;
 
 	if (flags & Texture::RenderTarget) {
+		AX_RELEASE_ASSERT(g_renderDriverInfo.renderTargetFormatSupport[format]);
 		if (format.isDepth()) {
 			bindflags |= D3D11_BIND_DEPTH_STENCIL;
 		} else {
@@ -64,6 +67,7 @@ void dx11CreateTexture(phandle_t h, TexType type, TexFormat format, int width, i
 		}
 	} else {
 		usage = D3D11_USAGE_DYNAMIC;
+		cpuAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	}
 
 	if (flags & Texture::AutoGenMipmap) {
@@ -76,17 +80,22 @@ void dx11CreateTexture(phandle_t h, TexType type, TexFormat format, int width, i
 		miplevels = 0;
 	}
 
-	if (type == TexType::CUBE)
+	int array_size = 1;
+	if (type == TexType::CUBE) {
 		miscflags |= D3D11_RESOURCE_MISC_TEXTURECUBE;
+		array_size = 6;
+	}
 
 	ID3D11Resource *d3dresource = 0;
-	DX11_Resource *apiResource = 0;
+	ID3D11Texture2D *texture2D = 0;
+	ID3D11Texture3D *texture3D = 0;
+	DX11_Resource *app_resource = 0;
 	if (type == TexType::_2D || type == TexType::CUBE) {
 		D3D11_TEXTURE2D_DESC desc;
 		desc.Width = width;
 		desc.Height = height;
 		desc.MipLevels = miplevels;
-		desc.ArraySize = 1;
+		desc.ArraySize = array_size;
 		desc.Format = d3dformat;
 		desc.SampleDesc.Count = 1;
 		desc.SampleDesc.Quality = 0;
@@ -95,10 +104,10 @@ void dx11CreateTexture(phandle_t h, TexType type, TexFormat format, int width, i
 		desc.CPUAccessFlags = cpuAccessFlags;
 		desc.MiscFlags = miscflags;
 
-		ID3D11Texture2D *texture2D;
 		V(g_device->CreateTexture2D(&desc, 0, &texture2D));
 
-		apiResource = new DX11_Resource(DX11_Resource::kDynamicTexture, texture2D);
+		d3dresource = texture2D;
+		app_resource = new DX11_Resource(DX11_Resource::kDynamicTexture, texture2D);
 	} else if (type == TexType::_3D) {
 		D3D11_TEXTURE3D_DESC desc;
 		desc.Width = width;
@@ -111,12 +120,60 @@ void dx11CreateTexture(phandle_t h, TexType type, TexFormat format, int width, i
 		desc.CPUAccessFlags = cpuAccessFlags;
 		desc.MiscFlags = miscflags;
 
-		ID3D11Texture3D *texture3D;
 		V(g_device->CreateTexture3D(&desc, 0, &texture3D));
-		apiResource = new DX11_Resource(DX11_Resource::kDynamicTexture, texture3D);
+		d3dresource = texture3D;
+		app_resource = new DX11_Resource(DX11_Resource::kDynamicTexture, texture3D);
 	}
 
-	// TODO
+	app_resource->m_isDynamic = true;
+	app_resource->m_dynamicTextureData->texFormat = format;
+	app_resource->m_dynamicTextureData->texType = type;
+	app_resource->m_dynamicTextureData->width = width;
+	app_resource->m_dynamicTextureData->height = height;
+	app_resource->m_dynamicTextureData->depth = depth;
+
+	if (flags & Texture::RenderTarget) {
+		if (format.isDepth()) {
+			D3D11_DEPTH_STENCIL_VIEW_DESC desc = {
+				DX11_Driver::trRenderTargetFormat(format),
+				D3D11_DSV_DIMENSION_TEXTURE2D,
+				0
+			};
+			ID3D11DepthStencilView *view = 0;
+			V(g_device->CreateDepthStencilView(d3dresource, &desc, &view));
+			app_resource->m_dynamicTextureData->m_depthStencilViews.push_back(view);
+		} else {
+			ID3D11RenderTargetView *view = 0;
+			if (array_size == 1) {
+				V(g_device->CreateRenderTargetView(d3dresource, 0, &view));
+				app_resource->m_dynamicTextureData->m_renderTargetViews.push_back(view);
+			} else {
+				D3D11_RENDER_TARGET_VIEW_DESC desc = {
+					DX11_Driver::trRenderTargetFormat(format), D3D11_RTV_DIMENSION_TEXTURE2DARRAY
+				};
+				desc.Texture2DArray.MipSlice = 0;
+				desc.Texture2DArray.FirstArraySlice = 0;
+				desc.Texture2DArray.ArraySize = 1;
+				for (int i = 0; i < array_size; i++) {
+					desc.Texture2DArray.FirstArraySlice = i;
+					V(g_device->CreateRenderTargetView(d3dresource, &desc, &view));
+					app_resource->m_dynamicTextureData->m_renderTargetViews.push_back(view);
+				}
+			}
+		}
+	}
+
+	if (format.isDepth()) {
+		D3D11_SHADER_RESOURCE_VIEW_DESC desc;
+		TypeZero(&desc);
+		desc.Format = DX11_Driver::trShaderResourceViewFormat(format);
+		desc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+		desc.Texture2D.MipLevels = 1;
+		V(g_device->CreateShaderResourceView(texture2D, &desc, &app_resource->m_shaderResourceView));
+	} else {
+		V(g_device->CreateShaderResourceView(d3dresource, 0, &app_resource->m_shaderResourceView));
+	}
+	*h = app_resource;
 }
 
 void dx11UploadTexture(phandle_t h, const void *pixels, TexFormat format)
@@ -125,10 +182,10 @@ void dx11UploadTexture(phandle_t h, const void *pixels, TexFormat format)
 }
 
 void dx11UploadSubTexture(phandle_t h, const Rect &rect, const void *pixels, TexFormat format)
-{
+{return;
 	DX11_Resource *apiResource = h->castTo<DX11_Resource *>();
-	AX_ASSURE(apiResource->m_type == DX11_Resource::kDynamicTexture);
-	AX_ASSURE(format == apiResource->m_dynamicTextureData->texFormat);
+	AX_RELEASE_ASSERT(apiResource->m_type == DX11_Resource::kDynamicTexture);
+	AX_RELEASE_ASSERT(format == apiResource->m_dynamicTextureData->texFormat);
 
 	D3D11_BOX box;
 	box.left = rect.x;
@@ -156,15 +213,11 @@ void dx11DeleteTexture(phandle_t h)
 
 void dx11CreateVertexBuffer(phandle_t h, int datasize, Primitive::Hint hint, const void *p)
 {
-	D3D11_USAGE usage = D3D11_USAGE_DEFAULT;
-	if (hint == Primitive::HintStatic) {
-		usage = D3D11_USAGE_IMMUTABLE;
-		AX_ASSURE(p);
-	}
+	bool is_dynamic = hint != Primitive::HintStatic;
 
 	// Fill in a buffer description.
 	D3D11_BUFFER_DESC bufferDesc;
-	bufferDesc.Usage = usage;
+	bufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
 	bufferDesc.ByteWidth = datasize;
 	bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	bufferDesc.CPUAccessFlags = 0;
@@ -178,17 +231,29 @@ void dx11CreateVertexBuffer(phandle_t h, int datasize, Primitive::Hint hint, con
 
 	// Create the vertex buffer.
 	ID3D11Buffer *buffer;
-	g_device->CreateBuffer(&bufferDesc, &InitData, &buffer);
+	if (is_dynamic) {
+		bufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+		bufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+
+		if (p) {
+			g_device->CreateBuffer(&bufferDesc, &InitData, &buffer);
+		} else {
+			g_device->CreateBuffer(&bufferDesc, 0, &buffer);
+		}
+	} else {
+		AX_RELEASE_ASSERT(p);
+		g_device->CreateBuffer(&bufferDesc, &InitData, &buffer);
+	}
 
 	DX11_Resource *apiRes = new DX11_Resource(DX11_Resource::kVertexBuffer, buffer);
-	apiRes->m_isDynamic = (hint != Primitive::HintStatic);
+	apiRes->m_isDynamic = is_dynamic;
 	*h = apiRes;
 }
 
 void dx11UploadVertexBuffer(phandle_t h, int offset, int datasize, const void *p)
 {
 	DX11_Resource *apiRes = h->castTo<DX11_Resource *>();
-	AX_ASSURE(apiRes->m_type == DX11_Resource::kVertexBuffer);
+	AX_RELEASE_ASSERT(apiRes->m_type == DX11_Resource::kVertexBuffer);
 
 	D3D11_MAP mapType = D3D11_MAP_WRITE_DISCARD;
 	if (offset != 0)
@@ -209,15 +274,11 @@ void dx11DeleteVertexBuffer(phandle_t h)
 
 void dx11CreateIndexBuffer(phandle_t h, int datasize, Primitive::Hint hint, const void *p)
 {
-	D3D11_USAGE usage = D3D11_USAGE_DEFAULT;
-	if (hint == Primitive::HintStatic) {
-		usage = D3D11_USAGE_IMMUTABLE;
-		AX_ASSURE(p);
-	}
+	bool is_dynamic = hint != Primitive::HintStatic;
 
 	// Fill in a buffer description.
 	D3D11_BUFFER_DESC bufferDesc;
-	bufferDesc.Usage = usage;
+	bufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
 	bufferDesc.ByteWidth = datasize;
 	bufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	bufferDesc.CPUAccessFlags = 0;
@@ -231,7 +292,19 @@ void dx11CreateIndexBuffer(phandle_t h, int datasize, Primitive::Hint hint, cons
 
 	// Create the vertex buffer.
 	ID3D11Buffer *buffer;
-	g_device->CreateBuffer(&bufferDesc, &InitData, &buffer);
+	if (is_dynamic) {
+		bufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+		bufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+
+		if (p) {
+			g_device->CreateBuffer(&bufferDesc, &InitData, &buffer);
+		} else {
+			g_device->CreateBuffer(&bufferDesc, 0, &buffer);
+		}
+	} else {
+		AX_RELEASE_ASSERT(p);
+		g_device->CreateBuffer(&bufferDesc, &InitData, &buffer);
+	}
 
 	DX11_Resource *apiRes = new DX11_Resource(DX11_Resource::kIndexBuffer, buffer);
 	apiRes->m_isDynamic = (hint != Primitive::HintStatic);
@@ -241,7 +314,7 @@ void dx11CreateIndexBuffer(phandle_t h, int datasize, Primitive::Hint hint, cons
 void dx11UploadIndexBuffer(phandle_t h, int offset, int datasize, const void *p)
 {
 	DX11_Resource *apiRes = h->castTo<DX11_Resource *>();
-	AX_ASSURE(apiRes->m_type == DX11_Resource::kIndexBuffer);
+	AX_RELEASE_ASSERT(apiRes->m_type == DX11_Resource::kIndexBuffer);
 
 	D3D11_MAP mapType = D3D11_MAP_WRITE_DISCARD;
 	if (offset != 0)
@@ -325,9 +398,15 @@ static inline ID3D11RenderTargetView *getRTV(phandle_t h, int slice)
 {
 	if (!h) return 0;
 	DX11_Resource *apiRes = h->castTo<DX11_Resource *>();
-	AX_ASSERT(apiRes->m_type == DX11_Resource::kDynamicTexture);
-	AX_ASSERT(apiRes->m_dynamicTextureData->texFormat.isColor());
-	return apiRes->m_dynamicTextureData->m_renderTargetViews[slice];
+	if (apiRes->m_type == DX11_Resource::kDynamicTexture) {
+		AX_ASSERT(apiRes->m_dynamicTextureData->texFormat.isColor());
+		return apiRes->m_dynamicTextureData->m_renderTargetViews[slice];
+	} else if (apiRes->m_type == DX11_Resource::kWindow) {
+		return apiRes->m_window->getRenderTargetView();
+	} else {
+		AX_WRONGPLACE;
+		return 0;
+	}
 }
 
 void dx11SetTargetSet(phandle_t targetSet[RenderTargetSet::MaxTarget], int slices[RenderTargetSet::MaxTarget])

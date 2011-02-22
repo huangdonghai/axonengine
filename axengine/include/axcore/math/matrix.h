@@ -232,7 +232,7 @@ inline void Matrix::initTranslate(float x, float y, float z)
 
 inline Vector4 Matrix::getRow(int index) const
 {
-	AX_STRICT_ASSERT(index>=0 && index<3);
+	AX_ASSERT(index>=0 && index<3);
 	return Vector4(axis.getRow(index), origin[index]);
 }
 
@@ -323,13 +323,13 @@ inline bool Matrix::operator!=(const Matrix &other) const
 
 inline Vector3 &Matrix::operator[](int index)
 {
-	AX_STRICT_ASSERT(index >= 0 && index < 4);
+	AX_ASSERT(index >= 0 && index < 4);
 	return axis[index];
 }
 
 inline const Vector3 &Matrix::operator[](int index) const
 {
-	AX_STRICT_ASSERT(index >= 0 && index < 4);
+	AX_ASSERT(index >= 0 && index < 4);
 	return axis[index];
 }
 

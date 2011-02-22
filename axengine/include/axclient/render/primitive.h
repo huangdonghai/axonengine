@@ -145,13 +145,13 @@ inline void Primitive::setMaterial(Material *material)
 
 inline void Primitive::setLightMap(Texture *lm)
 {
-	AX_ASSURE(m_material);
+	AX_RELEASE_ASSERT(m_material);
 	m_material->setTexture(MaterialTextureId::LightMap, lm);
 }
 
 inline Texture *Primitive::getLightMap() const
 {
-	AX_ASSURE(m_material);
+	AX_RELEASE_ASSERT(m_material);
 	return m_material->getTexture(MaterialTextureId::LightMap);
 }
 

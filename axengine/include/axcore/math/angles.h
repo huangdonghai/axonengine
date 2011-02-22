@@ -97,12 +97,12 @@ inline Angles &Angles::zero(void) {
 }
 
 inline float Angles::operator[](int index) const {
-	AX_STRICT_ASSERT((index >= 0) && (index < 3));
+	AX_ASSERT((index >= 0) && (index < 3));
 	return (&pitch)[ index ];
 }
 
 inline float &Angles::operator[](int index) {
-	AX_STRICT_ASSERT((index >= 0) && (index < 3));
+	AX_ASSERT((index >= 0) && (index < 3));
 	return (&pitch)[ index ];
 }
 

@@ -49,7 +49,7 @@ std::string OsUtil::getworkpath()
 {
 	wchar_t buf[260];
 	wchar_t * v = ::_wgetcwd(buf, ArraySize(buf));
-	AX_ASSURE(v);
+	AX_RELEASE_ASSERT(v);
 	return w2u(buf);
 }
 
