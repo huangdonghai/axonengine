@@ -62,6 +62,7 @@ void dx11CreateTexture(phandle_t h, TexType type, TexFormat format, int width, i
 		AX_RELEASE_ASSERT(g_renderDriverInfo.renderTargetFormatSupport[format]);
 		if (format.isDepth()) {
 			bindflags |= D3D11_BIND_DEPTH_STENCIL;
+			miscflags |= D3D11_RESOURCE_MISC_SHARED;
 		} else {
 			bindflags |= D3D11_BIND_RENDER_TARGET;
 		}
