@@ -40,6 +40,11 @@ public:
 		ID3D11DepthStencilState *state = findDepthStencilState(desc);
 		g_context->OMSetDepthStencilState(state, 0);
 		m_depthStencilDesc = desc;
+
+#ifdef _DEBUG
+		D3D11_DEPTH_STENCIL_DESC d3ddesc;
+		state->GetDesc(&d3ddesc);
+#endif
 	}
 
 	void setRasterizerState(const RasterizerDesc &desc)
@@ -87,6 +92,13 @@ public:
 
 		g_context->IASetInputLayout(il);
 		m_inputLayout = il;
+	}
+
+	void unsetAllTextures()
+	{
+		for (int i = 0; i < MAX_STAGES; i++) {
+			setTexture(i, 0);
+		}
 	}
 
 	ID3D11InputLayout *findInputLayout(VertexType vt, bool isInstanced, const void *bytecode, int bytecodeLength);

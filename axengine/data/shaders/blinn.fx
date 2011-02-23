@@ -128,8 +128,6 @@ Gbuffer FP_gpass(VertexOut IN)
 	OUT.accum.a = 1;
 #endif
 
-	OUT.accum = OUT.normal;
-
 	return OUT;
 }
 

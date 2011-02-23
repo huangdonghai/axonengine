@@ -575,7 +575,9 @@ DX11_Shader * DX11_ShaderManager::findShader(const FixedString &nameId, const Gl
 
 	DX11_Shader*& shader = m_shaders[key];
 
-	shader = new DX11_Shader(nameId, gm, mm);
+	if (!shader) {
+		shader = new DX11_Shader(nameId, gm, mm);
+	}
 
 	return shader;
 }

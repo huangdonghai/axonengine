@@ -14,10 +14,12 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
+class Color3;
+class Color4;
+
 //------------------------------------------------------------------------------
 // Rgb, 3 unsigned byte, identical to D3DFMT_R8G8B8
 //------------------------------------------------------------------------------
-class Color3;
 struct AX_API Rgb {
 	enum {
 		B, G, R
@@ -65,33 +67,41 @@ struct AX_API Rgb {
 	const static Rgb ColorTable[];
 };
 
-inline Rgb::Rgb() {}
+inline Rgb::Rgb()
+{}
 
 inline Rgb::Rgb(byte_t ir, byte_t ig, byte_t ib)
-	: r(ir), g(ig), b(ib) {}
+	: r(ir), g(ig), b(ib)
+{}
 
 inline Rgb::Rgb(const Vector3 &vec)
 	: r(Math::clampByte(vec.x*255.f))
 	, g(Math::clampByte(vec.y*255.f))
-	, b(Math::clampByte(vec.z*255.f)) {}
+	, b(Math::clampByte(vec.z*255.f))
+{}
 
 
 // operator overridden
-inline bool Rgb::operator==(const Rgb &color) const {
+inline bool Rgb::operator==(const Rgb &color) const
+{
 	return r == color.r && g == color.g && b == color.b;
 }
 
-inline bool Rgb::operator!=(const Rgb &color) const {
+inline bool Rgb::operator!=(const Rgb &color) const
+{
 	return r != color.r || g != color.g || b != color.b;
 }
 
-inline void Rgb::clear() { r = g = b = 0; }
+inline void Rgb::clear()
+{ r = g = b = 0; }
 
-inline Rgb &Rgb::set(byte_t ir, byte_t ig, byte_t ib) {
+inline Rgb &Rgb::set(byte_t ir, byte_t ig, byte_t ib)
+{
 	r=ir; g=ig; b=ib; return *this;
 }
 
-inline Rgb Rgb::operator*(const Rgb &other) {
+inline Rgb Rgb::operator*(const Rgb &other)
+{
 	Rgb c;
 	c.r = ((int)r * other.r) >> 8;
 	c.g = ((int)g * other.g) >> 8;
@@ -99,7 +109,8 @@ inline Rgb Rgb::operator*(const Rgb &other) {
 	return c;
 }
 
-inline Rgb& Rgb::operator*=(const Rgb &other) {
+inline Rgb& Rgb::operator*=(const Rgb &other)
+{
 	r = ((int)r * other.r) >> 8;
 	g = ((int)g * other.g) >> 8;
 	b = ((int)b * other.b) >> 8;
@@ -107,7 +118,8 @@ inline Rgb& Rgb::operator*=(const Rgb &other) {
 }
 
 
-inline Rgb Rgb::operator*(float scale) {
+inline Rgb Rgb::operator*(float scale)
+{
 	Rgb c;
 
 	c.r = (byte_t)(scale * r);
@@ -116,14 +128,16 @@ inline Rgb Rgb::operator*(float scale) {
 	return c;
 }
 
-inline Rgb& Rgb::operator*=(float scale) {
+inline Rgb& Rgb::operator*=(float scale)
+{
 	r = (byte_t)(scale * r);
 	g = (byte_t)(scale * g);
 	b = (byte_t)(scale * b);
 	return *this;
 }
 
-inline Rgb Rgb::operator+(const Rgb &other) const {
+inline Rgb Rgb::operator+(const Rgb &other) const
+{
 	Rgb c;
 	c.r = Math::clampByte((int)r + other.r);
 	c.g = Math::clampByte((int)g + other.g);
@@ -131,30 +145,35 @@ inline Rgb Rgb::operator+(const Rgb &other) const {
 	return c;
 }
 
-inline Rgb& Rgb::operator+=(const Rgb &other) {
+inline Rgb& Rgb::operator+=(const Rgb &other)
+{
 	r = Math::clampByte((int)r + other.r);
 	g = Math::clampByte((int)g + other.g);
 	b = Math::clampByte((int)b + other.b);
 	return *this;
 }
 
-inline byte_t &Rgb::operator[](int index) {
+inline byte_t &Rgb::operator[](int index)
+{
 	AX_ASSERT(index>=0 && index < 3);
 	return *(&r+index);
 }
 
-inline byte_t Rgb::operator[](int index) const {
+inline byte_t Rgb::operator[](int index) const
+{
 	AX_ASSERT(index>=0 && index < 3);
 	return *(&r+index);
 }
 
-inline void Rgb::fromVector(const Vector3 &v) {
+inline void Rgb::fromVector(const Vector3 &v)
+{
 	r = Math::clampByte(v.x * 255.0f);
 	g = Math::clampByte(v.y * 255.0f);
 	b = Math::clampByte(v.z * 255.0f);
 }
 
-inline Vector3 Rgb::toVector() const {
+inline Vector3 Rgb::toVector() const
+{
 	float inv255 = 1.0f / 255.0f;
 	return Vector3(r*inv255, g*inv255, b*inv255);
 
@@ -225,54 +244,67 @@ struct AX_API Rgba {
 	const static Rgba ColorTable[];
 };
 
-inline Rgba::Rgba() {}
+inline Rgba::Rgba()
+{}
 
 inline Rgba::Rgba(byte_t ir, byte_t ig, byte_t ib, byte_t ia)
-	: r(ir), g(ig), b(ib), a(ia) {}
+	: r(ir), g(ig), b(ib), a(ia)
+{}
 
 inline Rgba::Rgba(int ir, int ig, int ib, int ia)
-	: r(ir), g(ig), b(ib), a(ia) {}
+	: r(ir), g(ig), b(ib), a(ia)
+{}
 
 inline Rgba::Rgba(float _r, float _g, float _b, float _a)
 	: r(Math::clampByte(_r*255.f))
 	, g(Math::clampByte(_g*255.f))
 	, b(Math::clampByte(_b*255.f))
-	, a(Math::clampByte(_a*255.f)) {}
+	, a(Math::clampByte(_a*255.f))
+{}
 
 
 inline Rgba::Rgba(const Vector3 &vec)
 	: r(Math::clampByte(vec.x*255.f))
 	, g(Math::clampByte(vec.y*255.f))
 	, b(Math::clampByte(vec.z*255.f))
-	, a(255) {}
+	, a(255)
+{}
 
 inline Rgba::Rgba(const Vector4 &vec)
 	: r(Math::clampByte(vec.x*255.f))
 	, g(Math::clampByte(vec.y*255.f))
 	, b(Math::clampByte(vec.z*255.f))
-	, a(Math::clampByte(vec.w*255.f)) {}
+	, a(Math::clampByte(vec.w*255.f))
+{}
 
-inline bool Rgba::operator==(const Rgba &rhs) const {
+inline bool Rgba::operator==(const Rgba &rhs) const
+{
 	return dword == rhs.dword;
 }
 
-inline bool Rgba::operator!=(const Rgba &rhs) const {
+inline bool Rgba::operator!=(const Rgba &rhs) const
+{
 	return dword != rhs.dword;
 }
 
-inline Rgba::operator const byte_t*() const { return &r; }
+inline Rgba::operator const byte_t*() const
+{ return &r; }
 
-inline void Rgba::clear() { r=g=b=a=0; }
+inline void Rgba::clear()
+{ r=g=b=a=0; }
 
-inline Rgba &Rgba::set(byte_t ir, byte_t ig, byte_t ib, byte_t ia) {
+inline Rgba &Rgba::set(byte_t ir, byte_t ig, byte_t ib, byte_t ia)
+{
 	r=ir; g=ig; b=ib; a=ia; return *this;
 }
 
-inline Rgba &Rgba::set(const Rgb &rgb) {
+inline Rgba &Rgba::set(const Rgb &rgb)
+{
 	r=rgb.r; g=rgb.g; b=rgb.b; a=255; return *this;
 }
 
-inline Rgba Rgba::operator*(const Rgba &other) const {
+inline Rgba Rgba::operator*(const Rgba &other) const
+{
 	Rgba c;
 	c.r = ((int)r * other.r) >> 8;
 	c.g = ((int)g * other.g) >> 8;
@@ -281,7 +313,8 @@ inline Rgba Rgba::operator*(const Rgba &other) const {
 	return c;
 }
 
-inline Rgba Rgba::operator*(float scale) const {
+inline Rgba Rgba::operator*(float scale) const
+{
 	Rgba c;
 
 	c.r = (byte_t)(scale * r);
@@ -291,7 +324,8 @@ inline Rgba Rgba::operator*(float scale) const {
 	return c;
 }
 
-inline Rgba Rgba::operator+(const Rgba &other) const {
+inline Rgba Rgba::operator+(const Rgba &other) const
+{
 	Rgba c;
 
 	c.r = r + other.r;
@@ -302,7 +336,8 @@ inline Rgba Rgba::operator+(const Rgba &other) const {
 	return c;
 }
 
-inline Rgba Rgba::operator-(const Rgba &other) const {
+inline Rgba Rgba::operator-(const Rgba &other) const
+{
 	Rgba c;
 
 	c.r = r - other.r;
@@ -313,15 +348,18 @@ inline Rgba Rgba::operator-(const Rgba &other) const {
 	return c;
 }
 
-inline Rgba &Rgba::operator*=(float scale) {
+inline Rgba &Rgba::operator*=(float scale)
+{
 	return *this = (*this * scale);
 }
 
-inline Rgba &Rgba::operator+=(const Rgba &other) {
+inline Rgba &Rgba::operator+=(const Rgba &other)
+{
 	return *this = (*this + other);
 }
 
-inline Vector4 Rgba::toVector4() const {
+inline Vector4 Rgba::toVector4() const
+{
 	Vector4 result;
 	float inv255 = 1.0f / 255.0f;
 	result.x = r * inv255;
@@ -331,19 +369,22 @@ inline Vector4 Rgba::toVector4() const {
 	return result;
 }
 
-inline byte_t &Rgba::operator[](int index) {
+inline byte_t &Rgba::operator[](int index)
+{
 	AX_ASSERT(index>=0);
 	AX_ASSERT(index<4);
 	return *(&r+index);
 }
 
-inline byte_t Rgba::operator[](int index) const {
+inline byte_t Rgba::operator[](int index) const
+{
 	AX_ASSERT(index>=0);
 	AX_ASSERT(index<4);
 	return *(&r+index);
 }
 
-inline std::string Rgba::toStringRgb() const {
+inline std::string Rgba::toStringRgb() const
+{
 	std::string result;
 
 	StringUtil::sprintf(result, "%d,%d,%d", r,g,b);
@@ -351,14 +392,16 @@ inline std::string Rgba::toStringRgb() const {
 	return result;
 }
 
-inline void Rgba::parseRgb(const char *text) {
+inline void Rgba::parseRgb(const char *text)
+{
 	int _r, _g, _b;
 	int v = sscanf(text, "%d,%d,%d", &_r, &_g, &_b);
 	AX_ASSERT(v = 3);
 	r = _r; g = _g; b = _b; a = 255;
 }
 
-inline Rgba Rgba::randColor() {
+inline Rgba Rgba::randColor()
+{
 	Rgba result;
 	result.r = rand() % 255;
 	result.g = rand() % 255;
@@ -421,6 +464,7 @@ struct AX_API Color4
 	Color4() {}
 	Color4(float _r, float _g, float _b, float _a) : r(_r), g(_g), b(_b), a(_a) {}
 	explicit Color4(const Vector4 &rhs) : r(rhs.x), g(rhs.y), b(rhs.z), a(rhs.w) {}
+	explicit Color4(const Rgba &rhs) : r(rhs.r / 255.0f), g(rhs.g/255.0f), b(rhs.b/255.0f), a(rhs.a/255.0f) {}
 	~Color4() {}
 
 	Color4& set(float _r, float _g, float _b, float _a) {r=_r; g=_g; b=_b; a=_a; return *this; }
@@ -450,6 +494,8 @@ struct AX_API Color4
 
 	Color4 operator/(float rhs) const { return *this * (1.0f/rhs); }
 	Color4& operator/=(float rhs) { return *this = *this / rhs; }
+
+	const float *c_ptr() const { return &r; }
 
 	std::string toString() const;
 	bool fromString(const char *str);

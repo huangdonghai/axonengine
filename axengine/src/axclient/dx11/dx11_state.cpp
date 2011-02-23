@@ -22,7 +22,7 @@ ID3D11SamplerState * DX11_StateManager::findSamplerState(const SamplerDesc &desc
 	if (it != m_samplerStateDict.end())
 		return it->second;
 
-	CD3D11_SAMPLER_DESC d3ddesc;
+	CD3D11_SAMPLER_DESC d3ddesc(D3D11_DEFAULT);
 	TypeZero(&d3ddesc);
 
 	switch (desc.filterMode) {
@@ -109,7 +109,7 @@ ID3D11DepthStencilState * DX11_StateManager::findDepthStencilState(const DepthSt
 	if (it != m_depthStencilStateDict.end())
 		return it->second;
 
-	CD3D11_DEPTH_STENCIL_DESC d3ddesc;
+	CD3D11_DEPTH_STENCIL_DESC d3ddesc(D3D11_DEFAULT);
 
 	d3ddesc.DepthEnable = desc.depthEnable;
 	if (desc.depthWritable)
@@ -138,6 +138,10 @@ ID3D11DepthStencilState * DX11_StateManager::findDepthStencilState(const DepthSt
 	ID3D11DepthStencilState *state = 0;
 	V(g_device->CreateDepthStencilState(&d3ddesc, &state));
 	m_depthStencilStateDict[desc] = state;
+#ifdef _DEBUG
+	D3D11_DEPTH_STENCIL_DESC d3ddesc2;
+	state->GetDesc(&d3ddesc2);
+#endif
 	return state;
 }
 
@@ -176,7 +180,7 @@ ID3D11RasterizerState * DX11_StateManager::findRasterizerState(const RasterizerD
 	if (it != m_rasterizerStateDict.end())
 		return it->second;
 
-	CD3D11_RASTERIZER_DESC d3ddesc;
+	CD3D11_RASTERIZER_DESC d3ddesc(D3D11_DEFAULT);
 
 	d3ddesc.FillMode = trFillMode(desc.fillMode);
 	d3ddesc.CullMode = trCullMode(desc.frontCounterClockwise, desc.cullMode);
@@ -189,9 +193,11 @@ ID3D11RasterizerState * DX11_StateManager::findRasterizerState(const RasterizerD
 		d3ddesc.DepthBias = factor;
 		d3ddesc.SlopeScaledDepthBias = units;
 	}
-
+#if 0
 	d3ddesc.ScissorEnable = desc.scissorEnable;
-
+#else
+	d3ddesc.ScissorEnable = true;
+#endif
 	ID3D11RasterizerState *state = 0;
 	V(g_device->CreateRasterizerState(&d3ddesc, &state));
 	m_rasterizerStateDict[desc] = state;
@@ -232,7 +238,7 @@ ID3D11BlendState * DX11_StateManager::findBlendState(const BlendDesc &desc)
 	if (it != m_blendStateDict.end())
 		return it->second;
 
-	CD3D11_BLEND_DESC d3ddesc;
+	CD3D11_BLEND_DESC d3ddesc(D3D11_DEFAULT);
 
 	d3ddesc.AlphaToCoverageEnable = false;
 	d3ddesc.IndependentBlendEnable = false;

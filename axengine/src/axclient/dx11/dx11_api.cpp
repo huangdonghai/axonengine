@@ -36,6 +36,10 @@ static int s_curNumInstances;
 static int s_curPrimitiveCount;
 static Size s_curRenderTargetSize;
 
+ID3D11DepthStencilView *s_dsv;
+ID3D11RenderTargetView *s_rtv[RenderTargetSet::MaxColorTarget];
+int s_numView = 0;
+
 void dx11CreateTextureFromFileInMemory(phandle_t h, IoRequest *asioRequest)
 {
 	ID3D11Resource *texture;
@@ -386,12 +390,19 @@ void dx11EndPerfEvent()
 	D3DPERF_EndEvent();
 }
 
+static bool s_isTargetSizeSet = false;
+
 static inline ID3D11DepthStencilView *getDSV(phandle_t h, int slice)
 {
 	if (!h) return 0;
 	DX11_Resource *apiRes = h->castTo<DX11_Resource *>();
 	AX_ASSERT(apiRes->m_type == DX11_Resource::kDynamicTexture);
 	AX_ASSERT(apiRes->m_dynamicTextureData->texFormat.isDepth());
+	if (!s_isTargetSizeSet) {
+		s_curRenderTargetSize.width = apiRes->m_dynamicTextureData->width;
+		s_curRenderTargetSize.height = apiRes->m_dynamicTextureData->height;
+		s_isTargetSizeSet = true;
+	}
 	return apiRes->m_dynamicTextureData->m_depthStencilViews[slice];
 }
 
@@ -401,8 +412,17 @@ static inline ID3D11RenderTargetView *getRTV(phandle_t h, int slice)
 	DX11_Resource *apiRes = h->castTo<DX11_Resource *>();
 	if (apiRes->m_type == DX11_Resource::kDynamicTexture) {
 		AX_ASSERT(apiRes->m_dynamicTextureData->texFormat.isColor());
+		if (!s_isTargetSizeSet) {
+			s_curRenderTargetSize.width = apiRes->m_dynamicTextureData->width;
+			s_curRenderTargetSize.height = apiRes->m_dynamicTextureData->height;
+			s_isTargetSizeSet = true;
+		}
 		return apiRes->m_dynamicTextureData->m_renderTargetViews[slice];
 	} else if (apiRes->m_type == DX11_Resource::kWindow) {
+		if (!s_isTargetSizeSet) {
+			s_curRenderTargetSize = apiRes->m_window->swapChainSize();
+			s_isTargetSizeSet = true;
+		}
 		return apiRes->m_window->getRenderTargetView();
 	} else {
 		AX_WRONGPLACE;
@@ -412,18 +432,21 @@ static inline ID3D11RenderTargetView *getRTV(phandle_t h, int slice)
 
 void dx11SetTargetSet(phandle_t targetSet[RenderTargetSet::MaxTarget], int slices[RenderTargetSet::MaxTarget])
 {
-	ID3D11DepthStencilView *dsv = getDSV(targetSet[0], slices[0]);
-	ID3D11RenderTargetView *rtv[RenderTargetSet::MaxColorTarget];
+	s_isTargetSizeSet = false;
 
-	int numView = 0;
+	g_stateManager->unsetAllTextures();
+
+	s_dsv = getDSV(targetSet[0], slices[0]);
+	s_numView = 0;
+
 	for (int i = 0; i < RenderTargetSet::MaxColorTarget; i++) {
-		rtv[i] = getRTV(targetSet[i+1], slices[i+1]);
-		if (!rtv[i])
+		s_rtv[i] = getRTV(targetSet[i+1], slices[i+1]);
+		if (!s_rtv[i])
 			break;
-		numView++;
+		s_numView++;
 	}
 
-	g_context->OMSetRenderTargets(numView, rtv, dsv);
+	g_context->OMSetRenderTargets(s_numView, s_rtv, s_dsv);
 }
 
 void dx11SetViewport(const Rect &rect, const Vector2 & depthRange)
@@ -440,7 +463,14 @@ void dx11SetViewport(const Rect &rect, const Vector2 & depthRange)
 	d3dviewport.MinDepth = depthRange.x;
 	d3dviewport.MaxDepth = depthRange.y;
 
+	D3D11_RECT d3drect;
+	d3drect.left = d3dviewport.TopLeftX;
+	d3drect.top = d3dviewport.TopLeftY;
+	d3drect.right = d3dviewport.TopLeftX + d3dviewport.Width;
+	d3drect.bottom = d3dviewport.TopLeftY + d3dviewport.Height;
+
 	g_context->RSSetViewports(1, &d3dviewport);
+	g_context->RSSetScissorRects(1, &d3drect);
 }
 
 void dx11SetShader(const FixedString &name, const GlobalMacro &gm, const MaterialMacro &mm, Technique tech)
@@ -641,7 +671,20 @@ void dx11Draw()
 
 void dx11Clear(const RenderClearer &clearer)
 {
-	//dx11_context->ClearDepthStencilView();
+	if (s_dsv) {
+		UINT flags = 0;
+		if (clearer.isClearDepth) flags |= D3D11_CLEAR_DEPTH;
+		if (clearer.isClearStencil) flags |= D3D11_CLEAR_STENCIL;
+		if (flags)
+			g_context->ClearDepthStencilView(s_dsv, flags, clearer.depth, clearer.stencil);
+	}
+
+	if (clearer.isClearColor) {
+		Color4 color(clearer.color);
+		for (int i = 0; i < s_numView; i++) {
+			g_context->ClearRenderTargetView(s_rtv[i], color.c_ptr());
+		}
+	}
 }
 
 void dx11Present(phandle_t window)
@@ -651,6 +694,9 @@ void dx11Present(phandle_t window)
 	AX_ASSERT(resrouce->m_type == DX11_Resource::kWindow);
 	resrouce->m_window->present();
 	//dx11CheckQueryResult();
+
+	s_curVertexBufferPos = 0;
+	s_curIndexBufferPos = 0;
 }
 
 void dx11AssignRenderApi()
@@ -729,6 +775,9 @@ void dx11InitApi()
 
 	desc.ByteWidth = g_constBuffers.getBuffer(1)->getByteSize();
 	g_device->CreateBuffer(&desc, 0, &g_d3dConstBuffers[1]);
+
+	g_context->VSSetConstantBuffers(0, 2, g_d3dConstBuffers);
+	g_context->PSSetConstantBuffers(0, 2, g_d3dConstBuffers);
 
 	for (int i = 0; i < PRIMITIVECONST_COUNT; i++) {
 		desc.ByteWidth = (i+1) * 16;

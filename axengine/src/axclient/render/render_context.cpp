@@ -536,10 +536,12 @@ void RenderContext::drawPass_Lights(RenderScene *scene)
 	clearer.clearColor(true, Rgba::Zero);
 
 	m_targetSet.clear();
+#if 0
 	m_targetSet.m_depthTarget = m_curWindow->m_rtDepth->slice(0);
+#endif
 	m_targetSet.m_colorTargets[0] = m_curWindow->slice(0);
 
-	setupScene(m_curWorldScene, &clearer, 0);
+	setupScene(m_curWorldScene, 0, 0);
 	clearer.clearColor(false);
 
 	for (int i = 0; i < scene->numLights; i++) {

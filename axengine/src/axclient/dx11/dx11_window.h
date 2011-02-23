@@ -12,6 +12,7 @@ public:
 	void update(Handle newId, int width, int height);
 	void present();
 	ID3D11RenderTargetView *getRenderTargetView() const { return m_renderTargetView; }
+	Size swapChainSize() const { return m_swapChainSize; }
 
 protected:
 	void checkSwapChain();
