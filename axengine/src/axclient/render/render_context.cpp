@@ -668,7 +668,7 @@ static void ConvertToD3D(Matrix4 &m, const Size &windowSize)
 {
 	Matrix4 conv = GetConvertMatrix(windowSize);
 
-	if (g_renderDriverInfo.driverType == RenderDriverInfo::D3D9) {
+	if (g_renderDriverInfo.driverType != RenderDriverInfo::OpenGL) {
 		m = conv * m;
 	}
 }
