@@ -88,7 +88,7 @@ void DX11_Driver::initialize(SyncEvent &syncEvent)
 	dynlinkLoadD3D11API();
 
 	D3D_FEATURE_LEVEL featureLevel;
-	HRESULT hr = dx11_D3D11CreateDevice(0, D3D_DRIVER_TYPE_HARDWARE, 0, D3D11_CREATE_DEVICE_SINGLETHREADED, 0, 0, D3D11_SDK_VERSION, &g_device, &featureLevel, &g_context);
+	HRESULT hr = dx11_D3D11CreateDevice(0, D3D_DRIVER_TYPE_HARDWARE, 0, D3D11_CREATE_DEVICE_SINGLETHREADED|D3D11_CREATE_DEVICE_BGRA_SUPPORT, 0, 0, D3D11_SDK_VERSION, &g_device, &featureLevel, &g_context);
 
 	IDXGIDevice * pDXGIDevice;
 	hr = g_device->QueryInterface(__uuidof(IDXGIDevice), (void **)&pDXGIDevice);

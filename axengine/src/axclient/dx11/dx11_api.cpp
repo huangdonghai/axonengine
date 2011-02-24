@@ -71,12 +71,12 @@ void dx11CreateTexture(phandle_t h, TexType type, TexFormat format, int width, i
 			bindflags |= D3D11_BIND_RENDER_TARGET;
 		}
 	} else {
-		usage = D3D11_USAGE_DYNAMIC;
-		cpuAccessFlags = D3D11_CPU_ACCESS_WRITE;
+		//usage = D3D11_USAGE_DYNAMIC;
+		//cpuAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	}
 
 	if (flags & Texture::AutoGenMipmap) {
-		bool m_hardwareGenMipmap = g_renderDriverInfo.autogenMipmapSupports[format];
+		bool m_hardwareGenMipmap = g_renderDriverInfo.autogenMipmapSupports[format] && (flags & Texture::RenderTarget);
 
 		if (m_hardwareGenMipmap) {
 			miscflags |= D3D11_RESOURCE_MISC_GENERATE_MIPS;
@@ -99,7 +99,7 @@ void dx11CreateTexture(phandle_t h, TexType type, TexFormat format, int width, i
 		D3D11_TEXTURE2D_DESC desc;
 		desc.Width = width;
 		desc.Height = height;
-		desc.MipLevels = miplevels;
+		desc.MipLevels = 1;//miplevels;
 		desc.ArraySize = array_size;
 		desc.Format = d3dformat;
 		desc.SampleDesc.Count = 1;
@@ -187,7 +187,7 @@ void dx11UploadTexture(phandle_t h, const void *pixels, TexFormat format)
 }
 
 void dx11UploadSubTexture(phandle_t h, const Rect &rect, const void *pixels, TexFormat format)
-{return;
+{
 	DX11_Resource *apiResource = h->castTo<DX11_Resource *>();
 	AX_RELEASE_ASSERT(apiResource->m_type == DX11_Resource::kDynamicTexture);
 	AX_RELEASE_ASSERT(format == apiResource->m_dynamicTextureData->texFormat);
@@ -197,8 +197,8 @@ void dx11UploadSubTexture(phandle_t h, const Rect &rect, const void *pixels, Tex
 	box.top = rect.y;
 	box.right = rect.xMax();
 	box.bottom = rect.yMax();
-	box.back = 0;
-	box.front = 1;
+	box.front = 0;
+	box.back = 1;
 	UINT rowPitch = format.calculateDataSize(rect.width, 1);
 
 	g_context->UpdateSubresource(apiResource->m_dx11Resource, 0, &box, pixels, rowPitch, 0);
