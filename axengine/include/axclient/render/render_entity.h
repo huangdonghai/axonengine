@@ -21,6 +21,7 @@ class AX_API RenderEntity
 {
 	friend class RenderWorld;
 	friend class QuadNode;
+	friend class BvhNode;
 
 public:
 	enum Flag {
@@ -109,7 +110,8 @@ protected:
 	bool m_queryCulled;
 
 	// linked info
-	IntrusiveLink<RenderEntity> m_link;
+	IntrusiveLink<RenderEntity> m_nodeLink;
+	IntrusiveLink<RenderEntity> m_worldLink;
 	QuadNode *m_linkedNode;
 	int m_linkedFrame;
 

@@ -78,46 +78,6 @@ struct TerrainGpassOut {
 	float2 zoneTc	: TEXCOORD1;
 };
 
-TerrainGpassOut VP_gpass(TerrainVertexIn IN)
-{
-	TerrainGpassOut OUT;
-
-	OUT.hpos = VP_worldToClip(IN.position);
-	OUT.screenTc = Clip2Screen(OUT.hpos);
-	OUT.zoneTc.xy = (IN.position.xy - g_zoneRect.xy) / g_zoneRect.zw;
-
-	return OUT;
-}
-
-//------------------------------------------------------------------------------
-
-Gbuffer FP_gpass(LayerVertexOut IN)
-{
-	Gbuffer OUT=(Gbuffer)0;
-
-	half3 N = GetNormal(g_terrainNormal, IN.streamTc.xy).rgb;
-
-	OUT.normal.xyz = N * 0.5 + 0.5;
-	OUT.albedo.xyz = tex2D(g_terrainColor, IN.streamTc.xy).xyz;
-
-	OUT.misc.w = g_matShiness;
-
-	half3 spec;
-#if M_SPECULAR
-	spec = tex2D(g_specularMap, IN.streamTc.xy).xyz;
-#else
-	spec = OUT.albedo;
-#endif
-	OUT.albedo.w = Rgb2Lum(spec);
-
-	OUT.accum.xyz = OUT.normal.xyz;
-
-	for (int i = 0; i < M_NUM_LAYERS; i++) {}
-
-	return OUT;
-}
-
-
 //------------------------------------------------------------------------------
 
 TerrainVertexOut VP_main(TerrainVertexIn IN)
@@ -224,9 +184,9 @@ half4 getSampler(sampler2D smpl, float3 worldpos, half3 normal, int layer = 0)
 
 //------------------------------------------------------------------------------
 
-Gbuffer FP_layer(LayerVertexOut IN)
+GBufferOut FP_layer(LayerVertexOut IN)
 {
-	Gbuffer OUT=(Gbuffer)0;
+	GBufferData OUT=(GBufferData)0;
 
 	half3 N = GetNormal(g_terrainNormal, IN.streamTc.xy).rgb;
 	half3 basecolor = tex2D(g_terrainColor, IN.streamTc.xy).rgb;
@@ -267,11 +227,12 @@ Gbuffer FP_layer(LayerVertexOut IN)
 #endif
 	}
 
-	OUT.normal.xyz = normal * 0.5 + 0.5;
-	OUT.albedo.xyz = diffuse;
-	OUT.albedo.w = Rgb2Lum(diffuse);
+	OUT.normal = normal;
+	OUT.diffuse = diffuse;
+	OUT.specular = diffuse;
+	OUT.shiness = g_matShiness;
 
-	return OUT;
+	return GB_Output(OUT);
 }
 
 
@@ -280,14 +241,16 @@ Gbuffer FP_layer(LayerVertexOut IN)
 // TECHNIQUES
 //------------------------------------------------------------------------------
 
-technique gpass {
+technique gpass
+{
 	pass p0 {
 		VertexShader = compile VS_3_0 VP_layer();
 		PixelShader = compile PS_3_0 FP_layer();
 	}
 }
 
-technique shadowGen {
+technique shadowGen
+{
 	pass p0 {
 		VertexShader = compile VS_3_0 VP_zpass();
 		PixelShader = compile PS_3_0 FP_zpass();
@@ -295,14 +258,16 @@ technique shadowGen {
 }
 
 
-technique main {
+technique main
+{
 	pass p0 {
 		VertexShader = compile VS_3_0 VP_layer();
 		PixelShader = compile PS_3_0 FP_main();
 	}
 }
 
-technique layer {
+technique layer
+{
 	pass p0 {
 		VertexShader = compile VS_3_0 VP_layer();
 		PixelShader = compile PS_3_0 FP_layer();

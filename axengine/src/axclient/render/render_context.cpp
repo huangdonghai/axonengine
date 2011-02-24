@@ -499,6 +499,11 @@ void RenderContext::drawPass_ShadowGen(RenderScene *scene)
 		RenderClearer clearer;
 		clearer.clearDepth(true);
 
+		// HACK
+		if (qlight->isGlobal() && scene->splitIndex) {
+			clearer.clearDepth(false);
+		}
+
 		m_targetSet.clear();
 		if (target->format().isDepth()) {
 			m_targetSet.m_depthTarget.target = target;

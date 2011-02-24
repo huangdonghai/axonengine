@@ -142,6 +142,12 @@ void Texture::setBorderColor( SamplerDesc::BorderColor borderColor )
 	m_samplerDesc.borderColor = borderColor;
 }
 
+void Texture::setComparison(bool comparison)
+{
+	m_samplerDesc.comparison = comparison;
+}
+
+
 void Texture::saveToFile(const std::string &filename)
 {
 	// TODO

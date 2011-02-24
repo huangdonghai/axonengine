@@ -80,16 +80,10 @@ half4 FP_main(LightVertexOut IN) : COLOR
 	half4 OUT = 0;
 
 	// get gbuffer
-	float depth = tex2Dproj(g_rtDepth, IN.screenTc).r;
-
-	float viewDepth = ZR_GetViewSpace(depth);
-	half4 gbuffer = tex2Dproj(g_rt1, IN.screenTc);
-	half4 albedo = tex2Dproj(g_rt2, IN.screenTc);
-
-	float3 worldpos = g_cameraPos.xyz + IN.viewDir.xyz / IN.viewDir.w * viewDepth;
+	DeferredData data = GB_Input(IN.viewDir, IN.screenTc);
 
 	half3 L = s_lightPos.xyz;
-	half3 N = gbuffer.xyz * 2 - 1;
+	half3 N = data.normal;
 	half3 E = normalize(-IN.viewDir.xyz);
 
 	half NdotL = saturate(dot(N, L));
@@ -100,8 +94,8 @@ half4 FP_main(LightVertexOut IN) : COLOR
 
 #if F_DIRECTION_LIGHT
 	OUT.xyz = s_lightColor.xyz * NdotL;
-	OUT.w = pow(RdotE, 10) * NdotL/* * s_lightColor.w*/;
-	OUT *= getShadow(worldpos, viewDepth);
+	OUT.w = pow(RdotE, data.shiness) * NdotL/* * s_lightColor.w*/;
+	OUT *= getShadow(data.worldPos, data.viewDepth);
 #endif
 
 #if F_SKY_LIGHT
@@ -112,7 +106,7 @@ half4 FP_main(LightVertexOut IN) : COLOR
 	OUT.xyz += s_envColor.xyz;
 #endif
 
-	OUT.xyz = OUT.xyz * albedo.xyz + OUT.w * albedo.w;
+	OUT.xyz = OUT.xyz * data.diffuse + OUT.w * data.specular;
 	return OUT;
 }
 

@@ -163,13 +163,65 @@ struct VertexOut {
 #endif
 };
 
-struct Gbuffer {
+struct GBufferOut {
 	half4 accum			: COLOR0;
 	half4 normal		: COLOR1;
 	half4 albedo		: COLOR2;
 	half4 misc			: COLOR3;
 };
 
+struct GBufferData {
+	float viewDepth;
+	half3 normal;
+	half3 diffuse;
+	half3 specular;
+	half3 emission;
+	half shiness;
+	half opacity;
+	half2 motionVector;
+};
+
+struct DeferredData {
+	float viewDepth;
+	float3 worldPos;
+	half3 normal;
+	half3 diffuse;
+	half specular;
+	half shiness;
+	half ssao;
+};
+
+GBufferOut GB_Output(GBufferData IN)
+{
+	GBufferOut OUT=(GBufferOut)0;
+	OUT.accum.xyz = IN.emission;
+	OUT.normal.xy = IN.normal.xy * 0.5 + 0.5;
+	OUT.normal.z = log2(IN.shiness) / 8;
+	OUT.normal.w = sign(IN.normal.z) * 0.5 + 0.5;
+	OUT.albedo.xyz = IN.diffuse;
+	OUT.albedo.w = Rgb2Lum(IN.specular);
+	return OUT;
+}
+
+DeferredData GB_Input(float4 viewDir, float4 screenTc)
+{
+	DeferredData OUT;
+
+	float depth = tex2Dproj(g_rtDepth, screenTc).r;
+	OUT.viewDepth = ZR_GetViewSpace(depth);
+	OUT.worldPos = g_cameraPos.xyz + viewDir.xyz / viewDir.w * OUT.viewDepth;
+
+	half4 gnormal = tex2Dproj(g_rt1, screenTc);
+	half4 galbedo = tex2Dproj(g_rt2, screenTc);
+
+	OUT.normal.xy = gnormal.xy * 2 - 1;
+	OUT.normal.z = sqrt(1 - dot(OUT.normal.xy, OUT.normal.xy)) * (gnormal.w * 2 - 1);
+	OUT.diffuse = galbedo.xyz;
+	OUT.specular = galbedo.w;
+	OUT.shiness = exp2(gnormal.z * 8);
+	OUT.ssao = 1;
+	return OUT;
+}
 
 #include "texgen.fxh"
 #include "fragment.fxh"

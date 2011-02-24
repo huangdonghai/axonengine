@@ -39,15 +39,15 @@ VertexOut VP_main(MeshVertex IN)
     return OUT;
 }
 
-Gbuffer FP_gpass(VertexOut IN)
+GBufferOut FP_gpass(VertexOut IN)
 {
-	Gbuffer OUT = (Gbuffer)0;
-	OUT.accum.xyz = IN.color;
+	GBufferData OUT = (GBufferData)0;
+	OUT.emission = IN.color;
 #if M_DIFFUSE
-	OUT.accum.xyz *= tex2D(g_diffuseMap, IN.streamTc.xy);
+	OUT.emission *= tex2D(g_diffuseMap, IN.streamTc.xy);
 #endif
 
-	return OUT;
+	return GB_Output(OUT);
 }
 
 /********* pixel shaders ********/

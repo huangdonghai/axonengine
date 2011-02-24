@@ -49,6 +49,7 @@ public:
 	void setClampMode(SamplerDesc::ClampMode clampMode);
 	void setFilterMode(SamplerDesc::FilterMode filterMode);
 	void setBorderColor(SamplerDesc::BorderColor borderColor);
+	void setComparison(bool comparison);
 
 	Texture *clone() const;
 

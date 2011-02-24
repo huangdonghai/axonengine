@@ -99,10 +99,11 @@ struct SamplerDesc {
 
 	union {
 		struct {
-			uint_t clampMode : 8;
-			uint_t filterMode : 8;
-			uint_t borderColor : 8;
-			uint_t maxAnisotropy : 8;
+			uint_t clampMode : 4;
+			uint_t filterMode : 4;
+			uint_t borderColor : 4;
+			uint_t maxAnisotropy : 4;
+			uint_t comparison : 1; // for hardware shadow map
 		};
 		uint_t intValue;
 	};

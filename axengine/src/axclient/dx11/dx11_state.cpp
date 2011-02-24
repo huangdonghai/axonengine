@@ -43,6 +43,11 @@ ID3D11SamplerState * DX11_StateManager::findSamplerState(const SamplerDesc &desc
 	default: AX_WRONGPLACE; break;
 	}
 
+	if (desc.comparison) {
+		d3ddesc.Filter = (D3D11_FILTER)(d3ddesc.Filter | D3D11_FILTER_COMPARISON_MIN_MAG_MIP_POINT);
+		d3ddesc.ComparisonFunc = D3D11_COMPARISON_LESS;
+	}
+
 	switch (desc.clampMode) {
 	case SamplerDesc::ClampMode_Clamp:
 		d3ddesc.AddressU = d3ddesc.AddressV = d3ddesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;

@@ -13,7 +13,7 @@ float Script : STANDARDSGLOBAL <
 > = 0.8;
 
 // features typedef
-#define F_SHADOWED		M_FEATURE0
+#define F_SHADOWED M_FEATURE0
 
 AX_BEGIN_PC
 	float3x4 s_lightMatrix : PREG0;
@@ -38,11 +38,11 @@ half getShadow(float3 worldpos, float depth)
 #endif
 }
 
-ShadowVertexOut VP_main(MeshVertex IN)
+ShadowVertexOut VP_main(ChunkVertex IN)
 {
 	ShadowVertexOut OUT;
 
-	float3 worldpos = VP_modelToWorld(IN, IN.position);
+	float3 worldpos = VP_modelToWorld(IN.position);
 
 	OUT.hpos = VP_worldToClip(worldpos);
 
@@ -58,22 +58,16 @@ ShadowVertexOut VP_main(MeshVertex IN)
 
 half4 FP_main(ShadowVertexOut IN) : COLOR
 {
-	half4 OUT = 0;
+	half4 OUT = 1;
 
 	// get gbuffer
-	float depth = tex2Dproj(g_rtDepth, IN.screenTc).r;
+	DeferredData data = GB_Input(IN.viewDir, IN.screenTc);
 
-	float viewDepth = ZR_GetViewSpace(depth);
-	half4 normal = tex2Dproj(g_rt1, IN.screenTc);
-	half4 albedo = tex2Dproj(g_rt2, IN.screenTc);
-
-	float3 worldpos = g_cameraPos.xyz + IN.viewDir.xyz / IN.viewDir.w * viewDepth;
-
-	float3 lightPos = (s_lightPos.xyz - worldpos.xyz) * s_lightPos.w;
+	float3 lightPos = (s_lightPos.xyz - data.worldPos) * s_lightPos.w;
 	half falloff = saturate(1.0f - dot(lightPos.xyz, lightPos.xyz));
 
 	half3 L = normalize(lightPos.xyz);
-	half3 N = normal.xyz * 2 - 1;
+	half3 N = data.normal;
 	half3 E = normalize(-IN.viewDir.xyz);
 
 	half NdotL = saturate(dot(N, L));
@@ -81,11 +75,10 @@ half4 FP_main(ShadowVertexOut IN) : COLOR
 	half3 R = 2 * NdotL * N - L;
 	half RdotE = saturate(dot(E, R));
 
-	OUT.xyz = s_lightColor.xyz * NdotL;
+	RdotE = pow(RdotE, data.shiness) * NdotL;
 
-	OUT.w = pow(RdotE, 10) * NdotL * s_lightColor.w;
-return NdotL * falloff * getShadow(worldpos, viewDepth);
-	return OUT * falloff * getShadow(worldpos, viewDepth);
+	OUT.xyz = ((NdotL * data.diffuse) + (RdotE * data.specular)) * s_lightColor * falloff * getShadow(data.worldPos, data.viewDepth);
+	return OUT;
 }
 
 

@@ -27,15 +27,16 @@ namespace {
 		{
 			std::list<RenderTarget *> &rtlist = s_shadowMapPool[texType][size];
 			RenderTarget *rt = 0;
+			TexFormat format;
 			if (rtlist.empty()) {
 				if (texType == TexType::_2D) {
-					TexFormat format = g_renderDriverInfo.suggestFormats[RenderDriverInfo::SuggestedFormat_ShadowMap];
+					format = g_renderDriverInfo.suggestFormats[RenderDriverInfo::SuggestedFormat_ShadowMap];
 					rt = new RenderTarget(format, Size(size, size));
 					rt->setFilterMode(SamplerDesc::FilterMode_Linear);
 					rt->setClampMode(SamplerDesc::ClampMode_Border);
 					rt->setBorderColor(SamplerDesc::BorderColor_One);
 				} else if (texType == TexType::CUBE) {
-					TexFormat format = g_renderDriverInfo.suggestFormats[RenderDriverInfo::SuggestedFormat_CubeShadowMap];
+					format = g_renderDriverInfo.suggestFormats[RenderDriverInfo::SuggestedFormat_CubeShadowMap];
 					rt = new RenderTarget(texType, format, size, size, 1);
 					rt->setFilterMode(SamplerDesc::FilterMode_Nearest);
 					rt->setClampMode(SamplerDesc::ClampMode_Clamp);
@@ -47,6 +48,10 @@ namespace {
 				rt = rtlist.front();
 				rtlist.pop_front();
 			}
+
+			if (format.isDepth())
+				rt->setComparison(true);
+
 			return rt;
 		}
 
@@ -319,7 +324,8 @@ public:
 
 	bool checkIfNeedUpdateSplit(int index)
 	{
-		static int d[] = {1,3,8,23,16,32};
+		//static int d[] = {1,3,8,23,16,32};
+		static int d[] = {1,1,1,1,1,1};
 
 		SplitInfo *si = m_splits[index];
 

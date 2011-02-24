@@ -351,7 +351,7 @@ void RenderWorld::markVisible_r(RenderScene *qscene, QuadNode *node, Plane::Side
 		}
 	}
 
-	for (IntrusiveList<RenderEntity>::iterator it = node->linkHead.begin(); it != node->linkHead.end(); ++it) {
+	for (QuadNode::EntityList::iterator it = node->linkHead.begin(); it != node->linkHead.end(); ++it) {
 		RenderEntity *entity = &*it;
 		if (qscene->sceneType == RenderScene::ShadowGen && qscene->sourceLight->isGlobal()) {
 			if (entity->isCsmCulled()) {

@@ -139,14 +139,26 @@ void dx11CreateTexture(phandle_t h, TexType type, TexFormat format, int width, i
 
 	if (flags & Texture::RenderTarget) {
 		if (format.isDepth()) {
+			ID3D11DepthStencilView *view = 0;
 			D3D11_DEPTH_STENCIL_VIEW_DESC desc = {
 				DX11_Driver::trRenderTargetFormat(format),
 				D3D11_DSV_DIMENSION_TEXTURE2D,
 				0
 			};
-			ID3D11DepthStencilView *view = 0;
-			V(g_device->CreateDepthStencilView(d3dresource, &desc, &view));
-			app_resource->m_dynamicTextureData->m_depthStencilViews.push_back(view);
+			if (array_size == 1) {
+				V(g_device->CreateDepthStencilView(d3dresource, &desc, &view));
+				app_resource->m_dynamicTextureData->m_depthStencilViews.push_back(view);
+			} else {
+				desc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DARRAY;
+				desc.Texture2DArray.MipSlice = 0;
+				desc.Texture2DArray.FirstArraySlice = 0;
+				desc.Texture1DArray.ArraySize = 1;
+				for (int i = 0; i < array_size; i++) {
+					desc.Texture2DArray.FirstArraySlice = i;
+					V(g_device->CreateDepthStencilView(d3dresource, &desc, &view));
+					app_resource->m_dynamicTextureData->m_depthStencilViews.push_back(view);
+				}
+			}
 		} else {
 			ID3D11RenderTargetView *view = 0;
 			if (array_size == 1) {

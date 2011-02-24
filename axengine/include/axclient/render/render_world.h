@@ -19,13 +19,15 @@ class RenderSystem;
 
 class QuadNode {
 public:
+	typedef IntrusiveList<RenderEntity, &RenderEntity::m_nodeLink> EntityList;
+
 	float dist[2];
 	QuadNode *parent;
 	QuadNode *children[4];
 
 	float size;
 	BoundingBox bbox;
-	IntrusiveList<RenderEntity> linkHead;
+	EntityList linkHead;
 	int lastUpdateFrame;
 
 	QuadNode()
@@ -58,6 +60,19 @@ public:
 				parent->frameUpdated(frameId);
 		}
 	}
+};
+
+class BvhNode {
+public:
+	typedef IntrusiveList<RenderEntity, &RenderEntity::m_nodeLink> EntityList;
+private:
+	int m_dir;
+	float m_dist;
+	BvhNode *parent;
+	BvhNode *children[2];
+	BoundingBox m_bbox;
+	EntityList m_entityList;
+	int m_lastUpdateFrame;
 };
 
 class AX_API RenderWorld
@@ -115,6 +130,9 @@ private:
 	int m_shadowFrameId;
 	Vector3 m_shadowDir;
 	static int m_frameNum;
+
+	typedef IntrusiveList<RenderEntity, &RenderEntity::m_worldLink> EntityList;
+	EntityList m_entityList;
 
 public:
 	typedef IntrusiveList<RenderLight, &RenderLight::m_shadowLink> ShadowList;

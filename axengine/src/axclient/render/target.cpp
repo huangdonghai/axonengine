@@ -22,6 +22,8 @@ RenderTarget::RenderTarget(TexFormat format, const Size &size)
 	StringUtil::sprintf(texname, "_render_target_%d_%d_%d", m_size.width, m_size.height, g_system->generateId());
 
 	Texture::_init(texname, TexType::_2D, format, m_size, 1, Texture::RenderTarget);
+	setFilterMode(SamplerDesc::FilterMode_Nearest);
+	setClampMode(SamplerDesc::ClampMode_Clamp);
 }
 
 RenderTarget::RenderTarget(TexType texType, TexFormat format, int width, int height, int depth)
@@ -34,6 +36,8 @@ RenderTarget::RenderTarget(TexType texType, TexFormat format, int width, int hei
 	StringUtil::sprintf(texname, "_render_target_%d_%d_%d", m_size.width, m_size.height, g_system->generateId());
 
 	Texture::_init(texname, texType, format, Size(width, height), depth, Texture::RenderTarget);
+	setFilterMode(SamplerDesc::FilterMode_Nearest);
+	setClampMode(SamplerDesc::ClampMode_Clamp);
 }
 
 RenderTarget::RenderTarget(Handle hwnd, const std::string &debugname, const Size &size)

@@ -66,9 +66,9 @@ float4 FP_zpass(ShadowVertexOut IN) : COLOR
 	return OUT;
 }
 
-Gbuffer FP_gpass(VertexOut IN)
+GBufferOut FP_gpass(VertexOut IN)
 {
-	Gbuffer OUT=(Gbuffer)0;
+	GBufferData OUT=(GBufferData)0;
 
 	half3 detail = 0;
 #if M_DETAIL
@@ -76,12 +76,12 @@ Gbuffer FP_gpass(VertexOut IN)
 #endif
 
 #if M_DIFFUSE
-    OUT.albedo.xyz = tex2D(g_diffuseMap, IN.streamTc.xy).xyz;
+    OUT.diffuse = tex2D(g_diffuseMap, IN.streamTc.xy).xyz;
 #else
-	OUT.albedo.xyz = half3(1, 1, 1);
+	OUT.diffuse = half3(1, 1, 1);
 #endif
-	OUT.albedo.xyz += detail;
-	OUT.albedo.xyz *= IN.color.rgb;
+	OUT.diffuse += detail;
+	OUT.diffuse *= IN.color.rgb;
 
 #if S_DECAL || S_ALPHATEST
 #if M_DIFFUSE
@@ -95,40 +95,27 @@ Gbuffer FP_gpass(VertexOut IN)
 		discard;
 #endif
 
-	half3 N;
-
 #if NO_NORMALMAPPING
-	OUT.normal.xyz = normalize(IN.normal);
+	OUT.normal = normalize(IN.normal);
 #else
-	OUT.normal.xyz = FP_GetNormal(IN.normal, IN.tangent, IN.binormal, IN.streamTc.xy);
+	OUT.normal = FP_GetNormal(IN.normal, IN.tangent, IN.binormal, IN.streamTc.xy);
 #endif
-	OUT.normal.xyz = OUT.normal.xyz * 0.5f + 0.5f;
 
-	OUT.misc.w = g_matShiness;
+	OUT.shiness = g_matShiness;
 
-	half3 spec;
 #if M_SPECULAR
-	spec = tex2D(g_specularMap, IN.streamTc.xy).xyz + detail;
+	OUT.specular = tex2D(g_specularMap, IN.streamTc.xy).xyz + detail;
+#elif M_NORMAL
+	OUT.specular = tex2D(g_normalMap, IN.streamTc.xy).a + detail;
 #else
-#if M_NORMAL
-	spec = tex2D(g_normalMap, IN.streamTc.xy).a + detail;
-#else
-	spec = OUT.albedo.xyz;
+	OUT.specular = OUT.diffuse;
 #endif
-#endif
-	OUT.albedo.w = Rgb2Lum(spec);
 
 #if M_EMISSION
-	OUT.accum.xyz = tex2D(g_emissionMap, IN.streamTc.xy).xyz;
+	OUT.emission = tex2D(g_emissionMap, IN.streamTc.xy).xyz;
 #endif
 
-#if S_DECAL || S_ALPHATEST
-	OUT.accum.a = alpha;
-#else
-	OUT.accum.a = 1;
-#endif
-
-	return OUT;
+	return GB_Output(OUT);
 }
 
 /********* pixel shaders ********/
