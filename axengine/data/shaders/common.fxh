@@ -195,9 +195,9 @@ GBufferOut GB_Output(GBufferData IN)
 {
 	GBufferOut OUT=(GBufferOut)0;
 	OUT.accum.xyz = IN.emission;
-	OUT.normal.xy = IN.normal.xy * 0.5 + 0.5;
+	OUT.normal.xyz = IN.normal.xyz * 0.5 + 0.5;
 	OUT.normal.z = log2(IN.shiness) / 8;
-	OUT.normal.w = sign(IN.normal.z) * 0.5 + 0.5;
+	OUT.normal.w = IN.normal.z >= 0;
 	OUT.albedo.xyz = IN.diffuse;
 	OUT.albedo.w = Rgb2Lum(IN.specular);
 	return OUT;
@@ -214,11 +214,12 @@ DeferredData GB_Input(float4 viewDir, float4 screenTc)
 	half4 gnormal = tex2Dproj(g_rt1, screenTc);
 	half4 galbedo = tex2Dproj(g_rt2, screenTc);
 
-	OUT.normal.xy = gnormal.xy * 2 - 1;
-	OUT.normal.z = sqrt(1 - dot(OUT.normal.xy, OUT.normal.xy)) * (gnormal.w * 2 - 1);
+	OUT.normal.xyz = gnormal.xyz * 2 - 1;
+	OUT.normal.z = sqrt(abs(1 - dot(OUT.normal.xy, OUT.normal.xy))) * (gnormal.w > 0 ? 1 : -1);
 	OUT.diffuse = galbedo.xyz;
 	OUT.specular = galbedo.w;
 	OUT.shiness = exp2(gnormal.z * 8);
+	OUT.shiness = 10;
 	OUT.ssao = 1;
 	return OUT;
 }
