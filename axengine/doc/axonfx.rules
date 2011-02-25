@@ -7,7 +7,7 @@
 		<CustomBuildRule
 			Name="build-axon-fx"
 			DisplayName="Axon Effect files"
-			CommandLine="rem cgc.exe -DNOT_IN_ENGINE=1 -DG_OPENGL=1 -po EXT_gpu_shader4,version=150 [VPENTRY] [VPPROFILE] &quot;$(InputPath)&quot;&#x0D;&#x0A;rem cgc.exe -DNOT_IN_ENGINE=1 -DG_OPENGL=1 -po EXT_gpu_shader4,version=150 [FPENTRY] [FPPROFILE] &quot;$(InputPath)&quot;&#x0D;&#x0A;fxc.exe /Gec /DNOT_IN_ENGINE=1 /DG_D3D=1 /I$(InputDir) /T fx_2_0 &quot;$(InputPath)&quot;&#x0D;&#x0A;fxc.exe /Gec /DNOT_IN_ENGINE=1 /DG_D3D=1 /DG_DX11=1 /I$(InputDir) /T fx_5_0 &quot;$(InputPath)&quot;"
+			CommandLine="rem cgc.exe -DNOT_IN_ENGINE=1 -DG_OPENGL=1 -po EXT_gpu_shader4,version=150 [VPENTRY] [VPPROFILE] &quot;$(InputPath)&quot;&#x0D;&#x0A;rem cgc.exe -DNOT_IN_ENGINE=1 -DG_OPENGL=1 -po EXT_gpu_shader4,version=150 [FPENTRY] [FPPROFILE] &quot;$(InputPath)&quot;&#x0D;&#x0A;axfxdump -DNOT_IN_ENGINE=1 -DG_OPENGL=1 &quot;$(InputPath)&quot;&#x0D;&#x0A;fxc.exe /Gec /DNOT_IN_ENGINE=1 /DG_D3D=1 /I$(InputDir) /T fx_2_0 &quot;$(InputPath)&quot;&#x0D;&#x0A;fxc.exe /Gec /DNOT_IN_ENGINE=1 /DG_D3D=1 /DG_DX11=1 /I$(InputDir) /T fx_5_0 &quot;$(InputPath)&quot;"
 			Outputs="$(InputName).vp"
 			AdditionalDependencies="*.fxh"
 			FileExtensions="*.fx"

@@ -341,10 +341,6 @@
 			Name="shaders"
 			>
 			<File
-				RelativePath=".\shaders\_alluniforms.fx"
-				>
-			</File>
-			<File
 				RelativePath=".\shaders\_debug.fx"
 				>
 			</File>
@@ -457,10 +453,6 @@
 				Name="include"
 				>
 				<File
-					RelativePath=".\shaders\affectorinc.fxh"
-					>
-				</File>
-				<File
 					RelativePath=".\shaders\common.fxh"
 					>
 				</File>
@@ -469,15 +461,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\shaders\fog.fxh"
-					>
-				</File>
-				<File
 					RelativePath=".\shaders\fragment.fxh"
-					>
-				</File>
-				<File
-					RelativePath=".\shaders\glow.fxh"
 					>
 				</File>
 				<File
@@ -501,15 +485,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\shaders\shadowgen.fxh"
-					>
-				</File>
-				<File
 					RelativePath=".\shaders\shared.fxh"
-					>
-				</File>
-				<File
-					RelativePath=".\shaders\sky.fxh"
 					>
 				</File>
 				<File
@@ -521,15 +497,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\shaders\vertexdeform.fxh"
-					>
-				</File>
-				<File
 					RelativePath=".\shaders\wind.fxh"
-					>
-				</File>
-				<File
-					RelativePath=".\shaders\zpass.fxh"
 					>
 				</File>
 			</Filter>

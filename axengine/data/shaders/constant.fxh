@@ -34,16 +34,6 @@ read the license and understand and accept it fully.
 #define LOOP
 #endif
 
-#if G_D3D
-//#define AX_UNIFORM(shadertype, axtype, name, vsreg, psreg) shadertype name : register(vs, c##vsreg) : register(ps, c##psreg);
-//#define AX_ARRAY_UNIFORM(shadertype, axtype, name, num, vsreg, psreg) shadertype name[num] : register(vs, c##vsreg) : register(ps, c##psreg);
-#define AX_TEXTURE_UNIFORM(shadertype, name) texture name##_tex; shadertype name = sampler_state { Texture = <name##_tex>; };
-#else
-//#define AX_UNIFORM(shadertype, axtype, name, vsreg, psreg) shadertype name : register(vs, c##vsreg) : register(ps, c##psreg);
-//#define AX_ARRAY_UNIFORM(shadertype, axtype, name, num, vsreg, psreg) shadertype name[num] : register(vs, c##vsreg) : register(ps, c##psreg);
-#define AX_TEXTURE_UNIFORM(shadertype, name) texture name##_tex; shadertype name = sampler_state { Texture = <name##_tex>; };
-#endif
-
 #include "sceneconst.fxh"
 #include "interactionconst.fxh"
 
