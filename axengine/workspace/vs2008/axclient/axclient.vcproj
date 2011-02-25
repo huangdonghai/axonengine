@@ -189,7 +189,7 @@
 			</Filter>
 		</Filter>
 		<Filter
-			Name="opengl"
+			Name="old_gl"
 			>
 			<File
 				RelativePath="..\..\..\src\axclient\opengl\gldriver.cpp"
@@ -1148,7 +1148,7 @@
 			</Filter>
 		</Filter>
 		<Filter
-			Name="dx9_old"
+			Name="old_dx9"
 			>
 			<File
 				RelativePath="..\..\..\src\axclient\direct3d9\d3d9draw.cpp"
@@ -1640,6 +1640,58 @@
 			</File>
 			<File
 				RelativePath="..\..\..\src\axclient\dx11\dx11_window.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="gl"
+			>
+			<File
+				RelativePath="..\..\..\src\axclient\gl\gl_api.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\axclient\gl\gl_api.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\axclient\gl\gl_driver.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\axclient\gl\gl_driver.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\axclient\gl\gl_private.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\axclient\gl\gl_private.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\axclient\gl\gl_shader.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\axclient\gl\gl_shader.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\axclient\gl\gl_state.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\axclient\gl\gl_state.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\axclient\gl\gl_window.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\axclient\gl\gl_window.h"
 				>
 			</File>
 		</Filter>

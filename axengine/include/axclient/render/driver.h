@@ -68,7 +68,7 @@ class IRenderDriver
 public:
 	// device
 	virtual ~IRenderDriver() {}
-	virtual void initialize(SyncEvent &syncEvent) = 0;
+	virtual bool initialize() = 0;
 	virtual void finalize() = 0;
 
 	virtual const ShaderInfo *findShaderInfo(const FixedString &key) = 0;

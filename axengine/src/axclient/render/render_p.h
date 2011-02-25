@@ -16,6 +16,13 @@
 
 AX_BEGIN_NAMESPACE
 
+bool dx9_initialize();
+void dx9_finalize();
+bool dx11_initialize();
+void dx11_finalize();
+bool gl_initialize();
+void gl_finalize();
+
 extern RenderFrame *g_renderFrame;
 extern GlobalMacro g_globalMacro;
 extern ConstBuffers g_constBuffers;

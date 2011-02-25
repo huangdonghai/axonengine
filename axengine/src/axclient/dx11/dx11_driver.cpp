@@ -83,12 +83,15 @@ DX11_Driver::~DX11_Driver()
 {
 }
 
-void DX11_Driver::initialize(SyncEvent &syncEvent)
+bool DX11_Driver::initialize()
 {
-	dynlinkLoadD3D11API();
+	if (!dynlinkLoadD3D11API())
+		return false;
 
 	D3D_FEATURE_LEVEL featureLevel;
 	HRESULT hr = dx11_D3D11CreateDevice(0, D3D_DRIVER_TYPE_HARDWARE, 0, D3D11_CREATE_DEVICE_SINGLETHREADED|D3D11_CREATE_DEVICE_BGRA_SUPPORT, 0, 0, D3D11_SDK_VERSION, &g_device, &featureLevel, &g_context);
+
+	if (FAILED(hr)) return false;
 
 	IDXGIDevice * pDXGIDevice;
 	hr = g_device->QueryInterface(__uuidof(IDXGIDevice), (void **)&pDXGIDevice);
@@ -137,6 +140,8 @@ void DX11_Driver::initialize(SyncEvent &syncEvent)
 	g_globalMacro.setMacro(GlobalMacro::G_DX11);
 	g_shaderManager = new DX11_ShaderManager;
 	g_stateManager = new DX11_StateManager;
+
+	return true;
 }
 
 void DX11_Driver::finalize()

@@ -56,11 +56,10 @@ void RenderSystem::initialize()
 		drivername = d3d9name;
 	}
 
-	drivername = d3d11name;
+	drivername = glname;
 
-	SyncEvent syncEvent;
 	g_renderDriver = (IRenderDriver*)(g_classFactory->createInstance(drivername));
-	g_renderDriver->initialize(syncEvent);
+	g_renderDriver->initialize();
 
 	g_apiWrap = new ApiWrap();
 	g_renderContext = new RenderContext();

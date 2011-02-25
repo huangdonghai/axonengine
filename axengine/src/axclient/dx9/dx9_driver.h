@@ -23,7 +23,7 @@ public:
 	virtual ~DX9_Driver();
 
 	// implement IRenderDriver
-	virtual void initialize(SyncEvent &syncEvent);
+	virtual bool initialize();
 	virtual void finalize();
 
 	virtual const ShaderInfo *findShaderInfo(const FixedString &key);
@@ -43,8 +43,6 @@ protected:
 	void createVertexDecl();
 
 private:
-	bool m_initialized;
-
 	Size m_depthStencilSurfaceSize;
 	IDirect3DSurface9 *m_depthStencilSurface;
 	Size m_nullSurfaceSize;

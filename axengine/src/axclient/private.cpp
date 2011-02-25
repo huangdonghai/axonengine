@@ -61,7 +61,7 @@ void axClientInit()
 #endif
 
 #if 1 // _LIB
-//	AX_REGISTER_MODULE(AxGL);
+	AX_REGISTER_MODULE(AxGL);
 	AX_REGISTER_MODULE(AxDX9);
 	AX_REGISTER_MODULE(AxDX11);
 #endif

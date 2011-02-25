@@ -12,41 +12,6 @@ read the license and understand and accept it fully.
 #include "workbench.h"
 #include "application.h"
 
-void testArgs()
-{
-	Uuid uuid;
-	Uuid uuid1 = Uuid::generateUuid();
-	Uuid uuid2 = Uuid::generateUuid();
-
-	FixedUuid fu = uuid1;
-	FixedUuid fu2 = uuid2;
-
-	Uuid u1 = fu;
-	Uuid u2 = fu2;
-
-	fu = Uuid::generateUuid();
-
-	SyncMutex mutex;
-	CRITICAL_SECTION cs;
-	InitializeCriticalSection(&cs);
-
-	double start = OsUtil::seconds();
-	double d = 0;
-	for (int i = 0; i < 10000000; i++) {
-		d += i;
-	}
-	double end = OsUtil::seconds();
-
-	DeleteCriticalSection(&cs);
-
-	Printf("\n%f, %f\n", end - start, d);
-	Variant v1(1);
-	v1 = 3;
-	v1 = Vector3(0,1,2);
-	int result;
-	bool v = g_renderSystem->invokeMethodRt("testArgs", result, 1.0f, true, Vector3(0,1,2), Color3(1,1,1), Rect(0,0,640,480));
-}
-
 /**
   Change our current directory to be the same as the directory containing the .exe.
   Visual C++ starts us in the project directory by default, and the config file
@@ -128,13 +93,11 @@ int main(int argc, char *argv[])
 	splash->showMessage(QObject::tr("Initializing axEditor module..."), align, Qt::black);
 	axEditorInit();
 
-	testArgs();
-	profileHash();
+	//profileHash();
 
 	splash->showMessage(QObject::tr("Initializing axEditor..."), align, Qt::black);
 
     g_workbench = new Workbench();
-	//ParticleEditor *editor = new ParticleEditor();
     bool v = g_app->connect(g_app, SIGNAL(lastWindowClosed()), g_app, SLOT(quit()));
 	AX_ASSERT(v);
 	v = g_app->connect(g_app, SIGNAL(aboutToQuit()), g_app, SLOT(myQuit()));
@@ -151,7 +114,6 @@ int main(int argc, char *argv[])
 	g_system->removeTickable(System::TickEvent, g_app);
 #endif
 	SafeDelete(g_workbench);
-	//SafeDelete(editor);
 
 	axEditorQuit();
 	axLogicQuit();

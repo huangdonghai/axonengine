@@ -20,7 +20,7 @@ public:
 	virtual ~DX11_Driver();
 
 	// implement IRenderDriver
-	virtual void initialize(SyncEvent &syncEvent);
+	virtual bool initialize();
 	virtual void finalize();
 
 	virtual const ShaderInfo *findShaderInfo(const FixedString &key);

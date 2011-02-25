@@ -21,7 +21,6 @@ AX_END_COMMAND_MAP()
 
 DX9_Driver::DX9_Driver()
 {
-	m_initialized = false;
 	m_depthStencilSurfaceSize.set(-1,-1);
 	m_nullSurfaceSize.set(-1,-1);
 	m_depthStencilSurface = 0;
@@ -31,11 +30,8 @@ DX9_Driver::DX9_Driver()
 DX9_Driver::~DX9_Driver()
 {}
 
-void DX9_Driver::initialize(SyncEvent &syncEvent)
+bool DX9_Driver::initialize()
 {
-	if (m_initialized)
-		return;
-
 	g_renderDriver = this;
 	dx9_driver = this;
 
@@ -54,15 +50,15 @@ void DX9_Driver::initialize(SyncEvent &syncEvent)
 	dx9_api = Direct3DCreate9(D3D_SDK_VERSION);
 
 	if (!dx9_api) {
-		Errorf("D3D9Driver::initialize: Direct3DCreate9 error\nMaybe you should install DirectX 9 or later version runtime");
-		return;
+		Errorf("DX9_Driver::initialize: Direct3DCreate9 error\nMaybe you should install DirectX 9 or later version runtime");
+		return false;
 	}
 
 	D3DCAPS9 caps;
 
 	HRESULT hr = dx9_api->GetDeviceCaps(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, &caps);
 	if (FAILED(hr)) {
-		Errorf("D3D9Driver::initialize: GetDeviceCaps failed %s", DX9_ErrorString(hr));
+		Errorf("DX9_Driver::initialize: GetDeviceCaps failed %s", DX9_ErrorString(hr));
 	}
 
 	g_renderDriverInfo.maxTextureSize = std::min(caps.MaxTextureWidth, caps.MaxTextureHeight);
@@ -112,8 +108,7 @@ void DX9_Driver::initialize(SyncEvent &syncEvent)
 	dx9InitState();
 
 	Printf("ok\n");
-
-	syncEvent.setEvent();
+	return true;
 }
 
 void DX9_Driver::finalize()
