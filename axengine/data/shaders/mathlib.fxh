@@ -218,6 +218,8 @@ float4 Clip2Screen(float4 p)
 {
 #if G_OPENGL
 	return float4((p.xyz + p.w) * 0.5, p.w);
+#elif G_DX11
+	return float4(float2(p.x + p.w, p.w - p.y) * 0.5, p.zw);
 #else
 	return float4((float2(p.x + p.w, p.w - p.y) + g_sceneSize.zw * p.w) * 0.5, p.zw);
 #endif

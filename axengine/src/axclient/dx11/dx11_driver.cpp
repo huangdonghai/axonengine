@@ -102,7 +102,7 @@ bool DX11_Driver::initialize()
 	pDXGIAdapter->GetParent(__uuidof(IDXGIFactory), (void **)&dxgi_factory);
 
 	// initialized driver info
-	g_renderDriverInfo.driverType = RenderDriverInfo::D3D11;
+	g_renderDriverInfo.driverType = RenderDriverInfo::DX11;
 	g_renderDriverInfo.vendor = "unknown";
 	g_renderDriverInfo.renderer = "unknown";
 	g_renderDriverInfo.version = "unknown";

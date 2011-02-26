@@ -52,11 +52,14 @@ void RenderSystem::initialize()
 
 	if (rd == "gl") {
 		drivername = glname;
-	} else if (rd == "d3d9") {
+	} else if (rd == "dx9") {
 		drivername = d3d9name;
+	} else if (rd == "dx11") {
+		drivername = d3d11name;
+	} else {
+		drivername = d3d11name;
 	}
 
-	drivername = d3d11name;
 
 	g_renderDriver = (IRenderDriver*)(g_classFactory->createInstance(drivername));
 	g_renderDriver->initialize();

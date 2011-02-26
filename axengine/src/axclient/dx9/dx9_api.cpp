@@ -592,10 +592,10 @@ static void dx9SetTargetSet(phandle_t targetSet[RenderTargetSet::MaxTarget], int
 	}
 }
 
-static void dx9SetViewport(const Rect &rect, const Vector2 & depthRange)
+static void dx9SetViewport(const Rect &rect, const Vector2 &depthRange)
 {
 	D3DVIEWPORT9 d3dviewport;
-#if 1
+
 	d3dviewport.X = rect.x;
 	if (rect.y < 0)
 		d3dviewport.Y = s_curRenderTargetSize.height + rect.y - rect.height;
@@ -604,10 +604,7 @@ static void dx9SetViewport(const Rect &rect, const Vector2 & depthRange)
 
 	d3dviewport.Width = rect.width;
 	d3dviewport.Height = rect.height;
-#else
-	d3dviewport.X = d3dviewport.Y = 0;
-	d3dviewport.Width = d3dviewport.Height = 512;
-#endif
+
 	d3dviewport.MinZ = depthRange.x;
 	d3dviewport.MaxZ = depthRange.y;
 

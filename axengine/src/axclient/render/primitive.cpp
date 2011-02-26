@@ -1300,7 +1300,7 @@ void TextPrim::draw( Technique tech )
 	} else {
 		tq.s_vector = Vector3(1, 0, 0);
 		tq.t_vector = Vector3(0, 1, 0);
-		tq.origin = Vector3(m_rect.x+0.5f, m_rect.y+0.5f, 0);
+		tq.origin = Vector3(m_rect.x, m_rect.y, 0);
 		tq.width = m_rect.width;
 		tq.height = m_rect.height;
 	}

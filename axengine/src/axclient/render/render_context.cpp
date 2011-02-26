@@ -360,18 +360,16 @@ void RenderContext::drawScene_Noworld(RenderScene *scene, const RenderClearer &c
 
 	setupScene(scene, &clearer, 0);
 
-	for (int i = 0; i < scene->numInteractions; i++) {
+	for (int i = 0; i < scene->numInteractions; i++)
 		drawInteraction(scene->interactions[i]);
-	}
 
-	for (int i = 0; i < scene->numDebugInteractions; i++) {
+	for (int i = 0; i < scene->numDebugInteractions; i++)
 		drawInteraction(scene->debugInteractions[i]);
-	}
 
 	double start = OsUtil::seconds();
-	for (int i = 0; i < scene->numPrimitives; i++) {
+	for (int i = 0; i < scene->numPrimitives; i++)
 		drawPrimitive(scene->primtives[i]);
-	}
+
 	double end = OsUtil::seconds();
 
 	//	unsetScene(scene, nullptr, scene->target);
@@ -402,18 +400,16 @@ void RenderContext::drawPass_GeoFill(RenderScene *scene)
 	m_targetSet.m_colorTargets[3] = m_curWindow->m_rt3->slice(0);
 	setupScene(scene, &clearer, 0);
 
-	for (int i = 0; i < scene->numInteractions; i++) {
+	for (int i = 0; i < scene->numInteractions; i++)
 		drawInteraction(scene->interactions[i]);
-	}
 
 	issueVisQueries();
 }
 
 void RenderContext::drawPass_Overlay(RenderScene *scene)
 {
-	if (!scene->numOverlayPrimitives) {
+	if (!scene->numOverlayPrimitives)
 		return;
-	}
 
 	// draw overlay
 	RenderCamera camera = scene->camera;
@@ -424,9 +420,8 @@ void RenderContext::drawPass_Overlay(RenderScene *scene)
 
 	setupScene(scene, 0, &camera);
 
-	for (int i = 0; i < scene->numOverlayPrimitives; i++) {
+	for (int i = 0; i < scene->numOverlayPrimitives; i++)
 		drawPrimitive(scene->overlayPrimitives[i]);
-	}
 
 	//	unsetScene(scene, nullptr, nullptr, &camera);
 }
@@ -659,10 +654,10 @@ static Matrix4 GetConvertMatrix(const Size &windowSize)
 	Matrix4 mat;
 	mat.setIdentity();
 
-	if (g_renderDriverInfo.driverType == RenderDriverInfo::D3D9) {
+	if (g_renderDriverInfo.driverType == RenderDriverInfo::DX9) {
 		mat.scale(1, 1, 0.5);
-		mat.translate(-0.5/windowSize.width, -0.5/windowSize.height, 0.5);
-	} else if (g_renderDriverInfo.driverType == RenderDriverInfo::D3D11) {
+		mat.translate(-1.0/windowSize.width, 1.0/windowSize.height, 0.5);
+	} else if (g_renderDriverInfo.driverType == RenderDriverInfo::DX11) {
 		mat.scale(1, 1, 0.5);
 		mat.translate(0, 0, 0.5);
 	}

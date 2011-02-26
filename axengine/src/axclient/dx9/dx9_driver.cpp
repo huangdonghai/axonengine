@@ -40,7 +40,7 @@ bool DX9_Driver::initialize()
 	Printf("..Initializing DX9_Driver...\n");
 
 	dx9_internalWindow = new DX9_Window();
-	g_renderDriverInfo.driverType = RenderDriverInfo::D3D9;
+	g_renderDriverInfo.driverType = RenderDriverInfo::DX9;
 	g_renderDriverInfo.vendor = "unknown";
 	g_renderDriverInfo.renderer = "unknown";
 	g_renderDriverInfo.version = "unknown";

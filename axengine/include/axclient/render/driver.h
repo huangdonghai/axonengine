@@ -23,8 +23,7 @@ typedef std::vector<HitRecord> HitRecords;
 
 struct RenderDriverInfo {
 	enum DriverType {
-		OpenGL, D3D9, D3D11,
-		UNKNOWN
+		OpenGL, DX9, DX11,
 	};
 
 	enum SuggestedFormat {
@@ -40,6 +39,11 @@ struct RenderDriverInfo {
 	};
 
 	DriverType driverType;	// opengl, d3d etc...
+
+	inline bool isOpenGL() const { return driverType == OpenGL; }
+	inline bool isDX9() const { return driverType == DX9; }
+	inline bool isDX11() const { return driverType == DX11; }
+	inline bool isDX() const { return !isOpenGL(); }
 
 	// for opengl
 	std::string vendor;

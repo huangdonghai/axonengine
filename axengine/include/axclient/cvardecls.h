@@ -95,6 +95,6 @@ AX_CVARDECL(r_grass, "1", Cvar::Cheat);
 AX_CVARDECL(r_grassDistance, "35", Cvar::Cheat);
 //AX_CVARDECL(r_grassAdjust, "10", Cvar::Cheat);
 
-AX_CVARDECL(r_driver, "d3d9", Cvar::Latch | Cvar::Archive);
+AX_CVARDECL(r_driver, "dx11", Cvar::Latch | Cvar::Archive);
 
 AX_CVARDECL(r_msaa, "0", Cvar::Latch | Cvar::Archive);
