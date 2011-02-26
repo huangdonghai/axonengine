@@ -441,12 +441,24 @@ static void dx9DeleteWindowTarget(phandle_t h)
 	delete h;
 }
 
-static void dx9CreateQuery(phandle_t &h)
+static std::list<IDirect3DQuery9 *> s_freeQueries;
+
+static IDirect3DQuery9 *dx9AllocQuery()
 {
 	IDirect3DQuery9 *query = 0;
+	if (!s_freeQueries.empty()) {
+		query = s_freeQueries.front();
+		s_freeQueries.pop_front();
+		return query;
+	}
+
 	V(dx9_device->CreateQuery(D3DQUERYTYPE_OCCLUSION, &query));
-	DX9_Resource *resource = new DX9_Resource(DX9_Resource::kOcclusionQuery, query);
-	*h = resource;
+	return query;
+}
+
+static void dx9FreeQuery(IDirect3DQuery9 *query)
+{
+	s_freeQueries.push_front(query);
 }
 
 static void dx9SetShader(const FixedString &name, const GlobalMacro &gm, const MaterialMacro &mm, Technique tech);
@@ -491,29 +503,26 @@ static void dx9IssueQueries(int n, Query *queries[])
 	setupBoundingBoxIndices();
 	for (int i = 0; i < n; i++) {
 		Query *query = queries[i];
-		DX9_Resource *resource = query->m_handle->castTo<DX9_Resource *>();
+		AX_ASSERT(!query->m_handle); // make sure not in querying
+
+		IDirect3DQuery9 *d3dquery = dx9AllocQuery();
+
+		query->m_handle = d3dquery;
+
 		// setup vertice
 		setupBoundingBoxVertices(queries[i]->m_bbox);
 
-		V(resource->m_query->Issue(D3DISSUE_BEGIN));
+		V(d3dquery->Issue(D3DISSUE_BEGIN));
 		// draw
 		V(dx9_device->DrawIndexedPrimitiveUP(D3DPT_TRIANGLELIST, 0, 8, 12, s_curIndiceBufferUP, D3DFMT_INDEX16, s_curVerticeBufferUP, sizeof(ChunkVertex)));
 
-		V(resource->m_query->Issue(D3DISSUE_END));
+		V(d3dquery->Issue(D3DISSUE_END));
 
 		s_activeQueries.push_back(query);
 	}
 
 	s_curShader->endPass();
 	s_curShader->end();
-}
-
-static void dx9DeleteQuery(phandle_t h)
-{
-	DX9_Resource *resource = h->castTo<DX9_Resource *>();
-	AX_ASSERT(resource->m_type == DX9_Resource::kOcclusionQuery);
-	delete resource;
-	delete h;
 }
 
 static void dx9BeginPix(const char *pixname)
@@ -800,13 +809,14 @@ static void dx9CheckQueryResult()
 
 	while (it != s_activeQueries.end()) {
 		Query *query = *it;
-		DX9_Resource *resource = query->m_handle->castTo<DX9_Resource *>();
-
+		IDirect3DQuery9 *d3dquery = query->m_handle.castTo<IDirect3DQuery9 *>();
 		DWORD numberOfPixelsDrawn;
-		HRESULT hr = resource->m_query->GetData(&numberOfPixelsDrawn, sizeof(numberOfPixelsDrawn), 0);
+		HRESULT hr = d3dquery->GetData(&numberOfPixelsDrawn, sizeof(numberOfPixelsDrawn), 0);
 
 		if (hr == S_OK) {
 			it = s_activeQueries.erase(it);
+			dx9FreeQuery(d3dquery);
+			query->m_handle = 0;
 			query->m_result = numberOfPixelsDrawn;
 			continue;
 		}
@@ -848,9 +858,7 @@ void dx9AssignRenderApi()
 	RenderApi::updateWindowTarget = &dx9UpdateWindowTarget;
 	RenderApi::deleteWindowTarget = &dx9DeleteWindowTarget;
 
-	RenderApi::createQuery = &dx9CreateQuery;
 	RenderApi::issueQueries = &dx9IssueQueries;
-	RenderApi::deleteQuery = &dx9DeleteQuery;
 
 	RenderApi::beginPerfEvent = &dx9BeginPix;
 	RenderApi::endPerfEvent = &dx9EndPix;

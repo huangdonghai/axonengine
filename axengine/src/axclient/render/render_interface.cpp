@@ -20,9 +20,7 @@ void (*RenderApi::createWindowTarget)(phandle_t h, Handle hwnd, int width, int h
 void (*RenderApi::updateWindowTarget)(phandle_t h, Handle newHwnd, int width, int height);
 void (*RenderApi::deleteWindowTarget)(phandle_t h);
 
-void (*RenderApi::createQuery)(phandle_t &h);
 void (*RenderApi::issueQueries)(int n, Query *queries[]);
-void (*RenderApi::deleteQuery)(phandle_t h);
 
 void (*RenderApi::beginPerfEvent)(const char *pixname);
 void (*RenderApi::endPerfEvent)();
@@ -519,16 +517,6 @@ void ApiWrap::clear(const RenderClearer &clearer)
 #endif
 }
 
-void ApiWrap::createQuery(phandle_t &h)
-{
-	h = newHandle();
-#if AX_MTRENDER
-	AllocCommand_(RenderApi::createQuery).args(h);
-#else
-	RenderApi::createQuery(h);
-#endif
-}
-
 void ApiWrap::issueQueries(int n, Query *queries[])
 {
 #if AX_MTRENDER
@@ -538,11 +526,6 @@ void ApiWrap::issueQueries(int n, Query *queries[])
 #else
 	RenderApi::issueQueries(n, queries);
 #endif
-}
-
-void ApiWrap::deleteQuery(phandle_t h)
-{
-	addObjectDeletion(RenderApi::deleteQuery, h);
 }
 
 void ApiWrap::beginPerfEvent(const char *pixname)

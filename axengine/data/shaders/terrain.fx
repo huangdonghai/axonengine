@@ -11,15 +11,6 @@ read the license and understand and accept it fully.
 #include "fog.fxh"
 #include "light.fxh"
 
-float Script : STANDARDSGLOBAL <
-	// technique
-	string TechniqueGeoFill = "gpass";
-	string TechniqueShadowGen = "shadowGen";
-	string TechniqueMain = "main";
-	string TechniqueGlow = "";
-	string TechniqueLayer = "layer";
-> = 0.8;
-
 #define S_VERTICAL_PROJECTION	M_FEATURE0
 #define S_VERTICAL_PROJECTION1	M_FEATURE1
 #define S_VERTICAL_PROJECTION2	M_FEATURE2
@@ -77,25 +68,6 @@ struct TerrainGpassOut {
 	float4 screenTc	: TEXCOORD0;
 	float2 zoneTc	: TEXCOORD1;
 };
-
-//------------------------------------------------------------------------------
-
-TerrainVertexOut VP_main(TerrainVertexIn IN)
-{
-	TerrainVertexOut OUT = (TerrainVertexOut)0;
-
-	OUT.zoneTC.xy = (IN.position.xy - g_zoneRect.xy) / g_zoneRect.zw;
-
-	OUT.eyevec = g_cameraPos.xyz - IN.position;
-
-	OUT.hpos = VP_worldToClip(IN.position);
-
-	OUT.screenTc = Clip2Screen(OUT.hpos);
-
-	OUT.fog = IN.position.z;
-
-	return OUT;
-}
 
 //------------------------------------------------------------------------------
 
@@ -241,7 +213,7 @@ GBufferOut FP_layer(LayerVertexOut IN)
 // TECHNIQUES
 //------------------------------------------------------------------------------
 
-technique gpass
+technique GeoFill
 {
 	pass p0 {
 		VertexShader = compile VS_3_0 VP_layer();
@@ -249,7 +221,7 @@ technique gpass
 	}
 }
 
-technique shadowGen
+technique ShadowGen
 {
 	pass p0 {
 		VertexShader = compile VS_3_0 VP_zpass();
@@ -258,7 +230,7 @@ technique shadowGen
 }
 
 
-technique main
+technique Main
 {
 	pass p0 {
 		VertexShader = compile VS_3_0 VP_layer();
@@ -266,12 +238,3 @@ technique main
 	}
 }
 
-technique layer
-{
-	pass p0 {
-		VertexShader = compile VS_3_0 VP_layer();
-		PixelShader = compile PS_3_0 FP_layer();
-	}
-}
-
-/***************************** eof ***/

@@ -10,18 +10,8 @@ read the license and understand and accept it fully.
 
 #include "common.fxh"
 
-float Script : STANDARDSGLOBAL <
-	// technique
-	string TechniqueGeoFill = "";
-	string TechniqueShadowGen = "";
-	string TechniqueMain = "main";
-	string TechniqueGlow = "";
-	string TechniqueLayer = "";
-> = 0.8;
-
-/*********** Generic Vertex Shader ******/
-
-VertexOut VP_main(MeshVertex IN) {
+VertexOut VP_main(MeshVertex IN)
+{
     VertexOut OUT = (VertexOut)0;
 
 	OUT.worldPos = VP_modelToWorld(IN, IN.position);
@@ -32,26 +22,15 @@ VertexOut VP_main(MeshVertex IN) {
     return OUT;
 }
 
-/********* pixel shaders ********/
-half4 FP_main(VertexOut IN) : COLOR {
+half4 FP_main(VertexOut IN) : COLOR
+{
 	return FP_GetDiffuse(IN);
 }
 
-//////////////////////////////////////////////////////////////////////
-// TECHNIQUES ////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////
-
-
-technique main {
+technique Main {
     pass p0 {
         VertexShader = compile VS_3_0 VP_main();
 		PixelShader = compile PS_3_0 FP_main();
-#if 0
-	    DEPTHTEST = true;
-		DEPTHMASK = false;
-		CULL_NONE;
-		BLEND_BLEND;
-#endif
     }
 }
 

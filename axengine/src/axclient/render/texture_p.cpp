@@ -20,7 +20,7 @@ TextureResource::TextureResource(const FixedString &key, InitFlags flags)
 
 	std::string filename = key.toString() + ".dds";
 
-	m_ioRequest = new IoRequest(this, filename);
+	m_ioRequest = new IoRequest(filename, this);
 	if (1 || m_initFlags.isSet(Texture::Dynamic)) {
 		// dynamic texture need sync upload
 		g_fileSystem->syncRead(m_ioRequest);

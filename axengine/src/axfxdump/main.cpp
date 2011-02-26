@@ -136,7 +136,7 @@ int main(int argc, char **argv)
 
 	if (error != CG_NO_ERROR) {
 		if (error == CG_COMPILER_ERROR) {
-			printf("Error: %s\n\n" "Cg compiler output...\n%s", string, cgGetLastListing(cgcontext));
+			printf("%s:\n%s", string, cgGetLastListing(cgcontext));
 		} else {
 			printf("Cg Error: %s", string);
 		}

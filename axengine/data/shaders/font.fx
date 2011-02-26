@@ -10,16 +10,6 @@ read the license and understand and accept it fully.
 
 #include "common.fxh"
 
-float Script : STANDARDSGLOBAL
-<
-	// technique
-	string TechniqueGeoFill = "";
-	string TechniqueShadowGen = "";
-	string TechniqueMain = "main";
-	string TechniqueGlow = "";
-	string TechniqueLayer = "";
-> = 0.8;
-
 static const float	c_UvScale = 1.0 / 512.0;
 static const float2 c_SampleOffset[13] = {
 																		float2(0.0, -2.0 * c_UvScale),
@@ -92,27 +82,16 @@ half4 FP_blur(VertexOut IN) : COLOR
 //////////////////////////////////////////////////////////////////////
 
 
-technique main {
+technique Main {
 #if 0
 	pass p0 {
 		VertexShader = compile VS_3_0 VP_main();
 		PixelShader = compile PS_3_0 FP_blur();
-
-		DEPTHTEST = false;
-		DEPTHMASK = false;
-		CULL_NONE;
-		BLEND_BLEND;
 	}
 #endif
     pass p1 {
         VertexShader = compile VS_3_0 VP_main();
 		PixelShader = compile PS_3_0 FP_main();
-#if 0
-	    DEPTHTEST = false;
-		DEPTHMASK = false;
-		CULL_NONE;
-		BLEND_BLEND;
-#endif
     }
 }
 

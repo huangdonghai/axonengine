@@ -11,22 +11,6 @@ read the license and understand and accept it fully.
 #include "common.fxh"
 #include "light.fxh"
 
-float Script : STANDARDSGLOBAL <
-	// features
-	string	Features =	"F_GLOBAL_SPECULAR:Global Specular:Specular for global light(sun or moon)|"
-	"F_TEST2:Test2:just for test";
-
-	// macro parameters
-	string	MacroParameters = "P_TEST|P_TEST2";
-
-	// technique
-	string	TechniqueGeoFill = "";
-	string	TechniqueShadowGen = "";
-	string	TechniqueMain = "main";
-	string	TechniqueGlow = "";
-	string	TechniqueLayer = "";
-> = 0.8;
-
 float FresnelBias <
 	string UIHelp = "Make specular and reflection more visible  \nMin value = 0 (only visible at sharp angles) \nMax value = 1 (always visible) \nCorrect name - FresnelBias";
 	string UIName = "Specular/Reflection visibility";  
@@ -251,12 +235,7 @@ half4 FP_main(VertexOut IN) : COLOR {
 	return c;
 }
 
-//////////////////////////////////////////////////////////////////////
-// TECHNIQUES ////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////
-
-
-technique main {
+technique Main {
 	pass p0 {
 		VertexShader = compile VS_3_0 VP_main();
 		PixelShader = compile PS_3_0 FP_main();
@@ -270,4 +249,3 @@ technique main {
 	}
 }
 
-/***************************** eof ***/

@@ -89,17 +89,17 @@ bool DX11_Driver::initialize()
 		return false;
 
 	D3D_FEATURE_LEVEL featureLevel;
-	HRESULT hr = dx11_D3D11CreateDevice(0, D3D_DRIVER_TYPE_HARDWARE, 0, D3D11_CREATE_DEVICE_SINGLETHREADED|D3D11_CREATE_DEVICE_BGRA_SUPPORT, 0, 0, D3D11_SDK_VERSION, &g_device, &featureLevel, &g_context);
+	HRESULT hr = dx11_D3D11CreateDevice(0, D3D_DRIVER_TYPE_HARDWARE, 0, D3D11_CREATE_DEVICE_SINGLETHREADED|D3D11_CREATE_DEVICE_BGRA_SUPPORT, 0, 0, D3D11_SDK_VERSION, &dx11_device, &featureLevel, &dx11_context);
 
 	if (FAILED(hr)) return false;
 
 	IDXGIDevice * pDXGIDevice;
-	hr = g_device->QueryInterface(__uuidof(IDXGIDevice), (void **)&pDXGIDevice);
+	hr = dx11_device->QueryInterface(__uuidof(IDXGIDevice), (void **)&pDXGIDevice);
 
 	IDXGIAdapter * pDXGIAdapter;
 	hr = pDXGIDevice->GetParent(__uuidof(IDXGIAdapter), (void **)&pDXGIAdapter);
 
-	pDXGIAdapter->GetParent(__uuidof(IDXGIFactory), (void **)&g_dxgiFactory);
+	pDXGIAdapter->GetParent(__uuidof(IDXGIFactory), (void **)&dxgi_factory);
 
 	// initialized driver info
 	g_renderDriverInfo.driverType = RenderDriverInfo::D3D11;
@@ -138,8 +138,8 @@ bool DX11_Driver::initialize()
 
 	g_globalMacro.setMacro(GlobalMacro::G_D3D);
 	g_globalMacro.setMacro(GlobalMacro::G_DX11);
-	g_shaderManager = new DX11_ShaderManager;
-	g_stateManager = new DX11_StateManager;
+	dx11_shaderManager = new DX11_ShaderManager;
+	dx11_stateManager = new DX11_StateManager;
 
 	return true;
 }
@@ -151,7 +151,7 @@ void DX11_Driver::finalize()
 
 const ShaderInfo * DX11_Driver::findShaderInfo(const FixedString &key)
 {
-	return g_shaderManager->findShaderInfo(key);
+	return dx11_shaderManager->findShaderInfo(key);
 }
 
 
@@ -240,7 +240,7 @@ void DX11_Driver::checkFormats()
 		}
 
 		UINT tex_support, render_target_support;
-		HRESULT hr = g_device->CheckFormatSupport(dxgi_format, &tex_support);
+		HRESULT hr = dx11_device->CheckFormatSupport(dxgi_format, &tex_support);
 		if (FAILED(hr)) {
 			g_renderDriverInfo.textureFormatSupports[i] = false;
 			g_renderDriverInfo.renderTargetFormatSupport[i] = false;
@@ -248,7 +248,7 @@ void DX11_Driver::checkFormats()
 			continue;
 		}
 
-		g_device->CheckFormatSupport(trRenderTargetFormat(tex_format), &render_target_support);
+		dx11_device->CheckFormatSupport(trRenderTargetFormat(tex_format), &render_target_support);
 
 		g_renderDriverInfo.textureFormatSupports[i] = tex_support & D3D11_FORMAT_SUPPORT_TEXTURE2D;
 		if (tex_format.isDepth()) {

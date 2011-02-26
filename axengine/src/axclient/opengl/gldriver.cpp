@@ -261,7 +261,7 @@ void GLdriver::initialize()
 #endif
 
 	glShaderManager = new GLshadermanager();
-	g_shaderManager = glShaderManager;
+	dx11_shaderManager = glShaderManager;
 	GLtexture::initFactory();
 
 	m_initialized = true;
@@ -284,7 +284,7 @@ void GLdriver::finalize()
 	g_cmdSystem->registerHandler(this);
 
 	GLtexture::finalizeFactory();
-	g_shaderManager = 0;
+	dx11_shaderManager = 0;
 	SafeDelete(glShaderManager);
 
 	glFramebufferManager->finalize();

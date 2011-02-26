@@ -137,16 +137,10 @@ public:
 	DX11_Shader(const FixedString &name, const GlobalMacro &gm, const MaterialMacro &mm);
 	~DX11_Shader();
 
-	// implement Shader
-	ID3DX11Effect *getObject() const { return m_object; }
-
 	UINT begin(Technique tech);
 	void beginPass(UINT pass);
 	void endPass() {}
 	void end() {}
-
-	static bool isGlobalReg(int reg) { return reg >= SCENECONST_REG && reg < PRIMITIVECONST_REG; }
-	static bool isPrimitiveReg(int reg) { return reg >= PRIMITIVECONST_REG; }
 
 protected:
 	void initTechniques();
@@ -190,7 +184,6 @@ public:
 	const ShaderInfo *findShaderInfo(const FixedString &key);
 
 protected:
-	void _initialize();
 	void addShaderInfo(const FixedString &key, ShaderInfo *shaderInfo);
 
 private:

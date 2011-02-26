@@ -23,7 +23,7 @@ DX11_Pass::DX11_Pass(DX11_Shader *shader, ID3DX11EffectPass *d3dxpass)
 
 	if (m_primitiveConstBufferSize) {
 		int slot = (m_primitiveConstBufferSize + 15) / 16;
-		m_primitiveConstBuffer = g_primConstBuffers[slot];
+		m_primitiveConstBuffer = dx11_primConstBuffers[slot];
 	}
 }
 
@@ -225,27 +225,27 @@ void DX11_Pass::setInputLayout()
 {
 	ID3D11InputLayout **ils = m_inputLayouts;
 
-	if (g_curInstanced)
+	if (dx11_curInstanced)
 		ils = m_inputLayoutsInstanced;
 
 	ID3D11InputLayout *il = 0;
-	if (ils[g_curVertexType]) {
-		il = ils[g_curVertexType];
+	if (ils[dx11_curVertexType]) {
+		il = ils[dx11_curVertexType];
 	} else {
 		D3DX11_PASS_DESC desc;
 		m_d3dxpass->GetDesc(&desc);
-		il = g_stateManager->findInputLayout(g_curVertexType, g_curInstanced, desc.pIAInputSignature, desc.IAInputSignatureSize);
-		ils[g_curVertexType] = il;
+		il = dx11_stateManager->findInputLayout(dx11_curVertexType, dx11_curInstanced, desc.pIAInputSignature, desc.IAInputSignatureSize);
+		ils[dx11_curVertexType] = il;
 	}
 
-	g_context->IASetInputLayout(il);
+	dx11_stateManager->setInputLayout(il);
 }
 
 void DX11_Pass::apply()
 {
 	// set shaders
-	g_stateManager->setVertexShader(m_vs);
-	g_stateManager->setPixelShader(m_ps);
+	dx11_stateManager->setVertexShader(m_vs);
+	dx11_stateManager->setPixelShader(m_ps);
 
 	// set input layout
 	setInputLayout();
@@ -280,18 +280,18 @@ void DX11_Pass::setPrimitiveConstBuffer()
 	m_setflag++;
 
 	D3D11_MAPPED_SUBRESOURCE mapped;
-	g_context->Map(m_primitiveConstBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped);
+	dx11_context->Map(m_primitiveConstBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped);
 
 	// set params1
-	for (int i = 0; i < g_curParams1.m_numItems; i++) {
-		FixedString name(g_curParams1.m_items[i].nameId);
-		setParameter(&mapped, name, g_curParams1.m_items[i].count, &g_curParams1.m_floatData[g_curParams1.m_items[i].offset]);
+	for (int i = 0; i < dx11_curParams1.m_numItems; i++) {
+		FixedString name(dx11_curParams1.m_items[i].nameId);
+		setParameter(&mapped, name, dx11_curParams1.m_items[i].count, &dx11_curParams1.m_floatData[dx11_curParams1.m_items[i].offset]);
 	}
 
 	// set params2
-	for (int i = 0; i < g_curParams2.m_numItems; i++) {
-		FixedString name(g_curParams2.m_items[i].nameId);
-		setParameter(&mapped, name, g_curParams2.m_items[i].count, &g_curParams2.m_floatData[g_curParams2.m_items[i].offset]);
+	for (int i = 0; i < dx11_curParams2.m_numItems; i++) {
+		FixedString name(dx11_curParams2.m_items[i].nameId);
+		setParameter(&mapped, name, dx11_curParams2.m_items[i].count, &dx11_curParams2.m_floatData[dx11_curParams2.m_items[i].offset]);
 	}
 
 	// if not set by material parameter, set it to default value
@@ -308,9 +308,9 @@ void DX11_Pass::setPrimitiveConstBuffer()
 		memcpy((byte_t *)mapped.pData + param.d3dDesc.StartOffset, param.d3dDesc.DefaultValue, param.d3dDesc.Size);
 	}
 
-	g_context->Unmap(m_primitiveConstBuffer, 0);
-	g_context->VSSetConstantBuffers(ConstBuffer::PrimitiveConst, 1, &m_primitiveConstBuffer);
-	g_context->PSSetConstantBuffers(ConstBuffer::PrimitiveConst, 1, &m_primitiveConstBuffer);
+	dx11_context->Unmap(m_primitiveConstBuffer, 0);
+	dx11_context->VSSetConstantBuffers(ConstBuffer::PrimitiveConst, 1, &m_primitiveConstBuffer);
+	dx11_context->PSSetConstantBuffers(ConstBuffer::PrimitiveConst, 1, &m_primitiveConstBuffer);
 }
 
 static inline ID3D11ShaderResourceView *H2T(phandle_t h)
@@ -324,21 +324,21 @@ void DX11_Pass::setTextures()
 {
 	// set global textures
 	for (int i = 0; i < GlobalTextureId::MaxType; i++) {
-		if (m_sysSamplers[i] >= 0 && g_curGlobalTextures[i]) {
-			g_stateManager->setTexture(m_sysTextures[i], H2T(g_curGlobalTextures[i]));
-			g_stateManager->setSamplerState(m_sysSamplers[i], g_curGlobalTextureSamplerDescs[i]);
+		if (m_sysSamplers[i] >= 0 && dx11_curGlobalTextures[i]) {
+			dx11_stateManager->setTexture(m_sysTextures[i], H2T(dx11_curGlobalTextures[i]));
+			dx11_stateManager->setSamplerState(m_sysSamplers[i], dx11_curGlobalTextureSamplerDescs[i]);
 		} else {
 			//g_stateManager->setTexture(m_sysSamplers[i], 0);
 		}
 	}
 
 	// set material textures
-	for (int i = 0; i < g_curMaterialTextures.m_numItems; i++) {
-		FastTextureParams::Item &item = g_curMaterialTextures.m_items[i];
+	for (int i = 0; i < dx11_curMaterialTextures.m_numItems; i++) {
+		FastTextureParams::Item &item = dx11_curMaterialTextures.m_items[i];
 		int index = item.id;
 		if (m_matSamplers[index] >= 0) {
-			g_stateManager->setTexture(m_matTextures[index], H2T(item.handle));
-			g_stateManager->setSamplerState(m_matSamplers[index], item.samplerState);
+			dx11_stateManager->setTexture(m_matTextures[index], H2T(item.handle));
+			dx11_stateManager->setSamplerState(m_matSamplers[index], item.samplerState);
 		}
 	}
 }
@@ -419,7 +419,7 @@ DX11_Shader::DX11_Shader(const FixedString &name, const GlobalMacro &gm, const M
 
 	d3dxmacros.push_back(d3dxmacro);
 
-	IoRequest ioRequest(0, fullname);
+	IoRequest ioRequest(fullname, 0);
 	g_fileSystem->syncRead(&ioRequest);
 
 	AX_RELEASE_ASSERT(ioRequest.fileData() && ioRequest.fileSize());
@@ -443,7 +443,7 @@ DX11_Shader::DX11_Shader(const FixedString &name, const GlobalMacro &gm, const M
 	}
 
 	// D3DX11CreateEffectFromMemory
-	hr = D3DX11CreateEffectFromMemory(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), 0, g_device, &m_object);
+	hr = D3DX11CreateEffectFromMemory(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), 0, dx11_device, &m_object);
 	if (FAILED(hr)) {
 		Errorf("can't create effect");
 		return;
@@ -504,24 +504,12 @@ void DX11_Shader::initShaderInfo()
 	m_shaderInfo.m_needSceneColor = isGlobalTextureUsed(GlobalTextureId::SceneColor);
 
 	// add to shader manager
-	g_shaderManager->addShaderInfo(m_key, &m_shaderInfo);
+	dx11_shaderManager->addShaderInfo(m_key, &m_shaderInfo);
 }
 
 ID3DX11EffectTechnique *DX11_Shader::findTechnique(Technique tech)
 {
-	ID3DX11EffectVariable *var = m_object->GetVariableByName("Script");
-
-	if (!var || !var->IsValid()) return 0;
-
-	ID3DX11EffectVariable *anno = var->GetAnnotationByName(tech.toString().c_str());
-	if (!anno || !anno->IsValid()) return 0;
-
-	const char *techName = 0;
-	V(anno->AsString()->GetString(&techName));
-
-	if (!techName || !techName[0]) return 0;
-
-	ID3DX11EffectTechnique *result = m_object->GetTechniqueByName(techName);
+	ID3DX11EffectTechnique *result = m_object->GetTechniqueByName(tech.toString());
 
 	if (!result || !result->IsValid()) return 0;
 	return result;
@@ -557,8 +545,21 @@ void DX11_Shader::beginPass(UINT pass)
 
 DX11_ShaderManager::DX11_ShaderManager()
 {
-	g_shaderManager = this;
-	_initialize();
+	dx11_shaderManager = this;
+
+	TiXmlDocument doc;
+	doc.LoadAxonFile("shaders/shaderlist.xml");
+	AX_RELEASE_ASSERT(!doc.Error());
+
+	TiXmlNode *root = doc.FirstChild("shaderlist");
+
+	// no root
+	AX_ASSERT(root);
+
+	TiXmlElement *section;
+	for (section = root->FirstChildElement("item"); section; section = section->NextSiblingElement("item")) {
+		findShader(section->GetText(), g_globalMacro, MaterialMacro());
+	}
 }
 
 DX11_ShaderManager::~DX11_ShaderManager()
@@ -591,23 +592,6 @@ const ShaderInfo * DX11_ShaderManager::findShaderInfo(const FixedString &key)
 
 	AX_WRONGPLACE;
 	return 0;
-}
-
-void DX11_ShaderManager::_initialize()
-{
-	TiXmlDocument doc;
-	doc.LoadAxonFile("shaders/shaderlist.xml");
-	AX_RELEASE_ASSERT(!doc.Error());
-
-	TiXmlNode *root = doc.FirstChild("shaderlist");
-
-	// no root
-	AX_ASSERT(root);
-
-	TiXmlElement *section;
-	for (section = root->FirstChildElement("item"); section; section = section->NextSiblingElement("item")) {
-		findShader(section->GetText(), g_globalMacro, MaterialMacro());
-	}
 }
 
 void DX11_ShaderManager::addShaderInfo( const FixedString &key, ShaderInfo *shaderInfo )

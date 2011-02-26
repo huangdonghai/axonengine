@@ -193,7 +193,7 @@ public:
 	friend class AsioThread;
 	friend class FileSystem;
 
-	IoRequest(IEventHandler *handler, const std::string &filename);
+	IoRequest(const std::string &filename, IEventHandler *handler);
 	~IoRequest();
 
 	IEventHandler *eventHandler() const { return m_eventHandler; }

@@ -16,20 +16,6 @@ read the license and understand and accept it fully.
 #define S_ALPHATEST M_FEATURE1
 #define S_TWOSIDES M_FEATURE2
 
-float Script : STANDARDSGLOBAL <
-	// technique
-	string TechniqueGeoFill = "gfill";
-#if S_DECAL
-	string TechniqueShadowGen = "";
-#else
-	string TechniqueShadowGen = "shadowgen";
-#endif
-	string TechniqueMain = "main";
-	string TechniqueGlow = "";
-	string TechniqueLayer = "";
-> = 0.8;
-
-// UN-TWEAKABLES
 
 struct ShadowVertexOut {
 	float4 hpos			: POSITION;
@@ -227,26 +213,24 @@ half4 FP_main(VertexOut IN) : COLOR0
 
 //----------------------------------------------------------------------------
 
-technique gfill {
+technique GeoFill {
     pass p0 {
         VertexShader = compile VS_3_0 OutputMeshVertex();
 		PixelShader = compile PS_3_0 FP_gpass();
     }
 }
 
-technique shadowgen {
+technique ShadowGen {
     pass p0 {
         VertexShader = compile VS_3_0 VP_zpass();
 		PixelShader = compile PS_3_0 FP_zpass();
     }
 }
 
-
-technique main {
+technique Main {
     pass p0 {
         VertexShader = compile VS_3_0 OutputMeshVertex();
         PixelShader = compile PS_3_0 FP_main();
     }
 }
 
-/***************************** eof ***/

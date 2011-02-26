@@ -28,7 +28,7 @@ private:
 	virtual ~Query();
 
 public:
-	phandle_t m_handle;
+	Handle m_handle;
 	int m_queryFrame;
 	BoundingBox m_bbox;
 	volatile int m_result;

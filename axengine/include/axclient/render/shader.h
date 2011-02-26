@@ -16,9 +16,9 @@ AX_BEGIN_NAMESPACE
 class ConstBuffers;
 class ConstBuffer
 {
-public:
 	friend class ConstBuffers;
 
+public:
 	enum Item {
 #define AX_ITEM(stype, atype, name, reg) name,
 #define AX_ARRAY(stype, atype, name, n, reg) name,
@@ -79,11 +79,13 @@ private:
 	std::vector<byte_t> m_default;
 };
 
+//-------------------------------------------------------------------------
+
 class ConstBuffers
 {
-public:
 	friend class RenderContext;
 
+public:
 	typedef ConstBuffer::Type Type;
 	typedef ConstBuffer::Item Item;
 
@@ -109,118 +111,6 @@ private:
 
 
 //-------------------------------------------------------------------------
-#if 0
-class UniformItem
-{
-public:
-	enum ValueType {
-		vt_empty, vt_float, vt_Vector2, vt_Vector3, vt_Matrix3, vt_Vector4, vt_Matrix, vt_Matrix4, vt_Texture
-	};
-
-	UniformItem();
-	UniformItem(const UniformItem &rhs);
-	virtual ~UniformItem();
-
-	void init(ValueType vt, const char *name, int vsreg=0, int psreg=0, int arraysize = 1);
-
-	const char *getName() const { return m_name; }
-
-	template< class Q >
-	void set(const Q &q) {
-		AX_ASSERT(sizeof(q) <= m_dataSize);
-		if (memcmp(m_datap, &q, m_dataSize) == 0)
-			return;
-
-		::memcpy(m_datap, &q, sizeof(q));
-		m_needUpdate = true;
-	}
-
-	template< class Q >
-	const Q &get() const {
-		return *(Q*)(data);
-	}
-
-	void setData(const void *p) { memcpy(m_datap,p,m_dataSize); }
-	void *getDataP() const { return m_datap; }
-
-protected:
-	static int calcValueSize(ValueType vt);
-
-public:
-	ValueType m_valueType : 8;
-	int m_arraySize : 8;
-	int m_dataSize : 16;
-
-	int m_vsregister;
-	int m_psregister;
-	bool m_needUpdate;
-
-	void *m_datap;
-	const char *m_name;		// ascii name
-};
-
-//-------------------------------------------------------------------------
-
-class Uniforms
-{
-public:
-	enum ItemName {
-#define AX_ARRAY_UNIFORM(shadertype, axtype, name, num, start, end) name,
-#define AX_UNIFORM(fxtype, axtype, name, s, e) name,
-#define AX_TEXTURE_UNIFORM(fxtype, name) name,
-
-		AX_UNIFORM_DEFS
-
-#undef AX_TEXTURE_UNIFORM
-#undef AX_UNIFORM
-#undef AX_ARRAY_UNIFORM
-
-		NUM_UNIFORM_ITEMS
-	};
-
-	enum { MAX_REGISTER = 1024 };
-
-	Uniforms();
-	~Uniforms();
-
-	UniformItem &getItem(int itemname);
-
-	bool isVsregisterShared(int n) const {
-		if (n < 0 || n >= MAX_REGISTER)
-			return false;
-
-		return m_vsIsShared[n];
-	}
-
-	bool isPsregisterShared(int n) const {
-		if (n < 0 || n >= MAX_REGISTER)
-			return false;
-
-		return m_psIsShared[n];
-	}
-
-protected:
-	void findRegisters();
-
-private:
-	UniformItem m_items[NUM_UNIFORM_ITEMS];
-	bool m_vsIsShared[MAX_REGISTER];
-	bool m_psIsShared[MAX_REGISTER];
-};
-
-//-------------------------------------------------------------------------
-
-struct ShaderQuality {
-	enum Type {
-		Low = SHADER::ShaderQuality_low,
-		Middle = SHADER::ShaderQuality_middle,
-		High = SHADER::ShaderQuality_high
-	} t;
-	AX_DECLARE_ENUM(ShaderQuality);
-};
-#endif
-
-//-------------------------------------------------------------------------
 
 class ShaderMacro
 {
@@ -229,15 +119,6 @@ public:
 		kGlobalMacro, kMaterialMacro
 	};
 
-#if 0
-	enum Flag {
-#define AX_DECL_MACRO(m, s) m, 
-		AX_SHADERMACRO_DEFS
-#undef AX_DECL_MACRO
-
-		NUM_FLAGS,
-	};
-#endif
 	enum { VERSION = SHADER::SHADERMACRO_VERSION };
 
 	ShaderMacro(Type type);
@@ -310,29 +191,26 @@ public:
 
 struct Technique {
 	enum Type {
-		GeoFill, ShadowGen, Main, Layer, Glow, Reflection, MaxType
+		GeoFill, ShadowGen, Main, MaxType
 	};
 
 	AX_DECLARE_ENUM(Technique);
 
-	std::string toString();
+	const char *toString();
 };
 
 //-------------------------------------------------------------------------
 
-inline std::string Technique::toString()
+inline const char *Technique::toString()
 {
-	std::string result("Technique");
-
-#define ENUMDECL(t) case t: result += #t; break;
+#define ENUMDECL(t) case t: return #t; break;
 	switch (m_t) {
 	ENUMDECL(GeoFill)
 	ENUMDECL(ShadowGen)
 	ENUMDECL(Main)
-	ENUMDECL(Layer)
 	}
 #undef ENUMDECL
-	return result;
+	return "";
 }
 
 //-------------------------------------------------------------------------
@@ -346,49 +224,6 @@ public:
 };
 
 typedef Dict<FixedString, ShaderInfo*> ShaderInfoDict;
-
-//--------------------------------------------------------------------------
-#if 0
-class Shader : public RefObject
-{
-public:
-	enum {
-		MAX_FEATURES = 8,
-		MAX_LITERALS = 8
-	};
-
-	enum SortHint {
-		SortHint_opacit = SHADER::SortHint_opacit,
-		SortHint_decal = SHADER::SortHint_decal,
-		SortHint_underWater = SHADER::SortHint_underWater,
-		SortHint_water = SHADER::SortHint_water,
-		SortHint_aboveWater = SHADER::SortHint_aboveWater
-	};
-
-	// need to implement
-	virtual bool doInit(const String &name, const ShaderMacro &macro) = 0;
-	virtual bool isDepthWrite() const = 0;
-	virtual bool haveTextureTarget() const = 0;
-	virtual int getNumSampler() const = 0;
-	virtual SamplerInfo *getSamplerAnno(int index) const = 0;
-	virtual int getNumTweakable() const = 0;
-	virtual ParameterInfo *getTweakableDef(int index) = 0;
-	virtual SortHint getSortHint() const = 0;
-	virtual bool haveTechnique(Technique tech) const = 0;
-	virtual const ShaderInfo *getShaderInfo() const = 0;
-};
-#endif
-//--------------------------------------------------------------------------
-#if 0
-class ShaderManager
-{
-public:
-	virtual Shader *findShader(const String &name, const ShaderMacro &macro) = 0;
-	virtual Shader *findShader(const FixedString &nameId, const ShaderMacro &macro) = 0;
-	virtual void saveShaderCache(const String &name = String()) = 0;
-	virtual void applyShaderCache(const String &name = String()) = 0;
-};
-#endif
 
 AX_END_NAMESPACE
 

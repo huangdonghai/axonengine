@@ -46,15 +46,15 @@ inline const char *DX11_ErrorString(HRESULT hr)
 #undef D3DERR
 }
 
-extern DX11_Driver *g_driver;
-extern ID3D11Device *g_device;
-extern ID3D11DeviceContext *g_context;
-extern IDXGIFactory * g_dxgiFactory;
+extern DX11_Driver *dx11_driver;
+extern ID3D11Device *dx11_device;
+extern ID3D11DeviceContext *dx11_context;
+extern IDXGIFactory * dxgi_factory;
 
-extern DX11_ShaderManager *g_shaderManager;
-extern DX11_StateManager *g_stateManager;
-extern ID3D11Buffer *g_d3dConstBuffers[ConstBuffer::MaxType];
-extern ID3D11Buffer *g_primConstBuffers[PRIMITIVECONST_COUNT]; // for different size primitive const buffers
+extern DX11_ShaderManager *dx11_shaderManager;
+extern DX11_StateManager *dx11_stateManager;
+extern ID3D11Buffer *dx11_constBuffers[ConstBuffer::MaxType];
+extern ID3D11Buffer *dx11_primConstBuffers[PRIMITIVECONST_COUNT]; // for different size primitive const buffers
 
 AX_DX11_END_NAMESPACE
 

@@ -11,15 +11,6 @@ read the license and understand and accept it fully.
 #include "common.fxh"
 #include "sky.fxh"
 
-float Script : STANDARDSGLOBAL <
-	// technique
-	string TechniqueGeoFill = "";
-	string TechniqueShadowGen = "";
-	string TechniqueMain = "Render";
-	string TechniqueGlow = "";
-	string TechniqueLayer = "";
-> = 0.8;
-
 static const float G = -0.990;
 
 float g = G;
@@ -93,10 +84,8 @@ FragmentOut FP_main(PS_INPUT input)
 	return result; // + tex2D(starSampler, input.texCoord) * starIntensity;
 }
 
-technique Render
-{
-	pass Pass1
-	{
+technique Main {
+	pass Pass1 {
 		VertexShader = compile VS_3_0 VP_main();
 		PixelShader = compile PS_3_0 FP_main();
 	}

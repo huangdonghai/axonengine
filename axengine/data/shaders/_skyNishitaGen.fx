@@ -11,16 +11,6 @@ read the license and understand and accept it fully.
 #include "common.fxh"
 #include "sky.fxh"
 
-float Script : STANDARDSGLOBAL
-<
-	// technique
-	string TechniqueGeoFill = "";
-	string TechniqueShadowGen = "";
-	string TechniqueMain = "Update";
-	string TechniqueGlow = "";
-	string TechniqueLayer = "";
-> = 0.8;
-
 static const float PI = 3.1415159;
 
 static const float RADIUS = 6356.7523142;
@@ -184,8 +174,7 @@ FragOut FP_main(VertOut input)
 }
 
 
-technique Update
-{
+technique Main {
     pass Pass1 {
 		VertexShader = compile VS_3_0 VP_main();
 		PixelShader = compile PS_3_0 FP_main();

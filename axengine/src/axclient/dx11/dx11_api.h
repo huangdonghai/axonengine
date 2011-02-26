@@ -3,13 +3,13 @@
 
 AX_DX11_BEGIN_NAMESPACE
 
-extern FastParams g_curParams1;
-extern FastParams g_curParams2;
-extern phandle_t g_curGlobalTextures[GlobalTextureId::MaxType];
-extern SamplerDesc g_curGlobalTextureSamplerDescs[GlobalTextureId::MaxType];
-extern FastTextureParams g_curMaterialTextures;
-extern bool g_curInstanced;
-extern VertexType g_curVertexType;
+extern FastParams dx11_curParams1;
+extern FastParams dx11_curParams2;
+extern phandle_t dx11_curGlobalTextures[GlobalTextureId::MaxType];
+extern SamplerDesc dx11_curGlobalTextureSamplerDescs[GlobalTextureId::MaxType];
+extern FastTextureParams dx11_curMaterialTextures;
+extern bool dx11_curInstanced;
+extern VertexType dx11_curVertexType;
 
 struct DX11_Resource {
 	enum Type {

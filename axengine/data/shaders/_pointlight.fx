@@ -3,15 +3,6 @@
 #include "common.fxh"
 #include "shadow.fxh"
 
-float Script : STANDARDSGLOBAL <
-	// technique
-	string TechniqueGeoFill = "";
-	string TechniqueShadowGen = "";
-	string TechniqueMain = "main";
-	string TechniqueGlow = "";
-	string TechniqueLayer = "";
-> = 0.8;
-
 // features typedef
 #define F_SHADOWED M_FEATURE0
 
@@ -81,9 +72,7 @@ half4 FP_main(ShadowVertexOut IN) : COLOR
 	return OUT;
 }
 
-
-
-technique main {
+technique Main {
     pass p0 {
         VertexShader = compile VS_3_0 VP_main();
 		PixelShader = compile PS_3_0 FP_main();

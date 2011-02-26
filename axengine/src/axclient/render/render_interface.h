@@ -25,9 +25,7 @@ public:
 	static void (*updateWindowTarget)(phandle_t h, Handle newHwnd, int width, int height);
 	static void (*deleteWindowTarget)(phandle_t h);
 
-	static void (*createQuery)(phandle_t &h);
 	static void (*issueQueries)(int n, Query *queries[]);
-	static void (*deleteQuery)(phandle_t h);
 
 	static void (*beginPerfEvent)(const char *pixname);
 	static void (*endPerfEvent)();
@@ -105,9 +103,7 @@ public:
 	void updateWindowTarget(phandle_t h, Handle newWndId, int width, int height);
 	void deleteWindowTarget(phandle_t h);
 
-	void createQuery(phandle_t &h);
 	void issueQueries(int n, Query *queries[]);
-	void deleteQuery(phandle_t h);
 
 	void beginPerfEvent(const char *pixname);
 	void endPerfEvent();

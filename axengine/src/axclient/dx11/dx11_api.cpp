@@ -14,13 +14,13 @@ namespace {
 	};
 }
 
-FastParams g_curParams1;
-FastParams g_curParams2;
-phandle_t g_curGlobalTextures[GlobalTextureId::MaxType];
-SamplerDesc g_curGlobalTextureSamplerDescs[GlobalTextureId::MaxType];
-FastTextureParams g_curMaterialTextures;
-bool g_curInstanced = false;
-VertexType g_curVertexType;
+FastParams dx11_curParams1;
+FastParams dx11_curParams2;
+phandle_t dx11_curGlobalTextures[GlobalTextureId::MaxType];
+SamplerDesc dx11_curGlobalTextureSamplerDescs[GlobalTextureId::MaxType];
+FastTextureParams dx11_curMaterialTextures;
+bool dx11_curInstanced = false;
+VertexType dx11_curVertexType;
 
 static DX11_Shader *s_curShader;
 static Technique s_curTechnique;
@@ -43,9 +43,9 @@ int s_numView = 0;
 void dx11CreateTextureFromFileInMemory(phandle_t h, IoRequest *asioRequest)
 {
 	ID3D11Resource *texture;
-	V(D3DX11CreateTextureFromMemory(g_device, asioRequest->fileData(), asioRequest->fileSize(), 0, 0, &texture, 0));
+	V(D3DX11CreateTextureFromMemory(dx11_device, asioRequest->fileData(), asioRequest->fileSize(), 0, 0, &texture, 0));
 	DX11_Resource *resource = new DX11_Resource(DX11_Resource::kImmutableTexture, texture);
-	V(g_device->CreateShaderResourceView(texture, 0, &resource->m_shaderResourceView));
+	V(dx11_device->CreateShaderResourceView(texture, 0, &resource->m_shaderResourceView));
 	*h = resource;
 	delete asioRequest;
 }
@@ -109,7 +109,7 @@ void dx11CreateTexture(phandle_t h, TexType type, TexFormat format, int width, i
 		desc.CPUAccessFlags = cpuAccessFlags;
 		desc.MiscFlags = miscflags;
 
-		V(g_device->CreateTexture2D(&desc, 0, &texture2D));
+		V(dx11_device->CreateTexture2D(&desc, 0, &texture2D));
 
 		d3dresource = texture2D;
 		app_resource = new DX11_Resource(DX11_Resource::kDynamicTexture, texture2D);
@@ -125,7 +125,7 @@ void dx11CreateTexture(phandle_t h, TexType type, TexFormat format, int width, i
 		desc.CPUAccessFlags = cpuAccessFlags;
 		desc.MiscFlags = miscflags;
 
-		V(g_device->CreateTexture3D(&desc, 0, &texture3D));
+		V(dx11_device->CreateTexture3D(&desc, 0, &texture3D));
 		d3dresource = texture3D;
 		app_resource = new DX11_Resource(DX11_Resource::kDynamicTexture, texture3D);
 	}
@@ -146,7 +146,7 @@ void dx11CreateTexture(phandle_t h, TexType type, TexFormat format, int width, i
 				0
 			};
 			if (array_size == 1) {
-				V(g_device->CreateDepthStencilView(d3dresource, &desc, &view));
+				V(dx11_device->CreateDepthStencilView(d3dresource, &desc, &view));
 				app_resource->m_dynamicTextureData->m_depthStencilViews.push_back(view);
 			} else {
 				desc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DARRAY;
@@ -155,14 +155,14 @@ void dx11CreateTexture(phandle_t h, TexType type, TexFormat format, int width, i
 				desc.Texture1DArray.ArraySize = 1;
 				for (int i = 0; i < array_size; i++) {
 					desc.Texture2DArray.FirstArraySlice = i;
-					V(g_device->CreateDepthStencilView(d3dresource, &desc, &view));
+					V(dx11_device->CreateDepthStencilView(d3dresource, &desc, &view));
 					app_resource->m_dynamicTextureData->m_depthStencilViews.push_back(view);
 				}
 			}
 		} else {
 			ID3D11RenderTargetView *view = 0;
 			if (array_size == 1) {
-				V(g_device->CreateRenderTargetView(d3dresource, 0, &view));
+				V(dx11_device->CreateRenderTargetView(d3dresource, 0, &view));
 				app_resource->m_dynamicTextureData->m_renderTargetViews.push_back(view);
 			} else {
 				D3D11_RENDER_TARGET_VIEW_DESC desc = {
@@ -173,7 +173,7 @@ void dx11CreateTexture(phandle_t h, TexType type, TexFormat format, int width, i
 				desc.Texture2DArray.ArraySize = 1;
 				for (int i = 0; i < array_size; i++) {
 					desc.Texture2DArray.FirstArraySlice = i;
-					V(g_device->CreateRenderTargetView(d3dresource, &desc, &view));
+					V(dx11_device->CreateRenderTargetView(d3dresource, &desc, &view));
 					app_resource->m_dynamicTextureData->m_renderTargetViews.push_back(view);
 				}
 			}
@@ -186,9 +186,9 @@ void dx11CreateTexture(phandle_t h, TexType type, TexFormat format, int width, i
 		desc.Format = DX11_Driver::trShaderResourceViewFormat(format);
 		desc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 		desc.Texture2D.MipLevels = 1;
-		V(g_device->CreateShaderResourceView(texture2D, &desc, &app_resource->m_shaderResourceView));
+		V(dx11_device->CreateShaderResourceView(texture2D, &desc, &app_resource->m_shaderResourceView));
 	} else {
-		V(g_device->CreateShaderResourceView(d3dresource, 0, &app_resource->m_shaderResourceView));
+		V(dx11_device->CreateShaderResourceView(d3dresource, 0, &app_resource->m_shaderResourceView));
 	}
 	*h = app_resource;
 }
@@ -213,7 +213,7 @@ void dx11UploadSubTexture(phandle_t h, const Rect &rect, const void *pixels, Tex
 	box.back = 1;
 	UINT rowPitch = format.calculateDataSize(rect.width, 1);
 
-	g_context->UpdateSubresource(apiResource->m_dx11Resource, 0, &box, pixels, rowPitch, 0);
+	dx11_context->UpdateSubresource(apiResource->m_dx11Resource, 0, &box, pixels, rowPitch, 0);
 }
 
 void dx11GenerateMipmap(phandle_t h)
@@ -253,13 +253,13 @@ void dx11CreateVertexBuffer(phandle_t h, int datasize, Primitive::Hint hint, con
 		bufferDesc.Usage = D3D11_USAGE_DYNAMIC;
 
 		if (p) {
-			g_device->CreateBuffer(&bufferDesc, &InitData, &buffer);
+			dx11_device->CreateBuffer(&bufferDesc, &InitData, &buffer);
 		} else {
-			g_device->CreateBuffer(&bufferDesc, 0, &buffer);
+			dx11_device->CreateBuffer(&bufferDesc, 0, &buffer);
 		}
 	} else {
 		AX_RELEASE_ASSERT(p);
-		g_device->CreateBuffer(&bufferDesc, &InitData, &buffer);
+		dx11_device->CreateBuffer(&bufferDesc, &InitData, &buffer);
 	}
 
 	DX11_Resource *apiRes = new DX11_Resource(DX11_Resource::kVertexBuffer, buffer);
@@ -277,9 +277,9 @@ void dx11UploadVertexBuffer(phandle_t h, int offset, int datasize, const void *p
 		mapType = D3D11_MAP_WRITE_NO_OVERWRITE;
 
 	D3D11_MAPPED_SUBRESOURCE mapped;
-	g_context->Map(apiRes->m_dx11Resource, 0, mapType, 0, &mapped);
+	dx11_context->Map(apiRes->m_dx11Resource, 0, mapType, 0, &mapped);
 	memcpy((byte_t *)mapped.pData + offset, p, datasize);
-	g_context->Unmap(apiRes->m_dx11Resource, 0);
+	dx11_context->Unmap(apiRes->m_dx11Resource, 0);
 }
 
 void dx11DeleteVertexBuffer(phandle_t h)
@@ -314,13 +314,13 @@ void dx11CreateIndexBuffer(phandle_t h, int datasize, Primitive::Hint hint, cons
 		bufferDesc.Usage = D3D11_USAGE_DYNAMIC;
 
 		if (p) {
-			g_device->CreateBuffer(&bufferDesc, &InitData, &buffer);
+			dx11_device->CreateBuffer(&bufferDesc, &InitData, &buffer);
 		} else {
-			g_device->CreateBuffer(&bufferDesc, 0, &buffer);
+			dx11_device->CreateBuffer(&bufferDesc, 0, &buffer);
 		}
 	} else {
 		AX_RELEASE_ASSERT(p);
-		g_device->CreateBuffer(&bufferDesc, &InitData, &buffer);
+		dx11_device->CreateBuffer(&bufferDesc, &InitData, &buffer);
 	}
 
 	DX11_Resource *apiRes = new DX11_Resource(DX11_Resource::kIndexBuffer, buffer);
@@ -338,9 +338,9 @@ void dx11UploadIndexBuffer(phandle_t h, int offset, int datasize, const void *p)
 		mapType = D3D11_MAP_WRITE_NO_OVERWRITE;
 
 	D3D11_MAPPED_SUBRESOURCE mapped;
-	g_context->Map(apiRes->m_dx11Resource, 0, mapType, 0, &mapped);
+	dx11_context->Map(apiRes->m_dx11Resource, 0, mapType, 0, &mapped);
 	memcpy((byte *)mapped.pData + offset, p, datasize);
-	g_context->Unmap(apiRes->m_dx11Resource, 0);
+	dx11_context->Unmap(apiRes->m_dx11Resource, 0);
 }
 
 void dx11DeleteIndexBuffer(phandle_t h)
@@ -374,23 +374,28 @@ void dx11DeleteWindowTarget(phandle_t h)
 	delete h;
 }
 
-void dx11CreateQuery(phandle_t &h)
+static std::list<ID3D11Query *> s_freeQueries;
+
+ID3D11Query *dx11AllocQuery()
 {
+	ID3D11Query *query = 0;
+
+	if (!s_freeQueries.empty()) {
+		query = s_freeQueries.front();
+		s_freeQueries.pop_front();
+		return query;
+	}
+	
 	D3D11_QUERY_DESC desc;
 	desc.Query = D3D11_QUERY_OCCLUSION;
 	desc.MiscFlags = 0;
-	ID3D11Query *query;
-	g_device->CreateQuery(&desc, &query);
-	DX11_Resource *apiRes = new DX11_Resource(DX11_Resource::kOcclusionQuery, query);
-	*h = apiRes;
+	dx11_device->CreateQuery(&desc, &query);
+	return query;
 }
 
-void dx11DeleteQuery(phandle_t h)
+void dx11FreeQuery(ID3D11Query *query)
 {
-	DX11_Resource *resource = h->castTo<DX11_Resource *>();
-	AX_ASSERT(resource->m_type == DX11_Resource::kOcclusionQuery);
-	delete resource;
-	delete h;
+	s_freeQueries.push_front(query);
 }
 
 void dx11BeginPerfEvent(const char *pixname)
@@ -446,7 +451,7 @@ void dx11SetTargetSet(phandle_t targetSet[RenderTargetSet::MaxTarget], int slice
 {
 	s_isTargetSizeSet = false;
 
-	g_stateManager->unsetAllTextures();
+	dx11_stateManager->unsetAllTextures();
 
 	s_dsv = getDSV(targetSet[0], slices[0]);
 	s_numView = 0;
@@ -458,7 +463,7 @@ void dx11SetTargetSet(phandle_t targetSet[RenderTargetSet::MaxTarget], int slice
 		s_numView++;
 	}
 
-	g_context->OMSetRenderTargets(s_numView, s_rtv, s_dsv);
+	dx11_context->OMSetRenderTargets(s_numView, s_rtv, s_dsv);
 }
 
 void dx11SetViewport(const Rect &rect, const Vector2 & depthRange)
@@ -481,35 +486,35 @@ void dx11SetViewport(const Rect &rect, const Vector2 & depthRange)
 	d3drect.right = d3dviewport.TopLeftX + d3dviewport.Width;
 	d3drect.bottom = d3dviewport.TopLeftY + d3dviewport.Height;
 
-	g_context->RSSetViewports(1, &d3dviewport);
-	g_context->RSSetScissorRects(1, &d3drect);
+	dx11_context->RSSetViewports(1, &d3dviewport);
+	dx11_context->RSSetScissorRects(1, &d3drect);
 }
 
 void dx11SetShader(const FixedString &name, const GlobalMacro &gm, const MaterialMacro &mm, Technique tech)
 {
-	s_curShader = g_shaderManager->findShader(name, gm, mm);
+	s_curShader = dx11_shaderManager->findShader(name, gm, mm);
 	s_curTechnique = tech;
 }
 
 void dx11SetConstBuffer(ConstBuffers::Type type, int size, const void *data)
 {
 	D3D11_MAPPED_SUBRESOURCE mapped;
-	g_context->Map(g_d3dConstBuffers[type], 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped);
+	dx11_context->Map(dx11_constBuffers[type], 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped);
 	memcpy(mapped.pData, data, size);
-	g_context->Unmap(g_d3dConstBuffers[type], 0);
+	dx11_context->Unmap(dx11_constBuffers[type], 0);
 }
 
 void dx11SetParameters(const FastParams *params1, const FastParams *params2)
 {
 	if (params1)
-		g_curParams1 = *params1;
+		dx11_curParams1 = *params1;
 	else
-		g_curParams1.clear();
+		dx11_curParams1.clear();
 
 	if (params2)
-		g_curParams2 = *params2;
+		dx11_curParams2 = *params2;
 	else
-		g_curParams2.clear();
+		dx11_curParams2.clear();
 }
 
 void dx11SetVertices(phandle_t vb, VertexType vt, int offset, int vert_count)
@@ -517,13 +522,13 @@ void dx11SetVertices(phandle_t vb, VertexType vt, int offset, int vert_count)
 	DX11_Resource *resource = vb->castTo<DX11_Resource *>();
 	AX_ASSERT(resource->m_type == DX11_Resource::kVertexBuffer);
 
-	g_curInstanced = false;
-	g_curVertexType = vt;
+	dx11_curInstanced = false;
+	dx11_curVertexType = vt;
 	s_curNumVertices = vert_count;
 
 	UINT stride = vt.stride();
 	UINT uoffset = offset;
-	g_context->IASetVertexBuffers(0, 1, &resource->m_vertexBuffer, &stride, &uoffset);
+	dx11_context->IASetVertexBuffers(0, 1, &resource->m_vertexBuffer, &stride, &uoffset);
 }
 
 void dx11SetInstanceVertices(phandle_t vb, VertexType vt, int offset, int vert_count, phandle_t inb, int inoffset, int incount)
@@ -533,8 +538,8 @@ void dx11SetInstanceVertices(phandle_t vb, VertexType vt, int offset, int vert_c
 	DX11_Resource *resI = inb->castTo<DX11_Resource *>();
 	AX_ASSERT(resI->m_type == DX11_Resource::kVertexBuffer);
 
-	g_curInstanced = true;
-	g_curVertexType = vt;
+	dx11_curInstanced = true;
+	dx11_curVertexType = vt;
 	s_curNumVertices = vert_count;
 	s_curNumInstances = incount;
 
@@ -542,7 +547,7 @@ void dx11SetInstanceVertices(phandle_t vb, VertexType vt, int offset, int vert_c
 	UINT strides[2] = { vt.stride(), 64 };
 	UINT offsets[2] = { offset, inoffset };
 
-	g_context->IASetVertexBuffers(0, 2, buffers, strides, offsets);
+	dx11_context->IASetVertexBuffers(0, 2, buffers, strides, offsets);
 }
 
 static D3D11_PRIMITIVE_TOPOLOGY trElementType(ElementType et)
@@ -563,8 +568,8 @@ void dx11SetIndices(phandle_t ib, ElementType et, int offset, int indicescount)
 
 	s_curNumIndices = indicescount;
 
-	g_context->IASetIndexBuffer(resource->m_indexBuffer, DXGI_FORMAT_R16_UINT, offset);
-	g_context->IASetPrimitiveTopology(trElementType(et));
+	dx11_context->IASetIndexBuffer(resource->m_indexBuffer, DXGI_FORMAT_R16_UINT, offset);
+	dx11_stateManager->setPrimitiveTopology(trElementType(et));
 }
 
 void dx11SetVerticesUP(const void *vb, VertexType vt, int vertcount)
@@ -591,20 +596,20 @@ void dx11SetIndicesUP(const void *ib, ElementType et, int indicescount)
 
 void dx11SetGlobalTexture(GlobalTextureId id, phandle_t h, const SamplerDesc &samplerState)
 {
-	g_curGlobalTextures[id] = h;
-	g_curGlobalTextureSamplerDescs[id] = samplerState;
+	dx11_curGlobalTextures[id] = h;
+	dx11_curGlobalTextureSamplerDescs[id] = samplerState;
 }
 
 void dx11SetMaterialTexture(const FastTextureParams *textures)
 {
-	g_curMaterialTextures = *textures;
+	dx11_curMaterialTextures = *textures;
 }
 
 void dx11SetRenderState(const DepthStencilDesc &dsd, const RasterizerDesc &rd, const BlendDesc &bd)
 {
-	g_stateManager->setDepthStencilState(dsd);
-	g_stateManager->setRasterizerState(rd);
-	g_stateManager->setBlendState(bd);
+	dx11_stateManager->setDepthStencilState(dsd);
+	dx11_stateManager->setRasterizerState(rd);
+	dx11_stateManager->setBlendState(bd);
 }
 
 static void setupBoundingBoxIndices()
@@ -638,7 +643,7 @@ static void setupBoundingBoxVertices(const BoundingBox &bbox)
 
 static std::list<Query *> s_activeQueries;
 
-void dx11IssueQueries(int n, Query *queries[])
+static void dx11IssueQueries(int n, Query *queries[])
 {
 	setupBoundingBoxIndices();
 
@@ -647,15 +652,18 @@ void dx11IssueQueries(int n, Query *queries[])
 
 	for (int i = 0; i < n; i++) {
 		Query *query = queries[i];
-		DX11_Resource *resource = query->m_handle->castTo<DX11_Resource *>();
+		AX_ASSERT(!query->m_handle);
+		ID3D11Query *d3dquery = dx11AllocQuery();
+		query->m_handle = d3dquery;
+
 		// setup vertice
 		setupBoundingBoxVertices(queries[i]->m_bbox);
 
-		g_context->Begin(resource->m_query);
+		dx11_context->Begin(d3dquery);
 		// draw
-		g_context->DrawIndexed(s_curNumIndices, 0, 0);
+		dx11_context->DrawIndexed(s_curNumIndices, 0, 0);
 
-		g_context->End(resource->m_query);
+		dx11_context->End(d3dquery);
 
 		s_activeQueries.push_back(query);
 	}
@@ -664,16 +672,45 @@ void dx11IssueQueries(int n, Query *queries[])
 	s_curShader->end();
 }
 
+static void dx11CheckQueryResult()
+{
+	dx11BeginPerfEvent("CheckQueryResult");
+
+	std::list<Query *>::iterator it = s_activeQueries.begin();
+
+	while (it != s_activeQueries.end()) {
+		Query *query = *it;
+		ID3D11Query *d3dquery = query->m_handle.castTo<ID3D11Query *>();
+
+		UINT64 queryData; // This data type is different depending on the query type
+
+		HRESULT hr = dx11_context->GetData(d3dquery, &queryData, sizeof(queryData), 0);
+
+		if (hr == S_OK) {
+			it = s_activeQueries.erase(it);
+			dx11FreeQuery(d3dquery);
+			query->m_handle = 0;
+			query->m_result = queryData;
+			continue;
+		}
+
+		++it;
+	}
+
+	dx11EndPerfEvent();
+}
+
+
 void dx11Draw()
 {
 	UINT npass = s_curShader->begin(s_curTechnique);
 	for (int i = 0; i < npass; i++) {
 		s_curShader->beginPass(i);
 
-		if (!g_curInstanced) {
-			g_context->DrawIndexed(s_curNumIndices, 0, 0);
+		if (!dx11_curInstanced) {
+			dx11_context->DrawIndexed(s_curNumIndices, 0, 0);
 		} else {
-			g_context->DrawIndexedInstanced(s_curNumIndices, s_curNumInstances, 0, 0, 0);
+			dx11_context->DrawIndexedInstanced(s_curNumIndices, s_curNumInstances, 0, 0, 0);
 		}
 
 		s_curShader->endPass();
@@ -688,13 +725,13 @@ void dx11Clear(const RenderClearer &clearer)
 		if (clearer.isClearDepth) flags |= D3D11_CLEAR_DEPTH;
 		if (clearer.isClearStencil) flags |= D3D11_CLEAR_STENCIL;
 		if (flags)
-			g_context->ClearDepthStencilView(s_dsv, flags, clearer.depth, clearer.stencil);
+			dx11_context->ClearDepthStencilView(s_dsv, flags, clearer.depth, clearer.stencil);
 	}
 
 	if (clearer.isClearColor) {
 		Color4 color(clearer.color);
 		for (int i = 0; i < s_numView; i++) {
-			g_context->ClearRenderTargetView(s_rtv[i], color.c_ptr());
+			dx11_context->ClearRenderTargetView(s_rtv[i], color.c_ptr());
 		}
 	}
 }
@@ -705,7 +742,7 @@ void dx11Present(phandle_t window)
 	DX11_Resource *resrouce = window->castTo<DX11_Resource *>();
 	AX_ASSERT(resrouce->m_type == DX11_Resource::kWindow);
 	resrouce->m_window->present();
-	//dx11CheckQueryResult();
+	dx11CheckQueryResult();
 
 	s_curVertexBufferPos = 0;
 	s_curIndexBufferPos = 0;
@@ -731,9 +768,7 @@ void dx11AssignRenderApi()
 	RenderApi::updateWindowTarget = &dx11UpdateWindowTarget;
 	RenderApi::deleteWindowTarget = &dx11DeleteWindowTarget;
 
-	RenderApi::createQuery = &dx11CreateQuery;
 	RenderApi::issueQueries = &dx11IssueQueries;
-	RenderApi::deleteQuery = &dx11DeleteQuery;
 
 	RenderApi::beginPerfEvent = &dx11BeginPerfEvent;
 	RenderApi::endPerfEvent = &dx11EndPerfEvent;
@@ -783,17 +818,17 @@ void dx11InitApi()
 	desc.StructureByteStride = 0;
 
 	desc.ByteWidth = g_constBuffers.getBuffer(0)->getByteSize();
-	g_device->CreateBuffer(&desc, 0, &g_d3dConstBuffers[0]);
+	dx11_device->CreateBuffer(&desc, 0, &dx11_constBuffers[0]);
 
 	desc.ByteWidth = g_constBuffers.getBuffer(1)->getByteSize();
-	g_device->CreateBuffer(&desc, 0, &g_d3dConstBuffers[1]);
+	dx11_device->CreateBuffer(&desc, 0, &dx11_constBuffers[1]);
 
-	g_context->VSSetConstantBuffers(0, 2, g_d3dConstBuffers);
-	g_context->PSSetConstantBuffers(0, 2, g_d3dConstBuffers);
+	dx11_context->VSSetConstantBuffers(0, 2, dx11_constBuffers);
+	dx11_context->PSSetConstantBuffers(0, 2, dx11_constBuffers);
 
 	for (int i = 0; i < PRIMITIVECONST_COUNT; i++) {
 		desc.ByteWidth = (i+1) * 16;
-		g_device->CreateBuffer(&desc, 0, &g_primConstBuffers[i]);
+		dx11_device->CreateBuffer(&desc, 0, &dx11_primConstBuffers[i]);
 	}
 
 	dx11AssignRenderApi();

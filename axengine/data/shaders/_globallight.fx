@@ -14,15 +14,6 @@ read the license and understand and accept it fully.
 #include "common.fxh"
 #include "shadow.fxh"
 
-float Script : STANDARDSGLOBAL <
-	// technique
-	string TechniqueGeoFill = "";
-	string TechniqueShadowGen = "";
-	string TechniqueMain = "main";
-	string TechniqueGlow = "";
-	string TechniqueLayer = "";
-> = 0.8;
-
 // features typedef
 #define F_SHADOWED			M_FEATURE0
 #define F_DIRECTION_LIGHT	M_FEATURE1
@@ -112,7 +103,7 @@ half4 FP_main(LightVertexOut IN) : COLOR
 
 
 
-technique main
+technique Main
 {
     pass p0 {
         VertexShader = compile VS_3_0 VP_main();

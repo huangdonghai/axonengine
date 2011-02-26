@@ -15,57 +15,6 @@ AX_BEGIN_NAMESPACE
 namespace {
 	static ID3DXEffectPool *s_effectPool = NULL;   // Effect pool for sharing parameters
 
-#if 0
-	// cache system samplers
-	struct SamplerParam {
-		int type;
-		const char *paramname;
-	};
-
-	static SamplerParam s_materialTextureNames[] = {
-		MaterialTextureId::Diffuse, "g_diffuseMap",
-		MaterialTextureId::Normal, "g_normalMap",
-		MaterialTextureId::Specular, "g_specularMap",
-		MaterialTextureId::Opacit, "g_opacitMap",
-		MaterialTextureId::Emission, "g_emissionMap",
-		MaterialTextureId::Displacement, "g_displacementMap",
-		MaterialTextureId::Env, "g_envMap",
-
-		// terrain sampler
-		MaterialTextureId::TerrainColor, "g_terrainColor",
-		MaterialTextureId::TerrainNormal, "g_terrainNormal",
-
-		MaterialTextureId::Detail, "g_detailMap",
-		MaterialTextureId::Detail1, "g_detailMap1",
-		MaterialTextureId::Detail2, "g_detailMap2",
-		MaterialTextureId::Detail3, "g_detailMap3",
-
-		MaterialTextureId::DetailNormal, "g_detailNormalMap",
-		MaterialTextureId::DetailNormal1, "g_detailNormalMap1",
-		MaterialTextureId::DetailNormal2, "g_detailNormalMap2",
-		MaterialTextureId::DetailNormal3, "g_detailNormalMap3",
-
-		MaterialTextureId::LayerAlpha, "g_layerAlpha",
-		MaterialTextureId::LayerAlpha1, "g_layerAlpha1",
-		MaterialTextureId::LayerAlpha2, "g_layerAlpha2",
-		MaterialTextureId::LayerAlpha3, "g_layerAlpha3",
-
-		// other
-		MaterialTextureId::Reflection, "g_reflectionMap",
-		MaterialTextureId::LightMap, "g_lightMap",
-	};
-
-	static SamplerParam s_globalTextureNames[] = {
-		GlobalTextureId::RtDepth, "g_rtDepth",
-		GlobalTextureId::Rt0, "g_rt0",
-		GlobalTextureId::Rt1, "g_rt1",
-		GlobalTextureId::Rt2, "g_rt2",
-		GlobalTextureId::Rt3, "g_rt3",
-		GlobalTextureId::SceneColor, "g_sceneColor",
-		GlobalTextureId::ShadowMap, "g_shadowMap",
-		GlobalTextureId::ShadowMapCube, "g_shadowMapCube",
-	};
-#endif
 	class EffectHelper
 	{
 	public:
@@ -549,33 +498,7 @@ void DX9_Shader::initSamplerAnn(D3DXHANDLE param)
 
 D3DXHANDLE DX9_Shader::findTechnique(Technique tech)
 {
-	EffectHelper helper(m_object);
-
-	D3DXHANDLE script = m_object->GetParameterByName(0, "Script");
-
-	if (!script) return 0;
-
-	D3DXHANDLE annon = m_object->GetAnnotationByName(script, tech.toString().c_str());
-	if (!annon) return 0;
-
-	std::string techname = helper.getString(annon);
-
-	if (techname.empty()) return 0;
-
-	D3DXHANDLE d3dtech = m_object->GetTechniqueByName(techname.c_str());
-
-	if (!d3dtech) {
-		return 0;
-	}
-
-#if 0
-	HRESULT hr;
-	V(m_object->ValidateTechnique(d3dtech));
-
-	if (FAILED(hr)) {
-		Errorf("%s(%d): technique '%s' cann't be validated\n", __FILE__, __LINE__, techname.c_str());
-	}
-#endif
+	D3DXHANDLE d3dtech = m_object->GetTechniqueByName(tech.toString());
 
 	return d3dtech;
 }

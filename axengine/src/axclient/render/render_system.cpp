@@ -56,7 +56,7 @@ void RenderSystem::initialize()
 		drivername = d3d9name;
 	}
 
-	drivername = glname;
+	drivername = d3d11name;
 
 	g_renderDriver = (IRenderDriver*)(g_classFactory->createInstance(drivername));
 	g_renderDriver->initialize();

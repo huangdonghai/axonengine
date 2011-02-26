@@ -16,12 +16,10 @@ Query::Query()
 {
 	m_queryFrame = 0;
 	m_result = 0;
-	g_apiWrap->createQuery(m_handle);
 }
 
 Query::~Query()
 {
-	g_apiWrap->deleteQuery(m_handle);
 }
 
 void Query::issueVisQuery(int frameId, const BoundingBox &bbox)

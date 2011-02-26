@@ -68,9 +68,9 @@ namespace {
 } // anonymous namespace
 
 
-IoRequest::IoRequest(IEventHandler *handler, const std::string &filename)
-	: m_eventHandler(handler)
-	, m_filename(filename)
+IoRequest::IoRequest(const std::string &filename, IEventHandler *handler)
+	: m_filename(filename)
+	, m_eventHandler(handler)
 	, m_filesize(0)
 	, m_filedata(0)
 {}

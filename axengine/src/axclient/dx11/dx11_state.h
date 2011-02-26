@@ -3,7 +3,7 @@
 
 AX_DX11_BEGIN_NAMESPACE
 
-extern ID3D11DeviceContext *g_context;
+extern ID3D11DeviceContext *dx11_context;
 
 class DX11_StateManager
 {
@@ -18,7 +18,7 @@ public:
 	void setTexture(int stage, ID3D11ShaderResourceView *texture)
 	{
 		if (m_textures[stage] == texture) return;
-		g_context->PSSetShaderResources(stage, 1, &texture);
+		dx11_context->PSSetShaderResources(stage, 1, &texture);
 		m_textures[stage] = texture;
 	}
 
@@ -28,7 +28,7 @@ public:
 			return;
 		}
 		ID3D11SamplerState *state = findSamplerState(desc);
-		g_context->PSSetSamplers(stage, 1, &state);
+		dx11_context->PSSetSamplers(stage, 1, &state);
 		m_samplerDescs[stage] = desc;
 	}
 
@@ -38,13 +38,8 @@ public:
 			return;
 
 		ID3D11DepthStencilState *state = findDepthStencilState(desc);
-		g_context->OMSetDepthStencilState(state, 0);
+		dx11_context->OMSetDepthStencilState(state, 0);
 		m_depthStencilDesc = desc;
-
-#ifdef _DEBUG
-		D3D11_DEPTH_STENCIL_DESC d3ddesc;
-		state->GetDesc(&d3ddesc);
-#endif
 	}
 
 	void setRasterizerState(const RasterizerDesc &desc)
@@ -53,7 +48,7 @@ public:
 			return;
 
 		ID3D11RasterizerState *state = findRasterizerState(desc);
-		g_context->RSSetState(state);
+		dx11_context->RSSetState(state);
 		m_rasterizerDesc = desc;
 	}
 
@@ -64,7 +59,7 @@ public:
 
 		ID3D11BlendState *state = findBlendState(desc);
 		FLOAT blendFactor[4] = { 0,0,0,0 };
-		g_context->OMSetBlendState(state, blendFactor, 0xFFFFFFFF);
+		dx11_context->OMSetBlendState(state, blendFactor, 0xFFFFFFFF);
 		m_blendDesc = desc;
 	}
 
@@ -73,7 +68,7 @@ public:
 		if (m_vertexShader == vs)
 			return;
 
-		g_context->VSSetShader(vs, 0, 0);
+		dx11_context->VSSetShader(vs, 0, 0);
 		m_vertexShader = vs;
 	}
 
@@ -81,7 +76,7 @@ public:
 	{
 		if (m_pixelShader == ps)
 			return;
-		g_context->PSSetShader(ps, 0, 0);
+		dx11_context->PSSetShader(ps, 0, 0);
 		m_pixelShader = ps;
 	}
 
@@ -90,8 +85,17 @@ public:
 		if (m_inputLayout == il)
 			return;
 
-		g_context->IASetInputLayout(il);
+		dx11_context->IASetInputLayout(il);
 		m_inputLayout = il;
+	}
+
+	void setPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY pt)
+	{
+		if (pt == m_primitiveTopology)
+			return;
+
+		dx11_context->IASetPrimitiveTopology(pt);
+		m_primitiveTopology = pt;
 	}
 
 	void unsetAllTextures()
@@ -119,6 +123,7 @@ private:
 	ID3D11VertexShader *m_vertexShader;
 	ID3D11PixelShader *m_pixelShader;
 	ID3D11InputLayout *m_inputLayout;
+	D3D11_PRIMITIVE_TOPOLOGY m_primitiveTopology;
 
 	Dict<SamplerDesc, ID3D11SamplerState *> m_samplerStateDict;
 	Dict<DepthStencilDesc, ID3D11DepthStencilState *> m_depthStencilStateDict;

@@ -63,9 +63,9 @@ void DX11_Window::checkSwapChain()
 	desc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 	desc.Flags = 0;
 
-	g_dxgiFactory->CreateSwapChain(g_device, &desc, &m_swapChain);
+	dxgi_factory->CreateSwapChain(dx11_device, &desc, &m_swapChain);
 	m_swapChain->GetBuffer(0, __uuidof(m_backbuffer), reinterpret_cast<void**>(&m_backbuffer));
-	g_device->CreateRenderTargetView(m_backbuffer, NULL, &m_renderTargetView);
+	dx11_device->CreateRenderTargetView(m_backbuffer, NULL, &m_renderTargetView);
 
 	m_swapChainSize = m_updatedSize;
 	m_swapChainWnd = m_wndId;

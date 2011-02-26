@@ -83,6 +83,14 @@ bool GL_Driver::initialize()
 	if (!hglrc) return false;
 
 	gl_context = hglrc;
+
+	cg_context = cgCreateContext();
+	cgGLRegisterStates(cg_context);
+
+	g_globalMacro.setMacro(GlobalMacro::G_OPENGL);
+	gl_shaderManager = new GL_ShaderManager;
+	gl_stateManager = new GL_StateManager;
+
 	return true;
 }
 

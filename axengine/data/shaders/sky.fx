@@ -9,17 +9,6 @@ read the license and understand and accept it fully.
 
 #include "common.fxh"
 
-float Script : STANDARDSGLOBAL <
-	// technique
-	string TechniqueGeoFill = "gpass";
-	string TechniqueShadowGen = "";
-	string TechniqueMain = "main";
-	string TechniqueGlow = "";
-	string TechniqueLayer = "";
-> = 0.8;
-
-/*********** Generic Vertex Shader ******/
-
 VertexOut VP_main(MeshVertex IN)
 {
     VertexOut OUT = (VertexOut)0;
@@ -43,6 +32,8 @@ GBufferOut FP_gpass(VertexOut IN)
 {
 	GBufferData OUT = (GBufferData)0;
 	OUT.emission = IN.color;
+	OUT.shiness = g_matShiness;
+
 #if M_DIFFUSE
 	OUT.emission *= tex2D(g_diffuseMap, IN.streamTc.xy);
 #endif
@@ -50,7 +41,6 @@ GBufferOut FP_gpass(VertexOut IN)
 	return GB_Output(OUT);
 }
 
-/********* pixel shaders ********/
 half4 FP_main(VertexOut IN) : COLOR
 {
 	half4 result;
@@ -73,11 +63,7 @@ half4 FP_main(VertexOut IN) : COLOR
 	return result;
 }
 
-//////////////////////////////////////////////////////////////////////
-// TECHNIQUES ////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////
-
-technique gpass
+technique GeoFill
 {
 	pass p0 {
 		VertexShader = compile VS_3_0 VP_main();
@@ -86,7 +72,7 @@ technique gpass
 }
 
 
-technique main
+technique Main
 {
     pass p0 {
         VertexShader = compile VS_3_0 VP_main();
