@@ -248,8 +248,10 @@ void Landscape::buildKdTree()
 	int numLargeVertices = 0;
 	int numLargeElements = 0;
 	int numLargeModel = 0;
+	int numTinyModel = 0;
 	float area = 0;
 	float smallArea = 0;
+	float maxlength = 0;
 
 	Vector2 minmaxTc(0,0);
 
@@ -270,6 +272,11 @@ void Landscape::buildKdTree()
 		numMaterials += staticFixed->m_model->numMaterials();
 		Primitives prims = staticFixed->m_model->getStaticPrims();
 		numPrimitives += prims.size();
+
+		float len = staticFixed->m_model->getBoundingBox().getExtends().getLength();
+		maxlength = std::max(len, maxlength);
+
+		if (len < 4) numTinyModel++;
 
 		Primitives::const_iterator it = prims.begin();
 		float curArea = 0;
@@ -297,7 +304,7 @@ void Landscape::buildKdTree()
 			numScaledVertices += curVertices;
 			numScaledElements += curElements;
 		}
-		if (curArea / curElements < (1.0f / 16.0f)) {
+		if (len < 2) {
 			numSmallVertices += curVertices;
 			numSmallElements += curElements;
 			smallArea += curArea;

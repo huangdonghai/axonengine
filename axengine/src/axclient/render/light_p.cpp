@@ -224,7 +224,7 @@ void RenderLight::ShadowGenerator::updateGlobalSplit(RenderScene *scene, int ind
 
 	SplitInfo *si = m_splits[index];
 
-	Vector3 *points = si->m_volume;
+	Vector3 points[8];
 	BoundingBox &bbox = si->m_csmBbox;
 
 	const RenderCamera &visCamera = scene->camera;
@@ -287,7 +287,7 @@ void RenderLight::ShadowGenerator::updateZfar(RenderScene *scene, float *f)
 		return;
 	}
 
-	Vector3 *points = si->m_volume;
+	Vector3 points[8];
 	BoundingBox &bbox = si->m_csmBbox;
 
 	const RenderCamera &visCamera = scene->camera;
@@ -457,14 +457,8 @@ bool RenderLight::ShadowGenerator::initPoint()
 	for (int i=0; i<6; i++) {
 		SplitInfo *si = m_splits[i];
 
-		si->m_volume[0] = mtx.origin;
-		si->m_volume[1] = mtx.origin;
-		si->m_volume[2] = mtx.origin;
-		si->m_volume[3] = mtx.origin;
-
 		// TODO: fix this
 		si->m_camera = cameras[i];
-		si->m_camera.calcPointsAlongZdist(&si->m_volume[4], m_light->radius());
 		si->m_camera.setTarget(m_shadowMap->m_renderTarget);
 		si->m_camera.setTargetSlice(i);
 		si->m_camera.setViewRect(Rect(0,0,m_shadowMapSize,m_shadowMapSize));
@@ -495,15 +489,6 @@ bool RenderLight::ShadowGenerator::initSpot()
 	Matrix3 axis(forward,left,up);
 	camera.setViewAxis(axis);
 	camera.setFov(m_light->spotAngle(), m_light->spotAngle(), 0.5f, m_light->radius());
-
-	// calculate volumes
-	si->m_volume[0] = mtx.origin;
-	si->m_volume[1] = mtx.origin;
-	si->m_volume[2] = mtx.origin;
-	si->m_volume[3] = mtx.origin;
-
-	// TODO: fix this
-	camera.calcPointsAlongZdist(&si->m_volume[4], m_light->radius());
 
 	si->m_camera.setTarget(m_shadowMap->m_renderTarget);
 	si->m_camera.setViewRect(Rect(0,0,m_shadowMapSize,m_shadowMapSize));

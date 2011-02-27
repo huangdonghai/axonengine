@@ -18,7 +18,6 @@ public:
 
 	public:
 		RenderCamera m_camera;
-		Vector3 m_volume[8];
 		int m_updateFrame;
 		float m_csmExtend;
 		BoundingBox m_csmBbox;	// calc scale and offset

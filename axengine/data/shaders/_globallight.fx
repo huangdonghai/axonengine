@@ -85,7 +85,7 @@ half4 FP_main(LightVertexOut IN) : COLOR
 
 #if F_DIRECTION_LIGHT
 	OUT.xyz = s_lightColor.xyz * NdotL;
-	OUT.w = pow(RdotE, data.shiness) * NdotL/* * s_lightColor.w*/;
+	OUT.w = pow(RdotE, data.shiness) * NdotL;
 	OUT *= getShadow(data.worldPos, data.viewDepth);
 #endif
 
@@ -97,7 +97,7 @@ half4 FP_main(LightVertexOut IN) : COLOR
 	OUT.xyz += s_envColor.xyz;
 #endif
 
-	OUT.xyz = OUT.xyz * data.diffuse + OUT.w * data.specular;
+	OUT.xyz = OUT.xyz * data.diffuse + OUT.w * data.specular * s_lightColor;
 	return OUT;
 }
 
