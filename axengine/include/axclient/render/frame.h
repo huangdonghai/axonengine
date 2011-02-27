@@ -93,23 +93,6 @@ protected:
 	void sortInteractions();
 };
 
-inline bool RenderScene::isLastCsmSplits() const
-{
-	if (sceneType != ShadowGen)
-		return false;
-
-	if (!sourceLight)
-		return false;
-
-	if (!sourceLight->isGlobal())
-		return false;
-
-	if (splitIndex != sourceLight->m_shadowData->numSplitCamera-1)
-		return false;
-
-	return true;
-}
-
 class SyncMethod;
 class RenderData;
 

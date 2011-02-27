@@ -5,6 +5,8 @@ AX_BEGIN_NAMESPACE
 
 class TextureResource : public KeyedObject, public IEventHandler
 {
+	friend class Texture;
+
 public:
 	enum Status {
 		Constructed,

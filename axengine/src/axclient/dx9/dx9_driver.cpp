@@ -66,6 +66,8 @@ bool DX9_Driver::initialize()
 	g_renderDriverInfo.maxCubeMapTextureSize = g_renderDriverInfo.maxTextureSize;
 
 	g_renderDriverInfo.transposeMatrix = true;
+	g_renderDriverInfo.support2DArray = false;
+	g_renderDriverInfo.supportCubeArray = false;
 
 	// Get the current desktop format
 	D3DDISPLAYMODE dispmode;

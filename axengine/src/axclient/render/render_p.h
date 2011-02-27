@@ -3,6 +3,7 @@
 
 #define AX_MTRENDER 0
 
+#include "light_p.h"
 #include "selection.h"
 #include "render_thread.h"
 #include "render_interface.h"

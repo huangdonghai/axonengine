@@ -130,12 +130,12 @@ RenderContext::RenderContext()
 	m_mtrGlobalLight->m_blendMode = Material::BlendMode_Add;
 
 	m_mtrPointLight = new Material("_pointlight");
-	m_mtrPointLight->m_depthTest = true;
+	m_mtrPointLight->m_depthTest = false;
 	m_mtrPointLight->m_depthWrite = false;
 	m_mtrPointLight->m_blendMode = Material::BlendMode_Add;
 
 	m_mtrSpotLight = new Material("_spotlight");
-	m_mtrSpotLight->m_depthTest = true;
+	m_mtrSpotLight->m_depthTest = false;
 	m_mtrSpotLight->m_depthWrite = false;
 	m_mtrSpotLight->m_blendMode = Material::BlendMode_Add;
 
@@ -482,7 +482,6 @@ void RenderContext::drawPass_ShadowGen(RenderScene *scene)
 	int slice = scene->camera.targetSlice();
 
 	RenderLight *qlight = scene->sourceLight;
-	ShadowData *qshadow = qlight->m_shadowData;
 
 	if (r_shadowGen.getBool()) {
 		BEGIN_PIX("ShadowGen");
@@ -552,7 +551,7 @@ void RenderContext::drawPass_Lights(RenderScene *scene)
 		} else if (light->isPoint()) {
 			drawPointLight(scene, light);
 		} else if (light->isSpot()) {
-			//drawSpotLight(scene, light);
+			drawSpotLight(scene, light);
 		} else {
 			AX_WRONGPLACE;
 		}
@@ -756,14 +755,13 @@ void RenderContext::drawMeshUP(Material *material, MeshUP *mesh)
 #define F_ENV_LIGHT 3
 void RenderContext::drawGlobalLight(RenderScene *scene, RenderLight *light)
 {
-	ShadowData *qshadow = light->m_shadowData;
-
 	m_mtrGlobalLight->clearParameters();
 
-	if (qshadow) {
-		RenderTarget *tex = qshadow->splitCameras[0].target();
+	if (light->m_isShadowed) {
+		RenderLight::ShadowGenerator *qshadow = light->m_shadowGen;
+		RenderTarget *tex = qshadow->m_shadowMap->m_renderTarget;
 		AX_ASSERT(tex->isTexture());
-		Matrix4 matrix = qshadow->splitCameras[0].getViewProjMatrix();
+		Matrix4 matrix = qshadow->m_splits[0]->m_camera.getViewProjMatrix();
 		matrix.scale(0.5f, -0.5f, 0.5f);
 		matrix.translate(0.5f, 0.5f, 0.5f);
 
@@ -771,7 +769,7 @@ void RenderContext::drawGlobalLight(RenderScene *scene, RenderLight *light)
 		AX_SU(g_texMatrix, matrix);
 
 		Size size = tex->size();
-		Matrix4 fixmtx = *(Matrix4*)qshadow->splitScaleOffsets;
+		Matrix4 fixmtx = *(Matrix4*)qshadow->m_splitScaleOffsets;
 
 		float fixWidth = 0.5f / size.width;
 		float fixHeight = 0.5f / size.height;
@@ -812,7 +810,7 @@ void RenderContext::drawGlobalLight(RenderScene *scene, RenderLight *light)
 	lightpos.normalize();
 
 	m_mtrGlobalLight->clearFeatures();
-	m_mtrGlobalLight->setFeature(F_SHADOWED, light->m_shadowData != 0);
+	m_mtrGlobalLight->setFeature(F_SHADOWED, light->m_isShadowed);
 	m_mtrGlobalLight->setFeature(F_DIRECTION_LIGHT, !light->m_color.isZero());
 	m_mtrGlobalLight->setFeature(F_SKY_LIGHT, !light->m_skyColor.isZero());
 	m_mtrGlobalLight->setFeature(F_ENV_LIGHT, !light->m_envColor.isZero());
@@ -831,13 +829,13 @@ void RenderContext::drawGlobalLight(RenderScene *scene, RenderLight *light)
 #define F_SHADOWED 0
 void RenderContext::drawPointLight(RenderScene *scene, RenderLight *light)
 {
-	ShadowData *qshadow = light->m_shadowData;
+	RenderLight::ShadowGenerator *qshadow = light->m_shadowGen;
 
 	m_mtrPointLight->clearParameters();
 	m_mtrPointLight->clearFeatures();
 
-	if (qshadow) {
-		RenderTarget *target = qshadow->splitCameras[0].target();
+	if (light->m_isShadowed) {
+		RenderTarget *target = qshadow->m_shadowMap->m_renderTarget;
 		Size size = target->size();
 
 		AX_SU(g_textureSize, Vector4(size.width, size.height, 1.0f/size.width, 1.0f/size.height));
@@ -857,7 +855,7 @@ void RenderContext::drawPointLight(RenderScene *scene, RenderLight *light)
 		m_mtrPointLight->m_depthTest = false;
 		m_mtrPointLight->m_cullMode = RasterizerDesc::CullMode_Front;
 	} else {
-		m_mtrPointLight->m_depthTest = true;
+		m_mtrPointLight->m_depthTest = false;
 		m_mtrPointLight->m_cullMode = RasterizerDesc::CullMode_Back;
 	}
 
@@ -870,13 +868,13 @@ void RenderContext::drawSpotLight( RenderScene *scene, RenderLight *light )
 	m_mtrSpotLight->clearParameters();
 	m_mtrSpotLight->clearFeatures();
 
-	ShadowData *qshadow = light->m_shadowData;
+	RenderLight::ShadowGenerator *qshadow = light->m_shadowGen;
 
 	Vector4 lightpos(light->getOrigin(), 1.0f / light->radius());
 
-	if (qshadow) {
-		Matrix4 matrix = qshadow->splitCameras[0].getViewProjMatrix();
-		RenderTarget* target = qshadow->splitCameras[0].target();
+	if (light->m_isShadowed) {
+		Matrix4 matrix = qshadow->m_splits[0]->m_camera.getViewProjMatrix();
+		RenderTarget* target = qshadow->m_shadowMap->m_renderTarget;
 		Size size = target->size();
 		matrix.scale(0.5f, -0.5f, 0.5f);
 		matrix.translate(0.5f+0.5f/size.width, 0.5f+0.5f/size.height, 0.5f);
@@ -888,15 +886,15 @@ void RenderContext::drawSpotLight( RenderScene *scene, RenderLight *light )
 		AX_SU(g_texMatrix, matrix);
 	}
 
+	m_mtrSpotLight->addParameter("s_lightMatrix", 16, light->m_projMatrix.getTranspose().c_ptr());
 	m_mtrSpotLight->addParameter("s_lightColor", 4, light->lightColor().c_ptr());
 	m_mtrSpotLight->addParameter("s_lightPos", 4, lightpos.c_ptr());
-	m_mtrSpotLight->addParameter("s_lightMatrix", 16, light->m_projMatrix.getTranspose().c_ptr());
 
 	if (light->m_isIntersectsNearPlane) {
 		m_mtrSpotLight->m_depthTest = false;
 		m_mtrSpotLight->m_cullMode = RasterizerDesc::CullMode_Front;
 	} else {
-		m_mtrSpotLight->m_depthTest = true;
+		m_mtrSpotLight->m_depthTest = false;
 		m_mtrSpotLight->m_cullMode = RasterizerDesc::CullMode_Back;
 	}
 

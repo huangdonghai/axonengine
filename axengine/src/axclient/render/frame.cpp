@@ -18,6 +18,8 @@ void RenderScene::addLight(RenderLight *light)
 
 	if (light->isGlobal())
 		globalLight = light;
+
+	light->m_isShadowed = false; // shadow need check
 }
 
 void RenderScene::addEntity(RenderEntity *entity)
@@ -265,6 +267,7 @@ void RenderScene::checkLights()
 		totalUsed += light->getShadowMemoryUsed();
 		if (light->genShadowMap(this)) {
 			frameUsed += light->getShadowMemoryUsed();
+			light->m_isShadowed = true;
 		}
 		++it;
 	}
@@ -296,6 +299,24 @@ void RenderScene::addOverlayPrimitive( Primitive *prim )
 
 	overlayPrimitives[numOverlayPrimitives++] = prim;
 }
+
+bool RenderScene::isLastCsmSplits() const
+{
+	if (sceneType != ShadowGen)
+		return false;
+
+	if (!sourceLight)
+		return false;
+
+	if (!sourceLight->isGlobal())
+		return false;
+
+	if (splitIndex != sourceLight->m_shadowGen->m_numCsmSplits - 1)
+		return false;
+
+	return true;
+}
+
 
 RenderFrame::RenderFrame()
 {

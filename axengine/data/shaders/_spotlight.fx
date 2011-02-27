@@ -55,7 +55,7 @@ half4 FP_main(ShadowVertexOut IN) : COLOR
 	float4 projTc = mul(s_lightMatrix, float4(data.worldPos,1));
 	projTc.xy /= projTc.z;
 
-	half falloff = saturate(1.0f - dot(projTc.xyz,projTc.xyz));
+	half falloff = saturate(1.0f - length(projTc.xyz));
 
 	float3 lightPos = s_lightPos.xyz - data.worldPos;
 

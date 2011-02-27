@@ -114,18 +114,26 @@ bool DX11_Driver::initialize()
 		g_renderDriverInfo.maxTextureSize = 4096;
 		g_renderDriverInfo.max3DTextureSize = 256;
 		g_renderDriverInfo.maxCubeMapTextureSize = 4096;
+		g_renderDriverInfo.support2DArray = false;
+		g_renderDriverInfo.supportCubeArray = false;
 	} else if (featureLevel == D3D_FEATURE_LEVEL_10_0) {
 		g_renderDriverInfo.maxTextureSize = 8192;
 		g_renderDriverInfo.max3DTextureSize = 2048;
 		g_renderDriverInfo.maxCubeMapTextureSize = 8192;
+		g_renderDriverInfo.support2DArray = true;
+		g_renderDriverInfo.supportCubeArray = false;
 	} else if (featureLevel == D3D_FEATURE_LEVEL_10_1) {
 		g_renderDriverInfo.maxTextureSize = 8192;
 		g_renderDriverInfo.max3DTextureSize = 2048;
 		g_renderDriverInfo.maxCubeMapTextureSize = 8192;
+		g_renderDriverInfo.support2DArray = true;
+		g_renderDriverInfo.supportCubeArray = true;
 	} else if (featureLevel == D3D_FEATURE_LEVEL_11_0) {
 		g_renderDriverInfo.maxTextureSize = 16384;
 		g_renderDriverInfo.max3DTextureSize = 2048;
 		g_renderDriverInfo.maxCubeMapTextureSize = 16384;
+		g_renderDriverInfo.support2DArray = true;
+		g_renderDriverInfo.supportCubeArray = true;
 	} else {
 		AX_WRONGPLACE;
 	}
@@ -262,10 +270,10 @@ void DX11_Driver::checkFormats()
 	g_renderDriverInfo.suggestFormats[RenderDriverInfo::SuggestedFormat_DepthStencil] = TexFormat::D24S8;
 	g_renderDriverInfo.suggestFormats[RenderDriverInfo::SuggestedFormat_DepthStencilTexture] = TexFormat::D24S8;
 	g_renderDriverInfo.suggestFormats[RenderDriverInfo::SuggestedFormat_SceneColor] = TexFormat::BGRA8;
-	g_renderDriverInfo.suggestFormats[RenderDriverInfo::SuggestedFormat_HdrLightBuffer] = TexFormat::RGBA16F;
-	g_renderDriverInfo.suggestFormats[RenderDriverInfo::SuggestedFormat_HdrSceneColor] = TexFormat::RGBA16F;
+	g_renderDriverInfo.suggestFormats[RenderDriverInfo::SuggestedFormat_HdrLightBuffer] = TexFormat::R11G11B10F;
+	g_renderDriverInfo.suggestFormats[RenderDriverInfo::SuggestedFormat_HdrSceneColor] = TexFormat::R11G11B10F;
 	g_renderDriverInfo.suggestFormats[RenderDriverInfo::SuggestedFormat_NormalBuffer] = TexFormat::RGB10A2;
-	g_renderDriverInfo.suggestFormats[RenderDriverInfo::SuggestedFormat_ShadowMap] = TexFormat::D24S8;
+	g_renderDriverInfo.suggestFormats[RenderDriverInfo::SuggestedFormat_ShadowMap] = TexFormat::D16;
 	g_renderDriverInfo.suggestFormats[RenderDriverInfo::SuggestedFormat_CubeShadowMap] = TexFormat::R32F;
 }
 

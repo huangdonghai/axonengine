@@ -65,6 +65,8 @@ struct RenderDriverInfo {
 	TexFormat suggestFormats[SuggestedFormat_Max];
 
 	bool transposeMatrix;
+	bool support2DArray;
+	bool supportCubeArray;
 };
 
 class IRenderDriver

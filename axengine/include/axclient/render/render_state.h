@@ -104,6 +104,7 @@ struct SamplerDesc {
 			uint_t borderColor : 4;
 			uint_t maxAnisotropy : 4;
 			uint_t comparison : 1; // for hardware shadow map
+			uint_t sRGB : 1; // sRGB source
 		};
 		uint_t intValue;
 	};

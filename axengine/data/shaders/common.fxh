@@ -213,13 +213,13 @@ DeferredData GB_Input(float4 viewDir, float4 screenTc)
 
 	half4 gnormal = tex2Dproj(g_rt1, screenTc);
 	half4 galbedo = tex2Dproj(g_rt2, screenTc);
+	//galbedo = pow(galbedo, 2.2);
 
 	OUT.normal.xyz = gnormal.xyz * 2 - 1;
 	OUT.normal.z = sqrt(abs(1 - dot(OUT.normal.xy, OUT.normal.xy))) * (gnormal.w > 0 ? 1 : -1);
 	OUT.diffuse = galbedo.xyz;
 	OUT.specular = galbedo.w;
 	OUT.shiness = exp2(gnormal.z * 8);
-	OUT.shiness = 10;
 	OUT.ssao = 1;
 	return OUT;
 }

@@ -142,7 +142,7 @@ void DX9_Window::checkSwapChain()
 	memset(&presentparams, 0, sizeof(presentparams));
 	presentparams.BackBufferWidth = m_updatedSize.width;
 	presentparams.BackBufferHeight = m_updatedSize.height;
-	presentparams.BackBufferFormat = D3DFMT_A8R8G8B8;
+	presentparams.BackBufferFormat = D3DFMT_X8R8G8B8;
 	presentparams.BackBufferCount = 1;
 	presentparams.EnableAutoDepthStencil= FALSE;
 	presentparams.AutoDepthStencilFormat= D3DFMT_D24S8;

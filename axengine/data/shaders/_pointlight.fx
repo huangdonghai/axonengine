@@ -7,9 +7,8 @@
 #define F_SHADOWED M_FEATURE0
 
 AX_BEGIN_PC
-	float3x4 s_lightMatrix : PREG0;
-	float4 s_lightPos : PREG4;		// (xyz)*invR, invR
-	float4 s_lightColor : PREG5 = float4(1,1,1,1);
+	float4 s_lightPos : PREG0;		// (xyz)*invR, invR
+	float4 s_lightColor : PREG1 = float4(1,1,1,1);
 AX_END_PC
 
 struct ShadowVertexOut {
@@ -55,7 +54,8 @@ half4 FP_main(ShadowVertexOut IN) : COLOR
 	DeferredData data = GB_Input(IN.viewDir, IN.screenTc);
 
 	float3 lightPos = (s_lightPos.xyz - data.worldPos) * s_lightPos.w;
-	half falloff = saturate(1.0f - dot(lightPos.xyz, lightPos.xyz));
+	half falloff = saturate(1.0f - length(lightPos.xyz));
+	//falloff *= falloff;
 
 	half3 L = normalize(lightPos.xyz);
 	half3 N = data.normal;

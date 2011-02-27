@@ -12,8 +12,6 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-struct ShadowData;
-
 class AX_API RenderLight : public RenderEntity
 {
 	friend struct RenderScene;
@@ -112,17 +110,7 @@ private:
 	// if not intersect neap clip plane, we can use volume's front face to draw light buffer
 	bool m_isIntersectsNearPlane;
 	Matrix4 m_projMatrix;
-
-	ShadowData *m_shadowData;
-};
-
-struct ShadowData {
-	typedef Vector3 VolumeVertexes[RenderLight::NUM_VOLUME_VERTEXES];
-	int numSplitCamera;
-	RenderCamera splitCameras[RenderLight::MAX_SPLITS];
-	VolumeVertexes splitVolumes[RenderLight::MAX_SPLITS];
-
-	Vector4 splitScaleOffsets[RenderLight::MAX_CSM_SPLITS];
+	bool m_isShadowed;
 };
 
 AX_END_NAMESPACE
