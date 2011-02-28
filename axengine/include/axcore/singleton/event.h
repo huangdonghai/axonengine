@@ -7,12 +7,15 @@ AX_BEGIN_NAMESPACE
 class IEventHandler;
 class Event
 {
+	friend class CoreSystem;
+
 public:
 	enum Type {
 		None = 0,                               // invalid event
 		KeyDown, KeyUp, MouseDown, MouseUp, MouseMove, CharInput, MouseWheel, XboxAxis,
 
 		AsioCompleted, // asio file reading is completed
+		AddShaderInfo, // render thread add shader info to main thread
 
 		User = 1000,                            // first user event id
 		MaxUser = 65535                         // last user event id

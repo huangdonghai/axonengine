@@ -166,7 +166,7 @@ void CmdSystem::list_f(const CmdArgs &param)
 
 void CmdSystem::quit_f(const CmdArgs &param)
 {
-	g_system->finalize();
+	g_coreSystem->finalize();
 
 	exit(0);
 }

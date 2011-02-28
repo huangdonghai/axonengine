@@ -33,7 +33,7 @@ void Application::tick()
 void Application::myQuit()
 {
 //	QApplication::quit();
-	g_system->setExitable();
+	g_coreSystem->setExitable();
 }
 
 void Application::timerEvent(QTimerEvent * event)
@@ -64,12 +64,12 @@ void Application::setUpdate(int ms)
 
 void Application::engineTick()
 {
-	if (g_system) {
+	if (g_coreSystem) {
 		if (!g_workbench->isActiveWindow()) {
 			setUpdate(30);
 		} else {
 			setUpdate(0);
 		}
-		g_system->forceTick(0);
+		g_coreSystem->forceTick(0);
 	}
 }

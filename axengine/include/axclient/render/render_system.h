@@ -13,10 +13,27 @@ read the license and understand and accept it fully.
 AX_BEGIN_NAMESPACE
 
 class Selection;
+class RenderSystem;
 
-class AX_API RenderSystem : public Object, public ICmdHandler, public ITickable
+class AddShaderInfoEvent : public Event
 {
+	friend class RenderSystem;
+
 public:
+	AddShaderInfoEvent(const ShaderKey &key, ShaderInfo *shaderInfo) : Event(AddShaderInfo), m_key(key)
+	{
+		m_key = key;
+		m_shaderInfo = shaderInfo;
+	}
+	~AddShaderInfoEvent() {}
+
+private:
+	ShaderKey m_key;
+	ShaderInfo *m_shaderInfo;
+};
+
+class AX_API RenderSystem : public Object, public ICmdHandler, public ITickable, public IEventHandler
+{
 	// script
 	AX_DECLARE_CLASS(RenderSystem, Object)
 		AX_METHOD(info)
@@ -25,6 +42,7 @@ public:
 
 	AX_DECLARE_COMMAND_HANDLER(RenderSystem);
 
+public:
 	RenderSystem();
 	~RenderSystem();
 
@@ -33,6 +51,9 @@ public:
 
 	// implement ITickable
 	virtual void tick();
+
+	// implement IEventHandler
+	virtual bool event(Event *e);
 
 	int getFrameNum() const;
 
@@ -59,22 +80,12 @@ public:
 	void info();
 	int testArgs(int arg0, float arg1, const Vector3 &arg2, const Color3 &arg3, const Rect &arg4);
 
-#if 0
-	// textures for subscene's render target
-	RenderTarget *createWindowTarget(Handle wndId, const String &name);
-#endif
-
 	// actor manager register
 	void addEntityManager(IEntityManager *manager);
 	void removeEntityManager(IEntityManager *manager);
 	int getNumEntityManager() const;
 	IEntityManager *getEntityManager(int index) const;
 
-#if 0
-	// resource management
-	ShadowMap *allocShadowMap(int width, int height);
-	void freeShadowMap(ShadowMap *target);
-#endif
 	ReflectionMap *findReflection(RenderWorld *world, RenderEntity *actor, Primitive *prim, int width, int height);
 
 	static Rect getWindowRect(Handle hwnd);
@@ -102,6 +113,7 @@ private:
 
 	// actor manager registry
 	std::vector<IEntityManager*> m_entityManagers;
+	Dict<ShaderKey, ShaderInfo *> m_shaderInfoDict;
 };
 
 inline int RenderSystem::getFrameNum() const

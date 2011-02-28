@@ -447,6 +447,17 @@ Size RenderSystem::getScreenSize()
 	return Size(dwWidth, dwHeight);
 }
 
+bool RenderSystem::event(Event *e)
+{
+	if (e->type() == Event::AddShaderInfo) {
+		AddShaderInfoEvent *re = static_cast<AddShaderInfoEvent *>(e);
+		m_shaderInfoDict[re->m_key] = re->m_shaderInfo;
+		return true;
+	}
+
+	return false;
+}
+
 
 
 AX_END_NAMESPACE

@@ -161,9 +161,9 @@ bool MapContext::load(const std::string &filename)
 
 	root->Attribute("numActors", &numActors);
 
-	g_system->beginProgress("Loading Map...");
+	g_coreSystem->beginProgress("Loading Map...");
 
-	g_system->showProgress(progress += 5, "Loading XML...");
+	g_coreSystem->showProgress(progress += 5, "Loading XML...");
 
 	const TiXmlElement *elem;
 	for (elem = root->FirstChildElement(); elem; elem = elem->NextSiblingElement()) {
@@ -178,7 +178,7 @@ bool MapContext::load(const std::string &filename)
 
 		} else if (value == "terrain") {
 			m_terrain = new MapTerrain;
-			g_system->showProgress(progress += 5, "Loading kTerrain...");
+			g_coreSystem->showProgress(progress += 5, "Loading kTerrain...");
 			m_terrainFixed = new TerrainFixed(m_terrain);
 			m_terrain->initFromXml(map_name, elem);
 			m_gameWorld->addObject(m_terrainFixed);
@@ -188,7 +188,7 @@ bool MapContext::load(const std::string &filename)
 			progress = 10 + (float)actorRead / numActors * 90;
 			char msg[200];
 			StringUtil::snprintf(msg, ArraySize(msg), "Loading actor #%d...", actorRead);
-			g_system->showProgress(progress, msg);
+			g_coreSystem->showProgress(progress, msg);
 			readActor(elem);
 		} else if (value == "area") {
 //				gEditorActiveAreaMgr->initFromXml(map_name,elem);
@@ -202,7 +202,7 @@ bool MapContext::load(const std::string &filename)
 
 	loadEditorInfo(filename);	// load editor info. --timlly add
 
-	g_system->endProgress();
+	g_coreSystem->endProgress();
 
 	m_gameWorld->updateEnvdef();
 

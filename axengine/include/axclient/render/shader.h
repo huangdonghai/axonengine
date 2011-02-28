@@ -223,7 +223,20 @@ public:
 	bool m_haveTechnique[Technique::MaxType];
 };
 
-typedef Dict<FixedString, ShaderInfo*> ShaderInfoDict;
+struct ShaderKey {
+	int nameId;
+	int gm;
+	int mm;
+
+	ShaderKey(const FixedString &_nameId, const GlobalMacro &_gm, const MaterialMacro &_mm)
+	{
+		nameId = _nameId.id();
+		gm = _gm.id();
+		mm = _mm.id();
+	}
+	operator size_t() const { size_t result = nameId; hash_combine(result, gm); hash_combine(result, mm); return result; }
+};
+
 
 AX_END_NAMESPACE
 

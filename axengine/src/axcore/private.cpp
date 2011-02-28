@@ -45,7 +45,7 @@ FileSystem *g_fileSystem;
 CmdSystem *g_cmdSystem;
 CvarSystem *g_cvarSystem;
 ConfigFile *g_systemConfig;
-System *g_system;
+CoreSystem *g_coreSystem;
 ClassFactory *g_classFactory;
 ScriptSystem *g_scriptSystem;
 Statistic *g_statistic;
@@ -59,13 +59,15 @@ FILE *g_logFile;
 	#include <axcore/cvardecls.h>
 #undef AX_CVARDECL
 
-void terminateHandler() {
+void terminateHandler()
+{
 	MessageBoxW(NULL, L"terminateHandler", L"Error", MB_ICONERROR | MB_OK | MB_TASKMODAL);
 	int *p = 0;
 	*p = 0;
 }
 
-void axCoreInit(int argc, char *argv[]) {
+void axCoreInit(int argc, char *argv[])
+{
 	static bool _isInitialized = false;
 
 	SetupExceptionHandler();
@@ -87,8 +89,8 @@ void axCoreInit(int argc, char *argv[]) {
 	g_statistic = new Statistic;
 	g_statistic->initialize();
 
-	g_system = new System;
-	g_system->initialize();
+	g_coreSystem = new CoreSystem;
+	g_coreSystem->initialize();
 
 	g_fileSystem = new FileSystem;
 	g_fileSystem->initialize();
@@ -124,7 +126,8 @@ name = g_cvarSystem->createCvar(#name, defaultstring, flags);
 	_isInitialized = true;
 }
 
-void axCoreQuit() {
+void axCoreQuit()
+{
 #if 0
 	MaterialDecl::finalizeManager();
 #endif
@@ -146,8 +149,8 @@ void axCoreQuit() {
 	g_fileSystem->finalize();
 	SafeDelete(g_fileSystem);
 
-	g_system->finalize();
-	SafeDelete(g_system);
+	g_coreSystem->finalize();
+	SafeDelete(g_coreSystem);
 
 	g_statistic->finalize();
 	SafeDelete(g_statistic);

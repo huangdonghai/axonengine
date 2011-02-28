@@ -86,12 +86,12 @@ SoundSystem::SoundSystem()
 	init();
 
 	g_cmdSystem->registerHandler(this);
-	g_system->registerTickable(System::TickEditor, this);
+	g_coreSystem->registerTickable(CoreSystem::TickEditor, this);
 }
 
 SoundSystem::~SoundSystem()
 {
-	g_system->removeTickable(System::TickEditor, this);
+	g_coreSystem->removeTickable(CoreSystem::TickEditor, this);
 	g_cmdSystem->removeHandler(this);
 
 	m_commandSfx.clear();

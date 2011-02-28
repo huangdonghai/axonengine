@@ -105,4 +105,9 @@ const ShaderInfo * GL_Driver::findShaderInfo( const FixedString &key )
 	return 0;
 }
 
+const ShaderInfo * GL_Driver::findShaderInfo( const FixedString &key, const GlobalMacro &gm, const MaterialMacro &mm )
+{
+	return 0;
+}
+
 AX_END_NAMESPACE

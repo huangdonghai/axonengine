@@ -181,6 +181,11 @@ const ShaderInfo * DX9_Driver::findShaderInfo(const FixedString &key)
 	return dx9_shaderManager->findShaderInfo(key);
 }
 
+const ShaderInfo * DX9_Driver::findShaderInfo( const FixedString &key, const GlobalMacro &gm, const MaterialMacro &mm )
+{
+	return 0;
+}
+
 
 bool DX9_Driver::checkTextureFormatSupport(TexFormat format, D3DFORMAT d3dformat)
 {

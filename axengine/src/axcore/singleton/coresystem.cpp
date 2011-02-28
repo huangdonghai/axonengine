@@ -11,7 +11,7 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-System::System()
+CoreSystem::CoreSystem()
 	: m_initialized(0)
 	, m_logBufPos(0)
 	, m_lastId(0)
@@ -20,12 +20,12 @@ System::System()
 	m_canExit = false;
 }
 
-System::~System()
+CoreSystem::~CoreSystem()
 {
 }
 
 
-void System::initialize()
+void CoreSystem::initialize()
 {
 	if (m_initialized)
 		return;
@@ -59,7 +59,7 @@ void System::initialize()
 	Printf(_("Initialized BaseSystem\n"));
 }
 
-void System::finalize()
+void CoreSystem::finalize()
 {
 	Printf(_("Finalizing BaseSystem...\n"));
 	Printf(_("Finalized BaseSystem\n"));
@@ -67,7 +67,7 @@ void System::finalize()
 
 // register output system, core system can output info to multi target at
 // the same time
-void System::registerLog(ILogHandler *log)
+void CoreSystem::registerLog(ILogHandler *log)
 {
 	size_t i;
 
@@ -103,7 +103,7 @@ void System::registerLog(ILogHandler *log)
 	}
 }
 
-void System::removeLog(ILogHandler *log)
+void CoreSystem::removeLog(ILogHandler *log)
 {
 	std::vector<ILogHandler*>::iterator it;
 //	mLogCol::iterator it;
@@ -121,7 +121,7 @@ void System::removeLog(ILogHandler *log)
 	m_logSeq.erase(it);
 }
 
-void System::print(const char *text)
+void CoreSystem::print(const char *text)
 {
 	// save to log buffer
 	const char *p = text;
@@ -145,7 +145,7 @@ void System::print(const char *text)
 	}
 }
 
-void System::printLine()
+void CoreSystem::printLine()
 {
 	const char *p = m_line;
 	for (; *p; p++) {
@@ -159,12 +159,12 @@ void System::printLine()
 	}
 }
 
-int System::generateId()
+int CoreSystem::generateId()
 {
 	return ++m_lastId;
 }
 
-void System::registerProgress(IProgressHandler *progress)
+void CoreSystem::registerProgress(IProgressHandler *progress)
 {
 	size_t i;
 
@@ -180,7 +180,7 @@ void System::registerProgress(IProgressHandler *progress)
 	m_progressSeq.push_back(progress);
 }
 
-void System::removeProgress(IProgressHandler *progress)
+void CoreSystem::removeProgress(IProgressHandler *progress)
 {
 	std::vector<IProgressHandler*>::iterator it;
 	//	mLogCol::iterator it;
@@ -199,7 +199,7 @@ void System::removeProgress(IProgressHandler *progress)
 }
 
 // implement IProgressHandler
-void System::beginProgress(const std::string &title)
+void CoreSystem::beginProgress(const std::string &title)
 {
 	sys_noSleep.setBool(true);
 
@@ -210,7 +210,7 @@ void System::beginProgress(const std::string &title)
 }
 
 // return false if want go on, otherwise return true
-bool System::showProgress(uint_t percent, const std::string &msg)
+bool CoreSystem::showProgress(uint_t percent, const std::string &msg)
 {
 	std::vector<IProgressHandler*>::iterator it;
 	bool ret;
@@ -222,7 +222,7 @@ bool System::showProgress(uint_t percent, const std::string &msg)
 	return ret;
 }
 
-void System::endProgress()
+void CoreSystem::endProgress()
 {
 	std::vector<IProgressHandler*>::iterator it;
 	for (it=m_progressSeq.begin(); it!=m_progressSeq.end(); ++it) {
@@ -232,7 +232,7 @@ void System::endProgress()
 	sys_noSleep.setBool(false);
 }
 
-void System::printCpuInfo()
+void CoreSystem::printCpuInfo()
 {
 	Printf(_("..found %s\n"), m_cpuInfo.cpu_type.c_str());
 	Printf(_("..found %d logical cores\n"), m_cpuInfo.numLogicCores);
@@ -257,17 +257,17 @@ void System::printCpuInfo()
 	Printf("%s\n", features.c_str());
 }
 
-void System::registerTickable(TickPriority priority, ITickable *tickable)
+void CoreSystem::registerTickable(TickPriority priority, ITickable *tickable)
 {
 	m_tickableLists[priority].push_back(tickable);
 }
 
-void System::removeTickable(TickPriority priority, ITickable *tickable)
+void CoreSystem::removeTickable(TickPriority priority, ITickable *tickable)
 {
 	m_tickableLists[priority].remove(tickable);
 }
 
-int System::run()
+int CoreSystem::run()
 {
 	while (!m_canExit) {
 		forceTick(0);
@@ -276,9 +276,10 @@ int System::run()
 	return 0;
 }
 
-void System::forceTick(int mssleep)
+void CoreSystem::forceTick(int mssleep)
 {
 	RefObject::checkDeferredDeleteObject();
+	Event::processEvents();
 
 	for (int i = 0; i < TickNumber; i++) {
 		AX_FOREACH(ITickable *tickable, m_tickableLists[i]) {

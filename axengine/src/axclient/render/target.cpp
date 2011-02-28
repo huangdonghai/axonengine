@@ -19,7 +19,7 @@ RenderTarget::RenderTarget(TexFormat format, const Size &size)
 	m_rtDepth = m_rt0 = m_rt1 = m_rt2 = m_rt3 = 0;
 
 	std::string texname;
-	StringUtil::sprintf(texname, "_render_target_%d_%d_%d", m_size.width, m_size.height, g_system->generateId());
+	StringUtil::sprintf(texname, "_render_target_%d_%d_%d", m_size.width, m_size.height, g_coreSystem->generateId());
 
 	Texture::_init(texname, TexType::_2D, format, m_size, 1, Texture::RenderTarget);
 	setFilterMode(SamplerDesc::FilterMode_Nearest);
@@ -33,7 +33,7 @@ RenderTarget::RenderTarget(TexType texType, TexFormat format, int width, int hei
 	m_rtDepth = m_rt0 = m_rt1 = m_rt2 = m_rt3 = 0;
 
 	std::string texname;
-	StringUtil::sprintf(texname, "_render_target_%d_%d_%d", m_size.width, m_size.height, g_system->generateId());
+	StringUtil::sprintf(texname, "_render_target_%d_%d_%d", m_size.width, m_size.height, g_coreSystem->generateId());
 
 	Texture::_init(texname, texType, format, Size(width, height), depth, Texture::RenderTarget);
 	setFilterMode(SamplerDesc::FilterMode_Nearest);

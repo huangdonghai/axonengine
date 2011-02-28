@@ -25,12 +25,12 @@ GameSystem::GameSystem()
 	m_gameInput = new GameInput();
 	m_gameInput->initialize();
 
-	g_system->registerTickable(System::TickGame, this);
+	g_coreSystem->registerTickable(CoreSystem::TickGame, this);
 }
 
 GameSystem::~GameSystem()
 {
-	g_system->removeTickable(System::TickGame, this);
+	g_coreSystem->removeTickable(CoreSystem::TickGame, this);
 
 	m_gameInput->finalize();
 	SafeDelete(m_gameInput);

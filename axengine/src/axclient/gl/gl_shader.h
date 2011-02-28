@@ -36,7 +36,7 @@ private:
 	};
 	typedef Dict<ShaderKey, GL_Shader*> ShaderDict;
 	ShaderDict m_shaders;
-	ShaderInfoDict m_shaderInfoDict;
+	Dict<FixedString, ShaderInfo *> m_shaderInfoDict;
 };
 
 AX_END_NAMESPACE

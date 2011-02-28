@@ -156,7 +156,7 @@ protected:
 
 private:
 	ID3DX11Effect *m_object;              // Effect object
-	FixedString m_key;
+	ShaderKey m_key;
 
 	ID3DX11EffectTechnique *m_d3dxTechniques[Technique::MaxType];
 	ID3D11ShaderResourceView *m_samplerBound[MaterialTextureId::MaxType];
@@ -184,19 +184,11 @@ public:
 	const ShaderInfo *findShaderInfo(const FixedString &key);
 
 protected:
-	void addShaderInfo(const FixedString &key, ShaderInfo *shaderInfo);
+	void addShaderInfo(const ShaderKey &key, ShaderInfo *shaderInfo);
 
 private:
-	struct ShaderKey {
-		int nameId;
-		int gm;
-		int mm;
-
-		operator size_t() const { size_t result = nameId; hash_combine(result, gm); hash_combine(result, mm); return result; }
-	};
-	typedef Dict<ShaderKey, DX11_Shader*> ShaderDict;
-	ShaderDict m_shaders;
-	ShaderInfoDict m_shaderInfoDict;
+	Dict<ShaderKey, DX11_Shader*> m_shaders;
+	Dict<FixedString, ShaderInfo*> m_shaderInfoDict;
 };
 
 AX_DX11_END_NAMESPACE

@@ -123,7 +123,7 @@ GL_Shader *GL_ShaderManager::findShader(const FixedString &nameId, const GlobalM
 
 const ShaderInfo *GL_ShaderManager::findShaderInfo(const FixedString &key)
 {
-	ShaderInfoDict::const_iterator it = m_shaderInfoDict.find(key);
+	Dict<FixedString, ShaderInfo *>::const_iterator it = m_shaderInfoDict.find(key);
 
 	if (it != m_shaderInfoDict.end())
 		return it->second;

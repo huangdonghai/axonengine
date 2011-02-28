@@ -331,17 +331,11 @@ DX9_Technique::~DX9_Technique()
 
 //--------------------------------------------------------------------------
 
-DX9_Shader::DX9_Shader()
+DX9_Shader::DX9_Shader(const FixedString &name, const GlobalMacro &gm, const MaterialMacro &mm)
 {
 	m_shaderInfo.m_needReflection = false;
 	m_curTechnique = 0;
-}
 
-DX9_Shader::~DX9_Shader()
-{}
-
-bool DX9_Shader::init(const FixedString &name, const GlobalMacro &gm, const MaterialMacro &mm)
-{
 	m_key = name;
 	std::string fullname = "shaders/" + name.toString() + ".fx";
 
@@ -373,7 +367,7 @@ bool DX9_Shader::init(const FixedString &name, const GlobalMacro &gm, const Mate
 	DWORD dwFlags = D3DXSHADER_NO_PRESHADER;
 
 #if defined(_DEBUG) || defined(DEBUG)
-//		dwFlags |= D3DXSHADER_DEBUG;
+	//		dwFlags |= D3DXSHADER_DEBUG;
 #endif
 
 	void *filebuf;
@@ -381,7 +375,7 @@ bool DX9_Shader::init(const FixedString &name, const GlobalMacro &gm, const Mate
 
 	filesize = g_fileSystem->readFile(fullname, &filebuf);
 	if (!filesize || !filebuf)
-		return false;
+		return;
 	DX9_Include d3d9Inc;
 
 	double t0 = OsUtil::seconds();
@@ -393,7 +387,7 @@ bool DX9_Shader::init(const FixedString &name, const GlobalMacro &gm, const Mate
 		if (errbuf) {
 			Errorf("%s", errbuf->GetBufferPointer());
 		}
-		return false;
+		return;
 	}
 
 #if 0
@@ -414,9 +408,10 @@ bool DX9_Shader::init(const FixedString &name, const GlobalMacro &gm, const Mate
 
 	// init shader info
 	initShaderInfo();
-
-	return true;
 }
+
+DX9_Shader::~DX9_Shader()
+{}
 
 void DX9_Shader::initTechniques()
 {
@@ -644,8 +639,8 @@ DX9_ShaderManager::DX9_ShaderManager()
 	dx9_shaderManager = this;
 
 	V(D3DXCreateEffectPool( &s_effectPool ));
-	m_defaulted = new DX9_Shader();
 #if 0
+	m_defaulted = new DX9_Shader();
 	bool v = m_defaulted->init("blend");
 	AX_ASSERT(v);
 
@@ -672,15 +667,8 @@ DX9_Shader *DX9_ShaderManager::findShader(const FixedString &nameId, const Globa
 
 	DX9_Shader*& shader = m_shaders[key];
 
-	if (!shader) {
-		shader = new DX9_Shader();
-		bool v = shader->init(nameId, gm, mm);
-		if (!v) {
-			delete shader;
-			shader = m_defaulted;
-			shader->AddRef();
-		}
-	}
+	if (!shader)
+		shader = new DX9_Shader(nameId, gm, mm);
 
 	return shader;
 }
@@ -788,7 +776,7 @@ void DX9_ShaderManager::_initialize()
 
 const ShaderInfo *DX9_ShaderManager::findShaderInfo(const FixedString &key)
 {
-	ShaderInfoDict::const_iterator it = m_shaderInfoDict.find(key);
+	Dict<FixedString, ShaderInfo*>::const_iterator it = m_shaderInfoDict.find(key);
 
 	if (it != m_shaderInfoDict.end())
 		return it->second;
@@ -797,7 +785,7 @@ const ShaderInfo *DX9_ShaderManager::findShaderInfo(const FixedString &key)
 	return 0;
 }
 
-void DX9_ShaderManager::addShaderInfo( const FixedString &key, ShaderInfo *shaderInfo )
+void DX9_ShaderManager::addShaderInfo(const FixedString &key, ShaderInfo *shaderInfo)
 {
 	if (m_shaderInfoDict.find(key) != m_shaderInfoDict.end())
 		return;

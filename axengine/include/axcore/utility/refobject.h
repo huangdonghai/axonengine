@@ -20,7 +20,7 @@ AX_BEGIN_NAMESPACE
 class AX_API RefObject
 {
 public:
-	friend class System;
+	friend class CoreSystem;
 
 	void incref();
 	void decref();

@@ -61,7 +61,7 @@ public:
 };
 
 
-class AX_API System {
+class AX_API CoreSystem {
 public:
 
 	enum TickPriority {
@@ -72,8 +72,8 @@ public:
 		TickNumber
 	};
 
-	System();
-	virtual ~System();
+	CoreSystem();
+	virtual ~CoreSystem();
 
 	void initialize();
 	void finalize();
@@ -140,7 +140,7 @@ private:
 	bool m_canExit;
 };
 
-inline const CpuInfo &System::getCpuInfo() { return m_cpuInfo; }
+inline const CpuInfo &CoreSystem::getCpuInfo() { return m_cpuInfo; }
 
 
 AX_END_NAMESPACE

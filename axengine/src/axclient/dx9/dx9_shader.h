@@ -134,11 +134,10 @@ class DX9_Shader : public DX9_Unknown
 	friend class DX9_ShaderManager;
 
 public:
-	DX9_Shader();
+	DX9_Shader(const FixedString &name, const GlobalMacro &gm, const MaterialMacro &mm);
 	~DX9_Shader();
 
 	// implement Shader
-	bool init(const FixedString &name, const GlobalMacro &gm, const MaterialMacro &mm);
 	ID3DXEffect *getObject() const { return m_object; }
 
 	UINT begin(Technique tech);
@@ -210,10 +209,8 @@ private:
 
 		operator size_t() const { size_t result = nameId; hash_combine(result, gm); hash_combine(result, mm); return result; }
 	};
-	typedef Dict<ShaderKey, DX9_Shader*> ShaderDict;
-	ShaderDict m_shaders;
-	DX9_Shader *m_defaulted;
-	ShaderInfoDict m_shaderInfoDict;
+	Dict<ShaderKey, DX9_Shader*> m_shaders;
+	Dict<FixedString, ShaderInfo*> m_shaderInfoDict;
 };
 
 

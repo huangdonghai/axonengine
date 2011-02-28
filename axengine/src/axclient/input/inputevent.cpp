@@ -142,11 +142,11 @@ InputSystem::InputSystem() {
 	m_gameWnd = 0;
 	m_isCapturing = false;
 
-	g_system->registerTickable(System::TickEvent, this);
+	g_coreSystem->registerTickable(CoreSystem::TickEvent, this);
 }
 
 InputSystem::~InputSystem() {
-	g_system->removeTickable(System::TickEvent, this);
+	g_coreSystem->removeTickable(CoreSystem::TickEvent, this);
 }
 
 void InputSystem::initialize() {

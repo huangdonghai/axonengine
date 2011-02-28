@@ -67,7 +67,7 @@ void MapAlphaBlock::updateTexture()
 {
 	if (!m_texture) {
 		std::string key;
-		StringUtil::sprintf(key, "_alphablock_%d", g_system->generateId());
+		StringUtil::sprintf(key, "_alphablock_%d", g_coreSystem->generateId());
 
 		m_texture = new Texture(key, (TexFormat::Type)AlphaFormat, Size(Map::ChunkPixels, Map::ChunkPixels), Texture::Dynamic);
 		m_texture->setClampMode(SamplerDesc::ClampMode_Clamp);
@@ -2061,28 +2061,28 @@ void MapTerrain::generateZoneColor(bool doprogress)
 		return;
 
 	// fire event
-	g_system->beginProgress("Generating zone color...");
+	g_coreSystem->beginProgress("Generating zone color...");
 	doLayerPainted(m_tilerect * Map::TilePixels);
 	doUpdateColorTextureLod(m_tilerect * Map::TilePixels);
-	g_system->endProgress();
+	g_coreSystem->endProgress();
 }
 
 void MapTerrain::generateLayerAlpha(bool doprogress, int id)
 {
 	if (id < 0) {
-		g_system->beginProgress("Generating layer alpha...");
+		g_coreSystem->beginProgress("Generating layer alpha...");
 		m_numLayerGens = m_materialDef->getNumLayers();
 
 		for (int i = 0; i < m_materialDef->getNumLayers(); i++) {
 			std::string msg;
 			StringUtil::sprintf(msg, "generating %d layer...", i);
-			g_system->showProgress(i*100 / m_materialDef->getNumLayers(), msg);
+			g_coreSystem->showProgress(i*100 / m_materialDef->getNumLayers(), msg);
 			if (m_layerGens[i]->getLayerDef()->isAutoGen) {
 				m_layerGens[i]->autoGenerate();
 			}
 		}
 
-		g_system->endProgress();
+		g_coreSystem->endProgress();
 		return;
 	}
 

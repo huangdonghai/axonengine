@@ -24,12 +24,12 @@ ConsoleDlg::ConsoleDlg(QWidget *parent)
 	f.setStyleStrategy(QFont::PreferBitmap);
 	ui.message->setFont(f);
 
-	g_system->registerLog(this);
+	g_coreSystem->registerLog(this);
 }
 
 ConsoleDlg::~ConsoleDlg()
 {
-	g_system->removeLog(this);
+	g_coreSystem->removeLog(this);
 }
 
 void ConsoleDlg::addMessage(QString &msg)

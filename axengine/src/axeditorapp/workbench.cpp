@@ -36,7 +36,7 @@ Workbench::Workbench(QWidget *parent, Qt::WFlags flags)
 
 	setIconSize(QSize(24, 24));
 
-	g_system->registerProgress(this);
+	g_coreSystem->registerProgress(this);
 
 	createActions();
 	createToolBars();
@@ -69,7 +69,7 @@ Workbench::Workbench(QWidget *parent, Qt::WFlags flags)
 Workbench::~Workbench()
 {
 	this->killTimer(m_timerUpdateStatus);
-	g_system->removeProgress(this);
+	g_coreSystem->removeProgress(this);
 	g_mapContext->removeObserver(this);
 //	SafeDelete(m_uiEditor);
 }

@@ -56,7 +56,6 @@ namespace {
 } // namespace
 
 Thread *Thread::ms_mainThread = 0;
-Stat stat_lockTimes("Client", "LockTimes", Stat::F_Int|Stat::F_AutoReset, "how many times synclock called");
 
 //--------------------------------------------------------------------------
 // class SyncMutex
@@ -78,7 +77,6 @@ SyncMutex::~SyncMutex()
 bool SyncMutex::lock(uint_t)
 {
 	EnterCriticalSection((LPCRITICAL_SECTION)m_object);
-	stat_lockTimes.inc();
 	return true;
 }
 
@@ -231,7 +229,6 @@ void Thread::checkMainThread()
 		ms_mainThread = t;
 	}
 }
-
 
 
 AX_END_NAMESPACE

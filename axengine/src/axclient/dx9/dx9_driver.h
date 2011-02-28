@@ -27,6 +27,7 @@ public:
 	virtual void finalize();
 
 	virtual const ShaderInfo *findShaderInfo(const FixedString &key);
+	virtual const ShaderInfo *findShaderInfo(const FixedString &key, const GlobalMacro &gm, const MaterialMacro &mm);
 
 	void reset(int width, int height, bool fullscreen);
 	void onReset();

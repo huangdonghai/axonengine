@@ -17,6 +17,7 @@ public:
 	virtual void finalize();
 
 	virtual const ShaderInfo *findShaderInfo(const FixedString &key);
+	virtual const ShaderInfo *findShaderInfo(const FixedString &key, const GlobalMacro &gm, const MaterialMacro &mm);
 
 	static GLenum trTexFormat(TexFormat texFormat);
 	static GLenum trShaderResourceViewFormat(TexFormat texFormat);

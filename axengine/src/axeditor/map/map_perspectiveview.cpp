@@ -94,7 +94,7 @@ void PerspectiveView::bindFrame(IViewFrame *container)
 	if (m_frame) {
 		// unbind old first
 		m_frame->removeEventSource();
-		g_system->removeTickable(System::TickGame, this);
+		g_coreSystem->removeTickable(CoreSystem::TickGame, this);
 		((MapContext*)m_context)->getGameWorld()->setWindow(0);
 	}
 
@@ -104,7 +104,7 @@ void PerspectiveView::bindFrame(IViewFrame *container)
 	// post bind
 	if (m_frame) {
 		((MapContext*)m_context)->getGameWorld()->setWindow(m_frame->renderTarget());
-		g_system->registerTickable(System::TickGame, this);
+		g_coreSystem->registerTickable(CoreSystem::TickGame, this);
 		m_frame->registerEventSource();
 		m_context->notifyObservers(Context::EverythingChanged);
 	}

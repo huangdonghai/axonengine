@@ -20,7 +20,7 @@ QuickConsole::QuickConsole(QWidget *parent)
 	QFont f = ui.message->font();
 	f.setStyleStrategy(QFont::PreferBitmap);
 	ui.message->setFont(f);
-	g_system->registerLog(this);
+	g_coreSystem->registerLog(this);
 
 	mConsoleDlg = new ConsoleDlg(NULL);
 	currentHistory = inputHistory.end();
@@ -28,7 +28,7 @@ QuickConsole::QuickConsole(QWidget *parent)
 
 QuickConsole::~QuickConsole()
 {
-	g_system->removeLog(this);
+	g_coreSystem->removeLog(this);
 	delete mConsoleDlg;
 }
 

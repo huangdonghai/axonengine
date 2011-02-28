@@ -24,6 +24,7 @@ public:
 	virtual void finalize();
 
 	virtual const ShaderInfo *findShaderInfo(const FixedString &key);
+	virtual const ShaderInfo *findShaderInfo(const FixedString &key, const GlobalMacro &gm, const MaterialMacro &mm);
 
 	static DXGI_FORMAT trTexFormat(TexFormat texFormat);
 	static DXGI_FORMAT trShaderResourceViewFormat(TexFormat texFormat);

@@ -370,7 +370,7 @@ DX11_Technique::~DX11_Technique()
 
 //extern LPD3DX11COMPILEFROMMEMORY dx11_D3DX11CompileFromMemory;
 
-DX11_Shader::DX11_Shader(const FixedString &name, const GlobalMacro &gm, const MaterialMacro &mm)
+DX11_Shader::DX11_Shader(const FixedString &name, const GlobalMacro &gm, const MaterialMacro &mm) : m_key(name, gm, mm)
 {
 	class DX11_Include : public ID3D10Include
 	{
@@ -394,7 +394,6 @@ DX11_Shader::DX11_Shader(const FixedString &name, const GlobalMacro &gm, const M
 		}
 	};
 
-	m_key = name;
 	std::string fullname = "shaders/" + name.toString() + ".fx";
 
 	std::vector<D3D10_SHADER_MACRO> d3dxmacros;
@@ -569,23 +568,19 @@ DX11_ShaderManager::~DX11_ShaderManager()
 
 DX11_Shader * DX11_ShaderManager::findShader(const FixedString &nameId, const GlobalMacro &gm, const MaterialMacro &mm)
 {
-	ShaderKey key;
-	key.nameId = nameId.id();
-	key.gm = gm.id();
-	key.mm = mm.id();
+	ShaderKey key(nameId, gm, mm);
 
 	DX11_Shader*& shader = m_shaders[key];
 
-	if (!shader) {
+	if (!shader)
 		shader = new DX11_Shader(nameId, gm, mm);
-	}
 
 	return shader;
 }
 
 const ShaderInfo * DX11_ShaderManager::findShaderInfo(const FixedString &key)
 {
-	ShaderInfoDict::const_iterator it = m_shaderInfoDict.find(key);
+	Dict<FixedString, ShaderInfo*>::const_iterator it = m_shaderInfoDict.find(key);
 
 	if (it != m_shaderInfoDict.end())
 		return it->second;
@@ -594,12 +589,15 @@ const ShaderInfo * DX11_ShaderManager::findShaderInfo(const FixedString &key)
 	return 0;
 }
 
-void DX11_ShaderManager::addShaderInfo( const FixedString &key, ShaderInfo *shaderInfo )
+void DX11_ShaderManager::addShaderInfo(const ShaderKey &key, ShaderInfo *shaderInfo)
 {
-	if (m_shaderInfoDict.find(key) != m_shaderInfoDict.end())
+	AddShaderInfoEvent *e = new AddShaderInfoEvent(key, shaderInfo);
+	Event::postEvent(g_renderSystem, e);
+
+	if (m_shaderInfoDict.find(FixedString(key.nameId)) != m_shaderInfoDict.end())
 		return;
 
-	m_shaderInfoDict[key] = shaderInfo;
+	m_shaderInfoDict[FixedString(key.nameId)] = shaderInfo;
 }
 
 AX_DX11_END_NAMESPACE

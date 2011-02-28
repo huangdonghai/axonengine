@@ -77,7 +77,11 @@ public:
 	virtual bool initialize() = 0;
 	virtual void finalize() = 0;
 
+	// find default shader info, must return a valid value
 	virtual const ShaderInfo *findShaderInfo(const FixedString &key) = 0;
+	// find real shader info base on shader macro, maybe return 0 if the
+	// shader even not created, because renderer running in another thread
+	virtual const ShaderInfo *findShaderInfo(const FixedString &key, const GlobalMacro &gm, const MaterialMacro &mm) = 0;
 };
 
 AX_END_NAMESPACE

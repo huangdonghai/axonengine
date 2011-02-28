@@ -109,9 +109,9 @@ int main(int argc, char *argv[])
 #if 0
     g_app->exec();
 #else
-	g_system->registerTickable(System::TickEvent, g_app);
-	g_system->run();
-	g_system->removeTickable(System::TickEvent, g_app);
+	g_coreSystem->registerTickable(CoreSystem::TickEvent, g_app);
+	g_coreSystem->run();
+	g_coreSystem->removeTickable(CoreSystem::TickEvent, g_app);
 #endif
 	SafeDelete(g_workbench);
 

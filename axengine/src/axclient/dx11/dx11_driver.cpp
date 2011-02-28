@@ -162,6 +162,11 @@ const ShaderInfo * DX11_Driver::findShaderInfo(const FixedString &key)
 	return dx11_shaderManager->findShaderInfo(key);
 }
 
+const ShaderInfo * DX11_Driver::findShaderInfo( const FixedString &key, const GlobalMacro &gm, const MaterialMacro &mm )
+{
+	return 0;
+}
+
 
 DXGI_FORMAT DX11_Driver::trTexFormat(TexFormat texformat)
 {

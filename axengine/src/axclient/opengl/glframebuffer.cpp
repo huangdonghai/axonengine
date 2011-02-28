@@ -34,7 +34,7 @@ GLtarget::GLtarget(GLframebuffer *fb, int width, int height, TexFormat format, b
 	// create asset
 	if (!m_isRenderBuffer) {
 		std::string texname;
-		StringUtil::sprintf(texname, "_RenderTarget_%d_%d_%d", m_width, m_height, g_system->generateId());
+		StringUtil::sprintf(texname, "_RenderTarget_%d_%d_%d", m_width, m_height, g_coreSystem->generateId());
 #if 0
 		m_texture = dynamic_cast<GLtexture*>(g_assetManager->createEmptyAsset(Texture::AssetType));
 		m_texture->initialize(format, width, height);

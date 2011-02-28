@@ -78,9 +78,9 @@ void CDECL Debugf(const char *fmt, ...)
 	wprintf(L"%s", wstr.c_str());
 	fprintf(g_logFile, "%s", buffer);
 
-	if (g_system) {
-		g_system->print(S_COLOR_YELLOW);
-		g_system->print(buffer);
+	if (g_coreSystem) {
+		g_coreSystem->print(S_COLOR_YELLOW);
+		g_coreSystem->print(buffer);
 	}
 }
 
@@ -97,8 +97,8 @@ void CDECL Printf(const char *fmt, ...)
 	printf("%s", buffer);
 	fprintf(g_logFile, "%s", buffer);
 
-	if (g_system) {
-		g_system->print(buffer);
+	if (g_coreSystem) {
+		g_coreSystem->print(buffer);
 	}
 }
 
