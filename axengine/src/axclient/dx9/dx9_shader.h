@@ -137,9 +137,6 @@ public:
 	DX9_Shader(const FixedString &name, const GlobalMacro &gm, const MaterialMacro &mm);
 	~DX9_Shader();
 
-	// implement Shader
-	ID3DXEffect *getObject() const { return m_object; }
-
 	UINT begin(Technique tech);
 	void beginPass(UINT pass);
 	void endPass();
@@ -166,7 +163,7 @@ protected:
 
 private:
 	LPD3DXEFFECT m_object;              // Effect object
-	FixedString m_key;
+	ShaderKey m_key;
 
 	D3DXHANDLE m_d3dxTechniques[Technique::MaxType];
 	D3DXHANDLE m_curTechnique;
@@ -199,16 +196,9 @@ public:
 
 protected:
 	void _initialize();
-	void addShaderInfo(const FixedString &key, ShaderInfo *shaderInfo);
+	void addShaderInfo(const ShaderKey &key, ShaderInfo *shaderInfo);
 
 private:
-	struct ShaderKey {
-		int nameId;
-		int gm;
-		int mm;
-
-		operator size_t() const { size_t result = nameId; hash_combine(result, gm); hash_combine(result, mm); return result; }
-	};
 	Dict<ShaderKey, DX9_Shader*> m_shaders;
 	Dict<FixedString, ShaderInfo*> m_shaderInfoDict;
 };

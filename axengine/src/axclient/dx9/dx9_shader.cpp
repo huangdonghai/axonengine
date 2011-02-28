@@ -331,12 +331,11 @@ DX9_Technique::~DX9_Technique()
 
 //--------------------------------------------------------------------------
 
-DX9_Shader::DX9_Shader(const FixedString &name, const GlobalMacro &gm, const MaterialMacro &mm)
+DX9_Shader::DX9_Shader(const FixedString &name, const GlobalMacro &gm, const MaterialMacro &mm) : m_key(name, gm, mm)
 {
 	m_shaderInfo.m_needReflection = false;
 	m_curTechnique = 0;
 
-	m_key = name;
 	std::string fullname = "shaders/" + name.toString() + ".fx";
 
 	std::vector<D3DXMACRO> d3dxmacros;
@@ -660,10 +659,7 @@ DX9_ShaderManager::~DX9_ShaderManager()
 
 DX9_Shader *DX9_ShaderManager::findShader(const FixedString &nameId, const GlobalMacro &gm, const MaterialMacro &mm)
 {
-	ShaderKey key;
-	key.nameId = nameId.id();
-	key.gm = gm.id();
-	key.mm = mm.id();
+	ShaderKey key(nameId, gm, mm);
 
 	DX9_Shader*& shader = m_shaders[key];
 
@@ -785,12 +781,16 @@ const ShaderInfo *DX9_ShaderManager::findShaderInfo(const FixedString &key)
 	return 0;
 }
 
-void DX9_ShaderManager::addShaderInfo(const FixedString &key, ShaderInfo *shaderInfo)
+void DX9_ShaderManager::addShaderInfo(const ShaderKey &key, ShaderInfo *shaderInfo)
 {
-	if (m_shaderInfoDict.find(key) != m_shaderInfoDict.end())
+	AddShaderInfoEvent *e = new AddShaderInfoEvent(key, shaderInfo);
+	Event::postEvent(g_renderSystem, e);
+
+	FixedString name(key.nameId);
+	if (m_shaderInfoDict.find(name) != m_shaderInfoDict.end())
 		return;
 
-	m_shaderInfoDict[key] = shaderInfo;
+	m_shaderInfoDict[name] = shaderInfo;
 }
 
 AX_END_NAMESPACE
