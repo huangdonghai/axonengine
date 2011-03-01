@@ -756,6 +756,7 @@ void RenderContext::drawMeshUP(Material *material, MeshUP *mesh)
 void RenderContext::drawGlobalLight(RenderScene *scene, RenderLight *light)
 {
 	m_mtrGlobalLight->clearParameters();
+	m_mtrGlobalLight->clearFeatures();
 
 	if (light->m_isShadowed) {
 		RenderLight::ShadowGenerator *qshadow = light->m_shadowGen;
@@ -809,7 +810,6 @@ void RenderContext::drawGlobalLight(RenderScene *scene, RenderLight *light)
 	Vector3 lightpos = light->m_affineMat.origin;
 	lightpos.normalize();
 
-	m_mtrGlobalLight->clearFeatures();
 	m_mtrGlobalLight->setFeature(F_SHADOWED, light->m_isShadowed);
 	m_mtrGlobalLight->setFeature(F_DIRECTION_LIGHT, !light->m_color.isZero());
 	m_mtrGlobalLight->setFeature(F_SKY_LIGHT, !light->m_skyColor.isZero());

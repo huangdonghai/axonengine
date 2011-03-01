@@ -18,8 +18,6 @@ void RenderScene::addLight(RenderLight *light)
 
 	if (light->isGlobal())
 		globalLight = light;
-
-	light->m_isShadowed = false; // shadow need check
 }
 
 void RenderScene::addEntity(RenderEntity *entity)
@@ -225,9 +223,9 @@ void RenderScene::checkLights()
 	// copy shadowed light
 	RenderLight **shadowed = g_renderFrame->allocType<RenderLight*>(numLights);
 	int numShadowed = 0;
-	for (int i = 0; i < numLights; i++) {}
 
 	for (int i = 0; i < numLights; i++) {
+		lights[i]->m_isShadowed = false; // shadow need check
 		bool v = lights[i]->checkShadow(this);
 		if (!v)
 			continue;

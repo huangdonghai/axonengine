@@ -257,16 +257,14 @@ void RenderLight::clearShadowGenerator()
 
 bool RenderLight::checkShadow(RenderScene *qscene)
 {
-	if (!m_castShadowMap) {
+	if (!m_castShadowMap)
 		return false;
-	}
 
-	if (!m_shadowGen) {
+	if (!m_shadowGen)
 		initShadowGenerator();
-	}
 
 	if (isGlobal()) {
-		genShadowMap(qscene);
+		m_isShadowed = genShadowMap(qscene);
 		return false;
 	}
 

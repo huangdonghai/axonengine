@@ -521,11 +521,7 @@ inline float Dot(Vector4 v1, Vector4 v2)
 
 static void ModifyProjectionMatrix(const Vector4 &clipPlane, float matrix[16])
 {
-	//		float       matrix[16];
-	Vector4    q;
-
-	// Grab the current projection matrix from OpenGL
-	//		glGetFloatv(GL_PROJECTION_MATRIX, matrix);
+	Vector4 q;
 
 	// Calculate the clip-space corner point opposite the clipping plane
 	// as (sgn(clipPlane.x), sgn(clipPlane.y), 1, 1) and
@@ -545,10 +541,6 @@ static void ModifyProjectionMatrix(const Vector4 &clipPlane, float matrix[16])
 	matrix[6] = c.y;
 	matrix[10] = c.z + 1.0F;
 	matrix[14] = c.w;
-
-	// Load it back into OpenGL
-	//		glMatrixMode(GL_PROJECTION);
-	//		glLoadMatrixf(matrix);
 }
 
 void RenderCamera::adjustProjMatrixForReflection()

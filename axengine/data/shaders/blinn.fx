@@ -180,12 +180,10 @@ half4 FP_main(VertexOut IN) : COLOR0
 
 #if M_SPECULAR
 	lps.Cs = tex2D(g_specularMap, IN.streamTc.xy).xyz + detail;
-#else
-#if M_NORMAL
+#elif M_NORMAL
 	lps.Cs = tex2D(g_normalMap, IN.streamTc.xy).a + detail;
 #else
 	lps.Cs = Dif2Spec(lps.Cd);
-#endif
 #endif
 
 #if G_FOG

@@ -311,7 +311,7 @@ void Landscape::buildKdTree()
 			numSmallModel++;
 		}
 
-		BoundingBox bbox = staticFixed->m_model->getLocalBoundingBox();
+		BoundingBox bbox = staticFixed->m_model->getBoundingBox();
 		Vector3 extends = bbox.getExtends();
 		float maxface = 0;
 		if (extends.x < extends.y && extends.x < extends.z)
