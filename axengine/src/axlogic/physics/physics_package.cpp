@@ -15,7 +15,7 @@ read the license and understand and accept it fully.
 
 AX_BEGIN_NAMESPACE
 
-namespace { namespace Internal {
+namespace {
 
 	// return -1 if not found
 	int getLodFromName(const char *name)
@@ -385,36 +385,6 @@ namespace { namespace Internal {
 
 				samplers[samplertype] = tex;
 
-				// set texture set
-				if (samplertype == MaterialTextureId::Diffuse) {
-#if 0
-					if (!samplers[SamplerType::Normal]) {
-						tex = new Texture(filename + "_n");
-						if (tex->isDefaulted()) {
-							tex->release();
-						} else {
-							samplers[SamplerType::Normal] = tex;
-						}
-					}
-					if (!samplers[SamplerType::Specular]) {
-						tex = new Texture(filename + "_s");
-						if (tex->isDefaulted()) {
-							tex->release();
-						} else {
-							samplers[SamplerType::Specular] = tex;
-						}
-					}
-					if (!samplers[SamplerType::Emission]) {
-						tex = new Texture(filename + "_g");
-						if (tex->isDefaulted()) {
-							tex->release();
-						} else {
-							samplers[SamplerType::Emission] = tex;
-						}
-					}
-#endif
-				}
-
 				if (samplertype == MaterialTextureId::Detail && !samplers[MaterialTextureId::DetailNormal]) {
 					tex = new Texture(filename + "_n");
 					samplers[MaterialTextureId::DetailNormal] = tex;
@@ -434,23 +404,7 @@ namespace { namespace Internal {
 			StringPairSeq keyvalues;
 
 			if (m_hkmat->m_name && m_hkmat->m_name[0] == '_') {
-#if 0
-				// remove #
-				String name = m_hkmat->m_name;
-				size_t pos = name.rfind('#');
-				if (pos != String::npos) {
-					name.resize(pos);
-				}
-
-				if (fn.empty())
-					return new Material(name);
-
-				Render::Material *uniquemat = Material::loadUnique(name);
-				uniquemat->setTextureSet(fn);
-				return uniquemat;
-#else
 				parseMaterialName(m_hkmat->m_name, axname, keyvalues);
-#endif
 			} else {
 				axname = fn;
 			}
@@ -481,14 +435,6 @@ namespace { namespace Internal {
 			}
 
 			return mat;
-
-#if 0
-			if (fn.empty()) {
-				return new Material("default");
-			} else {
-				return new Material(fn);
-			}
-#endif
 		}
 
 	private:
@@ -580,9 +526,7 @@ namespace { namespace Internal {
 		size_t m_size;
 	};
 
-}} // namespace anonymous::Internal
-
-using namespace Internal;
+} // namespace anonymous
 
 //--------------------------------------------------------------------------
 // class HavokAnimator
@@ -951,7 +895,7 @@ errexit:
 
 	// Later on, when simpleobject is not needed anymore we should
 	// deallocate the memory containing the loaded data.
-//		loadedData->removeReference();
+	//		loadedData->removeReference();
 #endif
 	if (m_root) {
 		m_physicsData = static_cast<hkpPhysicsData*>(m_root->findObjectByType(hkpPhysicsDataClass.getName()));

@@ -231,6 +231,93 @@ void Landscape::removeFixed(Fixed *fixed)
 	fixed->m_landscape = 0;
 }
 
+namespace {
+	class UnwrapHelper;
+
+	struct Edge {
+		int index0, index1; // edge's index
+		int index2; // triangle another index
+		float length;
+
+		Edge(UnwrapHelper *obj, int index0, int index1, int index2);
+	};
+
+	struct Triangle
+	{
+		ushort_t p0, p1, p2;
+	};
+
+	struct QuadList
+	{
+		int rows, columns;
+		ushort_t indices;
+	};
+
+	class UnwrapHelper
+	{
+	public:
+		UnwrapHelper(MeshPrim *prim, float scale, float texelsPerMeter);
+		~UnwrapHelper();
+
+	protected:
+		int findAdjacentTriangle(int edge0, int edge1, int edge2);
+		void process();
+
+	private:
+		MeshPrim *m_prim;
+		const MeshVertex *m_vertices;
+		const ushort_t *m_indices;
+		int m_numTris;
+		std::vector<bool> m_triUsed;
+		float m_scale;
+		float m_texelsPerMeter;
+	};
+
+	UnwrapHelper::UnwrapHelper(MeshPrim *prim, float scale, float texelsPerMeter)
+	{
+		m_prim = prim;
+		m_vertices = prim->getVertexesPointer();
+		m_indices = prim->getIndexPointer();
+		m_numTris = prim->getNumIndexes() / 3;
+		m_triUsed.resize(m_numTris);
+		for (int i = 0; i < m_numTris; i++) {
+			m_triUsed[i] = false;
+		}
+		m_scale = scale;
+		m_texelsPerMeter = texelsPerMeter;
+	}
+
+	UnwrapHelper::~UnwrapHelper()
+	{
+	}
+
+	void UnwrapHelper::process()
+	{
+		for (int i = 0; i < m_numTris; i++) {
+			int index0 = m_indices[i*m_numTris+0];
+			int index1 = m_indices[i*m_numTris+1];
+			int index2 = m_indices[i*m_numTris+2];
+			
+			Edge e0(this, index0, index1, index2);
+			Edge e1(this, index1, index2, index0);
+			Edge e2(this, index2, index0, index1);
+
+			Edge *maxLengthEdge = &e0;
+			if (e1.length > maxLengthEdge->length)
+				maxLengthEdge = &e1;
+			if (e2.length > maxLengthEdge->length)
+				maxLengthEdge = &e2;
+
+			int adjTri = findAdjacentTriangle(maxLengthEdge->index0, maxLengthEdge->index1, maxLengthEdge->index2);
+			if (adjTri < 0) {
+				m_triUsed[i] = true;
+			}
+
+		}
+	}
+
+}
+
 void Landscape::buildKdTree()
 {
 	int numFixed = 0;

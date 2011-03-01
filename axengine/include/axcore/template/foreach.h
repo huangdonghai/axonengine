@@ -50,12 +50,14 @@ public:
 	}
 };
 
-template <typename T> inline T *axForeachPointer(const T &)
+template <typename T>
+inline T *axForeachPointer(const T &)
 {
 	return 0;
 }
 
-template <typename T> inline AxForeachContainer<T> axForeachContainerNew(const T &t)
+template <typename T>
+inline AxForeachContainer<T> axForeachContainerNew(const T &t)
 {
 	return AxForeachContainer<T>(t);
 }
@@ -67,12 +69,8 @@ inline const AxForeachContainer<T> *axForeachContainer(const ForeachContainerBas
 }
 
 #define AX_FOREACH(variable, container) \
-	for (const ForeachContainerBase &_container_ = axForeachContainerNew(container); \
-	axForeachContainer(&_container_, true ? 0 : axForeachPointer(container))->condition();       \
-	++axForeachContainer(&_container_, true ? 0 : axForeachPointer(container))->i)               \
-	for (variable = *axForeachContainer(&_container_, true ? 0 : axForeachPointer(container))->i; \
-	axForeachContainer(&_container_, true ? 0 : axForeachPointer(container))->brk;           \
-	--axForeachContainer(&_container_, true ? 0 : axForeachPointer(container))->brk)
+	for (const ForeachContainerBase &_container_ = axForeachContainerNew(container); axForeachContainer(&_container_, axForeachPointer(container))->condition(); ++axForeachContainer(&_container_, axForeachPointer(container))->i) \
+	for (variable = *axForeachContainer(&_container_, axForeachPointer(container))->i; axForeachContainer(&_container_, axForeachPointer(container))->brk; --axForeachContainer(&_container_, axForeachPointer(container))->brk)
 
 #endif
 
