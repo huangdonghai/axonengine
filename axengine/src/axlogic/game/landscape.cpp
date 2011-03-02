@@ -235,8 +235,8 @@ namespace {
 	class UnwrapHelper;
 
 	struct EdgeInfo {
-		int index0, index1; // edge's index
-		int index2; // triangle another index
+		int p0, p1; // edge's index
+		int p2; // triangle another index
 		float length;
 
 		bool operator<(const EdgeInfo &rhs)
@@ -263,24 +263,7 @@ namespace {
 			};
 			ushort_t p[3];
 		};
-
-		int findPos(ushort_t index) const;
-		bool find(ushort_t index) const;
 	};
-
-	int Triangle::findPos( ushort_t index ) const
-	{
-		for (int i = 0; i < 3; i++)
-			if (p[i] == index)
-				return i;
-
-		return -1;
-	}
-
-	bool Triangle::find( ushort_t index ) const
-	{
-		return findPos(index) >= 0;
-	}
 
 	struct Quad {
 		union {
@@ -289,18 +272,61 @@ namespace {
 			};
 			ushort_t p[4];
 		};
-	};
 
-	struct QuadLink
-	{
-		Quad *self;
 		Quad *sides[4];
-	};
+		int chart;
 
-	struct QuadList
-	{
-		int rows, columns;
-		ushort_t indices;
+		inline void tryLink(Quad *rhs)
+		{
+			if (!sides[0] && !rhs->sides[2]) {
+				if (p0 == rhs->p2 && p1 == rhs->p3) {
+					sides[0] = rhs;
+					rhs->sides[2] = this;
+					return;
+				}
+			}
+
+			if (!sides[1] && !rhs->sides[3]) {
+				if (p0 == rhs->p1 && p2 == rhs->p3) {
+					sides[1] = rhs;
+					rhs->sides[3] = this;
+					return;
+				}
+			}
+
+			if (!sides[2] && !rhs->sides[0]) {
+				if (p2 == rhs->p0 && p3 == rhs->p1) {
+					sides[2] = rhs;
+					rhs->sides[0] = this;
+					return;
+				}
+			}
+
+			if (!sides[3] && !rhs->sides[1]) {
+				if (p1 == rhs->p0 && p3 == rhs->p2) {
+					sides[3] = rhs;
+					rhs->sides[1] = this;
+					return;
+				}
+			}
+		}
+
+		inline bool isAllSideLinked() const
+		{
+			return sides[0] && sides[1] && sides[2] && sides[3];
+		}
+
+		inline void setChart(int _chart)
+		{
+			if (chart >= 0)
+				return;
+
+			chart = _chart;
+			for (int i = 0; i < 4; i++) {
+				if (sides[i])
+					sides[i]->setChart(_chart);
+			}
+		}
 	};
 
 	struct UnwrapHelper {
@@ -309,7 +335,7 @@ namespace {
 
 		int findAdjacentTriangle(int index);
 		void process();
-		Quad *allocQuad() { Quad *result = new Quad; m_quads.push_back(result); return result; }
+		Quad *allocQuad() { Quad *result = new Quad; TypeZero(result); m_quads.push_back(result); return result; }
 
 		MeshPrim *m_prim;
 		const MeshVertex *m_vertices;
@@ -320,7 +346,6 @@ namespace {
 		float m_texelsPerMeter;
 
 		std::vector<TriangleInfo> m_triInfos;
-		std::vector<QuadLink *> m_charts;
 		std::vector<int> m_orphanTris;
 		std::vector<Quad *> m_quads;
 	};
@@ -338,10 +363,18 @@ namespace {
 		}
 		m_scale = scale;
 		m_texelsPerMeter = texelsPerMeter;
+
+		process();
 	}
 
 	UnwrapHelper::~UnwrapHelper()
 	{
+		{
+			std::vector<Quad *>::const_iterator it = m_quads.begin();
+			for (; it != m_quads.end(); ++it ) {
+				delete *it;
+			}
+		}
 	}
 
 	void UnwrapHelper::process()
@@ -349,44 +382,77 @@ namespace {
 		// find quads
 		for (int i = 0; i < m_numTris; i++) {
 			const Triangle &tri0 = m_triangles[i];
-			const TriangleInfo &info = m_triInfos[i];
+			TriangleInfo &info = m_triInfos[i];
 
 			if (info.isUsed)
 				continue;
 
-			if (!info.isRightTriangle) {
-				m_orphanTris.push_back(i);
-				continue;
-			}
+			info.isUsed = true;
+
+			//if (!info.isRightTriangle) {
+			//	m_orphanTris.push_back(i);
+			//	continue;
+			//}
 			
 			int adjTri = findAdjacentTriangle(i);
 			if (adjTri < 0) {
-				m_triInfos[i].isUsed = true;
 				m_orphanTris.push_back(i);
+				continue;
 			}
 			const Triangle &tri1 = m_triangles[adjTri];
 			m_triInfos[adjTri].isUsed = true;
 
-			const EdgeInfo &e0 = info.edgeInfos[0];
-			const EdgeInfo &e1 = m_triInfos[adjTri].edgeInfos[0];
+			const EdgeInfo &e0 = info.edgeInfos[2];
+			const EdgeInfo &e1 = m_triInfos[adjTri].edgeInfos[2];
 
 			Quad *quad = allocQuad();
-			quad->p0 = e0.index2;
-			quad->p1 = e0.index0;
-			quad->p2 = e0.index1;
-			quad->p3 = e1.index2;
+			quad->p0 = e0.p2;
+			quad->p1 = e0.p0;
+			quad->p2 = e0.p1;
+			quad->p3 = e1.p2;
+			quad->chart = -1;
 		}
 
-		// link quads to chart
+		// link quads to each other
+		for (std::vector<Quad *>::iterator i = m_quads.begin(); i != m_quads.end(); ++i) {
+			Quad *self = *i;
+
+			if (self->isAllSideLinked())
+				continue;
+
+			for (std::vector<Quad *>::iterator j = m_quads.begin(); j != m_quads.end(); ++j) {
+				Quad *quad = *j;
+				if (quad == self)
+					continue;
+
+				self->tryLink(quad);
+
+				if (self->isAllSideLinked())
+					break;
+			}
+		}
+
+		// find quad chart
+		int chart = 0;
+		for (std::vector<Quad *>::iterator i = m_quads.begin(); i != m_quads.end(); ++i) {
+			Quad *self = *i;
+
+			if (self->chart >= 0)
+				continue;
+
+			self->setChart(chart);
+			chart++;
+		}
 	}
 
 	int UnwrapHelper::findAdjacentTriangle(int index)
 	{
-		const EdgeInfo &edge = m_triInfos[index].edgeInfos[0];
+		const EdgeInfo &edge = m_triInfos[index].edgeInfos[2];
 		for (int i = 0; i < m_numTris; i++) {
-			if (m_triInfos[i].isUsed) continue;
-			const EdgeInfo &adjEdge = m_triInfos[i].edgeInfos[0];
-			if (adjEdge.index1 == edge.index0 && adjEdge.index0 == edge.index1 && m_triInfos[i].isRightTriangle)
+			if (m_triInfos[i].isUsed)
+				continue;
+			const EdgeInfo &adjEdge = m_triInfos[i].edgeInfos[2];
+			if (adjEdge.p1 == edge.p0 && adjEdge.p0 == edge.p1/* && m_triInfos[i].isRightTriangle*/)
 				return i;
 		}
 
@@ -404,14 +470,21 @@ namespace {
 
 		std::sort(edgeInfos, edgeInfos+3);
 
-		float c = edgeInfos[1].length * edgeInfos[1].length + edgeInfos[2].length * edgeInfos[2].length;
-		if (c < = 0)
+		float c = edgeInfos[0].length * edgeInfos[0].length + edgeInfos[1].length * edgeInfos[1].length;
+		if (c <= 0)
 			return;
 
 		c = sqrt(c);
-		c = edgeInfos[0].length / c;
-		if (c > 0.5 && c < 2)
+		c = edgeInfos[2].length / c;
+		if (c > 0.5 && c < 1.5)
 			isRightTriangle = true;
+	}
+
+
+	void EdgeInfo::init(UnwrapHelper *obj, int index0, int index1, int index2)
+	{
+		p0 = index0; p1 = index1; p2 = index2;
+		length = (obj->m_vertices[p0].position - obj->m_vertices[p1].position).getLength();
 	}
 
 }
@@ -476,9 +549,11 @@ void Landscape::buildKdTree()
 
 		for (; it != prims.end(); ++it) {
 			Primitive *prim = *it;
+
 			if (prim->getType() != Primitive::MeshType)
 				continue;
 			MeshPrim *mesh = static_cast<MeshPrim *>(prim);
+			UnwrapHelper unwarper(mesh, 1, 4);
 
 			curVertices += mesh->getNumVertexes();
 			curElements += mesh->numElements();
