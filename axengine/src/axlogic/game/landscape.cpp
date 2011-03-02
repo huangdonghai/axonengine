@@ -234,17 +234,67 @@ void Landscape::removeFixed(Fixed *fixed)
 namespace {
 	class UnwrapHelper;
 
-	struct Edge {
+	struct EdgeInfo {
 		int index0, index1; // edge's index
 		int index2; // triangle another index
 		float length;
 
-		Edge(UnwrapHelper *obj, int index0, int index1, int index2);
+		bool operator<(const EdgeInfo &rhs)
+		{
+			return length < rhs.length;
+		}
+
+		EdgeInfo() {}
+		void init(UnwrapHelper *obj, int index0, int index1, int index2);
 	};
 
-	struct Triangle
+	struct TriangleInfo {
+		bool isRightTriangle;
+		bool isUsed;
+		EdgeInfo edgeInfos[3];
+
+		void init(UnwrapHelper *obj, int index);
+	};
+
+	struct Triangle {
+		union {
+			struct {
+				ushort_t p0, p1, p2;
+			};
+			ushort_t p[3];
+		};
+
+		int findPos(ushort_t index) const;
+		bool find(ushort_t index) const;
+	};
+
+	int Triangle::findPos( ushort_t index ) const
 	{
-		ushort_t p0, p1, p2;
+		for (int i = 0; i < 3; i++)
+			if (p[i] == index)
+				return i;
+
+		return -1;
+	}
+
+	bool Triangle::find( ushort_t index ) const
+	{
+		return findPos(index) >= 0;
+	}
+
+	struct Quad {
+		union {
+			struct {
+				ushort_t p0, p1, p2, p3;
+			};
+			ushort_t p[4];
+		};
+	};
+
+	struct QuadLink
+	{
+		Quad *self;
+		Quad *sides[4];
 	};
 
 	struct QuadList
@@ -253,24 +303,26 @@ namespace {
 		ushort_t indices;
 	};
 
-	class UnwrapHelper
-	{
-	public:
+	struct UnwrapHelper {
 		UnwrapHelper(MeshPrim *prim, float scale, float texelsPerMeter);
 		~UnwrapHelper();
 
-	protected:
-		int findAdjacentTriangle(int edge0, int edge1, int edge2);
+		int findAdjacentTriangle(int index);
 		void process();
+		Quad *allocQuad() { Quad *result = new Quad; m_quads.push_back(result); return result; }
 
-	private:
 		MeshPrim *m_prim;
 		const MeshVertex *m_vertices;
 		const ushort_t *m_indices;
+		const Triangle *m_triangles;
 		int m_numTris;
-		std::vector<bool> m_triUsed;
 		float m_scale;
 		float m_texelsPerMeter;
+
+		std::vector<TriangleInfo> m_triInfos;
+		std::vector<QuadLink *> m_charts;
+		std::vector<int> m_orphanTris;
+		std::vector<Quad *> m_quads;
 	};
 
 	UnwrapHelper::UnwrapHelper(MeshPrim *prim, float scale, float texelsPerMeter)
@@ -278,10 +330,11 @@ namespace {
 		m_prim = prim;
 		m_vertices = prim->getVertexesPointer();
 		m_indices = prim->getIndexPointer();
+		m_triangles = reinterpret_cast<const Triangle *>(m_indices);
 		m_numTris = prim->getNumIndexes() / 3;
-		m_triUsed.resize(m_numTris);
+		m_triInfos.resize(m_numTris);
 		for (int i = 0; i < m_numTris; i++) {
-			m_triUsed[i] = false;
+			m_triInfos[i].init(this, i);
 		}
 		m_scale = scale;
 		m_texelsPerMeter = texelsPerMeter;
@@ -293,27 +346,72 @@ namespace {
 
 	void UnwrapHelper::process()
 	{
+		// find quads
 		for (int i = 0; i < m_numTris; i++) {
-			int index0 = m_indices[i*m_numTris+0];
-			int index1 = m_indices[i*m_numTris+1];
-			int index2 = m_indices[i*m_numTris+2];
-			
-			Edge e0(this, index0, index1, index2);
-			Edge e1(this, index1, index2, index0);
-			Edge e2(this, index2, index0, index1);
+			const Triangle &tri0 = m_triangles[i];
+			const TriangleInfo &info = m_triInfos[i];
 
-			Edge *maxLengthEdge = &e0;
-			if (e1.length > maxLengthEdge->length)
-				maxLengthEdge = &e1;
-			if (e2.length > maxLengthEdge->length)
-				maxLengthEdge = &e2;
+			if (info.isUsed)
+				continue;
 
-			int adjTri = findAdjacentTriangle(maxLengthEdge->index0, maxLengthEdge->index1, maxLengthEdge->index2);
-			if (adjTri < 0) {
-				m_triUsed[i] = true;
+			if (!info.isRightTriangle) {
+				m_orphanTris.push_back(i);
+				continue;
 			}
+			
+			int adjTri = findAdjacentTriangle(i);
+			if (adjTri < 0) {
+				m_triInfos[i].isUsed = true;
+				m_orphanTris.push_back(i);
+			}
+			const Triangle &tri1 = m_triangles[adjTri];
+			m_triInfos[adjTri].isUsed = true;
 
+			const EdgeInfo &e0 = info.edgeInfos[0];
+			const EdgeInfo &e1 = m_triInfos[adjTri].edgeInfos[0];
+
+			Quad *quad = allocQuad();
+			quad->p0 = e0.index2;
+			quad->p1 = e0.index0;
+			quad->p2 = e0.index1;
+			quad->p3 = e1.index2;
 		}
+
+		// link quads to chart
+	}
+
+	int UnwrapHelper::findAdjacentTriangle(int index)
+	{
+		const EdgeInfo &edge = m_triInfos[index].edgeInfos[0];
+		for (int i = 0; i < m_numTris; i++) {
+			if (m_triInfos[i].isUsed) continue;
+			const EdgeInfo &adjEdge = m_triInfos[i].edgeInfos[0];
+			if (adjEdge.index1 == edge.index0 && adjEdge.index0 == edge.index1 && m_triInfos[i].isRightTriangle)
+				return i;
+		}
+
+		return -1;
+	}
+
+	void TriangleInfo::init(UnwrapHelper *obj, int index)
+	{
+		isUsed = false;
+
+		const Triangle &tri = obj->m_triangles[index];
+		edgeInfos[0].init(obj, tri.p0, tri.p1, tri.p2);
+		edgeInfos[1].init(obj, tri.p1, tri.p2, tri.p0);
+		edgeInfos[2].init(obj, tri.p2, tri.p0, tri.p1);
+
+		std::sort(edgeInfos, edgeInfos+3);
+
+		float c = edgeInfos[1].length * edgeInfos[1].length + edgeInfos[2].length * edgeInfos[2].length;
+		if (c < = 0)
+			return;
+
+		c = sqrt(c);
+		c = edgeInfos[0].length / c;
+		if (c > 0.5 && c < 2)
+			isRightTriangle = true;
 	}
 
 }
