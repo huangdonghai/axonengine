@@ -316,7 +316,7 @@ namespace {
 			return sides[0] && sides[1] && sides[2] && sides[3];
 		}
 
-		inline void setChart(int _chart)
+		inline void setChart_r(int _chart)
 		{
 			if (chart >= 0)
 				return;
@@ -324,7 +324,7 @@ namespace {
 			chart = _chart;
 			for (int i = 0; i < 4; i++) {
 				if (sides[i])
-					sides[i]->setChart(_chart);
+					sides[i]->setChart_r(_chart);
 			}
 		}
 	};
@@ -440,7 +440,7 @@ namespace {
 			if (self->chart >= 0)
 				continue;
 
-			self->setChart(chart);
+			self->setChart_r(chart);
 			chart++;
 		}
 	}
@@ -553,7 +553,7 @@ void Landscape::buildKdTree()
 			if (prim->getType() != Primitive::MeshType)
 				continue;
 			MeshPrim *mesh = static_cast<MeshPrim *>(prim);
-			UnwrapHelper unwarper(mesh, 1, 4);
+//			UnwrapHelper unwarper(mesh, 1, 4);
 
 			curVertices += mesh->getNumVertexes();
 			curElements += mesh->numElements();
