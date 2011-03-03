@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="axeditor"
+	Name="axedit"
 	ProjectGUID="{B04A5E9A-BC7A-4692-9DDC-075EED228D6E}"
-	RootNamespace="axeditor"
+	RootNamespace="axedit"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="131072"
 	>
@@ -141,19 +141,19 @@
 			Name="src"
 			>
 			<File
-				RelativePath="..\..\..\src\axeditor\action.cpp"
+				RelativePath="..\..\..\src\axedit\action.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axeditor\agent.cpp"
+				RelativePath="..\..\..\src\axedit\agent.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axeditor\context.cpp"
+				RelativePath="..\..\..\src\axedit\context.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axeditor\gizmo.cpp"
+				RelativePath="..\..\..\src\axedit\gizmo.cpp"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -176,11 +176,11 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axeditor\history.cpp"
+				RelativePath="..\..\..\src\axedit\history.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axeditor\pch.cpp"
+				RelativePath="..\..\..\src\axedit\pch.cpp"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -203,46 +203,11 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axeditor\pch.h"
+				RelativePath="..\..\..\src\axedit\pch.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axeditor\private.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-						PrecompiledHeaderThrough="pch.h"
-						ForcedIncludeFiles="pch.h"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="2"
-						PrecompiledHeaderThrough="pch.h"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\..\..\src\axeditor\private.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\axeditor\state.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\axeditor\tools.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\axeditor\types.cpp"
+				RelativePath="..\..\..\src\axedit\private.cpp"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -265,7 +230,42 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axeditor\view.cpp"
+				RelativePath="..\..\..\src\axedit\private.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\axedit\state.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\axedit\tools.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\axedit\types.cpp"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="2"
+						PrecompiledHeaderThrough="pch.h"
+						ForcedIncludeFiles="pch.h"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="2"
+						PrecompiledHeaderThrough="pch.h"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\..\..\src\axedit\view.cpp"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -291,43 +291,43 @@
 				Name="include"
 				>
 				<File
-					RelativePath="..\..\..\include\axeditor\action.h"
+					RelativePath="..\..\..\include\axedit\action.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\include\axeditor\agent.h"
+					RelativePath="..\..\..\include\axedit\agent.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\include\axeditor\context.h"
+					RelativePath="..\..\..\include\axedit\context.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\include\axeditor\gizmo.h"
+					RelativePath="..\..\..\include\axedit\gizmo.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\include\axeditor\history.h"
+					RelativePath="..\..\..\include\axedit\history.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\include\axeditor\public.h"
+					RelativePath="..\..\..\include\axedit\public.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\include\axeditor\state.h"
+					RelativePath="..\..\..\include\axedit\state.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\include\axeditor\tools.h"
+					RelativePath="..\..\..\include\axedit\tools.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\include\axeditor\types.h"
+					RelativePath="..\..\..\include\axedit\types.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\include\axeditor\view.h"
+					RelativePath="..\..\..\include\axedit\view.h"
 					>
 				</File>
 			</Filter>
@@ -336,86 +336,86 @@
 			Name="map"
 			>
 			<File
-				RelativePath="..\..\..\src\axeditor\map\map_action.cpp"
+				RelativePath="..\..\..\src\axedit\map\map_action.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axeditor\map\map_actor.cpp"
+				RelativePath="..\..\..\src\axedit\map\map_actor.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axeditor\map\map_agent.cpp"
+				RelativePath="..\..\..\src\axedit\map\map_agent.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axeditor\map\map_context.cpp"
+				RelativePath="..\..\..\src\axedit\map\map_context.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axeditor\map\map_history.cpp"
+				RelativePath="..\..\..\src\axedit\map\map_history.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axeditor\map\map_local.h"
+				RelativePath="..\..\..\src\axedit\map\map_local.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axeditor\map\map_orthoview.cpp"
+				RelativePath="..\..\..\src\axedit\map\map_orthoview.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axeditor\map\map_perspectiveview.cpp"
+				RelativePath="..\..\..\src\axedit\map\map_perspectiveview.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axeditor\map\map_state.cpp"
+				RelativePath="..\..\..\src\axedit\map\map_state.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axeditor\map\map_tools.cpp"
+				RelativePath="..\..\..\src\axedit\map\map_tools.cpp"
 				>
 			</File>
 			<Filter
 				Name="public"
 				>
 				<File
-					RelativePath="..\..\..\include\axeditor\map\all.h"
+					RelativePath="..\..\..\include\axedit\map\all.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\include\axeditor\map\map_action.h"
+					RelativePath="..\..\..\include\axedit\map\map_action.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\include\axeditor\map\map_actor.h"
+					RelativePath="..\..\..\include\axedit\map\map_actor.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\include\axeditor\map\map_agent.h"
+					RelativePath="..\..\..\include\axedit\map\map_agent.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\include\axeditor\map\map_context.h"
+					RelativePath="..\..\..\include\axedit\map\map_context.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\include\axeditor\map\map_history.h"
+					RelativePath="..\..\..\include\axedit\map\map_history.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\include\axeditor\map\map_orthoview.h"
+					RelativePath="..\..\..\include\axedit\map\map_orthoview.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\include\axeditor\map\map_perspectiveview.h"
+					RelativePath="..\..\..\include\axedit\map\map_perspectiveview.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\include\axeditor\map\map_state.h"
+					RelativePath="..\..\..\include\axedit\map\map_state.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\include\axeditor\map\map_tools.h"
+					RelativePath="..\..\..\include\axedit\map\map_tools.h"
 					>
 				</File>
 			</Filter>
@@ -424,46 +424,46 @@
 			Name="gfxedit"
 			>
 			<File
-				RelativePath="..\..\..\src\axeditor\gfxedit\gfx_agent.cpp"
+				RelativePath="..\..\..\src\axedit\gfxedit\gfx_agent.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axeditor\gfxedit\gfx_context.cpp"
+				RelativePath="..\..\..\src\axedit\gfxedit\gfx_context.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axeditor\gfxedit\gfx_local.h"
+				RelativePath="..\..\..\src\axedit\gfxedit\gfx_local.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axeditor\gfxedit\gfx_tools.cpp"
+				RelativePath="..\..\..\src\axedit\gfxedit\gfx_tools.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axeditor\gfxedit\gfx_view.cpp"
+				RelativePath="..\..\..\src\axedit\gfxedit\gfx_view.cpp"
 				>
 			</File>
 			<Filter
 				Name="public"
 				>
 				<File
-					RelativePath="..\..\..\include\axeditor\gfxedit\all.h"
+					RelativePath="..\..\..\include\axedit\gfxedit\all.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\include\axeditor\gfxedit\gfx_agent.h"
+					RelativePath="..\..\..\include\axedit\gfxedit\gfx_agent.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\include\axeditor\gfxedit\gfx_context.h"
+					RelativePath="..\..\..\include\axedit\gfxedit\gfx_context.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\include\axeditor\gfxedit\gfx_tools.h"
+					RelativePath="..\..\..\include\axedit\gfxedit\gfx_tools.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\include\axeditor\gfxedit\gfx_view.h"
+					RelativePath="..\..\..\include\axedit\gfxedit\gfx_view.h"
 					>
 				</File>
 			</Filter>
@@ -472,22 +472,22 @@
 			Name="mtl"
 			>
 			<File
-				RelativePath="..\..\..\src\axeditor\mtl\mtl_local.h"
+				RelativePath="..\..\..\src\axedit\mtl\mtl_local.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axeditor\mtl\mtl_nodedef.cpp"
+				RelativePath="..\..\..\src\axedit\mtl\mtl_nodedef.cpp"
 				>
 			</File>
 			<Filter
 				Name="public"
 				>
 				<File
-					RelativePath="..\..\..\include\axeditor\mtl\mtl_all.h"
+					RelativePath="..\..\..\include\axedit\mtl\mtl_all.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\include\axeditor\mtl\mtl_nodedef.h"
+					RelativePath="..\..\..\include\axedit\mtl\mtl_nodedef.h"
 					>
 				</File>
 			</Filter>

@@ -30,7 +30,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "axclient", "axclient\axclie
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "axlogic", "axlogic\axlogic.vcproj", "{58D8AD1C-DFD9-4796-A4C3-6152FE65C0AA}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "axeditor", "axeditor\axeditor.vcproj", "{B04A5E9A-BC7A-4692-9DDC-075EED228D6E}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "axedit", "axedit\axedit.vcproj", "{B04A5E9A-BC7A-4692-9DDC-075EED228D6E}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "axeditorapp", "axeditorapp\axeditorapp.vcproj", "{B30947E7-9FEC-408A-A73F-42FCC08AD988}"
 	ProjectSection(ProjectDependencies) = postProject

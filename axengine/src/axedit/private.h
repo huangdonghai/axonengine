@@ -14,7 +14,7 @@ read the license and understand and accept it fully.
 #include <axcore/public.h>
 #include <axclient/public.h>
 #include <axlogic/public.h>
-#include <axeditor/public.h>
+#include <axedit/public.h>
 
 AX_BEGIN_NAMESPACE
 
