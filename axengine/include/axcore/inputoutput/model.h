@@ -8,6 +8,13 @@ enum {
 	MAX_FILENAME = 128,
 	UNWRAP_UV_DIVIDED = 32
 };
+
+struct QuadStripData {
+	float width;
+	float height;
+	ushort_t *indices;
+};
+
 struct MeshData {
 	char name[MAX_NAME];
 	char material[MAX_FILENAME];
