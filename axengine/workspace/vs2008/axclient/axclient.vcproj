@@ -200,10 +200,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axclient\render\commandbuf.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\src\axclient\render\fog.cpp"
 				>
 			</File>
@@ -228,10 +224,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axclient\render\light_p.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\src\axclient\render\material.cpp"
 				>
 			</File>
@@ -240,19 +232,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axclient\render\material_p.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\src\axclient\render\outdoorenv.cpp"
 				>
 			</File>
 			<File
 				RelativePath="..\..\..\src\axclient\render\primitive.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\axclient\render\primitive_p.h"
 				>
 			</File>
 			<File
@@ -268,10 +252,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axclient\render\render_context.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\src\axclient\render\render_entity.cpp"
 				>
 			</File>
@@ -280,19 +260,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axclient\render\render_interface.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\axclient\render\render_p.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\src\axclient\render\render_state_p.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\axclient\render\render_state_p.h"
 				>
 			</File>
 			<File
@@ -304,19 +272,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axclient\render\render_thread.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\src\axclient\render\render_world.cpp"
 				>
 			</File>
 			<File
 				RelativePath="..\..\..\src\axclient\render\selection.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\axclient\render\selection.h"
 				>
 			</File>
 			<File
@@ -336,10 +296,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axclient\render\texture_p.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\src\axclient\render\textureatlas.cpp"
 				>
 			</File>
@@ -352,15 +308,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axclient\render\vertexbuffer.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\src\axclient\render\wind.cpp"
 				>
 			</File>
 			<Filter
-				Name="public"
+				Name="_public"
 				>
 				<File
 					RelativePath="..\..\..\include\axclient\render\camera.h"
@@ -471,6 +423,58 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="inc"
+				>
+				<File
+					RelativePath="..\..\..\src\axclient\render\commandbuf.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\axclient\render\light_p.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\axclient\render\material_p.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\axclient\render\primitive_p.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\axclient\render\render_context.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\axclient\render\render_interface.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\axclient\render\render_p.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\axclient\render\render_state_p.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\axclient\render\render_thread.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\axclient\render\selection.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\axclient\render\texture_p.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\axclient\render\vertexbuffer.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="input"
@@ -556,15 +560,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axclient\dx9\dx9_api.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\src\axclient\dx9\dx9_driver.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\axclient\dx9\dx9_driver.h"
 				>
 			</File>
 			<File
@@ -572,15 +568,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axclient\dx9\dx9_private.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\src\axclient\dx9\dx9_shader.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\axclient\dx9\dx9_shader.h"
 				>
 			</File>
 			<File
@@ -588,17 +576,37 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axclient\dx9\dx9_state.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\src\axclient\dx9\dx9_window.cpp"
 				>
 			</File>
-			<File
-				RelativePath="..\..\..\src\axclient\dx9\dx9_window.h"
+			<Filter
+				Name="inc"
 				>
-			</File>
+				<File
+					RelativePath="..\..\..\src\axclient\dx9\dx9_api.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\axclient\dx9\dx9_driver.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\axclient\dx9\dx9_private.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\axclient\dx9\dx9_shader.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\axclient\dx9\dx9_state.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\axclient\dx9\dx9_window.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="sound"
@@ -664,15 +672,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axclient\dx11\dx11_api.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\src\axclient\dx11\dx11_driver.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\axclient\dx11\dx11_driver.h"
 				>
 			</File>
 			<File
@@ -680,15 +680,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axclient\dx11\dx11_private.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\src\axclient\dx11\dx11_shader.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\axclient\dx11\dx11_shader.h"
 				>
 			</File>
 			<File
@@ -696,17 +688,37 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axclient\dx11\dx11_state.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\src\axclient\dx11\dx11_window.cpp"
 				>
 			</File>
-			<File
-				RelativePath="..\..\..\src\axclient\dx11\dx11_window.h"
+			<Filter
+				Name="inc"
 				>
-			</File>
+				<File
+					RelativePath="..\..\..\src\axclient\dx11\dx11_api.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\axclient\dx11\dx11_driver.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\axclient\dx11\dx11_private.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\axclient\dx11\dx11_shader.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\axclient\dx11\dx11_state.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\axclient\dx11\dx11_window.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="gl"
@@ -716,15 +728,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axclient\gl\gl_api.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\src\axclient\gl\gl_driver.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\axclient\gl\gl_driver.h"
 				>
 			</File>
 			<File
@@ -732,15 +736,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axclient\gl\gl_private.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\src\axclient\gl\gl_shader.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\axclient\gl\gl_shader.h"
 				>
 			</File>
 			<File
@@ -748,17 +744,37 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\axclient\gl\gl_state.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\src\axclient\gl\gl_window.cpp"
 				>
 			</File>
-			<File
-				RelativePath="..\..\..\src\axclient\gl\gl_window.h"
+			<Filter
+				Name="inc"
 				>
-			</File>
+				<File
+					RelativePath="..\..\..\src\axclient\gl\gl_api.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\axclient\gl\gl_driver.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\axclient\gl\gl_private.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\axclient\gl\gl_shader.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\axclient\gl\gl_state.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\axclient\gl\gl_window.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="_old"
