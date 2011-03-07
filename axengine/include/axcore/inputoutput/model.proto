@@ -1,0 +1,48 @@
+package AXON;
+
+//option optimize_for = LITE_RUNTIME;
+
+message VertexDeclaration {
+	enum DataType
+	{
+		DT_NONE = 0;
+		DT_BYTE4 = 1;
+		DT_FLOAT = 1;
+		DT_FLOAT2 = 3;
+		DT_FLOAT3 = 4;
+		DT_FLOAT4 = 5;
+	}
+
+	enum DataUsage
+	{
+		DU_NONE = 0;
+		DU_POSITION = 1;
+		DU_COLOR = 2;
+		DU_NORMAL = 4;
+		DU_TANGENT = 8;
+		DU_BINORMAL = 16;
+		DU_TEXCOORD = 32;
+		DU_BLENDWEIGHTS = 64;  // usually 4 weights, but 3 can be stored with 1 implied. Can be stored as 4*uint8, so quantized where 1.0f => 0xff (255),
+		DU_BLENDINDICES = 128; // usually 4 hkUint8s in a row. So can reference 256 blend transforms (bones)
+		DU_USERDATA = 256;
+	}
+
+	message Element {
+		required DataType dataType = 1;
+		required DataUsage usage = 2;
+		optional int32 offset = 3;
+		optional int32 usageIndex = 4;
+	}
+	
+	repeated Element elements = 1;
+}
+
+message MeshData {
+	optional string name = 1;
+	optional string material = 2;
+	repeated float floatData = 3 [packed=true];
+	repeated int32 byte4Data = 4 [packed=true];
+	repeated int32 intData = 5 [packed=true];
+	required VertexDeclaration declaration = 6;
+	repeated int32 indices = 7 [packed=true];
+}
