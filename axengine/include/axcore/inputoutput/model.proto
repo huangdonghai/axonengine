@@ -46,3 +46,14 @@ message MeshData {
 	required VertexDeclaration declaration = 6;
 	repeated int32 indices = 7 [packed=true];
 }
+
+message Joint {
+	required string name = 1;
+	required int32 parentIndex = 1;
+	repeated float pos = 3;
+	repeated float quat = 4; 
+}
+
+message Skeleton {
+	repeated Joint joints = 1;
+}
