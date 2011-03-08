@@ -30,8 +30,8 @@ message VertexDeclaration {
 	message Element {
 		required DataType dataType = 1;
 		required DataUsage usage = 2;
-		optional int32 offset = 3;
-		optional int32 usageIndex = 4;
+		optional int32 offset = 3 [default = 0];
+		optional int32 usageIndex = 4 [default = 0];
 	}
 	
 	repeated Element elements = 1;
