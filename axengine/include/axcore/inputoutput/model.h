@@ -54,24 +54,42 @@ struct QuadStripData {
 };
 
 struct MeshData {
-	char name[MAX_NAME];
-	char material[MAX_FILENAME];
+	std::string name;
+	std::string material;
+	VertexDeclaration declaration;
 	int numVertices;
 	int numIndices;
-	Vector3 *postions;
-	Vector2 *texcoords;
-	Vector3 *normals;
-	Rgba * colors;
-	ushort_t *indices;
-	ushort_t *quadstrips;
-	ushort_t *orphanTriangles;
+	std::vector<float> floatData;
+	std::vector<byte_t> byteData;
+	std::vector<ushort_t> indices;
+	std::vector<ushort_t> quadstrips;
+	std::vector<ushort_t> orphanTriangles;
 };
 
-struct SkeletonData {};
+struct JointData {
+	std::string name;
+	int parent;
+	Vector3 position;
+	CompactQuat rotate;
+};
+
+struct SkeletonData {
+	std::vector<JointData> joints;
+};
 
 struct SkinData {};
 
-struct AnimationData {};
+struct AnimationData {
+	SkeletonData *skeleton;
+	int numFrames;
+
+};
+
+struct ModelData {
+	MeshData *meshData;
+	SkeletonData *skeleton;
+	AnimationData *animationData;
+};
 
 AX_END_NAMESPACE
 

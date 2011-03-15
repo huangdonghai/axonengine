@@ -251,6 +251,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\include\axcore\inputoutput\model.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\include\axcore\inputoutput\model.pb.cc"
 					>
 				</File>
