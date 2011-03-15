@@ -35,6 +35,7 @@ read the license and understand and accept it fully.
 #include "./utility/calendar.h"
 #include "./utility/uuid.h"
 #include "./utility/refobject.h"
+#include "./inputoutput/model.h"
 #include "./inputoutput/image.h"
 #include "./script/script_all.h"
 #include "./singleton/classfactory.h"

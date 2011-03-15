@@ -32,7 +32,7 @@ public:
 
 	size_t hash() const;
 
-	static Uuid generateUuid();
+	static Uuid createUuid();
 
 private:
 	union {

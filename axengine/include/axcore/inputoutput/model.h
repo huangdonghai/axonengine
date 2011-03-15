@@ -79,16 +79,23 @@ struct SkeletonData {
 
 struct SkinData {};
 
+struct AnimationAnnotation {
+	float time;
+	std::string text;
+};
+
 struct AnimationData {
 	SkeletonData *skeleton;
 	int numFrames;
-
 };
 
 struct ModelData {
-	MeshData *meshData;
-	SkeletonData *skeleton;
-	AnimationData *animationData;
+	enum {
+		FileFourCC = AX_MAKEFOURCC('A', 'X', 'M', 'L'),
+		MeshFourCC = AX_MAKEFOURCC('M', 'E', 'S', 'H'),
+		Version = 1
+	};
+	std::vector<MeshData> meshData;
 };
 
 AX_END_NAMESPACE

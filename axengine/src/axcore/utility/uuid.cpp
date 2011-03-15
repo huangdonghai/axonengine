@@ -51,7 +51,7 @@ size_t Uuid::hash() const
 	return result;
 }
 
-Uuid Uuid::generateUuid()
+Uuid Uuid::createUuid()
 {
 	Uuid result;
 	RPC_STATUS status = UuidCreate((UUID*)&result);

@@ -240,6 +240,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\axcore\inputoutput\model.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\axcore\inputoutput\xml.cpp"
 				>
 			</File>

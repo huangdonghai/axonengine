@@ -230,7 +230,7 @@ AX_BEGIN_NAMESPACE
 
 		Asset *a = d->factory->create();
 		if (a->init(name, arg)) {
-			a->m_key = a->getKey().toString() + "$" + Uuid::generateUuid();
+			a->m_key = a->getKey().toString() + "$" + Uuid::createUuid();
 			d->assetDict[a->m_key] = a;
 
 			return a;
