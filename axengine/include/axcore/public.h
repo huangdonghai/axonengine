@@ -35,7 +35,6 @@ read the license and understand and accept it fully.
 #include "./utility/calendar.h"
 #include "./utility/uuid.h"
 #include "./utility/refobject.h"
-#include "./inputoutput/model.h"
 #include "./inputoutput/image.h"
 #include "./script/script_all.h"
 #include "./singleton/classfactory.h"
@@ -47,6 +46,7 @@ read the license and understand and accept it fully.
 #include "./singleton/statistic.h"
 #include "./singleton/assetmanager.h"
 #include "./singleton/coresystem.h"
+#include "./inputoutput/model.h"
 
 AX_BEGIN_NAMESPACE
 

@@ -27,25 +27,19 @@ struct SearchDir {
 	std::string dir;
 	bool extractSrc;
 };
-typedef std::list<SearchDir> SearchDirs;
 
 class PakedFolder;
 class File;
 class FileSystem;
 
 
-// global variable
-extern const char *const DEFAULT_CACHES_PATH;
-
-//------------------------------------------------------------------------------
-// class File
 //------------------------------------------------------------------------------
 
 class AX_API File : public ThreadSafe
 {
-public:
 	friend class FileSystem;
-	
+
+public:
 	enum AccessMode {
 		ReadMode,
 		WriteMode,
@@ -122,8 +116,6 @@ private:
 	std::string m_name;
 };
 
-
-typedef std::list<File*>			FileList;
 
 class FileInfo
 {
@@ -303,8 +295,8 @@ protected:
 	void addModPath();
 
 private:
-	SearchDirs m_searchDirs;
-	FileList m_fileList;
+	std::list<SearchDir> m_searchDirs;
+	std::list<File*> m_fileList;
 
 	std::string m_workPath;		// exe run path
 	std::string m_dataPath;		// main data path

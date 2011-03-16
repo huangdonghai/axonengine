@@ -550,7 +550,7 @@ void FileSystem::addGameDirectory(const std::string &dir, bool extractSrc)
 	SCOPED_LOCK;
 
 	/* check if already added */
-	SearchDirs::const_iterator pos = m_searchDirs.begin();
+	std::list<SearchDir>::const_iterator pos = m_searchDirs.begin();
 	for (; pos != m_searchDirs.end(); ++pos) {
 		if (pos->dir == dir) {
 			Printf("duplicated game directory '%s', ingored\n", dir.c_str());
@@ -724,7 +724,7 @@ File *FileSystem::openFileRead(const std::string &filename)
 	if (g_cvarSystem && fs_extract.getBool())
 		doExtract = true;
 
-	SearchDirs::iterator sp = m_searchDirs.begin();
+	std::list<SearchDir>::iterator sp = m_searchDirs.begin();
 
 	for (; sp != m_searchDirs.end(); ++sp) {
 		/* real file */
@@ -950,7 +950,7 @@ void FileSystem::detachFileObject(File *cf)
 {
 	SCOPED_LOCK;
 
-	FileList::iterator it = m_fileList.begin();
+	std::list<File*>::iterator it = m_fileList.begin();
 	for (; it!=m_fileList.end(); ++it) {
 		if (*it == cf) {
 			m_fileList.erase(it);
@@ -1020,7 +1020,7 @@ bool FileSystem::getFileModifyTime(const std::string &filename, longlong_t *time
 		return false;
 	}
 
-	SearchDirs::const_iterator sp;
+	std::list<SearchDir>::const_iterator sp;
 	for (sp = m_searchDirs.begin(); sp != m_searchDirs.end(); ++sp) {
 		std::string path = fullPath(sp->dir, filename);
 		if (PathUtil::getFileModifiedTime(path.c_str(), time))
