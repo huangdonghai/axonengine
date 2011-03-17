@@ -19,6 +19,11 @@ public:
 	Archiver &operator<<(double val) { val = LittleEndian(val); m_file->write(&val, 8); return *this; }
 	Archiver &operator<<(std::string val) { operator<<(static_cast<int>(val.size())); m_file->write(&val[0], val.size()); return *this; }
 	template <typename Q>
+	Archiver &operator<<(const Q &val)
+	{
+		val.save(*this); return *this;
+	}
+	template <typename Q>
 	Archiver &operator<<(const std::vector<Q> &val)
 	{
 		int size = val.size();
@@ -40,13 +45,18 @@ public:
 	Archiver &operator>>(double &val) { m_file->read(&val, 8); val = LittleEndian(val); return *this; }
 	Archiver &operator>>(std::string &val) { int size; operator>>(size); val.resize(size); m_file->read(&val[0], size); return *this; }
 	template <typename Q>
+	Archiver &operator>>(Q &val)
+	{
+		val.load(*this); return *this;
+	}
+	template <typename Q>
 	Archiver &operator>>(std::vector<Q> &val)
 	{
 		int size = 0;
-		operator>>size;
+		operator>>(size);
 		val.resize(size);
 		for (int i = 0; i < size; i++) {
-			operator>>val[i];
+			operator>>(val[i]);
 		}
 		return *this;
 	}
@@ -87,10 +97,16 @@ public:
 		DataType dataType;
 		DataUsage usage;
 		int usageIndex;
+
+		void save(Archiver &ar) const;
+		void load(Archiver &ar);
 	};
 
 	int m_stride;
 	std::vector<Element> m_elements;
+
+	void save(Archiver &ar) const;
+	void load(Archiver &ar);
 };
 
 struct QuadStripData {
@@ -100,6 +116,7 @@ struct QuadStripData {
 };
 
 struct MeshData {
+	enum { Version = 1 };
 	std::string name;
 	std::string material;
 	VertexDeclaration declaration;
@@ -110,6 +127,9 @@ struct MeshData {
 	std::vector<ushort_t> indices;
 	std::vector<ushort_t> quadstrips;
 	std::vector<ushort_t> orphanTriangles;
+
+	void save(Archiver &ar) const;
+	void load(Archiver &ar);
 };
 
 struct JointData {
@@ -137,18 +157,12 @@ struct AnimationData {
 
 struct ModelData {
 	enum {
-		FileFourCC = AX_MAKEFOURCC('A', 'X', 'M', 'L'),
+		MagicId = AX_MAKEFOURCC('A', 'X', 'M', 'L'),
 		Version = 1
 	};
 	std::vector<MeshData> meshData;
 
-	void save(Archiver &ar)
-	{
-		ar << FileFourCC;
-		ar << Version;
-		ar << meshData;
-	}
-
+	void save(Archiver &ar) const;
 	void load(Archiver &ar);
 };
 
