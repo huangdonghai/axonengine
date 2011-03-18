@@ -2,6 +2,24 @@
 
 AX_BEGIN_NAMESPACE
 
+void QuadStripData::save(Archiver &ar) const
+{
+	ar << row;
+	ar << column;
+	ar << width;
+	ar << height;
+	ar << indices;
+}
+
+void QuadStripData::load(Archiver &ar)
+{
+	ar >> row;
+	ar >> column;
+	ar >> width;
+	ar >> height;
+	ar >> indices;
+}
+
 void VertexDeclaration::Element::save(Archiver &ar) const
 {
 	ar << offset;
@@ -38,6 +56,7 @@ void MeshData::save(Archiver &ar) const
 	ar << numVertices;
 	ar << numIndices;
 	ar << floatData;
+	ar << ushortData;
 	ar << byteData;
 	ar << indices;
 	ar << quadstrips;
@@ -52,6 +71,7 @@ void MeshData::load(Archiver &ar)
 	ar >> numVertices;
 	ar >> numIndices;
 	ar >> floatData;
+	ar >> ushortData;
 	ar >> byteData;
 	ar >> indices;
 	ar >> quadstrips;
@@ -61,8 +81,8 @@ void MeshData::load(Archiver &ar)
 
 void ModelData::save(Archiver &ar) const
 {
-	ar << (int)MagicId;
-	ar << (int)Version;
+	ar << (int)FileId;
+	ar << (int)FileVersion;
 	ar << meshData;
 }
 
@@ -74,8 +94,8 @@ void ModelData::load(Archiver &ar)
 	ar >> id;
 	ar >> version;
 
-	if (id != MagicId) return;
-	if (version > Version) return;
+	if (id != FileId) return;
+	if (version > FileVersion) return;
 
 	ar >> meshData;
 }

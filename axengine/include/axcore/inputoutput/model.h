@@ -72,6 +72,7 @@ public:
 	{
 		DT_NONE = 0,
 		DT_BYTE4,
+		DT_USHORT2,
 		DT_FLOAT,
 		DT_FLOAT2,
 		DT_FLOAT3,
@@ -110,22 +111,27 @@ public:
 };
 
 struct QuadStripData {
+	int row;
+	int column;
 	float width;
 	float height;
-	ushort_t *indices;
+	std::vector<ushort_t> indices;
+
+	void save(Archiver &ar) const;
+	void load(Archiver &ar);
 };
 
 struct MeshData {
-	enum { Version = 1 };
 	std::string name;
 	std::string material;
 	VertexDeclaration declaration;
 	int numVertices;
 	int numIndices;
 	std::vector<float> floatData;
+	std::vector<ushort_t> ushortData;
 	std::vector<byte_t> byteData;
 	std::vector<ushort_t> indices;
-	std::vector<ushort_t> quadstrips;
+	std::vector<QuadStripData> quadstrips;
 	std::vector<ushort_t> orphanTriangles;
 
 	void save(Archiver &ar) const;
@@ -157,8 +163,8 @@ struct AnimationData {
 
 struct ModelData {
 	enum {
-		MagicId = AX_MAKEFOURCC('A', 'X', 'M', 'L'),
-		Version = 1
+		FileId = AX_MAKEFOURCC('A', 'X', 'M', 'L'),
+		FileVersion = 1
 	};
 	std::vector<MeshData> meshData;
 
