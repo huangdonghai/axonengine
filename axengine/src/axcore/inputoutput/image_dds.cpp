@@ -182,9 +182,9 @@ namespace {
 		for (int z = 0; z < (int)pParams->depth; z++) {
 			for (int y = 0; y < (int)pParams->height; y += 4) {
 				for (int x = 0; x < (int)pParams->width; x += 4) {
-					ushort_t color_0 = LittleShort(*(ushort_t*)pInData);
-					ushort_t color_1 = LittleShort(*(ushort_t*)(pInData+2));
-					uint_t bitmask = LittleInt(*(uint_t*)(pInData+4));
+					ushort_t color_0 = LittleEndian(*(ushort_t*)pInData);
+					ushort_t color_1 = LittleEndian(*(ushort_t*)(pInData+2));
+					uint_t bitmask = LittleEndian(*(uint_t*)(pInData+4));
 					pInData += 8;
 
 					Color565To888(color_0, colours);
@@ -243,9 +243,9 @@ namespace {
 
 					byte_t *pAlpha = pInData;
 					pInData += 8;
-					ushort_t color_0 = LittleShort(*(ushort_t*)pInData);
-					ushort_t color_1 = LittleShort(*(ushort_t*)(pInData+2));
-					uint_t bitmask = LittleInt(*(uint_t*)(pInData+4));
+					ushort_t color_0 = LittleEndian(*(ushort_t*)pInData);
+					ushort_t color_1 = LittleEndian(*(ushort_t*)(pInData+2));
+					uint_t bitmask = LittleEndian(*(uint_t*)(pInData+4));
 					pInData += 8;
 
 					Color565To888(color_0, colours);
@@ -306,9 +306,9 @@ namespace {
 					byte_t *alphamask = pInData + 2;
 					pInData += 8;
 
-					ushort_t color_0 = LittleShort(*(ushort_t*)pInData);
-					ushort_t color_1 = LittleShort(*(ushort_t*)(pInData+2));
-					uint_t bitmask = LittleInt(*(uint_t*)(pInData+4));
+					ushort_t color_0 = LittleEndian(*(ushort_t*)pInData);
+					ushort_t color_1 = LittleEndian(*(ushort_t*)(pInData+2));
+					uint_t bitmask = LittleEndian(*(uint_t*)(pInData+4));
 					pInData += 8;
 
 					Color565To888(color_0, colours);
@@ -373,26 +373,26 @@ namespace {
 
 	static void ChangeHeaderIntOrder(DdsHeader *pHeader)
 	{
-		pHeader->Size1 = LittleInt(pHeader->Size1);
-		pHeader->Size2 = LittleInt(pHeader->Size2);
-		pHeader->Flags1 = LittleInt(pHeader->Flags1);
-		pHeader->Flags2 = LittleInt(pHeader->Flags2);
-		pHeader->Width = LittleInt(pHeader->Width);
-		pHeader->Height = LittleInt(pHeader->Height);
-		pHeader->Depth = LittleInt(pHeader->Depth);
-		pHeader->ddsCaps1 = LittleInt(pHeader->ddsCaps1);
-		pHeader->ddsCaps2 = LittleInt(pHeader->ddsCaps2);
-		pHeader->ddsCaps3 = LittleInt(pHeader->ddsCaps3);
-		pHeader->ddsCaps4 = LittleInt(pHeader->ddsCaps4);
-		pHeader->RBitMask = LittleInt(pHeader->RBitMask);
-		pHeader->GBitMask = LittleInt(pHeader->GBitMask);
-		pHeader->BBitMask = LittleInt(pHeader->BBitMask);
-		pHeader->ABitMask = LittleInt(pHeader->ABitMask);
-		pHeader->RGBBitCount = LittleInt(pHeader->RGBBitCount);
-		pHeader->LinearSize = LittleInt(pHeader->LinearSize);
-		pHeader->MipMapCount = LittleInt(pHeader->MipMapCount);
-		pHeader->AlphaBitDepth = LittleInt(pHeader->AlphaBitDepth);
-		pHeader->TextureStage = LittleInt(pHeader->TextureStage);
+		pHeader->Size1 = LittleEndian(pHeader->Size1);
+		pHeader->Size2 = LittleEndian(pHeader->Size2);
+		pHeader->Flags1 = LittleEndian(pHeader->Flags1);
+		pHeader->Flags2 = LittleEndian(pHeader->Flags2);
+		pHeader->Width = LittleEndian(pHeader->Width);
+		pHeader->Height = LittleEndian(pHeader->Height);
+		pHeader->Depth = LittleEndian(pHeader->Depth);
+		pHeader->ddsCaps1 = LittleEndian(pHeader->ddsCaps1);
+		pHeader->ddsCaps2 = LittleEndian(pHeader->ddsCaps2);
+		pHeader->ddsCaps3 = LittleEndian(pHeader->ddsCaps3);
+		pHeader->ddsCaps4 = LittleEndian(pHeader->ddsCaps4);
+		pHeader->RBitMask = LittleEndian(pHeader->RBitMask);
+		pHeader->GBitMask = LittleEndian(pHeader->GBitMask);
+		pHeader->BBitMask = LittleEndian(pHeader->BBitMask);
+		pHeader->ABitMask = LittleEndian(pHeader->ABitMask);
+		pHeader->RGBBitCount = LittleEndian(pHeader->RGBBitCount);
+		pHeader->LinearSize = LittleEndian(pHeader->LinearSize);
+		pHeader->MipMapCount = LittleEndian(pHeader->MipMapCount);
+		pHeader->AlphaBitDepth = LittleEndian(pHeader->AlphaBitDepth);
+		pHeader->TextureStage = LittleEndian(pHeader->TextureStage);
 	}
 
 	static bool CheckHeaderIsValid(DdsHeader *pHeader)
@@ -649,14 +649,14 @@ namespace {
 		switch (readParams->outbpp) {
 		case 1:
 			for (int i = 0; i < count; i++) {
-				uint_t pixel = LittleInt(*(uint_t*)inptr);
+				uint_t pixel = LittleEndian(*(uint_t*)inptr);
 				inptr += readParams->inbpp;
 				*outptr++ = ((pixel & pHeader->RBitMask) >> RedR) << RedL;
 			}
 			break;
 		case 2:
 			for (int i = 0; i < count; i++) {
-				uint_t pixel = LittleInt(*(uint_t*)inptr);
+				uint_t pixel = LittleEndian(*(uint_t*)inptr);
 				inptr += readParams->inbpp;
 				*outptr++ = ((pixel & pHeader->RBitMask) >> RedR) << RedL;
 				byte_t alpha = ((pixel & pHeader->ABitMask) >> AlphaR) << AlphaL;
@@ -669,7 +669,7 @@ namespace {
 			break;
 		case 3:
 			for (int i = 0; i < count; i++) {
-				uint_t pixel = LittleInt(*(uint_t*)inptr);
+				uint_t pixel = LittleEndian(*(uint_t*)inptr);
 				inptr += readParams->inbpp;
 				*outptr++ = ((pixel & pHeader->BBitMask) >> BlueR) << BlueL;
 				*outptr++ = ((pixel & pHeader->GBitMask) >> GreenR) << GreenL;
@@ -678,7 +678,7 @@ namespace {
 			break;
 		case 4:
 			for (int i = 0; i < count; i++) {
-				uint_t pixel = LittleInt(*(uint_t*)inptr);
+				uint_t pixel = LittleEndian(*(uint_t*)inptr);
 				inptr += readParams->inbpp;
 				*outptr++ = ((pixel & pHeader->BBitMask) >> BlueR) << BlueL;
 				*outptr++ = ((pixel & pHeader->GBitMask) >> GreenR) << GreenL;
@@ -714,9 +714,9 @@ namespace {
 				return DecompressDXT1(readParams);
 			else{
 				for (uint_t i=0; i<readParams->outDataSize; i+=8) {
-					*(ushort_t*)(readParams->outData + i)		= LittleShort(*(ushort_t*)(readParams->inData + i));
-					*(ushort_t*)(readParams->outData + i + 2)	= LittleShort(*(ushort_t*)(readParams->inData + i + 2));
-					*(uint_t*)(readParams->outData + i + 4)	= LittleInt(*(uint_t*)(readParams->inData + i + 4));
+					*(ushort_t*)(readParams->outData + i) = LittleEndian(*(ushort_t*)(readParams->inData + i));
+					*(ushort_t*)(readParams->outData + i + 2) = LittleEndian(*(ushort_t*)(readParams->inData + i + 2));
+					*(uint_t*)(readParams->outData + i + 4)	= LittleEndian(*(uint_t*)(readParams->inData + i + 4));
 				}
 				readParams->inData += readParams->outDataSize;
 			}
@@ -733,9 +733,9 @@ namespace {
 				for (uint_t i=0; i<readParams->outDataSize; i+=16) {
 					*(uint_t*)(readParams->outData + i + 0)	= *(uint_t*)(readParams->inData + i + 0);
 					*(uint_t*)(readParams->outData + i + 4)	= *(uint_t*)(readParams->inData + i + 4);
-					*(ushort_t*)(readParams->outData + i + 8)	= LittleShort(*(ushort_t*)(readParams->inData + i + 8));
-					*(ushort_t*)(readParams->outData + i + 10)	= LittleShort(*(ushort_t*)(readParams->inData + i + 10));
-					*(uint_t*)(readParams->outData + i + 12)	= LittleInt(*(uint_t*)(readParams->inData + i + 12));
+					*(ushort_t*)(readParams->outData + i + 8)	= LittleEndian(*(ushort_t*)(readParams->inData + i + 8));
+					*(ushort_t*)(readParams->outData + i + 10)	= LittleEndian(*(ushort_t*)(readParams->inData + i + 10));
+					*(uint_t*)(readParams->outData + i + 12)	= LittleEndian(*(uint_t*)(readParams->inData + i + 12));
 				}
 				readParams->inData += readParams->outDataSize;
 			}
@@ -746,14 +746,14 @@ namespace {
 		case TexFormat::RG32F:
 		case TexFormat::RGBA32F:
 			for (uint_t i=0; i<readParams->outDataSize; i+=4)
-				*(uint_t*)(readParams->outData + i)	= LittleInt(*(uint_t*)(readParams->inData + i));
+				*(uint_t*)(readParams->outData + i)	= LittleEndian(*(uint_t*)(readParams->inData + i));
 			readParams->inData += readParams->outDataSize;
 			break;
 		case TexFormat::R16F:
 		case TexFormat::RG16F:
 		case TexFormat::RGBA16F:
 			for (uint_t i=0; i<readParams->outDataSize; i+=2)
-				*(ushort_t*)(readParams->outData + i)	= LittleShort(*(ushort_t*)(readParams->inData + i));
+				*(ushort_t*)(readParams->outData + i)	= LittleEndian(*(ushort_t*)(readParams->inData + i));
 			readParams->inData += readParams->outDataSize;
 			break;
 			
@@ -1380,12 +1380,12 @@ namespace {
 					bool hasAlpha;
 					ChooseEndpoints(block, &rgba1, &rgba2);
 					DXT1CheckOrder(block, &rgba1, &rgba2, &hasAlpha);
-					*(ushort_t*)(pWriteBuf + 0)	= LittleShort(ColorRGBAto565(&rgba1));
-					*(ushort_t*)(pWriteBuf + 2)	= LittleShort(ColorRGBAto565(&rgba2));
+					*(ushort_t*)(pWriteBuf + 0)	= LittleEndian(ColorRGBAto565(&rgba1));
+					*(ushort_t*)(pWriteBuf + 2)	= LittleEndian(ColorRGBAto565(&rgba2));
 
 					uint_t bitMask = (hasAlpha)?	GenBitMask(&rgba1, &rgba2, 3, block)
 						: GenBitMask(&rgba1, &rgba2, 4, block);
-					*(uint_t*)(pWriteBuf + 4)	= LittleInt(bitMask);
+					*(uint_t*)(pWriteBuf + 4)	= LittleEndian(bitMask);
 					pWriteBuf += 8;
 				}
 			}
@@ -1418,11 +1418,11 @@ namespace {
 						std::swap(c1, c2);
 						std::swap(rgba1, rgba2);
 					}
-					*(ushort_t*)(pWriteBuf + 0)	= LittleShort(c1);
-					*(ushort_t*)(pWriteBuf + 2)	= LittleShort(c2);
+					*(ushort_t*)(pWriteBuf + 0)	= LittleEndian(c1);
+					*(ushort_t*)(pWriteBuf + 2)	= LittleEndian(c2);
 
 					uint_t bitMask = GenBitMask(&rgba1, &rgba2, 4, block);
-					*(uint_t*)(pWriteBuf + 4)	= LittleInt(bitMask);
+					*(uint_t*)(pWriteBuf + 4)	= LittleEndian(bitMask);
 					pWriteBuf += 8;
 				}
 			}
@@ -1463,11 +1463,11 @@ namespace {
 						std::swap(c1, c2);
 						std::swap(rgba1, rgba2);
 					}
-					*(ushort_t*)(pWriteBuf + 0)	= LittleShort(c1);
-					*(ushort_t*)(pWriteBuf + 2)	= LittleShort(c2);
+					*(ushort_t*)(pWriteBuf + 0)	= LittleEndian(c1);
+					*(ushort_t*)(pWriteBuf + 2)	= LittleEndian(c2);
 
 					uint_t bitMask = GenBitMask(&rgba1, &rgba2, 4, block);
-					*(uint_t*)(pWriteBuf + 4)	= LittleInt(bitMask);
+					*(uint_t*)(pWriteBuf + 4)	= LittleEndian(bitMask);
 					pWriteBuf += 8;
 				}
 			}
@@ -1511,9 +1511,9 @@ namespace {
 		switch (writeParams->outFormat) {
 		case TexFormat::BC1:
 			for (uint_t i=0; i<writeParams->linearSize; i+=8) {
-				*(ushort_t*)(writeParams->outData + i)		= LittleShort(*(ushort_t*)(writeParams->inData + i));
-				*(ushort_t*)(writeParams->outData + i + 2)	= LittleShort(*(ushort_t*)(writeParams->inData + i + 2));
-				*(uint_t*)(writeParams->outData + i + 4)	= LittleInt(*(uint_t*)(writeParams->inData + i + 4));
+				*(ushort_t*)(writeParams->outData + i)		= LittleEndian(*(ushort_t*)(writeParams->inData + i));
+				*(ushort_t*)(writeParams->outData + i + 2)	= LittleEndian(*(ushort_t*)(writeParams->inData + i + 2));
+				*(uint_t*)(writeParams->outData + i + 4)	= LittleEndian(*(uint_t*)(writeParams->inData + i + 4));
 			}
 			break;
 		case TexFormat::BC2:
@@ -1521,23 +1521,23 @@ namespace {
 			for (uint_t i=0; i<writeParams->linearSize; i+=16) {
 				*(uint_t*)(writeParams->outData + i + 0)	= *(uint_t*)(writeParams->inData + i + 0);
 				*(uint_t*)(writeParams->outData + i + 4)	= *(uint_t*)(writeParams->inData + i + 4);
-				*(ushort_t*)(writeParams->outData + i + 8)	= LittleShort(*(ushort_t*)(writeParams->inData + i + 8));
-				*(ushort_t*)(writeParams->outData + i + 10)	= LittleShort(*(ushort_t*)(writeParams->inData + i + 10));
-				*(uint_t*)(writeParams->outData + i + 12)	= LittleInt(*(uint_t*)(writeParams->inData + i + 12));
+				*(ushort_t*)(writeParams->outData + i + 8)	= LittleEndian(*(ushort_t*)(writeParams->inData + i + 8));
+				*(ushort_t*)(writeParams->outData + i + 10)	= LittleEndian(*(ushort_t*)(writeParams->inData + i + 10));
+				*(uint_t*)(writeParams->outData + i + 12)	= LittleEndian(*(uint_t*)(writeParams->inData + i + 12));
 			}
 			break;
 		case TexFormat::R16F:			
 		case TexFormat::RG16F:		
 		case TexFormat::RGBA16F:	
 			for (uint_t i=0; i<writeParams->linearSize; i+=2) {
-				*(ushort_t*)(writeParams->outData + i)		= LittleShort(*(ushort_t*)(writeParams->inData + i));
+				*(ushort_t*)(writeParams->outData + i)		= LittleEndian(*(ushort_t*)(writeParams->inData + i));
 			}
 			break;
 		case TexFormat::R32F:			
 		case TexFormat::RG32F:		
 		case TexFormat::RGBA32F:	
 			for (uint_t i=0; i<writeParams->linearSize; i+=4) {
-				*(uint_t*)(writeParams->outData + i)		= LittleInt(*(uint_t*)(writeParams->inData + i));
+				*(uint_t*)(writeParams->outData + i)		= LittleEndian(*(uint_t*)(writeParams->inData + i));
 			}
 			break;
 		case TexFormat::LA8:

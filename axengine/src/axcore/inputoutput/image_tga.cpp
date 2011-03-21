@@ -210,20 +210,20 @@ bool Image::loadFile_tga(const std::string &filename)
 
 	tmp[0] = pdata[0]; 
 	tmp[1] = pdata[1]; 
-	header.colormap_index = LittleShort(*((short *)tmp)); 
+	header.colormap_index = LittleEndian(*((short *)tmp)); 
 	pdata+=2; 
 	tmp[0] = pdata[0]; 
 	tmp[1] = pdata[1]; 
-	header.colormap_length = LittleShort(*((short *)tmp)); 
+	header.colormap_length = LittleEndian(*((short *)tmp)); 
 	pdata+=2; 
 	header.colormap_size = *pdata++; 
-	header.x_origin = LittleShort(*((short *)pdata)); 
+	header.x_origin = LittleEndian(*((short *)pdata)); 
 	pdata+=2; 
-	header.y_origin = LittleShort(*((short *)pdata)); 
+	header.y_origin = LittleEndian(*((short *)pdata)); 
 	pdata+=2; 
-	header.width = LittleShort(*((short *)pdata)); 
+	header.width = LittleEndian(*((short *)pdata)); 
 	pdata+=2; 
-	header.height = LittleShort(*((short *)pdata)); 
+	header.height = LittleEndian(*((short *)pdata)); 
 	pdata+=2; 
 	header.pixel_size = *pdata++; 
 	header.attributes = *pdata++; 

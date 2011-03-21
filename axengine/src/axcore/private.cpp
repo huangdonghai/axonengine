@@ -13,12 +13,6 @@ read the license and understand and accept it fully.
 #include <windows.h>
 #include "BugTrap.h"
 
-#include <axcore/inputoutput/model.pb.h>
-#include <fstream>
-#include <ios>
-#include <google/protobuf/text_format.h>
-#include <google/protobuf/io/zero_copy_stream_impl.h>
-
 AX_BEGIN_NAMESPACE
 
 static void SetupExceptionHandler() {
@@ -65,34 +59,11 @@ FILE *g_logFile;
 	#include <axcore/cvardecls.h>
 #undef AX_CVARDECL
 
-#pragma comment(lib, "libprotobuf.lib")
-
-void TestProtoBuf()
-{
-	VertexDeclaration::Element *element = new VertexDeclaration::Element;
-
-	std::fstream fstr_out("msg.txt", std::ios::out | std::ios::trunc);
-
-	element->set_datatype(VertexDeclaration::DT_BYTE4);
-	element->set_usage(VertexDeclaration::DU_COLOR);
-
-	std::string ss = element->SerializeAsString();
-
-	const ::google::protobuf::Reflection * reflection = element->GetReflection();
-
-	google::protobuf::TextFormat::Printer printer;
-	printer.SetUseShortRepeatedPrimitives(true);
-	std::string text;
-	printer.PrintToString(*element, &text);
-}
-
-
 void axCoreInit(int argc, char *argv[])
 {
 	static bool _isInitialized = false;
 
 	SetupExceptionHandler();
-	TestProtoBuf();
 //	set_terminate(&terminateHandler);
 //	BT_SetTerminate(); // set_terminate() must be called from every thread
 

@@ -6,16 +6,17 @@ AX_BEGIN_NAMESPACE
 class Archiver
 {
 public:
-	Archiver(File *f);
+	Archiver(const std::string &filename, File::AccessMode mode);
+	~Archiver();
 
 	Archiver &operator<<(bool val) { return operator<<(char(val)); }
 	Archiver &operator<<(char val) { m_file->write(&val, 1); return *this; }
 	Archiver &operator<<(byte_t val) { m_file->write(&val, 1); return *this;}
-	Archiver &operator<<(short val) { val = LittleShort(val); m_file->write(&val, 2); return *this; }
-	Archiver &operator<<(ushort_t val) { val = LittleShort(val); m_file->write(&val, 2); return *this; }
-	Archiver &operator<<(int val) { val = LittleInt(val); m_file->write(&val, 4); return *this; }
-	Archiver &operator<<(uint_t val) { val = LittleInt(val); m_file->write(&val, 4); return *this; }
-	Archiver &operator<<(float val) { val = LittleFloat(val); m_file->write(&val, 4); return *this; }
+	Archiver &operator<<(short val) { val = LittleEndian(val); m_file->write(&val, 2); return *this; }
+	Archiver &operator<<(ushort_t val) { val = LittleEndian(val); m_file->write(&val, 2); return *this; }
+	Archiver &operator<<(int val) { val = LittleEndian(val); m_file->write(&val, 4); return *this; }
+	Archiver &operator<<(uint_t val) { val = LittleEndian(val); m_file->write(&val, 4); return *this; }
+	Archiver &operator<<(float val) { val = LittleEndian(val); m_file->write(&val, 4); return *this; }
 	Archiver &operator<<(double val) { val = LittleEndian(val); m_file->write(&val, 8); return *this; }
 	Archiver &operator<<(std::string val) { operator<<(static_cast<int>(val.size())); m_file->write(&val[0], val.size()); return *this; }
 	template <typename Q>
@@ -37,11 +38,11 @@ public:
 	Archiver &operator>>(bool &val) { char c; m_file->read(&c, 1); val = c; return *this; }
 	Archiver &operator>>(char &val) { m_file->read(&val, 1); return *this; }
 	Archiver &operator>>(byte_t &val) { m_file->read(&val, 1); return *this; }
-	Archiver &operator>>(short &val) { m_file->read(&val, 2); val = LittleShort(val); return *this; }
-	Archiver &operator>>(ushort_t &val) {m_file->read(&val, 2); val = LittleShort(val); return *this; }
-	Archiver &operator>>(int &val) { m_file->read(&val, 4); val = LittleInt(val); return *this; }
-	Archiver &operator>>(uint_t &val) { m_file->read(&val, 4); val = LittleInt(val); return *this; }
-	Archiver &operator>>(float &val) { m_file->read(&val, 4); val = LittleFloat(val); return *this; }
+	Archiver &operator>>(short &val) { m_file->read(&val, 2); val = LittleEndian(val); return *this; }
+	Archiver &operator>>(ushort_t &val) {m_file->read(&val, 2); val = LittleEndian(val); return *this; }
+	Archiver &operator>>(int &val) { m_file->read(&val, 4); val = LittleEndian(val); return *this; }
+	Archiver &operator>>(uint_t &val) { m_file->read(&val, 4); val = LittleEndian(val); return *this; }
+	Archiver &operator>>(float &val) { m_file->read(&val, 4); val = LittleEndian(val); return *this; }
 	Archiver &operator>>(double &val) { m_file->read(&val, 8); val = LittleEndian(val); return *this; }
 	Archiver &operator>>(std::string &val) { int size; operator>>(size); val.resize(size); m_file->read(&val[0], size); return *this; }
 	template <typename Q>
@@ -68,8 +69,7 @@ private:
 class VertexDeclaration
 {
 public:
-	enum DataType
-	{
+	enum DataType {
 		DT_NONE = 0,
 		DT_BYTE4,
 		DT_USHORT2,
@@ -79,8 +79,7 @@ public:
 		DT_FLOAT4
 	};
 
-	enum DataUsage
-	{
+	enum DataUsage {
 		DU_NONE = 0,
 		DU_POSITION = 1,
 		DU_COLOR = 2,
@@ -103,7 +102,9 @@ public:
 		void load(Archiver &ar);
 	};
 
-	int m_stride;
+	byte m_floatStride;
+	byte m_byteStride;
+	byte m_ushortStride;
 	std::vector<Element> m_elements;
 
 	void save(Archiver &ar) const;
@@ -131,8 +132,6 @@ struct MeshData {
 	std::vector<ushort_t> ushortData;
 	std::vector<byte_t> byteData;
 	std::vector<ushort_t> indices;
-	std::vector<QuadStripData> quadstrips;
-	std::vector<ushort_t> orphanTriangles;
 
 	void save(Archiver &ar) const;
 	void load(Archiver &ar);

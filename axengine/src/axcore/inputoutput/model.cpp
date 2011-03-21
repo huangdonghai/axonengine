@@ -2,6 +2,17 @@
 
 AX_BEGIN_NAMESPACE
 
+Archiver::Archiver(const std::string &filename, File::AccessMode mode)
+{
+	m_file = g_fileSystem->openFileByMode(filename, mode);
+}
+
+Archiver::~Archiver()
+{
+	delete m_file;
+}
+
+
 void QuadStripData::save(Archiver &ar) const
 {
 	ar << row;
@@ -38,13 +49,17 @@ void VertexDeclaration::Element::load(Archiver &ar)
 
 void VertexDeclaration::save(Archiver &ar) const
 {
-	ar << m_stride;
+	ar << m_floatStride;
+	ar << m_byteStride;
+	ar << m_ushortStride;
 	ar << m_elements;
 }
 
 void VertexDeclaration::load(Archiver &ar)
 {
-	ar >> m_stride;
+	ar >> m_floatStride;
+	ar >> m_byteStride;
+	ar >> m_ushortStride;
 	ar >> m_elements;
 }
 
@@ -59,8 +74,6 @@ void MeshData::save(Archiver &ar) const
 	ar << ushortData;
 	ar << byteData;
 	ar << indices;
-	ar << quadstrips;
-	ar << orphanTriangles;
 }
 
 void MeshData::load(Archiver &ar)
@@ -74,8 +87,6 @@ void MeshData::load(Archiver &ar)
 	ar >> ushortData;
 	ar >> byteData;
 	ar >> indices;
-	ar >> quadstrips;
-	ar >> orphanTriangles;
 }
 
 

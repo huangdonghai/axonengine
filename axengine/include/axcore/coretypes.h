@@ -157,7 +157,7 @@ __GNUG__
 
 #define AX_JOINT(x, y) x ## y
 
-#define AX_WIDEN(x)		AX_JOINT(L, x)
+#define AX_WIDEN(x) AX_JOINT(L, x)
 
 #define AX_MB_LEN_MAX 2 // multi-bytes char max length
 #define AX_UTF8_LEN_MAX 4 // utf8 char max length
@@ -165,15 +165,6 @@ __GNUG__
 #define AX_BIT(x) (1<<x)
 
 AX_BEGIN_NAMESPACE
-
-#if 0
-typedef signed char sbyte_t;
-typedef unsigned char byte_t;
-typedef signed short short;
-typedef unsigned short ushort_t;
-typedef signed int int;
-typedef unsigned int uint_t;
-#endif
 
 #if 1
 typedef signed char sbyte_t;
@@ -217,7 +208,8 @@ T handle_cast(const Handle & h)
 }
 
 template<typename T>
-void SafeDelete(T*& p) {
+void SafeDelete(T*& p)
+{
 	if (p) {
 		delete p;
 		p = NULL;
@@ -225,7 +217,8 @@ void SafeDelete(T*& p) {
 }
 
 template<typename T>
-void SafeDeleteArray(T*& p) {
+void SafeDeleteArray(T*& p)
+{
 	if (p) {
 		delete[] p;
 		p = NULL;
@@ -233,7 +226,8 @@ void SafeDeleteArray(T*& p) {
 }
 
 template<typename T>
-void SafeFree(T*& p) {
+void SafeFree(T*& p)
+{
 	if (p) {
 		free(p);
 		p = NULL;
@@ -241,7 +235,8 @@ void SafeFree(T*& p) {
 }
 
 template<typename T>
-void SafeDecRef(T*& p) {
+void SafeDecRef(T*& p)
+{
 	if (p) {
 		p->decref();
 		p = NULL;
@@ -249,14 +244,16 @@ void SafeDecRef(T*& p) {
 }
 
 template<typename T>
-void SafeIncRef(T*& p) {
+void SafeIncRef(T*& p)
+{
 	if (p) {
 		p->incref();
 	}
 }
 
 template<typename T>
-void SafeRelease(T*& p) {
+void SafeRelease(T*& p)
+{
 	if (p) {
 		p->release();
 		p = NULL;
@@ -264,14 +261,16 @@ void SafeRelease(T*& p) {
 }
 
 template<typename T>
-void SafeAddref(T*& p) {
+void SafeAddref(T*& p)
+{
 	if (p) {
 		p->addref();
 	}
 }
 
 template<typename T>
-void SafeClearContainer(T &t) {
+void SafeClearContainer(T &t)
+{
 	T::iterator it = t.begin();
 	for (; it != t.end(); ++it) {
 		SafeDelete(*it);
@@ -279,78 +278,15 @@ void SafeClearContainer(T &t) {
 }
 
 template<typename T, size_t size>
-size_t ArraySize(T (&)[size]) {
+size_t ArraySize(T (&)[size])
+{
 	return size;
 }
-#if 0
-template<typename T>
-T Max(T a, T b) {
-	return a > b ? a : b;
-}
-
-template<typename T>
-T Min(T a, T b) {
-	return a < b ? a : b;
-}
-#endif
 
 
-// byte order aware(BOA) data type convert. we store all datas in little endian byte
-// order, like Intel x86 platform
-
-inline short ShortSwap(short l) {
-	char    b1,b2;
-
-	b1 = l&255;
-	b2 = (l>>8)&255;
-
-	return (b1<<8) + b2;
-}
-
-inline int IntSwap(int l) {
-	char    b1,b2,b3,b4;
-
-	b1 = l&255;
-	b2 = (l>>8)&255;
-	b3 = (l>>16)&255;
-	b4 = (l>>24)&255;
-
-	return ((int)b1<<24) + ((int)b2<<16) + ((int)b3<<8) + b4;
-}
-
-inline longlong_t LongSwap(longlong_t l) {
-	char    b1,b2,b3,b4,b5,b6,b7,b8;
-
-	b1 = l&255;
-	b2 = (l>>8)&255;
-	b3 = (l>>16)&255;
-	b4 = (l>>24)&255;
-	b5 = (l>>32)&255;
-	b6 = (l>>40)&255;
-	b7 = (l>>48)&255;
-	b8 = (l>>56)&255;
-
-	return ((longlong_t)b1<<56) + ((longlong_t)b2<<48) + ((longlong_t)b3<<40) + ((longlong_t)b1<<32)
-		+ ((longlong_t)b1<<24) + ((longlong_t)b2<<16) + ((longlong_t)b3<<8) + b4;
-}
-
-inline float FloatSwap(float f) {
-	union {
-		float f;
-		char b[4];
-	} dat1, dat2;
-
-
-	dat1.f = f;
-	dat2.b[0] = dat1.b[3];
-	dat2.b[1] = dat1.b[2];
-	dat2.b[2] = dat1.b[1];
-	dat2.b[3] = dat1.b[0];
-	return dat2.f;
-}
-
-template< typename T >
-T ByteSwap(T val) {
+template <typename T>
+T ByteSwap(T val)
+{
 	size_t size = sizeof(T);
 
 	if (size == 1) return val;
@@ -371,112 +307,11 @@ T ByteSwap(T val) {
 #endif
 
 #if defined(AX_LITTLE_ENDIAN)
-#	define LittleShort(x)	(x)
-#	define LittleInt(x)		(x)
-#	define LittleLong(x)	(x)
-#	define LittleFloat(x)	(x)
-#	define LittleEndian(x)	(x)
+template <typename T>
+T LittleEndian(T val) { return val; }
 #else
-#	define LittleShort(x)	ShortSwap(x)
-#	define LittleInt(x)	IntSwap(x)
-#	define LittleLong(x)	LongSwap(x)
-#	define LittleFloat(x)	FloatSwap(x)
-#	define LittleEndian(x)	ByteSwap(x)
-#endif
-
-#if 0
-class Resource {
-public:
-	inline Resource() : mRefCount(0) {}
-	inline virtual ~Resource() {}
-	inline virtual UInt AddRef() { return ++mRefCount; }
-	inline virtual UInt Release() { --mRefCount; if (mRefCount == 0) delete this; return mRefCount; }
-
-protected:
-	UInt mRefCount;
-};
-
-
-// use delete to destruct the object
-template< typename T >
-class ResourcePtr {
-	typedef ResourcePtr<T>	ThisType;
-public:
-	typedef T ValueType;
-	typedef ValueType *Pointer;
-	typedef const Pointer ConstPointer;
-
-	ResourcePtr() : mObj(NULL) {}
-	ResourcePtr(T *obj) : mObj(obj) {
-		SafeAddRef(mObj);
-	}
-	ResourcePtr(const ThisType &other) : mObj(other.mObj) {
-		SafeAddRef(mObj);
-	}
-
-	template< typename Q >
-	ResourcePtr(const ResourcePtr<Q> other) : mObj(dynamic_cast<Pointer>(other.GetPointer())) {
-		SafeAddRef(mObj);
-	}
-
-	// destructor
-	~ResourcePtr() {
-		Clear();
-	}
-
-	ThisType &Attach(Pointer p) {
-		Clear();
-		mObj = p;
-		SafeAddRef(mObj);
-		return *this;
-	}
-
-	ThisType &operator=(Pointer p) {
-		Attach(p);
-		return *this;
-	}
-
-	ThisType &operator=(const ThisType &other) {
-		Clear();
-		mObj = other.mObj;
-		if (mObj)
-			mObj->AddRef();
-		return *this;
-	}
-
-	template< typename Q >
-	ThisType &operator=(const ResourcePtr<Q> other) {
-		Clear();
-		mObj = dynamic_cast<Pointer>(other.GetPointer());
-		if (mObj)
-			mObj->AddRef();
-
-		return *this;
-	}
-
-	T *operator->() const { return mObj; }
-	operator T*() const { return mObj; }
-	T &operator*() const { return *mObj; }
-
-	bool IsEmpty() const { return mObj == NULL; }
-	bool IsValid() const { return (mObj != 0); }
-	void Clear() { SafeRelease(mObj); }
-
-	bool operator==(const ThisType &other) {
-		return mObj == other.mObj;
-	}
-
-	bool operator!=(const ThisType other) {
-		return mObj != other.mObj;
-	}
-
-	Pointer GetPointer() const { return mObj; }
-
-private:
-	ValueType *mObj;
-};
-
-typedef ResourcePtr<Resource>	ResPtr;
+template <typename T>
+T LittleEndian(T val) { return ByteSwap(val); }
 #endif
 
 AX_END_NAMESPACE

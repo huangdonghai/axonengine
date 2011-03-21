@@ -259,14 +259,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\include\axcore\inputoutput\model.pb.cc"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\include\axcore\inputoutput\model.pb.h"
-					>
-				</File>
-				<File
 					RelativePath="..\..\..\include\axcore\inputoutput\xml.h"
 					>
 				</File>
@@ -274,20 +266,6 @@
 			<Filter
 				Name="proto"
 				>
-				<File
-					RelativePath="..\..\..\include\axcore\inputoutput\model.proto"
-					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="Generating model.pb.{h,cc}..."
-							CommandLine="protoc -I$(InputDir) --cpp_out=$(InputDir) $(InputPath)&#x0D;&#x0A;"
-							Outputs="model.h;model.cc"
-						/>
-					</FileConfiguration>
-				</File>
 			</Filter>
 		</Filter>
 		<Filter
