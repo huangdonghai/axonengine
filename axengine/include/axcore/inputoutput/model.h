@@ -88,7 +88,7 @@ public:
 		DU_BINORMAL = 16,
 		DU_TEXCOORD = 32,
 		DU_BLENDWEIGHTS = 64,  // usually 4 weights, but 3 can be stored with 1 implied. Can be stored as 4*uint8, so quantized where 1.0f => 0xff (255),
-		DU_BLENDINDICES = 128, // usually 4 hkUint8s in a row. So can reference 256 blend transforms (bones)
+		DU_BLENDINDICES = 128, // usually 4 bytes in a row. So can reference 256 blend transforms (bones)
 		DU_USERDATA = 256
 	};
 
@@ -160,11 +160,18 @@ struct AnimationData {
 	int numFrames;
 };
 
+struct CameraData {};
+
+struct LightData {};
+
+struct MaterialData {};
+
 struct ModelData {
 	enum {
 		FileId = AX_MAKEFOURCC('A', 'X', 'M', 'L'),
 		FileVersion = 1
 	};
+
 	std::vector<MeshData> meshData;
 
 	void save(Archiver &ar) const;

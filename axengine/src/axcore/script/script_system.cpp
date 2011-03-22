@@ -339,24 +339,23 @@ void ScriptSystem::updateNameIndex(const std::string &str)
 
 	int count = 0;
 	for (; it != str.rend(); ++it) {
-		if (!isdigit(*it)) {
+		if (!isdigit(*it))
 			break;
-		}
+
 		count++;
 	}
-	const char *p = &*it;
+	const char *p = 0;
 
 	bool noindex = false;
-	if (!count) {
+	if (!count)
 		noindex = true;
-	}
 
 	if (it == str.rend()) {
 		noindex = true;
-	}
-
-	if (*it != '_') {
+	} else if (*it != '_') {
 		noindex = true;
+	} else {
+		p = &*it;
 	}
 
 	int index = 0;
