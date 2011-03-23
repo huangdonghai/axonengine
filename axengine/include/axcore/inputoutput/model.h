@@ -160,7 +160,12 @@ struct AnimationData {
 	int numFrames;
 };
 
-struct CameraData {};
+struct CameraData {
+	Vector3 position;
+	CompactQuat rotate;
+	float fovY;
+	float focusLength;
+};
 
 struct LightData {};
 
