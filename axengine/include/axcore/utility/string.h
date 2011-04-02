@@ -65,11 +65,13 @@ struct AX_API StringUtil {
 	static std::string CDECL format(const char *fmt, ...);
 };
 
-inline int StringUtil::vsnprintf(char *buffer, size_t count, const char *format, va_list argptr) {
+inline int StringUtil::vsnprintf(char *buffer, size_t count, const char *format, va_list argptr)
+{
 	return ::vsnprintf_s(buffer, count, _TRUNCATE, format, argptr);
 }
 
-inline int CDECL StringUtil::snprintf(char *buffer, size_t count, const char *format, ...) {
+inline int CDECL StringUtil::snprintf(char *buffer, size_t count, const char *format, ...)
+{
 	va_list argptr;
 	int len;
 
@@ -80,7 +82,8 @@ inline int CDECL StringUtil::snprintf(char *buffer, size_t count, const char *fo
 	return len;
 }
 
-inline int CDECL StringUtil::sprintf(std::string &str, const char *format, ...) {
+inline int CDECL StringUtil::sprintf(std::string &str, const char *format, ...)
+{
 	char tmp[1024];
 	va_list argptr;
 	int len;
@@ -107,15 +110,18 @@ inline std::string CDECL StringUtil::format(const char *fmt, ...)
 	return std::string(tmp, len);
 }
 
-inline int StringUtil::stricmp(const char *string1, const char *string2) {
+inline int StringUtil::stricmp(const char *string1, const char *string2)
+{
 	return ::_stricmp(string1, string2);
 }
 
-inline int StringUtil::strnicmp(const char *string1, const char *string2, uint_t count) {
+inline int StringUtil::strnicmp(const char *string1, const char *string2, uint_t count)
+{
 	return ::_strnicmp(string1, string2, count);
 }
 
-inline char *StringUtil::strncpyz(char *strDest, const char *strSource, uint_t count) {
+inline char *StringUtil::strncpyz(char *strDest, const char *strSource, uint_t count)
+{
 	if (!strDest){
 		return NULL;
 	}
@@ -130,7 +136,8 @@ inline char *StringUtil::strncpyz(char *strDest, const char *strSource, uint_t c
 	return strDest;
 }
 
-inline char *StringUtil::strlwr(char *string) {
+inline char *StringUtil::strlwr(char *string)
+{
 	return _strlwr(string);
 }
 

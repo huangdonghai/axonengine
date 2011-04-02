@@ -33,7 +33,7 @@ public:
 	static FixedStringManager &instance();
 
 private:
-	Dict<const char*,int,HashCstr, EqualCstr> m_dict;
+	Dict<const char*, int, HashCstr, EqualCstr> m_dict;
 	std::vector<const std::string*> m_strings;
 };
 

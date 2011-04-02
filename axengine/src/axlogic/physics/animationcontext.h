@@ -21,7 +21,8 @@ class AnimationContext;
 // class AnimationChannel
 //--------------------------------------------------------------------------
 
-class AnimationChannel {
+class AnimationChannel
+{
 public:
 	friend class AnimationContext;
 
