@@ -53,8 +53,6 @@ MaterialDecl::MaterialDecl()
 
 MaterialDecl::~MaterialDecl()
 {
-	// free texture
-	// free params
 }
 
 bool MaterialDecl::tryLoad(const std::string &name)

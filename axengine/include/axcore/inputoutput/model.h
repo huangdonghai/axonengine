@@ -162,14 +162,17 @@ struct AnimationData {
 
 struct CameraData {
 	Vector3 position;
-	CompactQuat rotate;
+	Vector3 focus;
+	Vector3 up;
 	float fovY;
-	float focusLength;
+	float aperture;
 };
 
 struct LightData {};
 
-struct MaterialData {};
+struct MaterialData {
+	std::string stringData;
+};
 
 struct ModelData {
 	enum {
