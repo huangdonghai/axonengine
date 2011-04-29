@@ -15,20 +15,12 @@ Archiver::~Archiver()
 
 void QuadStripData::save(Archiver &ar) const
 {
-	ar << row;
-	ar << column;
-	ar << width;
-	ar << height;
-	ar << indices;
+	ar << row << column << width << height << indices;
 }
 
 void QuadStripData::load(Archiver &ar)
 {
-	ar >> row;
-	ar >> column;
-	ar >> width;
-	ar >> height;
-	ar >> indices;
+	ar >> row >> column >> width >> height >> indices;
 }
 
 void VertexDeclaration::Element::save(Archiver &ar) const
