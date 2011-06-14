@@ -174,7 +174,7 @@ struct MaterialData {
 	std::string stringData;
 };
 
-struct ModelData {
+struct ModelFile {
 	enum {
 		FileId = AX_MAKEFOURCC('A', 'X', 'M', 'L'),
 		FileVersion = 1

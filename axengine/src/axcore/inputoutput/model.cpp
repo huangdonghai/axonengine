@@ -82,14 +82,14 @@ void MeshData::load(Archiver &ar)
 }
 
 
-void ModelData::save(Archiver &ar) const
+void ModelFile::save(Archiver &ar) const
 {
 	ar << (int)FileId;
 	ar << (int)FileVersion;
 	ar << meshData;
 }
 
-void ModelData::load(Archiver &ar)
+void ModelFile::load(Archiver &ar)
 {
 	int id;
 	int version;
